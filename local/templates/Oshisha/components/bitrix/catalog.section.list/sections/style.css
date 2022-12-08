@@ -1,0 +1,12 @@
+.catalog-section-list-item{
+border: 1px solid #E5E5E5;
+border-radius: 10px;
+margin-bottom:20px;
+padding:10px;
+}
+.catalog-section-list-item-title{
+	font-size:22px;
+}
+.title-heading{
+	margin-bottom:20px;
+}

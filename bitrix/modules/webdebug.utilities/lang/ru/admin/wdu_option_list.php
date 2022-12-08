@@ -1,0 +1,30 @@
+<?
+$MESS['WEBDEBUG_OPTIONS_APPLICATION_TITLE'] = "Список опций";
+
+$MESS['WEBDEBUG_OPTIONS_COLUMN_MODULE_ID'] = "Модуль";
+$MESS['WEBDEBUG_OPTIONS_COLUMN_NAME'] = "Название опции";
+$MESS['WEBDEBUG_OPTIONS_COLUMN_VALUE'] = "Значение";
+$MESS['WEBDEBUG_OPTIONS_COLUMN_DESCRIPTION'] = "Описание";
+$MESS['WEBDEBUG_OPTIONS_COLUMN_SITE_ID'] = "Сайт";
+
+$MESS['WEBDEBUG_OPTIONS_FILTER_MODULE_ID'] = "Модуль";
+	$MESS['WEBDEBUG_OPTIONS_FILTER_MODULE_ID_ANY'] = "--- любой ---";
+	$MESS['WEBDEBUG_OPTIONS_FILTER_MODULE_ID_DESCR'] = "Укажите модуль";
+$MESS['WEBDEBUG_OPTIONS_FILTER_NAME'] = "Название";
+	$MESS['WEBDEBUG_OPTIONS_FILTER_NAME_DESCR'] = "Укажите название опции (напр., event_log_register)";
+$MESS['WEBDEBUG_OPTIONS_FILTER_VALUE'] = "Значение";
+	$MESS['WEBDEBUG_OPTIONS_FILTER_VALUE_DESCR'] = "Укажите Значение опции (напр., Y)";
+$MESS['WEBDEBUG_OPTIONS_FILTER_DESCRIPTION'] = "Описание опции";
+	$MESS['WEBDEBUG_OPTIONS_FILTER_DESCRIPTION_DESCR'] = "Укажите описание опции";
+$MESS['WEBDEBUG_OPTIONS_FILTER_SITE_ID'] = "Привязка к сайту";
+	$MESS['WEBDEBUG_OPTIONS_FILTER_SITE_ID_ANY'] = "--- любой ---";
+	$MESS['WEBDEBUG_OPTIONS_FILTER_SITE_ID_DESCR'] = "Выберите сайт, к которому привязана опция";
+
+$MESS['WEBDEBUG_OPTIONS_CONTEXT_EDIT'] = "Редактировать";
+$MESS['WEBDEBUG_OPTIONS_CONTEXT_COPY'] = "Копировать";
+$MESS['WEBDEBUG_OPTIONS_CONTEXT_DELETE'] = "Удалить";
+	$MESS['WEBDEBUG_OPTIONS_CONTEXT_DELETE_CONFIRM'] = "Удалить опцию \"%s\"?";
+
+$MESS['WEBDEBUG_OPTIONS_TOOLBAR_ADD_NAME'] = "Добавить опцию";
+$MESS['WEBDEBUG_OPTIONS_TOOLBAR_ADD_DESCR'] = "Добавить новую опцию";
+?>

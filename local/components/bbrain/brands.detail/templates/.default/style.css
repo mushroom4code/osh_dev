@@ -1,0 +1,29 @@
+.brand_detail_first{
+	display:flex;
+	align-items:center;
+}
+.brand_logo{
+	margin-right:30px;
+}
+.brand_name h1{
+font-weight: 700;
+font-size: 32px;
+line-height: 130%;
+color: #040404;	
+}
+
+.brand_detail_second{
+	margin-top:25px;
+font-weight: 500;
+font-size: 14px;
+line-height: 160.5%;	
+}
+.brand_detail{
+	margin-bottom:50px;
+}
+@media(min-width:1024px)
+{
+.brand_products{
+	padding:0 30px;
+}	
+}

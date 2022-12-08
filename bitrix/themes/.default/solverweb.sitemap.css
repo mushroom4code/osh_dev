@@ -1,0 +1,11 @@
+/*Menu icon*/
+.solverweb_menu_icon {
+    background: url(icons/solverweb.sitemap/sw_l_s.png) no-repeat center;
+    height: 24px;
+    background-size: 21px;
+}
+.solverweb_sitemap_menu_icon {
+    background: url(icons/solverweb.sitemap/sw_fav.png) no-repeat center;
+    height: 24px;
+    background-size: 21px;
+}

@@ -1,0 +1,29 @@
+.main_menu{
+	max-width:620px;
+}
+.menu_items{
+width:50%;
+background:#fff;
+display:flex !important;
+flex-direction:column;
+border-radius: 0px 20px 20px 0;
+}
+.menu_items.hide{
+	display:none !important;
+}
+.main_menu .li_menu_header {
+  padding: 5px 20px 5px 15px;
+}
+.main_menu{
+	background: initial !important;
+}
+.li_menu_header.link_js .fa-angle-right{
+	color:#9C9C9C;
+	padding-right:0px !important;
+}
+.li_menu_header.link_js{
+	width:100%;
+}
+.parent_category{
+	flex-grow:1;
+}

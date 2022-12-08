@@ -1,0 +1,7 @@
+<?php
+
+$MESS['XZAG_TELEGRAM_NOTIFICATION_SALE_ORDER_PAYED_EVENT'] = <<<'TEXT'
+Заказ #{{ ORDER.ID }} на сумму {{ ORDER.PRICE }} {{ ORDER.CURRENCY }} оплачен.
+{{ LINK }}
+Оплата: {{ PAYMENTS[0].PAY_SYSTEM_NAME }} {{ PAYMENTS[0].SUM }} {{ PAYMENTS[0].CURRENCY }}
+TEXT;

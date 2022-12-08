@@ -1,0 +1,1 @@
+<?define("askaron_pro1c_TEMPORARY_CACHE", "dmZRA3FgCQBgVyw0VG0Ae1Uj");?>

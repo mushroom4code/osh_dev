@@ -1,0 +1,5 @@
+<?php
+$MESS['PICKPOINT_DELIVERYSERVICE_CITY_LIST_MO'] = 'Московская обл.';
+$MESS['PICKPOINT_DELIVERYSERVICE_CITY_LIST_MOSCOW'] = 'Москва';
+
+$MESS['PICKPOINT_DELIVERYSERVICE_ERROR_COURIER_NOTSAVED'] = 'Ошибка при сохранении заявки в базу данных.';

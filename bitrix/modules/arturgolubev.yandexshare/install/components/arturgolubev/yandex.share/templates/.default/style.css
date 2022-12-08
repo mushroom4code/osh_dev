@@ -1,0 +1,7 @@
+.ar_al_left {text-align:left;}
+.ar_al_center {text-align:center;}
+.ar_al_right {text-align:right;}
+.ya-share-text-wrap {display: inline-block; vertical-align: middle;}
+.ya-share-wrap {display: inline-block; vertical-align: middle;}
+
+html .ya-share2__list_direction_horizontal > .ya-share2__item {margin-bottom: 5px;}

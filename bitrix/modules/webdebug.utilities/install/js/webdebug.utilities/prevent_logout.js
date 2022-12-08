@@ -1,0 +1,1 @@
+BX.ready(function(){BX.bind(BX('bx-panel-logout'), 'click', BX.proxy(function(e){if(!confirm(BX.message('WD_UTILITIES_LOGOUT_CONFIRM'))){e.preventDefault();}}));});

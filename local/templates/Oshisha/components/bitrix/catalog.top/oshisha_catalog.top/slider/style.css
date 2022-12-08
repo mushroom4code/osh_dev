@@ -1,0 +1,109 @@
+.catalog-top {
+	position: relative;
+	padding-bottom: 25px;
+}
+
+.catalog-top-header {
+	margin: 5px 0;
+	padding: 5px 15px;
+	border-bottom: 2px solid #d9dee6;
+	color: #000;
+	text-align: left;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.product-item-amount{
+	width: 50px;
+	max-width: 50px;
+}
+
+.catalog-top-slide.active {
+	opacity: 1;
+	-webkit-animation: nextslide 0.9s;
+	animation: nextslide 0.9s;
+}
+
+.catalog-top-slide.not-active {
+	display: none;
+	opacity: 0;
+	-webkit-animation: prevslide 0.9s;
+	animation: prevslide 0.9s;
+}
+
+@-webkit-keyframes prevslide {
+	from { opacity: 1 }
+	to { opacity: 0 }
+}
+
+@keyframes prevslide {
+	from { opacity: 1 }
+	to { opacity: 0 }
+}
+
+@-webkit-keyframes nextslide {
+	from { opacity: 0 }
+	to { opacity: 1 }
+}
+
+@keyframes nextslide {
+	from { opacity: 0 }
+	to { opacity: 1 }
+}
+
+.catalog-top-slider-arrow-left,
+.catalog-top-slider-arrow-right {
+	position: absolute;
+	top: 50%;
+	z-index: 910;
+	margin-top: -29px;
+	color: white;
+	padding: 6px 17px;
+	border-radius: 25px;
+	background: #dd0602 ;
+	background-size: 15px auto;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.catalog-top-slider-arrow-right  > i {
+	font-size: 30px;
+}
+.catalog-top-slider-arrow-left > i {
+	font-size: 30px;
+}
+.catalog-top:hover .catalog-top-slider-arrow-left:hover,
+.catalog-top:hover .catalog-top-slider-arrow-right:hover {
+	background: white;
+	color: black;
+	box-shadow: 0 0 4px 1px #d9d9d9;
+	transition: 0.3s;
+}
+
+.catalog-top-slider-arrow-right { right: 0; }
+
+
+.catalog-top-slider-pagination {
+	position: absolute;
+	bottom: 0;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	list-style: none;
+	text-align: center;
+}
+
+.catalog-top-slider-pagination li {
+	display: inline-block;
+	margin: 0 3px;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background-color: var(--primary);
+	opacity: .3;
+	cursor: pointer;
+	transition: 250ms linear all;
+}
+
+.catalog-top-slider-pagination li:hover,
+.catalog-top-slider-pagination li.active { opacity: 1; }

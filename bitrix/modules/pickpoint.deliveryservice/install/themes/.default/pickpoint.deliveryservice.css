@@ -1,0 +1,21 @@
+/* Module menu */
+.pickpoint_menu_icon {
+	background: url(icons/pickpoint.deliveryservice/icon.png) no-repeat center;
+}
+
+.pickpoint_page_icon {
+	background: url(icons/pickpoint.deliveryservice/icon_page.png) no-repeat center;
+}
+
+/* For options in row.php / setup.php */
+.aDelete
+{
+	margin: 5px;
+	text-decoration: underline;
+	cursor: pointer;
+	color: #2747BF;
+}
+.dAdded
+{
+	margin-top: 10px;
+}

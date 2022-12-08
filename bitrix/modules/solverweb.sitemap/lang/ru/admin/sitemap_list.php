@@ -1,0 +1,24 @@
+<?php
+$MESS['SW_MODULE_NOT_REGISTERED']	= 'Модуль не установлен';
+$MESS["SW_SITEMAP_ID"]				= "ID";
+$MESS["SW_SITEMAP_NAME"]			= "Название";
+$MESS["SW_SITEMAP_ACTIVE"]			= "Активность агента";
+$MESS["SW_SITEMAP_AGENT"]			= "Агент";
+$MESS["SW_SITEMAP_SITE_ID"]			= "Сайт";
+$MESS["SW_SITEMAP_TIMESTAMP_X"]		= "Изменено";
+$MESS["SW_SITEMAP_LAST_RUN"]		= "Последний запуск";
+$MESS["SW_SITEMAP_RUN"]				= "Сгенерировать";
+$MESS["SW_SITEMAP_EDIT_AGENT"]		= "Редактирование настройки агента sitemap";
+$MESS["SW_SITEMAP_EDIT_TITLE"]		= "Редактирование настройки генерации sitemap";
+$MESS["SW_SITEMAP_COPY"]			= "Копировать";
+$MESS["SW_SITEMAP_EDIT"]			= "Изменить";
+$MESS["SW_SITEMAP_ACTIVATE"]		= "Активировать";
+$MESS["SW_SITEMAP_DEACTIVATE"]		= "Деактивировать";
+$MESS["SW_SITEMAP_L_ACTIVATE"]		= "активировать";
+$MESS["SW_SITEMAP_L_DEACTIVATE"]	= "деактивировать";
+$MESS["SW_ADD_SITEMAP"]				= "Добавить";
+$MESS["SW_ADD_SITEMAP_CHOOSE_SITE"]	= "Выберите сайт";
+$MESS["SW_SITEMAP_DELETE"]			= "Удалить";
+$MESS["SW_ADD_SITEMAP_TITLE"]		= "Добавить настройку генерации sitemap";
+$MESS["SW_SITEMAP_DELETE_CONFIRM"]	= "Удалить настройки генерации карты сайта?";
+$MESS["SW_SEO_SITEMAP_TITLE"]		= "Умная карта сайта (sitemap.xml)";

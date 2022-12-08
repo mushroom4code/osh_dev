@@ -1,0 +1,25 @@
+<?php
+$MESS['SW_ACCESS_DENIED']			= 'Доступ запрещен';
+$MESS['SW_ERROR_404']				= 'Недопустимые параметры';
+$MESS["SW_SITEMAP_NO_DIRS_FOUND"]	= "<нет подразделов>";
+$MESS["SW_FREQUENCY"]				= "Частота обновления";
+$MESS["SW_FREQ_NONE"]				= "не выбрано";
+$MESS["SW_FREQ_ALWAYS"]				= "всегда";
+$MESS["SW_FREQ_HOURLY"]				= "ежечасно";
+$MESS["SW_FREQ_DAILY"]				= "ежедневно";
+$MESS["SW_FREQ_WEEKLY"]				= "еженедельно";
+$MESS["SW_FREQ_MONTHLY"]			= "ежемесячно";
+$MESS["SW_FREQ_YEARLY"]				= "ежегодно";
+$MESS["SW_FREQ_NEVER"]				= "никогда";
+$MESS["SW_MODTIME"]					= "Время модификации";
+$MESS["SW_NO"]						= "нет";
+$MESS["SW_YES"]						= "да";
+$MESS["SW_ALWAYS"]					= "текущая дата";
+$MESS["SW_BY_ELEMENT"]				= "по элементам";
+$MESS["SW_BY_ELEMENT_IF"]			= "по элементам если новее";
+$MESS["SW_PRIORITY"]				= "Приоритет";
+$MESS["SW_BAD_NAME"]				= "Не заполнено название";
+$MESS["SW_BAD_LID"]					= "Не указан сайт";
+$MESS["SW_BAD_DOMEN"]				= "Не выбран домен";
+$MESS["SW_BAD_FILENAME"]			= "Не указан путь карты";
+$MESS["SW_BAD_MAP"]					= "Карта пуста, не выбрано ни одной страницы/инфоблока";

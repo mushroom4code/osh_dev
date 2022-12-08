@@ -1,0 +1,1 @@
+<img src="/local/assets/images/logo.svg" alt="oshisha">

@@ -1,0 +1,32 @@
+<?
+$MESS['skyweb24.loyaltyprogram_MENU_MAIN'] = 'Loyalty Program';
+$MESS['skyweb24.loyaltyprogram_MENU_MAIN_TITLE'] = 'The site"s customer loyalty system';
+$MESS['skyweb24.loyaltyprogram_MENU_MANAGE'] = 'Management';
+$MESS['skyweb24.loyaltyprogram_MENU_MANAGE_TITLE'] = 'Management';
+$MESS['skyweb24.loyaltyprogram_MENU_BALANCE'] = 'Balance sheet';
+$MESS['skyweb24.loyaltyprogram_MENU_BALANCE_TITLE'] = 'Balance sheet';
+$MESS['skyweb24.loyaltyprogram_MENU_PROFILE'] = 'Loyalty Profiles';
+$MESS['skyweb24.loyaltyprogram_MENU_PROFILE_TITLE'] = 'Setting up, saving, and maintaining loyalty profiles';
+$MESS['skyweb24.loyaltyprogram_MENU_TRANSACT'] = 'List of transactions';
+$MESS['skyweb24.loyaltyprogram_MENU_TRANSACT_TITLE'] = 'The list of transactions of the loyalty module';
+$MESS['skyweb24.loyaltyprogram_MENU_ACCOUNT'] = 'Customer accounts';
+$MESS['skyweb24.loyaltyprogram_MENU_ACCOUNT_TITLE'] = 'Online store customer accounts';
+$MESS['skyweb24.loyaltyprogram_MENU_REFERRALS'] = 'Referral Network';
+$MESS['skyweb24.loyaltyprogram_MENU_REFERRALS_TITLE'] = 'List of referrals';
+$MESS['skyweb24.loyaltyprogram_MENU_RANKS'] = 'User ranks';
+$MESS['skyweb24.loyaltyprogram_MENU_RANKS_TITLE'] = 'User ranks';
+$MESS['skyweb24.loyaltyprogram_MENU_RANKS_LIST_USERS'] = 'List of users (ranks)';
+$MESS['skyweb24.loyaltyprogram_MENU_RANKS_LIST_USERS_TITLE'] = 'List of users (ranks)';
+$MESS['skyweb24.loyaltyprogram_MENU_GROUPS'] = 'Bulk operations';
+$MESS['skyweb24.loyaltyprogram_MENU_GROUPS_TITLE'] = 'Bulk operations';
+$MESS['skyweb24.loyaltyprogram_MENU_WRITEOFF'] = 'Withdrawal of funds';
+$MESS['skyweb24.loyaltyprogram_MENU_WRITEOFF_TITLE'] = 'Withdrawal of funds';
+$MESS['skyweb24.loyaltyprogram_MENU_DOCUMENTATION'] = 'Documentation';
+$MESS['skyweb24.loyaltyprogram_MENU_DOCUMENTATION_TITLE'] = 'Documentation';
+$MESS['skyweb24.loyaltyprogram_MENU_IMPORT'] = 'Importing data';
+$MESS['skyweb24.loyaltyprogram_MENU_IMPORT_TITLE'] = 'Importing data';
+$MESS['skyweb24.loyaltyprogram_MENU_SETTING'] = 'Settings';
+$MESS['skyweb24.loyaltyprogram_MENU_SETTING_TITLE'] = 'Setting up a customer loyalty system';
+$MESS['skyweb24.loyaltyprogram_MENU_EDITQUEUE'] = 'Bonuses in the queue';
+$MESS['skyweb24.loyaltyprogram_MENU_EDITQUEUE_TITLE'] = 'Manage bonuses that are not yet activated';
+?>

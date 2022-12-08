@@ -1,0 +1,83 @@
+<?
+$MESS["SHITOR_API_METHOD_GET_SETTLEMENT"] = "Метод получения справочника населенных пунктов";
+$MESS["SHITOR_API_METHOD_SUGGEST_SETTLEMENT"] = "Метод возвращает набор подходящих населенных пунктов";
+$MESS["SHITOR_API_METHOD_GET_SHIPPING_VARIANTS"] = "Метод получения справочника способов доставки";
+$MESS["SHITOR_API_METHOD_GET_DELIVERY_POINTS"] = "Метод получения списка ПВЗ";
+$MESS["SHITOR_API_METHOD_GET_DELIVERY_TIME"] = "Метод получения интервалов забора";
+$MESS["SHITOR_API_METHOD_GET_DAYS_OFF"] = "Метод получения выходных и праздничных дней";
+$MESS["SHITOR_API_METHOD_CALCULATE_SHIPMENT"] = "Метод расчета стоимости доставки";
+$MESS["SHITOR_API_METHOD_ADD_PACKAGE"] = "Метод добавления ожидаемой посылки";
+$MESS["SHITOR_API_METHOD_ADD_PACKAGES"] = "Метод добавления нескольких посылок";
+$MESS["SHITOR_API_METHOD_REMOVE_PACKAGE"] = "Метод удаления посылки";
+$MESS["SHITOR_API_METHOD_GET_PACKAGE"] = "Метод получения статуса посылки";
+$MESS["SHITOR_API_METHOD_GET_PACKAGES"] = "Метод получения списка посылок";
+$MESS["SHITOR_API_METHOD_ADD_PRODUCT"] = "Метод добавления товара";
+$MESS["SHITOR_API_METHOD_ADD_SERVICE"] = "Метод добавления услуги";
+$MESS["SHITOR_API_METHOD_ADD_PICKUP"] = "Метод оформления забора груза";
+$MESS["SHITOR_API_METHOD_CANCEL_PICKUP"] = "Метод отмены забора груза";
+$MESS["SHITOR_API_METHOD_GET_PICKUP"] = "Метод получения информации о заборе груза";
+$MESS["SHITOR_API_METHOD_GET_PICKUP_TIME"] = "Метод получения списка интервалов забора";
+$MESS["SHITOR_API_METHOD_GET_COURIER_PICKUP_TIME"] = "Метод получения списка интервалов забора для курьерской службы";
+$MESS["SHITOR_API_METHOD_GET_PRODUCTS"] = "Метод получения списка добавленных товаров";
+$MESS["SHITOR_API_METHOD_GET_TRACKING"] = "Метод отслеживания посылки по ее трек номеру";
+
+$MESS["OSH_API_ERROR_1001"] = "Доступ запрещен";
+$MESS["OSH_API_ERROR_1002"] = "Некорректный заголовок аутентификации";
+$MESS["OSH_API_ERROR_1100"] = "Пропущено обязательное поле фильтра";
+$MESS["OSH_API_ERROR_1103"] = "Пропущен обязательный параметр метода";
+$MESS["OSH_API_ERROR_1104"] = "Некорректное значение параметра";
+$MESS["OSH_API_ERROR_1201"] = "Сущность не найдена";
+$MESS["OSH_API_ERROR_1087"] = "Некорректные данные";
+$MESS["OSH_API_ERROR_2033"] = "Пропущены обязательные поля";
+$MESS["OSH_API_ERROR_2044"] = "Значение не может быть структурой";
+$MESS["OSH_API_ERROR_2045"] = "Значение не может быть скалярным";
+$MESS["OSH_API_ERROR_2055"] = "Пустая коллекция";
+$MESS["OSH_API_ERROR_2022"] = "Некорректный тип значения";
+$MESS["OSH_API_ERROR_1400"] = "Внутренняя ошибка сервера";
+$MESS["OSH_API_ERROR_1401"] = "Ошибка импорта";
+$MESS["OSH_API_ERROR_-32700"] = "Некорректный метод запроса; Некорректный или пустой заголовок Content-Type; Ошибка JSON структуры.";
+$MESS["OSH_API_ERROR_-32600"] = "Пустой id в JSON структуре; Пустой method в JSON структуре; Пустой params в JSON структуре.";
+$MESS["OSH_API_ERROR_-32602"] = "Запрошенный метод не найден; Ошибка вызова метода.";
+$MESS["OSH_API_ERROR_UNKNOWN"] = "Неизвестная ошибка";
+
+$MESS["OSH_API_REQUEST_ERROR_WRONG_TYPE"] = "Имя метода имеет нескалярное значение!";
+$MESS["OSH_API_REQUEST_ERROR_UNKNOWN_METHOD"] = "Метод имеет неопределенную функцию!";
+$MESS["OSH_API_REQUEST_ERROR_NOT_ARRAY"] = "Параметры должны быть переданы в виде массива!";
+$MESS["OSH_API_RESPONSE_ERROR_404"] = "Не удалось подключиться к #URL#";
+$MESS["OSH_API_RESPONSE_ERROR_WRONG"] = "Получен неверный ответ сервера: request id = #ID#, response id = #RES_ID#!";
+
+$MESS["OSH_API_INCOMING_STATUS_AWAITS"] = "ожидается на складе";
+$MESS["OSH_API_INCOMING_STATUS_IN_STOCK"] = "на складе";
+$MESS["OSH_API_INCOMING_STATUS_REMOVED"] = "удалена";
+
+$MESS["OSH_API_PICKUP_STATUS_WAITING"] = "Ожидает обработки";
+$MESS["OSH_API_PICKUP_STATUS_IN_WORK"] = "В работе";
+$MESS["OSH_API_PICKUP_STATUS_IN_STORE"] = "На складе";
+$MESS["OSH_API_PICKUP_STATUS_CANCELED"] = "Отменен";
+$MESS["OSH_API_PICKUP_STATUS_COMPLETED"] = "Завершен, выставлен счет за услугу";
+
+$MESS["OSH_API_OUTGOING_STATUS_NEW"] = "Сформирована пользователем";
+$MESS['OSH_API_OUTGOING_CHECKING_DECLARATION'] = 'Проверка декларации';
+$MESS['OSH_API_OUTGOING_DECLARATION_CHECKED'] = 'Декларация проверена';
+$MESS['OSH_API_OUTGOING_WAITING_PICKUP'] = 'Ожидает забора';
+$MESS['OSH_API_OUTGOING_WAITING_SEND'] = 'Ожидается отгрузка';
+$MESS['OSH_API_OUTGOING_ARRIVED_TO_WAREHOUSE'] = 'Прибыла на склад';
+$MESS['OSH_API_OUTGOING_PACKED'] = 'Упакована';
+$MESS['OSH_API_OUTGOING_PREPARED_TO_SEND'] = 'Готова к отправке';
+$MESS['OSH_API_OUTGOING_STATUS_RETURNED'] = 'В очереди на возврат';
+$MESS['OSH_API_OUTGOING_STATUS_REPORTED'] = 'Возвращена отправителю';
+$MESS['OSH_API_OUTGOING_STATUS_LOST'] = 'Утеряна';
+$MESS['OSH_API_OUTGOING_STATUS_RESEND'] = 'Отправлена повторно';
+
+$MESS["OSH_API_OUTGOING_STATUS_IN_QUEUE"] = "В очереди на упаковку";
+$MESS["OSH_API_OUTGOING_STATUS_PROCESSING"] = "Упаковывается";
+$MESS["OSH_API_OUTGOING_STATUS_AWAITS_PAYMENT"] = "Ожидается оплата";
+$MESS["OSH_API_OUTGOING_STATUS_AWAITS_SENDING"] = "Ожидается отправка";
+$MESS["OSH_API_OUTGOING_STATUS_SENT"] = "Отправлена";
+$MESS["OSH_API_OUTGOING_STATUS_RECIEVED"] = "Получена";
+$MESS["OSH_API_OUTGOING_STATUS_AWAITS_DISBAND"] = "Ожидает расформирования";
+$MESS["OSH_API_OUTGOING_STATUS_DISBANDED"] = "Расформирована";
+$MESS["OSH_API_OUTGOING_STATUS_AWAITS_RECYCLE"] = "Ожидает утилизации";
+$MESS["OSH_API_OUTGOING_STATUS_RECYCLED"] = "Утилизирована";
+$MESS["OSH_API_OUTGOING_STATUS_REMOVED"] = "Удалена";
+$MESS['OSH_API_OUTGOING_STATUS_WAITING_IN_PVZ'] = 'Ожидает в пункте выдачи';

@@ -1,0 +1,32 @@
+<?
+$MESS['skyweb24.loyaltyprogram_MENU_MAIN'] = 'Программа лояльности';
+$MESS['skyweb24.loyaltyprogram_MENU_MAIN_TITLE'] = 'Система лояльности клиентов сайта';
+$MESS['skyweb24.loyaltyprogram_MENU_MANAGE'] = 'Управление';
+$MESS['skyweb24.loyaltyprogram_MENU_MANAGE_TITLE'] = 'Управление';
+$MESS['skyweb24.loyaltyprogram_MENU_BALANCE'] = 'Баланс';
+$MESS['skyweb24.loyaltyprogram_MENU_BALANCE_TITLE'] = 'Баланс';
+$MESS['skyweb24.loyaltyprogram_MENU_PROFILE'] = 'Профили лояльности';
+$MESS['skyweb24.loyaltyprogram_MENU_PROFILE_TITLE'] = 'Настройка, сохранение, профилей лояльности';
+$MESS['skyweb24.loyaltyprogram_MENU_TRANSACT'] = 'Список транзакций';
+$MESS['skyweb24.loyaltyprogram_MENU_TRANSACT_TITLE'] = 'Список транзакций модуля лояльности';
+$MESS['skyweb24.loyaltyprogram_MENU_ACCOUNT'] = 'Счета покупателей';
+$MESS['skyweb24.loyaltyprogram_MENU_ACCOUNT_TITLE'] = 'Счета покупателей интернет-магазина';
+$MESS['skyweb24.loyaltyprogram_MENU_REFERRALS'] = 'Реферальная сеть';
+$MESS['skyweb24.loyaltyprogram_MENU_REFERRALS_TITLE'] = 'Список рефералов';
+$MESS['skyweb24.loyaltyprogram_MENU_RANKS'] = 'Ранги пользователей';
+$MESS['skyweb24.loyaltyprogram_MENU_RANKS_TITLE'] = 'Ранги пользователей';
+$MESS['skyweb24.loyaltyprogram_MENU_RANKS_LIST_USERS'] = 'Список пользователей (ранги)';
+$MESS['skyweb24.loyaltyprogram_MENU_RANKS_LIST_USERS_TITLE'] = 'Список пользователей (ранги)';
+$MESS['skyweb24.loyaltyprogram_MENU_GROUPS'] = 'Массовые операции';
+$MESS['skyweb24.loyaltyprogram_MENU_GROUPS_TITLE'] = 'Массовые операции';
+$MESS['skyweb24.loyaltyprogram_MENU_WRITEOFF'] = 'Вывод средств';
+$MESS['skyweb24.loyaltyprogram_MENU_WRITEOFF_TITLE'] = 'Вывод средств';
+$MESS['skyweb24.loyaltyprogram_MENU_DOCUMENTATION'] = 'Документация';
+$MESS['skyweb24.loyaltyprogram_MENU_DOCUMENTATION_TITLE'] = 'Документация';
+$MESS['skyweb24.loyaltyprogram_MENU_IMPORT'] = 'Импорт данных';
+$MESS['skyweb24.loyaltyprogram_MENU_IMPORT_TITLE'] = 'Импорт данных';
+$MESS['skyweb24.loyaltyprogram_MENU_SETTING'] = 'Настройки';
+$MESS['skyweb24.loyaltyprogram_MENU_SETTING_TITLE'] = 'Настройка системы лояльности клиентов';
+$MESS['skyweb24.loyaltyprogram_MENU_EDITQUEUE'] = 'Бонусы в очереди';
+$MESS['skyweb24.loyaltyprogram_MENU_EDITQUEUE_TITLE'] = 'Управление бонусами которые ещё не активированы';
+?>

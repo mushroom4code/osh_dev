@@ -1,0 +1,14 @@
+a.search-page-params {
+	border-bottom: 1px dashed blue;
+	text-decoration: none;
+}
+div.search-page-params {
+	margin-top: 6px;
+}
+.search-item-rate {font-size: 11px;}
+.search_result .row.bx-red{
+	margin:0 !important;
+}
+.search_result .row.products_box{
+	margin:0 !important;
+}
