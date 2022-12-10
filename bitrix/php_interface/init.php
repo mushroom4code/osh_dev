@@ -131,7 +131,7 @@ class BXConstants{
 	static function PriceCode(){
 		return array(
 			8 => "Сайт скидка",
-			2 => "Розничная",
+			2 => "Основная",
 			//7 => "b2b",
 		);
 		
