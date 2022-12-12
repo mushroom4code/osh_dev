@@ -1,6 +1,7 @@
 /bitrix/cache/*
 /bitrix/managed_cache/*
 /upload
+/upload_
 /pma
 /.git
 /.well-known
