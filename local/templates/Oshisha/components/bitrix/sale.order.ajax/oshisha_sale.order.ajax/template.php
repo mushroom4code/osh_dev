@@ -637,7 +637,7 @@ if ($request->get('ORDER_ID') <> '') {
     //TODO Get id delivery
     $arResult['DELIVERY_OPTIONS']['PERIOD_DELIVERY'] = $PeriodDelivery;
     $arResult['DELIVERY_OPTIONS']['DA_DATA_TOKEN'] = Osh\Delivery\Options\Config::getDaDataToken();
-    $arResult['DELIVERY_OPTIONS']['OSH_COURIER_ID'] = 38;
+    $arResult['DELIVERY_OPTIONS']['OSH_COURIER_ID'] = 93;
     $arResult['DELIVERY_OPTIONS']['OSH_PICKUP_ID'] = 40;
     
     ?>
@@ -686,7 +686,7 @@ if ($request->get('ORDER_ID') <> '') {
             params: <?=CUtil::PhpToJSObject($arParams)?>,
             signedParamsString: '<?=CUtil::JSEscape($signedParams)?>',
             siteID: '<?=CUtil::JSEscape($component->getSiteId())?>',
-            ajaxUrl: '<?="/local/templates/Oshisha/components/bitrix/sale.order.ajax/ajax.php"?>',
+            ajaxUrl: '<?=CUtil::JSEscape($component->getPath().'/ajax.php')?>',
             templateFolder: '<?=CUtil::JSEscape($templateFolder)?>',
             propertyValidation: true,
             showWarnings: true,

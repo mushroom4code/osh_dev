@@ -98,7 +98,7 @@ $actualBlockData = array(
     'order' => array('ID' => 'ASC'),
     'limit' => '50',
 );
-$resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('CatalogActual', $actualBlockData);
+$resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('MainPageActual', $actualBlockData);
 
 ?>
     <div class="slider single-items box_slide box_with_actual_none">

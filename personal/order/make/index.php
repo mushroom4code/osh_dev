@@ -5,13 +5,9 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
  * @var CMain  $APPLICATION
  */
 $APPLICATION->SetTitle("Заказы");
-if($_GET['TEST'])
-$TPL = 'oshisha';
-else
-$TPL = 'oshisha_sale.order.ajax';	
 $APPLICATION->IncludeComponent(
 	"bitrix:sale.order.ajax",
-	'old_version',
+	"oshisha_sale.order.ajax",
 	array(
 		"ACTION_VARIABLE" => "soa-action",
 		"ADDITIONAL_PICT_PROP_3" => "-",
@@ -23,12 +19,12 @@ $APPLICATION->IncludeComponent(
 		"ALLOW_USER_PROFILES" => "N",
 		"BASKET_IMAGES_SCALING" => "adaptive",
 		"BASKET_POSITION" => "before",
-		"COMPATIBLE_MODE" => "Y",
+		"COMPATIBLE_MODE" => "N",
 		"COUNT_DELIVERY_TAX" => "N",
 		"COUNT_DISCOUNT_4_ALL_QUANTITY" => "N",
 		"DELIVERIES_PER_PAGE" => "9",
 		"DELIVERY_FADE_EXTRA_SERVICES" => "N",
-		"DELIVERY_NO_AJAX" => "Y",
+		"DELIVERY_NO_AJAX" => "N",
 		"DELIVERY_NO_SESSION" => "Y",
 		"DELIVERY_TO_PAYSYSTEM" => "d2p",
 		"DISABLE_BASKET_REDIRECT" => "Y",
@@ -136,7 +132,7 @@ $APPLICATION->IncludeComponent(
 		"USE_CUSTOM_MAIN_MESSAGES" => "Y",
 		"USE_ENHANCED_ECOMMERCE" => "N",
 		"USE_PHONE_NORMALIZATION" => "Y",
-		"USE_PRELOAD" => "N",
+		"USE_PRELOAD" => "Y",
 		"USE_PREPAYMENT" => "N",
 		"USE_YM_GOALS" => "N",
 		"COMPONENT_TEMPLATE" => "oshisha_sale.order.ajax"
