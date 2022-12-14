@@ -30,7 +30,7 @@ top: 0;
 	margin-bottom:30px;
 }
 .checked[type="radio"] {
-  background-image: url('/upload/iblock/images/radio.png') !important;
+  background-image: url('/local/templates/Oshisha/images/radio.png') !important;
 }
 h5.bx-soa-section-title{
 	font-size:22px;
@@ -250,7 +250,7 @@ input[name="street"]{
 }
 
 .datepicker_order {
-    background-image: url('/upload/iblock/images/datePicker.png');
+    background-image: url('/local/templates/Oshisha/images/datePicker.png');
     background-repeat: no-repeat;
     background-position: right;
     cursor: pointer;
@@ -979,7 +979,7 @@ input[name="street"]{
     }
 
     .bx-sbb-empty-cart-image .banners_container {
-        background-image: url('/upload/iblock/images/box-image-order-success-mobile.png');
+        background-image: url('/local/templates/Oshisha/images/box-image-order-success-mobile.png');
         background-size: 73%;
         background-repeat: no-repeat;
         background-position: top right;
@@ -2117,14 +2117,14 @@ border: 1px solid #e5e5e5 !important;
 	padding-top:24px !important;
 }
 .box_code_CALL_ME .form-check-input:checked[type="checkbox"]{
-  background-image: url('/upload/iblock/images/radio.png') !important;
+  background-image: url('/local/templates/Oshisha/images/radio.png') !important;
   border-radius: 50% !important;
 width: 22px;
 height: 22px;
   transition:initial;
 }
 .box_code_CALL_ME .form-check-input[type="checkbox"]{
- background-image: url('/upload/iblock/images/radio_not_active.png') !important;
+ background-image: url('/local/templates/Oshisha/images/radio_not_active.png') !important;
 
  border: none !important;
 }

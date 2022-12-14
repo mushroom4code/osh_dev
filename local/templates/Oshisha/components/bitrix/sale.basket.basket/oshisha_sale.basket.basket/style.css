@@ -1438,11 +1438,11 @@ tr.basket-items-list-item-container {
 }
 
 .basket-item-amount-btn-plus {
-    background-image: url('/upload/iblock/images/plus_black.png');
+    background-image: url('/local/templates/Oshisha/images/plus_black.png');
 }
 
 .basket-item-amount-btn-minus {
-    background-image: url('/upload/iblock/images/minus.png');
+    background-image: url('/local/templates/Oshisha/images/minus.png');
 }
 
 .basket-item-amount-btn-plus,

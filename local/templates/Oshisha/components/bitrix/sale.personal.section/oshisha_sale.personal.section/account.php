@@ -31,8 +31,8 @@ if ($arParams['SHOW_ACCOUNT_PAY_COMPONENT'] !== 'N' && $USER->IsAuthorized()) {
     <div class="hides" id="personal_account">
         <h5 class="mb-4"><b>Подарочные сертификаты</b></h5>
         <div class="column">
-            <div class="photo_class_banner_top"><img src="/upload/iblock/images/Banner_big.png"/></div>
-            <div class="photo_class_bottom"><img src="/upload/iblock/images/Banner_small.png"/></div>
+            <div class="photo_class_banner_top"><img src="/local/templates/Oshisha/images/Banner_big.png"/></div>
+            <div class="photo_class_bottom"><img src="/local/templates/Oshisha/images/Banner_small.png"/></div>
         </div>
         <h5 class="mb-5"><b>Дарите как хотите</b></h5>
         <div class="row justify-content-between">

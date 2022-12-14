@@ -75,7 +75,7 @@
 }
 
 .box_photos_cart {
-    background-image: url('/upload/iblock/images/logoPeopleBig.png');
+    background-image: url('/local/templates/Oshisha/images/logoPeopleBig.png');
     background-repeat: no-repeat;
     background-size: auto;
     width: 120px;
@@ -91,7 +91,7 @@
 }
 
 .cart_box {
-    background-image: url('/upload/iblock/images/cart_white.png');
+    background-image: url('/local/templates/Oshisha/images/cart_white.png');
     background-color: #F0F0F0;
 }
 
@@ -363,12 +363,12 @@ p.lk, .main-profile-submit, .main-profile-submit:hover {
 }
 
 .box_check_lk {
-    background-image: url("/upload/iblock/images/check_mark_black.png");
+    background-image: url("/local/templates/Oshisha/images/check_mark_black.png");
     background-size: auto;
 }
 
 .form_company_many {
-    background-image: url("/upload/iblock/images/company.png");
+    background-image: url("/local/templates/Oshisha/images/company.png");
     background-size: auto;
     background-repeat: no-repeat;
     background-position: right bottom;
@@ -488,6 +488,6 @@ div#personal_account div.products_box div.col-sm-3 .bx_catalog_item_container {
     }
 
     .sort_mobile {
-        background-image: url(/upload/iblock/images/Filter.png);
+        background-image: url(/local/templates/Oshisha/images/Filter.png);
     }
 }

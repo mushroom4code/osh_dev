@@ -152,7 +152,7 @@
 }
 
 .datepicker_order {
-    background-image: url('/upload/iblock/images/datePicker.png');
+    background-image: url('/local/templates/Oshisha/images/datePicker.png');
     background-repeat: no-repeat;
     background-position: right;
     cursor: pointer;
@@ -881,7 +881,7 @@
     }
 
     .bx-sbb-empty-cart-image .banners_container {
-        background-image: url('/upload/iblock/images/box-image-order-success-mobile.png');
+        background-image: url('/local/templates/Oshisha/images/box-image-order-success-mobile.png');
         background-size: 73%;
         background-repeat: no-repeat;
         background-position: top right;

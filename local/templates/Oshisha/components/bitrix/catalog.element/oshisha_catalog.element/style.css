@@ -380,7 +380,7 @@ line-height: 130%;
 }
 
 .new_box span {
-    background-image: url(/upload/iblock/images/cub.png);
+    background-image: url(/local/templates/Oshisha/images/cub.png);
     width: 13%;
     background-repeat: no-repeat;
     height: auto;
