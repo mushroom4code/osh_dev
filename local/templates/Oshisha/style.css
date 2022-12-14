@@ -1800,8 +1800,11 @@ a.bx_catalog_item_title {
 
 .by-line .box_with_titles .box_with_like {
     position: absolute;
-    /*top:24px;*/
     right: 0;
+}
+
+.by-line .box_with_titles .box_with_like .icon_like {
+    z-index: 10;
 }
 
 .by-line .box_with_fav_bask .box_with_like {

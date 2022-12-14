@@ -11,15 +11,12 @@ class  DataBase_like
      */
     public static function getLikeFavoriteAllProduct(array $product_id, $USER_ID, $FUser_id='' ): array
     {
-        //TODO
-        return [];
-
         global $DB;
         $collection = [];
         $product_ids = implode(',', $product_id);
 
         if ($product_ids) {
-            $sql = "SELECT I_BLOCK_ID , SUM(LIKE_USER) AS LIKE_USER FROM bbrain_likes 
+            $sql = "SELECT I_BLOCK_ID , SUM(LIKE_USER) AS LIKE_USER FROM ent_like_favorite 
                     WHERE I_BLOCK_ID IN($product_ids) GROUP BY I_BLOCK_ID;";
             $result = $DB->Query($sql);
             while ($collectionElement = $result->Fetch()) {
@@ -34,14 +31,14 @@ class  DataBase_like
             $result_user_array = $DB->Query($sqlUser);
             while ($collectionElement_user = $result_user_array->Fetch()) {
                 $id = $collectionElement_user['I_BLOCK_ID'];
-               // $collection["USER"][$id]['Like'][] = $collectionElement_user['LIKE_USER'];
+                $collection["USER"][$id]['Like'][] = $collectionElement_user['LIKE_USER'];
                 $collection["USER"][$id]['Fav'][] = $collectionElement_user['FAVORITE'];
 				$collection["USER"]['NUM'] = $collection["USER"]['NUM'] + $collectionElement_user['FAVORITE'];
             }
         }
         if (!empty($FUser_id)) {
 
-            $sqlUser = "SELECT * FROM bbrain_likes WHERE F_USER_ID = $FUser_id";
+            $sqlUser = "SELECT * FROM ent_like_favorite WHERE F_USER_ID = $FUser_id";
             $result_user_array = $DB->Query($sqlUser);
             while ($collectionElement_user = $result_user_array->Fetch()) {
                 $id = $collectionElement_user['I_BLOCK_ID'];
@@ -71,17 +68,17 @@ class  DataBase_like
 		if (!empty($method) && !empty($product_id)) {
             if ($method === 'like' && !empty($Like_user_id) ) {
                 $METHOD = 'LIKE_USER';
-				$CheckTable = "SELECT * FROM bbrain_likes 
+				$CheckTable = "SELECT * FROM ent_like_favorite 
 							   WHERE F_USER_ID = $Like_user_id AND I_BLOCK_ID=$product_id";
 				$resultSelect = $DB->Query($CheckTable);
 				
 
 
 				if (!$resultSelect->Fetch()) {
-					$sql = "INSERT INTO bbrain_likes (F_USER_ID,I_BLOCK_ID,$METHOD)
+					$sql = "INSERT INTO ent_like_favorite (F_USER_ID,I_BLOCK_ID,$METHOD)
 									VALUES ($Like_user_id,$product_id,$value);";
 				} else {
-					$sql = "UPDATE  bbrain_likes  SET $METHOD=$value  
+					$sql = "UPDATE  ent_like_favorite  SET $METHOD=$value  
 								WHERE F_USER_ID = $Like_user_id AND I_BLOCK_ID=$product_id";
 				}				
 				

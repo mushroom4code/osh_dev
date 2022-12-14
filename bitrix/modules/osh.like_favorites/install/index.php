@@ -34,9 +34,9 @@ class osh_like_favorites extends CModule
             $_SERVER["DOCUMENT_ROOT"] . "/bitrix/templates/Oshisha/components/bitrix/$this->MODULE_PATH/", true,
             true, false);
 //        TODO написать добавление строки в файл  - автозагрузка класса в инит файл
-//        $data = 'CModule::AddAutoloadClasses("",
-//        array("\Ent_like\DataBase_like" => "/bitrix/modules/Like/lib/DataBase_like.php"));';
-//        file_put_contents('bitrix/php_interface/init.php', $data, FILE_APPEND);
+        $data = 'CModule::AddAutoloadClasses("",
+        array("\Ent_like\DataBase_like" => "/bitrix/modules/Like/lib/DataBase_like.php"));';
+        file_put_contents('bitrix/php_interface/init.php', $data, FILE_APPEND);
         return true;
     }
 
