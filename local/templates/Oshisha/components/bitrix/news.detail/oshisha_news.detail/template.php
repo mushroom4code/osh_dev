@@ -22,7 +22,7 @@ $FUser_id = Fuser::getId($id_USER);
 
 $item_id[] = $arResult['ID'];
 
-$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
+$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id,$FUser_id);
 foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
     $arResult['COUNT_LIKES'] = $count;
 }

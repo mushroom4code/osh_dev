@@ -9,8 +9,9 @@ class  DataBase_like
      * @param $FUser_id
      * @return array
      */
-    public static function getLikeFavoriteAllProduct(array $product_id, $USER_ID, $FUser_id='' ): array
+    public static function getLikeFavoriteAllProduct(array $product_id, $FUser_id): array
     {
+
         global $DB;
         $collection = [];
         $product_ids = implode(',', $product_id);
@@ -25,17 +26,6 @@ class  DataBase_like
             }
         }
 
-        if (!empty($USER_ID)) {
-
-            $sqlUser = "SELECT * FROM ent_like_favorite WHERE F_USER_ID = $USER_ID";
-            $result_user_array = $DB->Query($sqlUser);
-            while ($collectionElement_user = $result_user_array->Fetch()) {
-                $id = $collectionElement_user['I_BLOCK_ID'];
-                $collection["USER"][$id]['Like'][] = $collectionElement_user['LIKE_USER'];
-                $collection["USER"][$id]['Fav'][] = $collectionElement_user['FAVORITE'];
-				$collection["USER"]['NUM'] = $collection["USER"]['NUM'] + $collectionElement_user['FAVORITE'];
-            }
-        }
         if (!empty($FUser_id)) {
 
             $sqlUser = "SELECT * FROM ent_like_favorite WHERE F_USER_ID = $FUser_id";
@@ -43,9 +33,10 @@ class  DataBase_like
             while ($collectionElement_user = $result_user_array->Fetch()) {
                 $id = $collectionElement_user['I_BLOCK_ID'];
                 $collection["USER"][$id]['Like'][] = $collectionElement_user['LIKE_USER'];
-
+                $collection["USER"][$id]['Fav'][] = $collectionElement_user['FAVORITE'];
             }
         }
+
         return $collection;
 
     }
@@ -57,61 +48,37 @@ class  DataBase_like
      * @param $method
      * @return bool
      */
-    public static function SetRemoveLikeFavorite($USER_ID='', $product_id, $value, $method, $Like_user_id=''): bool
+    public static function SetRemoveLikeFavorite($FUser_id, $product_id, $value, $method): bool
     {
 
         global $DB;
 
         $sql = '';
-		$METHOD = '';
+        if (!empty($method) && !empty($FUser_id) && !empty($product_id)) {
+            $CheckTable = "SELECT * FROM ent_like_favorite 
+                           WHERE F_USER_ID = $FUser_id AND I_BLOCK_ID=$product_id";
+            $resultSelect = $DB->Query($CheckTable);
+            $METHOD = '';
 
-		if (!empty($method) && !empty($product_id)) {
-            if ($method === 'like' && !empty($Like_user_id) ) {
+            if ($method === 'like') {
                 $METHOD = 'LIKE_USER';
-				$CheckTable = "SELECT * FROM ent_like_favorite 
-							   WHERE F_USER_ID = $Like_user_id AND I_BLOCK_ID=$product_id";
-				$resultSelect = $DB->Query($CheckTable);
-				
-
-
-				if (!$resultSelect->Fetch()) {
-					$sql = "INSERT INTO ent_like_favorite (F_USER_ID,I_BLOCK_ID,$METHOD)
-									VALUES ($Like_user_id,$product_id,$value);";
-				} else {
-					$sql = "UPDATE  ent_like_favorite  SET $METHOD=$value  
-								WHERE F_USER_ID = $Like_user_id AND I_BLOCK_ID=$product_id";
-				}				
-				
-            } elseif ($method === 'favorite' && !empty($USER_ID) ) {
+            } elseif ($method === 'favorite') {
                 $METHOD = 'FAVORITE';
-            
-				$CheckTable = "SELECT * FROM ent_like_favorite 
-							   WHERE F_USER_ID = $USER_ID AND I_BLOCK_ID=$product_id";
-				$resultSelect = $DB->Query($CheckTable);
-				
+            }
 
+            if (!$resultSelect->Fetch()) {
+                $sql = "INSERT INTO ent_like_favorite (F_USER_ID,I_BLOCK_ID,$METHOD)
+                                VALUES ($FUser_id,$product_id,$value);";
+            } else {
+                $sql = "UPDATE  ent_like_favorite  SET $METHOD=$value  
+                            WHERE F_USER_ID = $FUser_id AND I_BLOCK_ID=$product_id";
+            }
 
-				if (!$resultSelect->Fetch()) {
-					$sql = "INSERT INTO ent_like_favorite (F_USER_ID,I_BLOCK_ID,$METHOD)
-									VALUES ($USER_ID,$product_id,$value);";
-				} else {
-					$sql = "UPDATE  ent_like_favorite  SET $METHOD=$value  
-								WHERE F_USER_ID = $USER_ID AND I_BLOCK_ID=$product_id";
-				}			
-			}
-		
-        
-			$DB->Query($sql);
+        }
 
-			return true;		
-		}
-		
-		
+        $DB->Query($sql);
 
-
-     
-
-
+        return true;
     }
 
 }

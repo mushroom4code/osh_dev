@@ -6,8 +6,11 @@ use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Web\Json;
 use Bitrix\Sale\Fuser;
 use DataBase_like;
-CModule::IncludeModule("highloadblock"); 
-use Bitrix\Highloadblock as HL; 
+
+CModule::IncludeModule("highloadblock");
+
+use Bitrix\Highloadblock as HL;
+
 /**
  * @global CMain $APPLICATION
  * @var array $arParams
@@ -22,8 +25,8 @@ use Bitrix\Highloadblock as HL;
 
 $this->setFrameMode(true);
 global $SETTINGS;
-$arIskCode = explode(",",$SETTINGS['arIskCode']);
-$rowResHidePrice = CIBlockSection::GetList(array(), array('ID'=>$arResult['SECTION']['ID'], 'IBLOCK_ID'=>$arParams['IBLOCK_ID']), false, array("ID", 'IBLOCK_SECTION_ID', 'UF_HIDE_PRICE'))->Fetch();
+$arIskCode = explode(",", $SETTINGS['arIskCode']);
+$rowResHidePrice = CIBlockSection::GetList(array(), array('ID' => $arResult['SECTION']['ID'], 'IBLOCK_ID' => $arParams['IBLOCK_ID']), false, array("ID", 'IBLOCK_SECTION_ID', 'UF_HIDE_PRICE'))->Fetch();
 $templateLibrary = array('popup', 'fx');
 $currencyList = '';
 
@@ -132,8 +135,8 @@ foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
         }
     }
 }
-if( intval($SETTINGS['MAX_QUANTITY'])  > 0 && $SETTINGS['MAX_QUANTITY'] < $actualItem['PRODUCT']['QUANTITY'] )
-	$actualItem['PRODUCT']['QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
+if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $actualItem['PRODUCT']['QUANTITY'])
+    $actualItem['PRODUCT']['QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
 
 
 $showDescription = !empty($arResult['PREVIEW_TEXT']) || !empty($arResult['DETAIL_TEXT']);
@@ -179,11 +182,13 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
     }
 }
 $item_id = [];
+$FUser_id = '';
 $id_USER = $USER->GetID();
+//if (empty($id_USER)) {
 $FUser_id = Fuser::getId($id_USER);
-
+//}
 $item_id[] = $arResult['ID'];
-$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $id_USER, $FUser_id);
+$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
 foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
     $arResult['COUNT_LIKES'] = $count;
@@ -194,8 +199,8 @@ foreach ($count_likes['USER'] as $keyLike => $count) {
     $arResult['COUNT_FAV'] = $count['Fav'][$item_id];
 }*/
 
-    $arResult['COUNT_LIKE'] = $count_likes['USER'][$arResult['ID']]['Like'][0];
-    $arResult['COUNT_FAV'] = $count_likes['USER'][$arResult['ID']]['Fav'][0];
+$arResult['COUNT_LIKE'] = $count_likes['USER'][$arResult['ID']]['Like'][0];
+$arResult['COUNT_FAV'] = $count_likes['USER'][$arResult['ID']]['Fav'][0];
 //var_dump($arResult['COUNT_LIKE']);
 $taste = $arResult['PROPERTIES']['VKUS'];
 $themeClass = isset($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_THEME'] : '';
@@ -222,7 +227,7 @@ if (!empty($actualItem['DETAIL_PICTURE'])) {
 
 if (!empty($actualItem['MORE_PHOTO'])) {
     foreach ($actualItem['MORE_PHOTO'] as $item) {
-        if(!in_array($item['SRC'],$actualItem['PICTURE'][0])){
+        if (!in_array($item['SRC'], $actualItem['PICTURE'][0])) {
             $actualItem['PICTURE'][] = $item;
         }
     }
@@ -230,7 +235,8 @@ if (!empty($actualItem['MORE_PHOTO'])) {
 
 
 ?>
-    <div class="bx-catalog-element  cat-det <?if($rowResHidePrice['UF_HIDE_PRICE'] == 1  && !$USER->IsAuthorized()):?>blur_photo<?endif;?>" id="<?= $itemIds['ID'] ?>">
+    <div class="bx-catalog-element  cat-det <? if ($rowResHidePrice['UF_HIDE_PRICE'] == 1 && !$USER->IsAuthorized()): ?>blur_photo<? endif; ?>"
+         id="<?= $itemIds['ID'] ?>">
         <div class="row  mb-lg-4  mb-md-4 mb-2">
             <div class="col" id="navigation">
                 <?php $APPLICATION->IncludeComponent(
@@ -307,25 +313,26 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                                 $component,
                                 array('HIDE_ICONS' => 'Y')
                             ); ?>
-                            <a href="#" class="delligate shared" title="Поделиться" data-element-id="<?=$arResult['ID']?>">
+                            <a href="#" class="delligate shared" title="Поделиться"
+                               data-element-id="<?= $arResult['ID'] ?>">
                                 <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-								 <div class="shared_block">
-<?$APPLICATION->IncludeComponent(
-	"arturgolubev:yandex.share",
-	"",
-	Array(
-		"DATA_IMAGE" => "",
-		"DATA_RESCRIPTION" => "",
-		"DATA_TITLE" =>$arResult['NAME'],
-		"DATA_URL" => 'https://'.SITE_SERVER_NAME.$arResult['DETAIL_PAGE_URL'],
-		"OLD_BROWSERS" => "N",
-		"SERVISE_LIST" => BXConstants::Shared(),
-		"TEXT_ALIGN" => "ar_al_left",
-		"TEXT_BEFORE" => "",
-		"VISUAL_STYLE" => "icons"
-	)
-);?>																  
-																  </div>
+                                <div class="shared_block">
+                                    <? $APPLICATION->IncludeComponent(
+                                        "arturgolubev:yandex.share",
+                                        "",
+                                        array(
+                                            "DATA_IMAGE" => "",
+                                            "DATA_RESCRIPTION" => "",
+                                            "DATA_TITLE" => $arResult['NAME'],
+                                            "DATA_URL" => 'https://' . SITE_SERVER_NAME . $arResult['DETAIL_PAGE_URL'],
+                                            "OLD_BROWSERS" => "N",
+                                            "SERVISE_LIST" => BXConstants::Shared(),
+                                            "TEXT_ALIGN" => "ar_al_left",
+                                            "TEXT_BEFORE" => "",
+                                            "VISUAL_STYLE" => "icons"
+                                        )
+                                    ); ?>
+                                </div>
                             </a>
                         </div>
                     </div>
@@ -535,9 +542,10 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                         </span>
                         <div class="product-item-amount-field-block">
                             <input class="product-item-amount card_element cat-det" id="<?= $itemIds['QUANTITY_ID'] ?>"
-                                   type="number" value="<?= $priceBasket ?>" data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                   type="number" value="<?= $priceBasket ?>"
+                                   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                    data-product_id="<?= $arResult['ID']; ?>"
-								    data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
+                                   data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
                         </div>
                         <span class="btn-plus no-select plus_icon add2basket basket_prod_detail"
                               data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
@@ -552,7 +560,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                     <div id="result_box"></div>
                     <div id="popup_mess"></div>
                 </div>
-				<div class="alert_quantity" data-id="<?=$arResult['ID']?>"></div>
+                <div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
                 <div class="d-flex flex-lg-column flex-md-column flex-column-reverse">
                     <div class="mb-4 d-flex align-items-center">
                         <a href="#" class="link_prod_quant"><span>В наличии </span></a>
@@ -601,11 +609,12 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                         <p>Наличие товара, варианты и стоимость доставки будут указаны далее при оформлении заказа. </p>
                     </div>
                     <?php if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?></div><?php } ?>
-                <div class="ganerate_price_wrap ml-auto mt-5 w-75 font-weight-bold h5" <?if($priceBasket>0):?><?else:?>style="display:none;"<?endif;?>>
+                <div class="ganerate_price_wrap ml-auto mt-5 w-75 font-weight-bold h5"
+                     <? if ($priceBasket > 0): ?><? else: ?>style="display:none;"<? endif; ?>>
                     Итого:
                     <div class="inline-block float-right ganerate_price">
                         <?=
-                        ((int) substr(preg_replace('/[\D]/','', $price_new), 0,-4)) * $priceBasket . ' ₽';
+                        ((int)substr(preg_replace('/[\D]/', '', $price_new), 0, -4)) * $priceBasket . ' ₽';
                         ?>
                     </div>
                 </div>
@@ -683,7 +692,8 @@ if (!empty($actualItem['MORE_PHOTO'])) {
             }
             if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
                 <li class="nav-item">
-                    <a class="nav-link <?if (!$showDescription): ?>active<?endif;?>" id="pills-profile-tab" data-toggle="pill" href="#pills-profile"
+                    <a class="nav-link <? if (!$showDescription): ?>active<? endif; ?>" id="pills-profile-tab"
+                       data-toggle="pill" href="#pills-profile"
                        role="tab" aria-controls="pills-profile" aria-selected="false">
                         <span><?= $arParams['MESS_PROPERTIES_TAB'] ?></span>
                     </a>
@@ -715,43 +725,43 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                 </div>
                 <?php
             }
-		
+
             if (!empty($arResult['PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
-                <div class="tab-pane fade <?if (!$showDescription): ?>show active<?endif;?>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <div class="tab-pane fade <? if (!$showDescription): ?>show active<? endif; ?>" id="pills-profile"
+                     role="tabpanel" aria-labelledby="pills-profile-tab">
                     <h6 class="mb-3"><b><?= $name ?></b></h6>
                     <?php if (!empty($arResult['PROPERTIES'])) { //print_r($arResult['DISPLAY_PROPERTIES']); ?>
                         <ul class="product-item-detail-properties">
                             <?php
 
-							foreach ($arResult['PROPERTIES'] as $property) {
-								if(in_array($property['CODE'], $arIskCode) ) continue;
-								
-								if ( (is_array($property['VALUE']) && count($property['VALUE']) == 0) || $property['VALUE'] == '' )
-									continue;
-								if( $property['CODE'] == 'BREND' )
-								{
-								
-									$hlbl = 6; 
-									$hlblock = HL\HighloadBlockTable::getById($hlbl)->fetch(); 
-									$entity = HL\HighloadBlockTable::compileEntity($hlblock); 
-									$EHL = $entity->getDataClass(); 		
-								
-									$QUERY = [];
-									$QUERY['select'] = array(
-										'UF_NAME',
-									);
-									$QUERY['order'] =  array("ID" => "ASC");		
-									$QUERY['filter'] =  array( '=ID'=> $property['VALUE']);
-									$rsData = $EHL::getList($QUERY)->Fetch();					
-									if( $rsData['UF_NAME'] == '') continue;
-									$property['VALUE'] = $rsData['UF_NAME'];
-								}
-							?>
+                            foreach ($arResult['PROPERTIES'] as $property) {
+                                if (in_array($property['CODE'], $arIskCode)) continue;
+
+                                if ((is_array($property['VALUE']) && count($property['VALUE']) == 0) || $property['VALUE'] == '')
+                                    continue;
+                                if ($property['CODE'] == 'BREND') {
+
+                                    $hlbl = 6;
+                                    $hlblock = HL\HighloadBlockTable::getById($hlbl)->fetch();
+                                    $entity = HL\HighloadBlockTable::compileEntity($hlblock);
+                                    $EHL = $entity->getDataClass();
+
+                                    $QUERY = [];
+                                    $QUERY['select'] = array(
+                                        'UF_NAME',
+                                    );
+                                    $QUERY['order'] = array("ID" => "ASC");
+                                    $QUERY['filter'] = array('=ID' => $property['VALUE']);
+                                    $rsData = $EHL::getList($QUERY)->Fetch();
+                                    if ($rsData['UF_NAME'] == '') continue;
+                                    $property['VALUE'] = $rsData['UF_NAME'];
+                                }
+                                ?>
                                 <li class="product-item-detail-properties-item  <?= $property['CODE'] ?>">
                                     <span class="product-item-detail-properties-value"> - &nbsp<b>
                                             <?= $property['NAME'] ?> </b> &nbsp&nbsp-&nbsp&nbsp </span>
-                                    <span class="product-item-detail-properties-value"> <?php 
-                                        if (is_array($property['VALUE'])) { 
+                                    <span class="product-item-detail-properties-value"> <?php
+                                        if (is_array($property['VALUE'])) {
                                             echo implode(", ", $property['VALUE']);
                                         } else {
                                             echo $property['VALUE'];
@@ -838,14 +848,14 @@ if (!empty($actualItem['MORE_PHOTO'])) {
             <div class="mb-4">
                 <?php if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
                     <p class="font-19"><b><?= $arParams['MESS_PROPERTIES_TAB'] ?></b></p>
-                    <?php foreach ($arResult['DISPLAY_PROPERTIES'] as $property) { 
-					if( in_array($property['CODE'], 'CML2_TRAITS', 'KOMMENTARIY_AVTOZAKAZA') ) continue; ?>
+                    <?php foreach ($arResult['DISPLAY_PROPERTIES'] as $property) {
+                        if (in_array($property['CODE'], 'CML2_TRAITS', 'KOMMENTARIY_AVTOZAKAZA')) continue; ?>
                         <p class="product-item-detail-properties-item">
                             <span class="product-item-detail-properties-value"> - &nbsp
                                 <b><?= $property['NAME'] ?>:</b> &nbsp&nbsp
                             </span>
                             <span class="product-item-detail-properties-value">
-                                <?php if (is_array($property['DISPLAY_VALUE'])) { 
+                                <?php if (is_array($property['DISPLAY_VALUE'])) {
                                     echo implode(",", $property['DISPLAY_VALUE']);
                                 } else {
                                     echo $property['DISPLAY_VALUE'];
@@ -1330,14 +1340,14 @@ if (!empty($actualItem['MORE_PHOTO'])) {
             'CATEGORY' => $arResult['CATEGORY_PATH']
         ),
         'BASKET' => array(
-        'ADD_PROPS' => $arParams['ADD_PROPERTIES_TO_BASKET'] === 'Y',
-        'QUANTITY' => $arParams['PRODUCT_QUANTITY_VARIABLE'],
-        'PROPS' => $arParams['PRODUCT_PROPS_VARIABLE'],
-        'EMPTY_PROPS' => $emptyProductProperties,
-        'BASKET_URL' => $arParams['BASKET_URL'],
-        'ADD_URL_TEMPLATE' => $arResult['~ADD_URL_TEMPLATE'],
-        'BUY_URL_TEMPLATE' => $arResult['~BUY_URL_TEMPLATE']
-    )
+            'ADD_PROPS' => $arParams['ADD_PROPERTIES_TO_BASKET'] === 'Y',
+            'QUANTITY' => $arParams['PRODUCT_QUANTITY_VARIABLE'],
+            'PROPS' => $arParams['PRODUCT_PROPS_VARIABLE'],
+            'EMPTY_PROPS' => $emptyProductProperties,
+            'BASKET_URL' => $arParams['BASKET_URL'],
+            'ADD_URL_TEMPLATE' => $arResult['~ADD_URL_TEMPLATE'],
+            'BUY_URL_TEMPLATE' => $arResult['~BUY_URL_TEMPLATE']
+        )
     );
     unset($emptyProductProperties);
 }

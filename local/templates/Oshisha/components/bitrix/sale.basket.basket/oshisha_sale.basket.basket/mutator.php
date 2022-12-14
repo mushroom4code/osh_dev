@@ -1,6 +1,7 @@
 <? if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Sale\Fuser;
 use Bitrix\Sale\PriceMaths;
 use Enterego\EnteregoHelper;
 
@@ -26,7 +27,7 @@ $result['BASKET_ITEM_RENDER_DATA_CUSTOM'] = EnteregoHelper::basketCustomSort($th
 global $USER, $SETTINGS;
 
 $id_USER = $USER->GetID();
-//$FUser_id = Fuser::getId($id_USER);
+$FUser_id = Fuser::getId($id_USER);
 $item_id = [];
 
 foreach ($item as $row) {
@@ -38,7 +39,7 @@ foreach ($item as $row) {
 	$item_id[] =  $row['ID'];
 }
 
-$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $id_USER);
+$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 /*
 echo '<pre>';
 print_r($item);*/

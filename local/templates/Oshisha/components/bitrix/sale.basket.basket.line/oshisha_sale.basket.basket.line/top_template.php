@@ -24,7 +24,8 @@ $cntBasketItems = CSaleBasket::GetList(
 );
 global $USER;
 $USER_CHECK = $USER->GetId();
-$arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $USER_CHECK);
+$FUser_id = Fuser::getId($USER_CHECK);
+$arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $FUser_id);
 //print_r($arUserLike);
 ?>
 <div class="box_with_loginBasket">

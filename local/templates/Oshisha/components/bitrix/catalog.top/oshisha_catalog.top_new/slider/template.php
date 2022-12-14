@@ -39,7 +39,7 @@ foreach ($arResult['ITEMS'] as $item => $arOneRow) {
 }
 
 
-$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $id_USER, $FUser_id);
+$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
 ?>
 <div id="<?= $strContID; ?>"

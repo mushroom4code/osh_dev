@@ -30,7 +30,7 @@ $item_id = [];
 
 
 $arIsd_product = [];
-$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $id_USER);
+$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id,$FUser_id);
 //print_r($count_likes );
 foreach ($count_likes['USER'] as $product_id => $val) {
     if($val['Fav'][0] === 1 || $val['Fav'][0] === '1') {

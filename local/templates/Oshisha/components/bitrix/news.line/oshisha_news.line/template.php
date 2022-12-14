@@ -22,7 +22,7 @@ foreach($arResult["ITEMS"] as $arItem){
     $item_id[] = $arItem['ID'];
 }
 
-$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
+$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id,$FUser_id);
 
 ?>
 

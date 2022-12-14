@@ -1,13 +1,13 @@
 $(document).ready(function () {
 // лайки
 
-	$(document).on('click','.initial_auth_popup',function () {
-		event.preventDefault();
-		$('.ctweb-smsauth-menu-block').show();	
-		$('.overlay').show();	
-		
-	});
-    $(document).on('click','a.method',function () {
+    $(document).on('click', '.initial_auth_popup', function () {
+        event.preventDefault();
+        $('.ctweb-smsauth-menu-block').show();
+        $('.overlay').show();
+
+    });
+    $(document).on('click', 'a.method', function () {
         let that = $(this);
         let newCount = 0;
         let value;
@@ -15,8 +15,8 @@ $(document).ready(function () {
         let fav = $(box_fav).find('i');
         let product_id = $(that).closest('.box_with_like').attr('data-product-id');
         let user_id = $(that).closest('.box_with_like').attr('data-user-id');
-		let fuser_id = $(that).closest('.box_with_like').attr('data-fuser-id');
-		
+        let fuser_id = $(that).closest('.box_with_like').attr('data-fuser-id');
+
         let method = $(that).attr('data-method');
         let color = $(that).find('i');
         let like = $(that).closest('.box_with_like').find('#likes');
@@ -44,11 +44,11 @@ $(document).ready(function () {
             'product_id': product_id,
             'method': method,
             'user_id': user_id,
-			'fuser_id': fuser_id,
+            'fuser_id': fuser_id,
             'value': value,
         }
-console.log(product_array);
 
+        console.log(product_array);
         $.ajax({
             type: 'POST',
             url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/osh.like_favorites/ajax.php',

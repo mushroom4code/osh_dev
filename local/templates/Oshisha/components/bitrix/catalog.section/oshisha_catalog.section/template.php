@@ -189,7 +189,7 @@ foreach ($arResult['ITEMS'] as $item) {
     $item_id[] = $item['ID'];
 }
 
-$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $id_USER, $FUser_id);
+$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID']));
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 ?>

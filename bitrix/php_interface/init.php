@@ -2,6 +2,7 @@
 
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Bitrix\Sale\Order;
+
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPKOST_TABAKA'); //Свойство для отображения крепости
 setcookie("PHPSESSID", "", 1, '/', '.oshisha.net');
@@ -21,13 +22,13 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\UserPrice\PluginStatic' => '/bitrix/modules/osh.userprice/include.php',
     '\Enterego\UserPrice\UserPriceHelperOsh' => '/bitrix/modules/osh.userprice/include.php',
     '\Enterego\EnteregoExchange' => '/bitrix/php_interface/enterego_class/EnteregoExchange.php',
-    '\Bitrix\Sale\Exchange\EnteregoUserExchange'=>'/bitrix/modules/sale/lib/exchange/enteregouserexchange.php'
+    '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php'
 ));
 
 global $PRICE_TYPE_ID;
 global $UserTypeOpt, $arIskCode, $SETTINGS;
 $arIskCode = array(
-'USE_AVAILABLE', 'BLOG_POST_ID', 'GRAMMOVKA_VES_NETTO'
+    'USE_AVAILABLE', 'BLOG_POST_ID', 'GRAMMOVKA_VES_NETTO'
 
 );
 $SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
@@ -69,15 +70,19 @@ function PriceTypeANDStatusUser()
     }
 
 }
-function getUserType(){
+
+function getUserType()
+{
     return $GLOBALS['UserTypeOpt'] ?? false;
 }
 
-function setCurrentPriceId($priceId){
+function setCurrentPriceId($priceId)
+{
     $GLOBALS['PRICE_TYPE_ID'] = $priceId;
 }
 
-function getCurrentPriceId(){
+function getCurrentPriceId()
+{
     $currentPrice = $GLOBALS['PRICE_TYPE_ID'] ?? BASIC_PRICE;
     return $currentPrice;
 }
@@ -125,38 +130,45 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 
     return $arRes;
 }*/
-class BXConstants{
-	
-	static function PriceCode(){
-		return array(
-			3 => "Сайт скидка",
-			2 => "Основная",
-			9 => "b2b",
-		);
-		
-	}
-	static function Shared()
-	{
-		return array("collections", "vkontakte", "odnoklassniki", "telegram", "twitter","viber","whatsapp","skype");
-	}
-	public static function isPST(){
-		return isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Lighthouse') !== false;
-	}	
-	
+
+class BXConstants
+{
+
+    static function PriceCode()
+    {
+        return array(
+            3 => "Сайт скидка",
+            2 => "Основная",
+            9 => "b2b",
+        );
+
+    }
+
+    static function Shared()
+    {
+        return array("collections", "vkontakte", "odnoklassniki", "telegram", "twitter", "viber", "whatsapp", "skype");
+    }
+
+    public static function isPST()
+    {
+        return isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Lighthouse') !== false;
+    }
+
 }
-	
 
 
 AddEventHandler("main", "OnEndBufferContent", "OnEndBufferContentHandler");
-function OnEndBufferContentHandler(&$content){
-				if(BxConstants::isPST()) {
-				$pattern = '/<iframe.*?<\/iframe>/is';
-				$content = preg_replace($pattern, '', $content);
+function OnEndBufferContentHandler(&$content)
+{
+    if (BxConstants::isPST()) {
+        $pattern = '/<iframe.*?<\/iframe>/is';
+        $content = preg_replace($pattern, '', $content);
 
-				$pattern = '/<script.*?<\/script>/is';
-				$content = preg_replace($pattern, '', $content);
-			}
+        $pattern = '/<script.*?<\/script>/is';
+        $content = preg_replace($pattern, '', $content);
+    }
 }
+
 AddEventHandler("main", "OnBeforeUserLogin", array("CUserEx", "OnBeforeUserLogin"));
 AddEventHandler("main", "OnBeforeUserRegister", array("CUserEx", "OnBeforeUserRegister"));
 AddEventHandler("main", "OnBeforeUserRegister", array("CUserEx", "OnBeforeUserUpdate"));
@@ -179,50 +191,50 @@ class CUserEx
 }
 
 
+AddEventHandler('main', 'OnBuildGlobalMenu', 'OnBuildGlobalMenuSistem');
+function OnBuildGlobalMenuSistem(&$arGlobalMenu, &$arModuleMenu)
+{
+
+    global $USER;
+
+    $moduleID = 'OSHISHA';
 
 
-	AddEventHandler('main', 'OnBuildGlobalMenu', 'OnBuildGlobalMenuSistem');
-	function OnBuildGlobalMenuSistem(&$arGlobalMenu, &$arModuleMenu){
-		
-		global $USER;
+    $arModuleMenu[] = array(
+        "parent_menu" => "global_menu_content",
+        'menu_id' => 'global_menu_osh',
+        'text' => 'Настройки сайта',
+        'title' => 'Настройки сайта',
+        'sort' => 9,
+        'items_id' => 'global_menu_osh',
+        'icon' => 'imi_corp',
+        'url' => '/bitrix/admin/bbrain_options.php?lang=' . LANG,
 
-		$moduleID = 'OSHISHA';
+    );
+
+}
 
 
-			$arModuleMenu[] = array(
-				"parent_menu" => "global_menu_content",  
-				'menu_id' => 'global_menu_osh',
-				'text' => 'Настройки сайта',
-				'title' => 'Настройки сайта',
-				'sort' => 9,
-				'items_id' => 'global_menu_osh',
-				'icon' => 'imi_corp',
-				'url' => '/bitrix/admin/bbrain_options.php?lang='.LANG,
-
-			);
-		
-	}
-	
-	
-AddEventHandler("sale", "OnOrderSave",  "OnOrderAddHandlerSave");
-function OnOrderAddHandlerSave($ID, $arFields, $arOrder){
+AddEventHandler("sale", "OnOrderSave", "OnOrderAddHandlerSave");
+function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
+{
     $order = Bitrix\Sale\Order::load($ID);
 
-        $propertyCollection = $order->getPropertyCollection();
+    $propertyCollection = $order->getPropertyCollection();
 
-			$FIX_KLADR = '7700000000000';
-			$propValueKLADR = $propertyCollection->getItemByOrderPropertyId(34);
-			$propValueKLADR->setValue($FIX_KLADR);
-			
-	        $propValueF = $propertyCollection->getItemByOrderPropertyId(19)->getValue();
-			$propValueM = $propertyCollection->getItemByOrderPropertyId(22)->getValue();
-			$propValueN = $propertyCollection->getItemByOrderPropertyId(24)->getValue();
-			$propValuePropusk = $propertyCollection->getItemByOrderPropertyId(37);
-			$ResultPropusk = trim($propValueF.' '.$propValueM.' '.$propValueN);
-			$propValuePropusk->setValue($ResultPropusk);
-        	
-        	$order->save();
-			
-			//if( $order->getPersonTypeId() == 1 ){}
+    $FIX_KLADR = '7700000000000';
+    $propValueKLADR = $propertyCollection->getItemByOrderPropertyId(34);
+    $propValueKLADR->setValue($FIX_KLADR);
+
+    $propValueF = $propertyCollection->getItemByOrderPropertyId(19)->getValue();
+    $propValueM = $propertyCollection->getItemByOrderPropertyId(22)->getValue();
+    $propValueN = $propertyCollection->getItemByOrderPropertyId(24)->getValue();
+    $propValuePropusk = $propertyCollection->getItemByOrderPropertyId(37);
+    $ResultPropusk = trim($propValueF . ' ' . $propValueM . ' ' . $propValueN);
+    $propValuePropusk->setValue($ResultPropusk);
+
+    $order->save();
+
+    //if( $order->getPersonTypeId() == 1 ){}
 
 }	

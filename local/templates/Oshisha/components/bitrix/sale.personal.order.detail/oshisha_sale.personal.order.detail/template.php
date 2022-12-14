@@ -145,7 +145,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                         $item_id[] = $basketItem['ID'];
                                     }
 
-                                    $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
+                                    $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id,$FUser_id);
 
                                     foreach ($arResult['BASKET'] as $basketItem) {
 
