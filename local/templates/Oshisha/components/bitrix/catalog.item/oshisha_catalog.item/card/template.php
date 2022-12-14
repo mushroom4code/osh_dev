@@ -58,7 +58,7 @@ $favorite = '';
 $styleForTaste = '';
 $taste = $item['PROPERTIES']['VKUS'];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
-$useDiscount = $item['PROPERTIES']['DISKONT'];
+$useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES']['NOVINKA'];
 $priceBasket = 0;
 

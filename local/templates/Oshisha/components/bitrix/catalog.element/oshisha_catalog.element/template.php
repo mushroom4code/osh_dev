@@ -116,7 +116,7 @@ $measureRatio = $actualItem['ITEM_MEASURE_RATIOS'][$actualItem['ITEM_MEASURE_RAT
 
 $price = [];
 
-$useDiscount = $arResult['PROPERTIES']['DISKONT'];
+$useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
 
 foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
     foreach ($PRICE['PRICES'] as $price_key => $price_val) {

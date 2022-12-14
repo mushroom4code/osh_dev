@@ -18,7 +18,7 @@ define("HIDE_SIDEBAR", true);
  */
 
 $GLOBALS['ArFilter'] = array(
-    'PROPERTY_DISKONT_VALUE' => 'Да',
+    'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
 	
 );
 
@@ -87,7 +87,7 @@ $APPLICATION->IncludeComponent(
             0 => "NEWPRODUCT",
             1 => "SALELEADER",
             2 => "SPECIALOFFER",
-            3 => "DISKONT",
+            3 => "USE_DISCOUNT",
         ),
         "INCLUDE_SUBSECTIONS" => "Y",
         "LIST_META_KEYWORDS" => "-",

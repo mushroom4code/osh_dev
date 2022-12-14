@@ -63,12 +63,12 @@ $arUrlRewrite=array (
     'PATH' => '/personal/workers/index.php',
     'SORT' => 100,
   ),
-  9 => 
+  21 => 
   array (
-    'CONDITION' => '#^/personal/order/#',
+    'CONDITION' => '#^/about/delivery/#',
     'RULE' => '',
-    'ID' => 'bitrix:sale.personal.order',
-    'PATH' => '/personal/order/index.php',
+    'ID' => '',
+    'PATH' => '/about/delivery/index.php',
     'SORT' => 100,
   ),
   22 => 
@@ -79,12 +79,12 @@ $arUrlRewrite=array (
     'PATH' => '/about/contacts/index.php',
     'SORT' => 100,
   ),
-  21 => 
+  9 => 
   array (
-    'CONDITION' => '#^/about/delivery/#',
+    'CONDITION' => '#^/personal/order/#',
     'RULE' => '',
-    'ID' => '',
-    'PATH' => '/about/delivery/index.php',
+    'ID' => 'bitrix:sale.personal.order',
+    'PATH' => '/personal/order/index.php',
     'SORT' => 100,
   ),
   20 => 
@@ -93,6 +93,14 @@ $arUrlRewrite=array (
     'RULE' => '',
     'ID' => '',
     'PATH' => '/about/o-nas/index.php',
+    'SORT' => 100,
+  ),
+  170 => 
+  array (
+    'CONDITION' => '#^/promotions/#',
+    'RULE' => '',
+    'ID' => '',
+    'PATH' => '/promotions/index.php',
     'SORT' => 100,
   ),
   24 => 
@@ -135,14 +143,6 @@ $arUrlRewrite=array (
     'PATH' => '/brands/index.php',
     'SORT' => 100,
   ),
-  170 => 
-  array (
-    'CONDITION' => '#^/promotions/#',
-    'RULE' => '',
-    'ID' => '',
-    'PATH' => '/promotions/index.php',
-    'SORT' => 100,
-  ),  
   7 => 
   array (
     'CONDITION' => '#^/news/#',

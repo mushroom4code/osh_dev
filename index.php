@@ -181,7 +181,11 @@ var swiper = new Swiper('.box_slide', {
   
 	<div class="h1">Распродажа</div>
     <div>
-        <?php $APPLICATION->IncludeComponent(
+        <?php
+        $GLOBALS['FILTER_SALE'] = array(
+            'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
+        );
+        $APPLICATION->IncludeComponent(
             "bitrix:catalog.top",
             "oshisha_catalog.top_new",
             array(
@@ -208,7 +212,7 @@ var swiper = new Swiper('.box_slide', {
                 "ELEMENT_SORT_ORDER2" => "desc",
                 "ENLARGE_PRODUCT" => "PROP",
                 "ENLARGE_PROP" => "-",
-                "FILTER_NAME" => "",
+                "FILTER_NAME" => "FILTER_SALE",
                 "HIDE_NOT_AVAILABLE" => "Y",
                 "HIDE_NOT_AVAILABLE_OFFERS" => "N",
                 "IBLOCK_ID" => IBLOCK_CATALOG,

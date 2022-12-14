@@ -32,11 +32,11 @@ if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
 			'=ID' => $product_id, 
 			'ACTIVE' => 'Y',
 			);
-			$resU = CIBlockElement::GetList(Array(), $arFilter, false, false, array('PROPERTY_DISKONT'));
+			$resU = CIBlockElement::GetList(Array(), $arFilter, false, false, array('PROPERTY_USE_DISCOUNT'));
 			while($rProd = $resU->Fetch())
 			{
 				//
-				$useDiscount = $rProd['PROPERTY_DISKONT_VALUE'];
+				$useDiscount = $rProd['PROPERTY_USE_DISCOUNT_VALUE'];
 			}	
 			
             if (USE_CUSTOM_SALE_PRICE || $useDiscount == 'Да') {

@@ -104,7 +104,7 @@ class EnteregoBasket
                     } else {
                         if (!isset($product_prices[$product_id])) {
                             $propsUseSale = CIBlockElement::GetProperty(9, $product_id,
-                                array(), array('CODE' => 'DISKONT'));
+                                array(), array('CODE' => 'USE_DISCOUNT'));
                             $newProp = $propsUseSale->Fetch();
                             $price_id = $newProp['VALUE_XML_ID'] == 'true' ?
                                 SALE_PRICE_TYPE_ID : $currentPriceTypeId;
@@ -133,7 +133,7 @@ class EnteregoBasket
                     $basket->save();
                 }
                 $propsUseSale = CIBlockElement::GetProperty(9, $product_id,
-                    array(), array('CODE' => 'DISKONT'));
+                    array(), array('CODE' => 'USE_DISCOUNT'));
                 $newProp = $propsUseSale->Fetch();
                 $price_id = USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true' ?
                     SALE_PRICE_TYPE_ID : $currentPriceTypeId;

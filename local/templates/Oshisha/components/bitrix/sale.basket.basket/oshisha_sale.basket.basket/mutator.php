@@ -51,7 +51,7 @@ foreach ($item as $row) {
 
     $product_prices = '';
     $show_product_prices = false; //var_dump(USE_CUSTOM_SALE_PRICE);
-    $propsUseSale = CIBlockElement::GetProperty(9, $row['PRODUCT_ID'], array(), array('CODE' => 'DISKONT'));
+    $propsUseSale = CIBlockElement::GetProperty(9, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
     if ($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) {
         $show_product_prices = true;

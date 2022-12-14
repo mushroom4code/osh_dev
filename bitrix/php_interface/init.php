@@ -6,13 +6,12 @@ CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPKOST_TABAKA'); //Свойство для отображения крепости
 setcookie("PHPSESSID", "", 1, '/', '.oshisha.net');
 
-/*
+
 if (COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE') === 'true') {
     define("USE_CUSTOM_SALE_PRICE", true);
 } else {
     define("USE_CUSTOM_SALE_PRICE", false);
-}*/
- define("USE_CUSTOM_SALE_PRICE", false);
+}
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
@@ -41,9 +40,9 @@ const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
 
 //Типы цен на сайте
-const SALE_PRICE_TYPE_ID = 8;
+const SALE_PRICE_TYPE_ID = 3;
 const BASIC_PRICE = 2;
-const B2B_PRICE = 7;
+const B2B_PRICE = 9;
 
 const PERSON_TYPE_CONTRAGENT = 2;
 const PERSON_TYPE_BUYER = 1;
@@ -130,9 +129,9 @@ class BXConstants{
 	
 	static function PriceCode(){
 		return array(
-			8 => "Сайт скидка",
+			3 => "Сайт скидка",
 			2 => "Основная",
-			//7 => "b2b",
+			9 => "b2b",
 		);
 		
 	}

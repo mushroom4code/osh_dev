@@ -88,7 +88,7 @@ if (isset($arResult['ITEM'])) {
         $measureRatio = $price['MIN_QUANTITY'];
         $morePhoto = $actualItem['MORE_PHOTO'];
     }
-    $useDiscount = $item['PROPERTIES']['DISKONT'];
+    $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 //print_r($item['PROPERTIES']['DISKONT']);
     if ($USER->IsAuthorized()) {
         $userId = $USER->GetID();
