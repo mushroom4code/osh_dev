@@ -8,9 +8,10 @@ class EnteregoProcessing
 {
 
     private $db;
-    public string $table_old_name = 'b_user_like';
+    public string $table_old_name_like = 'b_user_like';
+    public string $table_old_name_fav = 'b_utm_user';
     public string $table_new_name = 'ent_like_favorite';
-
+    public int $prop_favorites_id = 41;
 
     /**
      * @return string
@@ -22,7 +23,7 @@ class EnteregoProcessing
         $count = 0;
         $this->db = $DB;
         $res = $this->db->Query("SELECT count(distinct id) count, product_id 
-                                        FROM $this->table_old_name group by product_id");
+                                        FROM $this->table_old_name_like group by product_id");
 
         while ($arData = $res->Fetch()) {
             $count++;
@@ -41,5 +42,47 @@ class EnteregoProcessing
         return 'export ' . $count;
     }
 
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public function update_favorites_product_users(): string
+    {
+
+        global $DB;
+        $count = 0;
+        $this->db = $DB;
+        $users_ar = $this->db->Query("SELECT VALUE_ID user_id, VALUE_INT product_id 
+                                            FROM $this->table_old_name_fav 
+                                            WHERE FIELD_ID=$this->prop_favorites_id");
+
+
+        while ($arData = $users_ar->Fetch()) {
+
+            $count++;
+            $FUser_id = Fuser::getId($arData['user_id']);
+            $product_id = (int)$arData['product_id'];
+
+            $row_res = $this->db->Query("SELECT I_BLOCK_ID product_id  FROM $this->table_new_name
+            WHERE F_USER_ID=$FUser_id AND I_BLOCK_ID=$product_id");
+            $result = $row_res->Fetch();
+
+            $arFields['FAVORITE'] = 1;
+
+            if (!empty($result['product_id']) && $result !== false) {
+                $this->db->Update($this->table_new_name, $arFields,
+                    "WHERE F_USER_ID=$FUser_id AND I_BLOCK_ID=$product_id");
+            } else {
+                $arFields['F_USER_ID'] = $FUser_id;
+                $arFields['I_BLOCK_ID'] = $product_id;
+                $arFields['LIKE_USER'] = 0;
+                $this->db->Insert($this->table_new_name, $arFields);
+            }
+
+        }
+
+        return 'export ' . $count;
+    }
 
 }
