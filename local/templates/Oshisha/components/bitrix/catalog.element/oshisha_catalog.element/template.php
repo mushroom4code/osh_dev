@@ -741,18 +741,12 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                                     continue;
                                 if ($property['CODE'] == 'BREND') {
 
-                                    $hlbl = 6;
-                                    $hlblock = HL\HighloadBlockTable::getById($hlbl)->fetch();
-                                    $entity = HL\HighloadBlockTable::compileEntity($hlblock);
-                                    $EHL = $entity->getDataClass();
-
-                                    $QUERY = [];
-                                    $QUERY['select'] = array(
-                                        'UF_NAME',
+                                    $actualBlockData = array(
+                                        'select' => array('ID', 'UF_NAME'),
+                                        'order' => array('ID' => 'ASC'),
+                                        'limit' => '50',
                                     );
-                                    $QUERY['order'] = array("ID" => "ASC");
-                                    $QUERY['filter'] = array('=ID' => $property['VALUE']);
-                                    $rsData = $EHL::getList($QUERY)->Fetch();
+                                    $rsData = Enterego\EnteregoHelper::getHeadBlock('BREND', $actualBlockData);
                                     if ($rsData['UF_NAME'] == '') continue;
                                     $property['VALUE'] = $rsData['UF_NAME'];
                                 }

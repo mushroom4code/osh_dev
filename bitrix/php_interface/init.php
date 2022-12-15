@@ -22,6 +22,8 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\UserPrice\PluginStatic' => '/bitrix/modules/osh.userprice/include.php',
     '\Enterego\UserPrice\UserPriceHelperOsh' => '/bitrix/modules/osh.userprice/include.php',
     '\Enterego\EnteregoExchange' => '/bitrix/php_interface/enterego_class/EnteregoExchange.php',
+    '\Enterego\EnteregoBasket' => '/bitrix/php_interface/enterego_class/EnteregoBasket.php',
+    '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php'
 ));
 
@@ -34,7 +36,6 @@ $arIskCode = array(
 $SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
 
 require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
-require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
 
 const IBLOCK_CATALOG = 12;
 const MAIN_IBLOCK_ID = 8;

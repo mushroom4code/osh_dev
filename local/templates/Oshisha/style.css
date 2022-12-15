@@ -286,7 +286,7 @@ select {
 .height_100, .box_with_menu_header, .box_with_city, .box_honesty, .box_automation, .box_display, .box_block, .box_present,
 .box_help, .box_house, .icons_worker_contr, .icons_worker_comp, .box_company_icon, .vk_icons, .telegram_icons,
 .sidebar_inform, .carousel-item > img, .link_brands img, #box_brands .box_with_brands a, .box_present, .box_help,
-.box_house, .box_block, .box_with_404, .inner {
+.box_house, .box_block, .box_with_404, .inner, .banner_box_item div, .banner_box_item div img {
     height: 100%;
 }
 
@@ -1419,13 +1419,13 @@ span > i.header_icon {
     min-height: initial;
     max-height: initial;
     height: initial;
-
 }
 
 .box_with_text {
     line-height: 1;
     height: 37px;
     overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .toggle_taste {
@@ -1524,9 +1524,8 @@ span > i.header_icon {
 .main_menu {
     filter: drop-shadow(0px -4px 30px rgba(196, 196, 196, 0.2));
     border-radius: 20px;
-    top: 58px; /*280px;*/
+    top: 58px;
     z-index: 10000;
-    /*height: 400px;*/
     max-width: 1270px;
 }
 
@@ -1650,7 +1649,6 @@ img {
 }
 
 a.bx_catalog_item_title {
-    /*color: #3f3f3f;*/
     color: #000;
     font-size: 14px;
     font-weight: 500;
@@ -1658,8 +1656,12 @@ a.bx_catalog_item_title {
     letter-spacing: 0.02em;
 }
 
-.by-line:not(.opt) .row-line-reverse {
-    /*flex-direction: row-reverse;*/
+.banner_box_item img{
+    object-fit: cover;
+}
+
+.banner_box_item {
+    max-height: 49%;
 }
 
 .by-card .box_with_price {
@@ -1670,7 +1672,8 @@ a.bx_catalog_item_title {
     width: 100%;
 }
 
-.by-line.opt .box_with_fav_bask .width_90, .by-line.opt .bx_catalog_item_controls {
+.by-line.opt .box_with_fav_bask .width_90, .by-line.opt .bx_catalog_item_controls, .form_company,
+.width_50, #delivery_payment .btn_company {
     width: 50%;
 }
 
@@ -1693,7 +1696,8 @@ a.bx_catalog_item_title {
     margin-bottom: 20px;
 }
 
-.by-card .product-item-small-card, .by-card .product-item-small-card, .by-card .product-item-container, .by-card .bx_catalog_item,
+.by-card .product-item-small-card, .by-card .product-item-small-card, .by-card .product-item-container,
+.by-card .bx_catalog_item,
 .by-card .bx_catalog_item_container {
     height: 100%;
     margin: 0;
@@ -1708,7 +1712,7 @@ a.bx_catalog_item_title {
 }*/
 .by-card .bx_catalog_item .bx_catalog_item_container {
     max-width: 237px;
-    /* min-height: 376px;*/
+     min-height: 355px;
 }
 
 .by-card .product-item-small-card {
@@ -2501,10 +2505,6 @@ div#about_contacts > .row > .form_company {
     padding-top: 1.5rem;
 }
 
-.form_company, .width_50, #delivery_payment .btn_company {
-    width: 50%;
-}
-
 .bx-catalog-tab-container .blog-comments .blog-comment .blog-comment-cont
 .blog-comment-cont-white .blog-comment-info a.link_like span {
     margin-left: 7px;
@@ -2513,7 +2513,6 @@ div#about_contacts > .row > .form_company {
 .news-line .news-list {
     padding: 0 15px 20px 15px;
 }
-
 
 .taste {
     margin-right: 5px;
@@ -2791,7 +2790,6 @@ label.radio_input {
 
     .main_menu {
         max-width: 1000px;
-        /*top: 280px;*/
     }
 
     .link_banner a {
@@ -2847,7 +2845,6 @@ label.radio_input {
 
     .main_menu {
         max-width: 960px;
-        /*top: 280px;*/
         height: 375px;
     }
 
@@ -4450,12 +4447,6 @@ li, ul {
 @media screen and (min-width: 1480px) {
     #placeModal .modal-dialog {
         max-width: 42.5rem
-    }
-}
-
-@media (min-width: 2100px) {
-    .main_menu {
-        /*top: 280px;*/
     }
 }
 

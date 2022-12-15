@@ -1,20 +1,26 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+/** @var  CAllMain|CMain $APPLICATION */
 $APPLICATION->SetTitle("Адреса магазинов");
+use Bitrix\Conversion\Internals\MobileDetect;
+
+$mobile = new MobileDetect();
 ?>
     <div id="box_address" class="mb-5">
         <h1 class="mb-5"><b>Адреса магазинов</b></h1>
-
-        <section class="box_map mb-5">
-            <script type="text/javascript" charset="utf-8" async
-                    src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A6df90f322da89c9864a9e3290922023b0e946e6ad5db3e56f661b5b8e702b683&amp;width=100%25&amp;height=720&amp;lang=ru_RU&amp;scroll=true">
-            </script>
-        </section>
-        <section class="box_map_mobile mb-5">
-            <script type="text/javascript" charset="utf-8" async
-                    src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A6df90f322da89c9864a9e3290922023b0e946e6ad5db3e56f661b5b8e702b683&amp;width=320&amp;height=240&amp;lang=ru_RU&amp;scroll=true">
-            </script>
-        </section>
+        <?php if (!$mobile->isMobile()) { ?>
+            <section class="box_map mb-5">
+                <script type="text/javascript" charset="utf-8" async
+                        src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A6df90f322da89c9864a9e3290922023b0e946e6ad5db3e56f661b5b8e702b683&amp;width=100%25&amp;height=720&amp;lang=ru_RU&amp;scroll=true">
+                </script>
+            </section>
+        <?php } else { ?>
+            <section class="box_map_mobile mb-5">
+                <script type="text/javascript" charset="utf-8" async
+                        src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A6df90f322da89c9864a9e3290922023b0e946e6ad5db3e56f661b5b8e702b683&amp;width=320&amp;height=240&amp;lang=ru_RU&amp;scroll=true">
+                </script>
+            </section>
+        <?php } ?>
         <h5 class="mb-5"><b>Москва и МО</b></h5>
         <div class="row d-flex row_section justify-content-between">
             <div class="box_text_business mb-3 col-lg-3 col-md-3 col-12 mr-3">

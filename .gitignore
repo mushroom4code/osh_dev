@@ -46,6 +46,7 @@
 *.xml
 *.pem
 *.svg
+*.csv
 .DS_Store
 *.DS_Store
 Thumbs.db
