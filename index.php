@@ -310,4 +310,5 @@ var swiper = new Swiper('.box_slide', {
 //$update = new Enterego\EnteregoProcessing();
 //$update->update_like_in_new_table();
 //$update->update_favorites_product_users();
+
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");

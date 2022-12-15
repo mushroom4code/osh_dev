@@ -61,7 +61,7 @@ class EnteregoProcessing
         while ($arData = $users_ar->Fetch()) {
 
             $count++;
-            $FUser_id = Fuser::getId($arData['user_id']);
+            $FUser_id = Fuser::getIdByUserId($arData['user_id']);
             $product_id = (int)$arData['product_id'];
 
             $row_res = $this->db->Query("SELECT I_BLOCK_ID product_id  FROM $this->table_new_name
