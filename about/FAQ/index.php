@@ -13,7 +13,7 @@ Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
 
             <?php
             $k = 0;
-            $SectionRes = CIBlockSection::GetList(array(), array( 'ACTIVE' => 'Y','CODE'=>'FAQ'), false, array("CODE", 'NAME', 'ID', 'IBLOCK_SECTION_ID', 'XML_ID'));
+            $SectionRes = CIBlockSection::GetList(array(), array('ACTIVE' => 'Y', 'CODE' => 'FAQ'), false, array("CODE", 'NAME', 'ID', 'IBLOCK_SECTION_ID', 'XML_ID'));
             while ($arSection = $SectionRes->GetNext()) {
                 ?>
                 <div class="mb-5">
@@ -23,7 +23,7 @@ Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
                         <div class="accordion box_with_map" id="<?= $arSection['CODE'] ?>">
                             <?php
                             $arFilter = array(
-                                'CODE'=>'FAQ',
+                                'CODE' => 'FAQ',
                                 'ACTIVE' => 'Y',
                                 'SECTION_ID' => $arSection['ID']
                             );
@@ -61,7 +61,7 @@ Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
                         </div>
                     </div>
                 </div>
-                <?php } ?>
+            <?php } ?>
         </div>
         <h4 class="mb-4"><b> Есть вопросы, пожелания или комментарии? Напиши их здесь!</b></h4>
         <div class="mb-5">
