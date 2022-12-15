@@ -742,7 +742,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                                 if ($property['CODE'] == 'BREND') {
 
                                     $actualBlockData = array(
-                                        'select' => array('ID', 'UF_IMG', 'UF_STR', 'UF_LINK'),
+                                        'select' => array('ID', 'UF_NAME'),
                                         'order' => array('ID' => 'ASC'),
                                         'limit' => '50',
                                     );
