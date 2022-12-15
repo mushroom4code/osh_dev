@@ -1419,13 +1419,13 @@ span > i.header_icon {
     min-height: initial;
     max-height: initial;
     height: initial;
-
 }
 
 .box_with_text {
     line-height: 1;
     height: 37px;
     overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .toggle_taste {
@@ -1524,9 +1524,8 @@ span > i.header_icon {
 .main_menu {
     filter: drop-shadow(0px -4px 30px rgba(196, 196, 196, 0.2));
     border-radius: 20px;
-    top: 58px; /*280px;*/
+    top: 58px;
     z-index: 10000;
-    /*height: 400px;*/
     max-width: 1270px;
 }
 
@@ -1713,7 +1712,7 @@ a.bx_catalog_item_title {
 }*/
 .by-card .bx_catalog_item .bx_catalog_item_container {
     max-width: 237px;
-    /* min-height: 376px;*/
+     min-height: 355px;
 }
 
 .by-card .product-item-small-card {
@@ -2791,7 +2790,6 @@ label.radio_input {
 
     .main_menu {
         max-width: 1000px;
-        /*top: 280px;*/
     }
 
     .link_banner a {
@@ -2847,7 +2845,6 @@ label.radio_input {
 
     .main_menu {
         max-width: 960px;
-        /*top: 280px;*/
         height: 375px;
     }
 
@@ -4450,12 +4447,6 @@ li, ul {
 @media screen and (min-width: 1480px) {
     #placeModal .modal-dialog {
         max-width: 42.5rem
-    }
-}
-
-@media (min-width: 2100px) {
-    .main_menu {
-        /*top: 280px;*/
     }
 }
 

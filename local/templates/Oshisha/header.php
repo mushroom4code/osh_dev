@@ -1,12 +1,13 @@
 <?php
 
+use Bitrix\Conversion\Internals\MobileDetect;
 use Bitrix\Main\Page\Asset;
 use Bitrix\Main\UI\Extension;
 
 /** @var  CAllMain|CMain $APPLICATION
  ** @var  CAllUser $USER
  */
-
+$mobile = new MobileDetect();
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 IncludeTemplateLangFile($_SERVER["DOCUMENT_ROOT"] . "/bitrix/templates/" . SITE_TEMPLATE_ID . "/header.php");
@@ -28,11 +29,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo SITE_TEMPLATE_PATH; ?>/images/favicon.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
-	
+
     <?php
-	 Asset::getInstance()->addCss("/local/assets/js/arcticmodal/jquery.arcticmodal-0.3.css");
-	 Asset::getInstance()->addCss("/local/assets/js/arcticmodal/themes/simple.css");
-	 Asset::getInstance()->addJs("/local/assets/js/arcticmodal/jquery.arcticmodal-0.3.min.js");
+    Asset::getInstance()->addCss("/local/assets/js/arcticmodal/jquery.arcticmodal-0.3.css");
+    Asset::getInstance()->addCss("/local/assets/js/arcticmodal/themes/simple.css");
+    Asset::getInstance()->addJs("/local/assets/js/arcticmodal/jquery.arcticmodal-0.3.min.js");
 
 
     Asset::getInstance()->addCss("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
@@ -51,13 +52,12 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addJS('https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js');
     Asset::getInstance()->addJs("https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js");
     Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.css");
-   Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css");
-  
+    Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css");
 
-   
-   $APPLICATION->ShowHead(); ?>
+
+    $APPLICATION->ShowHead(); ?>
     <link rel="stylesheet" href="/local/assets/js/swiper/swiper-bundle.min.css">
-	    <script src="/local/assets/js/swiper/swiper-bundle.min.js"></script>
+    <script src="/local/assets/js/swiper/swiper-bundle.min.js"></script>
 </head>
 <body class="bx-background-image">
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
@@ -77,17 +77,17 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     ); ?>
                 </a>
             </div>
-			<div class="right_mobile_top">
-			<div class="search_mobile"></div>
-            <a class="box_for_menu" data-toggle="collapse" href="#MenuHeader" aria-controls="MenuHeader"
-               aria-expanded="false">
-                <div id="icon" class="Icon open">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </a>
-			</div>
+            <div class="right_mobile_top">
+                <div class="search_mobile"></div>
+                <a class="box_for_menu" data-toggle="collapse" href="#MenuHeader" aria-controls="MenuHeader"
+                   aria-expanded="false">
+                    <div id="icon" class="Icon open">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+            </div>
             <div class="container_header flex_header">
                 <div class="box_with_city flex_header">
                     <span class="d-flex flex-row align-items-center">
@@ -98,69 +98,70 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             // отключение композитного кеша вне компонента
                             Bitrix\Main\Page\Frame::getInstance()->startDynamicWithID("city-title");
                             // динамический контент?>
-                            <span id="city-title" class="text_header" data-city="<?= $_SESSION["code_region"]?>">
-                                        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH."/geolocation/location_current.php") ?>
-                                        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH."/geolocation/location_select.php") ?>
+                            <span id="city-title" class="text_header" data-city="<?= $_SESSION["code_region"] ?>">
+                                        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
+                                        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_select.php") ?>
                                     </span>
                             <?php Bitrix\Main\Page\Frame::getInstance()->finishDynamicWithID("city-title", ""); ?>
                         </button>
                     </div></a>
                     </span>
-                   <?/* <a href="/about/address-shops/" class="text_header adresa">Адреса магазинов</a>*/?>
+                    <? /* <a href="/about/address-shops/" class="text_header adresa">Адреса магазинов</a>*/ ?>
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
                     <a href="/about/contacts/" class="text_header">Контакты</a>
                     <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
-					<a href="javascript:void(0)" class="text_header callback">Обратный звонок</a>
+                    <a href="javascript:void(0)" class="text_header callback">Обратный звонок</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
-                    <?php } else {?>
+                    <?php } else { ?>
                         <a href="/about/FAQ/#support" class="text_header">Поддержка</a>
                     <?php } ?>
                 </div>
             </div>
         </div>
-        <div class="header_top collapse" id="MenuHeader">
-            <div class="mobile top_menu">
-                <div>
-                    <?php $APPLICATION->IncludeComponent(
-                        "bitrix:menu",
-                        "oshisha_menu_mobile",
-                        array(
-                            "ROOT_MENU_TYPE" => "left",
-                            "MENU_CACHE_TYPE" => "A",
-                            "MENU_CACHE_TIME" => "36000000",
-                            "MENU_CACHE_USE_GROUPS" => "Y",
-                            "MENU_THEME" => "site",
-                            "CACHE_SELECTED_ITEMS" => "N",
-                            "MENU_CACHE_GET_VARS" => array(),
-                            "MAX_LEVEL" => "3",
-                            "CHILD_MENU_TYPE" => "left",
-                            "USE_EXT" => "Y",
-                            "DELAY" => "N",
-                            "ALLOW_MULTI_SELECT" => "N",
-                            "COMPONENT_TEMPLATE" => "bootstrap_v4"
-                        ),
-                        false
-                    ); ?>
-                    <div class="ul_menu ul_menu_2">
-                        <div class="box_top_panel">
-                            <a href="/about/o-nas/" class="link_menu_top">
-                                <span class="text_catalog_link not_weight">О нас</span>
-                            </a>
-                            <a href="/about/contacts/" class="link_menu_top">
-                                <span class="text_catalog_link not_weight">Контакты</span>
-                            </a>
-                            <a href="/about/delivery/" class="link_menu_top ">
-                                <span class="text_catalog_link not_weight">Доставка и оплата</span>
-                            </a>
+        <?php if ($mobile->isMobile()) { ?>
+            <div class="header_top collapse" id="MenuHeader">
+                <div class="mobile top_menu">
+                    <div>
+                        <?php $APPLICATION->IncludeComponent(
+                            "bitrix:menu",
+                            "oshisha_menu_mobile",
+                            array(
+                                "ROOT_MENU_TYPE" => "left",
+                                "MENU_CACHE_TYPE" => "A",
+                                "MENU_CACHE_TIME" => "36000000",
+                                "MENU_CACHE_USE_GROUPS" => "Y",
+                                "MENU_THEME" => "site",
+                                "CACHE_SELECTED_ITEMS" => "N",
+                                "MENU_CACHE_GET_VARS" => array(),
+                                "MAX_LEVEL" => "3",
+                                "CHILD_MENU_TYPE" => "left",
+                                "USE_EXT" => "Y",
+                                "DELAY" => "N",
+                                "ALLOW_MULTI_SELECT" => "N",
+                                "COMPONENT_TEMPLATE" => "bootstrap_v4"
+                            ),
+                            false
+                        ); ?>
+                        <div class="ul_menu ul_menu_2">
+                            <div class="box_top_panel">
+                                <a href="/about/o-nas/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight">О нас</span>
+                                </a>
+                                <a href="/about/contacts/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight">Контакты</span>
+                                </a>
+                                <a href="/about/delivery/" class="link_menu_top ">
+                                    <span class="text_catalog_link not_weight">Доставка и оплата</span>
+                                </a>
 
-                            <a href="/about/FAQ/" class="link_menu_top ">
-                                <span class="text_catalog_link not_weight">FAQ</span>
-                            </a>
-                        </div>
-                        <span class="bx-header-phone-number">
+                                <a href="/about/FAQ/" class="link_menu_top ">
+                                    <span class="text_catalog_link not_weight">FAQ</span>
+                                </a>
+                            </div>
+                            <span class="bx-header-phone-number">
 									<?php $APPLICATION->IncludeComponent(
                                         "bitrix:main.include",
                                         "",
@@ -171,25 +172,26 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                         false
                                     ); ?>
 								</span>
-                        <div class="box_with_contact" >
-                            <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                            <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                            <div class="box_with_contact">
+                                <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                                <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
 
-                            <a href="#" class=" ">
-                                <div class="place">
-                                    <button type="button" class="place__button" data-toggle="modal"
-                                            data-target="#placeModal">
+                                <a href="#" class=" ">
+                                    <div class="place">
+                                        <button type="button" class="place__button" data-toggle="modal"
+                                                data-target="#placeModal">
                                     <span class="text_catalog_link not_weight">
-                                        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH."/geolocation/location_current.php") ?>
+                                        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
                                     </span>
-                                    </button>
-                                </div>
-                            </a>
+                                        </button>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <?php } ?>
         <div class="container_header">
             <!--        header menu search/login/basket/like     -->
             <div class="header_box_logo">
@@ -238,7 +240,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                     7 => "b2b",
                                     8 => "Сайт скидка"
                                 ),
-                                "FILL_ITEM_ALL_PRICES"=>"Y",
+                                "FILL_ITEM_ALL_PRICES" => "Y",
                                 "SHOW_PREVIEW" => "Y",
                                 "PREVIEW_WIDTH" => "75",
                                 "PREVIEW_HEIGHT" => "75",
@@ -271,34 +273,36 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </div>
                 </div>
             </div>
-            <div class="box_with_menu">
-                <div class="menu_header">
-                    <?php $APPLICATION->IncludeComponent(
-                        "bitrix:menu",
-                        "oshisha_menu",
-                        array(
-                            "ROOT_MENU_TYPE" => "left",
-                            "MENU_CACHE_TYPE" => "A",
-                            "MENU_CACHE_TIME" => "36000000",
-                            "MENU_CACHE_USE_GROUPS" => "Y",
-                            "MENU_THEME" => "site",
-                            "CACHE_SELECTED_ITEMS" => "N",
-                            "MENU_CACHE_GET_VARS" => array(),
-                            "MAX_LEVEL" => "4",
-                            "CHILD_MENU_TYPE" => "left",
-                            "USE_EXT" => "Y",
-                            "DELAY" => "N",
-                            "IBLOCK_ID" => IBLOCK_CATALOG, 
-                            "TYPE" => "1c_catalog",
-                            "ALLOW_MULTI_SELECT" => "N",
-                            "COMPONENT_TEMPLATE" => "bootstrap_v4",
-                            "SECTION_PAGE_URL" => "#SECTION_ID#/",
-                            "DETAIL_PAGE_URL" => "#SECTION_ID#/#ELEMENT_ID#",
-                        ),
-                        false
-                    ); ?>
+            <?php if (!$mobile->isMobile()) { ?>
+                <div class="box_with_menu">
+                    <div class="menu_header">
+                        <?php $APPLICATION->IncludeComponent(
+                            "bitrix:menu",
+                            "oshisha_menu",
+                            array(
+                                "ROOT_MENU_TYPE" => "left",
+                                "MENU_CACHE_TYPE" => "A",
+                                "MENU_CACHE_TIME" => "36000000",
+                                "MENU_CACHE_USE_GROUPS" => "Y",
+                                "MENU_THEME" => "site",
+                                "CACHE_SELECTED_ITEMS" => "N",
+                                "MENU_CACHE_GET_VARS" => array(),
+                                "MAX_LEVEL" => "4",
+                                "CHILD_MENU_TYPE" => "left",
+                                "USE_EXT" => "Y",
+                                "DELAY" => "N",
+                                "IBLOCK_ID" => IBLOCK_CATALOG,
+                                "TYPE" => "1c_catalog",
+                                "ALLOW_MULTI_SELECT" => "N",
+                                "COMPONENT_TEMPLATE" => "bootstrap_v4",
+                                "SECTION_PAGE_URL" => "#SECTION_ID#/",
+                                "DETAIL_PAGE_URL" => "#SECTION_ID#/#ELEMENT_ID#",
+                            ),
+                            false
+                        ); ?>
+                    </div>
                 </div>
-            </div>
+            <?php } ?>
         </div>
     </header>
 
@@ -307,7 +311,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 
 
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
-            <div >
-            <div class="bx-content <?=STATIC_P?>">
+            <div>
+                <div class="bx-content <?= STATIC_P ?>">
 
 
