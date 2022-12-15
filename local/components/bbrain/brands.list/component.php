@@ -1,43 +1,43 @@
-<?
+<?php
+
+/** @var $arParams */
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-use Bitrix\Main\Context,
-    Bitrix\Main\Type\DateTime,
-    Bitrix\Main\Loader,
-    Bitrix\Iblock;
+use Bitrix\Highloadblock\HighloadBlockTable;
+use Bitrix\Main\Loader;
 
-\Bitrix\Main\Loader::includeModule("iblock");
-\Bitrix\Main\Loader::includeModule("sale");
-\Bitrix\Main\Loader::includeModule("highloadblock");
-\Bitrix\Main\Loader::includeModule("catalog");
+Loader::includeModule("iblock");
+Loader::includeModule("sale");
+Loader::includeModule("highloadblock");
+Loader::includeModule("catalog");
 
-use Bitrix\Highloadblock as HL;
-
-if (!$arParams['IBLOCK_ID']) {
+if(!isset($arParams['HLBLOCK_NAME'])) {
     return;
 }
-//	TODO - заменить на получение через наименовнеие сущности highloadblock  Enterego\EnteregoHelper::getHeadBlock('BREND', $actualBlockData);
-// TODO - в $actualBlockData - лежит массив запрашиваемых полей - UF_CODE,UF_FILE,UF_NAME
-$hlbl = $arParams['IBLOCK_ID']; // Указываем ID нашего highloadblock блока
-$hlblock = HL\HighloadBlockTable::getById($hlbl)->fetch();
-$entity = HL\HighloadBlockTable::compileEntity($hlblock);
-$EHL = $entity->getDataClass();
 
+$result = HighloadBlockTable::getList(array('filter'=>array('=NAME'=>$arParams['HLBLOCK_NAME'])));
+if($row = $result->fetch())
+{
+    $obEntity = HighloadBlockTable::compileEntity($row);
+    $strEntityDataClass = $obEntity->getDataClass();
+} else {
+    return;
+}
 
-$QUERY['select'] = array('*');
-$QUERY['order'] = array("UF_NAME" => "ASC");
-$QUERY['filter'] = array();
+$QUERY = [
+    'select' => array('*'),
+    'order' => array("UF_NAME" => "ASC"),
+];
 
-$obData = $EHL::getList($QUERY);
+$obData = $strEntityDataClass::getList($QUERY);
 while ($arData = $obData->Fetch()) {
     $arSections = explode("#", $arData['UF_SECTIONS']);
     foreach ($arSections as $_sect) {
-        $arResult[$_sect][$arData['ID']] = $arData;
+        $sectionName = empty($_sect) ? 'Остальные' : $_sect;
+        $arResult[$sectionName][$arData['ID']] = $arData;
     }
-
-
 }
 
 $this->IncludeComponentTemplate();

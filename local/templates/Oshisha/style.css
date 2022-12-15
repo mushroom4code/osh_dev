@@ -5394,3 +5394,13 @@ li, ul {
         justify-content: center;
     }
 }
+
+/* BRANDS */
+.section_wrapper {
+    justify-content: flex-start;
+}
+
+.bx-breadcrumb {
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
