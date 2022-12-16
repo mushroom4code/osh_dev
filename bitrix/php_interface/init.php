@@ -36,6 +36,7 @@ $arIskCode = array(
 $SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
 
 require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
+require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
 
 const IBLOCK_CATALOG = 12;
 const MAIN_IBLOCK_ID = 8;

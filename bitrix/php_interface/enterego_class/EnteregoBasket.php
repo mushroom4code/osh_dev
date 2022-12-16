@@ -11,11 +11,11 @@ use CModule;
 use CUser;
 use Enterego\UserPrice\PluginStatic;
 use Enterego\UserPrice\UserPriceHelperOsh;
-/*
+
 Main\EventManager::getInstance()->addEventHandler('sale', 'OnSaleBasketBeforeSaved',
-    array('Enterego\EnteregoBasket', 'OnSaleBasketBeforeSaved'));*/
+    array('Enterego\EnteregoBasket', 'OnSaleBasketBeforeSaved'));
 Main\EventManager::getInstance()->addEventHandler('sale', 'OnSaleComponentOrderProperties',
-    ['Enterego\EnteregoBasket', 'OnSaleComponentOrderProperties']);
+    ['Enterego\EnteregoBasket', 'OnSaleBasketBeforeSaved']);
 
 class EnteregoBasket
 {
@@ -27,12 +27,12 @@ class EnteregoBasket
      * @param $arResult
      * @return void
      */
-    function OnSaleComponentOrderProperties(&$arUserResult, $request, &$arParams, &$arResult)
-    {
-        if ($arUserResult['PERSON_TYPE_ID']==PERSON_TYPE_BUYER && getUserType() && getCurrentPriceId()==B2B_PRICE) {
-            setCurrentPriceId(BASIC_PRICE);
-        }
-    }
+//    function OnSaleComponentOrderProperties(&$arUserResult, $request, &$arParams, &$arResult)
+//    {
+//        if ($arUserResult['PERSON_TYPE_ID']==PERSON_TYPE_BUYER && getUserType() && getCurrentPriceId()==B2B_PRICE) {
+//            setCurrentPriceId(BASIC_PRICE);
+//        }
+//    }
 
     /**
      * @param \Bitrix\Main\Event $event
@@ -103,7 +103,7 @@ class EnteregoBasket
                         }
                     } else {
                         if (!isset($product_prices[$product_id])) {
-                            $propsUseSale = CIBlockElement::GetProperty(9, $product_id,
+                            $propsUseSale = CIBlockElement::GetProperty(12, $product_id,
                                 array(), array('CODE' => 'USE_DISCOUNT'));
                             $newProp = $propsUseSale->Fetch();
                             $price_id = $newProp['VALUE_XML_ID'] == 'true' ?
@@ -132,7 +132,7 @@ class EnteregoBasket
                     ]);
                     $basket->save();
                 }
-                $propsUseSale = CIBlockElement::GetProperty(9, $product_id,
+                $propsUseSale = CIBlockElement::GetProperty(12, $product_id,
                     array(), array('CODE' => 'USE_DISCOUNT'));
                 $newProp = $propsUseSale->Fetch();
                 $price_id = USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true' ?
