@@ -388,8 +388,8 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                     $height = 10;
                     $strong = 0;
                     if (isset($arResult['PROPERTIES'][PROP_STRONG_CODE]) && !empty($arResult['PROPERTIES'][PROP_STRONG_CODE]['VALUE'])) {
-                        switch ($arResult['PROPERTIES']['KREPKOST_TABAKA']['VALUE']) {
-                            case "Легкий":
+                        switch ($arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE']) {
+                            case "легкая":
                                 $strong = 0.5;
                                 $color = "#07AB66";
                                 break;
@@ -397,7 +397,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                                 $strong = 1;
                                 $color = "#07AB66";
                                 break;
-                            case "Средний":
+                            case "средняя":
                                 $strong = 1.5;
                                 $color = "#FFC700";
                                 break;
@@ -405,7 +405,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                                 $strong = 2;
                                 $color = "#FFC700";
                                 break;
-                            case "Крепкий":
+                            case "крепкая":
                                 $strong = 2.5;
                                 $color = "#FF7A00";
                                 break;
@@ -416,7 +416,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                         } ?>
                         <div style="color: <?= $color ?>" class="column mt-lg-3 mt-md-3 mt-0 mb-4">
                             <p class="condensation_text">
-                                Крепость: <?= $arResult['PROPERTIES']['KREPKOST_TABAKA']['VALUE'] ?> </p>
+                                Крепость: <?= $arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE'] ?> </p>
                             <div class="d-flex flex-row">
                                 <?php for ($i = 0; $i < 3; $i++) { ?>
                                     <div style="border-color: <?= $color ?>; <?= ($strong - $i) >= 1 ? "background-color: $color" : ''; ?>"
