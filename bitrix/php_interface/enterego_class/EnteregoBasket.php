@@ -60,6 +60,8 @@ class EnteregoBasket
         $currentPriceTypeId = getCurrentPriceId();
         if (!empty($currentPriceTypeId)) {
 
+            $origin_total_price = 0;
+
             /** @var \Bitrix\Sale\BasketItem $item */
 
             foreach ($basket_items as $item) {
@@ -67,21 +69,6 @@ class EnteregoBasket
                 $product_id = $item->getProductId();
                 $product_quantity = $item->getQuantity();
 
-                if ($userId) {
-                    $productSectionId = UserPriceHelperOsh::GetSectionID($product_id);
-                    $priceId = PluginStatic::GetPriceIdFromRule($product_id, $productSectionId, $userId);
-                    
-					$rsCustomPrice = PriceTable::getList(
-                        ['select' => ['*'],
-                            'filter' => [
-                                '=PRODUCT_ID' => $product_id,
-                                '=CATALOG_GROUP_ID' => $priceId
-                            ],
-                        ]);
-                    if ($arCustomPrice = $rsCustomPrice->Fetch()) {
-                        $product_prices[$product_id] = $arCustomPrice['PRICE'];
-                    }
-                }
 
                 if (!isset($product_prices[$product_id])) {
                     if (USE_CUSTOM_SALE_PRICE) {
@@ -106,8 +93,26 @@ class EnteregoBasket
                             $propsUseSale = CIBlockElement::GetProperty(12, $product_id,
                                 array(), array('CODE' => 'USE_DISCOUNT'));
                             $newProp = $propsUseSale->Fetch();
-                            $price_id = $newProp['VALUE_XML_ID'] == 'true' ?
-                                SALE_PRICE_TYPE_ID : $currentPriceTypeId;
+
+
+                            $origin_price = self::loadProductPrice($product_id, BASIC_PRICE);
+                            if ($origin_price) {
+                                $origin_total_price += $product_quantity * $origin_price;
+                                $product_prices[$product_id]['PRICE'] = $origin_price;
+                                $product_prices[$product_id]['PRICE_TYPE'] = BASIC_PRICE;
+                            }
+
+                            if ($newProp['VALUE_XML_ID'] == 'true') {
+                                $price_id = SALE_PRICE_TYPE_ID;
+                            } else {
+                                if ($origin_total_price <= 10000) {
+                                    $price_id = RETAIL_PRICE;
+                                } elseif ($origin_total_price <= 30000) {
+                                    $price_id = BASIC_PRICE;
+                                } else {
+                                    $price_id = B2B_PRICE;
+                                }
+                            }
 
                             $res = CIBlockElement::GetList(array(), array("ID" => $product_id), false,
                                 false, array("CATALOG_PRICE_$price_id"));
@@ -147,9 +152,18 @@ class EnteregoBasket
                     'BASE_PRICE' => $new_basket_data[$product_id]['PRICE'],
                     'PRICE_TYPE_ID' => $price_id,
                 ]);
-				
+
             }
         }
 
+    }
+
+    private static function loadProductPrice($product_id, $price_type_id): ?int
+    {
+        $res = CIBlockElement::GetList(array(), array("ID" => $product_id), false, false, ["CATALOG_PRICE_$price_type_id"]);
+        if ($ar_res = $res->Fetch()) {
+            return $ar_res["CATALOG_PRICE_$price_type_id"];
+        }
+        return null;
     }
 }

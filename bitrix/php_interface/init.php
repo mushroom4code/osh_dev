@@ -46,7 +46,7 @@ const LOCATION_ID = 6;
 const SALE_PRICE_TYPE_ID = 3;
 const BASIC_PRICE = 2;
 const B2B_PRICE = 9;
-
+const RETAIL_PRICE = 4;
 const PERSON_TYPE_CONTRAGENT = 2;
 const PERSON_TYPE_BUYER = 1;
 
