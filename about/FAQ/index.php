@@ -5,17 +5,19 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
  * @var CMain $APPLICATION
  */
 $APPLICATION->SetTitle("FAQ");
-Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
+//Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
 ?>
     <div id="faq" class="box_boxes_delivery mt-3 static">
         <h1>FAQ</h1>
-        <div class="d-flex flex-column mb-3" id="FAQ">
+        <div class="d-flex flex-column mb-3 mt-4" id="FAQ">
 
             <?php
             $k = 0;
-            $SectionRes = CIBlockSection::GetList(array(), array('ACTIVE' => 'Y', 'CODE' => 'FAQ'), false, array("CODE", 'NAME', 'ID', 'IBLOCK_SECTION_ID', 'XML_ID'));
-            while ($arSection = $SectionRes->GetNext()) {
-                ?>
+            $SectionRes = CIBlockSection::GetList(array(),
+                array('ACTIVE' => 'Y', 'IBLOCK_CODE' => 'FAQ'),
+                false, array("CODE", 'NAME', 'ID', 'IBLOCK_SECTION_ID', 'XML_ID')
+            );
+            while ($arSection = $SectionRes->GetNext()) {?>
                 <div class="mb-5">
                     <h4 class="mb-4"><?= $arSection['NAME'] ?></h4>
 
@@ -23,7 +25,7 @@ Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
                         <div class="accordion box_with_map" id="<?= $arSection['CODE'] ?>">
                             <?php
                             $arFilter = array(
-                                'CODE' => 'FAQ',
+                                'IBLOCK_CODE' => 'FAQ',
                                 'ACTIVE' => 'Y',
                                 'SECTION_ID' => $arSection['ID']
                             );
@@ -66,21 +68,23 @@ Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
         <h4 class="mb-4"><b> Есть вопросы, пожелания или комментарии? Напиши их здесь!</b></h4>
         <div class="mb-5">
             <form class="form_company" id="support">
-                <input type="hidden" name="recaptcha_token" value="">
-                <?php echo bitrix_sessid_post(); ?>
-                <input type="hidden" name="captcha_sid" value="<?= $arResult["CAPTCHA_CODE"] ?>"/>
-                <div class="form-group">
-                    <?= GetMessage("CAPTCHA_REGF_PROMT") ?>
-                    <div class="form-group">
-                        <div class="bx-captcha"><img
-                                    src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult["CAPTCHA_CODE"] ?>"
-                                    width="180" height="40" alt="CAPTCHA"/></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="captcha_word" maxlength="50"
-                               value="" autocomplete="off"/>
-                    </div>
-                </div>
+                <!--                <input type="hidden" name="recaptcha_token" value="">-->
+                <!--                --><?php //echo bitrix_sessid_post(); ?>
+                <!--                <input type="hidden" name="captcha_sid" value="-->
+                <?php //= $arResult["CAPTCHA_CODE"] ?><!--"/>-->
+                <!--                <div class="form-group">-->
+                <!--                    --><?php //= GetMessage("CAPTCHA_REGF_PROMT") ?>
+                <!--                    <div class="form-group">-->
+                <!--                        <div class="bx-captcha"><img-->
+                <!--                                    src="/bitrix/tools/captcha.php?captcha_sid=-->
+                <?php //= $arResult["CAPTCHA_CODE"] ?><!--"-->
+                <!--                                    width="180" height="40" alt="CAPTCHA"/></div>-->
+                <!--                    </div>-->
+                <!--                    <div class="form-group">-->
+                <!--                        <input type="text" class="form-control" name="captcha_word" maxlength="50"-->
+                <!--                               value="" autocomplete="off"/>-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 <div class="form-group mb-3">
                     <label class="label_company">Поделись с нами!</label>
                 </div>
