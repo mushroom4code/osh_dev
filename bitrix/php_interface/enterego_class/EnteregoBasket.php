@@ -55,9 +55,8 @@ class EnteregoBasket
         /** @var \Bitrix\Sale\Basket $basket */
         $basket = $event->getParameter("ENTITY");
         $basket_items = $basket->getBasketItems();
-
-        $userId = CUser::GetID();
         $currentPriceTypeId = getCurrentPriceId();
+
         if (!empty($currentPriceTypeId)) {
 
             $origin_total_price = 0;
@@ -71,54 +70,68 @@ class EnteregoBasket
 
 
                 if (!isset($product_prices[$product_id])) {
-                    if (USE_CUSTOM_SALE_PRICE) {
+                    $propsUseSale = CIBlockElement::GetProperty(
+                        IBLOCK_CATALOG,
+                        $product_id,
+                        array(),
+                        array('CODE' => 'USE_DISCOUNT'));
+                    $newProp = $propsUseSale->Fetch();
+
+                    if (USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') {
                         $price_id = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
-                        $result = CIBlockElement::GetList(array(), array("ID" => $product_id), false,
-                            false, array("$price_id"));
+                        $result = CIBlockElement::GetList(
+                            array(),
+                            array("ID" => $product_id),
+                            false,
+                            false,
+                            array("$price_id"));
 
                         if ($ar_res = $result->fetch()) {
                             if (!empty($ar_res["$price_id"])) {
-                                $product_prices[$product_id] = $ar_res["$price_id"];
+
+                                $product_prices[$product_id]['PRICE'] = $ar_res["$price_id"];
+                                $product_prices[$product_id]['PRICE_ID'] = SALE_PRICE_TYPE_ID;
                             } else {
+
                                 $price_ids = "CATALOG_PRICE_" . $currentPriceTypeId;
-                                $res = CIBlockElement::GetList(array(), array("ID" => $product_id), false,
-                                    false, array("$price_ids"));
+                                $res = CIBlockElement::GetList(
+                                    array(),
+                                    array("ID" => $product_id),
+                                    false,
+                                    false,
+                                    array("$price_ids"));
+
                                 if ($arData = $res->fetch()) {
-                                    $product_prices[$product_id] = $arData["$price_ids"];
+                                    $product_prices[$product_id]['PRICE'] = $arData["$price_ids"];
+                                    $product_prices[$product_id]['PRICE_ID'] = SALE_PRICE_TYPE_ID;
                                 }
                             }
                         }
                     } else {
-                        if (!isset($product_prices[$product_id])) {
-                            $propsUseSale = CIBlockElement::GetProperty(12, $product_id,
-                                array(), array('CODE' => 'USE_DISCOUNT'));
-                            $newProp = $propsUseSale->Fetch();
 
+                        $origin_price = self::loadProductPrice($product_id, BASIC_PRICE);
+                        if ($origin_price) {
+                            $origin_total_price += $product_quantity * $origin_price;
+                        }
 
-                            $origin_price = self::loadProductPrice($product_id, BASIC_PRICE);
-                            if ($origin_price) {
-                                $origin_total_price += $product_quantity * $origin_price;
-                                $product_prices[$product_id]['PRICE'] = $origin_price;
-                                $product_prices[$product_id]['PRICE_TYPE'] = BASIC_PRICE;
-                            }
+                        if ($origin_total_price <= 10000) {
+                            $price_id = RETAIL_PRICE;
+                        } elseif ($origin_total_price <= 30000) {
+                            $price_id = BASIC_PRICE;
+                        } else {
+                            $price_id = B2B_PRICE;
+                        }
 
-                            if ($newProp['VALUE_XML_ID'] == 'true') {
-                                $price_id = SALE_PRICE_TYPE_ID;
-                            } else {
-                                if ($origin_total_price <= 10000) {
-                                    $price_id = RETAIL_PRICE;
-                                } elseif ($origin_total_price <= 30000) {
-                                    $price_id = BASIC_PRICE;
-                                } else {
-                                    $price_id = B2B_PRICE;
-                                }
-                            }
+                        $res = CIBlockElement::GetList(
+                            array(),
+                            array("ID" => $product_id),
+                            false,
+                            false,
+                            array("CATALOG_PRICE_$price_id"));
 
-                            $res = CIBlockElement::GetList(array(), array("ID" => $product_id), false,
-                                false, array("CATALOG_PRICE_$price_id"));
-                            if ($ar_res = $res->fetch()) {
-                                $product_prices[$product_id] = $ar_res["CATALOG_PRICE_$price_id"];
-                            }
+                        if ($ar_res = $res->fetch()) {
+                            $product_prices[$product_id]['PRICE'] = $ar_res["CATALOG_PRICE_$price_id"];
+                            $product_prices[$product_id]['PRICE_ID'] = $price_id;
                         }
                     }
                 }
@@ -137,12 +150,10 @@ class EnteregoBasket
                     ]);
                     $basket->save();
                 }
-                $propsUseSale = CIBlockElement::GetProperty(12, $product_id,
-                    array(), array('CODE' => 'USE_DISCOUNT'));
-                $newProp = $propsUseSale->Fetch();
-                $price_id = USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true' ?
-                    SALE_PRICE_TYPE_ID : $currentPriceTypeId;
-                $new_basket_data[$product_id]['PRICE'] = $price_data;
+
+                $price_id = $price_data['PRICE_ID'];
+                $new_basket_data[$product_id]['PRICE'] = $price_data['PRICE'];
+
                 $item->setFields([
                     'QUANTITY' => $new_basket_data[$product_id]['QUANTITY'],
                     'CURRENCY' => CurrencyManager::getBaseCurrency(),
@@ -158,9 +169,20 @@ class EnteregoBasket
 
     }
 
+    /**
+     * @param $product_id
+     * @param $price_type_id
+     * @return int|null
+     */
     private static function loadProductPrice($product_id, $price_type_id): ?int
     {
-        $res = CIBlockElement::GetList(array(), array("ID" => $product_id), false, false, ["CATALOG_PRICE_$price_type_id"]);
+        $res = CIBlockElement::GetList(
+            array(),
+            array("ID" => $product_id),
+            false,
+            false,
+            ["CATALOG_PRICE_$price_type_id"]);
+
         if ($ar_res = $res->Fetch()) {
             return $ar_res["CATALOG_PRICE_$price_type_id"];
         }
