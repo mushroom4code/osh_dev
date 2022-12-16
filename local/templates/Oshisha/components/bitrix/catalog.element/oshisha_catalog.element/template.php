@@ -22,13 +22,28 @@ use Bitrix\Highloadblock as HL;
  * @var string $templateFolder
  * @var CUser $USER
  */
-
 $this->setFrameMode(true);
+
 global $SETTINGS;
 $arIskCode = explode(",", $SETTINGS['arIskCode']);
-$rowResHidePrice = CIBlockSection::GetList(array(), array('ID' => $arResult['SECTION']['ID'], 'IBLOCK_ID' => $arParams['IBLOCK_ID']), false, array("ID", 'IBLOCK_SECTION_ID', 'UF_HIDE_PRICE'))->Fetch();
 $templateLibrary = array('popup', 'fx');
 $currencyList = '';
+$article = $arResult['PROPERTIES']['CML2_TRAITS'];
+$mainId = $this->GetEditAreaId($arResult['ID']);
+
+$rowResHidePrice = CIBlockSection::GetList(array(),
+    array(
+        'ID' => $arResult['SECTION']['ID'],
+        'IBLOCK_ID' => $arParams['IBLOCK_ID']
+    ),
+    false,
+    array(
+        "ID",
+        'IBLOCK_SECTION_ID',
+        'UF_HIDE_PRICE'
+    )
+)->Fetch();
+
 
 if (!empty($arResult['CURRENCIES'])) {
     $templateLibrary[] = 'currency';
@@ -47,10 +62,7 @@ $templateData = array(
     )
 );
 unset($currencyList, $templateLibrary);
-$article = $arResult['PROPERTIES']['CML2_TRAITS'];
 
-
-$mainId = $this->GetEditAreaId($arResult['ID']);
 $itemIds = array(
     'ID' => $mainId,
     'DISCOUNT_PERCENT_ID' => $mainId . '_dsc_pict',
@@ -122,7 +134,9 @@ $price = [];
 $useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
 
 foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
+
     foreach ($PRICE['PRICES'] as $price_key => $price_val) {
+
 
         if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
             if ($price_key == SALE_PRICE_TYPE_ID) {
@@ -130,9 +144,17 @@ foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
             }
         }
 
-        if ($price_key == $GLOBALS['PRICE_TYPE_ID']) {
-            $price['PRICE_DATA'] = $price_val;
+        if ((int)$price_val['PRICE_TYPE_ID'] === RETAIL_PRICE) {
+            $price['PRICE_DATA'][0] = $price_val;
+            $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
+        } else if ((int)$price_val['PRICE_TYPE_ID'] === BASIC_PRICE) {
+            $price['PRICE_DATA'][1] = $price_val;
+            $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
+        } elseif ((int)$price_val['PRICE_TYPE_ID'] === B2B_PRICE) {
+            $price['PRICE_DATA'][2] = $price_val;
+            $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
         }
+        ksort($price['PRICE_DATA']);
     }
 }
 if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $actualItem['PRODUCT']['QUANTITY'])
@@ -181,27 +203,22 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
         $labelPositionClass .= isset($positionClassMap[$pos]) ? ' ' . $positionClassMap[$pos] : '';
     }
 }
+
 $item_id = [];
 $FUser_id = '';
 $id_USER = $USER->GetID();
-//if (empty($id_USER)) {
 $FUser_id = Fuser::getId($id_USER);
-//}
 $item_id[] = $arResult['ID'];
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
 foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
     $arResult['COUNT_LIKES'] = $count;
 }
-/*
-foreach ($count_likes['USER'] as $keyLike => $count) { 
-    $arResult['COUNT_LIKE'] = $count['Like'][$item_id];
-    $arResult['COUNT_FAV'] = $count['Fav'][$item_id];
-}*/
+
 
 $arResult['COUNT_LIKE'] = $count_likes['USER'][$arResult['ID']]['Like'][0];
 $arResult['COUNT_FAV'] = $count_likes['USER'][$arResult['ID']]['Fav'][0];
-//var_dump($arResult['COUNT_LIKE']);
+
 $taste = $arResult['PROPERTIES']['VKUS'];
 $themeClass = isset($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_THEME'] : '';
 
@@ -213,7 +230,9 @@ $arItems = CSaleBasket::GetList(
     false,
     false,
     array("QUANTITY"));
+
 $priceBasket = 0;
+
 while ($res = $arItems->Fetch()) {
     if (!empty($res["QUANTITY"]) && $res !== false) {
         $priceBasket = $res["QUANTITY"];
@@ -231,10 +250,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
             $actualItem['PICTURE'][] = $item;
         }
     }
-}
-
-
-?>
+} ?>
     <div class="bx-catalog-element  cat-det <? if ($rowResHidePrice['UF_HIDE_PRICE'] == 1 && !$USER->IsAuthorized()): ?>blur_photo<? endif; ?>"
          id="<?= $itemIds['ID'] ?>">
         <div class="row  mb-lg-4  mb-md-4 mb-2">
@@ -266,12 +282,12 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                                     <?= $nameTaste ?>
                                     </span>
                                 <?php }
-                                continue;
                             }
                         } ?>
                     </div>
-                    <div class="product-item-detail-slider-block<?= ($arParams['IMAGE_RESOLUTION'] === '1by1' ? 'product-item-detail-slider-block-square' :
-                        '') ?>" data-entity="images-slider-block">
+                    <div class="product-item-detail-slider-block
+                    <?= ($arParams['IMAGE_RESOLUTION'] === '1by1' ? 'product-item-detail-slider-block-square' : '') ?>"
+                         data-entity="images-slider-block">
                         <div>
                             <span class="product-item-detail-slider-left carousel_elem_custom"
                                   data-entity="slider-control-left"
@@ -442,44 +458,34 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                     switch ($blockName) {
                     case 'price':
 
-                    if ($USER->IsAuthorized()) {
-                        $userId = $USER->GetID();
-                        $productSectionId = Enterego\UserPrice\UserPriceHelperOsh::GetSectionID($arResult['ID']);
-                        $price_id = Enterego\UserPrice\PluginStatic::GetPriceIdFromRule($arResult['ID'], $productSectionId, $userId);
-
-                        if ($price_id) {
-                            $rsCustomPrice = PriceTable::getList(
-                                ['select' => ['*'],
-                                    'filter' => [
-                                        '=PRODUCT_ID' => $arResult['ID'],
-                                        '=CATALOG_GROUP_ID' => $price_id
-                                    ],
-                                ]);
-                            if ($arCustomPrice = $rsCustomPrice->Fetch()) {
-                                $price_new = CurrencyFormat($arCustomPrice['PRICE'], $arCustomPrice['CURRENCY']);
-                            }
-                        }
+                    if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                        $useDiscount['VALUE_XML_ID'] === 'true' && !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
+                        $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
+                        $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
+                    } else {
+                        $price_new = $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                        $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
                     }
-
-                    if (empty($price_new)) {
-                        if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                            $useDiscount['VALUE_XML_ID'] === 'true' && !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
-                            $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
-                            $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
-                        } else {
-                            $price_new = $price['PRICE_DATA']['PRINT_PRICE'];
-                            $price_id = $price['PRICE_DATA']['PRICE_TYPE_ID'];
-                        }
-                    } ?>
-                    <div class="mb-4 d-flex flex-row align-items-center">
-                        <div class="product-item-detail-price-current"
-                             id="<?= $itemIds['PRICE_ID'] ?>"><?= $price_new ?>
+                    ?>
+                    <div class="mb-4 d-flex flex-column">
+                        <div class="mb-3 d-flex flex-row align-items-center">
+                            <div class="product-item-detail-price-current"
+                                 id="<?= $itemIds['PRICE_ID'] ?>"><?= $price_new ?>
+                            </div>
+                            <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRINT_PRICE']) ||
+                                $useDiscount['VALUE_XML_ID'] === 'true' &&
+                                !empty($price['SALE_PRICE']['PRINT_PRICE'])) { ?>
+                                <span class="span">Старая цена <?= $price['PRICE_DATA'][1]['PRINT_PRICE']; ?></span>
+                            <?php } ?>
                         </div>
-                        <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRINT_PRICE']) ||
-                            $useDiscount['VALUE_XML_ID'] === 'true' &&
-                            !empty($price['SALE_PRICE']['PRINT_PRICE'])) { ?>
-                            <span class="span">Старая цена <?= $price['PRICE_DATA']['PRINT_PRICE']; ?></span>
-                        <?php } ?>
+                        <div class="d-flex flex-column prices-block">
+                            <?php foreach ($price['PRICE_DATA'] as $items) { ?>
+                                <p>
+                                    <span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
+                                    <span class="font-14 ml-2"><b><?= $items['PRINT_PRICE']?></b></span>
+                                </p>
+                            <?php } ?>
+                        </div>
                     </div>
                     <!--Бонусная система -->
                     <!--                            <div class="mb-5">-->

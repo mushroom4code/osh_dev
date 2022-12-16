@@ -138,9 +138,10 @@ class BXConstants
     static function PriceCode()
     {
         return array(
-            3 => "Сайт скидка",
-            2 => "Основная",
-            9 => "b2b",
+            SALE_PRICE_TYPE_ID => "Сайт скидка",
+            BASIC_PRICE => "Основная",
+            B2B_PRICE => "b2b",
+            RETAIL_PRICE => 'Розничная',
         );
 
     }

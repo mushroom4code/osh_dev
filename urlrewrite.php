@@ -127,7 +127,7 @@ $arUrlRewrite=array (
     'PATH' => '/loyalty/index.php',
     'SORT' => 100,
   ),
-  106 => 
+  171 => 
   array (
     'CONDITION' => '#^/catalog/#',
     'RULE' => '',

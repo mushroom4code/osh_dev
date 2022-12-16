@@ -178,6 +178,12 @@ select {
     height: 0;
 }
 
+.prices-block {
+    width: fit-content;
+    background-color: #F0F0F0;
+    padding: 15px;
+    border-radius: 10px;
+}
 /* BOXES */
 .box_footer {
     background-color: #313131;
