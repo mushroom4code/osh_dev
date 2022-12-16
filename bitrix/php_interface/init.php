@@ -1,7 +1,6 @@
 <?php
 
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
-use Bitrix\Sale\Order;
 
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPKOST_TABAKA'); //Свойство для отображения крепости

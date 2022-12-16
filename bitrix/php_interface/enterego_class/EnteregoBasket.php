@@ -2,20 +2,16 @@
 
 namespace Enterego;
 
-use Bitrix\Catalog\PriceTable;
 use Bitrix\Currency\CurrencyManager;
 use Bitrix\Main;
 use Bitrix\Main\Context;
 use CIBlockElement;
 use CModule;
-use CUser;
-use Enterego\UserPrice\PluginStatic;
-use Enterego\UserPrice\UserPriceHelperOsh;
+
 
 Main\EventManager::getInstance()->addEventHandler('sale', 'OnSaleBasketBeforeSaved',
     array('Enterego\EnteregoBasket', 'OnSaleBasketBeforeSaved'));
-Main\EventManager::getInstance()->addEventHandler('sale', 'OnSaleComponentOrderProperties',
-    ['Enterego\EnteregoBasket', 'OnSaleBasketBeforeSaved']);
+
 
 class EnteregoBasket
 {
