@@ -206,24 +206,27 @@ class CUserEx
 	
 	
 AddEventHandler("sale", "OnOrderSave",  "OnOrderAddHandlerSave");
-function OnOrderAddHandlerSave($ID, $arFields, $arOrder){
+function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
+{
+    //TODO FIX why fix claddr
+    return;
     $order = Bitrix\Sale\Order::load($ID);
 
-        $propertyCollection = $order->getPropertyCollection();
+    $propertyCollection = $order->getPropertyCollection();
 
-			$FIX_KLADR = '7700000000000';
-			$propValueKLADR = $propertyCollection->getItemByOrderPropertyId(34);
-			$propValueKLADR->setValue($FIX_KLADR);
-			
-	        $propValueF = $propertyCollection->getItemByOrderPropertyId(19)->getValue();
-			$propValueM = $propertyCollection->getItemByOrderPropertyId(22)->getValue();
-			$propValueN = $propertyCollection->getItemByOrderPropertyId(24)->getValue();
-			$propValuePropusk = $propertyCollection->getItemByOrderPropertyId(37);
-			$ResultPropusk = trim($propValueF.' '.$propValueM.' '.$propValueN);
-			$propValuePropusk->setValue($ResultPropusk);
-        	
-        	$order->save();
-			
-			//if( $order->getPersonTypeId() == 1 ){}
+    $FIX_KLADR = '7700000000000';
+    $propValueKLADR = $propertyCollection->getItemByOrderPropertyId(34);
+    $propValueKLADR->setValue($FIX_KLADR);
+
+    $propValueF = $propertyCollection->getItemByOrderPropertyId(19)->getValue();
+    $propValueM = $propertyCollection->getItemByOrderPropertyId(22)->getValue();
+    $propValueN = $propertyCollection->getItemByOrderPropertyId(24)->getValue();
+    $propValuePropusk = $propertyCollection->getItemByOrderPropertyId(37);
+    $ResultPropusk = trim($propValueF . ' ' . $propValueM . ' ' . $propValueN);
+    $propValuePropusk->setValue($ResultPropusk);
+
+    $order->save();
+
+    //if( $order->getPersonTypeId() == 1 ){}
 
 }	

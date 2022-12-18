@@ -1,5 +1,6 @@
 <?php
 
+use Bitrix\Crm\Service\Sale\Order\BuyerService;
 use Bitrix\Main;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Controller\PhoneAuth;
@@ -664,7 +665,9 @@ class SaleOrderAjax extends \CBitrixComponent
 
 			if ($shipment = $this->getCurrentShipment($lastOrder))
 			{
-				//$lastOrderData['DELIVERY_ID'] = $shipment->getDeliveryId();
+                //Enterego uncomment
+				$lastOrderData['DELIVERY_ID'] = $shipment->getDeliveryId();
+                
 				$lastOrderData['BUYER_STORE'] = $shipment->getStoreId();
 				$lastOrderData['DELIVERY_EXTRA_SERVICES'][$shipment->getDeliveryId()] = $shipment->getExtraServices();
 				if ($storeFields = Delivery\ExtraServices\Manager::getStoresFields($lastOrderData['DELIVERY_ID'], false))
@@ -686,8 +689,8 @@ class SaleOrderAjax extends \CBitrixComponent
 		)
 		{
 			$showData = [];
-			
-			//$lastOrderData = $this->getLastOrderData($order);
+            //Enterego uncomment
+			$lastOrderData = $this->getLastOrderData($order);
 
 			if (!empty($lastOrderData))
 			{
@@ -701,7 +704,8 @@ class SaleOrderAjax extends \CBitrixComponent
 					$this->arUserResult['PAY_SYSTEM_ID'] = $showData['PAY_SYSTEM_ID'] = $lastOrderData['PAY_SYSTEM_ID'];
 
 				if (!empty($lastOrderData['DELIVERY_ID']))
-					$this->arUserResult['DELIVERY_ID'] = $showData['DELIVERY_ID'];// = $lastOrderData['DELIVERY_ID'];
+                    $this->arUserResult['DELIVERY_ID'] = $showData['DELIVERY_ID'] = $lastOrderData['DELIVERY_ID'];
+                //$this->arUserResult['DELIVERY_ID'] = $showData['DELIVERY_ID'];// = $lastOrderData['DELIVERY_ID'];
 
 				if (!empty($lastOrderData['DELIVERY_EXTRA_SERVICES']))
 					$this->arUserResult['DELIVERY_EXTRA_SERVICES'] = $showData['DELIVERY_EXTRA_SERVICES'] = $lastOrderData['DELIVERY_EXTRA_SERVICES'];
@@ -710,7 +714,6 @@ class SaleOrderAjax extends \CBitrixComponent
 					$this->arUserResult['BUYER_STORE'] = $showData['BUYER_STORE'] = $lastOrderData['BUYER_STORE'];
 
 				$this->arUserResult['LAST_ORDER_DATA'] = $showData;
-			
 			}
 		}
 	}
@@ -774,7 +777,8 @@ class SaleOrderAjax extends \CBitrixComponent
 
 		if ($haveProfileId)
 		{
-			//$profileProperties = Sale\OrderUserProperties::getProfileValues((int)$this->arUserResult['PROFILE_ID']); //скрыли чтобы адрес не сбивали
+            //Enterego uncomment
+			$profileProperties = Sale\OrderUserProperties::getProfileValues((int)$this->arUserResult['PROFILE_ID']); //скрыли чтобы адрес не сбивали
 		}
 
 		$ipAddress = '';
@@ -896,8 +900,9 @@ class SaleOrderAjax extends \CBitrixComponent
 			$this->arUserResult['ORDER_PROP'][$property['ID']] = $curVal;
 		}
 
-		$this->checkZipProperty($order, $willUseProfile);
-		$this->checkAltLocationProperty($order, $willUseProfile, $profileProperties);
+        $this->checkProperties($order, $isPersonTypeChanged, $willUseProfile, $profileProperties);
+		//$this->checkZipProperty($order, $willUseProfile);
+		//$this->checkAltLocationProperty($order, $willUseProfile, $profileProperties);
 
 		foreach (GetModuleEvents('sale', 'OnSaleComponentOrderProperties', true) as $arEvent)
 		{
@@ -1022,6 +1027,63 @@ class SaleOrderAjax extends \CBitrixComponent
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Checks all order properties.
+	 *
+	 * @param Order $order
+	 * @param bool $isPersonTypeChanged
+	 * @param bool|null $willUseProfile
+	 * @param array|null $profileProperties
+	 *
+	 * @return void
+	 */
+	protected function checkProperties(
+		Order $order,
+		bool $isPersonTypeChanged,
+		?bool $willUseProfile = null,
+		?array $profileProperties = null
+	): void
+	{
+		$haveProfileId = (int)$this->arUserResult['PROFILE_ID'] > 0;
+
+		if (is_null($willUseProfile))
+		{
+			if ($haveProfileId)
+			{
+				$willUseProfile =
+					$isPersonTypeChanged
+					// first load
+					|| $this->request->getRequestMethod() === 'GET'
+					// just authorized
+					|| $this->request->get('do_authorize') === 'Y'
+					|| $this->request->get('do_register') === 'Y'
+					|| $this->request->get('SMS_CODE')
+					// is profile changed
+					|| $this->arUserResult['PROFILE_CHANGE'] === 'Y'
+				;
+			}
+			else
+			{
+				$willUseProfile = false;
+			}
+		}
+
+		if (is_null($profileProperties))
+		{
+			if ($haveProfileId)
+			{
+				$profileProperties = Sale\OrderUserProperties::getProfileValues((int)$this->arUserResult['PROFILE_ID']);
+			}
+			else
+			{
+				$profileProperties = [];
+			}
+		}
+
+		$this->checkZipProperty($order, $willUseProfile);
+		$this->checkAltLocationProperty($order, $willUseProfile, $profileProperties);
 	}
 
 	/**
@@ -3190,7 +3252,6 @@ class SaleOrderAjax extends \CBitrixComponent
 				$arDelivery['DESCRIPTION'] = $this->sanitize($deliveryObj->getDescription());
 				$arDelivery['FIELD_NAME'] = 'DELIVERY_ID';
 				$arDelivery["CURRENCY"] = $this->order->getCurrency();
-				
 				$arDelivery['SORT'] = $deliveryObj->getSort();
 				$arDelivery['EXTRA_SERVICES'] = $deliveryObj->getExtraServices()->getItems();
 				$arDelivery['STORE'] = Delivery\ExtraServices\Manager::getStoresList($deliveryObj->getId());
@@ -3834,7 +3895,6 @@ class SaleOrderAjax extends \CBitrixComponent
 	protected function initDelivery(Shipment $shipment)
 	{
 		$deliveryId = intval($this->arUserResult['DELIVERY_ID']);
-	
 		$this->initDeliveryServices($shipment);
 		/** @var Sale\ShipmentCollection $shipmentCollection */
 		$shipmentCollection = $shipment->getCollection();
@@ -3855,7 +3915,8 @@ class SaleOrderAjax extends \CBitrixComponent
 					$this->addWarning(Loc::getMessage("DELIVERY_CHANGE_WARNING"), self::DELIVERY_BLOCK);
 				}
 
-				//$deliveryId = $deliveryObj->getId();
+                //Enterego
+				$deliveryId = $deliveryObj->getId();
 			}
 
 			if ($deliveryObj->isProfile())
@@ -3874,7 +3935,6 @@ class SaleOrderAjax extends \CBitrixComponent
 				'DELIVERY_NAME' => $name,
 				'CURRENCY' => $order->getCurrency(),
 			]);
-		
 			$this->arUserResult['DELIVERY_ID'] = $deliveryId;
 
 			$deliveryStoreList = Delivery\ExtraServices\Manager::getStoresList($deliveryId);
@@ -4708,8 +4768,9 @@ class SaleOrderAjax extends \CBitrixComponent
 		{
 			$this->isOrderConfirmed = true;
 			$saveToSession = false;
+			$needToRegister = $this->needToRegister();
 
-			if ($this->needToRegister())
+			if ($needToRegister)
 			{
 				[$userId, $saveToSession] = $this->autoRegisterUser();
 			}
@@ -4737,6 +4798,11 @@ class SaleOrderAjax extends \CBitrixComponent
 				}
 
 				$this->saveOrder($saveToSession);
+
+				if (!$needToRegister && Loader::includeModule('crm'))
+				{
+					BuyerService::getInstance()->attachUserToBuyers($userId);
+				}
 			}
 
 			if (empty($this->arResult["ERROR"]))
@@ -5437,9 +5503,8 @@ class SaleOrderAjax extends \CBitrixComponent
 			"QUANTITY_LIST" => [],
 			"USE_PRELOAD" => $this->arParams['USE_PRELOAD'] === 'Y',
 		];
-///file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/delivery2.txt', '123'.print_r($_POST,1).PHP_EOL, FILE_APPEND);
-//file_put_contents($_SERVER['DOCUMENT_ROOT'].'/upload/delivery2.txt', $request->get('DELIVERY_ID').PHP_EOL, FILE_APPEND);
-		if ($_POST)
+
+		if ($request->isPost())
 		{
 			if (intval($request->get('PERSON_TYPE')) > 0)
 				$arUserResult["PERSON_TYPE_ID"] = intval($request->get('PERSON_TYPE'));
@@ -5863,7 +5928,7 @@ class SaleOrderAjax extends \CBitrixComponent
 		{
 			$this->usePrepayment($order);
 		}
-	 
+
 		$isPersonTypeChanged = $this->initPersonType($order);
 
 		$this->initTradeBinding($order);
@@ -5892,6 +5957,7 @@ class SaleOrderAjax extends \CBitrixComponent
 		$this->initOrderFields($order);
 
 		// initialization of related properties
+		$this->checkProperties($order, $isPersonTypeChanged);
 		$this->setOrderProperties($order);
 
 		$this->recalculatePayment($order);
