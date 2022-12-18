@@ -1,20 +1,20 @@
 <?
 	class sdekShipment{
 	    public $accountId;
-		// города
+		// пїЅпїЅпїЅпїЅпїЅпїЅ
 		public $sender;
 		public $receiver;
 
-		// товары
+		// пїЅпїЅпїЅпїЅпїЅпїЅ
 		public $gabs;
 		public $goods;
 
-		// расчет
+		// пїЅпїЅпїЅпїЅпїЅпїЅ
 		public $profiles;
 		public $error = false;
 		public $arErrors;
 
-		// параметризация
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 		function sdekShipment($params=array()){
 			if(!self::checkField('RECEIVER',$params))

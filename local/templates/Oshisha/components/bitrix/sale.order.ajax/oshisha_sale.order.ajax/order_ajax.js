@@ -107,6 +107,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             this.propsBlockNode = BX(parameters.propsBlockId);
             this.propsHiddenBlockNode = BX(parameters.propsBlockId + '-hidden');
 
+            this.groupBuyerProps = "1";
+
             if (this.result.SHOW_AUTH) {
                 this.authBlockNode.style.display = '';
                 BX.addClass(this.authBlockNode, 'bx-active');
@@ -175,28 +177,34 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
 
             if (action === 'saveOrderAjax') {
-                form = BX('bx-soa-order-form');
-                if (form) {
-                    form.querySelector('input[type=hidden][name=sessid]').value = BX.bitrix_sessid();
-                }
+                // form = BX('bx-soa-order-form');
+                // if (form) {
+                //     form.querySelector('input[type=hidden][name=sessid]').value = BX.bitrix_sessid();
+                // }
+                //
+                // BX.ajax.submitAjax(
+                //     BX('bx-soa-order-form'),
+                //     {
+                //         url: this.ajaxUrl,
+                //         method: 'POST',
+                //         dataType: 'json',
+                //         data: {
+                //             via_ajax: 'Y',
+                //             action: 'saveOrderAjax',
+                //             sessid: BX.bitrix_sessid(),
+                //             SITE_ID: this.siteId,
+                //             signedParamsString: this.signedParamsString
+                //         },
+                //         onsuccess: BX.proxy(this.saveOrderWithJson, this),
+                //         onfailure: BX.proxy(this.handleNotRedirected, this)
+                //     }
+                // );
 
-                BX.ajax.submitAjax(
-                    BX('bx-soa-order-form'),
-                    {
-                        url: this.ajaxUrl,
-                        method: 'POST',
-                        dataType: 'json',
-                        data: {
-                            via_ajax: 'Y',
-                            action: 'saveOrderAjax',
-                            sessid: BX.bitrix_sessid(),
-                            SITE_ID: this.siteId,
-                            signedParamsString: this.signedParamsString
-                        },
-                        onsuccess: BX.proxy(this.saveOrderWithJson, this),
-                        onfailure: BX.proxy(this.handleNotRedirected, this)
-                    }
-                );
+                form = BX('bx-soa-order-form');
+                if (form)
+                    form.querySelector('input[type=hidden][name=sessid]').value = BX.bitrix_sessid();
+
+                BX.ajax.submit(BX('bx-soa-order-form'), BX.proxy(this.saveOrder, this));
 
             } else {
                 BX.ajax({
@@ -325,11 +333,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             return true;
         },
 
-        saveOrderWithJson: function (result) {
-            var redirected = false;
-
-            if (result && result.order) {
-                result = result.order;
+        saveOrder: function (result) {
+            //enterego - on iphone for cityid add <a href:''> -
+            result = result.replace(/<a.+a>/, '');
+            //
+            var res = BX.parseJSON(result), redirected = false;
+            if (res && res.order) {
+                result = res.order;
 
                 if (result.REDIRECT_URL) {
                     if (this.params.USE_ENHANCED_ECOMMERCE === 'Y') {
@@ -3779,7 +3789,113 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             });
         },
 
-        getPersonTypeControl: function (node) {
+        getPersonTypeControl: function(node)
+        {
+            if (!this.result.PERSON_TYPE)
+                return;
+
+            this.result.PERSON_TYPE = this.getPersonTypeSortedArray(this.result.PERSON_TYPE);
+
+            var personTypesCount = this.result.PERSON_TYPE.length,
+                currentType, oldPersonTypeId, i,
+                input, options = [], label, delimiter = false;
+
+            if (personTypesCount > 1)
+            {
+                input = BX.create('DIV', {
+                    props: {className: 'form-group'},
+                    children: [
+                        BX.create('LABEL', {props: {className: 'bx-soa-custom-label'}, html: this.params.MESS_PERSON_TYPE}),
+                        BX.create('BR')
+                    ]
+                });
+                node.appendChild(input);
+                node = input;
+            }
+
+            if (personTypesCount > 2)
+            {
+                for (i in this.result.PERSON_TYPE)
+                {
+                    if (this.result.PERSON_TYPE.hasOwnProperty(i))
+                    {
+                        currentType = this.result.PERSON_TYPE[i];
+                        options.push(BX.create('OPTION', {
+                            props: {
+                                value: currentType.ID,
+                                selected: currentType.CHECKED == 'Y'
+                            },
+                            text: currentType.NAME
+                        }));
+
+                        if (currentType.CHECKED == 'Y')
+                            oldPersonTypeId = currentType.ID;
+                    }
+
+                }
+                node.appendChild(BX.create('SELECT', {
+                    props: {name: 'PERSON_TYPE', className: 'form-control'},
+                    children: options,
+                    events: {change: BX.proxy(this.sendRequest, this)}
+                }));
+
+                this.regionBlockNotEmpty = true;
+            }
+            else if (personTypesCount == 2)
+            {
+                for (i in this.result.PERSON_TYPE)
+                {
+                    if (this.result.PERSON_TYPE.hasOwnProperty(i))
+                    {
+                        currentType = this.result.PERSON_TYPE[i];
+                        label = BX.create('LABEL', {
+                            children: [
+                                BX.create('INPUT', {
+                                    attrs: {checked: currentType.CHECKED == 'Y'},
+                                    props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID}
+                                }),
+                                BX.util.htmlspecialchars(currentType.NAME)
+                            ],
+                            events: {change: BX.proxy(this.sendRequest, this)}
+                        });
+
+                        if (delimiter)
+                            node.appendChild(BX.create('BR'));
+
+                        node.appendChild(BX.create('DIV', {props: {className: 'radio-inline'}, children: [label]}));
+                        delimiter = true;
+
+                        if (currentType.CHECKED == 'Y')
+                            oldPersonTypeId = currentType.ID;
+                    }
+                }
+
+                this.regionBlockNotEmpty = true;
+            }
+            else
+            {
+                for (i in this.result.PERSON_TYPE)
+                    if (this.result.PERSON_TYPE.hasOwnProperty(i))
+                        node.appendChild(BX.create('INPUT', {props: {type: 'hidden', name: 'PERSON_TYPE', value: this.result.PERSON_TYPE[i].ID}}));
+            }
+
+            if (oldPersonTypeId)
+            {
+                node.appendChild(
+                    BX.create('INPUT', {
+                        props: {
+                            type: 'hidden',
+                            name: 'PERSON_TYPE_OLD',
+                            value: oldPersonTypeId
+
+                        }
+                    })
+                );
+            }
+        },
+
+        //TODO
+        getPersonTypeControl_new: function (node) {
             if (!this.result.PERSON_TYPE)
                 return;
 
@@ -3878,6 +3994,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 );
             }
         },
+
         getProfilesControl: function (node) {
             var profilesLength = BX.util.object_keys(this.result.USER_PROFILES).length,
                 i, label, options = [],
@@ -4609,7 +4726,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.lastSelectedDelivery = deliveryId;
 
             if (BX.hasClass(itemNode, 'bx-selected')) {
-                this.editPropsItems(itemNode);
+               this.editPropsItems(itemNode);
             }
 
             return itemNode;
@@ -5382,7 +5499,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 propsContent, propsNode, selectedDelivery, showPropMap = false, i, validationErrors, newBlock,
                 TypePersonBlock;
             newBlock = this.newBlockId.querySelector('#new_block_with_comment_box');
-            TypePersonBlock = this.propsBlockNode.querySelector('.mr-4');
+            TypePersonBlock = this.propsBlockNode.querySelector('input[name="PROFILE_ID"]');
             if (this.initialized.props) {
 
                 BX.remove(BX.lastChild(node));
@@ -5531,22 +5648,18 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 propsIterator = group.getIterator();
                 while (property = propsIterator()) {
                     if (propsNode.classList.contains('delivery')) {
-                        if (property.getGroupId() === '2' || property.getGroupId() === '4' ||
-                            property.getGroupId() === '6' || property.getGroupId() === '7') {
-                            if (this.deliveryLocationInfo.loc === property.getId()
-                                || this.deliveryLocationInfo.zip === property.getId()
-                                || this.deliveryLocationInfo.city === property.getId() || property.getName() === 'company'
-                                || property.getName() === 'contragent')
-                                continue;
+                        if (property.getGroupId() === '2') {
                             this.getPropertyRowNode(property, propsItemsContainer, false);
+                        } else {
+                            continue;
                         }
-                        continue;
+
                     } else {
-                        if (property.getGroupId() === '1' || property.getGroupId() === '5') {
-                            if (this.deliveryLocationInfo.loc === property.getId()
-                                || this.deliveryLocationInfo.zip === property.getId()
-                                || this.deliveryLocationInfo.city === property.getId())
-                                continue;
+                        if (property.getGroupId() === this.groupBuyerProps) {
+                            // if (this.deliveryLocationInfo.loc === property.getId()
+                            //     || this.deliveryLocationInfo.zip === property.getId()
+                            //     || this.deliveryLocationInfo.city === property.getId())
+                            //     continue;
                             this.getPropertyRowNode(property, propsItemsContainer, false);
                         }
                         continue;

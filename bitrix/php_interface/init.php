@@ -220,6 +220,8 @@ function OnBuildGlobalMenuSistem(&$arGlobalMenu, &$arModuleMenu)
 AddEventHandler("sale", "OnOrderSave", "OnOrderAddHandlerSave");
 function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
 {
+    //TODO FIX why fix claddr
+    return;
     $order = Bitrix\Sale\Order::load($ID);
 
     $propertyCollection = $order->getPropertyCollection();
