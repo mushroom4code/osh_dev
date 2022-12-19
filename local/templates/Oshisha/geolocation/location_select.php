@@ -36,7 +36,7 @@ if (isset($_POST['submitcity'])) {
 
     list($first,$host) = explode(".",$_SERVER["SERVER_NAME"]);
    // $domen = SITE_SERVER_NAME;
-    header('Location: '.mb_strtolower($protocolType[0]).'://'.SITE_SERVER_NAME.$_SERVER['REQUEST_URI']);
+    header('Location: '.mb_strtolower($protocolType[0]).'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
     exit;
 
 }
