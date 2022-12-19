@@ -1,6 +1,10 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 $APPLICATION->SetTitle("Новости");
+//TODO временно скрыть
+$protocolType = explode('/',$_SERVER['SERVER_PROTOCOL']);
+header('Location: '.mb_strtolower($protocolType[0]).'://'.$_SERVER['HTTP_HOST'].'/');
+exit;
 ?><?$APPLICATION->IncludeComponent(
 	"bitrix:news", 
 	"oshisha_news", 

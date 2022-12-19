@@ -14,12 +14,12 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	),
-	Array(
-		"Акции", 
-		"/promotions/", 
-		Array(), 
-		Array(), 
-		"" 
-	)
+//	Array(
+//		"Акции",
+//		"/promotions/",
+//		Array(),
+//		Array(),
+//		""
+//	)
 );
 ?>

@@ -19,7 +19,7 @@ if (empty($arResult))
 <nav class="d-block">
 	<ul class="nav flex-column">
 		<?php foreach($arResult as $itemIdex => $arItem):
-		if( $arItem["TEXT"] == 'Новинки' || $arItem["TEXT"] == 'Дисконт' ) continue;
+		if( $arItem["TEXT"] == 'Новинки' || $arItem["TEXT"] == 'Дисконт' || $arItem["TEXT"] == 'Акции' ) continue;
 		?>
 			<?php if ($arItem["DEPTH_LEVEL"] == "1"):?>
 				<li class="nav-item li_link_footer">
