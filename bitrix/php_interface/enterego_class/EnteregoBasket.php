@@ -96,18 +96,18 @@ class EnteregoBasket
                 $newProp = $propsUseSale->Fetch();
 
                 if (USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') {
-                    $price_id = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
+                    $price_type = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
                     $result = CIBlockElement::GetList(
                         array(),
                         array("ID" => $product_id),
                         false,
                         false,
-                        array("$price_id"));
+                        array("$price_type"));
 
                     if ($ar_res = $result->fetch()) {
-                        if (!empty($ar_res["$price_id"])) {
+                        if (!empty($ar_res["$price_type"])) {
 
-                            $product_prices[$product_id]['PRICE'] = $ar_res["$price_id"];
+                            $product_prices[$product_id]['PRICE'] = $ar_res["$price_type"];
                             $product_prices[$product_id]['PRICE_ID'] = SALE_PRICE_TYPE_ID;
                         } else {
 
