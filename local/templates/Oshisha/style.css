@@ -165,6 +165,23 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     margin-bottom: 0px;
 }
 
+.d-hide {
+    display: none;
+}
+
+.info-price {
+    font-size: 21px !important;
+    color: #d5d5d5;
+}
+
+.info-prices-box-hover {
+    z-index: 1000;
+}
+
+.info-prices-box-hover:hover .d-hide, .info-prices-box-hover:focus .d-hide {
+    display: block;
+}
+
 /* header new theme */
 .header_top_panel {
     height: 40px;
@@ -178,12 +195,17 @@ select {
     height: 0;
 }
 
+.info-prices-box-hover .prices-block {
+    filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
+}
+
 .prices-block {
     width: fit-content;
     background-color: #F0F0F0;
     padding: 15px;
     border-radius: 10px;
 }
+
 /* BOXES */
 .box_footer {
     background-color: #313131;
@@ -696,7 +718,7 @@ div.carousel-indicators > span, .li_menu_header, .catalog_tile_slider_arrow_righ
 .new_custom_button_slick_left_cat, .view-buttons-list, input.check_input, .close_photo, .minus_icon,
 .catalog-section-list-item-link, .btn-plus, .btn-minus, .btn_basket, .btn_action, .box_with_delivery input.check_custom,
 .form-check-input, div > i.fa-bell-o, .form-check-input:checked[type="radio"], .box_popup .check_input, .icon_sort_line_active,
-.addProductDetailButton {
+.addProductDetailButton, .cursor-pointer, i {
     cursor: pointer;
 }
 
@@ -710,11 +732,9 @@ div.carousel-indicators > span, .li_menu_header, .catalog_tile_slider_arrow_righ
     font-size: 37px;
 }
 
-
 #box_contacts .box_with_icons {
     justify-content: flex-start;
 }
-
 
 .box_slide {
     margin-bottom: 5rem;
@@ -840,21 +860,18 @@ a.link_like, .catalog-section-list-item-link > i, .box_with_net a {
 .text_delivery, .link_message_box_product, .sort_orders, .sort_orders:hover, .sort_order, .sort_order:hover, title,
 .link_in_basket, .link_in_basket:hover, .not_product, .like_span, .link_header > span, .box_popup .form-control,
 .smart-filter-parameters-box-container > input, .mini_link, .mini_link:hover, .box_news .box_with_net a span,
-.mess_danger, .lk_light_mini, .box_with_message, .input_sendMe_mail, .box_with_message_prodNot > p, div#error {
+.mess_danger, .lk_light_mini, .box_with_message, .input_sendMe_mail, .box_with_message_prodNot > p, div#error, .font-11 {
     font-size: 11px;
 }
 
 .link_gram, .link_gram_active, .link_auth, div.card > div.card-body > div.box_with_properties > div > p, .box_edit span,
-a.bx_catalog_item_title,
-
-,
-.box_with_net a span, .box_with_warning span, .btn_cancel, .font_12,
+a.bx_catalog_item_title, .box_with_net a span, .box_with_warning span, .btn_cancel, .font_12, .font-12,
 div.left-menu a.btn_popup, .card_element, optgroup, textarea, .block_with_action_basket span, .box_editArch span#close,
 .basket_category .btn_basket_collapse, .basket_category .btn_basket_collapse:focus, .detail_disabled:hover, .input_chat,
 .basket_category .btn_basket_collapse:hover, .card_element:focus, .detail_disabled, .box_editArch span#ARCHIVED, select,
 .disabled_class a.link_gram_active, div.column > div > input.input_chat:focus, #TableWorkers tbody tr td, button, input,
 .box_contact span, #placeModal form input#city-search, #placeModal form input#city-search:focus, .by-line .detail-text,
-.by-line.opt a.bx_catalog_item_title, .font-12 {
+.by-line.opt a.bx_catalog_item_title {
     font-size: 12px;
 }
 
@@ -2654,6 +2671,11 @@ div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_
 
 .box_with_delivery .text_prev p {
     color: #9C9C9C;
+}
+
+.price-discount {
+    text-decoration-color: #f55f5c;
+    text-decoration-line: line-through;
 }
 
 .card-img-top {
@@ -5087,6 +5109,10 @@ li, ul {
 
     }
 
+    .info-prices-box-hover:hover .d-hide, .info-prices-box-hover:focus .d-hide {
+        left: 0;
+    }
+
     .three-column {
         padding-left: 10px;
         padding-right: 10px;
@@ -5315,6 +5341,17 @@ li, ul {
         align-items: center;
     }
 
+    .col_navigation {
+        flex-wrap: wrap;
+    }
+
+    .count-per-page {
+        order: 2;
+        margin-top: 30px;
+        width: 100%;
+        justify-content: center;
+    }
+
     .right_mobile_top .search_mobile {
         margin-right: 17px;
         width: 22px;
@@ -5351,7 +5388,6 @@ li, ul {
     background: #E5E5E5;
     font-weight: 300;
     font-size: 15px;
-    line-height: 130%;
     color: #464646;
     display: block;
     line-height: 30px;
@@ -5373,27 +5409,6 @@ li, ul {
 .count-per-page span {
     margin-right: 14px;
     line-height: 30px;
-}
-
-@media (max-width: 768px) {
-    /*.count-per-page a{
-    width: 15px;
-    height: 15px;
-    line-height:15px;
-    }
-    .count-per-page, .count-per-page a, .count-per-page span, .col_navigation li, .col_navigation li a{
-        font-size:8px !important;
-    }*/
-    .col_navigation {
-        flex-wrap: wrap;
-    }
-
-    .count-per-page {
-        order: 2;
-        margin-top: 30px;
-        width: 100%;
-        justify-content: center;
-    }
 }
 
 /* BRANDS */

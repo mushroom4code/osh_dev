@@ -90,39 +90,48 @@ if (isset($arResult['ITEM'])) {
     }
     $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 //print_r($item['PROPERTIES']['DISKONT']);
-    if ($USER->IsAuthorized()) {
-        $userId = $USER->GetID();
+//    if ($USER->IsAuthorized()) {
+//        $userId = $USER->GetID();
+//
+//        $productSectionId = Enterego\UserPrice\UserPriceHelperOsh::GetSectionID($arResult['ITEM']['ID']);
+//        $priceId = Enterego\UserPrice\PluginStatic::GetPriceIdFromRule($item['ID'], $productSectionId, $userId);
+//
+//        if ($priceId) {
+//            $rsCustomPrice = PriceTable::getList(
+//                ['select' => ['*'],
+//                    'filter' => [
+//                        '=PRODUCT_ID' => $item['ID'],
+//                        '=CATALOG_GROUP_ID' => $priceId
+//                    ],
+//                ]);
+//            if ($arCustomPrice = $rsCustomPrice->Fetch()) {
+//                $price['PRICE_DATA']['PRICE'] = $arCustomPrice['PRICE'];
+//            }
+//        }
+//    }
 
-        $productSectionId = Enterego\UserPrice\UserPriceHelperOsh::GetSectionID($arResult['ITEM']['ID']);
-        $priceId = Enterego\UserPrice\PluginStatic::GetPriceIdFromRule($item['ID'], $productSectionId, $userId);
+    foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
 
-        if ($priceId) {
-            $rsCustomPrice = PriceTable::getList(
-                ['select' => ['*'],
-                    'filter' => [
-                        '=PRODUCT_ID' => $item['ID'],
-                        '=CATALOG_GROUP_ID' => $priceId
-                    ],
-                ]);
-            if ($arCustomPrice = $rsCustomPrice->Fetch()) {
-                $price['PRICE_DATA']['PRICE'] = $arCustomPrice['PRICE'];
-            }
-        }
-    }
+        foreach ($PRICE['PRICES'] as $price_key => $price_val) {
 
-    if (empty($customPrice)) {
-        foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
 
-            foreach ($PRICE['PRICES'] as $price_key => $price_val) {
-                if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
-                    if ($price_key == SALE_PRICE_TYPE_ID) {
-                        $price['SALE_PRICE'] = $price_val;
-                    }
-                }
-                if ($price_key == $GLOBALS['PRICE_TYPE_ID']) {
-                    $price['PRICE_DATA'] = $price_val;
+            if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
+                if ($price_key == SALE_PRICE_TYPE_ID) {
+                    $price['SALE_PRICE'] = $price_val;
                 }
             }
+
+            if ((int)$price_val['PRICE_TYPE_ID'] === RETAIL_PRICE) {
+                $price['PRICE_DATA'][0] = $price_val;
+                $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
+            } else if ((int)$price_val['PRICE_TYPE_ID'] === BASIC_PRICE) {
+                $price['PRICE_DATA'][1] = $price_val;
+                $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
+            } elseif ((int)$price_val['PRICE_TYPE_ID'] === B2B_PRICE) {
+                $price['PRICE_DATA'][2] = $price_val;
+                $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
+            }
+            ksort($price['PRICE_DATA']);
         }
     }
 

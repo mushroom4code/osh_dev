@@ -466,7 +466,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                         $price_new = $price['PRICE_DATA'][1]['PRINT_PRICE'];
                         $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
                     }
-                    ?>
+                    $styles = ''; ?>
                     <div class="mb-4 d-flex flex-column">
                         <div class="mb-3 d-flex flex-row align-items-center">
                             <div class="product-item-detail-price-current"
@@ -474,7 +474,8 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                             </div>
                             <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRINT_PRICE']) ||
                                 $useDiscount['VALUE_XML_ID'] === 'true' &&
-                                !empty($price['SALE_PRICE']['PRINT_PRICE'])) { ?>
+                                !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
+                                $styles = 'price-discount'; ?>
                                 <span class="span">Старая цена <?= $price['PRICE_DATA'][1]['PRINT_PRICE']; ?></span>
                             <?php } ?>
                         </div>
@@ -482,7 +483,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                             <?php foreach ($price['PRICE_DATA'] as $items) { ?>
                                 <p>
                                     <span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
-                                    <span class="font-14 ml-2"><b><?= $items['PRINT_PRICE']?></b></span>
+                                    <span class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
                                 </p>
                             <?php } ?>
                         </div>
