@@ -57,7 +57,7 @@ foreach ($item as $row) {
     if ($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) {
         $show_product_prices = true;
         $res = CIBlockElement::GetList(array(), array("ID" => $row['PRODUCT_ID']), false, false,
-            array("CATALOG_PRICE_" . SALE_PRICE_TYPE_ID));
+            array("CATALOG_PRICE_" . SALE_PRICE_TYPE_ID,'CATALOG_PRICE_'.BASIC_PRICE));
         if ($ar_res = $res->fetch()) {
             $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
             $str_product_prices = explode('.', $product_prices_sql);
