@@ -146,7 +146,8 @@ $generalParams = array(
     'MESS_BTN_SUBSCRIBE' => $arParams['~MESS_BTN_SUBSCRIBE'],
     'MESS_BTN_ADD_TO_BASKET' => $arParams['~MESS_BTN_ADD_TO_BASKET'],
     'MESS_NOT_AVAILABLE' => $arParams['~MESS_NOT_AVAILABLE'],
-    'PRICE_CODE' => $arParams['PRICE_CODE']
+    'PRICE_CODE' => $arParams['PRICE_CODE'],
+    'FILL_ITEM_ALL_PRICES' => 'Y'
 );
 
 $obName = 'ob' . preg_replace('/[^a-zA-Z0-9_]/', 'x', $this->GetEditAreaId($navParams['NavNum']));
@@ -344,8 +345,7 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                                     }
                                     ?>
                                     <div class="product-item-small-card">
-                                        <?php
-                                        $APPLICATION->IncludeComponent(
+                                        <?php $APPLICATION->IncludeComponent(
                                             'bitrix:catalog.item',
                                             'oshisha_catalog.item',
                                             array(
@@ -803,12 +803,17 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
         //endregion
 
         //region Pagination
-        if ($showBottomPager ) {
+        if ($showBottomPager) {
             ?>
             <div class=" mb-4 col_navigation">
-				<div class="count-per-page">
-				<span>Количество</span> <a href="?page=24" class="page_num <?if($arParams['PAGE_ELEMENT_COUNT'] == 24):?>active<?endif;?>">24</a> <a href="?page=36" class="page_num <?if($arParams['PAGE_ELEMENT_COUNT'] == 36):?>active<?endif;?>">36</a> <a href="?page=72" class="page_num <?if($arParams['PAGE_ELEMENT_COUNT'] == 72):?>active<?endif;?>">72</a>
-				</div>
+                <div class="count-per-page">
+                    <span>Количество</span> <a href="?page=24"
+                                               class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 24): ?>active<?endif; ?>">24</a>
+                    <a href="?page=36"
+                       class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 36): ?>active<?endif; ?>">36</a> <a
+                            href="?page=72"
+                            class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 72): ?>active<?endif; ?>">72</a>
+                </div>
                 <div class=" text-center" data-pagination-num="<?= $navParams['NavNum'] ?>">
                     <!-- pagination-container -->
                     <?= $arResult['NAV_STRING'] ?>
