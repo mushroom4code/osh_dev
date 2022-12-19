@@ -1,4 +1,4 @@
-<?
+<?php
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 CModule::IncludeModule("ipol.sdek");
 
@@ -6,7 +6,7 @@ if (
     isset($_POST['isdek_token']) &&
     (
         // Da widget count delivery call
-        ($_POST['isdek_action'] == 'countDelivery' && sdekHelper::checkTokens(sdekHelper::getWidgetToken(), $_POST['isdek_token'])) ||
+        (in_array($_POST['isdek_action'],array('countDelivery','getCityPvz','getDataViaPointId')) && sdekHelper::checkTokens(sdekHelper::getWidgetToken(), $_POST['isdek_token'])) ||
         // Other calls
         ($_POST['isdek_action'] != 'countDelivery' && sdekHelper::checkTokens(sdekHelper::getModuleToken(), $_POST['isdek_token']))
     )

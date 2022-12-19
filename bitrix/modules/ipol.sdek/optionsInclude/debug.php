@@ -1,11 +1,11 @@
-<?
+<?php
 	Ipolh\SDEK\Bitrix\Tools::placeWarningLabel(
 		'<a href="/bitrix/js/'.$module_id.'/log.php" target="_blank">'.GetMessage('IPOLSDEK_LABEL_openLog').'</a>',
 		(Ipolh\SDEK\Bitrix\Admin\Logger::getLog()) ? GetMessage('IPOLSDEK_LABEL_haslog') : GetMessage('IPOLSDEK_LABEL_nolog')
 	);
 ?>
 
-<?
+<?php
 if(file_exists($_SERVER["DOCUMENT_ROOT"]."/bitrix/js/".$module_id."/errorLog.txt")){
 	$errorStr=file_get_contents($_SERVER["DOCUMENT_ROOT"]."/bitrix/js/".$module_id."/errorLog.txt");
 	if(strlen($errorStr)>0){
@@ -21,7 +21,7 @@ if(file_exists($_SERVER["DOCUMENT_ROOT"]."/bitrix/js/".$module_id."/hint.txt")){
 }
 ?>
 
-<?
+<?php
 foreach(array("debug_widget","startLogging","debug_fileMode","debug_calculation","debug_turnOffWidget","noagent","disabledagent","lateagent") as $code)
 	sdekOption::placeHint($code);
 ?>
@@ -52,17 +52,17 @@ foreach(array("debug_widget","startLogging","debug_fileMode","debug_calculation"
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_logging")?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('LOGGING')?>
+	<?php sdekOption::placeFAQ('LOGGING') ?>
 </td></tr>
-<?ShowParamsHTMLByArray($arAllOptions["debug"]);?>
+<?php ShowParamsHTMLByArray($arAllOptions["debug"]); ?>
 <tr class="subHeading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_loggingEvents")?></td></tr>
-<?ShowParamsHTMLByArray($arAllOptions["debug_events"]);?>
+<?php ShowParamsHTMLByArray($arAllOptions["debug_events"]); ?>
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_events")?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('EVENTS')?>
+	<?php sdekOption::placeFAQ('EVENTS'); ?>
 </td></tr>
-<?
+<?php
 $arEvents = array(
 	'onCompabilityBefore' => getMessage('IPOLSDEK_LABEL_onCompabilityBefore'),
 	'onCalculate' => getMessage('IPOLSDEK_LABEL_onCalculate'),
@@ -87,10 +87,10 @@ foreach($arEvents as $code => $name){
 	if(!empty($arSubscribe)){
 		?>
 		<tr class="subHeading"><td colspan="2" valign="top" align="center"><?=$name?></td></tr>
-		<?
+      <?php
 		foreach($arSubscribe as $path){?>
 			<tr><td colspan='2'><?=$path?></td></tr>
-		<?}
+		<?php }
 	}
 }
 	
@@ -98,10 +98,10 @@ foreach($arEvents as $code => $name){
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_defines")?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-    <?sdekOption::placeFAQ('CONSTANTS')?>
+    <?php sdekOption::placeFAQ('CONSTANTS'); ?>
 </td></tr>
 
-<?
+<?php
     $arConstants = array(
         'IPOLSDEK_CACHE_TIME'    => GetMessage('IPOLSDEK_LABEL_CACHE_TIME'),
         'IPOLSDEK_NOCACHE'       => GetMessage('IPOLSDEK_LABEL_NOCACHE'),
@@ -120,16 +120,16 @@ foreach($arEvents as $code => $name){
 <tr>
     <td><?=$sign?></td><td><?=$constantSign?></td>
 </tr>
-            <?
+            <?php
         }
     }
 ?>
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_agents")?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-        <?sdekOption::placeFAQ('AGENTS')?>
+        <?php sdekOption::placeFAQ('AGENTS') ?>
 </td></tr>
-<?
+<?php
     $agents = \Ipolh\SDEK\AgentHandler::getAgentList();
     foreach ($agents as $agentName => $agentDescr){
         $agent = CAgent::GetList(array(),array('NAME'=>$agentDescr[0]))->Fetch();
@@ -138,22 +138,22 @@ foreach($arEvents as $code => $name){
     <td><?=$agentName?></td>
     <td>
         <?=$agentDescr[0]?>&nbsp;
-        <?
+        <?php
             switch(true){
                 case (!is_array($agent)): echo \Ipolh\SDEK\Bitrix\Tools::getMessage('AGENT_NO_AGENT'); break;
                 case ($agent['ACTIVE'] !== 'Y'): echo \Ipolh\SDEK\Bitrix\Tools::getMessage('AGENT_DISABLED_AGENT'); break;
-                case (mktime()-strtotime($agent['LAST_EXEC']) > 90000): echo \Ipolh\SDEK\Bitrix\Tools::getMessage('AGENT_LATE_AGENT'); break;
+                case (time() -strtotime($agent['LAST_EXEC']) > 90000): echo \Ipolh\SDEK\Bitrix\Tools::getMessage('AGENT_LATE_AGENT'); break;
                 default: echo \Ipolh\SDEK\Bitrix\Tools::getMessage('AGENT_OK_AGENT'); break;
             }
         ?>
     </td>
 </tr>
-    <?}
+    <?php }
 ?>
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_pvzRestore")?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-    <?sdekOption::placeFAQ('PVZRESTORE')?>
+    <?php sdekOption::placeFAQ('PVZRESTORE') ?>
 </td></tr>
 <tr><td style="color:#555;" colspan="2"><br></td></tr>
 <tr><td colspan="2"><input type="button" id="SDEK_pvzRestore" onclick="IPOLSDEK_setups.debug.restorePVZ()" value="<?=GetMessage('IPOLSDEK_LBL_RESTOREPVZBTN')?>"/></td></tr>

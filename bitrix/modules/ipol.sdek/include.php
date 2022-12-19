@@ -1,4 +1,4 @@
-<?
+<?php
 define('IPOLH_SDEK', 'ipol.sdek');
 define('IPOLH_SDEK_LBL', 'IPOLSDEK_');
 
@@ -202,12 +202,14 @@ class sdekHelper{
             else{
                 // ���������� �� ������
                 $svd = self::getCountryOptions();
-                if(array_key_exists($params['COUNTRY'],$svd) && $svd[$params['COUNTRY']]['acc']){
+                if(array_key_exists($params['COUNTRY'], $svd) && array_key_exists('acc', $svd[$params['COUNTRY']]) && $svd[$params['COUNTRY']]['acc']) {
                     $auth = sqlSdekLogs::getById($svd[$params['COUNTRY']]['acc']);
-                    if($auth['ACTIVE'] != 'Y')
+                    if($auth['ACTIVE'] != 'Y') {
                         $auth = self::getBasicAuth();
-                }else
+                    }
+                } else {
                     $auth = self::getBasicAuth();
+                }
             }
         }
 
@@ -274,7 +276,7 @@ class sdekHelper{
             else $type = $params['type'];
             $answer = $answer[$type];
 
-            if($params['mode'] && array_key_exists($params['mode'],$answer))
+            if((array_key_exists('mode', $params) && $params['mode']) && array_key_exists($params['mode'], $answer))
                 $answer = $answer[$params['mode']];
         }
 
@@ -310,10 +312,29 @@ class sdekHelper{
             $arReturn[$tarifId] = array(
                 'NAME'  => GetMessage("IPOLSDEK_tarif_".$tarifId."_NAME")." (".$tarifId.")",
                 'DESC'  => GetMessage("IPOLSDEK_tarif_".$tarifId."_DESCR"),
-                'SHOW'  => ($svdOpts[$tarifId]['SHOW']) ? $svdOpts[$tarifId]['SHOW'] : "N",
-                'BLOCK' => ($svdOpts[$tarifId]['BLOCK']) ? $svdOpts[$tarifId]['BLOCK'] : "N",
+                'SHOW'  => (array_key_exists($tarifId, $svdOpts) && array_key_exists('SHOW', $svdOpts[$tarifId]) && $svdOpts[$tarifId]['SHOW']) ? $svdOpts[$tarifId]['SHOW'] : "N",
+                'BLOCK' => (array_key_exists($tarifId, $svdOpts) && array_key_exists('BLOCK', $svdOpts[$tarifId]) && $svdOpts[$tarifId]['BLOCK']) ? $svdOpts[$tarifId]['BLOCK']: "N",
             );
         return $arReturn;
+    }
+
+    /**
+     * @param $tarif - id of tarif
+     * @return false|string - either profile or nothing
+     *
+     * Defines, what tarif is given
+     */
+    static function defineTarif($tarif){
+        $arTarifs = self::getTarifList();
+        foreach ($arTarifs as $profile => $_arTarif){
+            foreach ($_arTarif as $_tarifs){
+                if(in_array($tarif,$_tarifs)){
+                    return $profile;
+                }
+            }
+        }
+
+        return false;
     }
 
 
@@ -428,11 +449,26 @@ class sdekHelper{
     ()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()*/
 
 
-    static function getErrCities($link = 'rus'){//��������� ������
-        $fileName = ($link == 'rus') ? 'errCities' : 'errCities_'.$link;
-        if(!file_exists($_SERVER['DOCUMENT_ROOT']."/bitrix/js/".self::$MODULE_ID."/".$fileName.".json"))
+    public static function getErrCities($link = 'rus') {
+        return ['many' => self::getMultipleMatchedCities($link), 'notFound' => self::getNotFoundedCities($link)];
+    }
+
+    public static function getNotFoundedCities($link = 'rus') {
+        $jsPath = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/js/' . self::$MODULE_ID . '/';
+        $fileName = 'notFoundedCities' . (($link === 'rus') ? ''  : '_' . $link);
+        if (!file_exists($jsPath . $fileName . '.json')) {
             return false;
-        return self::zaDEjsonit(json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT']."/bitrix/js/".self::$MODULE_ID."/".$fileName.".json"),true));
+        }
+        return  self::zaDEjsonit(json_decode(file_get_contents($jsPath . $fileName . '.json'),true));
+    }
+
+    public static function getMultipleMatchedCities($link = 'rus') {
+        $jsPath = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/js/' . self::$MODULE_ID . '/';
+        $fileName = 'multipleMatchedCities' . (($link === 'rus') ? ''  : '_' . $link);
+        if (!file_exists($jsPath . $fileName . '.json')) {
+            return false;
+        }
+        return  self::zaDEjsonit(json_decode(file_get_contents($jsPath . $fileName . '.json'),true));
     }
 
     static function getNormalCity($cityId,$onlyCity = false){// �������������� 2.0, �������� id �����a
@@ -466,17 +502,23 @@ class sdekHelper{
         return (method_exists("CSaleLocation","isLocationProMigrated") && CSaleLocation::isLocationProMigrated());
     }
 
-    static function isCityAvail($city,$mode=false){// �������� ����������� �������� � �����
-        if(!is_numeric($city)){
+    /**
+     * @param $city - bitrixId || cityName
+     * @param $mode
+     * @return false|string[]
+     */
+    static function isCityAvail($city, $mode=false){// �������� ����������� �������� � �����
+        if(is_numeric($city)){
+            $cityId = $city;
+            $city = CSaleLocation::GetByID($cityId);
+            $cityName = str_replace(GetMessage('IPOLSDEK_LANG_YO_S'),GetMessage('IPOLSDEK_LANG_YE_S'),$city['CITY_NAME']);
+        } else {
             $cityName = str_replace(GetMessage('IPOLSDEK_LANG_YO_S'),GetMessage('IPOLSDEK_LANG_YE_S'),$city);
             $city = CSaleLocation::getList(array(),array('CITY_NAME'=>self::zaDEjsonit($city)))->Fetch();
             if($city)
                 $cityId = $city['ID'];
-        }else{
-            $cityId = $city;
-            $city = CSaleLocation::GetByID($cityId);
-            $cityName = str_replace(GetMessage('IPOLSDEK_LANG_YO_S'),GetMessage('IPOLSDEK_LANG_YE_S'),$city['CITY_NAME']);
         }
+
         $return = false;
         if($city){
             $arCity = self::getSQLCityBI($cityId);
@@ -569,9 +611,6 @@ class sdekHelper{
 
         if(!$noEnc)
             $arList = self::zaDEjsonit($arList);
-
-        foreach(GetModuleEvents(self::$MODULE_ID,"onPVZListReady",true) as $arEvent)
-            ExecuteModuleEventEx($arEvent,Array(&$arList));
 
         return $arList;
     }

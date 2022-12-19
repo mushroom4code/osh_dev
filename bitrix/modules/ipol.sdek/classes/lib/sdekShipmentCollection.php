@@ -1,4 +1,4 @@
-<?
+<?php
 	class sdekShipmentCollection{
 		static $shipments;
 		public  static $accountId = false;

@@ -53,7 +53,7 @@
     }
 </style>
 
-<?
+<?php
 if(sdekHelper::getModuleVersion()){
 	Ipolh\SDEK\Bitrix\Tools::placeWarningLabel('<a href="/bitrix/admin/partner_modules.php?lang=ru">'.GetMessage('IPOLSDEK_LABEL_checkVersion').'</a>',GetMessage('IPOLSDEK_LABEL_moduleVersion').sdekHelper::getModuleVersion());
 }
@@ -61,43 +61,43 @@ if(sdekHelper::getModuleVersion()){
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_FAQ_HDR_SETUP')?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('WTF')?>
-	<?sdekOption::placeFAQ('HIW')?>
+	<?php sdekOption::placeFAQ('WTF') ?>
+	<?php sdekOption::placeFAQ('HIW') ?>
 </td></tr>
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_FAQ_HDR_ABOUT')?></td></tr> 
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('TURNON')?>
-	<?sdekOption::placeFAQ('DELSYS')?>
-	<?sdekOption::placeFAQ('SEND')?>
-	<?sdekOption::placeFAQ('PELENG')?>
+	<?php sdekOption::placeFAQ('TURNON') ?>
+	<?php sdekOption::placeFAQ('DELSYS') ?>
+	<?php sdekOption::placeFAQ('SEND') ?>
+	<?php sdekOption::placeFAQ('PELENG') ?>
 </td></tr>
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_FAQ_HDR_WORK')?></td></tr>
 <tr><td style="color:#555; " colspan="2">
-	<?sdekOption::placeFAQ('PRINTFULL')?>
-	<?sdekOption::placeFAQ('ACCOUNTS')?>
-	<?sdekOption::placeFAQ('RBK')?>
-	<?sdekOption::placeFAQ('PC')?>
-	<?sdekOption::placeFAQ('SENDER')?>
-	<?if(sdekOption::isConverted())
-		sdekOption::placeFAQ('SHIPMENTS')?>
-	<?sdekOption::placeFAQ('COMPONENT')?>
-	<?sdekOption::placeFAQ('AUTOMATIZATION')?>
-	<?sdekOption::placeFAQ('MULTISITE')?>
-	<?sdekOption::placeFAQ('DELIVERYPRICE')?>
-	<?sdekOption::placeFAQ('DIFFERENTSENDERS')?>
-	<?sdekOption::placeFAQ('SENDWATCHLINK')?>
+	<?php sdekOption::placeFAQ('PRINTFULL') ?>
+	<?php sdekOption::placeFAQ('ACCOUNTS') ?>
+	<?php sdekOption::placeFAQ('RBK') ?>
+	<?php sdekOption::placeFAQ('PC') ?>
+	<?php sdekOption::placeFAQ('SENDER') ?>
+	<?php if(sdekOption::isConverted())
+		sdekOption::placeFAQ('SHIPMENTS') ?>
+	<?php sdekOption::placeFAQ('COMPONENT') ?>
+	<?php sdekOption::placeFAQ('AUTOMATIZATION') ?>
+	<?php sdekOption::placeFAQ('MULTISITE') ?>
+	<?php sdekOption::placeFAQ('DELIVERYPRICE') ?>
+	<?php sdekOption::placeFAQ('DIFFERENTSENDERS') ?>
+	<?php sdekOption::placeFAQ('SENDWATCHLINK') ?>
 </td></tr>
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_FAQ_HDR_HELP')?></td></tr>
 <tr><td style="color:#555; " colspan="2">
-	<?sdekOption::placeFAQ('CITYSUNC')?>
-	<?sdekOption::placeFAQ('CNTDOST')?>
-	<?sdekOption::placeFAQ('CALLCOURIER')?>
-	<?sdekOption::placeFAQ('TESTACCOUNT')?>
-	<?sdekOption::placeFAQ('ERRORS')?>
-	<?sdekOption::placeFAQ('PROBLEMS')?>
-	<?sdekOption::placeFAQ('UPDATES')?>
-	<?sdekOption::placeFAQ('OTHER')?>
+	<?php sdekOption::placeFAQ('CITYSUNC') ?>
+	<?php sdekOption::placeFAQ('CNTDOST') ?>
+	<?php sdekOption::placeFAQ('CALLCOURIER') ?>
+	<?php sdekOption::placeFAQ('TESTACCOUNT') ?>
+	<?php sdekOption::placeFAQ('ERRORS') ?>
+	<?php sdekOption::placeFAQ('PROBLEMS') ?>
+	<?php sdekOption::placeFAQ('UPDATES') ?>
+	<?php sdekOption::placeFAQ('OTHER') ?>
 </td></tr>

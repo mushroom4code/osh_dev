@@ -1,4 +1,4 @@
-<?
+<?php
 $MESS ['IPOLSDEK_RK_1'] = "АДЫГЕ";
 $MESS ['IPOLSDEK_RV_1'] = "АДЫГЕЯ";
 

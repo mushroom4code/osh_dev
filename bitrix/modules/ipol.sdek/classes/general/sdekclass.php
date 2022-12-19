@@ -1,4 +1,4 @@
-<?
+<?php
 
 IncludeModuleLangFile(__FILE__);
 
@@ -292,9 +292,9 @@ class sdekdriver extends sdekHelper{
 		foreach($packs as $number => $packContent){
 			foreach($packContent['GOODS'] as $index => $arGood){
 				if($cntrCurrency){
-					$packs[$number]['GOODS'][$index]["price"]    = floatval(sdekExport::formatCurrency(array('TO'=>$cntrCurrency['site'],'SUM'=>$arGood["price"],'orderId'=>$oId)));
-					$arGood["price"]                             = floatval(sdekExport::formatCurrency(array('TO'=>$cntrCurrency['site'],'SUM'=>$arGood["price"],'orderId'=>$oId)));
-					$packs[$number]['GOODS'][$index]["cstPrice"] = floatval(sdekExport::formatCurrency(array('TO'=>$cntrCurrency['site'],'SUM'=>$arGood["cstPrice"],'orderId'=>$oId)));
+					$packs[$number]['GOODS'][$index]["price"]    = (float)sdekExport::formatCurrency(array('TO' => $cntrCurrency['site'], 'SUM' => $arGood["price"], 'orderId' => $oId));
+					$arGood["price"]                             = (float)sdekExport::formatCurrency(array('TO' => $cntrCurrency['site'], 'SUM' => $arGood["price"], 'orderId' => $oId));
+					$packs[$number]['GOODS'][$index]["cstPrice"] = (float)sdekExport::formatCurrency(array('TO' => $cntrCurrency['site'], 'SUM' => $arGood["cstPrice"], 'orderId' => $oId));
 				}
 				$toPay = ($bezNal || $orderParams['toPay'] == 0) ? 0 : $arGood["price"];
 				$cnt = (int) $arGood["quantity"];
@@ -303,7 +303,7 @@ class sdekdriver extends sdekHelper{
 					if($all > $orderParams['toPay']){
 						$toPay = $orderParams['toPay'] / $cnt;
 						$orderParams['toPay'] = 0;
-					}else
+					} else
 						$orderParams['toPay'] -= $all;
 				}
 
@@ -608,7 +608,7 @@ class sdekdriver extends sdekHelper{
 
 	public static function setOrderTrackingNumber($oId,$mode,$tracking)
     {
-        if (\Ipolh\SDEK\option::get('setDeliveryId') == 'Y') {
+        if (\Ipolh\SDEK\option::get('setDeliveryId') == 'Y' && CModule::IncludeModule('sale')) {
             if ($mode == 'order') {
                 CSaleOrder::Update($oId, array('TRACKING_NUMBER' => $tracking));
             } elseif (self::isConverted()) {// <3 D7
@@ -837,7 +837,7 @@ class sdekdriver extends sdekHelper{
 	}
 
 	static function getExtraOptions(){ // доп. настройки для заказов
-		$arAddService = array(3,7,16,17,30,36,48);
+		$arAddService = array(3,7,16,17,30,36,48,81);
 		$src = \Ipolh\SDEK\option::get('addingService');
 
 		$arReturn = array();
@@ -845,8 +845,8 @@ class sdekdriver extends sdekHelper{
 			$arReturn[$asId] = array(
 				'NAME' => GetMessage("IPOLSDEK_AS_".$asId."_NAME"),
 				'DESC' => GetMessage("IPOLSDEK_AS_".$asId."_DESCR"),
-				'SHOW' => ($src && $src[$asId]['SHOW']) ? $src[$asId]['SHOW'] : (($src) ? "N" : "Y"),
-				'DEF'  => ($src && $src[$asId]['DEF'])  ? $src[$asId]['DEF']  : "N",
+				'SHOW' => (isset($src) && array_key_exists($asId, $src) && array_key_exists('SHOW', $src[$asId]) && $src[$asId]['SHOW']) ? $src[$asId]['SHOW'] : (($src) ? "N" : "Y"),
+				'DEF'  => (isset($src) && array_key_exists($asId, $src) && array_key_exists('DEF', $src[$asId]) && $src[$asId]['DEF'])  ? $src[$asId]['DEF']  : "N",
 			);
 		return $arReturn;
 	}
@@ -960,6 +960,9 @@ class sdekdriver extends sdekHelper{
 			foreach($allPayers as $payer){
 				$tmpGet = CSaleOrderPropsGroup::GetList(array("SORT" => "ASC"),array("PERSON_TYPE_ID" => $payer),false,array('nTopCount' => '1'));
 				$tmpVal=$tmpGet->Fetch();
+				// Case: payer, but without props group and order props
+                if (!is_array($tmpVal) || empty($tmpVal['ID']))
+                    continue;
 				$arFields = array(
 				   "PERSON_TYPE_ID" => $payer,
 				   "NAME" => $arProp['NAME'],

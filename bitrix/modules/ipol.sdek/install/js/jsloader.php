@@ -1,4 +1,4 @@
-<?
+<?php
 	$pathToJQ = CJSCore::getExtInfo('jquery');
 	$pathToJQ = $pathToJQ['js'];
 ?>
@@ -57,7 +57,7 @@
 			head.appendChild(loadedJS);
 			if(ifJQ || callback){
 				loadedJS.onload = (ifJQ) ? IPOL_JSloader.recall : callback;
-				loadedJS.onreadystatechange = function () { //  IE
+				loadedJS.onreadystatechange = function () { /* IE */
 					 if (this.readyState == 'complete' || this.readyState == 'loaded')
 						 loadedJS.onload();
 				};

@@ -1,32 +1,32 @@
-<?
+<?php
 	class sdekShipment{
 	    public $accountId;
-		// пїЅпїЅпїЅпїЅпїЅпїЅ
+		// города
 		public $sender;
 		public $receiver;
 
-		// пїЅпїЅпїЅпїЅпїЅпїЅ
+		// товары
 		public $gabs;
 		public $goods;
 
-		// пїЅпїЅпїЅпїЅпїЅпїЅ
+		// расчет
 		public $profiles;
 		public $error = false;
 		public $arErrors;
 
-		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		// параметризация
 
-		function sdekShipment($params=array()){
-			if(!self::checkField('RECEIVER',$params))
+		function __construct($params=array()){
+			if(!$this->checkField('RECEIVER',$params))
 				$this->addError(GetMessage('IPOLSDEK_SHIPMENT_ERRRECEIVER'));
-			if(!self::checkField('ITEMS',$params) && !self::checkField('GABS',$params))
+			if(!$this->checkField('ITEMS',$params) && !$this->checkField('GABS',$params))
 				$this->addError(GetMessage('IPOLSDEK_SHIPMENT_ERRGOODS'));
 
-			$this->sender    = (self::checkField('SENDER',$params)) ? $params['SENDER'] : CDeliverySDEK::getHomeCity();
+			$this->sender    = ($this->checkField('SENDER',$params)) ? $params['SENDER'] : CDeliverySDEK::getHomeCity();
 			$this->receiver  = $params['RECEIVER'];
-			$this->accountId = (self::checkField('ACCOUNT',$params)) ? $params['ACCOUNT'] : false;
+			$this->accountId = ($this->checkField('ACCOUNT',$params)) ? $params['ACCOUNT'] : false;
 
-			if(self::checkField('ITEMS',$params)){
+			if($this->checkField('ITEMS',$params)){
 				$this->goods = $params['ITEMS'];
 				CDeliverySDEK::setGoods($this->goods);
 				$this->gabs = CDeliverySDEK::$goods;
@@ -106,7 +106,7 @@
 			$arReturn = array();
 			foreach($this->profiles as $profile => $result)
 				if($result['RESULT'] == 'OK')
-					$arReturn[] = $profile;
+					$arReturn[] = (is_numeric($profile)) ? \sdekHelper::defineTarif($profile) : $profile;
 			return $arReturn;
 		}
 

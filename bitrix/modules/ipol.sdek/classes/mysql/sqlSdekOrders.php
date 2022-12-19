@@ -1,4 +1,4 @@
-<?
+<?php
 class sqlSdekOrders
 {
 	public function toLog($wat,$sign){sdekHelper::toLog($wat,$sign);}
@@ -23,7 +23,7 @@ class sqlSdekOrders
 			$Data['PARAMS'] = serialize($Data['PARAMS']);
 		}
 		
-		$Data['UPTIME']=mktime();
+		$Data['UPTIME']= time();
 			
 		$rec = self::CheckRecord($Data['ORDER_ID'],$Data['SOURCE']);
 		if($rec)
@@ -244,7 +244,7 @@ class sqlSdekOrders
 		if($arParams["ACCOUNT"])
 			$setStr.="ACCOUNT = '".$arParams["ACCOUNT"]."',";
 
-		$setStr.=$okStat." UPTIME= '".mktime()."'";
+		$setStr.=$okStat." UPTIME= '". time() ."'";
 
 		if(array_key_exists('SOURCE',$arParams) && $arParams['SOURCE'])
 			$source = "SOURCE = '".$arParams['SOURCE']."'";

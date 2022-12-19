@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Ipolh\SDEK\Bitrix\Entity;
 
 use Ipolh\SDEK\SDEK\Entity\OptionsInterface;

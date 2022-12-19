@@ -1,4 +1,4 @@
-<?
+<?php
 #################################################
 #        Company developer: IPOL
 #        Developers: Nikta Egorov
@@ -7,7 +7,7 @@
 #        Copyright (c) 2006-2021 IPOL
 #################################################
 ?>
-<?
+<?php
 use Ipolh\SDEK\Bitrix\Tools as Tools;
 
 IncludeModuleLangFile(__FILE__);
@@ -298,14 +298,14 @@ function showOrderOptions(){
 					<div class="pop-text"><?=GetMessage('IPOLSDEK_LABEL_Sign_noPr')?><br><br><?=substr($arError['noPr'],4)?></div>
 					<div class="close" onclick="$(this).closest('.b-popup').hide();"></div>
 				</div>
-			<?}
+			<?php }
 			if($arError['unAct']){
 				$arError['str'].=GetMessage('IPOLSDEK_LABEL_unAct')." <a href='#' class='PropHint' onclick='return IPOLSDEK_setups.popup(\"pop-unAct_".$orderProp[0]."\",$(this));'></a>";?>
 				<div id="pop-unAct_<?=$orderProp[0]?>" class="b-popup" style="display: none; ">
 					<div class="pop-text"><?=GetMessage('IPOLSDEK_LABEL_Sign_unAct')?><br><br><?=substr($arError['unAct'],4)?></div>
 					<div class="close" onclick="$(this).closest('.b-popup').hide();"></div>
 				</div>
-			<?}
+			<?php }
 			
 			if($arError['str'])
 				$showErr=true;
@@ -319,9 +319,9 @@ function showOrderOptions(){
 		<tr>
 			<td width="50%" <?=$styleTdStr?> class="adm-detail-content-cell-l"><?=$orderProp[1]?></td>
 			<td width="50%" <?=$styleTdStr?> class="adm-detail-content-cell-r">
-				<?if($orderProp[0] != 'location'){?>
+				<?php if($orderProp[0] != 'location'){ ?>
 					<input type="text" size="" maxlength="255" value="<?=$value?>" name="<?=$orderProp[0]?>">
-				<?}else{
+				<?php } else {
 					global $locProps;
                     // dont show "choose option"
 					if($showErr && !$arError['str'])
@@ -335,22 +335,22 @@ function showOrderOptions(){
 					?>
 						<input type='hidden' value="<?=$key?>" name="<?=$orderProp[0]?>">
 						<?=array_pop($locProps)?> [<?=$key?>]
-					<?}else{?>
+					<?php } else { ?>
 						<select name="<?=$orderProp[0]?>">
-							<?foreach($locProps as $code => $name){?>
+							<?php foreach($locProps as $code => $name) { ?>
 								<option value='<?=$code?>' <?=($value==$code)?"selected":""?>><?=$name." [".$code."]"?></option>
-							<?}?>
+							<?php } ?>
 						</select>
-					<?}
-				}?>
-				&nbsp;&nbsp;<span class='errorText' <?if(!$showErr){?>style='display:none'<?}?>><?=($arError['str'])?$arError['str']:GetMessage('IPOLSDEK_LABEL_shPr')?></span>
-				<?if($orderProp[0] == 'name'){?>
+					<?php }
+				} ?>
+				&nbsp;&nbsp;<span class='errorText' <?php if(!$showErr) { ?>style='display:none'<?php } ?>><?=($arError['str'])?$arError['str']:GetMessage('IPOLSDEK_LABEL_shPr')?></span>
+				<?php if($orderProp[0] == 'name') { ?>
 					&nbsp;&nbsp;<a href='javascript:void(0)' onclick='IPOLSDEK_setups.base.properties.turnOnNF()'><?=GetMessage('IPOLSDEK_LBL_turnOnExtendName')?></a>
 					<input type='hidden' value="<?=(\Ipolh\SDEK\option::get('extendName') == 'Y') ? 'Y' : 'N'?>" name="extendName">
-				<?}elseif($orderProp[0] == 'fName'){?>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='IPOLSDEK_setups.base.properties.turnOffNF()'><?=GetMessage('IPOLSDEK_LBL_turnOffExtendName')?></a><?}?>
+				<?php } elseif($orderProp[0] == 'fName') { ?>&nbsp;&nbsp;<a href='javascript:void(0)' onclick='IPOLSDEK_setups.base.properties.turnOffNF()'><?=GetMessage('IPOLSDEK_LBL_turnOffExtendName')?></a><?php } ?>
 			</td>
 		</tr>
-	<?}
+	<?php }
 }
 
 $tabControl = new CAdminTabControl("tabControl", $aTabs);
@@ -429,11 +429,11 @@ $tabControl = new CAdminTabControl("tabControl", $aTabs);
 	});
 </script>
 <table>
-<?Tools::placeWarningLabel(GetMessage('IPOLSDEK_transit_content'),GetMessage('IPOLSDEK_transit_header'))?>
+<?php Tools::placeWarningLabel(GetMessage('IPOLSDEK_transit_content'), GetMessage('IPOLSDEK_transit_header')) ?>
 </table>
-<?if($isLogged){?>
-<form method="post" action="<?echo $APPLICATION->GetCurPage()?>?mid=<?=htmlspecialchars($mid)?>&amp;lang=<?echo LANG?>">
-	<?
+<?php if($isLogged) { ?>
+<form method="post" action="<?php echo $APPLICATION->GetCurPage() ?>?mid=<?=htmlspecialchars($mid)?>&amp;lang=<?php echo LANG; ?>">
+    <?php
 	$tabControl->Begin();
 	$tabControl->BeginNextTab();
 	include_once($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/".$module_id."/optionsInclude/faq.php");
@@ -466,12 +466,12 @@ $tabControl = new CAdminTabControl("tabControl", $aTabs);
 	?>
 	<div align="left">
 		<input type="hidden" name="Update" value="Y">
-		<input type="submit" <?if(!$USER->IsAdmin())echo " disabled ";?> name="Update" value="<?echo GetMessage("MAIN_SAVE")?>">
+		<input type="submit" <?php if(!$USER->IsAdmin()) echo " disabled "; ?> name="Update" value="<?php echo GetMessage("MAIN_SAVE"); ?>">
 	</div>
-	<?$tabControl->End();?>
-	<?=bitrix_sessid_post();?>
+	<?php $tabControl->End(); ?>
+	<?= bitrix_sessid_post(); ?>
 </form>
-<?}
+<?php }
 else{
 	$tabControl->Begin();
 	$tabControl->BeginNextTab();
