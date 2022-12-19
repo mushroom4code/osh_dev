@@ -68,12 +68,12 @@ class EnteregoBasket
                 $product_prices[$product_id]['ITEM'] = $item;
                 $new_basket_data[$product_id]['QUANTITY'] = $product_quantity;
 
-                $origin_price = self::loadProductPrice($product_id, BASIC_PRICE);
+                $origin_price = self::loadProductPrice($product_id, RETAIL_PRICE);
                 if ($origin_price) {
                     $new_basket_data[$product_id]['PRICE'] = $origin_price;
                     $origin_total_price += $product_quantity * $origin_price;
                     $product_prices[$product_id]['PRICE'] = $origin_price;
-                    $product_prices[$product_id]['PRICE_TYPE'] = BASIC_PRICE;
+                    $product_prices[$product_id]['PRICE_TYPE'] = RETAIL_PRICE;
                 }
             }
 
