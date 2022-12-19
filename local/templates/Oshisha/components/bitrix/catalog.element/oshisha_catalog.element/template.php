@@ -404,29 +404,17 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                     $height = 10;
                     $strong = 0;
                     if (isset($arResult['PROPERTIES'][PROP_STRONG_CODE]) && !empty($arResult['PROPERTIES'][PROP_STRONG_CODE]['VALUE'])) {
-                        switch ($arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE']) {
-                            case "легкая":
+                        switch ($arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE_SORT']) {
+                            case "1":
                                 $strong = 0.5;
                                 $color = "#07AB66";
                                 break;
-                            case "Ниже среднего":
-                                $strong = 1;
-                                $color = "#07AB66";
-                                break;
-                            case "средняя":
+                            case "2":
                                 $strong = 1.5;
                                 $color = "#FFC700";
                                 break;
-                            case "Выше среднего":
-                                $strong = 2;
-                                $color = "#FFC700";
-                                break;
-                            case "крепкая":
+                            case "3":
                                 $strong = 2.5;
-                                $color = "#FF7A00";
-                                break;
-                            case "Очень крепкий":
-                                $strong = 3;
                                 $color = "#FF7A00";
                                 break;
                         } ?>
