@@ -123,14 +123,29 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         $newStrPrice = '';
         $priceProduct = [];
         $price = [];
+        $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
+        foreach ($arItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
 
-        foreach ($arItem['PRICES'] as $price_name => $price_array) {
-            if (USE_CUSTOM_SALE_PRICE || SALE_PRICE_TYPE_ID == (int)$price_array['PRICE_ID']) {
-                $price['SALE_PRICE'] = $price_array;
-            }
+            foreach ($PRICE['PRICES'] as $price_key => $price_val) {
 
-            if ($price_array['PRICE_ID'] == $GLOBALS['PRICE_TYPE_ID']) {
-                $price['PRICE_DATA'] = $price_array;
+
+                if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
+                    if ($price_key == SALE_PRICE_TYPE_ID) {
+                        $price['SALE_PRICE'] = $price_val;
+                    }
+                }
+
+                if ((int)$price_val['PRICE_TYPE_ID'] === RETAIL_PRICE) {
+                    $price['PRICE_DATA'][0] = $price_val;
+                    $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
+                } else if ((int)$price_val['PRICE_TYPE_ID'] === BASIC_PRICE) {
+                    $price['PRICE_DATA'][1] = $price_val;
+                    $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
+                } elseif ((int)$price_val['PRICE_TYPE_ID'] === B2B_PRICE) {
+                    $price['PRICE_DATA'][2] = $price_val;
+                    $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
+                }
+                ksort($price['PRICE_DATA']);
             }
         }
 
@@ -141,7 +156,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
         ?>
         <div class="<?= ($arItem['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>">
-            <div class="bx_catalog_item_container product-item <? if ($catalogProduct['UF_HIDE_PRICE'] == 1 && !$USER->IsAuthorized()): ?>blur_photo<?endif; ?>"
+            <div class="bx_catalog_item_container product-item <? if ($catalogProduct['UF_HIDE_PRICE'] == 1 && !$USER->IsAuthorized()): ?>blur_photo<? endif; ?>"
                  id="<?= $strMainID; ?>">
                 <div>
                     <div class="variation_taste">
@@ -175,26 +190,45 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                 <img src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"
                                      id="<?= $arItemIDs['PICT']; ?>"/>
                             </a>
-                        <?php }
-                        ?>
+                        <?php } ?>
                     </div>
-                    <? if (!empty($price['PRICE_DATA']['PRINT_VALUE'])) { ?>
+                    <?php if (!empty($price['PRICE_DATA'][1]['PRINT_PRICE'])) { ?>
                         <div class="bx_catalog_item_price">
                             <div class="box_with_titles">
-                                <div class="box_with_price">
-                                    <?php if (!empty($price['SALE_PRICE'])) {
-                                        $price_new = $price['SALE_PRICE']['PRINT_VALUE'];
-                                        $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
-                                    } else {
-                                        $price_new = $price['PRICE_DATA']['PRINT_VALUE'];
-                                        $price_id = $price['PRICE_DATA']['PRICE_TYPE_ID'];
-                                    } ?>
-                                    <div class="bx_price" id="<?= $price_id ?>">
-                                        <?= $price_new ?>
+                                <div class="box_with_price d-flex flex-column">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <?php
+                                        $sale = false;
+                                        if (!empty($price['SALE_PRICE'])) {
+                                            $price_new = $price['SALE_PRICE']['PRINT_VALUE'];
+                                            $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
+                                            $sale = true;
+                                        } else {
+                                            $price_new = $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                                            $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
+                                        } ?>
+                                        <div class="bx_price" id="<?= $price_id ?>">
+                                            <?= $price_new ?>
+                                        </div>
+                                        <?php if (!$sale) { ?>
+                                            <div class="info-prices-box-hover cursor-pointer ml-2">
+                                                <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
+                                                <div class="position-absolute d-hide">
+                                                    <div class="d-flex flex-column prices-block">
+                                                        <?php foreach ($price['PRICE_DATA'] as $items) { ?>
+                                                            <p class="mb-1">
+                                                                <span class="font-11 mb-2"><?= $items['NAME'] ?></span><br>
+                                                                <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                                            </p>
+                                                        <?php } ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
                                     </div>
-                                    <?php if ( !empty($price['SALE_PRICE'])) { ?>
+                                    <?php if (!empty($price['SALE_PRICE'])) { ?>
                                         <div class="after_price">
-                                            Старая цена: <?= $price['PRICE_DATA']['PRINT_VALUE'] ?>
+                                            Старая цена: <?= $price['PRICE_DATA'][1]['PRINT_PRICE'] ?>
                                         </div>
                                     <?php } ?>
                                 </div>

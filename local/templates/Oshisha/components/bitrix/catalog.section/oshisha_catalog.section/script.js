@@ -246,7 +246,7 @@
             },
 
             tasteInit: function () {
-                let box = $('.variation_taste');
+                let box = $(document).find('.variation_taste');
 
                 $(box).find('span').each(
                     function () {
