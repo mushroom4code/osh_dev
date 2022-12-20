@@ -213,18 +213,6 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
         }
         //endregion
 
-
-        //region Description
-        if (($arParams['HIDE_SECTION_DESCRIPTION'] !== 'Y') && !empty($arResult['DESCRIPTION'])) {
-            ?>
-            <div class="row mb-4">
-                <div class="col catalog-section-description">
-                    <p><?= $arResult['DESCRIPTION'] ?></p>
-                </div>
-            </div>
-            <?php
-        }
-        //endregion
         $col_orientation = $_COOKIE['orientation'] === 'line' ? 'by-line' : 'by-card';
         $classPosition = '';
         $classOpt = '';
@@ -823,7 +811,17 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
             <?php
         }
         //endregion
-
+        //region Description
+        if (($arParams['HIDE_SECTION_DESCRIPTION'] !== 'Y') && !empty($arResult['DESCRIPTION'])) {
+            ?>
+            <div class="row mb-4">
+                <div class="col catalog-section-description">
+                    <p><?= $arResult['DESCRIPTION'] ?></p>
+                </div>
+            </div>
+            <?php
+        }
+        //endregion
         $signer = new Signer;
         $signedTemplate = $signer->sign($templateName, 'catalog.section');
         $signedParams = $signer->sign(base64_encode(serialize($arResult['ORIGINAL_PARAMETERS'])), 'catalog.section');
