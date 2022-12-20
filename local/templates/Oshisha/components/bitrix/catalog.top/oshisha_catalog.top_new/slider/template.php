@@ -123,7 +123,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         $newStrPrice = '';
         $priceProduct = [];
         $price = [];
-        $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
+        $useDiscount = $arItem['PROPERTIES']['USE_DISCOUNT'];
         foreach ($arItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
 
             foreach ($PRICE['PRICES'] as $price_key => $price_val) {
@@ -132,6 +132,10 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                 if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
                     if ($price_key == SALE_PRICE_TYPE_ID) {
                         $price['SALE_PRICE'] = $price_val;
+                    }
+                    if ((int)$price_val['PRICE_TYPE_ID'] === BASIC_PRICE) {
+                        $price['PRICE_DATA'][1] = $price_val;
+                        $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
                     }
                 }
 
@@ -200,7 +204,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                         <?php
                                         $sale = false;
                                         if (!empty($price['SALE_PRICE'])) {
-                                            $price_new = $price['SALE_PRICE']['PRINT_VALUE'];
+                                            $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
                                             $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
                                             $sale = true;
                                         } else {

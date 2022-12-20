@@ -237,13 +237,8 @@ var swiper = new Swiper('.box_slide', {
 		"OFFERS_SORT_ORDER2" => "desc",
 		"OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
 		"PARTIAL_PRODUCT_PROPERTIES" => "N",
-		"PRICE_CODE" => array(
-			0 => "Розничная",
-			1 => "Основная",
-			2 => "Сайт скидка",
-			3 => "b2b",
-		),
-		"FILL_ITEM_ALL_PRICES" => "Y",
+        "PRICE_CODE" => BXConstants::PriceCode(),
+        "FILL_ITEM_ALL_PRICES" => "Y",
 		"PRICE_VAT_INCLUDE" => "Y",
 		"PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
 		"PRODUCT_DISPLAY_MODE" => "Y",
@@ -271,10 +266,11 @@ var swiper = new Swiper('.box_slide', {
 		"USE_PRODUCT_QUANTITY" => "N",
 		"VIEW_MODE" => "SLIDER",
 		"PROPERTY_CODE" => array(
-			0 => "",
+			0 => "USE_DISCOUNT",
 			1 => "",
 		),
 		"PRODUCT_PROPERTIES" => array(
+                "USE_DISCOUNT"
 		)
 	),
 	false
