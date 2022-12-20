@@ -96,7 +96,7 @@ function initProperty(&$arUserResult)
 }
 
 // custom admin menu
-/*
+
 function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 {
 
@@ -115,6 +115,19 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
         "items" => array(),
     );
 
+
+    $aModuleMenu[] = array(
+        "parent_menu" => "global_menu_content",
+        'menu_id' => 'global_menu_osh',
+        'text' => 'Настройки сайта',
+        'title' => 'Настройки сайта',
+        'sort' => 9,
+        'items_id' => 'global_menu_osh',
+        'icon' => 'imi_corp',
+        'url' => '/bitrix/admin/bbrain_options.php?lang=' . LANG,
+
+    );
+
     $arRes = array(
         "global_menu_custom" => array(
             "menu_id" => "custom",
@@ -130,7 +143,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
     );
 
     return $arRes;
-}*/
+}
 
 class BXConstants
 {
@@ -190,30 +203,6 @@ class CUserEx
     {
         $arFields["LOGIN"] = $arFields["EMAIL"];
     }
-}
-
-
-AddEventHandler('main', 'OnBuildGlobalMenu', 'OnBuildGlobalMenuSistem');
-function OnBuildGlobalMenuSistem(&$arGlobalMenu, &$arModuleMenu)
-{
-
-    global $USER;
-
-    $moduleID = 'OSHISHA';
-
-
-    $arModuleMenu[] = array(
-        "parent_menu" => "global_menu_content",
-        'menu_id' => 'global_menu_osh',
-        'text' => 'Настройки сайта',
-        'title' => 'Настройки сайта',
-        'sort' => 9,
-        'items_id' => 'global_menu_osh',
-        'icon' => 'imi_corp',
-        'url' => '/bitrix/admin/bbrain_options.php?lang=' . LANG,
-
-    );
-
 }
 
 
