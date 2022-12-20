@@ -40,6 +40,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                 ];
             }
         }
+        usort($menu_for_JS['ELEMENT'][$itemID], 'sort_by_name_menu');
     }
 }
 ?>
@@ -57,15 +58,16 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             </a>
         </li>
 
-        <?php /*foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) { $i++;?>
-            <li class="li_menu_header none_mobile class_<?=$i?>" data-role="bx-menu-item">
-                <a class="link_menu_header" href="<?= $arResult["ALL_ITEMS"][$itemID]["LINK"] ?>">
-					<span class="text_catalog_link">
-						<?= htmlspecialcharsbx($arResult["ALL_ITEMS"][$itemID]["TEXT"], ENT_COMPAT, false) ?>
-					</span>
-                </a>
-            </li>
-        <?php }*/
+        <?php
+        function sort_by_name_menu($a, $b)
+        {
+            if ($a["TEXT"] == $b["TEXT"]) {
+                return 0;
+            }
+            return ($a["TEXT"] < $b["TEXT"]) ? -1 : 1;
+        }
+        usort($menu_for_JS['MAIN'], 'sort_by_name_menu');
+
         $result = json_encode($menu_for_JS) ?>
          <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
             <a class="link_menu_header" href="/diskont/">
@@ -144,8 +146,8 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 						
                             if (id === key_item) {
                                 $(value_item).each(function (i, val) {
-                                    $(menu_items).append('<a class="link_menu_header link_menu" href="' + val.LINK + '">' +
-                                        '<span class="text_catalog_link">' + val.TEXT + '</span></a>')
+                                    $(menu_items).append('<div class="col-lg-4 col-md-4 col-12 p-0"><a class="link_menu_header link_menu" href="' + val.LINK + '">' +
+                                        '<span class="text_catalog_link">' + val.TEXT + '</span></a></div')
                                 })
                             }
                         }
@@ -188,8 +190,8 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             $.each(menu_items_array.ELEMENT, function (key_item, value_item) {
                 if (id === key_item) {
                     $(value_item).each(function (i, val) {
-                        $(menu_items).append('<a class="link_menu_header link_menu" href="' + val.LINK + '">' +
-                            '<span class="text_catalog_link">' + val.TEXT + '</span></a>').removeClass('hide');
+                        $(menu_items).append('<div class="col-lg-4 col-md-4 col-12 p-0"><a class="link_menu_header link_menu" href="' + val.LINK + '">' +
+                            '<span class="text_catalog_link">' + val.TEXT + '</span></a></div>').removeClass('hide');
                     })
                 }
             });			
