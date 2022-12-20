@@ -37,6 +37,7 @@ $APPLICATION->IncludeComponent(
             5 => "SUM",
             6 => "PROPERTY_VKUS",
             7 => "PROPERTY_GRAMMOVKA_VES_NETTO",
+            9 => "PROPERTY_USE_DISCOUNT",
         ),
         "COLUMNS_LIST_MOBILE" => array(
             0 => "PREVIEW_PICTURE",
@@ -47,6 +48,7 @@ $APPLICATION->IncludeComponent(
             6 => "PROPERTY_VKUS",
             7 => "PROPERTY_GRAMMOVKA_VES_NETTO",
             8 => "PROPERTY_GRAMMOVKA",
+            9 => "PROPERTY_USE_DISCOUNT",
         ),
         "COMPATIBLE_MODE" => "Y",
         "CORRECT_RATIO" => "Y",

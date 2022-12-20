@@ -95,14 +95,6 @@ $arUrlRewrite=array (
     'PATH' => '/about/o-nas/index.php',
     'SORT' => 100,
   ),
-//  170 =>
-//  array (
-//    'CONDITION' => '#^/promotions/#',
-//    'RULE' => '',
-//    'ID' => '',
-//    'PATH' => '/promotions/index.php',
-//    'SORT' => 100,
-//  ),
   24 => 
   array (
     'CONDITION' => '#^/about/FAQ/#',
@@ -143,14 +135,6 @@ $arUrlRewrite=array (
     'PATH' => '/brands/index.php',
     'SORT' => 100,
   ),
-//  7 =>
-//  array (
-//    'CONDITION' => '#^/news/#',
-//    'RULE' => '',
-//    'ID' => 'bitrix:news',
-//    'PATH' => '/news/index.php',
-//    'SORT' => 100,
-//  ),
   5 => 
   array (
     'CONDITION' => '#^/rest/#',

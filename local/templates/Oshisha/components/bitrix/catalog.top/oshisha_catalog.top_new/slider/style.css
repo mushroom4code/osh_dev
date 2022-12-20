@@ -175,15 +175,6 @@
     font-weight: bold;
 }
 
-.bx_catalog_tile_home_type_2 .bx_catalog_item_price span {
-    color: #a5a5a5;
-    font-size: 12px;
-    font-weight: normal;
-    white-space: nowrap;
-    text-decoration: line-through;
-}
-
-
 @keyframes rotateimgfirst {
     from {
         opacity: 1;

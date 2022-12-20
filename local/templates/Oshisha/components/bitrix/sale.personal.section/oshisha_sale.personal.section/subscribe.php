@@ -91,8 +91,8 @@ if( count($arIsd_product) > 0)
                 "IBLOCK_ID" => IBLOCK_CATALOG,
                 "IBLOCK_TYPE" => "1c_catalog",
                 "INCLUDE_SUBSECTIONS" => "A",
-                "LABEL_PROP" => array("VKUS"),
-                "LABEL_PROP_MOBILE" => array(),
+                "LABEL_PROP" => array("VKUS","USE_DISCOUNT"),
+                "LABEL_PROP_MOBILE" => array(),""=>array("USE_DISCOUNT"),
                 "LABEL_PROP_POSITION" => "top-left",
                 "LAZY_LOAD" => "N",
                 "LINE_ELEMENT_COUNT" => "4",
@@ -114,7 +114,10 @@ if( count($arIsd_product) > 0)
                 "PAGER_TEMPLATE" => "round",
                 "PAGER_TITLE" => "Товары",
                 "PAGE_ELEMENT_COUNT" => "12",
-                "PARTIAL_PRODUCT_PROPERTIES" => "N",
+                "PARTIAL_PRODUCT_PROPERTIES" => "Y",
+                "PRODUCT_PROPERTIES" => array(
+                    "USE_DISCOUNT"
+                ),
                 "PRICE_CODE" => BXConstants::PriceCode(),
                 "PRICE_VAT_INCLUDE" => "Y",
                 "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",

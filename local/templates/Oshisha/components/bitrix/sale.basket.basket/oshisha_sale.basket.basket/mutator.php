@@ -52,14 +52,14 @@ foreach ($item as $row) {
 
     $product_prices = '';
     $show_product_prices = false; //var_dump(USE_CUSTOM_SALE_PRICE);
-    $propsUseSale = CIBlockElement::GetProperty(9, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
+    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
     if ($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) {
         $show_product_prices = true;
         $res = CIBlockElement::GetList(array(), array("ID" => $row['PRODUCT_ID']), false, false,
-            array("CATALOG_PRICE_" . $GLOBALS['PRICE_TYPE_ID']));
+            array("CATALOG_PRICE_" . SALE_PRICE_TYPE_ID,'CATALOG_PRICE_'.BASIC_PRICE));
         if ($ar_res = $res->fetch()) {
-            $product_prices_sql = $ar_res["CATALOG_PRICE_" . $GLOBALS['PRICE_TYPE_ID']];
+            $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
             $str_product_prices = explode('.', $product_prices_sql);
             $product_prices = $str_product_prices[0] . ' ₽';
         }

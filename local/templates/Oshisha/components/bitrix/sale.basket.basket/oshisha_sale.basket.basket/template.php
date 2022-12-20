@@ -211,11 +211,12 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 $classCat = '';
                                 $styleIcon = '';
 								 $styleIcon = 'style="transform:rotate(180deg);"';
-                                /*if ($i === 0) {
+                                if ($i === 0) {
                                     $styleIcon = 'style="transform:rotate(180deg);"';
                                 } else {
+                                    $styleIcon = 'style="transform:rotate(0deg);"';
                                     $classCat = 'collapse_hide';
-                                }*/
+                                }
                                 $newName = explode('_', $key); ?>
                                 <div class="box" id="<?= $newName[1] ?>">
                                     <div class="card-header basket_category" id="open<?= $newName[1] ?>">

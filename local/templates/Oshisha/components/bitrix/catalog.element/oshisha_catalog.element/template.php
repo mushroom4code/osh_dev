@@ -404,29 +404,17 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                     $height = 10;
                     $strong = 0;
                     if (isset($arResult['PROPERTIES'][PROP_STRONG_CODE]) && !empty($arResult['PROPERTIES'][PROP_STRONG_CODE]['VALUE'])) {
-                        switch ($arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE']) {
-                            case "легкая":
+                        switch ($arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE_SORT']) {
+                            case "1":
                                 $strong = 0.5;
                                 $color = "#07AB66";
                                 break;
-                            case "Ниже среднего":
-                                $strong = 1;
-                                $color = "#07AB66";
-                                break;
-                            case "средняя":
+                            case "2":
                                 $strong = 1.5;
                                 $color = "#FFC700";
                                 break;
-                            case "Выше среднего":
-                                $strong = 2;
-                                $color = "#FFC700";
-                                break;
-                            case "крепкая":
+                            case "3":
                                 $strong = 2.5;
-                                $color = "#FF7A00";
-                                break;
-                            case "Очень крепкий":
-                                $strong = 3;
                                 $color = "#FF7A00";
                                 break;
                         } ?>
@@ -466,7 +454,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                         $price_new = $price['PRICE_DATA'][1]['PRINT_PRICE'];
                         $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
                     }
-                    ?>
+                    $styles = ''; ?>
                     <div class="mb-4 d-flex flex-column">
                         <div class="mb-3 d-flex flex-row align-items-center">
                             <div class="product-item-detail-price-current"
@@ -474,7 +462,8 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                             </div>
                             <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRINT_PRICE']) ||
                                 $useDiscount['VALUE_XML_ID'] === 'true' &&
-                                !empty($price['SALE_PRICE']['PRINT_PRICE'])) { ?>
+                                !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
+                                $styles = 'price-discount'; ?>
                                 <span class="span">Старая цена <?= $price['PRICE_DATA'][1]['PRINT_PRICE']; ?></span>
                             <?php } ?>
                         </div>
@@ -482,7 +471,7 @@ if (!empty($actualItem['MORE_PHOTO'])) {
                             <?php foreach ($price['PRICE_DATA'] as $items) { ?>
                                 <p>
                                     <span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
-                                    <span class="font-14 ml-2"><b><?= $items['PRINT_PRICE']?></b></span>
+                                    <span class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
                                 </p>
                             <?php } ?>
                         </div>
