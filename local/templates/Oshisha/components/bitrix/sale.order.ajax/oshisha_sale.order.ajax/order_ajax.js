@@ -5686,6 +5686,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     BX.addClass(propsItemNode, "form-group bx-soa-customer-field box_grid_2 col-12");
                 } else if (property.getSettings().CODE === 'TIME') {
                     BX.addClass(propsItemNode, "form-group bx-soa-customer-field box_grid_3 col-12");
+                } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
+                    BX.addClass(propsItemNode, "d-none");
                 } else if (property.getSettings().CODE === 'ADDRESS') {
                     const extraClass = this.isOshPickUp() ? 'd-none' : 'bx-soa-customer-field box_grid_1 col-12';
                     BX.addClass(propsItemNode, extraClass);
