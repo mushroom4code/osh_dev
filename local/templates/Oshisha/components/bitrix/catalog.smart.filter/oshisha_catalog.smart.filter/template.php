@@ -65,7 +65,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                         ?>
 
-                        <?php if( $arItem['NAME'] === 'Основная'){?>
+                        <?php if( $arItem['ID'] === BASIC_PRICE){?>
                         <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?>F  smart-filter-parameters-box bx-active">
                             <span class="smart-filter-container-modef"></span>
 
