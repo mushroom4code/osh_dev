@@ -1,3 +1,147 @@
+#SDEK_preloader {
+	position:         fixed;
+	z-index:          2200;
+	display:          none;
+	left:             50%;
+	top:              50%;
+	margin-left:      -150px;
+	margin-top:       -150px;
+	width:            300px;
+	height:           300px;
+	box-sizing:       border-box;
+	overflow:         hidden;
+	-webkit-transform-style: flat;
+	transform-style:         flat;
+}
+.SDEK-widget__preloader {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background: #fff;
+	z-index: 0;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+}
+.SDEK-widget__preloader-truck {
+	width: 90%;
+	height: 33%;
+	margin: auto;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	position: relative;
+	overflow: hidden;
+}
+.SDEK-widget__preloader-truck__road {
+	content: '';
+	width: 100%;
+	height: 2px;
+	position: absolute;
+	background: -webkit-repeating-linear-gradient(0deg, #333, #333 0.5em, transparent 0.5em, transparent 1em);
+	background: repeating-linear-gradient(90deg, #333, #333 0.5em, transparent 0.5em, transparent 1em);
+	background-repeat: repeat-x;
+	background-size: 600px;
+	bottom: 0;
+	left: 0;
+	background-position-x: 0;
+	-webkit-animation: truck 5s linear 0s infinite normal;
+	animation: truck 5s linear 0s infinite normal;
+	z-index: 1;
+}
+.SDEK-widget__preloader-truck::after {
+	content: '';
+	height: 100%;
+	width: 10%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	background: -webkit-linear-gradient(left, #fff 0%, #fff 1%, rgba(255, 255, 255, 0) 100%);
+	background: linear-gradient(to right, #fff 0%, #fff 1%, rgba(255, 255, 255, 0) 100%);
+}
+.SDEK-widget__preloader-truck::before {
+	content: '';
+	height: 100%;
+	width: 10%;
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	right: 0;
+	background: -webkit-linear-gradient(right, #fff 0%, #fff 1%, rgba(255, 255, 255, 0) 100%);
+	background: linear-gradient(to left, #fff 0%, #fff 1%, rgba(255, 255, 255, 0) 100%);
+}
+.SDEK-widget__preloader-truck svg {
+	width: 32%;
+	margin: auto auto 3px;
+	position: relative;
+	z-index: 5;
+}
+.SDEK-widget__preloader-truck svg .path1 {
+	fill: #333;
+}
+.SDEK-widget__preloader-truck svg .path2 {
+	fill: #0f743c;
+}
+.SDEK-widget__preloader-truck svg .path3 {
+	fill: #91bf27;
+}
+.SDEK-widget__preloader-truck svg .path4 {
+	fill: #91bf27;
+}
+.SDEK-widget__preloader-truck svg .path5 {
+	fill: #efe41a;
+}
+.SDEK-widget__preloader-truck__grass {
+	width: 100%;
+	height: 20px;
+	position: absolute;
+	box-shadow: 0 0 0 50px rgba(143, 190, 45, 0.19), -20px 0 0 20px rgba(143, 190, 45, 0.19), -90px 0 0 50px rgba(143, 190, 45, 0.19), 250px 0 0 50px rgba(143, 190, 45, 0.19), 290px 0 0 50px rgba(143, 190, 45, 0.19), 620px 0 0 50px rgba(143, 190, 45, 0.19);
+	border-radius: 50%;
+	bottom: -50px;
+	-webkit-transform: translateX(103%);
+	-ms-transform: translateX(103%);
+	transform: translateX(103%);
+	-webkit-animation: gruss 5s linear 0s infinite normal;
+	animation: gruss 5s linear 0s infinite normal;
+}
+@-webkit-keyframes truck {
+	0% {
+		background-position-x: 0;
+	}
+	100% {
+		background-position-x: -600px;
+	}
+}
+@keyframes truck {
+	0% {
+		background-position-x: 0;
+	}
+	100% {
+		background-position-x: -600px;
+	}
+}
+@-webkit-keyframes gruss {
+	0% {
+		-webkit-transform: translateX(103%);
+		transform: translateX(103%);
+	}
+	100% {
+		-webkit-transform: translateX(-250%);
+		transform: translateX(-250%);
+	}
+}
+@keyframes gruss {
+	0% {
+		-webkit-transform: translateX(103%);
+		transform: translateX(103%);
+	}
+	100% {
+		-webkit-transform: translateX(-250%);
+		transform: translateX(-250%);
+	}
+}
+
 #SDEK_pvz{
 	position         : absolute;
 	z-index          : 2100;
@@ -32,9 +176,7 @@
 	height     : 11px;
 	margin-top : 15px;
 }
-#SDEK_logo:hover{
-	background-position: 0px -12px;
-}
+
 #SDEK_logo a{
 	text-decoration : none;
 	width           : 100%;
@@ -51,9 +193,6 @@
 	z-index    : 1000;
 	cursor     : pointer;
 }
-#SDEK_closer:hover{
-	background-position: 0px -22px;
-}
 #SDEK_looper{
 	position   : absolute;
 	background : url('/bitrix/images/ipol.sdek/widjet/looper.png') no-repeat transparent;
@@ -65,7 +204,7 @@
 	z-index    : 1000;
 	cursor     : pointer;
 }
-#SDEK_looper:hover, #SDEK_looper.active{
+#SDEK_looper.active{
 	background-position: 0px -22px;
 }
 #SDEK_map{
@@ -176,9 +315,6 @@
 	margin: 0px auto 5px;
 	text-decoration:none;
 }
-#SDEK_button:hover{
-	background-position: 0px -25px;
-}
 #SDEK_head > div{
 	font-size: 12px;
 	font-family: Arial;
@@ -203,36 +339,15 @@
 	cursor: help;
 }
 
-.SDEK_arrow{
-	width: 23px;
-	height: 14px;
-	/*background: #000 none repeat scroll 0% 0%;*/
-	background: url("/bitrix/images/ipol.sdek/arr.png") no-repeat bottom left;
-	display: block;
-	float: right;
-	margin-top: 12px;
-	/* margin-right: 5px; */
-	display: none;
-}
-
-.SDEK_arrow:hover{
-	background-position: bottom right;
-}
-
-.SDEK_arrow.up{
-	background-position: top left;
-
-}
-
-.SDEK_arrow.up:hover{
-	background-position: top right;
-}
-
 .SDEK_labelMode_SHORT{
 	display:none;
 }
 .SDEK_labelMode_FULL{
 	display:inline;
+}
+
+#SDEK_PvzList_button {
+	display: none;
 }
 
 @media screen and (max-width: 919px){
@@ -305,8 +420,27 @@
 		display: none;
 	}
 
-	.SDEK_arrow{
-		display: block;
+	#SDEK_head > div {
+		top: 7px;
+	}
+
+	#SDEK_PvzList_button {
+		right: 80px;
+	}
+
+	#SDEK_PvzList_button {
+		display:    block;
+		background: url("/bitrix/images/ipol.sdek/widjet/pvzListButton.png") 0 0 no-repeat;
+		position:   absolute;
+		width:      24px;
+		height:     23px;
+		top:        15px;
+		right:      75px;
+		cursor:     pointer;
+	}
+
+	#SDEK_PvzList_button.active {
+		background-position-y: -23px;
 	}
 }
 
@@ -314,6 +448,29 @@
 	#SDEK_pvz{
 		width: 100%;
 		min-width: 195px;
+	}
+}
+
+@media screen and (max-width: 699px) {
+	#SDEK_head {
+		position: relative;
+		z-index:  1;
+	}
+
+	#SDEK_info {
+		height:   74px;
+		overflow: visible;
+		width:    100%;
+	}
+
+	#SDEK_info .SDEK_all-items {
+		width: 270px;
+	}
+}
+
+@media screen and (max-width: 380px) {
+	#SDEK_sign span {
+		display: none;
 	}
 }
 
@@ -330,10 +487,6 @@
 	#SDEK_closer{
 		right: 12px;
 	}
-
-	.SDEK_arrow{
-		margin-right: 2px;
-	}
 }
 
 @media screen and (max-width: 268px){
@@ -349,5 +502,26 @@
 
 	#SDEK_pPrice{
 		font-size: 14px;
+	}
+}
+
+@media screen and (min-width: 992px) {
+	#SDEK_logo:hover {
+		background-position: 0 -12px;
+	}
+
+	#SDEK_closer:hover {
+		background-position: 0 -22px;
+	}
+
+	#SDEK_looper:hover {
+		background-position: 0 -22px;
+	}
+
+	#SDEK_button:hover {
+		background-position: 0 -25px;
+	}
+
+	#SDEK_PvzList_button:hover {
 	}
 }

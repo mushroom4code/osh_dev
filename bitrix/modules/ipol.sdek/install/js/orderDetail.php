@@ -1,4 +1,4 @@
-<?
+<?php
 $SDEK_ID = false;
 $message = array();
 
@@ -10,7 +10,7 @@ if(self::$requestVals){
     if($ordrVals['MESSAGE'])
         $_message=unserialize($ordrVals['MESSAGE']);
 
-    if($_message && is_array($_message)){
+    if(isset($_message) && is_array($_message)){
         $message = array('troubles' => '');
         foreach($_message as $key => $sign){
             if(in_array($key,array('service','location','street','house','flat','PVZ','name','phone','email','comment','number'),true)){
@@ -44,7 +44,7 @@ if(self::$requestVals){
     if(!$ordrVals['deliveryP'])
         $ordrVals['deliveryP'] = 0;
 
-    $cntrCurrency = $ordrVals['currency'];
+    $cntrCurrency = array_key_exists('currency', $ordrVals) ? $ordrVals['currency'] : false;
 }else{
     $ordrVals = self::formation();
     $naturalGabs = $ordrVals['GABS'];
@@ -52,12 +52,14 @@ if(self::$requestVals){
 
 $orderCity = sqlSdekCity::getBySId($ordrVals['location']);
 
-if($orderCity)
+if($orderCity) {
     $cityName = $orderCity['NAME'];
-else
+}
+else {
     $cityName = "ERROR";
-if(!$status)
-    $status='NEW';
+}
+if(!(isset($status) && $status))
+    $status = 'NEW';
 
 if(self::$isLoaded)
     self::$isEditable = (!self::$requestVals['OK']);
@@ -65,19 +67,19 @@ else
     self::$isEditable = true;
 
 // Checking city, if sended in error one
-$errCities = sdekHelper::getErrCities();
+$multipleMatchedCities = sdekHelper::getMultipleMatchedCities();
 $multiCity = false;
 $multiCityS = false;
 $bitrixCityId = self::$orderDescr['properties'][\Ipolh\SDEK\option::get('location')];
-if(is_array($errCities) && array_key_exists('many',$errCities) && array_key_exists($bitrixCityId,$errCities['many'])){
+if(is_array($multipleMatchedCities) && array_key_exists($bitrixCityId, $multipleMatchedCities)) {
     $multiCity = '&nbsp;&nbsp;<a href="#" class="PropWarning" onclick="return IPOLSDEK_oExport.popup(\'pop-multiCity\',this);"></a>	
 	<div id="pop-multiCity" class="b-popup" style="display: none; ">
 	<div class="pop-text">'.GetMessage("IPOLSDEK_SOD_MANYCITY").'<div class="close" onclick="$(this).closest(\'.b-popup\').hide();"></div>
 </div>';
 
     $multiCityS = "<select id='IPOLSDEK_ms' onchange='IPOLSDEK_oExport.onMSChange(\$(this))'>
-	<option value='".$orderCity['SDEK_ID']."' ".(($ordrVals['location'] == $orderCity['SDEK_ID'])?"selected":"").">".$errCities['many'][$bitrixCityId]['takenLbl']."</option>";
-    foreach($errCities['many'][$bitrixCityId]['sdekCity'] as $sdekId => $arAnalog)
+	<option value='".$orderCity['SDEK_ID']."' ".(($ordrVals['location'] == $orderCity['SDEK_ID'])?"selected":"").">" . $multipleMatchedCities[$bitrixCityId]['takenLbl'] . "</option>";
+    foreach($multipleMatchedCities[$bitrixCityId]['sdekCity'] as $sdekId => $arAnalog)
         $multiCityS .= "<option value='".$sdekId."' ".(($ordrVals['location'] == $sdekId)?"selected":"").">".$arAnalog['region'].", ".$arAnalog['name']."</option>";
     $multiCityS .= "</select>";
 }
@@ -85,7 +87,8 @@ if(is_array($errCities) && array_key_exists('many',$errCities) && array_key_exis
 $payment = sqlSdekCity::getCityPM($ordrVals['location']); // платежная система
 
 //ТАРИФЫ
-$arList = CDeliverySDEK::getListFile();
+$controllerPVZ = new \Ipolh\SDEK\Bitrix\Controller\pvzController(true);
+$arList =  $controllerPVZ->getList();//CDeliverySDEK::getListFile();
 $arModdedList = CDeliverySDEK::weightPVZ($ordrVals['GABS']["W"] * 1000,$arList['PVZ']);
 $arModdedPST  = CDeliverySDEK::weightPST($ordrVals['GABS'],$arList['POSTAMAT']);
 $strOfCodes='';
@@ -101,7 +104,7 @@ foreach($arTarif as $code => $arSign){//тариф
             $selected='selected';
         elseif(!$hasSelected && !$ordrVals['service']){ //пытаемся угадать тариф
             if(strpos($ordrVals['address'],"#S")){
-                if(array_key_exists($cityName,$arList['PVZ']) && $code == 136)
+                if(array_key_exists($orderCity['SDEK_ID'],$arList['PVZ']) && $code == 136)
                     $selected = 'selected';
             }
             elseif($code == 137)
@@ -136,26 +139,27 @@ $badPay = (self::$orderDescr['info']['PAYED'] != 'Y');
 // ПВЗ
 $strOfPSV='';
 $arBPVZ = "{";
-if(array_key_exists($cityName,$arList['PVZ'])){
-    uasort($arList['PVZ'][$cityName],'sdekExport::sortPVZ');
-    foreach($arList['PVZ'][$cityName] as $code => $punkts){
-        if(!array_key_exists($code,$arModdedList[$cityName]))
+if(array_key_exists($orderCity['SDEK_ID'],$arList['PVZ'])){
+    uasort($arList['PVZ'][$orderCity['SDEK_ID']],'sdekExport::sortPVZ');
+    foreach($arList['PVZ'][$orderCity['SDEK_ID']] as $code => $punkts){
+        if(!array_key_exists($code,$arModdedList[$orderCity['SDEK_ID']]))
             $arBPVZ .= $code.":true,";
         $selected = ($ordrVals['PVZ'] == $code) ? "selected" : "";
-        $strOfPSV.="<option $selected value='".$code."'>".$punkts['Name']." (".$punkts['Address'].") [".$code."]"."</option>";
+        $strOfPSV.="<option $selected value='".$code."'>".\Ipolh\SDEK\Bitrix\Tools::encodeFromUTF8($punkts['Name']." (".$punkts['Address'].") [".$code."]")."</option>";
     }
 }
 $arBPVZ .= "}";
 // Постаматы
 $strOfPST='';
 $arBPST = "{";
-if(array_key_exists($cityName,$arList['POSTAMAT'])){
-    uasort($arList['POSTAMAT'][$cityName],'sdekExport::sortPVZ');
-    foreach($arList['POSTAMAT'][$cityName] as $code => $punkts){
-        if(!array_key_exists($code,$arModdedPST[$cityName]))
+if(array_key_exists($orderCity['SDEK_ID'],$arList['POSTAMAT'])){
+    uasort($arList['POSTAMAT'][$orderCity['SDEK_ID']],'sdekExport::sortPVZ');
+    foreach($arList['POSTAMAT'][$orderCity['SDEK_ID']] as $code => $punkts){
+        if(!array_key_exists($code,$arModdedPST[$orderCity['SDEK_ID']]))
             $arBPST .= $code.":true,";
-        $selected = ($ordrVals['PVZ'] == $code || $ordrVals['PST'] == $code) ? "selected" : "";
-        $strOfPST.="<option $selected value='".$code."'>".$punkts['Name']." (".$punkts['Address'].") [".$code."]"."</option>";
+        $selected = ((array_key_exists('PVZ', $ordrVals) && $ordrVals['PVZ'] == $code)
+            || (array_key_exists('PST', $ordrVals) &&  $ordrVals['PST'] == $code)) ? "selected" : "";
+        $strOfPST.="<option $selected value='".$code."'>".\Ipolh\SDEK\Bitrix\Tools::encodeFromUTF8($punkts['Name']." (".$punkts['Address'].") [".$code."]")."</option>";
     }
 }
 $arBPST .= "}";
@@ -163,14 +167,14 @@ $arBPST .= "}";
 //Доп. опции
 $exOpts = sdekdriver::getExtraOptions();
 foreach($exOpts as $code => $vals)
-    if($ordrVals['AS'][$code] == 'Y')
+    if(array_key_exists('AS', $ordrVals) && $ordrVals['AS'][$code] == 'Y')
         $exOpts[$code]['DEF'] = 'Y';
     elseif(self::$isLoaded)
         $exOpts[$code]['DEF'] = 'N';
 
 // Вызов курьера
 $allowCourier = (\Ipolh\SDEK\option::get('allowSenders') == 'Y');
-if(!$ordrVals['courierCity'])
+if(!(array_key_exists('courierCity', $ordrVals) && $ordrVals['courierCity']))
     $ordrVals['courierCity'] = sqlSdekCity::getByBId(sdekHelper::getNormalCity(COption::GetOptionString('sale','location',false)));
 else
     $ordrVals['courierCity'] = sqlSdekCity::getBySId($ordrVals['courierCity']);
@@ -182,7 +186,7 @@ while($element=$citiesSender->Fetch()){
     $IPOLSDEK_sC .= "{label:'{$element['NAME']} ({$element['REGION']})',value:'{$element['SDEK_ID']}'},";
     $tmpCts[$element['SDEK_ID']] = $element['NAME']." (".$element['REGION'].')';
 }
-$svdCouriers = sdekOption::senders($_REQUEST['senders']);
+$svdCouriers = sdekOption::senders(array_key_exists('senders', $_REQUEST) ? $_REQUEST['senders'] : false);
 
 $IPOLSDEK_svdC = "";
 if($svdCouriers && count($svdCouriers))
@@ -223,7 +227,7 @@ if(self::$isLoaded)
 else {
     if(self::$orderDescr['info']['DELIVERY_SDEK'] && self::$orderDescr['info']['DELIVERY_ID']){
         $config = self::getDeliveryConfig(self::$orderDescr['info']['DELIVERY_ID']);
-        if(array_key_exists('VALUE',$config['ACCOUNT']) && $config['ACCOUNT']['VALUE']){
+        if(array_key_exists('ACCOUNT', $config) && $config['ACCOUNT'] && array_key_exists('VALUE',$config['ACCOUNT']) && $config['ACCOUNT']['VALUE']){
             $acc = self::defineAuth($config['ACCOUNT']['VALUE']);
         }
     }
@@ -242,10 +246,10 @@ CJSCore::Init(array("jquery"));
 ?>
 <?=sdekdriver::getModuleExt('packController')?>
 <?=sdekdriver::getModuleExt('markingController')?>
-    <link href="/bitrix/js/<?=self::$MODULE_ID?>/jquery-ui.css?<?=mktime()?>" type="text/css"  rel="stylesheet" />
-    <link href="/bitrix/js/<?=self::$MODULE_ID?>/jquery-ui.structure.css?<?=mktime()?>" type="text/css"  rel="stylesheet" />
+    <link href="/bitrix/js/<?=self::$MODULE_ID?>/jquery-ui.css?<?= time() ?>" type="text/css" rel="stylesheet" />
+    <link href="/bitrix/js/<?=self::$MODULE_ID?>/jquery-ui.structure.css?<?= time() ?>" type="text/css" rel="stylesheet" />
 
-    <script src='/bitrix/js/<?=self::$MODULE_ID?>/jquery-ui.js?<?=mktime()?>' type='text/javascript'></script>
+    <script src='/bitrix/js/<?=self::$MODULE_ID?>/jquery-ui.js?<?= time() ?>' type='text/javascript'></script>
     <style type='text/css'>
         .PropWarning{
             background: url('/bitrix/images/<?=self::$MODULE_ID?>/trouble.png') no-repeat transparent;
@@ -418,13 +422,13 @@ CJSCore::Init(array("jquery"));
             load: function(){
                 if($('#IPOLSDEK_btn').length) return;
 
-                // B24 support
+                /* B24 support */
                 if ($('#IPOLSDEK_btn_container').length)
                 {
                     $('#IPOLSDEK_btn_container').prepend("<a href='javascript:void(0)' onclick='IPOLSDEK_oExport.showWindow()' class='ui-btn ui-btn-light-border ui-btn-icon-edit' style='margin-left:12px;' id='IPOLSDEK_btn'><?=GetMessage('IPOLSDEK_JSC_SOD_BTNAME')?></a>");
                 }
 
-                // Standard
+                /* Standard */
                 if ($('.adm-detail-toolbar').find('.adm-detail-toolbar-right').length)
                 {
                     $('.adm-detail-toolbar').find('.adm-detail-toolbar-right').prepend("<a href='javascript:void(0)' onclick='IPOLSDEK_oExport.showWindow()' class='adm-btn' id='IPOLSDEK_btn'><?=GetMessage('IPOLSDEK_JSC_SOD_BTNAME')?></a>");
@@ -441,7 +445,7 @@ CJSCore::Init(array("jquery"));
                 IPOLSDEK_marks.init(<?=(array_key_exists('marks',$ordrVals) && $ordrVals['marks']) ? CUtil::PhpToJSObject($ordrVals['marks']) : 'false'?>);
             },
 
-            // window
+            /* window */
             wnd: false,
             showWindow: function(){
                 var savButStat='';
@@ -476,18 +480,18 @@ CJSCore::Init(array("jquery"));
                         buttons: [
                             '<input type=\"button\" id=\"IPOLSDEK_sendBtn\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_SAVESEND')?>\"  '+savButStat+'onclick=\"IPOLSDEK_oExport.send(\'saveAndSend\')\"/>',
                             '<input type=\"button\" id=\"IPOLSDEK_checkBtn\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_CHECK')?>\"  '+checkButStat+'onclick=\"IPOLSDEK_oExport.checkCdekNumber()\"/>',
-                            '<input id=\"IPOLSDEK_allTarifsBtn\" type=\"button\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_ALLTARIFS')?>\"  '+savButStat+'onclick=\"IPOLSDEK_oExport.allTarifs.show()\"/>', // all tarifs
-                            '<input type=\"button\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_DELETE')?>\" '+delButStat+' onclick=\"IPOLSDEK_oExport.delete()\"/>', // удалить
-                            '<input type=\"button\" id=\"IPOLSDEK_PRINT\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_PRNTSH')?>\" '+prntButStat+' onclick="IPOLSDEK_oExport.print(\''+IPOLSDEK_oExport.orderId+'\'); return false;"/>', // printing invoice
-                            '<input type=\"button\" id=\"IPOLSDEK_SHTRIH\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_SHTRIH')?>\" '+prntButStat+' onclick="IPOLSDEK_oExport.shtrih(\''+IPOLSDEK_oExport.orderId+'\'); return false;"/>', // printing shtrih
-                            '<input type=\"button\" value=\"<?=GetMessage('IPOLSDEK_JS_SOD_PACKS')?>\"  onclick="IPOLSDEK_packs.wnd.open(); return false;"/>', // места
-                            '<input type=\"button\" value=\"<?=GetMessage('IPOLSDEK_JS_SOD_MARKING')?>\"  onclick="IPOLSDEK_marks.wnd.open(); return false;"/>', // места
-                            <?if($SDEK_ID){?>'<a href="<?=\Ipolh\SDEK\SDEK\Tools::getTrackLink($SDEK_ID)?>" target="_blank"><?=GetMessage('IPOLSDEK_JSC_SOD_FOLLOW')?></a>'<?}?> // follow
+                            '<input id=\"IPOLSDEK_allTarifsBtn\" type=\"button\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_ALLTARIFS')?>\"  '+savButStat+'onclick=\"IPOLSDEK_oExport.allTarifs.show()\"/>', /* all tarifs */
+                            '<input type=\"button\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_DELETE')?>\" '+delButStat+' onclick=\"IPOLSDEK_oExport.delete()\"/>', /* удалить */
+                            '<input type=\"button\" id=\"IPOLSDEK_PRINT\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_PRNTSH')?>\" '+prntButStat+' onclick="IPOLSDEK_oExport.print(\''+IPOLSDEK_oExport.orderId+'\'); return false;"/>', /* printing invoice */
+                            '<input type=\"button\" id=\"IPOLSDEK_SHTRIH\" value=\"<?=GetMessage('IPOLSDEK_JSC_SOD_SHTRIH')?>\" '+prntButStat+' onclick="IPOLSDEK_oExport.shtrih(\''+IPOLSDEK_oExport.orderId+'\'); return false;"/>', /* printing shtrih */
+                            '<input type=\"button\" value=\"<?=GetMessage('IPOLSDEK_JS_SOD_PACKS')?>\"  onclick="IPOLSDEK_packs.wnd.open(); return false;"/>', /* места */
+                            '<input type=\"button\" value=\"<?=GetMessage('IPOLSDEK_JS_SOD_MARKING')?>\"  onclick="IPOLSDEK_marks.wnd.open(); return false;"/>', /* места */
+                            <?php if($SDEK_ID) { ?>'<a href="<?=\Ipolh\SDEK\SDEK\Tools::getTrackLink($SDEK_ID)?>" target="_blank"><?= GetMessage('IPOLSDEK_JSC_SOD_FOLLOW') ?></a>'<?php } ?> /* follow */
                         ]
                     });
                     $('#IPOLSDEK_courierTimeBeg').mask("29:59");
                     $('#IPOLSDEK_courierTimeEnd').mask("29:59");
-                    // $('#IPOLSDEK_courierPhone').mask("99999999999");
+                    /* $('#IPOLSDEK_courierPhone').mask("99999999999"); */
 
                     $( "#IPOLSDEK_cSSelector" ).autocomplete({
                         source: IPOLSDEK_oExport.senderCities,
@@ -499,13 +503,13 @@ CJSCore::Init(array("jquery"));
                 IPOLSDEK_oExport.courier.handle();
                 IPOLSDEK_oExport.onRecheck(true);
                 IPOLSDEK_oExport.wnd.Show();
-                <?if($cntrCurrency){?>
+                <?php if($cntrCurrency) { ?>
                 IPOLSDEK_oExport.currency.init();
-                <?}?>
+                <?php } ?>
             },
 
-            // events
-            // changing tarif: check weither pvz or couries, shows corresponding form fields
+            /* events */
+            /* changing tarif: check weither pvz or couries, shows corresponding form fields */
             onCodeChange: function(wat,ifDef){
                 if(wat.val() == 138 || wat.val() == 139) $('#IPOLSDEK_tarifWarning').css('display','table-row');
                 else $('#IPOLSDEK_tarifWarning').css('display','');
@@ -522,7 +526,7 @@ CJSCore::Init(array("jquery"));
                     case 'postamat' : $('#IPOLSDEK_wndOrder').find('.IPOLSDEK_PST').css('display',''); break;
                 }
 
-                <?if($allowCourier){?>
+                <?php if($allowCourier) { ?>
                 if(IPOLSDEK_oExport.isToDoor(wat.val())){
                     $('#IPOLSDEK_courierHeader').css('display','');
                     if(IPOLSDEK_oExport.courier.request)
@@ -532,9 +536,9 @@ CJSCore::Init(array("jquery"));
                     if(IPOLSDEK_oExport.courier.request && typeof(ifDef) === 'undefined')
                         IPOLSDEK_oExport.courier.handle();
                 }
-                <?}else{?>
+                <?php } else { ?>
                 $('#IPOLSDEK_courierHeader').css('display','none');
-                <?}?>
+                <?php } ?>
 
                 if(typeof(ifDef) === 'undefined')
                     IPOLSDEK_oExport.onRecheck();
@@ -542,12 +546,12 @@ CJSCore::Init(array("jquery"));
                     IPOLSDEK_oExport.onRecheck(true);
                 IPOLSDEK_oExport.onPVZChange();
             },
-            // changing destination city (if in error list)
+            /* changing destination city (if in error list) */
             onMSChange: function(wat){
                 $('#IPOLSDEK_location').val(wat.val());
                 IPOLSDEK_oExport.onRecheck();
             },
-            // changing PVZ - checking available
+            /* changing PVZ - checking available */
             onPVZChange: function(wat){
                 if(typeof(wat) === 'undefined')
                     wat = $('#IPOLSDEK_PVZ');
@@ -564,7 +568,7 @@ CJSCore::Init(array("jquery"));
                 else
                     $('#IPOLSDEK_oExport.badPST').css('display','none');
             },
-            // changing data delivery
+            /* changing data delivery */
             onDeliveryDateChange: function(){
                 $('#IPOLSDEK_badDeliveryTerm').css('display','');
                 var deliveryDate    = $('#IPOLSDEK_deliveryDate').val();
@@ -591,16 +595,16 @@ CJSCore::Init(array("jquery"));
                     }
                 }
             },
-            // data
+            /* data */
             resetDate: function(){
                 $("#IPOLSDEK_deliveryDate").val("");
                 IPOLSDEK_oExport.onDeliveryDateChange();
             },
-            // Changing cender-ciry: recheck all
+            /* Changing cender-ciry: recheck all */
             onDepartureChange: function(){
                 IPOLSDEK_oExport.onRecheck();
             },
-            // changing terms: recalculate
+            /* changing terms: recalculate */
             onRecheck: function(isNoAlert){
                 var reqParams = IPOLSDEK_oExport.getInputsRecheck();
 
@@ -641,9 +645,9 @@ CJSCore::Init(array("jquery"));
                 });
             },
 
-            // Data for sending
+            /* Data for sending */
             getInputsRecheck: function(params){
-                // var city = $('#IPOLSDEK_location').val();
+                /* var city = $('#IPOLSDEK_location').val(); */
                 var city = $('#IPOLSDEK_cityTo').val();
                 if(!city)
                     return '<?=GetMessage("IPOLSDEK_JSC_SOD_NOCITY")?>';
@@ -724,7 +728,7 @@ CJSCore::Init(array("jquery"));
                     'street'      	 : {need: true,check: (profile == 'courier')},
                     'house'      	 : {need: true,check: (profile == 'courier')},
                     'flat'       	 : {need: false},
-//                    'flat'       	 : {need: true,check: (profile == 'courier')},
+                    /* 'flat'       	 : {need: true,check: (profile == 'courier')}, */
                     'PVZ'            : {need: true,check: (profile == 'pickup')},
                     'PST'            : {need: true,check: (profile == 'postamat')},
                     'courierDate'    : {need: true,check: isCourierCall},
@@ -788,8 +792,8 @@ CJSCore::Init(array("jquery"));
                 return dO;
             },
 
-            // buttons
-            // save and send
+            /* buttons */
+            /* save and send */
             send: function(){
                 var dataObject=IPOLSDEK_oExport.getInputs();
                 if(typeof dataObject !== 'object'){if(dataObject)alert('<?=GetMessage('IPOLSDEK_JSC_SOD_ZAPOLNI')?> "'+dataObject+'"');return;}
@@ -806,7 +810,7 @@ CJSCore::Init(array("jquery"));
                     }
                 });
             },
-            // delete
+            /* delete */
             delete: function(){
                 var oId = (IPOLSDEK_oExport.mode == 'shipment') ? IPOLSDEK_oExport.shipment : IPOLSDEK_oExport.orderId;
                 if(IPOLSDEK_oExport.status == 'NEW' || IPOLSDEK_oExport.status == 'ERROR' || IPOLSDEK_oExport.status == 'DELETE'){
@@ -835,7 +839,7 @@ CJSCore::Init(array("jquery"));
                     }
                 }
             },
-            // invoice
+            /* invoice */
             print: function(){
                 $('#IPOLSDEK_PRINT').attr('disabled','true');
                 $('#IPOLSDEK_PRINT').val('<?=GetMessage("IPOLSDEK_JSC_SOD_LOADING")?>');
@@ -859,7 +863,7 @@ CJSCore::Init(array("jquery"));
                     }
                 });
             },
-            // barcode
+            /* barcode */
             shtrih: function(){
                 $('#IPOLSDEK_SHTRIH').attr('disabled','true');
                 $('#IPOLSDEK_SHTRIH').val('<?=GetMessage("IPOLSDEK_JSC_SOD_LOADING")?>');
@@ -883,7 +887,7 @@ CJSCore::Init(array("jquery"));
                     }
                 });
             },
-            // check
+            /* check */
             checkCdekNumber : function () {
                 $('#IPOLSDEK_checkBtn').css('display','none');
 
@@ -906,8 +910,8 @@ CJSCore::Init(array("jquery"));
                 });
             },
 
-            // service
-            // tarif: pvz, courier or inpost (old)
+            /* service */
+            /* tarif: pvz, courier or inpost (old) */
             defineTarifs: function(val){
                 val = parseInt(val);
 
@@ -921,17 +925,17 @@ CJSCore::Init(array("jquery"));
                 }
                 return 'courier';
             },
-            // tarif: todoor or to sklad
+            /* tarif: todoor or to sklad */
             isToDoor: function(val){
                 var dT = [<?=sdekHelper::getDoorTarifs(true)?>];
                 for(var i = 0; i < dT.length; i++)
                     if(dT[i] == val) return true;
                 return false;
             },
-            // checking payed / beznal
+            /* checking payed / beznal */
             checkPay: function(){
                 if($('#IPOLSDEK_isBeznal').prop('checked')){
-                    <?if($badPay){?>$('#IPOLSDEK_notPayed').css('display','inline');<?}?>
+                    <?php if($badPay) { ?>$('#IPOLSDEK_notPayed').css('display','inline');<?php } ?>
                     $('#IPOLSDEK_toPay').attr('disabled','disabled');
                     $('#IPOLSDEK_deliveryP').attr('disabled','disabled');
                     $('#IPOLSDEK_NDSGoods').attr('disabled','disabled');
@@ -939,7 +943,7 @@ CJSCore::Init(array("jquery"));
                     $('#IPOLSDEK_toPay').val('0');
                     $('#IPOLSDEK_deliveryP').val('0');
                 }else{
-                    <?if($badPay){?>$('#IPOLSDEK_notPayed').css('display','none');<?}?>
+                    <?php if($badPay) { ?>$('#IPOLSDEK_notPayed').css('display','none');<?php } ?>
                     $('#IPOLSDEK_toPay').removeAttr('disabled');
                     $('#IPOLSDEK_deliveryP').removeAttr('disabled');
                     $('#IPOLSDEK_NDSGoods').removeAttr('disabled');
@@ -948,12 +952,12 @@ CJSCore::Init(array("jquery"));
                     $('#IPOLSDEK_deliveryP').val(IPOLSDEK_oExport.delivPrice);
                 }
             },
-            // service props
+            /* service props */
             serverShow: function(){
                 $(".IPOLSDEK_detOrder").css("display","");
                 IPOLSDEK_oExport.gabs.label();
             },
-            // popup hints
+            /* popup hints */
             popup: function (code, info){
                 var offset = $(info).position().top;
                 var obj;
@@ -975,7 +979,7 @@ CJSCore::Init(array("jquery"));
             },
 
             checkPhone: function(val){
-                // var check = /^(\+7(\d{10}))/;
+                /* var check = /^(\+7(\d{10}))/; */
                 var check = /^(\+(\d{11}))/;
                 return check.test(val);
             },
@@ -987,8 +991,8 @@ CJSCore::Init(array("jquery"));
                 return true;
             },
 
-            // additional windows and functional
-            // searchPVZ
+            /* additional windows and functional */
+            /* searchPVZ */
             searchPVZ: {
                 on: function(label){
                     if(typeof(label) === 'undefined') {label = 'PVZ';}
@@ -1023,7 +1027,7 @@ CJSCore::Init(array("jquery"));
                     });
                 }
             },
-            // all tarifs
+            /* all tarifs */
             allTarifs: {
                 wnd: false,
 
@@ -1200,17 +1204,17 @@ CJSCore::Init(array("jquery"));
                 },
 
                 lang: {
-                    <?foreach(sdekExport::getAllProfiles() as $profile){?>
+                    <?php foreach(sdekExport::getAllProfiles() as $profile) { ?>
                     '<?=$profile?>' : '<?=GetMessage("IPOLSDEK_DELIV_".strtoupper($profile)."_TITLE")?>',
-                    <?}?>
+                    <?php } ?>
                 }
             },
-            // courier datas
+            /* courier datas */
             courier: {
-                request: <?if(!$allowCourier) echo 'true';
-            elseif($ordrVals['courierDate']) echo 'false';
-            else echo 'true';
-                ?>, // проверка в php! Обратное, так как при загрузке работает
+                request: <?php if(!$allowCourier) echo 'true';
+                elseif($ordrVals['courierDate']) echo 'false';
+                else echo 'true';
+                ?>, /* проверка в php! Обратное, так как при загрузке работает */
 
                 handle: function(){
                     if(IPOLSDEK_oExport.courier.request){
@@ -1219,7 +1223,7 @@ CJSCore::Init(array("jquery"));
                         IPOLSDEK_oExport.courier.request = false;
                         $('#IPOLSDEK_departure').removeAttr('disabled');
                     }else{
-                        <?if(\Ipolh\SDEK\option::get('allowSenders') == 'N'){?> return; <?}?>
+                        <?php if(\Ipolh\SDEK\option::get('allowSenders') == 'N') { ?> return; <?php } ?>
                         if($('#IPOLSDEK_courierHeader').css('display')!='none'){
                             $("[onclick='IPOLSDEK_oExport.courier.handle()']").html('<?=GetMessage('IPOLSDEK_JS_SOD_HD_NOSHOWCOURIER')?>');
                             $('.IPOLSDEK_courierInfo').css('display','');
@@ -1269,10 +1273,10 @@ CJSCore::Init(array("jquery"));
                         $('#IPOLSDEK_courierDateError').css('display','none');
                     if(selDate.valueOf() == curDate.valueOf() && !$('#IPOLSDEK_courierTimeBeg').val()){
                         var cT = new Date();
-                        var aT = new Date(cT.getTime() + 900000); // +15 min
+                        var aT = new Date(cT.getTime() + 900000); /* +15 min */
                         if(aT.getHours() < 15){
                             $('#IPOLSDEK_courierTimeBeg').val(aT.getHours()+":"+aT.getMinutes());
-                            aT = new Date(cT.getTime() + 11700000); // +3h 15m
+                            aT = new Date(cT.getTime() + 11700000); /* +3h 15m */
                             $('#IPOLSDEK_courierTimeEnd').val(aT.getHours()+":"+aT.getMinutes());
                         }
                     }
@@ -1344,11 +1348,11 @@ CJSCore::Init(array("jquery"));
                     return true;
                 }
             },
-            // Handling packs params
+            /* Handling packs params */
             gabs:{
-                // button "change"
+                /* button "change" */
                 change: function(){
-                    // in sm - CDEK params
+                    /* in sm - CDEK params */
                     var GABS = {
                         D_L: $('#IPOLSDEK_GABS_D_L').val() * 10,
                         D_W: $('#IPOLSDEK_GABS_D_W').val() * 10,
@@ -1363,7 +1367,7 @@ CJSCore::Init(array("jquery"));
                     $('#IPOLSDEK_gabsPlace').parents('tr').css('display','table-row');
                     $('#IPOLSDEK_gabsPlace').html(htmlCG);
                 },
-                // assepting changes via button "change"
+                /* assepting changes via button "change" */
                 accept: function(){
                     var ar = ['D_L','D_W','D_H','W'];
                     var GABS = {'mode':'mm'};
@@ -1376,7 +1380,7 @@ CJSCore::Init(array("jquery"));
 
                     IPOLSDEK_oExport.onRecheck();
                 },
-                // setting changes according to gabs
+                /* setting changes according to gabs */
                 write: function(GABS){
                     if(GABS.mode == 'mm'){
                         var GABSmm = GABS;
@@ -1405,7 +1409,7 @@ CJSCore::Init(array("jquery"));
                     IPOLSDEK_oExport.gabs.changeStat = true;
                     IPOLSDEK_oExport.serverShow();
                 },
-                // finishing work with gabs
+                /* finishing work with gabs */
                 onPackHandlerEnd: function(){
                     $('#IPOLSDEK_PLACES').val('');
                     if(IPOLSDEK_packs.saveObj.cnt == 1){
@@ -1433,10 +1437,10 @@ CJSCore::Init(array("jquery"));
                         IPOLSDEK_oExport.onRecheck();
                     }
                 },
-                // cheching, what to show when opening and editting
+                /* cheching, what to show when opening and editting */
                 changeStat: <?=(sdekHelper::isEqualArrs($naturalGabs,$ordrVals['GABS']) ? "false" : "true")?>,
                 label: function(){
-                    // if given labels
+                    /* if given labels */
                     if($('#IPOLSDEK_PLACES').val()){
                         $('#IPOLSDEK_gabsPlace').closest('tr').css('display','none');
                         $('#IPOLSDEK_natGabs').css('display','none');
@@ -1454,8 +1458,8 @@ CJSCore::Init(array("jquery"));
                     }
                 }
             },
-            <?if($senderWH){?>
-            // cender cities
+            <?php if($senderWH) { ?>
+            /* cender cities */
             senderWH: {
                 wnd: false,
                 show: function(){
@@ -1476,8 +1480,8 @@ CJSCore::Init(array("jquery"));
                     IPOLSDEK_oExport.senderWH.wnd.Show();
                 },
             },
-            <?}?>
-            // accounts
+            <?php } ?>
+            /* accounts */
             account : {
                 wnd: false,
 
@@ -1541,7 +1545,7 @@ CJSCore::Init(array("jquery"));
                     IPOLSDEK_oExport.account.wnd.Close();
                 }
             },
-            // currencies
+            /* currencies */
             currency:{
                 goal: '<?=$cntrCurrency?>',
 
@@ -1580,11 +1584,11 @@ CJSCore::Init(array("jquery"));
         <table id='IPOLSDEK_wndOrder'>
             <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_STATUS')?></td><td><?=$status?></td></tr>
             <tr><td colspan='2'><small><?=GetMessage('IPOLSDEK_JS_SOD_STAT_'.$status)?></small><?=$message['number']?></td></tr>
-            <?if($SDEK_ID){?><tr><td><?=GetMessage('IPOLSDEK_JS_SOD_SDEK_ID')?></td><td><?=$SDEK_ID?></td></tr><?}?>
-            <?if($MESS_ID){?><tr><td><?=GetMessage('IPOLSDEK_JS_SOD_MESS_ID')?></td><td><?=$MESS_ID?></td></tr><?}?>
-            <?if($senderWH){?><tr><td colspan='2'><a href='javascript:void(0)' onclick='IPOLSDEK_oExport.senderWH.show()'><?=GetMessage('IPOLSDEK_JS_SOD_senderWH_TITLE')?></a></td></tr>
-            <?}?>
-            <?// Form?>
+            <?php if($SDEK_ID) { ?><tr><td><?= GetMessage('IPOLSDEK_JS_SOD_SDEK_ID') ?></td><td><?= $SDEK_ID ?></td></tr><?php } ?>
+            <?php if($MESS_ID) { ?><tr><td><?= GetMessage('IPOLSDEK_JS_SOD_MESS_ID') ?></td><td><?= $MESS_ID ?></td></tr><?php } ?>
+            <?php if($senderWH) { ?><tr><td colspan='2'><a href='javascript:void(0)' onclick='IPOLSDEK_oExport.senderWH.show()'><?= GetMessage('IPOLSDEK_JS_SOD_senderWH_TITLE') ?></a></td></tr>
+            <?php } ?>
+            <?php // Form ?>
             <tr class='heading'><td colspan='2'><?=GetMessage('IPOLSDEK_JS_SOD_HD_PARAMS')?></td></tr>
             <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_number')?></td><td><?=(self::$orderDescr['info']['ACCOUNT_NUMBER'])?self::$orderDescr['info']['ACCOUNT_NUMBER']:self::$orderId?></td></tr>
             <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_service')?></td><td>
@@ -1593,40 +1597,40 @@ CJSCore::Init(array("jquery"));
                 </td></tr>
             <tr id='IPOLSDEK_tarifWarning'><td colspan='2'><span><?=GetMessage('IPOLSDEK_JS_SOD_WRONGTARIF')?></span></td></tr>
             <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_realSeller')?> <a href='#' class='PropHint' onclick='return IPOLSDEK_oExport.popup("pop-realSeller",this);'></a></td><td><input type='text' id='IPOLSDEK_realSeller' value='<?=str_replace("'",'"',$ordrVals['realSeller'])?>'></td></tr>
-            <?// Sender cities?>
-            <?if($citySenders || (self::$isLoaded && array_key_exists('departure',$ordrVals))){?>
+            <?php // Sender cities ?>
+            <?php if($citySenders || (self::$isLoaded && array_key_exists('departure', $ordrVals))) { ?>
                 <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_departure')?></td><td>
-                        <?if(self::$isLoaded && array_key_exists('departure',$ordrVals) && !$citySenders[$ordrVals['departure']]){
+                        <?php if(self::$isLoaded && array_key_exists('departure', $ordrVals) && !$citySenders[$ordrVals['departure']]) {
                             $subCitySender = sqlSdekCity::getBySId($ordrVals['departure']);
                             ?>
                             <span style='color:red'><?=$subCitySender['NAME']?> <?=GetMessage('IPOLSDEK_ERR_SENDERCITYNOTFOUND');?></span><br>
-                        <?}
-                        if($citySenders){?>
+                        <?php }
+                        if($citySenders) { ?>
                             <select id='IPOLSDEK_departure' onchange='IPOLSDEK_oExport.onDepartureChange($(this))'>
-                                <?foreach($citySenders as $id => $name){?>
+                                <?php foreach($citySenders as $id => $name) { ?>
                                     <option value="<?=$id?>" <?=(array_key_exists('departure',$ordrVals) && $ordrVals['departure'] == $id)?'selected':''?>><?=$name?></option>
-                                <?}?>
+                                <?php } ?>
                             </select>
-                        <?}?>
+                        <?php } ?>
                     </td></tr>
-            <?}?>
-            <?//Errors?>
-            <?if($message['troubles']){?>
+            <?php } ?>
+            <?php //Errors ?>
+            <?php if($message['troubles']) { ?>
                 <tr class='heading'><td colspan='2'><?=GetMessage('IPOLSDEK_JS_SOD_HD_ERRORS')?></td></tr>
                 <tr><td colspan='2'><?=$message['troubles']?></td></tr>
-            <?}?>
+            <?php } ?>
 
-            <?//Sender-courier?>
+            <?php //Sender-courier ?>
             <tr id='IPOLSDEK_courierHeader'><td colspan='2' style='text-align:center;border-top: 1px dashed black'><a href='javascript:void(0)' onclick='IPOLSDEK_oExport.courier.handle()'></a>&nbsp;<a class='PropHint' onclick="return IPOLSDEK_oExport.popup('pop-sender',this);" href='javascript:void(0)'></a></td></tr>
-            <?
+            <?php
             if($svdCouriers && count($svdCouriers)){?>
                 <tr class='IPOLSDEK_courierInfo'><td><?=GetMessage('IPOLSDEK_JS_SOD_courierSender')?></td><td><select onchange='IPOLSDEK_oExport.courier.selectProfile($(this).val())'><option></option>
-                            <?foreach($svdCouriers as $ind => $vals){?>
+                            <?php foreach($svdCouriers as $ind => $vals) { ?>
                                 <option value='<?=$ind?>'><?=$vals['senderName']?></option>
-                            <?}?>
+                            <?php } ?>
                         </select>&nbsp;<a class='PropHint' onclick="return IPOLSDEK_oExport.popup('pop-courierSender',this);" href='javascript:void(0)'></a></td></tr>
-            <?}?>
-            <?// Date?>
+            <?php } ?>
+            <?php // Date ?>
             <tr class='IPOLSDEK_courierInfo'><td><?=GetMessage('IPOLSDEK_JS_SOD_courierDate')?></td><td>
                     <div class="adm-input-wrap adm-input-wrap-calendar">
                         <input class="adm-input adm-input-calendar" disabled id='IPOLSDEK_courierDate' disabled type="text" name="IPOLSDEK_courierDate" style='width:148px;' value="<?=$ordrVals['courierDate']?>">
@@ -1634,10 +1638,10 @@ CJSCore::Init(array("jquery"));
                     </div>
                 </td></tr>
             <tr class='IPOLSDEK_courierInfo'><td colspan='2' id='IPOLSDEK_courierDateError' style='font-size:small;color:red;display:none'><?=GetMessage('IPOLSDEK_JS_SOD_badDate')?></td></tr>
-            <?// Time?>
+            <?php // Time ?>
             <tr class='IPOLSDEK_courierInfo'><td><?=GetMessage('IPOLSDEK_JS_SOD_courierTime')?></td><td><input id='IPOLSDEK_courierTimeBeg' type='text' value='<?=$ordrVals['courierTimeBeg']?>' style='width:56px' onchange='IPOLSDEK_oExport.courier.onTimeChange()'> - <input id='IPOLSDEK_courierTimeEnd' type='text' value='<?=$ordrVals['courierTimeEnd']?>' style='width:56px' onchange='IPOLSDEK_oExport.courier.onTimeChange()'><input type='hidden' id='IPOLSDEK_courierTimeOK'></td></tr>
             <tr class='IPOLSDEK_courierInfo'><td colspan='2' id='IPOLSDEK_courierTimeError' style='font-size:small;color:red'></td></tr>
-            <?// Courier?>
+            <?php // Courier ?>
             <tr class='IPOLSDEK_courierInfo'><td><?=GetMessage('IPOLSDEK_JS_SOD_courierCity')?></td><td>
                     <div><span id='IPOLSDEK_cSLabel'><?=$ordrVals['courierCity']['NAME']." ({$ordrVals['courierCity']['REGION']})"?></span><br><a href='javascript:void(0)' onclick='IPOLSDEK_oExport.courier.changeCity(1)'><?=GetMessage("IPOLSDEK_STT_CHNG")?></a></div>
                     <div style='display:none'><input id='IPOLSDEK_cSSelector' type='text' value=''></div>
@@ -1649,7 +1653,7 @@ CJSCore::Init(array("jquery"));
             <tr class='IPOLSDEK_courierInfo'><td><?=GetMessage('IPOLSDEK_JS_SOD_courierPhone')?></td><td><input id='IPOLSDEK_courierPhone' type='text' value='<?=$ordrVals['courierPhone']?>'></td></tr>
             <tr class='IPOLSDEK_courierInfo'><td><?=GetMessage('IPOLSDEK_JS_SOD_courierName')?></td><td><input id='IPOLSDEK_courierName' type='text' value='<?=str_replace("'",'"',$ordrVals['courierName'])?>'></td></tr>
             <tr class='IPOLSDEK_courierInfo'><td><?=GetMessage('IPOLSDEK_JS_SOD_courierComment')?></td><td><input id='IPOLSDEK_courierComment' type='text' value='<?=str_replace("'",'"',$ordrVals['courierComment'])?>'></td></tr>
-            <?// Sender?>
+            <?php // Sender ?>
             <tr class='heading'><td colspan='2'><a href="javascript:void(0)" onclick="IPOLSDEK_oExport.ui.toggleBlock('sender')"><?=GetMessage('IPOLSDEK_JS_SOD_HD_SENDER')?></a></td></tr>
             <tr class='IPOLSDEK_block_sender'><td><?=GetMessage('IPOLSDEK_JS_SOD_sender_company')?></td><td><input id='IPOLSDEK_sender_company' type='text' value='<?=$ordrVals['sender_company']?>'></td></tr>
             <tr class='IPOLSDEK_block_sender'><td><?=GetMessage('IPOLSDEK_JS_SOD_sender_name')?></td><td><input id='IPOLSDEK_sender_name' type='text' value='<?=$ordrVals['sender_name']?>'></td></tr>
@@ -1658,7 +1662,7 @@ CJSCore::Init(array("jquery"));
             <tr class='IPOLSDEK_block_sender'><td><?=GetMessage('IPOLSDEK_JS_SOD_sender_flat')?></td><td><input id='IPOLSDEK_sender_flat' type='text' value='<?=$ordrVals['sender_flat']?>'></td></tr>
             <tr class='IPOLSDEK_block_sender'><td><?=GetMessage('IPOLSDEK_JS_SOD_sender_phone')?></td><td><input id='IPOLSDEK_sender_phone' type='text' value='<?=$ordrVals['sender_phone']?>'></td></tr>
 
-            <?//Address?>
+            <?php //Address ?>
             <tr class='heading'><td colspan='2'><?=GetMessage('IPOLSDEK_JS_SOD_HD_ADDRESS')?></td></tr>
             <tr>
                 <td>
@@ -1672,42 +1676,42 @@ CJSCore::Init(array("jquery"));
                 </td>
             </tr>
             <tr class='IPOLSDEK_notSV'><td><?=GetMessage('IPOLSDEK_JS_SOD_street')?></td><td>
-                    <?if($ordrVals['street']){?>
+                    <?php if($ordrVals['street']) { ?>
                         <input id='IPOLSDEK_street' type='text' value="<?=$ordrVals['street']?>">
-                    <?}else{?>
+                    <?php } else { ?>
                         <textarea id='IPOLSDEK_street'><?=$ordrVals['address']?></textarea>
-                    <?}?>
+                    <?php } ?>
                     <?=$message['street']?>
                 </td></tr>
             <tr class='IPOLSDEK_notSV'><td><?=GetMessage('IPOLSDEK_JS_SOD_house')?></td><td><input id='IPOLSDEK_house' type='text' value="<?=(self::$locStreet && $ordrVals['address'] && !$ordrVals['house'])?$ordrVals['address']:$ordrVals['house']?>"><?=$message['house']?></td></tr>
             <tr class='IPOLSDEK_notSV'><td><?=GetMessage('IPOLSDEK_JS_SOD_flat')?></td><td><input id='IPOLSDEK_flat' type='text' value="<?=$ordrVals['flat']?>"><?=$message['flat']?></td></tr>
             <tr class='IPOLSDEK_SV'><td><?=GetMessage('IPOLSDEK_JS_SOD_PVZ')?>
-                    <?if($strOfPSV){?>&nbsp;<span id="IPOLSDEK_searchPVZ" onclick="IPOLSDEK_oExport.searchPVZ.on('PVZ');"></span><span id="IPOLSDEK_noSearchPVZ" onclick="IPOLSDEK_oExport.searchPVZ.off('PVZ');"></span><?}?></td>
+                    <?php if($strOfPSV) { ?>&nbsp;<span id="IPOLSDEK_searchPVZ" onclick="IPOLSDEK_oExport.searchPVZ.on('PVZ');"></span><span id="IPOLSDEK_noSearchPVZ" onclick="IPOLSDEK_oExport.searchPVZ.off('PVZ');"></span><?php } ?></td>
                 <td>
-                    <?if($strOfPSV){?>
+                    <?php if($strOfPSV) { ?>
                         <span id="IPOLSDEK_searchPVZPlace"><?=GetMessage('IPOLSDEK_JS_SOD_SEARCHPVZ')?>:&nbsp;<input type="text" id="IPOLSDEK_searchPVZInput" onkeyup="IPOLSDEK_oExport.searchPVZ.search('PVZ')"></span>
                         <select id='IPOLSDEK_PVZ' onchange='IPOLSDEK_oExport.onPVZChange($(this))'><?=$strOfPSV?></select>
-                    <?}
-                    else{?><span id='IPOLSDEK_deliveryPoint_noSV'><?=GetMessage('IPOLSDEK_JS_SOD_NOSVREG')?></span><?}?>
-                    <?=$message['deliveryPoint']?>
+                    <?php }
+                    else { ?><span id='IPOLSDEK_deliveryPoint_noSV'><?=GetMessage('IPOLSDEK_JS_SOD_NOSVREG')?></span><?php } ?>
+                    <?= $message['deliveryPoint'] ?>
                 </td>
             </tr>
             <tr class='IPOLSDEK_SV'><td colspan='2'><span id='IPOLSDEK_badPVZ' style='display:none'><?=GetMessage('IPOLSDEK_JS_SOD_BADPVZ')?></span></td></tr>
-            <tr class='IPOLSDEK_PST'><td><?=GetMessage('IPOLSDEK_JS_SOD_POSTAMAT')?>
-                    <?if($strOfPST){?>&nbsp;<span id="IPOLSDEK_searchPST" onclick="IPOLSDEK_oExport.searchPVZ.on('PST');"></span><span id="IPOLSDEK_noSearchPST" onclick="IPOLSDEK_oExport.searchPVZ.off('PST');"></span><?}?></td>
+            <tr class='IPOLSDEK_PST'><td><?= GetMessage('IPOLSDEK_JS_SOD_POSTAMAT') ?>
+                    <?php if($strOfPST) { ?>&nbsp;<span id="IPOLSDEK_searchPST" onclick="IPOLSDEK_oExport.searchPVZ.on('PST');"></span><span id="IPOLSDEK_noSearchPST" onclick="IPOLSDEK_oExport.searchPVZ.off('PST');"></span><?php } ?></td>
                 <td>
-                    <?if($strOfPST){?>
+                    <?php if($strOfPST) { ?>
                         <span id="IPOLSDEK_searchPSTPlace"><?=GetMessage('IPOLSDEK_JS_SOD_SEARCHPST')?>:&nbsp;<input type="text" id="IPOLSDEK_searchPSTInput" onkeyup="IPOLSDEK_oExport.searchPVZ.search('PST')"></span>
                         <select id='IPOLSDEK_PST' onchange='IPOLSDEK_oExport.onPSTChange($(this))'><?=$strOfPST?></select>
-                    <?}
-                    else{?><span id='IPOLSDEK_deliveryPoint_noPST'><?=GetMessage('IPOLSDEK_JS_SOD_NOPSTMTREG')?></span><?}?>
-                    <?=$message['deliveryPoint']?>
+                    <?php }
+                    else { ?><span id='IPOLSDEK_deliveryPoint_noPST'><?=GetMessage('IPOLSDEK_JS_SOD_NOPSTMTREG')?></span><?php } ?>
+                    <?= $message['deliveryPoint'] ?>
                 </td>
             </tr>
             <tr class='IPOLSDEK_PST'><td colspan='2'><span id='IPOLSDEK_badPST' style='display:none'><?=GetMessage('IPOLSDEK_JS_SOD_BADPST')?></span></td></tr>
-            <?// Reciver?>
+            <?php // Reciver ?>
             <tr class='heading'><td colspan='2'><?=GetMessage('IPOLSDEK_JS_SOD_HD_RESIEVER')?></td></tr>
-            <?if(\Ipolh\SDEK\option::get('addData') == 'Y'){?>
+            <?php if(\Ipolh\SDEK\option::get('addData') == 'Y') { ?>
                 <tr>
                     <td><?=GetMessage('IPOLSDEK_JS_SOD_deliveryDate')?></td>
                     <td>
@@ -1720,116 +1724,116 @@ CJSCore::Init(array("jquery"));
                         <?=$message['Schedule']?></td>
                 </tr>
                 <tr id='IPOLSDEK_badDeliveryTerm'><td colspan='2'><small><?=GetMessage('IPOLSDEK_JS_SOD_badDeliveryDate')?><span id='IPOLSDEK_deliveryTerm'></span>&nbsp;<?=GetMessage('IPOLSDEK_JS_SOD_HD_DAY')?></small></td></tr>
-            <?}?>
+            <?php } ?>
             <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_name')?></td><td><input id='IPOLSDEK_name' type='text' value="<?=str_replace(array('"','<','>','\''), ' ', $ordrVals['name'])?>"><?=$message['name']?></td></tr>
             <tr><td valign="top"><?=GetMessage('IPOLSDEK_JS_SOD_phone')?></td><td><input id='IPOLSDEK_phone' type='text' value="<?=$ordrVals['phone']?>"></td></tr>
-            <?if(array_key_exists('oldPhone',$ordrVals) && str_replace(' ','',$ordrVals['oldPhone']) != $ordrVals['phone']){?>
+            <?php if(array_key_exists('oldPhone', $ordrVals) && str_replace(' ', '', $ordrVals['oldPhone']) != $ordrVals['phone']) { ?>
                 <tr><td valign="top"><?=GetMessage('IPOLSDEK_JS_SOD_oldPhone')?></td><td><?=$ordrVals['oldPhone']?></td></tr>
-            <?}?>
+            <?php } ?>
             <tr><td valign="top"><?=GetMessage('IPOLSDEK_JS_SOD_email')?></td><td><input id='IPOLSDEK_email' type='text' value="<?=$ordrVals['email']?>"></td></tr>
             <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_comment')?></td><td><textarea id='IPOLSDEK_comment'><?=$ordrVals['comment']?></textarea><?=$message['comment']?></td></tr>
-            <?/*<tr><td><?=GetMessage('IPOLSDEK_JS_SOD_reccompany')?></td><td><input id='IPOLSDEK_reccompany'><?=$ordrVals['reccompany']?></input><?=$message['reccompany']?></td></tr>*/?>
+            <?php /*<tr><td><?=GetMessage('IPOLSDEK_JS_SOD_reccompany')?></td><td><input id='IPOLSDEK_reccompany'><?=$ordrVals['reccompany']?></input><?=$message['reccompany']?></td></tr>*/?>
             <tr><td colspan='2'>
-                    <?foreach(array('realSeller','sender','courierSender','GABARITES','minVats') as $hintCode){?>
+                    <?php foreach(array('realSeller', 'sender', 'courierSender', 'GABARITES', 'minVats') as $hintCode) { ?>
                         <div id="pop-<?=$hintCode?>" class="b-popup" >
                             <div class="pop-text"><?=GetMessage("IPOLSDEK_JSC_SOD_HELPER_$hintCode")?></div>
                             <div class="close" onclick="$(this).closest('.b-popup').hide();"></div>
                         </div>
-                    <?}?>
+                    <?php } ?>
                 </td></tr>
-            <?// Payment?>
-            <tr class='heading'><td colspan='2'><?=GetMessage('IPOLSDEK_JS_SOD_HD_PAYMENT')?></td></tr>
-            <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_isBeznal')?></td><td>
-                    <?if($payment === true || floatval($payment) >= floatval(self::$orderDescr['info']['PRICE'])){?>
+            <?php // Payment ?>
+            <tr class='heading'><td colspan='2'><?= GetMessage('IPOLSDEK_JS_SOD_HD_PAYMENT') ?></td></tr>
+            <tr><td><?= GetMessage('IPOLSDEK_JS_SOD_isBeznal') ?></td><td>
+                    <?php if($payment === true || floatval($payment) >= floatval(self::$orderDescr['info']['PRICE'])) { ?>
                         <input type='checkbox' id='IPOLSDEK_isBeznal' value='Y' <?=($ordrVals['isBeznal']=='Y')?'checked':''?> onchange='IPOLSDEK_oExport.checkPay()'>
-                    <?}else{?>
+                    <?php } else { ?>
                         <input type='checkbox' id='IPOLSDEK_isBeznal' value='Y' checked disabled onchange='IPOLSDEK_oExport.checkPay()'><br>
-                        <?
+                        <?php
                         if(!$payment)
                             echo GetMessage("IPOLSDEK_JS_SOD_NONALPAY");
                         else
                             echo str_replace("#VALUE#",$payment,GetMessage("IPOLSDEK_JS_SOD_TOOMANY"));
                     }?>
-                    &nbsp;&nbsp;<span id='IPOLSDEK_notPayed' style='color:red;display:none'><?=GetMessage("IPOLSDEK_JS_SOD_NOTPAYED")?></span>
+                    &nbsp;&nbsp;<span id='IPOLSDEK_notPayed' style='color:red;display:none'><?= GetMessage("IPOLSDEK_JS_SOD_NOTPAYED") ?></span>
                 </td></tr>
-            <?if(self::$orderDescr['info']['SUM_PAID'] > 0){?>
+            <?php if(self::$orderDescr['info']['SUM_PAID'] > 0) { ?>
                 <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_paid')?></td><td><?=self::$orderDescr['info']['SUM_PAID']?> <?=GetMessage('IPOLSDEK_JSC_SOD_RUB')?></td></tr>
-            <?}?>
+            <?php } ?>
             <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_toPay')?></td><td>
                     <input type='text' id='IPOLSDEK_toPay' value="<?=$ordrVals['toPay']?>" size='10' style='text-align: right' onchange='IPOLSDEK_oExport.checkFloat($(this))'>&nbsp;<?=GetMessage('IPOLSDEK_JSC_SOD_RUB')?>
-                    <?if($cntrCurrency){?>
+                    <?php if($cntrCurrency) { ?>
                         &nbsp;&nbsp;&nbsp;<span id='IPOLSDEK_toPayFormat'><?=self::formatCurrency(array('SUM'=>$ordrVals['toPay'],'TO'=>$cntrCurrency,'FORMAT'=>'Y','orderId'=>$orderId))?></span>
-                    <?}?>
+                    <?php } ?>
                 </td></tr>
             <tr>
                 <td><?=GetMessage('IPOLSDEK_JS_SOD_NDSGoods')?></td>
                 <td>
                     <select id='IPOLSDEK_NDSGoods'>
-                        <?foreach(array('VATX','VAT0','VAT10','VAT18','VAT20') as $ndsVats){?>
+                        <?php foreach(array('VATX', 'VAT0', 'VAT10', 'VAT18', 'VAT20') as $ndsVats) { ?>
                             <option value='<?=$ndsVats?>' <?=($ordrVals['NDSGoods'] == $ndsVats) ? 'selected' : ''?>><?=GetMessage('IPOLSDEK_NDS_'.$ndsVats)?></option>
-                        <?}?>
+                        <?php } ?>
                     </select>
                 </td>
             </tr>
             <tr><td><?=GetMessage('IPOLSDEK_JS_SOD_deliveryP')?></td><td>
                     <input type='text' id='IPOLSDEK_deliveryP' value="<?=$ordrVals['deliveryP']?>" size='10' style='text-align: right' onchange='IPOLSDEK_oExport.checkFloat($(this))'>&nbsp;<?=GetMessage('IPOLSDEK_JSC_SOD_RUB')?>
-                    <?if($cntrCurrency){?>
+                    <?php if($cntrCurrency) { ?>
                         &nbsp;&nbsp;&nbsp;<span id='IPOLSDEK_deliveryPFormat'><?=self::formatCurrency(array('SUM'=>$ordrVals['deliveryP'],'TO'=>$cntrCurrency,'FORMAT'=>'Y','orderId'=>$orderId))?></span>
-                    <?}?>
+                    <?php } ?>
                 </td></tr>
             <tr>
-                <td><?=GetMessage('IPOLSDEK_JS_SOD_NDSDelivery')?></td>
+                <td><?= GetMessage('IPOLSDEK_JS_SOD_NDSDelivery') ?></td>
                 <td>
                     <select id='IPOLSDEK_NDSDelivery'>
-                        <?foreach(array('VATX','VAT0','VAT10','VAT18','VAT20') as $ndsVats){?>
-                            <option value='<?=$ndsVats?>' <?=($ordrVals['NDSDelivery'] == $ndsVats) ? 'selected' : ''?>><?=GetMessage('IPOLSDEK_NDS_'.$ndsVats)?></option>
-                        <?}?>
+                        <?php foreach(array('VATX', 'VAT0', 'VAT10', 'VAT18', 'VAT20') as $ndsVats) { ?>
+                            <option value='<?= $ndsVats ?>' <?= ($ordrVals['NDSDelivery'] == $ndsVats) ? 'selected' : '' ?>><?= GetMessage('IPOLSDEK_NDS_' . $ndsVats) ?></option>
+                        <?php } ?>
                     </select>
                 </td>
             </tr>
-            <?if(\Ipolh\SDEK\option::get('noVats') === 'N'){?>
+            <?php if(\Ipolh\SDEK\option::get('noVats') === 'N') { ?>
                 <tr>
                     <td><?=GetMessage('IPOLSDEK_JS_SOD_minVats')?>  <a href='#' class='PropHint' onclick='return IPOLSDEK_oExport.popup("pop-minVats",this);'></a></td>
                     <td><input type='checkbox' id='IPOLSDEK_minVats' value="Y"></td>
                 </tr>
-            <?}?>
-            <?// additional servises?>
+            <?php } ?>
+            <?php // additional servises ?>
             <tr class='heading'><td colspan='2'><?=GetMessage('IPOLSDEK_AS')?></td></tr>
-            <?foreach($exOpts as $id => $option)
-                if($option['SHOW']=="Y" || $option['DEF']=="Y"){
+            <?php foreach($exOpts as $id => $option)
+                if($option['SHOW']=="Y" || $option['DEF']=="Y") {
                     ?>
                     <tr><td><?=GetMessage("IPOLSDEK_AS_".$id."_NAME")?></td><td><input id='IPOLSDEK_AS_<?=$id?>' <?=($option['DEF']=="Y")?"checked":""?> type='checkbox' value='<?=$id?>'></td></tr>
-                <?}?>
+                <?php } ?>
 
-            <?// about the order?>
+            <?php // about the order?>
             <tr class='heading'><td colspan='2'><a onclick='IPOLSDEK_oExport.serverShow()' href='javascript:void(0)'><?=GetMessage('IPOLSDEK_JS_SOD_ABOUT')?></td></tr>
-            <?// Gabarites defauls?>
+            <?php // Gabarites defauls?>
             <tr class='IPOLSDEK_detOrder' style='display:none'>
                 <td><?=GetMessage('IPOLSDEK_JS_SOD_GABARITES')?> <a href='#' class='PropHint' onclick='return IPOLSDEK_oExport.popup("pop-GABARITES",this);'></a></td>
                 <td>
                     <?=($naturalGabs['D_L'])*10?><?=GetMessage("IPOLSDEK_mm")?> x <?=($naturalGabs['D_W'])*10?><?=GetMessage("IPOLSDEK_mm")?> x <?=($naturalGabs['D_H'])*10?><?=GetMessage("IPOLSDEK_mm")?>, <?=$naturalGabs['W']?><?=GetMessage("IPOLSDEK_kg")?>
-                    <?if(!self::$isLoaded || $status == 'NEW' || $status == 'ERROR'){?>
+                    <?php if(!self::$isLoaded || $status == 'NEW' || $status == 'ERROR') { ?>
                         <a <?=(sdekHelper::isEqualArrs($naturalGabs,$ordrVals['GABS'])?"":"style='display:none'")?> href='javascript:void(0)' id='IPOLSDEK_natGabs' onclick='IPOLSDEK_oExport.gabs.change()'><?=GetMessage('IPOLSDEK_STT_CHNG')?></a>
-                    <?}?>
+                    <?php } ?>
                     <input id='IPOLSDEK_GABS_D_L' type='hidden' value="<?=$ordrVals['GABS']['D_L']?>">
                     <input id='IPOLSDEK_GABS_D_W' type='hidden' value="<?=$ordrVals['GABS']['D_W']?>">
                     <input id='IPOLSDEK_GABS_D_H' type='hidden' value="<?=$ordrVals['GABS']['D_H']?>">
                     <input id='IPOLSDEK_GABS_W'   type='hidden' value="<?=$ordrVals['GABS']['W']?>">
                 </td>
             </tr>
-            <?// Gabarites given?>
+            <?php // Gabarites given?>
             <tr class='IPOLSDEK_detOrder' style='display:none'>
                 <td><?=GetMessage('IPOLSDEK_JS_SOD_CGABARITES')?></td>
                 <td>
                     <div id='IPOLSDEK_gabsPlace'>
                         <?=($ordrVals['GABS']['D_L'])*10?><?=GetMessage("IPOLSDEK_mm")?> x <?=($ordrVals['GABS']['D_W'])*10?><?=GetMessage("IPOLSDEK_mm")?> x <?=($ordrVals['GABS']['D_H'])*10?><?=GetMessage("IPOLSDEK_mm")?>, <?=$ordrVals['GABS']['W']?><?=GetMessage("IPOLSDEK_kg")?>
-                        <?if(!self::$isLoaded || $status == 'NEW' || $status == 'ERROR'){?>
+                        <?php if(!self::$isLoaded || $status == 'NEW' || $status == 'ERROR') { ?>
                             <a href='javascript:void(0)' onclick='IPOLSDEK_oExport.gabs.change()'><?=GetMessage('IPOLSDEK_STT_CHNG')?></a>
-                        <?}?>
+                        <?php } ?>
                     </div>
                 </td>
             </tr>
-            <?// Gabarites result?>
+            <?php // Gabarites result ?>
             <tr class='IPOLSDEK_detOrder' style='display:none'>
                 <td colspan="2" style='text-align:center'><?=GetMessage('IPOLSDEK_JS_SOD_PACKS_GIVEN')?><input type='hidden' id='IPOLSDEK_PLACES' value='<?=(array_key_exists('packs',$ordrVals) && is_array($ordrVals['packs'])) ? json_encode($ordrVals['packs']) : false?>'></td>
             </tr>
@@ -1847,7 +1851,7 @@ CJSCore::Init(array("jquery"));
                 <td><?=GetMessage('IPOLSDEK_JS_SOD_NDELPRICE')?></td>
                 <td id='IPOLSDEK_newPrDel'></td>
             </tr>
-            <?// Account?>
+            <?php // Account ?>
             <tr class='IPOLSDEK_detOrder' style='display:none'>
                 <td><?=GetMessage('IPOLSDEK_JSC_SOD_ACCOUNT')?></td>
                 <td>
@@ -1860,22 +1864,22 @@ CJSCore::Init(array("jquery"));
             </tr>
         </table>
     </div>
-<?if($senderWH){?>
+<?php if($senderWH) { ?>
     <div id='IPOLSDEK_senderWHcontent' style='display:none'>
         <table id='IPOLSDEK_senderWH'>
             <tr><td colspan='3'><small><?=GetMessage('IPOLSDEK_JS_SOD_senderWH_HINT')?></small></td></tr>
-            <?
+            <?php
             foreach($senderWH as $ind => $descr){
                 $sender = sqlSdekCity::getBySId($descr[0]);
                 ?>
                 <tr><th><?=$sender['NAME']?></th><th><?=$sender['REGION']?></th><th><?=$descr[1]?></th></tr>
-                <?
+                <?php
                 if(array_key_exists($ind,sdekShipmentCollection::$shipments))
                     foreach(sdekShipmentCollection::$shipments[$ind]->goods as $goodCol){?>
                         <tr><td colspan='2'><?=$goodCol['NAME']?> (ID:<?=$goodCol['PRODUCT_ID']?>)</td><td><?=$goodCol['QUANTITY']?></td></tr>
-                    <?}
+                    <?php }
             }
             ?>
         </table>
     </div>
-<?}?>
+<?php } ?>

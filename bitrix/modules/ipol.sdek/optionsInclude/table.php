@@ -1,4 +1,4 @@
-<?
+<?php
 	$accounts = sqlSdekLogs::getAccountsList(false,true);
 ?>
 <style>
@@ -178,7 +178,7 @@
 			if(!IPOLSDEK_setups.table.ultraKillWnd){
 				IPOLSDEK_setups.table.ultraKillWnd = new BX.CDialog({
 					title: '<?=GetMessage('IPOLSDEK_OTHR_killReq_TITLE')?>',
-					content: "<div><a href='javascript:void(0)' onclick='$(this).next().toggle(); return false;'>?</a><div style='display:none'><small><?=GetMessage('IPOLSDEK_OTHR_killReq_DESCR')?></small></div><table><tr><td><?=GetMessage('IPOLSDEK_OTHR_killReq_LABEL')?></td><td><input size='3' type='text' id='IPOLSDEK_delDeqOrId'></td></tr><tr><td><?=GetMessage('IPOLSDEK_OTHR_killReq_TYPE')?></td><td><?if(sdekOption::canShipment()){?><select id='IPOLSDEK_delDeqType'><option value='order'><?=GetMessage('IPOLSDEK_STT_order')?></option><option value='shipment'><?=GetMessage('IPOLSDEK_STT_shipment')?></option></select><?}else{?><input id='IPOLSDEK_delDeqType' type='hidden' value='order'><?}?></td></tr></table><?=GetMessage('IPOLSDEK_OTHR_killReq_HINT')?></div>",
+					content: "<div><a href='javascript:void(0)' onclick='$(this).next().toggle(); return false;'>?</a><div style='display:none'><small><?=GetMessage('IPOLSDEK_OTHR_killReq_DESCR')?></small></div><table><tr><td><?=GetMessage('IPOLSDEK_OTHR_killReq_LABEL')?></td><td><input size='3' type='text' id='IPOLSDEK_delDeqOrId'></td></tr><tr><td><?=GetMessage('IPOLSDEK_OTHR_killReq_TYPE')?></td><td><?php if(sdekOption::canShipment()) { ?><select id='IPOLSDEK_delDeqType'><option value='order'><?=GetMessage('IPOLSDEK_STT_order')?></option><option value='shipment'><?=GetMessage('IPOLSDEK_STT_shipment')?></option></select><?php } else { ?><input id='IPOLSDEK_delDeqType' type='hidden' value='order'><?php } ?></td></tr></table><?=GetMessage('IPOLSDEK_OTHR_killReq_HINT')?></div>",
 					icon: 'head-block',
 					resizable: false,
 					draggable: true,
@@ -333,7 +333,7 @@
 					</select>
 				</td>
 			</tr>
-			<?if(sdekHelper::isConverted()){?>
+			<?php if(sdekHelper::isConverted()) { ?>
 				<tr class='IPOLSDEK_mrPd'>
 					<td><?=GetMessage('IPOLSDEK_TABLE_SENDTYPE')?></td>
 					<td>
@@ -344,7 +344,7 @@
 						</select>
 					</td>
 				</tr>
-			<?}?>
+			<?php } ?>
 			<tr class='IPOLSDEK_mrPd'>
 			  <td><?=GetMessage('IPOLSDEK_JS_SOD_SDEK_ID')?></td><td><input type='text' class='adm-workarea' id='IPOLSDEK_Fltr_>=SDEK_ID'><span class="adm-filter-text-wrap" style='margin: 4px 12px 0px'>...</span><input type='text' class='adm-workarea' id='IPOLSDEK_Fltr_<=SDEK_ID'></td>
 			</tr>
@@ -362,12 +362,12 @@
 					</div>
 				</td>
 			</tr>
-			<?if(count($accounts)>1){?>
+			<?php if(count($accounts) > 1) { ?>
 				<tr class='IPOLSDEK_mrPd'>
 					<td><?=GetMessage('IPOLSDEK_TABLE_ACCOUNT')?></td>
 					<td><?=sdekOption::makeSelect('IPOLSDEK_Fltr_ACCOUNT',array('' => '')+$accounts)?></td>
 				</tr>
-			<?}?>
+			<?php } ?>
 			<tr>
 				<td colspan='2'><div class="adm-filter-bottom-separate" style="margin-bottom:0px;"></div></td>
 			</tr>
@@ -387,15 +387,15 @@
 						<td class="adm-list-table-cell sortTr" style='width:77px;' onclick='IPOLSDEK_setups.table.sort("ORDER_ID",$(this))'><div class='adm-list-table-cell-inner'><?=GetMessage('IPOLSDEK_TABLE_ORDN')?></div></td>
 						<td class="adm-list-table-cell sortTr" style='width:77px;' onclick='IPOLSDEK_setups.table.sort("STATUS",$(this))'><div class='adm-list-table-cell-inner'><?=GetMessage('IPOLSDEK_JS_SOD_STATUS')?></div></td>
 						<td class="adm-list-table-cell sortTr" style='width:77px;' onclick='IPOLSDEK_setups.table.sort("SDEK_ID",$(this))'><div class='adm-list-table-cell-inner'><?=GetMessage('IPOLSDEK_JS_SOD_SDEK_ID')?></div></td>
-						<?if(sdekHelper::isConverted()){?>
+						<?php if(sdekHelper::isConverted()) { ?>
 						<td class="adm-list-table-cell" style='width:77px;'><div class='adm-list-table-cell-inner'><?=GetMessage('IPOLSDEK_TABLE_SENDTYPE')?></div></td>
-						<?}?>
+						<?php } ?>
 						<td class="adm-list-table-cell"><div class='adm-list-table-cell-inner'><?=GetMessage('IPOLSDEK_TABLE_PARAM')?></div></td>
 						<td class="adm-list-table-cell"><div class='adm-list-table-cell-inner'><?=GetMessage('IPOLSDEK_TABLE_MESS')?></div></td>
 						<td class="adm-list-table-cell sortTr" style='width:50px;' onclick='IPOLSDEK_setups.table.sort("UPTIME",$(this))'><div class='adm-list-table-cell-inner'><?=GetMessage('IPOLSDEK_TABLE_UPTIME')?></div></td>
-						<?if(count($accounts)>1){?>
+						<?php if(count($accounts) > 1) { ?>
 						<td class="adm-list-table-cell sortTr" style='width:50px;' onclick='IPOLSDEK_setups.table.sort("UPTIME",$(this))'><div class='adm-list-table-cell-inner'><?=GetMessage('IPOLSDEK_TABLE_ACCOUNT')?></div></td>
-						<?}?>
+						<?php } ?>
 					</tr>
 				</thead>
 				<tbody id='IPOLSDEK_tblPls'>

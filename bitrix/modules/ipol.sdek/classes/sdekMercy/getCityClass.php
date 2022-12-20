@@ -1,4 +1,4 @@
-<?
+<?php
 IncludeModuleLangFile(__FILE__);
 
 class sdekCityGetter{
@@ -259,83 +259,109 @@ class sdekCityGetter{
 			$this->workOutErrorCities($wat,$arNewCity,$arWorked,$existed);
 		}
 	}
-	
-	protected function workOutErrorCities($wat,$arNewCity,$arWorked,$existed){
-		$rewriteConflict = false;
-		$pathToErrCities = $_SERVER['DOCUMENT_ROOT'].'/bitrix/js/'.self::$MODULE_ID.'/errCities.json';
-		if(file_exists($pathToErrCities)){
 
-			foreach($wat as $founded){
-				if(!empty($arNewCity) && $founded['id'] == $arNewCity['id'])
-					continue;
-				$arWorked['founded'] []= $founded['id'];
-				$arWorked['handle'][$founded['id']]= $founded['id']; // all
-			}
-			
-			$arConflicts = json_decode(file_get_contents($pathToErrCities),true);
-			
-			// worked unfounded - only new
-			if(array_key_exists('new',$arWorked)){ // only new
-				foreach($arConflicts['notFound'] as $key => $arNotFound){
-					// if(array_key_exists($arNotFound['sdekId'],$arWorked['handle'])){ // all
-					if($arNotFound['sdekId'] == $arWorked['new']){
-						unset($arConflicts['notFound'][$key]);
-						// unset($arWorked['handle'][$arNotFound['sdekId']]); // all
-						$rewriteConflict = true;
-						break; // only new
-					}
-					// if(empty($arWorked)){ // all
-						// break;
-					// }
-				}
-			}
+	protected function workOutErrorCities($wat, $arNewCity, $arWorked, $existed)
+    {
+        foreach($wat as $founded)
+        {
+            if(!empty($arNewCity) && $founded['id'] === $arNewCity['id'])
+            {
+                continue;
+            }
+            $arWorked['founded'] []= $founded['id'];
+            $arWorked['handle'][$founded['id']]= $founded['id']; // all
+        }
 
-			$bitrixId = ($foundedSearched) ? $this->bitrixId : $arAddingCity['BITRIX_ID'];
-			// need to add new conflict ONLY IF existed - the city exists, otherwise CRAP happened
-			if(empty($existed) &&  array_key_exists('new',$arWorked) && count($wat) > 1){
-				if(!array_key_exists($bitrixId,$arConflicts['many'])){
-					$arConflicts['many'][$bitrixId] = array(
-						'takenLbl' => $arNewCity['regionName'].", ".$arNewCity['cityName'],
-						'sdekCity' => array()
-					);
-					foreach($wat as $pretends){
-						if(!empty($arNewCity) && $founded['id'] == $arNewCity['id'])
-							continue;
-						$arConflicts['many'][$bitrixId]['sdekCity'][$pretends['id']] = array(
-							'name'   => $pretends['cityName'],
-							'region' => $pretends['regionName']
-						);
-						$rewriteConflict = true;
-					}
-				}
-			}
-			// need to delete conflict if exists
-			elseif(array_key_exists('new',$arWorked)){
-				if(!array_key_exists($bitrixId,$arConflicts['many'])){
-					$founded = false;
-					foreach($arConflicts['many'] as $bitrixId => $arVals){
-						foreach($arVals['sdekCity'] as $sdekId => $arParams){
-							if($sdekId == $arWorked['new']){
-								unset($arConflicts['many'][$bitrixId]['sdekCity'][$sdekId]);
-								$founded = true;
-								$rewriteConflict = true;
-								break;
-							}
-						}
-						if($founded){
-							if(empty($arConflicts['many'][$bitrixId]['sdekCity'])){
-								unset($arConflicts['many'][$bitrixId]);
-							}
-							break;
-						}
-					}
-				}
-			}
-			
-			if($rewriteConflict){
-				file_put_contents($pathToErrCities,json_encode($arConflicts));
-			}
-		}
+        $notFoundedCitiesPath = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/js/' . self::$MODULE_ID . '/notFoundedCities.json';
+        if (file_exists($notFoundedCitiesPath))
+        {
+            $notFoundedCities = json_decode(file_get_contents($notFoundedCitiesPath),true);
+            $isNeedRewrite = false;
+
+            // worked unfounded - only new
+            if(array_key_exists('new', $arWorked))
+            { // only new
+                foreach($notFoundedCities as $key => $arNotFound)
+                {
+                    if($arNotFound['sdekId'] === $arWorked['new'])
+                    {
+                        unset($notFoundedCities[$key]);
+                        $isNeedRewrite = true;
+                        break; // only new
+                    }
+                }
+            }
+
+            if($isNeedRewrite)
+            {
+                file_put_contents($notFoundedCitiesPath, json_encode($notFoundedCities));
+            }
+        }
+
+        $multipleMatchedCitiesPath = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/js/' . self::$MODULE_ID . '/multipleMatchedCities.json';
+        if (file_exists($multipleMatchedCitiesPath))
+        {
+            $multipleMatchedCities = json_decode(file_get_contents($multipleMatchedCitiesPath),true);
+            $isNeedRewrite = false;
+
+            $bitrixId = ($foundedSearched) ? $this->bitrixId : $arAddingCity['BITRIX_ID'];
+            // need to add new conflict ONLY IF existed - the city exists, otherwise CRAP happened
+            if(empty($existed) &&  array_key_exists('new', $arWorked) && count($wat) > 1)
+            {
+                if(!array_key_exists($bitrixId, $multipleMatchedCities))
+                {
+                    $multipleMatchedCities[$bitrixId] = array(
+                        'takenLbl' => $arNewCity['regionName'] . ", " . $arNewCity['cityName'],
+                        'sdekCity' => array()
+                    );
+
+                    foreach($wat as $pretends)
+                    {
+                        if(!empty($arNewCity) && $founded['id'] === $arNewCity['id']) {
+                            continue;
+                        }
+                        $multipleMatchedCities[$bitrixId]['sdekCity'][$pretends['id']] = array(
+                            'name'   => $pretends['cityName'],
+                            'region' => $pretends['regionName']
+                        );
+                        $isNeedRewrite = true;
+                    }
+                }
+            }
+            // need to delete conflict if exists
+            elseif(array_key_exists('new', $arWorked))
+            {
+                if(!array_key_exists($bitrixId, $multipleMatchedCities))
+                {
+                    $founded = false;
+                    foreach($multipleMatchedCities as $bitrixId => $arVals)
+                    {
+                        foreach($arVals['sdekCity'] as $sdekId => $arParams)
+                        {
+                            if($sdekId === $arWorked['new'])
+                            {
+                                unset($multipleMatchedCities[$bitrixId]['sdekCity'][$sdekId]);
+                                $founded = true;
+                                $isNeedRewrite = true;
+                                break;
+                            }
+                        }
+                        if($founded)
+                        {
+                            if(empty($arConflicts['many'][$bitrixId]['sdekCity']))
+                            {
+                                unset($multipleMatchedCities[$bitrixId]);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if($isNeedRewrite){
+                file_put_contents($multipleMatchedCitiesPath, json_encode($multipleMatchedCities));
+            }
+        }
 	}
 	
 	protected static function guessCountry($country=false){

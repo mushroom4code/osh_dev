@@ -1,4 +1,4 @@
-<?
+<?php
 // Profiler - link 4 future profiles
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 include_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/js/'.CDeliverySDEK::$MODULE_ID.'/jsloader.php');
@@ -40,7 +40,7 @@ sort($arResult['Regions']);
 
         cityId: '<?=$arParams['CITY_ID']?>',
 
-        pvzInputs: [<?=substr($IPOLSDEK_propAddr,0,-1)?>],// inputs 4 PVZ address
+        pvzInputs: [<?=substr($IPOLSDEK_propAddr,0,-1)?>],/* inputs 4 PVZ address */
 
         prices: <?=$prices?>,
 
@@ -48,15 +48,15 @@ sort($arResult['Regions']);
 
         punctMode: false,
 
-        PVZ: <?=CUtil::PhpToJSObject($arResult['PVZ'])?>,// Profiler
+        PVZ: <?=CUtil::PhpToJSObject($arResult['PVZ'])?>, /* Profiler */
 
-        POSTAMAT: <?=CUtil::PhpToJSObject($arResult['POSTAMAT'])?>,// Profiler
+        POSTAMAT: <?=CUtil::PhpToJSObject($arResult['POSTAMAT'])?>,/* Profiler */
 
         order: <?=$order?>,
 
         forbidden: <?=$forbidens?>,
 
-        cityPVZ: {},//object with city PVZ - with GPS-coords
+        cityPVZ: {},/* object with city PVZ - with GPS-coords */
 
         scrollPVZ: false,
 
@@ -72,12 +72,12 @@ sort($arResult['Regions']);
             IPOLSDEK_pvz.punctMode = (IPOLSDEK_pvz.profiles.length === 1) ? IPOLSDEK_pvz.profiles[0] : 'ALL';
             $('#SDEK_modController').css('display','none');
             IPOLSDEK_pvz.switchMode(false,<?=($arParams['CNT_DELIV'] == 'Y')?'true':'false'?>);
-            <?if(!in_array("pickup",$arParams['FORBIDDEN']) || !in_array("postamat",$arParams['FORBIDDEN'])){?>
+            <?php if(!in_array("pickup", $arParams['FORBIDDEN']) || !in_array("postamat", $arParams['FORBIDDEN'])) { ?>
             IPOLSDEK_pvz.Y_init();
-            <?}else{?>
+            <?php } else { ?>
             $('#SDEK_map').css('display','none');
             $('#SDEK_info').css('display','none');
-            <?}?>
+            <?php } ?>
             $('#SDEK_listOfCities').jScrollPane({autoReinitialise:true});
         },
 
@@ -95,7 +95,7 @@ sort($arResult['Regions']);
             IPOLSDEK_pvz.resetCityName();
         },
 
-        initCityPVZ: function(){ // loading PVZ 4 chosen city
+        initCityPVZ: function(){ /* loading PVZ 4 chosen city */
             $('[id^="SDEK_delivInfo_"]').css('display','none');
             if(IPOLSDEK_pvz.punctMode !== 'ALL')
                 $('#SDEK_delivInfo_'+IPOLSDEK_pvz.punctMode).css('display','block');
@@ -103,7 +103,7 @@ sort($arResult['Regions']);
                 $('#SDEK_modController').css('display','');
             var city = IPOLSDEK_pvz.city;
             IPOLSDEK_pvz.cityPVZ = {};
-            if(IPOLSDEK_pvz.punctMode !== 'POSTAMAT'){ // Profiler
+            if(IPOLSDEK_pvz.punctMode !== 'POSTAMAT'){ /* Profiler */
                 for(var i in IPOLSDEK_pvz.PVZ[city]){
                     IPOLSDEK_pvz.cityPVZ[i] = {
                         'Name'     : (IPOLSDEK_pvz.PVZ[city][i]['Name']) ? IPOLSDEK_pvz.PVZ[city][i]['Name'] : IPOLSDEK_pvz.PVZ[city][i]['Address'],
@@ -131,10 +131,10 @@ sort($arResult['Regions']);
                     };
                 }
             }
-            IPOLSDEK_pvz.cityPVZHTML();// loading HTML of PVZ. Double running, but who cares
+            IPOLSDEK_pvz.cityPVZHTML(); /* loading HTML of PVZ. Double running, but who cares */
         },
 
-        cityPVZHTML: function(){ // filling PVZ-list of the city
+        cityPVZHTML: function(){ /* filling PVZ-list of the city */
             if(IPOLSDEK_pvz.scrollPVZ && typeof(IPOLSDEK_pvz.scrollPVZ.data('jsp'))!=='undefined')
                 IPOLSDEK_pvz.scrollPVZ.data('jsp').destroy();
             if(IPOLSDEK_pvz.punctMode === 'ALL' || IPOLSDEK_pvz.profiles.length === 1)
@@ -151,7 +151,7 @@ sort($arResult['Regions']);
             IPOLSDEK_pvz.scrollPVZ=$('#SDEK_wrapper').jScrollPane({autoReinitialise:true});
         },
 
-        paintPVZ: function(ind){ //painting PVZ-address, if color if given
+        paintPVZ: function(ind){ /* painting PVZ-address, if color if given */
             var addr = '';
             if(IPOLSDEK_pvz.cityPVZ[ind].color && IPOLSDEK_pvz.cityPVZ[ind].Address.indexOf(',')!==false)
                 addr="<span style='color:"+IPOLSDEK_pvz.cityPVZ[ind].color+"'>"+IPOLSDEK_pvz.cityPVZ[ind].Address.substr(0,IPOLSDEK_pvz.cityPVZ[ind].Address.indexOf(','))+"</span><br>"+IPOLSDEK_pvz.cityPVZ[ind].Name;
@@ -173,7 +173,7 @@ sort($arResult['Regions']);
                 $("#PVZ_"+id).addClass('sdek_chosen');
                 IPOLSDEK_pvz.Y_selectPVZ(id);
             }
-            var ind = (IPOLSDEK_pvz.cityPVZ[id].type === 'POSTAMAT') ? 'postamat' : 'pickup'; // Profiler
+            var ind = (IPOLSDEK_pvz.cityPVZ[id].type === 'POSTAMAT') ? 'postamat' : 'pickup'; /* Profiler */
             $('#SDEK_baloon').find('.sdek_baloonPrice').html(IPOLSDEK_pvz.prices[ind][0]+"&nbsp"+IPOLSDEK_pvz.prices[ind][1]+"<div style='clear:both'></div>");
         },
 
@@ -182,7 +182,7 @@ sort($arResult['Regions']);
             IPOLSDEK_pvz.scrollHintInited = false;
         },
 
-        // cityList
+        /* cityList */
         getCityName: function(){
             var text = $('#SDEK_citySearcher').val().toLowerCase();
             $('#SDEK_citySel').find('.SDEK_citySelect').each(function(){
@@ -202,24 +202,24 @@ sort($arResult['Regions']);
             $('#SDEK_citySel').css('display','');
         },
 
-        // режимы
+        /* режимы  */
         switchMode: function(mode,doLoad){
             $('.SDEK_mC_block').removeClass('active');
             if(typeof(mode) !== 'undefined' && mode)
                 IPOLSDEK_pvz.punctMode = mode;
             $('#SDEK_mC_'+IPOLSDEK_pvz.punctMode).addClass('active');
-            <?if(!in_array("pickup",$arParams['FORBIDDEN']) && !in_array("postamat",$arParams['FORBIDDEN'])){?> // Profiler
+            <?php if(!in_array("pickup", $arParams['FORBIDDEN']) && !in_array("postamat", $arParams['FORBIDDEN'])) { ?> // Profiler
                 IPOLSDEK_pvz.initCityPVZ();
                 IPOLSDEK_pvz.Y_init();
-            <?}?>
+            <?php } ?>
             if(typeof(doLoad) === 'undefined' || doLoad != true)
                 IPOLSDEK_pvz.loadCityCost();
             else
                 IPOLSDEK_pvz.setPrices();
         },
 
-        //Y - maps
-        Y_map: false,//Y-map index
+        /* Y - maps */
+        Y_map: false,/* Y-map index */
 
         Y_init: function(){
             IPOLSDEK_pvz.Y_readyToBlink = false;
@@ -313,7 +313,7 @@ sort($arResult['Regions']);
                     baloonHTML += "<div><div class='SDEK_iTime sdek_icon'></div><div class='sdek_baloonDiv'>"+IPOLSDEK_pvz.cityPVZ[i].WorkTime+"</div><div style='clear:both'></div></div>";
                 baloonHTML += "<div><div class='SDEK_iPrTerm sdek_icon'></div><div class='sdek_baloonDiv sdek_baloonPrice'></div><div style='clear:both'></div></div>";
 
-                // baloonHTML += "<div class='sdek_baloonPrice'></div>";
+                /* baloonHTML += "<div class='sdek_baloonPrice'></div>"; */
 
                 if(IPOLSDEK_pvz.cityPVZ[i].Note)
                     baloonHTML += "<div class='sdek_baloonInfo'><div>"+IPOLSDEK_pvz.cityPVZ[i].Note+"</div></div>";
@@ -392,7 +392,7 @@ sort($arResult['Regions']);
         },
 
         onLoadPrices: function(data){
-//console.log('onLoadPrices',data);
+            /* console.log('onLoadPrices',data); */
             if(IPOLSDEK_pvz.logging){
                 console.log(IPOLSDEK_pvz.label + ': response prices',data);
             }
@@ -411,7 +411,7 @@ sort($arResult['Regions']);
                 data.pickup = '';
                 transDate = '<?=GetMessage("IPOLSDEK_NO_DELIV")?>';
             }
-            IPOLSDEK_pvz.prices.pickup = [data.pickup,transDate]; // Profiler
+            IPOLSDEK_pvz.prices.pickup = [data.pickup,transDate]; /* Profiler */
 
             if(data.postamat !== 'no'){
                 transDate = ((typeof data.i_date === 'undefined') ?  transDate = data.date : data.i_date) + "<?=GetMessage("IPOLSDEK_DAY")?>";
@@ -419,7 +419,7 @@ sort($arResult['Regions']);
                 data.postamat = '';
                 transDate = '<?=GetMessage("IPOLSDEK_NO_DELIV")?>';
             }
-            IPOLSDEK_pvz.prices.postamat = [data.postamat,transDate]; // Profiler
+            IPOLSDEK_pvz.prices.postamat = [data.postamat,transDate]; /* Profiler */
 
             IPOLSDEK_pvz.setPrices();
         },
@@ -428,7 +428,7 @@ sort($arResult['Regions']);
             $('#SDEK_cPrice').html(IPOLSDEK_pvz.prices.courier[0]);
             $('#SDEK_cDate').html(IPOLSDEK_pvz.prices.courier[1]);
 
-            if(IPOLSDEK_pvz.punctMode !== 'ALL'){ // Profiler
+            if(IPOLSDEK_pvz.punctMode !== 'ALL'){ /* Profiler */
                 $('#SDEK_pPrice').html(IPOLSDEK_pvz.prices.pickup[0]);
                 $('#SDEK_pDate').html(IPOLSDEK_pvz.prices.pickup[1]);
 
@@ -449,17 +449,17 @@ sort($arResult['Regions']);
             $('#SDEK_pPrice').html('');
             $('#SDEK_pDate').html('');
 
-            $('#SDEK_pPrice').html('');// Profiler
+            $('#SDEK_pPrice').html(''); /* Profiler */
             $('#SDEK_pDate').html('');
 
-            $('#SDEK_iPrice').html('');// Profiler
+            $('#SDEK_iPrice').html(''); /* Profiler */
             $('#SDEK_iDate').html('');
 
-            $('.IPOLSDEK_subPunct_detail_PVZ').each(function(){$(this).html('')}); // Profiler
-            $('.IPOLSDEK_subPunct_detail_POSTAMAT').each(function(){$(this).html('')}); // Profiler
+            $('.IPOLSDEK_subPunct_detail_PVZ').each(function(){$(this).html('')}); /* Profiler */
+            $('.IPOLSDEK_subPunct_detail_POSTAMAT').each(function(){$(this).html('')}); /* Profiler */
         },
 
-        // loading
+        /* loading */
         readySt: {
             ymaps: false,
             jqui: false
@@ -502,9 +502,9 @@ sort($arResult['Regions']);
                         <input type='text' id='SDEK_citySearcher' placeholder='<?=GetMessage("IPOLSDEK_CITYSEARCH")?>' onkeyup='IPOLSDEK_pvz.getCityName()'/>
                         <div id='SDEK_listOfCities'>
                             <div>
-                        <?foreach($arResult['Regions'] as $city){?>
+                        <?php foreach($arResult['Regions'] as $city) { ?>
                             <a href='javascript:void(0)' <?=($city==CDeliverySDEK::toUpper($arResult['city']))?"style='display:none'":''?> onclick='IPOLSDEK_pvz.chooseCity("<?=$city?>");return false;' class='SDEK_citySelect'><?=$city?><br></a>
-                        <?}?>
+                        <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -526,16 +526,16 @@ sort($arResult['Regions']);
     <div id='SDEK_info'>
         <div id='SDEK_sign'><?=GetMessage("IPOLSDEK_LABELPVZ")?></div>
         <div id='SDEK_modController'>
-            <?foreach(array('ALL','PVZ','POSTAMAT') as $mode){ // Profiler?>
+            <?php foreach(array('ALL', 'PVZ', 'POSTAMAT') as $mode) { // Profiler ?>
                 <div class='SDEK_mC_block' id='SDEK_mC_<?=$mode?>' onclick='IPOLSDEK_pvz.switchMode("<?=$mode?>",true)'><?=GetMessage("IPOLSDEK_TEMPL_$mode")?></div>
-            <?}?>
+            <?php } ?>
             <div style='clear:both'></div>
         </div>
-        <div id='SDEK_delivInfo_PVZ'><?=GetMessage("IPOLSDEK_CMP_PRICE")?> <?// Profiler?>
+        <div id='SDEK_delivInfo_PVZ'><?=GetMessage("IPOLSDEK_CMP_PRICE")?> <?php // Profiler ?>
             <span id='SDEK_pPrice'><?=($arResult['DELIVERY']['pickup']!='no')?$arResult['DELIVERY']['pickup']:""?></span>,&nbsp;<?=GetMessage("IPOLSDEK_CMP_TRM")?>
             <span id='SDEK_pDate'><?=($arResult['DELIVERY']['pickup']!='no')?$arResult['DELIVERY']['date'].GetMessage("IPOLSDEK_DAY"):""?></span>
         </div>
-        <div id='SDEK_delivInfo_POSTAMAT'><?=GetMessage("IPOLSDEK_CMP_PRICE")?> <?// Profiler?>
+        <div id='SDEK_delivInfo_POSTAMAT'><?= GetMessage("IPOLSDEK_CMP_PRICE") ?> <?php // Profiler ?>
             <span id='SDEK_iPrice'><?=($arResult['DELIVERY']['postamat']!='no')?$arResult['DELIVERY']['postamat']:""?></span>,&nbsp;<?=GetMessage("IPOLSDEK_CMP_TRM")?>
             <span id='SDEK_iDate'><?=($arResult['DELIVERY']['postamat']!='no')?$arResult['DELIVERY']['date'].GetMessage("IPOLSDEK_DAY"):""?></span>
         </div>

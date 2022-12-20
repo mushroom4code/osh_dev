@@ -1,4 +1,4 @@
-<?
+<?php
 $module_id="ipol.sdek";
 CModule::IncludeModule($module_id);
 

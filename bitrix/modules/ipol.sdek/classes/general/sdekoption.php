@@ -1,4 +1,4 @@
-<?
+<?php
 	IncludeModuleLangFile(__FILE__);
 
 	class sdekOption extends sdekHelper{
@@ -380,7 +380,7 @@
 			if(file_exists($dirPath)){
 				$dirContain = scandir($dirPath);
 				foreach($dirContain as $contain){
-					if(strpos($contain,'.pdf')!==false && (mktime() - (int)filemtime($dirPath.$contain)) > 600)
+					if(strpos($contain,'.pdf')!==false && (time() - (int)filemtime($dirPath.$contain)) > 600)
 						unlink($dirPath.$contain);
 				}
 			}
@@ -445,27 +445,27 @@
 			}
 			?>
 			<script type="text/javascript">
-				<?if(count($arRequests) && !$shtrihs['error']){
-					if($mode == 'acts'){
+				<?php if(count($arRequests) && !$shtrihs['error']) {
+					if($mode == 'acts') {
 						if(self::canShipment()){?>
 							window.open('/bitrix/js/<?=self::$MODULE_ID?>/printActs.php?orders=<?=implode(":",$arRequests['order'])?>&shipments=<?=implode(":",$arRequests['shipment'])?>','_blank');
-						<?}else{?>
+						<?php } else { ?>
 							window.open('/bitrix/js/<?=self::$MODULE_ID?>/printActs.php?ORDER_ID=<?=implode(":",$arRequests['order'])?>','_blank');
-						<?}
+						<?php }
 					}
 					if(!$ifActs && $shtrihs['files']){
 						foreach($shtrihs['files'] as $file){?>
 							window.open('/upload/<?=self::$MODULE_ID?>/<?=$file?>','_blank');
-						<?}
+						<?php }
 					}
 					if($badOrders){?>
-						alert('<?=GetMessage("IPOLSDEK_PRINTERR_BADORDERS").$badOrders?>');
-					<?}?>
-				<?}else{?>
-					alert('<?=GetMessage("IPOLSDEK_PRINTERR_TOTALERROR").'\n'.$shtrihs['error']?> ');
-				<?}?>
+						alert('<?= GetMessage("IPOLSDEK_PRINTERR_BADORDERS") . $badOrders ?>');
+					<?php } ?>
+				<?php } else { ?>
+					alert('<?= GetMessage("IPOLSDEK_PRINTERR_TOTALERROR") . '\n' . $shtrihs['error'] ?> ');
+				<?php } ?>
 			</script>
-		<?}
+		<?php }
 
 		static function formActArray(){
 			if(!cmodule::includeModule('sale')) return;
@@ -508,14 +508,14 @@
 		static function placeFAQ($code){?>
 				<a class="ipol_header" onclick="$(this).next().toggle(); return false;"><?=GetMessage('IPOLSDEK_FAQ_'.$code.'_TITLE')?></a>
 				<div class="ipol_inst"><?=GetMessage('IPOLSDEK_FAQ_'.$code.'_DESCR')?></div>
-		<?}
+		<?php }
 
 		static function placeHint($code){?>
 			<div id="pop-<?=$code?>" class="b-popup" style="display: none; ">
 				<div class="pop-text"><?=GetMessage("IPOLSDEK_HELPER_".$code)?></div>
 				<div class="close" onclick="$(this).closest('.b-popup').hide();"></div>
 			</div>
-		<?}
+		<?php }
 
 		static function getSDEKCity($city){
 			$cityId = self::getNormalCity($city);
@@ -546,22 +546,22 @@
 						$arStShipment[] = $val;
 					}
 				ShowParamsHTMLByArray($option);
-			?><tr><td></td><td><div class='IPOLSDEK_sepTable'><?=GetMessage('IPOLSDEK_STT_order')?></div><div class='IPOLSDEK_sepTable'><?=GetMessage('IPOLSDEK_STT_shipment')?></div></td></tr><?
+			?><tr><td></td><td><div class='IPOLSDEK_sepTable'><?=GetMessage('IPOLSDEK_STT_order')?></div><div class='IPOLSDEK_sepTable'><?=GetMessage('IPOLSDEK_STT_shipment')?></div></td></tr><?php
 			foreach($arStatuses as $key => $description){?>
 				<tr>
 					<td><?=$description[1]?></td>
 					<td>
 						<div class='IPOLSDEK_sepTable'>
-							<?self::makeSelect($description[0],$description[4],\Ipolh\SDEK\option::get($description[0]));?>
+							<?php self::makeSelect($description[0], $description[4], \Ipolh\SDEK\option::get($description[0])); ?>
 						</div>
 						<div class='IPOLSDEK_sepTable'>
-							<?
+                <?php
 							$name = str_replace('status','stShipment',$description[0]);
 							self::makeSelect($name,$arStShipment[$key][4],\Ipolh\SDEK\option::get($name));?>
 						</div>
 					</td>
 				</tr>
-			<?}
+			<?php }
 			}else{
 				foreach($option as $key => $descr)
 					if(strpos($descr[0],'stShipment') === 0)
@@ -571,12 +571,12 @@
 		}
 
 		static function makeSelect($id,$vals,$def=false,$atrs=''){?>
-			<select <?if($id){?>name='<?=$id?>' id='<?=$id?>'<?}?> <?=$atrs?>>
-			<?foreach($vals as $val => $sign){?>
+			<select <?php if($id) { ?>name='<?= $id ?>' id='<?= $id ?>'<?php } ?> <?= $atrs ?>>
+			<?php foreach($vals as $val => $sign) { ?>
 				<option value='<?=$val?>' <?=($def == $val)?'selected':''?>><?=$sign?></option>
-			<?}?>
+			<?php } ?>
 			</select>
-		<?}
+		<?php }
 
 		static function getCountryHeaderCities($params = array('country' => 'rus')){
 			$allCities = sqlSdekCity::getCitiesByCountry($params['country'],true);
@@ -620,8 +620,8 @@
 					echo '</tbody></table>';
 				break;
 				case 'many':
-					$arErrCities = sdekHelper::getErrCities($params['country']);
-					if(count($arErrCities['many']) > 0){
+					$multipleMatchedCities = sdekHelper::getMultipleMatchedCities($params['country']);
+					if(count($multipleMatchedCities) > 0){
 						echo '<table class="adm-list-table">
 							<thead>
 									<tr class="adm-list-table-header">
@@ -632,7 +632,7 @@
 							</thead>
 							<tbody>';
 
-						foreach($arErrCities['many'] as $bitrixId => $arCities){
+						foreach($multipleMatchedCities as $bitrixId => $arCities){
 							$bitrix = false;
 							if(self::isLocation20()){
 								$city   = sdekCityGetter::getCityChain($bitrixId);
@@ -658,8 +658,8 @@
 					}
 				break;
 				case 'notFound':
-					$arErrCities = sdekHelper::getErrCities($params['country']);
-					if(count($arErrCities['notFound']) > 0){
+					$notFoundedCities = sdekHelper::getNotFoundedCities($params['country']);
+					if(count($notFoundedCities) > 0){
 						echo '<table class="adm-list-table">
 								<thead>
 										<tr class="adm-list-table-header">
@@ -670,7 +670,7 @@
 								</thead>
 								<tbody>';
 
-						foreach($arErrCities['notFound'] as $arCity)
+						foreach($notFoundedCities as $arCity)
 							echo '<tr class="adm-list-table-row">
 									<td class="adm-list-table-cell">'.$arCity['sdekId'].'</td>
 									<td class="adm-list-table-cell">'.$arCity['region'].'</td>
@@ -930,7 +930,7 @@
             }
 
 			if(!self::$ERROR_REF){
-                \Ipolh\SDEK\option::set('statCync',mktime());
+                \Ipolh\SDEK\option::set('statCync', time());
             }
 		}
 

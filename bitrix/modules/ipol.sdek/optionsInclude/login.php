@@ -67,5 +67,5 @@
 <tr><td></td><td><input type='button' value='<?=GetMessage('IPOLSDEK_LBL_AUTHORIZE')?>' onclick='IPOLSDEK_auth()'></td></tr>
 
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('API')?>	
+	<?php sdekOption::placeFAQ('API') ?>
 </td></tr>

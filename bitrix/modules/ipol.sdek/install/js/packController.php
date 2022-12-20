@@ -1,4 +1,4 @@
-<?
+<?php
 $arGoods = self::getGoodsArray(sdekExport::$orderId,sdekExport::$shipmentID);
 $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLSDEK_cm")." x ".(\Ipolh\SDEK\option::get("widthD") / 10)." ".GetMessage("IPOLSDEK_cm")." x ".(\Ipolh\SDEK\option::get("heightD") / 10)." ".GetMessage("IPOLSDEK_cm");
 ?>
@@ -107,11 +107,11 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 		cursor: pointer;
 		padding-top: 2px;
 	}
-	<?if(sdekExport::$isEditable){?>
+	<?php if(sdekExport::$isEditable) { ?>
 	.IPOLSDEK_PC_item:hover{
 		background-color: #D5EFC6;
 	}
-	<?}?>
+	<?php } ?>
 	.IPOLSDEK_PC_item div{
 		line-height: 2;
 	}
@@ -126,9 +126,9 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 	.IPOLSDEK_PC_checkB{
 		width: 50px;
 		text-align: center !important;
-	<?if(!sdekExport::$isEditable || count($arGoods) < 10){?>
+	<?php if(!sdekExport::$isEditable || count($arGoods) < 10) { ?>
 		visibility:hidden;
-	<?}?>
+	<?php } ?>
 	}
 	.IPOLSDEK_PC_name{
 		width: 230px;
@@ -170,18 +170,18 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 	#IPOLSDEK_PC_separator div{
 		text-align: center;
 	}
-	<?if(!sdekExport::$isEditable){?>
+	<?php if(!sdekExport::$isEditable) { ?>
 	#IPOLSDEK_buttonPlace, #IPOLSDEK_packApply, #IPOLSDEK_packCancel{
 		display:none;
 	}
 	.IPOLSDEK_PC_gabBLabel, .IPOLSDEK_PC_weightButtons, .IPOLSDEK_PC_delete a{
 		display:none;
 	}
-	<?}?>
+	<?php } ?>
 </style>
 <script>
 	var IPOLSDEK_packs = {
-		// сервис
+		/* сервис */
 		srv: {
 			count: function(obj){
 				var i = 0;
@@ -200,7 +200,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 				return temp;
 			}
 		},
-        // end
+        /* end */
 
         packsSrc : false,
         goods    : false,
@@ -279,7 +279,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 
 			IPOLSDEK_packs.makePackWeight(id);
 
-			// remove moved goods
+			/* remove moved goods */
 			$('#IPOLSDEK_pack_'+id+' .IPOLSDEK_PC_goodsPlace').children().each(function(){
 				if($(this).attr('id').indexOf('IPOLSDEK_pack_'+id+'_') === -1)
 					$(this).replaceWith("");
@@ -381,9 +381,9 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 		},
 
 		initUi: function(){
-			<?if(sdekExport::$isEditable){?>
+			<?php if(sdekExport::$isEditable) { ?>
 				$('.IPOLSDEK_PC_goodsPlace').sortable({connectWith:".IPOLSDEK_PC_goodsPlace",stop:IPOLSDEK_packs.moveItem,start:IPOLSDEK_packs.rend.close}).disableSelection();
-			<?}?>
+			<?php } ?>
 		},
 
 		moveItem: function(a,e){
@@ -422,9 +422,9 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			return goods;
 		},
 
-		// перемещение чекбоксами
+		/* перемещение чекбоксами */
 		cb_Change: function(cb){
-			<?if(!sdekExport::$isEditable){?>return;<?}?>
+			<?php if(!sdekExport::$isEditable) { ?>return;<?php } ?>
 			if($('.IPOLSDEK_PC_cbController:checked').length > 0)
 				IPOLSDEK_packs.cb_showWindow();
 			else
@@ -473,22 +473,22 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			IPOLSDEK_packs.rend.close();
 		},
 
-		// вес
+		/* вес */
 		weight_editting: false,
 
 		weight_edit: function(id){
 			IPOLSDEK_packs.closeEdits();
 			IPOLSDEK_packs.weight_editting = id;
 			var boss = $('#IPOLSDEK_pack_'+id);
-			// links
+			/* links */
 			boss.find('.IPOLSDEK_PC_weightEdit').css('display','none');
 			boss.find('.IPOLSDEK_PC_weightCancel').css('display','none');
 			boss.find('.IPOLSDEK_PC_weightSave').css('display','inline-block');
-			// signs
+			/* signs */
 			boss.find('.IPOLSDEK_PC_weightTrue').css('display','none');
 			boss.find('.IPOLSDEK_PC_weightLabeled').css('display','none');
 			boss.find('.IPOLSDEK_PC_weightChange').css('display','inline-block');
-			// fillings
+			/* fillings */
 			var oldVal = boss.find('.IPOLSDEK_PC_weightTrue .IPOLSDEK_PC_KG').html();
 			if(IPOLSDEK_packs.weight_isManual(id))
 				oldVal = parseFloat(boss.find('.IPOLSDEK_PC_weightLabeled').html());
@@ -503,7 +503,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			var tmpVal = parseFloat(boss.find('.IPOLSDEK_PC_weightChange input').val());
 			tmpVal = ((isNaN(tmpVal) || tmpVal == 0) ? '1' : tmpVal) + " <?=GetMessage('IPOLSDEK_kg')?>";
 			boss.find('.IPOLSDEK_PC_weightLabeled').html(tmpVal);
-			IPOLSDEK_packs.editPackGab(IPOLSDEK_packs.weight_editting,{weight:tmpVal}); // weight was editted
+			IPOLSDEK_packs.editPackGab(IPOLSDEK_packs.weight_editting,{weight:tmpVal}); /* weight was editted */
 			IPOLSDEK_packs.weight_stopChanges();
 		},
 
@@ -511,14 +511,14 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			if(!IPOLSDEK_packs.weight_editting)
 				return;
 			var boss = $('#IPOLSDEK_pack_'+IPOLSDEK_packs.weight_editting);
-			// links
+			/* links */
 			boss.find('.IPOLSDEK_PC_weightEdit').css('display','');
 			if(IPOLSDEK_packs.weight_isManual(IPOLSDEK_packs.weight_editting))
 				boss.find('.IPOLSDEK_PC_weightCancel').css('display','inline-block');
 			else
 				boss.find('.IPOLSDEK_PC_weightCancel').css('display','none');
 			boss.find('.IPOLSDEK_PC_weightSave').css('display','none');
-			// signs
+			/* signs */
 			if(IPOLSDEK_packs.weight_isManual(IPOLSDEK_packs.weight_editting)){
 				boss.find('.IPOLSDEK_PC_weightTrue').css('display','none');
 				boss.find('.IPOLSDEK_PC_weightLabeled').css('display','inline-block');
@@ -527,7 +527,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 				boss.find('.IPOLSDEK_PC_weightLabeled').css('display','none');
 			}
 			boss.find('.IPOLSDEK_PC_weightChange').css('display','none');
-			// fillings
+			/* fillings */
 			IPOLSDEK_packs.weight_editting = false;
 		},
 
@@ -539,15 +539,15 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			boss.find('.IPOLSDEK_PC_weightCancel').css('display','none');
 		},
 
-		weight_isManual: function(id){ // check weither weight was changed manually for pack id
+		weight_isManual: function(id){ /* check weither weight was changed manually for pack id */
 			return (typeof(IPOLSDEK_packs.packsGabs[id]) != 'undefined' && typeof(IPOLSDEK_packs.packsGabs[id].weight) != 'undefined');
 		},
 
-		weight_adequate: function(wei){ // js is crasy with floats
+		weight_adequate: function(wei){ /* js is crasy with floats */
 			return Math.round(wei*1000) / 1000;
 		},
 
-		// √абариты
+		/* √абариты */
 		gabs_editting: false,
 		gabs_request: false,
 
@@ -557,15 +557,15 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			IPOLSDEK_packs.closeEdits();
 			IPOLSDEK_packs.gabs_editting = id;
 			var boss = $('#IPOLSDEK_pack_'+id);
-			// links
+			/* links */
 			boss.find('.IPOLSDEK_PC_gabsEdit').css('display','none');
 			boss.find('.IPOLSDEK_PC_gabsCount').css('display','none');
 			boss.find('.IPOLSDEK_PC_gabsSave').css('display','inline-block');
-			// signs
+			/* signs */
 			boss.find('.IPOLSDEK_PC_gabLabel').css('display','none');
 			var gsl = boss.find('.IPOLSDEK_PC_gabCLabel');
 			gsl.css('display','inline');
-			// fillings
+			/* fillings */
 			var oldVal = boss.find('.IPOLSDEK_PC_gabLabel').html();
 			var gabs = [0,0,0];
 			if(oldVal.indexOf('x') !== -1)
@@ -596,14 +596,14 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			if(!IPOLSDEK_packs.gabs_editting)
 				return;
 			var boss = $('#IPOLSDEK_pack_'+IPOLSDEK_packs.gabs_editting);
-			// links
+			/* links */
 			boss.find('.IPOLSDEK_PC_gabsEdit').css('display','');
 			boss.find('.IPOLSDEK_PC_gabsCount').css('display','');
 			boss.find('.IPOLSDEK_PC_gabsSave').css('display','none');
-			// signs
+			/* signs */
 			boss.find('.IPOLSDEK_PC_gabLabel').css('display','inline');
 			boss.find('.IPOLSDEK_PC_gabCLabel').css('display','none');
-			// fillings
+			/* fillings */
 			IPOLSDEK_packs.gabs_editting = false;
 		},
 
@@ -637,7 +637,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			});
 		},
 
-		// информаци€ по всем габаритам
+		/* информаци€ по всем габаритам */
 		editPackGab: function(pack,params){
 			if(typeof(IPOLSDEK_packs.packsGabs[pack]) == 'undefined')
 				IPOLSDEK_packs.packsGabs[pack] = {};
@@ -654,7 +654,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 				delete IPOLSDEK_packs.packsGabs[pack];
 		},
 
-		// закрыть все редактилки
+		/* закрыть все редактилки */
 		closeEdits: function(mode){
 			IPOLSDEK_packs.weight_stopChanges();
 			IPOLSDEK_packs.gabs_stopChanges();
@@ -683,7 +683,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			}
 		},
 
-		// кнопки
+		/* кнопки */
 		act: {
 			apply: function(){
 				var SO = IPOLSDEK_packs.act.getSO();
@@ -726,7 +726,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 				IPOLSDEK_packs.wnd.close();
 			},
 
-			// контроль товаров
+			/* контроль товаров */
 			showGoods: function(){
 				$('.IPOLSDEK_PC_item').show();
 				$('#IPOLSDEK_PC_hideGoods').css('display','inline');
@@ -739,7 +739,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 				$('#IPOLSDEK_PC_showGoods').css('display','inline');
 			},
 
-			// расчет доставки
+			/* расчет доставки */
 			cntDost: function(){
 				var packs = IPOLSDEK_packs.act.getSO();
 				delete packs.cnt;
@@ -762,7 +762,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 				});
 			},
 
-			// авторасчет
+			/* авторасчет */
 			autoDistribution: function(){
 				var packsCnt = 0;
 
@@ -803,7 +803,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 				IPOLSDEK_packs.loadPacks();
 			},
 
-			// авторазбиение
+			/* авторазбиение */
 			autoSplit: function(){
 				var goodCnt  = $('.IPOLSDEK_PC_item').length;
 				var packsCnt = IPOLSDEK_packs.srv.count(IPOLSDEK_packs.packs);
@@ -814,10 +814,10 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			}
 		},
 
-		// разбиение
+		/* разбиение */
 		rend: {
 			that: function(link){
-				<?if(!sdekExport::$isEditable){?>return;<?}?>
+				<?php if(!sdekExport::$isEditable) { ?>return;<?php } ?>
 				var extCnt = parseInt(link.html());
 				if(extCnt == 1 || typeof(IPOLSDEK_packs.packs[2]) == 'undefined')
 					return;
@@ -855,15 +855,15 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 					var packFrom = parseInt($('#IPOLSDEK_PC_goodDescr').val().substr(14));
 					var packTo   = $('#IPOLSDEK_PC_cChange_select').val();
 					var goodId   = parseInt($('#IPOLSDEK_PC_goodDescr').val().substr(20+packFrom.toString().length));
-					//script
+					/* script */
 					IPOLSDEK_packs.packs[packFrom][goodId] -= changeVal;
 					if(typeof(IPOLSDEK_packs.packs[packTo][goodId]) == 'undefined')
 						IPOLSDEK_packs.packs[packTo][goodId] = changeVal;
 					else
 						IPOLSDEK_packs.packs[packTo][goodId] += changeVal;
-					//ui
-					IPOLSDEK_packs.loadPack(packFrom);// remove
-					IPOLSDEK_packs.loadPack(packTo);// add
+					/* ui */
+					IPOLSDEK_packs.loadPack(packFrom);/* remove */
+					IPOLSDEK_packs.loadPack(packTo);/* add */
 				}
 				IPOLSDEK_packs.rend.close();
 			},
@@ -887,7 +887,7 @@ $strPackGabsST = (\Ipolh\SDEK\option::get("lengthD") / 10)." ".GetMessage("IPOLS
 			},
 		},
 
-		// контроль окна
+		/* контроль окна */
 		wnd: {
 			link : false,
 

@@ -1,4 +1,4 @@
-<?
+<?php
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 if(!cmodule::includeModule('ipol.sdek'))
@@ -45,7 +45,7 @@ foreach($countries as $code)
 	$countrySwitcher[GetMessage('IPOLSDEK_SYNCTY_'.$code)] = $code;
 
 $goods = false;
-if($arParams['CNT_DELIV'] == 'Y'){
+if(array_key_exists('CNT_DELIV', $arParams) && $arParams['CNT_DELIV'] == 'Y'){
 	$goods = ($arParams['CNT_BASKET'] == 'Y') ? CDeliverySDEK::setOrderGoods() : false;
 
 	// Old templates
@@ -102,7 +102,11 @@ if($arList && count($arList)){
     $unneededFields = array('Site','Picture');
 	foreach($arList as $mode => $arCities)
 		foreach($arCities as $city => $arPVZ){
-			if(array_key_exists($city,$arExistedCities) && (!$arParams['COUNTRIES'] || is_array($countrySwitcher[$arExistedCities[$city]]) || in_array($countrySwitcher[$arExistedCities[$city]],$arParams['COUNTRIES']))){
+			if(array_key_exists($city,$arExistedCities)
+                && (!(array_key_exists('COUNTRIES', $arParams) && $arParams['COUNTRIES'])
+                    || is_array($countrySwitcher[$arExistedCities[$city]])
+                    || in_array($countrySwitcher[$arExistedCities[$city]],$arParams['COUNTRIES'])))
+            {
 				if($allCities || in_array($city,$arParams['CITIES'])){
 				    foreach ($arPVZ as $code => $pvzInfo){
 				        foreach ($unneededFields as $field){

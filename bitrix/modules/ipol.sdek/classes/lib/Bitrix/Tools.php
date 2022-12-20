@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Ipolh\SDEK\Bitrix;
 
 class Tools{
@@ -20,28 +20,28 @@ class Tools{
 		<tr><td colspan='2'>
 			<div class="adm-info-message-wrap adm-info-message-red">
 				<div class="adm-info-message">
-					<?if($header){?><div class="adm-info-message-title"><?=$header?></div><?}?>
+					<?php if($header){ ?><div class="adm-info-message-title"><?=$header?></div><?php } ?>
 					<?=$content?>
 					<div class="adm-info-message-icon"></div>
 				</div>
 			</div>
 		</td></tr>
-	<?}
+	<?php }
 
 	static public function placeWarningLabel($content,$header=false,$heghtLimit=false,$click=false)
 	{?>
 		<tr><td colspan='2'>
 			<div class="adm-info-message-wrap">
 				<div class="adm-info-message" style='color: #000000'>
-					<?if($header){?><div class="adm-info-message-title"><?=$header?></div><?}?>
-					<?if($click){?><input type="button" <?=($click['id'] ? 'id="'.self::$MODULE_LBL.$click['id'].'"' : '')?> onclick='<?=$click['action']?>' value="<?=$click['name']?>"/><?}?>
-						<div <?if($heghtLimit){?>style="max-height: <?=$heghtLimit?>px; overflow: auto;"<?}?>>
+					<?php if($header){ ?><div class="adm-info-message-title"><?=$header?></div><?php } ?>
+					<?php if($click){ ?><input type="button" <?=($click['id'] ? 'id="'.self::$MODULE_LBL.$click['id'].'"' : '')?> onclick='<?=$click['action']?>' value="<?=$click['name']?>"/><?php } ?>
+						<div <?php if($heghtLimit){ ?>style="max-height: <?=$heghtLimit?>px; overflow: auto;"<?php } ?>>
 						<?=$content?>
 					</div>
 				</div>
 			</div>
 		</td></tr>
-	<?}
+	<?php }
 
     static public function isB24()
     {
@@ -66,14 +66,14 @@ class Tools{
     static function placeFAQ($code){?>
         <a class="ipol_header" onclick="$(this).next().toggle(); return false;"><?=self::getMessage('FAQ_'.$code.'_TITLE')?></a>
         <div class="ipol_inst"><?=self::getMessage('FAQ_'.$code.'_DESCR')?></div>
-    <?}
+    <?php }
 
     static function placeHint($code){?>
         <div id="pop-<?=$code?>" class="<?=self::$MODULE_LBL?>b-popup" style="display: none; ">
             <div class="<?=self::$MODULE_LBL?>pop-text"><?=self::getMessage("HELPER_".$code)?></div>
             <div class="<?=self::$MODULE_LBL?>close" onclick="$(this).closest('.<?=self::$MODULE_LBL?>b-popup').hide();"></div>
         </div>
-    <?}
+    <?php }
 
     /**
      * @param $code
@@ -84,9 +84,9 @@ class Tools{
         global $arAllOptions;
         ?>
         <tr class="heading"><td colspan="2" valign="top" align="center" <?=($isHidden) ? "class='".self::$MODULE_LBL."headerLink' onclick='".self::$MODULE_LBL."setups.getPage(\"main\").showHidden($(this))'" : ''?>><?=self::getMessage("HDR_".$code)?></td></tr>
-        <?if(self::getMessage('FAQ_'.$code.'_TITLE')){?>
-            <tr><td colspan="2"><?self::placeFAQ($code)?></td></tr>
-        <?}
+        <?php if(self::getMessage('FAQ_' . $code . '_TITLE')) { ?>
+            <tr><td colspan="2"><?php self::placeFAQ($code) ?></td></tr>
+        <?php }
         /*if(Logger::getLogInfo($code)){
             self::placeWarningLabel(Logger::toOptions($code),self::getMessage("WARNING_".$code),150,array('name'=>Tools::getMessage('LBL_CLEAR'),'action'=>'IPONY_setups.getPage("main").clearLog("'.$code.'")','id'=>'clear'.$code));
         }*/
@@ -116,10 +116,10 @@ class Tools{
                 <td width='50%' class='adm-detail-content-cell-l'><?=$name?></td>
                 <td width='50%' class='adm-detail-content-cell-r'><?=$val?></td>
             </tr>
-        <?}else{?>
+        <?php } else { ?>
             <tr><td colspan = '2' style='text-align: center'><?=$val?></td></tr>
-        <?}?>
-    <?}
+        <?php } ?>
+    <?php }
 
     static function defaultOptionPath()
     {

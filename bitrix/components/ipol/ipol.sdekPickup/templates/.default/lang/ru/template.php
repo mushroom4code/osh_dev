@@ -1,4 +1,4 @@
-<?
+<?php
 $MESS["IPOLSDEK_YOURCITY"] = "Ваш город:&nbsp;";
 
 $MESS["IPOLSDEK_COURIER"] = "Курьер:";

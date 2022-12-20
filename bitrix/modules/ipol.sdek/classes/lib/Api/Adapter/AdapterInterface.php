@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Ipolh\SDEK\Api\Adapter;
 
 interface AdapterInterface

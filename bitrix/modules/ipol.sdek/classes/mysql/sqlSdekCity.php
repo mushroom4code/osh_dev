@@ -1,4 +1,4 @@
-<?
+<?php
 	class sqlSdekCity{
 		public static $tableName = 'ipol_sdekcities';
 		
@@ -142,9 +142,9 @@
 			$strSql='';
 
 			$where='';
-			if(strpos($arFilter['>=UPTIME'],".")!==false)
+			if(array_key_exists('>=UPTIME', $arFilter) && strpos($arFilter['>=UPTIME'],".") !== false)
 				$arFilter['>=UPTIME']=strtotime($arFilter['>=UPTIME']);
-			if(strpos($arFilter['<=UPTIME'],".")!==false)
+			if(array_key_exists('<=UPTIME', $arFilter) && strpos($arFilter['<=UPTIME'], ".") !== false)
 				$arFilter['<=UPTIME']=strtotime($arFilter['<=UPTIME']);
 
 			if(count($arFilter)>0)
@@ -184,8 +184,10 @@
 			$err_mess = "";
 			$cnt=$DB->Query("SELECT COUNT(*) as C FROM ".self::$tableName." ".$strSql, false, $err_mess.__LINE__)->Fetch();
 
-			if($arNavStartParams['nPageSize']==0)
-				$arNavStartParams['nPageSize']=$cnt['C'];
+            if(!array_key_exists('nPageSize', $arNavStartParams) || $arNavStartParams['nPageSize'] === 0)
+            {
+                $arNavStartParams['nPageSize'] = $cnt['C'];
+            }
 
 			$strSql="SELECT * FROM ".self::$tableName." ".$strSql;
 

@@ -341,9 +341,11 @@ class Order
 
             $addressFrom = new \Ipolh\SDEK\Core\Order\Address();
             $addressFrom->setCode($sendCity)
-                        ->setLine($orderParams['sender_street'])
-                        //->setField('countryCode','RU') // todo:check
-                        ->setCity($arSendCity['NAME']);
+                ->setStreet($orderParams['sender_street'])
+                ->setHouse($orderParams['sender_house'])
+                ->setFlat($orderParams['sender_flat'])
+                //->setField('countryCode','RU') // todo:check
+                ->setCity($arSendCity['NAME']);
             $this->getBaseOrder()->setAddressFrom($addressFrom);
 
             $addressTo   = new \Ipolh\SDEK\Core\Order\Address();
@@ -373,7 +375,7 @@ class Order
                         switch ($orderParams['NDSDelivery']){
                             case 'VAT10' : $priceDeliveryVAT = 10; break;
                             case 'VAT20' : $priceDeliveryVAT = 20; break;
-                            case 'VATX'  :
+                            case 'VATX'  : $priceDeliveryVAT = null; break;
                             case 'VAT0'  :
                             default      : $priceDeliveryVAT = 0; break;
                         }
@@ -432,7 +434,7 @@ class Order
                     'house'  => (array_key_exists('sender_house',$orderParams)  && $orderParams['sender_house'])  ? $orderParams['sender_house']  : '',
                     'flat'   => (array_key_exists('sender_flat',$orderParams)  && $orderParams['sender_flat'])    ? $orderParams['sender_flat']   : ''
                 ));
-                $sender->setField('address',$sender->getField('street').', '.$sender->getField('house').', '.$sender->getField('house'));
+                $sender->setField('address',$sender->getField('street').', '.$sender->getField('house').', '.$sender->getField('flat'));
             }
             $sender->setField('realSeller',$orderParams['realSeller']);
             $this->getBaseOrder()->setSender($sender);
@@ -456,13 +458,14 @@ class Order
                         $arServices []= $service;
                     } else {
                         switch ($service) {
-                            case 3  : $service = 'DELIV_WEEKEND';  break;
-                            case 7  : $service = 'DANGER_CARGO';   break;
-                            case 16 : $service = 'TAKE_SENDER';    break;
-                            case 17 : $service = 'DELIV_RECEIVER'; break;
-                            case 30 : $service = 'TRYING_ON';      break;
-                            case 36 : $service = 'PART_DELIV';     break;
-                            case 48 : $service = 'REVERSE';        break;
+                            case 3  : $service = 'DELIV_WEEKEND';             break;
+                            case 7  : $service = 'DANGER_CARGO';              break;
+                            case 16 : $service = 'TAKE_SENDER';               break;
+                            case 17 : $service = 'DELIV_RECEIVER';            break;
+                            case 30 : $service = 'TRYING_ON';                 break;
+                            case 36 : $service = 'PART_DELIV';                break;
+                            case 48 : $service = 'REVERSE';                   break;
+                            case 81 : $service = 'BAN_ATTACHMENT_INSPECTION'; break;
                         }
                         $arServices[$service] = 1;
                     }
@@ -490,7 +493,7 @@ class Order
                             switch ($arGood["VATRate"]){
                                 case 'VAT10' : $goodVR = 10; break;
                                 case 'VAT20' : $goodVR = 20; break;
-                                case 'VATX'  :
+                                case 'VATX'  : $goodVR = null; break;
                                 case 'VAT0'  :
                                 default      : $goodVR = 0; break;
                             }
@@ -520,7 +523,7 @@ class Order
                         switch ($arGood["VATRate"]){
                             case 'VAT10' : $goodVR = 10; break;
                             case 'VAT20' : $goodVR = 20; break;
-                            case 'VATX'  :
+                            case 'VATX'  : $goodVR = null; break;
                             case 'VAT0'  :
                             default      : $goodVR = 0; break;
                         }

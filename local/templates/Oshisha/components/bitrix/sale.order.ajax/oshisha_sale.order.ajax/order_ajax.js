@@ -177,29 +177,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
 
             if (action === 'saveOrderAjax') {
-                // form = BX('bx-soa-order-form');
-                // if (form) {
-                //     form.querySelector('input[type=hidden][name=sessid]').value = BX.bitrix_sessid();
-                // }
-                //
-                // BX.ajax.submitAjax(
-                //     BX('bx-soa-order-form'),
-                //     {
-                //         url: this.ajaxUrl,
-                //         method: 'POST',
-                //         dataType: 'json',
-                //         data: {
-                //             via_ajax: 'Y',
-                //             action: 'saveOrderAjax',
-                //             sessid: BX.bitrix_sessid(),
-                //             SITE_ID: this.siteId,
-                //             signedParamsString: this.signedParamsString
-                //         },
-                //         onsuccess: BX.proxy(this.saveOrderWithJson, this),
-                //         onfailure: BX.proxy(this.handleNotRedirected, this)
-                //     }
-                // );
-
                 form = BX('bx-soa-order-form');
                 if (form)
                     form.querySelector('input[type=hidden][name=sessid]').value = BX.bitrix_sessid();
@@ -211,7 +188,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     method: 'POST',
                     dataType: 'json',
                     url: this.ajaxUrl,
-                    data: this.getData(eventArgs.action, eventArgs.actionData),
+                    data: this.getData(action, actionData),
                     onsuccess: BX.delegate(function (result) {
                         if (result.redirect && result.redirect.length)
                             document.location.href = result.redirect;
@@ -5709,12 +5686,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     BX.addClass(propsItemNode, "form-group bx-soa-customer-field box_grid_2 col-12");
                 } else if (property.getSettings().CODE === 'TIME') {
                     BX.addClass(propsItemNode, "form-group bx-soa-customer-field box_grid_3 col-12");
+                } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
+                    BX.addClass(propsItemNode, "d-none");
                 } else if (property.getSettings().CODE === 'ADDRESS') {
                     const extraClass = this.isOshPickUp() ? 'd-none' : 'bx-soa-customer-field box_grid_1 col-12';
                     BX.addClass(propsItemNode, extraClass);
                 } else if (property.getSettings().CODE === 'CALL_ME') {
                     BX.addClass(propsItemNode, "form-group bx-soa-customer-field box_grid_4 col-12 d-flex flex-column" +
                         " justify-content-between");
+                } else {
+                    BX.addClass(propsItemNode, "form-group box3 bx-soa-customer-field p-0 custom_field");
                 }
                 textHtml += propertyDesc.length && propertyType !== 'STRING' && propertyType !== 'NUMBER' &&
                 propertyType !== 'DATE' ? ' <small>(' + BX.util.htmlspecialchars(propertyDesc) + ')</small>'

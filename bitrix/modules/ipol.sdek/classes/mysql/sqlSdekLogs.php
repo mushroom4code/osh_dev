@@ -1,4 +1,4 @@
-<?
+<?php
 	class sqlSdekLogs{
 		public static $tableName = 'ipol_sdeklogs';
 

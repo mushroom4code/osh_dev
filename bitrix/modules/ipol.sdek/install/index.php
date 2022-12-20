@@ -1,4 +1,4 @@
-<?
+<?php
 #################################################
 #        Company developer: IPOL
 #        Developer: Nikta Egorov
@@ -7,7 +7,7 @@
 #        Copyright (c) 2006-2012 IPOL
 #################################################
 ?>
-<?
+<?php
 IncludeModuleLangFile(__FILE__); 
 
 if(class_exists("ipol_sdek")) 
@@ -23,7 +23,7 @@ Class ipol_sdek extends CModule{
 	var $MODULE_GROUP_RIGHTS = "N";
         var $errors;
 
-	function ipol_sdek(){
+	function __construct(){
 		$arModuleVersion = array();
 
 		$path = str_replace("\\", "/", __FILE__);
@@ -187,12 +187,12 @@ Class ipol_sdek extends CModule{
 			<input type="hidden" name="id" value="<?= $this->MODULE_ID ?>" />
 			<input type="hidden" name="uninstall" value="Y" />
 			<input type="hidden" name="step" value="2" />
-			<? CAdminMessage::ShowMessage(GetMessage('IPOLSDEK_PRESERVE_TABLES')) ?>
-			<p><?echo GetMessage('MOD_UNINST_SAVE')?></p>
-			 <p><input type="checkbox" name="savedata" id="savedata" value="Y" checked="checked" /><label for="savedata"><?echo GetMessage('MOD_UNINST_SAVE_TABLES')?></label><br /></p>
-			<input type="submit" name="inst" value="<?echo GetMessage('MOD_UNINST_DEL');?>" />
+        <?php CAdminMessage::ShowMessage(GetMessage('IPOLSDEK_PRESERVE_TABLES')) ?>
+			<p><?php echo GetMessage('MOD_UNINST_SAVE')?></p>
+			 <p><input type="checkbox" name="savedata" id="savedata" value="Y" checked="checked" /><label for="savedata"><?php echo GetMessage('MOD_UNINST_SAVE_TABLES')?></label><br /></p>
+			<input type="submit" name="inst" value="<?php echo GetMessage('MOD_UNINST_DEL');?>" />
 		</form>
-		<?
+      <?php
 		include($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/epilog_admin.php');
 		die();
 	}

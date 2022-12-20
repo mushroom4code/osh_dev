@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Ipolh\SDEK\Bitrix\Entity;
 
 class cache extends \CPHPCache

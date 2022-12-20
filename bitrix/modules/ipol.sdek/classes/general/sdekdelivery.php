@@ -1,4 +1,4 @@
-<?
+<?php
 cmodule::includeModule('sale');
 IncludeModuleLangFile(__FILE__);
 
@@ -206,6 +206,7 @@ class CDeliverySDEK extends sdekHelper{
 		// defining cityTo
         self::$bitrixCity  = $arOrder['LOCATION_TO'];
 		$arCity = self::getCity($arOrder['LOCATION_TO'],true);
+
 		if($arCity){
 			self::$sdekCity = $arCity['SDEK_ID'];
 			self::$sdekCityCntr = ($arCity['COUNTRY']) ? $arCity['COUNTRY'] : 'rus';
@@ -237,8 +238,9 @@ class CDeliverySDEK extends sdekHelper{
 					) &&
 					$curdeliveryCountryAv
 				){
-					self::$city = $arCity['NAME'];
-					self::$cityId = $arOrder['LOCATION_TO'];
+					self::$city   = $arCity['NAME'];
+					self::$cityId = $arCity['BITRIX_ID'];
+
 					$arKeys[]='courier';
 					if(self::checkPVZ())
 						$arKeys[]='pickup';
@@ -278,7 +280,8 @@ class CDeliverySDEK extends sdekHelper{
 					}
 
 			//проверяем возможность доставки, если не редактирование заказа
-			if(strpos($_SERVER['REQUEST_URI'],"bitrix/admin/sale_order_new.php") === false && !$_POST['isdek_action']){
+			if(!(array_key_exists('isdek_action', $_POST) && $_POST['isdek_action'])
+                && strpos($_SERVER['REQUEST_URI'],"bitrix/admin/sale_order_new.php") === false){
 				if(!self::$preSet && $arItems = sdekShipmentCollection::formation($arOrder)){
 					// событие заполнения порядка
 					$order = array();
@@ -321,9 +324,9 @@ class CDeliverySDEK extends sdekHelper{
         }
 
 		// Подключение FrontEnd (для многостраничного компонента)
-		if($_POST['CurrentStep'] > 1 && $_POST['CurrentStep'] < 4 && in_array('pickup',$arKeys))
+		if(array_key_exists('CurrentStep', $_POST) && $_POST['CurrentStep'] > 1 && $_POST['CurrentStep'] < 4 && in_array('pickup',$arKeys))
 			self::pickupLoader();
-		
+
 		\Ipolh\SDEK\Bitrix\Admin\Logger::compability($arKeys);
 		return $arKeys;
 	}
@@ -345,6 +348,11 @@ class CDeliverySDEK extends sdekHelper{
 			if($arCity){
 				self::$sdekCity = $arCity['SDEK_ID'];
 				self::$sdekCityCntr = ($arCity['COUNTRY']) ? $arCity['COUNTRY'] : 'rus';
+                if(!self::$city){
+                    self::$city   = $arCity['NAME'];
+                }
+
+                self::$cityId = $arCity['BITRIX_ID'];
 			} else {
                 self::$sdekCity     = false;
                 self::$sdekCityCntr = false;
@@ -549,8 +557,10 @@ class CDeliverySDEK extends sdekHelper{
 			$result = array('error' => GetMessage('IPOLSDEK_DEAD_SERVER'));
 		else{
 			$mode = false;
+			/*
 			if(array_key_exists('W',self::$goods) && self::$goods['W'] > 30)
 				$mode = 'heavy';
+			*/
 
 			if(!self::$sdekCityCntr){
 				$arCity = sqlSdekCity::getBySId(self::$sdekCity);
@@ -591,7 +601,7 @@ class CDeliverySDEK extends sdekHelper{
 		$svdCountries = self::getCountryOptions();
 		$arCountries = array();
 		foreach($svdCountries as $code => $vals)
-			if($vals['act'] == 'Y')
+			if(array_key_exists('act', $vals) && $vals['act'] == 'Y')
 				$arCountries[]=$code;
 		return $arCountries;
 	}
@@ -900,64 +910,10 @@ class CDeliverySDEK extends sdekHelper{
 	static $cityId = 0; // bitrix
 	static $selDeliv = '';
 
-	static function pickupLoader($arResult,$arUR){//подготавливает данные о доставке
-		if(!self::isActive()) return;
-
-		self::$orderWeight = ($arResult['ORDER_WEIGHT']) ? $arResult['ORDER_WEIGHT'] : self::$orderWeight;
-		self::$orderPrice  = ($arResult['ORDER_PRICE'])  ? $arResult['ORDER_PRICE']  : self::$orderPrice;
-
-		$city = self::getCity($arUR['DELIVERY_LOCATION'],true);
-		self::$cityId = $arUR['DELIVERY_LOCATION'];
-		if($city){
-			$city = str_replace(GetMessage('IPOLSDEK_LANG_YO_S'),GetMessage('IPOLSDEK_LANG_YE_S'),$city['NAME']);
-			self::$city = $city;
-		}
-		self::$selDeliv = $arUR['DELIVERY_ID'];
-	}
-
-	static function loadComponent($arParams = array()){ // подключает компонент
-		if(!is_array($arParams))
-			$arParams = array();
-		if(self::isActive() && $_REQUEST['is_ajax_post'] != 'Y' && $_REQUEST["AJAX_CALL"] != 'Y' && !$_REQUEST["ORDER_AJAX"]){
-			if(\Ipolh\SDEK\option::get('noYmaps') == 'Y' || defined('BX_YMAP_SCRIPT_LOADED') || defined('IPOL_YMAPS_LOADED'))
-				$arParams['NOMAPS'] = 'Y';
-			elseif(!array_key_exists('NOMAPS',$arParams) || $arParams['NOMAPS'] != 'Y')
-				define('IPOL_YMAPS_LOADED',true);
-			$GLOBALS['APPLICATION']->IncludeComponent("ipol:ipol.sdekPickup", "order", $arParams,false);
-		}
-	}
-
-	public static function onBufferContent(&$content) {
-		if(self::$city && self::isActive()){
-			$noJson = self::no_json($content);
-			if(($_REQUEST['is_ajax_post'] == 'Y' || $_REQUEST["AJAX_CALL"] == 'Y' || $_REQUEST["ORDER_AJAX"]) && $noJson){
-				$content .= '<input type="hidden" id="sdek_city" name="sdek_city" value=\''.self::$city.'\' />';//вписываем город
-				$content .= '<input type="hidden" id="sdek_cityID" name="sdek_cityID" value=\''.self::$cityId.'\' />';//вписываем город
-				$content .= '<input type="hidden" id="sdek_dostav" name="sdek_dostav" value=\''.self::$selDeliv.'\' />';//вписываем выбранный вариант доставки
-				$content .= '<input type="hidden" id="sdek_payer" name="sdek_payer" value=\''.self::$payerType.'\' />';//вписываем плательщика
-				$content .= '<input type="hidden" id="sdek_paysystem" name="sdek_paysystem" value=\''.self::$paysystem.'\' />';//вписываем платежную систему
-			}elseif(($_REQUEST['soa-action'] == 'refreshOrderAjax' || $_REQUEST['action'] == 'refreshOrderAjax') && !$noJson)
-				$content = substr($content,0,strlen($content)-1).',"sdek":{"city":"'.self::zajsonit(self::$city).'","cityId":"'.self::$cityId.'","dostav":"'.self::$selDeliv.'","payer":"'.self::$payerType.'","paysystem":"'.self::$paysystem.'"}}';
-		}
-	}
 
 	static function no_json($wat){
 		return is_null(json_decode(self::zajsonit($wat),true));
 	}
-
-	static function onAjaxAnswer(&$result){
-		if(
-			self::$city && 
-			self::isActive() &&
-			!array_key_exists('REDIRECT_URL',$result['order']) // $why = $because
-		)
-			$result['sdek'] = array(
-				'city'   => self::$city,
-				'cityId' => self::$cityId,
-				'dostav' => self::$selDeliv
-			);
-	}
-
 
 	/*()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
 													Проверки ПВЗ и Почтоматов
@@ -1053,27 +1009,43 @@ class CDeliverySDEK extends sdekHelper{
     }
 
 	public static function checkPVZ($city = ''){
-		if(!self::$PVZcities){
-			self::$PVZcities = self::getListFile();
-			self::$PVZcities = self::$PVZcities['PVZ'];
-		}
-		if(!$city)
-			$city = self::$city;
-		elseif(!self::$city)
-			self::$city = $city;
-		return array_key_exists(self::$city,self::$PVZcities);
+        $pvzController = new \Ipolh\SDEK\Bitrix\Controller\pvzController(true);
+        if(!$city){
+            $city = self::$sdekCity;
+        }
+        if(is_numeric($city)){
+            self::$sdekCity = $city;
+            if(!self::$PVZcities) {
+                $arList = $pvzController->getList();
+                self::$PVZcities = $arList['PVZ'];
+            }
+        } else {
+            self::$city = $city;
+            $arList = $pvzController->getListFile();
+            self::$PVZcities = $arList['PVZ'];
+        }
+
+		return array_key_exists($city,self::$PVZcities);
 	}
 
 	public static function checkPOSTAMAT($city = ''){
-        if(!self::$POSTAMATcities){
-            self::$POSTAMATcities = self::getListFile();
-            self::$POSTAMATcities = self::$POSTAMATcities['POSTAMAT'];
+        $pvzController = new \Ipolh\SDEK\Bitrix\Controller\pvzController(true);
+        if(!$city){
+            $city = self::$sdekCity;
         }
-        if(!$city)
-            $city = self::$city;
-        elseif(!self::$city)
+        if(is_numeric($city)){
+            self::$sdekCity = $city;
+            if(!self::$POSTAMATcities) {
+                $arList = $pvzController->getList();
+                self::$POSTAMATcities = $arList['POSTAMAT'];
+            }
+        } else {
             self::$city = $city;
-        return array_key_exists(self::$city,self::$POSTAMATcities);
+            $arList = $pvzController->getListFile();
+            self::$POSTAMATcities = $arList['POSTAMAT'];
+        }
+
+        return array_key_exists($city,self::$POSTAMATcities);
 	}
 
 
@@ -1093,12 +1065,14 @@ class CDeliverySDEK extends sdekHelper{
 			if($hNal || $hNOC){
                 $arBesnalPaySys = \Ipolh\SDEK\option::get('paySystems');
                 if(!$arBesnalPaySys) $arBesnalPaySys = array();
-                $MP = self::getSQLCityBI($arUserResult['DELIVERY_LOCATION']);
+                $MP = self::getSQLCityBI(self::$bitrixCity);
 				$isAvail = true;
-				if($hNal)
-					$isAvail = self::defilePayNal($MP['PAYNAL'],$arResult['ORDER_PRICE']);
-				if($isAvail && $hNOC)
-					$isAvail = self::definePayCountry($MP['COUNTRY']);
+				if($hNal) {
+                    $isAvail = self::defilePayNal(is_array($MP) ? $MP['PAYNAL'] : false, $arResult['ORDER_PRICE']);
+                }
+				if($isAvail && $hNOC) {
+                    $isAvail = self::definePayCountry(is_array($MP) ? $MP['COUNTRY'] : false);
+                }
 				if(!$isAvail){
 					foreach($arResult['PAY_SYSTEM'] as $id => $payDescr)
 						if(!in_array($payDescr['ID'],$arBesnalPaySys)){
@@ -1122,7 +1096,7 @@ class CDeliverySDEK extends sdekHelper{
 			if($hNal || $hNOC){
                 $arBesnalPaySys = \Ipolh\SDEK\option::get('paySystems');
                 if(!$arBesnalPaySys) $arBesnalPaySys = array();
-				$MP = self::getSQLCityBI($arUserResult['DELIVERY_LOCATION']);
+				$MP = self::getSQLCityBI(self::$bitrixCity);
 				$isAvail = true;
 				if($hNal)
 					$isAvail = self::defilePayNal($MP['PAYNAL'],$arResult['ORDER_PRICE']);
@@ -1537,5 +1511,21 @@ class CDeliverySDEK extends sdekHelper{
 	public static function forceSetGoods($orderId){
 		self::setOrderGoods($orderId);
 	}
+
+    static function pickupLoader($arResult,$arUR){
+        \Ipolh\SDEK\pvzWidjetHandler::pickupLoader($arResult,$arUR);
+    }
+
+    static function loadComponent($arParams = array()){
+        \Ipolh\SDEK\pvzWidjetHandler::loadComponent($arParams);
+    }
+
+    public static function onBufferContent(&$content) {
+        \Ipolh\SDEK\pvzWidjetHandler::onBufferContent($content);
+    }
+
+    static function onAjaxAnswer(&$result){
+        \Ipolh\SDEK\pvzWidjetHandler::onAjaxAnswer($result);
+    }
 }
 ?>

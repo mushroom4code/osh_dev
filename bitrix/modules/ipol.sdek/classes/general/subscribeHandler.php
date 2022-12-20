@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Ipolh\SDEK;
 
 IncludeModuleLangFile(__FILE__);
@@ -27,6 +27,8 @@ class subscribeHandler /*extends abstractGeneral*/
                 \sdekOption::$action($_POST);
             elseif (method_exists('\Ipolh\SDEK\StatusHandler', $action))
                 \Ipolh\SDEK\StatusHandler::$action($_POST);
+            elseif (method_exists('\Ipolh\SDEK\pvzWidjetHandler', $action))
+                \Ipolh\SDEK\pvzWidjetHandler::$action($_POST);
         }
     }
 
@@ -35,6 +37,8 @@ class subscribeHandler /*extends abstractGeneral*/
         return array(
             'countGoods' => false,
             'countDelivery' => false,
+            'getCityPvz'    => false,
+            'getDataViaPointId' => false,
             'extCountDeliv' => false,
             'htmlTaritfList' => false,
             'getAllTarifsToCount' => false,
@@ -123,33 +127,15 @@ class subscribeHandler /*extends abstractGeneral*/
     }
 		// loading widjet data
     public static function OnEndBufferContent(&$content){
-		if(
-		    class_exists('Ipolh\SDEK\pvzWidjetHandler')
-        ){
-			\Ipolh\SDEK\pvzWidjetHandler::onBufferContent($content);
-		}else{
-			\CDeliverySDEK::onBufferContent($content);
-		}
+        \Ipolh\SDEK\pvzWidjetHandler::onBufferContent($content);
     }
 		// prepare data for component
     public static function prepareWidjetData($arResult,$arUserResult){
-        if(
-            class_exists('Ipolh\SDEK\pvzWidjetHandler')
-        ){
-			\Ipolh\SDEK\pvzWidjetHandler::pickupLoader($arResult,$arUserResult);
-		}else{
-			\CDeliverySDEK::pickupLoader($arResult,$arUserResult);
-		}
+        \Ipolh\SDEK\pvzWidjetHandler::pickupLoader($arResult,$arUserResult);
     }
 		// including component
     public static function loadComponent(){
-        if(
-            class_exists('Ipolh\SDEK\pvzWidjetHandler')
-        ){
-			\Ipolh\SDEK\pvzWidjetHandler::loadComponent();
-		}else{
-			\CDeliverySDEK::loadComponent();
-		}
+        \Ipolh\SDEK\pvzWidjetHandler::loadComponent();
     }
 		// adding properties to order & autoloads
     public static function onOrderCreate($oId,$arFields){

@@ -187,7 +187,7 @@ class RequestOrderMake extends AutomatedCommonRequest
             return null;
         }
 
-        if ($payment->getIsBeznal()) {
+        if ($payment->getIsBeznal() || $payment->getField('usualDelivery') === false) {
             return null;
         }
 
@@ -401,7 +401,7 @@ class RequestOrderMake extends AutomatedCommonRequest
                 ->setMarking($coreItem->getField('marking'))
                 ->setPaymentFromObject($apiMoney)
                 ->setCost($coreItem->getCost()->getAmount())
-                ->setWeight($coreItem->getWeight())
+                ->setWeight((int)(ceil($coreItem->getWeight()) ?: 1))
                 ->setWeightGross($coreItem->getField('weightGross'))
                 ->setAmount($coreItem->getQuantity())
                 ->setNameI18n($coreItem->getField('nameI18n'))

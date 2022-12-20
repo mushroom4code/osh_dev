@@ -1,4 +1,4 @@
-<?
+<?php
 //Доставки
 $MESS ['IPOLSDEK_DELIV_NAME'] = "СДЭК";
 $MESS ['IPOLSDEK_DELIV_DESCR'] = "Доставка курьерской службой СДЭК.";

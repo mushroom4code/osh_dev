@@ -602,8 +602,9 @@ class SdekApplication extends GeneralApplication
         } else {
             $this->setToken($newToken->getAccessToken());
             if ($this->getCache()) {
-                $this->getCache()->setCache(md5('tokenTtl'), $newToken->getExpiresIn() - 1);
-                $this->getCache()->setCache(md5($this->getAccount() . 'token'), $this->token);
+                $tokenTtl = $newToken->getExpiresIn() - 1;
+                $this->getCache()->setCache(md5('tokenTtl'), $tokenTtl);
+                $this->getCache()->setLife($tokenTtl)->setCache(md5($this->getAccount() . 'token'), $this->token);
             }
             return $this->token;
         }
