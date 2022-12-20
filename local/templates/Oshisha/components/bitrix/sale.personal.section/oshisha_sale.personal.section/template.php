@@ -66,13 +66,13 @@ if ($USER->IsAuthorized()) {
         $email_bool = false;
     }
 
-    $user_object =  new EnteregoUserExchange();
-    $user_object->USER_ID = $user_id;
-    $user_object->GetCompanyForUser();
-    $user_object->GetContragentsUser();
-    $getWorkers = EnteregoCompany::GetWorkers($user_id);
-    $workers_admin = EnteregoCompany::GetWorkersInfo($user_id);
-    \Enterego\EnteregoExchange::GetInfoForXML();
+//    $user_object =  new EnteregoUserExchange();
+//    $user_object->USER_ID = $user_id;
+//    $user_object->GetCompanyForUser();
+//    $user_object->GetContragentsUser();
+//    $getWorkers = EnteregoCompany::GetWorkers($user_id);
+//    $workers_admin = EnteregoCompany::GetWorkersInfo($user_id);
+//    \Enterego\EnteregoExchange::GetInfoForXML();
     ?>
     <div class="hides" id="profile_people">
         <h5 class="mb-4"><b>Личный кабинет</b></h5>
@@ -99,34 +99,6 @@ if ($USER->IsAuthorized()) {
                 </div>
             </div>
         </div>
-
-            <div class="box_with_banner_dop">
-                <?php /*$APPLICATION->IncludeComponent(
-                    "bitrix:advertising.banner",
-                    "oshisha_banners",
-                    array(
-                        "BS_ARROW_NAV" => "N",
-                        "BS_BULLET_NAV" => "N",
-                        "BS_CYCLING" => "N",
-                        "BS_EFFECT" => "fade",
-                        "BS_HIDE_FOR_PHONES" => "N",
-                        "BS_HIDE_FOR_PHONES" => "N",
-                        "BS_HIDE_FOR_TABLETS" => "N",
-                        "BS_KEYBOARD" => "N",
-                        "BS_WRAP" => "N",
-                        "CACHE_TIME" => "36000000",
-                        "CACHE_TYPE" => "N",
-                        "DEFAULT_TEMPLATE" => "-",
-                        "NOINDEX" => "N",
-                        "QUANTITY" => "1",
-                        "TYPE" => "BANNERS_LK",
-                        "COMPONENT_TEMPLATE" => "oshisha_banners"
-                    ),
-                    false
-                ); */?>
-            </div>
-    
-
     </div>
 <?php }
 

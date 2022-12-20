@@ -59,7 +59,7 @@
     padding-left: 0;
 }
 
-.sale-order-list-payment-number, .sale-order-list-title-container h3 {
+.sale-order-list-payment-number, .sale-order-list-title-container h3,.font-w-m-600 {
     font-weight: 600;
 }
 
@@ -70,8 +70,10 @@
     justify-content: space-between;
 }
 
-.sale-order-list-title-container h3 > div > span, .box_wth_delivery_number > div.mt-2 > span, .box_wth_delivery_number > div.mt-2 > a {
+.box_wth_delivery_number > div.mt-2 > span, .box_wth_delivery_number > div.mt-2 > a {
     font-weight: 300;
+}
+.sale-order-list-title-container h3 > div > span, .box_wth_delivery_number > div.mt-2 > span, .box_wth_delivery_number > div.mt-2 > a{
     font-size: 13px;
 }
 

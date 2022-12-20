@@ -56,11 +56,12 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
             <span class="sort_orders retail_orders">Розничные заказы</span>
             <span class="sort_orders wholesale_orders" style="display:none;">Оптовые заказы</span>
         </div>
-        <div class="d-flex row_section justify-content-between align-items-center" style="display:none !important;">
+        <div class="d-flex row_section justify-content-between align-items-center">
             <input type="text" data-range="true" data-multiple-dates-separator=" - "
                    class="datepicker-here form-control date_input mr-3"/>
-            <a class="sort_orders" href="javascript:void(0)"><span class="sort_orders_by">Сортировать по</span><i class="fa fa-angle-down"
-                                                              aria-hidden="true"></i>
+            <a class="sort_orders" href="javascript:void(0)"><span class="sort_orders_by">Сортировать по</span><i
+                        class="fa fa-angle-down"
+                        aria-hidden="true"></i>
                 <div class="sort_orders_elements">
                     <ul>
                         <li>Новые</li>

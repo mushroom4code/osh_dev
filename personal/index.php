@@ -67,12 +67,13 @@ if (!$USER->IsAuthorized()) {
 		"NAV_TEMPLATE" => "",
 		"ONLY_INNER_FULL" => "N",
 		"ORDERS_PER_PAGE" => "20",
-		"ORDER_DEFAULT_SORT" => "STATUS",
+		"ORDER_DEFAULT_SORT" => "DATE_INSERT",
 		"ORDER_DISALLOW_CANCEL" => "N",
 		"ORDER_HIDE_USER_INFO" => array(
 			0 => "0",
 		),
 		"ORDER_HISTORIC_STATUSES" => array(
+			0 => "F",
 		),
 		"ORDER_REFRESH_PRICES" => "N",
 		"ORDER_RESTRICT_CHANGE_PAYSYSTEM" => array(
