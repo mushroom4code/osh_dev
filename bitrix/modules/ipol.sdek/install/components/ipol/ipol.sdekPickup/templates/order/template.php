@@ -1,23 +1,38 @@
-<?
-// Profiler - link 4 future profiles
-if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
+/** @var array $arParams */
+/** @var array $arResult */
+/** @global CMain $APPLICATION */
+/** @global CUser $USER */
+/** @global CDatabase $DB */
+/** @var CBitrixComponentTemplate $this */
+/** @var string $templateName */
+/** @var string $templateFile */
+/** @var string $templateFolder */
+/** @var string $componentPath */
+/** @var CBitrixComponent $component */
+
 include_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/js/'.CDeliverySDEK::$MODULE_ID.'/jsloader.php');
 global $APPLICATION;
+
 $pathToYmaps = Ipolh\SDEK\pvzWidjetHandler::getMapsScript();
-if($arParams['NOMAPS']!='Y')
+if ($arParams['NOMAPS'] != 'Y')
     $APPLICATION->AddHeadString('<script data-id="'.CDeliverySDEK::$MODULE_ID.'" src="'.$pathToYmaps.'" type="text/javascript"></script>');
 $APPLICATION->AddHeadString('<link href="/bitrix/js/'.CDeliverySDEK::$MODULE_ID.'/jquery.jscrollpane.css" type="text/css"  rel="stylesheet" />');
 
+// Used in backend AJAX calls
+$orderGoodsObject = CUtil::PhpToJSObject(CDeliverySDEK::setOrderGoods());
+
 $objProfiles = array();
 $arModes = array( // Profiler
-                  'PVZ' => array(
-                      'forced' => \Ipolh\SDEK\option::get('pvzID'),
-                      'profs'  => CDeliverySDEK::getDeliveryId('pickup')
-                  ),
-                  'POSTAMAT' => array(
-                      'forced' => COption::GetOptionString(CDeliverySDEK::$MODULE_ID,'pickupID',false),
-                      'profs'  => CDeliverySDEK::getDeliveryId('postamat')
-                  )
+    'PVZ' => array(
+        'forced' => \Ipolh\SDEK\option::get('pvzID'),
+        'profs'  => CDeliverySDEK::getDeliveryId('pickup')
+    ),
+    'POSTAMAT' => array(
+        'forced' => COption::GetOptionString(CDeliverySDEK::$MODULE_ID,'pickupID',false),
+        'profs'  => CDeliverySDEK::getDeliveryId('postamat')
+    )
 );
 
 foreach($arModes as $mode => $content){
@@ -51,23 +66,26 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
     var IPOLSDEK_pvz = {
         label     : 'ISDEK_widjet',
 
-        // html of choosePvz-button
-        buttonPVZ : '<a href="javascript:void(0);" class="SDEK_selectPVZ" onclick="IPOLSDEK_pvz.selectPVZ(\'#id#\',\'PVZ\'); return false;"><?=$linkNamePVZ?></a>', // Profiler
+        /* html of choosePvz-button */
+        buttonPVZ : '<a href="javascript:void(0);" class="SDEK_selectPVZ" onclick="IPOLSDEK_pvz.selectPVZ(\'#id#\',\'PVZ\'); return false;"><?=$linkNamePVZ?></a>', /* Profiler */
 
-        buttonPOSTAMAT: '<a href="javascript:void(0);" class="SDEK_selectPVZ" onclick="IPOLSDEK_pvz.selectPVZ(\'#id#\',\'POSTAMAT\'); return false;"><?=$linkNamePOSTAMAT?></a>',// html кнопки "выбрать ПВЗ".
+        buttonPOSTAMAT: '<a href="javascript:void(0);" class="SDEK_selectPVZ" onclick="IPOLSDEK_pvz.selectPVZ(\'#id#\',\'POSTAMAT\'); return false;"><?=$linkNamePOSTAMAT?></a>',/* html кнопки "выбрать ПВЗ". */
 
-        // if opened
+        /* if opened */
         isActive: false,
 
         logging: <?=(\Ipolh\SDEK\option::get('debug_widget') == 'Y' && \Ipolh\SDEK\option::get('debugMode') == 'Y') ? 'true' : 'false'?>,
 
-        // which delivery is currently used
+        /* which delivery is currently used */
         curDelivery : '<?=CDeliverySDEK::$selDeliv?>',
 
-        // which profile is currently counted
+        /* which profile is currently counted */
         curProfile: false,
 
-        // which pvz-type is used
+        /* if we need to re-init maps when ready */
+        reinitMaps : false,
+
+        /* which pvz-type is used */
         curMode: false,
 
         deliveries: <?=CUtil::PhpToJSObject($objProfiles)?>,
@@ -75,6 +93,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
         city: '<?=CDeliverySDEK::$city?>',
 
         cityID: '<?=CDeliverySDEK::$cityId?>',
+        sdekID: '<?=CDeliverySDEK::$sdekCity?>',
 
         cityCountry: <?=CUtil::PhpToJSObject($arResult['Subjects'])?>,
 
@@ -82,7 +101,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
 
         paysystem: false,
 
-        // where do we load adress of chosen PVZ
+        /* where do we load adress of chosen PVZ */
         pvzInputs: [<?=substr($arResult['propAddr'],0,-1)?>],
 
         pickFirst: function(where){
@@ -97,7 +116,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
         ready: false,
 
         makeHTMLId: function(id){
-            return 'ID_DELIVERY_' + ((id == 'sdek_pickup' || id == 'sdek_postamat' ) ?  id : 'ID_'+id); // Profiler
+            return 'ID_DELIVERY_' + ((id == 'sdek_pickup' || id == 'sdek_postamat' ) ?  id : 'ID_'+id); /* Profiler */
         },
 
         checkCheckedDel: function(delId,delivery){
@@ -112,36 +131,36 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             return ('ID_DELIVERY_ID_'+delId == $('[name="DELIVERY_ID"]:checked').attr('ID'));
         },
 
-        PVZ: <?=CUtil::PhpToJSObject($arResult['PVZ'])?>, // Profiler
+        PVZ: {}<?php /*=CUtil::PhpToJSObject($arResult['PVZ'])*/?>, /* Profiler */
 
-        POSTAMAT: <?=CUtil::PhpToJSObject($arResult['POSTAMAT'])?>,
+        POSTAMAT: {} <?php /*=CUtil::PhpToJSObject($arResult['POSTAMAT'])*/?>,
 
-        // object with PVZ of the city + coordinates for yandex
+        /* object with PVZ of the city + coordinates for yandex */
         cityPVZ: {},
 
-        // scroll for PVZ-puncts
+        /* scroll for PVZ-puncts */
         scrollPVZ: false,
 
-        // scroll for detail information
+        /* scroll for detail information */
         scrollDetail: false,
 
-        // false, if several PVZ in cities, or its Id
+        /* false, if several PVZ in cities, or its Id */
         multiPVZ: false,
 
         init: function(){
-            if(!IPOLSDEK_pvz.isFull(IPOLSDEK_pvz.deliveries.PVZ)) // Profiler
+            if(!IPOLSDEK_pvz.isFull(IPOLSDEK_pvz.deliveries.PVZ)) /* Profiler */
                 console.warn(IPOLSDEK_pvz.label + ' warn: no delivery for PVZ');
             if(!IPOLSDEK_pvz.isFull(IPOLSDEK_pvz.deliveries.POSTAMAT))
                 console.warn('SDEK vidjet warn: no delivery for postamats');
 
             IPOLSDEK_pvz.oldTemplate = $('#ORDER_FORM').length;
 
-            // ==== subscribe for from reloading
+            /* ==== subscribe for from reloading */
             if(typeof BX !== 'undefined' && BX.addCustomEvent)
                 BX.addCustomEvent('onAjaxSuccess', IPOLSDEK_pvz.onLoad);
 
-            // old js-core
-            // rewriting ajax-success js function
+            /* old js-core */
+            /* rewriting ajax-success js function */
             if (window.jsAjaxUtil){
                 jsAjaxUtil._CloseLocalWaitWindow = jsAjaxUtil.CloseLocalWaitWindow;
                 jsAjaxUtil.CloseLocalWaitWindow = function (TID, cont){
@@ -149,25 +168,39 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
                     IPOLSDEK_pvz.onLoad();
                 }
             }
-            // == END
+            /* == END */
 
             $(window).resize(IPOLSDEK_pvz.positWindow);
 
             IPOLSDEK_pvz.onLoad();
 
-            //html of the mask
+            /* html of the mask */
             $('body').append("<div id='SDEK_mask'></div>");
+
+            /* Preloader */
+            var preloaderHTML = '<div id="SDEK_preloader"><div class="SDEK-widget__preloader">';
+            preloaderHTML += '<div class="SDEK-widget__preloader-truck">';
+            preloaderHTML += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440.34302 315.71001"><g>';
+            preloaderHTML += '<path class="path1" d="M416.43,188.455q-1.014-1.314-1.95-2.542c-7.762-10.228-14.037-21.74-19.573-31.897-5.428-9.959-10.555-19.366-16.153-25.871-12.489-14.513-24.24-21.567-35.925-21.567H285.128c-0.055.001-5.567,0.068-12.201,0.068h-9.409a14.72864,14.72864,0,0,0-14.262,11.104l-0.078.305V245.456l0.014,0.262a4.86644,4.86644,0,0,1-1.289,3.472c-1.587,1.734-4.634,2.65-8.812,2.65H14.345C6.435,251.839,0,257.893,0,265.334v46.388c0,7.441,6.435,13.495,14.345,13.495h49.36a57.8909,57.8909,0,0,0,115.335,0h82.61a57.89089,57.89089,0,0,0,115.335,0H414.53a25.8416,25.8416,0,0,0,25.813-25.811v-44.29C440.344,219.47,425.953,200.805,416.43,188.455ZM340.907,320.132a21.5865,21.5865,0,1,1-21.59-21.584A21.61074,21.61074,0,0,1,340.907,320.132ZM390.551,207.76c-0.451.745-1.739,1.066-3.695,0.941l-99.197-.005V127.782h42.886c11.539,0,19.716,5.023,28.224,17.337,5.658,8.19,20.639,33.977,21.403,35.293,0.532,1.027,1.079,2.071,1.631,3.125C386.125,191.798,392.658,204.279,390.551,207.76ZM121.372,298.548a21.58351,21.58351,0,1,1-21.583,21.584A21.6116,21.6116,0,0,1,121.372,298.548Z" transform="translate(0 -62.31697)"/>';
+            preloaderHTML += '<path class="path2" d="M30.234,231.317h68a12.51354,12.51354,0,0,0,12.5-12.5v-50a12.51354,12.51354,0,0,0-12.5-12.5h-68a12.51354,12.51354,0,0,0-12.5,12.5v50A12.51418,12.51418,0,0,0,30.234,231.317Z" transform="translate(0 -62.31697)"/>';
+            preloaderHTML += '<path class="path3" d="M143.234,231.317h68a12.51354,12.51354,0,0,0,12.5-12.5v-50a12.51354,12.51354,0,0,0-12.5-12.5h-68a12.51354,12.51354,0,0,0-12.5,12.5v50A12.51418,12.51418,0,0,0,143.234,231.317Z" transform="translate(0 -62.31697)"/>';
+            preloaderHTML += '<path class="path4" d="M30.234,137.317h68a12.51354,12.51354,0,0,0,12.5-12.5v-50a12.51355,12.51355,0,0,0-12.5-12.5h-68a12.51355,12.51355,0,0,0-12.5,12.5v50A12.51418,12.51418,0,0,0,30.234,137.317Z" transform="translate(0 -62.31697)"/>';
+            preloaderHTML += '<path class="path5" d="M143.234,137.317h68a12.51354,12.51354,0,0,0,12.5-12.5v-50a12.51354,12.51354,0,0,0-12.5-12.5h-68a12.51354,12.51354,0,0,0-12.5,12.5v50A12.51418,12.51418,0,0,0,143.234,137.317Z" transform="translate(0 -62.31697)"/>';
+            preloaderHTML += '</g></svg>';
+            preloaderHTML += '<div class="SDEK-widget__preloader-truck__grass"></div><div class="SDEK-widget__preloader-truck__road"></div>';
+            preloaderHTML += '</div></div></div>';
+            $('body').append(preloaderHTML);
         },
 
         getPrices: function(){
             var request = {
-                CITY_TO: IPOLSDEK_pvz.city,
+                CITY_TO    : IPOLSDEK_pvz.city,
                 WEIGHT     : '<?=CDeliverySDEK::$orderWeight?>',
                 PRICE      : '<?=CDeliverySDEK::$orderPrice?>',
                 CITY_TO_ID : IPOLSDEK_pvz.cityID,
                 CURPROF    : IPOLSDEK_pvz.curProfile,
                 DELIVERY   : IPOLSDEK_pvz.curDelivery,
-                GOODS      : <?=CUtil::PhpToJSObject(CDeliverySDEK::setOrderGoods())?>,
+                GOODS      : <?=$orderGoodsObject?>,
                 PERSON_TYPE_ID : IPOLSDEK_pvz.payer,
                 PAY_SYSTEM_ID  : IPOLSDEK_pvz.paysystem
             };
@@ -188,7 +221,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
                     if(IPOLSDEK_pvz.logging){
                         console.log(IPOLSDEK_pvz.label + ': response prices',data);
                     }
-                    var links = {pickup:'PVZ',postamat:'POSTAMAT'}; //Profiler
+                    var links = {pickup:'PVZ',postamat:'POSTAMAT'}; /* Profiler */
                     for(var i in links){
                         var det = (i==='pickup') ? 'p' : 'i';
                         if(data[i] !== 'no'){
@@ -206,7 +239,8 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
         },
 
         onLoad: function(ajaxAns){
-            // place, where button "choose pvz" will be
+            console.log('onLoad');
+            /* place, where button "choose pvz" will be */
             var tag = false;
 
             IPOLSDEK_pvz.ready = false;
@@ -214,21 +248,23 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             var newTemplateAjax = (typeof(ajaxAns) !== 'undefined' && ajaxAns !== null && typeof(ajaxAns.sdek) === 'object');
 
             var cityUpdated = true;
-            if($('#sdek_city').length>0){//обновляем город
+            if($('#sdek_city').length>0){/* обновляем город */
                 IPOLSDEK_pvz.city       = $('#sdek_city').val();
                 IPOLSDEK_pvz.cityID     = $('#sdek_cityID').val();
+                IPOLSDEK_pvz.sdekID     = $('#sdek_sdekID').val();
                 IPOLSDEK_pvz.payer      = $('#sdek_payer').val();
                 IPOLSDEK_pvz.paysystem  = $('#sdek_paysystem').val();
             }else{
-                if(newTemplateAjax){
+                if(newTemplateAjax && typeof(ajaxAns.sdek) !== 'undefined'){
                     IPOLSDEK_pvz.city       = ajaxAns.sdek.city;
                     IPOLSDEK_pvz.cityID     = ajaxAns.sdek.cityId;
+                    IPOLSDEK_pvz.sdekID     = ajaxAns.sdek.sdekId;
                     IPOLSDEK_pvz.payer      = ajaxAns.sdek.payer;
                     IPOLSDEK_pvz.paysystem  = ajaxAns.sdek.paysystem;
+                    console.log('rewriten sdek id',IPOLSDEK_pvz.sdekID);
                 }else
                     cityUpdated = false;
             }
-
             var checkPrices = true;
 
             for(var i in IPOLSDEK_pvz.deliveries){
@@ -274,17 +310,17 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
                     ){
                         IPOLSDEK_pvz.deliveries[i][j].price = (tag.html()) ? tag.html() : false;
                         IPOLSDEK_pvz.deliveries[i][j].tag = tag;
-                        IPOLSDEK_pvz.labelPzv(j,i);
+                        IPOLSDEK_pvz.labelPzv(j, i);
                     }
                 }
             }
 
             if(!cityUpdated) {
-                // if we don't have cdek_city - we load first time, so lets get PVZ adress from property and set it
+                /* if we don't have cdek_city - we load first time, so lets get PVZ adress from property and set it */
                 IPOLSDEK_pvz.loadProfile();
             }
 
-            // which delivery is chosen
+            /* which delivery is chosen */
             var sdekChecker = false;
             if($('#sdek_dostav').length>0){
                 sdekChecker = $('#sdek_dostav').val();
@@ -292,9 +328,23 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             }else
             if(newTemplateAjax)
                 sdekChecker = ajaxAns.sdek.dostav;
-            // choded PVZ - make choose it after load
-            if(sdekChecker && IPOLSDEK_pvz.curMode && IPOLSDEK_pvz.pvzId && IPOLSDEK_pvz.checkRightDelivery(sdekChecker))
-                IPOLSDEK_pvz.choozePVZ(IPOLSDEK_pvz.pvzId,true);
+
+            /* TODO curMode checked only after click on "selectPVZ" - may be some troubles with multi-templates */
+            if(sdekChecker && newTemplateAjax){
+                for(var i in IPOLSDEK_pvz.deliveries) {
+                    for (var j in IPOLSDEK_pvz.deliveries[i]) {
+                        if(j == sdekChecker){
+                            IPOLSDEK_pvz.curMode = i;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            /* choded PVZ - make choose it after load */
+            if(sdekChecker && IPOLSDEK_pvz.curMode && IPOLSDEK_pvz.pvzId && IPOLSDEK_pvz.checkRightDelivery(sdekChecker) && !cityUpdated) {
+                IPOLSDEK_pvz.choozePVZ(IPOLSDEK_pvz.pvzId, true);
+            }
 
             if(sdekChecker)
                 IPOLSDEK_pvz.curDelivery = sdekChecker;
@@ -327,22 +377,47 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             return false;
         },
 
-        // addind link for chosing and sigh with info
+        /* getting existed point via pointId because of different modes (will be erased) */
+        checkPoint : function (pointId,mode){
+            var point = false;
+
+            if(typeof(mode) === 'undefined' || !mode){
+                mode = IPOLSDEK_pvz.curMode;
+            }
+
+            if(pointId) {
+                if (typeof (IPOLSDEK_pvz[mode][IPOLSDEK_pvz.city]) !== 'undefined') {
+                    if(typeof (IPOLSDEK_pvz[mode][IPOLSDEK_pvz.city][[pointId]]) !== 'undefined'){
+                        point = IPOLSDEK_pvz[mode][IPOLSDEK_pvz.city][[pointId]];
+                    }
+                } else if (typeof (IPOLSDEK_pvz[mode][IPOLSDEK_pvz.sdekID]) !== 'undefined') {
+                    if(typeof (IPOLSDEK_pvz[mode][IPOLSDEK_pvz.sdekID][[pointId]]) !== 'undefined'){
+                        point = IPOLSDEK_pvz[mode][IPOLSDEK_pvz.sdekID][[pointId]];
+                    }
+                }
+            }
+
+            return point;
+        },
+
+        /* addind link for chosing and sigh with info */
         labelPzv: function(i,mode){
             if(typeof(IPOLSDEK_pvz.deliveries[mode][i]) === 'undefined')
                 return false;
             var tmpHTML = "<div class='sdek_pvzLair'>"+IPOLSDEK_pvz['button'+mode].replace('#id#',i) + "<br>";
-            if(IPOLSDEK_pvz.pvzId && typeof(IPOLSDEK_pvz[mode][IPOLSDEK_pvz.city][IPOLSDEK_pvz.pvzId]) !== 'undefined')
-                tmpHTML += "<span class='sdek_pvzAddr'>" + IPOLSDEK_pvz[mode][IPOLSDEK_pvz.city][IPOLSDEK_pvz.pvzId].Address+"</span><br>";
+            var point = IPOLSDEK_pvz.checkPoint(IPOLSDEK_pvz.pvzId,mode);
+            if(point)
+                tmpHTML += "<span class='sdek_pvzAddr'>" + point.Address+"</span><br>";
             if(IPOLSDEK_pvz.deliveries[mode][i].price)
                 tmpHTML += IPOLSDEK_pvz.deliveries[mode][i].price;
             tmpHTML += "</div>";
             IPOLSDEK_pvz.deliveries[mode][i].tag.html(tmpHTML);
             if(!IPOLSDEK_pvz.oldTemplate)
-                $('.sdek_pvzLair .SDEK_selectPVZ').addClass('btn btn-default');
+                $('.sdek_pvzLair .SDEK_selectPVZ').addClass('btn btn-default btn-primary');
         },
 
-        // loading pvz from profile
+        /* loading pvz from profile */
+        profileAsked : false, /* for not-spamming */
         loadProfile:function(){
             var chznPnkt=false;
             for(var i in IPOLSDEK_pvz.pvzInputs){
@@ -361,41 +436,125 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             if(seltdPVZ <= 0)
                 return false;
             else{
-                var checks = ['PVZ','POSTAMAT']; // Profiler
+                var checks = ['PVZ','POSTAMAT']; /* Profiler */
                 var pret = false;
+                var point = false;
                 for(var i in checks){
                     if(typeof(checks[i]) === 'function') continue;
-                    if(
-                        typeof IPOLSDEK_pvz[checks[i]][IPOLSDEK_pvz.city] !== 'undefined' &&
-                        typeof IPOLSDEK_pvz[checks[i]][IPOLSDEK_pvz.city][seltdPVZ] !== 'undefined'
-                    ){
+                    point = IPOLSDEK_pvz.checkPoint(seltdPVZ,checks[i]);
+                    if(point){
                         pret = checks[i];
                         break;
                     }
                 }
-                if(!pret)
-                    return false;
-                else
+                /* maybe we haven't load the point data */
+                if(!pret){
+                    var city = IPOLSDEK_pvz.sdekID; /*IPOLSDEK_pvz.city;*/
+                    if(
+                        !IPOLSDEK_pvz.profileAsked &&
+                        (
+                            typeof(IPOLSDEK_pvz['PVZ'][city]) === 'undefined' ||
+                            typeof(IPOLSDEK_pvz['POSTAMAT'][city]) === 'undefined'
+                        )
+                    ){
+                        IPOLSDEK_pvz.profileAsked = true;
+                        $.ajax({
+                            url: '/bitrix/js/ipol.sdek/ajax.php',
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: {isdek_action : 'getDataViaPointId', isdek_token : '<?=sdekHelper::getWidgetToken()?>', city : city,point : seltdPVZ},
+                            success: function(data){
+                                if(data.mode){
+                                    IPOLSDEK_pvz.curMode = data.mode;
+                                    if(typeof(IPOLSDEK_pvz[data.mode]) === 'undefined'){IPOLSDEK_pvz[data.mode] = {};}
+                                    if(typeof(IPOLSDEK_pvz[data.mode][data.city]) === 'undefined'){IPOLSDEK_pvz[data.mode][data.city] = {};}
+                                    IPOLSDEK_pvz[data.mode][data.city] = data.POINTS;
+                                    IPOLSDEK_pvz.subLoadProfile(data.point);
+                                }
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                }
+                else {
                     IPOLSDEK_pvz.curMode = pret;
+                    IPOLSDEK_pvz.subLoadProfile(seltdPVZ);
+                }
             }
+        },
+        /* moved because of Ajax */
+        subLoadProfile : function (seltdPVZ){
+            /* we choose PVZ */
+            var point = IPOLSDEK_pvz.checkPoint(seltdPVZ,IPOLSDEK_pvz.curMode);
+            if(point) {
+                IPOLSDEK_pvz.pvzAdress = IPOLSDEK_pvz.city + ", " + point['Address'] + " #S" + seltdPVZ;
+                IPOLSDEK_pvz.pvzId = seltdPVZ;
 
-            // we choose PVZ
-            IPOLSDEK_pvz.pvzAdress=IPOLSDEK_pvz.city+", "+IPOLSDEK_pvz[IPOLSDEK_pvz.curMode][IPOLSDEK_pvz.city][seltdPVZ]['Address']+" #S"+seltdPVZ;
-            IPOLSDEK_pvz.pvzId = seltdPVZ;
-
-            // adding label about PVZ info near the "Choose PVZ" button
-            for(var i in IPOLSDEK_pvz.deliveries[IPOLSDEK_pvz.curMode]){
-                if(typeof(IPOLSDEK_pvz.deliveries[IPOLSDEK_pvz.curMode][i]) === 'function') continue;
-                if(IPOLSDEK_pvz.deliveries[IPOLSDEK_pvz.curMode][i].tag)
-                    IPOLSDEK_pvz.labelPzv(i,IPOLSDEK_pvz.curMode);
+                /* adding label about PVZ info near the "Choose PVZ" button */
+                for (var i in IPOLSDEK_pvz.deliveries[IPOLSDEK_pvz.curMode]) {
+                    if (typeof (IPOLSDEK_pvz.deliveries[IPOLSDEK_pvz.curMode][i]) === 'function') continue;
+                    if (IPOLSDEK_pvz.deliveries[IPOLSDEK_pvz.curMode][i].tag) {
+                        IPOLSDEK_pvz.labelPzv(i, IPOLSDEK_pvz.curMode);
+                    }
+                }
             }
         },
 
-        // loading city PVZ
+        /* loading city PVZ */
         initCityPVZ: function(){
-            var city = IPOLSDEK_pvz.city;
+            var city = IPOLSDEK_pvz.sdekID; /*IPOLSDEK_pvz.city*/
+            if(typeof(IPOLSDEK_pvz[IPOLSDEK_pvz.curMode][city]) === 'undefined'){
+                $.ajax({
+                    url: '/bitrix/js/ipol.sdek/ajax.php',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        isdek_action: 'getCityPvz',
+                        isdek_token:  '<?=sdekHelper::getWidgetToken()?>',
+                        city:         city,
+                        mode:         IPOLSDEK_pvz.curMode,
+                        weight:       '<?=CDeliverySDEK::$orderWeight?>',
+                        goods:        <?=$orderGoodsObject?>
+                    },
+                    success: function(data){
+                        if(typeof(IPOLSDEK_pvz[data.mode]) === 'undefined'){IPOLSDEK_pvz[data.mode] = {};}
+                        if(typeof(IPOLSDEK_pvz[data.mode][data.city]) === 'undefined'){IPOLSDEK_pvz[data.mode][data.city] = {};}
+
+                        IPOLSDEK_pvz[data.mode][data.city] = data.POINTS;
+
+                        IPOLSDEK_pvz.prepareCityPVZContent();
+                    }
+                });
+            } else {
+                IPOLSDEK_pvz.prepareCityPVZContent();
+            }
+        },
+
+        /**
+         * Fills cityPVZ data, creates PVZ list HTML, init YMap with placemarks and positions da widget window
+         */
+        prepareCityPVZContent: function(){
+            IPOLSDEK_pvz.putCityPVZ();
+
+            if (IPOLSDEK_pvz.reinitMaps) {
+                IPOLSDEK_pvz.reinitMaps = false;
+                IPOLSDEK_pvz.Y_init();
+
+                IPOLSDEK_pvz.isActive = true;
+                IPOLSDEK_pvz.positWindow();
+
+                IPOLSDEK_pvz.scrollPVZ = $('#SDEK_wrapper').jScrollPane({autoReinitialise: true});
+                $('#SDEK_preloader').css('display', 'none');
+            }
+        },
+
+        putCityPVZ : function ()
+        {
+            var city = IPOLSDEK_pvz.sdekID; /*IPOLSDEK_pvz.city;*/
             var cnt = [];
             IPOLSDEK_pvz.cityPVZ = {};
+
             for(var i in IPOLSDEK_pvz[IPOLSDEK_pvz.curMode][city]){
                 if(typeof(IPOLSDEK_pvz[IPOLSDEK_pvz.curMode][city][i]) === 'function') continue;
                 IPOLSDEK_pvz.cityPVZ[i] = {
@@ -409,12 +568,12 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
                 };
                 cnt.push(i);
             }
-            // loading list of PVZs
+            /* loading list of PVZs */
             IPOLSDEK_pvz.cityPVZHTML();
             IPOLSDEK_pvz.multiPVZ = (cnt.length === 1) ? cnt.pop() : false;
         },
 
-        // making list of city PVZ
+        /* making list of city PVZ */
         cityPVZHTML: function(){
             var html = '';
             for(var i in IPOLSDEK_pvz.cityPVZ){
@@ -424,7 +583,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             $('#SDEK_wrapper').html(html);
         },
 
-        // painting pvz, if color is given
+        /* painting pvz, if color is given */
         paintPVZ: function(ind){
             var addr = '';
             if(IPOLSDEK_pvz.cityPVZ[ind].color && IPOLSDEK_pvz.cityPVZ[ind].Address.indexOf(',')!==false)
@@ -434,23 +593,23 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             return addr;
         },
 
-        // choosing pvz
+        /* choosing pvz */
         pvzAdress: '',
         pvzId: false,
         choozePVZ: function(pvzId,isAjax){
-            if(typeof IPOLSDEK_pvz[IPOLSDEK_pvz.curMode][IPOLSDEK_pvz.city][pvzId] === 'undefined')
+            var point = IPOLSDEK_pvz.checkPoint(pvzId,IPOLSDEK_pvz.curMode);
+            if(!point)
                 return;
 
-            IPOLSDEK_pvz.pvzAdress=IPOLSDEK_pvz.city+", "+IPOLSDEK_pvz[IPOLSDEK_pvz.curMode][IPOLSDEK_pvz.city][pvzId]['Address']+" #S"+pvzId;
+            IPOLSDEK_pvz.pvzAdress=IPOLSDEK_pvz.city+", "+point.Address+" #S"+pvzId;
 
             IPOLSDEK_pvz.pvzId = pvzId;
 
-            var chznPnkt = false;
             if(typeof(KladrJsObj) !== 'undefined') KladrJsObj.FuckKladr();
 
             IPOLSDEK_pvz.markUnable();
 
-            // reloading form with new delivery price
+            /* reloading form with new delivery price */
             if(typeof isAjax === 'undefined'){
 
                 var htmlId = IPOLSDEK_pvz.makeHTMLId(IPOLSDEK_pvz.curProfile);
@@ -458,7 +617,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
                     IPOLSDEK_DeliveryChangeEvent(htmlId);
                 else{
                     if(IPOLSDEK_pvz.oldTemplate){
-                        if(typeof $.prop === 'undefined') // <3 jquery
+                        if(typeof $.prop === 'undefined')
                             $('#'+htmlId).attr('checked', 'Y');
                         else
                             $('#'+htmlId).prop('checked', 'Y');
@@ -472,6 +631,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
         },
 
         markUnable: function(){
+            var chznPnkt = false;
             for(var i in IPOLSDEK_pvz.pvzInputs){
                 if(typeof(IPOLSDEK_pvz.pvzInputs[i]) === 'function') continue;
 
@@ -486,12 +646,12 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             }
         },
 
-        // displaying
+        /* displaying */
         close: function(fromChoose){
-            <?if(\Ipolh\SDEK\option::get('autoSelOne') == 'Y'){?>
+            <?php if(\Ipolh\SDEK\option::get('autoSelOne') == 'Y'){?>
             if(IPOLSDEK_pvz.multiPVZ !== false && typeof(fromChoose) === 'undefined')
                 IPOLSDEK_pvz.choozePVZ(IPOLSDEK_pvz.multiPVZ);
-            <?}?>
+            <?php }?>
             if(IPOLSDEK_pvz.scrollPVZ && typeof(IPOLSDEK_pvz.scrollPVZ.data('jsp')) !== 'undefined')
                 IPOLSDEK_pvz.scrollPVZ.data('jsp').destroy();
             $('#SDEK_pvz').css('display','none');
@@ -499,12 +659,20 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             IPOLSDEK_pvz.isActive = false;
         },
 
-        // clicking on button "Choose PVZ"
+        /* clicking on button "Choose PVZ" */
         selectPVZ: function(id, mode){
             if(!IPOLSDEK_pvz.isActive){
+                if(IPOLSDEK_pvz.scrollPVZ && typeof(IPOLSDEK_pvz.scrollPVZ.data) == 'function' && typeof(IPOLSDEK_pvz.scrollPVZ.data('jsp')) !== 'undefined'){
+                    IPOLSDEK_pvz.scrollPVZ.data('jsp').destroy(); // TODO : not working
+                }
+
                 if(typeof(mode) === 'undefined')
                     mode = 'PVZ';
                 if(IPOLSDEK_pvz.curMode != mode || !IPOLSDEK_pvz.Y_map || !IPOLSDEK_pvz.ready){
+                    /* Preloader and mask */
+                    $('#SDEK_preloader').css('display', 'block');
+                    $('#SDEK_mask').css('display', 'block');
+
                     IPOLSDEK_pvz.ready = true;
                     if(IPOLSDEK_pvz.Y_map)
                         IPOLSDEK_pvz.Y_clearPVZ();
@@ -520,18 +688,17 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
                     }
                     IPOLSDEK_pvz.getPrices();
 
-                    IPOLSDEK_pvz.initCityPVZ();
+                    IPOLSDEK_pvz.reinitMaps = true;
 
-                    IPOLSDEK_pvz.Y_init();
+                    IPOLSDEK_pvz.initCityPVZ(); /* Da isActive flag raised and positWindow called inside initCityPVZ */
+
+                    /* IPOLSDEK_pvz.Y_init(); moved to initCityPvz */
+                } else {
+                    IPOLSDEK_pvz.isActive = true;
+                    IPOLSDEK_pvz.positWindow();
+                    IPOLSDEK_pvz.scrollPVZ = $('#SDEK_wrapper').jScrollPane({autoReinitialise: true});
+                    $('#SDEK_mask').css('display','block');
                 }
-
-                IPOLSDEK_pvz.scrollPVZ=$('#SDEK_wrapper').jScrollPane({autoReinitialise: true});
-
-                IPOLSDEK_pvz.isActive = true;
-
-                IPOLSDEK_pvz.positWindow();
-
-                $('#SDEK_mask').css('display','block');
             }
         },
 
@@ -543,7 +710,6 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             var left = ($(window).width()>hndlr.outerWidth()) ? (($(window).width()-hndlr.outerWidth())/2) : 0;
 
             if($(window).height() < 542){
-                // hndlr.css('height','100%');
                 $('#SDEK_wrapper').css('height',hndlr.height()-82);
             }else{
                 hndlr.css('height','');
@@ -562,14 +728,53 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
                 var leftZK = (hndlr.width()  < 900) ? hndlr.width() - 40     : 265;
                 var topZK  = (hndlr.height() < 540)	? (hndlr.height()-206)/2 : 146;
                 var control = IPOLSDEK_pvz.Y_map.controls.getContainer();
+                var leftSearch = 20;
+                var topSearch  = 0;
+                if (hndlr.width() < 880) {
+                    leftSearch = 210;
+                }
+                if (hndlr.width() < 700) {
+                    leftSearch = 210 + (700 - hndlr.width());
+                    topSearch = 40;
+                }
+                if (hndlr.width() < 350) {
+                    $(control).find('[class*="searchbox__normal-layout"]').css('width', '200px');
+                } else {
+                    $(control).find('[class*="searchbox__normal-layout"]').css('width', '');
+                }
+
+                if ((hndlr.width() < 620) && ($('#SDEK_pvz #SDEK_info .SDEK_all-items').css('display') === 'block') && ($('#SDEK_looper').hasClass('active'))) {
+                    $('#SDEK_looper').trigger('click');
+                }
+
                 $(control).find('[class*="_control"]').css({
                     left:leftZK,
                     top: topZK
+                });
+
+                $(control).find('[class*="_toolbar"]').css({
+                    left:  'auto',
+                    right: leftSearch,
+                    top:   topSearch
                 });
             }
 
             if(hndlr.width() > 700)
                 $('.SDEK_all-items').css('display','block');
+
+            IPOLSDEK_pvz.togglePvzListButton();
+        },
+
+        isPvzListContainerShown: function(){
+            return ($('.SDEK_all-items').css('display') === 'block');
+        },
+
+        togglePvzListButton: function(){
+            if (IPOLSDEK_pvz.isPvzListContainerShown()) {
+                $('#SDEK_PvzList_button').addClass('active');
+            } else {
+                $('#SDEK_PvzList_button').removeClass('active');
+            }
         },
 
         scrollHintInited: false,
@@ -593,12 +798,18 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
         },
 
         handleArrow: function(){
-            $('.SDEK_arrow').toggleClass('up');
-            $('.SDEK_all-items').slideToggle(300);
+            if (!IPOLSDEK_pvz.isPvzListContainerShown()) {
+                $('#SDEK_PvzList_button').addClass('active');
+                $('.SDEK_all-items').slideDown();
+                if (($('#SDEK_pvz').width() < 620) && ($('#SDEK_looper').hasClass('active')))
+                    IPOLSDEK_pvz.Y_turnSearch();
+            } else {
+                $('#SDEK_PvzList_button').removeClass('active');
+                $('.SDEK_all-items').slideUp();
+            }
         },
 
-        // Y-maps
-        // ymaps-object
+        /* Y-maps */
         Y_map: false,
 
         Y_init: function(){
@@ -619,6 +830,8 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
                     IPOLSDEK_pvz.Y_initCityMap(coords);
                 });
             }
+
+            IPOLSDEK_pvz.togglePvzListButton();
         },
 
         Y_initCityMap : function(coords){
@@ -746,8 +959,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             }
         },
 
-        Y_zoomCalibrate: function()
-        {
+        Y_zoomCalibrate: function(){
             while(!ymaps.geoQuery(map.geoObjects).searchInside(IPOLSDEK_pvz.Y_map).getLength() && IPOLSDEK_pvz.Y_map.getZoom()> 4)
             {
                 IPOLSDEK_pvz.Y_map.setZoom(IPOLSDEK_pvz.Y_map.getZoom()-1);
@@ -760,8 +972,9 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
                     IPOLSDEK_pvz.Y_map.controls.add('searchControl', {float: 'right', floatIndex: 100, noPlacemark: true });
                     IPOLSDEK_pvz.Y_map.controls.events.add('resultshow', IPOLSDEK_pvz.Y_zoomCalibrate, IPOLSDEK_pvz.Y_map.controls.get('searchControl'));
                     $('#SDEK_looper').addClass('active');
-                }
-                else{
+                    if (($('#SDEK_pvz').width() < 620) && ($('#SDEK_PvzList_button').hasClass('active')))
+                        IPOLSDEK_pvz.handleArrow();
+                } else {
                     IPOLSDEK_pvz.Y_map.controls.events.remove('resultshow', IPOLSDEK_pvz.Y_zoomCalibrate, IPOLSDEK_pvz.Y_map.controls.get('searchControl'));
                     IPOLSDEK_pvz.Y_map.controls.remove('searchControl');
                     $('#SDEK_looper').removeClass('active');
@@ -769,7 +982,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             }
         },
 
-        // loading
+        /* loading */
         readySt: {
             ymaps: false,
             jqui: false
@@ -820,7 +1033,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
             IPOLSDEK_pvz.ymapsBlockLoad = false;
             IPOLSDEK_pvz.ymapsBidner();
         },
-        // service
+        /* service */
         isFull: function(wat){
             if(typeof(wat) !== 'object') return (wat);
             else
@@ -833,13 +1046,14 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
     IPOL_JSloader.checkScript('',"/bitrix/js/<?=CDeliverySDEK::$MODULE_ID?>/jquery.mousewheel.js");
     IPOL_JSloader.checkScript('$("body").jScrollPane',"/bitrix/js/<?=CDeliverySDEK::$MODULE_ID?>/jquery.jscrollpane.js",IPOLSDEK_pvz.jquiready);
 </script>
-<?// HTML of the vidjet ?>
+<?php /* HTML of the vidjet */?>
 <div id='SDEK_pvz'>
     <div id='SDEK_head'>
-        <div id='SDEK_logo'><a href='http://ipolh.com' rel='nofollow' target='_blank'></a></div>
-        <?if($arParams['SEARCH_ADDRESS'] === 'Y'){?>
+        <div id='SDEK_logo'><a href='http://ipol.ru' rel='nofollow' target='_blank'></a></div>
+        <div id="SDEK_PvzList_button" onclick="IPOLSDEK_pvz.handleArrow()"></div>
+        <?php if($arParams['SEARCH_ADDRESS'] === 'Y'){?>
             <div id="SDEK_looper" onclick="IPOLSDEK_pvz.Y_turnSearch()"></div>
-        <?}?>
+        <?php }?>
         <div id='SDEK_closer' onclick='IPOLSDEK_pvz.close()'></div>
     </div>
     <div id='SDEK_map'></div>
@@ -848,9 +1062,7 @@ if(!$linkNamePOSTAMAT) $linkNamePOSTAMAT = GetMessage("IPOLSDEK_FRNT_CHOOSEPOSTA
         <div id='SDEK_delivInfo_PVZ'><?=GetMessage("IPOLSDEK_CMP_PRICE")?>
             <span id='SDEK_pPrice'></span>,&nbsp;<?=GetMessage("IPOLSDEK_CMP_TRM")?>
             <span id='SDEK_pDate'></span>
-            <a href="javascript:void(0);" class="SDEK_arrow" onclick='IPOLSDEK_pvz.handleArrow()'></a>
         </div>
-
         <div class="SDEK_all-items">
             <div id='SDEK_wrapper'></div>
             <div id='SDEK_ten'></div>

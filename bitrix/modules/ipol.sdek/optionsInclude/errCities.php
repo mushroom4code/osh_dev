@@ -1,4 +1,4 @@
-<?
+<?php
 	$countryModul = sdekOption::getCountries(true);
 	$countries = CSaleLocation::GetCountryList();
 	$svdCountries = sdekOption::zaDEjsonit(\Ipolh\SDEK\option::get('countries'));
@@ -328,7 +328,7 @@ console.log('suncProceed',data);
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_HDR_countries')?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('ADDCOUNTRY')?>
+	<?php sdekOption::placeFAQ('ADDCOUNTRY') ?>
 </td></tr>
 
 <tr><td	colspan="2"><table id='IPOLSDEK_countries'>
@@ -338,14 +338,14 @@ console.log('suncProceed',data);
 	<th><a onclick='IPOLSDEK_setups.cities.getAccountSelect()' style='cursor:pointer' title='<?=GetMessage('IPOLSDEK_TC_ACCOUNT_HINT')?>'><?=GetMessage('IPOLSDEK_TC_ACCOUNT')?></a></th>
 	<th><?=GetMessage('IPOLSDEK_TC_CURRENCY')?></th>
 </tr>
-<?
+            <?php
 $soloAccount = (count($accounts) <= 2);
 foreach($arCountryList as $country){?>
 	<tr id='IPOLSDEK_countrySetups_<?=$country['CODE']?>'>
 		<td>
-			<?if($country['EXISTS']){?>
+			<?php if($country['EXISTS']) { ?>
 				<input type='checkbox' name='countries[<?=$country['CODE']?>][act]' value='Y' <?=($country['CHECKED']) ? 'checked' : ''?>>
-			<?}else
+			<?php } else
 				echo GetMessage('IPOLSDEK_SYNCTY_ERR_NOCOUNTRY').GetMessage("IPOLSDEK_SYNCTY_".$country['CODE']);
 			?>
 		</td>
@@ -354,7 +354,7 @@ foreach($arCountryList as $country){?>
 		<td><?=sdekOption::makeSelect('countries['.$country['CODE'].'][cur]',$arCurrencies,(array_key_exists($country['CODE'],$svdCountries)?$svdCountries[$country['CODE']]['cur']:false),'onchange = IPOLSDEK_setups.cities.checkCountrySetups()')?></td>
 		<td><div class='IPOLSDEK_countryWarn' onclick='IPOLSDEK_setups.popup("pop-BadLink",$(this));'></div></td>
 	</tr>
-<?}?>
+<?php } ?>
 <tr><td><?=sdekOption::placeHint('BadLink')?></td></tr>
 </table></td></tr>
 <tr><td><?=GetMessage('IPOLSDEK_OPT_noteOrderDateCC')?></td><td><input name="noteOrderDateCC" value="Y" <?=(\Ipolh\SDEK\option::get('noteOrderDateCC') == 'Y')?'checked':''?> type="checkbox"></td></tr>
@@ -370,19 +370,19 @@ foreach($arCountryList as $country){?>
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_TAB_CITIES_LOGIN')?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('CITYHINT')?>
+	<?php sdekOption::placeFAQ('CITYHINT'); ?>
 </td></tr>
 <tr><td colspan="2">
-	<?
+        <?php
 	foreach($arCountryList as $country)
 		if($country['EXISTS'] && $country['CHECKED']){
 		?>
 			<div class='IPOLSDEK_countryButton'>
 				<input id='IPOLSDEK_cB_<?=$country['CODE']?>' onclick="IPOLSDEK_setups.cities.switchCountry('<?=$country['CODE']?>')" value="<?=GetMessage('IPOLSDEK_SYNCTY_'.$country['CODE'])?>" type="button">
 			</div>
-		<?}?>
+		<?php } ?>
 	<div style='clear:both'></div>
 </td></tr>
 
 <tr><td colspan="2" id='IPOLSDEK_countryContent'></td></tr>
-<?sdekOption::placeHint('noteOrderDateCC');?>
+<?php sdekOption::placeHint('noteOrderDateCC'); ?>

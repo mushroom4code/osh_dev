@@ -132,9 +132,9 @@
 
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_HDR_autoloadSetups')?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('AUTOUPLOADS')?>
+	<?php sdekOption::placeFAQ('AUTOUPLOADS') ?>
 </td></tr>
-<?ShowParamsHTMLByArray($arAllOptions["autoloads"]);?>
+<?php ShowParamsHTMLByArray($arAllOptions["autoloads"]); ?>
 <tr><td colspan='2'>
     <br>
     <input type='button' value='<?=GetMessage('IPOLSDEK_OTHR_TurnOffautoloads')?>' onclick='IPOLSDEK_setups.autoloads.turnOff()' id='IPOLSDEK_DEAUTO'>

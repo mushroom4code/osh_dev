@@ -1,4 +1,4 @@
-<?
+<?php
 //платежные системы
 $PayDefault = \Ipolh\SDEK\option::get('paySystems');
 
@@ -21,9 +21,9 @@ while($paySys=$paySysS->Fetch()){
 }
 $paySysHtml.="</select>";
 ?>
-<link href="/bitrix/js/<?=$module_id?>/jquery-ui.css?<?=mktime()?>" type="text/css"  rel="stylesheet" />
-<link href="/bitrix/js/<?=$module_id?>/jquery-ui.structure.css?<?=mktime()?>" type="text/css"  rel="stylesheet" />
-<script src='/bitrix/js/<?=$module_id?>/jquery-ui.js?<?=mktime()?>' type='text/javascript'></script>
+<link href="/bitrix/js/<?=$module_id?>/jquery-ui.css?<?= time() ?>" type="text/css" rel="stylesheet" />
+<link href="/bitrix/js/<?=$module_id?>/jquery-ui.structure.css?<?= time() ?>" type="text/css" rel="stylesheet" />
+<script src='/bitrix/js/<?=$module_id?>/jquery-ui.js?<?= time() ?>' type='text/javascript'></script>
 <?=sdekdriver::getModuleExt('courierTimeCheck')?>
 <style>
 	.PropHint { 
@@ -140,7 +140,7 @@ $paySysHtml.="</select>";
 
 		senderCities: [<?=$senderCitiesJS?>],
 
-		// кнопки хэдера
+		/* кнопки хэдера */
 		clearCache: function(){
 			$('#IPOLSDEK_cacheKiller').attr('disabled','disabled');
 			IPOLSDEK_setups.ajax({
@@ -162,7 +162,7 @@ $paySysHtml.="</select>";
 			});
 		},
 
-		// аккаунты
+		/* аккаунты */
 		accounts: {
 			wnd: false,
 
@@ -211,7 +211,7 @@ $paySysHtml.="</select>";
 				$('#IPOLSDEK_addAccComment').on('keyup',IPOLSDEK_setups.base.accounts.onPressComment);
 			},
 
-				// добавление
+				/* добавление */
 			new: function(){
 				$('#IPOLSDEK_accountWnd').addClass('IPOLSDEK_addAcc');
 			},
@@ -252,7 +252,7 @@ $paySysHtml.="</select>";
 				else
 					IPOLSDEK_setups.base.accounts.requestAcs();
 			},
-				// удаление
+				/* удаление */
 			defaultDelete: function(id){
 				if(confirm("<?=GetMessage("IPOLSDEK_OTHR_accDefaultDelete")?>"))
 					IPOLSDEK_setups.base.accounts.delete(id);
@@ -271,7 +271,7 @@ $paySysHtml.="</select>";
 					success: IPOLSDEK_setups.base.accounts.onAnswerAccount
 				});
 			},
-				// основной
+				/* основной */
 			makeDefault: function(id){
 				if(confirm("<?=GetMessage("IPOLSDEK_OTHR_accDefaultDelete")?>")){
 					IPOLSDEK_setups.base.accounts.markAjax();
@@ -289,7 +289,7 @@ $paySysHtml.="</select>";
 			}
 		},
 
-		// отправители
+		/* отправители */
 		senders: {
 			init: function(){
 				if($('.IPOLSDEK_sender').length)
@@ -339,7 +339,7 @@ $paySysHtml.="</select>";
 				chz.find("[name*='[courierTimeEnd]']").mask("29:59").on('change',IPOLSDEK_setups.base.senders.timeChanged);
 			},
 
-			timeChanged: function(link){ // IPOLSDEK_courierTimeCheck - /bitrix/js/ipol.sdek/courierTimeCheck.php
+			timeChanged: function(link){ /* IPOLSDEK_courierTimeCheck - /bitrix/js/ipol.sdek/courierTimeCheck.php */
 				var tr = $(link.delegateTarget).parents('tr:first');
 				var check = IPOLSDEK_courierTimeCheck(tr.find("[name*='[courierTimeBeg]']").val(),tr.find("[name*='[courierTimeEnd]']").val());
 
@@ -356,7 +356,7 @@ $paySysHtml.="</select>";
 			}
 		},
 
-		// ѓорода-отправители
+		/* ѓорода-отправители */
 		depature:{
 			add: function(){
 				$('#IPOLSDEK_addDeparturePlace').append("<div><input type='text' class='IPOLSDEK_addDeparture rescent'><input type='hidden' name='addDeparture[]'></div>");
@@ -383,10 +383,10 @@ $paySysHtml.="</select>";
 			}
 		},
 
-		// отображение свойств заЯвки
+		/* отображение свойств заЯвки */
 		properties: {
 			getModeNF : function(){
-				// T - extended, F - usual
+				/* T - extended, F - usual */
 				return ($('[name="extendName"]').val()==='Y');
 			},
 			checkNF : function(){
@@ -414,7 +414,7 @@ $paySysHtml.="</select>";
 				IPOLSDEK_setups.base.properties.checkNF();
 			}
 		},
-		// сервисные
+		/* сервисные */
 		serverShow: function(){
 			$('.IPOLSDEK_service').each(function(){
 				$(this).css('display','table-row');
@@ -539,7 +539,7 @@ $paySysHtml.="</select>";
 				$("#IPOLSDEK_logoffer").removeAttr('disabled');
 		},
 
-		// прочие
+		/* прочие */
 		onTermChange: function(){
 			var day = parseInt($('[name="termInc"]').val());
 			if(isNaN(day))
@@ -565,12 +565,12 @@ $paySysHtml.="</select>";
 	};
 </script>
 
-<?
+<?php
 foreach(array("departure","showInOrders","realSeller","addDeparture","shipments","prntActOrdr","numberOfPrints","numberOfStrihs","formatOfStrihs","deliveryAsPosition","normalizePhone","addData","NDSUseCatalog","address","pvzPicker","ymapsAPIKey","vidjetSearch","noPVZnoOrder","hideNal","hideNOC","autoSelOne","noYmaps","cntExpress","mindEnsure","mindNDSEnsure","forceRoundDelivery","AS","noVats","addMeasureName","statusSTORE","statusTRANZT","statusCORIER","setTrackingOrderProp","tarifs","warhouses","dostTimeout","timeoutRollback","TURNOFF","TARSHOW","autoAddCities","debugMode","sender_phone") as $code)
 	sdekOption::placeHint($code);
 
 $deadServerCheck = \Ipolh\SDEK\option::get('sdekDeadServer');
-if($deadServerCheck && (mktime() - $deadServerCheck) < (\Ipolh\SDEK\option::get('timeoutRollback') * 60)){?>
+if($deadServerCheck && (time() - $deadServerCheck) < (\Ipolh\SDEK\option::get('timeoutRollback') * 60)){?>
 	<tr><td colspan='2'>
 		<div class="adm-info-message-wrap adm-info-message-red">
 		  <div class="adm-info-message">
@@ -578,14 +578,14 @@ if($deadServerCheck && (mktime() - $deadServerCheck) < (\Ipolh\SDEK\option::get(
 				<?=GetMessage('IPOLSDEK_DEAD_SERVER_TITLE')?>&nbsp;<?=date('H:i:s d.m.Y',$deadServerCheck)?>.
 				<br>
 				<br>
-				<?sdekOption::placeFAQ('DEAD_SERVER')?>
+				<?php sdekOption::placeFAQ('DEAD_SERVER') ?>
 				<br>
 				<input type='button' id='IPOLSDEK_ressurect' onclick='IPOLSDEK_setups.base.ressurect()' value='<?=GetMessage("IPOLSDEK_DEAD_SERVER_BTN")?>'>
 			<div class="adm-info-message-icon"></div>
 		  </div>
 		</div>
 	</td></tr>
-<?}
+<?php }
 
 if(!file_exists(\Ipolh\SDEK\Bitrix\Controller\pvzController::getFilePath())){
 	Ipolh\SDEK\Bitrix\Tools::placeErrorLabel(GetMessage('IPOLSDEK_NOLIST_ERR_TITLE'),GetMessage('IPOLSDEK_NOLIST_ERR_HEADER'));
@@ -611,7 +611,7 @@ foreach(sdekExport::getAllProfiles() as $profile)
 ?>
 
 <tr>
-	<?
+    <?php
 		$basicAuth = sdekHelper::getBasicAuth();
 		if(!$basicAuth)
 			sdekOption::authConsolidation();
@@ -622,109 +622,109 @@ foreach(sdekExport::getAllProfiles() as $profile)
 </tr>
 <tr><td></td><td align="center"><input type='button' id='IPOLSDEK_cacheKiller' onclick='IPOLSDEK_setups.base.clearCache()' value='<?=GetMessage('IPOLSDEK_LBL_CLRCACHE')?>'></td></tr>
 
-<?//Общие?>
-<?\Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('common');?>
+<?php //Общие ?>
+<?php \Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('common'); ?>
 
-<?//Данные отправителя?>
-<?\Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('sender');?>
+<?php //Данные отправителя ?>
+<?php \Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('sender'); ?>
 
-<?//Печать?>
+<?php //Печать ?>
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_print")?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('PRINT')?>
+	<?php sdekOption::placeFAQ('PRINT') ?>
 </td></tr>
-<?ShowParamsHTMLByArray($arAllOptions["print"]);?>
+<?php ShowParamsHTMLByArray($arAllOptions["print"]); ?>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('PRINTSHTR')?>
+	<?php sdekOption::placeFAQ('PRINTSHTR') ?>
 </td></tr>
-<?ShowParamsHTMLByArray($arAllOptions["printShtr"]);?>
+<?php ShowParamsHTMLByArray($arAllOptions["printShtr"]); ?>
 
-<?//Габариты товаров по умолчанию?>
-<?\Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('dimensionsDef');?>
+<?php //Габариты товаров по умолчанию ?>
+<?php \Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('dimensionsDef'); ?>
 
-<?//Свойства заявки?>
+<?php //Свойства заявки ?>
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_HDR_requestProps')?></td></tr>
-<?ShowParamsHTMLByArray($arAllOptions["commonRequest"]);?>
-    <?// Свойства заказа?>
+<?php ShowParamsHTMLByArray($arAllOptions["commonRequest"]); ?>
+    <?php // Свойства заказа ?>
 <tr class="subHeading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_HDR_orderProps')?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('PROPS')?>
+	<?php sdekOption::placeFAQ('PROPS') ?>
 </td></tr>
-<?showOrderOptions();?>
-<?ShowParamsHTMLByArray($arAllOptions["usualOrderProps"]);?>
-    <?// Свойства товаров ?>
+<?php showOrderOptions(); ?>
+<?php ShowParamsHTMLByArray($arAllOptions["usualOrderProps"]); ?>
+    <?php // Свойства товаров ?>
 <tr class="subHeading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_HDR_itemProps')?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('IPROPS')?>
+	<?php sdekOption::placeFAQ('IPROPS') ?>
 </td></tr>
-<?ShowParamsHTMLByArray($arAllOptions["itemProps"]);?>
-    <?//Ндс?>
+<?php ShowParamsHTMLByArray($arAllOptions["itemProps"]); ?>
+    <?php //Ндс ?>
 <tr class="subHeading"><td colspan="2" valign="top" align="center"><?=GetMessage('IPOLSDEK_HDR_NDS')?></td></tr>
 <tr class="IPOLSDEK_converted"><td style="color:#555;" colspan="2">
-        <?sdekOption::placeFAQ('NDS')?>
+        <?php sdekOption::placeFAQ('NDS') ?>
 </td></tr>
-<?ShowParamsHTMLByArray($arAllOptions["NDS"]);?>
+<?php ShowParamsHTMLByArray($arAllOptions["NDS"]); ?>
 
-<?//Статусы заказа?>
+<?php //Статусы заказа ?>
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_status")?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('status')?>
+	<?php sdekOption::placeFAQ('status') ?>
 </td></tr>
-<?
+<?php
 	sdekOption::placeStatuses($arAllOptions["status"]);
 ?>
 
-<?//Виджет?>
-<?\Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('vidjet');?>
+<?php //Виджет ?>
+<?php \Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('vidjet'); ?>
 
-<?//Оформление заказа?>
-<?\Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('basket');?>
+<?php //Оформление заказа ?>
+<?php \Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('basket'); ?>
 
-<?// Доставки?>
-<?\Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('delivery');?>
+<?php // Доставки ?>
+<?php \Ipolh\SDEK\Bitrix\Tools::placeOptionBlock('delivery'); ?>
 <tr><td colspan="2"><?=GetMessage("IPOLSDEK_FAQ_DELIVERY")?></td></tr>
 
-<?//Платежные системы?>
-<tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_OPT_paySystems")?></td></tr>
+<?php //Платежные системы ?>
+<tr class="heading"><td colspan="2" valign="top" align="center"><?= GetMessage("IPOLSDEK_OPT_paySystems") ?></td></tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('PAYSYS')?>
+	<?php sdekOption::placeFAQ('PAYSYS') ?>
 </td></tr>
-<tr><td colspan="2" style='text-align:center'><?=$paySysHtml?></td></tr>
+<tr><td colspan="2" style='text-align:center'><?= $paySysHtml ?></td></tr>
 
-<tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_addingService")?></td></tr>
+<tr class="heading"><td colspan="2" valign="top" align="center"><?= GetMessage("IPOLSDEK_HDR_addingService") ?></td></tr>
 <tr><td colspan="2" valign="top" align="center"><table>
-	<?//Тарифы?>
+	<?php //Тарифы ?>
 	<tr><td colspan="4" valign="top" align="center"><strong><?=GetMessage("IPOLSDEK_OPT_tarifs")?></strong> <a href='#' class='PropHint' onclick='return IPOLSDEK_setups.popup("pop-tarifs", this);'></a></td></tr>
-	<?$arTarifs = sdekdriver::getExtraTarifs();?>
+	<?php $arTarifs = sdekdriver::getExtraTarifs(); ?>
 	<tr><th style="width:20px"></th><th><?=GetMessage("IPOLSDEK_TARIF_TABLE_NAME")?></th><th><?=GetMessage("IPOLSDEK_TARIF_TABLE_SHOW")?></th><th><?=GetMessage("IPOLSDEK_TARIF_TABLE_TURNOFF")?></th><th></th></tr>
-	<?
+            <?php
 	foreach($arTarifs as $tarifId => $tarifOption){?>
 		<tr>
-			<td style='text-align:center'><?if($tarifOption['DESC']){?><a href='#' class='PropHint' onclick='return IPOLSDEK_setups.popup("pop-AS<?=$tarifId?>",this);'></a><?}?></td>
-			<td><?=$tarifOption['NAME']?></td>
+			<td style='text-align:center'><?php if($tarifOption['DESC']) { ?><a href='#' class='PropHint' onclick='return IPOLSDEK_setups.popup("pop-AS<?=$tarifId?>",this);'></a><?php } ?></td>
+			<td><?= $tarifOption['NAME'] ?></td>
 			<td align='center'><input type='checkbox' name='tarifs[<?=$tarifId?>][SHOW]' value='Y' <?=($tarifOption['SHOW']=='Y')?"checked":""?> /></td>
 			<td align='center'><input type='checkbox' name='tarifs[<?=$tarifId?>][BLOCK]' value='Y' <?=($tarifOption['BLOCK']=='Y')?"checked":""?> /></td>
 			<td>
-				<? if($tarifOption['DESC']) {?>
+          <?php if($tarifOption['DESC']) {?>
 				<div id="pop-AS<?=$tarifId?>" class="b-popup" style="display: none; ">
 					<div class="pop-text"><?=$tarifOption['DESC']?></div>
 					<div class="close" onclick="$(this).closest('.b-popup').hide();"></div>
 				</div>
-				<?}?>
+				<?php } ?>
 			</td>
 		</tr>
-	<?}?>
+	<?php } ?>
 	<tr><td colspan='2'><br></td></tr>
 </table></td></tr>
-	<?//Дополнительные услуги?>
+	<?php //Дополнительные услуги ?>
 <tr><td colspan="2" valign="top" align="center"><table>
-	<tr><td colspan="2" valign="top" align="center"><strong><?=GetMessage("IPOLSDEK_OPT_addingService")?></strong> <a href='#' class='PropHint' onclick='return IPOLSDEK_setups.popup("pop-AS", this);'></a></td></tr>
-	<?$arAddService = sdekdriver::getExtraOptions();?>
-	<tr><th></th><th><?=GetMessage("IPOLSDEK_AS_TABLE_NAME")?></th><th><?=GetMessage("IPOLSDEK_AS_TABLE_SHOW")?></th><th><?=GetMessage("IPOLSDEK_AS_TABLE_DEF")?></th><th></th></tr>
-	<?foreach($arAddService as $asId => $adOption){?>
+	<tr><td colspan="2" valign="top" align="center"><strong><?= GetMessage("IPOLSDEK_OPT_addingService") ?></strong> <a href='#' class='PropHint' onclick='return IPOLSDEK_setups.popup("pop-AS", this);'></a></td></tr>
+	<?php $arAddService = sdekdriver::getExtraOptions(); ?>
+	<tr><th></th><th><?=GetMessage("IPOLSDEK_AS_TABLE_NAME")?></th><th><?=GetMessage("IPOLSDEK_AS_TABLE_SHOW")?></th><th><?= GetMessage("IPOLSDEK_AS_TABLE_DEF") ?></th><th></th></tr>
+	<?php foreach($arAddService as $asId => $adOption) { ?>
 		<tr>
-			<td><a href='#' class='PropHint' onclick='return IPOLSDEK_setups.popup("pop-AS<?=$asId?>",this);'></a></td>
-			<td><?=$adOption['NAME']?></td>
+			<td><a href='#' class='PropHint' onclick='return IPOLSDEK_setups.popup("pop-AS<?= $asId ?>",this);'></a></td>
+			<td><?= $adOption['NAME'] ?></td>
 			<td align='center'><input type='checkbox' name='addingService[<?=$asId?>][SHOW]' value='Y' <?=($adOption['SHOW']=='Y')?"checked":""?> /></td>
 			<td align='center'><input type='checkbox' name='addingService[<?=$asId?>][DEF]' value='Y' <?=($adOption['DEF']=='Y')?"checked":""?> /></td>
 			<td>
@@ -734,25 +734,25 @@ foreach(sdekExport::getAllProfiles() as $profile)
 				</div>
 			</td>
 		</tr>
-	<?}?>
+	<?php } ?>
 </table></td></tr>
 
-<?// Отправители?>
+<?php // Отправители ?>
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_senders")?></td>
 </tr>
 <tr>
 	<td><label for="allowSenders"><?=GetMessage("IPOLSDEK_OPT_allowSenders")?></label></td>
 	<td><input id="allowSenders" onchange='IPOLSDEK_setups.base.senders.onTurnOn($(this))' name="allowSenders" value="Y" <?=(\Ipolh\SDEK\option::get('allowSenders') == 'Y')?'checked':''?> type="checkbox"></td>
 </tr>
-<?if(\Ipolh\SDEK\option::get('allowSenders') === 'Y'){?>
+<?php if(\Ipolh\SDEK\option::get('allowSenders') === 'Y') { ?>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('SENDERS')?>
+	<?php sdekOption::placeFAQ('SENDERS') ?>
 </td></tr>
 <tr><td colspan="2" valign="top" align="center" id="IPOLSDEK_sendersPlace">
-	<?
+        <?php
 	$svdCt = sdekOption::senders();
 	if(is_array($svdCt) && count($svdCt))
-		foreach($svdCt as $key => $val){?>
+		foreach($svdCt as $key => $val) { ?>
 			<table class="IPOLSDEK_sender">
 				<tr><td><?=GetMessage('IPOLSDEK_LBL_SENDER')?></td><td><input name="senders[<?=$key?>][senderName]" value='<?=$val['senderName']?>' type="text"></td></tr>
 				<tr><td><?=GetMessage("IPOLSDEK_LBL_COURIERTIME")?></td><td><input type='text' style="width:56px" name='senders[<?=$key?>][courierTimeBeg]' value='<?=$val['courierTimeBeg']?>'> - <input type='text' name='senders[<?=$key?>][courierTimeEnd]' style="width:56px" value='<?=$val['courierTimeEnd']?>'></td></tr>
@@ -765,20 +765,20 @@ foreach(sdekExport::getAllProfiles() as $profile)
 				<tr><td><?=GetMessage('IPOLSDEK_JS_SOD_courierName')?></td><td><input name="senders[<?=$key?>][courierName]" value='<?=$val['courierName']?>' type="text"></td></tr>
 				<tr><td><?=GetMessage('IPOLSDEK_JS_SOD_courierComment')?></td><td><input name="senders[<?=$key?>][courierComment]" value='<?=$val['courierComment']?>' type="text"></td></tr>
 			</table>
-	<?}?>
+	<?php } ?>
 </td></tr>
 <tr><td colspan="2" valign="top" align="center"><input type='button' value="<?=GetMessage("IPOLSDEK_LBL_ADDSENDER")?>" onclick='IPOLSDEK_setups.base.senders.add()'></td></tr>
-<?}?>
+<?php } ?>
 
-<?// ђазбиение на города-отправители?>
+<?php // ђазбиение на города-отправители ?>
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_warhouses")?></td>
 </tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('WARHOUSES')?>
+	<?php sdekOption::placeFAQ('WARHOUSES') ?>
 </td></tr>
-<?ShowParamsHTMLByArray($arAllOptions["warhouses"]);?>
+<?php ShowParamsHTMLByArray($arAllOptions["warhouses"]); ?>
 <tr><td colspan='2'>
-<?
+        <?php
 	$arFounded = array();
 	foreach(GetModuleEvents($module_id, "onBeforeShipment", true) as $arEvent)
 		$arFounded[]=$arEvent;
@@ -793,37 +793,37 @@ foreach(sdekExport::getAllProfiles() as $profile)
 ?>
 </td></tr>
 
-<?// Ђвтоотгрузки?>
-<?if(!$autoloads){?>
+<?php // Ђвтоотгрузки?>
+<?php if(!$autoloads) { ?>
 <tr class="heading"><td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_autoUploads")?></td>
 </tr>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('AUTOUPLOADS')?>
+	<?php sdekOption::placeFAQ('AUTOUPLOADS') ?>
 </td></tr>
 <tr><td colspan='2' style='text-align:center'>
 	<br><input type='button' value='<?=GetMessage('IPOLSDEK_OPT_autoloads')?>' id='IPOLSDEK_AUTOLOADS' onclick='IPOLSDEK_setups.base.autoloads()'/>
 </td></tr>
-<?}?>
+<?php } ?>
 
-<?// ‘ервисные свойства?>
+<?php // ‘ервисные свойства ?>
 <tr class="heading" onclick='IPOLSDEK_setups.base.serverShow()' style='cursor:pointer;text-decoration:underline'>
 	<td colspan="2" valign="top" align="center"><?=GetMessage("IPOLSDEK_HDR_service")?></td>
 </tr> 
 <tr style='display:none' class='IPOLSDEK_service'>
 	<td><?=GetMessage('IPOLSDEK_OTHR_schet')?></td>
 	<td>
-	<?
+      <?php
 		$tmpVal=\Ipolh\SDEK\option::get('schet');
 		echo $tmpVal;
 		if($tmpVal>0){
 	?> <input type='button' value='<?=GetMessage('IPOLSDEK_OTHR_schet_BUTTON')?>' onclick='IPOLSDEK_setups.base.counterReset()'/>
-	<?}?>
+	<?php } ?>
 	</td>
 </tr>
 <tr style='display:none' class='IPOLSDEK_service'>
 	<td><?=GetMessage('IPOLSDEK_OTHR_lastModList')?></td>
 	<td>
-		<? $ft = filemtime($_SERVER["DOCUMENT_ROOT"]."/bitrix/js/".$module_id."/list.json");?>
+      <?php $ft = filemtime($_SERVER["DOCUMENT_ROOT"]."/bitrix/js/".$module_id."/list.json");?>
 		<span id='IPOLSDEK_updtTime'><?=($ft)?date("d.m.Y H:i:s",$ft):GetMessage("IPOLSDEK_OTHR_NOTCOMMITED");?></span>
 		<input id='IPOLSDEK_sT_sunc' type='button' value='<?=GetMessage('IPOLSDEK_OTHR_lastModList_BUTTON')?>' onclick='IPOLSDEK_setups.base.syncList()'/>
 	</td>
@@ -831,7 +831,7 @@ foreach(sdekExport::getAllProfiles() as $profile)
 <tr style='display:none' class='IPOLSDEK_service'>
 	<td><?=GetMessage('IPOLSDEK_OPT_statCync')?></td>
 	<td>
-		<?	$optVal = \Ipolh\SDEK\option::get('statCync');
+      <?php $optVal = \Ipolh\SDEK\option::get('statCync');
 			if($optVal>0) echo date("d.m.Y H:i:s",$optVal);
 			else echo GetMessage('IPOLSDEK_OTHR_NOTCOMMITED');
 		?>
@@ -847,7 +847,7 @@ foreach(sdekExport::getAllProfiles() as $profile)
 <tr style='display:none' class='IPOLSDEK_service'>
 	<td><?=GetMessage('IPOLSDEK_OPT_dostTimeout')?></td>
 	<td>
-		<?	
+      <?php
 			$optVal = \Ipolh\SDEK\option::get('dostTimeout');
 			if(floatval($optVal)<=0) $optVal=6;
 		?>
@@ -857,7 +857,7 @@ foreach(sdekExport::getAllProfiles() as $profile)
 <tr style='display:none' class='IPOLSDEK_service'>
 	<td><?=GetMessage('IPOLSDEK_OPT_timeoutRollback')?></td>
 	<td>
-		<?
+      <?php
 			$optVal = \Ipolh\SDEK\option::get('timeoutRollback');
 			if(floatval($optVal)<=0) $optVal=15;
 		?>
@@ -876,8 +876,8 @@ foreach(sdekExport::getAllProfiles() as $profile)
 		<input type='checkbox' value='Y' name='autoAddCities' <?=(\Ipolh\SDEK\option::get('autoAddCities') === 'Y') ? 'checked' : ''?>/>
 	</td>
 </tr>
-<?if(!$import){?>
+<?php if(!$import) { ?>
 <tr style='display:none' class='IPOLSDEK_service'><td colspan='2' style='text-align:center'>
 	<br><input type='button' value='<?=GetMessage('IPOLSDEK_OTHR_importCities_BUTTON')?>' id='IPOLSDEK_IMPORTCITIES' onclick='IPOLSDEK_setups.base.importCities()'/>
 </td></tr>
-<?}?>
+<?php } ?>

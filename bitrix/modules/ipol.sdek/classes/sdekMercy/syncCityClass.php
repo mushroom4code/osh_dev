@@ -1,4 +1,4 @@
-<?
+<?php
 IncludeModuleLangFile(__FILE__);
 
 class cityExport{
@@ -22,7 +22,7 @@ class cityExport{
 
 	public $impMode = false;
 
-	function cityExport($countryLink='rus',$timeLimit=60,$fname='tmpExport.txt'){
+	function __construct($countryLink='rus', $timeLimit=60, $fname='tmpExport.txt'){
 		$countryParams = sdekOption::getCountryDescr($countryLink);
 		if(!$countryParams)
 			return false;
@@ -124,14 +124,14 @@ class cityExport{
 			);
 			return false;
 		}
-		$this->startTime = mktime();
+		$this->startTime = time();
 		for($i=$this->curIndex;$i<count($this->citArray);$i++){
 			if(!$this->citArray[$i])
 				continue;
 			$tmpCity = explode(';',$this->citArray[$i]);
 
 			$this->getCity(sdekHelper::zaDEjsonit($tmpCity));
-			if(mktime()-$this->startTime > $this->timeLimit){
+			if(time() -$this->startTime > $this->timeLimit){
 				$this->curIndex=$i;
 				$this->pauseExport();
 				return;
@@ -284,8 +284,13 @@ class cityExport{
 	}
 	
 	protected function endExport(){
-		$addCntr = ($this->countryMode == 'rus') ? '' : '_'.$this->countryMode;
-		file_put_contents($_SERVER['DOCUMENT_ROOT'].'/bitrix/js/'.sdekOption::$MODULE_ID.'/errCities'.$addCntr.'.json',json_encode(sdekOption::zajsonit($this->errCity)));
+        $jsPath = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/js/' . sdekOption::$MODULE_ID;
+        $addCntr = ($this->countryMode === 'rus') ? '' : '_'.$this->countryMode;
+        file_put_contents($jsPath . "/notFoundedCities{$addCntr}.json",
+            json_encode(sdekOption::zajsonit($this->errCity['notFound'])));
+        file_put_contents($jsPath . "/multipleMatchedCities{$addCntr}.json",
+            json_encode(sdekOption::zajsonit($this->errCity['many'])));
+
 		if(file_exists($_SERVER['DOCUMENT_ROOT'].'/bitrix/js/'.sdekOption::$MODULE_ID.'/'.$this->fname))
 			unlink($_SERVER['DOCUMENT_ROOT'].'/bitrix/js/'.sdekOption::$MODULE_ID.'/'.$this->fname);
 		$this->result =  array(
@@ -325,7 +330,7 @@ class cityExport{
 			}
 		}
 
-		$this->startTime = mktime();
+		$this->startTime = time();
 		// определяем связку с регионами
 		if(!$this->backRegions)
 			foreach($this->arMP['links'] as $connect => $bitrixName){
@@ -344,7 +349,7 @@ class cityExport{
 						continue;
 					$tmpCity = explode(';',$this->citArray[$i]);
 					$this->getCity(sdekHelper::zaDEjsonit($tmpCity));
-					if(mktime()-$this->startTime > $this->timeLimit){
+					if(time() -$this->startTime > $this->timeLimit){
 						$this->curIndex=$i;
 						$this->pauseImport();
 						return;
@@ -372,7 +377,7 @@ class cityExport{
 							"TOTABLE" => $regions['TOTABLE'],
 						);
 					else
-					if(mktime()-$this->startTime > $this->timeLimit){
+					if(time() -$this->startTime > $this->timeLimit){
 						$this->importIndex=$i;
 						$this->pauseImport();
 						return;
@@ -466,7 +471,7 @@ class cityExport{
 							if($ic)
 								$this->addedCity++;
 					}
-					if(mktime()-$this->startTime > $this->timeLimit){
+					if(time() -$this->startTime > $this->timeLimit){
 						$this->importIndex=$i+1;
 						$this->pauseImport();
 						return;

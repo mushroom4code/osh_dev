@@ -65,7 +65,7 @@
 			
 		},
 
-		// ������
+		/* ������ */
 		counter: false,
 		curTime: false,
 
@@ -83,7 +83,7 @@
 			$('#IPOLSDEK_timeout').html('');
 		},
 
-		// ���������
+		/* ��������� */
 		timeOutCheck: function(){
 			$('#IPOLSDEK_timeoutCnter').val(IPOLSDEK_cityImport.getTime());
 		},
@@ -93,7 +93,7 @@
 				val = 60;
 			return val;
 		},
-		// ������
+		/* ������ */
 		kill: function(){
 			IPOLSDEK_cityImport.hideButtons();
 			IPOLSDEK_cityImport.stat = 'killed';
@@ -135,7 +135,7 @@
 	}
 </style>
 
-<?
+<?php
 if($migrated){
     Ipolh\SDEK\Bitrix\Tools::placeErrorLabel(
         GetMessage('IPOLSDEK_IMPORT_LBL_HAS20'),
@@ -144,14 +144,14 @@ if($migrated){
 }
 ?>
 
-<?
+<?php
 Ipolh\SDEK\Bitrix\Tools::placeWarningLabel(
     GetMessage('IPOLSDEK_IMPORT_LBL_BEWIZE'),
     GetMessage('IPOLSDEK_LBL_ATTENTION')
 );
 ?>
 <tr><td style="color:#555;" colspan="2">
-	<?sdekOption::placeFAQ('IMPORT')?>
+	<?php sdekOption::placeFAQ('IMPORT') ?>
 </td></tr>
 
 <tr><td style="color:#555;" colspan="2">

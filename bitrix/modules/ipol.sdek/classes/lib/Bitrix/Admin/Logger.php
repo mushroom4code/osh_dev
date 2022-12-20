@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Ipolh\SDEK\Bitrix\Admin;
 
 // use Ipolh\SDEK\Bitrix\Tools;

@@ -1,4 +1,4 @@
-<?
+<?php
 $MESS ['IPOLSDEK_LANG_YO_S'] = 'ё';
 $MESS ['IPOLSDEK_LANG_YE_S'] = 'е';
 $MESS ['IPOLSDEK_LANG_YO_B'] = 'Ё';

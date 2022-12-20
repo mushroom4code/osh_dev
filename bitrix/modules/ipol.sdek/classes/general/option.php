@@ -36,7 +36,7 @@ class option extends abstractGeneral
         return \COption::SetOptionString(self::$MODULE_ID,$option,$val);
     }
 
-    public function getDefault($option)
+    public static function getDefault($option)
     {
         $opt = self::collection();
         if(array_key_exists($option,$opt))
@@ -551,14 +551,14 @@ class option extends abstractGeneral
             'addingService' => array(
                 'group'   => 'addingService',
                 'hasHint' => '',
-                'default' => '',
+                'default' => 'a:0:{}', // Empty array
                 'type'    => "special",
                 'handling' => 'serialize'
             ),
             'tarifs' => array(
                 'group'   => 'addingService',
                 'hasHint' => '',
-                'default' => '',
+                'default' => 'a:0:{}', // Empty array
                 'type'    => "special",
                 'handling' => 'serialize'
             ),
@@ -616,7 +616,7 @@ class option extends abstractGeneral
             'autoAddCities' => array(
                 'group'   => 'service',
                 'hasHint' => 'Y',
-                'default' => 'N',
+                'default' => 'Y',
                 'type'    => 'checkbox'
             ),
             'debugMode' => array(

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 	Это пример шаблона печати акта приема-передачи и заказов.
 	Его можно использовать для создания своего шаблона, однако стоит учитывать, что он не расчитан на большой список заказов (может просто не уместиться на одном листе).
@@ -81,7 +81,7 @@ if(CModule::IncludeModule("sale")){
 						<td><p>Стоимость Отправления (руб.)</p></td>
 						<td><p>Итого к оплате (руб.)</p></td>
 					</tr>
-					<?foreach($arOrders as $key => $arOrder){?>
+					<?php foreach($arOrders as $key => $arOrder) { ?>
 						<TR VALIGN='TOP'>
 							<td><p><?=$key+1?></p></td>
 							<td><p><?=$arOrder['ID']?></p></td>
@@ -90,7 +90,7 @@ if(CModule::IncludeModule("sale")){
 							<td><p><?=$arOrder['PRICE']?></p></td>
 							<td><p><?=$arOrder['TOPAY']?></p></td>
 						</TR>
-					<?}?>
+					<?php } ?>
 				</TABLE>
 				<p><strong>Общее количество отправлений <?=count($arOrders)?> единиц.</strong></p>
 				<p><strong>Общая сумма объявленной стоимости <?=$ttlPay?> руб.</strong></p>
@@ -117,6 +117,6 @@ if(CModule::IncludeModule("sale")){
 				</table>
 				<p class='breaker'></p>
 			</div>
-		<?}
+		<?php }
 	}
 ?>

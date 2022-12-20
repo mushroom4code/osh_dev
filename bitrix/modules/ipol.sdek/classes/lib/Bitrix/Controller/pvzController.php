@@ -40,46 +40,66 @@ class pvzController extends abstractController
     }
 
     /**
-     * old usage
-     */
-    public function getListFile()
-    {
-        $arList = array();
-        foreach(array('PVZ','POSTAMAT') as $type) {
-            if(array_key_exists($type,self::$arList)) {
-                foreach (self::$arList[$type] as $cityCode => $arCityPVZ) {
-                    if (array_key_exists($cityCode, self::$arList['CITY'])) {
-                        $cityName                 = self::$arList['CITY'][$cityCode];
-                        $arList[$type][$cityName] = array();
-                        foreach ($arCityPVZ as $pvzCode => $arPVZ) {
-                            $arList[$type][$cityName][$pvzCode] = $arPVZ;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $arList;
-    }
-
-    /**
      * Get info from file
      */
     protected function loadPVZ()
     {
         if (!self::$arList) {
             self::$arList = json_decode(file_get_contents(self::getFilePath()),true);
+
+            foreach(GetModuleEvents(self::$MODULE_ID,"onPVZListReady",true) as $arEvent) {
+                ExecuteModuleEventEx($arEvent, array(&self::$arList));
+
+                $akPVZ = array_keys(self::$arList['PVZ']);
+                $akPOSTAMAT = array_keys(self::$arList['POSTAMAT']);
+                $found = array();
+                foreach ($akPVZ as $name){
+                    if(!is_numeric($name)){
+                        foreach(self::$arList['CITY'] as $code => $cityName){
+                            if($cityName == $name){
+                                if(array_key_exists($code,self::$arList['PVZ'])){
+                                    self::$arList['PVZ'][$code] = array_merge(self::$arList['PVZ'][$code],self::$arList['PVZ'][$name]);
+                                    unset(self::$arList['PVZ'][$name]);
+                                    $found[$name] = $code;
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach ($akPOSTAMAT as $name => $pvz){
+                    if(!is_numeric($name)){
+                        $newCode = false;
+                        if(array_key_exists($name,$found)){
+                            $newCode = $found[$name];
+                        } else {
+                            foreach(self::$arList['CITY'] as $code => $cityName){
+                                if($cityName == $name){
+                                    if(array_key_exists($code,self::$arList['POSTAMAT'])){
+                                        $newCode = $code;
+                                    }
+                                }
+                            }
+                        }
+                        if($newCode){
+                            self::$arList['POSTAMAT'][$newCode] = array_merge(self::$arList['POSTAMAT'][$newCode],self::$arList['POSTAMAT'][$name]);
+                            unset(self::$arList['POSTAMAT'][$name]);
+                            $found[$name] = $newCode;
+                        }
+
+                    }
+                }
+            }
         }
     }
 
     /**
+     * @param $location - CoreLocation, if null - all cities
      * @return Result
      */
-    public function getPoints()
+    public function getPoints($location = null)
     {
         $result = new Result();
 
-        $location = null; // All cities
         $answer = $this->application->deliveryPoints($location);
         if ($answer->isSuccess()) {
             $response = $answer->getResponse();
@@ -151,6 +171,10 @@ class pvzController extends abstractController
                 /** @var DeliveryPoint $point */
                 while ($point = $data['DELIVERY_POINTS']->getNext())
                 {
+                    // Skip fullfilment points because they're unavailable for usual customers
+                    if ($point->isFulfillment())
+                        continue;
+
                     $pointLocation = $point->getLocation();
                     if (in_array($pointLocation->getCountryCode(), $allowedCountries)) {
                         $cityCode = $pointLocation->getCityCode();
@@ -281,9 +305,10 @@ class pvzController extends abstractController
     {
         return (
             file_exists(self::getFilePath()) &&
-            mktime() - filemtime(self::getFilePath()) < self::$cacheTime
+            time() - filemtime(self::getFilePath()) < self::$cacheTime
         );
     }
+
 
     /**
      * @return string
@@ -292,5 +317,29 @@ class pvzController extends abstractController
     public static function getFilePath()
     {
         return $_SERVER["DOCUMENT_ROOT"]."/bitrix/js/".self::$MODULE_ID."/list.json";
+    }
+
+    /**
+     * old usage
+     */
+    public function getListFile()
+    {
+        $arList = array();
+
+        foreach(array('PVZ','POSTAMAT') as $type) {
+            if(array_key_exists($type,self::$arList)) {
+                foreach (self::$arList[$type] as $cityCode => $arCityPVZ) {
+                    if (array_key_exists($cityCode, self::$arList['CITY'])) {
+                        $cityName                 = self::$arList['CITY'][$cityCode];
+                        $arList[$type][$cityName] = array();
+                        foreach ($arCityPVZ as $pvzCode => $arPVZ) {
+                            $arList[$type][$cityName][$pvzCode] = $arPVZ;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $arList;
     }
 }

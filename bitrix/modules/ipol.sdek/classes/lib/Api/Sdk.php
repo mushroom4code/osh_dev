@@ -45,7 +45,7 @@ class Sdk
     {
         $this->adapter = $adapter;
         $this->encoder = $encoder;
-        $this->map = self::getMap($mode, $custom);
+        $this->map = $this->getMap($mode, $custom);
 
         if ($token) {
             $this->adapter->appendHeaders(['Authorization: Bearer ' . $token]);

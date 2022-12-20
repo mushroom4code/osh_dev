@@ -1,4 +1,4 @@
-<?
+<?php
 IncludeModuleLangFile(__FILE__);
 
 /*
@@ -112,7 +112,7 @@ class sdekExport extends sdekHelper{
 					$tmpCity=CSaleLocation::GetList(array(),array("ID"=>$cityId,"CITY_LID"=>'ru'))->Fetch();
 					if(!$tmpCity)
 						$tmpCity=CSaleLocation::GetByID($cityId);
-					self::$arTmpArLocation[$oCity['VALUE']]=($tmpCity['CITY_NAME_LANG'])?$tmpCity['CITY_NAME_LANG']:$tmpCity['CITY_NAME'];
+					self::$arTmpArLocation[$oCity['VALUE']] = (array_key_exists('CITY_NAME_LANG', $tmpCity) && $tmpCity['CITY_NAME_LANG']) ? $tmpCity['CITY_NAME_LANG'] : $tmpCity['CITY_NAME'];
 					$oCity=str_replace(GetMessage('IPOLSDEK_LANG_YO_S'),GetMessage('IPOLSDEK_LANG_YE_S'),self::$arTmpArLocation[$oCity['VALUE']]);
 				}
 			}
@@ -251,10 +251,10 @@ class sdekExport extends sdekHelper{
 		}
 
 		foreach(array('location','name','email','phone','address','street','house','flat','fName','sName','mName') as $prop){
-			if(!$arProps[$prop] || $prop=='location'){
+			if(!(array_key_exists($prop, $arProps) && $arProps[$prop]) || $prop === 'location'){
 				$propCode = \Ipolh\SDEK\option::get($prop);
 				if($prop!='location' && (!self::$locStreet || $prop != 'street'))
-					$arProps[$prop] = ($propCode)?self::$orderDescr['properties'][$propCode]:false;
+					$arProps[$prop] = (isset($propCode) && $propCode) && array_key_exists($propCode, self::$orderDescr['properties']) ? self::$orderDescr['properties'][$propCode] : false;
 				elseif($prop == 'street')
 					$arProps[$prop] = self::$locStreet;
 				elseif($propCode){
@@ -262,7 +262,7 @@ class sdekExport extends sdekHelper{
 					self::$orderDescr['properties'][$propCode] = sdekHelper::getNormalCity(self::$orderDescr['properties'][$propCode]);
 					$src = sdekExport::getCity(self::$orderDescr['properties'][$propCode]);
 					$orignCityId = $src;
-					if(!$arProps[$prop]){
+					if(!(array_key_exists($prop, $arProps) && $arProps[$prop])){
 						$arProps[$prop]=sdekExport::getCity(self::$orderDescr['properties'][$propCode]);
 						$cityName = sdekExport::getOrderCity(self::$orderId);
 					}
@@ -540,6 +540,7 @@ class sdekExport extends sdekHelper{
 			}
 
 			$arReturn = CDeliverySDEK::countDelivery($arOrder);
+
 			if($arReturn['success']){
 				$arReturn['price']       = strip_tags($arReturn['price']);
 				if(self::diffPrice($arReturn['price']))
@@ -661,19 +662,19 @@ class sdekExport extends sdekHelper{
 				load: function(){
 					if($('#IPOLSDEK_btn').length) return;
 					
-					// B24 support
+					/* B24 support */
 					if ($('#IPOLSDEK_btn_container').length)
 					{
 						$('#IPOLSDEK_btn_container').prepend("<a href='javascript:void(0)' onclick='IPOLSDEK_existedInfo.showWindow()' class='ui-btn ui-btn-light-border ui-btn-icon-edit' style='margin-left:12px;' id='IPOLSDEK_btn'><?=GetMessage('IPOLSDEK_JSC_SOD_BTNAME')?></a>");		
 					}
 					
-					// Standard
+					/* Standard */
 					if ($('.adm-detail-toolbar').find('.adm-detail-toolbar-right').length)
 					{
 						$('.adm-detail-toolbar').find('.adm-detail-toolbar-right').prepend("<a href='javascript:void(0)' onclick='IPOLSDEK_existedInfo.showWindow()' class='adm-btn' id='IPOLSDEK_btn'><?=GetMessage('IPOLSDEK_JSC_SOD_BTNAME')?></a>");
 					}
 				},
-				// ����
+				/* ���� */
 				wnd: false,
 				showWindow: function(){
 					if(!IPOLSDEK_existedInfo.wnd){
@@ -791,49 +792,49 @@ class sdekExport extends sdekHelper{
 			</script>
 			<div style='display:none' id='IPOLSDEK_wndOrder'>
 				<div><?=GetMessage('IPOLSDEK_JSC_NOWND_'.self::$workMode)?></div>
-				<?foreach(self::$subRequests as $request){?>
+				<?php foreach(self::$subRequests as $request) { ?>
 					<table class='IPOLSDEK_sendedTable' id='IPOLSDEK_sT_<?=$request['ORDER_ID']?>'>
 						<tr>
-							<?if(self::$workMode == 'shipment'){?>
+							<?php if(self::$workMode == 'shipment') { ?>
 								<td><?=GetMessage("IPOLSDEK_JSC_SOD_order")?></td>
 								<td>
 									<a target='_blank' href='<?=self::makePathForEditing('order', self::$workType, 
 									$request["ORDER_ID"]);?>'><?=$request['ORDER_ID']?></a>
-							<?}else{?>
+							<?php } else { ?>
 								<td><?=GetMessage("IPOLSDEK_JSC_SOD_shipment")?></td>
 								<td>
 									<a target='_blank' href='<?=self::makePathForEditing('shipment', self::$workType, 
 									self::$orderId, $request["ORDER_ID"]);?>'><?=$request["ORDER_ID"]?></a>
-							<?}?>
+							<?php } ?>
 							</td>
 						</tr>
 						<tr><td><?=GetMessage('IPOLSDEK_JS_SOD_STATUS')?></td><td><?=$request['STATUS']?></td></tr>
 						<tr><td colspan='2'><small><?=GetMessage('IPOLSDEK_JS_SOD_STAT_'.$request['STATUS'])?></small></td></tr>
-						<?if($request['SDEK_ID']){?><tr><td><?=GetMessage('IPOLSDEK_JS_SOD_SDEK_ID')?></td><td><?=$request['SDEK_ID']?></td></tr><?}?>
-						<?if($request['MESS_ID']){?><tr><td><?=GetMessage('IPOLSDEK_JS_SOD_MESS_ID')?></td><td><?=$request['MESS_ID']?></td></tr><?}?>
-						<?if($request['SDEK_ID']){?><tr><td colspan='2'><a href="<?=\Ipolh\SDEK\SDEK\Tools::getTrackLink($request['SDEK_ID'])?>" target="_blank"><?=GetMessage('IPOLSDEK_JSC_SOD_FOLLOW')?></a></td></tr><?}?>
+						<?php if($request['SDEK_ID']) { ?><tr><td><?=GetMessage('IPOLSDEK_JS_SOD_SDEK_ID')?></td><td><?=$request['SDEK_ID']?></td></tr><?php } ?>
+						<?php if($request['MESS_ID']) { ?><tr><td><?=GetMessage('IPOLSDEK_JS_SOD_MESS_ID')?></td><td><?=$request['MESS_ID']?></td></tr><?php } ?>
+						<?php if($request['SDEK_ID']) { ?><tr><td colspan='2'><a href="<?=\Ipolh\SDEK\SDEK\Tools::getTrackLink($request['SDEK_ID'])?>" target="_blank"><?=GetMessage('IPOLSDEK_JSC_SOD_FOLLOW')?></a></td></tr><?php } ?>
 						<tr><td colspan='2'><hr></td></tr>
 						<tr><td colspan='2'>
-							<?if(in_array($request['STATUS'],array('OK','ERROR','NEW','DELETD'))){?>
+							<?php if(in_array($request['STATUS'], array('OK', 'ERROR', 'NEW', 'DELETD'))) { ?>
 							<input id='IPOLSDEK_delete_<?=$request['ORDER_ID']?>' value="<?=GetMessage('IPOLSDEK_JSC_SOD_DELETE')?>" onclick="IPOLSDEK_existedInfo.delete(<?=$request['ORDER_ID']?>,'<?=$request['STATUS']?>'); return false;" type="button">&nbsp;&nbsp;
-							<?}?>
-							<?if($request['STATUS'] == 'OK'){?>
+							<?php } ?>
+							<?php if($request['STATUS'] == 'OK') { ?>
 							<input id='IPOLSDEK_print_<?=$request['ORDER_ID']?>' value="<?=GetMessage('IPOLSDEK_JSC_SOD_PRNTSH')?>" onclick="IPOLSDEK_existedInfo.print(<?=$request['ORDER_ID']?>); return false;" type="button">&nbsp;&nbsp;
 							<input id='IPOLSDEK_shtrih_<?=$request['ORDER_ID']?>' value="<?=GetMessage('IPOLSDEK_JSC_SOD_SHTRIH')?>" onclick="IPOLSDEK_existedInfo.shtrih(<?=$request['ORDER_ID']?>); return false;" type="button">&nbsp;&nbsp;
-							<?}?>
+							<?php } ?>
 						</td></tr>
 					</table>
-				<?}?>
-				<?if($unsended){?>
+				<?php } ?>
+				<?php if($unsended) { ?>
 				<div>
 					<?=GetMessage('IPOLSDEK_JSC_NOWND_noSended')?>
-					<?foreach($unsended as $shipmintId){?><a target='_blank' href='<?=self::makePathForEditing('shipment', self::$workType, 
+					<?php foreach($unsended as $shipmintId) { ?><a target='_blank' href='<?=self::makePathForEditing('shipment', self::$workType,
 									self::$orderId, $shipmintId);?>'><?=$shipmintId?></a>&nbsp;
-					<?}?>
+					<?php } ?>
 				</div>
-				<?}?>
+				<?php } ?>
 			</div>
-		<?
+		<?php
 	}
 
 	static function formatCurrency($params){

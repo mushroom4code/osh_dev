@@ -31,8 +31,16 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
 if (!isset($arParams['SHOW_ORDER_BUTTON'])) {
     $arParams['SHOW_ORDER_BUTTON'] = 'final_step';
 }
-$arResult['JS_DATA']['ORDER_PROP']['properties'][5]['VALUE'][0] = $_SESSION['code_region'];
-$arResult['JS_DATA']['ORDER_PROP']['properties'][6]['VALUE'][0] = $_SESSION["city_of_user"];
+
+//enterego - проставляем выбранный регион из шапки в соответсвующее свойство
+foreach ($arResult['JS_DATA']['ORDER_PROP']['properties'] as &$propItems) {
+    if ($propItems['CODE'] === 'LOCATION') {
+        $propItems['VALUE'][0] = $_SESSION['code_region'];
+    } elseif ($propItems['CODE'] === 'CITY') {
+        $propItems['VALUE'][0] = $_SESSION['city_of_user'];
+    }
+}
+
 $arParams['HIDE_ORDER_DESCRIPTION'] = isset($arParams['HIDE_ORDER_DESCRIPTION']) && $arParams['HIDE_ORDER_DESCRIPTION'] === 'Y' ? 'Y' : 'N';
 $arParams['SHOW_TOTAL_ORDER_BUTTON'] = $arParams['SHOW_TOTAL_ORDER_BUTTON'] === 'Y' ? 'Y' : 'N';
 $arParams['SHOW_PAY_SYSTEM_LIST_NAMES'] = $arParams['SHOW_PAY_SYSTEM_LIST_NAMES'] === 'N' ? 'N' : 'Y';
