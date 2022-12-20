@@ -19,210 +19,16 @@ $templateData = array(
 );
 
 PriceTypeANDStatusUser();
-/*echo '<pre>';
-print_r($arResult["ITEMS"]);*/
+
 if (isset($templateData['TEMPLATE_THEME'])) {
     $this->addExternalCss($templateData['TEMPLATE_THEME']);
 }
-		
-		foreach ($arResult["ITEMS"] as $key => $arItem)//prices
-		{
-			if (isset($arItem["PRICE"]))
-			{
-				if ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)
-				{
-					unset($arResult["ITEMS"][$key]);
-				}
-			}
-			else
-			{
-				if( count($arItem["VALUES"]) == 0 )
-					unset($arResult["ITEMS"][$key]);
-			}
-						
-		}
-//print_r($arResult["ITEMS"]);
 
-//Сортировка
-if( stripos($APPLICATION->GetCurPage(),'/catalog_new/') !== false )
-{
-	$arPositionProp = array(
-2134, //бренд
-
-	);
-
-	
-}
-if( stripos($APPLICATION->GetCurPage(),'/catalog/kalyany/') !== false )
-{
-	$arPositionProp = array(
-2134, //бренд
-2136,//линейка
-2286,//cvet
-2532,//Высота шахты, см
-2514, //Тип шахты
-2518, //Материал погружной части
-2522, //Наличие мундштука
-2620, //Наличие диффузора
-2521,//Наличие шланга
-2519, //Наличие колбы
-2524, //Наличие чашки
-
-
-	);
-
-	$arPositionPropName = array(
-
-	2518 => 'Материал',
-	);		
-}
-
-if( stripos($APPLICATION->GetCurPage(),'/catalog/tabak_dlya_kalyana/') !== false )
-{
-	$arPositionProp = array(
-2134, //бренд
-2239, //vkus
-2378, //krepost
-2381, //gramovka
-2573, //osnova
-2380, //sostav
-2136, //lineyka
-);
-	$arPositionPropName = array(
-
-	2378 => 'Крепость',
-	2573 => 'Основа',
-	2380 => 'Состав',
-	);	
-}
-if( stripos($APPLICATION->GetCurPage(),'/catalog/ugol/') !== false )
-{
-	$arPositionProp = array(
-2134, //бренд
-2281, //vkus
-2511, //razmer
-2283, //shtuk v upak
-
-);	
-	$arPositionPropName = array(
-
-	2511 => 'Размер, мм',
-	2283 => 'Количество в упаковке, шт',
-
-	);
-
-
-	
-}
-if( stripos($APPLICATION->GetCurPage(),'/catalog/elektronnye_sigarety/') !== false )
-{
-	$arPositionProp = array(
-2134, //бренд
-2527, //primenyaemost
-2293, //kol-vo zatyj
-2239, //vkus
-2136, //lineyka
-
-);	
-	$arPositionPropName = array(
-	2527 => 'Тип',
-
-	);
-
-
-	
-}
-/*
-if( stripos($APPLICATION->GetCurPage(),'/catalog/zhidkosti_dlya_elektronnykh_sigaret/') !== false )
-{
-	$arPositionProp = array(
-2134, //бренд
-2527, //primenyaemost
-2293, //kol-vo zatyj
-2239, //vkus
-2136, //lineyka
-
-);	
-	$arPositionPropName = array(
-	2527 => 'Тип',
-
-	);
-
-
-	
-}
-*/
-
-if( stripos($APPLICATION->GetCurPage(),'/catalog/chay/') !== false )
-{
-	$arPositionProp = array(
-2134, //бренд
-2335, //сорт
-2537, //аромат
-2339, //граммовка
-2341, //Эффект чая
-
-);	
-	$arPositionPropName = array(
-	2335 => 'Сорт',
-	2537 => 'Аромат',
-	
-	
-	);
-
-
-	
-}
-
-
-if( stripos($APPLICATION->GetCurPage(),'/catalog/kolby/') !== false )
-{
-	$arPositionProp = array(
-2134, //бренд
-2543, //форма
-2544, //высота
-2286, //цвет
-
-);	
-
-
-
-	
-}
-
-	if( count($arPositionProp) > 0 )
-	{
-		$arPositionProp[] ='Сайт скидка';
-		$arPositionProp[] ='Розничная';
-		$itemsTEMP = $arResult["ITEMS"];
-		foreach( $arPositionProp as $pos_id)
-		{
-			
-
-			
-			if( $arPositionPropName[$pos_id] )
-				$arResult["ITEMS"][$pos_id]['NAME'] = $arPositionPropName[$pos_id];
-			if( $arPositionPropDecimial[$pos_id] )
-				$arResult["ITEMS"][$pos_id]['DECIMALS'] = $arPositionPropDecimial[$pos_id];
-			
-			$resPosItems[$pos_id] = $arResult["ITEMS"][$pos_id];
-			
-
-		}
-		$arResult["ITEMS"] = $resPosItems;
-	}
-
-if( count($arResult["ITEMS"]) > 0 ):
 ?>
-<div class="filter_wrap_mobile tablet">
-<div class="h1 tablet">Фильтры</div>
-<div class="closeButtonFilter"><i class="fa fa-close"></i></div>
-</div>
-
 <div class="smart-filter <?= $templateData["TEMPLATE_CLASS"] ?> <? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL") echo "smart-filter-horizontal" ?>">
     <div class="smart-filter-section">
 
-        <form id="SMART_FILTER" name="<? echo $arResult["FILTER_NAME"] . "_form" ?>" action="<? echo $arResult["FORM_ACTION"] ?>"
+        <form name="<? echo $arResult["FILTER_NAME"] . "_form" ?>" action="<? echo $arResult["FORM_ACTION"] ?>"
               method="get" class="smart-filter-form">
 
             <? foreach ($arResult["HIDDEN"] as $arItem): ?>
@@ -240,7 +46,7 @@ if( count($arResult["ITEMS"]) > 0 ):
                     if (isset($arItem["PRICE"])):
                         if ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)
                             continue;
-					
+
                         $step_num = 4;
                         $step = ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"]) / $step_num;
                         $prices = array();
@@ -259,22 +65,13 @@ if( count($arResult["ITEMS"]) > 0 ):
 
                         ?>
 
-                        <?php 
-						
-						if ($arItem['NAME'] === 'Сайт скидка')
-							continue;
-						if ($arItem['NAME'] === 'Розничная' && $GLOBALS['UserTypeOpt'] === true) {
-                        continue;
-                    }else if($arItem['NAME'] === 'b2b' && $GLOBALS['UserTypeOpt'] === false){ continue; }else { ?>
-                        <? $arItem["NAME"] = str_replace('Розничная', 'Цена', $arItem["NAME"]);?>
-						
-						
-						<div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?>F  smart-filter-parameters-box bx-active">
+                        <?php if( (int)$arItem['ID'] === BASIC_PRICE){?>
+                        <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?>F  smart-filter-parameters-box bx-active">
                             <span class="smart-filter-container-modef"></span>
 
                             <div class="smart-filter-parameters-box-title"
                                  onclick="smartFilter.hideFilterProps(this)">
-                                <span class="smart-filter-parameters-box-title-text"><?= $arItem["NAME"] ?></span>
+                                <span class="smart-filter-parameters-box-title-text">Цена</span>
                                 <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
 									<i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
 								</span>
@@ -342,7 +139,7 @@ if( count($arResult["ITEMS"]) > 0 ):
                     <?php } ?>
 
 
-                        <?php
+                    <?php
                     $arJsParams = array(
                         "leftSlider" => 'left_slider_' . $key,
                         "rightSlider" => 'right_slider_' . $key,
@@ -380,7 +177,7 @@ if( count($arResult["ITEMS"]) > 0 ):
                         continue;
                     ?>
 
-                    <div data-filter-id="<?=$arItem['ID']?>" class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box <? if ($arItem["DISPLAY_EXPANDED"] == "Y"): ?>bx-active<? endif ?>">
+                    <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box <? if ($arItem["DISPLAY_EXPANDED"] == "Y"): ?>bx-active<? endif ?>">
                         <span class="smart-filter-container-modef"></span>
 
                         <div class="smart-filter-parameters-box-title" onclick="smartFilter.hideFilterProps(this)">
@@ -484,7 +281,7 @@ if( count($arResult["ITEMS"]) > 0 ):
                                     "colorAvailableActive" => 'colorAvailableActive_' . $key,
                                     "colorAvailableInactive" => 'colorAvailableInactive_' . $key,
                                 );
-                              
+                                die();
                                 ?>
                                     <script type="text/javascript">
                                         BX.ready(function () {
@@ -881,40 +678,7 @@ if( count($arResult["ITEMS"]) > 0 ):
                                 default:
                                 ?>
                                     <div class="smart-filter-input-group-checkbox-list">
-                                            <div class="form-group form-check form-check-all" style="display:none;">
-                                                <label data-role="label_<?= $ar["CONTROL_ID"] ?>"
-                                                       class="smart-filter-checkbox-text form-check-label"
-                                                       id="all_label_<? echo $ar["CONTROL_ID"] ?>" for="all_<? echo $ar["CONTROL_ID"] ?>">
-                                                   Выбрать все
-                                                </label>
-                                                <input
-                                                        type="checkbox"
-                                                        value="all"
-                                                        name="all"
-                                                        id="all_<? echo $ar["CONTROL_ID"] ?>"
-                                                        class="check_input_all_<?=$arItem['CODE']?> check_input form-check-input"
-                                                        onclick="CheckAll('<?=$arItem['CODE']?>')"
-                                                />
-                                            </div>									
-                                        <?$icount = 0;
-											$icountPre = 0;
-											$stopNone = 0;
-											foreach($arItem["VALUES"] as $val => $ar)									   
-											{
-												$icountPre++;
-												if($ar["CHECKED"] && $icountPre > 6 )
-													$stopNone = 1;
-											}	
-											foreach($arItem["VALUES"] as $val => $ar) { 
-											$ar['VALUE'] = str_replace('Ёлка', 'Елка', $ar['VALUE']);
-											$arItem["VALUES"][$val]['VALUE'] = trim($ar['VALUE']);
-											}
-										\Bitrix\Main\Type\Collection::sortByColumn($arItem["VALUES"], array("VALUE" => SORT_ASC));												
-										foreach ($arItem["VALUES"] as $val => $ar): $icount++;?>
-                                           <?if( count($arItem["VALUES"])>6 && $icount==6 && $stopNone != 1):?>
-                                           <div class="list_brand_none list_brand_none_<?=$arItem['CODE']?>">
-                                           <?endif;?>										
-										
+                                        <? foreach ($arItem["VALUES"] as $val => $ar): ?>
                                             <div class="form-group form-check">
                                                 <label data-role="label_<?= $ar["CONTROL_ID"] ?>"
                                                        class="smart-filter-checkbox-text form-check-label"
@@ -926,26 +690,13 @@ if( count($arResult["ITEMS"]) > 0 ):
                                                         value="<? echo $ar["HTML_VALUE"] ?>"
                                                         name="<? echo $ar["CONTROL_NAME"] ?>"
                                                         id="<? echo $ar["CONTROL_ID"] ?>"
-                                                        class="check_<?=$arItem['CODE']?> <?if( $icount == 1):?>check_<?=$arItem['CODE']?>_first<?endif;?> check_input form-check-input"
+                                                        class="check_input form-check-input"
                                                     <? echo $ar["CHECKED"] ? 'checked="checked"' : '' ?>
                                                     <? echo $ar["DISABLED"] ? 'disabled' : '' ?>
                                                         onclick="smartFilter.click(this)"
                                                 />
                                             </div>
                                         <? endforeach; ?>
-					                   	   <?if( count($arItem["VALUES"])>6  && $stopNone != 1):?>
-                                           </div>
-                                           <?endif;?>										
-									
-
-                					<?if(  count($arItem["VALUES"])>6  && $stopNone != 1):?>
-										<div class="all_brand">
-		                					<span href="" onclick="VisAll('<?=$arItem['CODE']?>')" class="btn1 btn1_<?=$arItem['CODE']?>">Показать больше</span>
-		                					</div>
-										<?endif;?>
-
-
-									
                                     </div>
                                 <?
                                     //endregion
@@ -973,13 +724,6 @@ if( count($arResult["ITEMS"]) > 0 ):
                         </div>
                     </div>
                 </div>
-				
-				<div class="bx_filter_block buttons tablet">
-					<div class="bx_filter_parameters_box_container">
-						<input class="bx_filter_search_button" type="submit" id="set_filter" name="set_filter" value="<?=GetMessage("CT_BCSF_SET_FILTER")?>" />
-						
-					</div>
-				</div>
             </div><!--//row-->
 
 
@@ -989,43 +733,5 @@ if( count($arResult["ITEMS"]) > 0 ):
 </div>
 
 <script type="text/javascript">
-var this_url = '<?=$APPLICATION->GetCurPage();?>';
-	 var smartFilter = new JCSmartFilter('<?echo CUtil::JSEscape($arResult["FORM_ACTION"])?>', '<?=CUtil::JSEscape($arParams["FILTER_VIEW_MODE"])?>', <?=CUtil::PhpToJSObject($arResult["JS_FILTER_PARAMS"])?>);
-
-   function VisAll( CODE )
-	{
-      $('.list_brand_none_'+CODE).slideToggle(function() {
-        
-		if( $('.list_brand_none_'+CODE).is(':visible') )
-			$('.btn1_'+CODE).text('Скрыть');
-		else
-			$('.btn1_'+CODE).text('Показать все');
-      });		
-	}
-	
-	function CheckAll( CODE)
-	{
-		if( $('.check_input_all_'+CODE).is(':checked') )
-		{
-			//$('.check_'+CODE).not(':first').attr("checked", true);
-			//$('.check_'+CODE+'_first').click();
-			$('.check_'+CODE).click();
-		
-		}
-		else
-		{
-			//$('.check_'+CODE).not(':first').attr("checked", false);
-			//$('.check_'+CODE+'_first').click();
-			$('.check_'+CODE).click();
-		}
-		
-		//smartFilter.click();
-	}
-	$(document).ready(function () {
-		
-smartFilter.InitHorisontalFilter('<?echo CUtil::JSEscape($arResult["FORM_ACTION"])?>', '<?=CUtil::JSEscape($arParams["FILTER_VIEW_MODE"])?>', <?=CUtil::PhpToJSObject($arResult["JS_FILTER_PARAMS"])?>);
-
-
-	});
+    var smartFilter = new JCSmartFilter('<?echo CUtil::JSEscape($arResult["FORM_ACTION"])?>', '<?=CUtil::JSEscape($arParams["FILTER_VIEW_MODE"])?>', <?=CUtil::PhpToJSObject($arResult["JS_FILTER_PARAMS"])?>);
 </script>
-<?endif;?>
