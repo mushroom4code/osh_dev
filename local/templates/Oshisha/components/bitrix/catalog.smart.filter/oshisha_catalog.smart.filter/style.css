@@ -243,7 +243,7 @@ scrollbar-width: thin;
     bottom: -86%;
     width: 0;
     height: 0;
-    border: 6px solid var(--primary);
+    border: 6px solid #f55f5c;
     border-radius: 36px;
     cursor: pointer;
 }

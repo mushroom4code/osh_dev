@@ -247,7 +247,7 @@
 	top: 100%;
 	width: 0;
 	height: 0;
-	border: 7px solid var(--primary);
+	border: 7px solid #f55f5c;
 }
 
 .smart-filter-slider-handle:hover {

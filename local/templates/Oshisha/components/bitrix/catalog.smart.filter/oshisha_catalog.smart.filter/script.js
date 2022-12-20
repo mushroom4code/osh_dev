@@ -7,7 +7,7 @@ function JCSmartFilter(ajaxURL, viewMode, params)
 	this.cache = [];
 	this.popups = [];
 	this.viewMode = viewMode;
-	//this.countCheckboxFilter = 0;
+	this.countCheckboxFilter = 0;
 	this.sectionCode = null;
 	this.allFilterShowHideContent = '<div class="osh-circle d-inline-block"></div>' +
 		' <div class="osh-circle d-inline-block"></div>' +
@@ -16,7 +16,6 @@ function JCSmartFilter(ajaxURL, viewMode, params)
 	{
 		this.sef = true;
 	}
-	
 }
 
 JCSmartFilter.prototype.keyup = function(input)
@@ -35,7 +34,7 @@ JCSmartFilter.prototype.click = function(checkbox)
 	if(BX(checkbox).checked) {
 		this.addHorizontalFilter(checkbox)
 	} else {
-		this.removeHorizontalFilterNoProxy(checkbox)
+		this.removeHorizontalFilter(checkbox)
 	}
 
 
@@ -50,8 +49,8 @@ JCSmartFilter.prototype.click = function(checkbox)
 };
 
 JCSmartFilter.prototype.reload = function(input)
-{		
-	/*if (this.cacheKey !== '')
+{
+	if (this.cacheKey !== '')
 	{
 		//Postprone backend query
 		if(!!this.timer)
@@ -62,15 +61,13 @@ JCSmartFilter.prototype.reload = function(input)
 			this.reload(input);
 		}, this), 1000);
 		return;
-	}*/
+	}
 	this.cacheKey = '|';
-	//console.log('START');
+
 	this.position = BX.pos(input, true);
-	this.form = BX('SMART_FILTER');//.findParent(input, {'tag':'form'}); 
-	//console.log(this.form);
+	this.form = BX.findParent(input, {'tag':'form'});
 	if (this.form)
 	{
-
 		var values = [];
 		values[0] = {name: 'ajax', value: 'y'};
 		this.gatherInputsValues(values, BX.findChildren(this.form, {'tag': new RegExp('^(input|select)$', 'i')}, true));
@@ -85,16 +82,15 @@ JCSmartFilter.prototype.reload = function(input)
 		}
 		else
 		{
-			this.curFilterinput = input; 	console.log(this.ajaxURL);	console.log(this.values2post(values));	
+			this.curFilterinput = input;
 			BX.ajax.loadJSON(
 				this.ajaxURL,
 				this.values2post(values),
-			
 				BX.delegate(this.postHandler, this)
 			);
 		}
 
-		
+		this.proxy()
 	}
 };
 
@@ -118,41 +114,9 @@ JCSmartFilter.prototype.allFilterShowHide = function ()
 
 	this.updateHorizontalFilter();
 };
-JCSmartFilter.prototype.InitHorisontalFilter = function (ajaxURL, viewMode, params)
-{
-	JCSmartFilter.prototype.ajaxURL = ajaxURL;
-	JCSmartFilter.prototype.form = null;
-	JCSmartFilter.prototype.timer = null;
-	JCSmartFilter.prototype.cacheKey = '';
-	JCSmartFilter.prototype.cache = [];
-	JCSmartFilter.prototype.popups = [];
-	JCSmartFilter.prototype.viewMode = viewMode;
-	JCSmartFilter.prototype.countCheckboxFilter = 0;
-	JCSmartFilter.prototype.sectionCode = null;
-	JCSmartFilter.prototype.allFilterShowHideContent = '<div class="osh-circle d-inline-block"></div>' +
-		' <div class="osh-circle d-inline-block"></div>' +
-		' <div class="osh-circle d-inline-block"></div>';
-	if (params && params.SEF_SET_FILTER_URL)
-	{
-		JCSmartFilter.prototype.sef = true;
-	}
 
-
-        $('.smart-filter-form').find("input.check_input:checked").each(
-            function () { 
-                let text_taste = $(this).closest('div.form-check').find('label').attr('id');
-				let code = $(this).closest('div.form-check').find('label').attr('for');
-	
-				
-				JCSmartFilter.prototype.addHorizontalFilter(BX(code));
-
-            }
-        );	
-		//this.updateHorizontalFilter();
-	
-};
 JCSmartFilter.prototype.updateHorizontalFilter = function()
-{ //console.log('COUNT:'+this.countCheckboxFilter);
+{
 	const allFilter = $('#osh-filter-horizontal-item div'),
 		stateFilter = $('#osh-filter-horizontal-item').data('osh-filter-state'),
 		filterRemoveAllOne = this.countCheckboxFilter == 0 ? 'd-none' : 'd-inline-block',
@@ -160,7 +124,7 @@ JCSmartFilter.prototype.updateHorizontalFilter = function()
 		filterCount = this.countCheckboxFilter > 3 ? this.countCheckboxFilter - 3 : 0,
 		filterCountAddClass = this.countCheckboxFilter > 3 ? 'd-inline-block' : 'd-none',
 		filterCountRemoveClass = this.countCheckboxFilter > 3 ? 'd-none' : 'd-inline-block'
-//console.log(this.countCheckboxFilter);
+
 	if (stateFilter == 'show') {
 		for (let i=0; i<allFilter.length; i++) {
 			$(allFilter[i]).removeClass('d-none').addClass('d-inline-block')
@@ -198,58 +162,31 @@ JCSmartFilter.prototype.removeHorizontalFilterAll = function ()
 		this.countCheckboxFilter--
 	}
 	this.updateHorizontalFilter()
-	this.reload(checkbox); 
-	//this.proxy();
-
-
+	this.proxy();
 };
 
 JCSmartFilter.prototype.removeHorizontalFilter = function(checkbox)
 {
 	const idFilter = BX(checkbox).getAttribute('id'),
-	idFilterItem = `item-${idFilter}`
-	
+		idFilterItem = `item-${idFilter}`
 	BX.remove(BX(idFilterItem));
 	this.countCheckboxFilter--
 	this.updateHorizontalFilter()
-	if(!!this.timer)
-	{
-		clearTimeout(this.timer);
-	}
-	this.timer = setTimeout(BX.delegate(function(){
-		this.reload(checkbox);
-	}, this), 500);
-	
-//this.proxy();
-	
+	this.proxy();
 };
-JCSmartFilter.prototype.removeHorizontalFilterNoProxy = function(checkbox)
-{
-	const idFilter = BX(checkbox).getAttribute('id'),
-	idFilterItem = `item-${idFilter}`
-	BX.remove(BX(idFilterItem));
-	this.countCheckboxFilter--
-	this.updateHorizontalFilter()
-	
-};
+
 JCSmartFilter.prototype.addHorizontalFilter = function(checkbox)
 {
-
-	
 	const mainBlock = BX('osh-filter-horizontal-item'),
 		idFilter = BX(checkbox).getAttribute('id'),
-		
 		idFilterItem = `item-${idFilter}`,
 		nameFilter = BX.findChild(BX.findParent(checkbox, {'tag':'form'}), {
 			attribute: {
 				'for': idFilter
 			}
 		}, true).innerHTML;
-	if( BX(idFilterItem) )
-	{
-		return;
-	}
-	this.countCheckboxFilter++;
+
+	this.countCheckboxFilter++
 
 	BX.append(
 		BX.create('div', {
@@ -270,8 +207,7 @@ JCSmartFilter.prototype.addHorizontalFilter = function(checkbox)
 		BX(checkbox).checked = false;
 		this.countCheckboxFilter--
 		this.updateHorizontalFilter()
-		this.reload(checkbox);		
-		//this.proxy();
+		this.proxy();
 		return BX.PreventDefault(e);
 	});
 };
@@ -317,19 +253,19 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem)
 					var label = document.querySelector('[data-role="label_'+value.CONTROL_ID+'"]');
 					if (value.DISABLED)
 					{
-							BX.adjust(control, {props: {disabled: true}});
-							if (label)
-								BX.addClass(label, 'disabled');
-							else
-								BX.addClass(control.parentNode, 'disabled');
+						BX.adjust(control, {props: {disabled: true}});
+						if (label)
+							BX.addClass(label, 'disabled');
+						else
+							BX.addClass(control.parentNode, 'disabled');
 					}
 					else
 					{
-							BX.adjust(control, {props: {disabled: false}});
-							if (label)
-								BX.removeClass(label, 'disabled');
-							else
-								BX.removeClass(control.parentNode, 'disabled');
+						BX.adjust(control, {props: {disabled: false}});
+						if (label)
+							BX.removeClass(label, 'disabled');
+						else
+							BX.removeClass(control.parentNode, 'disabled');
 					}
 
 					if (value.hasOwnProperty('ELEMENT_COUNT'))
@@ -345,10 +281,10 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem)
 };
 
 JCSmartFilter.prototype.postHandler = function (result, fromCache)
-{	
+{
 	var hrefFILTER, url, curProp;
 	if (!!result && !!result.ITEMS)
-	{	
+	{
 		for(var popupId in this.popups)
 		{
 			if (this.popups.hasOwnProperty(popupId))
@@ -366,27 +302,6 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 			}
 		}
 	}
-//console.log(result.FILTER_AJAX_URL);
-		url = BX.util.htmlspecialcharsback(result.FILTER_AJAX_URL);
-		url = url.replace('#', '%23');
-		
-		
-	  if (window.history.enabled || window.history.pushState != null) {
-			url_result = decodeURIComponent(url).replace(/#/g, '%23').replace('filter/clear/apply/', '');
-			 
-			window.history.pushState(null, document.title, url_result);
-			
-			
-			let PRICE_ID = $('.urlsort_price_max').attr('data-price-id');
-	  $('.urlsort_popular').attr('href', url_result+'?sort_by=SHOW_COUNTER&sort_order=ASC');
-	  $('.urlsort_price_max').attr('href', url_result+'?sort_by=PROPERTY_MINIMUM_PRICE&sort_order=desc');//CATALOG_PRICE_'+PRICE_ID+
-	  $('.urlsort_price_min').attr('href', url_result+'?sort_by=PROPERTY_MINIMUM_PRICE&sort_order=ASC');
-	  $('.urlsort_name').attr('href', url_result+'?sort_by=NAME&sort_order=ASC');
-	  $('.urlsort_created').attr('href', url_result+'?sort_by=CREATED_DATE&sort_order=desc');
-	  
-	  } else {
-		//location.href = url;
-	  }
 
 
 	if (!fromCache && this.cacheKey !== '')
@@ -394,20 +309,17 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 		this.cache[this.cacheKey] = result;
 	}
 	this.cacheKey = '';
-	this.proxy();
 };
 
 JCSmartFilter.prototype.proxy = function()
 {
-	//
+	BX.cleanNode(window.JCCatalogSectionComponentThis.container);
 
 	// data['action'] = 'initialLoad';
 	var data = {};
 	data['action'] = 'showMore';
-	data['PAGEN_' + 1] = 1;
-	data['PAGER_BASE_LINK'] = location.href;
-	data['PAGER_BASE_LINK_ENABLE'] = 'Y';
-	
+	data['PAGEN_' + 0] = 1;
+
 	var values = [];
 	values[0] = {name: 'ajax', value: 'y'};
 	values[1] = {name: 'ajax_filter', value: 'y'};
@@ -418,8 +330,7 @@ JCSmartFilter.prototype.proxy = function()
 	if (this.sectionCode) {
 		data['subcat'] = this.sectionCode;
 	}
-	//console.log(data);
-	//console.log(2);
+
 	window.JCCatalogSectionComponent.prototype.sendRequestRefreshCatalog.call(window.JCCatalogSectionComponentThis, data);
 	return false;
 };
@@ -724,7 +635,7 @@ BX.Iblock.SmartFilter = (function()
 			this.rightSlider.style.right = this.rightPercent + "%";
 			this.colorUnavailableActive.style.right = this.rightPercent + "%";
 		}
-		
+
 		this.setMaxFilteredValue(this.fltMaxPrice);
 	};
 

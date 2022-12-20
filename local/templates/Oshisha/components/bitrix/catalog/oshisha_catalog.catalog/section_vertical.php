@@ -296,7 +296,7 @@ usort($arResultSection, 'sort_by_name');
                     <span class='d-inline-block osh-filter-horizontal-remove'></span>
                 </div>
             </div>
-            <div class="sort-panel">
+            <div class="sort-panel mb-4">
                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                     <div class="sort_panel_wrap">
                         <div class="sort_panel">
