@@ -203,6 +203,8 @@ class Module {
             'INFOSMSKARU' => array('NAME' => 'infosmska.ru', 'PATH' => __DIR__ . '/lib/providers/infosmskaru.php', 'CLASS' => '\Ctweb\SMSAuth\ProviderINFOSMSKARU'),
             'MAINSMS' => array('NAME' => 'mainsms.ru', 'PATH' => __DIR__ . '/lib/providers/mainsms.php', 'CLASS' => '\Ctweb\SMSAuth\ProviderMAINSMS'),
             'SMSUSLUGIRU' => array('NAME' => 'sms-uslugi.ru', 'PATH' => __DIR__. '/lib/providers/smsuslugiru.php', 'CLASS' => '\Ctweb\SMSAuth\ProviderSMSUSLUGIRU'),
+            'BEELINESMS' => array('NAME' => 'beeline.ru', 'PATH' => __DIR__ . '/lib/providers/beelinesms.php', 'CLASS' => '\Ctweb\SMSAuth\ProviderBeelineSMS'),
+            'NEWBEELINE' => array('NAME' => 'a2p-sms.beeline.ru', 'PATH' => __DIR__ . '/lib/providers/newbeeline.php', 'CLASS' => '\Ctweb\SMSAuth\NewBeeline'),
         );
 
         $event = new \Bitrix\Main\Event(self::MODULE_ID, "OnGetProviderList", array(&$arResult));
