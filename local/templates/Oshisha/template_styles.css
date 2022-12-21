@@ -645,8 +645,7 @@ h3.ctweb-title {
 
 .blur_photo .bx_price,
 .blur_photo .product-item-amount-field-contain,
-.blur_photo .product-item-detail-price-current,
-.blur_photo .bx_catalog_item_controls {
+.blur_photo .product-item-detail-price-current{
     display: none !important;
 }
 

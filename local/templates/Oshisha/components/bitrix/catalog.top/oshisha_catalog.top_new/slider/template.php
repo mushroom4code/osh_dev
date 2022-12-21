@@ -157,10 +157,14 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         $catalog = CIBlockSection::GetList(array(), array('ID' => $arElement['IBLOCK_SECTION_ID'], 'IBLOCK_ID' => $arParams['IBLOCK_ID']),
             false, array('*', 'UF_*'));
         $catalogProduct = $catalog->Fetch();
-
+        $rowResHidePrice = $arItem['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
+        $show_price = true;
+        if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
+            $show_price = false;
+        }
         ?>
         <div class="<?= ($arItem['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>">
-            <div class="bx_catalog_item_container product-item <? if ($catalogProduct['UF_HIDE_PRICE'] == 1 && !$USER->IsAuthorized()): ?>blur_photo<? endif; ?>"
+            <div class="bx_catalog_item_container product-item <?php if (!$show_price): ?>blur_photo<? endif; ?>"
                  id="<?= $strMainID; ?>">
                 <div>
                     <div class="variation_taste">
@@ -198,45 +202,48 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                     </div>
                     <?php if (!empty($price['PRICE_DATA'][1]['PRINT_PRICE'])) { ?>
                         <div class="bx_catalog_item_price">
-                            <div class="box_with_titles">
+                            <div class="box_with_titles justify-content-between">
                                 <div class="box_with_price d-flex flex-column">
-                                    <div class="d-flex flex-row align-items-center">
-                                        <?php
-                                        $sale = false;
-                                        if (!empty($price['SALE_PRICE'])) {
-                                            $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
-                                            $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
-                                            $sale = true;
-                                        } else {
-                                            $price_new = $price['PRICE_DATA'][1]['PRINT_PRICE'];
-                                            $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
-                                        } ?>
-                                        <div class="bx_price" id="<?= $price_id ?>">
-                                            <?= $price_new ?>
-                                        </div>
-                                        <?php if (!$sale) { ?>
-                                            <div class="info-prices-box-hover cursor-pointer ml-2">
-                                                <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-                                                <div class="position-absolute d-hide">
-                                                    <div class="d-flex flex-column prices-block">
-                                                        <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                                                            <p class="mb-1">
-                                                                <span class="font-11 mb-2"><?= $items['NAME'] ?></span><br>
-                                                                <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                                                            </p>
-                                                        <?php } ?>
+                                    <?php if ($show_price) { ?>
+                                        <div class="d-flex flex-row align-items-center">
+                                            <?php
+                                            $sale = false;
+                                            if (!empty($price['SALE_PRICE'])) {
+                                                $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
+                                                $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
+                                                $sale = true;
+                                            } else {
+                                                $price_new = $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                                                $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
+                                            } ?>
+                                            <div class="bx_price" id="<?= $price_id ?>">
+                                                <?= $price_new ?>
+                                            </div>
+                                            <?php if (!$sale) { ?>
+                                                <div class="info-prices-box-hover cursor-pointer ml-2">
+                                                    <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
+                                                    <div class="position-absolute d-hide">
+                                                        <div class="d-flex flex-column prices-block">
+                                                            <?php foreach ($price['PRICE_DATA'] as $items) { ?>
+                                                                <p class="mb-1">
+                                                                    <span class="font-11 mb-2"><?= $items['NAME'] ?></span><br>
+                                                                    <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                                                </p>
+                                                            <?php } ?>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
-                                    <?php if (!empty($price['SALE_PRICE'])) { ?>
-                                        <div class="after_price">
-                                            Старая цена: <?= $price['PRICE_DATA'][1]['PRINT_PRICE'] ?>
+                                            <?php } ?>
                                         </div>
-                                    <?php } ?>
+                                        <?php if (!empty($price['SALE_PRICE'])) { ?>
+                                            <div class="after_price">
+                                                Старая цена: <?= $price['PRICE_DATA'][1]['PRINT_PRICE'] ?>
+                                            </div>
+                                        <?php }
+                                    } ?>
                                 </div>
-                                <?php $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                                <?php
+                                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                                     'templates',
                                     array(
                                         'ID_PROD' => $arItem['ID'],
@@ -254,7 +261,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                             </div>
                         </div>
                     <?php } else { ?>
-                        <div class="box_with_titles">
+                        <div class="box_with_titles justify-content-between">
                             <div class="not_product">
                                 Товара нет в наличии
                             </div>
@@ -293,39 +300,40 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                         <?php if ($arItem['PRODUCT']['QUANTITY'] !== '0') { ?>
 
                         <div class="box_with_fav_bask">
-                            <div class="btn red_button_cart btn-plus add2basket"
-                                 data-url="<?= $arItem['DETAIL_PAGE_URL'] ?>"
-                                 data-product_id="<?= $arItem['ID']; ?>"
-                                 data-max-quantity="<?= $arItem['PRODUCT']['QUANTITY'] ?>"
-                                 id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                 <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>В корзину
-                            </div>
-                            <div class="product-item-amount-field-contain-wrap"
-                                 <? if ($priceBasket > 0): ?>style="display:block;"<? endif; ?>
-                                 data-product_id="<?= $arItem['ID']; ?>">
-
-                                <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
-                                    <a class="btn-minus  minus_icon no-select add2basket"
-                                       id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                       href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                       data-product_id="<?= $arItem['ID']; ?>">
-                                        <span class="minus_icon"></span>
-                                    </a>
-                                    <div class="product-item-amount-field-block">
-                                        <input class="product-item-amount card_element"
-                                               id="<?= $arItemIDs['QUANTITY_ID'] ?>" type="number"
-                                               value="<?= $priceBasket ?>">
-                                    </div>
-
-                                    <a class="btn-plus plus_icon no-select add2basket" data-max-quantity="
-                                                <?= $arItem['PRODUCT']['QUANTITY'] ?>"
-                                       id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                       href="javascript:void(0)" data-url="<?= $arItem['DETAIL_PAGE_URL'] ?>"
-                                       data-product_id="<?= $arItem['ID']; ?>"
-                                       title="Добавить в корзину"></a>
+                            <?php if ($show_price) { ?>
+                                <div class="btn red_button_cart btn-plus add2basket"
+                                     data-url="<?= $arItem['DETAIL_PAGE_URL'] ?>"
+                                     data-product_id="<?= $arItem['ID']; ?>"
+                                     data-max-quantity="<?= $arItem['PRODUCT']['QUANTITY'] ?>"
+                                     id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                     <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>В корзину
                                 </div>
-                            </div>
-                            <?php $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                                <div class="product-item-amount-field-contain-wrap"
+                                     <? if ($priceBasket > 0): ?>style="display:block;"<? endif; ?>
+                                     data-product_id="<?= $arItem['ID']; ?>">
+
+                                    <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
+                                        <a class="btn-minus  minus_icon no-select add2basket"
+                                           id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                           href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                           data-product_id="<?= $arItem['ID']; ?>">
+                                            <span class="minus_icon"></span>
+                                        </a>
+                                        <div class="product-item-amount-field-block">
+                                            <input class="product-item-amount card_element"
+                                                   id="<?= $arItemIDs['QUANTITY_ID'] ?>" type="number"
+                                                   value="<?= $priceBasket ?>">
+                                        </div>
+                                        <a class="btn-plus plus_icon no-select add2basket" data-max-quantity="
+                                                <?= $arItem['PRODUCT']['QUANTITY'] ?>"
+                                           id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                           href="javascript:void(0)" data-url="<?= $arItem['DETAIL_PAGE_URL'] ?>"
+                                           data-product_id="<?= $arItem['ID']; ?>"
+                                           title="Добавить в корзину"></a>
+                                    </div>
+                                </div>
+                            <?php }
+                            $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                                 'templates',
                                 array(
                                     'ID_PROD' => $arItem['ID'],
@@ -343,8 +351,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                         </div>
                         <div style="clear: both;"></div>
                     </div>
-                    <?
-                    } else { ?>
+                    <?php } else { ?>
                     <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>"
                     <div class="box_with_fav_bask">
                         <div class="not_product detail_popup">
