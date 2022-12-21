@@ -1,14 +1,22 @@
 .main_menu {
-    max-width: 980px;
+    max-width: 1030px;
+    align-content: stretch;
+    height: 495px;
 }
 
 .menu_items {
+    align-content: stretch;
     width: 80%;
     background: #fff;
     display: flex !important;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
     border-radius: 0 20px 20px 0;
+}
+
+.menu-item-line {
+    max-width: 37%;
+    margin-bottom: 5px;
 }
 
 .menu_items.hide {
