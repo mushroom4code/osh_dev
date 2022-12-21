@@ -1476,9 +1476,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 if (!this.locations.hasOwnProperty(i))
                     continue;
 
-                //enterego
-                this.editActiveRegionBlock(true);
-
                 locationNode = this.orderBlockNode.querySelector('div[data-property-id-row="' + i + '"]');
                 if (!locationNode)
                     continue;
@@ -1525,10 +1522,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
 
             // this.checkNotifications();
-
-            if (this.activeSectionId !== this.propsBlockNode.id) {
-                this.editActivePropsBlock(true);
-            }
 
             // if (this.activeSectionId !== this.propsBlockNode.id)
             //     this.editFadePropsContent(this.propsBlockNode.querySelector('.bx-soa-section-content'));
@@ -2052,11 +2045,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             // this.mobileTotalBlockNode.style.display = this.result.SHOW_AUTH ? 'none' : '';
 
             this.checkPickUpShow();
+            //enterego always redraw props block
+            this.editActivePropsBlock(true);
+            this.editActiveRegionBlock(true);
 
-            if (this.activeSection !== null) {
-                this.editSection(this.activeSection);
-                this.activeSection = null;
-            }
+            // if (this.activeSection !== null) {
+            //     this.editSection(this.activeSection);
+            //     this.activeSection = null;
+            // }
 
             this.editTotalBlock();
             this.totalBlockFixFont();
