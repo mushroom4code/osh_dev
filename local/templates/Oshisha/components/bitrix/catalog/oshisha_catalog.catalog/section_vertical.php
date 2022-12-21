@@ -176,8 +176,6 @@ if ($_GET['page'] != '') {
 }
 $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
-
-usort($arResultSection, 'sort_by_name');
 ?>
 <div class="row mb-4 box_with_prod">
     <?php if ($isFilter) : ?>

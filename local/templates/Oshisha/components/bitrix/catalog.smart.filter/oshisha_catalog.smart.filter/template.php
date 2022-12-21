@@ -65,13 +65,13 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                         ?>
 
-                        <?php if( (int)$arItem['ID'] === BASIC_PRICE){?>
+                        <?php if( (int)$arItem['ID'] === RETAIL_PRICE){?>
                         <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?>F  smart-filter-parameters-box bx-active">
                             <span class="smart-filter-container-modef"></span>
 
                             <div class="smart-filter-parameters-box-title"
                                  onclick="smartFilter.hideFilterProps(this)">
-                                <span class="smart-filter-parameters-box-title-text">Цена</span>
+                                <span class="smart-filter-parameters-box-title-text">Цена(Розничная)</span>
                                 <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
 									<i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
 								</span>

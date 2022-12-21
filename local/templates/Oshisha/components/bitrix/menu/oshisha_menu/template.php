@@ -66,19 +66,18 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             }
             return ($a["TEXT"] < $b["TEXT"]) ? -1 : 1;
         }
-        usort($menu_for_JS['MAIN'], 'sort_by_name_menu');
 
         $result = json_encode($menu_for_JS) ?>
          <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
             <a class="link_menu_header" href="/diskont/">
                 <span class="text_catalog_link">Дисконт</span>
             </a>
-        </li>       
+        </li>
         <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
             <a class="link_menu_header" href="/catalog_new/">
                 <span class="text_catalog_link">Новинки</span>
             </a>
-        </li>		
+        </li>
 		<li class="li_menu_header  none_mobile" data-role="bx-menu-item">
             <a class="link_menu_header" href="/brands/">
                 <span class="text_catalog_link">Бренды</span>
@@ -119,7 +118,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 		//$('body').addClass('overlay_top');
 		$('.overlay_top').show();
         if (that === "span_bar") {
-            $(this).attr('style', 'flex-direction:row-reverse;transition:0.3s;');
+            $(this).attr('style', 'flex-direction:column;transition:0.3s; flex-wrap:wrap;');
             $(this).find('.span_bar').addClass('open_menu');
             $('#main_menu').addClass('main_menu');
             if (menu_items_array !== '') {
@@ -146,7 +145,8 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 						
                             if (id === key_item) {
                                 $(value_item).each(function (i, val) {
-                                    $(menu_items).append('<div class="col-lg-4 col-md-4 col-12 p-0"><a class="link_menu_header link_menu" href="' + val.LINK + '">' +
+                                    $(menu_items).append('<div class=" p-0" style="max-width:37%;margin-bottom: 5px;">' +
+                                        '<a class="link_menu_header link_menu" href="' + val.LINK + '">' +
                                         '<span class="text_catalog_link">' + val.TEXT + '</span></a></div')
                                 })
                             }
@@ -190,7 +190,8 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             $.each(menu_items_array.ELEMENT, function (key_item, value_item) {
                 if (id === key_item) {
                     $(value_item).each(function (i, val) {
-                        $(menu_items).append('<div class="col-lg-4 col-md-4 col-12 p-0"><a class="link_menu_header link_menu" href="' + val.LINK + '">' +
+                        $(menu_items).append('<div  style="max-width:37%;margin-bottom: 5px;">' +
+                            '<a class="link_menu_header link_menu" href="' + val.LINK + '">' +
                             '<span class="text_catalog_link">' + val.TEXT + '</span></a></div>').removeClass('hide');
                     })
                 }
