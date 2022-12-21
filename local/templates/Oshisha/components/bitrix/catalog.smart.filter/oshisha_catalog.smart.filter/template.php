@@ -71,7 +71,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                             <div class="smart-filter-parameters-box-title"
                                  onclick="smartFilter.hideFilterProps(this)">
-                                <span class="smart-filter-parameters-box-title-text">Цена(Розничная)</span>
+                                <span class="smart-filter-parameters-box-title-text">Цена</span>
                                 <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
 									<i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
 								</span>
