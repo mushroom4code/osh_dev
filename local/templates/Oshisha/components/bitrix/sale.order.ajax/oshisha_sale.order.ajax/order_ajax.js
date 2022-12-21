@@ -1,3 +1,5 @@
+//TODO сейчас при изменении основных полей перерисовывается вся форма
+//можно отслеживать зависимости полей и не перерисовывать всю форму
 BX.namespace('BX.Sale.OrderAjaxComponent');
 
 (function () {
@@ -107,7 +109,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             this.propsBlockNode = BX(parameters.propsBlockId);
             this.propsHiddenBlockNode = BX(parameters.propsBlockId + '-hidden');
 
-            this.groupBuyerProps = "1";
+            this.groupBuyerProps = ["Личные данные"];
+            this.groupDeliveryProps = ["Данные для доставки"];
 
             if (this.result.SHOW_AUTH) {
                 this.authBlockNode.style.display = '';
@@ -1473,6 +1476,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 if (!this.locations.hasOwnProperty(i))
                     continue;
 
+                //enterego
+                this.editActiveRegionBlock(true);
+
                 locationNode = this.orderBlockNode.querySelector('div[data-property-id-row="' + i + '"]');
                 if (!locationNode)
                     continue;
@@ -1520,8 +1526,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             // this.checkNotifications();
 
-            if (this.activeSectionId !== this.propsBlockNode.id)
+            if (this.activeSectionId !== this.propsBlockNode.id) {
                 this.editActivePropsBlock(true);
+            }
 
             // if (this.activeSectionId !== this.propsBlockNode.id)
             //     this.editFadePropsContent(this.propsBlockNode.querySelector('.bx-soa-section-content'));
@@ -5509,12 +5516,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         }
                     }
                 }
-
-                if (!TypePersonBlock) {
-                    this.getPersonTypeControl(this.UserCheckType);
-
-                    this.getProfilesControl(this.UserCheckType);
-                }
+                this.UserCheckType.innerHTML = '';
+                this.getPersonTypeControl(this.UserCheckType);
+                this.getProfilesControl(this.UserCheckType);
 
                 this.editPropsItems(propsNode);
 
@@ -5625,18 +5629,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 propsIterator = group.getIterator();
                 while (property = propsIterator()) {
                     if (propsNode.classList.contains('delivery')) {
-                        if (property.getGroupId() === '2') {
+                        if (this.groupDeliveryProps.find(item => item === group.getName())!==undefined) {
                             this.getPropertyRowNode(property, propsItemsContainer, false);
                         } else {
                             continue;
                         }
 
                     } else {
-                        if (property.getGroupId() === this.groupBuyerProps) {
-                            // if (this.deliveryLocationInfo.loc === property.getId()
-                            //     || this.deliveryLocationInfo.zip === property.getId()
-                            //     || this.deliveryLocationInfo.city === property.getId())
-                            //     continue;
+                        if (this.groupBuyerProps.find(item => item === group.getName())!==undefined) {
                             this.getPropertyRowNode(property, propsItemsContainer, false);
                         }
                         continue;
@@ -5665,38 +5665,25 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (disabled) {
                 propsItemNode.innerHTML = '<strong>' + BX.util.htmlspecialchars(property.getName()) + ':</strong> ';
             } else {
+                let className = "form-group bx-soa-customer-field p-2";
+
                 if (property.getSettings().CODE === 'EMAIL') {
                     if (this.result.IS_AUTHORIZED) {
                         if (BX('user_select')) {
                             BX.adjust(BX('user_select'), {style: {display: "none"}});
                         }
                     }
-                    BX.addClass(propsItemNode, "form-group box2 bx-soa-customer-field p-0 custom_field");
-                } else if (property.getSettings().CODE === 'PHONE' || property.getSettings().CODE === 'CAR_MODEL' ||
-                    property.getSettings().CODE === 'CAR_NUMBER') {
-                    BX.addClass(propsItemNode, "form-group box3 bx-soa-customer-field p-0 custom_field");
-                } else if (property.getSettings().CODE === 'FIO') {
-                    BX.addClass(propsItemNode, "form-group box1 bx-soa-customer-field p-0");
-                } else if (property.getSettings().CODE === 'company') {
-                    BX.adjust(BX('user_select'), {style: {display: "block"}});
-                    BX.addClass(propsItemNode, "form-group bx-soa-customer-field box1 none_block");
-                } else if (property.getSettings().CODE === 'contragent') {
-                    BX.addClass(propsItemNode, "form-group bx-soa-customer-field box3 none_block");
-                } else if (property.getId() === this.deliveryDatePropertyId) {
-                    BX.addClass(propsItemNode, "form-group bx-soa-customer-field box_grid_2 col-12");
-                } else if (property.getSettings().CODE === 'TIME') {
-                    BX.addClass(propsItemNode, "form-group bx-soa-customer-field box_grid_3 col-12");
+                    className += " col-6";
+                } if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
+                    || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY') {
+                    className += " col-12";
                 } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
-                    BX.addClass(propsItemNode, "d-none");
-                } else if (property.getSettings().CODE === 'ADDRESS') {
-                    const extraClass = this.isOshPickUp() ? 'd-none' : 'bx-soa-customer-field box_grid_1 col-12';
-                    BX.addClass(propsItemNode, extraClass);
-                } else if (property.getSettings().CODE === 'CALL_ME') {
-                    BX.addClass(propsItemNode, "form-group bx-soa-customer-field box_grid_4 col-12 d-flex flex-column" +
-                        " justify-content-between");
+                    className += " d-none";
                 } else {
-                    BX.addClass(propsItemNode, "form-group box3 bx-soa-customer-field p-0 custom_field");
+                    className += " col-6";
                 }
+                BX.addClass(propsItemNode, className);
+
                 textHtml += propertyDesc.length && propertyType !== 'STRING' && propertyType !== 'NUMBER' &&
                 propertyType !== 'DATE' ? ' <small>(' + BX.util.htmlspecialchars(propertyDesc) + ')</small>'
                     : BX.util.htmlspecialchars(property.getName());
