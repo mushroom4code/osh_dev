@@ -1,7 +1,7 @@
 .main_menu {
-    max-width: 980px;
+    max-width: 1030px;
     align-content: stretch;
-    max-height: 420px;
+    height: 475px;
 }
 
 .menu_items {
