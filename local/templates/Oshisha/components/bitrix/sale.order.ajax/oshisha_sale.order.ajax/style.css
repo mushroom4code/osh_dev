@@ -38,8 +38,9 @@
 }
 
 #bx-soa-properties .bx-soa-customer, #bx-soa-delivery .bx-soa-customer {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .datepicker--cell-day {
@@ -86,69 +87,6 @@
 
 #bx-soa-properties .form-check-input {
     padding: 9px;
-}
-
-#bx-soa-properties .bx-soa-customer {
-    grid-auto-rows: 55px;
-}
-
-#bx-soa-delivery .bx-soa-customer {
-    /*grid-auto-rows: 75px;*/
-}
-
-.box1 {
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 1;
-}
-
-.box2 {
-    grid-column-start: 2;
-    grid-row-start: 3;
-    grid-row-end: 3;
-}
-
-.box3 {
-    grid-row-start: 3;
-    grid-row-end: 3;
-}
-
-.box_grid_3, .box_grid_1, .box_grid_2, .box_grid_4 {
-    margin: 0;
-    padding: 0;
-}
-
-.box_grid_1 {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 2;
-}
-
-.select2-container .select2-selection--single .select2-selection__rendered {
-    font-size: 13px;
-}
-
-.box_grid_2 {
-    grid-column-start: 1;
-    grid-row-start: 3;
-    grid-row-end: 3;
-    grid-column-end: 2;
-}
-
-.box_grid_3 {
-    grid-row-start: 3;
-    grid-row-end: 3;
-}
-
-.box_grid_4 {
-    grid-column-start: 3;
-    grid-row-start: 4;
-    grid-row-end: 3;
-}
-
-.box_grid_3 .soa-property-container, .datepicker_order {
-    max-width: 200px;
 }
 
 .datepicker_order {
@@ -835,10 +773,6 @@
     border-radius: 3px;
     background-color: #fff;
     transition: opacity .2s ease;
-}
-
-.bx-soa-customer .form-group {
-    margin: 0 13px 10px 0;
 }
 
 .order_text {
