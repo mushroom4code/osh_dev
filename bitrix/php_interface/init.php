@@ -23,7 +23,8 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoExchange' => '/bitrix/php_interface/enterego_class/EnteregoExchange.php',
     '\Enterego\EnteregoBasket' => '/bitrix/php_interface/enterego_class/EnteregoBasket.php',
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
-    '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php'
+    '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
+    '\CommonPVZ\DeliveryHelper' => '/local/php_interface/include/sale_delivery/CommonPVZ/DeliveryHelper.php'
 ));
 
 global $PRICE_TYPE_ID;
@@ -230,4 +231,18 @@ function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
 
     //if( $order->getPersonTypeId() == 1 ){}
 
-}	
+}
+
+#000018618
+AddEventHandler("sale", "OnSaleComponentOrderOneStepDelivery", "onOrderOneStepDelivery");
+
+function onOrderOneStepDelivery(&$arResult, &$arUserResult, $arParams)
+{
+    $button = \CommonPVZ\DeliveryHelper::getButton();
+    $id = \CommonPVZ\DeliveryHelper::getDeliveryID($arResult['DELIVERY']);
+
+    if (isset($arResult['DELIVERY'][$id])) {
+        $content = $arResult['DELIVERY'][$id]['DESCRIPTION'];
+        $arResult['DELIVERY'][$id]['DESCRIPTION'] = $content . $button;
+    }
+}

@@ -260,6 +260,14 @@ switch (LANGUAGE_ID) {
 $this->addExternalJs($templateFolder . '/order_ajax.js');
 PropertyValueCollection::initJs();
 $this->addExternalJs($templateFolder . '/script.js');
+
+#000018618 PVZ
+if ($arParams['SHOW_PICKUP_MAP'] === 'Y' || $arParams['SHOW_MAP_IN_PROPS'] === 'Y') {
+    $apiKey = htmlspecialcharsbx(Option::get('fileman', 'yandex_map_api_key', ''));
+    $this->addExternalJs($scheme . '://api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey . '&lang=' . $locale);
+}
+$this->addExternalJs('/local/assets/js/commonpvz/script.js');
+
 ?>
     <NOSCRIPT>
         <div style="color:red"><?= Loc::getMessage('SOA_NO_JS') ?></div>
@@ -761,6 +769,7 @@ if ($request->get('ORDER_ID') <> '') {
                     )) . '</div>'
             )
         ))?>);
+        BX.SaleCommonPVZ.init();
     </script>
     <?php
 
