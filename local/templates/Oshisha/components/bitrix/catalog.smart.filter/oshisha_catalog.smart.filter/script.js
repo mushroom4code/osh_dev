@@ -652,7 +652,7 @@ BX.Iblock.SmartFilter = (function()
 			// else
 			// 	this.colorAvailableActive.style.left = this.fltMinPercent + "%";
 
-			this.colorAvailableInactive.style.left = this.fltMinPercent + "%";
+			// this.colorAvailableInactive.style.left = this.fltMinPercent + "%";
 		}
 		else
 		{
