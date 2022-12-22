@@ -261,7 +261,7 @@ $this->addExternalJs($templateFolder . '/order_ajax.js');
 PropertyValueCollection::initJs();
 $this->addExternalJs($templateFolder . '/script.js');
 
-#000018618 PVZ
+// #000018618 PVZ
 if ($arParams['SHOW_PICKUP_MAP'] === 'Y' || $arParams['SHOW_MAP_IN_PROPS'] === 'Y') {
     $apiKey = htmlspecialcharsbx(Option::get('fileman', 'yandex_map_api_key', ''));
     $this->addExternalJs($scheme . '://api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey . '&lang=' . $locale);
@@ -769,7 +769,10 @@ if ($request->get('ORDER_ID') <> '') {
                     )) . '</div>'
             )
         ))?>);
-        BX.SaleCommonPVZ.init();
+        // #000018618 PVZ
+        BX.SaleCommonPVZ.init({
+            ajaxUrlPVZ: '/local/php_interface/include/sale_delivery/CommonPVZ/ajax.php'
+        });
     </script>
     <?php
 

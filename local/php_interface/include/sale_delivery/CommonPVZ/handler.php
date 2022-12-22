@@ -26,6 +26,7 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
     protected static $canHasProfiles = false;
     protected static $isCalculatePriceImmediately = true;
     protected static $whetherAdminExtraServicesShow = false;
+    protected static $locationCode = 0;
 
     /**
      * @param array $initParams
@@ -43,14 +44,21 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
      */
     protected function calculateConcrete(\Bitrix\Sale\Shipment $shipment = null)
     {
-        $order = $shipment->getCollection()->getOrder(); // заказ
+        $result = new \Bitrix\Sale\Delivery\CalculationResult();
+
+        // получаем код города
+        $order = $shipment->getCollection()->getOrder();
         $props = $order->getPropertyCollection();
         $locationCode = $props->getDeliveryLocation()->getValue();
-        $data = \CommonPVZ\DeliveryHelper::mainRequest($_POST['soa-action'], $locationCode);
+
+        $resp = \CommonPVZ\DeliveryHelper::mainRequest($_POST, $locationCode);
+        if ($resp['price'] === 0) {
+            return $result->addError(new Error(Loc::getMessage("COMMONPVZ_CHOOSE_PVZ")));
+        }
 
         $weight = $shipment->getWeight(); // вес отгрузки
 
-         // местоположение
+        // местоположение
         echo '<pre>';
         print_r($_POST['soa-action']);
         echo '</pre>';
