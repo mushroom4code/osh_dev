@@ -41,6 +41,10 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                 foreach ($arResult["ITEMS"] as $key => $arItem)//prices
                 {
 
+                    if ((int)$arItem['ID'] !== RETAIL_PRICE) {
+                        continue;
+                    }
+
                     $key = $arItem["ENCODED_ID"];
 
                     if (isset($arItem["PRICE"])):
@@ -65,7 +69,6 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                         ?>
 
-                        <?php if( (int)$arItem['ID'] === RETAIL_PRICE){?>
                         <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?>F  smart-filter-parameters-box bx-active">
                             <span class="smart-filter-container-modef"></span>
 
@@ -136,9 +139,6 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 </div>
                             </div>
                         </div>
-                    <?php } ?>
-
-
                     <?php
                     $arJsParams = array(
                         "leftSlider" => 'left_slider_' . $key,
