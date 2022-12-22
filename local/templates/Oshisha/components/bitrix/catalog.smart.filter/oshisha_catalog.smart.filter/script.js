@@ -649,8 +649,8 @@ BX.Iblock.SmartFilter = (function()
 
 			if (this.leftPercent > this.fltMinPercent)
 				this.colorAvailableActive.style.left = this.leftPercent + "%";
-			else
-				this.colorAvailableActive.style.left = this.fltMinPercent + "%";
+			// else
+			// 	this.colorAvailableActive.style.left = this.fltMinPercent + "%";
 
 			this.colorAvailableInactive.style.left = this.fltMinPercent + "%";
 		}
