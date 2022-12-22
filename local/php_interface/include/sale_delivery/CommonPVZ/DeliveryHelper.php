@@ -3,17 +3,12 @@
 namespace CommonPVZ;
 
 use Bitrix\Main\Data\Cache;
-use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale\Location\LocationTable;
 
-Loc::loadMessages(__FILE__);
+require_once 'PickPointDelivery.php';
 
 class DeliveryHelper
 {
-    protected $arDeliveries = array(
-        'pickpoint'
-    );
-
     public static function getButton()
     {
         ob_start();
@@ -46,23 +41,29 @@ class DeliveryHelper
         return 0;
     }
 
-    public static function mainRequest($req, $locationCode)
+    public static function getCityName($locationCode)
+    {
+        $city = LocationTable::getByCode(
+            $locationCode,
+            [
+                'filter' => array('=TYPE.ID' => '5', '=NAME.LANGUAGE_ID' => LANGUAGE_ID),
+                'select' => ['ID', 'LOCATION_NAME' => 'NAME.NAME']
+            ]
+        )->fetch();
+
+        return $city['LOCATION_NAME'];
+    }
+
+    public static function mainRequest($req)
     {
         $result = [];
-        $result['price'] = 0;
 
         if ($req['soa-action'] === 'refreshOrderAjax') {
-            $city = LocationTable::getByCode(
-                $locationCode,
-                [
-                    'filter' => array('=TYPE.ID' => '5', '=NAME.LANGUAGE_ID' => LANGUAGE_ID),
-                    'select' => ['ID', 'LOCATION_NAME' => 'NAME.NAME']
-                ]
-            )->fetch();
-            $city_name = $city['LOCATION_NAME'];
+            $result['price'] = 0;
 
-            $result = self::getAllPVZ($city_name);
+
         } elseif ($req['soa-action'] === 'getPVZPrice') {
+            $result = self::getAllPVZ(self::getCityName($req['code_city']));
 
         }
 
@@ -74,17 +75,29 @@ class DeliveryHelper
     {
         $id_feature = 0;
         $result_array = [];
+        $points_Array = [];
         $cache = Cache::createInstance();
 
-        if ($cache->initCache(7200, "all_pvz")) {
-            $result_array = $cache->getVars();
+        if ($cache->initCache(7200, "pvz")) {
+            $points_Array = $cache->getVars();
         } elseif ($cache->startDataCache()) {
-            PickPointDelivery::getPVZ($city_name, $result_array, $id_feature);
+            PickPointDelivery::getPVZ($city_name, $points_Array, $id_feature);
 
-            $cache->endDataCache($result_array);
+            $cache->endDataCache($points_Array);
         }
 
+        $result_array['type'] = 'FeatureCollection';
+        $result_array['features'] = $points_Array;
+
         return $result_array;
+    }
+
+
+
+    // TODO
+    public static function refreshJSComponent()
+    {
+
     }
 
 }

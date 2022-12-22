@@ -2,13 +2,18 @@
 
 namespace CommonPVZ;
 
+use PickPointSdk\Components\PackageSize;
+use PickPointSdk\Components\SenderDestination;
+use PickPointSdk\PickPoint\PickPointConf;
+use PickPointSdk\PickPoint\PickPointConnector;
+
 class PickPointDelivery
 {
     public static function getPVZ($city_name, &$result_array, &$id_feature)
     {
 
         try {
-            // TODO - брать из настроек СД
+            // TODO - брать из настроек СД и вынести в конструктор
             $config = [
                 'host' => 'https://e-solution.pickpoint.ru/api/',
                 'login' => 'hYdz3J',
@@ -47,12 +52,16 @@ class PickPointDelivery
                         'preset' => 'islands#darkOrangeIcon'
                     ];
 
-                    $result_array['features'][] = $features_obj;
+                    $result_array[] = $features_obj;
                 }
             }
         } catch (\Exception $e) {
             $result_array['Errors'][] = $e->getMessage();
         }
         return $result_array;
+    }
+
+    public static function getPrice($array) {
+
     }
 }

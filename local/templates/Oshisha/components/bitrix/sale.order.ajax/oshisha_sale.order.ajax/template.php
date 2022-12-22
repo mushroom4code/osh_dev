@@ -267,6 +267,7 @@ if ($arParams['SHOW_PICKUP_MAP'] === 'Y' || $arParams['SHOW_MAP_IN_PROPS'] === '
     $this->addExternalJs($scheme . '://api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey . '&lang=' . $locale);
 }
 $this->addExternalJs('/local/assets/js/commonpvz/script.js');
+$this->addExternalCss('/local/assets/css/commonpvz/style.css');
 
 ?>
     <NOSCRIPT>

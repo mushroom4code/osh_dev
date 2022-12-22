@@ -46,13 +46,23 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
     {
         $result = new \Bitrix\Sale\Delivery\CalculationResult();
 
+        if ($_POST['soa-action'] === 'setPVZPrice') {
+            echo '<pre>';
+            print_r($_POST);
+            echo '</pre>';
+            die();
+        }
+
         // получаем код города
         $order = $shipment->getCollection()->getOrder();
         $props = $order->getPropertyCollection();
         $locationCode = $props->getDeliveryLocation()->getValue();
+        $_POST['code_city'] = \CommonPVZ\DeliveryHelper::getCityName($locationCode);
 
-        $resp = \CommonPVZ\DeliveryHelper::mainRequest($_POST, $locationCode);
+        $resp = \CommonPVZ\DeliveryHelper::mainRequest($_POST);
+
         if ($resp['price'] === 0) {
+
             return $result->addError(new Error(Loc::getMessage("COMMONPVZ_CHOOSE_PVZ")));
         }
 
@@ -60,7 +70,7 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 
         // местоположение
         echo '<pre>';
-        print_r($_POST['soa-action']);
+        print_r($resp);
         echo '</pre>';
         die();
         $result = new \Bitrix\Sale\Delivery\CalculationResult();

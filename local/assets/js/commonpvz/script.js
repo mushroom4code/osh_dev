@@ -5,23 +5,32 @@ BX.SaleCommonPVZ = {
 
     pvzPopup: null,
     curCityCode: null,
+    curCityName: null,
     isGetPVZ: false,
     ajaxUrlPVZ: null,
+    propsMap: null,
+    pvzObj: null,
 
     init: function (params) {
         console.log('SaleCommonPVZ init');
-        console.dir(ymaps);
         this.ajaxUrlPVZ = params.ajaxUrlPVZ;
+        this.propsMap = null;
+        this.getCityName();
     },
 
     openMap: function () {
-        console.log('open');
-        BX.Sale.OrderAjaxComponent.sendRequest('loadPVZMap');
+        console.log(this);
+        console.dir(ymaps);
+
+        this.createPVZPopup();
+        this.buildPVZMap();
+        this.pvzPopup.show();
+
     },
 
     createPVZPopup: function () {
         if (BX.PopupWindowManager.isPopupExists('wrap_pvz_map')) return;
-
+        console.log('createPVZPopup');
         this.pvzPopup = BX.PopupWindowManager.create(
             'wrap_pvz_map',
             null,
@@ -44,6 +53,7 @@ BX.SaleCommonPVZ = {
                     onPopupShow: function () {
                     },
                     onPopupClose: function () {
+                        console.dir(this);
                     }
                 },
                 closeByEsc: true
@@ -54,36 +64,36 @@ BX.SaleCommonPVZ = {
      *   Построение карты с PVZ
      */
     buildPVZMap: function () {
-        this.createPVZPopup();
-
+        if (this.propsMap !== null) {
+            return;
+        }
         var __this = this;
-        var myGeocoder = ymaps.geocode(__this.curLocation.name_city, {results: 1});
-        myGeocoder.then(function (res) { // получаем координаты
-            var firstGeoObject = res.geoObjects.get(0),
-                coords = firstGeoObject.geometry.getCoordinates();
-            __this.curLocation['lat'] = coords[0];
-            __this.curLocation['lon'] = coords[1];
+        ymaps.ready(function () {
+            var myGeocoder = ymaps.geocode(__this.curCityName, {results: 1});
+            myGeocoder.then(function (res) { // получаем координаты
+                var firstGeoObject = res.geoObjects.get(0),
+                    coords = firstGeoObject.geometry.getCoordinates();
 
-            __this.propsMap = new ymaps.Map("map_for_pvz", {
-                center: [__this.curLocation['lat'], __this.curLocation['lon']],
-                zoom: 10,
-                controls: ['fullscreenControl']
+                __this.propsMap = new ymaps.Map('map_for_pvz', {
+                    center: [coords[0], coords[1]],
+                    zoom: 10,
+                    controls: ['fullscreenControl']
+                });
+                __this.getPVZList();
+
+            }).catch(function (e) {
+                __this.showError(__this.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
+                console.warn(e);
             });
-            __this.setPVZOnMap(__this.propsMap);
-
-        }).catch(function (e) {
-            __this.showError(__this.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
-            console.warn(e)
         });
+
     },
 
-    getPVZ: function () {
-        if (this.isGetPVZ) return;
-        this.isGetPVZ = true;
+    getCityName: function () {
         var __this = this;
 
         // Получаем код местопожения
-        BX.Sale.OrderAjaxComponent.ORDER_PROP.properties.forEach(function (item, index, array) {
+        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
             if (item.IS_LOCATION === 'Y') {
                 __this.curCityCode = item.VALUE[0];
             }
@@ -93,27 +103,89 @@ BX.SaleCommonPVZ = {
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
-                code_city: __this.curLocation.curCityCode,
-                'soa-action': 'getCityName'
+                codeCity: __this.curCityCode,
+                'action': 'getCityName'
             },
-            onsuccess: BX.delegate(function (result) {
-                result = JSON.parse(result) || [];
-                if (result['city']) {
-                    __this.curLocation.name_city = result['city'];
-                    delete result['city'];
-                }
-                if (result['Errors']) {
-                    console.warn(result['Errors']);
-                    delete result['Errors'];
-                }
-                __this.pvzObj = result;
-                __this.buildPVZMap();
-            }, this),
-            onfailure: BX.delegate(function () {
-                __this.showError(__this.mainErrorsNode, 'Ошибка запроса Пунктов Выдачи Заказа!');
-                console.log('error getPVZ')
-            }),
-        })
+            onsuccess: function (res) {
+                __this.curCityName = res;
+            },
+            onfailure: function (res) {
+                console.log('error getCityName');
+            }
+        });
     },
+
+    getPVZList: function () {
+        var __this = this;
+
+        BX.ajax({
+            url: __this.ajaxUrlPVZ,
+            method: 'POST',
+            data: {
+                'cityName': __this.curCityName,
+                'action': 'getPVZList'
+            },
+            onsuccess: function (res) {
+                __this.pvzObj = JSON.parse(res) || [];
+                __this.setPVZOnMap();
+            },
+            onfailure: function (res) {
+                console.log('error getPVZList');
+            }
+        });
+    },
+    /**
+     *  Установка маркеров на карту PVZ
+     */
+    setPVZOnMap: function () {
+
+        var objectManager = new ymaps.ObjectManager({
+            clusterize: true,
+            clusterHasBalloon: false
+        });
+        console.dir(this.pvzObj);
+        objectManager.add(this.pvzObj);
+
+        var __this = this;
+
+        __this.propsMap.geoObjects.add(objectManager);
+        objectManager.objects.events.add(['click', 'multitouchstart'], function (e) {
+            __this.pvzPopup.close();
+            var objectId = e.get('objectId'),
+                obj = objectManager.objects.getById(objectId);
+            //__this.pvzInfo.addr = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
+            //__this.pvzInfo.code = obj.properties.code_pvz;
+
+
+            BX.ajax({
+                url: __this.ajaxUrlPVZ,
+                method: 'POST',
+                data: {
+                    'action': 'getPrice',
+                    code_city: __this.curCityCode,
+                    delivery: obj.properties.deliveryName,
+                    to: obj.properties.fullAddress,
+                    weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
+                    fivepost_zone: obj.properties.fivepostZone,
+                    hubregion: obj.properties.hubregion,
+                    name_city: __this.curCityName
+                },
+                onsuccess: BX.delegate(function (result) {
+                    result = JSON.parse(result);
+                    BX.Sale.OrderAjaxComponent.sendRequest('setPVZPrice', parseInt(result));
+
+                }, this),
+
+                onfailure: BX.delegate(function () {
+                    BX.Sale.OrderAjaxComponent.showError(BX.Sale.OrderAjaxComponent.mainErrorsNode, 'Ошибка запроса стоимости доставки!');
+                    console.warn('error get price delivery');
+                }),
+            });
+
+            //alert('Вы выбрали ТК: ' + obj.properties.deliveryName + ', по адресу ' + obj.properties.fullAddress);
+        });
+
+    },
+
 
 };
