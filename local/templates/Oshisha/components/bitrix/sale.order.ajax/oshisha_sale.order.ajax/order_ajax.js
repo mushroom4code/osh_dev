@@ -2048,6 +2048,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             //enterego always redraw props block
             this.editActivePropsBlock(true);
             this.editActiveRegionBlock(true);
+            this.editActiveDeliveryBlock(true);
 
             // if (this.activeSection !== null) {
             //     this.editSection(this.activeSection);
