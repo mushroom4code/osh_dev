@@ -6,6 +6,7 @@ use Bitrix\Main\Data\Cache;
 use Bitrix\Sale\Location\LocationTable;
 
 require_once 'PickPointDelivery.php';
+require_once 'SDEKDelivery.php';
 
 class DeliveryHelper
 {
