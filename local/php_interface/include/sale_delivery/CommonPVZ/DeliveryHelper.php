@@ -54,34 +54,19 @@ class DeliveryHelper
         return $city['LOCATION_NAME'];
     }
 
-    public static function mainRequest($req)
-    {
-        $result = [];
-
-        if ($req['soa-action'] === 'refreshOrderAjax') {
-            $result['price'] = 0;
-
-
-        } elseif ($req['soa-action'] === 'getPVZPrice') {
-            $result = self::getAllPVZ(self::getCityName($req['code_city']));
-
-        }
-
-        return $result;
-
-    }
-
     public static function getAllPVZ($city_name)
     {
         $id_feature = 0;
         $result_array = [];
         $points_Array = [];
         $cache = Cache::createInstance();
+        $cachePath = '/getAllPVZPoints';
 
-        if ($cache->initCache(7200, "pvz")) {
+        if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
             $points_Array = $cache->getVars();
         } elseif ($cache->startDataCache()) {
-            PickPointDelivery::getPVZ($city_name, $points_Array, $id_feature);
+            $delivery = new PickPointDelivery();
+            $delivery->getPVZ($city_name, $points_Array, $id_feature);
 
             $cache->endDataCache($points_Array);
         }
@@ -92,6 +77,13 @@ class DeliveryHelper
         return $result_array;
     }
 
+    public static function getPrice($req_data)
+    {
+        if ($req_data['delivery'] === 'PickPoint') {
+            $delivery = new PickPointDelivery();
+            return $delivery->getPrice($req_data);
+        }
+    }
 
 
     // TODO

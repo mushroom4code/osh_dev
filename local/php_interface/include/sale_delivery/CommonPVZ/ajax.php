@@ -10,7 +10,5 @@ if ($_POST['action'] === 'getPVZList') {
 }
 
 if ($_POST['action'] === 'getPrice') {
-    /*if ($_POST['delivery'] === 'PickPoint') {
-        exit(json_encode(\CommonPVZ\PickPointDelivery::getPrice($_POST)));
-    }*/
+    exit(json_encode(\CommonPVZ\DeliveryHelper::getPrice($_POST)));
 }

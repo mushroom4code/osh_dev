@@ -153,9 +153,6 @@ BX.SaleCommonPVZ = {
             __this.pvzPopup.close();
             var objectId = e.get('objectId'),
                 obj = objectManager.objects.getById(objectId);
-            //__this.pvzInfo.addr = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
-            //__this.pvzInfo.code = obj.properties.code_pvz;
-
 
             BX.ajax({
                 url: __this.ajaxUrlPVZ,
@@ -172,19 +169,17 @@ BX.SaleCommonPVZ = {
                 },
                 onsuccess: BX.delegate(function (result) {
                     result = JSON.parse(result);
-                    BX.Sale.OrderAjaxComponent.sendRequest('setPVZPrice', parseInt(result));
+                    var reqData = {};
+                    reqData.price = parseInt(result);
+                    BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', reqData);
 
                 }, this),
-
                 onfailure: BX.delegate(function () {
                     BX.Sale.OrderAjaxComponent.showError(BX.Sale.OrderAjaxComponent.mainErrorsNode, 'Ошибка запроса стоимости доставки!');
                     console.warn('error get price delivery');
                 }),
             });
-
-            //alert('Вы выбрали ТК: ' + obj.properties.deliveryName + ', по адресу ' + obj.properties.fullAddress);
         });
-
     },
 
 

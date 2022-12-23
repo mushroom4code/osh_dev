@@ -26,7 +26,6 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
     protected static $canHasProfiles = false;
     protected static $isCalculatePriceImmediately = true;
     protected static $whetherAdminExtraServicesShow = false;
-    protected static $locationCode = 0;
 
     /**
      * @param array $initParams
@@ -45,46 +44,19 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
     protected function calculateConcrete(\Bitrix\Sale\Shipment $shipment = null)
     {
         $result = new \Bitrix\Sale\Delivery\CalculationResult();
+        if (isset($_POST['price'])) {
+            $result->setDeliveryPrice(
+                roundEx(
+                    $_POST['price'],
+                    SALE_VALUE_PRECISION
+                )
+            );
+            $result->setPeriodDescription('2-3 days');
+            return $result;
 
-        if ($_POST['soa-action'] === 'setPVZPrice') {
-            echo '<pre>';
-            print_r($_POST);
-            echo '</pre>';
-            die();
         }
-
-        // получаем код города
-        $order = $shipment->getCollection()->getOrder();
-        $props = $order->getPropertyCollection();
-        $locationCode = $props->getDeliveryLocation()->getValue();
-        $_POST['code_city'] = \CommonPVZ\DeliveryHelper::getCityName($locationCode);
-
-        $resp = \CommonPVZ\DeliveryHelper::mainRequest($_POST);
-
-        if ($resp['price'] === 0) {
-
-            return $result->addError(new Error(Loc::getMessage("COMMONPVZ_CHOOSE_PVZ")));
-        }
-
-        $weight = $shipment->getWeight(); // вес отгрузки
-
-        // местоположение
-        echo '<pre>';
-        print_r($resp);
-        echo '</pre>';
-        die();
-        $result = new \Bitrix\Sale\Delivery\CalculationResult();
-        $result->setDeliveryPrice(
-            roundEx(
-                500,
-                SALE_VALUE_PRECISION
-            )
-        );
-        $result->setPeriodDescription('2-3 days');
 
         return $result;
-
-
     }
 
     public static function canHasProfiles()
