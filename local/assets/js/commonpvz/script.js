@@ -12,20 +12,30 @@ BX.SaleCommonPVZ = {
     pvzObj: null,
 
     init: function (params) {
-        console.log('SaleCommonPVZ init');
         this.ajaxUrlPVZ = params.ajaxUrlPVZ;
-        this.propsMap = null;
-        this.getCityName();
+        this.refresh();
     },
 
     openMap: function () {
-        console.log(this);
-        console.dir(ymaps);
-
+        this.refresh();
         this.createPVZPopup();
         this.buildPVZMap();
         this.pvzPopup.show();
+    },
 
+    refresh: function () {
+        console.log('refresh');
+        var __this = this;
+
+        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
+            if (item.IS_LOCATION === 'Y') {
+                if (__this.curCityCode !== item.VALUE[0]) {
+                    __this.curCityCode = item.VALUE[0];
+                    __this.propsMap = null;
+                    __this.getCityName();
+                }
+            }
+        });
     },
 
     createPVZPopup: function () {
@@ -92,12 +102,6 @@ BX.SaleCommonPVZ = {
     getCityName: function () {
         var __this = this;
 
-        // Получаем код местопожения
-        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
-            if (item.IS_LOCATION === 'Y') {
-                __this.curCityCode = item.VALUE[0];
-            }
-        });
 
         BX.ajax({
             url: __this.ajaxUrlPVZ,
@@ -172,6 +176,10 @@ BX.SaleCommonPVZ = {
                     var reqData = {};
                     reqData.price = parseInt(result);
                     BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', reqData);
+                    __this.setPVZAddr(
+                        obj.properties.deliveryName + ': ' + obj.properties.fullAddress,
+                        obj.properties.code_pvz
+                    );
 
                 }, this),
                 onfailure: BX.delegate(function () {
@@ -182,5 +190,9 @@ BX.SaleCommonPVZ = {
         });
     },
 
-
+    setPVZAddr: function (address, code) {
+        BX('soa-property-7').value = address + ' #' + code;
+        BX.addClass(BX('soa-property-7'), 'disabled');
+        BX("soa-property-7").setAttribute("readonly", "readonly");
+    }
 };
