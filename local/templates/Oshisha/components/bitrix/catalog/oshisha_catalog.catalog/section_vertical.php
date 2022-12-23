@@ -185,16 +185,12 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             <div class="row">
                 <div class="catalog-section-list-tile-list">
                     <? foreach ($arResultSection as $arSection): ?>
-                        <?php if ($arSection['CODE'] == $arResult["VARIABLES"]["SECTION_CODE"] || $arCurSection['IBLOCK_SECTION_ID'] == $arSection['ID'])
-                            $smartFil = 'smart-filter-angle-up';
-                        else
-                            $smartFil = ''; ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap">
                                 <a href="<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
                                 <? if ($arSection['CHILDS']): ?>
                                     <span data-role="prop_angle"
-                                          class="smart-filter-tog smart-filter-angle <?= $smartFil ?>"
+                                          class="smart-filter-tog smart-filter-angle"
                                           data-code-vis="<?= $arSection['ID'] ?>">
 					                    <i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
                                     </span>
