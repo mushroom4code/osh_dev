@@ -24,7 +24,6 @@ BX.SaleCommonPVZ = {
     },
 
     refresh: function () {
-        console.log('refresh');
         var __this = this;
 
         BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
@@ -40,7 +39,6 @@ BX.SaleCommonPVZ = {
 
     createPVZPopup: function () {
         if (BX.PopupWindowManager.isPopupExists('wrap_pvz_map')) return;
-        console.log('createPVZPopup');
         this.pvzPopup = BX.PopupWindowManager.create(
             'wrap_pvz_map',
             null,
@@ -63,7 +61,6 @@ BX.SaleCommonPVZ = {
                     onPopupShow: function () {
                     },
                     onPopupClose: function () {
-                        console.dir(this);
                     }
                 },
                 closeByEsc: true
@@ -147,7 +144,7 @@ BX.SaleCommonPVZ = {
             clusterize: true,
             clusterHasBalloon: false
         });
-        console.dir(this.pvzObj);
+        console.dir(this.pvzObj)
         objectManager.add(this.pvzObj);
 
         var __this = this;
@@ -191,6 +188,7 @@ BX.SaleCommonPVZ = {
     },
 
     setPVZAddr: function (address, code) {
+        BX('pvz_address').innerHTML = address;
         BX('soa-property-7').value = address + ' #' + code;
         BX.addClass(BX('soa-property-7'), 'disabled');
         BX("soa-property-7").setAttribute("readonly", "readonly");

@@ -24,6 +24,7 @@ class DeliveryHelper
            onclick="BX.SaleCommonPVZ.openMap(); return false;">
             <?= GetMessage('COMMONPVZ_BTN_CHOOSE') ?>
         </a>
+        <span id="pvz_address"></span>
         <?php
         $content = ob_get_contents();
         ob_end_clean();
@@ -67,6 +68,8 @@ class DeliveryHelper
         } elseif ($cache->startDataCache()) {
             $delivery = new PickPointDelivery();
             $delivery->getPVZ($city_name, $points_Array, $id_feature);
+            $delivery = new SDEKDelivery();
+            $delivery->getPVZ($city_name, $points_Array, $id_feature);
 
             $cache->endDataCache($points_Array);
         }
@@ -81,7 +84,8 @@ class DeliveryHelper
     {
         if ($req_data['delivery'] === 'PickPoint') {
             $delivery = new PickPointDelivery();
-            return $delivery->getPrice($req_data);
+            if ($delivery->error === null)
+                return $delivery->getPrice($req_data);
         }
     }
 

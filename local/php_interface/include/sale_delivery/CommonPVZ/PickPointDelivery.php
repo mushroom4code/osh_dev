@@ -10,6 +10,7 @@ use PickPointSdk\Components\ReceiverDestination;
 
 class PickPointDelivery
 {
+    // TODO вынести в настройки
     private $config = [
         'host' => 'https://e-solution.pickpoint.ru/api/',
         'login' => 'hYdz3J',
@@ -18,18 +19,28 @@ class PickPointDelivery
     ];
 
     private $client = null;
+    public $error = null;
 
     public function __construct()
     {
-        $pickPointConf = new PickPointConf(
-            $this->config['host'],
-            $this->config['login'],
-            $this->config['password'],
-            $this->config['ikn']
-        );
-        $defaultPackageSize = new PackageSize(20, 20, 20); // может быть null
-        $senderDestination = new SenderDestination('Москва', 'Московская обл.'); // Адрес отправителя
-        $this->client = new PickPointConnector($pickPointConf, $senderDestination, $defaultPackageSize);
+        $this->connect();
+    }
+
+    private function connect()
+    {
+        try {
+            $pickPointConf = new PickPointConf(
+                $this->config['host'],
+                $this->config['login'],
+                $this->config['password'],
+                $this->config['ikn']
+            );
+            $defaultPackageSize = new PackageSize(20, 20, 20); // может быть null
+            $senderDestination = new SenderDestination('Москва', 'Московская обл.'); // Адрес отправителя
+            $this->client = new PickPointConnector($pickPointConf, $senderDestination, $defaultPackageSize);
+        } catch (\Exception $e) {
+            $this->error = $e->getMessage();
+        }
     }
 
     public function getPVZ($city_name, &$result_array, &$id_feature)
@@ -68,8 +79,6 @@ class PickPointDelivery
                 $result_array[] = $features_obj;
             }
         }
-
-        return $result_array;
     }
 
     public function getPrice($array)
