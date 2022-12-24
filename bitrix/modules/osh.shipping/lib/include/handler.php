@@ -18,12 +18,6 @@ Loc::loadMessages(__FILE__);
 class COshDeliveryHandler
 {
     const MODULE_ID = "osh.shipping";
-    const PICK_PVZ_HTML = <<<PICK_PVZ
-        <div id="shd_pvz_pick" data-json=' %s ' data-delivery="%s" data-force="%s">
-            <button type="button" class="btn btn_red radius_10 font_12" onclick="window.Osh.bxPopup.onPickerClick(this);">Выбрать адрес на карте</button>
-        </div>
-       PICK_PVZ;
-    const PVZ_PACEHOLDER = '<div id="shd_pvz_info"><small>%s %s</small></div>';
 
     public function addCustomDeliveryServices(/* \Bitrix\Main\Event $event */)
     {
@@ -159,10 +153,7 @@ class COshDeliveryHandler
                             });
                         </script>
                     JS;
-                $htmlPickPVZ = sprintf(self::PICK_PVZ_HTML, $json, $deliveryId, 1, $buttonText);
                 $cAsset->addString($jsNoPvz);
-                $htmlPlaceholder = sprintf(self::PVZ_PACEHOLDER, $pvzCode, $pvzAddress);
-                $oDelivery->addDescription($htmlPlaceholder . $htmlPickPVZ);
             }
             $dateDateliveryId = DateDelivery::getId($deliveryId);
             $timeExtraServiceId = TimeDelivery::getId($deliveryId);
