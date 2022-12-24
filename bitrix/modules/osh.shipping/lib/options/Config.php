@@ -34,55 +34,9 @@ class Config
 //    const AS_INSURANCE = 'package-insurance';
 //    const STOCK_NONE = '0';
     private $fields = array(
-//        'adminApiKey',
-//        'publicApiKey',
-//        'apiUrl',
-//        'jsUrl',
-//        'cssUrl',
         'active',
         'pvzStrict',
-//        'checkout',
-//        'debug',
-//        'check_pvz',
-//        'sortProfiles',
-//        'productArticle',
-//        'xmlIdComplex',
-//        'articleProperty',
-//        'productOfferArticle',
-//        'offerXmlIdComplex',
-//        'offerArticleProperty',
-//        'cashPaymentsIds',
-//        'tracking_map_statuses',
-//        'tracking_map_statuses_order',
-//        'direct_reciever',
-//        'direct_phone',
-//        'direct_email',
-//        'direct_zip',
-//        'direct_street',
-//        'direct_house',
-//        'direct_flat',
-//        'direct_comment',
-//        'direct_date_type',
-//        'direct_date_delay',
-//        'direct_time',
         'address_type',
-//        'configOk',
-//        'cache_mec',
-//        'adminOrderViewUrl',
-//        'adminOrderAddUrl',
-//        'adminOrderEditUrl',
-//        'syncCreateOrderLimit',
-//        'mirror_pvz_address',
-//        'include_yamaps',
-//        'departure_type',
-//        'departure_status',
-//        'change_status',
-//        'rounding_type',
-//        'rounding_precision',
-//        'is_fulfilment',
-//        'is_pvz_haunt',
-//        'is_date_time_mirror',
-//        'default_stock',
         'ymaps_key',
         'da_data_token',
         'timeDeliveryEndNight',
@@ -397,5 +351,14 @@ class Config
     public static function getCost()
     {
         return self::getDataValue("cost");
+    }
+
+    public static function getStartCost()
+    {
+        return 299;
+    }
+
+    public static function getLimitBasket(){
+        return 4000;
     }
 }

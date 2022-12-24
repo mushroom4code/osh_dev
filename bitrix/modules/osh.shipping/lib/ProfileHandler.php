@@ -125,43 +125,18 @@ class ProfileHandler extends \Bitrix\Sale\Delivery\Services\Base
     {
         $oCalculationResult = new \Bitrix\Sale\Delivery\CalculationResult();
         try {
-//            $arData = $this->getOrderData($shipment);
+            $cost = Options\Config::getCost();
+            $startCost = Options\Config::getStartCost();
+            $distance = ceil(($_SESSION['Osh']['delivery_address_info']['distance'] ?? 0) - 0.8);
 
-            if(!empty($_SESSION['Osh']['delivery_address_info']['price'])) {
-                $delivery_price = $_SESSION['Osh']['delivery_address_info']['price'];
+            $limitBasket = Options\Config::getLimitBasket();
+            if ($shipment->getOrder()->getPrice() >= $limitBasket) {
+                $delivery_price = max($distance - 5, 0) * $cost;
             } else {
-                $delivery_price = 0;
+                $delivery_price = $startCost + $distance * $cost;
             }
-
-//            if(in_array($arData['ADDRESS']['COUNTRY_CODE'],array(self::COUNTRY_RU, self::COUNTRY_BY, self::COUNTRY_KZ))){
-//                $calculation = \COshDeliveryHelper::getDeliveryPrice($arData);
-//            }else{
-//                $calculation = \COshDeliveryHelper::getDeliveryPriceInternational($arData);
-//            }
-//            if(empty($calculation['RESULT']['PRICE'])){
-//                throw new \Exception(Loc::getMessage('OSH_ZERO_PRICE',array('#METHOD_NAME#' => $this->name)));
-//            }
-//            if(is_numeric($this->config['MAIN']['FIXED_PRICE'])){
-//                $arDeliveryPrice['PRICE'] = roundEx($this->config['MAIN']['FIXED_PRICE'],SALE_VALUE_PRECISION);
-//            }else{
-//                //$calculation['RESULT']['PRICE'] = $this->convertCurrency($calculation['RESULT']['PRICE']);
-//                $arDeliveryPrice = $this->calculateMargin($calculation['RESULT']['PRICE']);
-//            }
             $oCalculationResult->setDeliveryPrice($delivery_price);
-//            $days = $this->getTerms($calculation['RESULT']['DAYS']);
-//            switch(Config::getSortProfiles()){
-//                case Config::SORT_PROFILES_DAYS:
-//                    $sort = intval($days)*50;
-//                    $this->setSort($sort);
-//                    break;
-//                case Config::SORT_PROFILES_PRICE:
-//                    $sort = intval($arDeliveryPrice['PRICE'] / 10);
-//                    $this->setSort($sort);
-//                    break;
-//            }
-//            if(!empty($days)){
-//                $oCalculationResult->setPeriodDescription($days);
-//            }
+
         } catch(\Exception $e) {
             $oCalculationResult->addError(new \Bitrix\Main\Error($e->getMessage()));
 //            Logger::exception($e);

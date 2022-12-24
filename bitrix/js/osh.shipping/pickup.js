@@ -3,31 +3,29 @@ window.Osh = window.Osh || {};
 window.Osh.oshMkadDistance = (function () {
     let instance;
 
-    function createInstance() {
-        return new window.Osh.oshMkadDistanceObject();
-    }
-
     return {
         getInstance: function () {
-            BX.addClass(BX('saveBTN'), "popup-window-button-disable");
-            if (instance===undefined)
-                instance = createInstance();
-
+            return instance;
+        },
+        init: function (param) {
+            BX.addClass(BX('saveBTN'), 'popup-window-button-disable');
+            instance = new window.Osh.oshMkadDistanceObject(param);
             return instance;
         }
     };
 }());
 
-window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject() {
+window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     var $ = $ || jQuery;
     var selfObj = this;
     selfObj.isInited = false;
     selfObj.configuredPromise = false;
     selfObj.mobile_api_cache = {};
     selfObj.oUrls = {
-        selectPVZ: "/bitrix/tools/osh.shipping/ajax/ajaxSelectPVZ.php",
-        setPriceDelivery: "/bitrix/tools/osh.shipping/ajax/ajaxSetPricePVZ.php",
+        selectPVZ: "/bitrix/modules/osh.shipping/tools/ajax/ajaxSetPricePVZ.php",
+        setPriceDelivery: "/bitrix/modules/osh.shipping/tools/ajax/ajaxSetPricePVZ.php",
     };
+    selfObj.afterSave = null;
 
     var mkad_poly = null,
         msk_center_point = [55.75119082121071, 37.61699737548825],
@@ -149,10 +147,12 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject() {
         searchControl = true,
         html_map_id = 'map',
         balloon = null,
-        apikey = JSON.parse(document.querySelector('#' + window.Osh.bxPopup.oContainers.PVZ_ID)
-            .getAttribute('data-json')).key || false,
-        cost = JSON.parse(document.querySelector('#' + window.Osh.bxPopup.oContainers.PVZ_ID)
-            .getAttribute('data-json')).cost || 399,
+        apikey = param.YA_API_KEY ?? '',
+        cost = parseFloat(param.START_COST),
+        costKm = parseFloat(param.DELIVERY_COST),
+        limitBasket = parseFloat(param.LIMIT_BASKET),
+        currentBasket = parseFloat(param.CURRENT_BASKET),
+        distKm = 0,
         is_mobile_api = true,
         delivery_address,
         delivery_price;
@@ -345,10 +345,14 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject() {
         BX.ajax.post(selfObj.oUrls.setPriceDelivery, {
             address: delivery_address,
             price: delivery_price,
+            distance: distKm,
             sessid: sessid
         }, function (result) {
             window.Osh.bxPopup.PVZAddress = delivery_address;
             window.Osh.bxPopup.hide();
+            if (selfObj.afterSave!=null) {
+                selfObj.afterSave(delivery_address);
+            }
             BX.onCustomEvent('onDeliveryExtraServiceValueChange');
         });
     };
@@ -445,32 +449,23 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject() {
     };
 
     selfObj.calculateCost = function (dist) {
-        let dist_m = dist, dist_km = parseInt(dist_m), new_cost_dop = 0;
-        if ((dist_m % 10) >= 8) {
-            dist_km = dist_m + 1;
-        }
-
-        if (dist_km > 5) {
-            new_cost_dop = (dist_km - 5) * 40;
-        }
-
-        return  parseInt(cost) + new_cost_dop;
+        const dist_m = Math.ceil(dist-0.8);
+        return currentBasket>=limitBasket ? Math.max(dist_m - 5, 0) * costKm : cost + dist_m * costKm;
     };
 
     selfObj.showResults = function (result, d, delivery_address = '', saveDelivery=false) {
 
         if (result.inMkad) {
-            let str = 'В пределах МКАД - 299.';
-
-            delivery_price = 299;
+            distKm = 0
+            delivery_price = this.calculateCost(0);
+            let str = `В пределах МКАД - ${delivery_price}.`;
             selfObj.showText('<b id="addressData">' + delivery_address + '</b>');
 
             balloon.open(d, str);
         } else {
             var i = result.geometry;
-            let dist_km = i.getLength() / 1000;
-            let cost_str = this.calculateCost(dist_km);
-            delivery_price = cost_str;
+            distKm = i.getLength() / 1000;
+            delivery_price = this.calculateCost(distKm);
 
             let g, b;
             i.getPaths().options.set({
@@ -485,8 +480,8 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject() {
                 } else {
                     c.options.set("preset", "islands#redStretchyIcon");
 
-                    c.properties.set("iconContent", '' + dist_km.toFixed(1) + ' км, ' + (cost_str.toFixed() > 0 ?
-                        cost_str.toFixed() + ' руб' : '299 руб'));
+                    c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                        + delivery_price.toFixed() + ' руб');
 
                     g = c.geometry.getCoordinates();
                     c.properties.set("balloonContent", "");
@@ -592,8 +587,12 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject() {
             selfObj.configuredPromise = $.Deferred();
         }
         if (!selfObj.isInited) {
-            selfObj.isInited = true;
+            if (typeof ymaps === "undefined" )
+                return null;
+
             ymaps.ready(selfObj.init());
+            selfObj.isInited = true;
+
 
         }
         return selfObj;
@@ -782,12 +781,11 @@ window.Osh.bxPopup = {
     },
 
     oUrls: {
-        // showPVZ:"/bitrix/tools/osh.shipping/ajax/ajaxShowPVZ.php",
-        selectPVZ: "/bitrix/tools/osh.shipping/ajax/ajaxSelectPVZ.php",
-        setPriceDelivery: "/bitrix/tools/osh.shipping/ajax/ajaxSetPricePVZ.php",
-        // getLocation: "/bitrix/tools/osh.shipping/ajax/getLocation.php"
+        selectPVZ: "/bitrix/modules/osh.shipping/tools/ajax/ajaxSetPricePVZ.php",
+        setPriceDelivery: "/bitrix/modules/osh.shipping/tools/ajax/ajaxSetPricePVZ.php",
     },
     PVZAddress: '',
+
     init: function () {
         if (this.instance !== null)
             return;
@@ -825,6 +823,7 @@ window.Osh.bxPopup = {
 
         BX.bind(window, 'resize', BX.delegate(this.refresh, this));
     },
+
     onPickerClick: function () {
         this.init();
         this.instance.show();
@@ -835,6 +834,7 @@ window.Osh.bxPopup = {
 
         return false;
     },
+
     onPopupWindowClose: function () {
         document.body.style.overflow = 'auto';
 
@@ -876,12 +876,14 @@ window.Osh.bxPopup = {
 
         return clientSizes;
     },
+
     hide: function () {
         this.instance.close();
     },
     refresh: function () {
         setTimeout(BX.delegate(this.setPopupSize, this), 500);
     },
+
     errorTitle: function (text) {
         this.setTitle('<strong class="error">' + text + '</strong>');
         if (window.Osh.Map.isMobile) {
