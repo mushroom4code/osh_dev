@@ -111,7 +111,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                    id="main-profile-phone" value="<?= $arResult["arUser"]["PERSONAL_PHONE"] ?>"/>
                         </div>
                     </div>
-					<script>$('input[name="PHONE_NUMBER"]').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>
+					<script>$('#main-profile-phone').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>
                     <div class="form-group  mb-5" style="display:none">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-radio">Информировать меня по заказам через</label>
@@ -124,13 +124,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                    id="main-profile-radio_telegram" value="5"/>
                             <label class="radio_input   main-profile-form-label"
                                    for="main-profile-radio_telegram">Телеграм</label>
-                        
                         </div>
-						
-						
-       					
-						
-						
                     </div>
 
                     <!--                    --><? //
