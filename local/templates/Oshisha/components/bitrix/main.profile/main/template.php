@@ -107,8 +107,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-phone">Номер телефона</label>
                         <div class="col-sm-12 col-md-12">
-                            <input class="form-control input_lk" type="text" name="PHONE_NUMBER" maxlength="50"
-                                   id="main-profile-phone" value="<?= $arResult["arUser"]["PHONE_NUMBER"] ?>"/>
+                            <input class="form-control input_lk" type="text" name="PERSONAL_PHONE" maxlength="50"
+                                   id="main-profile-phone" value="<?= $arResult["arUser"]["PERSONAL_PHONE"] ?>"/>
                         </div>
                     </div>
 					<script>$('input[name="PHONE_NUMBER"]').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>
@@ -116,7 +116,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-radio">Информировать меня по заказам через</label>
                         <div class="col-sm-12 col-md-12 d-flex align-items-center">
-                            <input class="input_lk form-check-input" type="radio" <?if($arResult["arUser"]['UF_TYPE_CONNECT'] == 4):?>checked<?endif;?> name="UF_TYPE_CONNECT" maxlength="50"
+                            <input class="input_lk form-check-iniput" type="radio" <?if($arResult["arUser"]['UF_TYPE_CONNECT'] == 4):?>checked<?endif;?> name="UF_TYPE_CONNECT" maxlength="50"
                                    id="main-profile-radio_sms" value="4"/>
                             <label class="radio_input main-profile-form-label"
                                    for="main-profile-radio_sms">Смс</label>

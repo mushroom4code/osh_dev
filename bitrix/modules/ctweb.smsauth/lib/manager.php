@@ -371,6 +371,9 @@ class Manager
             $arFields = [];
             $phoneField = $this->options['PHONE_FIELD'];
             $arFields[$phoneField] = $this->NormalizePhone($phone);
+
+            //duplicate registration phone to personal phone (for lk and orders)
+            $arFields["PERSONAL_PHONE"] = $arFields[$phoneField] ;
             if (!trim($arFields['EMAIL'])) {
                 switch ($this->options['NEW_EMAIL_AS']) {
                     case "PHONE":
