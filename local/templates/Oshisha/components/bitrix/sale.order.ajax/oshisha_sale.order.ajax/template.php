@@ -27,7 +27,7 @@ $request = $context->getRequest();
 
 $this->addExternalJs('/bitrix/js/osh.shipping/jquery.suggestions.min.js');
 $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css');
-$this->addExternalJs('/bitrix/js/osh.shipping/pickup.js');
+CJSCore::Init(array("osh_pickup"));
 
 if (!isset($arParams['SHOW_ORDER_BUTTON'])) {
     $arParams['SHOW_ORDER_BUTTON'] = 'final_step';
