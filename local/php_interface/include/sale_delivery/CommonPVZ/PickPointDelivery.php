@@ -8,38 +8,29 @@ use PickPointSdk\PickPoint\PickPointConf;
 use PickPointSdk\PickPoint\PickPointConnector;
 use PickPointSdk\Components\ReceiverDestination;
 
-class PickPointDelivery
+class PickPointDelivery extends CommonPVZ
 {
-    // TODO вынести в настройки
-    private $config = [
+    protected $configs = [
         'host' => 'https://e-solution.pickpoint.ru/api/',
         'login' => 'hYdz3J',
         'password' => '6jUzhQ7iwfgj0',
         'ikn' => '9990000112',
     ];
 
-    private $client = null;
-    public $error = null;
-
-    public function __construct()
-    {
-        $this->connect();
-    }
-
-    private function connect()
+    protected function connect()
     {
         try {
             $pickPointConf = new PickPointConf(
-                $this->config['host'],
-                $this->config['login'],
-                $this->config['password'],
-                $this->config['ikn']
+                $this->configs['host'],
+                $this->configs['login'],
+                $this->configs['password'],
+                $this->configs['ikn']
             );
             $defaultPackageSize = new PackageSize(20, 20, 20); // может быть null
             $senderDestination = new SenderDestination('Москва', 'Московская обл.'); // Адрес отправителя
             $this->client = new PickPointConnector($pickPointConf, $senderDestination, $defaultPackageSize);
         } catch (\Exception $e) {
-            $this->error = $e->getMessage();
+            $this->errors[] = $e->getMessage();
         }
     }
 

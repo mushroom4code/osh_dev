@@ -4,12 +4,22 @@ namespace CommonPVZ;
 
 use Bitrix\Main\Data\Cache;
 use Bitrix\Sale\Location\LocationTable;
+use \Bitrix\Main\Localization\Loc;
 
-require_once 'PickPointDelivery.php';
-require_once 'SDEKDelivery.php';
+Loc::loadMessages(__FILE__);
 
 class DeliveryHelper
 {
+    public $deliveries = [];
+
+    public function __construct()
+    {
+        // TODO брать из настроек
+        $this->deliveries[] = 'PickPoint';
+        $this->deliveries[] = 'SDEK';
+        $this->deliveries[] = 'PEK';
+    }
+
     public static function getButton()
     {
         ob_start();
@@ -56,7 +66,7 @@ class DeliveryHelper
         return $city['LOCATION_NAME'];
     }
 
-    public static function getAllPVZ($city_name)
+    public function getAllPVZ($city_name)
     {
         $id_feature = 0;
         $result_array = [];
@@ -67,11 +77,15 @@ class DeliveryHelper
         if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
             $points_Array = $cache->getVars();
         } elseif ($cache->startDataCache()) {
-            $delivery = new PickPointDelivery();
-            $delivery->getPVZ($city_name, $points_Array, $id_feature);
-            $delivery = new SDEKDelivery();
-            $delivery->getPVZ($city_name, $points_Array, $id_feature);
-
+            foreach ($this->deliveries as $delName) {
+                $deliveryClass = '\CommonPVZ\\' . $delName . 'Delivery';
+                $delivery = new $deliveryClass();
+                if (!empty($delivery->errors)) {
+                    $result_array['errors'][] = Loc::getMessage("COMMONPVZ_GET_DEL_ERROR") . $delName;
+                } else {
+                    $delivery->getPVZ($city_name, $points_Array, $id_feature);
+                }
+            }
             $cache->endDataCache($points_Array);
         }
 
@@ -85,7 +99,7 @@ class DeliveryHelper
     {
         if ($req_data['delivery'] === 'PickPoint') {
             $delivery = new PickPointDelivery();
-            if ($delivery->error === null)
+            if (empty($delivery->errors))
                 return $delivery->getPrice($req_data);
         }
     }

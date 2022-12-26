@@ -23,8 +23,7 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoExchange' => '/bitrix/php_interface/enterego_class/EnteregoExchange.php',
     '\Enterego\EnteregoBasket' => '/bitrix/php_interface/enterego_class/EnteregoBasket.php',
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
-    '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
-    '\CommonPVZ\DeliveryHelper' => '/local/php_interface/include/sale_delivery/CommonPVZ/DeliveryHelper.php'
+    '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php'
 ));
 
 global $PRICE_TYPE_ID;
@@ -246,3 +245,11 @@ function onOrderOneStepDelivery(&$arResult, &$arUserResult, $arParams)
         $arResult['DELIVERY'][$id]['DESCRIPTION'] = $content . $button;
     }
 }
+CModule::AddAutoloadClasses("", array(
+    '\CommonPVZ\DeliveryHelper' => '/local/php_interface/include/sale_delivery/CommonPVZ/DeliveryHelper.php',
+    '\CommonPVZ\CommonPVZ' => '/local/php_interface/include/sale_delivery/CommonPVZ/CommonPVZ.php',
+    '\CommonPVZ\PickPointDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/PickPointDelivery.php',
+    '\CommonPVZ\SDEKDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/SDEKDelivery.php',
+    '\CommonPVZ\PEKDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/SDEKDelivery.php'
+
+));
