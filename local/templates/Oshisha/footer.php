@@ -3,7 +3,8 @@
  ** @var  CAllUser $USER
  */
 
- if(!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'],'catalog')){?></div><?php }?>
+if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
+?></div><?php } ?>
 
 
 </div><!--end .bx-content -->
@@ -25,7 +26,7 @@
                         </label>
                     </span>
                 </span>
-                <div  data-id="checkbox1"  data-hide="true" class="hides_box box_footer_js">
+                <div data-id="checkbox1" data-hide="true" class="hides_box box_footer_js">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "bottom_menu",
@@ -76,15 +77,16 @@
                         </label>
                     </span>
                         </div>
-                </span>  
-                <nav class="li_link_footer box_with_link_footer hides_box box_footer_js"  data-hide="false" data-id="checkbox3">
+                </span>
+                <nav class="li_link_footer box_with_link_footer hides_box box_footer_js" data-hide="false"
+                     data-id="checkbox3">
                      <span class="li_link_footer mobile">
                          <a href="/about/o-nas/" class="text_link_footer">О нас</a>
                     </span>
                     <span class="li_link_footer desktop">
                          <a href="/about/contacts/" class="text_link_footer">Контакты</a>
-                    </span>					
-					
+                    </span>
+
                     <span class="li_link_footer mobile">
                          <a href="/about/for-business/" class="text_link_footer">Для бизнеса</a>
                     </span>
@@ -94,10 +96,10 @@
 
                     <span class="li_link_footer ">
                          <a href="/about/feedback/" class="text_link_footer">Обратная связь</a>
-                    </span>	
-                     <span class="li_link_footer ">
+                    </span>
+                    <span class="li_link_footer ">
                          <a href="javascript:void(0)" class="callback text_link_footer">Обратный звонок</a>
-                    </span>	       
+                    </span>
 
                     <span class="li_link_footer desktop">
                          <a href="/about/FAQ/" class="text_link_footer li_link_footer">FAQ</a>
@@ -105,24 +107,28 @@
 
                     <span class="li_link_footer ">
                          <a href="/about/users_rules/" class="text_link_footer">Пользовательское соглашение</a>
-                    </span>	
+                    </span>
                     <span class="li_link_footer ">
                          <a href="/about/politics/" class="text_link_footer">Политика конфиденциальности</a>
-                    </span>						
+                    </span>
                 </nav>
             </div>
             <div class="mobile width_100 p-0">
-                <div class="box_mail_footer col-11 d-flex flex-column align-items-center mb-5 m-3" style="display:none !important;">
+                <div class="box_mail_footer col-11 d-flex flex-column align-items-center mb-5 m-3"
+                     style="display:none !important;">
                     <label class="mb-3 mail_footer" for="mail_footer">Будьте в курсе всех новостей!</label>
-                    <input class="form-control input_footer mb-3" data-name="EMAIL" type="text" name="EMAIL" maxlength="50"
+                    <input class="form-control input_footer mb-3" data-name="EMAIL" type="text" name="EMAIL"
+                           maxlength="50"
                            placeholder="Введите вашу почту" id="mail_footer"/>
                     <button class="btn font_15 btn_footer">Подписаться на рассылку</button>
                 </div>
-                <p class="m-3 mail_footer col-11"><a href="tel:<?=$SETTINGS['PHONE']?>"><?=$SETTINGS['PHONE']?></a></p>
+                <p class="m-3 mail_footer col-11"><a href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a>
+                </p>
                 <div class="box_with_contact pl-3">
                     <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
                     <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                    <a href="javascript:void(0)" class="link_menu_top " data-toggle="modal" data-target="#placeModal"><span class="mail_footer not_weight">Москва, Россия</span>
+                    <a href="javascript:void(0)" class="link_menu_top " data-toggle="modal"
+                       data-target="#placeModal"><span class="mail_footer not_weight">Москва, Россия</span>
                     </a>
                 </div>
             </div>
@@ -144,37 +150,28 @@
                     ),
                     false
                 ); ?>
-				
+
                 <span class="text_footer_weight desktop social_block">
                   Социальные сети
                 </span>
                 <div class="box_with_icons_new">
                     <div class="social-line-1">
-					<a href="https://t.me/oshishanet">
-                       <img class="tg"src="<?=SITE_TEMPLATE_PATH?>/images/tg.svg">
-                    </a>
-                    <a href="https://api.whatsapp.com/send?phone=79031182939">
-                         <img class="ws" src="<?=SITE_TEMPLATE_PATH?>/images/ws.svg">
-                    </a>
-					</div>
-					<div class="social-line-2">
-					<a href="https://www.instagram.com/oshishastore/" >
-                       <img class="insta" src="<?=SITE_TEMPLATE_PATH?>/images/insta.svg">
-                    </a>
-                    <a href="https://vk.com/oshishacc">
-                         <img class="vk" src="<?=SITE_TEMPLATE_PATH?>/images/vk.svg">
-                    </a>
-                     <a href="https://dzen.ru/id/6125150216123a2f95667201">
-                         <img class="dzen" src="<?=SITE_TEMPLATE_PATH?>/images/dzen.svg">
-                    </a>                   
-					 </div>	
-
-
-                </div>				
+                        <a href="https://t.me/oshishanet">
+                            <img class="tg" src="<?= SITE_TEMPLATE_PATH ?>/images/tg.svg">
+                        </a>
+                        <a href="https://api.whatsapp.com/send?phone=79031182939">
+                            <img class="ws" src="<?= SITE_TEMPLATE_PATH ?>/images/ws.svg">
+                        </a>
+                        <a href="https://vk.com/oshishacc">
+                            <img class="vk" src="<?= SITE_TEMPLATE_PATH ?>/images/vk.svg">
+                        </a>
+                        <a href="https://dzen.ru/id/6125150216123a2f95667201">
+                            <img class="dzen" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
+                        </a>
+                    </div>
+                </div>
             </div>
-           
 
-       
 
             <div class="col-11 col-lg-3 box_footer_with_boxes box_color order-lg-1">
                 <div class="desktop">
@@ -189,7 +186,7 @@
                             false
                         ); ?>
                     </a>
-					
+
                     <div class="mb-3 d-flex align-items-center">
 							<span class="text-white">
 							
@@ -201,25 +198,28 @@
                                 ),
                                     false
                                 ); ?>
-								<span class="phone_footer phone_footer_first"><a href="tel:<?=$SETTINGS['PHONE']?>"><?=$SETTINGS['PHONE']?></a></span>
+								<span class="phone_footer phone_footer_first"><a
+                                            href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a></span>
 								<span class="phone_footer"><a href="tel:88006004424">8-800-600-44-24</a></span>
 								<span class="work_time">Время работы: 10:00 - 20:00, <br>ежедневно.</span>
 								
-								<span class="email_footer"><a href="mailto:info@oshisha.net">info@oshisha.net </a></span>
+								<span class="email_footer"><a
+                                            href="mailto:info@oshisha.net">info@oshisha.net </a></span>
 							</span>
                     </div>
                 </div>
                 <div class="mb-3 text_footer_mini d-flex column_section">
-                    <span class="mr-2">© 2014-<?=date('Y');?> <?=$SETTINGS['COMPANY']?>.</span><span>Все права защищены</span>
+                    <span class="mr-2">© 2014-<?= date('Y'); ?> <?= $SETTINGS['COMPANY'] ?>.</span><span>Все права защищены</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="placeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="placeModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header d-flex align-items-center">
-                    <h4 class="modal-title font_weight_500" id="placeModalLabel"><?=GetMessage('CITY_CHOOSE_TITLE')?>
+                    <h4 class="modal-title font_weight_500" id="placeModalLabel"><?= GetMessage('CITY_CHOOSE_TITLE') ?>
                         <i class="fa fa-map-marker ml-2" aria-hidden="true"></i></h4>
                     <button type="button" class="close close_button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"></span>
@@ -227,46 +227,52 @@
                 </div>
                 <div class="modal-body">
                     <nav class="navbar navbar-light">
-                        <div class="cities js_city_chooser" data-param-url="<?=urlencode($APPLICATION->GetCurUri());?>" data-param-form_id="city_chooser">
+                        <div class="cities js_city_chooser"
+                             data-param-url="<?= urlencode($APPLICATION->GetCurUri()); ?>"
+                             data-param-form_id="city_chooser">
                             <form id="formofcity" name="formofcity" method="POST" class="form-inline">
                                 <div class="w-100" id="locations">
-                                    <input id="city-search" class="form-control search" type="text" name="cityother" placeholder="<?=GetMessage('CITY_CHOOSE_PLACEHOLDER')?>" value="" autocomplete="off" required>
+                                    <input id="city-search" class="form-control search" type="text" name="cityother"
+                                           placeholder="<?= GetMessage('CITY_CHOOSE_PLACEHOLDER') ?>" value=""
+                                           autocomplete="off" required>
                                     <div class="cities-list-wrap mb-3">
                                         <ul id="big-cities-list">
                                             <li>
-                                                <span class="city-item"><?=$runames[$moskow]?></span>
+                                                <span class="city-item"><?= $runames[$moskow] ?></span>
                                             </li>
                                             <li>
-                                                <span class="city-item"><?=$runames[$st_petersburg]?></span>
+                                                <span class="city-item"><?= $runames[$st_petersburg] ?></span>
                                             </li>
                                             <li>
-                                                <span class="city-item"><?=$runames[$nizhny_novgorod]?></span>
+                                                <span class="city-item"><?= $runames[$nizhny_novgorod] ?></span>
                                             </li>
                                             <li>
-                                                <span class="city-item"><?=$runames[$yekaterinburg]?></span>
+                                                <span class="city-item"><?= $runames[$yekaterinburg] ?></span>
                                             </li>
                                             <li>
-                                                <span class="city-item"><?=$runames[$permian]?></span>
+                                                <span class="city-item"><?= $runames[$permian] ?></span>
                                             </li>
                                             <li>
-                                                <span class="city-item"><?=$runames[$novosibirsk]?></span>
+                                                <span class="city-item"><?= $runames[$novosibirsk] ?></span>
                                             </li>
                                             <li>
-                                                <span class="city-item"><?=$runames[$kazan]?></span>
+                                                <span class="city-item"><?= $runames[$kazan] ?></span>
                                             </li>
                                         </ul>
                                         <ul id="cities-list" class="list" style="display: none">
                                             <?
                                             $i = 0;
-                                            foreach($runames as $name) {?>
+                                            foreach ($runames as $name) { ?>
                                                 <li>
-                                                    <span class="city-item"><?=$name?></span>
+                                                    <span class="city-item"><?= $name ?></span>
                                                 </li>
-                                                <?$i++;}?>
+                                                <? $i++;
+                                            } ?>
                                         </ul>
                                     </div>
                                 </div>
-                                <input id="choose-city-btn" name="submitcity" class="btn btnok btn-region" type="submit" value="Выбрать" disabled/>
+                                <input id="choose-city-btn" name="submitcity" class="btn btnok btn-region" type="submit"
+                                       value="Выбрать" disabled/>
                             </form>
                         </div>
                     </nav>
@@ -274,105 +280,106 @@
             </div>
         </div>
     </div>
-<div style="display:none;">	
-				<div  id="callbackModal" class="box-modal-white">
-				<div class="box-modal_close arcticmodal-close" style="display:none;"></div>
+    <div style="display:none;">
+        <div id="callbackModal" class="box-modal-white">
+            <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
 
-					<div class="flex_block_cols">
-						<h4>Заказать обратный звонок</h4>
-<div class="block_text">Оставьте ваш номер и мы перезвоним вам в ближайшее рабочее время</div>
-<div class="block_text_sub">Отдел поддержки работает с 10:00 до 20:00, ежедневно </div>
-<form method="POST" class="callback_form">
-<input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
-<div class="er_CALLBACK_PHONE"></div>
-<div class="submit-wrap"><input type=submit class="btn btn-submit" value="Отправить"></div>
-</form>
-<div class="result-callback" style="display:none;">Ваша заявка отправлена</div>
-					</div>
-				</div>
-
-</div>	
-	 <script>
-	 $(document).ready(function() {
-		 $('.callback_PHONE').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
-		$('.callback').on('click', function(){
-			 $("#callbackModal").arcticmodal(
-			 {
-				 closeOnOverlayClick: true,
-				afterClose: function(data, el) {
-
-			 
-				}
-			 });
-		 });
-	 });
-	 
-// age access
-	 
-	 
-	 </script>
-
-	
-	 <?php if ( !$USER->IsAuthorized() && !$_SESSION['age_access'] ) { ?>
-			<div style="display:none;">
-				<div  id="trueModal" class="box-modal">
-				<div class="box-modal_close arcticmodal-close" style="display:none;"></div>
-
-				<div class="flex_block">
-
-<div class="age-access-inner">
-        <div class="age-access__text">
-            <div class="age-access__text-part1">
-               <?=$SETTINGS['ATTENT_TEXT']?>
-            </div>
-            <div class="age-access__text-part2">
-                <?=$SETTINGS['ATTENT_TEXT2']?>
+            <div class="flex_block_cols">
+                <h4>Заказать обратный звонок</h4>
+                <div class="block_text">Оставьте ваш номер и мы перезвоним вам в ближайшее рабочее время</div>
+                <div class="block_text_sub">Отдел поддержки работает с 10:00 до 20:00, ежедневно</div>
+                <form method="POST" class="callback_form">
+                    <input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
+                    <div class="er_CALLBACK_PHONE"></div>
+                    <div class="submit-wrap"><input type=submit class="btn btn-submit" value="Отправить"></div>
+                </form>
+                <div class="result-callback" style="display:none;">Ваша заявка отправлена</div>
             </div>
         </div>
-        <div class="age-access__buttons">
-            <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close" data-option="1" data-auth="false">Да, мне
-                больше 18 лет</a>
-            <a href="<?=$SETTINGS['ATTENT_NOT']?>" class="age-access__button link_red_button" data-option="2" rel="nofollow">Нет</a>
-        </div>
+
     </div>
+    <script>
+        $(document).ready(function () {
+            $('.callback_PHONE').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
+            $('.callback').on('click', function () {
+                $("#callbackModal").arcticmodal(
+                    {
+                        closeOnOverlayClick: true,
+                        afterClose: function (data, el) {
 
 
-					</div>
-				</div>	
-			</div>	 
-	 <script>
-	 $(document).ready(function() {
-		 	
-		 let ageAccess = sessionStorage.getItem("age_access");
-		 if( !ageAccess )
-		 {
-			 $("#trueModal").arcticmodal(
-			 {
-				 closeOnOverlayClick: false,
-				afterClose: function(data, el) {
-					console.log('save');
-					sessionStorage.setItem("age_access", "1");
-			 
-				}
-			 });
-		 }
-	 });
-	 
-// age access
-	 
-	 
-	 </script>
-	 <?}?>
-	  <?php if ( !$USER->IsAuthorized() && !$_SESSION['age_access'] ) { ?>
+                        }
+                    });
+            });
+        });
 
-	  <?}?>
-	 <script>
-	 $(document).ready(function() {
-		$(document).on('click', '.close_header_box', function(){
-			$('.overlay').hide();
-		});
-	 });
-	</script>	 
+        // age access
+
+
+    </script>
+
+
+    <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
+        <div style="display:none;">
+            <div id="trueModal" class="box-modal">
+                <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
+
+                <div class="flex_block">
+
+                    <div class="age-access-inner">
+                        <div class="age-access__text">
+                            <div class="age-access__text-part1">
+                                <?= $SETTINGS['ATTENT_TEXT'] ?>
+                            </div>
+                            <div class="age-access__text-part2">
+                                <?= $SETTINGS['ATTENT_TEXT2'] ?>
+                            </div>
+                        </div>
+                        <div class="age-access__buttons">
+                            <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close"
+                               data-option="1" data-auth="false">Да, мне
+                                больше 18 лет</a>
+                            <a href="<?= $SETTINGS['ATTENT_NOT'] ?>" class="age-access__button link_red_button"
+                               data-option="2" rel="nofollow">Нет</a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+
+                let ageAccess = sessionStorage.getItem("age_access");
+                if (!ageAccess) {
+                    $("#trueModal").arcticmodal(
+                        {
+                            closeOnOverlayClick: false,
+                            afterClose: function (data, el) {
+                                console.log('save');
+                                sessionStorage.setItem("age_access", "1");
+
+                            }
+                        });
+                }
+            });
+
+            // age access
+
+
+        </script>
+    <? } ?>
+    <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
+
+    <? } ?>
+    <script>
+        $(document).ready(function () {
+            $(document).on('click', '.close_header_box', function () {
+                $('.overlay').hide();
+            });
+        });
+    </script>
 </footer>
 </div>
 </div><!-- //bx-wrapper -->
