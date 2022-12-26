@@ -39,7 +39,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             //enterego
             this.activeSection = null;
             this.deliveryOptions = null;
-            this.deliveryDatePropertyId = '13';
 
             this.BXFormPosting = false;
             this.regionBlockNotEmpty = false;
@@ -242,6 +241,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 SITE_ID: this.siteId,
                 signedParamsString: this.signedParamsString
             };
+            if (typeof actionData === 'object' && actionData !== null && 'price' in actionData)
+                data.price = actionData.price;
 
             data[this.params.ACTION_VARIABLE] = action;
 
@@ -5672,7 +5673,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     }
                     className += " col-6";
                 } if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
-                    || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY') {
+                    || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
+                    ||  property.getSettings().CODE === 'ADDRESS' ) {
                     className += " col-12";
                 } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
                     className += " d-none";
@@ -5806,18 +5808,57 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         initOshCourier: function (propsNode) {
 
             if (this.deliveryOptions.DA_DATA_TOKEN !== undefined) {
-                $(propsNode).find('[data-name="ADDRESS"]').suggestions({
+                window.Osh.bxPopup.init();
+                const oshMkad = window.Osh.oshMkadDistance.init(this.deliveryOptions);
+
+                $(propsNode).find('[data-name="ADDRESS"]').val( this.deliveryOptions?.DA_DATA_ADDRESS).hide();
+                const propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
+                const nodeDaData = BX.create('INPUT', {
+                    props: {
+                        className: 'form-control bx-soa-customer-input bx-ios-fix mb-2',
+                        name: 'dadata_input',
+                        type: 'text',
+                        size: 40,
+                        value: this.deliveryOptions?.DA_DATA_ADDRESS
+                    },
+                    events: {keypress: BX.proxy(this.checkKeyPress, this)}
+                })
+
+                propContainer.append(nodeDaData)
+                const nodeOpenMap = BX.create('a',
+                    {
+                        props: {className: 'btn btn-primary'},
+                        text: 'Выбрать адрес на карте',
+                        events: {
+                            click: BX.proxy(function () {
+                                oshMkad.afterSave = function (address) {
+                                    this.deliveryOptions.DA_DATA_ADDRESS = address;
+                                }.bind(this);
+                                window.Osh.bxPopup.onPickerClick(this)
+                            }, this)
+                        }
+                    });
+                propContainer.append(nodeOpenMap);
+                propsNode.append(propContainer);
+
+                $(nodeDaData).suggestions({
                     token: this.deliveryOptions.DA_DATA_TOKEN,
                     type: "ADDRESS",
                     hint: false,
+                    floating: true,
+                    constraints: {
+                        locations: [{ region: "Московская" }, { region: "Москва" }],
+                        // deletable: true
+                    },
+                    // в списке подсказок не показываем область
+                    // restrict_value: true,
                     onSelect: function (suggestion) {
                         let address = propsNode.querySelector('input[data-name="ADDRESS"]');
                         address.setAttribute('data-geo-lat', suggestion.data.geo_lat);
                         address.setAttribute('data-geo-lon', suggestion.data.geo_lon);
                         if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                            window.Osh.bxPopup.init();
-                            let oshMkad = window.Osh.oshMkadDistance.getInstance();
-
+                            oshMkad.afterSave = null;
+                            this.deliveryOptions.DA_DATA_ADDRESS = suggestion.value;
                             oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon], true);
                         }
                     }.bind(this)

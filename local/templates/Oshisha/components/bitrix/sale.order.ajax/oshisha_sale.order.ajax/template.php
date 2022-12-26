@@ -27,6 +27,7 @@ $request = $context->getRequest();
 
 $this->addExternalJs('/bitrix/js/osh.shipping/jquery.suggestions.min.js');
 $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css');
+$this->addExternalJs('/bitrix/js/osh.shipping/pickup.js');
 
 if (!isset($arParams['SHOW_ORDER_BUTTON'])) {
     $arParams['SHOW_ORDER_BUTTON'] = 'final_step';
@@ -260,6 +261,15 @@ switch (LANGUAGE_ID) {
 $this->addExternalJs($templateFolder . '/order_ajax.js');
 PropertyValueCollection::initJs();
 $this->addExternalJs($templateFolder . '/script.js');
+
+// #000018618 PVZ
+if ($arParams['SHOW_PICKUP_MAP'] === 'Y' || $arParams['SHOW_MAP_IN_PROPS'] === 'Y') {
+    $apiKey = htmlspecialcharsbx(Option::get('fileman', 'yandex_map_api_key', ''));
+    $this->addExternalJs($scheme . '://api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey . '&lang=' . $locale);
+}
+$this->addExternalJs('/local/assets/js/commonpvz/script.js');
+$this->addExternalCss('/local/assets/css/commonpvz/style.css');
+
 ?>
     <NOSCRIPT>
         <div style="color:red"><?= Loc::getMessage('SOA_NO_JS') ?></div>
@@ -652,9 +662,16 @@ if ($request->get('ORDER_ID') <> '') {
         }
     }
 
-    //TODO Get id delivery
+    //OSH DELIVERY OPT
     $arResult['DELIVERY_OPTIONS']['PERIOD_DELIVERY'] = $PeriodDelivery;
     $arResult['DELIVERY_OPTIONS']['DA_DATA_TOKEN'] = Osh\Delivery\Options\Config::getDaDataToken();
+    $arResult['DELIVERY_OPTIONS']['YA_API_KEY'] = Osh\Delivery\Options\Config::getYMapsKey();
+    $arResult['DELIVERY_OPTIONS']['DELIVERY_COST'] = Osh\Delivery\Options\Config::getCost();
+    $arResult['DELIVERY_OPTIONS']['START_COST'] = Osh\Delivery\Options\Config::getStartCost();
+    $arResult['DELIVERY_OPTIONS']['LIMIT_BASKET'] = Osh\Delivery\Options\Config::getLimitBasket();
+    $arResult['DELIVERY_OPTIONS']['CURRENT_BASKET'] = $arResult['ORDER_PRICE'];
+    $arResult['DELIVERY_OPTIONS']['DA_DATA_ADDRESS']  = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
+
     $arResult['DELIVERY_OPTIONS']['OSH_COURIER_ID'] = 93;
     $arResult['DELIVERY_OPTIONS']['OSH_PICKUP_ID'] = 40;
     
@@ -761,6 +778,10 @@ if ($request->get('ORDER_ID') <> '') {
                     )) . '</div>'
             )
         ))?>);
+        // #000018618 PVZ
+        BX.SaleCommonPVZ.init({
+            ajaxUrlPVZ: '/local/php_interface/include/sale_delivery/CommonPVZ/ajax.php'
+        });
     </script>
     <?php
 
