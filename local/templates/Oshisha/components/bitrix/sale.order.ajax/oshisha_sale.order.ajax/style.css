@@ -1833,3 +1833,59 @@ hr.bxe-light {
 #bx-soa-pickup {
     display: none !important;
 }
+
+/*OSH COURIER DELIVERY*/
+
+#osh_map_overlay {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .8);
+    z-index: 99999;
+}
+
+#osh-map-container {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+}
+#osh-map-container #map {
+    flex: 1 1 auto;
+    margin: 30px;
+}
+#osh-map-action {
+    flex: 0 0 auto;
+    text-align: center;
+    margin: 0px 20px 25px 20px;
+}
+
+#osh-close-icon {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    z-index: 999;
+    cursor: pointer;
+}
+
+#osh-close-icon:before, #osh-close-icon:after {
+    position: absolute;
+    left: 7px;
+    content: ' ';
+    height: 25px;
+    width: 5px;
+    background-color: #333;
+}
+
+#osh-close-icon:after {
+    transform: rotate(-45deg);
+}
+
+#osh-close-icon:before {
+    transform: rotate(45deg);
+}
