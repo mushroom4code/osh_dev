@@ -634,7 +634,7 @@ h3.ctweb-title {
     margin: 40px 0 0;
 }
 
-.blur_photo .image_cart, .blur_photo .product-item-detail-slider-images-container {
+.blur_photo .image_cart, .blur_photo .product-item-detail-slider-images-container,.blur_photo .product-item-detail-slider-container {
     width: 100%;
     z-index: 1000;
     backdrop-filter: blur(8px);
