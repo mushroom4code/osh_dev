@@ -75,7 +75,7 @@ class DeliveryHelper
         $cache = Cache::createInstance();
         $cachePath = '/getAllPVZPoints';
 
-        if ($cache->initCache(7, 'pvz_' . $city_name, $cachePath)) {
+        if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
             $points_Array = $cache->getVars();
         } elseif ($cache->startDataCache()) {
             foreach ($this->deliveries as $delName) {
