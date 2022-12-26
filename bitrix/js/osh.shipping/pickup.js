@@ -449,6 +449,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     };
 
     selfObj.calculateCost = function (dist) {
+        //TODO validate round
         const dist_m = Math.ceil(dist-0.8);
         return currentBasket>=limitBasket ? Math.max(dist_m - 5, 0) * costKm : cost + dist_m * costKm;
     };

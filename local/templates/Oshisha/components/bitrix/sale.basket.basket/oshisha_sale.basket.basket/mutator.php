@@ -47,6 +47,14 @@ print_r($item);*/
 foreach ($item as $row) {
 	/*if($row['CAN_BUY'] == 'N')
 		CSaleBasket::Delete($row['ID']);*/
+    //enterego - remove gift from basket if condition not execute
+    if (\Enterego\EnteregoHelper::productIsGift($row['PRODUCT_ID']) && $row['PRICE']!==0.0){
+        (new CSaleBasket)->Delete($row['ID']);
+        unset($row);
+        continue;
+    }
+    //
+
 	if( intval($SETTINGS['MAX_QUANTITY'])  > 0 && $SETTINGS['MAX_QUANTITY'] < $row['AVAILABLE_QUANTITY'] )
 		$row['AVAILABLE_QUANTITY'] = $SETTINGS['MAX_QUANTITY'];	
 

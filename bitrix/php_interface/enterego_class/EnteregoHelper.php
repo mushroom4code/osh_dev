@@ -187,6 +187,12 @@ class EnteregoHelper
                 $result[$main_brand_name] = [];
                 foreach ($temp_ar as $products) {
                     foreach ($products as $product) {
+                        if (self::productIsGift($product['PRODUCT_ID'])) {
+                            $product['GIFT'] = true;
+                            $product['SHOW_DISCOUNT_PRICE'] = false;
+                            $product['SHOW_MAX_PRICE'] = false;
+                        }
+
                         array_push($result[$main_brand_name], $product);
                     }
                 }
@@ -212,4 +218,13 @@ class EnteregoHelper
         return true;
     }
 
+    /** Return product type for discount gift
+     * @param int $productId
+     * @return false
+     */
+    public static function productIsGift(int $productId): bool
+    {
+        $rsRes = CIBlockElement::GetList([], ['ID' => $productId, 'SECTION_ID' => CATALOG_GIFT_ID]);
+        return $rsRes->SelectedRowsCount() > 0;
+    }
 }
