@@ -16,8 +16,9 @@ class DeliveryHelper
     {
         // TODO брать из настроек
         $this->deliveries[] = 'PickPoint';
-        $this->deliveries[] = 'SDEK';
-        $this->deliveries[] = 'PEK';
+        //$this->deliveries[] = 'SDEK';
+        //$this->deliveries[] = 'PEK';
+        $this->deliveries[] = 'FivePost';
     }
 
     public static function getButton()
@@ -66,7 +67,7 @@ class DeliveryHelper
         return $city['LOCATION_NAME'];
     }
 
-    public function getAllPVZ($city_name)
+    public function getAllPVZ($city_name, $codeCity)
     {
         $id_feature = 0;
         $result_array = [];
@@ -74,17 +75,14 @@ class DeliveryHelper
         $cache = Cache::createInstance();
         $cachePath = '/getAllPVZPoints';
 
-        if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
+        if ($cache->initCache(7, 'pvz_' . $city_name, $cachePath)) {
             $points_Array = $cache->getVars();
         } elseif ($cache->startDataCache()) {
             foreach ($this->deliveries as $delName) {
                 $deliveryClass = '\CommonPVZ\\' . $delName . 'Delivery';
                 $delivery = new $deliveryClass();
-                if (!empty($delivery->errors)) {
-                    $result_array['errors'][] = Loc::getMessage("COMMONPVZ_GET_DEL_ERROR") . $delName;
-                } else {
-                    $delivery->getPVZ($city_name, $points_Array, $id_feature);
-                }
+                $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity);
+                $result_array['errors'][$delName] = $delivery->errors;
             }
             $cache->endDataCache($points_Array);
         }
@@ -99,16 +97,16 @@ class DeliveryHelper
     {
         if ($req_data['delivery'] === 'PickPoint') {
             $delivery = new PickPointDelivery();
-            if (empty($delivery->errors))
-                return $delivery->getPrice($req_data);
+            return $delivery->getPrice($req_data);
+        } elseif ($req_data['delivery'] === 'СДЭК') {
+            $delivery = new SDEKDelivery();
+            return $delivery->getPrice($req_data);
+        } elseif ($req_data['delivery'] === 'ПЭК') {
+            $delivery = new PEKDelivery();
+            return $delivery->getPrice($req_data);
+        } elseif ($req_data['delivery'] === '5post') {
+            $delivery = new FivePostDelivery();
+            return $delivery->getPrice($req_data);
         }
     }
-
-
-    // TODO
-    public static function refreshJSComponent()
-    {
-
-    }
-
 }

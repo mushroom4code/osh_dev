@@ -2,7 +2,6 @@
 
 namespace CommonPVZ;
 
-use CommonPVZ\CommonPVZ;
 use Symfony\Component\HttpClient\Psr18Client;
 use CdekSDK2\Client;
 
@@ -26,7 +25,7 @@ class SDEKDelivery extends CommonPVZ
         }
     }
 
-    public function getPVZ($city_name, &$result_array, &$id_feature)
+    public function getPVZ($city_name, &$result_array, &$id_feature, $code_city)
     {
         try {
             $result = $this->client->cities()->getFiltered(['country_codes' => 'RU', 'city' => $city_name]);
@@ -37,33 +36,50 @@ class SDEKDelivery extends CommonPVZ
             if ($result->isOk()) {
                 $sdek_result = $this->client->formatResponseList($result, \CdekSDK2\Dto\PickupPointList::class);
             }
-
-            foreach ($sdek_result->items as $key => $value) {
-                $features_obj['type'] = 'Feature';
-                $features_obj['id'] = $id_feature;
-                $id_feature += 1;
-                $features_obj['geometry'] = [
-                    'type' => 'Point',
-                    'coordinates' => [
-                        $value->location->latitude,
-                        $value->location->longitude
-                    ]
-                ];
-                $features_obj['properties'] = [
-                    'code_pvz' => $value->code,
-                    'fullAddress' => $value->location->address_full,
-                    'deliveryName' => 'СДЭК',
-                    'iconContent' => 'СДЭК',
-                    'hintContent' => $value->location->address
-                ];
-                $features_obj['options'] = [
-                    'preset' => 'islands#darkGreenIcon'
-                ];
-                $result_array[] = $features_obj;
-            }
         } catch (\Exception $e) {
             $this->errors[] = $e->getMessage();
         }
 
+        foreach ($sdek_result->items as $key => $value) {
+            $features_obj['type'] = 'Feature';
+            $features_obj['id'] = $id_feature;
+            $id_feature += 1;
+            $features_obj['geometry'] = [
+                'type' => 'Point',
+                'coordinates' => [
+                    $value->location->latitude,
+                    $value->location->longitude
+                ]
+            ];
+            $features_obj['properties'] = [
+                'code_pvz' => $value->code,
+                'fullAddress' => $value->location->address_full,
+                'deliveryName' => 'СДЭК',
+                'iconContent' => 'СДЭК',
+                'hintContent' => $value->location->address
+            ];
+            $features_obj['options'] = [
+                'preset' => 'islands#darkGreenIcon'
+            ];
+            $result_array[] = $features_obj;
+        }
+    }
+
+    public function getPrice($array)
+    {
+        try {
+            $result = $this->client->cities()->getFiltered(['country_codes' => 'RU', 'city' => $array['name_city']]);
+            if ($result->isOk()) {
+                $cities = $this->client->formatResponseList($result, \CdekSDK2\Dto\CityList::class);
+            }
+            $sdekk = new \Enterego\EnteregoDeliveries;
+            $sdekk::auth();
+            $sdek_price = $sdekk::getSDEKPrice($array['weight'], $cities->items[0]->code, $array['to']);
+            $sdekk::setDelPrice($sdek_price->total_sum);
+            return json_encode(round($sdek_price->total_sum));
+        } catch (\Exception $e) {
+            $this->errors[] = $e->getMessage();
+        }
+        return 0;
     }
 }

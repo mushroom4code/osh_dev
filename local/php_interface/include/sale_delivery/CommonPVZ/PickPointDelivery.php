@@ -34,13 +34,13 @@ class PickPointDelivery extends CommonPVZ
         }
     }
 
-    public function getPVZ($city_name, &$result_array, &$id_feature)
+    public function getPVZ($city_name, &$result_array, &$id_feature, $code_city)
     {
 
         try {
             $pickPoint_result = $this->client->getPoints();
         } catch (\Exception $e) {
-            return $e->getMessage();
+            $this->errors[] = $e->getMessage();
         }
 
         foreach ($pickPoint_result as $key => $value) {
@@ -74,9 +74,14 @@ class PickPointDelivery extends CommonPVZ
 
     public function getPrice($array)
     {
-        $receiverDestination = new ReceiverDestination($array['name_city'], $array['hubregion']);
-        $tariffPrice = $this->client->calculateObjectedPrices($receiverDestination); // Вернет объект с ценами
-        $commonStandardPrice = $tariffPrice->getStandardCommonPrice(); // получить общую цену с тарифом стандарт
-        return json_encode(round($commonStandardPrice));
+        try {
+            $receiverDestination = new ReceiverDestination($array['name_city'], $array['hubregion']);
+            $tariffPrice = $this->client->calculateObjectedPrices($receiverDestination); // Вернет объект с ценами
+            $commonStandardPrice = $tariffPrice->getStandardCommonPrice(); // получить общую цену с тарифом стандарт
+            return json_encode(round($commonStandardPrice));
+        } catch (\Exception $e) {
+            $this->errors[] = $e->getMessage();
+        }
+        return 0;
     }
 }

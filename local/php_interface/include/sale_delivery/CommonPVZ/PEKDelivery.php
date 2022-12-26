@@ -2,19 +2,18 @@
 
 namespace CommonPVZ;
 
-require_once('pecom_kabinet.php');
 
 class PEKDelivery extends CommonPVZ
 {
     protected $configs = [
         'login' => 'smaksultan',
-        'password' => 'C78CCD5137422CCE292210C7F1AADF57284D7320',
+        'password' => 'C78CCD5137422CCE292210C7F1AADF57284D7320'
     ];
 
     protected function connect()
     {
         try {
-            $client = new PecomKabinet(
+            $this->client = new \PecomKabinet(
                 $this->configs['login'],
                 $this->configs['password']
             );
@@ -24,7 +23,7 @@ class PEKDelivery extends CommonPVZ
         }
     }
 
-    public function getPVZ($city_name, &$result_array, &$id_feature)
+    public function getPVZ($city_name, &$result_array, &$id_feature, $code_city)
     {
 
         try {
@@ -40,7 +39,7 @@ class PEKDelivery extends CommonPVZ
             );
             $this->client->close();
         } catch (\Exception $e) {
-            return $e->getMessage();
+            $this->errors[] = $e->getMessage();
         }
 
         foreach ($pek_result['divisions'] as $key => $value) {
@@ -65,15 +64,38 @@ class PEKDelivery extends CommonPVZ
                 'preset' => 'islands#nightIcon'
             ];
 
-            $result_array['features'][] = $features_obj;
+            $result_array[] = $features_obj;
         }
     }
 
     public function getPrice($array)
     {
-        $receiverDestination = new ReceiverDestination($array['name_city'], $array['hubregion']);
-        $tariffPrice = $this->client->calculateObjectedPrices($receiverDestination); // Вернет объект с ценами
-        $commonStandardPrice = $tariffPrice->getStandardCommonPrice(); // получить общую цену с тарифом стандарт
-        return json_encode(round($commonStandardPrice));
+        try {
+            $pek_result = $this->client->call('BRANCHES', 'FINDZONEBYADDRESS', // поиск uid города по названию города
+                array(
+                    "address" => $array['name_city']
+                )
+            );
+            $pek_bitrix_id = $pek_result->bitrixId;
+            $pek_result = $this->client->call('CALCULATOR', 'CALCULATEPRICE',
+                array(
+                    "senderCityId" => 446,
+                    "receiverCityId" => $pek_bitrix_id,
+                    "senderDistanceType" => 0,
+                    "cargos" => array(
+                        array(
+                            'weight' => $array['weight'] / 1000
+                        )
+                    ),
+                    'calcDate' => date('Y-m-d')
+                )
+            );
+
+            $this->client->close();
+            return json_encode($pek_result->transfers[0]->costTotal);
+        } catch (\Exception $e) {
+            $this->errors[] = $e->getMessage();
+        }
+        return 0;
     }
 }

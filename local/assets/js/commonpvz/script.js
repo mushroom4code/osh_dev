@@ -117,21 +117,25 @@ BX.SaleCommonPVZ = {
     },
 
     getPVZList: function () {
-        var __this = this;
-
+        var loaderTimer, __this = this;
+        if (!(loaderTimer = BX.Sale.OrderAjaxComponent.startLoader()))
+            return;
         BX.ajax({
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
                 'cityName': __this.curCityName,
+                'codeCity': __this.curCityCode,
                 'action': 'getPVZList'
             },
             onsuccess: function (res) {
                 __this.pvzObj = JSON.parse(res) || [];
                 __this.setPVZOnMap();
+                BX.Sale.OrderAjaxComponent.endLoader(loaderTimer);
             },
             onfailure: function (res) {
                 console.log('error getPVZList');
+                BX.Sale.OrderAjaxComponent.endLoader(loaderTimer);
             }
         });
     },
@@ -144,7 +148,6 @@ BX.SaleCommonPVZ = {
             clusterize: true,
             clusterHasBalloon: false
         });
-        console.dir(this.pvzObj)
         objectManager.add(this.pvzObj);
 
         var __this = this;

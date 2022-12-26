@@ -250,6 +250,10 @@ CModule::AddAutoloadClasses("", array(
     '\CommonPVZ\CommonPVZ' => '/local/php_interface/include/sale_delivery/CommonPVZ/CommonPVZ.php',
     '\CommonPVZ\PickPointDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/PickPointDelivery.php',
     '\CommonPVZ\SDEKDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/SDEKDelivery.php',
-    '\CommonPVZ\PEKDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/SDEKDelivery.php'
+    '\CommonPVZ\PEKDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/PEKDelivery.php',
+    '\CommonPVZ\FivePostDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/FivePostDelivery.php',
+    '\Enterego\EnteregoDBDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/EnteregoDBDelivery.php',
+    '\Enterego\EnteregoDeliveries' => '/local/php_interface/include/sale_delivery/CommonPVZ/EnteregoDeliveries.php',
+    '\PecomKabinet' => '/local/php_interface/include/sale_delivery/CommonPVZ/pecom_kabinet.php'
 
 ));

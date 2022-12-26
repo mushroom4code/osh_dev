@@ -8,7 +8,7 @@ if ($_POST['action'] === 'getCityName') {
 }
 
 if ($_POST['action'] === 'getPVZList') {
-    exit(json_encode($delHelper->getAllPVZ($_POST['cityName'])));
+    exit(json_encode($delHelper->getAllPVZ($_POST['cityName'], $_POST['codeCity'])));
 }
 
 if ($_POST['action'] === 'getPrice') {
