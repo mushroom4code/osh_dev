@@ -10,12 +10,13 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
     $message .= 'Комментарий пользователя: <b>' . PHP_EOL . $MESSAGE . '</b>' . PHP_EOL . PHP_EOL;
     $message .= 'Номер телефона пользователя: <b>' . PHP_EOL . $PHONE . '</b>.' . PHP_EOL . PHP_EOL;
     $message .= 'Сайт с которого было отправлено сообщение https://' . $_SERVER['HTTP_HOST'] . '/';
-    $headers = 'MIME-Version: 1.0' . "\r\n" .
-        'From: oshisha.net' . "\r\n" .
-        'Reply-To: oshisha.net' . "\r\n" .
-        'Content-type: text/html; charset=utf-8' . "\r\n";
+    $headers = array(
+        'From' => 'oshisha.net',
+        'Reply-To' => 'oshisha.net',
+        'X-Mailer' => 'PHP/' . phpversion(),
+    );
 
-    echo mail('rodionova@enterego.ru', 'Новый сайт', $message, $headers);
+    echo mail('rodionova@enterego.ru', 'Новый сайт', $message, implode("\r\n", $headers));
 } else {
     echo 'ошибка';
 }
