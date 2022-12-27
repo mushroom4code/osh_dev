@@ -15,7 +15,7 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
         'Reply-To: oshisha.net' . "\r\n" .
         'Content-type: text/html; charset=utf-8' . "\r\n";
 
-    echo mail('tgilmanov@oshisha.net', 'Новый сайт', $message, $headers);
+    echo mail('rodionova@enterego.ru', 'Новый сайт', $message, $headers);
 } else {
     echo 'ошибка';
 }
