@@ -45,7 +45,7 @@ class EnteregoGiftHandlers
         $basketItems = $basket->getBasketItems();
         $productIds = [];
         foreach ($basketItems as $basketItem) {
-            $productIds[] = $basketItem->getField('product_id');
+            $productIds[] = $basketItem->getField('PRODUCT_ID');
         }
 
         $discountData = self::getDiscountData($basket);

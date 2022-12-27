@@ -19,11 +19,10 @@ $mobileColumns = array_fill_keys($mobileColumns, true);
 
 $result['BASKET_ITEM_RENDER_DATA'] = array();
 
-$item = $this->basketItems;
-
 // TODO - доработать получение базовой цены
 $result['BASKET_ITEM_RENDER_DATA_CUSTOM'] = EnteregoHelper::basketCustomSort($this->basketItems);
 
+$item = $this->basketItems;
 global $USER, $SETTINGS;
 
 $id_USER = $USER->GetID();
@@ -48,7 +47,7 @@ foreach ($item as $row) {
 	/*if($row['CAN_BUY'] == 'N')
 		CSaleBasket::Delete($row['ID']);*/
     //enterego - remove gift from basket if condition not execute
-    if (\Enterego\EnteregoHelper::productIsGift($row['PRODUCT_ID']) && $row['PRICE']!==0.0){
+    if (\Enterego\EnteregoHelper::productIsGift($row['PRODUCT_ID']) && $row['PRICE']!==0.0) {
         (new CSaleBasket)->Delete($row['ID']);
         unset($row);
         continue;
@@ -118,6 +117,7 @@ foreach ($item as $row) {
         'BRAND' => isset($row[$this->arParams['BRAND_PROPERTY'] . '_VALUE'])
             ? $row[$this->arParams['BRAND_PROPERTY'] . '_VALUE']
             : '',
+        'GIFT' =>  $row['GIFT'] ?? false,
     );
 	foreach ($count_likes['USER'] as $keyLike => $count) {
 		if ($keyLike == $row['ID']) {
@@ -403,9 +403,6 @@ foreach ($item as $row) {
 
     $result['BASKET_ITEM_RENDER_DATA'][] = $rowData;
 }
-
-
-
 
 $totalData = array(
     'DISABLE_CHECKOUT' => (int)$result['ORDERABLE_BASKET_ITEMS_COUNT'] === 0,

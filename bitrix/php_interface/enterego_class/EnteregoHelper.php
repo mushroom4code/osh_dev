@@ -140,12 +140,12 @@ class EnteregoHelper
         return $name;
     }
 
-    public static function basketCustomSort($arResult, $type = 'basket')
+    public static function basketCustomSort(&$arResult, $type = 'basket')
     { //Сортировка в корзине
         $data = $result = [];
 
         if (!empty($arResult)) {
-            foreach ($arResult as $key_basket => $basket_item) {
+            foreach ($arResult as $key_basket => &$basket_item) {
                 $id = $type == 'basket' ? $basket_item['PRODUCT_ID'] : $basket_item['data']['PRODUCT_ID'];
 
                 \CModule::IncludeModule("iblock");
@@ -158,6 +158,11 @@ class EnteregoHelper
                     if ($type == 'basket') {
                         $basket_item['BASKET_KEY'] = $key_basket;
                         $data[$parent_name . '_' . $parent_id][] = $basket_item;
+                        if (self::productIsGift($id)) {
+                            $basket_item['GIFT'] = true;
+                            $basket_item['SHOW_DISCOUNT_PRICE'] = false;
+                            $basket_item['SHOW_MAX_PRICE'] = false;
+                        }
                     } else {
                         $data[$parent_name . '_' . $parent_id][$basket_item['id']] = $basket_item;
                     }
@@ -187,12 +192,6 @@ class EnteregoHelper
                 $result[$main_brand_name] = [];
                 foreach ($temp_ar as $products) {
                     foreach ($products as $product) {
-                        if (self::productIsGift($product['PRODUCT_ID'])) {
-                            $product['GIFT'] = true;
-                            $product['SHOW_DISCOUNT_PRICE'] = false;
-                            $product['SHOW_MAX_PRICE'] = false;
-                        }
-
                         array_push($result[$main_brand_name], $product);
                     }
                 }

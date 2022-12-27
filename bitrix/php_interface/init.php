@@ -28,20 +28,6 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
 ));
 
-CModule::AddAutoloadClasses("", array(
-    '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
-    '\Enterego\ProductDeactivation' => '/bitrix/php_interface/enterego_class/ProductDeactivation.php',
-    'DataBase_like' => '/bitrix/modules/osh.like_favorites/lib/DataBase_like.php',
-    '\Enterego\EnteregoCompany' => '/bitrix/php_interface/enterego_class/EnteregoCompany.php',
-    '\Enterego\UserPrice\PluginStatic' => '/bitrix/modules/osh.userprice/include.php',
-    '\Enterego\UserPrice\UserPriceHelperOsh' => '/bitrix/modules/osh.userprice/include.php',
-    '\Enterego\EnteregoExchange' => '/bitrix/php_interface/enterego_class/EnteregoExchange.php',
-    '\Enterego\EnteregoBasket' => '/bitrix/php_interface/enterego_class/EnteregoBasket.php',
-    '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
-    '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
-    '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
-));
-
 global $PRICE_TYPE_ID;
 global $UserTypeOpt, $arIskCode, $SETTINGS;
 $arIskCode = array(
