@@ -241,6 +241,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 SITE_ID: this.siteId,
                 signedParamsString: this.signedParamsString
             };
+            if (typeof actionData === 'object' && actionData !== null && 'price' in actionData)
+                data.price = actionData.price;
 
             data[this.params.ACTION_VARIABLE] = action;
 
@@ -5672,7 +5674,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     className += " col-6";
                 } if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
                     || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
-                    ||  property.getSettings().CODE === 'ADDRESS' ) {
+                    ||  property.getSettings().CODE === 'ADDRESS' ||  property.getSettings().CODE === 'DATE_DELIVERY') {
                     className += " col-12";
                 } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
                     className += " d-none";

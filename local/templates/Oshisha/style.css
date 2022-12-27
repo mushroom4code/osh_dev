@@ -189,12 +189,6 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     filter: drop-shadow(0px 1px 3px rgba(97, 97, 97, 0.09));
 }
 
-select {
-    border: none !important;
-    width: 0;
-    height: 0;
-}
-
 .info-prices-box-hover .prices-block {
     filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
 }
@@ -3170,10 +3164,6 @@ table#TableWorkers.no-footer {
         min-height: 22px;
         min-width: 22px;
         margin-top: 5px;
-    }
-
-    .box_with_icons .icon_instagram {
-        background-image: url("/local/templates/Oshisha/images/icon_instagram.png");
     }
 
     .link_header > .icon_header {

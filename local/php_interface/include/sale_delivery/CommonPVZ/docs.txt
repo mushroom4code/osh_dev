@@ -1,0 +1,7 @@
+включить в настройках компонента карту для данной доставки;
+в модуле кладр отключить применение для этой доставки;
+композером необходимо подтянуть зависимости:
+composer require sch-group/pickpoint
+composer require symfony/http-client
+composer require lapaygroup/fivepost-sdk
+composer require cdek-it/sdk2.0

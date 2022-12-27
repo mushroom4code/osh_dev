@@ -150,7 +150,6 @@ $mobile = new MobileDetect();
             <h5 class="mb-3">Социальные сети и мессенджеры</h5>
             <div class="width_50 mb-5">
                 <div class="box_with_icons">
-                    <a href="https://www.instagram.com/oshisha.cc/" class="mr-5 fa fa-instagram icons_theme"></a>
                     <a href="https://t.me/oshishanet" class="mr-5 telegram_icons">
                     </a>
                     <a href="https://vk.com/oshishacc" class="mr-5 vk_icons">

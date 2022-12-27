@@ -73,7 +73,6 @@
 
         init: function (parameters) {
             this.initializePrimaryFields();
-
             this.params = parameters.params || {};
             this.template = parameters.template || '';
             this.signedParamsString = parameters.signedParamsString || '';
@@ -108,7 +107,7 @@
                 var template = BX(templateName);
                 this.templates[templateName] = BX.type.isDomNode(template) ? template.innerHTML : '';
             }
-
+            this.tasteInit();
             return this.templates[templateName];
         },
 
@@ -1432,9 +1431,37 @@
                 this.setQuantity(itemData, quantity);
             }
         },
+        tasteInit: function () {
+            let box = $(document).find('.variation_taste');
+
+            $(box).find('span').each(
+                function () {
+                    let classes = $(this).attr('class');
+                    if (classes === 'taste') {
+                        let color = $(this).data('background');
+                        $(this).css('background-color', color);
+                        let str = '#';
+                        if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
+                            && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
+                            $(this).css('color', 'black');
+                        } else {
+                            $(this).css('color', 'white');
+                        }
+                    }
+                }
+            );
+            $('body').find('.variation_taste').each(
+                function (index, item) {
+                    if ($(item).find('.taste').length > 2) {
+                        $(item).closest('.toggle_taste ').css('overflow', 'hidden');
+                        $(item).closest('.toggle_taste ').addClass('many_tastes_toggle');
+                        $(item).attr('visible', '0');
+                    }
+                }
+            );
+        },
 
         quantityChange: function () {
-            console.log('true');
            
             var itemData = this.getItemDataByTarget(BX.proxy_context);
             if (itemData) {
@@ -1464,7 +1491,7 @@
             if (measureRatio > 0 && quantity < measureRatio) {
                 quantity = measureRatio;
             }
-			console.log(quantity+'|'+parseInt(itemData.AVAILABLE_QUANTITY));
+
 			if( quantity > parseInt(itemData.AVAILABLE_QUANTITY) )
 			{
 				let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
@@ -1512,7 +1539,6 @@
             }
 
             quantity = isQuantityFloat ? parseFloat(quantity) : parseInt(quantity, 10);
-
             return quantity;
         },
 
@@ -1532,6 +1558,7 @@
                     this.actionPool.changeQuantity(itemData.ID, quantity, currentQuantity);
                 }
             }
+
         },
 
         animatePriceByQuantity: function (itemData, quantity) {
