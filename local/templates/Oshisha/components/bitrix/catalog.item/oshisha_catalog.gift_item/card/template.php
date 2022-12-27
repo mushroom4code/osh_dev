@@ -174,7 +174,7 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
             <div class="justify-content-center">
                 <?php if ($show_price) { ?>
                     <div class="product-item-button-container" id="<?=$itemIds['BASKET_ACTIONS']?>">
-                        <button class="btn btn_red js-add2basket-gift
+                        <button class="btn btn_red js-add2basket-gift"
                                 data-product_id="<?= $item['ID']; ?>"
                                 id="<?=$itemIds['BUY_LINK']?>"
                                 href="javascript:void(0)" rel="nofollow">
