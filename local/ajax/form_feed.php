@@ -6,9 +6,9 @@ $PHONE = htmlspecialcharsbx($_REQUEST['PHONE']);
 
 $message = '';
 if (!empty($PHONE) && !empty($MESSAGE)) {
-    $message .= 'Новое сообщение от <b>' . PHP_EOL . $NAME . '</b>.' . PHP_EOL . PHP_EOL;
-    $message .= 'Комментарий пользователя: <b>' . PHP_EOL . $MESSAGE . '</b>' . PHP_EOL . PHP_EOL;
-    $message .= 'Номер телефона пользователя: <b>' . PHP_EOL . $PHONE . '</b>.' . PHP_EOL . PHP_EOL;
+    $message .= 'Новое сообщение от ' . PHP_EOL . $NAME . PHP_EOL . PHP_EOL;
+    $message .= 'Комментарий пользователя: ' . PHP_EOL . $MESSAGE . PHP_EOL . PHP_EOL;
+    $message .= 'Номер телефона пользователя: ' . PHP_EOL . $PHONE . PHP_EOL . PHP_EOL;
     $message .= 'Сайт с которого было отправлено сообщение https://' . $_SERVER['HTTP_HOST'] . '/';
 
     echo mail('rodionova@enterego.ru', 'Новый сайт', $message);
