@@ -12,6 +12,7 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
     $message .= 'Сайт с которого было отправлено сообщение https://' . $_SERVER['HTTP_HOST'] . '/';
     $headers = array(
         'From' => 'oshisha.net',
+        'Content-type'=>': text/html',
     );
 
     echo mail('rodionova@enterego.ru', 'Новый сайт', $message, implode("\r\n", $headers));
