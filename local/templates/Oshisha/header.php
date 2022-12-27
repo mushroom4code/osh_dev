@@ -89,7 +89,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </a>
             </div>
             <div class="container_header flex_header">
-                <div class="box_with_city flex_header">
+                <div class="box_with_city flex_header col-5 pl-0">
                     <span class="d-flex flex-row align-items-center">
                         <img src="/local/assets/images/icon_location.svg" class="icon_location">
                         <a href="#" class="text_header"><div class="place">
@@ -106,9 +106,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         </button>
                     </div></a>
                     </span>
-                    <? /* <a href="/about/address-shops/" class="text_header adresa">Адреса магазинов</a>*/ ?>
+                    <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать отзыв</a>
+                    <a href="https://oshisha.net/" class="red_text text_font_13 font-weight-bold">Вернуться на старый
+                        сайт</a>
                 </div>
-                <div class="box_with_menu_header flex_header flex_header_right">
+                <div class="box_with_menu_header flex_header flex_header_right col-7 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
                     <a href="/about/contacts/" class="text_header">Контакты</a>
                     <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
@@ -187,6 +189,13 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                     </div>
                                 </a>
                             </div>
+                            <a href="/about/feedback_new_site/" class="link_menu_top">
+                                <span class="red_text text_font_13 font-weight-bold ">Написать отзыв</span>
+                            </a>
+                            <a href="https://oshisha.net/" class="link_menu_top">
+                                <span class="red_text text_font_13 font-weight-bold">
+                                    Вернуться на старый сайт</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -304,6 +313,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
             <?php } ?>
         </div>
+        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/include/feedback-popup-line.php") ?>
     </header>
 
     <div class="section_wrapper">

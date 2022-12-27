@@ -634,7 +634,7 @@ h3.ctweb-title {
     margin: 40px 0 0;
 }
 
-.blur_photo .image_cart, .blur_photo .product-item-detail-slider-images-container,.blur_photo .product-item-detail-slider-container {
+.blur_photo .image_cart, .blur_photo .product-item-detail-slider-images-container, .blur_photo .product-item-detail-slider-container {
     width: 100%;
     z-index: 1000;
     backdrop-filter: blur(8px);
@@ -645,7 +645,7 @@ h3.ctweb-title {
 
 .blur_photo .bx_price,
 .blur_photo .product-item-amount-field-contain,
-.blur_photo .product-item-detail-price-current{
+.blur_photo .product-item-detail-price-current {
     display: none !important;
 }
 
@@ -946,4 +946,8 @@ h3.ctweb-title {
 
 .product-item-amount-field-contain {
     max-width: 90px;
+}
+
+.bottom-0 {
+    bottom: 0;
 }
