@@ -10,12 +10,8 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
     $message .= 'Комментарий пользователя: <b>' . PHP_EOL . $MESSAGE . '</b>' . PHP_EOL . PHP_EOL;
     $message .= 'Номер телефона пользователя: <b>' . PHP_EOL . $PHONE . '</b>.' . PHP_EOL . PHP_EOL;
     $message .= 'Сайт с которого было отправлено сообщение https://' . $_SERVER['HTTP_HOST'] . '/';
-    $headers = array(
-        'From' => 'oshisha.net',
-        'Content-type'=>': text/html',
-    );
 
-    echo mail('rodionova@enterego.ru', 'Новый сайт', $message, implode("\r\n", $headers));
+    echo mail('rodionova@enterego.ru', 'Новый сайт', $message);
 } else {
     echo 'ошибка';
 }
