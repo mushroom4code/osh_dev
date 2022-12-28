@@ -5,6 +5,9 @@
 $APPLICATION->SetTitle("Корзина");
 $APPLICATION->SetPageProperty("title", "Корзина");
 
+//Add automatically gift in the basket
+\Enterego\EnteregoGiftHandlers::OnLoadSaleBasketAddGiftInBasket();
+
 $APPLICATION->IncludeComponent(
     "bitrix:sale.basket.basket",
     "oshisha_sale.basket.basket",

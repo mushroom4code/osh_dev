@@ -313,6 +313,23 @@ $(document).ready(function () {
         changePrice();
     })
 
+    $(document).on('click', '.js-add2basket-gift', function () {
+        const product_id = $(this).attr('data-product_id');
+        product_data = {
+            'ID': product_id,
+            'QUANTITY': 1,
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/local/templates/Oshisha/include/add2basket.php',
+            data: 'product_data=' + JSON.stringify(product_data),
+            success: function () {
+                location.href = BX.message('BASKET_URL');
+            }
+        });
+    })
+
     if (addToBasket === true) {
         setInterval(() => sendArrayItems(arItemsForDB), 500);
 

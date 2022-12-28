@@ -6,6 +6,7 @@ CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
 setcookie("PHPSESSID", "", 1, '/', '.oshisha.net');
 
+require_once(__DIR__ . '/conf.php');
 
 if (COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE') === 'true') {
     define("USE_CUSTOM_SALE_PRICE", true);
@@ -23,7 +24,8 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoExchange' => '/bitrix/php_interface/enterego_class/EnteregoExchange.php',
     '\Enterego\EnteregoBasket' => '/bitrix/php_interface/enterego_class/EnteregoBasket.php',
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
-    '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php'
+    '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
+    '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
 ));
 
 global $PRICE_TYPE_ID;
@@ -34,6 +36,8 @@ $arIskCode = array(
 );
 $SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
 
+//class used in component files before init autoload files
+require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
 

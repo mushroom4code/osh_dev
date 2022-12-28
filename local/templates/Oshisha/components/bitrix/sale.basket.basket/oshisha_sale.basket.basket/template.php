@@ -139,7 +139,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             </div>
             <?php $APPLICATION->IncludeComponent(
                 'bitrix:sale.products.gift.basket',
-                'bootstrap_v4',
+                'oshisha_gift',
                 $giftParameters,
                 $component
             ); ?>
