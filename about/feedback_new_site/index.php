@@ -4,6 +4,7 @@ $APPLICATION->SetTitle("Обратная связь по новому сайту
 <h5 class="mb-3" id="form"></h5>
 <div class="mb-5">
     <form class="form_company send_feed" id="support">
+        <input type="hidden" name="recaptcha_token" value="">
         <div class="form-form-wrap">
             <div class="form-group mb-3">
                 <label class="label_company">Обратная связь по новому сайту</label>

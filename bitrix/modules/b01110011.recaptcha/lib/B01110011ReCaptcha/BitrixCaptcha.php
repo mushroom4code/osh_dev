@@ -128,7 +128,7 @@ class BitrixCaptcha
     /**
      * Основной метод проверки капчи
      */
-    public function checkSpam()
+    public static function checkSpam()
     {
         global $APPLICATION;
 
