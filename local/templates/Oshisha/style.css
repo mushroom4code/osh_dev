@@ -2394,7 +2394,7 @@ a.bx-advertisingbanner-btn {
 }
 
 .margin-rel {
-    top: 2.5%;
+    top: 37px;
 }
 
 .close_span {
@@ -3211,7 +3211,7 @@ table#TableWorkers.no-footer {
     }
 
     .margin-rel {
-        top: 8.5%;
+        top: 67px;
     }
 
     .card_element, .product-item-amount-field-contain input[type="number"]:not(.cat-det) {
@@ -4837,6 +4837,10 @@ li, ul {
     .h1 {
         font-size: 18px;
         line-height: 110.4%;
+    }
+
+    .text_font_13 {
+        font-size: 12px;
     }
 
     .link_menu_catalog {
