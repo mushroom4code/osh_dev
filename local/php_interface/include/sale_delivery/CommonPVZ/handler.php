@@ -45,6 +45,12 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
     {
         $result = new \Bitrix\Sale\Delivery\CalculationResult();
         if (isset($_POST['price'])) {
+
+            $order = $shipment->getCollection()->getOrder();
+            $propertyCollection = $order->getPropertyCollection();
+            $adressProperty = $propertyCollection->getAddress();
+            $adressProperty->setValue($_POST['address']);
+
             $result->setDeliveryPrice(
                 roundEx(
                     $_POST['price'],

@@ -239,8 +239,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 SITE_ID: this.siteId,
                 signedParamsString: this.signedParamsString
             };
-            if (typeof actionData === 'object' && actionData !== null && 'price' in actionData)
-                data.price = actionData.price;
 
             data[this.params.ACTION_VARIABLE] = action;
 
