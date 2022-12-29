@@ -1783,7 +1783,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     BX.addClass(this.authBlockNode, 'bx-active');
                     break;
                 case this.regionBlockNode.id:
-                    this.editActiveRegionBlock(true);
+                    //this.editActiveRegionBlock(true);
                     break;
                 case this.deliveryBlockNode.id:
                     this.editActiveDeliveryBlock(true);
@@ -1847,8 +1847,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
                 if (!this.checkBlockErrors(allSections[i]) || !this.checkPreload(allSections[i])) {
                     if (this.activeSectionId !== allSections[i].id) {
-                        BX(this.activeSectionId) && this.fade(BX(this.activeSectionId));
-                        this.show(allSections[i]);
+                        // BX(this.activeSectionId) && this.fade(BX(this.activeSectionId));
+                        // this.show(allSections[i]);
                     }
 
                     break;
@@ -2046,7 +2046,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             this.checkPickUpShow();
             //enterego always redraw props block
             this.editActivePropsBlock(true);
-            this.editActiveRegionBlock(true);
+            //this.editActiveRegionBlock(true);
             this.editActiveDeliveryBlock(true);
 
             // if (this.activeSection !== null) {
@@ -5809,7 +5809,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 window.Osh.bxPopup.init();
                 const oshMkad = window.Osh.oshMkadDistance.init(this.deliveryOptions);
 
-                $(propsNode).find('[data-name="ADDRESS"]').val( this.deliveryOptions?.DA_DATA_ADDRESS).hide();
+                $(propsNode).find('[data-name="ADDRESS"]').val( this.deliveryOptions?.DA_DATA_ADDRESS).addClass('d-none')
                 const propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
                 const nodeDaData = BX.create('INPUT', {
                     props: {
