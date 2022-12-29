@@ -3,6 +3,7 @@
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
+use Enterego\EnteregoDiscount;
 
 /**
  * @global CMain $APPLICATION
@@ -176,6 +177,30 @@ if ($_GET['page'] != '') {
 }
 $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
+
+//TODO move to back (component) and slow
+const CATALOG_GIFT_ID=1873;
+$cat = new EnteregoDiscount();
+$arResultSection = $cat->getSectionProductsForFilter(CATALOG_DISCOUNT_ID);
+
+function recursiveSort(&$arSort)
+{
+    foreach ($arSort as &$item) {
+        if (count($item) > 1 && isset($item[0])) {
+            uasort($item, "sortCategory");
+            recursiveSort($item);
+        }
+    }
+}
+
+function sortCategory($oneElement, $TwoElement)
+{
+    return strnatcasecmp($oneElement[0]['NAME'], $TwoElement[0]['NAME']);
+}
+
+uasort($categoryProduct, "sortCategory");
+recursiveSort($categoryProduct);
+
 ?>
 <div class="row mb-4 box_with_prod">
     <?php if ($isFilter) : ?>
@@ -184,7 +209,13 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
                 <div class="catalog-section-list-tile-list">
-                    <? foreach ($arResultSection as $arSection): ?>
+                    <? foreach ($arResultSection as $section):
+
+                        if (!isset($section[0]) || $section[0]['CODE'] === 'sale') {
+                            continue;
+                        }
+                        $arSection = $section[0];
+                        ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap">
                                 <a href="<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
