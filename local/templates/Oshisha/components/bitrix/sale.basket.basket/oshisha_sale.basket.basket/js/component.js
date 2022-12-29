@@ -478,25 +478,26 @@
                     }
 
                     if (result.DELETED_BASKET_ITEMS) {
+                        //TODO recalculate count and fix delete baskets
                         //enterego add remove gift if basket not support discount after changes
-                        let deletedItems = result.DELETED_BASKET_ITEMS;
-                        let curBlock = result.BASKET_DATA.BASKET_ITEM_RENDER_DATA;
-                        $('.basket-items-list-item-container').each(function () {
-                            let id = this.getAttribute('data-id');
-                            let find  = curBlock.find(function (elem){
-                                if (elem.ID===id){
-                                    return true;
-                                }
-                            });
-                            if (find===undefined) {
-                                deletedItems.push(id);
-                            }
-                        });
+                        // let deletedItems = result.DELETED_BASKET_ITEMS;
+                        // let curBlock = result.BASKET_DATA.BASKET_ITEM_RENDER_DATA;
+                        // $('.basket-items-list-item-container').each(function () {
+                        //     let id = this.getAttribute('data-id');
+                        //     let find  = curBlock.find(function (elem){
+                        //         if (elem.ID===id){
+                        //             return true;
+                        //         }
+                        //     });
+                        //     if (find===undefined) {
+                        //         deletedItems.push(id);
+                        //     }
+                        // });
 
-                        if (deletedItems)
-                        {
-                            this.deleteBasketItems(deletedItems, this.params.SHOW_RESTORE === 'Y');
-                        }
+                        // if (deletedItems)
+                        // {
+                            this.deleteBasketItems(DELETED_BASKET_ITEMS, this.params.SHOW_RESTORE === 'Y');
+                        // }
                     }
 
                     if (result.MERGED_BASKET_ITEMS) {
