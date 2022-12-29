@@ -10,9 +10,12 @@ BX.SaleCommonPVZ = {
     ajaxUrlPVZ: null,
     propsMap: null,
     pvzObj: null,
+    pvzAddress: null,
+    pvzFullAddress: null,
 
     init: function (params) {
         this.ajaxUrlPVZ = params.ajaxUrlPVZ;
+        this.ajaxUrl = params.ajaxUrl;
         this.refresh();
     },
 
@@ -118,7 +121,7 @@ BX.SaleCommonPVZ = {
 
     getPVZList: function () {
         var loaderTimer, __this = this;
-        if (!(loaderTimer = BX.Sale.OrderAjaxComponent.startLoader()))
+        if (!BX.Sale.OrderAjaxComponent.startLoader())
             return;
         BX.ajax({
             url: __this.ajaxUrlPVZ,
@@ -131,11 +134,10 @@ BX.SaleCommonPVZ = {
             onsuccess: function (res) {
                 __this.pvzObj = JSON.parse(res) || [];
                 __this.setPVZOnMap();
-                BX.Sale.OrderAjaxComponent.endLoader(loaderTimer);
             },
             onfailure: function (res) {
                 console.log('error getPVZList');
-                BX.Sale.OrderAjaxComponent.endLoader(loaderTimer);
+                BX.Sale.OrderAjaxComponent.endLoader();
             }
         });
     },
@@ -153,10 +155,16 @@ BX.SaleCommonPVZ = {
         var __this = this;
 
         __this.propsMap.geoObjects.add(objectManager);
+        BX.Sale.OrderAjaxComponent.endLoader();
+
         objectManager.objects.events.add(['click', 'multitouchstart'], function (e) {
+            if (!BX.Sale.OrderAjaxComponent.startLoader())
+                return;
             __this.pvzPopup.close();
             var objectId = e.get('objectId'),
                 obj = objectManager.objects.getById(objectId);
+            __this.pvzAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
+            __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress + ' #' + obj.properties.code_pvz;
 
             BX.ajax({
                 url: __this.ajaxUrlPVZ,
@@ -174,13 +182,9 @@ BX.SaleCommonPVZ = {
                 onsuccess: BX.delegate(function (result) {
                     result = JSON.parse(result);
                     var reqData = {};
-                    reqData.price = parseInt(result);
-                    BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', reqData);
-                    __this.setPVZAddr(
-                        obj.properties.deliveryName + ': ' + obj.properties.fullAddress,
-                        obj.properties.code_pvz
-                    );
-
+                    reqData.price = parseInt(result) || 0;
+                    reqData.address = obj.properties.deliveryName + ': ' + obj.properties.fullAddress + ' #' + obj.properties.code_pvz || '';
+                    __this.sendRequestToComponent('refreshOrderAjax', reqData);
                 }, this),
                 onfailure: BX.delegate(function () {
                     BX.Sale.OrderAjaxComponent.showError(BX.Sale.OrderAjaxComponent.mainErrorsNode, 'Ошибка запроса стоимости доставки!');
@@ -190,10 +194,56 @@ BX.SaleCommonPVZ = {
         });
     },
 
-    setPVZAddr: function (address, code) {
-        BX('pvz_address').innerHTML = address;
-        BX('soa-property-7').value = address + ' #' + code;
-        BX.addClass(BX('soa-property-7'), 'disabled');
-        BX("soa-property-7").setAttribute("readonly", "readonly");
+    sendRequestToComponent: function (action, actionData) {
+        var __this = this;
+
+        BX.ajax({
+            method: 'POST',
+            dataType: 'json',
+            url: this.ajaxUrl,
+            data: this.getDataForPVZ(action, actionData),
+            onsuccess: BX.delegate(function (result) {
+                if (action === 'refreshOrderAjax') {
+                    BX.Sale.OrderAjaxComponent.refreshOrder(result);
+                }
+                // TODO
+                // пока что не понял почему адрес в ответе запроса имеется,
+                // но не ставится в поле адреса
+                BX('pvz_address').innerHTML = __this.pvzAddress;
+                if (BX('soa-property-7')) {
+                    BX('soa-property-7').value = __this.pvzFullAddress;
+                    BX.addClass(BX('soa-property-7'), 'disabled');
+                    BX("soa-property-7").setAttribute("readonly","readonly");
+                }
+                if (BX('soa-property-19')) {
+                    BX('soa-property-19').value = __this.pvzFullAddress;
+                    BX.addClass(BX('soa-property-19'), 'disabled');
+                    BX("soa-property-19").setAttribute("readonly","readonly");
+                }
+
+
+                BX.Sale.OrderAjaxComponent.endLoader();
+            }, this),
+            onfailure: BX.delegate(function () {
+                console.warn('error sendRequestToComponent');
+                BX.Sale.OrderAjaxComponent.endLoader();
+            }, this)
+        });
+    },
+
+    getDataForPVZ: function (action, actionData) {
+        var data = {
+            order: BX.Sale.OrderAjaxComponent.getAllFormData(),
+            sessid: BX.bitrix_sessid(),
+            via_ajax: 'Y',
+            SITE_ID: BX.Sale.OrderAjaxComponent.siteId,
+            signedParamsString: BX.Sale.OrderAjaxComponent.signedParamsString,
+            price: actionData.price,
+            address: actionData.address
+        };
+
+        data[BX.Sale.OrderAjaxComponent.params.ACTION_VARIABLE] = action;
+
+        return data;
     }
 };

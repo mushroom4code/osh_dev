@@ -41,20 +41,29 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
      * @return CalculationResult
      * @throws \Bitrix\Main\ArgumentException
      */
-    protected function calculateConcrete(\Bitrix\Sale\Shipment $shipment = null)
+    protected function calculateConcrete(\Bitrix\Sale\Shipment $shipment)
     {
         $result = new \Bitrix\Sale\Delivery\CalculationResult();
-        if (isset($_POST['price'])) {
-            $result->setDeliveryPrice(
-                roundEx(
-                    $_POST['price'],
-                    SALE_VALUE_PRECISION
-                )
-            );
-            $result->setPeriodDescription('2-3 days');
-            return $result;
 
+        if (isset($_POST['price'])) {
+            $_SESSION['pricePVZ'] = $_POST['price'];
+
+            $order = $shipment->getCollection()->getOrder();
+            $propertyCollection = $order->getPropertyCollection();
+            $adressProperty = $propertyCollection->getAddress();
+            $adressProperty->setValue($_POST['address']);
         }
+
+        if (!isset($_SESSION['pricePVZ'])) {
+            $_SESSION['pricePVZ'] = 0;
+        }
+
+        $result->setDeliveryPrice(
+            roundEx(
+                $_SESSION['pricePVZ'],
+                SALE_VALUE_PRECISION
+            )
+        );
 
         return $result;
     }
@@ -86,10 +95,7 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
      */
     protected function getConfigStructure()
     {
-        $result = [];
-
-
-        return $result;
+        return array();
     }
 
     /**

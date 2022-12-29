@@ -780,7 +780,8 @@ if ($request->get('ORDER_ID') <> '') {
         ))?>);
         // #000018618 PVZ
         BX.SaleCommonPVZ.init({
-            ajaxUrlPVZ: '/local/php_interface/include/sale_delivery/CommonPVZ/ajax.php'
+            ajaxUrlPVZ: '/local/php_interface/include/sale_delivery/CommonPVZ/ajax.php',
+            ajaxUrl: '<?=CUtil::JSEscape($component->getPath().'/ajax.php')?>'
         });
     </script>
     <?php
