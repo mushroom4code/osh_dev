@@ -929,7 +929,7 @@ class CPickpoint extends CAllPickpoint
 		$ppds = array(	
 			"js" => "/bitrix/js/{$MODULE_ID}/pickpoint_deliveryservice.js",		
 			"lang" => "/bitrix/modules/{$MODULE_ID}/lang/".LANGUAGE_ID."/js/pickpoint_deliveryservice.php",	
-			"rel" => array("jquery"),
+			"rel" => array("jquery3"),
 			);
 			
 		// Block JQuery loading in some cases

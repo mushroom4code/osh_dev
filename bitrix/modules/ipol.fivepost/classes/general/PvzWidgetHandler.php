@@ -33,7 +33,7 @@ class PvzWidgetHandler extends abstractGeneral
 
     public static function loadWidjet(){
         if(Deliveries::isActive() && $_REQUEST['is_ajax_post'] != 'Y' && $_REQUEST["AJAX_CALL"] != 'Y' && !$_REQUEST["ORDER_AJAX"]) {
-            \CJSCore::Init(array('jquery'));
+            \CJSCore::Init(array('jquery3'));
             $pathToController = Tools::getJSPath().'pvzWidjet.js';
             $pathToWidjet     = Tools::getJSPath().'widjet/widjet.js';
 
