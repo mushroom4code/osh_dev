@@ -23,24 +23,28 @@ $menuBlockId = "catalog_menu_" . $this->randString();
 $menu_for_JS = [];
 foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
     $HAS_CHILD = 0;
-	 if (is_array($arColumns) && count($arColumns) > 0)
-		$HAS_CHILD = 1;
-	$menu_for_JS['MAIN'][] = [
-        'LINK' => $arResult["ALL_ITEMS"][$itemID]["LINK"],
-        'TEXT' => $arResult["ALL_ITEMS"][$itemID]["TEXT"],
-        'ID' => $itemID,
-		'HAS_CHILD' => $HAS_CHILD, 
-    ];
-    if (is_array($arColumns) && count($arColumns) > 0) {
-        foreach ($arColumns as $key => $arRow) {
-            foreach ($arRow as $itemIdLevel_2 => $arLevel_3) {
-                $menu_for_JS['ELEMENT'][$itemID][] = [
-                    'LINK' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["LINK"],
-                    'TEXT' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["TEXT"],
-                ];
+    if (is_array($arColumns) && count($arColumns) > 0)
+        $HAS_CHILD = 1;
+    if ($arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/diskont/') {
+
+
+        $menu_for_JS['MAIN'][] = [
+            'LINK' => $arResult["ALL_ITEMS"][$itemID]["LINK"],
+            'TEXT' => $arResult["ALL_ITEMS"][$itemID]["TEXT"],
+            'ID' => $itemID,
+            'HAS_CHILD' => $HAS_CHILD,
+        ];
+        if (is_array($arColumns) && count($arColumns) > 0) {
+            foreach ($arColumns as $key => $arRow) {
+                foreach ($arRow as $itemIdLevel_2 => $arLevel_3) {
+                    $menu_for_JS['ELEMENT'][$itemID][] = [
+                        'LINK' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["LINK"],
+                        'TEXT' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["TEXT"],
+                    ];
+                }
             }
+            usort($menu_for_JS['ELEMENT'][$itemID], 'sort_by_name_menu');
         }
-        usort($menu_for_JS['ELEMENT'][$itemID], 'sort_by_name_menu');
     }
 }
 ?>
@@ -68,7 +72,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         }
 
         $result = json_encode($menu_for_JS) ?>
-         <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
             <a class="link_menu_header" href="/diskont/">
                 <span class="text_catalog_link">Дисконт</span>
             </a>
@@ -78,20 +82,20 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                 <span class="text_catalog_link">Новинки</span>
             </a>
         </li>
-		<li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
             <a class="link_menu_header" href="/brands/">
                 <span class="text_catalog_link">Бренды</span>
             </a>
         </li>
-<!--		<li class="li_menu_header  none_mobile" data-role="bx-menu-item">-->
-<!--            <a class="link_menu_header" href="/promotions/">-->
-<!--                <span class="text_catalog_link">Акции</span>-->
-<!--            </a>-->
-<!--        </li>		-->
+        <!--		<li class="li_menu_header  none_mobile" data-role="bx-menu-item">-->
+        <!--            <a class="link_menu_header" href="/promotions/">-->
+        <!--                <span class="text_catalog_link">Акции</span>-->
+        <!--            </a>-->
+        <!--        </li>		-->
         <div class="open_menu" id="main_menu">
             <div class="parent_menu"></div>
             <div class="menu_items hide"></div>
-        </div>		
+        </div>
     </ul>
 </nav>
 <div class="overlay_top"></div>
@@ -104,19 +108,19 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
     let class_active = '';
     let hrefs = window.location.pathname;
 
-	$('.overlay_top').on('click', function () {
-            $(icon_bar).removeAttr('style');
-            $(icon_bar).find('.span_bar').removeClass('open_menu');
-            $(main_menu).hide(300);
-            $(parent_menu).empty();
-            $(menu_items).empty();
-			$('.overlay_top').hide();		
-		
-	});
+    $('.overlay_top').on('click', function () {
+        $(icon_bar).removeAttr('style');
+        $(icon_bar).find('.span_bar').removeClass('open_menu');
+        $(main_menu).hide(300);
+        $(parent_menu).empty();
+        $(menu_items).empty();
+        $('.overlay_top').hide();
+
+    });
     $(icon_bar).on('click', function () {
         let that = $(this).find('.span_bar').attr('class');
-		//$('body').addClass('overlay_top');
-		$('.overlay_top').show();
+        //$('body').addClass('overlay_top');
+        $('.overlay_top').show();
         if (that === "span_bar") {
             $(this).attr('style', 'flex-direction:row;transition:0.3s;');
             $(this).find('.span_bar').addClass('open_menu');
@@ -128,21 +132,21 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                     } else {
                         class_active = '';
                     }
-					if( value.HAS_CHILD == 1 )
-						var print_strelka = '<i class="fa_icon fa fa-angle-right" aria-hidden="true"></i>';
-					else
-						var print_strelka = '';
+                    if (value.HAS_CHILD == 1)
+                        var print_strelka = '<i class="fa_icon fa fa-angle-right" aria-hidden="true"></i>';
+                    else
+                        var print_strelka = '';
                     $(parent_menu).append('<li onclick="location.href=\'' + value.LINK + '\'" class="li_menu_header none_mobile link_js ' + class_active + '" data-role="bx-menu-item">' +
                         '<span class="parent_category_menu"></span>' +
                         '<a class="link_menu_header parent_category" id="' + value.ID + '" href="javascript:void(0)">' +
-                        '<span class="text_catalog_link">' + value.TEXT + '</span></a>'+print_strelka+'</li>');
+                        '<span class="text_catalog_link">' + value.TEXT + '</span></a>' + print_strelka + '</li>');
                 });
 
                 $.each(menu_items_array.ELEMENT, function (key_item, value_item) {
                     $(parent_menu).find('li.active_item_menu').each(
                         function () {
                             let id = $(this).find('a').attr('id');
-						
+
                             if (id === key_item) {
                                 $(value_item).each(function (i, val) {
                                     $(menu_items).append('<div class="menu-item-line p-0">' +
@@ -161,26 +165,26 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             $(main_menu).hide(300);
             $(parent_menu).empty();
             $(menu_items).empty();
-			//$('body').removeClass('overlay_top');
-			$('.overlay_top').hide();
+            //$('body').removeClass('overlay_top');
+            $('.overlay_top').hide();
         }
-       /* $('li.link_js').on('click', function () {
-            let id = $(this).find('a').attr('id');
-            $(document).find('.active_item_menu').removeClass('active_item_menu');
+        /* $('li.link_js').on('click', function () {
+             let id = $(this).find('a').attr('id');
+             $(document).find('.active_item_menu').removeClass('active_item_menu');
 
-            $(this).addClass('active_item_menu');
-            $(menu_items).hide().empty();
+             $(this).addClass('active_item_menu');
+             $(menu_items).hide().empty();
 
-            $.each(menu_items_array.ELEMENT, function (key_item, value_item) {
-                if (id === key_item) {
-                    $(value_item).each(function (i, val) {
-                        $(menu_items).append('<a class="link_menu_header col-3 link_menu" href="' + val.LINK + '">' +
-                            '<span class="text_catalog_link">' + val.TEXT + '</span></a>').show(200);
-                    })
-                }
-            });
-        });*/
-		$(document).on('mouseover','li.link_js', function(){
+             $.each(menu_items_array.ELEMENT, function (key_item, value_item) {
+                 if (id === key_item) {
+                     $(value_item).each(function (i, val) {
+                         $(menu_items).append('<a class="link_menu_header col-3 link_menu" href="' + val.LINK + '">' +
+                             '<span class="text_catalog_link">' + val.TEXT + '</span></a>').show(200);
+                     })
+                 }
+             });
+         });*/
+        $(document).on('mouseover', 'li.link_js', function () {
             let id = $(this).find('a').attr('id');
             $(document).find('.active_item_menu').removeClass('active_item_menu');
 
@@ -195,9 +199,9 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                             '<span class="text_catalog_link">' + val.TEXT + '</span></a></div>').removeClass('hide');
                     })
                 }
-            });			
-			
-		});
+            });
+
+        });
     });
 
 
