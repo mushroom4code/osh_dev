@@ -35,7 +35,7 @@ if ($arParams["SET_TITLE"] == "Y") {
                                 В ближайшее время с вами свяжется менеджер<br>для подтверждения заказа.
                             </p>
                         </div>
-                        <a href="/personal/orders/<?= $arResult["ORDER"]["ACCOUNT_NUMBER"] ?>"
+                        <a href="/personal/orders/<?= $arResult["ORDER"]["ACCOUNT_NUMBER"] ?>/"
                            class="mb-5 font-16 color-blue-order"><b>Подробности заказа</b></a>
                         <a href="/catalog/kalyany/" class="bx-advertisingbanner-btn btn">
                             Продолжить покупки</a>

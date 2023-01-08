@@ -151,7 +151,7 @@ if ($USER->IsAuthorized()) {
                                             <span data-company-id="<?= $order['ORDER_ID'] ?>"
                                                   class="mr-3 name_box">№ <?= $order['ORDER_ID'] ?></span>
                                             </div>
-                                            <a href="/personal/orders/<?=$order['ORDER_ID']?>" class="link_repeat_orders">
+                                            <a href="/personal/orders/<?=$order['ORDER_ID']?>/" class="link_repeat_orders">
                                                 Подробности заказа</a>
                                         </div>
                                     <?php }

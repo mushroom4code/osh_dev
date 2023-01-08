@@ -97,16 +97,37 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             <?php
                             // отключение композитного кеша вне компонента
                             Bitrix\Main\Page\Frame::getInstance()->startDynamicWithID("city-title");
-                            // динамический контент?>
-                            <span id="city-title" class="text_header" data-city="<?= $_SESSION["code_region"] ?>">
+                            // динамический контент
+                            $code_region = $_SESSION["code_region"];
+
+                            if (empty($_SESSION["code_region"])) {
+
+                                $user_id = $USER->GetID();
+
+                                if (!empty($user_id)) {
+
+                                    $UserPropsTable = Bitrix\Sale\Internals\UserPropsTable::getList(array('filter' => [
+                                        'USER_ID' => $user_id,
+                                    ]));
+
+                                    $result = Bitrix\Sale\Internals\UserPropsValueTable::getList(array('filter' => [
+                                        'USER_PROPS_ID' => $UserPropsTable->fetch()['ID'],
+                                        'NAME' => 'Город'
+                                    ]));
+
+                                    $code_region = $result->fetch()['VALUE'];
+                                }
+                            } ?>
+                            <span id="city-title" class="text_header" data-city="<?= $code_region ?>">
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_select.php") ?>
-                                    </span>
+                            </span>
                             <?php Bitrix\Main\Page\Frame::getInstance()->finishDynamicWithID("city-title", ""); ?>
                         </button>
                     </div></a>
                     </span>
-                    <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать отзыв</a>
+                    <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
+                        отзыв</a>
                     <a href="https://oshisha.net/" class="red_text text_font_13 font-weight-bold">Вернуться на старый
                         сайт</a>
                 </div>
