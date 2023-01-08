@@ -21,6 +21,7 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
             "TEXT" => $MESSAGE,
         ),
     ));
+    echo 1;
 } else {
     echo 'ошибка';
 }

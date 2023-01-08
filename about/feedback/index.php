@@ -5,6 +5,7 @@ $APPLICATION->SetTitle("Обратная связь");
 <div class="mb-5">
     <form class="form_company form-form " id="support">
         <div class="form-form-wrap">
+            <input type="hidden" name="recaptcha_token" value="">
             <div class="form-group mb-3">
                 <label class="label_company">Обратная связь</label>
             </div>

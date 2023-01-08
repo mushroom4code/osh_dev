@@ -15,6 +15,11 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
 		var ctx = this;
 		this.options = options;
 
+		//block enter on send from to order create
+		$(document).on("keydown", "form", function(event) {
+			return event.key != "Enter";
+		});
+
 		window.submitFormProxy = BX.proxy(function(){
 			ctx.submitFormProxy.apply(ctx, arguments);
 		}, this);
