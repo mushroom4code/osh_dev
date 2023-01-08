@@ -186,7 +186,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 <div class="catalog-section-list-tile-list">
                     <?php foreach ($arResultSection as $arSection):
                         if ($arSection['SECTION_PAGE_URL'] === '/catalog/diskont/') {
-                            $arSection['SECTION_PAGE_URL'] === '/diskont/';
+                            $arSection['SECTION_PAGE_URL'] = '/diskont/';
                         } ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap">
