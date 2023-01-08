@@ -8,9 +8,9 @@ $mobile = new MobileDetect();
     <link rel="preconnect" href="//api-maps.yandex.ru">
     <link rel="dns-prefetch" href="//api-maps.yandex.ru">
     <div class="mb-5 static" id="box_contacts">
-        <h1>Контакты</h1>
+        <h1 class="mb-4">Контакты</h1>
         <div class="row mb-5 ">
-            <div class="column-contacts">
+            <div class="column-contacts p-0">
                 <div class="col-12 d-flex flex-column justify-content-between three-column ">
                     <div class="box_text_business mb-3">
                         <h5 class="mb-3">Режим работы</h5>
@@ -64,15 +64,14 @@ $mobile = new MobileDetect();
                                <img src="/local/assets/images/icon_location.svg" class="icon_location">
                             </span>
                     <b class="text_delivery text_delivery_next">г. Москва, ул. Краснобогатырская, 2с2 <span
-                                class="red_text">(для пеших курьеров)</span><br/>(вход со стороны Краснобогатырской)</b>
+                                class="red_text">(Пешком)</span><br/>(вход со стороны Краснобогатырской)</b>
                 </div>
                 <div class="d-flex row_section width_50 mb-3 box_row">
                             <span class="d-flex align-items-center mr-3 flex-row">
                                 <img src="/local/assets/images/icon_location.svg" class="icon_location">
                             </span>
                     <b class="text_delivery text_delivery_next">г. Москва, ул. Краснобогатырская, 2с64 <span
-                                class="red_text"> (для курьеров на машине)</span><br/>(въезд со стороны проспекта
-                        Ветеранов) </b>
+                                class="red_text"> (на Авто)</span><br/>(въезд со стороны проспекта Ветеранов) </b>
                 </div>
             </div>
             <?php if (!$mobile->isMobile()) { ?>
