@@ -10,9 +10,9 @@ if ($_SESSION["code_region"]) {
     echo $_SESSION["city_of_user"];
 } else {
     // если нет, выводим определенный по IP
-    $ip = $_SERVER["REMOTE_ADDR"];
-    if (!empty($_SERVER["HTTP_X_REAL_IP"])) {
-        $ip = $_SERVER["HTTP_X_REAL_IP"];
+    $ip = $_SERVER["HTTP_X_REAL_IP"];
+    if (empty($_SERVER["HTTP_X_REAL_IP"])) {
+        $ip = $_SERVER["REMOTE_ADDR"];
     }
 
     $obBitrixGeoIPResult = \Bitrix\Main\Service\GeoIp\Manager::getDataResult($ip, 'ru');
