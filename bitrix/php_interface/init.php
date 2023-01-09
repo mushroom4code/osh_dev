@@ -37,7 +37,7 @@ $arIskCode = array(
 $SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
 
 //class used in component files before init autoload files
-require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
+require_once(__DIR__ . '/enterego_class/EnteregoGiftHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
 

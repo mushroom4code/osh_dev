@@ -8,9 +8,9 @@ $mobile = new MobileDetect();
     <link rel="preconnect" href="//api-maps.yandex.ru">
     <link rel="dns-prefetch" href="//api-maps.yandex.ru">
     <div class="mb-5 static" id="box_contacts">
-        <h1>Контакты</h1>
+        <h1 class="mb-4">Контакты</h1>
         <div class="row mb-5 ">
-            <div class="column-contacts">
+            <div class="column-contacts p-0">
                 <div class="col-12 d-flex flex-column justify-content-between three-column ">
                     <div class="box_text_business mb-3">
                         <h5 class="mb-3">Режим работы</h5>
@@ -64,15 +64,14 @@ $mobile = new MobileDetect();
                                <img src="/local/assets/images/icon_location.svg" class="icon_location">
                             </span>
                     <b class="text_delivery text_delivery_next">г. Москва, ул. Краснобогатырская, 2с2 <span
-                                class="red_text">(для пеших курьеров)</span><br/>(вход со стороны Краснобогатырской)</b>
+                                class="red_text">(Пешком)</span><br/>(вход со стороны Краснобогатырской)</b>
                 </div>
                 <div class="d-flex row_section width_50 mb-3 box_row">
                             <span class="d-flex align-items-center mr-3 flex-row">
                                 <img src="/local/assets/images/icon_location.svg" class="icon_location">
                             </span>
                     <b class="text_delivery text_delivery_next">г. Москва, ул. Краснобогатырская, 2с64 <span
-                                class="red_text"> (для курьеров на машине)</span><br/>(въезд со стороны проспекта
-                        Ветеранов) </b>
+                                class="red_text"> (на Авто)</span><br/>(въезд со стороны проспекта Ветеранов) </b>
                 </div>
             </div>
             <?php if (!$mobile->isMobile()) { ?>
@@ -89,60 +88,46 @@ $mobile = new MobileDetect();
             <h5 class="mb-3" id="form"></h5>
             <div class="mb-5">
                 <form class="form_company form-form " id="support">
-                    <div class="form-form-wrap">
-                        <input type="hidden" name="recaptcha_token" value="">
-                        <?php echo bitrix_sessid_post(); ?>
-                        <input type="hidden" name="captcha_sid" value="<?= $arResult["CAPTCHA_CODE"] ?>"/>
-                        <div class="form-group">
-                            <?= GetMessage("CAPTCHA_REGF_PROMT") ?>
-                            <div class="form-group">
-                                <div class="bx-captcha">
-                                    <img src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult["CAPTCHA_CODE"] ?>"
-                                         width="180" height="40" alt="CAPTCHA"/></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="captcha_word" maxlength="50"
-                                       value="" autocomplete="off"/>
-                            </div>
-                        </div>
-                        <input type="hidden" name="recaptcha_token" value="">
-                        <div class="form-group mb-3">
-                            <label class="label_company">Вопросы, замечания, жалобы? Свяжитесь с нами:</label>
-                        </div>
-                        <div class="form-group mb-3">
-                            <input type="text" class="form-control input_lk" id="Name" name="NAME"
-                                   placeholder="Пожалуйста, представьтесь*">
-                            <div class="er_FORM_NAME error_field"></div>
-                        </div>
-                        <div class="form-group mb-3">
-                            <input type="text" data-name="PHONE-FORM" name="PHONE" class="form-control input_lk"
-                                   id="phoneNumber" placeholder="Мобильный телефон, чтобы связаться с вами*">
-                            <div class="er_FORM_PHONE error_field"></div>
-                        </div>
-                        <div class="form-group mb-3">
-                            <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk"
-                                   id="phoneNumber" placeholder="E-mail если хотите получить ответ на почту">
-                        </div>
-                        <div class="form-group mb-5">
+                    <input type="hidden" name="recaptcha_token" value="">
+                    <?php echo bitrix_sessid_post(); ?>
+
+                    <div class="form-group mb-3">
+                        <label class="label_company">Вопросы, замечания, жалобы? Свяжитесь с нами:</label>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="text" class="form-control input_lk" id="Name" name="NAME"
+                               placeholder="Пожалуйста, представьтесь*">
+                        <div class="er_FORM_NAME error_field"></div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="text" data-name="PHONE-FORM" name="PHONE" class="form-control input_lk"
+                               id="phoneNumber" placeholder="Мобильный телефон, чтобы связаться с вами*">
+                        <div class="er_FORM_PHONE error_field"></div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk"
+                               id="phoneNumber" placeholder="E-mail если хотите получить ответ на почту">
+                    </div>
+                    <div class="form-group mb-5">
                             <textarea class="form-control input_lk" name="MESSAGE" id="text"
                                       placeholder="Сообщение*"></textarea>
-                            <div class="er_FORM_MESSAGE error_field"></div>
-                        </div>
-                        <div class="form-group mb-2">
-                            <div class="col-sm-10">
-                                <input class="btn link_menu_catalog get_code_button"
-                                       type="submit"
-                                       value="Отправить"
-                                       onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
-                            </div>
-                            <div class="error_form error_field"></div>
-                        </div>
+                        <div class="er_FORM_MESSAGE error_field"></div>
                     </div>
-                    <div class="form_block_ok">
-                        Сообщение отправлено.<br>
-                        Мы свяжемся с вами в самое ближайшее время!
+                    <div class="form-group mb-2">
+                        <div class="col-sm-10">
+                            <input class="btn link_menu_catalog get_code_button"
+                                   type="submit"
+                                   value="Отправить"
+                                   onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
+                        </div>
+                        <div class="error_form error_field"></div>
                     </div>
-                </form>
+            </div>
+            <div class="form_block_ok">
+                Сообщение отправлено.<br>
+                Мы свяжемся с вами в самое ближайшее время!
+            </div>
+            </form>
 
             </div>
 

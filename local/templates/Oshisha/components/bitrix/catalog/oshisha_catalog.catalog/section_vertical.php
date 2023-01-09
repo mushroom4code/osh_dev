@@ -184,21 +184,24 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
                 <div class="catalog-section-list-tile-list">
-                    <? foreach ($arResultSection as $arSection): ?>
+                    <?php foreach ($arResultSection as $arSection):
+                        if ($arSection['SECTION_PAGE_URL'] === '/catalog/diskont/') {
+                            $arSection['SECTION_PAGE_URL'] = '/diskont/';
+                        } ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap">
                                 <a href="<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
-                                <? if ($arSection['CHILDS']): ?>
+                                <?php if ($arSection['CHILDS']): ?>
                                     <span data-role="prop_angle"
                                           class="smart-filter-tog smart-filter-angle"
                                           data-code-vis="<?= $arSection['ID'] ?>">
 					                    <i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
                                     </span>
-                                <? endif; ?>
+                                <?php endif; ?>
                             </div>
-                            <? if ($arSection['CHILDS']):
+                            <?php if ($arSection['CHILDS']):
                                 usort($arSection['CHILDS'], 'sort_by_name');
-                              foreach ($arSection['CHILDS'] as $arSectionSub): ?>
+                                foreach ($arSection['CHILDS'] as $arSectionSub): ?>
                                     <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
                                          data-code="<?= $arSection['ID'] ?>">
                                         <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>

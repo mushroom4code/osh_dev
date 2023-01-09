@@ -980,16 +980,12 @@ div.card > div.card-body > div.box_with_properties > div > h4.card-title > a, .n
 .input_sendMe_mail, .bx-pagination .bx-pagination-container ul li.bx-pag-all a:hover span, .btn_gray:hover, .card_element,
 .bx-pagination .bx-pagination-container ul li.bx-pag-prev a:hover span, .news-list .card-title a.text_news_title,
 .bx-pagination .bx-pagination-container ul li.bx-pag-next a:hover span, .product_item_title > a, input.btn-link,
-.product-item-amount-field-contain input[type="number"], h1, h2, h3, h4, h5, h6, .btn_basket_collapse {
-    color: black;
+.product-item-amount-field-contain input[type="number"], h1, h2, h3, h4, h5, h6, .btn_basket_collapse, .link_header, .text_catalog_link {
+    color: #393939;
 }
 
 .color-blue-order {
     color: #0085FF;
-}
-
-.link_header, .text_catalog_link {
-    color: #464646;
 }
 
 #workersForContragentAdmin .form_company_many {
@@ -1608,6 +1604,14 @@ span > i.header_icon {
 .banner_big {
     width: 74%;
 }
+
+/*.banner_big .swiper-slide {*/
+/*    height: 474px;*/
+/*}*/
+
+/*.banner_small .banner_box_item {*/
+/*    height: 218px;*/
+/*}*/
 
 .banner_small {
     width: 22.5%;
@@ -4985,8 +4989,8 @@ li, ul {
 .static h1, .static .h1 {
     font-family: 'Montserrat';
     font-style: normal;
-    font-weight: 700;
-    font-size: 48px;
+    font-weight: 600;
+    font-size: 40px;
     line-height: 100%;
     margin-bottom: 20px;
     margin-top: -6px;

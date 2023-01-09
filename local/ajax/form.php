@@ -1,6 +1,7 @@
 <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
 
+use B01110011ReCaptcha\BitrixCaptcha;
 use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
 use Xzag\Telegram\Container;
@@ -19,6 +20,11 @@ $MESSAGE = htmlspecialcharsbx($_REQUEST['MESSAGE']);
 $PHONE = htmlspecialcharsbx($_REQUEST['PHONE']);
 $EMAIL = htmlspecialcharsbx($_REQUEST['EMAIL']);
 $message = '';
+
+$res = BitrixCaptcha::checkSpam();
+if ($res===false) {
+    echo 'Ошибка CAPTCHA';
+}
 
 if ($NAME != '' && $PHONE != '') {
     $MESAGE_EMAIL = '

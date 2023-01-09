@@ -172,34 +172,36 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             return
         }
 
-        myMap = new ymaps.Map(html_map_id, {
-            center: msk_center_point,
-            zoom: 9,
-            controls: ["zoomControl", "typeSelector"]
-        });
-
-        selfObj.initCircleControl();
-        selfObj.initGeoLocationControl();
-        selfObj.initSearchControls();
-        selfObj.prepareData();
-
-        if (is_mobile_api) {
-            $('#adr').on('change', function () {
-                $('#rez').val('{"loading:true"}');
-                var mkad_address = ($(this).val()).replace(/\s+/g, ' ');
-                if (typeof (selfObj.mobile_api_cache[mkad_address]) == 'undefined') {
-                    selfObj.update_order_form(mkad_address, function (calculatedObj) {
-                        selfObj.mobile_api_cache[mkad_address] = calculatedObj;
-                        $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
-                    });
-                } else {
-                    $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
-                }
+        ymaps.ready(function(){
+            myMap = new ymaps.Map(html_map_id, {
+                center: msk_center_point,
+                zoom: 9,
+                controls: ["zoomControl", "typeSelector"]
             });
 
-        }
+            selfObj.initCircleControl();
+            selfObj.initGeoLocationControl();
+            selfObj.initSearchControls();
+            selfObj.prepareData();
 
-        selfObj.configuredPromise.resolve('config end');
+            if (is_mobile_api) {
+                $('#adr').on('change', function () {
+                    $('#rez').val('{"loading:true"}');
+                    var mkad_address = ($(this).val()).replace(/\s+/g, ' ');
+                    if (typeof (selfObj.mobile_api_cache[mkad_address]) == 'undefined') {
+                        selfObj.update_order_form(mkad_address, function (calculatedObj) {
+                            selfObj.mobile_api_cache[mkad_address] = calculatedObj;
+                            $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
+                        });
+                    } else {
+                        $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
+                    }
+                });
+
+            }
+
+            selfObj.configuredPromise.resolve('config end');
+        });
     };
 
     selfObj.initCircleControl = function (){
