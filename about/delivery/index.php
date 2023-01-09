@@ -114,7 +114,7 @@ $oshShippingParams = json_encode(array(
                         </div>
                     </div>
                     <p class=" mb-4 delivery_description">А еще можем доставить через СДЭК и постаматы 5post
-                        (Пятерочка). Расчет стоимости доставки и выбор постомат/ПВЗ доступны при оформлении заказа.</p>
+                        (Пятерочка). Расчет стоимости доставки и выбор постамат/ПВЗ доступны при оформлении заказа.</p>
                 </div>
                 <div class="width_50">
                     <div class="d-flex justify-content-between box_picture_info mb-3">
