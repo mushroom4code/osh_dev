@@ -24,7 +24,7 @@ class DeliveryHelper
                 max-width: 320px
             }
         </style>
-        <a class="btn btn_basket btn_pvz"
+        <a class="btn btn_basket btn_pvz btn-default"
            onclick="BX.SaleCommonPVZ.openMap(); return false;">
             <?= Loc::getMessage('COMMONPVZ_BTN_CHOOSE') ?>
         </a>
