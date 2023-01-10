@@ -2,13 +2,11 @@
 
 namespace CommonPVZ;
 
-
 class FivePostDelivery extends CommonPVZ
 {
-    protected $configs = [
-        'login' => 'smaksultan',
-        'password' => 'C78CCD5137422CCE292210C7F1AADF57284D7320',
-    ];
+
+    protected $delivery_name = 'FivePost';
+
 
     protected function connect()
     {

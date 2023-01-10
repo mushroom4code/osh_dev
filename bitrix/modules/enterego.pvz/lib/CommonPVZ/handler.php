@@ -13,13 +13,7 @@ use CIBlockSection;
 use Bitrix\Main\Page\Asset;
 
 Loc::loadMessages(__FILE__);
-\Bitrix\Main\Loader::includeModule("ipol.cdek");
-\Bitrix\Main\Loader::includeModule("sale");
 
-
-/*
- * @package Bitrix\Sale\Delivery\Services
- */
 
 class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 {
@@ -96,19 +90,7 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
      */
     protected function getConfigStructure()
     {
-        return array(
-            "MAIN" => array(
-                "TITLE" => 'Настройка обработчика',
-                "DESCRIPTION" => 'Настройка обработчика',
-                "ITEMS" => array(
-                    "PRICE" => array(
-                        "TYPE" => "NUMBER",
-                        "MIN" => 0,
-                        "NAME" => 'Стоимость доставки за грамм'
-                    )
-                )
-            )
-        );
+        return array();
     }
 
     /**

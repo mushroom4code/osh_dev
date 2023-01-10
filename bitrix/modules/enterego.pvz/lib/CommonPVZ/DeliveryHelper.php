@@ -11,16 +11,6 @@ Loc::loadMessages(__FILE__);
 
 class DeliveryHelper
 {
-    public $deliveries = [];
-
-    public function __construct()
-    {
-        // TODO брать из настроек
-        $this->deliveries[] = 'PickPoint';
-        //$this->deliveries[] = 'SDEK';
-        //$this->deliveries[] = 'PEK';
-        $this->deliveries[] = 'FivePost';
-    }
 
     public function getButton()
     {
@@ -74,7 +64,7 @@ class DeliveryHelper
         return $city['LOCATION_NAME'];
     }
 
-    public function getAllPVZ($city_name, $codeCity)
+    public static function getAllPVZ($deliveries, $city_name, $codeCity)
     {
         $id_feature = 0;
         $result_array = [];
@@ -85,7 +75,7 @@ class DeliveryHelper
         if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
             $points_Array = $cache->getVars();
         } elseif ($cache->startDataCache()) {
-            foreach ($this->deliveries as $delName) {
+            foreach ($deliveries as $delName) {
                 $deliveryClass = '\CommonPVZ\\' . $delName . 'Delivery';
                 $delivery = new $deliveryClass();
                 $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity);

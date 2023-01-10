@@ -10,12 +10,7 @@ use PickPointSdk\Components\ReceiverDestination;
 
 class PickPointDelivery extends CommonPVZ
 {
-    protected $configs = [
-        'host' => 'https://e-solution.pickpoint.ru/api/',
-        'login' => 'hYdz3J',
-        'password' => '6jUzhQ7iwfgj0',
-        'ikn' => '9990000112',
-    ];
+    protected $delivery_name = 'PickPoint';
 
     protected function connect()
     {
