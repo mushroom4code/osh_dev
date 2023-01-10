@@ -15,10 +15,11 @@ use Xzag\Telegram\Event\SampleEvent;
 CModule::IncludeModule("iblock");
 Loader::includeModule('main');
 
-if (class_exists('BitrixCaptcha')) {
+if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
     $res = BitrixCaptcha::checkSpam();
     if ($res === false) {
         echo 'Ошибка CAPTCHA';
+        die;
     }
 }
 
