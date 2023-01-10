@@ -2763,3 +2763,15 @@ $(document).on('submit', '.callback_form', function () {
     return false;
 });
 
+// Открытие попап обратного звонка: начало
+$(document).ready(function () {
+    $('.callback_PHONE').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
+    $('.callback').on('click', function () {
+    $("#callbackModal").arcticmodal(
+        {
+            closeOnOverlayClick: true,
+            afterClose: function (data, el) {}
+        });
+    });
+});
+// Открытие попап обратного звонка: конец
