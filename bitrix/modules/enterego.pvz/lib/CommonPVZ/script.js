@@ -1,21 +1,19 @@
 BX.namespace('BX.SaleCommonPVZ');
 
-
 BX.SaleCommonPVZ = {
 
     pvzPopup: null,
     curCityCode: null,
     curCityName: null,
     isGetPVZ: false,
-    ajaxUrlPVZ: null,
+    ajaxUrlPVZ: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
     propsMap: null,
     pvzObj: null,
     pvzAddress: null,
     pvzFullAddress: null,
 
     init: function (params) {
-        this.ajaxUrlPVZ = params.ajaxUrlPVZ;
-        this.ajaxUrl = params.ajaxUrl;
+        console.log('... CommonPVZ init ...');
         this.refresh();
     },
 
@@ -200,16 +198,14 @@ BX.SaleCommonPVZ = {
         BX.ajax({
             method: 'POST',
             dataType: 'json',
-            url: this.ajaxUrl,
+            url: BX.Sale.OrderAjaxComponent.ajaxUrl,
             data: this.getDataForPVZ(action, actionData),
             onsuccess: BX.delegate(function (result) {
                 if (action === 'refreshOrderAjax') {
                     BX.Sale.OrderAjaxComponent.refreshOrder(result);
                 }
-                // TODO
-                // пока что не понял почему адрес в ответе запроса имеется,
-                // но не ставится в поле адреса
-                BX('pvz_address').innerHTML = __this.pvzAddress;
+                // TODO - неправильно что по определенным номерам св-в
+                BX('pvz_address').innerHTML = __this.pvzFullAddress;
                 if (BX('soa-property-7')) {
                     BX('soa-property-7').value = __this.pvzFullAddress;
                     BX.addClass(BX('soa-property-7'), 'disabled');
@@ -220,7 +216,6 @@ BX.SaleCommonPVZ = {
                     BX.addClass(BX('soa-property-19'), 'disabled');
                     BX("soa-property-19").setAttribute("readonly","readonly");
                 }
-
 
                 BX.Sale.OrderAjaxComponent.endLoader();
             }, this),
@@ -247,3 +242,7 @@ BX.SaleCommonPVZ = {
         return data;
     }
 };
+
+window.addEventListener('load', function () {
+    BX.SaleCommonPVZ.init();
+});

@@ -2,6 +2,8 @@
 
 namespace CommonPVZ;
 
+require_once '__config_deliveries.php';
+
 abstract class CommonPVZ
 {
     protected $configs = [];
@@ -12,6 +14,14 @@ abstract class CommonPVZ
 
     public function __construct()
     {
+        global $CONFIG_DELIVERIES;
+
+        if ($this->delivery_name !== null) {
+            foreach ($CONFIG_DELIVERIES[$this->delivery_name] as $k => $v) {
+                $this->configs[$k] = $v;
+            }
+        }
+
         $this->connect();
     }
 
