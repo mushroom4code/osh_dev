@@ -267,8 +267,6 @@ if ($arParams['SHOW_PICKUP_MAP'] === 'Y' || $arParams['SHOW_MAP_IN_PROPS'] === '
     $apiKey = htmlspecialcharsbx(Option::get('fileman', 'yandex_map_api_key', ''));
     $this->addExternalJs($scheme . '://api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey . '&lang=' . $locale);
 }
-$this->addExternalJs('/local/assets/js/commonpvz/script.js');
-$this->addExternalCss('/local/assets/css/commonpvz/style.css');
 
 ?>
     <NOSCRIPT>
@@ -778,11 +776,6 @@ if ($request->get('ORDER_ID') <> '') {
                     )) . '</div>'
             )
         ))?>);
-        // #000018618 PVZ
-        BX.SaleCommonPVZ.init({
-            ajaxUrlPVZ: '/local/php_interface/include/sale_delivery/CommonPVZ/ajax.php',
-            ajaxUrl: '<?=CUtil::JSEscape($component->getPath().'/ajax.php')?>'
-        });
     </script>
     <?php
 
