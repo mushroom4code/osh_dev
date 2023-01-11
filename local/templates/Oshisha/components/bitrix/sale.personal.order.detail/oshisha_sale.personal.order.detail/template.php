@@ -114,6 +114,11 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                         }
                                         ?>
                                 </span>
+                                <span class="mb-1"> <b
+                                            class="mr-1">Сумма доставки:</b>  <?php foreach ($arResult['SHIPMENT'] as $shipment) {
+                                        echo htmlspecialcharsbx($shipment["PRICE_DELIVERY_FORMATTED"]);
+                                    } ?>
+                                </span>
                             </div>
                             <div class="d-flex flex-column custom_item">
                                 <a href="<?= $arResult["URL_TO_COPY"] ?>"

@@ -21,9 +21,12 @@ $PHONE = htmlspecialcharsbx($_REQUEST['PHONE']);
 $EMAIL = htmlspecialcharsbx($_REQUEST['EMAIL']);
 $message = '';
 
-$res = BitrixCaptcha::checkSpam();
-if ($res===false) {
-    echo 'Ошибка CAPTCHA';
+if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
+    $res = BitrixCaptcha::checkSpam();
+    if ($res === false) {
+        echo 'Ошибка CAPTCHA';
+        die;
+    }
 }
 
 if ($NAME != '' && $PHONE != '') {
