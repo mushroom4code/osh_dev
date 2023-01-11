@@ -789,6 +789,7 @@ h3.ctweb-title {
 }
 
 .box-modal-white {
+    position: relative;
     background: #fff;
     border-radius: 10px;
     max-width: 685px;

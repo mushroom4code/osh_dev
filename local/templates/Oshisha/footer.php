@@ -282,42 +282,27 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
     </div>
     <div style="display:none;">
         <div id="callbackModal" class="box-modal-white">
-            <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
+            <div class="box-modal_close arcticmodal-close"></div>
 
             <div class="flex_block_cols">
                 <h4>Заказать обратный звонок</h4>
                 <div class="block_text">Оставьте ваш номер и мы перезвоним вам в ближайшее рабочее время</div>
                 <div class="block_text_sub">Отдел поддержки работает с 10:00 до 20:00, ежедневно</div>
                 <form method="POST" class="callback_form">
+                    <input type="hidden" name="recaptcha_token" value="">
+
                     <input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
                     <div class="er_CALLBACK_PHONE"></div>
-                    <div class="submit-wrap"><input type=submit class="btn btn-submit" value="Отправить"></div>
+                    <div class="submit-wrap">
+                        <input type=submit class="btn btn-submit" value="Отправить"
+                               onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
+                    </div>
                 </form>
                 <div class="result-callback" style="display:none;">Ваша заявка отправлена</div>
             </div>
         </div>
 
     </div>
-    <script>
-        $(document).ready(function () {
-            $('.callback_PHONE').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
-            $('.callback').on('click', function () {
-                $("#callbackModal").arcticmodal(
-                    {
-                        closeOnOverlayClick: true,
-                        afterClose: function (data, el) {
-
-
-                        }
-                    });
-            });
-        });
-
-        // age access
-
-
-    </script>
-
 
     <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
         <div style="display:none;">
