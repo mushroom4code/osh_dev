@@ -293,6 +293,17 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                     <span class='d-inline-block osh-filter-horizontal-remove'></span>
                 </div>
             </div>
+            <div class="mb-4 col_navigation">
+                <div class="count-per-page">
+                    <span>Количество</span>
+                    <a href="?page=24"
+                                               class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 24): ?>active<? endif; ?>">24</a>
+                    <a href="?page=36"
+                       class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 36): ?>active<? endif; ?>">36</a> <a
+                            href="?page=72"
+                            class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 72): ?>active<? endif; ?>">72</a>
+                </div>
+            </div>
             <div class="sort-panel mb-4">
                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                     <div class="sort_panel_wrap">
