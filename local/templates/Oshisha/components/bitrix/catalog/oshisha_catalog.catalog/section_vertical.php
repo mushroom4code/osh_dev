@@ -297,11 +297,11 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 <div class="count-per-page">
                     <span>Количество</span>
                     <a href="?page=24"
-                                               class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 24): ?>active<? endif; ?>">24</a>
+                       class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24): ?>active<?php endif; ?>">24</a>
                     <a href="?page=36"
-                       class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 36): ?>active<? endif; ?>">36</a> <a
-                            href="?page=72"
-                            class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 72): ?>active<? endif; ?>">72</a>
+                       class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36): ?>active<?php endif; ?>">36</a>
+                    <a href="?page=72"
+                       class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72): ?>active<?php endif; ?>">72</a>
                 </div>
             </div>
             <div class="sort-panel mb-4">
