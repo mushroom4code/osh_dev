@@ -1,5 +1,7 @@
 <?php
 
+use Bitrix\Main\Entity;
+
 class  DataBase_like
 {
     // TODO enterego - закешировать результаты выборки лайков для всех товаров
@@ -8,29 +10,43 @@ class  DataBase_like
      * @param array $product_id
      * @param $FUser_id
      * @return array
+     * @throws \Bitrix\Main\ArgumentException
+     * @throws \Bitrix\Main\ObjectPropertyException
+     * @throws \Bitrix\Main\SystemException
      */
     public static function getLikeFavoriteAllProduct(array $product_id, $FUser_id): array
     {
 
-        global $DB;
         $collection = [];
         $product_ids = implode(',', $product_id);
 
         if ($product_ids) {
-            $sql = "SELECT I_BLOCK_ID , SUM(LIKE_USER) AS LIKE_USER FROM ent_like_favorite 
-                    WHERE I_BLOCK_ID IN($product_ids) GROUP BY I_BLOCK_ID;";
-            $result = $DB->Query($sql);
-            while ($collectionElement = $result->Fetch()) {
+            $resultSelect = Bitrix\Like\ORM_like_favoritesTable::getList(
+                array(
+                    'select' => array(
+                        'I_BLOCK_ID', 'LIKE_USERS'
+                    ),
+                    'filter' => array(
+                        '@I_BLOCK_ID' => $product_id,
+                    ),
+                    'group' => array('I_BLOCK_ID'),
+                )
+            );
+
+
+            while ($collectionElement = $resultSelect->Fetch()) {
                 $id = $collectionElement['I_BLOCK_ID'];
-                $collection['ALL_LIKE'][$id] = $collectionElement['LIKE_USER'];
+                $collection['ALL_LIKE'][$id] = $collectionElement['LIKE_USERS'];
             }
         }
 
         if (!empty($FUser_id)) {
 
-            $sqlUser = "SELECT * FROM ent_like_favorite WHERE F_USER_ID = $FUser_id";
-            $result_user_array = $DB->Query($sqlUser);
-            while ($collectionElement_user = $result_user_array->Fetch()) {
+            $result_user_array = Bitrix\Like\ORM_like_favoritesTable::getList(array('filter' => [
+                'F_USER_ID' => $FUser_id,
+            ]));
+
+            while ($collectionElement_user = $result_user_array->fetch()) {
                 $id = $collectionElement_user['I_BLOCK_ID'];
                 $collection["USER"][$id]['Like'][] = $collectionElement_user['LIKE_USER'];
                 $collection["USER"][$id]['Fav'][] = $collectionElement_user['FAVORITE'];
@@ -51,13 +67,12 @@ class  DataBase_like
     public static function SetRemoveLikeFavorite($FUser_id, $product_id, $value, $method): bool
     {
 
-        global $DB;
-
-        $sql = '';
         if (!empty($method) && !empty($FUser_id) && !empty($product_id)) {
-            $CheckTable = "SELECT * FROM ent_like_favorite 
-                           WHERE F_USER_ID = $FUser_id AND I_BLOCK_ID=$product_id";
-            $resultSelect = $DB->Query($CheckTable);
+            $resultSelect = Bitrix\Like\ORM_like_favoritesTable::getList(array('filter' => [
+                'I_BLOCK_ID' => $product_id,
+                'F_USER_ID' => $FUser_id,
+            ]));
+
             $METHOD = '';
 
             if ($method === 'like') {
@@ -67,16 +82,25 @@ class  DataBase_like
             }
 
             if (!$resultSelect->Fetch()) {
-                $sql = "INSERT INTO ent_like_favorite (F_USER_ID,I_BLOCK_ID,$METHOD)
-                                VALUES ($FUser_id,$product_id,$value);";
+                Bitrix\Like\ORM_like_favoritesTable::add(
+                    array(
+                        $METHOD => $value,
+                        'I_BLOCK_ID' => $product_id,
+                        'F_USER_ID' => $FUser_id
+                    ),
+                );
             } else {
-                $sql = "UPDATE  ent_like_favorite  SET $METHOD=$value  
-                            WHERE F_USER_ID = $FUser_id AND I_BLOCK_ID=$product_id";
+                Bitrix\Like\ORM_like_favoritesTable::update(
+                    array(
+                        'I_BLOCK_ID' => $product_id,
+                        'F_USER_ID' => $FUser_id
+                    ),
+                    array(
+                        $METHOD => $value
+                    )
+                );
             }
-
         }
-
-        $DB->Query($sql);
 
         return true;
     }
