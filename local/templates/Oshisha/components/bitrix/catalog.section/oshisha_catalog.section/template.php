@@ -195,7 +195,7 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 ?>
 <div class="row<?= $themeClass ?>">
-    <div class="col">
+    <div class="col p-0">
 
         <?php
 
@@ -780,7 +780,7 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
             ?>
             <div class="text-center mb-4" data-entity="lazy-<?= $containerName ?>">
                 <button type="button"
-                        class="btn btn-primary btn-md"
+                        class="btn text_catalog_button link_red_button btn-md"
                         style="margin: 15px;"
                         data-use="show-more-<?= $navParams['NavNum'] ?>">
                     <?= $arParams['MESS_BTN_LAZY_LOAD'] ?>
@@ -793,15 +793,7 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
         //region Pagination
         if ($showBottomPager) {
             ?>
-            <div class=" mb-4 col_navigation">
-                <div class="count-per-page">
-                    <span>Количество</span> <a href="?page=24"
-                                               class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 24): ?>active<?endif; ?>">24</a>
-                    <a href="?page=36"
-                       class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 36): ?>active<?endif; ?>">36</a> <a
-                            href="?page=72"
-                            class="page_num <? if ($arParams['PAGE_ELEMENT_COUNT'] == 72): ?>active<?endif; ?>">72</a>
-                </div>
+            <div class=" mb-4 col_navigation d-flex justify-content-end">
                 <div class=" text-center" data-pagination-num="<?= $navParams['NavNum'] ?>">
                     <!-- pagination-container -->
                     <?= $arResult['NAV_STRING'] ?>
