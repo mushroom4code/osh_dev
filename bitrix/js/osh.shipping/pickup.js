@@ -591,7 +591,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             if (typeof ymaps === "undefined" )
                 return null;
 
-            ymaps.ready(selfObj.init());
+            ymaps.ready(selfObj.init);
             selfObj.isInited = true;
 
 
