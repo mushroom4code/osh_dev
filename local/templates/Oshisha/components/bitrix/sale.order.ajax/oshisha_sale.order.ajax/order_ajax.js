@@ -2048,6 +2048,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             this.editActivePropsBlock(true);
             //this.editActiveRegionBlock(true);
             this.editActiveDeliveryBlock(true);
+            this.editActivePaySystemBlock(true),
 
             // if (this.activeSection !== null) {
             //     this.editSection(this.activeSection);
@@ -4160,14 +4161,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                             props: {className: 'bx-soa-pp-company-title'},
                             text: item.NAME
                         }), BX.create('DIV', {
-                            props: {className: 'bx-soa-pp-company-smalltitle'},
+                            props: {className: 'bx-soa-pp-company-smalltitle d-none d-sm-block'},
                             text: item.DESCRIPTION
                         })]
                     }),
                 ]
             });
             itemNode = BX.create('DIV', {
-                props: {className: 'bx-soa-pp-company col-6'},
+                props: {className: 'bx-soa-pp-company col-12 col-md-6'},
                 children: [label],
                 events: {
                     click: BX.proxy(this.selectPaySystem, this)
