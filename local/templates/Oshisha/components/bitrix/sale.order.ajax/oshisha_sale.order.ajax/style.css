@@ -1199,6 +1199,7 @@
 .bx-soa-pp-company {
     position: relative;
     z-index: 100;
+    margin-top: 20px;
 }
 
 .bx-soa-pp-desc-container {
@@ -1334,10 +1335,6 @@ ul.bx-soa-pp-list li {
 @media (max-width: 480px) {
     .bx-soa-pp-company-logo {
         width: 45%;
-    }
-
-    .bx-soa-pp-company-title {
-        display: none;
     }
 
     .bx-soa-pp-item-container {
