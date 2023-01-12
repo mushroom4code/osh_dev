@@ -10,6 +10,7 @@ if(CModule::IncludeModule('iblock'))
         "TYPE" => "1c_catalog",
         "SITE_ID" => SITE_ID,
 		"ID" => IBLOCK_CATALOG,
+        'ACTIVE' => 'Y'
     );
 
     $dbIBlock = CIBlock::GetList(array('SORT' => 'ASC', 'ID' => 'ASC'), $arFilter);
