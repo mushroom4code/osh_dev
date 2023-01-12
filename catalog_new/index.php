@@ -8,11 +8,9 @@ $APPLICATION->SetTitle("Новинки");
 /**
  * @var  CAllMain|CMain $APPLICATION
  */
-$nowDate = date("Y-m-d H:i:s");
-$date = new DateTime($nowDate);
 
 $GLOBALS['ArFilter'] = array(
-    '>=DATE_CREATE' => $date->sub(new DateInterval('P0Y1M0DT0H0M0S'))->format('d.m.Y H:i:s')
+    'PROPERTY_NEW_VALUE' => 'Да'
 );
 
 $APPLICATION->IncludeComponent(
@@ -72,10 +70,10 @@ $APPLICATION->IncludeComponent(
         "SECTIONS_SHOW_PARENT_NAME" => "N",
         "PAGE_ELEMENT_COUNT" => "16",
         "LINE_ELEMENT_COUNT" => "3",
-        "ELEMENT_SORT_FIELD" =>'name',
-        "ELEMENT_SORT_ORDER" => "asc",
+        "ELEMENT_SORT_FIELD" =>'DATE_CREATE',
+        "ELEMENT_SORT_ORDER" => "desc",
         "ELEMENT_SORT_FIELD2" => 'name',
-        "ELEMENT_SORT_ORDER2" => "desc",
+        "ELEMENT_SORT_ORDER2" => "asc",
         "LIST_PROPERTY_CODE" => array(
             0 => "NEWPRODUCT",
             1 => "SALELEADER",
