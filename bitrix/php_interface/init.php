@@ -2,68 +2,17 @@
 
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Enterego\EnteregoHelper;
+require_once(__DIR__ . '/conf.php');
 
-function newProductAssignment() {
-    $rs = CIBlockElement::GetList(
-        ['DATE_CREATE' => 'DESC'],
-        ['IBLOCK_ID' => '12'],
-        false, array('nTopCount' => 300),
-        ['ID', 'IBLOCK_ID', 'NAME', 'DATE_CREATE', 'PROPERTY_NEW']
-    );
-    while ($ar = $rs->Fetch()) {
-        print_r($ar);
-        if (EnteregoHelper::checkNewProduct($ar['DATE_CREATE'])) {
-            $property_enums = CIBlockPropertyEnum::GetList(array("DEF" => "DESC", "SORT" => "ASC"), array("IBLOCK_ID" => $ar["IBLOCK_ID"], "CODE" => "NEW"));
-            while ($enum_fields = $property_enums->GetNext()) {
-                if ($enum_fields["VALUE"] == "Да") {
-                    $arPropertyNew = array(
-                        "NEW" => $enum_fields["ID"],
-                    );
-                }
-            }
-            CIBlockElement::SetPropertyValuesEx($ar["ID"], false, $arPropertyNew);
-        } else {
+const IBLOCK_CATALOG = 12;
 
-            $property_enums = CIBlockPropertyEnum::GetList(array("DEF" => "DESC", "SORT" => "ASC"), array("IBLOCK_ID" => $ar["IBLOCK_ID"], "CODE" => "NEW"));
-            while ($enum_fields = $property_enums->GetNext()) {
-                if ($enum_fields["VALUE"] == "Нет") {
-                    $arPropertyNew = array(
-                        "NEW" => $enum_fields["ID"],
-                    );
-                }
-            }
-            CIBlockElement::SetPropertyValuesEx($ar["ID"], false, $arPropertyNew);
-        }
-    }
 
-    $rs = CIBlockElement::GetList(
-        ['DATE_CREATE' => 'DESC'],
-        ['IBLOCK_ID' => '12'],
-        false, array('nTopCount' => 50),
-        ['ID', 'IBLOCK_ID', 'NAME', 'DATE_CREATE', 'PROPERTY_NEW']
-    );
-    while ($ar = $rs->Fetch()) {
-        print_r($ar);
-        $resProp = CIBlockElement::GetProperty($ar["IBLOCK_ID"], $ar["ID"], "sort", "asc", Array("CODE"=>"NEW"));
-
-        $property_enums = CIBlockPropertyEnum::GetList(Array("DEF" => "DESC", "SORT" => "ASC"), Array("IBLOCK_ID" => $ar["IBLOCK_ID"], "CODE" => "NEW"));
-        while($enum_fields = $property_enums->GetNext()) {
-            if ($enum_fields["VALUE"] == "Да") {
-                $arPropertyNew = Array(
-                    "NEW" => $enum_fields["ID"],
-                );
-            }
-        }
-        CIBlockElement::SetPropertyValuesEx($ar["ID"], false, $arPropertyNew);
-    }
-    return "newProductAssignment();";
-}
 
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
 setcookie("PHPSESSID", "", 1, '/', '.oshisha.net');
 
-require_once(__DIR__ . '/conf.php');
+
 
 if (COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE') === 'true') {
     define("USE_CUSTOM_SALE_PRICE", true);
@@ -101,7 +50,7 @@ require_once(__DIR__ . '/enterego_class/EnteregoGiftHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
 
-const IBLOCK_CATALOG = 12;
+
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
 
@@ -323,4 +272,7 @@ CModule::AddAutoloadClasses("", array(
     '\PecomKabinet' => '/local/php_interface/include/sale_delivery/CommonPVZ/pecom_kabinet.php'
 
 ));
+
+
+require(__DIR__ . '/enterego_class/newProductAssignment_function.php');
 

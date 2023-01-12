@@ -61,8 +61,8 @@ $styleForTaste = '';
 $taste = $item['PROPERTIES']['VKUS'];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
 $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
-$newProduct = $item['PROPERTIES']['NEW'];
-$hitProduct = $item['PROPERTIES']['HIT'];
+$newProduct = $item['PROPERTIES'][PROP_NEW];
+$hitProduct = $item['PROPERTIES'][PROP_HIT];
 
 
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
