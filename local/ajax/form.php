@@ -21,13 +21,17 @@ $PHONE = htmlspecialcharsbx($_REQUEST['PHONE']);
 $EMAIL = htmlspecialcharsbx($_REQUEST['EMAIL']);
 $message = '';
 
-if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
-    $res = BitrixCaptcha::checkSpam();
-    if ($res === false) {
-        echo 'Ошибка CAPTCHA';
-        die;
-    }
-}
+//if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
+//    $res = BitrixCaptcha::checkSpam();
+//    if ($res === false) {
+//        echo 'Ошибка CAPTCHA';
+//        die;
+//    }
+//}
+
+print_r($_POST);
+print_r($_FILES);
+die;
 
 if ($NAME != '' && $PHONE != '') {
     $MESAGE_EMAIL = '
