@@ -47,51 +47,27 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                 </div>
             </div>
             <div class="col-11 col-lg-3 mb-4 mb-lg-0 order-lg-3">
-                <span class="mobile mb-3">
-                    <div class="d-flex justify-content-between flex-row text_footer_weight">
-                 <span>Акции </span>
-                     <span class="icon_footer_menu">
-                        <input type="checkbox" id="checkbox2" class="checkbox2 visuallyHidden">
-                        <label for="checkbox2">
-                            <div class="hamburger hamburger2">
-                                <span class="bar bar1"></span>
-                                <span class="bar bar4"></span>
-                            </div>
-                        </label>
-                    </span>
-                        </div>
-                </span>
                 <span class="text_footer_weight desktop">
                    Поддержка
                 </span>
                 <span class="mobile">
                     <div class="d-flex justify-content-between flex-row text_footer_weight">
-                 <span>Покупателям </span>
-                     <span class="icon_footer_menu">
-                        <input type="checkbox" checked id="checkbox3" class="checkbox3 visuallyHidden">
-                        <label for="checkbox3">
-                            <div class="hamburger hamburger3">
-                                <span class="bar bar5"></span>
-                                <span class="bar bar6"></span>
-                            </div>
-                        </label>
-                    </span>
-                        </div>
+                        <span>Покупателям </span>
+                         <span class="icon_footer_menu">
+                            <input type="checkbox" checked id="checkbox3" class="checkbox3 visuallyHidden">
+                            <label for="checkbox3">
+                                <div class="hamburger hamburger3">
+                                    <span class="bar bar5"></span>
+                                    <span class="bar bar6"></span>
+                                </div>
+                            </label>
+                        </span>
+                    </div>
                 </span>
                 <nav class="li_link_footer box_with_link_footer hides_box box_footer_js" data-hide="false"
                      data-id="checkbox3">
-                     <span class="li_link_footer mobile">
-                         <a href="/about/o-nas/" class="text_link_footer">О нас</a>
-                    </span>
-                    <span class="li_link_footer desktop">
+                    <span class="li_link_footer">
                          <a href="/about/contacts/" class="text_link_footer">Контакты</a>
-                    </span>
-
-                    <span class="li_link_footer mobile">
-                         <a href="/about/for-business/" class="text_link_footer">Для бизнеса</a>
-                    </span>
-                    <span class="li_link_footer mobile">
-                    <a href="/about/delivery/" class="text_link_footer li_link_footer">Доставка и оплата</a>
                     </span>
 
                     <span class="li_link_footer ">
@@ -101,7 +77,7 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                          <a href="javascript:void(0)" class="callback text_link_footer">Обратный звонок</a>
                     </span>
 
-                    <span class="li_link_footer desktop">
+                    <span class="li_link_footer">
                          <a href="/about/FAQ/" class="text_link_footer li_link_footer">FAQ</a>
                     </span>
 
@@ -113,44 +89,38 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                     </span>
                 </nav>
             </div>
-            <div class="mobile width_100 p-0">
-                <div class="box_mail_footer col-11 d-flex flex-column align-items-center mb-5 m-3"
-                     style="display:none !important;">
-                    <label class="mb-3 mail_footer" for="mail_footer">Будьте в курсе всех новостей!</label>
-                    <input class="form-control input_footer mb-3" data-name="EMAIL" type="text" name="EMAIL"
-                           maxlength="50"
-                           placeholder="Введите вашу почту" id="mail_footer"/>
-                    <button class="btn font_15 btn_footer">Подписаться на рассылку</button>
-                </div>
-                <p class="m-3 mail_footer col-11"><a href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a>
-                </p>
-                <div class="box_with_contact pl-3">
-                    <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                    <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                    <a href="javascript:void(0)" class="link_menu_top " data-toggle="modal"
-                       data-target="#placeModal"><span class="mail_footer not_weight">Москва, Россия</span>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-2  col-11 mb-4 mb-lg-0 desktop order-lg-4">
+            <div class="col-lg-2  col-11 mb-4 mb-lg-0 order-lg-4">
+                <div class="d-flex justify-content-between flex-row">
                 <span class="text_footer_weight">
                 О компании
                 </span>
-                <?php $APPLICATION->IncludeComponent(
-                    "bitrix:menu",
-                    "bottom_menu",
-                    array(
-                        "ROOT_MENU_TYPE" => "bottom",
-                        "MAX_LEVEL" => "1",
-                        "MENU_CACHE_TYPE" => "A",
-                        "CACHE_SELECTED_ITEMS" => "N",
-                        "MENU_CACHE_TIME" => "36000000",
-                        "MENU_CACHE_USE_GROUPS" => "Y",
-                        "MENU_CACHE_GET_VARS" => array(),
-                    ),
-                    false
-                ); ?>
-
+                    <span class="icon_footer_menu">
+                    <input type="checkbox" id="checkbox4" class="checkbox4 visuallyHidden">
+                    <label for="checkbox4">
+                        <div class="hamburger hamburger4">
+                            <span class="bar bar7"></span>
+                            <span class="bar bar8"></span>
+                        </div>
+                    </label>
+                </span>
+                </div>
+                <div data-id="checkbox4" class="hides_box box_footer_js li_link_footer box_with_link_footer"
+                     data-hide="true">
+                    <?php $APPLICATION->IncludeComponent(
+                        "bitrix:menu",
+                        "bottom_menu",
+                        array(
+                            "ROOT_MENU_TYPE" => "bottom",
+                            "MAX_LEVEL" => "1",
+                            "MENU_CACHE_TYPE" => "A",
+                            "CACHE_SELECTED_ITEMS" => "N",
+                            "MENU_CACHE_TIME" => "36000000",
+                            "MENU_CACHE_USE_GROUPS" => "Y",
+                            "MENU_CACHE_GET_VARS" => array(),
+                        ),
+                        false
+                    ); ?>
+                </div>
                 <span class="text_footer_weight desktop social_block">
                   Социальные сети
                 </span>
@@ -172,7 +142,24 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                 </div>
             </div>
 
-
+            <div class="mobile width_100 p-0">
+                <!--                <div class="box_mail_footer col-11 d-flex flex-column align-items-center mb-5 m-3">-->
+                <!--                    <label class="mb-3 mail_footer" for="mail_footer">Будьте в курсе всех новостей!</label>-->
+                <!--                    <input class="form-control input_footer mb-3" data-name="EMAIL" type="text" name="EMAIL"-->
+                <!--                           maxlength="50"-->
+                <!--                           placeholder="Введите вашу почту" id="mail_footer"/>-->
+                <!--                    <button class="btn font_15 btn_footer">Подписаться на рассылку</button>-->
+                <!--                </div>-->
+                <p class="m-3 mail_footer col-11"><a href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a>
+                </p>
+                <div class="box_with_contact pl-3">
+                    <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                    <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                    <a href="javascript:void(0)" class="link_menu_top " data-toggle="modal"
+                       data-target="#placeModal"><span class="mail_footer not_weight">Москва, Россия</span>
+                    </a>
+                </div>
+            </div>
             <div class="col-11 col-lg-3 box_footer_with_boxes box_color order-lg-1">
                 <div class="desktop">
                     <a class="bx-footer-logo" href="<?= SITE_DIR ?>">
