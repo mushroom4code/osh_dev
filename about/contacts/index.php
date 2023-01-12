@@ -135,14 +135,14 @@ $mobile = new MobileDetect();
             <h5 class="mb-3">Социальные сети и мессенджеры</h5>
             <div class="width_50 mb-5">
                 <div class="box_with_icons">
-                    <a href="https://t.me/oshishanet" class="mr-5 telegram_icons">
+                    <a href="https://t.me/oshishanet" class="mr-5 telegram_icons" target="_blank">
                     </a>
-                    <a href="https://vk.com/oshishacc" class="mr-5 vk_icons">
+                    <a href="https://vk.com/oshishacc" class="mr-5 vk_icons" target="_blank">
                     </a>
-                    <a href="https://api.whatsapp.com/send?phone=79031182939" class="mr-4"> <i
+                    <a href="https://api.whatsapp.com/send?phone=79031182939" class="mr-4" target="_blank"> <i
                                 class="fa fa-whatsapp icons_theme" aria-hidden="true"></i></a>
 
-                    <a href="https://dzen.ru/id/6125150216123a2f95667201">
+                    <a href="https://dzen.ru/id/6125150216123a2f95667201" target="_blank">
                         <img class="dzen_contacts" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
                     </a>
                 </div>
