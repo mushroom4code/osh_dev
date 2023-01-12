@@ -77,6 +77,7 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
     '\Enterego\ProductDeactivation' => '/bitrix/php_interface/enterego_class/ProductDeactivation.php',
     'DataBase_like' => '/bitrix/modules/osh.like_favorites/lib/DataBase_like.php',
+    '\Bitrix\Like\ORM_like_favoritesTable' => '/bitrix/modules/osh.like_favorites/lib/ORM_like_favoritesTable.php',
     '\Enterego\EnteregoCompany' => '/bitrix/php_interface/enterego_class/EnteregoCompany.php',
     '\Enterego\UserPrice\PluginStatic' => '/bitrix/modules/osh.userprice/include.php',
     '\Enterego\UserPrice\UserPriceHelperOsh' => '/bitrix/modules/osh.userprice/include.php',
@@ -164,7 +165,7 @@ function initProperty(&$arUserResult)
 function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 {
 
-   $aModuleMenu[] = array(
+    $aModuleMenu[] = array(
         "parent_menu" => "global_menu_custom",
         "icon" => "default_menu_icon",
         "page_icon" => "default_page_icon",
@@ -309,6 +310,7 @@ function onOrderOneStepDelivery(&$arResult, &$arUserResult, $arParams)
         $arResult['DELIVERY'][$id]['DESCRIPTION'] = $content . $button;
     }
 }
+
 CModule::AddAutoloadClasses("", array(
     '\CommonPVZ\DeliveryHelper' => '/local/php_interface/include/sale_delivery/CommonPVZ/DeliveryHelper.php',
     '\CommonPVZ\CommonPVZ' => '/local/php_interface/include/sale_delivery/CommonPVZ/CommonPVZ.php',

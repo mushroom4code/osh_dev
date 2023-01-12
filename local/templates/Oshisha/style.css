@@ -2665,7 +2665,7 @@ span > i.header_icon {
     border: 1px solid #F55F5C;
 }
 
-.datepicker--cell.-in-range-, .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current-,
+.datepicker--cell.-in-range-, .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current-,.text_catalog_button:hover,
 .datepicker--cell.-range-from-, .datepicker--cell.-selected-.-focus-, .datepicker--cell.-range-to-, .btn_basket,
 .btn_cancel, .btn_cancel:hover, .link_gram_active, .link_gram_active:hover, .link_gram:hover, .link_auth,
 .link_auth:hover, .link_message_box_product:hover, .link_message_box_product > i, .btn_brand, .btn_brand:hover,
@@ -5433,7 +5433,6 @@ li, ul {
 
 .count-per-page {
     display: flex;
-    margin: 10px 0 25px;
 }
 
 .count-per-page span {
