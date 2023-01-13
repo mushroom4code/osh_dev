@@ -145,8 +145,7 @@ class PriceList {
             $objWriter->save($path_to_file);
             $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));
             $option->price_list_link =  '/price-list/' . $file_name;
-            COption::SetOptionString('BBRAIN','SETTING_SITE',json_encode($option));
-//            \CIBlockElement::SetPropertyValuesEx(324, false, array('link' => '/price-list/' . $file_name));
+            COption::SetOptionString('BBRAIN','SETTINGS_SITE',json_encode($option));
         }
     }
 
