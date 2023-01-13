@@ -254,7 +254,7 @@ function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
 
 }
 
-require(__DIR__ . '/enterego_class/newProductAssignment_function.php');
+require(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php.php');
 
 
 
