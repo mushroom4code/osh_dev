@@ -47,17 +47,17 @@
                                 <? } ?>
                                 <?= $banner ?>
                             </div>
-                        <?endforeach; ?>
+                        <? endforeach; ?>
                     </div>
 
                 </div>
                 <div class="carousel-indicators swiper-pagination-block"></div>
-            <?
+                <?
             } else {
                 ?>
                 <div class="carousel-inner" role="listbox">
 
-                    <? foreach ($arResult["BANNERS"] as $k => $banner):?>
+                    <? foreach ($arResult["BANNERS"] as $k => $banner): ?>
 
                         <div class=" carousel-item-elems <? if ($k == 0) echo 'active'; ?>">
                             <?php if ($arParams['TYPE'] === 'MAIN') { ?>
@@ -119,7 +119,7 @@
                         },
                         pagination: {
                             el: '.swiper-pagination-block',
-                            clickable:true
+                            clickable: true
                         },
                         loop: true,
                         navigation: {
