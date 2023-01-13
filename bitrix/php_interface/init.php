@@ -274,5 +274,5 @@ CModule::AddAutoloadClasses("", array(
 ));
 
 
-require(__DIR__ . '/enterego_class/newProductAssignment_function.php');
+require(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
 
