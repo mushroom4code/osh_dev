@@ -76,7 +76,7 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));
                 </div>
             </div>
             <?php if (!$mobile->isMobile()) { ?>
-                <section class="box_map mb-5">Z
+                <section class="box_map mb-5">
                     <script type="text/javascript" charset="utf-8"
                             src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A149de29607a13c15d0cddf04f2230c7b147fd3f62f69e7b9461ec5ac48550769&amp;width=100%&amp;height=400&amp;lang=ru_RU&amp;scroll=true"></script>
                 </section>
