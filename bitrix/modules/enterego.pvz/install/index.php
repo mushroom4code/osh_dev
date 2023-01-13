@@ -1,0 +1,91 @@
+<?php
+
+use Bitrix\Main\ModuleManager,
+    Bitrix\Main\Localization\Loc,
+    Bitrix\Main\EventManager;
+
+Loc::loadMessages(__FILE__);
+
+if (class_exists("enterego_pvz"))
+    return;
+
+class enterego_pvz extends CModule
+{
+    var $MODULE_ID = 'enterego.pvz';
+    var $MODULE_GROUP_RIGHTS = "Y";
+    //var $MODULE_CSS;
+
+    var $strError = '';
+    var $arHandlers = array("sale" => array(
+        "OnSaleComponentOrderOneStepDelivery" => array("\CommonPVZ\DeliveryHelper", "onOrderOneStepDelivery"),
+        "OnSaleComponentOrderCreated" => array("\CommonPVZ\DeliveryHelper", "registerJSComponent")
+    )
+    );
+
+    function __construct()
+    {
+        $arModuleVersion = array();
+        include(dirname(__FILE__) . "/version.php");
+        $this->MODULE_VERSION = $arModuleVersion["VERSION"];
+        $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
+        $this->MODULE_NAME = Loc::getMessage("EE_PVZ_MODULE_NAME");
+        $this->MODULE_DESCRIPTION = Loc::getMessage("EE_PVZ_MODULE_DESC");
+
+        $this->PARTNER_NAME = Loc::getMessage("EE_PVZ_PARTNER_NAME");
+        $this->PARTNER_URI = Loc::getMessage("EE_PVZ_PARTNER_URI");
+        //$this->MODULE_CSS = "/bitrix/modules/" . $this->MODULE_ID . "/osh_admin.css";
+    }
+
+    function InstallEvents()
+    {
+        $eventManager = EventManager::getInstance();
+        foreach ($this->arHandlers as $moduleTo => $arEvents) {
+            foreach ($arEvents as $eventName => $eventValues) {
+                $className = $eventValues[0];
+                $funcName = $eventValues[1];
+                $eventManager->registerEventHandler($moduleTo, $eventName, $this->MODULE_ID, $className, $funcName);
+            }
+        }
+        return true;
+    }
+
+    function UnInstallEvents()
+    {
+        COption::RemoveOption($this->MODULE_ID);
+        $eventManager = EventManager::getInstance();
+        foreach ($this->arHandlers as $moduleTo => $arEvents) {
+            foreach ($arEvents as $eventName => $eventValues) {
+                $className = $eventValues[0];
+                $funcName = $eventValues[1];
+                $eventManager->unRegisterEventHandler($moduleTo, $eventName, $this->MODULE_ID, $className, $funcName);
+            }
+        }
+        return true;
+    }
+
+    function InstallFiles()
+    {
+        CopyDirFiles($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . $this->MODULE_ID . "/install/CommonPVZ/", $_SERVER["DOCUMENT_ROOT"] . "/bitrix/php_interface/include/sale_delivery/CommonPVZ/", true, true);
+        return true;
+    }
+
+    function UnInstallFiles()
+    {
+        DeleteDirFilesEx("/bitrix/php_interface/include/sale_delivery/CommonPVZ/");
+        return true;
+    }
+
+    function DoInstall()
+    {
+        $this->InstallFiles();
+        $this->InstallEvents();
+        ModuleManager::registerModule($this->MODULE_ID);
+    }
+
+    function DoUninstall()
+    {
+        $this->UnInstallFiles();
+        $this->UnInstallEvents();
+        ModuleManager::unRegisterModule($this->MODULE_ID);
+    }
+}
