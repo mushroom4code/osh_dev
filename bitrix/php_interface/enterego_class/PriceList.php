@@ -293,3 +293,12 @@ class PriceList {
 
     }
 }
+
+/**
+ * @return string
+ */
+function price_list(): string
+{
+    $new = new PriceList();
+    return 'price_list();';
+}
