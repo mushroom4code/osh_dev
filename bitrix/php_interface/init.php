@@ -263,3 +263,16 @@ CModule::AddAutoloadClasses("", array(
     '\PecomKabinet' => '/local/php_interface/include/sale_delivery/CommonPVZ/pecom_kabinet.php'
 
 ));
+
+/**
+ * @param $a
+ * @param $b
+ * @return int
+ */
+function sort_by_sort($a, $b): int
+{
+    if ($a["SORT"] == $b["SORT"]) {
+        return 0;
+    }
+    return ($a["SORT"] < $b["SORT"]) ? -1 : 1;
+}
