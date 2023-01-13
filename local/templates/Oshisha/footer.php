@@ -134,7 +134,7 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
                         <a href="https://api.whatsapp.com/send?phone=<?= $option->PHONE_WTS; ?>" target="_blank">
                             <img class="ws" src="<?= SITE_TEMPLATE_PATH ?>/images/ws.svg">
                         </a>
-                        <a href=<?= $option->VK_LINK; ?>"  target="_blank">
+                        <a href="<?= $option->VK_LINK; ?>"  target="_blank">
                             <img class="vk" src="<?= SITE_TEMPLATE_PATH ?>/images/vk.svg">
                         </a>
                         <a href="<?= $option->DZEN; ?>"  target="_blank">
