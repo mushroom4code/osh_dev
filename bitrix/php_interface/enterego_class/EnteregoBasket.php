@@ -89,7 +89,7 @@ class EnteregoBasket
             foreach ($product_prices as $product_id => $price_data) {
 
                 $propsUseSale = CIBlockElement::GetProperty(
-                    CATALOG_IBLOCK_ID,
+                    IBLOCK_CATALOG,
                     $product_id,
                     array(),
                     array('CODE' => 'USE_DISCOUNT'));

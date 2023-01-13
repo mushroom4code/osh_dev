@@ -10,13 +10,13 @@ function newProductAssignment(): string
 {
     $rs = CIBlockElement::GetList(
         ['DATE_CREATE' => 'DESC'],
-        ['IBLOCK_ID' => CATALOG_IBLOCK_ID, '>DATE_CREATE'=>monthAgo()],
+        ['IBLOCK_ID' => IBLOCK_CATALOG, '>DATE_CREATE'=>monthAgo()],
         false, [],
         ['ID', 'IBLOCK_ID', 'NAME', 'DATE_CREATE', 'PROPERTY_NEW']
     );
 
     $property_enums = CIBlockPropertyEnum::GetList(array("DEF" => "DESC", "SORT" => "ASC"),
-        array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "CODE" => "NEW"));
+        array("IBLOCK_ID" => IBLOCK_CATALOG, "CODE" => "NEW"));
     while ($enum_fields = $property_enums->GetNext()) {
         if ($enum_fields["VALUE"] == "Да") {
             $arPropertyNewTrue = array(
@@ -36,7 +36,7 @@ function newProductAssignment(): string
     }
     $rs = CIBlockElement::GetList(
         ['DATE_CREATE' => 'DESC'],
-        ['!ID' => $arNewProduct, 'IBLOCK_ID' => CATALOG_IBLOCK_ID, 'PROPERTY_NEW_VALUE' => "Да"],
+        ['!ID' => $arNewProduct, 'IBLOCK_ID' => IBLOCK_CATALOG, 'PROPERTY_NEW_VALUE' => "Да"],
         false, false,
         ['ID', 'IBLOCK_ID', 'NAME', 'DATE_CREATE', 'PROPERTY_NEW']
     );
