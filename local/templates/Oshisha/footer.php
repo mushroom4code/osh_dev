@@ -4,7 +4,9 @@
  */
 
 if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
-?></div><?php } ?>
+?>
+    </div><?php }
+$option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
 
 
 </div><!--end .bx-content -->
@@ -156,16 +158,16 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                 </span>
                 <div class="box_with_icons_new">
                     <div class="social-line-1">
-                        <a href="https://t.me/oshishanet" target="_blank">
+                        <a href="<?= $option->TG; ?>" target="_blank">
                             <img class="tg" src="<?= SITE_TEMPLATE_PATH ?>/images/tg.svg">
                         </a>
-                        <a href="https://api.whatsapp.com/send?phone=79031182939" target="_blank">
+                        <a href="https://api.whatsapp.com/send?phone=<?= $option->PHONE_WTS; ?>" target="_blank">
                             <img class="ws" src="<?= SITE_TEMPLATE_PATH ?>/images/ws.svg">
                         </a>
-                        <a href="https://vk.com/oshishacc"  target="_blank">
+                        <a href=<?= $option->VK_LINK; ?>"  target="_blank">
                             <img class="vk" src="<?= SITE_TEMPLATE_PATH ?>/images/vk.svg">
                         </a>
-                        <a href="https://dzen.ru/id/6125150216123a2f95667201"  target="_blank">
+                        <a href="<?= $option->DZEN; ?>"  target="_blank">
                             <img class="dzen" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
                         </a>
                     </div>
