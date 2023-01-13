@@ -284,7 +284,14 @@ CModule::AddAutoloadClasses("", array(
 
 require(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
 
-
+/**
+ * @return string
+ */
+function price_list(): string
+{
+    $new = new PriceList();
+    return 'price_list();';
+}
 
 /**
  * @param $a
