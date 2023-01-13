@@ -1,7 +1,6 @@
 <?php
 
 define("HIDE_SIDEBAR", true);
-
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
 /**
@@ -14,7 +13,7 @@ $APPLICATION->IncludeComponent(
 	"oshisha_catalog.catalog", 
 	array(
 		"IBLOCK_TYPE" => "1c_catalog",
-		"IBLOCK_ID" => IBLOCK_CATALOG,
+		"IBLOCK_ID" => CATALOG_IBLOCK_ID,
 		"TEMPLATE_THEME" => "site",
 		"DETAIL_SHOW_MAX_QUANTITY" => "Y",
 		"HIDE_NOT_AVAILABLE" => "L",
