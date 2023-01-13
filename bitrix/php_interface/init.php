@@ -16,6 +16,7 @@ if (COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE') 
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
+    '\PriceList' => '/bitrix/php_interface/enterego_class/PriceList.php',
     '\Enterego\ProductDeactivation' => '/bitrix/php_interface/enterego_class/ProductDeactivation.php',
     'DataBase_like' => '/bitrix/modules/osh.like_favorites/lib/DataBase_like.php',
     '\Bitrix\Like\ORM_like_favoritesTable' => '/bitrix/modules/osh.like_favorites/lib/ORM_like_favoritesTable.php',
@@ -145,6 +146,22 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
             "help_section" => "custom",
             "items" => array()
         ),
+    );
+
+
+    $aModuleMenu[] = array(
+        "parent_menu" => "global_menu_custom",
+        "icon" => "default_menu_icon",
+        "page_icon" => "default_page_icon",
+        "sort" => "200",
+        "text" => "Прайс-лист",
+        "title" => "Прайс-лист",
+        "url" => "/bitrix/php_interface/enterego_class/modules/priceList.php",
+        "parent_page" => "global_menu_custom",
+        "more_url" => array(
+            "priceList.php",
+        ),
+        "items" => array(),
     );
 
     return $arRes;

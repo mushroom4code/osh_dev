@@ -182,7 +182,14 @@ $SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
         </td>
 
     </tr>
+    <tr>
+        <td width="50">Ссылка на прайс-лист (генерируется автоматически)</td>
+        <td width="80%">
+            <textarea name="SETTINGS[price_list_link]" width="100%" cols=100
+                      rows=3><?= $SETTINGS['price_list_link'] ?></textarea>
+        </td>
 
+    </tr>
 <?
 //********************
 // вторая закладка - параметры автоматической генерации рассылки
