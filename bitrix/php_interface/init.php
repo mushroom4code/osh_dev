@@ -276,3 +276,17 @@ CModule::AddAutoloadClasses("", array(
 
 require(__DIR__ . '/enterego_class/newProductAssignment_function.php');
 
+
+
+/**
+ * @param $a
+ * @param $b
+ * @return int
+ */
+function sort_by_sort($a, $b): int
+{
+    if ($a["SORT"] == $b["SORT"]) {
+        return 0;
+    }
+    return ($a["SORT"] < $b["SORT"]) ? -1 : 1;
+}
