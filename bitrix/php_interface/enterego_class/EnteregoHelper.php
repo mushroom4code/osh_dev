@@ -201,22 +201,6 @@ class EnteregoHelper
         return $result;
     }
 
-    /**
-     * @param string $duringTime
-     * @return bool
-     * @throws \Exception
-     */
-    public static function checkNewProduct(string $duringTime): bool
-    {
-        $nowDate = date("d.m.Y H:i:s");
-        $date = new DateTime($nowDate);
-        $dateAMonthAgo = $date->sub(new DateInterval('P0Y1M0DT0H0M0S'))->format('d.m.Y H:i:s');
-        if (strtotime($duringTime) < strtotime($dateAMonthAgo)) {
-            return false;
-        }
-        return true;
-    }
-
     /** Return product type for discount gift
      * @param int $productId
      * @return false

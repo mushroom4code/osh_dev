@@ -2621,7 +2621,8 @@ a.dropdown-toggle, .detail_disabled, .detail_disabled:hover, .disabled_class a.l
 .link_menu_top:hover, .link_menu_top:active, .link_menu_top:focus, .link_menu_top_active, .link_gram_active,
 .link_gram_active:hover, .link_gram:hover, .link_auth, .link_auth:hover, .link_message_box_product:hover,
 .checkbox1:checked + label > .hamburger1 > .bar2, .checkbox2:checked + label > .hamburger2 > .bar1,
-.checkbox3:checked + label > .hamburger3 > .bar5, .checkbox1:checked + label > .hamburger1 > .bar3, .btn_company,
+.checkbox3:checked + label > .hamburger3 > .bar5, .checkbox1:checked + label > .hamburger1 > .bar3,
+.checkbox4:checked + label > .hamburger4 > .bar8,.checkbox4:checked + label > .hamburger4 > .bar7,.btn_company,
 .checkbox2:checked + label > .hamburger2 > .bar4, .carousel-indicators > span.active, .link_banner a, .btn_red,
 .checkbox3:checked + label > .hamburger3 > .bar6, .bx-pagination .bx-pagination-container ul li.bx-active span,
 .btn_basket, .datepicker--cell.-in-range-, .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current-,
@@ -4233,12 +4234,14 @@ table#TableWorkers.no-footer {
 }
 
 .Icon span:nth-child(1), .Icon span:nth-child(3), .checkbox1:checked + label > .hamburger1 > .bar2,
-.checkbox2:checked + label > .hamburger2 > .bar1, .checkbox3:checked + label > .hamburger3 > .bar5 {
+.checkbox4:checked + label > .hamburger4 > .bar7, .checkbox2:checked + label > .hamburger2 > .bar1,
+.checkbox3:checked + label > .hamburger3 > .bar5 {
     transform: rotate(45deg);
 }
 
 .Icon span:nth-child(2), .checkbox1:checked + label > .hamburger1 > .bar3,
-.checkbox2:checked + label > .hamburger2 > .bar4, .checkbox3:checked + label > .hamburger3 > .bar6 {
+.checkbox2:checked + label > .hamburger2 > .bar4, .checkbox3:checked + label > .hamburger3 > .bar6,
+.checkbox4:checked + label > .hamburger4 > .bar8{
     transform: rotate(-45deg);
 }
 
@@ -4284,7 +4287,7 @@ table#TableWorkers.no-footer {
 }
 
 
-.hamburger1 .bar, .hamburger2 .bar, .hamburger3 .bar {
+.hamburger1 .bar, .hamburger2 .bar, .hamburger3 .bar, .hamburger4 .bar{
     transition: all 0.1s ease-in-out, transform 0.1s ease-in-out 0.1s;
 }
 
@@ -4292,11 +4295,11 @@ table#TableWorkers.no-footer {
 .checkbox1:checked + label > .hamburger1 > .bar2, .hamburger .bar, .hamburger2 .bar1, .hamburger2 .bar4,
 .checkbox2:checked + label > .hamburger2 > .bar1, .checkbox2:checked + label > .hamburger2 > .bar4,
 .checkbox3:checked + label > .hamburger2 > .bar5, .checkbox3:checked + label > .hamburger2 > .bar6, .hamburger3 .bar6,
-.hamburger3 .bar6 {
+.hamburger4 .bar8,.hamburger4 .bar7 {
     width: 23px;
 }
 
-.hamburger1 .bar2, .hamburger2 .bar1, .hamburger3 .bar5 {
+.hamburger1 .bar2, .hamburger2 .bar1, .hamburger3 .bar5, .hamburger4 .bar7 {
     transform: rotate(90deg);
 }
 

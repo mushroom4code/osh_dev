@@ -13,7 +13,7 @@
 /** @var CBitrixComponent $component */
 
 $this->setFrameMode(true);
-	if( $APPLICATION->GetCurPage() == '/catalog_new/' ||  $APPLICATION->GetCurPage() == '/diskont/' )
+	if( $APPLICATION->GetCurPage() == '/catalog_new/' ||  $APPLICATION->GetCurPage() == '/diskont/' ||  $APPLICATION->GetCurPage() == '/catalog_hits/')
 	{
 		include('section.php');
 	}

@@ -42,7 +42,7 @@ require_once(__DIR__ . '/enterego_class/EnteregoGiftHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
 
-const IBLOCK_CATALOG = 12;
+
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
 
@@ -263,6 +263,11 @@ CModule::AddAutoloadClasses("", array(
     '\PecomKabinet' => '/local/php_interface/include/sale_delivery/CommonPVZ/pecom_kabinet.php'
 
 ));
+
+
+require(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
+
+
 
 /**
  * @param $a

@@ -61,7 +61,9 @@ $styleForTaste = '';
 $taste = $item['PROPERTIES']['VKUS'];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
 $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
-$newProduct = $item['PROPERTIES']['NOVINKA'];
+$newProduct = $item['PROPERTIES'][PROP_NEW];
+$hitProduct = $item['PROPERTIES'][PROP_HIT];
+
 
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $show_price = true;
@@ -93,7 +95,10 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
         <?php if (count($taste['VALUE']) > 0) { ?>
             <div class="toggle_taste card-price">
                 <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                    <?php if (EnteregoHelper::checkNewProduct($item['DATE_CREATE'])) { ?>
+                    <?php if ($hitProduct['VALUE'] == 'да') { ?>
+                        <span class="taste" data-background="#000000">Хит</span>
+                    <?php } ?>
+                    <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
                         <span class="taste" data-background="#F55F5C">Новинка</span>
                     <?php }
 
@@ -207,7 +212,10 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
             <?php if (count($taste['VALUE']) > 0) { ?>
                 <div class="toggle_taste_line">
                     <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                        <?php if (EnteregoHelper::checkNewProduct($item['DATE_CREATE'])) { ?>
+                        <?php if ($hitProduct['VALUE'] == 'да') { ?>
+                            <span class="taste" data-background="#000000">Хит</span>
+                        <?php } ?>
+                        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProductХ['VALUE'] != 'да')) { ?>
                             <span class="taste" data-background="#F55F5C">Новинка</span>
                         <?php }
 

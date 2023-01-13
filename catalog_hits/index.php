@@ -3,14 +3,16 @@
 define("HIDE_SIDEBAR", true);
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetPageProperty("title", "Новинки");
-$APPLICATION->SetTitle("Новинки");
+$APPLICATION->SetPageProperty("title", "Хиты");
+$APPLICATION->SetTitle("Хиты");
 /**
  * @var  CAllMain|CMain $APPLICATION
  */
+$nowDate = date("Y-m-d H:i:s");
+$date = new DateTime($nowDate);
 
 $GLOBALS['ArFilter'] = array(
-    'PROPERTY_NEW_VALUE' => 'Да'
+    'PROPERTY_HIT_VALUE' => 'да'
 );
 
 $APPLICATION->IncludeComponent(
@@ -70,10 +72,10 @@ $APPLICATION->IncludeComponent(
         "SECTIONS_SHOW_PARENT_NAME" => "N",
         "PAGE_ELEMENT_COUNT" => "16",
         "LINE_ELEMENT_COUNT" => "3",
-        "ELEMENT_SORT_FIELD" =>'DATE_CREATE',
-        "ELEMENT_SORT_ORDER" => "desc",
+        "ELEMENT_SORT_FIELD" =>'name',
+        "ELEMENT_SORT_ORDER" => "asc",
         "ELEMENT_SORT_FIELD2" => 'name',
-        "ELEMENT_SORT_ORDER2" => "asc",
+        "ELEMENT_SORT_ORDER2" => "desc",
         "LIST_PROPERTY_CODE" => array(
             0 => "NEWPRODUCT",
             1 => "SALELEADER",
