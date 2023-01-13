@@ -17,19 +17,22 @@ function newProductAssignment(): string
 
     $property_enums = CIBlockPropertyEnum::GetList(array("DEF" => "DESC", "SORT" => "ASC"),
         array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "CODE" => "NEW"));
+    while ($enum_fields = $property_enums->GetNext()) {
+        if ($enum_fields["VALUE"] == "Да") {
+            $arPropertyNewTrue = array(
+                PROP_NEW => $enum_fields["ID"],
+            );
+        } elseif ($enum_fields["VALUE"] == "Нет") {
+            $arPropertyNewFalse = array(
+                PROP_NEW => $enum_fields["ID"],
+            );
+        }
+    }
 
     $arNewProduct = [];
     while ($ar = $rs->Fetch()) {
         $arNewProduct[] = $ar['ID'];
-
-        while ($enum_fields = $property_enums->GetNext()) {
-            if ($enum_fields["VALUE"] == "Да") {
-                $arPropertyNew = array(
-                    PROP_NEW => $enum_fields["ID"],
-                );
-                CIBlockElement::SetPropertyValuesEx($ar["ID"], false, $arPropertyNew);
-            }
-        }
+        CIBlockElement::SetPropertyValuesEx($ar["ID"], false, $arPropertyNewTrue);
     }
     $rs = CIBlockElement::GetList(
         ['DATE_CREATE' => 'DESC'],
@@ -40,14 +43,7 @@ function newProductAssignment(): string
     while ($ar = $rs->Fetch()) {
         $arNewProduct[] = $ar['ID'];
         if(count($arNewProduct) >= COUNT_NEW_PRODUCTS) {
-            while ($enum_fields = $property_enums->GetNext()) {
-                if ($enum_fields["VALUE"] == "Нет") {
-                    $arPropertyNew = array(
-                        PROP_NEW => $enum_fields["ID"],
-                    );
-                    CIBlockElement::SetPropertyValuesEx($ar["ID"], false, $arPropertyNew);
-                }
-            }
+            CIBlockElement::SetPropertyValuesEx($ar["ID"], false, $arPropertyNewFalse);
         }
     }
 
