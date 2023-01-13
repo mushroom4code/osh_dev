@@ -30,7 +30,7 @@ CModule::AddAutoloadClasses("", array(
 ));
 
 global $PRICE_TYPE_ID;
-global $UserTypeOpt, $arIskCode, $SETTINGS;
+global $UserTypeOpt, $arIskCode, $SETTINGS_;
 $arIskCode = array(
     'USE_AVAILABLE', 'BLOG_POST_ID', 'GRAMMOVKA_VES_NETTO'
 
@@ -129,7 +129,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
         'sort' => 9,
         'items_id' => 'global_menu_osh',
         'icon' => 'imi_corp',
-        'url' => '/bitrix/admin/bbrain_options.php?lang=' . LANG,
+        'url' => '/bitrix/php_interface/enterego_class/site_options.php?lang=' . LANG,
 
     );
 

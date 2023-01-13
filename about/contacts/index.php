@@ -4,6 +4,7 @@ $APPLICATION->SetTitle("Контакты");
 use Bitrix\Conversion\Internals\MobileDetect;
 
 $mobile = new MobileDetect();
+$option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));
 ?>
     <link rel="preconnect" href="//api-maps.yandex.ru">
     <link rel="dns-prefetch" href="//api-maps.yandex.ru">
@@ -75,7 +76,7 @@ $mobile = new MobileDetect();
                 </div>
             </div>
             <?php if (!$mobile->isMobile()) { ?>
-                <section class="box_map mb-5">
+                <section class="box_map mb-5">Z
                     <script type="text/javascript" charset="utf-8"
                             src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A149de29607a13c15d0cddf04f2230c7b147fd3f62f69e7b9461ec5ac48550769&amp;width=100%&amp;height=400&amp;lang=ru_RU&amp;scroll=true"></script>
                 </section>
@@ -128,28 +129,26 @@ $mobile = new MobileDetect();
                 Мы свяжемся с вами в самое ближайшее время!
             </div>
             </form>
-
-            </div>
-
-
-            <h5 class="mb-3">Социальные сети и мессенджеры</h5>
-            <div class="width_50 mb-5">
-                <div class="box_with_icons">
-                    <a href="https://t.me/oshishanet" class="mr-5 telegram_icons" target="_blank">
-                    </a>
-                    <a href="https://vk.com/oshishacc" class="mr-5 vk_icons" target="_blank">
-                    </a>
-                    <a href="https://api.whatsapp.com/send?phone=79031182939" class="mr-4" target="_blank"> <i
-                                class="fa fa-whatsapp icons_theme" aria-hidden="true"></i></a>
-
-                    <a href="https://dzen.ru/id/6125150216123a2f95667201" target="_blank">
-                        <img class="dzen_contacts" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
-                    </a>
-                </div>
-            </div>
-            <h5 class="mb-3">Реквизиты</h5>
-            <p>ООО "СМАК-СУЛТАНА", ИНН 771544140</p>
         </div>
+        <h5 class="mb-3">Социальные сети и мессенджеры</h5>
+        <div class="width_50 mb-5">
+            <div class="box_with_icons">
+                <a href="<?= $option->TG; ?>" class="mr-5 telegram_icons" target="_blank">
+                </a>
+                <a href="<?= $option->VK_LINK ?>" class="mr-5 vk_icons" target="_blank">
+                </a>
+                <a href="https://api.whatsapp.com/send?phone=<?= $option->PHONE_WTS ?>" class="mr-4"
+                   target="_blank"> <i
+                            class="fa fa-whatsapp icons_theme" aria-hidden="true"></i></a>
+
+                <a href="<?= $option->DZEN?>" target="_blank">
+                    <img class="dzen_contacts" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
+                </a>
+            </div>
+        </div>
+        <h5 class="mb-3">Реквизиты</h5>
+        <p>ООО "СМАК-СУЛТАНА", ИНН 771544140</p>
+    </div>
 
     </div>
 <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php") ?>
