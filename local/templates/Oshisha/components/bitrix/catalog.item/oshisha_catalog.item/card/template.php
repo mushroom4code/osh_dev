@@ -62,8 +62,7 @@ $taste = $item['PROPERTIES']['VKUS'];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
 $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES']['NOVINKA'];
-$hitProduct = $item['PROPERTIES']['HIT'];
-
+$hitProduct = $item['PROPERTIES'][PROP_HIT]
 
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $show_price = true;
