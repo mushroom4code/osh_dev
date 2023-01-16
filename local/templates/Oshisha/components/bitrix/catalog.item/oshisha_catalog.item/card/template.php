@@ -95,7 +95,7 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
         <?php if (count($taste['VALUE']) > 0) { ?>
             <div class="toggle_taste card-price">
                 <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                    <?php if ($hitProduct['VALUE'] == 'да') { ?>
+                    <?php if ($hitProduct['VALUE'] === 'да') { ?>
                         <span class="taste" data-background="#000000">Хит</span>
                     <?php } ?>
                     <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
