@@ -28,6 +28,7 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
+    '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
 ));
 
 global $PRICE_TYPE_ID;
