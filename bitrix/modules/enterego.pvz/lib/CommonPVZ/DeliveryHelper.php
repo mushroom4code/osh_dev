@@ -29,9 +29,9 @@ class DeliveryHelper
             <?= Loc::getMessage('COMMONPVZ_BTN_CHOOSE') ?>
         </a>
         <?php
-        if (isset($_SESSION['addressPVZ'])) {
+        if (isset($_SESSION['addressPVZ']) && $_SESSION['addressPVZ'] !== '') {
             ?>
-            <span id="pvz_address"><?= $_SESSION['addressPVZ'] ?></span>
+            <span id="pvz_address"><?= Loc::getMessage('COMMONPVZ_TEXT_PREADDRESS') ?><span><?= $_SESSION['addressPVZ'] ?></span></span>
             <?php
         }
 
