@@ -27,13 +27,10 @@ $sort = [
 
 ];
 
-
 if ($_GET['sort_by']) {
     $_SESSION['sort']['by']['by'] = $_GET['sort_by'];
     $_SESSION['sort']['by']['order'] = $_GET['sort_order'];
-
 }
-
 
 if ($_SESSION['sort']) {
     $sort = [
@@ -126,28 +123,6 @@ if (!isset($sort['by']['order']) || empty($sort['by']['order']))
 $contentBlockClass = "col";
 $sort_active = $_COOKIE['orientation'] === 'line' ? "icon_sort_line_active" : "icon_sort_bar_active";
 
-$arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG, 'GLOBAL_ACTIVE' => 'Y',);
-
-$arSelectS = array('*');
-$arOrderS = array('DEPTH_LEVEL' => 'ASC', 'SORT' => 'ASC',);
-
-$rsSections = CIBlockSection::GetList($arOrderS, $arFilterS, false, $arSelectS);
-$sectionLinc = array();
-$arResult['ROOT'] = array();
-$sectionLinc[0] = &$arResult['ROOT'];
-while ($arSection = $rsSections->GetNext()) {
-    $arSection['TEXT'] = $arSection['NAME'];
-    $arSection['LINK'] = $arSection['CODE'];
-    if ($arSection['DEPTH_LEVEL'] > 1) {
-        $arSection['DEPTH_LEVEL'] = $arSection['DEPTH_LEVEL'] - 1;
-
-    }
-
-
-    $arSections[$arSection['ID']] = $arSection;
-}
-
-
 function sort_by_name($a, $b)
 {
     if ($a["NAME"] == $b["NAME"]) {
@@ -156,50 +131,12 @@ function sort_by_name($a, $b)
     return ($a["NAME"] < $b["NAME"]) ? -1 : 1;
 }
 
-foreach ($arSections as $arSection) {
-    if ($arSection['DEPTH_LEVEL'] == 1 && $arSection['IBLOCK_SECTION_ID'] > 0) {
-        $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']] = $arSection;
-        $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']];
-    } else {
-        $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILD'][$arSection['ID']] = $arSection;
-        $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILD'][$arSection['ID']];
-    }
-
-}
-
-$arResultSection = $sectionLinc[0]['CHILD'];
-
-
 $catalogElementField = $APPLICATION->get_cookie("PAGE_ELEMENT_COUNT") ? $APPLICATION->get_cookie("PAGE_ELEMENT_COUNT") : "36";
 if ($_GET['page'] != '') {
     $APPLICATION->set_cookie("PAGE_ELEMENT_COUNT", $_GET['page'], false, "/", SITE_SERVER_NAME);
     $catalogElementField = intval($_GET['page']);
 }
 $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
-
-
-//TODO move to back (component) and slow
-const CATALOG_GIFT_ID=1873;
-$cat = new EnteregoDiscount();
-$arResultSection = $cat->getSectionProductsForFilter(CATALOG_DISCOUNT_ID);
-
-function recursiveSort(&$arSort)
-{
-    foreach ($arSort as &$item) {
-        if (count($item) > 1 && isset($item[0])) {
-            uasort($item, "sortCategory");
-            recursiveSort($item);
-        }
-    }
-}
-
-function sortCategory($oneElement, $TwoElement)
-{
-    return strnatcasecmp($oneElement[0]['NAME'], $TwoElement[0]['NAME']);
-}
-
-uasort($categoryProduct, "sortCategory");
-recursiveSort($categoryProduct);
 
 ?>
 <div class="row mb-4 box_with_prod">
@@ -209,13 +146,7 @@ recursiveSort($categoryProduct);
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
                 <div class="catalog-section-list-tile-list">
-                    <? foreach ($arResultSection as $section):
-
-                        if (!isset($section[0]) || $section[0]['CODE'] === 'sale') {
-                            continue;
-                        }
-                        $arSection = $section[0];
-                        ?>
+                    <? foreach ($arResult['SECTION_LIST'] as $arSection):?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap">
                                 <a href="<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
@@ -562,7 +493,7 @@ recursiveSort($categoryProduct);
             'BRAND_PROPERTY' => (isset($arParams['BRAND_PROPERTY']) ? $arParams['BRAND_PROPERTY'] : ''),
 
             'TEMPLATE_THEME' => (isset($arParams['TEMPLATE_THEME']) ? $arParams['TEMPLATE_THEME'] : ''),
-            "ADD_SECTIONS_CHAIN" => "N",
+            "ADD_SECTIONS_CHAIN" => $arParams["ADD_SECTIONS_CHAIN"],
             'ADD_TO_BASKET_ACTION' => $basketAction,
             'SHOW_CLOSE_POPUP' => isset($arParams['COMMON_SHOW_CLOSE_POPUP']) ? $arParams['COMMON_SHOW_CLOSE_POPUP'] : '',
             'COMPARE_PATH' => $arResult['FOLDER'] . $arResult['URL_TEMPLATES']['compare'],
@@ -617,7 +548,7 @@ recursiveSort($categoryProduct);
                                     "SET_META_KEYWORDS" => "N",
                                     "SET_META_DESCRIPTION" => "N",
                                     "SET_LAST_MODIFIED" => "N",
-                                    "ADD_SECTIONS_CHAIN" => "N",
+                                    "ADD_SECTIONS_CHAIN" => $arParams["ADD_SECTIONS_CHAIN"],
 
                                     "PRICE_VAT_INCLUDE" => $arParams["PRICE_VAT_INCLUDE"],
                                     "USE_PRODUCT_QUANTITY" => $arParams['USE_PRODUCT_QUANTITY'],

@@ -26,35 +26,22 @@ class EnteregoDiscount
         }
         $categoryProduct = $this->getFilterDiscountCategoryProduct($sectionsIDS, [], 'discount');
 
-        $arCategory = [];
-        foreach ($categoryProduct as $section) {
-            if (!isset($section[0]) || $section[0]['CODE'] === 'sale') {
-                continue;
-            }
-
-            $link = 'discount';
-            if (!empty($section)) {
-                $section[0]['CHILD'] = $this->recursiveForeach($section, $link);
-            }
-            $arCategory[] = $section[0];
-        }
+        $link = 'diskont';
+        $arCategory = $this->recursiveForeach($categoryProduct, $link);
         return $arCategory;
     }
 
-    public function recursiveForeach($array, $linkNew): array
+    public function recursiveForeach($section, $linkNew): array
     {
-        $htmlElem = '';
         $arCategory = [];
-        if (!empty($array)) {
-            foreach ($array as $key => $item) {
+        if (!empty($section)) {
+            foreach ($section as $key => $item) {
                 if ($key !== 0) {
-                    if (count($item) > 1) {
-                        $item['CHILD'] = $this->recursiveForeach($item, $linkNew);
-                        $arCategory[] = $item;
-                    } else {
-                        $item['CHILD'] = $this->recursiveForeach($item, $linkNew);
+                    if (isset($item[0])) {
+                        $item[0]['CHILDS'] = $this->recursiveForeach($item, $linkNew);
+                        $item[0]['SECTION_PAGE_URL'] =  '/'  . $linkNew . '/'. $item[0]['CODE'] . '/';
+                        $arCategory[] = $item[0];
                     }
-
                 }
             }
         }
@@ -70,8 +57,9 @@ class EnteregoDiscount
     public function getFilterDiscountCategoryProduct(array $sectionsIDS = [], array $filter = [], string $catFilter = ''): array
     {
         $resSection = [];
+        $arSelect = array('ID', 'CODE', 'NAME', 'IBLOCK_SECTION_ID');
         $categoryAr = \CIBlockSection::GetList(array("depth_level" => "ASC"),
-            array('ACTIVE' => 'Y', 'ID' => $sectionsIDS), false, array('ID', 'CODE', 'NAME', 'IBLOCK_SECTION_ID'));
+            array('ACTIVE' => 'Y', 'ID' => $sectionsIDS), false, $arSelect);
         $sectionsIDS = [];
         while ($arrayData = $categoryAr->Fetch()) {
             // узнаем количество доступных элементов в разделе
