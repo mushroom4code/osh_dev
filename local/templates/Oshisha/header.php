@@ -154,15 +154,18 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-7 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
+                    <?php if ($USER->IsAuthorized()) { ?>
+                        <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
+                    <?php } else { ?>
+                        <a href="/login/" class="text_header ">Прайс-лист</a>
+                    <?php } ?>
                     <a href="/about/contacts/" class="text_header">Контакты</a>
                     <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
                     <a href="javascript:void(0)" class="text_header callback">Обратный звонок</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
-                        <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
                     <?php } else { ?>
                         <a href="/about/FAQ/#support" class="text_header">Поддержка</a>
-                        <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
                 </div>
             </div>
