@@ -143,9 +143,9 @@ class PriceList {
             $file_name = 'price-list-oshisha-' . date("d.m.Y") . '-' . date("H:i:s") . '.xls';;
             $path_to_file = $this->price_list_dir . $file_name;
             $objWriter->save($path_to_file);
-            $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));
+            $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE', false, 'N2'));
             $option->price_list_link =  '/price-list/' . $file_name;
-            COption::SetOptionString('BBRAIN','SETTINGS_SITE',json_encode($option));
+            COption::SetOptionString('BBRAIN','SETTINGS_SITE',json_encode($option), false, 'N2');
         }
     }
 
