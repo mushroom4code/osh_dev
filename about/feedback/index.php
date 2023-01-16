@@ -23,10 +23,36 @@ $APPLICATION->SetTitle("Обратная связь");
                 <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk" id="phoneNumber"
                        placeholder="E-mail если хотите получить ответ на почту">
             </div>
-            <div class="form-group mb-5">
+            <div class="form-group mb-3">
                 <textarea class="form-control input_lk" name="MESSAGE" id="text" placeholder="Сообщение*"></textarea>
                 <div class="er_FORM_MESSAGE error_field"></div>
             </div>
+
+            <div class="form-group mb-3">
+                <div class="form-control input_lk input_files drop-zone">
+                    <div class="drop-message">Перетащите файлы сюда</div>
+                    <div class="drop-message">или</div>
+                    <label class="upload-file-label">
+                        <input type="file" data-name="FILES" name="FILES" id="upload-files" class="file-upload"
+                               placeholder="Выберите файл или перетащите сюда" multiple accept="image/*">
+                        <span class="btn">Выберите файлы</span>
+                    </label>
+                    <div class="drop-message">Приложить можно изображения в форматах .jpg, .gif, .png объемом не более 5 Мб</div>
+                    <ul class="file-list"> </ul>
+                </div>
+                <div class="er_FORM_FILES error_field"></div>
+            </div>
+
+            <div class="form-group mb-5">
+                <label class="form-control input_lk" style="height: auto">
+                    <input name="confirm" type="checkbox" checked="checked">
+                    <span class="custom__title">Подтверждаю свое согласие с
+                                <a href="/about/politics/"
+                                   target="_blank">положением об обработке персональных данны</a></span>
+                </label>
+                <div class="er_FORM_CONFIRM error_field"></div>
+            </div>
+
             <div class="form-group mb-2">
                 <div class="col-sm-10">
                     <input class="btn link_menu_catalog get_code_button"
