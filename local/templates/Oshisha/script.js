@@ -2630,56 +2630,35 @@ $(document).ready(function () {
 
 
 
-
-
-
-
-
-
-
-
-
 // т.к. FormData не может в multiple, создадим ей массив с файлами сами
-let //files = [],
-    files = {},
+let files = {},
     uploadZone = $('.drop-zone'),
     fileList = $('.file-list');
 
-$(document).on('dragenter', uploadZone, function (e) {
+$(document).on('drag dragstart dragend dragover dragenter dragleave drop', uploadZone, function (e) {
     e.preventDefault();
     e.stopPropagation();
-})
-$(document).on('dragleave', uploadZone, function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-})
-$(document).on('dragover', uploadZone, function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-})
+});
+$(document).on('dragover dragenter', uploadZone, function (e) {
+    uploadZone.addClass('overmouse');
+});
+$(document).on('dragleave dragend drop', uploadZone, function (e) {
+    uploadZone.removeClass('overmouse');
+});
 $(document).on('drop', uploadZone, function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-
     let fls = e.originalEvent.dataTransfer.files,
-        // index = files.length ?? 0;
-        index = $('.upload-file-item:last-of-type').data('index') ?? 0;
-    drawFileRow(fls, index);
-})
-
-
-$('input[type=file]').on('change', function() {
-    let fls =  this.files,
-        // index = Object.keys(files).length;
         index = $('.upload-file-item:last-of-type').data('index') ?? 0;
     drawFileRow(fls, index);
 });
 
-function drawFileRow(fls, index) {
-    console.log('LastIndex: ', index);
+$('input[type=file]').on('change', function() {
+    let fls =  this.files,
+        index = $('.upload-file-item:last-of-type').data('indaex') ?? 0;
+    drawFileRow(fls, index);
+});
 
+function drawFileRow(fls, index) {
     for (let i = 0, f; f = fls[i]; i++) {
-        console.log('index: ', index, ' i: ', i);
         let j = index + i + 1;
         fileList.append(
             '<li class="upload-file-item" data-index="'+ j +'">' +
@@ -2687,8 +2666,6 @@ function drawFileRow(fls, index) {
             '<span class="file-remove">x</span>' +
             '</li>'
         );
-        // files.push(f);x
-        console.log(String(j));
         files[j] = f;
     }
 }
@@ -2719,13 +2696,11 @@ $(document).on('submit', '.form-form', function (e) {
         fieldName = $(this).find('input[name="NAME"]'),
         fieldPhone = $(this).find('input[name="PHONE"]'),
         fieldMessage = $(this).find('textarea[name="MESSAGE"]'),
-        fileTrueTypes = ['image/jpeg','image/png', 'image/gif', 'image/webp'],
+        fileTrueTypes = ['image/jpeg','image/png', 'image/gif', 'image/jpg'],
         fieldConfirm = $(this).find('input[name="confirm"]'),
         err = 0;
 
-    // postData.delete('FILES');
-    console.log('files', files);
-
+    postData.delete('FILES');
 
     $('.error_form').hide();
     $('.form-form .error_field').hide();
@@ -2754,7 +2729,6 @@ $(document).on('submit', '.form-form', function (e) {
         $.each(files, function(key, file) {
             errSize += file.size > 5000000 ? 1 : 0;
             errType += $.inArray(file.type, fileTrueTypes) < 0 ? 1 : 0;
-            console.log('key: ', key, ' file: ', file.name);
             postData.append(key, file);
         });
 
@@ -2787,70 +2761,16 @@ $(document).on('submit', '.form-form', function (e) {
             contentType: false,
         }).done(function (dataRes) {
             console.log(dataRes);
-            // if (dataRes == 1) {
-            //     //location.reload();
-            //     $('.form-form-wrap').hide();
-            //     $('.form_block_ok').show();
-            // } else {
-            //     console.log(dataRes);
-            //     $('.error_form').html(dataRes).show();
-            // }
+            if (dataRes == 1) {
+                //location.reload();
+                $('.form-form-wrap').hide();
+                $('.form_block_ok').show();
+            } else {
+                console.log(dataRes);
+                $('.error_form').html(dataRes).show();
+            }
         });
     }
-
-    /*if( !$('#agree6').is(':checked') )
-    {
-        $('.checkboxes_error').html('Примите условия').show();
-        return false;
-    }*/
-    // $('.error_form').hide();
-    // $('.form-form .error_field').hide();
-    // var err = 0;
-    // if ($('.form-form input[name="NAME"]').val() == '') {
-    //     $('.er_FORM_NAME').html('Поле не заполнено');
-    //     $('.er_FORM_NAME').show();
-    //     var err = 1;
-    // }
-    /*
-    if( $('.form-form input[name="EMAIL"]').val() == '' )
-    {
-        $('.er_FORM_EMAIL').html('Поле не заполнено');
-        $('.er_FORM_EMAIL').show();
-        var err = 1;
-    }*/
-    // if ($('.form-form input[name="PHONE"]').val() == '') {
-    //     $('.er_FORM_PHONE').html('Поле не заполнено');
-    //     $('.er_FORM_PHONE').show();
-    //     var err = 1;
-    // }
-    // if ($('.form-form textarea[name="MESSAGE"]').val() == '') {
-    //     $('.er_FORM_MESSAGE').html('Поле не заполнено');
-    //     $('.er_FORM_MESSAGE').show();
-    //     var err = 1;
-    // }
-    console.log('errors: ', err);
-    return false;
-
-    // if (err != 1) {
-    //     $.ajax({
-    //         url: '/local/ajax/form.php',
-    //         method: 'POST',
-    //         data: $(this).serialize(),
-    //
-    //
-    //     }).done(function (dataRes) {
-    //         if (dataRes == 1) {
-    //             //location.reload();
-    //             $('.form-form-wrap').hide();
-    //             $('.form_block_ok').show();
-    //         } else {
-    //             console.log(dataRes);
-    //             $('.error_form').html(dataRes).show();
-    //         }
-    //
-    //
-    //     });
-    // }
     return false;
 });
 

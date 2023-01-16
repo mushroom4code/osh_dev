@@ -88,57 +88,7 @@ $mobile = new MobileDetect();
             <h5 class="mb-3" id="form"></h5>
 
             <style>
-                .file-upload {
-                    display: none;
-                }
-                .drop-zone {
-                    min-height: 80px;
-                    display: block;
-                    position: relative;
-                }
-                .file-list {
-                    border: 2px dashed #999;
-                    background: #f3f3f3;
-                    border-radius: 20px;
-                    padding: 10px;
-                    position: relative;
-                    min-height: inherit;
-                    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: space-around;
-                }
-                .file-list li {
-                    display: inline-block;
-                    padding: 10px;
-                    margin: 5px;
-                    border: 1px solid #999;
-                    width: 80px;
-                    height: 80px;
-                    position: relative;
-                }
-                .file-list li .image-box {
-                    display: block;
-                    position: relative;
-                    width: 100%;
-                    height: 100%;
-                    overflow: hidden;
-                }
-                .file-remove {
-                    position: absolute;
-                    width: 20px;
-                    height: 20px;
-                    background-color: #fff;
-                    border: 1px solid #666;
-                    border-radius: 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 16px;
-                    color: #666;
-                    cursor: pointer;
-                    top: -5px;
-                    right: -5px;
-                }
+
             </style>
             <div class="mb-5">
                 <form class="form_company form-form " id="support" enctype="multipart/form-data">
@@ -167,18 +117,18 @@ $mobile = new MobileDetect();
                                       placeholder="Сообщение*"></textarea>
                         <div class="er_FORM_MESSAGE error_field"></div>
                     </div>
+
                     <div class="form-group mb-3">
-                        <div class="form-control input_lk" style="height: auto">
-                            <label>
-                                <span>Вы можете добавить файлы к сообщению.<br>Внимание! Файлы должны быть не более 5 Мб и являться изображениями (JPG, PNG, GIF, WEBP)</span>
-
-                                <input type="file" data-name="FILES" name="FILES" id="files" class="file-upload"
-                                placeholder="Выберите файл или перетащите сюда" multiple accept="image/*">
-
-                            <span class="drop-zone">
-                                <span class="file-list"> </span>
-                            </span>
-                            </label>
+                        <div class="form-control input_lk input_files drop-zone">
+                                <div class="drop-message">Перетащите файлы сюда</div>
+                                <div class="drop-message">или</div>
+                                <label class="upload-file-label">
+                                    <input type="file" data-name="FILES" name="FILES" id="upload-files" class="file-upload"
+                                           placeholder="Выберите файл или перетащите сюда" multiple accept="image/*">
+                                    <span class="btn">Выберите файлы</span>
+                                </label>
+                                <div class="drop-message">Приложить можно изображения в форматах .jpg, .gif, .png объемом не более 5 Мб</div>
+                                <ul class="file-list"> </ul>
                         </div>
                         <div class="er_FORM_FILES error_field"></div>
                     </div>
