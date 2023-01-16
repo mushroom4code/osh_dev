@@ -2621,56 +2621,57 @@ $(document).ready(function () {
 });
 
 
-
-
-
-
-
-
-
-
-
 // т.к. FormData не может в multiple, создадим ей массив с файлами сами
-let files = {},
-    uploadZone = $('.drop-zone'),
-    fileList = $('.file-list');
+let uploadFiles = {};
+console.log(uploadFiles.length);
 
-$(document).on('drag dragstart dragend dragover dragenter dragleave drop', uploadZone, function (e) {
-    e.preventDefault();
-    e.stopPropagation();
+$(document).find('#drop-zone').on({
+    'dragover dragenter': function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass('overmouse');
+    },
+    'dragleave dragend': function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass('overmouse');
+    },
+    'drop': function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let fls = e.originalEvent.dataTransfer.files,
+            index = $('.upload-file-item:last-of-type').data('index') ?? 0;
+        drawFileRow(fls, index);
+        $('.drop-zone').removeClass('overmouse');
+    }
 });
-$(document).on('dragover dragenter', uploadZone, function (e) {
-    uploadZone.addClass('overmouse');
-});
-$(document).on('dragleave dragend drop', uploadZone, function (e) {
-    uploadZone.removeClass('overmouse');
-});
-$(document).on('drop', uploadZone, function (e) {
-    let fls = e.originalEvent.dataTransfer.files,
+
+$(document).on('change', 'input[type=file]', function (e) {
+    let fls = this.files,
         index = $('.upload-file-item:last-of-type').data('index') ?? 0;
-    drawFileRow(fls, index);
-});
-
-$('input[type=file]').on('change', function() {
-    let fls =  this.files,
-        index = $('.upload-file-item:last-of-type').data('indaex') ?? 0;
     drawFileRow(fls, index);
 });
 
 function drawFileRow(fls, index) {
     for (let i = 0, f; f = fls[i]; i++) {
         let j = index + i + 1;
-        fileList.append(
-            '<li class="upload-file-item" data-index="'+ j +'">' +
-            '<span class="image-box">' + f.name + '</span>' +
-            '<span class="file-remove">x</span>' +
-            '</li>'
-        );
-        files[j] = f;
+        console.log(Object.keys(uploadFiles).length);
+
+        if (Object.keys(uploadFiles).length < 10) {
+            $('.file-list').append(
+                '<li class="upload-file-item" data-index="' + j + '">' +
+                '<span class="image-box">' + f.name + '</span>' +
+                '<span class="file-remove">x</span>' +
+                '</li>'
+            );
+
+            uploadFiles[j] = f;
+        }
     }
 }
+
 // Удаление файла из списка подгруженных и из formData
-$(document).on('click', '.file-list .file-remove', function(e) {
+$(document).on('click', '.file-list .file-remove', function (e) {
     e.preventDefault();
     e.stopPropagation();
 
@@ -2679,7 +2680,7 @@ $(document).on('click', '.file-list .file-remove', function(e) {
     $(this).parents('.file-list')
         .find('[data-index="' + fileToRemoveId + '"]')
         .remove();
-    delete files[fileToRemoveId];
+    delete uploadFiles[fileToRemoveId];
 });
 
 $(document).on('submit', '.form-form', function (e) {
@@ -2687,7 +2688,7 @@ $(document).on('submit', '.form-form', function (e) {
 
     let postData = new FormData(this),
         errors = {
-            emptyField:'Поле не заполнено',
+            emptyField: 'Поле не заполнено',
             wrongFilesSize: 'Некоторые из файлов больше 500 Кб',
             wrongFilesType: 'Некоторые из файлов недопустимого типа',
             wrongFilesCombo: 'Некоторые файлы не отвечают требованиям',
@@ -2696,11 +2697,11 @@ $(document).on('submit', '.form-form', function (e) {
         fieldName = $(this).find('input[name="NAME"]'),
         fieldPhone = $(this).find('input[name="PHONE"]'),
         fieldMessage = $(this).find('textarea[name="MESSAGE"]'),
-        fileTrueTypes = ['image/jpeg','image/png', 'image/gif', 'image/jpg'],
+        fileTrueTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'],
         fieldConfirm = $(this).find('input[name="confirm"]'),
         err = 0;
 
-    postData.delete('FILES');
+    postData.delete('upload-files');
 
     $('.error_form').hide();
     $('.form-form .error_field').hide();
@@ -2721,12 +2722,12 @@ $(document).on('submit', '.form-form', function (e) {
     }
 
     // если files не пустой
-    if(files.length !== 0) {
+    if (uploadFiles.length !== 0) {
         let errSize = 0,
             errType = 0;
 
         // заполняем объект данных файлами в подходящем для отправки формате
-        $.each(files, function(key, file) {
+        $.each(uploadFiles, function (key, file) {
             errSize += file.size > 5000000 ? 1 : 0;
             errType += $.inArray(file.type, fileTrueTypes) < 0 ? 1 : 0;
             postData.append(key, file);
@@ -2766,7 +2767,7 @@ $(document).on('submit', '.form-form', function (e) {
                 $('.form-form-wrap').hide();
                 $('.form_block_ok').show();
             } else {
-                console.log(dataRes);
+                // console.log(dataRes);
                 $('.error_form').html(dataRes).show();
             }
         });
@@ -2865,11 +2866,12 @@ $(document).on('submit', '.callback_form', function () {
 $(document).ready(function () {
     $('.callback_PHONE').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
     $('.callback').on('click', function () {
-    $("#callbackModal").arcticmodal(
-        {
-            closeOnOverlayClick: true,
-            afterClose: function (data, el) {}
-        });
+        $("#callbackModal").arcticmodal(
+            {
+                closeOnOverlayClick: true,
+                afterClose: function (data, el) {
+                }
+            });
     });
 });
 // Открытие попап обратного звонка: конец

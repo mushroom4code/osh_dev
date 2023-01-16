@@ -3,7 +3,7 @@ $APPLICATION->SetTitle("Обратная связь");
 ?>
 <h5 class="mb-3" id="form"></h5>
 <div class="mb-5">
-    <form class="form_company form-form " id="support">
+    <form class="form_company form-form " id="support" enctype="multipart/form-data">
         <div class="form-form-wrap">
             <input type="hidden" name="recaptcha_token" value="">
             <div class="form-group mb-3">
@@ -29,15 +29,15 @@ $APPLICATION->SetTitle("Обратная связь");
             </div>
 
             <div class="form-group mb-3">
-                <div class="form-control input_lk input_files drop-zone">
+                <div class="form-control input_lk input_files drop-zone" id="drop-zone">
                     <div class="drop-message">Перетащите файлы сюда</div>
                     <div class="drop-message">или</div>
                     <label class="upload-file-label">
-                        <input type="file" data-name="FILES" name="FILES" id="upload-files" class="file-upload"
-                               placeholder="Выберите файл или перетащите сюда" multiple accept="image/*">
+                        <input type="file" name="upload-files" id="upload-files" class="file-upload"
+                               placeholder="Выберите файл или перетащите сюда" multiple="multiple" accept=".png, .jpg, .jpeg, .gif">
                         <span class="btn">Выберите файлы</span>
                     </label>
-                    <div class="drop-message">Приложить можно изображения в форматах .jpg, .gif, .png объемом не более 5 Мб</div>
+                    <div class="drop-message">Приложить можно до 10 изображений в форматах .jpg, .gif, .png объемом не более 5 Мб</div>
                     <ul class="file-list"> </ul>
                 </div>
                 <div class="er_FORM_FILES error_field"></div>
