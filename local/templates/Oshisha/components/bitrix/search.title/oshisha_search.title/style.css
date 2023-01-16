@@ -46,14 +46,15 @@
 }
 
 div.title-search-result {
-	border:1px solid #c6c6c6;
-	display:none;
-	overflow:hidden;
-	z-index:999;
+	box-shadow: 0px 5px 1px rgb(242 242 242);
+	display: none;
+	overflow: hidden;
+	z-index: 1001;
 	min-width: 370px;
-	margin-left: 11px;
-	margin-top:-20px;
+	margin-top: -7px;
 	background-color: #FFF;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
 }
 
 div.title-search-fader {
@@ -74,30 +75,49 @@ div.title-search-result td.title-search-price span {
 /*========================*/
 .bx_searche{}
 .bx_searche .bx_img_element{
-	background: #fafafa;
+	margin-left: 25px;
+	display: flex;
+	flex-direction: column;
+	width: 75px;
+	height: 75px;
 	float: left;
-	width: 45px;
-	padding: 5px 10px;
+	/*padding: 5px 10px;*/
 	position: absolute;
 	top: 0;
 	bottom: 0;
 }
 .bx_searche .bx_item_block{
-	min-height: 65px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
+	min-height: 75px;
 	position: relative
 }
+.bx_searche .bx_item_block:hover {
+	background:#F0F0F0;
+	cursor: pointer;
+}
+.bx_searche .bx_item_block:first-child{
+	margin-top: 30px;
+}
+.bx_searche .bx_item_block.all_result .bx_item_element {
+	margin-left:20px;
+}
 .bx_searche .bx_image{
-	width: 45px;
-	height: 45px;
+	display:flex;
+	width: 75px;
+	height: 75px;
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
-	border: 1px solid #e8e8e8;
 }
 .bx_searche .bx_item_element{
 	/*float: left;*/
+	display: flex;
 	padding-left: 10px;
-	margin-left: 70px;
+	padding-right: 20px;
+	margin-left: 105px;
 }
 .bx_searche .bx_item_element hr{
 	margin: 0;
@@ -105,15 +125,17 @@ div.title-search-result td.title-search-price span {
 	border-bottom: 1px solid #e5e5e5;
 }
 .bx_searche .bx_item_element a{
-	margin-top: 10px;
 	display: inline-block;
-	color: #4788cb;
-	font-size: 13px;
+	color: #000;
+	font-size: 15px;
+	font-weight: 500;
 	text-decoration: none;
 }
-.bx_searche .bx_item_element a b{color: #000;font-weight: normal;}
+.bx_searche .bx_item_element a b{color: #000;font-weight: 500;}
 .bx_searche .bx_item_element a:hover,
-.bx_searche .bx_item_element a:hover b{text-decoration: underline;}
+.bx_searche .bx_item_element a:hover b{
+	/*text-decoration: underline;*/
+}
 .bx_searche .bx_price{
 	font-weight:bold;
 	font-size:13px;
@@ -123,7 +145,10 @@ div.title-search-result td.title-search-price span {
 	text-decoration: line-through;
 	color: #636363
 }
-.bx_item_block.all_result{min-height:0}
+.bx_item_block.all_result{
+	min-height:0;
+	margin-bottom:15px;
+}
 .bx_item_block.others_result{
 	min-height: 0;
 	padding: 0 0 12px;
@@ -136,8 +161,8 @@ div.title-search-result td.title-search-price span {
 	padding-top: 15px;
 	padding-bottom: 10px;
 }
-.bx_item_block.all_result .all_result_title a{color: #a7a7a7}
-.bx_item_block.all_result .all_result_title a:hover{color: #4788cb}
+.bx_item_block.all_result .all_result_title a{color: rgb(255, 102, 102)}
+.bx_item_block.all_result .all_result_title a:hover{color: rgb(255, 102, 102)}
 .bx_item_block.all_result a{
 	margin-top: 0;
 }

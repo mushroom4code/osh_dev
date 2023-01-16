@@ -1746,6 +1746,8 @@ a.bx_catalog_item_title {
 
 .by-card .product-item-small-card {
     width: 100% !important;
+    max-width: 237px;
+    min-height: 355px;
 }
 
 /*.by-card .toggle_taste{
@@ -2218,6 +2220,8 @@ input.check_input {
 }
 
 .bx-pagination .bx-pagination-container ul li span, .search_input {
+    color: black;
+    font-size: 15px;
     border-radius: 8px;
 }
 
