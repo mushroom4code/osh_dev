@@ -205,17 +205,9 @@ BX.SaleCommonPVZ = {
                     BX.Sale.OrderAjaxComponent.refreshOrder(result);
                 }
                 // TODO - неправильно что по определенным номерам св-в
-                BX('pvz_address').innerHTML = __this.pvzFullAddress;
-                if (BX('soa-property-7')) {
-                    BX('soa-property-7').value = __this.pvzFullAddress;
-                    BX.addClass(BX('soa-property-7'), 'disabled');
-                    BX("soa-property-7").setAttribute("readonly","readonly");
-                }
-                if (BX('soa-property-19')) {
-                    BX('soa-property-19').value = __this.pvzFullAddress;
-                    BX.addClass(BX('soa-property-19'), 'disabled');
-                    BX("soa-property-19").setAttribute("readonly","readonly");
-                }
+                $('#pvz_address>span').text(__this.pvzFullAddress);
+                var adr = $('[name="ORDER_PROP_7"]').length ? $('[name="ORDER_PROP_7"]') : $('[name="ORDER_PROP_19"]');
+                adr.val(__this.pvzFullAddress);
 
                 BX.Sale.OrderAjaxComponent.endLoader();
             }, this),
