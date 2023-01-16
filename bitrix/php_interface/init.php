@@ -305,3 +305,6 @@ function sort_by_sort($a, $b): int
     }
     return ($a["SORT"] < $b["SORT"]) ? -1 : 1;
 }
+
+global $option_site;
+$option_site = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE'));

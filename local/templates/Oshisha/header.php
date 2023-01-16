@@ -17,7 +17,8 @@ Extension::load("ui.bootstrap4");
 
 $curPage = $APPLICATION->GetCurPage(true);
 $MESS["CITY_CHOOSE_TITLE"] = 'Выберите город';
-
+global $option_site;
+$option = $option_site;
 $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 ?><!DOCTYPE html>
 <html xml:lang="<?= LANGUAGE_ID ?>" lang="<?= LANGUAGE_ID ?>">
@@ -158,8 +159,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <a href="javascript:void(0)" class="text_header callback">Обратный звонок</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
+                        <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
                     <?php } else { ?>
                         <a href="/about/FAQ/#support" class="text_header">Поддержка</a>
+                        <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
                 </div>
             </div>
