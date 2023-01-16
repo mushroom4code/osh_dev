@@ -5464,6 +5464,7 @@ li, ul {
     display: inline-block;
     margin: 10px auto;
     left: 50%;
+    line-height: 0;
     transform: translateX(-50%);
 }
 .input_files .upload-file-label .btn {
@@ -5485,7 +5486,11 @@ li, ul {
 }
 
 .input_files .file-upload {
-    display: none;
+    /*display: none;*/
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    font-size: 0;
 }
 .input_files.drop-zone {
     display: block;
