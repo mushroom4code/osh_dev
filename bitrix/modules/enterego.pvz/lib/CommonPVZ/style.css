@@ -2,21 +2,29 @@
     display: block;
     font-size: 13px;
     line-height: 17px;
-    margin-top: 5px;
+    margin-top: 15px;
+}
+
+#pvz_address > span {
+    font-weight: bold;
+
 }
 
 #wrap_pvz_map {
     min-width: 80%;
 }
+
 @media (max-width: 600px) {
     #wrap_pvz_map {
         min-width: 100%;
     }
 }
+
 #wrap_pvz_map .popup-window-close-icon {
     width: 35px;
     height: 35px;
 }
+
 #wrap_pvz_map .popup-window-close-icon:after {
     height: 100%;
     width: 100%;
