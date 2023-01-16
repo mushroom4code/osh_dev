@@ -221,7 +221,7 @@ class PriceList
 
                 $prod[] = array(
                     'NAME' => $arRes['NAME'],
-                    'PATH' => 'https://oshisha.net/catalog/product/' . $arRes['CODE'] . '/',
+                    'PATH' => 'https://' . $_SERVER['SERVER_NAME'] . '/catalog/product/' . $arRes['CODE'] . '/',
                     'BASE' => $base_price,
                     'DO_10' => $arRes['CATALOG_PRICE_' . RETAIL_PRICE],
                     'OT_10_DO_30' => $arRes['CATALOG_PRICE_' . BASIC_PRICE],
