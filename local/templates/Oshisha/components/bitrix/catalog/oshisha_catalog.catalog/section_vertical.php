@@ -504,7 +504,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             'BRAND_PROPERTY' => (isset($arParams['BRAND_PROPERTY']) ? $arParams['BRAND_PROPERTY'] : ''),
 
             'TEMPLATE_THEME' => (isset($arParams['TEMPLATE_THEME']) ? $arParams['TEMPLATE_THEME'] : ''),
-            "ADD_SECTIONS_CHAIN" => "N",
+            "ADD_SECTIONS_CHAIN" => $arParams["ADD_SECTIONS_CHAIN"],
             'ADD_TO_BASKET_ACTION' => $basketAction,
             'SHOW_CLOSE_POPUP' => isset($arParams['COMMON_SHOW_CLOSE_POPUP']) ? $arParams['COMMON_SHOW_CLOSE_POPUP'] : '',
             'COMPARE_PATH' => $arResult['FOLDER'] . $arResult['URL_TEMPLATES']['compare'],
@@ -559,7 +559,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                     "SET_META_KEYWORDS" => "N",
                                     "SET_META_DESCRIPTION" => "N",
                                     "SET_LAST_MODIFIED" => "N",
-                                    "ADD_SECTIONS_CHAIN" => "N",
+                                    "ADD_SECTIONS_CHAIN" => $arParams["ADD_SECTIONS_CHAIN"],
 
                                     "PRICE_VAT_INCLUDE" => $arParams["PRICE_VAT_INCLUDE"],
                                     "USE_PRODUCT_QUANTITY" => $arParams['USE_PRODUCT_QUANTITY'],
