@@ -37,10 +37,18 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
     ];
     $elemId = $el->add($arElement);
 
-    // Получение свойств елемента ИБ
-    $elemProps = getElemProps(IBLOCK_NEW_SITE_COMMENTS, $elemId);
-    // Формирование массива ИД файлов для аттача в емейл
-    $filesForEmail = getFilesIds($elemProps, 'USER_FILES');
+    // Получение ИД изображений елемента ИБ
+    $elemFiles = [];
+    $tmpProps = CIBlockElement::GetProperty(
+        IBLOCK_NEW_SITE_COMMENTS,
+        $elemId,
+        [],
+        ['CODE'=>'USER_FILES']
+    );
+
+    while($arrProps = $tmpProps->Fetch()) {
+        $elemFiles[] = $arrProps['VALUE'];
+    }
 
     $message .= 'Новое сообщение от' . PHP_EOL . $NAME  . PHP_EOL . PHP_EOL;
     $message .= 'Комментарий пользователя:' . PHP_EOL . $MESSAGE  . PHP_EOL . PHP_EOL;
@@ -49,7 +57,7 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
 
     Event::send(array(
         "EVENT_NAME" => "FEEDBACK_FORM",
-        "LID" => "s1",
+        "LID" => SITE_ID,
         "C_FIELDS" => array(
             "AUTHOR" => $NAME,
             "AUTHOR_PHONE" => $PHONE,
@@ -57,43 +65,9 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
         ),
         'duplicate' => 'Y',
         '',
-        'FILE' => $filesForEmail
+        'FILE' => $elemFiles
     ));
     echo 1;
 } else {
     echo 'ошибка';
-}
-
-
-// Метод получает значения полей елемента
-function getElemProps($iblockID, $elementID) {
-    $result = [];
-    $rsProps = CIBlockElement::GetProperty($iblockID, $elementID, [], []);
-    while($arrProps = $rsProps->Fetch()) {
-        if ($arrProps['PROPERTY_TYPE'] == 'F') {
-            $result[$arrProps['CODE']][] = [
-                'id' =>$arrProps['VALUE'],
-                'path' => CFile::GetPath($arrProps['VALUE'])
-            ];
-        } else {
-            $result[$arrProps['CODE']][] = $arrProps['VALUE'];
-        }
-    }
-    foreach ($result as $name => $value) {
-        if (count($value) == 1) {
-            $result[$name] = $value[0];
-        }
-    }
-    return $result;
-}
-
-// Возвращает массив ИД файлов
-function getFilesIds($props, $code) {
-    $ids = [];
-
-    foreach($props[$code] as $file) {
-        $ids[] = $file['id'];
-    }
-
-    return $ids;
 }
