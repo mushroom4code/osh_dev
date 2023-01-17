@@ -2,11 +2,11 @@
 /** @var  CAllMain|CMain $APPLICATION
  ** @var  CAllUser $USER
  */
-
-if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
-?>
+global $option_site;
+if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')) {
+    ?>
     </div><?php }
-$option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
+$option = $option_site; ?>
 
 
 </div><!--end .bx-content -->
@@ -123,7 +123,9 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
                         false
                     ); ?>
                     <li class="nav-item li_link_footer">
-                        <a href="<?= $option->price_list_link; ?>" class="text_link_footer ">Прайс-лист</a>
+                        <?php if ($USER->IsAuthorized()) { ?>
+                            <a href="<?= $option->price_list_link; ?>" class="text_link_footer ">Прайс-лист</a>
+                        <?php } else { ?> <a href="/login/" class="text_link_footer ">Прайс-лист</a><?php } ?>
                     </li>
                 </div>
                 <span class="text_footer_weight desktop social_block">
@@ -137,10 +139,10 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
                         <a href="https://api.whatsapp.com/send?phone=<?= $option->PHONE_WTS; ?>" target="_blank">
                             <img class="ws" src="<?= SITE_TEMPLATE_PATH ?>/images/ws.svg">
                         </a>
-                        <a href="<?= $option->VK_LINK; ?>"  target="_blank">
+                        <a href="<?= $option->VK_LINK; ?>" target="_blank">
                             <img class="vk" src="<?= SITE_TEMPLATE_PATH ?>/images/vk.svg">
                         </a>
-                        <a href="<?= $option->DZEN; ?>"  target="_blank">
+                        <a href="<?= $option->DZEN; ?>" target="_blank">
                             <img class="dzen" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
                         </a>
                     </div>

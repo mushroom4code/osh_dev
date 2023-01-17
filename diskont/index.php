@@ -22,6 +22,11 @@ $GLOBALS['ArFilter'] = array(
 	
 );
 
+$GLOBALS['arrFilter'][] = [
+    'LOGIC' => 'OR',
+    'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
+];
+
 $APPLICATION->IncludeComponent(
     "bitrix:catalog",
     "oshisha_catalog.catalog",
@@ -312,7 +317,7 @@ $APPLICATION->IncludeComponent(
         "SEF_URL_TEMPLATES" => array(
             "sections" => "",
             "section" => "#SECTION_CODE#/",
-            "element" => "/product/#ELEMENT_CODE#/",
+            "element" => "diskont/product/#ELEMENT_CODE#/",
             "compare" => "compare/",
             "smart_filter" => "#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/",
         )

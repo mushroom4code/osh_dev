@@ -4,7 +4,7 @@ $APPLICATION->SetTitle("Контакты");
 use Bitrix\Conversion\Internals\MobileDetect;
 
 $mobile = new MobileDetect();
-$option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));
+$option = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE'));
 ?>
     <link rel="preconnect" href="//api-maps.yandex.ru">
     <link rel="dns-prefetch" href="//api-maps.yandex.ru">
@@ -135,46 +135,46 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));
                                 <input name="confirm" type="checkbox" checked="checked">
                                 <span class="custom__title">Подтверждаю свое согласие с
                                     <a href="/about/politics/"
-                                       target="_blank">положением об обработке персональных данны</a></span>
+                                       target="_blank">положением об обработке персональных данных</a></span>
                             </label>
                             <div class="er_FORM_CONFIRM error_field"></div>
                         </div>
 
-                    <div class="form-group mb-2">
-                        <div class="col-sm-10">
-                            <input class="btn link_menu_catalog get_code_button"
-                                   type="submit"
-                                   value="Отправить"
-                                   onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
+                        <div class="form-group mb-2">
+                            <div class="col-sm-10">
+                                <input class="btn link_menu_catalog get_code_button"
+                                       type="submit"
+                                       value="Отправить"
+                                       onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
+                            </div>
+                            <div class="error_form error_field"></div>
                         </div>
-                        <div class="error_form error_field"></div>
                     </div>
+                    <div class="form_block_ok">
+                        Сообщение отправлено.<br>
+                        Мы свяжемся с вами в самое ближайшее время!
+                    </div>
+                </form>
             </div>
-            <div class="form_block_ok">
-                Сообщение отправлено.<br>
-                Мы свяжемся с вами в самое ближайшее время!
-            </div>
-            </form>
-        </div>
-        <h5 class="mb-3">Социальные сети и мессенджеры</h5>
-        <div class="width_50 mb-5">
-            <div class="box_with_icons">
-                <a href="<?= $option->TG; ?>" class="mr-5 telegram_icons" target="_blank">
-                </a>
-                <a href="<?= $option->VK_LINK ?>" class="mr-5 vk_icons" target="_blank">
-                </a>
-                <a href="https://api.whatsapp.com/send?phone=<?= $option->PHONE_WTS ?>" class="mr-4"
-                   target="_blank"> <i
-                            class="fa fa-whatsapp icons_theme" aria-hidden="true"></i></a>
+            <h5 class="mb-3">Социальные сети и мессенджеры</h5>
+            <div class="width_50 mb-5">
+                <div class="box_with_icons">
+                    <a href="<?= $option->TG; ?>" class="mr-5 telegram_icons" target="_blank">
+                    </a>
+                    <a href="<?= $option->VK_LINK ?>" class="mr-5 vk_icons" target="_blank">
+                    </a>
+                    <a href="https://api.whatsapp.com/send?phone=<?= $option->PHONE_WTS ?>" class="mr-4"
+                       target="_blank"> <i
+                                class="fa fa-whatsapp icons_theme" aria-hidden="true"></i></a>
 
-                <a href="<?= $option->DZEN?>" target="_blank">
-                    <img class="dzen_contacts" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
-                </a>
+                    <a href="<?= $option->DZEN ?>" target="_blank">
+                        <img class="dzen_contacts" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
+                    </a>
+                </div>
             </div>
+            <h5 class="mb-3">Реквизиты</h5>
+            <p>ООО "СМАК-СУЛТАНА", ИНН 771544140</p>
         </div>
-        <h5 class="mb-3">Реквизиты</h5>
-        <p>ООО "СМАК-СУЛТАНА", ИНН 771544140</p>
-    </div>
 
     </div>
 <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php") ?>
