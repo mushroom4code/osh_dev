@@ -41,6 +41,9 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
             "AUTHOR_PHONE" => $PHONE,
             "TEXT" => $MESSAGE,
         ),
+        'duplicate' => 'Y',
+        '',
+        $_FILES
     ));
     echo 1;
 } else {
