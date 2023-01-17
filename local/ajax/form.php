@@ -1,6 +1,5 @@
 <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
-
 use B01110011ReCaptcha\BitrixCaptcha;
 use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
@@ -30,6 +29,22 @@ if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
 }
 
 if ($NAME != '' && $PHONE != '') {
+    $el = new CIBlockElement();
+
+    $arElement = [
+        'ACTIVE' => 'Y',
+        'IBLOCK_ID' => IBLOCK_FEEDBACK_ID,
+        'NAME' => $NAME,
+        'DETAIL_TEXT' => $MESSAGE,
+        'PROPERTY_VALUES' => [
+            'PHONE' => $PHONE,
+            'EMAIL' => $EMAIL,
+            'FILES' => $_FILES,
+        ],
+    ];
+    $result = $el->add($arElement);
+
+    // Sending in TGM
     $MESAGE_EMAIL = '
 		Имя: ' . $NAME . '<br>
 		Телефон: ' . $PHONE . '<br>
