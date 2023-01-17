@@ -138,7 +138,7 @@ $option = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE'));
                                 <input name="confirm" type="checkbox" checked="checked">
                                 <span class="custom__title">Подтверждаю свое согласие с
                                     <a href="/about/politics/"
-                                       target="_blank">положением об обработке персональных данны</a></span>
+                                       target="_blank">положением об обработке персональных данных</a></span>
                             </label>
                             <div class="er_FORM_CONFIRM error_field"></div>
                         </div>
