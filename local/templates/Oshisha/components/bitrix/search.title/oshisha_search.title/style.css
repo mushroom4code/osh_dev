@@ -94,7 +94,7 @@ div.title-search-result td.title-search-price span {
 	min-height: 75px;
 	position: relative
 }
-.bx_searche .bx_item_block:hover {
+.bx_searche .bx_item_block:hover:not(.popular_searches_title) {
 	background:#F0F0F0;
 	cursor: pointer;
 }
@@ -166,3 +166,40 @@ div.title-search-result td.title-search-price span {
 .bx_item_block.all_result a{
 	margin-top: 0;
 }
+
+.bx_item_block.popular_searches_title {
+	margin-top: 32px;
+	min-height: 0px;
+}
+.bx_item_block.popular_searches_title span {
+	margin-left: 20px;
+	padding-left: 10px;
+	color: #000;
+	font-size: 15px;
+	font-weight: 500;
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+.bx_item_block.popular_searches_result {
+	min-height: 0px;
+}
+.bx_item_block.popular_searches_result:last-child {
+	margin-bottom: 15px;
+}
+.bx_item_block.popular_searches_result .bx_item_element {
+	margin-left: 20px;
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+.bx_item_block.popular_searches_result .bx_item_element i {
+	font-size: 20px;
+	margin-right: 12px;
+}
+
+/*.bx_item_block.popular_searches .popular_searches_title {*/
+/*	color: #000;*/
+/*	font-weight: 500;*/
+/*	font-size: 15px;*/
+/*	padding-top: 15px;*/
+/*	padding-bottom: 10px;*/
+/*}*/

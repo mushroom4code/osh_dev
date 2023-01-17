@@ -3,7 +3,42 @@ if (empty($arResult["CATEGORIES"]))
     return;
 ?>
 <div class="bx_searche">
-    <? $test = GetMessage("ALL_RESULTS");?>
+    <?
+    $INPUT_ID = trim($arParams["~INPUT_ID"]);
+    if ($INPUT_ID == '')
+        $INPUT_ID = "title-search-input";
+    $INPUT_ID = CUtil::JSEscape($INPUT_ID);
+    $dbStatistic = CSearchStatistic::GetList(
+            array("TIMESTAMP_X"=>'DESC'),
+            array("STAT_SESS_ID" => $_SESSION['SESS_SESSION_ID']),
+            array('TIMESTAMP_X', 'PHRASE')
+    );
+    $CONTAINER_ID = trim($arParams["~CONTAINER_ID"]);
+    if ($CONTAINER_ID == '')
+        $CONTAINER_ID = "title-search";
+    $CONTAINER_ID = CUtil::JSEscape($CONTAINER_ID);
+    $dbStatistic->NavStart(3);
+    $testar = [];
+    while( $arStatistic = $dbStatistic->Fetch()){
+        $testar[] = $arStatistic;
+//        print_r($arStatistic);
+    }
+
+//    $session_id = 1;
+//    $artest = [];
+//    if ($rs = CSession::GetByID($_SESSION['SESS_SESSION_ID'])) {
+//        $ar = $rs->Fetch();
+//        $artest[] = $ar;
+//         выведем параметры сессии
+//        echo "<pre>"; print_r($ar); echo "</pre>";
+//    }
+
+//    print_r($testar);
+
+
+
+
+    ?>
     <?foreach($arResult["CATEGORIES"] as $category_id => $arCategory):?>
         <?foreach($arCategory["ITEMS"] as $i => $arItem):?>
             <?//echo $arCategory["TITLE"]?>
@@ -55,4 +90,28 @@ if (empty($arResult["CATEGORIES"]))
             <?endif;?>
         <?endforeach;?>
     <?endforeach;?>
+    <?if(!empty($testar)):?>
+        <div class="bx_item_block popular_searches_title" onclick="">
+            <span>Популярные запросы</span>
+        </div>
+        <?foreach ($testar as $popularSearch):?>
+            <div class="bx_item_block popular_searches_result" onclick="popularSearchResultSubmit(this)">
+                <div class="bx_item_element"
+
+                >
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <span class="popular_search_title">
+                        <a><?echo $popularSearch["PHRASE"]?></a>
+                    </span>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        <?endforeach;?>
+        <script>
+            function popularSearchResultSubmit(el) {
+                $('#<?echo $INPUT_ID?>').val($(el).find('span').text().trim());
+                $('#<?echo $CONTAINER_ID?>').find('form').submit();
+            }
+        </script>
+    <?endif;?>
 </div>
