@@ -2687,7 +2687,7 @@ $(document).on('submit', '.form-form', function (e) {
     let postData = new FormData(this),
         errors = {
             emptyField: 'Поле не заполнено',
-            wrongFilesSize: 'Некоторые из файлов больше 500 Кб',
+            wrongFilesSize: 'Некоторые из файлов больше 5 Мб',
             wrongFilesType: 'Некоторые из файлов недопустимого типа',
             wrongFilesCombo: 'Некоторые файлы не отвечают требованиям',
             emptyConfirm: 'Не приняты условия обработки персональных данных',
@@ -2765,45 +2765,90 @@ $(document).on('submit', '.form-form', function (e) {
             } else {
                 $('.error_form').html(dataRes).show();
             }
+            uploadFiles = {};
         });
     }
     return false;
 });
 
 
-$(document).on('submit', '.send_feed', function () {
-    /*if( !$('#agree6').is(':checked') )
-    {
-        $('.checkboxes_error').html('Примите условия').show();
-        return false;
-    }*/
+$(document).on('submit', '.send_feed', function (e) {
+    e.preventDefault();
+
+    let postData = new FormData(this),
+        errors = {
+            emptyField: 'Поле не заполнено',
+            wrongFilesSize: 'Некоторые из файлов больше 5 Мб',
+            wrongFilesType: 'Некоторые из файлов недопустимого типа',
+            wrongFilesCombo: 'Некоторые файлы не отвечают требованиям',
+            emptyConfirm: 'Не приняты условия обработки персональных данных',
+        },
+        fieldName = $(this).find('input[name="NAME"]'),
+        fieldPhone = $(this).find('input[name="PHONE"]'),
+        fieldMessage = $(this).find('textarea[name="MESSAGE"]'),
+        fileTrueTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'],
+        fieldConfirm = $(this).find('input[name="confirm"]'),
+        err = 0;
+
+    postData.delete('upload-files');
+
     $('.error_form').hide();
-    $('.send_feed .error_field').hide();
-    var err = 0;
-    if ($('.send_feed input[name="NAME"]').val() == '') {
-        $('.er_FORM_NAME').html('Поле не заполнено');
-        $('.er_FORM_NAME').show();
-        var err = 1;
+    $('.form-form .error_field').hide();
+
+    if (fieldName.val().length <= 0) {
+        $('.er_FORM_NAME').html(errors.emptyField).show();
+        err++;
     }
 
-    if ($('.send_feed input[name="PHONE"]').val() == '') {
-        $('.er_FORM_PHONE').html('Поле не заполнено');
-        $('.er_FORM_PHONE').show();
-        var err = 1;
-    }
-    if ($('.send_feed textarea[name="MESSAGE"]').val() == '') {
-        $('.er_FORM_MESSAGE').html('Поле не заполнено');
-        $('.er_FORM_MESSAGE').show();
-        var err = 1;
+    if (fieldPhone.val().length <= 0) {
+        $('.er_FORM_PHONE').html(errors.emptyField).show();
+        err++;
     }
 
-    if (err != 1) {
+    if (fieldMessage.val().length <= 0) {
+        $('.er_FORM_MESSAGE').html(errors.emptyField).show();
+        err++;
+    }
+
+    // если files не пустой
+    if (uploadFiles.length !== 0) {
+        let errSize = 0,
+            errType = 0;
+
+        // заполняем объект данных файлами в подходящем для отправки формате
+        $.each(uploadFiles, function (key, file) {
+            errSize += file.size > 5000000 ? 1 : 0;
+            errType += $.inArray(file.type, fileTrueTypes) < 0 ? 1 : 0;
+            postData.append(key, file);
+        });
+
+        if (errSize > 0 && errType > 0) {
+            $('.er_FORM_FILES').html(errors.wrongFilesCombo).show();
+        }
+        if (errSize > 0 && errType == 0) {
+            $('.er_FORM_FILES').html(errors.wrongFilesSize).show();
+        }
+        if (errSize == 0 && errType > 0) {
+            $('.er_FORM_FILES').html(errors.wrongFilesType).show();
+        }
+    }
+
+    if (!fieldConfirm.prop('checked')) {
+        $('.er_FORM_CONFIRM').html(errors.emptyConfirm).show();
+        err++;
+    }
+
+    if (err < 1) {
         $.ajax({
             url: '/local/ajax/form_feed.php',
             method: 'POST',
-            data: $(this).serialize(),
-
-
+            data: postData,
+            cache: false,
+            dataType: 'json',
+            // отключаем обработку передаваемых данных, пусть передаются как есть
+            processData: false,
+            // отключаем установку заголовка типа запроса. Так jQuery скажет серверу что это строковой запрос
+            contentType: false,
         }).done(function (dataRes) {
             if (dataRes == 1) {
                 $('.form-form-wrap').hide();
@@ -2811,8 +2856,7 @@ $(document).on('submit', '.send_feed', function () {
             } else {
                 $('.error_form').html(dataRes).show();
             }
-
-
+            uploadFiles = {};
         });
     }
     return false;
