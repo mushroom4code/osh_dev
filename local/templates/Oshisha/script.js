@@ -2623,7 +2623,6 @@ $(document).ready(function () {
 
 // т.к. FormData не может в multiple, создадим ей массив с файлами сами
 let uploadFiles = {};
-console.log(uploadFiles.length);
 
 $(document).find('#drop-zone').on({
     'dragover dragenter': function (e) {
@@ -2655,7 +2654,6 @@ $(document).on('change', 'input[type=file]', function (e) {
 function drawFileRow(fls, index) {
     for (let i = 0, f; f = fls[i]; i++) {
         let j = index + i + 1;
-        console.log(Object.keys(uploadFiles).length);
 
         if (Object.keys(uploadFiles).length < 10) {
             $('.file-list').append(
@@ -2761,13 +2759,10 @@ $(document).on('submit', '.form-form', function (e) {
             // отключаем установку заголовка типа запроса. Так jQuery скажет серверу что это строковой запрос
             contentType: false,
         }).done(function (dataRes) {
-            console.log(dataRes);
             if (dataRes == 1) {
-                //location.reload();
                 $('.form-form-wrap').hide();
                 $('.form_block_ok').show();
             } else {
-                // console.log(dataRes);
                 $('.error_form').html(dataRes).show();
             }
         });
@@ -2811,11 +2806,9 @@ $(document).on('submit', '.send_feed', function () {
 
         }).done(function (dataRes) {
             if (dataRes == 1) {
-                //location.reload();
                 $('.form-form-wrap').hide();
                 $('.form_block_ok').show();
             } else {
-                console.log(dataRes);
                 $('.error_form').html(dataRes).show();
             }
 
