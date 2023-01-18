@@ -817,6 +817,13 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
         $signer = new Signer;
         $signedTemplate = $signer->sign($templateName, 'catalog.section');
         $signedParams = $signer->sign(base64_encode(serialize($arResult['ORIGINAL_PARAMETERS'])), 'catalog.section');
+
+        //enterego filter for special group category
+        $staticFilter = [];
+        if (!empty($GLOBALS[$arParams['FILTER_NAME']]['PROPERTY_USE_DISCOUNT_VALUE'] )) {
+            $staticFilter['PROPERTY_USE_DISCOUNT_VALUE'] = $GLOBALS[$arParams['FILTER_NAME']]['PROPERTY_USE_DISCOUNT_VALUE'];
+        }
+
         ?>
         <!-- ajax_filter --><?php
         if ($_REQUEST['ajax_filter'] && $_REQUEST['ajax_filter'] === 'y') {
@@ -863,7 +870,9 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                 template: '<?=CUtil::JSEscape($signedTemplate)?>',
                 ajaxId: '<?=CUtil::JSEscape($arParams['AJAX_ID'])?>',
                 parameters: '<?=CUtil::JSEscape($signedParams)?>',
-                container: '<?=$containerName?>'
+                container: '<?=$containerName?>',
+                //enterego filter for special group category
+                staticFilter: <?= CUtil::PhpToJSObject($staticFilter) ?>,
             });
         </script>
 
