@@ -149,7 +149,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                     <? foreach ($arResult['SECTION_LIST'] as $arSection):?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap">
-                                <a href="/<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
+                                <a href="<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
                                 <? if ($arSection['CHILDS']): ?>
                                     <span data-role="prop_angle"
                                           class="smart-filter-tog smart-filter-angle"
@@ -163,7 +163,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                               foreach ($arSection['CHILDS'] as $arSectionSub): ?>
                                     <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
                                          data-code="<?= $arSection['ID'] ?>">
-                                        <a href="/<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
+                                        <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
                                     </div>
                                 <? endforeach; ?>
                             <? endif; ?>
