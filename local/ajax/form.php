@@ -23,13 +23,13 @@ $PHONE = htmlspecialcharsbx($_REQUEST['PHONE']);
 $EMAIL = htmlspecialcharsbx($_REQUEST['EMAIL']);
 $message = '';
 
-//if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
-//    $res = BitrixCaptcha::checkSpam();
-//    if ($res === false) {
-//        echo 'Ошибка CAPTCHA';
-//        die;
-//    }
-//}
+if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
+    $res = BitrixCaptcha::checkSpam();
+    if ($res === false) {
+        echo 'Ошибка CAPTCHA';
+        die;
+    }
+}
 
 if ($NAME != '' && $PHONE != '') {
     $el = new CIBlockElement();
@@ -60,7 +60,7 @@ if ($NAME != '' && $PHONE != '') {
         $elemFiles[] = $_SERVER['HTTP_HOST'] . CFile::GetPath($arrProps['VALUE']);
     }
 
-    // Sending in TGM
+    // Sending message in TGM
     $MESAGE_EMAIL = '
 		Имя: ' . $NAME . '<br>
 		Телефон: ' . $PHONE . '<br>
@@ -83,41 +83,19 @@ if ($NAME != '' && $PHONE != '') {
             $response->addHeader('Content-Type', 'application/json');
             $set = new ProxySettings();
 
-
-            $bot = new BotApi(MY_TEST_TGM_BOT_API_TOKEN);
-            $media = new ArrayOfInputMedia();
-
-            foreach ($elemFiles as $i => $photo) {
-                $caption = $i == 0 ? 'ИМЯ: ' . $NAME . ' --- ТЕЛЕФОН: ' . $PHONE : null;
-                $media->addItem(new InputMediaPhoto($photo, $caption));
-            }
-
             try {
-//                $newSet = SettingsForm::make([
-//                    'token' => COption::GetOptionString($moduleId, 'token'),
-//                    'chat_id' => COption::GetOptionString($moduleId, 'chat_id')]
-//                    ?? []);
-                $newSet = SettingsForm::make([
-                    'token' => MY_TEST_TGM_BOT_API_TOKEN,
-                    'chat_id' => MY_TEST_TGM_CHANNEL_ID]
-                    ?? []);
-
-//                $notification = (new TelegramNotification(COption::GetOptionString($moduleId, 'token')))
-//                    ->to(COption::GetOptionString($moduleId, 'chat_id'));
-                $notification = (new TelegramNotification(MY_TEST_TGM_BOT_API_TOKEN))
-                    ->to(MY_TEST_TGM_CHANNEL_ID);
+                $tgmToken = COption::GetOptionString($moduleId, 'token');
+                $chatId = COption::GetOptionString($moduleId, 'chat_id');
+                $notification = (new TelegramNotification($tgmToken))
+                    ->to($chatId);
 
                 /**
                  * @var $notificator NotificationService
                  */
                 $notificator = Container::get(NotificationService::class);
 
-//                $sampleEvent = SampleEvent::make([
-//                    'CHAT_ID' => COption::GetOptionString($moduleId, 'chat_id'),
-//                    'PROXY' => $set->getDSN(),
-//                ]);
                 $sampleEvent = SampleEvent::make([
-                    'CHAT_ID' => MY_TEST_TGM_CHANNEL_ID,
+                    'CHAT_ID' => $chatId,
                     'PROXY' => $set->getDSN(),
                 ]);
                 //Шаблон сообщения
@@ -126,6 +104,15 @@ if ($NAME != '' && $PHONE != '') {
                 $message .= 'Номер телефона пользователя: <b>' . PHP_EOL . $PHONE . '</b>.' . PHP_EOL . PHP_EOL;
                 $message .= 'Сайт с которого было отправлено сообщение https://' . $_SERVER['HTTP_HOST'] . '/';
                 $messages = $sampleEvent->convertNew($message);
+
+                // отправка файлов в Telegram
+                $bot = new BotApi($tgmToken);
+                $media = new ArrayOfInputMedia();
+
+                foreach ($elemFiles as $i => $photo) {
+                    $caption = $i == 0 ? 'ИМЯ: ' . $NAME . ' --- ТЕЛЕФОН: ' . $PHONE : null;
+                    $media->addItem(new InputMediaPhoto($photo, $caption));
+                }
 
                 $notificator->with($notification)->send($messages);
                 $botSendResult = $bot->sendMediaGroup(MY_TEST_TGM_CHANNEL_ID, $media);
