@@ -183,7 +183,6 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                         $PREFILTER_NAME = 'ArFilter';
                     }
 
-
                     $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
                         "oshisha_catalog.smart.filter", array(
                             "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
