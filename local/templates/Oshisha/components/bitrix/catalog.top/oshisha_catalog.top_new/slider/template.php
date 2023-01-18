@@ -285,7 +285,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                     <div class="box_with_title_like">
                         <div class="box_with_text">
                             <a class="bx_catalog_item_title"
-                               href="/catalog/<?= $catalogProduct['CODE'] . '/' . $arItem['CODE']; ?>/"
+                               href="<?= $arItem['DETAIL_PAGE_URL'] ?>"
                                title="<?= $productTitle; ?>">
                                 <?= $productTitle; ?>
                             </a>

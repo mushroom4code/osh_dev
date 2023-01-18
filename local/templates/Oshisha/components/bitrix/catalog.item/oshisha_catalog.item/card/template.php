@@ -87,8 +87,7 @@ foreach ($item['ACTUAL_BASKET'] as $key => $val) {
 
 
 $productTitle = str_replace("\xC2\xA0", " ", $productTitle);
-$productTitle = str_replace("\xC2\xA0", " ", $productTitle);
-$item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
+$productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
 <div class="<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
     <div class="bx_catalog_item_container product-item <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">

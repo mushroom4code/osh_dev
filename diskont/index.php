@@ -19,13 +19,7 @@ define("HIDE_SIDEBAR", true);
 
 $GLOBALS['ArFilter'] = array(
     'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
-	
 );
-
-$GLOBALS['arrFilter'][] = [
-    'LOGIC' => 'OR',
-    'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
-];
 
 $APPLICATION->IncludeComponent(
     "bitrix:catalog",
@@ -42,8 +36,6 @@ $APPLICATION->IncludeComponent(
         "SECTION_ID_VARIABLE" => "SECTION_ID",
         "PRODUCT_QUANTITY_VARIABLE" => "quantity",
         "PRODUCT_PROPS_VARIABLE" => "prop",
-        "SEF_MODE" => "Y",
-        "SEF_FOLDER" => "/diskont/",
         "AJAX_MODE" => "N",
         "AJAX_OPTION_JUMP" => "N",
         "AJAX_OPTION_STYLE" => "Y",
@@ -314,10 +306,12 @@ $APPLICATION->IncludeComponent(
         "DETAIL_SET_VIEWED_IN_COMPONENT" => "N",
         "LIST_ENLARGE_PROP" => "-",
         "MESS_BTN_LAZY_LOAD" => "Показать ещё",
+        "SEF_MODE" => "Y",
+        "SEF_FOLDER" => "/diskont/",
         "SEF_URL_TEMPLATES" => array(
             "sections" => "",
             "section" => "#SECTION_CODE#/",
-            "element" => "diskont/product/#ELEMENT_CODE#/",
+            "element" => "product/#ELEMENT_CODE#/",
             "compare" => "compare/",
             "smart_filter" => "#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/",
         )
