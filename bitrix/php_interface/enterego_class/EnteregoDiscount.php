@@ -4,12 +4,12 @@ namespace Enterego;
 
 class EnteregoDiscount
 {
-    public function getSectionProductsForFilter($id): array
+    public function getSectionProductsForFilter(): array
     {
         global $DB;
         $productIds = [];
         $sectionsIDS = [];
-        $rsElements = \CIBlockElement::GetList(['ID', 'IBLOCK_SECTION_ID'], array_merge(['SECTION_ID' => $id], $GLOBALS['arrFilter']));
+        $rsElements = \CIBlockElement::GetList(['ID', 'IBLOCK_SECTION_ID'], $GLOBALS['ArFilter']);
 
         while ($arElement = $rsElements->Fetch()) {
             $productIds[] = $arElement['ID'];
@@ -39,7 +39,7 @@ class EnteregoDiscount
                 if ($key !== 0) {
                     if (isset($item[0])) {
                         $item[0]['CHILDS'] = $this->recursiveForeach($item, $linkNew);
-                        $item[0]['SECTION_PAGE_URL'] =  '/'  . $linkNew . '/'. $item[0]['CODE'] . '/';
+                        $item[0]['SECTION_PAGE_URL'] =  $linkNew . '/'. $item[0]['CODE'] . '/';
                         $arCategory[] = $item[0];
                     }
                 }

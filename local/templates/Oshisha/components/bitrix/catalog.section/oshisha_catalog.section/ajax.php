@@ -41,7 +41,6 @@ if ($parameters)
         $parameters["SECTION_CODE"] = trim($_REQUEST['subcat']);
     }
 
-    //$_REQUEST["SECTION_CODE"] = 'al_fakher_250_gr_nd';
     $arFilter = array(
         "IBLOCK_ID" => $parameters["IBLOCK_ID"],
         "ACTIVE" => "Y",
@@ -82,9 +81,6 @@ if ($parameters)
         $arCurSection = array();
 }
 
-//$arCurSection['ID'] = 810;
-//$_REQUEST['SECTION_ID'] = 811;
-
 ob_start();
 //region Filter
 $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", $template, array(
@@ -92,7 +88,6 @@ $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", $template, array(
     "IBLOCK_ID" => $parameters["IBLOCK_ID"],
     //TODO static parameters
     "SECTION_ID" => $arCurSection['ID'],
-    //"SECTION_ID" => 810,
     "FILTER_NAME" => $parameters["FILTER_NAME"],
     "PRICE_CODE" => $parameters["PRICE_CODE"],
     "CACHE_TYPE" => $parameters["CACHE_TYPE"],
@@ -118,14 +113,21 @@ $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", $template, array(
                                array('HIDE_ICONS' => 'Y')
 );
 ob_get_contents();
-//			//endregion
+//endregion
 
 $parameters['GLOBAL_FILTER'] = $GLOBALS[$parameters["FILTER_NAME"]];
-if( isset($_REQUEST['PAGER_BASE_LINK_ENABLE'])){
-$parameters['PAGER_BASE_LINK'] = $_REQUEST['PAGER_BASE_LINK'];
-$parameters['PAGER_BASE_LINK_ENABLE'] = $_REQUEST['PAGER_BASE_LINK_ENABLE'];
+
+//enterego static filter for special group
+$staticFilter = $request->get('staticFilter');
+if (!empty($staticFilter)) {
+    $parameters['GLOBAL_FILTER'] = array_merge($parameters['GLOBAL_FILTER'], $staticFilter);
 }
-file_put_contents($_SERVER['DOCUMENT_ROOT'].'/test.txt', print_r($parameters,1));
+
+if( isset($_REQUEST['PAGER_BASE_LINK_ENABLE'])){
+    $parameters['PAGER_BASE_LINK'] = $_REQUEST['PAGER_BASE_LINK'];
+    $parameters['PAGER_BASE_LINK_ENABLE'] = $_REQUEST['PAGER_BASE_LINK_ENABLE'];
+}
+
 $APPLICATION->IncludeComponent(
     'bitrix:catalog.section',
     $template,
