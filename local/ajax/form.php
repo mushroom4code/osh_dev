@@ -115,7 +115,7 @@ if ($NAME != '' && $PHONE != '') {
                 }
 
                 $notificator->with($notification)->send($messages);
-                $botSendResult = $bot->sendMediaGroup(MY_TEST_TGM_CHANNEL_ID, $media);
+                $botSendResult = $bot->sendMediaGroup($chatId, $media);
 
             } catch (SendException $e) {
                 echo 'Ошибка отправки сообщения из-за некорректных настроек модуля';
