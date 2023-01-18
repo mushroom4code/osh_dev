@@ -10,6 +10,9 @@ use Xzag\Telegram\Data\SettingsForm;
 use Xzag\Telegram\Service\NotificationService;
 use Xzag\Telegram\Exception\SendException;
 use Xzag\Telegram\Event\SampleEvent;
+use TelegramBot\Api\BotApi;
+use TelegramBot\Api\Types\InputMedia\ArrayOfInputMedia;
+use TelegramBot\Api\Types\InputMedia\InputMediaPhoto;
 
 CModule::IncludeModule("iblock");
 Loader::includeModule('main');
@@ -20,13 +23,13 @@ $PHONE = htmlspecialcharsbx($_REQUEST['PHONE']);
 $EMAIL = htmlspecialcharsbx($_REQUEST['EMAIL']);
 $message = '';
 
-if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
-    $res = BitrixCaptcha::checkSpam();
-    if ($res === false) {
-        echo 'Ошибка CAPTCHA';
-        die;
-    }
-}
+//if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
+//    $res = BitrixCaptcha::checkSpam();
+//    if ($res === false) {
+//        echo 'Ошибка CAPTCHA';
+//        die;
+//    }
+//}
 
 if ($NAME != '' && $PHONE != '') {
     $el = new CIBlockElement();
@@ -42,7 +45,20 @@ if ($NAME != '' && $PHONE != '') {
             'FILES' => $_FILES,
         ],
     ];
-    $result = $el->add($arElement);
+    $elemId = $el->add($arElement);
+
+    // Получение ИД изображений елемента ИБ
+    $elemFiles = [];
+    $tmpProps = CIBlockElement::GetProperty(
+        IBLOCK_FEEDBACK_ID,
+        $elemId,
+        [],
+        ['CODE' => 'FILES']
+    );
+
+    while ($arrProps = $tmpProps->Fetch()) {
+        $elemFiles[] = $_SERVER['HTTP_HOST'] . CFile::GetPath($arrProps['VALUE']);
+    }
 
     // Sending in TGM
     $MESAGE_EMAIL = '
@@ -66,21 +82,42 @@ if ($NAME != '' && $PHONE != '') {
             $response = Context::getCurrent()->getResponse();
             $response->addHeader('Content-Type', 'application/json');
             $set = new ProxySettings();
+
+
+            $bot = new BotApi(MY_TEST_TGM_BOT_API_TOKEN);
+            $media = new ArrayOfInputMedia();
+
+            foreach ($elemFiles as $i => $photo) {
+                $caption = $i == 0 ? 'ИМЯ: ' . $NAME . ' --- ТЕЛЕФОН: ' . $PHONE : null;
+                $media->addItem(new InputMediaPhoto($photo, $caption));
+            }
+
             try {
+//                $newSet = SettingsForm::make([
+//                    'token' => COption::GetOptionString($moduleId, 'token'),
+//                    'chat_id' => COption::GetOptionString($moduleId, 'chat_id')]
+//                    ?? []);
                 $newSet = SettingsForm::make([
-                    'token' => COption::GetOptionString($moduleId, 'token'),
-                    'chat_id' => COption::GetOptionString($moduleId, 'chat_id')]
+                    'token' => MY_TEST_TGM_BOT_API_TOKEN,
+                    'chat_id' => MY_TEST_TGM_CHANNEL_ID]
                     ?? []);
-                $notification = (new TelegramNotification(COption::GetOptionString($moduleId, 'token')))
-                    ->to(COption::GetOptionString($moduleId, 'chat_id'));
+
+//                $notification = (new TelegramNotification(COption::GetOptionString($moduleId, 'token')))
+//                    ->to(COption::GetOptionString($moduleId, 'chat_id'));
+                $notification = (new TelegramNotification(MY_TEST_TGM_BOT_API_TOKEN))
+                    ->to(MY_TEST_TGM_CHANNEL_ID);
 
                 /**
                  * @var $notificator NotificationService
                  */
                 $notificator = Container::get(NotificationService::class);
 
+//                $sampleEvent = SampleEvent::make([
+//                    'CHAT_ID' => COption::GetOptionString($moduleId, 'chat_id'),
+//                    'PROXY' => $set->getDSN(),
+//                ]);
                 $sampleEvent = SampleEvent::make([
-                    'CHAT_ID' => COption::GetOptionString($moduleId, 'chat_id'),
+                    'CHAT_ID' => MY_TEST_TGM_CHANNEL_ID,
                     'PROXY' => $set->getDSN(),
                 ]);
                 //Шаблон сообщения
@@ -91,7 +128,7 @@ if ($NAME != '' && $PHONE != '') {
                 $messages = $sampleEvent->convertNew($message);
 
                 $notificator->with($notification)->send($messages);
-
+                $botSendResult = $bot->sendMediaGroup(MY_TEST_TGM_CHANNEL_ID, $media);
 
             } catch (SendException $e) {
                 echo 'Ошибка отправки сообщения из-за некорректных настроек модуля';
