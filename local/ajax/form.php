@@ -10,6 +10,9 @@ use Xzag\Telegram\Data\SettingsForm;
 use Xzag\Telegram\Service\NotificationService;
 use Xzag\Telegram\Exception\SendException;
 use Xzag\Telegram\Event\SampleEvent;
+use TelegramBot\Api\BotApi;
+use TelegramBot\Api\Types\InputMedia\ArrayOfInputMedia;
+use TelegramBot\Api\Types\InputMedia\InputMediaPhoto;
 
 CModule::IncludeModule("iblock");
 Loader::includeModule('main');
@@ -42,9 +45,22 @@ if ($NAME != '' && $PHONE != '') {
             'FILES' => $_FILES,
         ],
     ];
-    $result = $el->add($arElement);
+    $elemId = $el->add($arElement);
 
-    // Sending in TGM
+    // Получение ИД изображений елемента ИБ
+    $elemFiles = [];
+    $tmpProps = CIBlockElement::GetProperty(
+        IBLOCK_FEEDBACK_ID,
+        $elemId,
+        [],
+        ['CODE' => 'FILES']
+    );
+
+    while ($arrProps = $tmpProps->Fetch()) {
+        $elemFiles[] = $_SERVER['HTTP_HOST'] . CFile::GetPath($arrProps['VALUE']);
+    }
+
+    // Sending message in TGM
     $MESAGE_EMAIL = '
 		Имя: ' . $NAME . '<br>
 		Телефон: ' . $PHONE . '<br>
@@ -66,13 +82,12 @@ if ($NAME != '' && $PHONE != '') {
             $response = Context::getCurrent()->getResponse();
             $response->addHeader('Content-Type', 'application/json');
             $set = new ProxySettings();
+
             try {
-                $newSet = SettingsForm::make([
-                    'token' => COption::GetOptionString($moduleId, 'token'),
-                    'chat_id' => COption::GetOptionString($moduleId, 'chat_id')]
-                    ?? []);
-                $notification = (new TelegramNotification(COption::GetOptionString($moduleId, 'token')))
-                    ->to(COption::GetOptionString($moduleId, 'chat_id'));
+                $tgmToken = COption::GetOptionString($moduleId, 'token');
+                $chatId = COption::GetOptionString($moduleId, 'chat_id');
+                $notification = (new TelegramNotification($tgmToken))
+                    ->to($chatId);
 
                 /**
                  * @var $notificator NotificationService
@@ -80,7 +95,7 @@ if ($NAME != '' && $PHONE != '') {
                 $notificator = Container::get(NotificationService::class);
 
                 $sampleEvent = SampleEvent::make([
-                    'CHAT_ID' => COption::GetOptionString($moduleId, 'chat_id'),
+                    'CHAT_ID' => $chatId,
                     'PROXY' => $set->getDSN(),
                 ]);
                 //Шаблон сообщения
@@ -90,8 +105,17 @@ if ($NAME != '' && $PHONE != '') {
                 $message .= 'Сайт с которого было отправлено сообщение https://' . $_SERVER['HTTP_HOST'] . '/';
                 $messages = $sampleEvent->convertNew($message);
 
-                $notificator->with($notification)->send($messages);
+                // отправка файлов в Telegram
+                $bot = new BotApi($tgmToken);
+                $media = new ArrayOfInputMedia();
 
+                foreach ($elemFiles as $i => $photo) {
+                    $caption = $i == 0 ? 'ИМЯ: ' . $NAME . ' --- ТЕЛЕФОН: ' . $PHONE : null;
+                    $media->addItem(new InputMediaPhoto($photo, $caption));
+                }
+
+                $notificator->with($notification)->send($messages);
+                $botSendResult = $bot->sendMediaGroup($chatId, $media);
 
             } catch (SendException $e) {
                 echo 'Ошибка отправки сообщения из-за некорректных настроек модуля';
