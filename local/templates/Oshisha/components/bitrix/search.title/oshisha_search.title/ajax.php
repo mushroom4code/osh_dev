@@ -15,16 +15,6 @@ if (empty($arResult["CATEGORIES"]))
     while( $arStatistic = $dbStatistic->Fetch()){
         $popularSearches[] = $arStatistic;
     }
-//    $uniqueId = $item['ID'] . '_' . md5($this->randString() . $component->getAction());
-//    $areaIds[$item['ID']] = $this->GetEditAreaId($uniqueId);
-//    $session_id = 1;
-//    $artest = [];
-//    if ($rs = CSession::GetByID($_SESSION['SESS_SESSION_ID'])) {
-//        $ar = $rs->Fetch();
-//        $artest[] = $ar;
-//         выведем параметры сессии
-//        echo "<pre>"; print_r($ar); echo "</pre>";
-//    }
 
     $arBasketItems = array();
     $dbBasketItems = CSaleBasket::GetList(
@@ -57,22 +47,6 @@ if (empty($arResult["CATEGORIES"]))
             $arResult['ELEMENTS'][$searchItem['ID']]['BASKET_QUANTITY'] = 0;
         }
     }
-
-
-//    $res = CIBlockElement::GetList(
-//            false,
-//            array('ID' => $searchElementsIds),
-//            false,
-//            false
-//    );
-//    while ($arElement = $res->Fetch()) {
-//        $searchElements[$arElement["ID"]] = $arElement;
-//    }
-//    foreach ($arResult['ELEMENTS'] as $searchElementId => $searchElement) {
-//        $arResult['ELEMENTS'][$searchElementId]['QUANTITY'] =  CCatalogProduct::GetByID($searchElementId)['QUANTITY'];
-//    }
-//    print_r($popularSearches);
-
 
 ?>
     <?foreach($arResult["CATEGORIES"] as $category_id => $arCategory):?>
@@ -209,8 +183,6 @@ if (empty($arResult["CATEGORIES"]))
 </div>
 <script>
     $('#search_results_container').focusout(function () {
-        console.log('ssssss');
-        console.log(event);
         if(!event.relatedTarget
             || ((event.relatedTarget.getAttribute('id') != 'input_search_desktop')
             && ($('#search_results_container').find(event.relatedTarget).length != 1))) {
