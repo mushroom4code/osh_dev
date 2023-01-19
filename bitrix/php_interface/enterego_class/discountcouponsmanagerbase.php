@@ -39,6 +39,10 @@ class DiscountCouponsManagerBase
 	const COUPON_CHECK_CORRUPT_DATA = 0x0400;
 	const COUPON_CHECK_NOT_APPLIED = 0x0800;
 
+    //enterego
+    const ENTEREGO_COUPON_APPLIED_USER = 0x1000;
+    const ENTEREGO_COUPON_UNAUTHORIZED_USER = 0x2000;
+
 	const COUPON_MODE_SIMPLE = 0x0001;
 	const COUPON_MODE_FULL = 0x0002;
 
@@ -336,7 +340,10 @@ class DiscountCouponsManagerBase
 				self::COUPON_CHECK_ALREADY_MAX_USED => Loc::getMessage('BX_SALE_DCM_COUPON_CHECK_ALREADY_MAX_USED'),
 				self::COUPON_CHECK_UNKNOWN_TYPE => Loc::getMessage('BX_SALE_DCM_COUPON_CHECK_UNKNOWN_TYPE'),
 				self::COUPON_CHECK_CORRUPT_DATA => Loc::getMessage('BX_SALE_DCM_COUPON_CHECK_CORRUPT_DATA'),
-				self::COUPON_CHECK_NOT_APPLIED => Loc::getMessage('BX_SALE_DCM_COUPON_CHECK_NOT_APPLIED')
+				self::COUPON_CHECK_NOT_APPLIED => Loc::getMessage('BX_SALE_DCM_COUPON_CHECK_NOT_APPLIED'),
+                //enterego
+                self::ENTEREGO_COUPON_APPLIED_USER => Loc::getMessage('BX_SALE_USER_APPLIED'),
+                self::ENTEREGO_COUPON_UNAUTHORIZED_USER => Loc::getMessage('BX_SALE_ONLY_AUTHORIZED_USER'),
 			);
 		}
 		return array(
@@ -1354,6 +1361,7 @@ class DiscountCouponsManagerBase
 			}
 
             //enterego - custom validator
+            $checkCode = self::additionalCheck($coupon, $existCoupon, $checkCode);
 
 			$result['STATUS'] = ($checkCode == self::COUPON_CHECK_OK ? self::STATUS_ENTERED : self::STATUS_FREEZE);
 			$result['CHECK_CODE'] = $checkCode;
@@ -1572,7 +1580,7 @@ class DiscountCouponsManagerBase
 	protected static function checkBaseData(&$data, $checkCode = self::COUPON_CHECK_OK)
 	{
 		if (empty(self::$couponTypes))
-			self::$couponTypes = Internals\DiscountCouponTable::getCouponTypes(true);
+			self::$couponTypes = DgetCouponTypes(true);
 
 		if (!isset($data['ID']))
 		{
@@ -2424,4 +2432,61 @@ class DiscountCouponsManagerBase
 			'SAVED' => 'N'
 		);
 	}
+
+    /**
+     * @param string $coupon
+     * @param int $userId
+     * @return bool
+     */
+    protected static function checkUserApplyCoupon(string $coupon, int $userId): bool
+    {
+        $conn = Main\Application::getConnection();
+        $sql = "SELECT orders.ID
+        FROM b_sale_order_coupons order_coupons
+                 INNER JOIN b_sale_order orders
+                            ON order_coupons.ORDER_ID = orders.ID
+        WHERE order_coupons.COUPON = '$coupon'  AND orders.USER_ID = $userId";
+
+        try {
+            $res = $conn->query($sql, 1);
+            if ($res->fetch()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Main\DB\SqlQueryException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param $coupon string
+     * @param array $existCoupon
+     * @param $checkCode int
+     * @return int
+     */
+    protected static function additionalCheck(string $coupon, array $existCoupon, int $checkCode): int
+    {
+        if ($checkCode !== self::COUPON_CHECK_OK) {
+            return $checkCode;
+        }
+        if (isset($existCoupon['TYPE'])
+            && $existCoupon['TYPE'] === Internals\DiscountCouponTable::TYPE_ONE_FOR_USER) {
+
+            global $USER;
+            $userId = $USER->GetID();
+
+            if ($userId == "0") {
+                $checkCode = self::ENTEREGO_COUPON_UNAUTHORIZED_USER;
+            } else {
+                $couponApply = self::checkUserApplyCoupon($coupon, $userId);
+                if ($couponApply) {
+                    $checkCode = self::ENTEREGO_COUPON_APPLIED_USER;
+                }
+            }
+        }
+
+        return $checkCode;
+    }
+
 }

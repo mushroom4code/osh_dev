@@ -32,6 +32,7 @@ CModule::AddAutoloadClasses("", array(
 ));
 
 require(__DIR__ . '/enterego_class/discountcouponsmanagerbase.php');
+require(__DIR__ . '/enterego_class/discountcoupon.php');
 
 global $PRICE_TYPE_ID;
 global $UserTypeOpt, $arIskCode, $SETTINGS_;
