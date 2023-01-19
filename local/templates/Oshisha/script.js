@@ -19,7 +19,7 @@ $(document).ready(function () {
     let arrayCompanyId;
     //
     //BASKET
-    let addToBasket = $('a').is('.add2basket');
+    let addToBasket = true;
     let box_basket_elems = $('.basket-items-list').find('.basket-items-list-table');
     let arItemsForDB = [];
     let product_data;
@@ -334,7 +334,6 @@ $(document).ready(function () {
         setInterval(() => sendArrayItems(arItemsForDB), 500);
 
         $(document).on('click', '.add2basket', function () {
-
             function appendLoader() {
                 $('.spanBasketTop').text('').attr('style', 'padding: 4px 8px;').append('' +
                     '<div class="loader"><div class="inner one"></div><div class="inner two">' +
@@ -431,7 +430,7 @@ $(document).ready(function () {
                     $(boxInput).val(1);
                 }
             }
-            let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)');
+            let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="'+product_id+'"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
                     if (!$(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
@@ -442,6 +441,7 @@ $(document).ready(function () {
                 } else {
                     if ($(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
                         $(detailCardBasketAddButton).hide(200).text('В корзину');
+                        $(detailCardBasketAddButton).prop('onclick', null).off('click');
                         $(detailCardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').show(200);
                     }
                 }

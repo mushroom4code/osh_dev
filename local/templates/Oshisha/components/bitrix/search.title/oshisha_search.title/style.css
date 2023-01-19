@@ -113,12 +113,22 @@ div.title-search-result td.title-search-price span {
 	background-repeat: no-repeat;
 }
 .bx_searche .bx_item_element{
-	/*float: left;*/
 	display: flex;
+	justify-content: space-between;
 	padding-left: 10px;
 	padding-right: 20px;
 	margin-left: 105px;
 }
+.bx_searche .bx_item_element i.fa.fa-angle-right {
+	display:flex;
+	flex-direction: column;
+	align-self: center;
+	width: 50px;
+	height: 30px;
+	align-items: center;
+	justify-content: center;
+}
+
 .bx_searche .bx_item_element hr{
 	margin: 0;
 	border: none;
@@ -190,10 +200,72 @@ div.title-search-result td.title-search-price span {
 	margin-left: 20px;
 	padding-top: 10px;
 	padding-bottom: 5px;
+	justify-content: start;
 }
 .bx_item_block.popular_searches_result .bx_item_element i {
 	font-size: 20px;
 	margin-right: 12px;
+}
+
+
+.bx_item_block_detail .product-item-amount-field-contain {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex !important;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	position: relative;
+	max-width: 150px;
+}
+
+.bx_item_block_detail {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: end;
+	padding-right: 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.bx_item_block_detail .product-item-detail-price-current {
+	margin-right: 20px;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+div.bx_item_block_detail div.bx_catalog_item.bx_catalog_item_controls {
+	margin-bottom: 0px !important;
+}
+
+.bx_item_block_detail .not_product {
+	font-size: 14px !important;
+	font-weight: 500;
+	padding: 10px 35px;
+	width: 100%;
+}
+.bx_item_block_detail a.basket_prod_detail {
+	font-size: 14px !important;
+	font-weight: 500;
+}
+.bx_item_block_detail .basket_prod_detail {
+	display: block !important;
+}
+.bx_item_block_detail div.mb-4.justify-content-between {
+	margin-bottom: 0px !important;
+}
+.bx_item_block_detail .product-item-amount {
+	max-width:50px;
+	/*width: 100%;*/
+}
+.bx_searche .alert_quantity.show_block {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 20px;
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
 }
 
 /*.bx_item_block.popular_searches .popular_searches_title {*/

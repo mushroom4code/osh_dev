@@ -318,7 +318,11 @@ function JCTitleSearch(arParams)
 
 	this.onFocusLost = function(hide)
 	{
-		setTimeout(function(){_this.RESULT.style.display = 'none';}, 250);
+		if(!event.relatedTarget
+			|| ((event.relatedTarget.getAttribute('id') != 'search_results_container')
+			&& ($('#search_results_container').find(event.relatedTarget).length != 1))) {
+				setTimeout(function(){_this.RESULT.style.display = 'none'}, 250);
+		}
 	};
 
 	this.onFocusGain = function()
@@ -402,3 +406,5 @@ function JCTitleSearch(arParams)
 	};
 	BX.ready(function (){_this.Init(arParams)});
 }
+
+
