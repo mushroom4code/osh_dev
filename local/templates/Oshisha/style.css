@@ -3381,7 +3381,7 @@ table#TableWorkers.no-footer {
     }
 
     div.desktop, .bx-advertisingbanner-btn-container, .link_banner, #delivery_method span > i.header_icon, .box_map,
-    .desktop, div#profile_people, .detail-text, #pills-tabContent, #myTab,
+    .desktop, div#profile_people, .detail-text, #myTab,
     .product-item-detail-slider-container .product-item__favorite-star, .delligate, .codeProduct, .box_quantity_for_uric_line,
     .product-item-detail-slider-controls-block, .banner_small_basket, .banner_big_basket, .bx-sbb-empty-cart-image .fa-check {
         display: none !important;
