@@ -170,39 +170,38 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
 	
 		if($obUser->Update($arResult["ID"], $arFields))
 		{
-            $phone = \Bitrix\Main\UserPhoneAuthTable::getRowById($arResult["ID"]);
-			if($arResult["PHONE_REGISTRATION"] == true && $arFields["PHONE_NUMBER"] <> '')
-			{
-				if(!($phone = \Bitrix\Main\UserPhoneAuthTable::getRowById($arResult["ID"])))
-				{
-					$phone = ["PHONE_NUMBER" => "", "CONFIRMED" => "N"];
-				}
-
-				$arFields["PHONE_NUMBER"] = \Bitrix\Main\UserPhoneAuthTable::normalizePhoneNumber($arFields["PHONE_NUMBER"]);
-
-				if($arFields["PHONE_NUMBER"] <> $phone["PHONE_NUMBER"] || $phone["CONFIRMED"] <> 'Y')
-				{
-					//added or updated the phone number for the user, now sending a confirmation SMS
-					list($code, $phoneNumber) = CUser::GeneratePhoneCode($arResult["ID"]);
-
-					$sms = new \Bitrix\Main\Sms\Event(
-						"SMS_USER_CONFIRM_NUMBER",
-						[
-							"USER_PHONE" => $phoneNumber,
-							"CODE" => $code,
-						]
-					);
-					$smsResult = $sms->send(true);
-
-					if(!$smsResult->isSuccess())
-					{
-						$strError .= implode("<br />", $smsResult->getErrorMessages());
-					}
-
-					$arResult["SHOW_SMS_FIELD"] = true;
-					$arResult["SIGNED_DATA"] = \Bitrix\Main\Controller\PhoneAuth::signData(['phoneNumber' => $phoneNumber]);
-				}
-			}
+//			if($arResult["PHONE_REGISTRATION"] == true && $arFields["PHONE_NUMBER"] <> '')
+//			{
+//				if(!($phone = \Bitrix\Main\UserPhoneAuthTable::getRowById($arResult["ID"])))
+//				{
+//					$phone = ["PHONE_NUMBER" => "", "CONFIRMED" => "N"];
+//				}
+//
+//				$arFields["PHONE_NUMBER"] = \Bitrix\Main\UserPhoneAuthTable::normalizePhoneNumber($arFields["PHONE_NUMBER"]);
+//
+//				if($arFields["PHONE_NUMBER"] <> $phone["PHONE_NUMBER"] || $phone["CONFIRMED"] <> 'Y')
+//				{
+//					//added or updated the phone number for the user, now sending a confirmation SMS
+//					list($code, $phoneNumber) = CUser::GeneratePhoneCode($arResult["ID"]);
+//
+//					$sms = new \Bitrix\Main\Sms\Event(
+//						"SMS_USER_CONFIRM_NUMBER",
+//						[
+//							"USER_PHONE" => $phoneNumber,
+//							"CODE" => $code,
+//						]
+//					);
+//					$smsResult = $sms->send(true);
+//
+//					if(!$smsResult->isSuccess())
+//					{
+//						$strError .= implode("<br />", $smsResult->getErrorMessages());
+//					}
+//
+//					$arResult["SHOW_SMS_FIELD"] = true;
+//					$arResult["SIGNED_DATA"] = \Bitrix\Main\Controller\PhoneAuth::signData(['phoneNumber' => $phoneNumber]);
+//				}
+//			}
 		}
 		else
 		{
