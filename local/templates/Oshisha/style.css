@@ -2110,6 +2110,7 @@ input.check_input {
 }
 
 .product-item-amount-field-contain input[type="number"].cat-det {
+    min-width: 50px;
     padding: 11px !important;
 }
 

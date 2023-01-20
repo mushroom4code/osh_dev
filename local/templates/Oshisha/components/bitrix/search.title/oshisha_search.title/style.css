@@ -55,6 +55,9 @@ div.title-search-result {
 	background-color: #FFF;
 	border-bottom-right-radius: 10px;
 	border-bottom-left-radius: 10px;
+	border: black solid 2px;
+	border-top: none;
+	border-bottom: none;
 }
 
 div.title-search-fader {

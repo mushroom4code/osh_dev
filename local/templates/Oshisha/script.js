@@ -309,8 +309,33 @@ $(document).ready(function () {
         $('.ganerate_price').text(getPriceForProduct(this) * value + ' ₽');
     }
 
-    $(document).on('change', '.card_element', function () {
-        changePrice();
+    $(document).on('keypress', '.card_element', function (e) {
+        if(e.which == 13) {
+            clearTimeout(window.addToBasketEventTimeout);
+            changePrice.call(this);
+            addToBasketEvent.call(this);
+        }
+    })
+
+    $(document).on('input', '.card_element', function() {
+        console.log(this);
+        let cardBasketAddButton = $(this).parent().parent().parent();
+        if (cardBasketAddButton.hasClass('bx_catalog_item_controls')) {
+            cardBasketAddButton = cardBasketAddButton.find('a.add2basket:not(.btn-plus):not(.btn-minus)');
+        }
+        console.log(cardBasketAddButton);
+        if ($(cardBasketAddButton).is('.basket_prod_detail')) {
+            if ($(cardBasketAddButton).hasClass('addProductDetailButton')) {
+                $(cardBasketAddButton).hide(200).text('В корзину');
+                $(cardBasketAddButton).prop('onclick', null).off('click');
+                $(cardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').show(200);
+            }
+        }
+
+        clearTimeout(window.addToBasketEventTimeout);
+        window.addToBasketEventTimeout = setTimeout(() => {
+            addToBasketEvent.call(this);
+        }, 3000);
     })
 
     $(document).on('click', '.js-add2basket-gift', function () {
@@ -333,7 +358,7 @@ $(document).ready(function () {
     if (addToBasket === true) {
         setInterval(() => sendArrayItems(arItemsForDB), 500);
 
-        $(document).on('click', '.add2basket', function () {
+        function addToBasketEvent() {
             function appendLoader() {
                 $('.spanBasketTop').text('').attr('style', 'padding: 4px 8px;').append('' +
                     '<div class="loader"><div class="inner one"></div><div class="inner two">' +
@@ -450,7 +475,14 @@ $(document).ready(function () {
             $(box_with_products_order).empty();
 
             addItemArrayANDSend(product_data);
+        }
+
+        $(document).on('click', '.add2basket', function () {
+            event.stopPropagation();
+            clearTimeout(window.addToBasketEventTimeout);
+            addToBasketEvent.call(this);
         });
+
 
         function deleteBasketItemTop(result) {
             if (result !== '' && result !== 0) {
@@ -588,6 +620,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.btn-plus', function () {
+        console.log('ddddddd');
         let input = $('input.product-item-amount').val();
         let popup_mess = $(this).closest('div.bx_catalog_item').find('div#popup_mess');
         let classes = $(this).hasClass('product-item-amount-field-btn-disabled');
