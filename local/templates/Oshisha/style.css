@@ -2631,6 +2631,10 @@ a.dropdown-toggle, .detail_disabled, .detail_disabled:hover, .disabled_class a.l
     background-color: #F55F5C;
 }
 
+.btn-primary-color {
+    color: #DD0602;
+}
+
 .btn_basket:hover, .set_filter:hover, .link_menu_catalog:hover, .image_box:hover {
     background-color: #DD0602;
 }
