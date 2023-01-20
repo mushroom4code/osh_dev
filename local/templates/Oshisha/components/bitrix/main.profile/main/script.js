@@ -33,8 +33,36 @@ BX.namespace('BX.Sale.PersonalProfileComponent');
 					}
 				});
 
+				$('#main-profile-day2').change(function (){
+					// console.log('tryagain');
+					// var dateArray = BX('main-profile-day2').value.split('/');
+					// var readyDateString = dateArray[1] + '/' + dateArray[0] + '/' + dateArray[2];
+					// $('#main-profile-day2').val(readyDateString);
+				});
+
 				BX.bind(BX('main-profile-submit'), 'click', function () {
+
 					if (BX('notification').checked !== true) {
+						// console.log('eeeeee');
+						// console.log(BX('main-profile-day2').value);
+						// console.log(new Date(BX('main-profile-day2').value));
+						// var dateArray = BX('main-profile-day2').value.split('/');
+						// var readyDateString = dateArray[1] + '/' + dateArray[0] + '/' + dateArray[2];
+						// $('#main-profile-day2').val(readyDateString);
+						// console.log('sssss');
+						// console.log(dateArray);
+						// console.log(readyDateString);
+						// var options = {
+						// 	year: 'numeric',
+						// 	month: 'numeric',
+						// 	day: 'numeric',
+						// 	timezone: 'UTC'
+						// };
+						// console.log('ssssssss');
+						// var birthdate = new Date(BX('main-profile-day2').value).toLocaleString("ru", options);
+						// console.log(birthdate.getDate());
+						//let proper_birthdate = (birthdate.getMonth() + 1) + "/" + birthdate.getDate() + "/" + birthdate.getFullYear();
+						//console.log(proper_birthdate);
 						BX.removeClass(
 							BX("notification-error"),
 							'd-none'

@@ -64,7 +64,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-name">ФИО</label>
                         <div class="col-sm-12 col-md-12">
-                            <input class="form-control input_lk" type="text" name="NAME" maxlength="50"
+                            <input class="form-control input_lk" type="text" name="NAME"
+                                   minlength="3" maxlength="50"
                                    id="main-profile-name" value="<?= $arResult["arUser"]["NAME"] ?>"/>
                         </div>
                     </div>
@@ -75,10 +76,10 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
 							<?if( strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"]) > strtotime($arResult["arUser"]["PERSONAL_BIRTHDAY"])+365*24*3600):?>
                             <input class="form-control input_lk" type="text" name="BIRTHDAY" maxlength="50"
                                    id="main-profile-day2" disabled value="<?= $arResult["arUser"]["PERSONAL_BIRTHDAY"] ?>"/>	
-								<?$dateChange = '<br><b>Изменить дату рождения можно будет '.date('d.m.Y',strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])+365*24*3600).'</b>';?>
+								<?$dateChange = '<br><b>Изменить дату рождения можно будет '.date('d/m/Y',strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])+365*24*3600).'</b>';?>
 							<?else:?>
                             <input class="form-control input_lk" type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
-                                   id="main-profile-day2" value="<?= $arResult["arUser"]["PERSONAL_BIRTHDAY"] ?>"/>
+                                   id="main-profile-day2" value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
 							<?endif;?>
                         </div>
 						<div class="info-date">
@@ -89,25 +90,27 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                     </div>
 					<script>//$('input[name="PERSONAL_BIRTHDAY"]').inputmask("99/99/9999",{ "placeholder": "dd/mm/yyyy" });;
 					    Inputmask("datetime", {
-        inputFormat: "dd.mm.yyyy",
+        inputFormat: "dd/mm/yyyy",
         placeholder: "_",
         leapday: "-02-29",
-        alias: "tt.mm.jjjj"
+        alias: "tt/mm/jjjj"
     }).mask("input[name='PERSONAL_BIRTHDAY']");
 					</script>
                     <div class="form-group  mb-2">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-email">Почта</label>
                         <div class="col-sm-12 col-md-12">
-                            <input class="form-control input_lk" type="text" name="EMAIL" maxlength="50"
-                                   id="main-profile-email" value="<?= $arResult["arUser"]["EMAIL"] ?>"/>
+                            <input class="form-control input_lk" type="email" name="EMAIL" maxlength="50"
+                                   id="main-profile-email" value="<?= $arResult["arUser"]["EMAIL"] ?>"
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                   oninvalid="setCustomValidity('Неверный формат почты. Почта должна иметь вид *@*.*')"/>
                         </div>
                     </div>
                     <div class="form-group  mb-2">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-phone">Номер телефона</label>
                         <div class="col-sm-12 col-md-12">
-                            <input class="form-control input_lk" type="text" name="PERSONAL_PHONE" maxlength="50"
+                            <input class="form-control input_lk" type="text" name="PHONE_NUMBER" maxlength="50"
                                    id="main-profile-phone" value="<?= $arResult["arUser"]["PERSONAL_PHONE"] ?>"/>
                         </div>
                     </div>

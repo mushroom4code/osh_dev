@@ -157,15 +157,21 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
 		//Проверяем дату рождения
 //PERSONAL_BIRTHDAY
 		$rowUser = $obUser->GetByID($USER->GetId())->Fetch();
+        $arFields['PERSONAL_BIRTHDAY'] = date(
+            'm/d/Y',
+            strtotime(str_replace('/', '-', $arFields['PERSONAL_BIRTHDAY'])));
 		if( $rowUser['PERSONAL_BIRTHDAY'] != $arFields['PERSONAL_BIRTHDAY'] )
 		{
-			$arFields['UF_DATE_CHANGE_BH'] = date('d.m.Y');
-		}
+			$arFields['UF_DATE_CHANGE_BH'] = date('m/d/Y');
+		} else {
+            unset($arFields['PERSONAL_BIRTHDAY']);
+        }
 		$USER_FIELD_MANAGER->EditFormAddFields("USER", $arFields);
 	
 		if($obUser->Update($arResult["ID"], $arFields))
 		{
-			/*if($arResult["PHONE_REGISTRATION"] == true && $arFields["PHONE_NUMBER"] <> '')
+            $phone = \Bitrix\Main\UserPhoneAuthTable::getRowById($arResult["ID"]);
+			if($arResult["PHONE_REGISTRATION"] == true && $arFields["PHONE_NUMBER"] <> '')
 			{
 				if(!($phone = \Bitrix\Main\UserPhoneAuthTable::getRowById($arResult["ID"])))
 				{
@@ -196,7 +202,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
 					$arResult["SHOW_SMS_FIELD"] = true;
 					$arResult["SIGNED_DATA"] = \Bitrix\Main\Controller\PhoneAuth::signData(['phoneNumber' => $phoneNumber]);
 				}
-			}*/
+			}
 		}
 		else
 		{
