@@ -5282,7 +5282,7 @@ li, ul {
 
 .overlay_top {
     background: rgb(0, 0, 0, 0.31);
-    z-index: 1001;
+    z-index: 2000;
     position: fixed;
     top: 0;
     height: 100%;
