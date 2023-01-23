@@ -318,12 +318,10 @@ $(document).ready(function () {
     })
 
     $(document).on('input', '.card_element', function() {
-        console.log(this);
         let cardBasketAddButton = $(this).parent().parent().parent();
         if (cardBasketAddButton.hasClass('bx_catalog_item_controls')) {
             cardBasketAddButton = cardBasketAddButton.find('a.add2basket:not(.btn-plus):not(.btn-minus)');
         }
-        console.log(cardBasketAddButton);
         if ($(cardBasketAddButton).is('.basket_prod_detail')) {
             if ($(cardBasketAddButton).hasClass('addProductDetailButton')) {
                 $(cardBasketAddButton).hide(200).text('В корзину');
@@ -628,7 +626,6 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.btn-plus', function () {
-        console.log('ddddddd');
         let input = $('input.product-item-amount').val();
         let popup_mess = $(this).closest('div.bx_catalog_item').find('div#popup_mess');
         let classes = $(this).hasClass('product-item-amount-field-btn-disabled');
