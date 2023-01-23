@@ -31,6 +31,9 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
 ));
 
+require(__DIR__ . '/enterego_class/discountcouponsmanagerbase.php');
+require(__DIR__ . '/enterego_class/discountcoupon.php');
+
 global $PRICE_TYPE_ID;
 global $UserTypeOpt, $arIskCode, $SETTINGS_;
 $arIskCode = array(

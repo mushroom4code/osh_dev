@@ -178,18 +178,14 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             if ($isFilter): ?>
                 <div class="bx-sidebar-block">
                     <?php
-                    if ($APPLICATION->GetCurPage(false) == '/catalog_new/' || $APPLICATION->GetCurPage(false) == '/diskont/') {
-                        unset($arCurSection['ID']);
-                        $PREFILTER_NAME = 'ArFilter';
-                    }
 
                     $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
                         "oshisha_catalog.smart.filter", array(
                             "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
                             "IBLOCK_ID" => $arParams["IBLOCK_ID"],
                             "SECTION_ID" => $arCurSection['ID'],
+                            "PREFILTER_NAME" => $arParams["PREFILTER_NAME"],
                             "FILTER_NAME" => $arParams["FILTER_NAME"],
-                            "PREFILTER_NAME" => $PREFILTER_NAME,
                             "PRICE_CODE" => $arParams["PRICE_CODE"],
                             "CACHE_TYPE" => $arParams["CACHE_TYPE"],
                             "CACHE_TIME" => $arParams["CACHE_TIME"],

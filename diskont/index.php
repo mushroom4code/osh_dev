@@ -7,8 +7,8 @@ $APPLICATION->AddChainItem('Дисконт','/diskont/');
 
 ?>
     <div id="o_nas" class="mb-5">
-    
-		
+
+
 <?php
 
 define("HIDE_SIDEBAR", true);
@@ -20,6 +20,10 @@ define("HIDE_SIDEBAR", true);
 $GLOBALS['ArFilter'] = array(
     'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
 );
+$GLOBALS['ArPreFilter'] = array(
+    'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
+);
+
 
 $APPLICATION->IncludeComponent(
     "bitrix:catalog",
@@ -52,6 +56,7 @@ $APPLICATION->IncludeComponent(
         "USE_ELEMENT_COUNTER" => "Y",
         "USE_FILTER" => "Y",
         "FILTER_NAME" => "ArFilter",
+        "PREFILTER_NAME" => "ArPreFilter",
         "FILTER_VIEW_MODE" => "VERTICAL",
         "USE_COMPARE" => "N",
         "PRICE_CODE" => BXConstants::PriceCode(),

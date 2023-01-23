@@ -683,7 +683,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 <?php
             }
         } ?>
-        <ul class="nav nav-fill mb-3 mt-5" id="myTab" role="tablist">
+        <ul class="nav nav-fill mb-3 mt-5" role="tablist">
             <?php if ($showDescription) { ?>
                 <li class="nav-item link">
                     <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home"
@@ -712,7 +712,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 </li>
             <?php } ?>
         </ul>
-        <div class="tab-content mt-5" id="pills-tabContent">
+        <div class="tab-content mt-5">
             <?php if ($showDescription) { ?>
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                     <h6 class="mb-3"><b><?= $name ?></b></h6>
@@ -728,53 +728,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 <?php
             }
 
-            if (!empty($arResult['PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
-                <div class="tab-pane fade <? if (!$showDescription): ?>show active<? endif; ?>" id="pills-profile"
-                     role="tabpanel" aria-labelledby="pills-profile-tab">
-                    <h6 class="mb-3"><b><?= $name ?></b></h6>
-                    <?php if (!empty($arResult['PROPERTIES'])) { //print_r($arResult['DISPLAY_PROPERTIES']); ?>
-                        <ul class="product-item-detail-properties">
-                            <?php
-
-                            foreach ($arResult['PROPERTIES'] as $property) {
-                                if (in_array($property['CODE'], $arIskCode)) continue;
-
-                                if ((is_array($property['VALUE']) && count($property['VALUE']) == 0) || $property['VALUE'] == '')
-                                    continue;
-                                if ($property['CODE'] == 'BREND') {
-
-                                    $actualBlockData = array(
-                                        'select' => array('ID', 'UF_NAME'),
-                                        'order' => array('ID' => 'ASC'),
-                                        'limit' => '50',
-                                    );
-                                    $rsData = Enterego\EnteregoHelper::getHeadBlock('BREND', $actualBlockData);
-                                    if ($rsData['UF_NAME'] == '') continue;
-                                    $property['VALUE'] = $rsData['UF_NAME'];
-                                }
-                                ?>
-                                <li class="product-item-detail-properties-item  <?= $property['CODE'] ?>">
-                                    <span class="product-item-detail-properties-value"> - &nbsp<b>
-                                            <?= $property['NAME'] ?> </b> &nbsp&nbsp-&nbsp&nbsp </span>
-                                    <span class="product-item-detail-properties-value"> <?php
-                                        if (is_array($property['VALUE'])) {
-                                            echo implode(", ", $property['VALUE']);
-                                        } else {
-                                            echo $property['VALUE'];
-                                        } ?>
-										</span>
-                                </li>
-                                <?php
-                            }
-                            unset($property); ?>
-                        </ul>
-                        <?php
-                    }
-                    if ($arResult['SHOW_OFFERS_PROPS']) { ?>
-                        <ul class="product-item-detail-properties" id="<?= $itemIds['DISPLAY_PROP_DIV'] ?>"></ul>
-                    <?php } ?>
-                </div>
-                <?php
+            if (!empty($arResult['PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) {
+                include(__DIR__ . '/props/template.php');
             }
             if ($arParams['USE_COMMENTS'] === 'Y') { ?>
                 <div class="tab-pane fade " id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
@@ -825,59 +780,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     ); ?>
                 </div>
             <?php } ?>
-        </div>
-        <div class="desktop-none-cat-det d-lg-none d-md-none d-flex flex-column">
-            <div class="mb-4">
-                <?php if ($showDescription) { ?>
-                    <p class="font-19"><b><?= $arParams['MESS_DESCRIPTION_TAB'] ?></b></p>
-                    <h6 class="mb-3"><b><?= $name ?></b></h6>
-                    <?php if ($arResult['PREVIEW_TEXT'] != '' && ($arParams['DISPLAY_PREVIEW_TEXT_MODE'] === 'S'
-                            || ($arParams['DISPLAY_PREVIEW_TEXT_MODE'] === 'E' && $arResult['DETAIL_TEXT'] == ''))) {
-                        echo $arResult['PREVIEW_TEXT_TYPE'] === 'html' ? $arResult['PREVIEW_TEXT'] : '<h6>' . $arResult['PREVIEW_TEXT'] . '</h6>';
-                    }
-
-                    if ($arResult['DETAIL_TEXT'] != '') {
-                        echo $arResult['DETAIL_TEXT_TYPE'] === 'html' ? $arResult['DETAIL_TEXT'] : '<h6>' . $arResult['DETAIL_TEXT'] . '</h6>';
-                    } ?>
-                <?php } ?>
-            </div>
-            <div class="mb-4">
-                <?php if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
-                    <p class="font-19"><b><?= $arParams['MESS_PROPERTIES_TAB'] ?></b></p>
-                    <?php foreach ($arResult['DISPLAY_PROPERTIES'] as $property) {
-                        if (in_array($property['CODE'], 'CML2_TRAITS', 'KOMMENTARIY_AVTOZAKAZA')) continue; ?>
-                        <p class="product-item-detail-properties-item">
-                            <span class="product-item-detail-properties-value"> - &nbsp
-                                <b><?= $property['NAME'] ?>:</b> &nbsp&nbsp
-                            </span>
-                            <span class="product-item-detail-properties-value">
-                                <?php if (is_array($property['DISPLAY_VALUE'])) {
-                                    echo implode(",", $property['DISPLAY_VALUE']);
-                                } else {
-                                    echo $property['DISPLAY_VALUE'];
-                                } ?>
-                            </span>
-                        </p>
-                        <?php
-                    }
-                    unset($property);
-                } ?>
-            </div>
-            <!--            <div class="mb-4">-->
-            <!--                --><?php //if ($arParams['USE_COMMENTS'] === 'Y') { ?>
-            <!--                    <p class="font-19"><b>--><? //= $arParams['MESS_COMMENTS_TAB'] ?><!--</b></p>-->
-            <!--                    <div>-->
-            <!--                        --><?php
-            //                        $APPLICATION->IncludeComponent(
-            //                            'bitrix:catalog.comments',
-            //                            'oshisha_catalog.commets',
-            //                            $componentCommentsParams,
-            //                            $component,
-            //                            array('HIDE_ICONS' => 'Y')
-            //                        ); ?>
-            <!--                    </div>-->
-            <!--                --><?php //} ?>
-            <!--            </div>-->
         </div>
     </div>
 <?php if ($arParams['BRAND_USE'] === 'Y') { ?>
@@ -1159,7 +1061,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                         $strMainProps .= $current;
                     }
                 }
-
                 unset($current);
             }
         }

@@ -79,6 +79,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     $APPLICATION->ShowHead(); ?>
     <link rel="stylesheet" href="/local/assets/js/swiper/swiper-bundle.min.css">
     <script src="/local/assets/js/swiper/swiper-bundle.min.js"></script>
+    <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
 <body class="bx-background-image">
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
@@ -149,8 +150,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </span>
                     <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
                         отзыв</a>
-                    <a href="https://oshisha.net/" class="red_text text_font_13 font-weight-bold">Вернуться на старый
-                        сайт</a>
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-7 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
@@ -239,10 +238,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             <a href="/about/feedback_new_site/" class="link_menu_top">
                                 <span class="red_text text_font_13 font-weight-bold ">Написать отзыв</span>
                             </a>
-                            <a href="https://oshisha.net/" class="link_menu_top">
-                                <span class="red_text text_font_13 font-weight-bold">
-                                    Вернуться на старый сайт</span>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -270,7 +265,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </div>
                 </div>
                 <div class="box_right_header">
-                    <div class="box_with_search ">
+                    <div class="box_with_search z-index-1200">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:search.title",
                             "oshisha_search.title",
@@ -307,7 +302,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         ); ?>
                     </div>
 
-                    <div class="block_menu_mobile bx-header-personal">
+                    <div class="block_menu_mobile bx-header-personal z-index-1200">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:sale.basket.basket.line",
                             "oshisha_sale.basket.basket.line",
