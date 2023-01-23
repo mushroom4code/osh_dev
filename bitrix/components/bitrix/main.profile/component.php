@@ -162,7 +162,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
             strtotime(str_replace('/', '-', $arFields['PERSONAL_BIRTHDAY'])));
 		if( $rowUser['PERSONAL_BIRTHDAY'] != $arFields['PERSONAL_BIRTHDAY'] )
 		{
-			$arFields['UF_DATE_CHANGE_BH'] = date('m/d/Y');
+			$arFields['UF_DATE_CHANGE_BH'] = date('m/d/Y', strtotime('+1 year'));
 		} else {
             unset($arFields['PERSONAL_BIRTHDAY']);
         }
