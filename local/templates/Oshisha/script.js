@@ -440,19 +440,27 @@ $(document).ready(function () {
                     }
                 }
             } else {
-                let quantity = parseInt(quantityProdDet);
-                if ((quantity > 1) || (quantity !== 0)) {
-                    product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
-                    $(boxInput).val(quantity);
-                    if (quantity > max_QUANTITY) {
-                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
+                if (quantityProdDet) {
+                    let quantity = parseInt(quantityProdDet);
+                    if ((quantity > 1) || (quantity !== 0)) {
+                        product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
+                        $(boxInput).val(quantity);
+                        if (quantity > max_QUANTITY) {
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
 
+                        } else {
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                        }
+                    } else if(quantity == 0) {
+                        product_data = {'QUANTITY': 0, 'URL': product_url, 'ID': product_id};
+                        $(boxInput).val(0);
                     } else {
-                        $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                        product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
+                        $(boxInput).val(1);
                     }
                 } else {
-                    product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
-                    $(boxInput).val(1);
+                    product_data = {'QUANTITY': 0, 'URL': product_url, 'ID': product_id};
+                    $(boxInput).val(0);
                 }
             }
             let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="'+product_id+'"]');

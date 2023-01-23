@@ -84,15 +84,10 @@ if (empty($arResult["CATEGORIES"]))
                     $classButton = 'addProductDetailButton';
                 }
                 ?>
-                <div id="search_item_<?echo $arElement['ID']?>" class="bx_item_block_detail" style="display: none">
+                <div id="search_item_<?echo $arElement['ID']?>" class="bx_item_block_detail" style="display: none" tabindex="0">
                     <div class="product-item-detail-price-current"
                          id="<?= $arElement['PRICE_ID'] ?>"><?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>
                     </div>
-
-
-
-
-
                     <?if ($arElement['CATALOG_QUANTITY'] > 0):?>
                         <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
                             <?= (!$arElement['PRICES']['Основная']['CAN_BUY'] ? ' style="display: none;"' : '') ?>
@@ -136,7 +131,6 @@ if (empty($arResult["CATEGORIES"]))
                 <script>
                     $('#search_result<?echo $arElement['ID']?>_detail_opener').click(function(event) {
                         event.stopImmediatePropagation();
-                        // event.stopPropagation();
                         $("#search_item_<?echo $arElement['ID']?>").toggle("fast");
                         var matrix = $(this).css("transform");
                         if (matrix !== 'none') {
