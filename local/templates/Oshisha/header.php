@@ -79,6 +79,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     $APPLICATION->ShowHead(); ?>
     <link rel="stylesheet" href="/local/assets/js/swiper/swiper-bundle.min.css">
     <script src="/local/assets/js/swiper/swiper-bundle.min.js"></script>
+    <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
 <body class="bx-background-image">
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
