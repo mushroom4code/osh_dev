@@ -6997,24 +6997,33 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_PAYSYSTEM_PRICE'), '~' + total.PAY_SYSTEM_PRICE_FORMATTED));
             }
 
-            this.totalInfoBlockNode.appendChild(
-                BX.create('DIV', {
-                    props: {className: 'bx-soa-cart-total-button-container' + ('d-block')},
-                    children: [
-                        BX.create('A', {
-                            props: {
-                                href: 'javascript:void(0)',
-                                className: 'btn btn_basket btn-order-save'
-                            },
-                            html: this.params.MESS_ORDER,
-                            events: {
-                                click: BX.proxy(this.clickOrderSaveAction, this)
-                            }
-                        })
+            if (this.result.IS_AUTHORIZED) {
+                this.totalInfoBlockNode.appendChild(
+                    BX.create('DIV', {
+                        props: {className: 'bx-soa-cart-total-button-container' + ('d-block')},
+                        children: [
+                            BX.create('A', {
+                                props: {
+                                    href: 'javascript:void(0)',
+                                    className: 'btn btn_basket btn-order-save'
+                                },
+                                html: this.params.MESS_ORDER,
+                                events: {
+                                    click: BX.proxy(this.clickOrderSaveAction, this)
+                                }
+                            })
 
-                    ]
-                })
-            );
+                        ]
+                    })
+                );
+            } else {
+                this.totalInfoBlockNode.appendChild(
+                    BX.create('span', {
+                        props: {className: 'btn-primary-color'},
+                        html: 'Для оформления заказа необходимо авторизоваться'
+                    })
+                )
+            }
 
             this.editMobileTotalBlock();
         },
