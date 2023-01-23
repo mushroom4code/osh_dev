@@ -178,6 +178,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     z-index: 1000;
 }
 
+
 .info-prices-box-hover:hover .d-hide, .info-prices-box-hover:focus .d-hide {
     display: block;
 }
@@ -206,6 +207,10 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 
 .z-index-1000 {
     z-index: 1000;
+}
+
+.z-index-1200 {
+    z-index: 1200;
 }
 
 .z-index-1001 {
@@ -2622,7 +2627,7 @@ a.dropdown-toggle, .detail_disabled, .detail_disabled:hover, .disabled_class a.l
 .link_gram_active:hover, .link_gram:hover, .link_auth, .link_auth:hover, .link_message_box_product:hover,
 .checkbox1:checked + label > .hamburger1 > .bar2, .checkbox2:checked + label > .hamburger2 > .bar1,
 .checkbox3:checked + label > .hamburger3 > .bar5, .checkbox1:checked + label > .hamburger1 > .bar3,
-.checkbox4:checked + label > .hamburger4 > .bar8,.checkbox4:checked + label > .hamburger4 > .bar7,.btn_company,
+.checkbox4:checked + label > .hamburger4 > .bar8, .checkbox4:checked + label > .hamburger4 > .bar7, .btn_company,
 .checkbox2:checked + label > .hamburger2 > .bar4, .carousel-indicators > span.active, .link_banner a, .btn_red,
 .checkbox3:checked + label > .hamburger3 > .bar6, .bx-pagination .bx-pagination-container ul li.bx-active span,
 .btn_basket, .datepicker--cell.-in-range-, .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current-,
@@ -2670,7 +2675,7 @@ span > i.header_icon {
     border: 1px solid #F55F5C;
 }
 
-.datepicker--cell.-in-range-, .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current-,.text_catalog_button:hover,
+.datepicker--cell.-in-range-, .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current-, .text_catalog_button:hover,
 .datepicker--cell.-range-from-, .datepicker--cell.-selected-.-focus-, .datepicker--cell.-range-to-, .btn_basket,
 .btn_cancel, .btn_cancel:hover, .link_gram_active, .link_gram_active:hover, .link_gram:hover, .link_auth,
 .link_auth:hover, .link_message_box_product:hover, .link_message_box_product > i, .btn_brand, .btn_brand:hover,
@@ -4245,7 +4250,7 @@ table#TableWorkers.no-footer {
 
 .Icon span:nth-child(2), .checkbox1:checked + label > .hamburger1 > .bar3,
 .checkbox2:checked + label > .hamburger2 > .bar4, .checkbox3:checked + label > .hamburger3 > .bar6,
-.checkbox4:checked + label > .hamburger4 > .bar8{
+.checkbox4:checked + label > .hamburger4 > .bar8 {
     transform: rotate(-45deg);
 }
 
@@ -4291,7 +4296,7 @@ table#TableWorkers.no-footer {
 }
 
 
-.hamburger1 .bar, .hamburger2 .bar, .hamburger3 .bar, .hamburger4 .bar{
+.hamburger1 .bar, .hamburger2 .bar, .hamburger3 .bar, .hamburger4 .bar {
     transition: all 0.1s ease-in-out, transform 0.1s ease-in-out 0.1s;
 }
 
@@ -4299,7 +4304,7 @@ table#TableWorkers.no-footer {
 .checkbox1:checked + label > .hamburger1 > .bar2, .hamburger .bar, .hamburger2 .bar1, .hamburger2 .bar4,
 .checkbox2:checked + label > .hamburger2 > .bar1, .checkbox2:checked + label > .hamburger2 > .bar4,
 .checkbox3:checked + label > .hamburger2 > .bar5, .checkbox3:checked + label > .hamburger2 > .bar6, .hamburger3 .bar6,
-.hamburger4 .bar8,.hamburger4 .bar7 {
+.hamburger4 .bar8, .hamburger4 .bar7 {
     width: 23px;
 }
 
@@ -5011,8 +5016,8 @@ li, ul {
 }
 
 .static h5 {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 22px;
+    font-weight: 600;
     line-height: 100%;
     margin-bottom: 40px;
 }
@@ -5463,6 +5468,7 @@ li, ul {
     border: 2px dashed #E5E5E5;
     background: #f3f3f370;
 }
+
 .input_files .upload-file-label {
     position: relative;
     display: inline-block;
@@ -5471,6 +5477,7 @@ li, ul {
     line-height: 0;
     transform: translateX(-50%);
 }
+
 .input_files .upload-file-label .btn {
     display: flex;
     text-align: center;
@@ -5485,6 +5492,7 @@ li, ul {
     transition: 0.3s linear;
     z-index: -1;
 }
+
 .input_files .upload-file-label .btn:hover {
     background-color: #DD0602;
 }
@@ -5496,12 +5504,14 @@ li, ul {
     overflow: hidden;
     font-size: 0;
 }
+
 .input_files.drop-zone {
     display: block;
     position: relative;
     /*padding: 20px;*/
     transition: 0.3s linear;
 }
+
 .input_files.drop-zone.overmouse {
     background-color: #ebebeb70;
     background-color: #c3c0c070;
@@ -5515,6 +5525,7 @@ li, ul {
     margin: 10px auto;
     z-index: -1;
 }
+
 .input_files.drop-zone .file-list {
     width: 100%;
     position: relative;
@@ -5524,6 +5535,7 @@ li, ul {
     list-style: none;
     /*margin: 15px 0;*/
 }
+
 .input_files.drop-zone .file-list .upload-file-item {
     display: inline-block;
     padding: 10px;
@@ -5542,7 +5554,8 @@ li, ul {
     height: 100%;
     overflow: hidden;
 }
-.input_files.drop-zone  .file-list .upload-file-item .file-remove {
+
+.input_files.drop-zone .file-list .upload-file-item .file-remove {
     position: absolute;
     width: 20px;
     height: 20px;

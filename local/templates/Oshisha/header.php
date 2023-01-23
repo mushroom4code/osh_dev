@@ -268,7 +268,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </div>
                 </div>
                 <div class="box_right_header">
-                    <div class="box_with_search ">
+                    <div class="box_with_search z-index-1200">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:search.title",
                             "oshisha_search.title",
@@ -305,7 +305,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         ); ?>
                     </div>
 
-                    <div class="block_menu_mobile bx-header-personal">
+                    <div class="block_menu_mobile bx-header-personal z-index-1200">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:sale.basket.basket.line",
                             "oshisha_sale.basket.basket.line",
