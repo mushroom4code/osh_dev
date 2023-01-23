@@ -12,6 +12,9 @@ $APPLICATION->SetTitle("Новинки");
 $GLOBALS['ArFilter'] = array(
     'PROPERTY_NEW_VALUE' => 'Да'
 );
+$GLOBALS['PREFILTER_NAME'] = array(
+    'PROPERTY_NEW_VALUE' => 'Да'
+);
 
 $APPLICATION->IncludeComponent(
     "bitrix:catalog",
@@ -46,6 +49,7 @@ $APPLICATION->IncludeComponent(
         "USE_ELEMENT_COUNTER" => "Y",
         "USE_FILTER" => "Y",
         "FILTER_NAME" => "ArFilter",
+        "PREFILTER_NAME" => "ArPreFilter",
         "FILTER_VIEW_MODE" => "VERTICAL",
         "USE_COMPARE" => "N",
         "PRICE_CODE" => BXConstants::PriceCode(),
