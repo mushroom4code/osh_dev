@@ -239,6 +239,13 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                value="<?= (($arResult["ID"] > 0) ? Loc::getMessage("MAIN_SAVE") : Loc::getMessage("MAIN_ADD")) ?>">
                     </div>
                 </div>
+                <?php $APPLICATION->IncludeComponent(
+                    "ctweb:sms.authorize",
+                    "top",
+                    array(
+                        "ALLOW_MULTIPLE_USERS" => "Y"
+                    )
+                ); ?>
                 <div class="col-12 col-md-5 desktop" style="display:none;">
                     <h5 class="mb-3"><b>Подписки</b></h5>
                     <div class="column block_with_subscriptions">
