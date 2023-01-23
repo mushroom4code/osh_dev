@@ -104,30 +104,113 @@
             <? } ?>
 
             <!--endregion-->
-            <script>
+            <?php if ($arParams['TYPE'] === 'MAIN') { ?>
+                <script>
 
-                var swiper = new Swiper('.carousel-inner-main', {
-                    slidesPerView: 1,
-                    adaptiveHeight: true,
-                    spaceBetween: 0,
-                    speed: 1500,
+                    var swiper = new Swiper('.carousel-inner-main', {
+                        slidesPerView: 1,
+                        adaptiveHeight: true,
+                        spaceBetween: 0,
+                        speed: 1500,
 
-                    autoplay: {
-                        enabled: true,
-                        delay: 4000,
-                    },
-                    pagination: {
-                        el: '.swiper-pagination-block',
-                        clickable: true
-                    },
-                    loop: true,
-                    navigation: {
-                        prevEl: '.carousel-nav-MAIN-prev',
-                        nextEl: '.carousel-nav-MAIN-next'
-                    },
+                        autoplay: {
+                            enabled: true,
+                            delay: 4000,
+                        },
+                        pagination: {
+                            el: '.swiper-pagination-block',
+                            clickable: true
+                        },
+                        loop: true,
+                        navigation: {
+                            prevEl: '.carousel-nav-MAIN-prev',
+                            nextEl: '.carousel-nav-MAIN-next'
+                        },
 
-                });
-            </script>
+                    });
+                </script>
+            <? }else{ ?>
+                <script>
+                    BX("carousel-<?=$arResult['ID']?>").addEventListener("slid.bs.carousel", function (e) {
+                        var item = e.detail.curSlide.querySelector('.play-caption');
+                        if (!!item) {
+                            item.style.display = 'none';
+                            item.style.left = '-100%';
+                            item.style.opacity = 0;
+                        }
+                    }, false);
+                    BX("carousel-<?=$arResult['ID']?>").addEventListener("slide.bs.carousel", function (e) {
+                        var nodeToFixFont = e.target && e.target.querySelector(
+                            '.carousel-item.active .bx-advertisingbanner-text-title[data-fixfont="false"]'
+                        );
+                        if (BX.type.isDomNode(nodeToFixFont)) {
+                            nodeToFixFont.setAttribute('data-fixfont', 'true');
+                            BX.FixFontSize.init({
+                                objList: [{
+                                    node: nodeToFixFont,
+                                    smallestValue: 10
+                                }],
+                                onAdaptiveResize: true
+                            });
+                        }
+
+                        var item = e.detail.curSlide.querySelector('.play-caption');
+                        if (!!item) {
+                            var duration = item.getAttribute('data-duration') || 500,
+                                delay = item.getAttribute('data-delay') || 0;
+
+                            setTimeout(function () {
+                                item.style.display = '';
+                                var easing = new BX.easing({
+                                    duration: duration,
+                                    start: {left: -100, opacity: 0},
+                                    finish: {left: 0, opacity: 100},
+                                    transition: BX.easing.transitions.quart,
+                                    step: function (state) {
+                                        item.style.opacity = state.opacity / 100;
+                                        item.style.left = state.left + '%';
+                                    },
+                                    complete: function () {
+                                    }
+                                });
+                                easing.animate();
+                            }, delay);
+                        }
+                    }, false);
+                    BX.ready(function () {
+                        var tag = document.createElement('script');
+                        tag.src = "";
+                        var firstScriptTag = document.getElementsByTagName('script')[0];
+                        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                    });
+
+                    function mutePlayer(e) {
+                        e.target.mute();
+                    }
+
+                    function loopPlayer(e) {
+                        if (e.data === YT.PlayerState.ENDED)
+                            e.target.playVideo();
+                    }
+
+                    function onYouTubePlayerAPIReady() {
+                        if (typeof yt_player !== 'undefined') {
+                            for (var i in yt_player) {
+                                window[yt_player[i].id] = new YT.Player(
+                                    yt_player[i].id, {
+                                        events: {
+                                            'onStateChange': loopPlayer
+                                        }
+                                    }
+                                );
+                                if (yt_player[i].mute == true)
+                                    window[yt_player[i].id].addEventListener('onReady', mutePlayer);
+                            }
+                            delete yt_player;
+                        }
+                    }
+                </script>
+            <? } ?>
         </div>
         <? if ($arParams['PREVIEW'] == 'Y'): ?>
     </div>
