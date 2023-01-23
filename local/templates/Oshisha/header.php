@@ -238,10 +238,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             <a href="/about/feedback_new_site/" class="link_menu_top">
                                 <span class="red_text text_font_13 font-weight-bold ">Написать отзыв</span>
                             </a>
-                            <a href="https://oshisha.net/" class="link_menu_top">
-                                <span class="red_text text_font_13 font-weight-bold">
-                                    Вернуться на старый сайт</span>
-                            </a>
                         </div>
                     </div>
                 </div>
