@@ -21,8 +21,8 @@ if (isset($arParams['USE_COMMON_SETTINGS_BASKET_POPUP']) && $arParams['USE_COMMO
 
 $sort = [
     'by' => [
-        'by' => 'PROPERTY_MINIMUM_PRICE',//'CATALOG_PRICE_'.$GLOBALS['PRICE_TYPE_ID'],
-        'order' => 'asc'
+        'by' => 'SERVICE_FIELD_POPULARITY', // 'PROPERTY_MINIMUM_PRICE',//'CATALOG_PRICE_'.$GLOBALS['PRICE_TYPE_ID'],
+        'order' => 'DESC'
     ],
 
 ];
@@ -146,7 +146,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
                 <div class="catalog-section-list-tile-list">
-                    <? foreach ($arResult['SECTION_LIST'] as $arSection):?>
+                    <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap">
                                 <a href="<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
@@ -160,7 +160,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             </div>
                             <? if ($arSection['CHILDS']):
                                 usort($arSection['CHILDS'], 'sort_by_name');
-                              foreach ($arSection['CHILDS'] as $arSectionSub): ?>
+                                foreach ($arSection['CHILDS'] as $arSectionSub): ?>
                                     <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
                                          data-code="<?= $arSection['ID'] ?>">
                                         <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
@@ -266,35 +266,57 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                     <div class="sort_panel_wrap">
                         <div class="sort_panel">
-                            <a class="sort_order" href="#">
-                                Сортировать по
+                            <a class="sort_order sort_tool" href="#">
+                                <?php /*
+                                if ($_GET["sort"] == "price")
+                                {
+                                    $arParams["ELEMENT_SORT_FIELD"] = "catalog_PRICE_1";
+                                    $price="asortvibor";
+                                    $brend="";
+                                }
+//
+                                if ($_GET["sort"] == "NAME")
+                                {
+                                    $arParams["ELEMENT_SORT_FIELD"] = "NAME";
+                                    $brend="";
+                                    $price="";
+                                }
+                                */ ?>
+                                <span class="sort_orders_by sort_caption" style="min-width: 150px;">Сортировать по</span>
                                 <i class="fa fa-angle-down" aria-hidden="true"></i>
                             </a>
                             <div class="sort_orders_element">
                                 <ul>
                                     <li>
-                                        <a class="urlsort_popular"
-                                           href="<?= str_replace("#", "%23",
+                                        <a class="catalog_sort_item"
+                                           href="<?= str_replace(
+                                               "#",
+                                               "%23",
                                                $APPLICATION->GetCurPageParam(
-                                                   "sort_by=SHOW_COUNTER&sort_order=ASC",
-                                                   array('sort_by', 'sort_order'))) ?>">По популярности</a>
+                                                   "sort_by=PROPERTY_SERVICE_FIELD_POPULARITY&sort_order=DESC",
+                                                   array('sort_by', 'sort_order'))
+                                           ) ?>">По популярности</a>
+                                    </li>
+
+                                    <li>
+                                        <a class="catalog_sort_item" data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                           href="<?= str_replace(
+                                               "#",
+                                               "%23",
+                                               $APPLICATION->GetCurPageParam(
+                                                   "sort_by=CATALOG_PRICE_2&sort_order=ASC",
+                                                   array('sort_by', 'sort_order'))) ?>">По возрастанию цены</a>
                                     </li>
                                     <li>
-                                        <a class="urlsort_price_max" data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                        <a class="catalog_sort_item"
+                                           data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
                                            href="<?= str_replace("#", "%23",
                                                $APPLICATION->GetCurPageParam(
-                                                   "sort_by=PROPERTY_MINIMUM_PRICE&sort_order=desc",
-                                                   array('sort_by', 'sort_order'))) ?>">По цене (дорогие вначале)</a>
+                                                   "sort_by=CATALOG_PRICE_2&sort_order=DESC",
+                                                   array('sort_by', 'sort_order'))) ?>">По убыванию цены</a>
                                     </li>
                                     <li>
-                                        <a class="urlsort_price_min" data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                           href="<?= str_replace("#", "%23",
-                                               $APPLICATION->GetCurPageParam(
-                                                   "sort_by=PROPERTY_MINIMUM_PRICE&sort_order=asc",
-                                                   array('sort_by', 'sort_order'))) ?>">По цене (дешевые вначале)</a>
-                                    </li>
-                                    <li>
-                                        <a class="urlsort_name"
+                                        <a class="catalog_sort_item"
                                            href="<?= str_replace("#", "%23",
                                                $APPLICATION->GetCurPageParam(
                                                    "sort_by=NAME&sort_order=ASC",
@@ -302,9 +324,9 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                     </li>
 
                                     <li>
-                                        <a class="urlsort_created"
+                                        <a class="catalog_sort_item"
                                            href="<?= str_replace("#", "%23", $APPLICATION->GetCurPageParam(
-                                               "sort_by=CREATED_DATE&sort_order=desc",
+                                               "sort_by=CREATED_DATE&sort_order=DESC",
                                                array('sort_by', 'sort_order'))) ?>">По новизне</a>
                                     </li>
                                 </ul>

@@ -2077,13 +2077,14 @@ $(document).ready(function () {
             $('.icon_sort_bar').addClass('icon_sort_bar_active').removeClass('icon_sort_bar');
         }
     }
+    // переключение на вид картога карточками
     $(document).on('click', '#card_catalog', function () {
         document.cookie = 'orientation=card';
         $('.catalog-section').removeClass('by-line').addClass('by-card');
         $('.icon_sort_line_active').addClass('icon_sort_line').removeClass('icon_sort_line_active');
         $(this).addClass('icon_sort_bar_active').removeClass('icon_sort_bar');
     });
-
+    // переключение на вид картога списком
     $(document).on('click', '#line_catalog', function () {
         document.cookie = 'orientation=line';
         $('.catalog-section').removeClass('by-card').addClass('by-line');
@@ -2110,9 +2111,31 @@ $(document).ready(function () {
         }
     })
 
-    $('.sort_orders_elements').on('click', function (e) {
+
+    // выбор
+    $('.catalog_sort_item').on('click', function(e) {
+        e.preventDefault();
+
         let element = e.target;
-        $(this).closest('.sort_orders').find('.sort_orders_by').html(element.textContent);
+        console.log('Sort by: ', element.textContent);
+        $(this).closest('.sort_panel_wrap').find('.sort_caption').html(element.textContent);
+        $(this).closest('.sort_panel_wrap').find('.sort_orders_element').hide();
+
+        /* AJAX должен собрать новые параметры сортировки и отправить их в фильтр.
+            Тот должен получить новые данные и перерисовать товары и пагинацию */
+        $.ajax({
+            url: BX.message('SITE_DIR') +
+                'local/ajax/catalog_sorting.php',
+        });
+    })
+
+
+
+    /*
+    $('.sort_orders_elements').on('click', function (e) {
+        // let element = e.target;
+        // console.log(element.textContent);
+        // $(this).closest('.sort_orders').find('.sort_orders_by').html(element.textContent);
         $.ajax({
                 url: BX.message('SITE_DIR') +
                     'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
@@ -2198,6 +2221,7 @@ $(document).ready(function () {
             }
         )
     })
+    */
 
     $(document).on('click', function (e) {
         let elem = e.target;
