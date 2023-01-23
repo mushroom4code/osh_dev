@@ -157,17 +157,19 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
 		//Проверяем дату рождения
 //PERSONAL_BIRTHDAY
 		$rowUser = $obUser->GetByID($USER->GetId())->Fetch();
-        $arFields['PERSONAL_BIRTHDAY'] = date(
-            'm/d/Y',
-            strtotime(str_replace('/', '-', $arFields['PERSONAL_BIRTHDAY'])));
-		if( $rowUser['PERSONAL_BIRTHDAY'] != $arFields['PERSONAL_BIRTHDAY'] )
-		{
-			$arFields['UF_DATE_CHANGE_BH'] = date('m/d/Y', strtotime('+1 year'));
-		} else {
-            unset($arFields['PERSONAL_BIRTHDAY']);
+        if (!empty($arFields['PERSONAL_BIRTHDAY'])) {
+            $arFields['PERSONAL_BIRTHDAY'] = date(
+                'm/d/Y',
+                strtotime(str_replace('/', '-', $arFields['PERSONAL_BIRTHDAY'])));
+            if( $rowUser['PERSONAL_BIRTHDAY'] != $arFields['PERSONAL_BIRTHDAY'] )
+            {
+                $arFields['UF_DATE_CHANGE_BH'] = date('m/d/Y', strtotime('+1 year'));
+            } else {
+                unset($arFields['PERSONAL_BIRTHDAY']);
+            }
+            $USER_FIELD_MANAGER->EditFormAddFields("USER", $arFields);
         }
-		$USER_FIELD_MANAGER->EditFormAddFields("USER", $arFields);
-	
+
 		if($obUser->Update($arResult["ID"], $arFields))
 		{
 //			if($arResult["PHONE_REGISTRATION"] == true && $arFields["PHONE_NUMBER"] <> '')

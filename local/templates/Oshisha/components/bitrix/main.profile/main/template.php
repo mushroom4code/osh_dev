@@ -73,10 +73,10 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-day">Дата рождения</label>
                         <div class="col-sm-12 col-md-12">
-							<?if($arResult):?>
-                            <input class="form-control input_lk" type="text" name="BIRTHDAY" maxlength="50"
-                                   id="main-profile-day2" disabled value="<?= $arResult["arUser"]["PERSONAL_BIRTHDAY"] ?>"/>	
-								<?$dateChange = '<br><b>Изменить дату рождения можно будет '.date('d/m/Y',strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])+365*24*3600).'</b>';?>
+							<?if(date('m/d/Y') < $arResult['arUser']['UF_DATE_CHANGE_BH']):?>
+                            <input class="form-control input_lk" type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
+                                   id="main-profile-day2" disabled value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
+								<?$dateChange = '<br><b>Изменить дату рождения можно будет '.date('d/m/Y',strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])).'</b>';?>
 							<?else:?>
                             <input class="form-control input_lk" type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
                                    id="main-profile-day2" value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
