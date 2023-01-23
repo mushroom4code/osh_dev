@@ -5374,6 +5374,10 @@ li, ul {
 }
 
 @media (max-width: 768px) {
+    .container_header {
+        margin-top: 10px
+    }
+
     .right_mobile_top {
         display: flex;
         align-items: center;
