@@ -62,14 +62,14 @@ if (empty($arResult["CATEGORIES"]))
                 </div>
             <?elseif(isset($arResult["ELEMENTS"][$arItem["ITEM_ID"]])):
                 $arElement = $arResult["ELEMENTS"][$arItem["ITEM_ID"]];?>
-                <div class="bx_item_block" onclick="window.location='<?echo $arItem["URL"]?>';">
+                <div class="bx_item_block" onclick="window.location='<?= $arItem["URL"]?>';">
                     <?if (is_array($arElement["PICTURE"])):?>
                         <div class="bx_img_element">
                             <div class="bx_image" style="background-image: url('<?echo $arElement["PICTURE"]["src"]?>')"></div>
                         </div>
                     <?endif;?>
                     <div class="bx_item_element">
-                        <a href="<?echo $arItem["URL"]?>"><?echo $arItem["NAME"]?></a>
+                        <a href="<?echo $arItem["URL"]?>"><?= $arElement["PREVIEW_TEXT"]?></a>
 
                         <i  id="search_result<?echo$arElement['ID']?>_detail_opener"
                            class="fa fa-angle-right" aria-hidden="true" tabindex="0"></i>
@@ -85,7 +85,21 @@ if (empty($arResult["CATEGORIES"]))
                 }
                 ?>
                 <div id="search_item_<?echo $arElement['ID']?>" class="bx_item_block_detail" style="display: none" tabindex="0">
-                    <div class="product-item-detail-price-current"
+                    <div class="d-flex flex-column prices-block">
+                        <?foreach ($arElement['PRICES'] as $price_name => $price_data):?>
+                        <p>
+                            <span class="font-14 mr-2"><?= $price_name ?> <? if($price_name == 'Розничная'):?>
+                                        (до 10к)
+                                    <?elseif ($price_name == 'Основная'):?>
+                                        (до 30к)
+                                    <?elseif ($price_name == 'b2b'):?>
+                                        (от 30к)
+                                    <?endif;?></span> -
+                            <span class="font-14 ml-2 "><?= $price_data['PRINT_VALUE_VAT'] ?></span>
+                        </p>
+                        <?endforeach;?>
+                    </div>
+                    <div style="display: none" class="product-item-detail-price-current"
                          id="<?= $arElement['PRICE_ID'] ?>"><?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>
                     </div>
                     <?if ($arElement['CATALOG_QUANTITY'] > 0):?>
