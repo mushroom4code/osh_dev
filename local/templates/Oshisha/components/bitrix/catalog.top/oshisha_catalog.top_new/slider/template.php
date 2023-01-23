@@ -188,13 +188,13 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                     <div class="image_cart">
                         <?php if (!empty($arItem['PREVIEW_PICTURE']['SRC'])) { ?>
                             <a id="<?= $arItemIDs['PICT']; ?>"
-                               href="/catalog/<?= $catalogProduct['CODE'] . '/' . $arItem['CODE']; ?>/">
+                               href="<?= $arItem['DETAIL_PAGE_URL']; ?>">
                                 <img src="<?= $arItem['PREVIEW_PICTURE']['SRC']; ?>"
                                      id="<?= $arItemIDs['PICT']; ?>"/>
                             </a>
                         <?php } else { ?>
                             <a id="<?= $arItemIDs['PICT']; ?>"
-                               href="/catalog/<?= $catalogProduct['CODE'] . '/' . $arItem['CODE']; ?>/">
+                               href="<?= $arItem['DETAIL_PAGE_URL']; ?>">
                                 <img src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"
                                      id="<?= $arItemIDs['PICT']; ?>"/>
                             </a>

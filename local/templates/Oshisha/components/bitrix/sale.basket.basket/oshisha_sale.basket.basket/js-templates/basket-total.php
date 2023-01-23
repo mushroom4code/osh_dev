@@ -34,18 +34,18 @@ use Bitrix\Main\Localization\Loc;
                     <span class="text_filter_basket"> {{{WEIGHT_FORMATED}}}</span>
                     {{/WEIGHT_FORMATED}}
                 </div>
-<!--               Бонусная система -->
-<!--                <div>-->
-<!--                    <div class="basket-checkout-block mb-4 d-flex justify-content-between flex-row align-items-center">-->
-<!--                        <span class="text_filter_basket"><b>У вас 500 баллов</b></span>-->
-<!--                        <span class="text_filter_basket link_bonus">(Вам начислится <a href="#">230</a> баллов) </span>-->
-<!--                    </div>-->
-<!--                    <div class="basket-checkout-block mb-4 d-flex pb-3  align-items-center justify-content-between-->
-<!--                 flex-row border_color">-->
-<!--                        <input type="text" class="input-form-control input_basket" placeholder="Введите кол-во баллов"/>-->
-<!--                        <button class="btn_basket_filter" type="button">Списать</button>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--               Бонусная система -->
+                <!--                <div>-->
+                <!--                    <div class="basket-checkout-block mb-4 d-flex justify-content-between flex-row align-items-center">-->
+                <!--                        <span class="text_filter_basket"><b>У вас 500 баллов</b></span>-->
+                <!--                        <span class="text_filter_basket link_bonus">(Вам начислится <a href="#">230</a> баллов) </span>-->
+                <!--                    </div>-->
+                <!--                    <div class="basket-checkout-block mb-4 d-flex pb-3  align-items-center justify-content-between-->
+                <!--                 flex-row border_color">-->
+                <!--                        <input type="text" class="input-form-control input_basket" placeholder="Введите кол-во баллов"/>-->
+                <!--                        <button class="btn_basket_filter" type="button">Списать</button>-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 <div class="basket-checkout-block mb-4 d-flex justify-content-between flex-row align-items-center">
                     <div class="d-flex flex-column">
                         <span class="text_filter_basket mb-1"><b>Общая стоимость</b></span>
@@ -53,14 +53,24 @@ use Bitrix\Main\Localization\Loc;
                                     href="#">Бесплатная</a> доставка по г. Москва.</span>
                     </div>
                     <div>
-                        <span class="text_filter_basket" data-entity="basket-total-price"><b> {{{PRICE_FORMATED}}}</b></span>
+                        <span class="text_filter_basket"
+                              data-entity="basket-total-price"><b> {{{PRICE_FORMATED}}}</b></span>
                     </div>
                 </div>
-                <div class="basket-checkout-block  mb-4 basket-checkout-block-btn">
-                    <button class="btn_basket  basket-btn-checkout{{#DISABLE_CHECKOUT}} disabled{{/DISABLE_CHECKOUT}}"
-                            data-entity="basket-checkout-button">
-                        <?= Loc::getMessage('SBB_ORDER') ?>
-                    </button>
+                <div class="basket-checkout-block mb-4 basket-checkout-block-btn text-left">
+                    <?php
+                    if ($USER->IsAuthorized()) {
+                        ?>
+                        <button class="btn_basket  basket-btn-checkout{{#DISABLE_CHECKOUT}} disabled{{/DISABLE_CHECKOUT}}"
+                                data-entity="basket-checkout-button">
+                            <?= Loc::getMessage('SBB_ORDER') ?>
+                        </button>
+                        <?php
+                    }  else {
+                        ?>
+                            <span class="btn-primary-color">Для оформления заказа необходимо авторизоваться</span>
+                        <?php
+                    }?>
                 </div>
             </div>
         </div>
@@ -87,22 +97,23 @@ use Bitrix\Main\Localization\Loc;
                             </div>
                         </div>
 
-			<div class="basket-coupon-alert-section">
-				<div class="basket-coupon-alert-inner">
-					{{#COUPON_LIST}}
-					<div class="basket-coupon-alert text-{{CLASS}}">
+                        <div class="basket-coupon-alert-section">
+                            <div class="basket-coupon-alert-inner">
+                                {{#COUPON_LIST}}
+                                <div class="basket-coupon-alert text-{{CLASS}}">
 						<span class="basket-coupon-text">
-							<strong>{{COUPON}}</strong> - <?=Loc::getMessage('SBB_COUPON')?> {{JS_CHECK_CODE}}
+							<strong>{{COUPON}}</strong> - <?= Loc::getMessage('SBB_COUPON') ?> {{JS_CHECK_CODE}}
 							{{#DISCOUNT_NAME}}({{DISCOUNT_NAME}}){{/DISCOUNT_NAME}}
 						</span>
-						<span class="close-link" data-entity="basket-coupon-delete" data-coupon="{{COUPON}}">
-							<?=Loc::getMessage('SBB_DELETE')?>
+                                    <span class="close-link" data-entity="basket-coupon-delete"
+                                          data-coupon="{{COUPON}}">
+							<?= Loc::getMessage('SBB_DELETE') ?>
 						</span>
-					</div>
-					{{/COUPON_LIST}}
-				</div>
-			</div>
-		
+                                </div>
+                                {{/COUPON_LIST}}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <?
