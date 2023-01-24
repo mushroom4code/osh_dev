@@ -258,6 +258,14 @@ div.title-search-result td.title-search-price span {
 	/*margin-right: 40px;*/
 }
 
+.bx_item_block_detail .old_and_current_prices_block {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
 .bx_item_block_detail .product-item-detail-price-current {
 	margin-right: 20px;
 	font-size: 18px;
