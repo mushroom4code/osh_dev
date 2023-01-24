@@ -150,4 +150,12 @@ $arUrlRewrite=array (
     'PATH' => '/bitrix/services/rest/index.php',
     'SORT' => 100,
   ),
+    18 =>
+        array (
+            'CONDITION' => '#^/local/osh-rest/hook/#',
+            'RULE' => '',
+            'ID' => 'bitrix:rest.hook',
+            'PATH' => '/local/osh-rest/hook/index.php',
+            'SORT' => 100,
+        )
 );
