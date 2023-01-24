@@ -660,17 +660,6 @@ h3.ctweb-title {
     position: fixed !important;
 }
 
-.overlay {
-    display: none;
-    background-color: rgb(0, 0, 0);
-    opacity: 0.6;
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9000;
-}
 
 .email-register {
     display: none;
