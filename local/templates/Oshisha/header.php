@@ -272,7 +272,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <div class="text_header_menu"><span>Вся продукция <br>для кальяна</span></div>
                 </div>
                 <div class="box_right_header">
-                    <div class="box_with_search z-index-1200">
+                    <div class="box_with_search">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:search.title",
                             "oshisha_search.title",
