@@ -124,8 +124,8 @@ class SDEKDelivery extends CommonPVZ
             if ($this->token !== '' && $sdek_city_code) {
 
                 $requestObjectString = '{
-                    "tariff_code":"136",
-                    "from_location":{"code": "44"},
+                    "tariff_code":"' . $this->configs['tariff_code'] . '",
+                    "from_location":{"code": "' . $this->configs['from_location'] . '"},
                     "to_location":{"code":"' . $sdek_city_code . '", "address": "' . $array['to'] . '"},
                     "packages":[{
                     "weight":"' . $array['weight'] . '"
