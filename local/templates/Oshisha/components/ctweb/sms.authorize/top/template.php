@@ -40,7 +40,6 @@ $jsParams = array(
     )
 );
 ?>
-<div>
 <div style="display: none" class="ctweb-smsauth-menu-block radius_10 position-absolute">
     <div class="close_login_menu">
         <a class="close_header_box" href="">
@@ -238,7 +237,6 @@ $jsParams = array(
 
         <?php endif; ?>
     </div>
-</div>
 </div>
 <script>
     BX.message(<?= json_encode(array(
