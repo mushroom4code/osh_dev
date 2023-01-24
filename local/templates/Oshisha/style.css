@@ -223,8 +223,11 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 
 /* BOXES */
 .box_footer {
-    background-color: #313131;
     padding: 5rem 0;
+}
+
+.bg-dark-osh, .box_footer {
+    background-color: #313131;
 }
 
 .box_with_search, .box_honesty, .box_automation, .box_display, .box_block, .box_present, .box_help, .box_house,
@@ -959,7 +962,7 @@ div.card > div.card-body > div.box_with_properties > div > h4.card-title > a, .b
 }
 
 div.box_with_icons > a > i.icons_theme:first-child {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .box_with_net a, .by-line .icon_like {
@@ -968,6 +971,15 @@ div.box_with_icons > a > i.icons_theme:first-child {
 
 .by-line .product-item__favorite-star {
     font-size: 28px;
+}
+
+.font-40 {
+    font-size: 40px;
+    line-height: 100%;
+}
+
+.font-120 {
+    font-size: 120px;
 }
 
 h4 > b, .orderCancel, .select2-results__option,
@@ -1350,7 +1362,7 @@ span > i.header_icon {
 
 .link_menu_header:hover, .mini_link:hover, .not_product, .view-buttons-list:hover, .view-buttons-list:active,
 .active_filter, .box_with_message_prodNot > i, .red_text, .link_basket_after, .box_edit span:hover,
-.link_menu .text_catalog_link:hover, .addProductDetailButton {
+.link_menu .text_catalog_link:hover, .addProductDetailButton, .color-redLight {
     color: #F55F5C !important;
 }
 
@@ -2308,9 +2320,9 @@ input.check_input {
 }
 
 .blog-comment-date, .blog-author, .bx-catalog-tab-container .blog-comments .blog-comment .blog-comment-cont
-.blog-comment-cont-white .blog-comment-info a.link_like span,
+.blog-comment-cont-white .blog-comment-info a.link_like span, .color-black,
 .bx-catalog-tab-container .blog-comments .blog-comment .blog-comment-cont .blog-comment-cont-white .blog-comment-info
-a.link_like {
+a.link_like, #placeModal form #choose-city-btn, #placeModal form input#city-search, #placeModal form input#city-search:focus {
     color: black !important;
 }
 
@@ -2687,7 +2699,8 @@ span > i.header_icon {
 .link_menu_top_active span, .link_menu_top_active i, .carousel_elem_custom, .text_footer_weight, .carousel_custom,
 div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_message_box_product, .link_banner a,
 .link_banner a:hover, .link_gram_active, .link_gram_active:hover, .link_gram:hover, .link_auth, .link_auth:hover,
-.link_message_box_product:hover, a.bx-advertisingbanner-btn, span.name, .box_editArch span.btn_s {
+.link_message_box_product:hover, a.bx-advertisingbanner-btn, span.name, .box_editArch span.btn_s, .color-white,
+.color-white:hover {
     color: white;
 }
 
@@ -2755,6 +2768,10 @@ div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_
     max-width: 407px;
 }
 
+.width-fit-content {
+    width: fit-content;
+}
+
 .mess_danger {
     padding: 8px;
     width: 32%;
@@ -2775,9 +2792,7 @@ div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_
 }
 
 #o_nas .box_text_business {
-    width: fit-content;
     width: 360px;
-
     height: initial;
     margin-right: 30px;
     min-height: 135px;
@@ -3690,7 +3705,7 @@ table#TableWorkers.no-footer {
     }
 
     .new_custom_button_slick_right > i, .new_custom_button_slick_right_cat > i, .new_custom_button_slick_left > i,
-    .new_custom_button_slick_left_cat > i, #box_contacts h5, #o_nas h5, .text_footer_weight {
+    .new_custom_button_slick_left_cat > i, #box_contacts h5, .text_footer_weight {
         font-size: 16px;
     }
 
@@ -4422,7 +4437,6 @@ table#TableWorkers.no-footer {
     background-color: #f0f0f0;
     border: 2px solid white !important;
     border-radius: 10px 10px 0 0;
-    color: black;
     font-weight: 600;
     padding: 20px 55px;
 }
@@ -4439,7 +4453,6 @@ table#TableWorkers.no-footer {
 #placeModal form #choose-city-btn {
     border: 3px solid white;
     opacity: 0.8;
-    color: black;
     font-weight: 400;
     cursor: pointer;
     z-index: inherit;
@@ -5072,6 +5085,16 @@ li, ul {
     line-height: 130%;
 }
 
+.bg-image-ugol {
+    height: 567px;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+}
+
+.bg-gray-blue {
+    background-color: #E0E0E0;
+}
+
 .search_adress {
     display: none;
 }
@@ -5088,10 +5111,6 @@ li, ul {
 .faq_question {
     font-weight: 500;
     font-size: 16px;
-}
-
-.accordion .box:first-child {
-    border-top: 1px solid #E5E5E5;
 }
 
 .icon_for_bussines {
@@ -5128,6 +5147,10 @@ li, ul {
 
 .mb-6 {
     margin-bottom: 60px;
+}
+
+.mb-7 {
+    margin-bottom: 5rem;
 }
 
 .forn_for_bussiness .form_company {
@@ -5377,6 +5400,28 @@ li, ul {
 
 }
 
+.severnei {
+    max-width: 386px;
+}
+
+.burn {
+    max-width: 209px;
+}
+
+.sebero {
+    max-width: 260px;
+}
+
+.duft {
+    max-width: 189px;
+}
+
+.o-nas-image {
+    background-size: auto;
+    height: 100%;
+    background-repeat: no-repeat;
+}
+
 @media (max-width: 768px) {
     .right_mobile_top {
         display: flex;
@@ -5404,12 +5449,52 @@ li, ul {
         margin-top: 4px;
     }
 
+    .bg-image-ugol {
+        background-size: contain;
+    }
+
     .box_with_search .btn_search {
         right: 13px;
         top: 10px;
         width: 22px;
         height: 22px;
         background-image: url("/local/templates/Oshisha/images/search_basket.png");
+    }
+
+    .font-40 {
+        font-size: 21px;
+    }
+
+    .mb-7 {
+        margin-bottom: 2rem;
+    }
+
+    .font-m-13 {
+        font-size: 13px;
+    }
+
+    .bg-image-ugol {
+        height: 466px;
+    }
+
+    .font-120 {
+        font-size: 35px;
+    }
+
+    .severnei {
+        max-width: 263px;
+    }
+
+    .sebero {
+        max-width: 191px;
+    }
+
+    .duft {
+        max-width: 152px;
+    }
+
+    .burn {
+        max-width: 188px;
     }
 }
 

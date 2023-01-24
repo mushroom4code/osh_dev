@@ -398,7 +398,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     </div>
                     <?php
                 } else { ?>
-                    <p class="article ">Артикул: <?= $article['VALUE'][2] ?></p>
                     <p class="text_prev mb-4"><?= $arResult['PREVIEW_TEXT'] ?></p>
                     <div class="d-flex flex-lg-column flex-md-column flex-column-reverse">
                         <?php
