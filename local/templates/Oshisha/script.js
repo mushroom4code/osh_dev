@@ -465,15 +465,19 @@ $(document).ready(function () {
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
                     if (!$(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
-                        $(detailCardBasketAddButton).hide(200).text('В корзине');
+                        $(detailCardBasketAddButton).fadeOut(100, function () {
+                            $(detailCardBasketAddButton).text('В корзине');
+                        });
                         $(detailCardBasketAddButton).attr({'onclick': "location.href='/personal/cart/'"});
-                        $(detailCardBasketAddButton).removeClass('btn_basket').addClass('addProductDetailButton').show(200);
+                        $(detailCardBasketAddButton).removeClass('btn_basket').addClass('addProductDetailButton').fadeIn(200);
                     }
                 } else {
                     if ($(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
-                        $(detailCardBasketAddButton).hide(200).text('В корзину');
+                        $(detailCardBasketAddButton).fadeOut(100, function () {
+                            $(detailCardBasketAddButton).text('В корзину');
+                        });
                         $(detailCardBasketAddButton).prop('onclick', null).off('click');
-                        $(detailCardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').show(200);
+                        $(detailCardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').fadeIn(200)
                     }
                 }
             }
