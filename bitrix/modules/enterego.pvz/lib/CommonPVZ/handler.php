@@ -12,11 +12,14 @@ use CIBlockElement;
 use CIBlockSection;
 use Bitrix\Main\Page\Asset;
 use CModule;
+use \CommonPVZ\DeliveryHelper;
 use CSaleOrderProps;
 use CSaleOrderPropsValue;
 
 Loc::loadMessages(__FILE__);
 
+if (!\Bitrix\Main\Loader::includeModule('enterego.pvz'))
+    return;
 
 class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 {
@@ -76,6 +79,7 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
         }
 
         $result = new \Bitrix\Sale\Delivery\CalculationResult();
+        $result->setDescription(\CommonPVZ\DeliveryHelper::getButton());
         $result->setDeliveryPrice(
             roundEx(
                 $price,

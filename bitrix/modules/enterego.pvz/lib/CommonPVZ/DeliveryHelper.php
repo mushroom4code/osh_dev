@@ -12,18 +12,11 @@ Loc::loadMessages(__FILE__);
 class DeliveryHelper
 {
 
-    public function getButton()
+    public static function getButton()
     {
 
         ob_start();
         ?>
-        <style>
-            .btn_pvz {
-                display: block;
-                margin-top: 8px;
-                max-width: 320px
-            }
-        </style>
         <a class="btn btn_basket btn_pvz btn-default"
            onclick="BX.SaleCommonPVZ.openMap(); return false;">
             <?= Loc::getMessage('COMMONPVZ_BTN_CHOOSE') ?>
@@ -104,17 +97,6 @@ class DeliveryHelper
         } elseif ($req_data['delivery'] === '5post') {
             $delivery = new FivePostDelivery();
             return $delivery->getPrice($req_data);
-        }
-    }
-
-    public function onOrderOneStepDelivery(&$arResult, &$arUserResult, $arParams)
-    {
-        $button = self::getButton();
-        $id = self::getDeliveryID($arResult['DELIVERY']);
-
-        if (isset($arResult['DELIVERY'][$id])) {
-            $content = $arResult['DELIVERY'][$id]['DESCRIPTION'];
-            $arResult['DELIVERY'][$id]['DESCRIPTION'] = $content . $button;
         }
     }
 

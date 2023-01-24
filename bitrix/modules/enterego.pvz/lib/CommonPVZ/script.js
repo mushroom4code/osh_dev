@@ -162,7 +162,10 @@ BX.SaleCommonPVZ = {
             var objectId = e.get('objectId'),
                 obj = objectManager.objects.getById(objectId);
             __this.pvzAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
-            __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress + ' #' + obj.properties.code_pvz;
+            if (typeof obj.properties.code_pvz !== 'undefined')
+                __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress + ' #' + obj.properties.code_pvz;
+            else
+                __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
 
             BX.ajax({
                 url: __this.ajaxUrlPVZ,
@@ -181,7 +184,7 @@ BX.SaleCommonPVZ = {
                     result = JSON.parse(result);
                     var reqData = {};
                     reqData.price = parseInt(result) || 0;
-                    reqData.address = obj.properties.deliveryName + ': ' + obj.properties.fullAddress + ' #' + obj.properties.code_pvz || '';
+                    reqData.address = __this.pvzFullAddress || '';
                     __this.sendRequestToComponent('refreshOrderAjax', reqData);
                 }, this),
                 onfailure: BX.delegate(function () {
@@ -206,8 +209,6 @@ BX.SaleCommonPVZ = {
                 }
                 // TODO - неправильно что по определенным номерам св-в
                 $('#pvz_address>span').text(__this.pvzAddress);
-                var adr = $('[name="ORDER_PROP_7"]').length ? $('[name="ORDER_PROP_7"]') : $('[name="ORDER_PROP_19"]');
-                adr.val(__this.pvzFullAddress);
 
                 BX.Sale.OrderAjaxComponent.endLoader();
             }, this),
