@@ -457,7 +457,7 @@ $(document).ready(function () {
                     }
                 } else {
                     product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
-                    $(boxInput).val(0);
+                    $(boxInput).val(1);
                 }
             }
             let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="'+product_id+'"]');
@@ -487,7 +487,6 @@ $(document).ready(function () {
         }
 
         $(document).on('click', '.add2basket', function () {
-            console.log('ssss');
             clearTimeout(window.addToBasketEventTimeout);
             addToBasketEvent.call(this);
         });
