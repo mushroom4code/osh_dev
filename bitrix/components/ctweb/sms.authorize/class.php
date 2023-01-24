@@ -281,7 +281,6 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     $this->clearSession();
                 }
             } else {
-
                 switch ($this->manager->getStep()) {
                     case Manager::STEP_SUCCESS : // all ok, redirect waiting
                         $this->actionStepSuccess();
@@ -308,8 +307,35 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                 ($this->arResult['STEP'] = $this->manager->getStep()) || ($this->arResult['STEP'] = Manager::STEP_PHONE_WAITING);
             }
         } else {
-            $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
-            $this->clearSession();
+            if($APPLICATION->GetCurPage() != "/personal/private/") {
+                $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
+                $this->clearSession();
+            } else {
+                switch ($this->manager->getStep()) {
+                    case Manager::STEP_SUCCESS : // all ok, redirect waiting
+                        $this->actionStepSuccess();
+                        break;
+
+                    case Manager::STEP_USER_WAITING :
+                        $this->actionStepUserWaiting();
+                        break;
+
+                    case Manager::STEP_CODE_WAITING : // user found, code waiting for auth
+                        $this->actionStepCodeWaiting($isAjaxRequest);
+                        break;
+
+                    case Manager::STEP_PHONE_WAITING: // no action, phone waiting
+                    default: // no action, phone waiting
+                        $this->actionStepPhoneWaiting($isAjaxRequest);
+                }
+
+                $this->arResult['ERRORS'] = $this->manager->getErrors();
+                $this->arResult['USER_VALUES']['SAVE_SESSION'] = $this->getSessionField('SAVE_SESSION');
+                $this->arResult['USER_VALUES']['PHONE'] = $this->getSessionField('PHONE');
+                $this->arResult['EXPIRE_TIME'] = $this->manager->getExpireTime() - time();
+                $this->arResult['REUSE_TIME'] = $this->manager->getReuseTime() - time();
+                ($this->arResult['STEP'] = $this->manager->getStep()) || ($this->arResult['STEP'] = Manager::STEP_PHONE_WAITING);
+            }
         }
 
         if ($isAjaxRequest) {
