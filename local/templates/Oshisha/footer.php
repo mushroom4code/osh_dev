@@ -7,11 +7,10 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')) {
     ?>
     </div><?php }
 $option = $option_site; ?>
-
-
-</div><!--end .bx-content -->
-</div><!--end .container.bx-content-section-->
+</div>
+<!--end .container.bx-content-section-->
 </div><!--end .workarea-->
+
 <footer class="box_footer">
     <div class="foot_container">
         <div class="row">

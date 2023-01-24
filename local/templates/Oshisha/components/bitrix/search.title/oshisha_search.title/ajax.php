@@ -4,6 +4,12 @@ if (empty($arResult["CATEGORIES"]))
 ?>
 <div tabindex="0" id="search_results_container" class="bx_searche">
     <?
+    foreach ($arResult['ELEMENTS'] as $product_id => $product) {
+        $db_props = CIBlockElement::GetProperty($product['IBLOCK_ID'], $product['ID'], array("sort" => "asc"), Array("CODE"=>"USE_DISCOUNT"));
+        if($ar_props = $db_props->Fetch()) {
+            $arResult['ELEMENTS'][$product_id]['USE_DISCOUNT'] = $ar_props['VALUE_ENUM'];
+        }
+    }
     $dbStatistic = CSearchStatistic::GetList(
             array("TIMESTAMP_X"=>'DESC'),
             array("STAT_SESS_ID" => $_SESSION['SESS_SESSION_ID']),
@@ -86,21 +92,33 @@ if (empty($arResult["CATEGORIES"]))
                 ?>
                 <div id="search_item_<?echo $arElement['ID']?>" class="bx_item_block_detail" style="display: none" tabindex="0">
                     <div class="d-flex flex-column prices-block">
-                        <?foreach ($arElement['PRICES'] as $price_name => $price_data):?>
                         <p>
-                            <span class="font-14 mr-2"><?= $price_name ?> <? if($price_name == 'Розничная'):?>
-                                        (до 10к)
-                                    <?elseif ($price_name == 'Основная'):?>
-                                        (до 30к)
-                                    <?elseif ($price_name == 'b2b'):?>
-                                        (от 30к)
-                                    <?endif;?></span> -
-                            <span class="font-14 ml-2 "><?= $price_data['PRINT_VALUE_VAT'] ?></span>
+                            <span class="font-14 mr-2">Розничная (до 10к)</span> -
+                            <span class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
+                                <?= $arElement['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?></span>
                         </p>
-                        <?endforeach;?>
+                        <p>
+                            <span class="font-14 mr-2">Основная (до 30к)
+                            <span class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
+                                <?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?></span>
+                        </p>
+                        <p>
+                            <span class="font-14 mr-2">b2b (от 30к)</span> -
+                            <span class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
+                                <?= $arElement['PRICES']['b2b']['PRINT_VALUE_VAT'] ?></span>
+                        </p>
                     </div>
-                    <div style="display: none" class="product-item-detail-price-current"
-                         id="<?= $arElement['PRICE_ID'] ?>"><?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>
+                    <div class="old_and_current_prices_block">
+                        <div style="<?= ($arElement['USE_DISCOUNT'] == 'Нет') ? 'display: none' : '' ?>"
+                             class="product-item-detail-price-current"
+                             id="<?= $arElement['PRICE_ID'] ?>">
+                            <?= ($arElement['USE_DISCOUNT'] == 'Да') ?
+                                $arElement['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] :
+                                $arElement['PRICES']['Основная']['PRINT_VALUE_VAT']?>
+                        </div>
+                        <?if ($arElement['USE_DISCOUNT'] == 'Да'):?>
+                            <span class="span">Старая цена <?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?></span>
+                        <?endif;?>
                     </div>
                     <?if ($arElement['CATALOG_QUANTITY'] > 0):?>
                         <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"

@@ -4,9 +4,8 @@ $(document).ready(function () {
     $(document).on('click', '.initial_auth_popup', function () {
         event.preventDefault();
         $('.ctweb-smsauth-menu-block').show();
-        $('.overlay').show();
-
     });
+
     $(document).on('click', 'a.method', function () {
         let that = $(this);
         let newCount = 0;

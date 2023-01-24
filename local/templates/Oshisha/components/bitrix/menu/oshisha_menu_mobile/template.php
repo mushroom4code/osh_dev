@@ -56,8 +56,8 @@ print_r($arResult["MENU_STRUCTURE"]);*/
                 <li class="li_menu_top " data-role="bx-menu-item">
                     <?php
                     $active = '';
-                    if($arResult["ALL_ITEMS"][$itemID]["LINK"] === '/catalog/kalyany/'){
-                       // $active = 'link_menu_top_active';
+                    if ($arResult["ALL_ITEMS"][$itemID]["LINK"] == '/catalog/diskont/') {
+                       continue;
                     } ?>
 					<div class="wrap_block_menu <?=$class?>">
                     <a class="link_menu_top <?= $active ?>" href="<?= $arResult["ALL_ITEMS"][$itemID]["LINK"] ?>">
