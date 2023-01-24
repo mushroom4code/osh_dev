@@ -1,222 +1,144 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-//You may customize user card fields to display
-$arResult['USER_PROPERTY'] = array(
-	"UF_DEPARTMENT",
-);
+$PREVIEW_WIDTH = intval($arParams["PREVIEW_WIDTH"]);
+if ($PREVIEW_WIDTH <= 0)
+    $PREVIEW_WIDTH = 75;
 
-//Code below searches for appropriate icon for search index item.
-//All filenames should be lowercase.
+$PREVIEW_HEIGHT = intval($arParams["PREVIEW_HEIGHT"]);
+if ($PREVIEW_HEIGHT <= 0)
+    $PREVIEW_HEIGHT = 75;
 
-//1
-//Check if index item is information block element with property DOC_TYPE set.
-//This property should be type list and we'll take it's values XML_ID as parameter
-//iblock_doc_type_<xml_id>.png
+$arParams["PRICE_VAT_INCLUDE"] = $arParams["PRICE_VAT_INCLUDE"] !== "N";
 
-//2
-//When no such fle found we'll check for section attributes
-//iblock_section_<code>.png
-//iblock_section_<id>.png
-//iblock_section_<xml_id>.png
+$arCatalogs = false;
 
-//3
-//Next we'll try to detect icon by "extention".
-//where extension is all a-z between dot and end of title
-//iblock_type_<iblock type id>_<extension>.png
-
-//4
-//If we still failed. Try to match information block attributes.
-//iblock_iblock_<code>.png
-//iblock_iblock_<id>.png
-//iblock_iblock_<xml_id>.png
-
-//5
-//If indexed item is section when checkj for
-//iblock_section.png
-//If it is an element when chek for
-//iblock_element.png
-
-//6
-//If item belongs to main module (static file)
-//when check is done by it's extention
-//main_<extention>.png
-
-//7
-//For blog module we'll check if icon for post or user exists
-//blog_post.png
-//blog_user.png
-
-//8, 9 and 10
-//forum_message.png
-//intranet_user.png
-//socialnetwork_group.png
-
-//11
-//In case we still failed to find an icon
-//<module_id>_default.png
-
-//12
-//default.png
-
-$arIBlocks = array();
-
-$image_path = $this->GetFolder()."/images/";
-$abs_path = $_SERVER["DOCUMENT_ROOT"].$image_path;
-
+$arResult["ELEMENTS"] = array();
 $arResult["SEARCH"] = array();
 foreach($arResult["CATEGORIES"] as $category_id => $arCategory)
 {
-	foreach($arCategory["ITEMS"] as $i => $arItem)
-	{
-		if(isset($arItem["ITEM_ID"]))
-			$arResult["SEARCH"][] = &$arResult["CATEGORIES"][$category_id]["ITEMS"][$i];
-	}
+    foreach($arCategory["ITEMS"] as $i => $arItem)
+    {
+        if(isset($arItem["ITEM_ID"]))
+        {
+            $arResult["SEARCH"][] = &$arResult["CATEGORIES"][$category_id]["ITEMS"][$i];
+            if (
+                $arItem["MODULE_ID"] == "iblock"
+                && substr($arItem["ITEM_ID"], 0, 1) !== "S"
+            )
+            {
+                if ($arCatalogs === false)
+                {
+                    $arCatalogs = array();
+                    if (CModule::IncludeModule("catalog"))
+                    {
+                        $rsCatalog = CCatalog::GetList(array(
+                            "sort" => "asc",
+                        ));
+                        while ($ar = $rsCatalog->Fetch())
+                        {
+                            if ($ar["PRODUCT_IBLOCK_ID"])
+                                $arCatalogs[$ar["PRODUCT_IBLOCK_ID"]] = 1;
+                            else
+                                $arCatalogs[$ar["IBLOCK_ID"]] = 1;
+                        }
+                    }
+                }
+
+                if (array_key_exists($arItem["PARAM2"], $arCatalogs))
+                {
+                    $arResult["ELEMENTS"][$arItem["ITEM_ID"]] = $arItem["ITEM_ID"];
+                }
+            }
+        }
+    }
+}
+
+if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
+{
+    $arConvertParams = array();
+    if ('Y' == $arParams['CONVERT_CURRENCY'])
+    {
+        if (!CModule::IncludeModule('currency'))
+        {
+            $arParams['CONVERT_CURRENCY'] = 'N';
+            $arParams['CURRENCY_ID'] = '';
+        }
+        else
+        {
+            $arCurrencyInfo = CCurrency::GetByID($arParams['CURRENCY_ID']);
+            if (!(is_array($arCurrencyInfo) && !empty($arCurrencyInfo)))
+            {
+                $arParams['CONVERT_CURRENCY'] = 'N';
+                $arParams['CURRENCY_ID'] = '';
+            }
+            else
+            {
+                $arParams['CURRENCY_ID'] = $arCurrencyInfo['CURRENCY'];
+                $arConvertParams['CURRENCY_ID'] = $arCurrencyInfo['CURRENCY'];
+            }
+        }
+    }
+
+    $obParser = new CTextParser;
+
+    if (is_array($arParams["PRICE_CODE"]))
+        $arResult["PRICES"] = CIBlockPriceTools::GetCatalogPrices(0, $arParams["PRICE_CODE"]);
+    else
+        $arResult["PRICES"] = array();
+
+    $arSelect = array(
+        "ID",
+        "IBLOCK_ID",
+        "PREVIEW_TEXT",
+        "PREVIEW_PICTURE",
+        "DETAIL_PICTURE",
+    );
+    $arFilter = array(
+        "IBLOCK_LID" => SITE_ID,
+        "IBLOCK_ACTIVE" => "Y",
+        "ACTIVE_DATE" => "Y",
+        "ACTIVE" => "Y",
+        "CHECK_PERMISSIONS" => "Y",
+        "MIN_PERMISSION" => "R",
+    );
+    foreach($arResult["PRICES"] as $value)
+    {
+        $arSelect[] = $value["SELECT"];
+        $arFilter["CATALOG_SHOP_QUANTITY_".$value["ID"]] = 1;
+    }
+    $arFilter["=ID"] = $arResult["ELEMENTS"];
+    $rsElements = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
+    while($arElement = $rsElements->Fetch())
+    {
+        $arElement["PRICES"] = CIBlockPriceTools::GetItemPrices($arElement["IBLOCK_ID"], $arResult["PRICES"], $arElement, $arParams['PRICE_VAT_INCLUDE'], $arConvertParams);
+        if($arParams["PREVIEW_TRUNCATE_LEN"] > 0)
+            $arElement["PREVIEW_TEXT"] = $obParser->html_cut($arElement["PREVIEW_TEXT"], $arParams["PREVIEW_TRUNCATE_LEN"]);
+
+        $arResult["ELEMENTS"][$arElement["ID"]] = $arElement;
+    }
 }
 
 foreach($arResult["SEARCH"] as $i=>$arItem)
 {
-	$file = false;
-	switch($arItem["MODULE_ID"])
-	{
-		case "socialnetwork":
-		case "iblock":
-			if(mb_substr($arItem["ITEM_ID"], 0, 1) === "G")
-			{
-				if(file_exists($abs_path."socialnetwork_group.png"))
-					$file = "socialnetwork_group.png";
-			}
-			elseif(CModule::IncludeModule('iblock'))
-			{
-				if(!array_key_exists($arItem["PARAM2"], $arIBlocks))
-					$arIBlocks[$arItem["PARAM2"]] = CIBlock::GetArrayByID($arItem["PARAM2"]);
+    switch($arItem["MODULE_ID"])
+    {
+        case "iblock":
+            if(array_key_exists($arItem["ITEM_ID"], $arResult["ELEMENTS"]))
+            {
+                $arElement = &$arResult["ELEMENTS"][$arItem["ITEM_ID"]];
 
-				//section /element
-				if(mb_substr($arItem["ITEM_ID"], 0, 1) !== "S")
-				{
-					//Try to find gif by element proprety value xml id
-					$rsElement = CIBlockElement::GetList(array(), array(
-							"=ID" => $arItem["ITEM_ID"],
-							"IBLOCK_ID" => $arItem["PARAM2"],
-						),
-						false, false, array(
-							"ID",
-							"IBLOCK_ID",
-							"CODE",
-							"XML_ID",
-							"PROPERTY_DOC_TYPE",
-						)
-					);
-					$arElement = $rsElement->Fetch();
-					if($arElement && $arElement["PROPERTY_DOC_TYPE_ENUM_ID"] <> '')
-					{
-						$arEnum = CIBlockPropertyEnum::GetByID($arElement["PROPERTY_DOC_TYPE_ENUM_ID"]);
-						if($arEnum && $arEnum["XML_ID"])
-						{
-							if(file_exists($abs_path."iblock_doc_type_".mb_strtolower($arEnum["XML_ID"]).".png"))
-								$file = "iblock_doc_type_".mb_strtolower($arEnum["XML_ID"]).".png";
-						}
-					}
+                if ($arParams["SHOW_PREVIEW"] == "Y")
+                {
+                    if ($arElement["PREVIEW_PICTURE"] > 0)
+                        $arElement["PICTURE"] = CFile::ResizeImageGet($arElement["PREVIEW_PICTURE"], array("width"=>$PREVIEW_WIDTH, "height"=>$PREVIEW_HEIGHT), BX_RESIZE_IMAGE_PROPORTIONAL, true);
+                    elseif ($arElement["DETAIL_PICTURE"] > 0)
+                        $arElement["PICTURE"] = CFile::ResizeImageGet($arElement["DETAIL_PICTURE"], array("width"=>$PREVIEW_WIDTH, "height"=>$PREVIEW_HEIGHT), BX_RESIZE_IMAGE_PROPORTIONAL, true);
+                }
+            }
+            break;
+    }
 
-					//We failed. next try should be element section
-					if(!$file)
-					{
-						$rsSection = CIBlockElement::GetElementGroups($arItem["ITEM_ID"], true);
-						$arSection = $rsSection->Fetch();
-						if($arSection)
-							$SECTION_ID = $arSection["ID"];
-					}
-					else
-					{
-						$SECTION_ID = false;
-					}
-				}
-				else
-				{
-					$SECTION_ID = $arItem["ITEM_ID"];
-				}
-
-				//If no element icon was found. We'll take chances with section
-				if(!$file && $SECTION_ID)
-				{
-					$rsSection = CIBlockSection::GetList(array(), array(
-						"=ID" => $SECTION_ID,
-						"IBLOCK_ID" => $arItem["PARAM2"],
-						)
-					);
-					if($arSection = $rsSection->Fetch())
-					{
-						if(mb_strlen($arSection["CODE"]) && file_exists($abs_path."iblock_section_".mb_strtolower($arSection["CODE"]).".png"))
-							$file = "iblock_section_".mb_strtolower($arSection["CODE"]).".png";
-						elseif(file_exists($abs_path."iblock_section_".mb_strtolower($arSection["ID"]).".png"))
-							$file = "iblock_section_".mb_strtolower($arSection["ID"]).".png";
-						elseif(mb_strlen($arSection["XML_ID"]) && file_exists($abs_path."iblock_section_".mb_strtolower($arSection["XML_ID"]).".png"))
-							$file = "iblock_section_".mb_strtolower($arSection["XML_ID"]).".png";
-					}
-				}
-				//Try to detect by "extension"
-				if(!$file && preg_match("/\\.([a-z]+?)$/i", $arItem["TITLE"], $match))
-				{
-					if(file_exists($abs_path."iblock_type_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["IBLOCK_TYPE_ID"])."_".$match[1].".png"))
-						$file = "iblock_type_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["IBLOCK_TYPE_ID"])."_".$match[1].".png";
-				}
-				//We still failed to find icon? Try iblock itself
-				if(!$file)
-				{
-					if(mb_strlen($arIBlocks[$arItem["PARAM2"]]["CODE"]) && file_exists($abs_path."iblock_iblock_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["CODE"]).".png"))
-						$file = "iblock_iblock_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["CODE"]).".png";
-					elseif(file_exists($abs_path."iblock_iblock_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["ID"]).".png"))
-						$file = "iblock_iblock_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["ID"]).".png";
-					elseif(mb_strlen($arIBlocks[$arItem["PARAM2"]]["XML_ID"]) && file_exists($abs_path."iblock_iblock_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["XML_ID"]).".png"))
-						$file = "iblock_iblock_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["XML_ID"]).".png";
-					elseif(file_exists($abs_path."iblock_type_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["IBLOCK_TYPE_ID"]).".png"))
-						$file = "iblock_type_".mb_strtolower($arIBlocks[$arItem["PARAM2"]]["IBLOCK_TYPE_ID"]).".png";
-				}
-
-				if(!$file)
-				{
-					if(mb_substr($arItem["ITEM_ID"], 0, 1) !== "S")
-					{
-						if(file_exists($abs_path."iblock_element.png"))
-							$file = "iblock_element.png";
-					}
-					else
-					{
-						if(file_exists($abs_path."iblock_section.png"))
-							$file = "iblock_section.png";
-					}
-				}
-			}
-			break;
-		case "main":
-			$ext = end(explode('.', $arItem["ITEM_ID"]));
-			if(file_exists($abs_path."main_".mb_strtolower($ext).".png"))
-				$file = "main_".mb_strtolower($ext).".png";
-			break;
-		case "blog":
-			if(mb_substr($arItem["ITEM_ID"], 0, 1) === "P" && file_exists($abs_path."blog_post.png"))
-				$file = "blog_post.png";
-			elseif(mb_substr($arItem["ITEM_ID"], 0, 1) === "U" && file_exists($abs_path."blog_user.png"))
-				$file = "blog_user.png";
-			break;
-		case "forum":
-			if(file_exists($abs_path."forum_message.png"))
-				$file = "forum_message.png";
-			break;
-		case "intranet":
-			if(mb_substr($arItem["ITEM_ID"], 0, 1) === "U" && file_exists($abs_path."intranet_user.png"))
-				$file = "intranet_user.png";
-			break;
-	}
-
-	if(!$file)
-	{
-		if(file_exists($abs_path.$arItem["MODULE_ID"]."_default.png"))
-			$file = $arItem["MODULE_ID"]."_default.png";
-		else
-			$file = "default.png";
-	}
-
-	$arResult["SEARCH"][$i]["ICON"] = $image_path.$file;
+    $arResult["SEARCH"][$i]["ICON"] = true;
 }
 
 ?>

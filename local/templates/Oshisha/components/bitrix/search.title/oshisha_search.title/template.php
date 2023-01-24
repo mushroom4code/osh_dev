@@ -12,7 +12,6 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
-
 $INPUT_ID = trim($arParams["~INPUT_ID"]);
 if ($INPUT_ID == '')
     $INPUT_ID = "title-search-input";

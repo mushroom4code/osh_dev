@@ -1,5 +1,7 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 
+use Bitrix\Main\ModuleManager;
+
 $arPrice = array();
 if(CModule::IncludeModule("catalog"))
 {
@@ -79,7 +81,7 @@ if (CModule::IncludeModule('catalog') && CModule::IncludeModule('currency'))
 	if (isset($arCurrentValues['CONVERT_CURRENCY']) && 'Y' == $arCurrentValues['CONVERT_CURRENCY'])
 	{
 		$arCurrencyList = array();
-		$rsCurrencies = CCurrency::GetList(($by = 'SORT'), ($order = 'ASC'));
+		$rsCurrencies = CCurrency::GetList('SORT', 'ASC');
 		while ($arCurrency = $rsCurrencies->Fetch())
 		{
 			$arCurrencyList[$arCurrency['CURRENCY']] = $arCurrency['CURRENCY'];
@@ -94,5 +96,26 @@ if (CModule::IncludeModule('catalog') && CModule::IncludeModule('currency'))
 		);
 	}
 }
+
+$arThemes = array(
+	'blue' => GetMessage('TP_BST_THEME_BLUE'),
+	'green' => GetMessage('TP_BST_THEME_GREEN'),
+	'red' => GetMessage('TP_BST_THEME_RED'),
+	'yellow' => GetMessage('TP_BST_THEME_YELLOW'),
+);
+
+if (ModuleManager::isModuleInstalled('bitrix.eshop'))
+{
+	$arThemes['site'] = GetMessage('TP_BST_THEME_SITE');
+}
+
+$arTemplateParameters['TEMPLATE_THEME'] = array(
+	'PARENT' => 'VISUAL',
+	'NAME' => GetMessage("TP_BST_TEMPLATE_THEME"),
+	'TYPE' => 'LIST',
+	'VALUES' => $arThemes,
+	'DEFAULT' => 'blue',
+	'ADDITIONAL_VALUES' => 'Y'
+);
 
 ?>
