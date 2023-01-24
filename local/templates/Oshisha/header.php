@@ -274,33 +274,29 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             "bitrix:search.title",
                             "oshisha_search.title",
                             array(
-                                "NUM_CATEGORIES" => "1",
-                                "TOP_COUNT" => "5",
+                                "CATEGORY_0" => array("iblock_1c_catalog"),
+                                "CATEGORY_0_TITLE" => "",
+                                "CATEGORY_0_iblock_1c_catalog" => array("all"),
+                                "CATEGORY_1" => array(),
+                                "CATEGORY_1_TITLE" => "",
                                 "CHECK_DATES" => "N",
-                                "SHOW_OTHERS" => "N",
-                                "PAGE" => SITE_DIR . "catalog/",
-                                "CATEGORY_0_TITLE" => GetMessage("SEARCH_GOODS"),
-                                "CATEGORY_0" => array(
-                                    0 => "iblock_catalog",
-                                ),
-                                "CATEGORY_0_iblock_catalog" => array(
-                                    0 => "all",
-                                ),
-                                "CATEGORY_OTHERS_TITLE" => GetMessage("SEARCH_OTHER"),
+                                "CONTAINER_ID" => "title-search_desktop",
+                                "CONVERT_CURRENCY" => "N",
+                                "INPUT_ID" => "input_search_desktop",
+                                "NUM_CATEGORIES" => "2",
+                                "ORDER" => "date",
+                                "PAGE" => "#SITE_DIR#catalog/",
+                                "PREVIEW_HEIGHT" => "150",
+                                "PREVIEW_TRUNCATE_LEN" => "",
+                                "PREVIEW_WIDTH" => "150",
+                                "PRICE_CODE" => BXConstants::PriceCode(),
+                                "PRICE_VAT_INCLUDE" => "Y",
                                 "SHOW_INPUT" => "Y",
-                                "INPUT_ID" => "title-search-input",
-                                "CONTAINER_ID" => "search",
-                                "PRICE_CODE" => array(
-                                    2 => "Розничная",
-                                    7 => "b2b",
-                                    8 => "Сайт скидка"
-                                ),
-                                "FILL_ITEM_ALL_PRICES" => "Y",
+                                "SHOW_OTHERS" => "N",
                                 "SHOW_PREVIEW" => "Y",
-                                "PREVIEW_WIDTH" => "75",
-                                "PREVIEW_HEIGHT" => "75",
-                                "CONVERT_CURRENCY" => "Y",
-                                "USE_LANGUAGE_GUESS" => "N"
+                                "TEMPLATE_THEME" => "blue",
+                                "TOP_COUNT" => "5",
+                                "USE_LANGUAGE_GUESS" => "Y"
                             ),
                             true
                         ); ?>

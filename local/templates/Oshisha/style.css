@@ -1751,6 +1751,8 @@ a.bx_catalog_item_title {
 
 .by-card .product-item-small-card {
     width: 100% !important;
+    max-width: 237px;
+    min-height: 355px;
 }
 
 /*.by-card .toggle_taste{
@@ -2113,6 +2115,7 @@ input.check_input {
 }
 
 .product-item-amount-field-contain input[type="number"].cat-det {
+    min-width: 50px;
     padding: 11px !important;
 }
 
@@ -2223,6 +2226,8 @@ input.check_input {
 }
 
 .bx-pagination .bx-pagination-container ul li span, .search_input {
+    color: black;
+    font-size: 15px;
     border-radius: 8px;
 }
 
@@ -5378,6 +5383,10 @@ li, ul {
 }
 
 @media (max-width: 768px) {
+    .container_header {
+        margin-top: 10px
+    }
+
     .right_mobile_top {
         display: flex;
         align-items: center;
