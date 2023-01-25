@@ -522,10 +522,10 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 case 'quantity':
                                     if ($show_price) {
                                     if ($actualItem['PRODUCT']['QUANTITY'] != '0') {
-                                    $textButton = 'В корзину';
+                                    $textButton = 'Забронировать';
                                     $classButton = 'btn_basket';
                                     if ($priceBasket > 0) {
-                                        $textButton = 'В корзине';
+                                        $textButton = 'Забронировано';
                                         $classButton = 'addProductDetailButton';
                                     } ?>
                                     <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
@@ -589,7 +589,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                        class="basket_prod_detail detail_popup detail_disabled"
                                                        data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                                        data-product_id="<?= $arResult['ID']; ?>"
-                                                       title="Добавить в корзину">В корзину</a>
+                                                       title="Добавить в корзину">Забронировать</a>
                                                 </div>
                                                 <div id="popup_mess" class="popup_mess_prods"></div>
                                                 <div id="result_box" style="width: 100%;position: absolute;"></div>

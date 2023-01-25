@@ -325,7 +325,7 @@ $(document).ready(function () {
         if ($(cardBasketAddButton).is('.basket_prod_detail')) {
             if ($(cardBasketAddButton).hasClass('addProductDetailButton')) {
                 $(cardBasketAddButton).fadeOut(100, function () {
-                    $(cardBasketAddButton).text('В корзину');
+                    $(cardBasketAddButton).text('Забронировать');
                 })
                 $(cardBasketAddButton).prop('onclick', null).off('click');
                 $(cardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').fadeIn(100);
@@ -465,7 +465,7 @@ $(document).ready(function () {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
                     if (!$(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
                         $(detailCardBasketAddButton).fadeOut(100, function () {
-                            $(detailCardBasketAddButton).text('В корзине');
+                            $(detailCardBasketAddButton).text('Забронировано');
                         });
                         $(detailCardBasketAddButton).attr({'onclick': "location.href='/personal/cart/'"});
                         $(detailCardBasketAddButton).removeClass('btn_basket').addClass('addProductDetailButton').fadeIn(100);
@@ -473,7 +473,7 @@ $(document).ready(function () {
                 } else {
                     if ($(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
                         $(detailCardBasketAddButton).fadeOut(100, function () {
-                            $(detailCardBasketAddButton).text('В корзину');
+                            $(detailCardBasketAddButton).text('Забронировать');
                         });
                         $(detailCardBasketAddButton).prop('onclick', null).off('click');
                         $(detailCardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').fadeIn(100)

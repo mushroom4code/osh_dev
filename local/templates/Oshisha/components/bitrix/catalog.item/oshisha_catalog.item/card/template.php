@@ -271,7 +271,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                              data-product_id="<?= $item['ID']; ?>"
                              data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                              id="<?= $arItemIDs['BUY_LINK']; ?>"
-                             <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>В корзину
+                             <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>Забронировать
                         </div>
                         <div class="product-item-amount-field-contain-wrap"
                              <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
