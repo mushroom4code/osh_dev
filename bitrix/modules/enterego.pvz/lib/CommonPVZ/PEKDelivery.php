@@ -54,7 +54,7 @@ class PEKDelivery extends CommonPVZ
             $features_obj['properties'] = [
                 'fullAddress' => $value['warehouses'][0]['addressDivision'],
                 'deliveryName' => 'ПЭК',
-                'iconContent' => 'ПЭК',
+                'iconCaption' => 'ПЭК',
                 'hintContent' => $value['warehouses'][0]['address']
             ];
             $features_obj['options'] = [

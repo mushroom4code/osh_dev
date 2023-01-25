@@ -95,7 +95,7 @@ class SDEKDelivery extends CommonPVZ
                 'code_pvz' => $value['code'],
                 'fullAddress' => $value['location']['address_full'],
                 'deliveryName' => 'СДЭК',
-                'iconContent' => 'СДЭК',
+                'iconCaption' => 'СДЭК',
                 'hintContent' => $value['location']['address']
             ];
             $features_obj['options'] = [

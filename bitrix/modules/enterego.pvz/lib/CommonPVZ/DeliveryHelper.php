@@ -12,7 +12,7 @@ Loc::loadMessages(__FILE__);
 class DeliveryHelper
 {
 
-    public static function getButton()
+    public static function getButton($address = '')
     {
 
         ob_start();
@@ -22,26 +22,16 @@ class DeliveryHelper
             <?= Loc::getMessage('COMMONPVZ_BTN_CHOOSE') ?>
         </a>
         <?php
-        if (isset($_SESSION['addressPVZ']) && $_SESSION['addressPVZ'] !== '') {
-            ?>
-            <span id="pvz_address"><?= Loc::getMessage('COMMONPVZ_TEXT_PREADDRESS') ?><span><?= $_SESSION['addressPVZ'] ?></span></span>
-            <?php
-        }
+       /* if ($address !== '') {
+            */?><!--
+            <span id="pvz_address"><?/*= Loc::getMessage('COMMONPVZ_TEXT_PREADDRESS') */?><span><?/*= $address */?></span></span>
+            --><?php
+/*        }*/
 
         $content = ob_get_contents();
         ob_end_clean();
 
         return $content;
-    }
-
-    public function getDeliveryID($arDeliveries)
-    {
-        foreach ($arDeliveries as $id => $del) {
-            if ($del['NAME'] === Loc::getMessage('COMMONPVZ_TITLE')) {
-                return $id;
-            }
-        }
-        return 0;
     }
 
     public static function getCityName($locationCode)

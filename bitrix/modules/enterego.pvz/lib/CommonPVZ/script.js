@@ -208,7 +208,9 @@ BX.SaleCommonPVZ = {
                     BX.Sale.OrderAjaxComponent.refreshOrder(result);
                 }
                 // TODO - неправильно что по определенным номерам св-в
-                $('#pvz_address>span').text(__this.pvzAddress);
+                //$('#pvz_address>span').text(__this.pvzAddress);
+                var adr = $('[name="ORDER_PROP_76"]').length ? $('[name="ORDER_PROP_76"]') : $('[name="ORDER_PROP_77"]');
+                adr.val(__this.pvzFullAddress).attr('readonly', 'readonly');
 
                 BX.Sale.OrderAjaxComponent.endLoader();
             }, this),
