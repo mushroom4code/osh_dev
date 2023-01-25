@@ -41,8 +41,8 @@ $jsParams = array(
 );
 ?>
 
-<div style="display: block" class="ctweb-smsauth-menu-block">
-    <div class="ctweb-smsauth-box">
+<div style="display: block" class="ctweb-smsauth-menu-block profile col-12 col-md-7">
+    <div class="ctweb-smsauth-box profile">
         <?php if ($arResult['AUTH_RESULT'] === 'SUCCESS') : ?>
             <?php if ($arResult['STEP'] === Manager::STEP_SUCCESS) : ?>
                 <div class="row">
@@ -64,8 +64,8 @@ $jsParams = array(
         <?php else: ?>
             <div>
                 <div class="row">
-                    <form id="<?= $mainID ?>" class="ctweb-smsauth-menu-form"
-                          action="/bitrix/components/ctweb/sms.authorize/ajax.php"
+                    <form id="<?= $mainID ?>" class="ctweb-smsauth-menu-form profile"
+                          action="/bitrix/components/ctweb/sms.authorize_profile/ajax.php"
                           method="POST" name="auth">
                         <?php echo bitrix_sessid_post(); ?>
                         <input type="hidden" name="FORM_ID" value="<?= $arResult['FORM_ID'] ?>">
@@ -73,19 +73,31 @@ $jsParams = array(
                         <input id="<?= $jsParams['TEMPLATE']['STATE'] ?? Manager::STEP_PHONE_WAITING ?>" type="hidden"
                                name=""
                                value="<?= $arResult['STEP'] ?>">
-
+                        <h5 class="mt-2 mb-4"><b>Изменение номера телефона</b></h5>
                         <!--STEP PNONE WAITING-->
                         <div id="ctweb_form_step_1"
                              class="ctweb-smsauth-menu-step d-none">
-                            <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
-                            <div class="form-group">
-                                <label class="ctweb-label"
-                                       for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
-                                <span id="flag"></span>
-                                <input type="text" name="PHONE" placeholder="Введите номер"
-                                       value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
-                                       class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
-                                       autocomplete="off"/>
+<!--                            <div class="form-group  mb-2">-->
+<!--                                <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"-->
+<!--                                       for="main-profile-phone">Номер телефона</label>-->
+<!--                                <div class="col-sm-12 col-md-12">-->
+<!--                                    <input class="form-control input_lk" type="text" name="PERSONAL_PHONE" maxlength="50"-->
+<!--                                           id="main-profile-phone" value="--><?php //= $arResult["arUser"]["PERSONAL_PHONE"] ?><!--"/>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <script>$('#main-profile-phone').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>-->
+<!--                            <div class="form-group">-->
+                                <div class="form-group mb-2">
+                                    <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
+                                           for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
+                                    <span id="flag"></span>
+                                    <div class="col-sm-12 col-md-12">
+                                        <input class="form-control input_lk profile" type="text" name="PHONE" placeholder="Введите номер"
+                                               value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
+                                               class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
+                                               autocomplete="off"/>
+                                    </div>
+                                </div>
                             </div>
                             <div class="checkbox d-none">
                                 <label>
@@ -95,23 +107,6 @@ $jsParams = array(
                                     <?= GetMessage("SMS_AUTH_SAVE_SESSION") ?>
                                 </label>
                             </div>
-                            <?php if ($arResult["USE_CAPTCHA"] == "Y"): ?>
-                                <input type="hidden" name="captcha_sid" value="<?= $arResult["CAPTCHA_CODE"] ?>"/>
-
-                                <div class="form-group">
-                                    <?= GetMessage("CAPTCHA_REGF_PROMT") ?>
-                                    <div class="form-group">
-                                        <div class="bx-captcha"><img
-                                                    src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult["CAPTCHA_CODE"] ?>"
-                                                    width="180" height="40" alt="CAPTCHA"/></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="captcha_word" maxlength="50"
-                                               value="" autocomplete="off"/>
-                                    </div>
-                                </div>
-
-                            <?php endif ?>
                         </div>
 
                         <!-- STEP CODE WAITING -->
@@ -147,7 +142,7 @@ $jsParams = array(
 
                         <!--Навигация по форме авторизации-->
                         <div class="ctweb-button-block">
-                            <input class="btn link_menu_catalog get_code_button"
+                            <input class="btn link_menu_catalog get_code_button profile"
                                    id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                                    type="submit"
                                    value="<?= GetMessage("SMS_AUTH_GET_CODE") ?>"

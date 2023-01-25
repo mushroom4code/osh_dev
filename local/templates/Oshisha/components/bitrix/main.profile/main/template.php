@@ -110,11 +110,11 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-phone">Номер телефона</label>
                         <div class="col-sm-12 col-md-12">
-                            <input class="form-control input_lk" type="text" name="PHONE_NUMBER" maxlength="50"
+                            <input class="form-control input_lk" type="text" name="PERSONAL_PHONE" maxlength="50"
                                    id="main-profile-phone" value="<?= $arResult["arUser"]["PERSONAL_PHONE"] ?>"/>
                         </div>
                     </div>
-					<script>$('#main-profile-phone').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>
+                    <script>$('#main-profile-phone').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>
                     <div class="form-group  mb-5" style="display:none">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-radio">Информировать меня по заказам через</label>
@@ -239,13 +239,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                value="<?= (($arResult["ID"] > 0) ? Loc::getMessage("MAIN_SAVE") : Loc::getMessage("MAIN_ADD")) ?>">
                     </div>
                 </div>
-                <?php $APPLICATION->IncludeComponent(
-                    "ctweb:sms.authorize",
-                    "top",
-                    array(
-                        "ALLOW_MULTIPLE_USERS" => "Y"
-                    )
-                ); ?>
+
                 <div class="col-12 col-md-5 desktop" style="display:none;">
                     <h5 class="mb-3"><b>Подписки</b></h5>
                     <div class="column block_with_subscriptions">
@@ -300,12 +294,16 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
         </div>
 		<input type=hidden name="CHANGE_FORM" class="CHANGE_FORM" value="">
     </form>
+    <?php $APPLICATION->IncludeComponent(
+        "ctweb:sms.authorize_profile",
+        "profile",
+        array(
+            "ALLOW_MULTIPLE_USERS" => "Y"
+        )
+    ); ?>
 
     <div class="clearfix"></div>
     <script>
         BX.Sale.PrivateProfileComponent.init();
-		
-		
-
     </script>
 </div>
