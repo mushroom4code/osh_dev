@@ -146,7 +146,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
                 <div class="catalog-section-list-tile-list">
-                    <? foreach ($arResult['SECTION_LIST'] as $arSection):?>
+                    <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap">
                                 <a href="<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
@@ -160,7 +160,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             </div>
                             <? if ($arSection['CHILDS']):
                                 usort($arSection['CHILDS'], 'sort_by_name');
-                              foreach ($arSection['CHILDS'] as $arSectionSub): ?>
+                                foreach ($arSection['CHILDS'] as $arSectionSub): ?>
                                     <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
                                          data-code="<?= $arSection['ID'] ?>">
                                         <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
@@ -234,6 +234,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             </div>
         </div>
         <h1 id="pagetitle"><?php $APPLICATION->ShowTitle(false); ?></h1>
+        <p class="message_for_user_minzdrav font-14"></p>
         <div id="osh-filter-horizontal2"></div>
         <div class="osh-block-panel">
             <div id="osh-filter-horizontal">

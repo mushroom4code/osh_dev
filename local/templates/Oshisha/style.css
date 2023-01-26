@@ -5555,11 +5555,6 @@ li, ul {
     justify-content: flex-start;
 }
 
-.bx-breadcrumb {
-    margin-top: -10px;
-    margin-bottom: 30px;
-}
-
 .form-control.input_lk.input_files {
     padding: 0;
     height: auto;

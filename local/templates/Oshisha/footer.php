@@ -196,10 +196,12 @@ $option = $option_site; ?>
                 </div>
             </div>
         </div>
-        <div class="text_footer_mini d-flex flex-column p-3">
-            <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_row; ?></p>
-            <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_column; ?></p>
-        </div>
+        <?php if (!empty($option->text_rospetrebnadzor_row)) { ?>
+            <div class="text_footer_mini d-flex flex-column p-3">
+                <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_row; ?></p>
+                <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_column; ?></p>
+            </div>
+        <?php } ?>
         <div class="text_footer_mini d-flex column_section p-3">
             <span class="mr-2">© 2014-<?= date('Y'); ?> <?= $SETTINGS['COMPANY'] ?>.</span><span>Все права защищены</span>
         </div>
