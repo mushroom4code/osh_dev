@@ -873,6 +873,8 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                 container: '<?=$containerName?>',
                 //enterego filter for special group category
                 staticFilter: <?= CUtil::PhpToJSObject($staticFilter) ?>,
+                //enterego sort selector
+                sortCatalogId: <?= CUtil::PhpToJSObject('.js__catalog-sort-item') ?>,
             });
         </script>
 

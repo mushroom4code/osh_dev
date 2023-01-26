@@ -2117,13 +2117,14 @@ $(document).ready(function () {
             $('.icon_sort_bar').addClass('icon_sort_bar_active').removeClass('icon_sort_bar');
         }
     }
+    // переключение на вид картога карточками
     $(document).on('click', '#card_catalog', function () {
         document.cookie = 'orientation=card';
         $('.catalog-section').removeClass('by-line').addClass('by-card');
         $('.icon_sort_line_active').addClass('icon_sort_line').removeClass('icon_sort_line_active');
         $(this).addClass('icon_sort_bar_active').removeClass('icon_sort_bar');
     });
-
+    // переключение на вид картога списком
     $(document).on('click', '#line_catalog', function () {
         document.cookie = 'orientation=line';
         $('.catalog-section').removeClass('by-card').addClass('by-line');
@@ -2136,6 +2137,8 @@ $(document).ready(function () {
         $('.sort_orders_element').toggle();
         return false;
     });
+
+
     $('.sort_orders').on('click', function () {
         if (!$(this).hasClass('active')) {
             $(this).addClass('active');
@@ -2150,94 +2153,11 @@ $(document).ready(function () {
         }
     })
 
-    $('.sort_orders_elements').on('click', function (e) {
-        let element = e.target;
-        $(this).closest('.sort_orders').find('.sort_orders_by').html(element.textContent);
-        $.ajax({
-                url: BX.message('SITE_DIR') +
-                    'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
-                type: 'POST',
-                data: {
-                    typeSort: JSON.stringify(element.textContent),
-                    url: JSON.stringify(document.location.search),
-                },
-                success: function (response) {
-                    let data = JSON.parse(response);
-                    $('.sale-order-list-inner-container').remove();
-                    data.forEach((item, index) => {
-                        function addPictures() {
-                            item['PICTURE'].forEach(item => {
-                                if (item === null) {
-                                    $(`.sort_by_date_orders_${index}`).append(`<img class="image_box_orders" src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"/>`)
-                                } else {
-                                    $(`.sort_by_date_orders_${index}`).append(`<img class="image_box_orders" src="${item}"/>`)
-                                }
-                            })
-                        }
 
-                        function statusOrder() {
-                            if (item['STATUS_ID'] === 'F') {
-                                return `<span class="status_completed">Выполнен</span>`;
-                            }
-                            return `<span class="status_pending_payment">Принят, ожидается оплата</span>`
-                        }
+    // $('.catalog_sort_item').on('click', function () {
+    //     $(this).parents('.sort_orders_element').hide();
+    // })
 
-                        $('#content_box').append(`<div class="row mx-0 mb-5 sale-order-list-inner-container">
-                <div class="row mx-0 sale-order-list-title-container">
-                    <h3 class="mb-1 mt-1">
-                        <div>
-                            <span>Заказ № ${item['ACCOUNT_NUMBER']} от ${item['DATE_INSERT_FORMAT'].split(' ')[0]}</span>
-                        </div>
-                        <div>
-                            ${statusOrder()}
-                        </div>
-                    </h3>
-                </div>
-                <div class="box_wth_delivery_number">
-                    <div class="mt-2">
-                        <span>Номер отслеживания:</span> <a href="#">24006875</a>
-                    </div>
-                </div>
-
-                <div class="row mx-0 mb-4 mt-4 d-flex flex_class justify-content-evenly sort_by_date_orders_${index}">
-                </div>
-                    <div class="col pt-3">
-                    <div class="sale-order-list-inner-row">
-                        <div class="sale-order-list-inner-row">
-                            <div class=" sale-order-list-about-container">
-                                <a class="sale-order-list-about-link"
-                                   href="/personal/orders/${item['ACCOUNT_NUMBER']}">Подробности
-                                    заказа</a>
-                            </div>
-
-                            <div class=" sale-order-list-repeat-container">
-                                <a class=" sale-order-list-repeat-link"
-                                   href="/personal/cart/">Повторить заказ</a>
-                            </div>
-                            <div class=" sale-order-list-cancel-container">
-                                <a class="sale-order-list-cancel-link"
-                                       href="/personal/cancel/${item['ACCOUNT_NUMBER']}?CANCEL=Y">Отменить заказ</a>
-                            </div>
-                        </div>
-                        <div class="sale-order-list-inner">
-                            <div class="sale-order-list-inner-row-body">
-                                <div class="sale-order-list-payment">
-                                    <div class="mb-1 sale-order-list-payment-price">
-                                        <span class="sale-order-list-payment-element">Сумма заказа:</span>
-                                        <span class="sale-order-list-payment-number">${item['PRICE'].split('.')[0] + ' ₽'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                        </div>`);
-                        addPictures();
-                    })
-                }
-            }
-        )
-    })
 
     $(document).on('click', function (e) {
         let elem = e.target;
