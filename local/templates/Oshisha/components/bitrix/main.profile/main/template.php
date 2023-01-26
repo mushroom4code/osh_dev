@@ -106,15 +106,6 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                    oninvalid="setCustomValidity('Неверный формат почты. Почта должна иметь вид *@*.*')"/>
                         </div>
                     </div>
-                    <div class="form-group  mb-2">
-                        <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
-                               for="main-profile-phone">Номер телефона</label>
-                        <div class="col-sm-12 col-md-12">
-                            <input class="form-control input_lk" type="text" name="PERSONAL_PHONE" maxlength="50"
-                                   id="main-profile-phone" value="<?= $arResult["arUser"]["PERSONAL_PHONE"] ?>"/>
-                        </div>
-                    </div>
-                    <script>$('#main-profile-phone').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>
                     <div class="form-group  mb-5" style="display:none">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-radio">Информировать меня по заказам через</label>
@@ -298,7 +289,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
         "ctweb:sms.authorize_profile",
         "profile",
         array(
-            "ALLOW_MULTIPLE_USERS" => "Y"
+            "ALLOW_MULTIPLE_USERS" => "Y",
+            "USER_PHONE" => $arResult['arUser']['PHONE_NUMBER']
         )
     ); ?>
 

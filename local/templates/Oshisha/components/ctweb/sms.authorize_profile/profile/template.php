@@ -43,25 +43,6 @@ $jsParams = array(
 
 <div style="display: block" class="ctweb-smsauth-menu-block profile col-12 col-md-7">
     <div class="ctweb-smsauth-box profile">
-        <?php if ($arResult['AUTH_RESULT'] === 'SUCCESS') : ?>
-            <?php if ($arResult['STEP'] === Manager::STEP_SUCCESS) : ?>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="error alert alert-success">
-                            <?= GetMessage("SMS_SUCCESS_AUTH"); ?>
-                        </div>
-                    </div>
-                </div>
-            <?php else: ?>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="error alert alert-success">
-                            <?= GetMessage("SMS_AUTH_ALREADY_AUTH"); ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-        <?php else: ?>
             <div>
                 <div class="row">
                     <form id="<?= $mainID ?>" class="ctweb-smsauth-menu-form profile"
@@ -74,6 +55,11 @@ $jsParams = array(
                                name=""
                                value="<?= $arResult['STEP'] ?>">
                         <h5 class="mt-2 mb-4"><b>Изменение номера телефона</b></h5>
+                        <?php if ($arResult['AUTH_RESULT'] === 'SUCCESS') : ?>
+                                            <? ShowNote(GetMessage('SMS_PHONE_SAVED')); ?>
+                        <?php elseif ($arResult['AUTH_RESULT'] === 'FAILED'): ?>
+                                            <? ShowError($arResult["strProfileError"]); ?>
+                        <?php endif;?>
                         <!--STEP PNONE WAITING-->
                         <div id="ctweb_form_step_1"
                              class="ctweb-smsauth-menu-step d-none">
@@ -87,13 +73,14 @@ $jsParams = array(
 <!--                            </div>-->
 <!--                            <script>$('#main-profile-phone').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>-->
 <!--                            <div class="form-group">-->
+                                <p class="form-group mb-2 col-sm-12 col-md-12 profile-asterisk">* Будет выслан код подтверждения</p>
                                 <div class="form-group mb-2">
                                     <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                            for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                     <span id="flag"></span>
                                     <div class="col-sm-12 col-md-12">
                                         <input class="form-control input_lk profile" type="text" name="PHONE" placeholder="Введите номер"
-                                               value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
+                                               value="<?= $arParams['USER_PHONE'] ?? '' ?>"
                                                class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
                                                autocomplete="off"/>
                                     </div>
@@ -111,18 +98,20 @@ $jsParams = array(
 
                         <!-- STEP CODE WAITING -->
                         <div id="ctweb_form_step_3"
-                             class="ctweb-smsauth-menu-step <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'd-none' ?> ">
+                             class="profile ctweb-smsauth-menu-step <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'd-none' ?> ">
                             <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
 
-                            <div class="form-group">
-                                <label class="ctweb-label" for="sms-auth-code"></label>
-                                <div>
+                            <div class="form-group mb-2">
+                                <label style="margin-bottom: 10px" class="ctweb-label" for="sms-auth-code"></label>
+                                <div style="display: none">
                                     <a class="ctweb-link"><?= GetMessage("SMS_AUTH_CHANGE_NUMBER_PHONE") ?></a>
                                 </div>
-                                <label class="ctweb-label"
+                                <label style="display: none" class="ctweb-label"
                                        for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
-                                <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
-                                       class="form-control auth_code" autocomplete="off">
+                                <div class="col-sm-12 col-md-12">
+                                    <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
+                                           class="form-control input_lk profile auth_code" autocomplete="off">
+                                </div>
                                 <span id="result"></span>
                             </div>
 
@@ -141,11 +130,11 @@ $jsParams = array(
                         </div>
 
                         <!--Навигация по форме авторизации-->
-                        <div class="ctweb-button-block">
+                        <div class="ctweb-button-block profile">
                             <input class="btn link_menu_catalog get_code_button profile"
                                    id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                                    type="submit"
-                                   value="<?= GetMessage("SMS_AUTH_GET_CODE") ?>"
+                                   value="Сохранить"
                                    onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
 
                             <div style="display: none" class="ctweb-button-back">
@@ -168,12 +157,8 @@ $jsParams = array(
                                    id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>"><?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
                             </div>
 
-                            <div>
-                                <a class="ctweb-link email-login"
-                                   id="<?= $jsParams['TEMPLATE']['AUTH_EMAIL_LOGIN'] ?>"><?= GetMessage("SMS_AUTH_EMAIL_LOGIN") ?></a>
-                            </div>
 
-                            <div>
+                            <div style="display:none">
                                 <a class="ctweb-link" href="<? SITE_DIR ?>about/FAQ/"
                                    id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>"><?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
                             </div>
@@ -226,7 +211,6 @@ $jsParams = array(
                 </div>
             </div>
 
-        <?php endif; ?>
     </div>
 </div>
 
@@ -236,6 +220,8 @@ $jsParams = array(
         'SMS_AUTH_TIME_EXPIRED' => GetMessage('SMS_AUTH_TIME_OUT'),
         'SMS_AUTH_ERROR_CODE_NOT_CORRECT_TITLE' => GetMessage('SMS_AUTH_ERROR_CODE_NOT_CORRECT_TITLE'),
         'SMS_AUTH_ERROR_CODE_NOT_CORRECT_TEXT' => GetMessage('SMS_AUTH_ERROR_CODE_NOT_CORRECT_TEXT'),
+        'SMS_AUTH_ERROR_PHONE_EXISTS_TITLE' => GetMessage('SMS_AUTH_ERROR_PHONE_EXISTS_TITLE'),
+        'SMS_AUTH_ERROR_PHONE_EXISTS_TEXT' => GetMessage('SMS_AUTH_ERROR_PHONE_EXISTS_TEXT'),
         'SMS_AUTH_ERROR_TIME_EXPIRED_TITLE' => GetMessage('SMS_AUTH_ERROR_TIME_EXPIRED_TITLE'),
         'SMS_AUTH_ERROR_TIME_EXPIRED_TEXT' => GetMessage('SMS_AUTH_ERROR_TIME_EXPIRED_TEXT'),
         'SMS_AUTH_CHANGE_PHONE' => GetMessage('SMS_AUTH_CHANGE_PHONE'),

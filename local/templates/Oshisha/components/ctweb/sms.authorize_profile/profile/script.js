@@ -14,9 +14,11 @@
     const STATE_SUCCESS = '4';
     const STATE_CODE_NOT_VALID = '5';
     const STATE_CODE_REUSED = '6';
+    const STATE_PHONE_EXISTS = '7';
 
     const ERROR_CODE_NOT_CORRECT = 'CODE_NOT_CORRECT';
     const ERROR_TIME_EXPIRED = 'TIME_EXPIRED';
+    const ERROR_PHONE_EXISTS = 'PHONE_EXISTS';
 
     BX.Ctweb.SMSAuth.Controller = function (params) {
         this.state = STATE_INIT;
@@ -234,6 +236,8 @@
                             Ctweb.setState(STATE_CODE_NOT_VALID);
                         } else if (objResponse['ERRORS'][0] === ERROR_TIME_EXPIRED) {
                             Ctweb.setState(STATE_EXPIRED);
+                        } else if (objResponse['ERRORS'][0] === ERROR_PHONE_EXISTS) {
+                            Ctweb.setState(STATE_PHONE_EXISTS);
                         }
                     } else {
                         if (step === STATE_CODE_WAITING) {
@@ -366,6 +370,13 @@
                 BX.show(this.obResend.closest('div'));
                 BX.show(this.obMessage);
                 BX.show(this.obResend);
+                break;
+            case STATE_PHONE_EXISTS:
+                BX.toggleClass(BX('ctweb_form_step_error'), 'd-none');
+                BX.adjust(this.errotTitle, {text: BX.message('SMS_AUTH_ERROR_PHONE_EXISTS_TITLE')});
+                BX.adjust(this.errorText, {text: BX.message('SMS_AUTH_ERROR_PHONE_EXISTS_TEXT')});
+;
+                BX.show(this.obChangePhone);
                 break;
             case STATE_CODE_REUSED:
                 clearInterval(this.timerId);

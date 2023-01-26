@@ -34,7 +34,7 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
     const RESULT_SUCCESS = 'SUCCESS';
     const RESULT_FAILED = 'FAILED';
 
-    const ERROR_PHONE_EXISTS = 'PHONE_ALREADY_EXISTS';
+    const ERROR_PHONE_EXISTS = 'PHONE_EXISTS';
 
     /** @var Ctweb\SMSAuth\Manager */
     protected $manager;
@@ -206,8 +206,9 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                 if ($this->getSessionField('PHONE')) {
                     $arUsers = $this->manager->GetUsersByPhone($this->getSessionField('PHONE'));
                     if ($arUsers) {
-                        $this->arResult['AUTH_RESULT'] = self::RESULT_FAILED;
+                        //$this->arResult['AUTH_RESULT'] = self::RESULT_FAILED;
                         $this->manager->addError(self::ERROR_PHONE_EXISTS);
+                        return;
                     } else {
                         //TODO enable phone change
                         if (true) {
@@ -224,9 +225,9 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                 }
             }
 
-            if (!$isAjaxRequest) {
-                LocalRedirect($APPLICATION->GetCurPageParam());
-            }
+//            if (!$isAjaxRequest) {
+//                LocalRedirect($APPLICATION->GetCurPageParam());
+//            }
         }
     }
 
@@ -234,6 +235,9 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
         $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
         $this->clearSession();
         $this->manager->clearSession();
+        $isAjaxRequest = $this->request["is_ajax_post"] == "Y";
+        $this->manager->setStep();
+        $this->actionStepPhoneWaiting($isAjaxRequest);
     }
 
     public function executeComponent()
@@ -298,7 +302,6 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                 ($this->arResult['STEP'] = $this->manager->getStep()) || ($this->arResult['STEP'] = Manager::STEP_PHONE_WAITING);
             }
         } else {
-
                 switch ($this->manager->getStep()) {
                     case Manager::STEP_SUCCESS : // all ok, redirect waiting
                         $this->actionStepSuccess();

@@ -961,7 +961,7 @@ h3.ctweb-title {
     border-radius: 9px;
     padding: 8px 15px;
     width: 170px;
-    olor: white !important;
+    сolor: white !important;
     font-size: 14px;
     font-weight: 300 !important;
     transition: 0.3s;
@@ -974,5 +974,25 @@ h3.ctweb-title {
 }
 
 .form-control.input_lk.profile {
-    max-width: 447px;
+    /*max-width: 447px;*/
+}
+
+.ctweb-button-block.profile a {
+    color: #F55F5C;
+}
+
+.profile.ctweb-smsauth-menu-step div.col-sm-12.col-md-12{
+    padding-left: unset;
+}
+
+.ctweb-button-block.profile > div {
+    /*text-align: left;*/
+}
+
+p.profile-asterisk {
+    font-size: 14px
+}
+
+.profile .ctweb-label-error {
+    margin-bottom: 25px;
 }
