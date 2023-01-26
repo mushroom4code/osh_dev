@@ -54,25 +54,16 @@ $jsParams = array(
                         <input id="<?= $jsParams['TEMPLATE']['STATE'] ?? Manager::STEP_PHONE_WAITING ?>" type="hidden"
                                name=""
                                value="<?= $arResult['STEP'] ?>">
-                        <h5 class="mt-2 mb-4"><b>Изменение номера телефона</b></h5>
                         <?php if ($arResult['AUTH_RESULT'] === 'SUCCESS') : ?>
-                                            <? ShowNote(GetMessage('SMS_PHONE_SAVED')); ?>
+                            <? ShowNote(GetMessage('SMS_PHONE_SAVED')); ?>
                         <?php elseif ($arResult['AUTH_RESULT'] === 'FAILED'): ?>
-                                            <? ShowError($arResult["strProfileError"]); ?>
+                            <? ShowError($arResult["strProfileError"]); ?>
                         <?php endif;?>
-                        <!--STEP PNONE WAITING-->
+                        <h5 class="mt-2 mb-4"><b>Изменение номера телефона</b></h5>
+
+                        <!--STEP PHONE WAITING-->
                         <div id="ctweb_form_step_1"
                              class="ctweb-smsauth-menu-step d-none">
-<!--                            <div class="form-group  mb-2">-->
-<!--                                <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"-->
-<!--                                       for="main-profile-phone">Номер телефона</label>-->
-<!--                                <div class="col-sm-12 col-md-12">-->
-<!--                                    <input class="form-control input_lk" type="text" name="PERSONAL_PHONE" maxlength="50"-->
-<!--                                           id="main-profile-phone" value="--><?php //= $arResult["arUser"]["PERSONAL_PHONE"] ?><!--"/>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <script>$('#main-profile-phone').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>-->
-<!--                            <div class="form-group">-->
                                 <p class="form-group mb-2 col-sm-12 col-md-12 profile-asterisk">* Будет выслан код подтверждения</p>
                                 <div class="form-group mb-2">
                                     <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
@@ -83,6 +74,7 @@ $jsParams = array(
                                                value="<?= $arParams['USER_PHONE'] ?? '' ?>"
                                                class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
                                                autocomplete="off"/>
+                                        <script>$('#<?= $mainID . "phone" ?>').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>
                                     </div>
                                 </div>
                             </div>
