@@ -216,8 +216,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         </div>
     <? endif ?>
     <? global $GLOBAL_SECTION; ?>
-    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> padding_product_box
-    <? if ($GLOBAL_SECTION['UF_HIDE_PRICE'] == 1 && !$USER->IsAuthorized()): ?>blur_photo<? endif; ?>">
+    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> padding_product_box">
         <div class="row navigation-wrap">
             <div class="col" id="navigation">
                 <?php $APPLICATION->IncludeComponent(

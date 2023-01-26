@@ -67,16 +67,20 @@ $hitProduct = $item['PROPERTIES'][PROP_HIT];
 
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $show_price = true;
+$not_auth = '';
 if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
     $show_price = false;
+    $not_auth = 'link_header_box';
 }
 
 
 $priceBasket = 0;
 $styleForNo = '';
+
 if ($item['PRODUCT']['QUANTITY'] == '0') {
     /*$styleForTaste = 'blur_check';*/
     $styleForNo = 'not_av';
+
 }
 
 foreach ($item['ACTUAL_BASKET'] as $key => $val) {
@@ -114,7 +118,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                 </div>
             </div>
         <?php } ?>
-        <div class="image_cart">
+        <div class="image_cart <?= $not_auth ?>">
             <a class=" <?= $styleForTaste ?>"
                href="<?= $item['DETAIL_PAGE_URL']; ?>">
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
@@ -214,7 +218,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                         <?php if ($hitProduct['VALUE'] == 'да') { ?>
                             <span class="taste" data-background="#000000">Хит</span>
                         <?php } ?>
-                        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProductХ['VALUE'] != 'да')) { ?>
+                        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
                             <span class="taste" data-background="#F55F5C">Новинка</span>
                         <?php }
 
@@ -241,15 +245,19 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                         }
                     } ?>
                 </div>
-            <?php } ?>
+            <?php }
+            if (!$show_price) {
+                $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
+            } ?>
             <div class="box_with_text">
-                <a class="bx_catalog_item_title <?= $styleForNo ?>" href="<?= $item['DETAIL_PAGE_URL']; ?>"
+                <a class="bx_catalog_item_title <?= $styleForNo . ' ' . $not_auth ?>"
+                   href="<?= $item['DETAIL_PAGE_URL']; ?>"
                    title="<?= $productTitle; ?>">
                     <?= $productTitle; ?>
                 </a>
                 <?php if (count($taste['VALUE']) > 0) { ?>
                 <?php }
-                if (!empty($item['DETAIL_TEXT'])) {?>
+                if (!empty($item['DETAIL_TEXT'])) { ?>
                     <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
                 <?php } ?>
             </div>
@@ -334,6 +342,8 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                             <?php } ?>
                         </div>
                     </div>
+                <?php } else { ?>
+                    <div class="btn red_button_cart btn-plus <?= $not_auth ?>">Подробнее</div>
                 <?php }
                 $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                     'templates',
@@ -385,7 +395,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
     </div>
     <?php }
     $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
-    if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) {?>
+    if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) { ?>
         <div id="<?= $arItemIDs['BASKET_PROP_DIV']; ?>" style="display: none;">
             <?php
             if (!empty($item['PRODUCT_PROPERTIES_FILL'])) {
