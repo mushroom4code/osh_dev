@@ -935,7 +935,7 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
 }
 
 .font_21, .bx-catalog-tab-container .blog-comments .blog-comment .blog-comment-cont
-.blog-comment-cont-white .blog-comment-info a.link_like {
+.blog-comment-cont-white .blog-comment-info a.link_like,.font-20 {
     font-size: 20px;
 }
 
@@ -5531,6 +5531,10 @@ li, ul {
     margin-right: 10px;
 }
 
+.wrap_a540 {
+    bottom: 53px!important;
+}
+
 .count-per-page a.active {
     color: #fff;
     background: #F55F5C;
@@ -5549,11 +5553,6 @@ li, ul {
 /* BRANDS */
 .section_wrapper {
     justify-content: flex-start;
-}
-
-.bx-breadcrumb {
-    margin-top: -10px;
-    margin-bottom: 30px;
 }
 
 .form-control.input_lk.input_files {

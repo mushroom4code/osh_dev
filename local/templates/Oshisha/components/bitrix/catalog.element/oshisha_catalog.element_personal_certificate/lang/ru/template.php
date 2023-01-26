@@ -1,7 +1,7 @@
 <?
 $MESS["CT_BCE_QUANTITY"] = "Количество";
 $MESS["CT_BCE_CATALOG_BUY"] = "Купить";
-$MESS["CT_BCE_CATALOG_ADD"] = "В корзину";
+$MESS["CT_BCE_CATALOG_ADD"] = "Забронировать";
 $MESS["CT_BCE_CATALOG_COMPARE"] = "Сравнить";
 $MESS["CT_BCE_CATALOG_NOT_AVAILABLE"] = "нет на складе";
 $MESS["CT_BCE_CATALOG_ECONOMY_INFO2"] = "Скидка #ECONOMY#";

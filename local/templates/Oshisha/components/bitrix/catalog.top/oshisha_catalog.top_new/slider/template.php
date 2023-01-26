@@ -306,7 +306,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                      data-product_id="<?= $arItem['ID']; ?>"
                                      data-max-quantity="<?= $arItem['PRODUCT']['QUANTITY'] ?>"
                                      id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                     <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>В корзину
+                                     <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
+                                    Забронировать
                                 </div>
                                 <div class="product-item-amount-field-contain-wrap"
                                      <? if ($priceBasket > 0): ?>style="display:block;"<? endif; ?>
@@ -329,7 +330,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                            id="<?= $arItemIDs['BUY_LINK']; ?>"
                                            href="javascript:void(0)" data-url="<?= $arItem['DETAIL_PAGE_URL'] ?>"
                                            data-product_id="<?= $arItem['ID']; ?>"
-                                           title="Добавить в корзину"></a>
+                                           title="Забронировать"></a>
                                     </div>
                                 </div>
                             <?php }

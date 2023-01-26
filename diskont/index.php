@@ -166,7 +166,7 @@ $APPLICATION->IncludeComponent(
         "SHOW_DISCOUNT_PERCENT" => "Y",
         "SHOW_OLD_PRICE" => "Y",
         "MESS_BTN_BUY" => "Купить",
-        "MESS_BTN_ADD_TO_BASKET" => "В корзину",
+        "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
         "MESS_BTN_COMPARE" => "Сравнение",
         "MESS_BTN_DETAIL" => "Подробнее",
         "MESS_NOT_AVAILABLE" => "Нет в наличии",

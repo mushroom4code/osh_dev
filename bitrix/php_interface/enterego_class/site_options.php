@@ -190,6 +190,44 @@ $SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
         </td>
 
     </tr>
+    <tr>
+        <td class="heading" colspan=2>Текст в футере для никотиносодержащей продукции</td>
+    </tr>
+    <tr>
+        <td width="50">Колонка</td>
+        <td width="80%">
+            <textarea name="SETTINGS[text_rospetrebnadzor_column]" width="100%" cols=100
+                      rows=5><?= $SETTINGS['text_rospetrebnadzor_column'] ?></textarea>
+        </td>
+
+    </tr>
+    <tr>
+        <td width="50">Нижняя строка</td>
+        <td width="80%">
+            <textarea name="SETTINGS[text_rospetrebnadzor_row]" width="100%" cols=100
+                      rows=5><?= $SETTINGS['text_rospetrebnadzor_row'] ?></textarea>
+        </td>
+
+    </tr>
+    <tr>
+        <td class="heading" colspan=2>Текст в каталоге и карточке товара для никотиносодержащей продукции</td>
+    </tr>
+    <tr>
+        <td width="50">В каталоге</td>
+        <td width="80%">
+            <textarea name="SETTINGS[text_rospetrebnadzor_catalog]" width="100%" cols=100
+                      rows=5><?= $SETTINGS['text_rospetrebnadzor_catalog'] ?></textarea>
+        </td>
+
+    </tr>
+    <tr>
+        <td width="50">В карточке товара</td>
+        <td width="80%">
+            <textarea name="SETTINGS[text_rospetrebnadzor_product]" width="100%" cols=100
+                      rows=5><?= $SETTINGS['text_rospetrebnadzor_product'] ?></textarea>
+        </td>
+
+    </tr>
 <?
 //********************
 // вторая закладка - параметры автоматической генерации рассылки

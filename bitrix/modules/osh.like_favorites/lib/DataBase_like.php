@@ -1,7 +1,5 @@
 <?php
 
-use Bitrix\Main\Entity;
-
 class  DataBase_like
 {
     // TODO enterego - закешировать результаты выборки лайков для всех товаров

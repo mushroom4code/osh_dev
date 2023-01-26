@@ -7010,7 +7010,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                                     href: 'javascript:void(0)',
                                     className: 'btn btn_basket btn-order-save'
                                 },
-                                html: this.params.MESS_ORDER,
+                                html:'Зарезервировать',
                                 events: {
                                     click: BX.proxy(this.clickOrderSaveAction, this)
                                 }
