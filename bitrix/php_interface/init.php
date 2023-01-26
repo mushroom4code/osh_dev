@@ -46,7 +46,7 @@ $SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
 require_once(__DIR__ . '/enterego_class/EnteregoGiftHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
-
+require_once (__DIR__ . '/enterego_class/modules/update_service_likes.php');
 
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
