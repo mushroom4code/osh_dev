@@ -12,43 +12,21 @@ Loc::loadMessages(__FILE__);
 class DeliveryHelper
 {
 
-    public function getButton()
+    public static function getButton($address = '')
     {
 
         ob_start();
         ?>
-        <style>
-            .btn_pvz {
-                display: block;
-                margin-top: 8px;
-                max-width: 320px
-            }
-        </style>
         <a class="btn btn_basket btn_pvz btn-default"
            onclick="BX.SaleCommonPVZ.openMap(); return false;">
             <?= Loc::getMessage('COMMONPVZ_BTN_CHOOSE') ?>
         </a>
         <?php
-        if (isset($_SESSION['addressPVZ']) && $_SESSION['addressPVZ'] !== '') {
-            ?>
-            <span id="pvz_address"><?= Loc::getMessage('COMMONPVZ_TEXT_PREADDRESS') ?><span><?= $_SESSION['addressPVZ'] ?></span></span>
-            <?php
-        }
 
         $content = ob_get_contents();
         ob_end_clean();
 
         return $content;
-    }
-
-    public function getDeliveryID($arDeliveries)
-    {
-        foreach ($arDeliveries as $id => $del) {
-            if ($del['NAME'] === Loc::getMessage('COMMONPVZ_TITLE')) {
-                return $id;
-            }
-        }
-        return 0;
     }
 
     public static function getCityName($locationCode)
@@ -101,20 +79,9 @@ class DeliveryHelper
         } elseif ($req_data['delivery'] === 'ПЭК') {
             $delivery = new PEKDelivery();
             return $delivery->getPrice($req_data);
-        } elseif ($req_data['delivery'] === '5post') {
+        } elseif ($req_data['delivery'] === '5Post') {
             $delivery = new FivePostDelivery();
             return $delivery->getPrice($req_data);
-        }
-    }
-
-    public function onOrderOneStepDelivery(&$arResult, &$arUserResult, $arParams)
-    {
-        $button = self::getButton();
-        $id = self::getDeliveryID($arResult['DELIVERY']);
-
-        if (isset($arResult['DELIVERY'][$id])) {
-            $content = $arResult['DELIVERY'][$id]['DESCRIPTION'];
-            $arResult['DELIVERY'][$id]['DESCRIPTION'] = $content . $button;
         }
     }
 

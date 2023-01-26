@@ -48,9 +48,9 @@ class FivePostDelivery extends CommonPVZ
                 $features_obj['properties'] = [
                     'code_pvz' => $value['POINT_GUID'],
                     'fullAddress' => $value['ADDRESS_COUNTRY'] . ', ' . $value['ADDRESS_ZIP_CODE'] . $region . ', ' . $value['FULL_ADDRESS'],
-                    'deliveryName' => '5post',
+                    'deliveryName' => '5Post',
                     'fivepostZone' => $value['ID'],
-                    'iconContent' => '5post',
+                    'iconCaption' => '5Post',
                     'hintContent' => $value['FULL_ADDRESS'],
                 ];
                 $features_obj['options'] = [

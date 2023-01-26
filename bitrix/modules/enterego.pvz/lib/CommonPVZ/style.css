@@ -34,3 +34,9 @@
     width: 100%;
     height: 600px;
 }
+
+.btn_pvz {
+    display: block;
+    margin-top: 8px;
+    max-width: 320px
+}

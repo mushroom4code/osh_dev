@@ -54,7 +54,7 @@ class PickPointDelivery extends CommonPVZ
                     'code_pvz' => $value['Number'],
                     'fullAddress' => $value['HubCity'] . ', ' . $value['Address'],
                     'deliveryName' => 'PickPoint',
-                    'iconContent' => 'PickPoint',
+                    'iconCaption' => 'PickPoint',
                     'hintContent' => $value['Address'],
                     "hubregion" => $value['HubRegion']
                 ];

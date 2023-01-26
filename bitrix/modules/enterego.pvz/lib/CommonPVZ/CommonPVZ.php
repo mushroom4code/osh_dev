@@ -26,4 +26,8 @@ abstract class CommonPVZ
     }
 
     abstract protected function connect();
+
+    abstract public function getPVZ($city_name, &$result_array, &$id_feature, $code_city);
+
+    abstract public function getPrice($array);
 }

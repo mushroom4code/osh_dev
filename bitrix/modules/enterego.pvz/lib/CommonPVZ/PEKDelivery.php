@@ -5,10 +5,7 @@ namespace CommonPVZ;
 
 class PEKDelivery extends CommonPVZ
 {
-    protected $configs = [
-        'login' => 'smaksultan',
-        'password' => 'C78CCD5137422CCE292210C7F1AADF57284D7320'
-    ];
+    protected $delivery_name = 'PEK';
 
     protected function connect()
     {
@@ -57,7 +54,7 @@ class PEKDelivery extends CommonPVZ
             $features_obj['properties'] = [
                 'fullAddress' => $value['warehouses'][0]['addressDivision'],
                 'deliveryName' => 'ПЭК',
-                'iconContent' => 'ПЭК',
+                'iconCaption' => 'ПЭК',
                 'hintContent' => $value['warehouses'][0]['address']
             ];
             $features_obj['options'] = [
@@ -79,9 +76,9 @@ class PEKDelivery extends CommonPVZ
             $pek_bitrix_id = $pek_result->bitrixId;
             $pek_result = $this->client->call('CALCULATOR', 'CALCULATEPRICE',
                 array(
-                    "senderCityId" => 446,
+                    "senderCityId" => $this->configs['senderCityId'],
                     "receiverCityId" => $pek_bitrix_id,
-                    "senderDistanceType" => 0,
+                    "senderDistanceType" => $this->configs['senderDistanceType'],
                     "cargos" => array(
                         array(
                             'weight' => $array['weight'] / 1000

@@ -2,21 +2,16 @@
 
 namespace Sale\Handlers\Delivery;
 
-use Bitrix\Currency\CurrencyManager;
-use Bitrix\Main\Loader;
 use \Bitrix\Main\Localization\Loc;
 use \Bitrix\Sale\Delivery\CalculationResult;
-use \Bitrix\Sale\Location;
-use Bitrix\Main\Error;
-use CIBlockElement;
-use CIBlockSection;
-use Bitrix\Main\Page\Asset;
 use CModule;
 use CSaleOrderProps;
 use CSaleOrderPropsValue;
 
 Loc::loadMessages(__FILE__);
 
+if (!\Bitrix\Main\Loader::includeModule('enterego.pvz'))
+    return;
 
 class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 {
@@ -33,23 +28,6 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
         parent::__construct($initParams);
     }
 
-    // TODO так как непонял почему у физлица не возвращается свойство ADDRESS вот такой костыль
-    private function setAddress($orderId, $address)
-    {
-        if (CModule::IncludeModule('sale')) {
-            if ($prop = CSaleOrderProps::GetList([], ['CODE' => 'ADDRESS'])->Fetch()) {
-
-                $ii = CSaleOrderPropsValue::Add([
-                    'NAME' => $prop['NAME'],
-                    'CODE' => $prop['CODE'],
-                    'ORDER_PROPS_ID' => $prop['ID'],
-                    'ORDER_ID' => $orderId,
-                    'VALUE' => $address
-                ]);
-            }
-        }
-    }
-
     /**
      * @param \Bitrix\Sale\Shipment|null $shipment
      * @return CalculationResult
@@ -57,25 +35,15 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
      */
     protected function calculateConcrete(\Bitrix\Sale\Shipment $shipment)
     {
-        if (isset($_POST['price'])) {
-            $_SESSION['pricePVZ'] = $_POST['price'];
-            $_SESSION['addressPVZ'] = $_POST['address'];
-        }
-
-        $price = $_SESSION['pricePVZ'] ?? 0;
-        $address = $_SESSION['addressPVZ'] ?? '';
-
-        $order = $shipment->getCollection()->getOrder();
-        $propertyCollection = $order->getPropertyCollection();
-        $adressProperty = $propertyCollection->getAddress();
-
-        if ($adressProperty === null) {
-            self::setAddress($order->getId(), $address);
-        } else {
-            $adressProperty->setValue($address);
-        }
-
         $result = new \Bitrix\Sale\Delivery\CalculationResult();
+
+        if (isset($_POST['price'])) {
+            $_SESSION['CommonPVZ']['pricePVZ'] = $_POST['price'];
+        }
+
+        $price = $_SESSION['CommonPVZ']['pricePVZ'] ?? 0;
+
+        $result->setDescription(\CommonPVZ\DeliveryHelper::getButton());
         $result->setDeliveryPrice(
             roundEx(
                 $price,

@@ -308,6 +308,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.editOrder();
                 this.mapsReady && this.initMaps();
                 BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
+
+                // #18618
+                BX.SaleCommonPVZ && BX.SaleCommonPVZ.refresh();
             }
             return true;
         },
