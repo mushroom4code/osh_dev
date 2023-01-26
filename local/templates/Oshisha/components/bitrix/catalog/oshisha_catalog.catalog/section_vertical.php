@@ -261,7 +261,9 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             <div class="sort-panel mb-4">
                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                     <div class="sort_panel_wrap">
-                        <div class="sort_panel">
+                        <div class="sort_panel" id="">
+<!--                            <input type="hidden" name="sort_by" value="PROPERTY_SERVICE_FIELD_POPULARITY" form="catalog_filter_form">-->
+<!--                            <input type="hidden" name="sort_order" value="DESC" form="catalog_filter_form">-->
                             <a class="sort_order sort_tool" href="#">
                                 <?php /*
                                 if ($_GET["sort"] == "price")
@@ -283,48 +285,23 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             </a>
                             <div class="sort_orders_element">
                                 <ul>
-                                    <li>
-                                        <a class="catalog_sort_item"
-                                           href="<?= str_replace(
-                                               "#",
-                                               "%23",
-                                               $APPLICATION->GetCurPageParam(
-                                                   "sort_by=PROPERTY_SERVICE_FIELD_POPULARITY&sort_order=DESC",
-                                                   array('sort_by', 'sort_order'))
-                                           ) ?>">По популярности</a>
-                                    </li>
-
-                                    <li>
-                                        <a class="catalog_sort_item" data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                           href="<?= str_replace(
-                                               "#",
-                                               "%23",
-                                               $APPLICATION->GetCurPageParam(
-                                                   "sort_by=CATALOG_PRICE_2&sort_order=ASC",
-                                                   array('sort_by', 'sort_order'))) ?>">По возрастанию цены</a>
-                                    </li>
-                                    <li>
-                                        <a class="catalog_sort_item"
-                                           data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                           href="<?= str_replace("#", "%23",
-                                               $APPLICATION->GetCurPageParam(
-                                                   "sort_by=CATALOG_PRICE_2&sort_order=DESC",
-                                                   array('sort_by', 'sort_order'))) ?>">По убыванию цены</a>
-                                    </li>
-                                    <li>
-                                        <a class="catalog_sort_item"
-                                           href="<?= str_replace("#", "%23",
-                                               $APPLICATION->GetCurPageParam(
-                                                   "sort_by=NAME&sort_order=ASC",
-                                                   array('sort_by', 'sort_order'))) ?>">По названию</a>
-                                    </li>
-
-                                    <li>
-                                        <a class="catalog_sort_item"
-                                           href="<?= str_replace("#", "%23", $APPLICATION->GetCurPageParam(
-                                               "sort_by=CREATED_DATE&sort_order=DESC",
-                                               array('sort_by', 'sort_order'))) ?>">По новизне</a>
-                                    </li>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-sort="PROPERTY_SERVICE_FIELD_POPULARITY"
+                                        data-order="DESC">По популярности</li>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                        data-sort="CATALOG_PRICE_2"
+                                        data-order="ASC">По возрастанию цены</li>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                        data-sort="CATALOG_PRICE_2"
+                                        data-order="DESC">По убыванию цены</li>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-sort="NAME"
+                                        data-order="ASC">По названию</li>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-sort="CREATED_DATE"
+                                        data-order="DESC">По новизне</li>
                                 </ul>
                             </div>
                         </div>

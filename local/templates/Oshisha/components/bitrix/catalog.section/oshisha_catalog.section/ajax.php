@@ -128,6 +128,13 @@ if( isset($_REQUEST['PAGER_BASE_LINK_ENABLE'])){
     $parameters['PAGER_BASE_LINK_ENABLE'] = $_REQUEST['PAGER_BASE_LINK_ENABLE'];
 }
 
+if (isset($_REQUEST['sort_by'])) {
+    $parameters['ELEMENT_SORT_FIELD'] = $request->get('sort_by');
+    $parameters['ELEMENT_SORT_ORDER'] = $request->get('sort_order');
+    $parameters['ELEMENT_SORT_FIELD2'] = 'NAME';
+    $parameters['ELEMENT_SORT_ORDER2'] = 'ASC';
+}
+
 $APPLICATION->IncludeComponent(
     'bitrix:catalog.section',
     $template,
