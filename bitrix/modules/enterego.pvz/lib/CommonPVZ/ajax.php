@@ -12,7 +12,6 @@ if (!Bitrix\Main\Loader::includeModule('enterego.pvz'))
 
 if ($_POST['action'] === 'getCityName') {
     $_SESSION['CommonPVZ']['pricePVZ'] = 0;
-    $_SESSION['CommonPVZ']['addressPVZ'] = '';
 
     exit(\CommonPVZ\DeliveryHelper::getCityName($_POST['codeCity']));
 }

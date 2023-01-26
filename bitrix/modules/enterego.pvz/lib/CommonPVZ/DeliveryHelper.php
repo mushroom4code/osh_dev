@@ -22,11 +22,6 @@ class DeliveryHelper
             <?= Loc::getMessage('COMMONPVZ_BTN_CHOOSE') ?>
         </a>
         <?php
-       /* if ($address !== '') {
-            */?><!--
-            <span id="pvz_address"><?/*= Loc::getMessage('COMMONPVZ_TEXT_PREADDRESS') */?><span><?/*= $address */?></span></span>
-            --><?php
-/*        }*/
 
         $content = ob_get_contents();
         ob_end_clean();
@@ -84,7 +79,7 @@ class DeliveryHelper
         } elseif ($req_data['delivery'] === 'ПЭК') {
             $delivery = new PEKDelivery();
             return $delivery->getPrice($req_data);
-        } elseif ($req_data['delivery'] === '5post') {
+        } elseif ($req_data['delivery'] === '5Post') {
             $delivery = new FivePostDelivery();
             return $delivery->getPrice($req_data);
         }

@@ -28,23 +28,6 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
         parent::__construct($initParams);
     }
 
-    // TODO так как непонял почему у физлица не возвращается свойство ADDRESS вот такой костыль
-    private function setAddress($orderId, $address)
-    {
-        if (CModule::IncludeModule('sale')) {
-            if ($prop = CSaleOrderProps::GetList([], ['CODE' => 'ADDRESS'])->Fetch()) {
-
-                $ii = CSaleOrderPropsValue::Add([
-                    'NAME' => $prop['NAME'],
-                    'CODE' => $prop['CODE'],
-                    'ORDER_PROPS_ID' => $prop['ID'],
-                    'ORDER_ID' => $orderId,
-                    'VALUE' => $address
-                ]);
-            }
-        }
-    }
-
     /**
      * @param \Bitrix\Sale\Shipment|null $shipment
      * @return CalculationResult
@@ -56,23 +39,11 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 
         if (isset($_POST['price'])) {
             $_SESSION['CommonPVZ']['pricePVZ'] = $_POST['price'];
-            $_SESSION['CommonPVZ']['addressPVZ'] = $_POST['address'];
         }
 
         $price = $_SESSION['CommonPVZ']['pricePVZ'] ?? 0;
-        $address = $_SESSION['CommonPVZ']['addressPVZ'] ?? '';
 
-        $order = $shipment->getCollection()->getOrder();
-        $propertyCollection = $order->getPropertyCollection();
-        $adressProperty = $propertyCollection->getAddress();
-
-        if ($adressProperty === null) {
-            self::setAddress($order->getId(), $address);
-        } else {
-            $adressProperty->setValue($address);
-        }
-
-        $result->setDescription(\CommonPVZ\DeliveryHelper::getButton($address));
+        $result->setDescription(\CommonPVZ\DeliveryHelper::getButton());
         $result->setDeliveryPrice(
             roundEx(
                 $price,

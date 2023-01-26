@@ -11,6 +11,7 @@ BX.SaleCommonPVZ = {
     pvzObj: null,
     pvzAddress: null,
     pvzFullAddress: null,
+    pvzPrice: null,
 
     init: function (params) {
         console.log('... CommonPVZ init ...');
@@ -18,7 +19,6 @@ BX.SaleCommonPVZ = {
     },
 
     openMap: function () {
-        this.refresh();
         this.createPVZPopup();
         this.buildPVZMap();
         this.pvzPopup.show();
@@ -26,6 +26,11 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         var __this = this;
+        var adr = $('[name="ORDER_PROP_76"]').length ? $('[name="ORDER_PROP_76"]') : $('[name="ORDER_PROP_77"]');
+        if (__this.pvzFullAddress) {
+            adr.val(__this.pvzFullAddress)
+        }
+        adr.attr('readonly', 'readonly');
 
         BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
             if (item.IS_LOCATION === 'Y') {
@@ -183,8 +188,13 @@ BX.SaleCommonPVZ = {
                 onsuccess: BX.delegate(function (result) {
                     result = JSON.parse(result);
                     var reqData = {};
-                    reqData.price = parseInt(result) || 0;
-                    reqData.address = __this.pvzFullAddress || '';
+
+                    __this.pvzPrice = parseInt(result) || 0;
+                    reqData.price = __this.pvzPrice;
+                    if (!result) {
+                        reqData.error = 'Ошибка запроса стоимости доставки ' + obj.properties.deliveryName + ' !';
+                    }
+
                     __this.sendRequestToComponent('refreshOrderAjax', reqData);
                 }, this),
                 onfailure: BX.delegate(function () {
@@ -196,8 +206,6 @@ BX.SaleCommonPVZ = {
     },
 
     sendRequestToComponent: function (action, actionData) {
-        var __this = this;
-
         BX.ajax({
             method: 'POST',
             dataType: 'json',
@@ -205,13 +213,11 @@ BX.SaleCommonPVZ = {
             data: this.getDataForPVZ(action, actionData),
             onsuccess: BX.delegate(function (result) {
                 if (action === 'refreshOrderAjax') {
+                    if (actionData.error) {
+                        result.error = actionData.error;
+                    }
                     BX.Sale.OrderAjaxComponent.refreshOrder(result);
                 }
-                // TODO - неправильно что по определенным номерам св-в
-                //$('#pvz_address>span').text(__this.pvzAddress);
-                var adr = $('[name="ORDER_PROP_76"]').length ? $('[name="ORDER_PROP_76"]') : $('[name="ORDER_PROP_77"]');
-                adr.val(__this.pvzFullAddress).attr('readonly', 'readonly');
-
                 BX.Sale.OrderAjaxComponent.endLoader();
             }, this),
             onfailure: BX.delegate(function () {
@@ -228,8 +234,7 @@ BX.SaleCommonPVZ = {
             via_ajax: 'Y',
             SITE_ID: BX.Sale.OrderAjaxComponent.siteId,
             signedParamsString: BX.Sale.OrderAjaxComponent.signedParamsString,
-            price: actionData.price,
-            address: actionData.address
+            price: actionData.price
         };
 
         data[BX.Sale.OrderAjaxComponent.params.ACTION_VARIABLE] = action;
