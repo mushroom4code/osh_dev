@@ -676,7 +676,11 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                                 //region CHECKBOXES +
                                 default:
-                                uasort($arItem["VALUES"],'sort_by_sort');
+                                if ($arItem['PROPERTY_TYPE'] !== 'S') {
+                                    uasort($arItem["VALUES"], 'sort_by_sort');
+                                } else {
+                                    ksort($arItem["VALUES"]);
+                                }
                                 ?>
                                     <div class="smart-filter-input-group-checkbox-list">
                                         <? foreach ($arItem["VALUES"] as $val => $ar): ?>
