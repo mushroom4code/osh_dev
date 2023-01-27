@@ -70,11 +70,10 @@ $jsParams = array(
                                            for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                     <span id="flag"></span>
                                     <div class="col-sm-12 col-md-12">
-                                        <input class="form-control input_lk profile" type="text" name="PHONE" placeholder="Введите номер"
+                                        <input class="form-control input_lk profile" type="text" name="PHONE" placeholder="+7 (___)-___-____"
                                                value="<?= $arParams['USER_PHONE'] ?? '' ?>"
-                                               class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
+                                               class="form-control profile custom_style_auth" id="<?= $mainID . "phone" ?>"
                                                autocomplete="off"/>
-                                        <script>$('#<?= $mainID . "phone" ?>').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});</script>
                                     </div>
                                 </div>
                             </div>
@@ -216,6 +215,9 @@ $jsParams = array(
         'SMS_AUTH_ERROR_PHONE_EXISTS_TEXT' => GetMessage('SMS_AUTH_ERROR_PHONE_EXISTS_TEXT'),
         'SMS_AUTH_ERROR_TIME_EXPIRED_TITLE' => GetMessage('SMS_AUTH_ERROR_TIME_EXPIRED_TITLE'),
         'SMS_AUTH_ERROR_TIME_EXPIRED_TEXT' => GetMessage('SMS_AUTH_ERROR_TIME_EXPIRED_TEXT'),
+        'SMS_AUTH_ERROR_CAPTCHA_WRONG' => GetMessage('SMS_AUTH_ERROR_CAPTCHA_WRONG'),
+        'SMS_AUTH_ERROR_CAPTCHA_WRONG_TITLE' => GetMessage('SMS_AUTH_ERROR_CAPTCHA_WRONG_TITLE'),
+        'SMS_AUTH_ERROR_CAPTCHA_WRONG_TEXT' => GetMessage('SMS_AUTH_ERROR_CAPTCHA_WRONG_TEXT'),
         'SMS_AUTH_CHANGE_PHONE' => GetMessage('SMS_AUTH_CHANGE_PHONE'),
         'ERROR_ALERT_NOT_CORRECT' => GetMessage("SMS_AUTH_ERROR_EMAIL_OR_PASS_NOT_CORRECT"),
         'ERROR_ALERT_EMPTY_FIELD' => GetMessage("SMS_AUTH_ERROR_EMPTY_FIELD"),

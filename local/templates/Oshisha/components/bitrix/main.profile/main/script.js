@@ -110,7 +110,7 @@ BX.namespace('BX.Sale.PersonalProfileComponent');
 
 
 $(document).ready(function(){
-    $(".form-control").keyup(function(){
+    $(".form-control:not(.profile)").keyup(function(){
         $(".CHANGE_FORM").val('1');     
     });
 
@@ -119,8 +119,6 @@ $(document).ready(function(){
 		console.log($(".CHANGE_FORM").val());
 		if(  $(".CHANGE_FORM").val() == '1' )
 			return confirm ('Введенные в форме данные не сохранятся! Вы действительно хотите перейти на другую страницу?');
-		
-		
 	}); 
 
   });

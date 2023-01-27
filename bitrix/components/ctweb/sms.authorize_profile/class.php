@@ -95,7 +95,7 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
 
     private function CaptchaCheckToken(): bool
     {
-        $secret = COption::GetOptionString("b01110011.recaptcha", "secret_key_s1");
+        $secret = COption::GetOptionString("b01110011.recaptcha", "secret_key_N2");
         $reCaptcha = new ReCaptcha($secret);
         $verify = $reCaptcha->verify($_REQUEST['recaptcha_token']);
 
@@ -194,7 +194,13 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
     {
         global $APPLICATION;
         if ($this->isPost() && $this->request['method'] != self::METHOD_CHANGE_PHONE) {
-
+//            $use_captcha = COption::GetOptionString("b01110011.recaptcha");
+            if ($this->arResult['USE_CAPTCHA'] == "Y") {
+                if (!$this->CaptchaCheckToken()) {
+                    $this->manager->addError(self::ERROR_CAPTCHA_WRONG);
+                    return;
+                }
+            }
             $this->setSessionField('IS_AJAX_POST', $isAjaxRequest);
 
             if (strlen($this->request->get('PHONE')))

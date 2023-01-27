@@ -15,10 +15,12 @@
     const STATE_CODE_NOT_VALID = '5';
     const STATE_CODE_REUSED = '6';
     const STATE_PHONE_EXISTS = '7';
+    const STATE_CAPTCHA_WRONG = '8';
 
     const ERROR_CODE_NOT_CORRECT = 'CODE_NOT_CORRECT';
     const ERROR_TIME_EXPIRED = 'TIME_EXPIRED';
     const ERROR_PHONE_EXISTS = 'PHONE_EXISTS';
+    const ERROR_CAPTCHA_WRONG = 'CAPTCHA_WRONG';
 
     BX.Ctweb.SMSAuth.Controller = function (params) {
         this.state = STATE_INIT;
@@ -138,7 +140,6 @@
             event.preventDefault();
 
             clearInterval(this.timerId);
-
             let form = $(BX(this.obForm));
             let url = form.attr('action');
             let data = form.serializeArray();
@@ -238,6 +239,8 @@
                             Ctweb.setState(STATE_EXPIRED);
                         } else if (objResponse['ERRORS'][0] === ERROR_PHONE_EXISTS) {
                             Ctweb.setState(STATE_PHONE_EXISTS);
+                        } else if (objResponse['ERRORS'][0] === ERROR_CAPTCHA_WRONG) {
+                            Ctweb.setState(STATE_CAPTCHA_WRONG);
                         }
                     } else {
                         if (step === STATE_CODE_WAITING) {
@@ -370,6 +373,15 @@
                 BX.show(this.obResend.closest('div'));
                 BX.show(this.obMessage);
                 BX.show(this.obResend);
+                break;
+            case STATE_CAPTCHA_WRONG:
+                clearInterval(this.timerId);
+                BX.toggleClass(BX('ctweb_form_step_error'), 'd-none');
+                BX.hide(this.obSubmit);
+                BX.adjust(this.errotTitle, {text: BX.message('SMS_AUTH_ERROR_CAPTCHA_WRONG_TITLE')});
+                BX.adjust(this.errorText, {text: BX.message('SMS_AUTH_ERROR_CAPTCHA_WRONG_TEXT')});
+
+                BX.show(this.obChangePhone);
                 break;
             case STATE_PHONE_EXISTS:
                 BX.toggleClass(BX('ctweb_form_step_error'), 'd-none');

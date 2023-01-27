@@ -43,5 +43,8 @@ $MESS["SMS_AUTH_ERROR_USER_NOT_CHOOSED"] = "User is not selected";
 $MESS["SMS_AUTH_ERROR_UNKNOWN_ERROR"] = "Unknown error";
 $MESS["SMS_AUTH_ERROR_CAPTCHA_WRONG"] = "Wrong captcha";
 
+$MESS["SMS_AUTH_ERROR_CAPTCHA_WRONG_TITLE"] = "Неверная каптча";
+$MESS["SMS_AUTH_ERROR_CAPTCHA_WRONG_TEXT"] = "Проверка каптчи не пройдена";
+
 $MESS["CAPTCHA_REGF_PROMT"] = "Enter word from image";
 ?>

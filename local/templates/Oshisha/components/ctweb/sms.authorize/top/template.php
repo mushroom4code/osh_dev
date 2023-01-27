@@ -99,23 +99,6 @@ $jsParams = array(
                                     <?= GetMessage("SMS_AUTH_SAVE_SESSION") ?>
                                 </label>
                             </div>
-                            <?php if ($arResult["USE_CAPTCHA"] == "Y"): ?>
-                                <input type="hidden" name="captcha_sid" value="<?= $arResult["CAPTCHA_CODE"] ?>"/>
-
-                                <div class="form-group">
-                                    <?= GetMessage("CAPTCHA_REGF_PROMT") ?>
-                                    <div class="form-group">
-                                        <div class="bx-captcha"><img
-                                                    src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult["CAPTCHA_CODE"] ?>"
-                                                    width="180" height="40" alt="CAPTCHA"/></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="captcha_word" maxlength="50"
-                                               value="" autocomplete="off"/>
-                                    </div>
-                                </div>
-
-                            <?php endif ?>
                         </div>
 
                         <!-- STEP CODE WAITING -->
@@ -250,6 +233,9 @@ $jsParams = array(
         'SMS_AUTH_CHANGE_PHONE' => GetMessage('SMS_AUTH_CHANGE_PHONE'),
         'ERROR_ALERT_NOT_CORRECT' => GetMessage("SMS_AUTH_ERROR_EMAIL_OR_PASS_NOT_CORRECT"),
         'ERROR_ALERT_EMPTY_FIELD' => GetMessage("SMS_AUTH_ERROR_EMPTY_FIELD"),
+        'SMS_AUTH_ERROR_CAPTCHA_WRONG' => GetMessage('SMS_AUTH_ERROR_CAPTCHA_WRONG'),
+        'SMS_AUTH_ERROR_CAPTCHA_WRONG_TITLE' => GetMessage('SMS_AUTH_ERROR_CAPTCHA_WRONG_TITLE'),
+        'SMS_AUTH_ERROR_CAPTCHA_WRONG_TEXT' => GetMessage('SMS_AUTH_ERROR_CAPTCHA_WRONG_TEXT'),
     ))?>);
 
     BX(function () {
