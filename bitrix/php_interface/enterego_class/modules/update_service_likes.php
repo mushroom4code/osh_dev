@@ -1,31 +1,36 @@
 <?php
 function updateProductPopularity()
 {
-    $toChange = [];
+    $updates = [];
+    $products = [];
     $arFilter = ['IBLOCK_ID' => IBLOCK_CATALOG];
     $arSelect = ['IBLOCK_ID', 'ID', 'PROPERTY_SERVICE_FIELD_POPULARITY'];
     $res = CIBlockElement::GetList(false, $arFilter, $arSelect);
 
     while ($el = $res->GetNextElement()) {
         $fields = $el->GetFields();
-        $id = $fields['ID'];
-        $likes = DataBase_like::getLikeFavoriteAllProduct([$id], false);
-
-        if ((int)$fields['PROPERTY_SERVICE_FIELD_POPULARITY_VALUE'] != (int)$likes['ALL_LIKE'][$id]) {
-            $oldCount = $fields['PROPERTY_SERVICE_FIELD_POPULARITY_VALUE'] != null ? $fields['PROPERTY_SERVICE_FIELD_POPULARITY_VALUE'] : 0;
-            $toChange[$id] = [
-                'new' => $likes['ALL_LIKE'][$id],
-                'old' => $oldCount
-            ];
-        }
+        $products[$fields['ID']] = $fields['PROPERTY_SERVICE_FIELD_POPULARITY_VALUE'];
     }
 
-    foreach ($toChange as $id => $elem) {
+    $actualLikes = DataBase_like::getLikeFavoriteAllProduct(array_keys($products), false);
+    print_r($actualLikes);
+    echo '<br><br>';
+
+    foreach ($products as $id => $popularity) {
+        echo PHP_EOL;
+        if ($popularity != $actualLikes['ALL_LIKE'][$id]) {
+            $updates[$id] = $actualLikes['ALL_LIKE'][$id];
+        }
+    }
+    print_r($updates);
+    echo '<br><br>';
+
+    foreach ($updates as $id => $updElem) {
         CIBlockElement::SetPropertyValuesEx(
             $id,
             IBLOCK_CATALOG,
             [
-                'SERVICE_FIELD_POPULARITY' => $elem['new'],
+                'SERVICE_FIELD_POPULARITY' => $updElem['new'],
             ]
         );
     }
