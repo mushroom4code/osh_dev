@@ -1,9 +1,5 @@
 <?php
 
-use Bitrix\Main\Page\Asset;
-use Bitrix\Main\Web\Json;
-
-//use Osh\Delivery\Options\Config;
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetPageProperty("keywords", "доставка, условия, стоимость, самовывоз");
@@ -12,23 +8,15 @@ $APPLICATION->SetPageProperty("keywords", "доставка, условия, с�
  */
 $APPLICATION->SetTitle("Доставка и оплата товаров для кальяна в компании Ошиша");
 
-//CModule::IncludeModule('osh.shipping');
-//$ymapsApikey = Config::getYMapsKey();
-//$daDataToken = Config::getDaDataToken();
-Asset::getInstance()->addJs("/bitrix/js/osh.shipping/pickup.js");
-Asset::getInstance()->addJs("/bitrix/js/osh.shipping/async.js");
-Asset::getInstance()->addJs("/bitrix/js/osh.shipping/jquery.suggestions.min.js");
-Asset::getInstance()->addCss("/bitrix/css/osh.shipping/suggestions.css");
-Asset::getInstance()->addJs('https://api-maps.yandex.ru/2.1.71/?lang=ru_RU&apikey=' . ($ymapsApikey ? '&apikey=' . $ymapsApikey : ''), true);
-/*
-$oshShippingParams = json_encode(array(
-    'key' => $ymapsApikey,
-    'cost' => Config::getCost(),
-));*/
+global $USER;
+if ($USER->IsAuthorized()) {
 
-?>
+    ?>
     <div id="content_box_delivery" class="box_boxes_delivery static">
-        <h2 class="font-weight-bold">Условия доставки и способы оплаты</h2>
+        <h2 class="font-weight-bold mb-4">Условия доставки и способы оплаты</h2>
+        <p class="delivery_description font-weight-bolder">
+            Доставка кальянов, табачной и никотиносодержащей продукции для физических лиц - не осуществляется,<br>
+            в отношении иной продукции применяются следующие условия о доставке:</p>
         <div class="d-flex flex-column mt-3" id="delivery_method">
             <h5 style="margin:20px 0 15px">Способы оплаты заказов</h5>
             <p class="delivery_description"><span
@@ -140,4 +128,11 @@ $oshShippingParams = json_encode(array(
         </div>
 
     </div>
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+<?php } else { ?>
+    <div id="content_box_delivery" class="box_boxes_delivery static">
+        <p class="mb-2 mt-5 font-20 font-weight-bolder text-center"> Для ознакомления с информацией необходимо
+            <a href="javascript:void(0)" class="link_header_box color-redLight text-decoration-underline">авторизоваться.</a></p>
+    </div>
+    <?php
+}
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");

@@ -83,10 +83,10 @@ if (empty($arResult["CATEGORIES"]))
                     <div style="clear:both;"></div>
                 </div>
                 <?
-                $textButton = 'В корзину';
+                $textButton = 'Забронировать';
                 $classButton = 'btn_basket';
                 if ($arElement['BASKET_QUANTITY'] > 0) {
-                    $textButton = 'В корзине';
+                    $textButton = 'Забронировано';
                     $classButton = 'addProductDetailButton';
                 }
                 ?>

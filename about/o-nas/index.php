@@ -40,7 +40,7 @@ $APPLICATION->SetTitle("О нас");
                 </div>
                 <div class="d-flex flex-column justify-content-between align-content-between">
                     <span class=" text_advantage">Широкий ассортимент – более
-                        <br> 15000 товаров на любой вкус</span>
+                        <br> 6000 товаров на любой вкус</span>
                 </div>
             </div>
             <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
@@ -80,7 +80,7 @@ $APPLICATION->SetTitle("О нас");
                         <span class="text_advantage">
                             Универсальная доставка - мы работаем<br>
                             со множеством транспортных компаний<br>
-                            и доставляем нашимикурьерами по<br>
+                            и доставляем нашими курьерами по<br>
                             Москве\МО в любое время дня и ночи</span>
                 </div>
             </div>

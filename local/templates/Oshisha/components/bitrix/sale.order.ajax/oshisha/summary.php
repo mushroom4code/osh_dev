@@ -23,7 +23,7 @@ $countProduct = count($arResult["GRID"]["ROWS"]);
 
 
 		<div class="bx-soa-cart-total-line bx-soa-cart-total-line-total"><span class="bx-soa-cart-t">Общая стоимость</span><span class="bx-soa-cart-d"><?=$arResult["ORDER_TOTAL_PRICE_FORMATED"]?></span></div>
-		<div class="bx-soa-cart-total-button-containerd-block"><a href="javascript:void(0)" onclick="submitForm('Y'); return false;"  class="btn btn_basket btn-order-save">Оформить заказ</a></div>
+		<div class="bx-soa-cart-total-button-containerd-block"><a href="javascript:void(0)" onclick="submitForm('Y'); return false;"  class="btn btn_basket btn-order-save">Зарезервировать</a></div>
 
 
 	</div>

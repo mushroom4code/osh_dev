@@ -935,7 +935,7 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
 }
 
 .font_21, .bx-catalog-tab-container .blog-comments .blog-comment .blog-comment-cont
-.blog-comment-cont-white .blog-comment-info a.link_like {
+.blog-comment-cont-white .blog-comment-info a.link_like, .font-20 {
     font-size: 20px;
 }
 
@@ -1523,7 +1523,6 @@ span > i.header_icon {
 
 .not_product {
     padding: 5px 11px;
-    width: 63%;
     border-radius: 7px;
 }
 
@@ -1726,9 +1725,6 @@ a.bx_catalog_item_title {
     width: 85%;
 }
 
-.by-line .box_with_fav_bask {
-    width: 100%;
-}
 
 .by-line.opt .box_with_fav_bask .width_90, .by-line.opt .bx_catalog_item_controls, .form_company,
 .width_50, #delivery_payment .btn_company {
@@ -1763,7 +1759,7 @@ a.bx_catalog_item_title {
 
 .by-card .product-item-small-card {
     width: 100% !important;
-    max-width: 237px;
+    max-width: 268px;
     min-height: 355px;
 }
 
@@ -1813,7 +1809,7 @@ a.bx_catalog_item_title {
 }
 
 .by-line .bx_catalog_item_price {
-    grid-row-start: 2;
+    grid-row-start: 3;
     grid-column-end: 4;
     grid-column-start: 2;
 }
@@ -2131,12 +2127,16 @@ input.check_input {
     padding: 11px !important;
 }
 
-.product-item-amount-field-contain input[type="number"]:not(.cat-det) {
-    padding: 4px !important;
-}
-
 .card_element:focus {
     border-radius: 5.01973px;
+}
+
+.card_element {
+    padding: 10px 0;
+}
+
+.font-weight-600 {
+    font-weight: 600;
 }
 
 .bx-no-touch input.card_element::-webkit-outer-spin-button, .bx-no-touch input.card_element::-webkit-inner-spin-button {
@@ -5170,6 +5170,11 @@ li, ul {
     margin-top: -10px;
 }
 
+.image-cart {
+    width: 26px;
+    height: 26px;
+}
+
 @media (max-width: 767px) {
 
     .static h1, .static .h1 {
@@ -5531,6 +5536,10 @@ li, ul {
     margin-right: 10px;
 }
 
+.wrap_a540 {
+    bottom: 53px !important;
+}
+
 .count-per-page a.active {
     color: #fff;
     background: #F55F5C;
@@ -5549,11 +5558,6 @@ li, ul {
 /* BRANDS */
 .section_wrapper {
     justify-content: flex-start;
-}
-
-.bx-breadcrumb {
-    margin-top: -10px;
-    margin-bottom: 30px;
 }
 
 .form-control.input_lk.input_files {

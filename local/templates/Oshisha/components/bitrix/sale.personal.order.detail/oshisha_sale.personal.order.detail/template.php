@@ -203,7 +203,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                                         if ($basketItem['PICTURE']['SRC'] <> '') {
                                                             $imageSrc = $basketItem['PICTURE']['SRC'];
                                                         } else {
-                                                            $imageSrc = $this->GetFolder() . '/images/no_photo.png';
+                                                            $imageSrc = '/local/templates/Oshisha/images/no-photo.gif';
                                                         }
                                                         ?>
                                                         <img class="sale-order-detail-order-item-img-container"
@@ -288,7 +288,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                                            class="btn_basket add2basket basket_prod_detail"
                                                            data-url="<?= $basketItem['DETAIL_PAGE_URL'] ?>"
                                                            data-product_id="<?= $basketItem['ID']; ?>"
-                                                           title="Добавить в корзину">В корзину</a>
+                                                           title="Добавить в корзину">Забронировать</a>
                                                     </div>
                                                 </div>
                                                 <div class="box_with_net ml-3">
