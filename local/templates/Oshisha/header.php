@@ -24,24 +24,34 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 <html xml:lang="<?= LANGUAGE_ID ?>" lang="<?= LANGUAGE_ID ?>">
 <head>
 
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();
-   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () {
+                (m[i].a = m[i].a || []).push(arguments)
+            };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) {
+                if (document.scripts[j].src === r) {
+                    return;
+                }
+            }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-   ym(92030744, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true,
-        ecommerce:"dataLayer"
-   });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/92030744" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+        ym(92030744, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true,
+            ecommerce: "dataLayer"
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/92030744" style="position:absolute; left:-9999px;" alt=""/></div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
 
     <title><?php $APPLICATION->ShowTitle() ?></title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -259,49 +269,41 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             ); ?>
                         </a>
                     </div>
-                    <div class="text_header_menu">
-                            <span>Вся продукция <br>для кальяна
-                </span>
-                    </div>
+                    <div class="text_header_menu"><span>Вся продукция <br>для кальяна</span></div>
                 </div>
                 <div class="box_right_header">
-                    <div class="box_with_search z-index-1200">
+                    <div class="box_with_search">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:search.title",
                             "oshisha_search.title",
                             array(
-                                "NUM_CATEGORIES" => "1",
-                                "TOP_COUNT" => "5",
+                                "CATEGORY_0" => array("iblock_1c_catalog"),
+                                "CATEGORY_0_TITLE" => "",
+                                "CATEGORY_0_iblock_1c_catalog" => array("all"),
+                                "CATEGORY_1" => array(),
+                                "CATEGORY_1_TITLE" => "",
                                 "CHECK_DATES" => "N",
-                                "SHOW_OTHERS" => "N",
-                                "PAGE" => SITE_DIR . "catalog/",
-                                "CATEGORY_0_TITLE" => GetMessage("SEARCH_GOODS"),
-                                "CATEGORY_0" => array(
-                                    0 => "iblock_catalog",
-                                ),
-                                "CATEGORY_0_iblock_catalog" => array(
-                                    0 => "all",
-                                ),
-                                "CATEGORY_OTHERS_TITLE" => GetMessage("SEARCH_OTHER"),
+                                "CONTAINER_ID" => "title-search_desktop",
+                                "CONVERT_CURRENCY" => "N",
+                                "INPUT_ID" => "input_search_desktop",
+                                "NUM_CATEGORIES" => "2",
+                                "ORDER" => "date",
+                                "PAGE" => "#SITE_DIR#catalog/",
+                                "PREVIEW_HEIGHT" => "150",
+                                "PREVIEW_TRUNCATE_LEN" => "",
+                                "PREVIEW_WIDTH" => "150",
+                                "PRICE_CODE" => BXConstants::PriceCode(),
+                                "PRICE_VAT_INCLUDE" => "Y",
                                 "SHOW_INPUT" => "Y",
-                                "INPUT_ID" => "title-search-input",
-                                "CONTAINER_ID" => "search",
-                                "PRICE_CODE" => array(
-                                    2 => "Розничная",
-                                    7 => "b2b",
-                                    8 => "Сайт скидка"
-                                ),
-                                "FILL_ITEM_ALL_PRICES" => "Y",
+                                "SHOW_OTHERS" => "N",
                                 "SHOW_PREVIEW" => "Y",
-                                "PREVIEW_WIDTH" => "75",
-                                "PREVIEW_HEIGHT" => "75",
-                                "CONVERT_CURRENCY" => "Y",
-                                "USE_LANGUAGE_GUESS" => "N"
+                                "TEMPLATE_THEME" => "blue",
+                                "TOP_COUNT" => "5",
+                                "USE_LANGUAGE_GUESS" => "Y"
                             ),
                             true
                         ); ?>
                     </div>
-
                     <div class="block_menu_mobile bx-header-personal z-index-1200">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:sale.basket.basket.line",
@@ -357,13 +359,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         </div>
         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/include/feedback-popup-line.php") ?>
     </header>
-
     <div class="section_wrapper">
         <div class="container_header">
-
-
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
-            <div>
                 <div class="bx-content <?= STATIC_P ?>">
-
-
