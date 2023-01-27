@@ -157,46 +157,53 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
 		//Проверяем дату рождения
 //PERSONAL_BIRTHDAY
 		$rowUser = $obUser->GetByID($USER->GetId())->Fetch();
-		if( $rowUser['PERSONAL_BIRTHDAY'] != $arFields['PERSONAL_BIRTHDAY'] )
-		{
-			$arFields['UF_DATE_CHANGE_BH'] = date('d.m.Y');
-		}
-		$USER_FIELD_MANAGER->EditFormAddFields("USER", $arFields);
-	
+        if (!empty($arFields['PERSONAL_BIRTHDAY'])) {
+            $arFields['PERSONAL_BIRTHDAY'] = date(
+                'm/d/Y',
+                strtotime(str_replace('/', '-', $arFields['PERSONAL_BIRTHDAY'])));
+            if( $rowUser['PERSONAL_BIRTHDAY'] != $arFields['PERSONAL_BIRTHDAY'] )
+            {
+                $arFields['UF_DATE_CHANGE_BH'] = date('m/d/Y', strtotime('+1 year'));
+            } else {
+                unset($arFields['PERSONAL_BIRTHDAY']);
+            }
+            $USER_FIELD_MANAGER->EditFormAddFields("USER", $arFields);
+        }
+
 		if($obUser->Update($arResult["ID"], $arFields))
 		{
-			/*if($arResult["PHONE_REGISTRATION"] == true && $arFields["PHONE_NUMBER"] <> '')
-			{
-				if(!($phone = \Bitrix\Main\UserPhoneAuthTable::getRowById($arResult["ID"])))
-				{
-					$phone = ["PHONE_NUMBER" => "", "CONFIRMED" => "N"];
-				}
-
-				$arFields["PHONE_NUMBER"] = \Bitrix\Main\UserPhoneAuthTable::normalizePhoneNumber($arFields["PHONE_NUMBER"]);
-
-				if($arFields["PHONE_NUMBER"] <> $phone["PHONE_NUMBER"] || $phone["CONFIRMED"] <> 'Y')
-				{
-					//added or updated the phone number for the user, now sending a confirmation SMS
-					list($code, $phoneNumber) = CUser::GeneratePhoneCode($arResult["ID"]);
-
-					$sms = new \Bitrix\Main\Sms\Event(
-						"SMS_USER_CONFIRM_NUMBER",
-						[
-							"USER_PHONE" => $phoneNumber,
-							"CODE" => $code,
-						]
-					);
-					$smsResult = $sms->send(true);
-
-					if(!$smsResult->isSuccess())
-					{
-						$strError .= implode("<br />", $smsResult->getErrorMessages());
-					}
-
-					$arResult["SHOW_SMS_FIELD"] = true;
-					$arResult["SIGNED_DATA"] = \Bitrix\Main\Controller\PhoneAuth::signData(['phoneNumber' => $phoneNumber]);
-				}
-			}*/
+//			if($arResult["PHONE_REGISTRATION"] == true && $arFields["PHONE_NUMBER"] <> '')
+//			{
+//				if(!($phone = \Bitrix\Main\UserPhoneAuthTable::getRowById($arResult["ID"])))
+//				{
+//					$phone = ["PHONE_NUMBER" => "", "CONFIRMED" => "N"];
+//				}
+//
+//				$arFields["PHONE_NUMBER"] = \Bitrix\Main\UserPhoneAuthTable::normalizePhoneNumber($arFields["PHONE_NUMBER"]);
+//
+//				if($arFields["PHONE_NUMBER"] <> $phone["PHONE_NUMBER"] || $phone["CONFIRMED"] <> 'Y')
+//				{
+//					//added or updated the phone number for the user, now sending a confirmation SMS
+//					list($code, $phoneNumber) = CUser::GeneratePhoneCode($arResult["ID"]);
+//
+//					$sms = new \Bitrix\Main\Sms\Event(
+//						"SMS_USER_CONFIRM_NUMBER",
+//						[
+//							"USER_PHONE" => $phoneNumber,
+//							"CODE" => $code,
+//						]
+//					);
+//					$smsResult = $sms->send(true);
+//
+//					if(!$smsResult->isSuccess())
+//					{
+//						$strError .= implode("<br />", $smsResult->getErrorMessages());
+//					}
+//
+//					$arResult["SHOW_SMS_FIELD"] = true;
+//					$arResult["SIGNED_DATA"] = \Bitrix\Main\Controller\PhoneAuth::signData(['phoneNumber' => $phoneNumber]);
+//				}
+//			}
 		}
 		else
 		{
