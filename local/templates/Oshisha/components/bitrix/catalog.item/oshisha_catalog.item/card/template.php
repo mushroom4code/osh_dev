@@ -124,8 +124,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
                     <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
                 <?php } else { ?>
-                    <img src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"
-                         alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
+                    <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                 <?php } ?>
             </a>
         </div>
@@ -279,7 +278,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                              data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                              id="<?= $arItemIDs['BUY_LINK']; ?>"
                              <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
-                            <img class="image-cart" src="/local/templates/Oshisha/images/cart.png" />
+                            <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png" />
                         </div>
                         <div class="product-item-amount-field-contain-wrap"
                              <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>

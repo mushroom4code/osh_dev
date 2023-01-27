@@ -296,7 +296,7 @@ global $option_site;
                                   data-entity="slider-control-right"
                                   style="display: none;"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
                             <div class="product-item-detail-slider-images-container" data-entity="images-container">
-                                <?php if (!empty($actualItem['PICTURE'])) {
+                                <?php if (!empty($actualItem['PICTURE'][0]['SRC'])) {
                                     foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
                                         <div class="product-item-detail-slider-image<?= ($key == 0 ? ' active' : '') ?>"
                                              data-entity="image" data-id="<?= $photo['ID'] ?>">
@@ -305,6 +305,12 @@ global $option_site;
                                         </div>
                                         <?php
                                     }
+                                }else {
+                                    ?>
+                                    <div class="product-item-detail-slider-image active" data-entity="image" data-id="1">
+                                        <img src="/local/templates/Oshisha/images/no-photo.gif"  itemprop="image">
+                                    </div>
+                                    <?
                                 }
                                 if ($arParams['SLIDER_PROGRESS'] === 'Y') { ?>
                                     <div class="product-item-detail-slider-progress-bar"

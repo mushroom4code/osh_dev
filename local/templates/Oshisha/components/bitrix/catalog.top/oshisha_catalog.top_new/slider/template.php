@@ -195,7 +195,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                         <?php } else { ?>
                             <a id="<?= $arItemIDs['PICT']; ?>"
                                href="<?= $arItem['DETAIL_PAGE_URL']; ?>">
-                                <img src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"
+                                <img src="/local/templates/Oshisha/images/no-photo.gif"
                                      id="<?= $arItemIDs['PICT']; ?>"/>
                             </a>
                         <?php } ?>
@@ -308,7 +308,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                      data-max-quantity="<?= $arItem['PRODUCT']['QUANTITY'] ?>"
                                      id="<?= $arItemIDs['BUY_LINK']; ?>"
                                      <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
-                                    <img class="image-cart" src="/local/templates/Oshisha/images/cart.png" />
+                                    <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png" />
                                 </div>
                                 <div class="product-item-amount-field-contain-wrap"
                                      <? if ($priceBasket > 0): ?>style="display:block;"<? endif; ?>
