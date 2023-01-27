@@ -14,7 +14,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 /** @var string $parentComponentTemplate */
 $this->setFrameMode(false);
 
-//enterego
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/iblock/classes/general/cml2_ee.php");
 
 /*************************************************************************
@@ -350,12 +349,10 @@ elseif (($_GET["mode"] == "import") && $_SESSION["BX_CML2_IMPORT"]["zip"])
 //Step by step import
 elseif (($_GET["mode"] == "import") && $ABS_FILE_NAME)
 {
-    //enterego
     if (!isset($arParams['IBLOCK_CACHE_MODE']))
         $arParams['IBLOCK_CACHE_MODE'] = CIBlockCMLImportEe::IBLOCK_CACHE_NORMAL;
     if (!in_array($arParams['IBLOCK_CACHE_MODE'], CIBlockCMLImportEe::getIblockCacheModeList(false)))
         $arParams['IBLOCK_CACHE_MODE'] = CIBlockCMLImportEe::IBLOCK_CACHE_NORMAL;
-    //
 
     $NS = &$_SESSION["BX_CML2_IMPORT"]["NS"];
     $strError = "";
@@ -440,12 +437,14 @@ elseif (($_GET["mode"] == "import") && $ABS_FILE_NAME)
     }
     elseif ($NS["STEP"] == 4)
     {
-        //Enterego
         $obCatalog = new CIBlockCMLImportEe;
         $obCatalog->InitEx($NS, $importParameters);
+        CIBlock::disableClearTagCache();
         $result = $obCatalog->ImportMetaData(array(1,2), $arParams["IBLOCK_TYPE"], $arParams["SITE_LIST"]);
+        CIBlock::enableClearTagCache();
         if ($result === true)
         {
+            $obCatalog->clearIblockCacheOnHit();
             $strMessage = GetMessage("CC_BSC1_METADATA_IMPORTED");
             $NS["STEP"] = 5;
         }
@@ -460,7 +459,6 @@ elseif (($_GET["mode"] == "import") && $ABS_FILE_NAME)
     }
     elseif ($NS["STEP"] == 5)
     {
-        //Enterego
         $obCatalog = new CIBlockCMLImportEe;
         $obCatalog->InitEx($NS, $importParameters);
         $obCatalog->freezeIblockCache();
@@ -479,7 +477,6 @@ elseif (($_GET["mode"] == "import") && $ABS_FILE_NAME)
     }
     elseif ($NS["STEP"] == 6)
     {
-        //Enterego
         $obCatalog = new CIBlockCMLImportEe;
         $obCatalog->InitEx($NS, $importParameters);
         $obCatalog->freezeIblockCache();
@@ -507,7 +504,6 @@ elseif (($_GET["mode"] == "import") && $ABS_FILE_NAME)
 
         if ($strError == "")
         {
-            //Enterego
             $obCatalog = new CIBlockCMLImportEe;
             $obCatalog->InitEx($NS, $importParameters);
             $obCatalog->freezeIblockCache();
@@ -540,7 +536,6 @@ elseif (($_GET["mode"] == "import") && $ABS_FILE_NAME)
     }
     elseif ($NS["STEP"] == 8)
     {
-        //Enterego
         $obCatalog = new CIBlockCMLImportEe;
         $obCatalog->InitEx($NS, $importParameters);
         $obCatalog->freezeIblockCache();
@@ -581,7 +576,6 @@ elseif (($_GET["mode"] == "import") && $ABS_FILE_NAME)
     }
     else
     {
-        //Enterego
         $obCatalog = new CIBlockCMLImportEe;
         $obCatalog->InitEx($NS, $importParameters);
         $obCatalog->clearIblockCacheAfterFinal();
