@@ -41,12 +41,7 @@ $jsParams = array(
 );
 ?>
 
-<div style="display: block" class="ctweb-smsauth-menu-block radius_10 position-absolute">
-    <div class="close_login_menu">
-        <a class="close_header_box" href="">
-            <span class="login_span_bar login_span"></span>
-        </a>
-    </div>
+<div style="display: block" class="ctweb-smsauth-menu-block">
     <div class="ctweb-smsauth-box">
         <?php if ($arResult['AUTH_RESULT'] === 'SUCCESS') : ?>
             <?php if ($arResult['STEP'] === Manager::STEP_SUCCESS) : ?>
@@ -192,7 +187,7 @@ $jsParams = array(
                     </form>
                     <!-- STEP AUTH EMAIL LOGIN -->
                     <form id="<?= $jsParams['TEMPLATE']['MAIL_FORM'] ?>"
-                          action="/bitrix/components/ctweb/sms.authorize/ajax.php"
+                          action="/bitrix/components/ctweb/sms.authorize_profile/ajax.php"
                           method="POST" class="ctweb-smsauth-menu-step d-none">
                         <?= bitrix_sessid_post(); ?>
                         <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>

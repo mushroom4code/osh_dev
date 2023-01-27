@@ -27,11 +27,14 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
     const ERROR_CAPTCHA_WRONG = 'CAPTCHA_WRONG';
     const ERROR_UNKNOWN_ERROR = 'UNKNOWN_ERROR';
 
+
     const METHOD_REUSE_CODE = 'REUSE_CODE';
     const METHOD_CHANGE_PHONE = 'CHANGE_PHONE';
 
     const RESULT_SUCCESS = 'SUCCESS';
     const RESULT_FAILED = 'FAILED';
+
+    const ERROR_PHONE_EXISTS = 'PHONE_EXISTS';
 
     /** @var Ctweb\SMSAuth\Manager */
     protected $manager;
@@ -159,7 +162,14 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     return;
                 }
 
-                if ($this->manager->getState() === $this->manager::STATE_REGISTER) {
+                if ($this->manager->getState() === $this->manager::STATE_PHONE_CHANGE) {
+                    if ($this->manager->ChangePhoneByCode($this->request->get('CODE'), $this->getSessionField('PHONE'))) {
+                        $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
+                    } else {
+                        $this->arResult['AUTH_RESULT'] = self::RESULT_FAILED;
+                        $this->manager->addError(self::ERROR_CODE_NOT_CORRECT);
+                    }
+                } elseif ($this->manager->getState() === $this->manager::STATE_REGISTER) {
                     if ($this->manager->RegisterByCode($this->request->get('CODE'), $this->getSessionField('PHONE'))) {
                         $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
                     } else {
@@ -184,19 +194,11 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
     {
         global $APPLICATION;
         if ($this->isPost() && $this->request['method'] != self::METHOD_CHANGE_PHONE) {
-            // check captcha
-            $use_captcha = COption::GetOptionString("b01110011.recaptcha", "registration_enable_s1");
-            if ($use_captcha == "Y") {
-                if (!$this->CaptchaCheckToken()) {
-                    $this->manager->addError(self::ERROR_CAPTCHA_WRONG);
-                }
-            }
 
             $this->setSessionField('IS_AJAX_POST', $isAjaxRequest);
 
             if (strlen($this->request->get('PHONE')))
                 $this->setPhone($this->request->get('PHONE'));
-
             if (strlen($this->request->get('SAVE_SESSION')))
                 $this->setSessionField('SAVE_SESSION', $this->request->get('SAVE_SESSION'));
 
@@ -204,23 +206,13 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                 if ($this->getSessionField('PHONE')) {
                     $arUsers = $this->manager->GetUsersByPhone($this->getSessionField('PHONE'));
                     if ($arUsers) {
-                        if ($this->arParams['ALLOW_MULTIPLE_USERS'] === 'Y' && count($arUsers) > 1) {
-                            $this->manager->setStep(Manager::STEP_USER_WAITING);
-                        } else {
-                            $this->manager->setStep(Manager::STEP_CODE_WAITING);
-                            $arUser = reset($arUsers);
-
-                            if ($arUser['ID']) {
-                                $res = $this->manager->StartUserAuth($arUser['ID']);
-                                if (!$res) {
-                                    $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
-                                }
-                            }
-                        }
+                        //$this->arResult['AUTH_RESULT'] = self::RESULT_FAILED;
+                        $this->manager->addError(self::ERROR_PHONE_EXISTS);
+                        return;
                     } else {
-                        //TODO enable registration
+                        //TODO enable phone change
                         if (true) {
-                            $res = $this->manager->StartUserRegister(['PHONE' => $this->getSessionField('PHONE')]);
+                            $res = $this->manager->StartUserPhoneChange(['PHONE' => $this->getSessionField('PHONE')]);
                             if ($res!==true) {
                                 $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
                             }
@@ -233,9 +225,9 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                 }
             }
 
-            if (!$isAjaxRequest) {
-                LocalRedirect($APPLICATION->GetCurPageParam());
-            }
+//            if (!$isAjaxRequest) {
+//                LocalRedirect($APPLICATION->GetCurPageParam());
+//            }
         }
     }
 
@@ -243,6 +235,9 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
         $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
         $this->clearSession();
         $this->manager->clearSession();
+        $isAjaxRequest = $this->request["is_ajax_post"] == "Y";
+        $this->manager->setStep();
+        $this->actionStepPhoneWaiting($isAjaxRequest);
     }
 
     public function executeComponent()
@@ -307,8 +302,31 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                 ($this->arResult['STEP'] = $this->manager->getStep()) || ($this->arResult['STEP'] = Manager::STEP_PHONE_WAITING);
             }
         } else {
-                $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
-                $this->clearSession();
+                switch ($this->manager->getStep()) {
+                    case Manager::STEP_SUCCESS : // all ok, redirect waiting
+                        $this->actionStepSuccess();
+                        break;
+
+                    case Manager::STEP_USER_WAITING :
+                        $this->actionStepUserWaiting();
+                        break;
+
+                    case Manager::STEP_CODE_WAITING : // user found, code waiting for auth
+                        $this->actionStepCodeWaiting($isAjaxRequest);
+                        break;
+
+                    case Manager::STEP_PHONE_WAITING: // no action, phone waiting
+                    default: // no action, phone waiting
+                        $this->actionStepPhoneWaiting($isAjaxRequest);
+                }
+
+                $this->arResult['ERRORS'] = $this->manager->getErrors();
+                $this->arResult['USER_VALUES']['SAVE_SESSION'] = $this->getSessionField('SAVE_SESSION');
+                $this->arResult['USER_VALUES']['PHONE'] = $this->getSessionField('PHONE');
+                $this->arResult['EXPIRE_TIME'] = $this->manager->getExpireTime() - time();
+                $this->arResult['REUSE_TIME'] = $this->manager->getReuseTime() - time();
+                ($this->arResult['STEP'] = $this->manager->getStep()) || ($this->arResult['STEP'] = Manager::STEP_PHONE_WAITING);
+
         }
 
         if ($isAjaxRequest) {
