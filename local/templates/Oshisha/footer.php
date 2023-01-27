@@ -2,20 +2,56 @@
 /** @var  CAllMain|CMain $APPLICATION
  ** @var  CAllUser $USER
  */
-
-if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
-?>
+global $option_site;
+if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')) {
+    ?>
     </div><?php }
-$option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
-
-
-</div><!--end .bx-content -->
-</div><!--end .container.bx-content-section-->
+$option = $option_site; ?>
+</div>
+<!--end .container.bx-content-section-->
 </div><!--end .workarea-->
+
 <footer class="box_footer">
     <div class="foot_container">
-        <div class="row">
-            <div class="col-11 col-lg-3  mb-4 mb-lg-0 order-lg-2">
+        <div class="d-flex flex-lg-row flex-md-row flex-column mb-3">
+            <div class="col-11 col-lg-3 col-md-3 box_footer_with_boxes box_color order-lg-1">
+                <div class="desktop">
+                    <a class="bx-footer-logo" href="<?= SITE_DIR ?>">
+                        <?php $APPLICATION->IncludeComponent(
+                            "bitrix:main.include",
+                            "",
+                            array(
+                                "AREA_FILE_SHOW" => "file",
+                                "PATH" => SITE_DIR . "include/logo_footer.php"
+                            ),
+                            false
+                        ); ?>
+                    </a>
+                    <div class="mb-3 d-flex align-items-center">
+							<span class="text-white">
+
+								<?php $APPLICATION->IncludeComponent(
+                                    "bitrix:main.include",
+                                    "", array(
+                                    "AREA_FILE_SHOW" => "file",
+                                    "PATH" => SITE_DIR . "include/about_title.php"
+                                ),
+                                    false
+                                ); ?>
+								<span class="phone_footer phone_footer_first">
+                                    <a href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a>
+                                </span>
+								<span class="phone_footer"><a href="tel:88006004424">8-800-600-44-24</a></span>
+								<span class="work_time">Время работы <br>
+                                    <div class="mt-2"> 10:00 - 20:00, ежедневно.</div>
+                                </span>
+								<span class="email_footer">
+                                    <a href="mailto:info@oshisha.net">info@oshisha.net </a></span>
+							</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-11 col-lg-3 col-md-3 mb-4 mb-lg-0 order-lg-2">
                 <span class="text_footer_weight d-flex justify-content-between">
                     <span> Каталог</span>
                     <span class="icon_footer_menu">
@@ -48,7 +84,7 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
                     ); ?>
                 </div>
             </div>
-            <div class="col-11 col-lg-3 mb-4 mb-lg-0 order-lg-3">
+            <div class="col-11 col-lg-3 col-md-3mb-4 mb-lg-0 order-lg-3">
                 <span class="text_footer_weight desktop">
                    Поддержка
                 </span>
@@ -91,7 +127,7 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
                     </span>
                 </nav>
             </div>
-            <div class="col-lg-2  col-11 mb-4 mb-lg-0 order-lg-4">
+            <div class="col-lg-3 col-md-3 col-11 mb-4 mb-lg-0 order-lg-4">
                 <div class="d-flex justify-content-between flex-row">
                 <span class="text_footer_weight">
                 О компании
@@ -122,6 +158,11 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
                         ),
                         false
                     ); ?>
+                    <li class="nav-item li_link_footer">
+                        <?php if ($USER->IsAuthorized()) { ?>
+                            <a href="<?= $option->price_list_link; ?>" class="text_link_footer ">Прайс-лист</a>
+                        <?php } else { ?> <a href="/login/" class="text_link_footer ">Прайс-лист</a><?php } ?>
+                    </li>
                 </div>
                 <span class="text_footer_weight desktop social_block">
                   Социальные сети
@@ -134,24 +175,16 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
                         <a href="https://api.whatsapp.com/send?phone=<?= $option->PHONE_WTS; ?>" target="_blank">
                             <img class="ws" src="<?= SITE_TEMPLATE_PATH ?>/images/ws.svg">
                         </a>
-                        <a href="<?= $option->VK_LINK; ?>"  target="_blank">
+                        <a href="<?= $option->VK_LINK; ?>" target="_blank">
                             <img class="vk" src="<?= SITE_TEMPLATE_PATH ?>/images/vk.svg">
                         </a>
-                        <a href="<?= $option->DZEN; ?>"  target="_blank">
+                        <a href="<?= $option->DZEN; ?>" target="_blank">
                             <img class="dzen" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
                         </a>
                     </div>
                 </div>
             </div>
-
-            <div class="mobile width_100 p-0">
-                <!--                <div class="box_mail_footer col-11 d-flex flex-column align-items-center mb-5 m-3">-->
-                <!--                    <label class="mb-3 mail_footer" for="mail_footer">Будьте в курсе всех новостей!</label>-->
-                <!--                    <input class="form-control input_footer mb-3" data-name="EMAIL" type="text" name="EMAIL"-->
-                <!--                           maxlength="50"-->
-                <!--                           placeholder="Введите вашу почту" id="mail_footer"/>-->
-                <!--                    <button class="btn font_15 btn_footer">Подписаться на рассылку</button>-->
-                <!--                </div>-->
+            <div class="mobile width_100 p-0 mb-4">
                 <p class="m-3 mail_footer col-11"><a href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a>
                 </p>
                 <div class="box_with_contact pl-3">
@@ -162,47 +195,19 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
                     </a>
                 </div>
             </div>
-            <div class="col-11 col-lg-3 box_footer_with_boxes box_color order-lg-1">
-                <div class="desktop">
-                    <a class="bx-footer-logo" href="<?= SITE_DIR ?>">
-                        <?php $APPLICATION->IncludeComponent(
-                            "bitrix:main.include",
-                            "",
-                            array(
-                                "AREA_FILE_SHOW" => "file",
-                                "PATH" => SITE_DIR . "include/logo_footer.php"
-                            ),
-                            false
-                        ); ?>
-                    </a>
-
-                    <div class="mb-3 d-flex align-items-center">
-							<span class="text-white">
-							
-								<?php $APPLICATION->IncludeComponent(
-                                    "bitrix:main.include",
-                                    "", array(
-                                    "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_DIR . "include/about_title.php"
-                                ),
-                                    false
-                                ); ?>
-								<span class="phone_footer phone_footer_first"><a
-                                            href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a></span>
-								<span class="phone_footer"><a href="tel:88006004424">8-800-600-44-24</a></span>
-								<span class="work_time">Время работы: 10:00 - 20:00, <br>ежедневно.</span>
-								
-								<span class="email_footer"><a
-                                            href="mailto:info@oshisha.net">info@oshisha.net </a></span>
-							</span>
-                    </div>
-                </div>
-                <div class="mb-3 text_footer_mini d-flex column_section">
-                    <span class="mr-2">© 2014-<?= date('Y'); ?> <?= $SETTINGS['COMPANY'] ?>.</span><span>Все права защищены</span>
-                </div>
+        </div>
+        <?php if (!empty($option->text_rospetrebnadzor_row)) { ?>
+            <div class="text_footer_mini d-flex flex-column p-3">
+                <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_row; ?></p>
+                <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_column; ?></p>
             </div>
+        <?php } ?>
+        <div class="text_footer_mini d-flex column_section p-3">
+            <span class="mr-2">© 2014-<?= date('Y'); ?> <?= $SETTINGS['COMPANY'] ?>.</span><span>Все права защищены</span>
         </div>
     </div>
+    <!--FOOTER END-->
+    <!-- MODALS -->
     <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="placeModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -292,7 +297,6 @@ $option = json_decode(COption::GetOptionString("BBRAIN",'SETTINGS_SITE'));?>
         </div>
 
     </div>
-
     <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
         <div style="display:none;">
             <div id="trueModal" class="box-modal">

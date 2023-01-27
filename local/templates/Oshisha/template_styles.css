@@ -664,17 +664,6 @@ h3.ctweb-title {
     padding-right: unset;
 }
 
-.overlay {
-    display: none;
-    background-color: rgb(0, 0, 0);
-    opacity: 0.6;
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9000;
-}
 
 .email-register {
     display: none;
@@ -773,7 +762,7 @@ h3.ctweb-title {
 
 .red_button_cart {
     background-color: #F55F5C;
-    border-radius: 5px;
+    border-radius: 7px;
     text-decoration: none;
     font-weight: 500 !important;
     color: #fff;

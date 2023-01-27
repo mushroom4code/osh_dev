@@ -10,7 +10,10 @@
         this.ajaxId = params.ajaxId || '';
         this.template = params.template || '';
         this.componentPath = params.componentPath || '';
-        this.parameters = params.parameters || '';
+        this.parameters = params.parameters || {};
+
+        //enterego filter for special group category
+        this.staticFilter = params.staticFilter || '';
 
         if (params.navParams) {
             this.navParams = {
@@ -174,7 +177,9 @@
                 var defaultData = {
                     siteId: this.siteId,
                     template: this.template,
-                    parameters: this.parameters
+                    parameters: this.parameters,
+                    //enterego filter for special group category
+                    staticFilter: this.staticFilter
                 };
 
                 if (this.ajaxId) {

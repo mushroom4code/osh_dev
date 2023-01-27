@@ -462,7 +462,7 @@ $themeClass = isset($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_
                                        rel="nofollow" class="btn_basket add2basket basket_prod_detail"
                                        data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                        data-product_id="<?= $arResult['ID']; ?>"
-                                       title="Добавить в корзину">В корзину</a>
+                                       title="Добавить в корзину">Забронировать</a>
                                     <div id="result_box"></div>
                                     <div id="popup_mess"></div>
                                 </div>
@@ -475,7 +475,7 @@ $themeClass = isset($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_
                                            class="add2basket basket_prod_detail detail_popup detail_disabled"
                                            data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                            data-product_id="<?= $arResult['ID']; ?>"
-                                           title="Добавить в корзину">В корзину</a>
+                                           title="Добавить в корзину">Забронировать</a>
                                     </div>
                                     <div id="popup_mess"></div>
                                     <div id="result_box" style="width: 100%;position: absolute;"></div>

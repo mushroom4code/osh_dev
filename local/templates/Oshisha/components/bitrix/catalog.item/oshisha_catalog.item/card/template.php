@@ -67,16 +67,20 @@ $hitProduct = $item['PROPERTIES'][PROP_HIT];
 
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $show_price = true;
+$not_auth = '';
 if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
     $show_price = false;
+    $not_auth = 'link_header_box';
 }
 
 
 $priceBasket = 0;
 $styleForNo = '';
+
 if ($item['PRODUCT']['QUANTITY'] == '0') {
     /*$styleForTaste = 'blur_check';*/
     $styleForNo = 'not_av';
+
 }
 
 foreach ($item['ACTUAL_BASKET'] as $key => $val) {
@@ -87,15 +91,14 @@ foreach ($item['ACTUAL_BASKET'] as $key => $val) {
 
 
 $productTitle = str_replace("\xC2\xA0", " ", $productTitle);
-$productTitle = str_replace("\xC2\xA0", " ", $productTitle);
-$item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
+$productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
 <div class="<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
     <div class="bx_catalog_item_container product-item <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
         <?php if (count($taste['VALUE']) > 0) { ?>
             <div class="toggle_taste card-price">
                 <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                    <?php if ($hitProduct['VALUE'] == 'да') { ?>
+                    <?php if ($hitProduct['VALUE'] === 'да') { ?>
                         <span class="taste" data-background="#000000">Хит</span>
                     <?php } ?>
                     <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
@@ -115,21 +118,119 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
                 </div>
             </div>
         <?php } ?>
-        <div class="image_cart">
+        <div class="image_cart <?= $not_auth ?>">
             <a class=" <?= $styleForTaste ?>"
                href="<?= $item['DETAIL_PAGE_URL']; ?>">
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
                     <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
                 <?php } else { ?>
-                    <img src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"
-                         alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
+                    <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                 <?php } ?>
             </a>
         </div>
 
         <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
-            <div class="bx_catalog_item_price mt-2 mb-2">
+            <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
                 <div class="box_with_titles">
+                    <?php
+                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                        'templates',
+                        array(
+                            'ID_PROD' => $item['ID_PROD'],
+                            'F_USER_ID' => $item['F_USER_ID'],
+                            'LOOK_LIKE' => true,
+                            'LOOK_FAVORITE' => false,
+                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                            'COUNT_FAV' => $item['COUNT_FAV'],
+                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                        ),
+                        $component,
+                        array('HIDE_ICONS' => 'Y'),
+                    );
+                    ?>
+                </div>
+            </div>
+        <?php } else { ?>
+            <div class="box_with_titles">
+                <div class="not_product">
+                    Товара нет в наличии
+                </div>
+                <?php
+                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                    'templates',
+                    array(
+                        'ID' => $item['ID_PROD'],
+                        'F_USER_ID' => $item['F_USER_ID'],
+                        'LOOK_LIKE' => true,
+                        'LOOK_FAVORITE' => false,
+                        'COUNT_LIKE' => $item['COUNT_LIKE'],
+                        'COUNT_FAV' => $item['COUNT_FAV'],
+                        'COUNT_LIKES' => $item['COUNT_LIKES'],
+                    ),
+                    $component,
+                    array('HIDE_ICONS' => 'Y')
+                ); ?>
+            </div>
+        <?php } ?>
+        <div class="box_with_title_like d-flex align-items-center">
+            <?php if (count($taste['VALUE']) > 0) { ?>
+                <div class="toggle_taste_line">
+                    <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
+                        <?php if ($hitProduct['VALUE'] == 'да') { ?>
+                            <span class="taste" data-background="#000000">Хит</span>
+                        <?php } ?>
+                        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
+                            <span class="taste" data-background="#F55F5C">Новинка</span>
+                        <?php }
+
+                        foreach ($taste['VALUE'] as $key => $name) {
+                            foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
+                                if ($key === $keys) {
+                                    $color = explode('#', $value); ?>
+                                    <span class="taste" data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>">
+                                    <?= $name ?>
+                            </span>
+                                <?php }
+                            }
+                        } ?>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <?php if ($GLOBALS['UserTypeOpt'] === true) { ?>
+                <div class="codeProduct font-10 mr-4">
+                    <?php
+                    foreach ($codeProp['DESCRIPTION'] as $key => $code) {
+                        if ($code === 'Код') {
+                            echo $codeProp['VALUE'][$key];
+                        }
+                    } ?>
+                </div>
+            <?php }
+            if (!$show_price) {
+                $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
+            } ?>
+            <div class="box_with_text">
+                <a class="bx_catalog_item_title <?= $styleForNo . ' ' . $not_auth ?>"
+                   href="<?= $item['DETAIL_PAGE_URL']; ?>"
+                   title="<?= $productTitle; ?>">
+                    <?= $productTitle; ?>
+                </a>
+                <?php if (count($taste['VALUE']) > 0) { ?>
+                <?php }
+                if (!empty($item['DETAIL_TEXT'])) { ?>
+                    <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
+                <?php } ?>
+            </div>
+        </div>
+        <?php
+        $showSubscribeBtn = false;
+        $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE'));
+        if (!isset($item['OFFERS']) || empty($item['OFFERS'])) { ?>
+        <div class="bx_catalog_item_controls">
+            <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
+            <div class="box_with_fav_bask">
+                <?php if ($show_price && $price['PRICE_DATA'][1]['PRICE'] !== '' ) { ?>
                     <div class="box_with_price card-price font_weight_600 d-flex flex-column">
                         <?php if ($show_price) { ?>
                             <div class="d-flex flex-row align-items-center">
@@ -167,112 +268,17 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
                             <?php }
                         } ?>
                     </div>
-                    <?php
-                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                        'templates',
-                        array(
-                            'ID_PROD' => $item['ID_PROD'],
-                            'F_USER_ID' => $item['F_USER_ID'],
-                            'LOOK_LIKE' => true,
-                            'LOOK_FAVORITE' => false,
-                            'COUNT_LIKE' => $item['COUNT_LIKE'],
-                            'COUNT_FAV' => $item['COUNT_FAV'],
-                            'COUNT_LIKES' => $item['COUNT_LIKES'],
-                        )
-                        ,
-                        $component,
-                        array('HIDE_ICONS' => 'Y'),
-                    );
-                    ?>
-                </div>
-            </div>
-        <?php } else { ?>
-            <div class="box_with_titles">
-                <div class="not_product">
-                    Товара нет в наличии
-                </div>
-                <?php
-                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                    'templates',
-                    array(
-                        'ID' => $item['ID_PROD'],
-                        'F_USER_ID' => $item['F_USER_ID'],
-                        'LOOK_LIKE' => true,
-                        'LOOK_FAVORITE' => false,
-                        'COUNT_LIKE' => $item['COUNT_LIKE'],
-                        'COUNT_FAV' => $item['COUNT_FAV'],
-                        'COUNT_LIKES' => $item['COUNT_LIKES'],
-                    ),
-                    $component,
-                    array('HIDE_ICONS' => 'Y')
-                ); ?>
-            </div>
-        <?php } ?>
-        <div class="box_with_title_like d-flex align-items-center">
-            <?php if (count($taste['VALUE']) > 0) { ?>
-                <div class="toggle_taste_line">
-                    <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                        <?php if ($hitProduct['VALUE'] == 'да') { ?>
-                            <span class="taste" data-background="#000000">Хит</span>
-                        <?php } ?>
-                        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProductХ['VALUE'] != 'да')) { ?>
-                            <span class="taste" data-background="#F55F5C">Новинка</span>
-                        <?php }
-
-                        foreach ($taste['VALUE'] as $key => $name) {
-                            foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
-                                if ($key === $keys) {
-                                    $color = explode('#', $value); ?>
-                                    <span class="taste" data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>">
-                                    <?= $name ?>
-                            </span>
-                                <?php }
-                            }
-                        } ?>
-                    </div>
-                </div>
-            <?php } ?>
-
-            <?php if ($GLOBALS['UserTypeOpt'] === true) { ?>
-                <div class="codeProduct font-10 mr-4">
-                    <?php
-                    foreach ($codeProp['DESCRIPTION'] as $key => $code) {
-                        if ($code === 'Код') {
-                            echo $codeProp['VALUE'][$key];
-                        }
-                    } ?>
-                </div>
-            <?php } ?>
-            <div class="box_with_text">
-                <a class="bx_catalog_item_title <?= $styleForNo ?>" href="<?= $item['DETAIL_PAGE_URL']; ?>"
-                   title="<?= $productTitle; ?>">
-                    <?= $productTitle; ?>
-                </a>
-                <?php if (count($taste['VALUE']) > 0) { ?>
-                <?php }
-                if (!empty($item['DETAIL_TEXT'])) {?>
-                    <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
-                <?php } ?>
-            </div>
-        </div>
-        <?php
-        $showSubscribeBtn = false;
-        $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE'));
-        if (!isset($item['OFFERS']) || empty($item['OFFERS'])) { ?>
-        <div class="bx_catalog_item_controls">
-            <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
-            <div class="box_with_fav_bask">
-                <?php if ($show_price) { ?>
                     <div class="box_quantity_for_uric_line">
                         <span class="font-12 ml-1"><?= $item['PRODUCT']['QUANTITY'] ?></span>
                         <span class="font-12">шт.</span>
                     </div>
-                    <div class="d-flex row-line-reverse justify-content-between">
+                    <div class="d-flex row-line-reverse justify-content-between box-basket">
                         <div class="btn red_button_cart btn-plus add2basket" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                              data-product_id="<?= $item['ID']; ?>"
                              data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                              id="<?= $arItemIDs['BUY_LINK']; ?>"
-                             <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>В корзину
+                             <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
+                            <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png" />
                         </div>
                         <div class="product-item-amount-field-contain-wrap"
                              <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
@@ -335,6 +341,8 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
                             <?php } ?>
                         </div>
                     </div>
+                <?php } else { ?>
+                    <div class="btn red_button_cart btn-plus <?= $not_auth ?>">Подробнее</div>
                 <?php }
                 $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                     'templates',
@@ -386,7 +394,7 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
     </div>
     <?php }
     $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
-    if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) {?>
+    if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) { ?>
         <div id="<?= $arItemIDs['BASKET_PROP_DIV']; ?>" style="display: none;">
             <?php
             if (!empty($item['PRODUCT_PROPERTIES_FILL'])) {

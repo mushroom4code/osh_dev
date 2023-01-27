@@ -86,9 +86,13 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                             class="mr-1">Статус:</b>  <?= $arResult["STATUS"]["NAME"] ?> </span>
                                 <span class="mb-1"> <b
                                             class="mr-1">Сумма заказа:</b>  <?= $arResult["PRICE_FORMATED"] ?> </span>
-	                                <span class="mb-1"> <b class="mr-1">Номер отслеживания:</b>
-                                    <a href="#" class="link_repeat_orders"> <?= $arResult["TRACKING_NUMBER"] ?></a>
-                                </span>									
+                                <span class="mb-1"> <b
+                                            class="mr-1">Сумма доставки:</b>  <?php
+                                    $deliveryPrice = 0;
+                                    foreach ($arResult['SHIPMENT'] as $shipment) {
+                                        $deliveryPrice += $shipment["PRICE_DELIVERY"];
+                                    } echo htmlspecialcharsbx(CurrencyFormat($deliveryPrice, $arResult['CURRENCY'])); ?>
+                                </span>
                                 <span class="mb-1" style="display:none;"> <b class="mr-1">Начислено балов:</b>
                                     <a href="#" class="link_repeat_orders">240</a>
                                 </span>
@@ -114,10 +118,8 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                         }
                                         ?>
                                 </span>
-                                <span class="mb-1"> <b
-                                            class="mr-1">Сумма доставки:</b>  <?php foreach ($arResult['SHIPMENT'] as $shipment) {
-                                        echo htmlspecialcharsbx($shipment["PRICE_DELIVERY_FORMATTED"]);
-                                    } ?>
+                                <span class="mb-1"> <b class="mr-1">Номер отслеживания:</b>
+                                    <a href="#" class="link_repeat_orders"> <?= $arResult["TRACKING_NUMBER"] ?></a>
                                 </span>
                             </div>
                             <div class="d-flex flex-column custom_item">
@@ -201,7 +203,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                                         if ($basketItem['PICTURE']['SRC'] <> '') {
                                                             $imageSrc = $basketItem['PICTURE']['SRC'];
                                                         } else {
-                                                            $imageSrc = $this->GetFolder() . '/images/no_photo.png';
+                                                            $imageSrc = '/local/templates/Oshisha/images/no-photo.gif';
                                                         }
                                                         ?>
                                                         <img class="sale-order-detail-order-item-img-container"
@@ -286,7 +288,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                                            class="btn_basket add2basket basket_prod_detail"
                                                            data-url="<?= $basketItem['DETAIL_PAGE_URL'] ?>"
                                                            data-product_id="<?= $basketItem['ID']; ?>"
-                                                           title="Добавить в корзину">В корзину</a>
+                                                           title="Добавить в корзину">Забронировать</a>
                                                     </div>
                                                 </div>
                                                 <div class="box_with_net ml-3">

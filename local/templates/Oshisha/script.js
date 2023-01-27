@@ -19,7 +19,7 @@ $(document).ready(function () {
     let arrayCompanyId;
     //
     //BASKET
-    let addToBasket = $('a').is('.add2basket');
+    let addToBasket = true;
     let box_basket_elems = $('.basket-items-list').find('.basket-items-list-table');
     let arItemsForDB = [];
     let product_data;
@@ -309,8 +309,33 @@ $(document).ready(function () {
         $('.ganerate_price').text(getPriceForProduct(this) * value + ' ₽');
     }
 
-    $(document).on('change', '.card_element', function () {
-        changePrice();
+    $(document).on('keypress', '.card_element', function (e) {
+        if(e.which == 13) {
+            clearTimeout(window.addToBasketEventTimeout);
+            changePrice.call(this);
+            addToBasketEvent.call(this);
+        }
+    })
+
+    $(document).on('input', '.card_element', function() {
+        let cardBasketAddButton = $(this).parent().parent().parent();
+        if (cardBasketAddButton.hasClass('bx_catalog_item_controls')) {
+            cardBasketAddButton = cardBasketAddButton.find('a.add2basket:not(.btn-plus):not(.btn-minus)');
+        }
+        if ($(cardBasketAddButton).is('.basket_prod_detail')) {
+            if ($(cardBasketAddButton).hasClass('addProductDetailButton')) {
+                $(cardBasketAddButton).fadeOut(100, function () {
+                    $(cardBasketAddButton).text('Забронировать');
+                })
+                $(cardBasketAddButton).prop('onclick', null).off('click');
+                $(cardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').fadeIn(100);
+            }
+        }
+
+        clearTimeout(window.addToBasketEventTimeout);
+        window.addToBasketEventTimeout = setTimeout(() => {
+            addToBasketEvent.call(this);
+        }, 3000);
     })
 
     $(document).on('click', '.js-add2basket-gift', function () {
@@ -333,8 +358,7 @@ $(document).ready(function () {
     if (addToBasket === true) {
         setInterval(() => sendArrayItems(arItemsForDB), 500);
 
-        $(document).on('click', '.add2basket', function () {
-
+        function addToBasketEvent() {
             function appendLoader() {
                 $('.spanBasketTop').text('').attr('style', 'padding: 4px 8px;').append('' +
                     '<div class="loader"><div class="inner one"></div><div class="inner two">' +
@@ -416,33 +440,43 @@ $(document).ready(function () {
                     }
                 }
             } else {
-                let quantity = parseInt(quantityProdDet);
-                if ((quantity > 1) || (quantity !== 0)) {
-                    product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
-                    $(boxInput).val(quantity);
-                    if (quantity > max_QUANTITY) {
-                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
+                if (quantityProdDet) {
+                    let quantity = parseInt(quantityProdDet);
+                    if ((quantity > 1) || (quantity !== 0)) {
+                        product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
+                        $(boxInput).val(quantity);
+                        if (quantity > max_QUANTITY) {
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
 
+                        } else {
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                        }
                     } else {
-                        $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                        product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
+                        $(boxInput).val(1);
                     }
                 } else {
                     product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
                     $(boxInput).val(1);
                 }
             }
-            let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)');
+            let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="'+product_id+'"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
                     if (!$(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
-                        $(detailCardBasketAddButton).hide(200).text('В корзине');
+                        $(detailCardBasketAddButton).fadeOut(100, function () {
+                            $(detailCardBasketAddButton).text('Забронировано');
+                        });
                         $(detailCardBasketAddButton).attr({'onclick': "location.href='/personal/cart/'"});
-                        $(detailCardBasketAddButton).removeClass('btn_basket').addClass('addProductDetailButton').show(200);
+                        $(detailCardBasketAddButton).removeClass('btn_basket').addClass('addProductDetailButton').fadeIn(100);
                     }
                 } else {
                     if ($(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
-                        $(detailCardBasketAddButton).hide(200).text('В корзину');
-                        $(detailCardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').show(200);
+                        $(detailCardBasketAddButton).fadeOut(100, function () {
+                            $(detailCardBasketAddButton).text('Забронировать');
+                        });
+                        $(detailCardBasketAddButton).prop('onclick', null).off('click');
+                        $(detailCardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').fadeIn(100)
                     }
                 }
             }
@@ -450,7 +484,13 @@ $(document).ready(function () {
             $(box_with_products_order).empty();
 
             addItemArrayANDSend(product_data);
+        }
+
+        $(document).on('click', '.add2basket', function () {
+            clearTimeout(window.addToBasketEventTimeout);
+            addToBasketEvent.call(this);
         });
+
 
         function deleteBasketItemTop(result) {
             if (result !== '' && result !== 0) {
@@ -2621,106 +2661,242 @@ $(document).ready(function () {
 });
 
 
-$(document).on('submit', '.form-form', function () {
-    /*if( !$('#agree6').is(':checked') )
-    {
-        $('.checkboxes_error').html('Примите условия').show();
-        return false;
-    }*/
+// т.к. FormData не может в multiple, создадим ей массив с файлами сами
+let uploadFiles = {};
+
+$(document).find('#drop-zone').on({
+    'dragover dragenter': function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass('overmouse');
+    },
+    'dragleave dragend': function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass('overmouse');
+    },
+    'drop': function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let fls = e.originalEvent.dataTransfer.files,
+            index = $('.upload-file-item:last-of-type').data('index') ?? 0;
+        drawFileRow(fls, index);
+        $('.drop-zone').removeClass('overmouse');
+    }
+});
+
+$(document).on('change', 'input[type=file]', function (e) {
+    let fls = this.files,
+        index = $('.upload-file-item:last-of-type').data('index') ?? 0;
+    drawFileRow(fls, index);
+});
+
+function drawFileRow(fls, index) {
+    for (let i = 0, f; f = fls[i]; i++) {
+        let j = index + i + 1;
+
+        if (Object.keys(uploadFiles).length < 10) {
+            $('.file-list').append(
+                '<li class="upload-file-item" data-index="' + j + '">' +
+                '<span class="image-box">' + f.name + '</span>' +
+                '<span class="file-remove">x</span>' +
+                '</li>'
+            );
+
+            uploadFiles[j] = f;
+        }
+    }
+}
+
+// Удаление файла из списка подгруженных и из formData
+$(document).on('click', '.file-list .file-remove', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    let fileToRemoveId = $(this).parents('li').data('index');
+
+    $(this).parents('.file-list')
+        .find('[data-index="' + fileToRemoveId + '"]')
+        .remove();
+    delete uploadFiles[fileToRemoveId];
+});
+
+$(document).on('submit', '.form-form', function (e) {
+    e.preventDefault();
+
+    let postData = new FormData(this),
+        errors = {
+            emptyField: 'Поле не заполнено',
+            wrongFilesSize: 'Некоторые из файлов больше 5 Мб',
+            wrongFilesType: 'Некоторые из файлов недопустимого типа',
+            wrongFilesCombo: 'Некоторые файлы не отвечают требованиям',
+            emptyConfirm: 'Не приняты условия обработки персональных данных',
+        },
+        fieldName = $(this).find('input[name="NAME"]'),
+        fieldPhone = $(this).find('input[name="PHONE"]'),
+        fieldMessage = $(this).find('textarea[name="MESSAGE"]'),
+        fileTrueTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'],
+        fieldConfirm = $(this).find('input[name="confirm"]'),
+        err = 0;
+
+    postData.delete('upload-files');
+
     $('.error_form').hide();
     $('.form-form .error_field').hide();
-    var err = 0;
-    if ($('.form-form input[name="NAME"]').val() == '') {
-        $('.er_FORM_NAME').html('Поле не заполнено');
-        $('.er_FORM_NAME').show();
-        var err = 1;
+
+    if (fieldName.val().length <= 0) {
+        $('.er_FORM_NAME').html(errors.emptyField).show();
+        err++;
     }
-    /*
-    if( $('.form-form input[name="EMAIL"]').val() == '' )
-    {
-        $('.er_FORM_EMAIL').html('Поле не заполнено');
-        $('.er_FORM_EMAIL').show();
-        var err = 1;
-    }*/
-    if ($('.form-form input[name="PHONE"]').val() == '') {
-        $('.er_FORM_PHONE').html('Поле не заполнено');
-        $('.er_FORM_PHONE').show();
-        var err = 1;
+
+    if (fieldPhone.val().length <= 0) {
+        $('.er_FORM_PHONE').html(errors.emptyField).show();
+        err++;
     }
-    if ($('.form-form textarea[name="MESSAGE"]').val() == '') {
-        $('.er_FORM_MESSAGE').html('Поле не заполнено');
-        $('.er_FORM_MESSAGE').show();
-        var err = 1;
+
+    if (fieldMessage.val().length <= 0) {
+        $('.er_FORM_MESSAGE').html(errors.emptyField).show();
+        err++;
     }
-    console.log(err);
-    if (err != 1) {
+
+    // если files не пустой
+    if (uploadFiles.length !== 0) {
+        let errSize = 0,
+            errType = 0;
+
+        // заполняем объект данных файлами в подходящем для отправки формате
+        $.each(uploadFiles, function (key, file) {
+            errSize += file.size > 5000000 ? 1 : 0;
+            errType += $.inArray(file.type, fileTrueTypes) < 0 ? 1 : 0;
+            postData.append(key, file);
+        });
+
+        if (errSize > 0 && errType > 0) {
+            $('.er_FORM_FILES').html(errors.wrongFilesCombo).show();
+        }
+        if (errSize > 0 && errType == 0) {
+            $('.er_FORM_FILES').html(errors.wrongFilesSize).show();
+        }
+        if (errSize == 0 && errType > 0) {
+            $('.er_FORM_FILES').html(errors.wrongFilesType).show();
+        }
+    }
+
+    if (!fieldConfirm.prop('checked')) {
+        $('.er_FORM_CONFIRM').html(errors.emptyConfirm).show();
+        err++;
+    }
+
+    if (err < 1) {
         $.ajax({
             url: '/local/ajax/form.php',
             method: 'POST',
-            data: $(this).serialize(),
-
-
+            data: postData,
+            cache: false,
+            dataType: 'json',
+            // отключаем обработку передаваемых данных, пусть передаются как есть
+            processData: false,
+            // отключаем установку заголовка типа запроса. Так jQuery скажет серверу что это строковой запрос
+            contentType: false,
         }).done(function (dataRes) {
             if (dataRes == 1) {
-                //location.reload();
                 $('.form-form-wrap').hide();
                 $('.form_block_ok').show();
             } else {
-                console.log(dataRes);
                 $('.error_form').html(dataRes).show();
             }
-
-
+            uploadFiles = {};
         });
     }
     return false;
 });
 
 
-$(document).on('submit', '.send_feed', function () {
-    /*if( !$('#agree6').is(':checked') )
-    {
-        $('.checkboxes_error').html('Примите условия').show();
-        return false;
-    }*/
+$(document).on('submit', '.send_feed', function (e) {
+    e.preventDefault();
+
+    let postData = new FormData(this),
+        errors = {
+            emptyField: 'Поле не заполнено',
+            wrongFilesSize: 'Некоторые из файлов больше 5 Мб',
+            wrongFilesType: 'Некоторые из файлов недопустимого типа',
+            wrongFilesCombo: 'Некоторые файлы не отвечают требованиям',
+            emptyConfirm: 'Не приняты условия обработки персональных данных',
+        },
+        fieldName = $(this).find('input[name="NAME"]'),
+        fieldPhone = $(this).find('input[name="PHONE"]'),
+        fieldMessage = $(this).find('textarea[name="MESSAGE"]'),
+        fileTrueTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'],
+        fieldConfirm = $(this).find('input[name="confirm"]'),
+        err = 0;
+
+    postData.delete('upload-files');
+
     $('.error_form').hide();
-    $('.send_feed .error_field').hide();
-    var err = 0;
-    if ($('.send_feed input[name="NAME"]').val() == '') {
-        $('.er_FORM_NAME').html('Поле не заполнено');
-        $('.er_FORM_NAME').show();
-        var err = 1;
+    $('.form-form .error_field').hide();
+
+    if (fieldName.val().length <= 0) {
+        $('.er_FORM_NAME').html(errors.emptyField).show();
+        err++;
     }
 
-    if ($('.send_feed input[name="PHONE"]').val() == '') {
-        $('.er_FORM_PHONE').html('Поле не заполнено');
-        $('.er_FORM_PHONE').show();
-        var err = 1;
-    }
-    if ($('.send_feed textarea[name="MESSAGE"]').val() == '') {
-        $('.er_FORM_MESSAGE').html('Поле не заполнено');
-        $('.er_FORM_MESSAGE').show();
-        var err = 1;
+    if (fieldPhone.val().length <= 0) {
+        $('.er_FORM_PHONE').html(errors.emptyField).show();
+        err++;
     }
 
-    if (err != 1) {
+    if (fieldMessage.val().length <= 0) {
+        $('.er_FORM_MESSAGE').html(errors.emptyField).show();
+        err++;
+    }
+
+    // если files не пустой
+    if (uploadFiles.length !== 0) {
+        let errSize = 0,
+            errType = 0;
+
+        // заполняем объект данных файлами в подходящем для отправки формате
+        $.each(uploadFiles, function (key, file) {
+            errSize += file.size > 5000000 ? 1 : 0;
+            errType += $.inArray(file.type, fileTrueTypes) < 0 ? 1 : 0;
+            postData.append(key, file);
+        });
+
+        if (errSize > 0 && errType > 0) {
+            $('.er_FORM_FILES').html(errors.wrongFilesCombo).show();
+        }
+        if (errSize > 0 && errType == 0) {
+            $('.er_FORM_FILES').html(errors.wrongFilesSize).show();
+        }
+        if (errSize == 0 && errType > 0) {
+            $('.er_FORM_FILES').html(errors.wrongFilesType).show();
+        }
+    }
+
+    if (!fieldConfirm.prop('checked')) {
+        $('.er_FORM_CONFIRM').html(errors.emptyConfirm).show();
+        err++;
+    }
+
+    if (err < 1) {
         $.ajax({
             url: '/local/ajax/form_feed.php',
             method: 'POST',
-            data: $(this).serialize(),
-
-
+            data: postData,
+            cache: false,
+            dataType: 'json',
+            // отключаем обработку передаваемых данных, пусть передаются как есть
+            processData: false,
+            // отключаем установку заголовка типа запроса. Так jQuery скажет серверу что это строковой запрос
+            contentType: false,
         }).done(function (dataRes) {
             if (dataRes == 1) {
-                //location.reload();
                 $('.form-form-wrap').hide();
                 $('.form_block_ok').show();
             } else {
-                console.log(dataRes);
                 $('.error_form').html(dataRes).show();
             }
-
-
+            uploadFiles = {};
         });
     }
     return false;
@@ -2767,11 +2943,12 @@ $(document).on('submit', '.callback_form', function () {
 $(document).ready(function () {
     $('.callback_PHONE').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
     $('.callback').on('click', function () {
-    $("#callbackModal").arcticmodal(
-        {
-            closeOnOverlayClick: true,
-            afterClose: function (data, el) {}
-        });
+        $("#callbackModal").arcticmodal(
+            {
+                closeOnOverlayClick: true,
+                afterClose: function (data, el) {
+                }
+            });
     });
 });
 // Открытие попап обратного звонка: конец

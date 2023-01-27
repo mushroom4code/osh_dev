@@ -111,11 +111,11 @@
                         slidesPerView: 1,
                         adaptiveHeight: true,
                         spaceBetween: 0,
-                        speed: 1000,
+                        speed: 1500,
 
                         autoplay: {
                             enabled: true,
-                            delay: 1000,
+                            delay: 4000,
                         },
                         pagination: {
                             el: '.swiper-pagination-block',

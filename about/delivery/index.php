@@ -1,9 +1,5 @@
 <?php
 
-use Bitrix\Main\Page\Asset;
-use Bitrix\Main\Web\Json;
-
-//use Osh\Delivery\Options\Config;
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetPageProperty("keywords", "доставка, условия, стоимость, самовывоз");
@@ -12,52 +8,26 @@ $APPLICATION->SetPageProperty("keywords", "доставка, условия, с�
  */
 $APPLICATION->SetTitle("Доставка и оплата товаров для кальяна в компании Ошиша");
 
-//CModule::IncludeModule('osh.shipping');
-//$ymapsApikey = Config::getYMapsKey();
-//$daDataToken = Config::getDaDataToken();
-Asset::getInstance()->addJs("/bitrix/js/osh.shipping/pickup.js");
-Asset::getInstance()->addJs("/bitrix/js/osh.shipping/async.js");
-Asset::getInstance()->addJs("/bitrix/js/osh.shipping/jquery.suggestions.min.js");
-Asset::getInstance()->addCss("/bitrix/css/osh.shipping/suggestions.css");
-Asset::getInstance()->addJs('https://api-maps.yandex.ru/2.1.71/?lang=ru_RU&apikey=' . ($ymapsApikey ? '&apikey=' . $ymapsApikey : ''), true);
-/*
-$oshShippingParams = json_encode(array(
-    'key' => $ymapsApikey,
-    'cost' => Config::getCost(),
-));*/
+global $USER;
+if ($USER->IsAuthorized()) {
 
-?>
-    <link rel="preconnect" href="//api-maps.yandex.ru">
-    <link rel="dns-prefetch" href="//api-maps.yandex.ru">
+    ?>
     <div id="content_box_delivery" class="box_boxes_delivery static">
-        <h1>Условия доставки и способы оплаты</h1>
-        <div class="d-flex flex-column" id="delivery_method">
+        <h2 class="font-weight-bold mb-4">Условия доставки и способы оплаты</h2>
+        <p class="delivery_description font-weight-bolder">
+            Доставка кальянов, табачной и никотиносодержащей продукции для физических лиц - не осуществляется,<br>
+            в отношении иной продукции применяются следующие условия о доставке:</p>
+        <div class="d-flex flex-column mt-3" id="delivery_method">
             <h5 style="margin:20px 0 15px">Способы оплаты заказов</h5>
-            <p class="delivery_description" style="margin:0 0 40px"><span
+            <p class="delivery_description"><span
                         class="red_text">Наличный расчет / картой</span> – оплачиваете курьеру при получении заказа,
                 актуально только для Москвы и Московской области.<br/><br/>
-                <span class="red_text">Переводы по системе быстрых платежей</span> – вы можете оплатить свой заказ через
-                любое мобильное приложение любого банка. Реквизиты предоставляются после подтверждения заказа
-                менеджером.<br/><br/>
             </p>
-
-
-            <div class="box_msk mb-5 d-flex">
+            <div class="box_msk mb-3 d-flex">
                 <div class="width_50">
                     <h5 style="margin-bottom:15px">Cамовывоз со склада в Москве</h5>
                     <p class="mb-4 delivery_description">Самовывоз со склада доступен с понедельника по субботу (<a
                                 href="/about/contacts/" style="color:#DD0602;">схема и часы работы</a>).</p>
-                    <div class="flex-column d-flex">
-                        <div class="d-flex row_section mb-3">
-                            <span class="d-flex align-items-center mr-3 ">
-                                <i class="fa fa-circle header_icon" aria-hidden="true"></i>
-                            </span>
-                            <div class="delivery_description">Закажи на сайте, <span
-                                        class="red_text">забери самовывозом</span> и получи скидку 2%.<br/>Скидка за
-                                самовывоз действует для любых заказов на любую сумму.<br/></div>
-                        </div>
-                    </div>
-
                 </div>
                 <div class="width_50">
                     <div class="d-flex justify-content-between box_picture_info mb-3">
@@ -68,7 +38,7 @@ $oshShippingParams = json_encode(array(
             </div>
 
 
-            <div class="box_msk mb-5 d-flex">
+            <div class="box_msk mb-4 d-flex">
                 <div class="width_50">
                     <h5 style="margin-bottom:15px">Доставка заказов по Москве и МО</h5>
                     <p class="mb-4 delivery_description">
@@ -76,20 +46,11 @@ $oshShippingParams = json_encode(array(
                         понедельника по субботу. В воскресенье доставка <span class="red_text">не работает.</span>
                     </p>
                     <div class="flex-column d-flex">
-
                         <div class="d-flex row_section mb-3">
                             <span class="d-flex align-items-center mr-3 ">
                                 <i class="fa fa-circle header_icon" aria-hidden="true"></i>
                             </span>
-                            <div class="delivery_description">Сделай <span
-                                        class="red_text">заказ до 15:00 (пнд-птн)</span>, доставим до 21:00 в этот же
-                                день<br/><span class="red_text">стоимость доставки 299 руб.</span><br/></div>
-                        </div>
-                        <div class="d-flex row_section mb-3">
-                            <span class="d-flex align-items-center mr-3 ">
-                                <i class="fa fa-circle header_icon" aria-hidden="true"></i>
-                            </span>
-                            <div class="delivery_description">Сделай <span class="red_text">заказ до 18:00</span>,
+                            <div class="delivery_description">Сделай <span class="red_text">заказ до 17:00</span>,
                                 доставим с 21 до 02 в этот же день (кроме сб и вс)<br/>доставка от 299 руб, <span
                                         class="red_text">бесплатно для заказов от 4000 руб</span>.
                             </div>
@@ -135,7 +96,7 @@ $oshShippingParams = json_encode(array(
                     </div>
                 </div>
             </div>
-            <div class="box_reg mb-5 d-flex">
+            <div class="box_reg mb-4 d-flex">
                 <div class="width_50">
                     <h5 style="margin-bottom:15px">Доставка заказов по России</h5>
                     <p class="delivery_description">Доставка по России осуществляется всеми удобными для Вас
@@ -167,4 +128,11 @@ $oshShippingParams = json_encode(array(
         </div>
 
     </div>
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+<?php } else { ?>
+    <div id="content_box_delivery" class="box_boxes_delivery static">
+        <p class="mb-2 mt-5 font-20 font-weight-bolder text-center"> Для ознакомления с информацией необходимо
+            <a href="javascript:void(0)" class="link_header_box color-redLight text-decoration-underline">авторизоваться.</a></p>
+    </div>
+    <?php
+}
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");

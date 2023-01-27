@@ -59,7 +59,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         {{/DETAIL_PAGE_URL}}
 
                         <img class="basket-item-image" alt="{{NAME}}"
-                             src="{{{IMAGE_URL}}}{{^IMAGE_URL}}<?= $templateFolder ?>/images/no_photo.png{{/IMAGE_URL}}">
+                             src="{{{IMAGE_URL}}}{{^IMAGE_URL}}/local/templates/Oshisha/images/no-photo.gif{{/IMAGE_URL}}">
 
                         {{#SHOW_LABEL}}
                         <div class="basket-item-label-text basket-item-label-big <?= $labelPositionClass ?>">
@@ -462,14 +462,13 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         {{/DETAIL_PAGE_URL}}
 
                         <img class="basket-item-image" alt="{{NAME}}"
-                             src="{{{IMAGE_URL}}}{{^IMAGE_URL}}<?= $templateFolder ?>/images/no_photo.png{{/IMAGE_URL}}">
+                             src="{{{IMAGE_URL}}}{{^IMAGE_URL}}/local/templates/Oshisha/images/no-photo.gif{{/IMAGE_URL}}">
 
                         {{#SHOW_LABEL}}
                         <div class="basket-item-label-text basket-item-label-big <?= $labelPositionClass ?>">
                             {{#LABEL_VALUES}}
                             <div
-                                    {{#HIDE_MOBILE}} class="d-none d-sm-block" {{
-                            /HIDE_MOBILE}}>
+                                    {{#HIDE_MOBILE}} class="d-none d-sm-block" {{/HIDE_MOBILE}}>
                             <span title="{{NAME}}">{{NAME}}</span>
                         </div>
                         {{/LABEL_VALUES}}

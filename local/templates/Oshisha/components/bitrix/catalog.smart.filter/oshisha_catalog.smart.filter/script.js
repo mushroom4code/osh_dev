@@ -156,12 +156,18 @@ JCSmartFilter.prototype.removeHorizontalFilterAll = function ()
 	$('#osh-filter-horizontal-item > *').remove();
 
 	const checkbox = $('form[name="_form"] input[type="checkbox"]:checked');
+	const disabled = $('form[name="_form"] input[type="checkbox"]:disabled');
+
+	$.each(disabled,function(i,val){
+		$(val).removeAttr('disabled');
+	});
 
 	for (let i=0; i < checkbox.length; i++) {
 		BX(checkbox[i]).checked = false;
-		this.countCheckboxFilter--
+		console.log(BX(checkbox[i]));
+		this.countCheckboxFilter--;
 	}
-	this.updateHorizontalFilter()
+	this.updateHorizontalFilter();
 	this.proxy();
 };
 

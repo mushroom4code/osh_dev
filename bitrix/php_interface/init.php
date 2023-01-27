@@ -28,7 +28,11 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
+    '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
 ));
+
+require(__DIR__ . '/enterego_class/discountcouponsmanagerbase.php');
+require(__DIR__ . '/enterego_class/discountcoupon.php');
 
 global $PRICE_TYPE_ID;
 global $UserTypeOpt, $arIskCode, $SETTINGS_;
@@ -256,7 +260,14 @@ function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
 
 require(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
 
-
+/**
+ * @return string
+ */
+function price_list(): string
+{
+    $new = new PriceList();
+    return 'price_list();';
+}
 
 /**
  * @param $a
@@ -270,3 +281,6 @@ function sort_by_sort($a, $b): int
     }
     return ($a["SORT"] < $b["SORT"]) ? -1 : 1;
 }
+
+global $option_site;
+$option_site = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE'));

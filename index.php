@@ -58,29 +58,29 @@ if (IsModuleInstalled("advertising")):?>
             </div>
             <div class="banner_big">
                 <?php $APPLICATION->IncludeComponent(
-                    "bitrix:advertising.banner",
-                    "oshisha_banners",
-                    array(
-                        "BS_ARROW_NAV" => "Y",
-                        "BS_BULLET_NAV" => "Y",
-                        "BS_CYCLING" => "N",
-						'BS_INTERVAL' => 4000,
-                        "BS_EFFECT" => "fade",
-                        "BS_HIDE_FOR_PHONES" => "N",
-                        "BS_HIDE_FOR_TABLETS" => "N",
-                        "BS_KEYBOARD" => "Y",
-                        "BS_PAUSE" => "Y",
-                        "BS_WRAP" => "Y",
-                        "CACHE_TIME" => "36000000",
-                        "CACHE_TYPE" => "Y",
-                        "COMPONENT_TEMPLATE" => "oshisha_banners",
-                        "DEFAULT_TEMPLATE" => "bootstrap_v4",
-                        "NOINDEX" => "Y",
-                        "QUANTITY" => "5",
-                        "TYPE" => "MAIN"
-                    ),
-                    false
-                ); ?>
+	"bitrix:advertising.banner", 
+	"oshisha_banners", 
+	array(
+		"BS_ARROW_NAV" => "Y",
+		"BS_BULLET_NAV" => "Y",
+		"BS_CYCLING" => "N",
+		"BS_INTERVAL" => "4000",
+		"BS_EFFECT" => "fade",
+		"BS_HIDE_FOR_PHONES" => "N",
+		"BS_HIDE_FOR_TABLETS" => "N",
+		"BS_KEYBOARD" => "Y",
+		"BS_PAUSE" => "Y",
+		"BS_WRAP" => "Y",
+		"CACHE_TIME" => "3600",
+		"CACHE_TYPE" => "A",
+		"COMPONENT_TEMPLATE" => "oshisha_banners",
+		"DEFAULT_TEMPLATE" => "bootstrap_v4",
+		"NOINDEX" => "Y",
+		"QUANTITY" => "5",
+		"TYPE" => "MAIN"
+	),
+	false
+); ?>
             </div>
         </div>
     </div>
@@ -221,7 +221,7 @@ var swiper = new Swiper('.box_slide', {
 		"LABEL_PROP_MOBILE" => "",
 		"LABEL_PROP_POSITION" => "top-left",
 		"LINE_ELEMENT_COUNT" => "20",
-		"MESS_BTN_ADD_TO_BASKET" => "В корзину",
+		"MESS_BTN_ADD_TO_BASKET" => "Забронировать",
 		"MESS_BTN_BUY" => "Купить",
 		"MESS_BTN_COMPARE" => "Сравнить",
 		"MESS_BTN_DETAIL" => "Подробнее",
