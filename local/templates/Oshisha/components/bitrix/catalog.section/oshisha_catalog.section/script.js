@@ -26,6 +26,7 @@
 
         this.bigData = params.bigData || {enabled: false};
         this.container = document.querySelector('[data-entity="' + params.container + '"]');
+        this.lazyLoadContainer = document.querySelector('[data-entity="lazy-' + params.container + '"]');
         this.showMoreButton = null;
         this.showMoreButtonMessage = null;
 
@@ -78,7 +79,7 @@
                         `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`,
                     );
 
-                    sortPanel.querySelector('.sort_orders_element').style.display = 'none';
+                    sortPanel.querySelector('.js__sort_orders_element').style.display = 'none';
                     sortPanel.querySelector('.sort_caption').textContent = currentValue.textContent;
                 }, this));
             },
@@ -93,8 +94,7 @@
 
         if (params.loadOnScroll) {
             BX.bind(window, 'scroll', BX.proxy(this.loadOnScroll, this));
-
-    }
+        }
         window.JCCatalogSectionComponentThis = this;
     };
 
@@ -248,7 +248,7 @@
                                 NavPageNomer: 0,
                                 NavPageCount: parseInt(navParams.NavPageCount) || 1
                             };
-                        }HeightTaste
+                        }
 
                         BX.ajax.processScripts(
                             BX.processHTML(result.JS).SCRIPT,
@@ -308,7 +308,7 @@
                         }
                     }
                 );
-                ё
+
                 $('body').find('.variation_taste').each(
                     function (index, item) {
                         if ($(item).find('.taste').length > 2) {
@@ -470,18 +470,11 @@ function HeightTaste() {
                         var left = $(".by-card .toggle_taste").eq(index).css({'height': resHeight});
                         var right = $(".by-card .toggle_taste").eq(l).css({'height': resHeight});
                     }
-
                 }
             });
-
-
         }
     }
-
-
 }
-
 $(document).ready(function () {
     HeightTaste();
-
 });
