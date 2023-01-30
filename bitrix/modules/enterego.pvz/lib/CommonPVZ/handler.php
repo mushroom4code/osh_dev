@@ -4,9 +4,6 @@ namespace Sale\Handlers\Delivery;
 
 use \Bitrix\Main\Localization\Loc;
 use \Bitrix\Sale\Delivery\CalculationResult;
-use CModule;
-use CSaleOrderProps;
-use CSaleOrderPropsValue;
 
 Loc::loadMessages(__FILE__);
 
@@ -15,6 +12,7 @@ if (!\Bitrix\Main\Loader::includeModule('enterego.pvz'))
 
 class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 {
+    protected $handlerCode = 'enterego.pvz';
     protected static $canHasProfiles = false;
     protected static $isCalculatePriceImmediately = true;
     protected static $whetherAdminExtraServicesShow = false;

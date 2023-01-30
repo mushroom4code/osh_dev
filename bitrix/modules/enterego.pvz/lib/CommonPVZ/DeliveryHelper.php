@@ -6,6 +6,7 @@ use Bitrix\Main\Data\Cache,
     Bitrix\Main\Page\Asset;
 use Bitrix\Sale\Location\LocationTable;
 use \Bitrix\Main\Localization\Loc;
+use CUtil;
 
 Loc::loadMessages(__FILE__);
 
@@ -85,10 +86,55 @@ class DeliveryHelper
         }
     }
 
-    public function registerJSComponent($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
+    public function addAssets($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
     {
+        $MODULE_ID = 'enterego.pvz';
+        $delID = 96;
+        $params = [];
+
+        foreach ($arDeliveryServiceAll as $k => $v) {
+            if ($v->getHandlerCode() === $MODULE_ID) {
+                $params['delID'] = $k;
+            }
+        }
+
+        $dbRes = \Bitrix\Sale\Property::getList([
+            'select' => ['ID', 'CODE'],
+            'filter' => [
+                'REL_DLV.ENTITY_ID' => $delID,
+            ],
+            'runtime' => [
+                new \Bitrix\Main\Entity\ReferenceField(
+                    'REL_DLV',
+                    '\Bitrix\Sale\Internals\OrderPropsRelationTable',
+                    array("=this.ID" => "ref.PROPERTY_ID", "=ref.ENTITY_TYPE" => new \Bitrix\Main\DB\SqlExpression('?', 'D')),
+                    array("join_type"=>"left")
+                ),
+            ],
+            'group' => ['ID'],
+            'order' => ['ID' => 'DESC']
+        ]);
+
+        while ($property = $dbRes->fetch())
+        {
+            if ($property['CODE'] === 'ADDRESS') {
+                $params['arPropsAddr'][] = $property['ID'];
+            }
+        }
+
         $cAsset = Asset::getInstance();
+
         $cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
+        $cAsset->addString(
+            "<script id='' data-params=''>
+                    window.addEventListener('load', function () {
+                        BX.SaleCommonPVZ.init({
+                            params: " . CUtil::PhpToJSObject($params) . "
+                        });
+                    });
+                </script>",
+            true
+        );
     }
 }

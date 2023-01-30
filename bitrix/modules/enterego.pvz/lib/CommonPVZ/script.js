@@ -243,6 +243,4 @@ BX.SaleCommonPVZ = {
     }
 };
 
-window.addEventListener('load', function () {
-    BX.SaleCommonPVZ.init();
-});
+

@@ -13,12 +13,10 @@ class enterego_pvz extends CModule
 {
     var $MODULE_ID = 'enterego.pvz';
     var $MODULE_GROUP_RIGHTS = "Y";
-    //var $MODULE_CSS;
 
     var $strError = '';
     var $arHandlers = array("sale" => array(
-        "OnSaleComponentOrderOneStepDelivery" => array("\CommonPVZ\DeliveryHelper", "onOrderOneStepDelivery"),
-        "OnSaleComponentOrderCreated" => array("\CommonPVZ\DeliveryHelper", "registerJSComponent")
+        "OnSaleComponentOrderCreated" => array("\CommonPVZ\DeliveryHelper", "addAssets")
     )
     );
 
