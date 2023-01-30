@@ -124,52 +124,14 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
                     <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
                 <?php } else { ?>
-                    <img src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"
-                         alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
+                    <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                 <?php } ?>
             </a>
         </div>
 
         <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
-            <div class="bx_catalog_item_price mt-2 mb-2">
+            <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
                 <div class="box_with_titles">
-                    <div class="box_with_price card-price font_weight_600 d-flex flex-column">
-                        <?php if ($show_price) { ?>
-                            <div class="d-flex flex-row align-items-center">
-                                <div class="bx_price <?= $styleForNo ?>">
-                                    <?php $sale = false;
-                                    if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                        $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-                                        echo(round($price['SALE_PRICE']['PRICE']));
-                                        $sale = true;
-                                    } else {
-                                        echo(round($price['PRICE_DATA'][1]['PRICE']));
-                                    } ?>₽
-                                </div>
-                                <?php if (!$sale) { ?>
-                                    <div class="info-prices-box-hover cursor-pointer ml-2">
-                                        <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-                                        <div class="position-absolute d-hide">
-                                            <div class="d-flex flex-column prices-block">
-                                                <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                                                    <p class="mb-1">
-                                                        <span class="font-11 mb-2"><?= $items['NAME'] ?></span><br>
-                                                        <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                                                    </p>
-                                                <?php } ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                            <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-                                <div class="after_price">
-                                    Старая цена: <?= $price['PRICE_DATA'][1]['PRICE'] ?>₽
-                                </div>
-                            <?php }
-                        } ?>
-                    </div>
                     <?php
                     $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                         'templates',
@@ -181,8 +143,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                             'COUNT_FAV' => $item['COUNT_FAV'],
                             'COUNT_LIKES' => $item['COUNT_LIKES'],
-                        )
-                        ,
+                        ),
                         $component,
                         array('HIDE_ICONS' => 'Y'),
                     );
@@ -269,17 +230,55 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
         <div class="bx_catalog_item_controls">
             <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
             <div class="box_with_fav_bask">
-                <?php if ($show_price) { ?>
+                <?php if ($show_price && $price['PRICE_DATA'][1]['PRICE'] !== '' ) { ?>
+                    <div class="box_with_price card-price font_weight_600 d-flex flex-column">
+                        <?php if ($show_price) { ?>
+                            <div class="d-flex flex-row align-items-center">
+                                <div class="bx_price <?= $styleForNo ?>">
+                                    <?php $sale = false;
+                                    if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                        $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
+                                        echo(round($price['SALE_PRICE']['PRICE']));
+                                        $sale = true;
+                                    } else {
+                                        echo(round($price['PRICE_DATA'][1]['PRICE']));
+                                    } ?>₽
+                                </div>
+                                <?php if (!$sale) { ?>
+                                    <div class="info-prices-box-hover cursor-pointer ml-2">
+                                        <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
+                                        <div class="position-absolute d-hide">
+                                            <div class="d-flex flex-column prices-block">
+                                                <?php foreach ($price['PRICE_DATA'] as $items) { ?>
+                                                    <p class="mb-1">
+                                                        <span class="font-11 mb-2"><?= $items['NAME'] ?></span><br>
+                                                        <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                                    </p>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
+                                <div class="after_price">
+                                    Старая цена: <?= $price['PRICE_DATA'][1]['PRICE'] ?>₽
+                                </div>
+                            <?php }
+                        } ?>
+                    </div>
                     <div class="box_quantity_for_uric_line">
                         <span class="font-12 ml-1"><?= $item['PRODUCT']['QUANTITY'] ?></span>
                         <span class="font-12">шт.</span>
                     </div>
-                    <div class="d-flex row-line-reverse justify-content-between">
+                    <div class="d-flex row-line-reverse justify-content-between box-basket">
                         <div class="btn red_button_cart btn-plus add2basket" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                              data-product_id="<?= $item['ID']; ?>"
                              data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                              id="<?= $arItemIDs['BUY_LINK']; ?>"
-                             <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>Забронировать
+                             <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
+                            <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png" />
                         </div>
                         <div class="product-item-amount-field-contain-wrap"
                              <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>

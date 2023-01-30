@@ -105,7 +105,7 @@ function showOrderBlock($arResult, $accountNumber)
                         <img class="image_box_orders" src="<?= $url ?>"/>
                     <? } else { ?>
                         <img class="image_box_orders"
-                             src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"/>
+                             src="/local/templates/Oshisha/images/no-photo.gif"/>
                     <?php }
                 } ?>
             </div>

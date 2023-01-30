@@ -46,7 +46,8 @@ $MESS["SMS_AUTH_ERROR_PHONE_USER_EXISTS"] = "Пользователь с так�
 
 $MESS["SMS_AUTH_ERROR_USER_NOT_CHOOSED"] = "Пользователь не выбран";
 $MESS["SMS_AUTH_ERROR_UNKNOWN_ERROR"] = "Неизвестная ошибка";
-$MESS["SMS_AUTH_ERROR_CAPTCHA_WRONG"] = "Неверная каптча";
+$MESS["SMS_AUTH_ERROR_CAPTCHA_WRONG_TITLE"] = "Неверная каптча";
+$MESS["SMS_AUTH_ERROR_CAPTCHA_WRONG_TEXT"] = "Проверка каптчи не пройдена";
 
 $MESS["EMAIL_AUTH_REGISTRATION"] = "Зарегистрироваться";
 $MESS["AUTH_PHONE_LOGIN"] = "Войти по номеру телефона";

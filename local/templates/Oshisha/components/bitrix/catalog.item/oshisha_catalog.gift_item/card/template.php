@@ -119,7 +119,7 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
                     <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
                 <?php } else { ?>
-                    <img src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"
+                    <img  src="/local/templates/Oshisha/images/no-photo.gif"
                          alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
                 <?php } ?>
             </a>

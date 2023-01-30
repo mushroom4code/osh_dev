@@ -92,7 +92,7 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
 
     private function CaptchaCheckToken(): bool
     {
-        $secret = COption::GetOptionString("b01110011.recaptcha", "secret_key_s1");
+        $secret = COption::GetOptionString("b01110011.recaptcha", "secret_key_N2");
         $reCaptcha = new ReCaptcha($secret);
         $verify = $reCaptcha->verify($_REQUEST['recaptcha_token']);
 
@@ -185,10 +185,11 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
         global $APPLICATION;
         if ($this->isPost() && $this->request['method'] != self::METHOD_CHANGE_PHONE) {
             // check captcha
-            $use_captcha = COption::GetOptionString("b01110011.recaptcha", "registration_enable_s1");
-            if ($use_captcha == "Y") {
+//            $use_captcha = COption::GetOptionString("b01110011.recaptcha", "registration_enable_s1");
+            if ($this->arResult["USE_CAPTCHA"] == "Y") {
                 if (!$this->CaptchaCheckToken()) {
                     $this->manager->addError(self::ERROR_CAPTCHA_WRONG);
+                    return;
                 }
             }
 
@@ -281,7 +282,6 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     $this->clearSession();
                 }
             } else {
-
                 switch ($this->manager->getStep()) {
                     case Manager::STEP_SUCCESS : // all ok, redirect waiting
                         $this->actionStepSuccess();
@@ -308,8 +308,8 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                 ($this->arResult['STEP'] = $this->manager->getStep()) || ($this->arResult['STEP'] = Manager::STEP_PHONE_WAITING);
             }
         } else {
-            $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
-            $this->clearSession();
+                $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
+                $this->clearSession();
         }
 
         if ($isAjaxRequest) {
