@@ -84,7 +84,7 @@ $option = $option_site; ?>
                     ); ?>
                 </div>
             </div>
-            <div class="col-11 col-lg-3 col-md-3mb-4 mb-lg-0 order-lg-3">
+            <div class="col-11 col-lg-3 col-md-3 mb-4 mb-lg-0 order-lg-3">
                 <span class="text_footer_weight desktop">
                    Поддержка
                 </span>

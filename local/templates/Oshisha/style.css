@@ -3244,6 +3244,15 @@ table#TableWorkers.no-footer {
         min-height: 10px;
     }
 
+    .image-cart {
+        width: 23px;
+        height: 23px;
+    }
+
+    .after_price {
+        font-size: 8px;
+    }
+
     .margin-rel {
         top: 67px;
     }
@@ -3272,7 +3281,7 @@ table#TableWorkers.no-footer {
 
     .bx_catalog_tile_home_type_2 .bx_catalog_item .bx_catalog_item_container {
         width: auto;
-        height: 295px;
+        height: 325px;
         min-height: 295px;
     }
 
@@ -3705,7 +3714,7 @@ table#TableWorkers.no-footer {
     }
 
     .box_with_text {
-        height: 47px;
+        height: 35px;
         overflow: hidden;
     }
 
@@ -5536,7 +5545,7 @@ li, ul {
     margin-right: 10px;
 }
 
-.wrap_a540 {
+.__jivoMobileButton {
     bottom: 53px !important;
 }
 
