@@ -102,7 +102,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                         <span class="taste" data-background="#000000">Хит</span>
                     <?php } ?>
                     <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
-                        <span class="taste" data-background="#F55F5C">Новинка</span>
+                        <span class="taste new-product" data-background="#F55F5C">Новинка</span>
                     <?php }
 
                     foreach ($taste['VALUE'] as $key => $name) {
@@ -180,7 +180,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                             <span class="taste" data-background="#000000">Хит</span>
                         <?php } ?>
                         <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
-                            <span class="taste" data-background="#F55F5C">Новинка</span>
+                            <span class="taste new-product" data-background="#F55F5C">Новинка</span>
                         <?php }
 
                         foreach ($taste['VALUE'] as $key => $name) {

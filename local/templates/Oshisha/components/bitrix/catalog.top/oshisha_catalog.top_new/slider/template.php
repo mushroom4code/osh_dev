@@ -159,8 +159,10 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         $catalogProduct = $catalog->Fetch();
         $rowResHidePrice = $arItem['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
         $show_price = true;
+        $not_auth = '';
         if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             $show_price = false;
+            $not_auth = 'link_header_box';
         }
         ?>
         <div class="<?= ($arItem['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>">
@@ -259,7 +261,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                     if (!isset($arItem['OFFERS']) || empty($arItem['OFFERS'])) { ?>
                     <div class="bx_catalog_item_controls d-flex flex-row">
                         <?php if ($arItem['PRODUCT']['QUANTITY'] !== '0') {
-                        if (!empty($price['PRICE_DATA'][1]['PRINT_PRICE'])) {?>
+                        if (!empty($price['PRICE_DATA'][1]['PRINT_PRICE'])) { ?>
                             <div class="box_with_price d-flex flex-column">
                                 <?php if ($show_price) { ?>
                                     <div class="d-flex flex-row align-items-center">
@@ -308,7 +310,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                      data-max-quantity="<?= $arItem['PRODUCT']['QUANTITY'] ?>"
                                      id="<?= $arItemIDs['BUY_LINK']; ?>"
                                      <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
-                                    <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png" />
+                                    <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
                                 </div>
                                 <div class="product-item-amount-field-contain-wrap"
                                      <? if ($priceBasket > 0): ?>style="display:block;"<? endif; ?>
@@ -334,7 +336,10 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                            title="Забронировать"></a>
                                     </div>
                                 </div>
-                            <?php }
+                            <?php } else { ?>
+                                <div class="btn red_button_cart btn-plus <?= $not_auth ?>">Подробнее</div>
+                                <?php
+                            }
                             $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                                 'templates',
                                 array(

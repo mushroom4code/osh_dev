@@ -167,7 +167,7 @@ $APPLICATION->SetTitle("О нас");
                                 индустрии.
                             </p>
                         </div>
-                        <a href="https://xn--c1aeil2b0b.xn--p1ai/" style="padding: 8px 39px;"
+                        <a href="https://xn--c1aeil2b0b.xn--p1ai/" style="padding: 8px 39px;"  target="_blank"
                            class="link_red_button color-white width-fit-content">
                             Перейти на сайт</a>
                     </div>
