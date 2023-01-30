@@ -19,7 +19,10 @@ $(document).ready(function () {
     let arrayCompanyId;
     //
     //BASKET
-    let addToBasket = true;
+    let addToBasket = false;
+    if ($(document).find('.add2basket').length !== 0) {
+        addToBasket = true;
+    }
     let box_basket_elems = $('.basket-items-list').find('.basket-items-list-table');
     let arItemsForDB = [];
     let product_data;
@@ -196,17 +199,6 @@ $(document).ready(function () {
             $('.box_filter_catalog').hide();
             $('.Icon').removeClass('open');
         }
-
-        /*if (this.className === "Icon") {
-            $('header').removeAttr('style');
-            this.className = "Icon open";
-            $('body').css('overflow', 'initial');
-        } else {
-           // $('header').attr('style', 'position: fixed;z-index: 1010;width: 100%;height: 100%;');
-            this.className = "Icon";
-            $('body').css('overflow', 'hidden');
-            $('.box_filter_catalog').hide();
-        }*/
     });
 
     // width JS
@@ -310,14 +302,14 @@ $(document).ready(function () {
     }
 
     $(document).on('keypress', '.card_element', function (e) {
-        if(e.which == 13) {
+        if (e.which == 13) {
             clearTimeout(window.addToBasketEventTimeout);
             changePrice.call(this);
             addToBasketEvent.call(this);
         }
     })
 
-    $(document).on('input', '.card_element', function() {
+    $(document).on('input', '.card_element', function () {
         let cardBasketAddButton = $(this).parent().parent().parent();
         if (cardBasketAddButton.hasClass('bx_catalog_item_controls')) {
             cardBasketAddButton = cardBasketAddButton.find('a.add2basket:not(.btn-plus):not(.btn-minus)');
@@ -460,7 +452,7 @@ $(document).ready(function () {
                     $(boxInput).val(1);
                 }
             }
-            let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="'+product_id+'"]');
+            let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="' + product_id + '"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
                     if (!$(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
@@ -2771,13 +2763,17 @@ $(document).ready(function () {
 // Открытие попап обратного звонка: конец
 document.addEventListener('click', (e) => {
     const sortList = document.querySelector('.js__sort_orders_element');
-    if (!e.composedPath().includes(sortList)) {
-        sortList.style.display = 'none';
+    if (sortList !== null) {
+        if (!e.composedPath().includes(sortList)) {
+            sortList.style.display = 'none';
+        }
     }
-})
+});
 document.addEventListener('keyup', (e) => {
     const sortList = document.querySelector('.js__sort_orders_element');
-    if (e.code === 'Escape') {
-        sortList.style.display = 'none';
+    if (sortList !== null) {
+        if (e.code === 'Escape') {
+            sortList.style.display = 'none';
+        }
     }
-})
+});

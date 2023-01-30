@@ -29,7 +29,11 @@ CModule::AddAutoloadClasses("", array(
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
     '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
+    '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
 ));
+// 18844
+AddEventHandler('rest', 'OnRestServiceBuildDescription', array('CatalogAPIService', 'OnRestServiceBuildDescription'));
+
 
 require(__DIR__ . '/enterego_class/discountcouponsmanagerbase.php');
 require(__DIR__ . '/enterego_class/discountcoupon.php');
@@ -257,34 +261,6 @@ function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
     //if( $order->getPersonTypeId() == 1 ){}
 
 }
-
-#000018618
-AddEventHandler("sale", "OnSaleComponentOrderOneStepDelivery", "onOrderOneStepDelivery");
-
-function onOrderOneStepDelivery(&$arResult, &$arUserResult, $arParams)
-{
-    $button = \CommonPVZ\DeliveryHelper::getButton();
-    $id = \CommonPVZ\DeliveryHelper::getDeliveryID($arResult['DELIVERY']);
-
-    if (isset($arResult['DELIVERY'][$id])) {
-        $content = $arResult['DELIVERY'][$id]['DESCRIPTION'];
-        $arResult['DELIVERY'][$id]['DESCRIPTION'] = $content . $button;
-    }
-}
-
-CModule::AddAutoloadClasses("", array(
-    '\CommonPVZ\DeliveryHelper' => '/local/php_interface/include/sale_delivery/CommonPVZ/DeliveryHelper.php',
-    '\CommonPVZ\CommonPVZ' => '/local/php_interface/include/sale_delivery/CommonPVZ/CommonPVZ.php',
-    '\CommonPVZ\PickPointDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/PickPointDelivery.php',
-    '\CommonPVZ\SDEKDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/SDEKDelivery.php',
-    '\CommonPVZ\PEKDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/PEKDelivery.php',
-    '\CommonPVZ\FivePostDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/FivePostDelivery.php',
-    '\Enterego\EnteregoDBDelivery' => '/local/php_interface/include/sale_delivery/CommonPVZ/EnteregoDBDelivery.php',
-    '\Enterego\EnteregoDeliveries' => '/local/php_interface/include/sale_delivery/CommonPVZ/EnteregoDeliveries.php',
-    '\PecomKabinet' => '/local/php_interface/include/sale_delivery/CommonPVZ/pecom_kabinet.php'
-
-));
-
 
 require(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
 
