@@ -309,7 +309,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                         <?php } ?>
                         <div class="box_with_price line-price font_weight_600 mb-2">
                             <div class="d-flex flex-row align-items-center">
-                                <div class="bx_price <?= $styleForNo . ' '. $not_auth?>">
+                                <div class="bx_price <?= $styleForNo . ' ' . $not_auth?>">
                                     <?php
                                     $sale = false;
                                     if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||

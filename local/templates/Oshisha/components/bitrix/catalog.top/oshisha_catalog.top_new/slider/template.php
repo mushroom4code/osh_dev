@@ -187,7 +187,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                     </div>
                 </div>
                 <div>
-                    <div class="image_cart">
+                    <div class="image_cart <?= $not_auth?>">
                         <?php if (!empty($arItem['PREVIEW_PICTURE']['SRC'])) { ?>
                             <a id="<?= $arItemIDs['PICT']; ?>"
                                href="<?= $arItem['DETAIL_PAGE_URL']; ?>">
