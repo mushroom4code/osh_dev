@@ -262,28 +262,11 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                     <div class="sort_panel_wrap">
                         <div class="sort_panel" id="">
-<!--                            <input type="hidden" name="sort_by" value="PROPERTY_SERVICE_FIELD_POPULARITY" form="catalog_filter_form">-->
-<!--                            <input type="hidden" name="sort_order" value="DESC" form="catalog_filter_form">-->
                             <a class="sort_order sort_tool" href="#">
-                                <?php /*
-                                if ($_GET["sort"] == "price")
-                                {
-                                    $arParams["ELEMENT_SORT_FIELD"] = "catalog_PRICE_1";
-                                    $price="asortvibor";
-                                    $brend="";
-                                }
-//
-                                if ($_GET["sort"] == "NAME")
-                                {
-                                    $arParams["ELEMENT_SORT_FIELD"] = "NAME";
-                                    $brend="";
-                                    $price="";
-                                }
-                                */ ?>
                                 <span class="sort_orders_by sort_caption" style="min-width: 150px;">Сортировать по</span>
                                 <i class="fa fa-angle-down" aria-hidden="true"></i>
                             </a>
-                            <div class="sort_orders_element">
+                            <div class="sort_orders_element js__sort_orders_element">
                                 <ul>
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-sort="PROPERTY_SERVICE_FIELD_POPULARITY"

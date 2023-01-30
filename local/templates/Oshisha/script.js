@@ -2153,12 +2153,6 @@ $(document).ready(function () {
         }
     })
 
-
-    // $('.catalog_sort_item').on('click', function () {
-    //     $(this).parents('.sort_orders_element').hide();
-    // })
-
-
     $(document).on('click', function (e) {
         let elem = e.target;
         if (elem.classList.contains('close_modalWindow')) {
@@ -2173,103 +2167,6 @@ $(document).ready(function () {
             $('.bx-background-image').css('overflow-y', 'auto');
         }
     })
-    /*
-        $(".datepicker-here").datepicker({
-            onSelect: function (selectedDate) {
-                if (/\s.\s/.test(selectedDate) === false) {
-                    return;
-                }
-                let arr = selectedDate.split(/\s.\s/);
-                let arrOfDate = {
-                    'firstDate': arr[0],
-                    'secondDate': arr[arr.length - 1],
-                    'url': document.location.search,
-                }
-                $.ajax({
-                    url: BX.message('SITE_DIR') +
-                        'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax.php',
-                    type: 'POST',
-                    data: {
-                        arrOfDate: JSON.stringify(arrOfDate),
-                    },
-                    success: function (response) {
-                        let data = JSON.parse(response);
-                        $('.sale-order-list-inner-container').remove();
-                        if (data === null) {
-                            $('#content_box').append('Заказов в выбранный промежуток времени нет');
-                        } else {
-                            data.forEach((item, index) => {
-                                function addPictures() {
-                                    item['PICTURE'].forEach(item => {
-                                        $(`.sort_by_date_orders_${index}`).append(`<img class="image_box_orders" src="${item}"/>`)
-                                    })
-                                }
-
-                                function statusOrder() {
-                                    if (item['STATUS_ID'] === 'F') {
-                                        return `<span class="status_completed">Выполнен</span>`;
-                                    }
-                                    return `<span class="status_pending_payment">Принят, ожидается оплата</span>`
-                                }
-
-                                $('#content_box').append(`<div class="row mx-0 mb-5 sale-order-list-inner-container">
-                    <div class="row mx-0 sale-order-list-title-container">
-                        <h3 class="mb-1 mt-1">
-                            <div>
-                                <span>Заказ № ${item['ACCOUNT_NUMBER']} от ${item['DATE_INSERT_FORMAT'].split(' ')[0]}</span>
-                            </div>
-                            <div>
-                                ${statusOrder()}
-                            </div>
-                        </h3>
-                    </div>
-                    <div class="box_wth_delivery_number">
-                        <div class="mt-2">
-                            <span>Номер отслеживания:</span> <a href="#">24006875</a>
-                        </div>
-                    </div>
-
-                    <div class="row mx-0 mb-4 mt-4 d-flex flex_class justify-content-evenly sort_by_date_orders_${index}">
-                    </div>
-                        <div class="col pt-3">
-                        <div class="sale-order-list-inner-row">
-                            <div class="sale-order-list-inner-row">
-                                <div class=" sale-order-list-about-container">
-                                    <a class="sale-order-list-about-link"
-                                       href="/personal/orders/${item['ACCOUNT_NUMBER']}">Подробности
-                                        заказа</a>
-                                </div>
-
-                                <div class=" sale-order-list-repeat-container">
-                                    <a class=" sale-order-list-repeat-link"
-                                       href="/personal/cart/">Повторить заказ</a>
-                                </div>
-                                <div class=" sale-order-list-cancel-container">
-                                    <a class="sale-order-list-cancel-link"
-                                           href="/personal/cancel/${item['ACCOUNT_NUMBER']}?CANCEL=Y">Отменить заказ</a>
-                                </div>
-                            </div>
-                            <div class="sale-order-list-inner">
-                                <div class="sale-order-list-inner-row-body">
-                                    <div class="sale-order-list-payment">
-                                        <div class="mb-1 sale-order-list-payment-price">
-                                            <span class="sale-order-list-payment-element">Сумма заказа:</span>
-                                            <span class="sale-order-list-payment-number">${item['PRICE'].split('.')[0] + ' ₽'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                            </div>`);
-                                addPictures();
-                            })
-                        }
-                    }
-                })
-            }
-        });
-    */
 
     $(document).on('click', '.retail_orders', function () {
         $(this).closest('div').find('.wholesale_orders').css({
@@ -2872,3 +2769,15 @@ $(document).ready(function () {
     });
 });
 // Открытие попап обратного звонка: конец
+document.addEventListener('click', (e) => {
+    const sortList = document.querySelector('.js__sort_orders_element');
+    if (!e.composedPath().includes(sortList)) {
+        sortList.style.display = 'none';
+    }
+})
+document.addEventListener('keyup', (e) => {
+    const sortList = document.querySelector('.js__sort_orders_element');
+    if (e.code === 'Escape') {
+        sortList.style.display = 'none';
+    }
+})

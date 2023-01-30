@@ -194,18 +194,18 @@ $SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
         <td class="heading" colspan=2>Текст в футере для никотиносодержащей продукции</td>
     </tr>
     <tr>
-        <td width="50">Колонка</td>
+        <td width="50">Верхний абзац</td>
         <td width="80%">
-            <textarea name="SETTINGS[text_rospetrebnadzor_column]" width="100%" cols=100
-                      rows=5><?= $SETTINGS['text_rospetrebnadzor_column'] ?></textarea>
+            <textarea name="SETTINGS[text_rospetrebnadzor_row]" width="100%" cols=100
+                      rows=5><?= $SETTINGS['text_rospetrebnadzor_row'] ?></textarea>
         </td>
 
     </tr>
     <tr>
-        <td width="50">Нижняя строка</td>
+        <td width="50">Нижний абзац</td>
         <td width="80%">
-            <textarea name="SETTINGS[text_rospetrebnadzor_row]" width="100%" cols=100
-                      rows=5><?= $SETTINGS['text_rospetrebnadzor_row'] ?></textarea>
+            <textarea name="SETTINGS[text_rospetrebnadzor_column]" width="100%" cols=100
+                      rows=5><?= $SETTINGS['text_rospetrebnadzor_column'] ?></textarea>
         </td>
 
     </tr>
