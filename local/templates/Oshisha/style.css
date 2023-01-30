@@ -1624,6 +1624,7 @@ span > i.header_icon {
 .new-product {
     font-weight: bold;
     border-radius: 20px;
+    background-color: #F55F5C;
 }
 
 .banner_small {
