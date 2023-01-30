@@ -1587,7 +1587,7 @@ span > i.header_icon {
 }
 
 .link_menu {
-    padding: 12px 0 0 30px;
+    padding: 12px 0 0 10px;
 }
 
 .parent_category_menu {
@@ -1621,13 +1621,10 @@ span > i.header_icon {
     width: 74%;
 }
 
-/*.banner_big .swiper-slide {*/
-/*    height: 474px;*/
-/*}*/
-
-/*.banner_small .banner_box_item {*/
-/*    height: 218px;*/
-/*}*/
+.new-product {
+    font-weight: bold;
+    border-radius: 20px;
+}
 
 .banner_small {
     width: 22.5%;
@@ -5020,7 +5017,7 @@ li, ul {
     }
 
     .new_custom_button_slick_left_cat {
-        top: 40%;
+        top: 48%;
     }
 
 }
