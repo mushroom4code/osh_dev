@@ -1623,7 +1623,8 @@ span > i.header_icon {
 
 .new-product {
     font-weight: bold;
-    border-radius: 20px;
+    color: white !important;
+    border-radius: 20px !important;
     background-color: #F55F5C;
 }
 
