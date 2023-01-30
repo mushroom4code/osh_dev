@@ -273,11 +273,11 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                         data-order="DESC">По популярности</li>
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                        data-sort="CATALOG_PRICE_2"
+                                        data-sort="PROPERTY_SERVICE_SORT_PRICE"
                                         data-order="ASC">По возрастанию цены</li>
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                        data-sort="CATALOG_PRICE_2"
+                                        data-sort="PROPERTY_SERVICE_SORT_PRICE"
                                         data-order="DESC">По убыванию цены</li>
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-sort="NAME"
