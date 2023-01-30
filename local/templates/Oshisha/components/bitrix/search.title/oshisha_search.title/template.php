@@ -31,6 +31,10 @@ if ($arParams["SHOW_INPUT"] !== "N"):?>
         </form>
     </div>
 <? endif ?>
+<?php
+global $USER;
+if ($USER->IsAuthorized()) {
+?>
 <script>
     BX.ready(function () {
         new JCTitleSearch({
@@ -41,3 +45,4 @@ if ($arParams["SHOW_INPUT"] !== "N"):?>
         });
     });
 </script>
+<?}?>

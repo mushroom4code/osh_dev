@@ -98,7 +98,7 @@ if (empty($arResult["CATEGORIES"]))
                                 <?= $arElement['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?></span>
                         </p>
                         <p>
-                            <span class="font-14 mr-2">Основная (до 30к)
+                            <span class="font-14 mr-2">Основная (до 30к)</span> -
                             <span class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
                                 <?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?></span>
                         </p>
@@ -147,10 +147,6 @@ if (empty($arResult["CATEGORIES"]))
                                       id="<?= $arElement['QUANTITY_UP_ID'] ?>" tabindex="0">
                                 </span>
                             </div>
-                            <a id="<?= $arElement['BUY_LINK']; ?>" href="javascript:void(0)" rel="nofollow"
-                               class="<?= $classButton ?> add2basket basket_prod_detail"
-                               data-url="<?= $arItem['URL'] ?>" data-product_id="<?= $arElement['ID']; ?>"
-                               title="Добавить в корзину" tabindex="0"><?= $textButton ?></a>
                             <div id="result_box"></div>
                             <div id="popup_mess"></div>
                         </div>
