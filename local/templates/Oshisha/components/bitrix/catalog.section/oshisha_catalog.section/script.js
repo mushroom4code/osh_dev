@@ -11,8 +11,6 @@
         this.template = params.template || '';
         this.componentPath = params.componentPath || '';
         this.parameters = params.parameters || {};
-        console.log('params');
-        console.log(params);
 
         //enterego filter for special group category
         this.staticFilter = params.staticFilter || '';
@@ -200,8 +198,6 @@
 						
 						BX.cleanNode(window.JCCatalogSectionComponentThis.container);
                         if (result.parameters) {
-                            console.log('result_parameters');
-                            console.log(result.parameters);
                             this.parameters = result.parameters;
                         }
 
@@ -213,7 +209,6 @@
                                 NavPageCount: parseInt(navParams.NavPageCount) || 1
                             };
                         }
-//console.log(result);
                         BX.ajax.processScripts(
                             BX.processHTML(result.JS).SCRIPT,
                             false,
@@ -412,7 +407,6 @@ function HeightTaste()
 		{
 			var max_height = 0;
 			$(".toggle_taste").each(function (index, el){
-				//console.log($(this).height());
 				if( $(this).height() > max_height)
 					max_height = $(this).height();
 			});

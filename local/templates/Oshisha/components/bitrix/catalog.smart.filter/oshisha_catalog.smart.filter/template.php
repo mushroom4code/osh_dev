@@ -172,43 +172,6 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 //not price
 
                 foreach ($arResult["ITEMS"] as $key => $arItem) {
@@ -769,26 +732,47 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group form-check">
-                            <label data-role="label_in_stoсk"
-                                   class="smart-filter-checkbox-text form-check-label"
-                                   id="hide_not_available_label" for="<? echo $ar["CONTROL_ID"] ?>">
-                                Показать только товар в наличии
-                            </label>
-                            <input
-                                    type="checkbox"
-                                    value="<? echo $arParams["HIDE_NOT_AVAILABLE"] ?>"
-                                    name="hide_not_available"
-                                    id="hide_not_available_id"
-                                    class="check_input form-check-input"
-                                <? echo $arParams["HIDE_NOT_AVAILABLE"] == 'Y' ? 'checked="checked"' : '' ?>
-                                    onclick="smartFilter.click(this)"
-                            />
-                        </div>
+
                     </div>
                     <?
                 }
                 ?>
+<!--                sus-->
+                <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box bx-active">
+                    <span class="smart-filter-container-modef"></span>
+                    <div class="smart-filter-block filter_id" data-role="bx_filter_block"
+                         id="hide_not_available_container_id">
+                        <div class="smart-filter-parameters-box-container">
+                            <div class="form-group form-check hide_not_available">
+                                <label data-role="label_in_stoсk"
+                                       class="smart-filter-checkbox-text form-check-label hide_not_available"
+                                       id="hide_not_available_label" for="<? echo $ar["CONTROL_ID"] ?>">
+                                    Показать только товар в наличии
+                                </label>
+                                <input
+                                        type="checkbox"
+                                        value="<? echo $arParams["HIDE_NOT_AVAILABLE"] ?>"
+                                        name="hide_not_available"
+                                        id="hide_not_available_id"
+                                        class="check_input form-check-input"
+                                    <? echo $arParams["HIDE_NOT_AVAILABLE"] == 'Y' ? 'checked="checked"' : '' ?>
+                                        onclick="smartFilter.click(this)"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
                 <div class="button_box">
                     <div class="smart-filter-button-box">
                         <div class="smart-filter-block">

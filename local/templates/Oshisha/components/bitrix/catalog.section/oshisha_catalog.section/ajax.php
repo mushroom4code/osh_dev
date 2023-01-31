@@ -27,6 +27,11 @@ try {
 
 $parameters = unserialize(base64_decode($paramString));
 
+if (isset($hide_not_available)) {
+    $parameters['HIDE_NOT_AVAILABLE'] = $hide_not_available;
+}
+
+
 if (isset($parameters['PARENT_NAME'])) {
     $parent = new CBitrixComponent();
     $parent->InitComponent($parameters['PARENT_NAME'], $parameters['PARENT_TEMPLATE_NAME']);

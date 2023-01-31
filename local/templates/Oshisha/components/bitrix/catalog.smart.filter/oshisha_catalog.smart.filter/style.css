@@ -985,5 +985,16 @@ font-weight: 500;
 font-size: 14px;
 line-height: 110.4%;
 color: #464646;
-	
+}
+
+div.form-group.form-check.hide_not_available {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+label.smart-filter-checkbox-text.form-check-label.hide_not_available {
+    max-width: 175px;
+    font-weight: 600;
+    color: black;
 }
