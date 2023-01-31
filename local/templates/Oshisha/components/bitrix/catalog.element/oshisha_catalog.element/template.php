@@ -532,17 +532,11 @@ global $option_site;
                 break;
             case 'quantity':
             if ($show_price) {
-            if ($actualItem['PRODUCT']['QUANTITY'] != '0') {
-            $textButton = 'Забронировать';
-            $classButton = 'btn_basket';
-            if ($priceBasket > 0) {
-                $textButton = 'Забронировано';
-                $classButton = 'addProductDetailButton';
-            } ?>
+            if ($actualItem['PRODUCT']['QUANTITY'] != '0') {?>
                 <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
                     <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
                      data-entity="quantity-block">
-                    <div class="product-item-amount-field-contain">
+                    <div class="product-item-amount-field-contain mr-3">
                                                     <span class="btn-minus no-select minus_icon add2basket basket_prod_detail"
                                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                                           data-product_id="<?= $arResult['ID']; ?>"
@@ -563,9 +557,11 @@ global $option_site;
                               id="<?= $itemIds['QUANTITY_UP_ID'] ?>"></span>
                     </div>
                     <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)" rel="nofollow"
-                       class="<?= $classButton ?> add2basket basket_prod_detail"
+                       class="add2basket basket_prod_detail btn red_button_cart"
                        data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>" data-product_id="<?= $arResult['ID']; ?>"
-                       title="Добавить в корзину"><?= $textButton ?></a>
+                       title="Добавить в корзину">
+                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
+                    </a>
                     <div id="result_box"></div>
                     <div id="popup_mess"></div>
                 </div>
