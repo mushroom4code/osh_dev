@@ -169,7 +169,9 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
                     <a href="/about/contacts/" class="text_header">Контакты</a>
-                    <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
+                    <?php if ($USER->IsAuthorized()) { ?>
+                        <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
+                    <?php } ?>
                     <a href="javascript:void(0)" class="text_header callback">Обратный звонок</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
@@ -211,9 +213,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
                                 </a>
-                                <a href="/about/delivery/" class="link_menu_top ">
-                                    <span class="text_catalog_link not_weight">Доставка и оплата</span>
-                                </a>
+                                <?php if ($USER->IsAuthorized()) { ?>
+                                    <a href="/about/delivery/" class="link_menu_top ">
+                                        <span class="text_catalog_link not_weight">Доставка и оплата</span>
+                                    </a>
+                                <?php } ?>
 
                                 <a href="/about/FAQ/" class="link_menu_top ">
                                     <span class="text_catalog_link not_weight">FAQ</span>
@@ -299,7 +303,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 "SHOW_PREVIEW" => "Y",
                                 "TEMPLATE_THEME" => "blue",
                                 "TOP_COUNT" => "5",
-                                "USE_LANGUAGE_GUESS" => "Y"
+                                "USE_LANGUAGE_GUESS" => "N"
                             ),
                             true
                         ); ?>

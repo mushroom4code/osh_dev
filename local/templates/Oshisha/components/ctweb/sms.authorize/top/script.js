@@ -71,7 +71,6 @@
         this.obChangePhone = BX(params['TEMPLATE']['CHANGE_PHONE']);
         this.obAuthEmailLogin = BX(params['TEMPLATE']['AUTH_EMAIL_LOGIN']);
         this.obRegistration = BX(params['TEMPLATE']['REGISTRATION']);
-
         //email
         this.mailForm = BX(params['TEMPLATE']['MAIL_FORM']);
         this.obAuthPhoneLogin = BX(params['TEMPLATE']['AUTH_PHONE_LOGIN']);
@@ -89,6 +88,8 @@
         this.timeLeft = params['DATA']['TIME_LEFT'] ? parseInt(params['DATA']['TIME_LEFT']) : 0;
         this.error_not_correct = params['DATA']['ERROR_ALERT_NOT_CORRECT'];
         this.error_empty_field = params['DATA']['ERROR_ALERT_EMPTY_FIELD'];
+        let PRODUCT_URL = '';
+
         if (this.obPhone) {
             if (this.obPhone.value === '') {
                 this.obState.value = STATE_PHONE_WAITING;
@@ -104,9 +105,11 @@
         if (this.obState) {
             this.setState(this.obState.value);
         }
-        $('.link_header_box').on('click', function (event) {
+        $(document).on('click', '.link_header_box', function (event) {
             event.preventDefault();
-
+            if ($(this).attr('data-href') !== '') {
+              PRODUCT_URL = $(this).attr('data-href');
+            }
             $('.ctweb-smsauth-menu-block').show();
         });
 
@@ -187,8 +190,7 @@
                 let form = $(BX(this.mailForm));
                 let url = form.attr('action');
                 let data = form.serializeArray();
-
-                this.EmailAuth(data, url);
+                this.EmailAuth(data, url, PRODUCT_URL);
             }
         }.bind(this));
 
@@ -199,11 +201,11 @@
             let url = form.attr('action');
             let data = form.serializeArray();
 
-            this.getCode(data, url);
+            this.getCode(data, url, PRODUCT_URL);
         }.bind(this));
     };
 
-    BX.Ctweb.SMSAuth.Controller.prototype.getCode = function (data, url) {
+    BX.Ctweb.SMSAuth.Controller.prototype.getCode = function (data, url, product_url = '') {
 
         let Ctweb = this;
         data.push({name: 'is_ajax_post', value: 'Y'});
@@ -229,7 +231,11 @@
 
                 if (step === STATE_SUCCESS) {
                     $('.ctweb-smsauth-menu-block').hide();
-                    location.reload();
+                    if(product_url !== ''){
+                        location.href = window.location.origin + product_url;
+                    }else {
+                        location.reload();
+                    }
                 } else {
                     if (objResponse['ERRORS'].length > 0) {
                         if (objResponse['ERRORS'][0] === ERROR_CODE_NOT_CORRECT) {
@@ -251,7 +257,7 @@
         });
     };
 
-    BX.Ctweb.SMSAuth.Controller.prototype.EmailAuth = function (data, url) {
+    BX.Ctweb.SMSAuth.Controller.prototype.EmailAuth = function (data, url, product_url = '') {
 
         BX.adjust(this.obCode, {props: {value: ''}});
         data.push({name: 'is_ajax_post', value: 'Y'});
@@ -265,7 +271,12 @@
 
                 if (step === STATE_SUCCESS) {
                     $('.ctweb-smsauth-menu-block').hide();
-                    location.reload();
+                    if(product_url !== ''){
+                        location.href = window.location.origin + product_url;
+                    }else {
+                        location.reload();
+                    }
+
                 } else {
                     BX.show(this.errorAlert);
                     BX.adjust(this.errorAlert, {text: BX.message('ERROR_ALERT_NOT_CORRECT')});

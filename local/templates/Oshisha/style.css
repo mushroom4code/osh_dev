@@ -1621,13 +1621,6 @@ span > i.header_icon {
     width: 74%;
 }
 
-.new-product {
-    font-weight: bold;
-    color: white !important;
-    border-radius: 20px !important;
-    background-color: #F55F5C;
-}
-
 .banner_small {
     width: 22.5%;
     align-content: space-between;
@@ -2607,8 +2600,26 @@ div#about_contacts > .row > .form_company {
 .taste {
     margin-right: 5px;
     margin-bottom: 6px;
-    padding: 4px 15px;
+    padding: 4px 8px;
+    font-weight: 500;
     border-radius: 5px;
+}
+
+.new-product {
+    font-weight: bold;
+    color: white !important;
+    border-radius: 20px !important;
+    background-color: #F55F5C;
+    position: absolute;
+    bottom: 92%;
+    right: 87%;
+    padding: 9px 4px;
+    z-index: 1000;
+}
+
+.by-line .new-product {
+    bottom: 78%;
+    right: 97%;
 }
 
 .certificate_variations {
@@ -3939,11 +3950,6 @@ table#TableWorkers.no-footer {
         margin-bottom: 30px;
     }
 
-    /*.box_with_banner_dop .carousel-item{
-        margin-left: -10px;
-        margin-right: -10px;
-        width: calc(100% + 20px);
-    }*/
     .bx_catalog_tile_home_type_2 {
         margin: 1rem 0;
     }
@@ -3952,6 +3958,19 @@ table#TableWorkers.no-footer {
         margin-right: 2px;
         margin-bottom: 4px;
         padding: 3px 7px;
+    }
+
+    .new-product {
+        bottom: 93%;
+        right: 86%;
+        padding: 8px 4px;
+        font-size: 8px;
+    }
+
+    .by-line .new-product {
+        bottom: 69%;
+        right: 95%;
+        padding: 6px 2px;
     }
 
     .by-card .product-item-container > .bx_catalog_item > .bx_catalog_item_container {
