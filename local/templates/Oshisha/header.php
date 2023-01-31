@@ -299,7 +299,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 "SHOW_PREVIEW" => "Y",
                                 "TEMPLATE_THEME" => "blue",
                                 "TOP_COUNT" => "5",
-                                "USE_LANGUAGE_GUESS" => "Y"
+                                "USE_LANGUAGE_GUESS" => "N"
                             ),
                             true
                         ); ?>
