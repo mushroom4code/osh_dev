@@ -124,7 +124,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             <a class=" <?= $styleForTaste ?>"
                href="<?= $item['DETAIL_PAGE_URL']; ?>">
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
-                    <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?=$productTitle?>"/>
+                    <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $productTitle ?>"/>
                 <?php } else { ?>
                     <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                 <?php } ?>
@@ -205,7 +205,9 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                     } ?>
                 </div>
             <?php }
+            $href = '';
             if (!$show_price) {
+                $href = $item['DETAIL_PAGE_URL'];
                 $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
             } ?>
             <div class="box_with_text">
@@ -344,7 +346,9 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                     </div>
                 <?php }
                 if (!$USER->IsAuthorized() && !$show_price) { ?>
-                    <div class="btn red_button_cart btn-plus <?= $not_auth ?>">Подробнее</div>
+                    <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
+                         data-href="<?= $href ?>">Подробнее
+                    </div>
                     <?php
                 }
                 $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',

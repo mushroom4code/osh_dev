@@ -164,6 +164,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             $show_price = false;
             $not_auth = 'link_header_box';
         }
+        $href = $item['DETAIL_PAGE_URL'];
         ?>
         <div class="<?= ($arItem['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>">
             <div class="bx_catalog_item_container product-item <?php if (!$show_price): ?>blur_photo<? endif; ?>"
@@ -336,7 +337,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                     </div>
                                 </div>
                             <?php } else { ?>
-                                <div class="btn red_button_cart btn-plus <?= $not_auth ?>">Подробнее</div>
+                                <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
+                                     data-href="<?= $href ?>">Подробнее</div>
                                 <?php
                             }
                             $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',

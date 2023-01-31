@@ -24,6 +24,7 @@
         this.state = STATE_INIT;
 
         this.obMain = null;
+        this.product_url = null;
         this.obCode = null;
         this.obTimer = null;
         this.obReuse = null;
@@ -106,7 +107,10 @@
         }
         $(document).on('click', '.link_header_box', function (event) {
             event.preventDefault();
-
+            if ($(this).hasClass('.btn-plus')) {
+                this.product_url = $(this).attr('data-href');
+            }
+            console.log(this.product_url)
             $('.ctweb-smsauth-menu-block').show();
         });
 
@@ -229,7 +233,7 @@
 
                 if (step === STATE_SUCCESS) {
                     $('.ctweb-smsauth-menu-block').hide();
-                    location.reload();
+                    location.href = location.href + this.product_url;
                 } else {
                     if (objResponse['ERRORS'].length > 0) {
                         if (objResponse['ERRORS'][0] === ERROR_CODE_NOT_CORRECT) {
@@ -265,7 +269,7 @@
 
                 if (step === STATE_SUCCESS) {
                     $('.ctweb-smsauth-menu-block').hide();
-                    location.reload();
+                    location.href = location.href + this.product_url;
                 } else {
                     BX.show(this.errorAlert);
                     BX.adjust(this.errorAlert, {text: BX.message('ERROR_ALERT_NOT_CORRECT')});
