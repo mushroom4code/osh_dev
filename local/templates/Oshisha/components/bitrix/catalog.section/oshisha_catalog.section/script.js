@@ -11,6 +11,8 @@
         this.template = params.template || '';
         this.componentPath = params.componentPath || '';
         this.parameters = params.parameters || {};
+        console.log('params');
+        console.log(params);
 
         //enterego filter for special group category
         this.staticFilter = params.staticFilter || '';
@@ -181,11 +183,10 @@
                     //enterego filter for special group category
                     staticFilter: this.staticFilter
                 };
-
                 if (this.ajaxId) {
                     defaultData.AJAX_ID = this.ajaxId;
                 }
-//console.log(data);
+
                 BX.ajax({
                     url: '/local/templates/Oshisha/components/bitrix/catalog.section/oshisha_catalog.section/ajax.php' +
                         (document.location.href.indexOf('clear_cache=Y') !== -1 ? '?clear_cache=Y' : ''),
@@ -199,6 +200,8 @@
 						
 						BX.cleanNode(window.JCCatalogSectionComponentThis.container);
                         if (result.parameters) {
+                            console.log('result_parameters');
+                            console.log(result.parameters);
                             this.parameters = result.parameters;
                         }
 

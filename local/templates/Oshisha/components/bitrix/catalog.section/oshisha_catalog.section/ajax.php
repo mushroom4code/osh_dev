@@ -127,6 +127,8 @@ if( isset($_REQUEST['PAGER_BASE_LINK_ENABLE'])){
     $parameters['PAGER_BASE_LINK'] = $_REQUEST['PAGER_BASE_LINK'];
     $parameters['PAGER_BASE_LINK_ENABLE'] = $_REQUEST['PAGER_BASE_LINK_ENABLE'];
 }
+//TODO DEBUG
+$parameters['HIDE_NOT_AVAILABLE'] = 'Y';
 
 $APPLICATION->IncludeComponent(
     'bitrix:catalog.section',

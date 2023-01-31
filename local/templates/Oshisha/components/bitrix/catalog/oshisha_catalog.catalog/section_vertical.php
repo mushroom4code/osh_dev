@@ -378,7 +378,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             );
         }
         //endregion
-
+        global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
             "oshisha_catalog.section", array(

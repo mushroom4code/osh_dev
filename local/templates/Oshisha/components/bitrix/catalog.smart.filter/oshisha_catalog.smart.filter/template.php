@@ -41,16 +41,15 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                 foreach ($arResult["ITEMS"] as $key => $arItem)//prices
                 {
 
-                    if ((int)$arItem['ID'] !== RETAIL_PRICE) {
+                    if (((int)$arItem['ID'] !== RETAIL_PRICE) && ((int)$arItem['ID'] !== KOLVO_ZATYAZHEK_ID)) {
                         continue;
                     }
+                    if ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)
+                        continue;
 
-                    $key = $arItem["ENCODED_ID"];
+                    $key = (int)$arItem['ID'] === KOLVO_ZATYAZHEK_ID ? md5($arItem['ID']) : $arItem["ENCODED_ID"];
 
                     if (isset($arItem["PRICE"])):
-                        if ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)
-                            continue;
-
                         $step_num = 4;
                         $step = ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"]) / $step_num;
                         $prices = array();
@@ -67,14 +66,16 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                             $prices[$step_num] = number_format($arItem["VALUES"]["MAX"]["VALUE"], $precision, ".", "");
                         }
 
-                        ?>
+                        endif;?>
 
                         <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?>F  smart-filter-parameters-box bx-active">
                             <span class="smart-filter-container-modef"></span>
 
                             <div class="smart-filter-parameters-box-title"
                                  onclick="smartFilter.hideFilterProps(this)">
-                                <span class="smart-filter-parameters-box-title-text">Цена</span>
+                                <span class="smart-filter-parameters-box-title-text">
+                                    <?= (int)$arItem['ID'] === RETAIL_PRICE ? 'Цена' : 'Количество затяжек'?>
+                                </span>
                                 <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
 									<i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
 								</span>
@@ -160,17 +161,58 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                     );
                     ?>
                         <script type="text/javascript">
+                            console.log('emmemememmem');
                             BX.ready(function () {
                                 window['trackBar<?=$key?>'] = new BX.Iblock.SmartFilter(<?=CUtil::PhpToJSObject($arJsParams)?>);
                             });
                         </script>
-                    <?endif;
+                    <?
                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 //not price
 
                 foreach ($arResult["ITEMS"] as $key => $arItem) {
-                    if (empty($arItem["VALUES"]) || isset($arItem["PRICE"]))
+                    if (empty($arItem["VALUES"]) || isset($arItem["PRICE"]) || ((int)$arItem['ID'] === KOLVO_ZATYAZHEK_ID))
                         continue;
 
                     if ($arItem["DISPLAY_TYPE"] == "A" && ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0))
@@ -703,11 +745,45 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                             </div>
                                         <? endforeach; ?>
                                     </div>
+
                                 <?
                                     //endregion
                                 }
                                 ?>
+                                <div class="form-group form-check">
+                                    <label data-role="label_<?= $ar["CONTROL_ID"] ?>"
+                                           class="smart-filter-checkbox-text form-check-label"
+                                           id="<?= $ar["VALUE"]; ?>" for="<? echo $ar["CONTROL_ID"] ?>">
+                                        <?= $ar["VALUE"]; ?>
+                                    </label>
+                                    <input
+                                            type="checkbox"
+                                            value="<? echo $ar["HTML_VALUE"] ?>"
+                                            name="<? echo $ar["CONTROL_NAME"] ?>"
+                                            id="<? echo $ar["CONTROL_ID"] ?>"
+                                            class="check_input form-check-input"
+                                        <? echo $ar["CHECKED"] ? 'checked="checked"' : '' ?>
+                                        <? echo $ar["DISABLED"] ? 'disabled' : '' ?>
+                                            onclick="smartFilter.click(this)"
+                                    />
+                                </div>
                             </div>
+                        </div>
+                        <div class="form-group form-check">
+                            <label data-role="label_in_stoсk"
+                                   class="smart-filter-checkbox-text form-check-label"
+                                   id="hide_not_available_label" for="<? echo $ar["CONTROL_ID"] ?>">
+                                Показать только товар в наличии
+                            </label>
+                            <input
+                                    type="checkbox"
+                                    value="<? echo $arParams["HIDE_NOT_AVAILABLE"] ?>"
+                                    name="hide_not_available"
+                                    id="hide_not_available_id"
+                                    class="check_input form-check-input"
+                                <? echo $arParams["HIDE_NOT_AVAILABLE"] == 'Y' ? 'checked="checked"' : '' ?>
+                                    onclick="smartFilter.click(this)"
+                            />
                         </div>
                     </div>
                     <?
@@ -738,5 +814,6 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 </div>
 
 <script type="text/javascript">
+    console.log('ssssssssss');
     var smartFilter = new JCSmartFilter('<?echo CUtil::JSEscape($arResult["FORM_ACTION"])?>', '<?=CUtil::JSEscape($arParams["FILTER_VIEW_MODE"])?>', <?=CUtil::PhpToJSObject($arResult["JS_FILTER_PARAMS"])?>);
 </script>

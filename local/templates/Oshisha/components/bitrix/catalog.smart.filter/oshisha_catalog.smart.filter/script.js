@@ -20,6 +20,7 @@ function JCSmartFilter(ajaxURL, viewMode, params)
 
 JCSmartFilter.prototype.keyup = function(input)
 {
+	console.log(input);
 	if(!!this.timer)
 	{
 		clearTimeout(this.timer);
@@ -31,11 +32,18 @@ JCSmartFilter.prototype.keyup = function(input)
 
 JCSmartFilter.prototype.click = function(checkbox)
 {
+	console.log(checkbox);
+	console.log(BX(checkbox).value);
 	if(BX(checkbox).checked) {
-		this.addHorizontalFilter(checkbox)
+		BX(checkbox).value = 'Y';
 	} else {
-		this.removeHorizontalFilter(checkbox)
+		BX(checkbox).value = 'L';
 	}
+	// if(BX(checkbox).checked) {
+	// 	this.addHorizontalFilter(checkbox)
+	// } else {
+	// 	this.removeHorizontalFilter(checkbox)
+	// }
 
 
 	if(!!this.timer)
@@ -50,6 +58,7 @@ JCSmartFilter.prototype.click = function(checkbox)
 
 JCSmartFilter.prototype.reload = function(input)
 {
+	console.log();
 	if (this.cacheKey !== '')
 	{
 		//Postprone backend query
@@ -336,7 +345,8 @@ JCSmartFilter.prototype.proxy = function()
 	if (this.sectionCode) {
 		data['subcat'] = this.sectionCode;
 	}
-
+	console.log('this is data');
+	console.log(data);
 	window.JCCatalogSectionComponent.prototype.sendRequestRefreshCatalog.call(window.JCCatalogSectionComponentThis, data);
 	return false;
 };
