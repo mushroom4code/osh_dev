@@ -94,16 +94,18 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle);
 $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
 <div class="<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
-    <div class="bx_catalog_item_container product-item <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
-        <?php if (count($taste['VALUE']) > 0) { ?>
+    <div class="bx_catalog_item_container product-item position-relative
+    <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
+        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
+            <span class="taste new-product" data-background="#F55F5C">NEW</span>
+        <?php }
+        if (count($taste['VALUE']) > 0) { ?>
             <div class="toggle_taste card-price">
                 <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
                     <?php if ($hitProduct['VALUE'] === 'да') { ?>
                         <span class="taste" data-background="#000000">Хит</span>
                     <?php } ?>
-                    <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
-                        <span class="taste new-product" data-background="#F55F5C">NEW</span>
-                    <?php }
+                    <?php
 
                     foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
@@ -122,7 +124,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             <a class=" <?= $styleForTaste ?>"
                href="<?= $item['DETAIL_PAGE_URL']; ?>">
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
-                    <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
+                    <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?=$productTitle?>"/>
                 <?php } else { ?>
                     <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                 <?php } ?>
@@ -178,11 +180,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                     <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
                         <?php if ($hitProduct['VALUE'] == 'да') { ?>
                             <span class="taste" data-background="#000000">Хит</span>
-                        <?php } ?>
-                        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
-                            <span class="taste new-product" data-background="#F55F5C">NEW</span>
                         <?php }
-
                         foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                                 if ($key === $keys) {
@@ -309,7 +307,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                         <?php } ?>
                         <div class="box_with_price line-price font_weight_600 mb-2">
                             <div class="d-flex flex-row align-items-center">
-                                <div class="bx_price <?= $styleForNo . ' ' . $not_auth?>">
+                                <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>">
                                     <?php
                                     $sale = false;
                                     if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
