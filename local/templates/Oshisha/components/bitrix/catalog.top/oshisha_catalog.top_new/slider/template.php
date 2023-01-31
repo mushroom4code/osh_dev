@@ -164,7 +164,11 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             $show_price = false;
             $not_auth = 'link_header_box';
         }
-        $href = $item['DETAIL_PAGE_URL'];
+        $href = '';
+        if (!$show_price) {
+            $href = $arItem['DETAIL_PAGE_URL'];
+            $arItem['DETAIL_PAGE_URL'] = 'javascript:void(0)';
+        }
         ?>
         <div class="<?= ($arItem['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>">
             <div class="bx_catalog_item_container product-item <?php if (!$show_price): ?>blur_photo<? endif; ?>"
@@ -248,7 +252,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                     <?php } ?>
                     <div class="box_with_title_like">
                         <div class="box_with_text">
-                            <a class="bx_catalog_item_title"
+                            <a class="bx_catalog_item_title <?=$not_auth?>"
                                href="<?= $arItem['DETAIL_PAGE_URL'] ?>"
                                title="<?= $productTitle; ?>">
                                 <?= $productTitle; ?>
