@@ -104,7 +104,7 @@
         if (this.obState) {
             this.setState(this.obState.value);
         }
-        $('.link_header_box').on('click', function (event) {
+        $(document).on('click', '.link_header_box', function (event) {
             event.preventDefault();
 
             $('.ctweb-smsauth-menu-block').show();
