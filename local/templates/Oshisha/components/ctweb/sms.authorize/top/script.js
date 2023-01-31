@@ -107,7 +107,7 @@
         }
         $(document).on('click', '.link_header_box', function (event) {
             event.preventDefault();
-            if ($(this).hasClass('btn-plus')) {
+            if ($(this).attr('data-href') !== '') {
               PRODUCT_URL = $(this).attr('data-href');
             }
             $('.ctweb-smsauth-menu-block').show();

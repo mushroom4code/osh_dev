@@ -88,7 +88,11 @@ foreach ($item['ACTUAL_BASKET'] as $key => $val) {
         $priceBasket = $val;
     }
 }
-
+$href = '';
+if (!$show_price) {
+    $href = $item['DETAIL_PAGE_URL'];
+    $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
+}
 
 $productTitle = str_replace("\xC2\xA0", " ", $productTitle);
 $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
@@ -120,7 +124,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                 </div>
             </div>
         <?php } ?>
-        <div class="image_cart <?= $not_auth ?>">
+        <div class="image_cart <?= $not_auth ?>" data-href="<?=$href?>">
             <a class=" <?= $styleForTaste ?>"
                href="<?= $item['DETAIL_PAGE_URL']; ?>">
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
@@ -205,14 +209,11 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                     } ?>
                 </div>
             <?php }
-            $href = '';
-            if (!$show_price) {
-                $href = $item['DETAIL_PAGE_URL'];
-                $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
-            } ?>
+            ?>
             <div class="box_with_text">
                 <a class="bx_catalog_item_title <?= $styleForNo . ' ' . $not_auth ?>"
                    href="<?= $item['DETAIL_PAGE_URL']; ?>"
+                   data-href="<?=$href?>"
                    title="<?= $productTitle; ?>">
                     <?= $productTitle; ?>
                 </a>
@@ -309,7 +310,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                         <?php } ?>
                         <div class="box_with_price line-price font_weight_600 mb-2">
                             <div class="d-flex flex-row align-items-center">
-                                <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>">
+                                <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>" data-href="<?=$href?>">
                                     <?php
                                     $sale = false;
                                     if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
