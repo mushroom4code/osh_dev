@@ -229,7 +229,11 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     background-color: #313131;
 }
 
-.box_with_search, .box_honesty, .box_automation, .box_display, .box_block, .box_present, .box_help, .box_house,
+.box_with_search {
+    width: inherit;
+}
+
+.box_honesty, .box_automation, .box_display, .box_block, .box_present, .box_help, .box_house,
 .box_footer, .inner, #delivery_payment .form_company, .link_message_box_product, .box_with_tags, .box_reg, .box_msk,
 .banners_box, .smart-filter-button-box, .box_for_banner_footer, img, .image_cart, .catalog-section-list-item-inner,
 .catalog-section-list-item-link, .smart-filter-parameters-box-container, .Icon span:nth-child(1), .box_with_404,
@@ -716,13 +720,13 @@ div.left-menu, .box_with_company {
 }
 
 .spanBasketTop, .spanBasketTop:hover {
-    font-size: 8px;
+    font-size: 9px;
     color: white !important;
     padding: 2px 5px;
     border-radius: 50%;
-    top: 3px;
-    right: -5px;
+    top: 11px;
     min-width: 16px;
+    left: 8px;
     text-align: center;
 }
 
@@ -926,7 +930,7 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
 }
 
 .catalog-section-list-item-link > i, .link_header > .icon_header {
-    font-size: 21px;
+    font-size: 23px;
 }
 
 .font_18, .by-line:not(.opt) a.bx_catalog_item_title {
@@ -2208,8 +2212,8 @@ input.check_input {
 
 .basket_icon_basket, .basket_icon_personal {
     background-repeat: no-repeat;
-    min-width: 19px;
-    min-height: 19px;
+    min-width: 23px;
+    min-height: 23px;
 }
 
 .progress-bar-wrapper {
@@ -4663,7 +4667,7 @@ li, ul {
 }
 
 .box_with_loginBasket .link_header span {
-    font-weight: 500;
+    font-weight: 900;
 }
 
 .box_with_menu_header .li_menu_header.class_1 {
@@ -5747,5 +5751,17 @@ header {
 }
 
 .header-scroll .spanBasketTop {
-    top: 18px;
+    top: 11px;
+}
+
+.header-scroll .li_menu_header {
+    margin: 20px 17px 20px 0;
+}
+
+.header-scroll .box_with_basket_login {
+    margin-left: 25px;
+}
+
+.header-scroll .box_with_search {
+    width: auto;
 }

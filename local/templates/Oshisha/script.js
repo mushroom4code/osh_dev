@@ -356,6 +356,7 @@ $(document).ready(function () {
 
             if (!$('span').is('.spanBasketTop')) {
                 $('.basket_top').append('<span class="spanBasketTop"></span>');
+                $('.basket_top').append('<span class="font-12 font-weight-bold price_basket_top"></span>');
             }
             appendLoader();
             let product_id = $(this).attr('data-product_id');
@@ -476,10 +477,12 @@ $(document).ready(function () {
 
 
         function deleteBasketItemTop(result) {
-            if (result !== '' && result !== 0) {
-                $('.spanBasketTop').attr('style', 'padding: 3px 6px;').text(result);
+            if (result.QUANTITY !== '' && result.QUANTITY !== 0) {
+                $('.spanBasketTop').attr('style', 'padding: 3px 6px;').text(result.QUANTITY);
+                $('.price_basket_top').text(result.SUM_PRICE + ' ₽');
             } else {
                 $('.spanBasketTop').remove();
+                $('.price_basket_top').remove();
             }
         }
 

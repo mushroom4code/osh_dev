@@ -8,7 +8,7 @@ use Bitrix\Main\Context;
 use Bitrix\Sale;
 use Bitrix\Sale\Fuser;
 
-$answer = false;
+$answer['QUANTITY'] = 0;
 
 if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
     CModule::IncludeModule("catalog")) {
@@ -28,17 +28,16 @@ if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
             );
 
             // Скидки
-			$arFilter = array(
-			'=ID' => $product_id, 
-			'ACTIVE' => 'Y',
-			);
-			$resU = CIBlockElement::GetList(Array(), $arFilter, false, false, array('PROPERTY_USE_DISCOUNT'));
-			while($rProd = $resU->Fetch())
-			{
-				//
-				$useDiscount = $rProd['PROPERTY_USE_DISCOUNT_VALUE'];
-			}	
-			
+            $arFilter = array(
+                '=ID' => $product_id,
+                'ACTIVE' => 'Y',
+            );
+            $resU = CIBlockElement::GetList(array(), $arFilter, false, false, array('PROPERTY_USE_DISCOUNT'));
+            while ($rProd = $resU->Fetch()) {
+                //
+                $useDiscount = $rProd['PROPERTY_USE_DISCOUNT_VALUE'];
+            }
+
             if (USE_CUSTOM_SALE_PRICE || $useDiscount == 'Да') {
                 $price_id = SALE_PRICE_TYPE_ID;
             } else {
@@ -54,20 +53,21 @@ if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
             } else {
 
                 $item = $basket->createItem('catalog', $product_id);
-				$arFields = array(
+                $arFields = array(
                     'QUANTITY' => $product_quantity,
                     'CURRENCY' => CurrencyManager::getBaseCurrency(),
                     'LID' => Context::getCurrent()->getSite(),
                     'PRODUCT_PROVIDER_CLASS' => Basket::getDefaultProviderName(),
-                    'PRICE_TYPE_ID' => $price_id,				
-				);
-				
-                $item->setFields($arFields);
-				file_put_contents($_SERVER['DOCUMENT_ROOT'].'/_sale.txt', $price_id);
+                    'PRICE_TYPE_ID' => $price_id,
+                );
 
+                $item->setFields($arFields);
+                file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/_sale.txt', $price_id);
             }
+
             $basket->save();
-            $answer = $basket->count();
+            $answer['QUANTITY'] = round(array_sum($basket->getQuantityList()));
+            $answer['SUM_PRICE'] = round($basket->getPrice());
         }
     }
 }
