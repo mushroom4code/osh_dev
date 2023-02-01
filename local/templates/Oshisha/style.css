@@ -5752,7 +5752,7 @@ header {
     top: 11px;
 }
 
-.header-scroll .li_menu_header {
+.header-scroll .li_menu_header:not(.link_js) {
     margin: 20px 17px 20px 0;
 }
 
