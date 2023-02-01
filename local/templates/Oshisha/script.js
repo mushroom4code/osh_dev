@@ -349,7 +349,7 @@ $(document).ready(function () {
 
         function addToBasketEvent() {
             function appendLoader() {
-                $('.spanBasketTop').text('').attr('style', 'padding: 4px 8px;').append('' +
+                $('.spanBasketTop').text('').attr('style', 'padding: 8px;').append('' +
                     '<div class="loader"><div class="inner one"></div><div class="inner two">' +
                     '</div> <div class="inner three"></div></div>');
             }

@@ -109,6 +109,7 @@ $arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $FUser_id);
                 <div class="basket_top">
                     <?php if (!empty($cntBasketItems) && $cntBasketItems !== null && $cntBasketItems !== 0) { ?>
                         <span class="spanBasketTop"><?= $cntBasketItems ?></span>
+
                     <?php } ?>
                     <div class="basket_icon_basket"></div>
                 </div>

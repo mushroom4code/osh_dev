@@ -4373,8 +4373,8 @@ table#TableWorkers.no-footer {
 .loader {
     top: calc(50% - 8px);
     left: calc(50% - 8px);
-    width: 15px;
-    height: 15px;
+    width: 17px;
+    height: 17px;
     border-radius: 100%;
     perspective: 800px;
 }
