@@ -339,13 +339,14 @@ $(document).ready(function () {
 
         function addToBasketEvent() {
             function appendLoader() {
-                $('.spanBasketTop').text('').attr('style', 'padding: 4px 8px;').append('' +
+                $('.spanBasketTop').text('').attr('style', 'padding: 8px;').append('' +
                     '<div class="loader"><div class="inner one"></div><div class="inner two">' +
                     '</div> <div class="inner three"></div></div>');
             }
 
             if (!$('span').is('.spanBasketTop')) {
-                $('.basket_top').append('<span class="spanBasketTop"></span>');
+                $('.basket_top').append('<span class="spanBasketTop"></span>' +
+                    '<span class="font-12 font-weight-bold price_basket_top"></span>');
             }
             appendLoader();
             let product_id = $(this).attr('data-product_id'),
@@ -465,10 +466,12 @@ $(document).ready(function () {
 
 
         function deleteBasketItemTop(result) {
-            if (result !== '' && result !== 0) {
-                $('.spanBasketTop').attr('style', 'padding: 3px 6px;').text(result);
+            if (result.QUANTITY !== '' && result.QUANTITY !== 0) {
+                $('.spanBasketTop').attr('style', 'padding: 3px 6px;').text(result.QUANTITY);
+                $('.price_basket_top').text(result.SUM_PRICE + ' ₽');
             } else {
                 $('.spanBasketTop').remove();
+                $('.price_basket_top').remove();
             }
         }
 
@@ -510,7 +513,9 @@ $(document).ready(function () {
                             url: '/local/templates/Oshisha/include/add2basket.php',
                             data: 'product_data=' + JSON.stringify(product_data),
                             success: function (result) {
-                                deleteBasketItemTop(result);
+                                if(result.STATUS === 'success'){
+                                    deleteBasketItemTop(result);
+                                }
                             }
                         });
                         $(arItemsForDB).each(function (i, val) {
@@ -2719,3 +2724,20 @@ document.addEventListener('keyup', (e) => {
         }
     }
 });
+
+// top menu scroll
+
+if ($(window).width() > 1024) {
+    $(window).scroll(function () {
+        var appended = false;
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop > 0) {
+            if (!appended) {
+                $(document).find('header').addClass('header-scroll');
+                appended = true;
+            }
+        } else {
+            $(document).find('header').removeClass('header-scroll');
+        }
+    });
+}

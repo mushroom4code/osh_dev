@@ -66,10 +66,8 @@
                         'ajax': 'y',
                         'ajax_filter': 'y',
                         action: 'showMore',
-                        PAGEN_0: 1
+                        PAGER_BASE_LINK_ENABLE: 'Y'
                     };
-                    this.sendRequestRefreshCatalog(data);
-
                     history.pushState(
                         {
                             sort_by: data.sort_by,
@@ -78,6 +76,8 @@
                         '',
                         `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`,
                     );
+                    data['sort_request'] = `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`;
+                    this.sendRequestRefreshCatalog(data);
 
                     sortPanel.querySelector('.js__sort_orders_element').style.display = 'none';
                     sortPanel.querySelector('.sort_caption').textContent = currentValue.textContent;
@@ -257,6 +257,7 @@
                                 this.showAction(result, data);
                             }, this)
                         );
+                        this.processPagination(result.pagination);
                     }, this)
                 });
             },

@@ -1,4 +1,4 @@
-<?
+<?php
 /** @global \CMain $APPLICATION */
 define('STOP_STATISTICS', true);
 define('NOT_CHECK_PERMISSIONS', true);
@@ -83,34 +83,37 @@ if ($parameters)
 
 ob_start();
 //region Filter
-$APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", $template, array(
-    "IBLOCK_TYPE" => $parameters["IBLOCK_TYPE"],
-    "IBLOCK_ID" => $parameters["IBLOCK_ID"],
-    //TODO static parameters
-    "SECTION_ID" => $arCurSection['ID'],
-    "FILTER_NAME" => $parameters["FILTER_NAME"],
-    "PRICE_CODE" => $parameters["PRICE_CODE"],
-    "CACHE_TYPE" => $parameters["CACHE_TYPE"],
-    "CACHE_TIME" => $parameters["CACHE_TIME"],
-    "CACHE_GROUPS" => $parameters["CACHE_GROUPS"],
-    "SAVE_IN_SESSION" => "N",
-    "FILTER_VIEW_MODE" => $parameters["FILTER_VIEW_MODE"],
-    "XML_EXPORT" => "N",
-    "SECTION_TITLE" => "NAME",
-    "SECTION_DESCRIPTION" => "DESCRIPTION",
-    'HIDE_NOT_AVAILABLE' => $parameters["HIDE_NOT_AVAILABLE"],
-    "TEMPLATE_THEME" => $parameters["TEMPLATE_THEME"],
-    'CONVERT_CURRENCY' => $parameters['CONVERT_CURRENCY'],
-    'CURRENCY_ID' => $parameters['CURRENCY_ID'],
-    "SEF_MODE" => $parameters["SEF_MODE"],
-    //TODO static parameters
-    "SEF_RULE" => '/catalog/#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/',
-    "SMART_FILTER_PATH" => $parameters["VARIABLES"]["SMART_FILTER_PATH"],
-    "PAGER_PARAMS_NAME" => $parameters["PAGER_PARAMS_NAME"],
-    "INSTANT_RELOAD" => $parameters["INSTANT_RELOAD"],
-),
-                               null,
-                               array('HIDE_ICONS' => 'Y')
+$APPLICATION->IncludeComponent(
+    "bitrix:catalog.smart.filter",
+    $template,
+    array(
+        "IBLOCK_TYPE" => $parameters["IBLOCK_TYPE"],
+        "IBLOCK_ID" => $parameters["IBLOCK_ID"],
+        //TODO static parameters
+        "SECTION_ID" => $arCurSection['ID'],
+        "FILTER_NAME" => $parameters["FILTER_NAME"],
+        "PRICE_CODE" => $parameters["PRICE_CODE"],
+        "CACHE_TYPE" => $parameters["CACHE_TYPE"],
+        "CACHE_TIME" => $parameters["CACHE_TIME"],
+        "CACHE_GROUPS" => $parameters["CACHE_GROUPS"],
+        "SAVE_IN_SESSION" => "N",
+        "FILTER_VIEW_MODE" => $parameters["FILTER_VIEW_MODE"],
+        "XML_EXPORT" => "N",
+        "SECTION_TITLE" => "NAME",
+        "SECTION_DESCRIPTION" => "DESCRIPTION",
+        'HIDE_NOT_AVAILABLE' => $parameters["HIDE_NOT_AVAILABLE"],
+        "TEMPLATE_THEME" => $parameters["TEMPLATE_THEME"],
+        'CONVERT_CURRENCY' => $parameters['CONVERT_CURRENCY'],
+        'CURRENCY_ID' => $parameters['CURRENCY_ID'],
+        "SEF_MODE" => $parameters["SEF_MODE"],
+        //TODO static parameters
+        "SEF_RULE" => '/catalog/#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/',
+        "SMART_FILTER_PATH" => $parameters["VARIABLES"]["SMART_FILTER_PATH"],
+        "PAGER_PARAMS_NAME" => $parameters["PAGER_PARAMS_NAME"],
+        "INSTANT_RELOAD" => $parameters["INSTANT_RELOAD"],
+    ),
+    null,
+    array('HIDE_ICONS' => 'Y')
 );
 ob_get_contents();
 //endregion
@@ -124,7 +127,7 @@ if (!empty($staticFilter)) {
 }
 
 if( isset($_REQUEST['PAGER_BASE_LINK_ENABLE'])){
-    $parameters['PAGER_BASE_LINK'] = $_REQUEST['PAGER_BASE_LINK'];
+    $parameters['PAGER_BASE_LINK'] = $_REQUEST['sort_request'] ?? $_REQUEST['PAGER_BASE_LINK'];
     $parameters['PAGER_BASE_LINK_ENABLE'] = $_REQUEST['PAGER_BASE_LINK_ENABLE'];
 }
 

@@ -655,7 +655,7 @@ h3.ctweb-title {
 
 .ctweb-smsauth-menu-block:not(.profile) {
     left: calc(50% - 134px);
-    top: 20%;
+    top: 27vh;
     position: fixed !important;
 }
 .ctweb-smsauth-menu-form.profile {

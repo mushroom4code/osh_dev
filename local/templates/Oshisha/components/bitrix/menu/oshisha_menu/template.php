@@ -97,7 +97,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         <!--                <span class="text_catalog_link">Акции</span>-->
         <!--            </a>-->
         <!--        </li>		-->
-        <div class="open_menu" id="main_menu">
+        <div class="open_menu" style="display: none" id="main_menu">
             <div class="parent_menu"></div>
             <div class="menu_items hide"></div>
         </div>
