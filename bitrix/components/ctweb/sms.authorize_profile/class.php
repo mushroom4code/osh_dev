@@ -141,7 +141,7 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
 
         if ($this->isPost() && $this->request['method']===self::METHOD_REUSE_CODE) {
             if ($this->manager->isTimeReused()) {
-                $this->actionStepPhoneWaiting($isAjaxRequest);
+                $this->actionStepPhoneWaiting($isAjaxRequest, false);
             }
         }
         elseif ($this->manager->isTimeExpired()) {
@@ -190,12 +190,12 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
         }
     }
 
-    private function actionStepPhoneWaiting($isAjaxRequest = false)
+    private function actionStepPhoneWaiting($isAjaxRequest = false, $capthca_check = true)
     {
         global $APPLICATION;
         if ($this->isPost() && $this->request['method'] != self::METHOD_CHANGE_PHONE) {
 //            $use_captcha = COption::GetOptionString("b01110011.recaptcha");
-            if ($this->arResult['USE_CAPTCHA'] == "Y") {
+            if ($this->arResult['USE_CAPTCHA'] == "Y" && $capthca_check) {
                 if (!$this->CaptchaCheckToken()) {
                     $this->manager->addError(self::ERROR_CAPTCHA_WRONG);
                     return;

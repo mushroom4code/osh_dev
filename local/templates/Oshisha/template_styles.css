@@ -429,18 +429,22 @@ a:hover,
         position: absolute;
     }
 
-    .get_code_button {
+    .get_code_button:not(.profile) {
         display: flex !important;
         padding: 6px 22px !important;
         height: auto !important;
         font-size: 12px;
     }
 
+    .get_code_button.profile {
+        margin-left:6px;
+    }
+
     .ctweb-label {
         font-size: 10px;
     }
 
-    .auth_code {
+    .auth_code:not(.profile) {
         font-size: 13px;
         border: none;
     }

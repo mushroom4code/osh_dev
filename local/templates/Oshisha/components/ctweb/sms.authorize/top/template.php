@@ -86,7 +86,7 @@ $jsParams = array(
                                 <label class="ctweb-label"
                                        for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                 <span id="flag"></span>
-                                <input type="text" name="PHONE" placeholder="Введите номер"
+                                <input type="text" name="PHONE" placeholder="+7 (___)-___-____"
                                        value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
                                        class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
                                        autocomplete="off"/>
