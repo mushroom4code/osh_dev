@@ -12,10 +12,13 @@ BX.SaleCommonPVZ = {
     pvzAddress: null,
     pvzFullAddress: null,
     pvzPrice: null,
+    isInit: false,
 
     init: function (params) {
         console.log('... CommonPVZ init ...');
+        this.params = params.params;
         this.refresh();
+        this.isInit = true;
     },
 
     openMap: function () {
@@ -26,7 +29,7 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         var __this = this;
-        var adr = $('[name="ORDER_PROP_76"]').length ? $('[name="ORDER_PROP_76"]') : $('[name="ORDER_PROP_77"]');
+        var adr = $('[name="ORDER_PROP_'+__this.params.arPropsAddr[1]+'"]') || $('[name="ORDER_PROP_'+__this.params.arPropsAddr[0]+'"]');
         if (__this.pvzFullAddress) {
             adr.val(__this.pvzFullAddress)
         }
@@ -172,7 +175,20 @@ BX.SaleCommonPVZ = {
             else
                 __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
 
-            BX.ajax({
+            var dataToHandler = {
+                action: 'getPrice',
+                code_city: __this.curCityCode,
+                delivery: obj.properties.deliveryName,
+                to: obj.properties.fullAddress,
+                weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
+                fivepost_zone: obj.properties.fivepostZone,
+                hubregion: obj.properties.hubregion,
+                name_city: __this.curCityName
+            };
+            __this.refresh();
+            __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
+
+            /*BX.ajax({
                 url: __this.ajaxUrlPVZ,
                 method: 'POST',
                 data: {
@@ -195,13 +211,14 @@ BX.SaleCommonPVZ = {
                         reqData.error = 'Ошибка запроса стоимости доставки ' + obj.properties.deliveryName + ' !';
                     }
 
+                    __this.refresh();
                     __this.sendRequestToComponent('refreshOrderAjax', reqData);
                 }, this),
                 onfailure: BX.delegate(function () {
                     BX.Sale.OrderAjaxComponent.showError(BX.Sale.OrderAjaxComponent.mainErrorsNode, 'Ошибка запроса стоимости доставки!');
                     console.warn('error get price delivery');
                 }),
-            });
+            });*/
         });
     },
 
@@ -234,7 +251,7 @@ BX.SaleCommonPVZ = {
             via_ajax: 'Y',
             SITE_ID: BX.Sale.OrderAjaxComponent.siteId,
             signedParamsString: BX.Sale.OrderAjaxComponent.signedParamsString,
-            price: actionData.price
+            dataToHandler: actionData
         };
 
         data[BX.Sale.OrderAjaxComponent.params.ACTION_VARIABLE] = action;

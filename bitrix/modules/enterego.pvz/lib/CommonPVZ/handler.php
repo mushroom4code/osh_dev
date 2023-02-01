@@ -2,8 +2,9 @@
 
 namespace Sale\Handlers\Delivery;
 
-use \Bitrix\Main\Localization\Loc;
-use \Bitrix\Sale\Delivery\CalculationResult;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Sale\Delivery\CalculationResult;
+use CommonPVZ\DeliveryHelper;
 
 Loc::loadMessages(__FILE__);
 
@@ -34,14 +35,22 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
     protected function calculateConcrete(\Bitrix\Sale\Shipment $shipment)
     {
         $result = new \Bitrix\Sale\Delivery\CalculationResult();
+        $price = 0;
 
-        if (isset($_POST['price'])) {
-            $_SESSION['CommonPVZ']['pricePVZ'] = $_POST['price'];
+        $order = $shipment->getCollection()->getOrder();
+        $propertyCollection = $order->getPropertyCollection();
+        $adressProperty = $propertyCollection->getAddress();
+
+        if (isset($_POST['dataToHandler'])) {
+            $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
+            $price = DeliveryHelper::getPrice($_POST['dataToHandler']);
+        } else {
+            $adr = $adressProperty->getValue();
         }
 
-        $price = $_SESSION['CommonPVZ']['pricePVZ'] ?? 0;
+        $adressProperty->setValue($adr ?? '');
 
-        $result->setDescription(\CommonPVZ\DeliveryHelper::getButton());
+        $result->setDescription(DeliveryHelper::getButton());
         $result->setDeliveryPrice(
             roundEx(
                 $price,
