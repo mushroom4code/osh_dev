@@ -263,8 +263,7 @@ function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
 
 }
 
-require(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
-
+require_once(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
 /**
  * @return string
  */
