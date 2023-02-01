@@ -96,12 +96,13 @@
                 this.obState.value = STATE_PHONE_WAITING;
             }
             let phone = this.formatPhoneNumber(this.obPhone.value, false);
-            let phoneMask = new BX.MaskedInput({
-                mask: '+7 (999) 999-99-99', // устанавливаем маску
-                input: this.obPhone,
-                placeholder: '_' // символ замены +7 ___ ___ __ __
-            });
-            phoneMask.setValue(phone);
+            $(this.obPhone).mask("+7 999 999 99 99");
+            // let phoneMask = new BX.MaskedInput({
+            //     mask: '+7 (999) 999-99-99', // устанавливаем маску
+            //     input: this.obPhone,
+            //     placeholder: '_' // символ замены +7 ___ ___ __ __
+            // });
+            // phoneMask.setValue(phone);
         }
         if (this.obState) {
             this.setState(this.obState.value);

@@ -5,10 +5,12 @@
 use Bitrix\Main\Page\Asset;
 use \Ctweb\SMSAuth\Manager;
 
-CJSCore::Init(['masked_input']);
+
 
 Asset::getInstance()->addJS("https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js");
 Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
+
+CJSCore::Init(['masked_input']);
 
 $mainID = $this->GetEditAreaId('');
 $jsParams = array(
@@ -86,7 +88,7 @@ $jsParams = array(
                                 <label class="ctweb-label"
                                        for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                 <span id="flag"></span>
-                                <input type="text" name="PHONE" placeholder="+7 (___)-___-____"
+                                <input type="text" name="PHONE" placeholder="+7 ___ ___ __ __"
                                        value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
                                        class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
                                        autocomplete="off"/>
