@@ -2208,8 +2208,8 @@ input.check_input {
 
 .basket_icon_basket, .basket_icon_personal {
     background-repeat: no-repeat;
-    min-width: 21px;
-    min-height: 21px;
+    min-width: 19px;
+    min-height: 19px;
 }
 
 .progress-bar-wrapper {
