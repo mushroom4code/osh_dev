@@ -33,13 +33,24 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
      */
     protected function calculateConcrete(\Bitrix\Sale\Shipment $shipment)
     {
-        $result = new \Bitrix\Sale\Delivery\CalculationResult();
+        $adr = '';
+        $price = 0;
 
-        if (isset($_POST['price'])) {
-            $_SESSION['CommonPVZ']['pricePVZ'] = $_POST['price'];
+        $order = $shipment->getCollection()->getOrder();
+        $propertyCollection = $order->getPropertyCollection();
+        $adressProperty = $propertyCollection->getAddress();
+
+        if(isset($_POST['dataToHandler'])) {
+            $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
+            $price = \CommonPVZ\DeliveryHelper::getPrice($_POST['dataToHandler']);
+        } else {
+            $adr = $adressProperty->getValue();
         }
 
-        $price = $_SESSION['CommonPVZ']['pricePVZ'] ?? 0;
+
+        $adressProperty->setValue($adr);
+
+        $result = new \Bitrix\Sale\Delivery\CalculationResult();
 
         $result->setDescription(\CommonPVZ\DeliveryHelper::getButton());
         $result->setDeliveryPrice(

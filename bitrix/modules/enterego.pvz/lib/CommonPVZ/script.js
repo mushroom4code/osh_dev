@@ -26,10 +26,8 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         var __this = this;
+        // TODO
         var adr = $('[name="ORDER_PROP_76"]').length ? $('[name="ORDER_PROP_76"]') : $('[name="ORDER_PROP_77"]');
-        if (__this.pvzFullAddress) {
-            adr.val(__this.pvzFullAddress)
-        }
         adr.attr('readonly', 'readonly');
 
         BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
@@ -172,36 +170,17 @@ BX.SaleCommonPVZ = {
             else
                 __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
 
-            BX.ajax({
-                url: __this.ajaxUrlPVZ,
-                method: 'POST',
-                data: {
-                    'action': 'getPrice',
-                    code_city: __this.curCityCode,
-                    delivery: obj.properties.deliveryName,
-                    to: obj.properties.fullAddress,
-                    weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
-                    fivepost_zone: obj.properties.fivepostZone,
-                    hubregion: obj.properties.hubregion,
-                    name_city: __this.curCityName
-                },
-                onsuccess: BX.delegate(function (result) {
-                    result = JSON.parse(result);
-                    var reqData = {};
-
-                    __this.pvzPrice = parseInt(result) || 0;
-                    reqData.price = __this.pvzPrice;
-                    if (!result) {
-                        reqData.error = 'Ошибка запроса стоимости доставки ' + obj.properties.deliveryName + ' !';
-                    }
-
-                    __this.sendRequestToComponent('refreshOrderAjax', reqData);
-                }, this),
-                onfailure: BX.delegate(function () {
-                    BX.Sale.OrderAjaxComponent.showError(BX.Sale.OrderAjaxComponent.mainErrorsNode, 'Ошибка запроса стоимости доставки!');
-                    console.warn('error get price delivery');
-                }),
-            });
+            var dataToHandler = {
+                action: 'getPrice',
+                code_city: __this.curCityCode,
+                delivery: obj.properties.deliveryName,
+                to: obj.properties.fullAddress,
+                weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
+                fivepost_zone: obj.properties.fivepostZone,
+                hubregion: obj.properties.hubregion,
+                name_city: __this.curCityName
+            };
+            __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
         });
     },
 
@@ -234,7 +213,7 @@ BX.SaleCommonPVZ = {
             via_ajax: 'Y',
             SITE_ID: BX.Sale.OrderAjaxComponent.siteId,
             signedParamsString: BX.Sale.OrderAjaxComponent.signedParamsString,
-            price: actionData.price
+            dataToHandler: actionData
         };
 
         data[BX.Sale.OrderAjaxComponent.params.ACTION_VARIABLE] = action;
