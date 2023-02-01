@@ -112,7 +112,7 @@ $option = $option_site; ?>
                          <a href="/about/feedback/" class="text_link_footer">Обратная связь</a>
                     </span>
                     <span class="li_link_footer ">
-                         <a href="javascript:void(0)" class="callback text_link_footer">Обратный звонок</a>
+                         <a href="javascript:void(0)" class="callback js__callback text_link_footer">Обратный звонок</a>
                     </span>
 
                     <span class="li_link_footer">
