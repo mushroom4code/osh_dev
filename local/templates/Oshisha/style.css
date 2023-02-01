@@ -70,8 +70,7 @@ a.link_header:hover *, .text_link_footer, .product-item__favorite-star, .btn_bas
 .box_with_loginBasket, .mobile_lk, .box_with_properties, .box_with_news, .box_for_banner_footer, .banners_container,
 .main_menu, .title_home, .title_footer, .box_with_brands_parents, .header_box_logo, .flex_header, .box_with_titles,
 .sort-panel__view-buttons-list, .view-buttons-list, .box_with_prod, .box_left_header, .box_right_header,
-.header_top_panel, .ul_menu, .box_with_tags, .link_menu_header_catalog, .box_with_icons,
-.box_with_input {
+.header_top_panel, .ul_menu, .box_with_tags, .link_menu_header_catalog, .box_with_icons, .box_with_input {
     display: flex;
     flex-direction: row;
 }
@@ -308,7 +307,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .box_with_basket_login {
-    margin-left: 35px;
+    margin-left: 30px;
 }
 
 .box_with_banner_dop {
@@ -538,8 +537,8 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .btn_search {
-    height: 54%;
-    width: 2%;
+    height: 23px;
+    width: 23px;
 }
 
 .basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search {
@@ -637,6 +636,10 @@ div.column > div > input.input_chat:focus, #boxWithCompanyChecked .form-check-in
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+.block_menu_mobile {
+    display: flex;
+    align-items: center;
+}
 
 div.left-menu, .box_with_company {
     padding: 30px;
@@ -717,8 +720,8 @@ div.left-menu, .box_with_company {
     color: white !important;
     padding: 2px 5px;
     border-radius: 50%;
-    top: -3px;
-    right: 3px;
+    top: 3px;
+    right: -5px;
     min-width: 16px;
     text-align: center;
 }
@@ -923,7 +926,7 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
 }
 
 .catalog-section-list-item-link > i, .link_header > .icon_header {
-    font-size: 17px;
+    font-size: 21px;
 }
 
 .font_18, .by-line:not(.opt) a.bx_catalog_item_title {
@@ -1228,8 +1231,8 @@ div > div.card-body {
 }
 
 .btn_search {
-    margin-left: 12px;
-    margin-top: 7px;
+    margin-left: 7px;
+    margin-top: 11px;
 }
 
 .btn_search:focus, .sidebar_inform a, .btn_search, .search_input, input.basket_input:focus,
@@ -1576,6 +1579,7 @@ span > i.header_icon {
     top: 58px;
     z-index: 10000;
     max-width: 1270px;
+    min-width: 1000px;
 }
 
 .box_with_menu_header .ul_menu {
@@ -2192,13 +2196,20 @@ input.check_input {
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
     background-position: center;
     background-repeat: no-repeat;
+}
+
+.box_with_404, .select2-container--default .select2-selection--single .select2-selection__arrow b {
     background-size: auto;
 }
 
 .basket_icon_basket, .basket_icon_personal {
+    background-size: contain;
+}
+
+.basket_icon_basket, .basket_icon_personal {
     background-repeat: no-repeat;
-    min-width: 26px;
-    min-height: 25px;
+    min-width: 21px;
+    min-height: 21px;
 }
 
 .progress-bar-wrapper {
@@ -2895,7 +2906,7 @@ label.radio_input {
 
 @media (min-width: 1340px) and (max-width: 1440px) {
     .box_with_search {
-        width: 685px;
+        width: 537px;
     }
 
     .bx-touch .product-item {
@@ -2960,7 +2971,7 @@ label.radio_input {
     }
 
     .box_with_search {
-        width: 400px;
+        width: 305px;
     }
 
     .text_header_menu > span {
@@ -5695,4 +5706,45 @@ li, ul {
     cursor: pointer;
     top: -5px;
     right: -5px;
+}
+
+/* MENU SCROLL */
+header {
+    transition: 0.7s;
+}
+
+.header-scroll {
+    z-index: 100000;
+    position: fixed;
+    filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
+    width: 100%;
+    transition: 0.7s;
+    background-color: white;
+}
+
+.header-scroll .box_left_header {
+    display: none;
+}
+
+.header-scroll > .container_header {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.header-scroll .overlay_top {
+    position: absolute;
+    min-height: 100vh;
+}
+
+.header-scroll .header_box_logo, .header-scroll .box_right_header {
+    width: 100%;
+}
+
+.header-scroll .header_box_logo {
+    margin-top: 0;
+}
+
+.header-scroll .spanBasketTop {
+    top: 18px;
 }

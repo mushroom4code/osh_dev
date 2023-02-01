@@ -45,7 +45,6 @@ $arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $FUser_id);
 
                 <a class="link_header" <?= $class_width ?> href="<?= $arParams['PATH_TO_PROFILE'] ?>">
                     <div class="basket_icon_personal"></div>
-                    <span><?= htmlspecialcharsbx($newName[0]) ?></span>
                 </a>
 
             <?php else:
@@ -79,9 +78,6 @@ $arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $FUser_id);
             ?>
                 <a class="link_header link_header_box" href="#">
                     <div class="basket_icon_personal"></div>
-                    <span>
-                     <?= GetMessage('TSB1_LOGIN') ?>
-                    </span>
                 </a>
 
                 <?php $APPLICATION->IncludeComponent(
@@ -105,7 +101,6 @@ $arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $FUser_id);
     <div class="box_with_basket_login">
         <a href="/personal/subscribe/" id="personal_subscribe" class="link_header link_lk">
             <i class="fa fa-star-o icon_header" aria-hidden="true"></i>
-            <span>Избранное</span>
 			<?if( $arUserLike['USER']['NUM'] > 0):?>
 			<span class="spanLikeTop"><?=$arUserLike['USER']['NUM']?></span> 
 			<?endif;?>
@@ -119,19 +114,12 @@ $arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $FUser_id);
                     <?php } ?>
                     <div class="basket_icon_basket"></div>
                 </div>
-
-                <span>
-                   <?= GetMessage('TSB1_CART') ?>
-               </span>
             </a>
             <?php
         if ($arParams['SHOW_PERSONAL_LINK'] == 'Y'):?>
             <div class="box_with_basket_login">
                 <a href="<?= $arParams['PATH_TO_PERSONAL'] ?>" class="link_header">
                     <div class="basket_icon_basket"></div>
-                    <span>
-                       <?= GetMessage('TSB1_PERSONAL') ?>
-                   </span>
                 </a>
             </div>
         <?php endif ?>

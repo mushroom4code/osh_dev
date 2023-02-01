@@ -2768,3 +2768,20 @@ document.addEventListener('keyup', (e) => {
         }
     }
 });
+
+// top menu scroll
+
+if ($(window).width() > 1024) {
+    $(window).scroll(function () {
+        var appended = false;
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop > 0) {
+            if (!appended) {
+                $(document).find('header').addClass('header-scroll');
+                appended = true;
+            }
+        } else {
+            $(document).find('header').removeClass('header-scroll');
+        }
+    });
+}
