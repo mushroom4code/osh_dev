@@ -93,9 +93,7 @@ $arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $FUser_id);
     <?php endif ?>
     <div class="box_with_basket_login mobile">
         <a href="/catalog/" class="link_header link_header_catalog">
-            <div class="span_bar icon_header">
-            </div>
-            <span>Каталог</span>
+            <div class="span_bar icon_header"></div>
         </a>
     </div>
     <div class="box_with_basket_login">
