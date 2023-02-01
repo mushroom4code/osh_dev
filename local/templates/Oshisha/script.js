@@ -526,7 +526,9 @@ $(document).ready(function () {
                             url: '/local/templates/Oshisha/include/add2basket.php',
                             data: 'product_data=' + JSON.stringify(product_data),
                             success: function (result) {
-                                deleteBasketItemTop(result);
+                                if(result.STATUS === 'success'){
+                                    deleteBasketItemTop(result);
+                                }
                             }
                         });
                         $(arItemsForDB).each(function (i, val) {

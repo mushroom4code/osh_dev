@@ -1,5 +1,4 @@
-<?php
-require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Catalog\Product\Basket;
@@ -8,7 +7,7 @@ use Bitrix\Main\Context;
 use Bitrix\Sale;
 use Bitrix\Sale\Fuser;
 
-$answer['QUANTITY'] = 0;
+$answer = ['QUANTITY' => 0, 'SUM_PRICE' => 0, 'STATUS' => ''];
 
 if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
     CModule::IncludeModule("catalog")) {
@@ -34,7 +33,6 @@ if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
             );
             $resU = CIBlockElement::GetList(array(), $arFilter, false, false, array('PROPERTY_USE_DISCOUNT'));
             while ($rProd = $resU->Fetch()) {
-                //
                 $useDiscount = $rProd['PROPERTY_USE_DISCOUNT_VALUE'];
             }
 
@@ -62,13 +60,13 @@ if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
                 );
 
                 $item->setFields($arFields);
-                file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/_sale.txt', $price_id);
             }
 
             $basket->save();
-            $answer['QUANTITY'] = round(array_sum($basket->getQuantityList()));
-            $answer['SUM_PRICE'] = round($basket->getPrice());
         }
+        $answer['QUANTITY'] = round(array_sum($basket->getQuantityList()));
+        $answer['SUM_PRICE'] = round($basket->getPrice());
+        $answer['STATUS'] = 'success';
     }
 }
 

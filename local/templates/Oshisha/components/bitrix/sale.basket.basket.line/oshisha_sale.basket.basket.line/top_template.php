@@ -103,6 +103,11 @@ while ($arItems = $cntBasketItems->Fetch()) {
             <div class="span_bar icon_header"></div>
         </a>
     </div>
+    <div class="box_with_basket_login d-flex align-items-center d-lg-none d-md-none font-20">
+        <a href="/diskont/" class="link_header link_header_catalog">
+            <div class="icon_header font-20"><i class="fa fa-percent" aria-hidden="true"></i></div>
+        </a>
+    </div>
     <div class="box_with_basket_login">
         <a href="/personal/subscribe/" id="personal_subscribe" class="link_header link_lk">
             <i class="fa fa-star-o icon_header" aria-hidden="true"></i>
