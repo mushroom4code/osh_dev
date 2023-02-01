@@ -285,8 +285,21 @@ $option = $option_site; ?>
                 <form method="POST" class="callback_form">
                     <input type="hidden" name="recaptcha_token" value="">
 
-                    <input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
-                    <div class="er_CALLBACK_PHONE"></div>
+                    <div class="form-group mb-3">
+                        <input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
+                        <div class="er_CALLBACK_PHONE error_field js__error_field"></div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-control input_lk" style="height: auto">
+                            <input name="confirm" type="checkbox" checked="checked">
+                            <span class="custom__title">Подтверждаю свое согласие с
+                                <a href="/about/politics/" target="_blank">положением об обработке персональных данных</a>
+                            </span>
+                        </label>
+                        <div class="er_FORM_CONFIRM error_field js__error_field"></div>
+                    </div>
+
                     <div class="submit-wrap">
                         <input type=submit class="btn btn-submit" value="Отправить"
                                onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">

@@ -168,11 +168,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <?php } else { ?>
                         <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
-                    <a href="/about/contacts/" class="text_header">Контакты</a>
+                        <a href="/about/contacts/" class="text_header">Контакты</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
                     <?php } ?>
-                    <a href="javascript:void(0)" class="text_header callback">Обратный звонок</a>
+                        <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
                     <?php } else { ?>
