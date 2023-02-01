@@ -28,7 +28,7 @@ $cntBasketItems = CSaleBasket::GetList(
         "ORDER_ID" => "NULL"
     ),
     false, false,
-    array('QUANTITY', 'ORDER_PRICE', 'SUM_PRICE')
+    array('QUANTITY', 'SUM_PRICE')
 );
 
 $arBasket = [];
