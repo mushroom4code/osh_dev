@@ -7,17 +7,23 @@ function updateMinSortPrice()
         ['IBLOCK_ID' => IBLOCK_CATALOG],
         false,
         false,
-        ['ID', CATALOG_BASE_PRICE, CATALOG_STOCK_PRICE, SORT_PRICE_PROPERTY, IS_DISCOUNT_PROPERTY]
+        [
+            'ID',
+            'CATALOG_PRICE_' . CATALOG_BASE_PRICE,
+            'CATALOG_PRICE_' . CATALOG_STOCK_PRICE,
+            'PROPERTY_' . SORT_PRICE,
+            'PROPERTY_' . IS_DISCOUNT
+        ]
     );
 
     while ($product = $products->Fetch()) {
         $id = (int)$product['ID'];
-        $basePrice = (int)$product[CATALOG_BASE_PRICE] ?? 0;
-        $stockPrice = (int)$product[CATALOG_STOCK_PRICE] ?? 0;
-        $currSortPrice = (int)$product[SORT_PRICE_PROPERTY_VALUE] ?? 0;
+        $basePrice = (int)$product['CATALOG_PRICE_' . CATALOG_BASE_PRICE] ?? 0;
+        $stockPrice = (int)$product['CATALOG_PRICE_' . CATALOG_STOCK_PRICE] ?? 0;
+        $currSortPrice = (int)$product['PROPERTY_' . SORT_PRICE . '_VALUE'] ?? 0;
         $sortPrice = $basePrice;
 
-        if ($product[IS_DISCOUNT_VALUE] == "Да") {
+        if ($product['PROPERTY_' . IS_DISCOUNT . '_VALUE'] == "Да") {
             $sortPrice = $stockPrice ?? $sortPrice;
         }
 
@@ -30,7 +36,7 @@ function updateMinSortPrice()
                 $id,
                 IBLOCK_CATALOG,
                 [
-                    SORT_PRICE_CODE => $sortPrice
+                    SORT_PRICE => $sortPrice
                 ]
             );
         }
