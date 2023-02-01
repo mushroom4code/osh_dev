@@ -104,7 +104,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
         </a>
     </div>
     <div class="box_with_basket_login d-flex align-items-center d-lg-none d-md-none font-20">
-        <a href="/diskont/" class="link_header link_header_catalog">
+        <a href="/diskont/" class="link_header">
             <div class="icon_header font-20"><i class="fa fa-percent" aria-hidden="true"></i></div>
         </a>
     </div>
