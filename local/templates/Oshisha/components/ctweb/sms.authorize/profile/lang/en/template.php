@@ -32,6 +32,8 @@ $MESS["SMS_AUTH_ERROR_CODE_ALREADY_SENT"] = "Code is already sent";
 $MESS["SMS_AUTH_ERROR_CODE_EMPTY"] = "Code is empty";
 $MESS["SMS_AUTH_ERROR_PHONE_SHORT_LENGTH"] = "Phone number is too short";
 $MESS["SMS_AUTH_ERROR_PHONE_USER_EXISTS"] = "User with this phone number already exists";
+$MESS["SMS_AUTH_ERROR_PHONE_EXISTS_TITLE"] = "Номер телефона занят";
+$MESS["SMS_AUTH_ERROR_PHONE_EXISTS_TEXT"] = "К сожалению, этот номер телефона уже используется";
 $MESS["SMS_AUTH_ERROR_CODE_NOT_CORRECT_TITLE"] = "Введен неверный проверочный код";
 $MESS["SMS_AUTH_ERROR_CODE_NOT_CORRECT_TEXT"] = "К сожалению, введен неверный код. Попробуйте еще раз или запросите код повторно";
 $MESS["SMS_AUTH_ERROR_TIME_EXPIRED_TITLE"] = "Время действия кода истекло";
@@ -40,6 +42,9 @@ $MESS["SMS_AUTH_ERROR_TIME_EXPIRED"] = "Time is over";
 $MESS["SMS_AUTH_ERROR_USER_NOT_CHOOSED"] = "User is not selected";
 $MESS["SMS_AUTH_ERROR_UNKNOWN_ERROR"] = "Unknown error";
 $MESS["SMS_AUTH_ERROR_CAPTCHA_WRONG"] = "Wrong captcha";
+
+$MESS["SMS_AUTH_ERROR_CAPTCHA_WRONG_TITLE"] = "Неверная каптча";
+$MESS["SMS_AUTH_ERROR_CAPTCHA_WRONG_TEXT"] = "Проверка каптчи не пройдена";
 
 $MESS["CAPTCHA_REGF_PROMT"] = "Enter word from image";
 ?>

@@ -86,9 +86,10 @@ $arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $FUser_id);
 
                 <?php $APPLICATION->IncludeComponent(
                     "ctweb:sms.authorize",
-                    "top",
+                    "profile",
                     array(
-                        "ALLOW_MULTIPLE_USERS" => "Y"
+                        "ALLOW_MULTIPLE_USERS" => "Y",
+                        "PROFILE_AUTH" => "N"
                     )
                 ); ?>
 
