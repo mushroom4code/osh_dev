@@ -194,13 +194,13 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
         global $APPLICATION;
         if ($this->isPost() && $this->request['method'] != self::METHOD_CHANGE_PHONE) {
             // check captcha
-//            $use_captcha = COption::GetOptionString("b01110011.recaptcha", "registration_enable_s1");
-//            if ($this->arResult["USE_CAPTCHA"] == "Y" && $captcha_check) {
-//                if (!$this->CaptchaCheckToken()) {
-//                    $this->manager->addError(self::ERROR_CAPTCHA_WRONG);
-//                    return;
-//                }
-//            }
+            $use_captcha = COption::GetOptionString("b01110011.recaptcha", "registration_enable_s1");
+            if ($this->arResult["USE_CAPTCHA"] == "Y" && $captcha_check) {
+                if (!$this->CaptchaCheckToken()) {
+                    $this->manager->addError(self::ERROR_CAPTCHA_WRONG);
+                    return;
+                }
+            }
 
             $this->setSessionField('IS_AJAX_POST', $isAjaxRequest);
 
