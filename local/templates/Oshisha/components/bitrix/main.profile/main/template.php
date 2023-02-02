@@ -83,8 +83,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
 							<?endif;?>
                         </div>
 						<div class="info-date">
-						В день рождения вам будут доступны персональные скидки»<br>
-						Смена дня рождения доступна не чаще одногораза в год
+						В день рождения вам будут доступны персональные скидки<br>
+						Смена дня рождения доступна не чаще одного раза в год
 						<?=$dateChange?>
 						</div>
                     </div>
