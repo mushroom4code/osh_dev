@@ -2,6 +2,7 @@
 
 namespace Sale\Handlers\Delivery;
 
+use Bitrix\Main\Data\Cache;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale\Delivery\CalculationResult;
 use CommonPVZ\DeliveryHelper;
@@ -40,15 +41,23 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
         $order = $shipment->getCollection()->getOrder();
         $propertyCollection = $order->getPropertyCollection();
         $adressProperty = $propertyCollection->getAddress();
+        $cache = Cache::createInstance();
+        $cachePath = '/getAllPVZprices';
 
         if (isset($_POST['dataToHandler'])) {
             $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
             $price = DeliveryHelper::getPrice($_POST['dataToHandler']);
+            $cache->startDataCache(7200, 'pvz_price_' . $adr, $cachePath);
+            $cache->endDataCache($price);
         } else {
             $adr = $adressProperty->getValue();
         }
 
-        $adressProperty->setValue($adr ?? '');
+        if ($price === 0) {
+            if ($cache->initCache(7200, 'pvz_price_' . $adr, $cachePath)) {
+                $price = $cache->getVars();
+            }
+        }
 
         $result->setDescription(DeliveryHelper::getButton());
         $result->setDeliveryPrice(

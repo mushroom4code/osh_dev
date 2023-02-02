@@ -20,7 +20,6 @@ class FivePostDelivery extends CommonPVZ
 
         try {
             if (!empty(\COption::GetOptionString('ipol.fivepost', 'apiKey'))) {
-                //$fipostClient = new LapayGroup\FivePostSdk\Client('api-key', 60, \LapayGroup\FivePostSdk\Client::API_URI_TEST);
                 $resultPVZ = \Enterego\EnteregoDBDelivery::getPoints5postForALLMap($code_city);
             }
         } catch (\Exception $e) {

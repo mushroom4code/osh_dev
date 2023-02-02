@@ -13,6 +13,7 @@ BX.SaleCommonPVZ = {
     pvzFullAddress: null,
     pvzPrice: null,
     isInit: false,
+    dataPVZ: null,
 
     init: function (params) {
         console.log('... CommonPVZ init ...');
@@ -29,7 +30,7 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         var __this = this;
-        var adr = $('[name="ORDER_PROP_'+__this.params.arPropsAddr[1]+'"]') || $('[name="ORDER_PROP_'+__this.params.arPropsAddr[0]+'"]');
+        var adr = $('[name="ORDER_PROP_' + __this.params.arPropsAddr[1] + '"]') || $('[name="ORDER_PROP_' + __this.params.arPropsAddr[0] + '"]');
         if (__this.pvzFullAddress) {
             adr.val(__this.pvzFullAddress)
         }
@@ -187,38 +188,6 @@ BX.SaleCommonPVZ = {
             };
             __this.refresh();
             __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
-
-            /*BX.ajax({
-                url: __this.ajaxUrlPVZ,
-                method: 'POST',
-                data: {
-                    'action': 'getPrice',
-                    code_city: __this.curCityCode,
-                    delivery: obj.properties.deliveryName,
-                    to: obj.properties.fullAddress,
-                    weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
-                    fivepost_zone: obj.properties.fivepostZone,
-                    hubregion: obj.properties.hubregion,
-                    name_city: __this.curCityName
-                },
-                onsuccess: BX.delegate(function (result) {
-                    result = JSON.parse(result);
-                    var reqData = {};
-
-                    __this.pvzPrice = parseInt(result) || 0;
-                    reqData.price = __this.pvzPrice;
-                    if (!result) {
-                        reqData.error = 'Ошибка запроса стоимости доставки ' + obj.properties.deliveryName + ' !';
-                    }
-
-                    __this.refresh();
-                    __this.sendRequestToComponent('refreshOrderAjax', reqData);
-                }, this),
-                onfailure: BX.delegate(function () {
-                    BX.Sale.OrderAjaxComponent.showError(BX.Sale.OrderAjaxComponent.mainErrorsNode, 'Ошибка запроса стоимости доставки!');
-                    console.warn('error get price delivery');
-                }),
-            });*/
         });
     },
 

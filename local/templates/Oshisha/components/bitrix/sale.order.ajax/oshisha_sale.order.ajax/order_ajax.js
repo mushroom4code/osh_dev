@@ -310,7 +310,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
 
                 // #18618
-                console.dir(BX.SaleCommonPVZ);
                 BX.SaleCommonPVZ.isInit && BX.SaleCommonPVZ.refresh();
             }
             return true;

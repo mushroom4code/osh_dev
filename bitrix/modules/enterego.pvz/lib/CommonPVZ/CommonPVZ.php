@@ -2,7 +2,6 @@
 
 namespace CommonPVZ;
 
-require_once '__config_deliveries.php';
 
 abstract class CommonPVZ
 {
@@ -14,7 +13,7 @@ abstract class CommonPVZ
 
     public function __construct()
     {
-        global $CONFIG_DELIVERIES;
+        $CONFIG_DELIVERIES = DeliveryHelper::getConfigs();
 
         if ($this->delivery_name !== null) {
             foreach ($CONFIG_DELIVERIES[$this->delivery_name] as $k => $v) {

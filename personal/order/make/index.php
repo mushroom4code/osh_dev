@@ -88,8 +88,11 @@ $APPLICATION->IncludeComponent(
 			0 => "1",
 			1 => "2",
 			2 => "3",
+			3 => "76"
 		),
 		"PROPS_FADE_LIST_2" => array(
+			0 => "77",
+
 		),
 		"PROP_1" => "",
 		"SEND_NEW_USER_NOTIFY" => "Y",

@@ -2,6 +2,7 @@
 
 namespace CommonPVZ;
 
+use Bitrix\Main\Config\Option;
 use Bitrix\Main\Data\Cache,
     Bitrix\Main\Page\Asset;
 use Bitrix\Sale\Location\LocationTable;
@@ -12,6 +13,18 @@ Loc::loadMessages(__FILE__);
 
 class DeliveryHelper
 {
+    public static $MODULE_ID = 'enterego.pvz';
+
+    public static function getConfigs() {
+        $arConfgs = Option::getForModule(self::$MODULE_ID, SITE_ID);
+        $CONFIG_DELIVERIES = [];
+        foreach ($arConfgs as $k => $v) {
+            $arDel = explode('_', $k);
+            $CONFIG_DELIVERIES[$arDel[0]][$arDel[1]] = $v;
+        }
+        return $CONFIG_DELIVERIES;
+    }
+
 
     public static function getButton($address = '')
     {
@@ -50,17 +63,22 @@ class DeliveryHelper
         $points_Array = [];
         $cache = Cache::createInstance();
         $cachePath = '/getAllPVZPoints';
+        $delName = '0';
 
-        if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
-            $points_Array = $cache->getVars();
-        } elseif ($cache->startDataCache()) {
-            foreach ($deliveries as $delName) {
-                $deliveryClass = '\CommonPVZ\\' . $delName . 'Delivery';
-                $delivery = new $deliveryClass();
-                $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity);
-                $result_array['errors'][$delName] = $delivery->errors;
+        try {
+            if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
+                $points_Array = $cache->getVars();
+            } elseif ($cache->startDataCache()) {
+                foreach ($deliveries as $delName) {
+                    $deliveryClass = '\CommonPVZ\\' . $delName . 'Delivery';
+                    $delivery = new $deliveryClass();
+                    $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity);
+                    $result_array['errors'][$delName] = $delivery->errors;
+                }
+                $cache->endDataCache($points_Array);
             }
-            $cache->endDataCache($points_Array);
+        } catch (\Exception $e) {
+            $result_array['errors'][$delName] = $e->getMessage();
         }
 
         $result_array['type'] = 'FeatureCollection';
@@ -71,6 +89,8 @@ class DeliveryHelper
 
     public static function getPrice($req_data)
     {
+        global $CONFIG_DELIVERIES;
+
         if ($req_data['delivery'] === 'PickPoint') {
             $delivery = new PickPointDelivery();
             return $delivery->getPrice($req_data);
@@ -86,14 +106,13 @@ class DeliveryHelper
         }
     }
 
-    public function addAssets($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
+    public static function addAssets($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
     {
-        $MODULE_ID = 'enterego.pvz';
         $delID = 96;
         $params = [];
 
         foreach ($arDeliveryServiceAll as $k => $v) {
-            if ($v->getHandlerCode() === $MODULE_ID) {
+            if ($v->getHandlerCode() === self::$MODULE_ID) {
                 $params['delID'] = $k;
             }
         }
