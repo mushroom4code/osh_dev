@@ -6,7 +6,6 @@ use Bitrix\Main\Loader;
 use Xzag\Telegram\Container;
 use Xzag\Telegram\Data\ProxySettings;
 use Xzag\Telegram\Service\Notification\TelegramNotification;
-use Xzag\Telegram\Data\SettingsForm;
 use Xzag\Telegram\Service\NotificationService;
 use Xzag\Telegram\Exception\SendException;
 use Xzag\Telegram\Event\SampleEvent;

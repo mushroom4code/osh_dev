@@ -9,6 +9,7 @@ Loader::includeModule('main');
 
 $NAME = htmlspecialcharsbx($_REQUEST['NAME']);
 $MESSAGE = htmlspecialcharsbx($_REQUEST['MESSAGE']);
+$EMAIL = htmlspecialcharsbx($_REQUEST['EMAIL']);
 $PHONE = htmlspecialcharsbx($_REQUEST['PHONE']);
 $message = '';
 
@@ -32,6 +33,7 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
         'PROPERTY_VALUES' => [
             'USER_NAME' => $NAME,
             'PHONE' => $PHONE,
+            'EMAIL' => $EMAIL,
             'USER_FILES' => !empty($_FILES) ? $_FILES : []
         ],
     ];

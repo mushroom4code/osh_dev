@@ -69,7 +69,7 @@ $APPLICATION->SetTitle("FAQ");
         <div class="mb-5">
             <form class="form_company form-form " id="support" enctype="multipart/form-data">
                 <div class="form-form-wrap">
-                    <input type="hidden" name="recaptcha_token" value="">
+                    <input type="hidden" name="recaptcha_token" id="recaptchaResponse">
                     <?php echo bitrix_sessid_post(); ?>
                     <div class="form-group mb-3">
                         <label class="label_company">Поделись с нами!</label>
@@ -86,7 +86,7 @@ $APPLICATION->SetTitle("FAQ");
                     </div>
                     <div class="form-group mb-3">
                         <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk"
-                               id="phoneNumber" placeholder="E-mail если хотите получить ответ на почту">
+                               id="userEmail" placeholder="E-mail если хотите получить ответ на почту">
                     </div>
                     <div class="form-group mb-3">
                                 <textarea class="form-control input_lk" name="MESSAGE" id="text"

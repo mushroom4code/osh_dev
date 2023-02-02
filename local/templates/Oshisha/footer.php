@@ -283,7 +283,7 @@ $option = $option_site; ?>
                 <div class="block_text">Оставьте ваш номер и мы перезвоним вам в ближайшее рабочее время</div>
                 <div class="block_text_sub">Отдел поддержки работает с 10:00 до 20:00, ежедневно</div>
                 <form method="POST" class="callback_form">
-                    <input type="hidden" name="recaptcha_token" value="">
+                    <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
 
                     <div class="form-group mb-3">
                         <input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
