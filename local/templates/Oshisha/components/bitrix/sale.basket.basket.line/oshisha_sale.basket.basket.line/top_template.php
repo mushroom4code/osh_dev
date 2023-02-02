@@ -89,9 +89,10 @@ while ($arItems = $cntBasketItems->Fetch()) {
 
                 <?php $APPLICATION->IncludeComponent(
                     "ctweb:sms.authorize",
-                    "top",
+                    "profile",
                     array(
-                        "ALLOW_MULTIPLE_USERS" => "Y"
+                        "ALLOW_MULTIPLE_USERS" => "Y",
+                        "PROFILE_AUTH" => "N"
                     )
                 ); ?>
 
