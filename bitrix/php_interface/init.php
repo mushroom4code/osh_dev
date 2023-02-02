@@ -4,7 +4,6 @@ use Bitrix\Sale\Exchange\EnteregoUserExchange;
 
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
-//setcookie("PHPSESSID", "", 1, '/', '.oshisha.net');
 
 require_once(__DIR__ . '/conf.php');
 
