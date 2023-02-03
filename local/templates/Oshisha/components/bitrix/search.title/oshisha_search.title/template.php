@@ -26,7 +26,7 @@ if ($arParams["SHOW_INPUT"] !== "N"):?>
     <div id="<? echo $CONTAINER_ID ?>" class="bx-searchtitle">
         <form action="<? echo $arResult["FORM_ACTION"] ?>" class="d-flex flex-row">
             <a href="javascript:void(0)" name="s" type="submit" class="btn_search"></a>
-            <input id="<? echo $INPUT_ID ?>" type="text" name="q" value="" size="45" maxlength="50" class="search_input"
+            <input id="<? echo $INPUT_ID ?>" type="text" name="q" value="" size="50" maxlength="50" class="search_input"
                    placeholder="Искать на Oshisha" autocomplete="off"/>
         </form>
     </div>

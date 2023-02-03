@@ -230,7 +230,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .box_with_search {
-    width: inherit;
+    width: auto;
 }
 
 .box_honesty, .box_automation, .box_display, .box_block, .box_present, .box_help, .box_house,
@@ -930,7 +930,7 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
 }
 
 .catalog-section-list-item-link > i, .link_header > .icon_header {
-    font-size: 23px;
+    font-size: 21px;
 }
 
 .font_18, .by-line:not(.opt) a.bx_catalog_item_title {
@@ -1361,10 +1361,6 @@ div.carousel-indicators > span {
 span > i.header_icon {
     font-size: 10px;
     padding-right: 3px;
-}
-
-.link_header > .icon_header {
-    margin-bottom: 7px;
 }
 
 .link_menu_header:hover, .mini_link:hover, .not_product, .view-buttons-list:hover, .view-buttons-list:active,
@@ -2208,12 +2204,17 @@ input.check_input {
 
 .basket_icon_basket, .basket_icon_personal {
     background-size: contain;
+    background-repeat: no-repeat;
 }
 
-.basket_icon_basket, .basket_icon_personal {
-    background-repeat: no-repeat;
+.basket_icon_basket {
     min-width: 23px;
     min-height: 23px;
+}
+
+.basket_icon_personal {
+    min-width: 20px;
+    min-height: 20px;
 }
 
 .progress-bar-wrapper {
@@ -4736,9 +4737,7 @@ li, ul {
 }
 
 .link_lk .icon_header {
-    /*margin-bottom:0px;*/
     position: relative;
-    top: 3px;
 }
 
 .link_lk .spanLikeTop {

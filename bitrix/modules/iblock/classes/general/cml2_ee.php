@@ -2233,6 +2233,10 @@ class CIBlockCMLImportEe
                     {
                         $arFields["UF_FILE"] = $this->MakeFileArray($arE[$this->mess["IBLOCK_XML2_PICTURE"]]);
                     }
+                    //enterego add description
+                    if (isset($arE[$this->mess["IBLOCK_XML2_DESCRIPTION"]])){
+                        $arFields["UF_DESCRIPTION"] = $arE[$this->mess["IBLOCK_XML2_DESCRIPTION"]];
+                    }
 
                     if(!array_key_exists($xml_id, $arEnumMap))
                     {
@@ -2240,7 +2244,7 @@ class CIBlockCMLImportEe
                     }
                     //enterego update if set file
 //					elseif ($arEnumMap[$xml_id]["UF_NAME"] !== $arFields['UF_NAME'])
-                    elseif ($arEnumMap[$xml_id]["UF_NAME"] !== $arFields['UF_NAME'] || isset($arFields["UF_FILE"] ))
+                    else
                     {
                         $entity_data_class::update($arEnumMap[$xml_id]["ID"], $arFields);
                     }

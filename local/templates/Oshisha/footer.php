@@ -42,7 +42,7 @@ $option = $option_site; ?>
                                     false
                                 ); ?>
 								<span class="phone_footer phone_footer_first">
-                                    <a href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a>
+                                    <a href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
                                 </span>
 								<span class="phone_footer"><a href="tel:88006004424">8-800-600-44-24</a></span>
 								<span class="work_time">Время работы <br>
@@ -117,11 +117,11 @@ $option = $option_site; ?>
                     <span class="li_link_footer ">
                          <a href="javascript:void(0)" class="callback js__callback text_link_footer">Обратный звонок</a>
                     </span>
-
-                    <span class="li_link_footer">
+                    <?php if ($USER->IsAuthorized()) { ?>
+                        <span class="li_link_footer">
                          <a href="/about/FAQ/" class="text_link_footer li_link_footer">FAQ</a>
                     </span>
-
+                    <?php } ?>
                     <span class="li_link_footer ">
                          <a href="/about/users_rules/" class="text_link_footer">Пользовательское соглашение</a>
                     </span>
@@ -188,7 +188,7 @@ $option = $option_site; ?>
                 </div>
             </div>
             <div class="mobile width_100 p-0 mb-4">
-                <p class="m-3 mail_footer col-11"><a href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a>
+                <p class="m-3 mail_footer col-11"><a href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
                 </p>
                 <div class="box_with_contact pl-3">
                     <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
@@ -206,7 +206,7 @@ $option = $option_site; ?>
             </div>
         <?php } ?>
         <div class="text_footer_mini d-flex column_section p-3">
-            <span class="mr-2">© 2014-<?= date('Y'); ?> <?= $SETTINGS['COMPANY'] ?>.</span><span>Все права защищены</span>
+            <span class="mr-2">© 2014-<?= date('Y'); ?> <?=  $option->COMPANY ?>.</span><span>Все права защищены</span>
         </div>
     </div>
     <!--FOOTER END-->
@@ -305,7 +305,8 @@ $option = $option_site; ?>
                         <label class="form-control input_lk" style="height: auto">
                             <input name="confirm" type="checkbox" checked="checked">
                             <span class="custom__title">Подтверждаю свое согласие с
-                                <a href="/about/politics/" target="_blank">положением об обработке персональных данных</a>
+                                <a href="/about/politics/"
+                                   target="_blank">положением об обработке персональных данных</a>
                             </span>
                         </label>
                         <div class="er_FORM_CONFIRM error_field js__error_field"></div>
@@ -331,17 +332,17 @@ $option = $option_site; ?>
                     <div class="age-access-inner">
                         <div class="age-access__text">
                             <div class="age-access__text-part1">
-                                <?= $SETTINGS['ATTENT_TEXT'] ?>
+                                <?= $option->ATTENT_TEXT ?>
                             </div>
                             <div class="age-access__text-part2">
-                                <?= $SETTINGS['ATTENT_TEXT2'] ?>
+                                <?= $option->ATTENT_TEXT2 ?>
                             </div>
                         </div>
                         <div class="age-access__buttons">
                             <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close"
                                data-option="1" data-auth="false">Да, мне
                                 больше 18 лет</a>
-                            <a href="<?= $SETTINGS['ATTENT_NOT'] ?>" class="age-access__button link_red_button"
+                            <a href="<?= $option->ATTENT_NOT ?>" class="age-access__button link_red_button"
                                data-option="2" rel="nofollow">Нет</a>
                         </div>
                     </div>

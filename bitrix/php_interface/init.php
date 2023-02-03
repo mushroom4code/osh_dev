@@ -42,9 +42,11 @@ global $PRICE_TYPE_ID;
 global $UserTypeOpt, $arIskCode, $SETTINGS_;
 $arIskCode = array(
     'USE_AVAILABLE', 'BLOG_POST_ID', 'GRAMMOVKA_VES_NETTO'
-
 );
-$SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
+
+global $option_site;
+$option_site = json_decode(\Bitrix\Main\Config\Option::get("BBRAIN", 'SETTINGS_SITE'));
+
 
 //class used in component files before init autoload files
 require_once(__DIR__ . '/enterego_class/EnteregoGiftHandlers.php');
@@ -286,5 +288,32 @@ function sort_by_sort($a, $b): int
     return ($a["SORT"] < $b["SORT"]) ? -1 : 1;
 }
 
-global $option_site;
-$option_site = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE'));
+
+// #000018950
+// используем события модуля пикпоинт
+AddEventHandler("pickpoint.deliveryservice", "onJSHandlersSet", "onJSHandlersSetHandler");
+function onJSHandlersSetHandler(&$arHandlers)
+{
+    if (array_key_exists('onAfterPostamatSelected', $arHandlers))
+        $arHandlers['onAfterPostamatSelected'] = 'PPDSExtension.onAfterPostamatSelectedHandler';
+}
+
+AddEventHandler("sale", "OnSaleComponentOrderOneStepPersonType", "setAdditionalPPDSJS");
+function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
+{
+    global $APPLICATION;
+    $jsCode = "
+        <script type='text/javascript'>
+            var PPDSExtension = {onAfterPostamatSelectedHandler: function(data) {
+                if (data.zone != '1') {
+                    BX.Sale.OrderAjaxComponent.showError(BX.Sale.OrderAjaxComponent.deliveryBlockNode, 'Доставка PickPoint работает только в Москве и Московской области!', true);
+                    var adr = $('#soa-property-7'); // TODO - получить из списка св-в
+                    adr.val('');
+                    adr.attr('readonly', 'readonly');
+                    throw new Error('Only Moscow'); // чтобы небыло перезагрузки страницы (sendRequest)
+                }
+            }};
+        </script>
+        ";
+    $APPLICATION->AddHeadString($jsCode);
+}

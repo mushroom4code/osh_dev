@@ -7,7 +7,8 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("FAQ");
 //Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
 $userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : false;
-?>
+if ($USER->IsAuthorized()) {
+    ?>
     <div id="faq" class="box_boxes_delivery mt-3 static">
         <h1>FAQ</h1>
         <div class="d-flex flex-column mb-3 mt-4" id="FAQ">
@@ -164,4 +165,12 @@ $userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : fal
         </div>
 
     </div>
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+<?php } else { ?>
+    <div id="content_box_delivery" class="box_boxes_delivery static">
+        <p class="mb-2 mt-5 font-20 font-weight-bolder text-center"> Для ознакомления с информацией необходимо
+            <a href="javascript:void(0)" class="link_header_box color-redLight text-decoration-underline">авторизоваться.</a>
+        </p>
+    </div>
+    <?php
+}
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");

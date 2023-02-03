@@ -8,10 +8,9 @@ $APPLICATION->SetTitle("О нас");
 ?>
     <div id="o_nas" class="mb-5">
         <h1 class="font-120 font-weight-bold color-black mb-7 mt-lg-5 mt-md-5 mt-3">О нас</h1>
-
         <div class="d-flex flex-lg-row flex-md-row flex-column mb-7 align-items-center">
             <div class="col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4">
-                <img src="/about/o-nas/o-nas.png" class="o-nas-image" />
+                <img src="/about/o-nas/o-nas.png" class="o-nas-image"/>
             </div>
             <div class="col-lg-6 col-md-6 col-12 p-lg-4 p-md-4">
                 <p class="mb-lg-5 mb-md-5 mb-3">
@@ -31,9 +30,8 @@ $APPLICATION->SetTitle("О нас");
                 </p>
             </div>
         </div>
-
         <h5 class="font-40 font-weight-bold color-black mb-lg-5 mb-md-5 mb-3">Почему выбирают нас?</h5>
-        <div class="d-flex flex-lg-row flex-md-row flex-column flex-wrap mb-3">
+        <div class="d-flex flex-lg-row flex-md-row flex-column flex-wrap mb-5 justify-content-center">
             <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
                 <div class="mr-4">
                     <b class="font-weight-bold font-40 color-redLight">01</b>
@@ -68,8 +66,11 @@ $APPLICATION->SetTitle("О нас");
                     <b class="font-weight-bold font-40 color-redLight">04</b>
                 </div>
                 <div class="d-flex flex-column justify-content-between align-content-between">
-                    <span class="text_advantage">Отсутствие минимальной
-                        <br> суммы заказа </span>
+                          <span class="text_advantage">
+                            Универсальные способы получения товара -
+                            мы работаем со множеством транспортных компаний и
+                            развозим заказы нашими курьерами по Москве\МО в
+                            любое время дня и ночи</span>
                 </div>
             </div>
             <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
@@ -77,11 +78,8 @@ $APPLICATION->SetTitle("О нас");
                     <b class="font-weight-bold font-40 color-redLight">05</b>
                 </div>
                 <div class="d-flex flex-column justify-content-between align-content-between">
-                        <span class="text_advantage">
-                            Универсальная доставка - мы работаем<br>
-                            со множеством транспортных компаний<br>
-                            и доставляем нашими курьерами по<br>
-                            Москве\МО в любое время дня и ночи</span>
+                      <span class="text_advantage">Отсутствие минимальной
+                        <br> суммы заказа </span>
                 </div>
             </div>
         </div>
@@ -167,7 +165,7 @@ $APPLICATION->SetTitle("О нас");
                                 индустрии.
                             </p>
                         </div>
-                        <a href="https://xn--c1aeil2b0b.xn--p1ai/" style="padding: 8px 39px;"  target="_blank"
+                        <a href="https://xn--c1aeil2b0b.xn--p1ai/" style="padding: 8px 39px;" target="_blank"
                            class="link_red_button color-white width-fit-content">
                             Перейти на сайт</a>
                     </div>
