@@ -4472,9 +4472,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         editDeliveryItems: function (deliveryNode) {
             if (!this.result.DELIVERY || this.result.DELIVERY.length <= 0)
                 return;
-            console.log(this.result.DELIVERY)
+
             let deliveryItemsContainer = BX.create('DIV', {
-                    props: {className: 'order-2 bx-soa-pp-item-container'}
+                    props: {className: ' bx-soa-pp-item-container'}
                 }),
                 deliveryItemsContainerRow = BX.create('DIV', {props: {className: 'row'}}),
                 deliveryItemNode, k;
@@ -4498,7 +4498,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     } else {
                         deliveryItemsContainerRow.appendChild(BX.create('DIV', {
                                     props: {
-                                        className: 'd-flex flex-column order-1 bx-soa-pp-company box_with_del_js parent_type_'
+                                        className: 'd-flex flex-column bx-soa-pp-company box_with_del_js parent_type_'
                                             + item_edit.GROUP_ID + ' ' + check
                                     },
                                     children: [
@@ -4729,7 +4729,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 
             itemNode = BX.create('DIV', {
-                props: {className: delivery + ' bx-soa-pp-company order-2'},
+                props: {className: delivery + ' bx-soa-pp-company'},
                 children: [label],
             });
             checked && BX.addClass(itemNode, 'bx-selected');
