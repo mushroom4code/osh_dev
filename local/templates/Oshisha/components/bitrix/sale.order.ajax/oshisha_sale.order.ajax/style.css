@@ -1903,7 +1903,7 @@ hr.bxe-light {
     color: #F55F5C;
 }
 
-.bx-soa-pp-company:has(.delivery.bx-selected) .box-none, .box_with_del_js.active_box .box-none {
+.box_with_del_js.active_box .box-none {
     display: block;
 }
 

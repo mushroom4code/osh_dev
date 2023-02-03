@@ -4482,18 +4482,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             for (k = 0; k < this.deliveryPagination.currentPage.length; k++) {
                 let item_edit = this.deliveryPagination.currentPage[k];
                 deliveryItemNode = this.createDeliveryItem(item_edit);
-
+                let check = '';
                 if (item_edit.CHECKED === "Y") {
                     this.editDeliveryInfo(deliveryItemNode, item_edit)
+                    check = 'active_box';
                 }
 
                 if (item_edit.GROUP_ID !== '0') {
                     let box_with_deliveries = deliveryItemsContainerRow.querySelector('div.parent_type_' + item_edit.GROUP_ID);
                     let box_type_id = deliveryItemsContainerRow.querySelector('div.box_' + item_edit.GROUP_ID);
 
-                    console.log(box_with_deliveries)
-                    console.log(box_type_id)
-                    console.log(item_edit.NAME);
 
                     if (box_with_deliveries !== null && box_type_id !== null) {
                         box_type_id.appendChild(deliveryItemNode);
@@ -4501,7 +4499,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         deliveryItemsContainerRow.appendChild(BX.create('DIV', {
                                     props: {
                                         className: 'd-flex flex-column order-1 bx-soa-pp-company box_with_del_js parent_type_'
-                                            + item_edit.GROUP_ID
+                                            + item_edit.GROUP_ID + ' ' + check
                                     },
                                     children: [
                                         BX.create('DIV', {
