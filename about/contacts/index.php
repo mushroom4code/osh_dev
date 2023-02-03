@@ -2,9 +2,11 @@
 $APPLICATION->SetTitle("Контакты");
 
 use Bitrix\Conversion\Internals\MobileDetect;
+use enterego\EnteregoUser;
 
 $mobile = new MobileDetect();
 $option = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE'));
+$userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : false;
 ?>
     <link rel="preconnect" href="//api-maps.yandex.ru">
     <link rel="dns-prefetch" href="//api-maps.yandex.ru">
@@ -96,20 +98,44 @@ $option = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE'));
                             <label class="label_company">Вопросы, замечания, жалобы? Свяжитесь с нами:</label>
                         </div>
                         <div class="form-group mb-3">
-                            <input type="text" class="form-control input_lk" id="Name" name="NAME"
-                                   placeholder="Пожалуйста, представьтесь*">
+                            <input type="text"
+                                   class="form-control input_lk"
+                                   id="Name"
+                                   name="NAME"
+                                   placeholder="Пожалуйста, представьтесь*"
+                                <?php if ($userData): ?>
+                                    value="<?= $userData['NAME'] ?? '' ?>"
+                                <?php endif; ?>
+                            >
                             <div class="er_FORM_NAME error_field"></div>
                         </div>
                         <div class="form-group mb-3">
-                            <input type="text" data-name="PHONE-FORM" name="PHONE" class="form-control input_lk"
-                                   id="phoneNumber" placeholder="Мобильный телефон, чтобы связаться с вами*">
+                            <input type="text"
+                                   data-name="PHONE-FORM"
+                                   name="PHONE"
+                                   class="form-control input_lk"
+                                   id="phoneNumber"
+                                   placeholder="Мобильный телефон, чтобы связаться с вами*"
+                                <?php if ($userData): ?>
+                                    value="<?= $userData['PHONE'] ?? '' ?>"
+                                <?php endif; ?>
+                            >
                             <div class="er_FORM_PHONE error_field"></div>
                         </div>
                         <div class="form-group mb-3">
-                            <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk"
-                                   id="phoneNumber" placeholder="E-mail если хотите получить ответ на почту">
-                        </div>
-                        <div class="form-group mb-3">
+                            <div class="form-group mb-3">
+                                <input type="text"
+                                       data-name="EMAIL"
+                                       name="EMAIL"
+                                       class="form-control input_lk"
+                                       id="userEmail"
+                                       placeholder="E-mail если хотите получить ответ на почту"
+                                    <?php if ($userData): ?>
+                                        value="<?= $userData['MAIL'] ?? '' ?>"
+                                    <?php endif; ?>
+                                >
+                            </div>
+                            <div class="form-group mb-3">
                                 <textarea class="form-control input_lk" name="MESSAGE" id="text"
                                           placeholder="Сообщение*"></textarea>
                             <div class="er_FORM_MESSAGE error_field"></div>

@@ -1,4 +1,6 @@
-<?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
+<?php use enterego\EnteregoUser;
+
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var  CAllMain|CMain $APPLICATION
  ** @var  CAllUser $USER
  */
@@ -11,6 +13,7 @@ $option = $option_site; ?>
 <!--end .container.bx-content-section-->
 </div><!--end .workarea-->
 
+<?php $userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : false; ?>
 <footer class="box_footer">
     <div class="foot_container">
         <div class="d-flex flex-lg-row flex-md-row flex-column mb-3">
@@ -286,7 +289,15 @@ $option = $option_site; ?>
                     <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
 
                     <div class="form-group mb-3">
-                        <input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
+                        <input
+                                type="text"
+                                name="PHONE"
+                                class="PHONE callback_PHONE"
+                                placeholder="Ваш номер"
+                            <?php if ($userData): ?>
+                                value="<?= $userData['PHONE'] ?? '' ?>"
+                            <?php endif; ?>
+                        >
                         <div class="er_CALLBACK_PHONE error_field js__error_field"></div>
                     </div>
 

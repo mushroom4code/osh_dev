@@ -1,5 +1,8 @@
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+<?php use enterego\EnteregoUser;
+
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("Обратная связь по новому сайту");
+$userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : false;
 ?>
     <h5 class="mb-3" id="form"></h5>
     <div class="mb-5">
@@ -10,14 +13,28 @@ $APPLICATION->SetTitle("Обратная связь по новому сайту
                     <label class="label_company">Обратная связь по новому сайту</label>
                 </div>
                 <div class="form-group mb-3">
-                    <input type="text" class="form-control input_lk" id="Name" name="NAME"
-                           placeholder="Пожалуйста, представьтесь *">
+                    <input type="text"
+                           class="form-control input_lk"
+                           id="Name"
+                           name="NAME"
+                           placeholder="Пожалуйста, представьтесь*"
+                        <?php if ($userData): ?>
+                            value="<?= $userData['NAME'] ?? '' ?>"
+                        <?php endif; ?>
+                    >
                     <div class="er_FORM_NAME error_field"></div>
                 </div>
                 <div class="form-group mb-3">
-                    <input type="text" data-name="PHONE-FORM" name="PHONE" class="form-control input_lk"
+                    <input type="text"
+                           data-name="PHONE-FORM"
+                           name="PHONE"
+                           class="form-control input_lk"
                            id="phoneNumber"
-                           placeholder="Мобильный телефон *">
+                           placeholder="Мобильный телефон, чтобы связаться с вами*"
+                        <?php if ($userData): ?>
+                            value="<?= $userData['PHONE'] ?? '' ?>"
+                        <?php endif; ?>
+                    >
                     <div class="er_FORM_PHONE error_field"></div>
                 </div>
                 <div class="form-group mb-3">

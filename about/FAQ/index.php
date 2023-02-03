@@ -1,11 +1,12 @@
 <?php use Bitrix\Main\Page\Asset;
-
+use enterego\EnteregoUser;
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 /**
  * @var CMain $APPLICATION
  */
 $APPLICATION->SetTitle("FAQ");
 //Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
+$userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : false;
 ?>
     <div id="faq" class="box_boxes_delivery mt-3 static">
         <h1>FAQ</h1>
@@ -75,18 +76,41 @@ $APPLICATION->SetTitle("FAQ");
                         <label class="label_company">Поделись с нами!</label>
                     </div>
                     <div class="form-group mb-3">
-                        <input type="text" class="form-control input_lk" id="Name" name="NAME"
-                               placeholder="Пожалуйста, представьтесь*">
+                        <input type="text"
+                               class="form-control input_lk"
+                               id="Name"
+                               name="NAME"
+                               placeholder="Пожалуйста, представьтесь*"
+                            <?php if ($userData): ?>
+                                value="<?= $userData['NAME'] ?? '' ?>"
+                            <?php endif; ?>
+                        >
                         <div class="er_FORM_NAME error_field"></div>
                     </div>
                     <div class="form-group mb-3">
-                        <input type="text" data-name="PHONE-FORM" name="PHONE" class="form-control input_lk"
-                               id="phoneNumber" placeholder="Мобильный телефон, чтобы связаться с вами*">
+                        <input type="text"
+                               data-name="PHONE-FORM"
+                               name="PHONE"
+                               class="form-control input_lk"
+                               id="phoneNumber"
+                               placeholder="Мобильный телефон, чтобы связаться с вами*"
+                            <?php if ($userData): ?>
+                                value="<?= $userData['PHONE'] ?? '' ?>"
+                            <?php endif; ?>
+                        >
                         <div class="er_FORM_PHONE error_field"></div>
                     </div>
                     <div class="form-group mb-3">
-                        <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk"
-                               id="userEmail" placeholder="E-mail если хотите получить ответ на почту">
+                        <input type="text"
+                               data-name="EMAIL"
+                               name="EMAIL"
+                               class="form-control input_lk"
+                               id="userEmail"
+                               placeholder="E-mail если хотите получить ответ на почту"
+                            <?php if ($userData): ?>
+                                value="<?= $userData['MAIL'] ?? '' ?>"
+                            <?php endif; ?>
+                        >
                     </div>
                     <div class="form-group mb-3">
                                 <textarea class="form-control input_lk" name="MESSAGE" id="text"
