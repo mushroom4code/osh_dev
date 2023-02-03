@@ -100,18 +100,16 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
     <div class="bx_catalog_item_container product-item position-relative
     <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
-        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
+        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
             <span class="taste new-product" data-background="#F55F5C">NEW</span>
+        <?php }
+        if ($hitProduct['VALUE'] === 'Да') { ?>
+            <span class="taste new-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
         <?php }
         if (count($taste['VALUE']) > 0) { ?>
             <div class="toggle_taste card-price">
                 <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                    <?php if ($hitProduct['VALUE'] === 'да') { ?>
-                        <span class="taste" data-background="#000000">Хит</span>
-                    <?php } ?>
-                    <?php
-
-                    foreach ($taste['VALUE'] as $key => $name) {
+                    <?php foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                             if ($key === $keys) {
                                 $color = explode('#', $value); ?>
@@ -124,7 +122,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                 </div>
             </div>
         <?php } ?>
-        <div class="image_cart <?= $not_auth ?>" data-href="<?=$href?>">
+        <div class="image_cart <?= $not_auth ?>" data-href="<?= $href ?>">
             <a class=" <?= $styleForTaste ?>"
                href="<?= $item['DETAIL_PAGE_URL']; ?>">
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
@@ -182,10 +180,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             <?php if (count($taste['VALUE']) > 0) { ?>
                 <div class="toggle_taste_line">
                     <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                        <?php if ($hitProduct['VALUE'] == 'да') { ?>
-                            <span class="taste" data-background="#000000">Хит</span>
-                        <?php }
-                        foreach ($taste['VALUE'] as $key => $name) {
+                        <?php foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                                 if ($key === $keys) {
                                     $color = explode('#', $value); ?>
@@ -213,7 +208,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             <div class="box_with_text">
                 <a class="bx_catalog_item_title <?= $styleForNo . ' ' . $not_auth ?>"
                    href="<?= $item['DETAIL_PAGE_URL']; ?>"
-                   data-href="<?=$href?>"
+                   data-href="<?= $href ?>"
                    title="<?= $productTitle; ?>">
                     <?= $productTitle; ?>
                 </a>
@@ -310,7 +305,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                         <?php } ?>
                         <div class="box_with_price line-price font_weight_600 mb-2">
                             <div class="d-flex flex-row align-items-center">
-                                <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>" data-href="<?=$href?>">
+                                <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>" data-href="<?= $href ?>">
                                     <?php
                                     $sale = false;
                                     if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
