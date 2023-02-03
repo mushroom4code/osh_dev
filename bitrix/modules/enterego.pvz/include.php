@@ -12,3 +12,8 @@ CModule::AddAutoloadClasses("", array(
     '\PecomKabinet' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/pecom_kabinet.php'
 
 ));
+
+if ( file_exists($_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php') )
+{
+    require_once($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php');
+}

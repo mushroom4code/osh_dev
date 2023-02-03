@@ -146,6 +146,9 @@ BX.SaleCommonPVZ = {
             onfailure: function (res) {
                 console.log('error getPVZList');
                 BX.Sale.OrderAjaxComponent.endLoader();
+                BX.Sale.OrderAjaxComponent.showError(BX('bx-soa-delivery'), 'Ошибка запроса ПВЗ. Попробуйте позже.');
+                __this.pvzPopup.close();
+
             }
         });
     },
