@@ -32,7 +32,8 @@ BX.SaleCommonPVZ = {
         var __this = this;
         var adr = $('[name="ORDER_PROP_' + __this.params.arPropsAddr[1] + '"]') || $('[name="ORDER_PROP_' + __this.params.arPropsAddr[0] + '"]');
         if (__this.pvzFullAddress) {
-            adr.val(__this.pvzFullAddress)
+            adr.val(__this.pvzFullAddress);
+            $('#pvz_address').html('Вы выбрали: <span>' + __this.pvzAddress + '</span>');
         }
         adr.attr('readonly', 'readonly');
 

@@ -37,26 +37,41 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
     {
         $result = new \Bitrix\Sale\Delivery\CalculationResult();
         $price = 0;
+        $adr = '';
 
         $order = $shipment->getCollection()->getOrder();
         $propertyCollection = $order->getPropertyCollection();
         $adressProperty = $propertyCollection->getAddress();
+
         $cache = Cache::createInstance();
-        $cachePath = '/getAllPVZprices';
+        $cachePath = '/getAllPVZpr';
 
         if (isset($_POST['dataToHandler'])) {
             $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
             $price = DeliveryHelper::getPrice($_POST['dataToHandler']);
-            $cache->startDataCache(7200, 'pvz_price_' . $adr, $cachePath);
-            $cache->endDataCache($price);
+            $f = DeliveryHelper::translitSef($adr);
+            if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
+                $price = $cache->getVars();
+            }
+            elseif ($cache->startDataCache()) {
+                $cache->endDataCache($price);
+            }
         } else {
-            $adr = $adressProperty->getValue();
+            foreach ($propertyCollection as $item) {
+                if ($item->getField('CODE') == "COMMON_PVZ") {
+                    $adr = $item->getValue();
+                    break;
+                }
+            }
         }
 
         if ($price === 0) {
-            if ($cache->initCache(7200, 'pvz_price_' . $adr, $cachePath)) {
+            $f = DeliveryHelper::translitSef($adr);
+
+            if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
                 $price = $cache->getVars();
             }
+            $adressProperty->setValue('');
         }
 
         $result->setDescription(DeliveryHelper::getButton());

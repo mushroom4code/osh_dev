@@ -15,7 +15,8 @@ class DeliveryHelper
 {
     public static $MODULE_ID = 'enterego.pvz';
 
-    public static function getConfigs() {
+    public static function getConfigs()
+    {
         $arConfgs = Option::getForModule(self::$MODULE_ID, SITE_ID);
         $CONFIG_DELIVERIES = [];
         foreach ($arConfgs as $k => $v) {
@@ -28,20 +29,14 @@ class DeliveryHelper
 
     public static function getButton($address = '')
     {
-
-        ob_start();
-        ?>
-        <a class="btn btn_basket btn_pvz btn-default"
-           onclick="BX.SaleCommonPVZ.openMap(); return false;">
-            <?= Loc::getMessage('COMMONPVZ_BTN_CHOOSE') ?>
-        </a>
-        <?php
-
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = "<a class='btn btn_basket btn_pvz btn-default'
+           onclick='BX.SaleCommonPVZ.openMap(); return false;'>";
+        $content .= Loc::getMessage('COMMONPVZ_BTN_CHOOSE');
+        $content .= " </a>";
+        $content .= "<span id='pvz_address'></span>";
 
         return $content;
-    }
+}
 
     public static function getCityName($locationCode)
     {
@@ -89,8 +84,6 @@ class DeliveryHelper
 
     public static function getPrice($req_data)
     {
-        global $CONFIG_DELIVERIES;
-
         if ($req_data['delivery'] === 'PickPoint') {
             $delivery = new PickPointDelivery();
             return $delivery->getPrice($req_data);
@@ -108,8 +101,8 @@ class DeliveryHelper
 
     public static function addAssets($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
     {
-        $delID = 96;
         $params = [];
+        $params['delID'] = 96;
 
         foreach ($arDeliveryServiceAll as $k => $v) {
             if ($v->getHandlerCode() === self::$MODULE_ID) {
@@ -119,24 +112,21 @@ class DeliveryHelper
 
         $dbRes = \Bitrix\Sale\Property::getList([
             'select' => ['ID', 'CODE'],
-            'filter' => [
-                'REL_DLV.ENTITY_ID' => $delID,
-            ],
+            'filter' => [],
             'runtime' => [
                 new \Bitrix\Main\Entity\ReferenceField(
                     'REL_DLV',
                     '\Bitrix\Sale\Internals\OrderPropsRelationTable',
                     array("=this.ID" => "ref.PROPERTY_ID", "=ref.ENTITY_TYPE" => new \Bitrix\Main\DB\SqlExpression('?', 'D')),
-                    array("join_type"=>"left")
+                    array("join_type" => "left")
                 ),
             ],
             'group' => ['ID'],
             'order' => ['ID' => 'DESC']
         ]);
 
-        while ($property = $dbRes->fetch())
-        {
-            if ($property['CODE'] === 'ADDRESS') {
+        while ($property = $dbRes->fetch()) {
+            if ($property['CODE'] === 'COMMON_PVZ') {
                 $params['arPropsAddr'][] = $property['ID'];
             }
         }
@@ -146,7 +136,15 @@ class DeliveryHelper
         $cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
         $cAsset->addString(
-            "<script id='' data-params=''>
+            "<style>
+                    div[data-property-id-row='76'] {
+                        display:none
+                    }
+                    div[data-property-id-row='77'] {
+                        display:none
+                    }
+                 </style>
+                 <script id='' data-params=''>
                     window.addEventListener('load', function () {
                         BX.SaleCommonPVZ.init({
                             params: " . CUtil::PhpToJSObject($params) . "
@@ -155,5 +153,27 @@ class DeliveryHelper
                 </script>",
             true
         );
+    }
+
+
+    public static function translitSef($value)
+    {
+        $converter = array(
+            'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd',
+            'е' => 'e', 'ё' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i',
+            'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n',
+            'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't',
+            'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
+            'ш' => 'sh', 'щ' => 'sch', 'ь' => '', 'ы' => 'y', 'ъ' => '',
+            'э' => 'e', 'ю' => 'yu', 'я' => 'ya',
+        );
+
+        $value = mb_strtolower($value);
+        $value = strtr($value, $converter);
+        $value = mb_ereg_replace('[^-0-9a-z]', '-', $value);
+        $value = mb_ereg_replace('[-]+', '-', $value);
+        $value = trim($value, '-');
+
+        return $value;
     }
 }

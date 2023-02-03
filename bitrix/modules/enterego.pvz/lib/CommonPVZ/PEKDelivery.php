@@ -76,9 +76,9 @@ class PEKDelivery extends CommonPVZ
             $pek_bitrix_id = $pek_result->bitrixId;
             $pek_result = $this->client->call('CALCULATOR', 'CALCULATEPRICE',
                 array(
-                    "senderCityId" => $this->configs['senderCityId'],
+                    "senderCityId" => $this->configs['sendercityid'],
                     "receiverCityId" => $pek_bitrix_id,
-                    "senderDistanceType" => $this->configs['senderDistanceType'],
+                    "senderDistanceType" => $this->configs['senderdistancetype'],
                     "cargos" => array(
                         array(
                             'weight' => $array['weight'] / 1000
