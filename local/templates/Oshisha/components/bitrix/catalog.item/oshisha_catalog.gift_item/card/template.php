@@ -90,15 +90,15 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
 <div class="<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
     <div class="bx_catalog_item_container product-item align-items-center <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
-        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
+        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
             <span class="taste new-product" data-background="#F55F5C">NEW</span>
+        <?php }
+        if ($hitProduct['VALUE'] == 'Да') { ?>
+            <span class="taste new-product" data-background="#F55F5C">ХИТ</span>
         <?php }
         if (count($taste['VALUE']) > 0) { ?>
             <div class="toggle_taste card-price">
                 <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                    <?php if ($hitProduct['VALUE'] == 'да') { ?>
-                        <span class="taste" data-background="#000000">Хит</span>
-                    <?php } ?>
                     <?php
                     foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
@@ -129,9 +129,6 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
             <?php if (count($taste['VALUE']) > 0) { ?>
                 <div class="toggle_taste_line">
                     <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                        <?php if ($hitProduct['VALUE'] == 'да') { ?>
-                            <span class="taste" data-background="#000000">Хит</span>
-                        <?php } ?>
                         <?php
 
                         foreach ($taste['VALUE'] as $key => $name) {
