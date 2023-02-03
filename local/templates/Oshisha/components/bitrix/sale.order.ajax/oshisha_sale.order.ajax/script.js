@@ -437,10 +437,11 @@ BX.saleOrderAjax = { // bad solution, actually, a singleton at the page
     }
 };
 
-$(document).on('click', '.box_with_del_js', function () {
-    if (!$(this).hasClass('active_box')) {
-        $(this).addClass('active_box');
+$(document).on('click', '.bx-soa-pp-company-smalltitle.box_with_delivery', function () {
+    let checked_title = $(this).closest('.box_with_del_js');
+    if (!$(checked_title).hasClass('active_box')) {
+        $(checked_title).addClass('active_box');
     } else {
-        $(this).removeClass('active_box');
+        $(checked_title).removeClass('active_box');
     }
 });
