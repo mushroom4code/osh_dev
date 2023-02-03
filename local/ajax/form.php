@@ -6,7 +6,6 @@ use Bitrix\Main\Loader;
 use Xzag\Telegram\Container;
 use Xzag\Telegram\Data\ProxySettings;
 use Xzag\Telegram\Service\Notification\TelegramNotification;
-use Xzag\Telegram\Data\SettingsForm;
 use Xzag\Telegram\Service\NotificationService;
 use Xzag\Telegram\Exception\SendException;
 use Xzag\Telegram\Event\SampleEvent;
@@ -42,22 +41,24 @@ if ($NAME != '' && $PHONE != '') {
         'PROPERTY_VALUES' => [
             'PHONE' => $PHONE,
             'EMAIL' => $EMAIL,
-            'FILES' => $_FILES,
+            'FILES' => !empty($_FILES) ? $_FILES : []
         ],
     ];
     $elemId = $el->add($arElement);
 
     // Получение ИД изображений елемента ИБ
-    $elemFiles = [];
-    $tmpProps = CIBlockElement::GetProperty(
-        IBLOCK_FEEDBACK_ID,
-        $elemId,
-        [],
-        ['CODE' => 'FILES']
-    );
+    if (!empty($_FILES)) {
+        $elemFiles = [];
+        $tmpProps = CIBlockElement::GetProperty(
+            IBLOCK_FEEDBACK_ID,
+            $elemId,
+            [],
+            ['CODE' => 'FILES']
+        );
 
-    while ($arrProps = $tmpProps->Fetch()) {
-        $elemFiles[] = $_SERVER['HTTP_HOST'] . CFile::GetPath($arrProps['VALUE']);
+        while ($arrProps = $tmpProps->Fetch()) {
+            $elemFiles[] = $_SERVER['HTTP_HOST'] . CFile::GetPath($arrProps['VALUE']);
+        }
     }
 
     // Sending message in TGM
@@ -105,18 +106,20 @@ if ($NAME != '' && $PHONE != '') {
                 $message .= 'Сайт с которого было отправлено сообщение https://' . $_SERVER['HTTP_HOST'] . '/';
                 $messages = $sampleEvent->convertNew($message);
 
-                // отправка файлов в Telegram
-                $bot = new BotApi($tgmToken);
-                $media = new ArrayOfInputMedia();
-
-                foreach ($elemFiles as $i => $photo) {
-                    $caption = $i == 0 ? 'ИМЯ: ' . $NAME . ' --- ТЕЛЕФОН: ' . $PHONE : null;
-                    $media->addItem(new InputMediaPhoto($photo, $caption));
-                }
-
+                // отправка текстовой части
                 $notificator->with($notification)->send($messages);
-                $botSendResult = $bot->sendMediaGroup($chatId, $media);
 
+                // отправка приложенных фотографий
+                if (!empty($_FILES)) {
+                    $bot = new BotApi($tgmToken);
+                    $media = new ArrayOfInputMedia();
+
+                    foreach ($elemFiles as $i => $photo) {
+                        $caption = $i == 0 ? 'ИМЯ: ' . $NAME . ' --- ТЕЛЕФОН: ' . $PHONE : null;
+                        $media->addItem(new InputMediaPhoto($photo, $caption));
+                    }
+                    $botSendResult = $bot->sendMediaGroup($chatId, $media);
+                }
             } catch (SendException $e) {
                 echo 'Ошибка отправки сообщения из-за некорректных настроек модуля';
             } catch (\Throwable $e) { //print_r($e);

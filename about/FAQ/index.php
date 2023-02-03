@@ -17,7 +17,7 @@ $APPLICATION->SetTitle("FAQ");
                 array('ACTIVE' => 'Y', 'IBLOCK_CODE' => 'FAQ'),
                 false, array("CODE", 'NAME', 'ID', 'IBLOCK_SECTION_ID', 'XML_ID')
             );
-            while ($arSection = $SectionRes->GetNext()) {?>
+            while ($arSection = $SectionRes->GetNext()) { ?>
                 <div class="mb-5">
                     <h4 class="mb-4"><?= $arSection['NAME'] ?></h4>
 
@@ -67,44 +67,74 @@ $APPLICATION->SetTitle("FAQ");
         </div>
         <h4 class="mb-4"><b> Есть вопросы, пожелания или комментарии? Напиши их здесь!</b></h4>
         <div class="mb-5">
-            <form class="form_company" id="support">
-                <!--                <input type="hidden" name="recaptcha_token" value="">-->
-                <!--                --><?php //echo bitrix_sessid_post(); ?>
-                <!--                <input type="hidden" name="captcha_sid" value="-->
-                <?php //= $arResult["CAPTCHA_CODE"] ?><!--"/>-->
-                <!--                <div class="form-group">-->
-                <!--                    --><?php //= GetMessage("CAPTCHA_REGF_PROMT") ?>
-                <!--                    <div class="form-group">-->
-                <!--                        <div class="bx-captcha"><img-->
-                <!--                                    src="/bitrix/tools/captcha.php?captcha_sid=-->
-                <?php //= $arResult["CAPTCHA_CODE"] ?><!--"-->
-                <!--                                    width="180" height="40" alt="CAPTCHA"/></div>-->
-                <!--                    </div>-->
-                <!--                    <div class="form-group">-->
-                <!--                        <input type="text" class="form-control" name="captcha_word" maxlength="50"-->
-                <!--                               value="" autocomplete="off"/>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-                <div class="form-group mb-3">
-                    <label class="label_company">Поделись с нами!</label>
-                </div>
-                <div class="form-group mb-3">
-                    <input type="text" class="form-control input_lk" id="Name" placeholder="ФИО">
-                </div>
-                <div class="form-group mb-3">
-                    <input type="text" data-name="PHONE" class="form-control input_lk" id="phoneNumber"
-                           placeholder="Номер телефона">
-                </div>
-                <div class="form-group mb-5">
-                    <textarea class="form-control input_lk" id="text" placeholder="Ваш комментарий"></textarea>
-                </div>
-                <div class="form-group mb-2">
-                    <div class="col-sm-10">
-                        <input class="btn link_menu_catalog get_code_button"
-                               type="submit"
-                               value="Отправить"
-                               onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
+            <form class="form_company form-form " id="support" enctype="multipart/form-data">
+                <div class="form-form-wrap">
+                    <input type="hidden" name="recaptcha_token" id="recaptchaResponse">
+                    <?php echo bitrix_sessid_post(); ?>
+                    <div class="form-group mb-3">
+                        <label class="label_company">Поделись с нами!</label>
                     </div>
+                    <div class="form-group mb-3">
+                        <input type="text" class="form-control input_lk" id="Name" name="NAME"
+                               placeholder="Пожалуйста, представьтесь*">
+                        <div class="er_FORM_NAME error_field"></div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="text" data-name="PHONE-FORM" name="PHONE" class="form-control input_lk"
+                               id="phoneNumber" placeholder="Мобильный телефон, чтобы связаться с вами*">
+                        <div class="er_FORM_PHONE error_field"></div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk"
+                               id="userEmail" placeholder="E-mail если хотите получить ответ на почту">
+                    </div>
+                    <div class="form-group mb-3">
+                                <textarea class="form-control input_lk" name="MESSAGE" id="text"
+                                          placeholder="Сообщение*"></textarea>
+                        <div class="er_FORM_MESSAGE error_field"></div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="form-control input_lk input_files drop-zone" id="drop-zone">
+                            <div class="drop-message">Перетащите файлы сюда</div>
+                            <div class="drop-message">или</div>
+                            <label class="upload-file-label">
+                                <input type="file" name="upload-files" id="upload-files" class="file-upload"
+                                       placeholder="Выберите файл или перетащите сюда" multiple="multiple"
+                                       accept=".png, .jpg, .jpeg, .gif">
+                                <span class="btn">Выберите файлы</span>
+                            </label>
+                            <div class="drop-message">Приложить можно до 10 изображений в форматах .jpg, .gif, .png
+                                объемом не более 5 Мб
+                            </div>
+                            <ul class="file-list"></ul>
+                        </div>
+                        <div class="er_FORM_FILES error_field"></div>
+                    </div>
+
+                    <div class="form-group mb-5">
+                        <label class="form-control input_lk" style="height: auto">
+                            <input name="confirm" type="checkbox" checked="checked">
+                            <span class="custom__title">Подтверждаю свое согласие с
+                                    <a href="/about/politics/"
+                                       target="_blank">положением об обработке персональных данных</a></span>
+                        </label>
+                        <div class="er_FORM_CONFIRM error_field"></div>
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <div class="col-sm-10">
+                            <input class="btn link_menu_catalog get_code_button"
+                                   type="submit"
+                                   value="Отправить"
+                                   onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
+                        </div>
+                        <div class="error_form error_field"></div>
+                    </div>
+                </div>
+                <div class="form_block_ok">
+                    Сообщение отправлено.<br>
+                    Мы свяжемся с вами в самое ближайшее время!
                 </div>
             </form>
         </div>

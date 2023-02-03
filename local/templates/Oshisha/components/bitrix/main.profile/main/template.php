@@ -83,8 +83,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
 							<?endif;?>
                         </div>
 						<div class="info-date">
-						В день рождения вам будут доступны персональные скидки»<br>
-						Смена дня рождения доступна не чаще одногораза в год
+						В день рождения вам будут доступны персональные скидки<br>
+						Смена дня рождения доступна не чаще одного раза в год
 						<?=$dateChange?>
 						</div>
                     </div>
@@ -286,10 +286,11 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
 		<input type=hidden name="CHANGE_FORM" class="CHANGE_FORM" value="">
     </form>
     <?php $APPLICATION->IncludeComponent(
-        "ctweb:sms.authorize_profile",
+        "ctweb:sms.authorize",
         "profile",
         array(
             "ALLOW_MULTIPLE_USERS" => "Y",
+            "PROFILE_AUTH" => "Y",
             "USER_PHONE" => $arResult['arUser']['PHONE_NUMBER']
         )
     ); ?>

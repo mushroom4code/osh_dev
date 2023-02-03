@@ -112,7 +112,7 @@ $option = $option_site; ?>
                          <a href="/about/feedback/" class="text_link_footer">Обратная связь</a>
                     </span>
                     <span class="li_link_footer ">
-                         <a href="javascript:void(0)" class="callback text_link_footer">Обратный звонок</a>
+                         <a href="javascript:void(0)" class="callback js__callback text_link_footer">Обратный звонок</a>
                     </span>
 
                     <span class="li_link_footer">
@@ -283,10 +283,23 @@ $option = $option_site; ?>
                 <div class="block_text">Оставьте ваш номер и мы перезвоним вам в ближайшее рабочее время</div>
                 <div class="block_text_sub">Отдел поддержки работает с 10:00 до 20:00, ежедневно</div>
                 <form method="POST" class="callback_form">
-                    <input type="hidden" name="recaptcha_token" value="">
+                    <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
 
-                    <input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
-                    <div class="er_CALLBACK_PHONE"></div>
+                    <div class="form-group mb-3">
+                        <input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
+                        <div class="er_CALLBACK_PHONE error_field js__error_field"></div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-control input_lk" style="height: auto">
+                            <input name="confirm" type="checkbox" checked="checked">
+                            <span class="custom__title">Подтверждаю свое согласие с
+                                <a href="/about/politics/" target="_blank">положением об обработке персональных данных</a>
+                            </span>
+                        </label>
+                        <div class="er_FORM_CONFIRM error_field js__error_field"></div>
+                    </div>
+
                     <div class="submit-wrap">
                         <input type=submit class="btn btn-submit" value="Отправить"
                                onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">

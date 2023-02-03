@@ -3434,7 +3434,7 @@ table#TableWorkers.no-footer {
         max-height: 110px;
     }
 
-    .ctweb-smsauth-menu-block {
+    .ctweb-smsauth-menu-block:not(.profile) {
         top: auto !important;
         width: 98% !important;
         bottom: 60px !important;
@@ -3541,13 +3541,13 @@ table#TableWorkers.no-footer {
     }
 
     .box_map_mobile, .bx_catalog_item, .mobile_lk, #content_box, #personal_account, #about_contacts, #personal_orders,
-    #personal_company, .box_top_panel, .box_with_contact, .ctweb-smsauth-menu-block, .by-line.opt .line-price {
+    #personal_company, .box_top_panel, .box_with_contact, .ctweb-smsauth-menu-block:not(.profile), .by-line.opt .line-price {
         display: flex;
     }
 
     .box_map_mobile, .mobile_lk, #content_box, #personal_account, #about_contacts, #personal_orders,
     #personal_company, .products_box, .box_with_prod, .bx-header-personal, .box_with_brands_parents,
-    .box_with_properties > .news-list-view, .ctweb-smsauth-menu-block {
+    .box_with_properties > .news-list-view, .ctweb-smsauth-menu-block:not(.profile) {
         justify-content: center;
     }
 
