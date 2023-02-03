@@ -48,12 +48,12 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 
         if (isset($_POST['dataToHandler'])) {
             $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
-            $price = DeliveryHelper::getPrice($_POST['dataToHandler']);
-            $f = DeliveryHelper::translitSef($adr);
+            $f = serialize($adr);
             if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
                 $price = $cache->getVars();
             }
             elseif ($cache->startDataCache()) {
+                $price = DeliveryHelper::getPrice($_POST['dataToHandler']);
                 $cache->endDataCache($price);
             }
         } else {
@@ -66,12 +66,11 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
         }
 
         if ($price === 0) {
-            $f = DeliveryHelper::translitSef($adr);
-
+            $f = serialize($adr);
             if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
                 $price = $cache->getVars();
             }
-            $adressProperty->setValue('');
+            $adressProperty->setValue(''); // при первой загрузке страницы проскакивает адрес с др СД
         }
 
         $result->setDescription(DeliveryHelper::getButton());
