@@ -31,7 +31,7 @@ $APPLICATION->SetTitle("О нас");
             </div>
         </div>
         <h5 class="font-40 font-weight-bold color-black mb-lg-5 mb-md-5 mb-3">Почему выбирают нас?</h5>
-        <div class="d-flex flex-lg-row flex-md-row flex-column flex-wrap mb-3">
+        <div class="d-flex flex-lg-row flex-md-row flex-column flex-wrap mb-5 justify-content-center">
             <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
                 <div class="mr-4">
                     <b class="font-weight-bold font-40 color-redLight">01</b>
@@ -66,8 +66,11 @@ $APPLICATION->SetTitle("О нас");
                     <b class="font-weight-bold font-40 color-redLight">04</b>
                 </div>
                 <div class="d-flex flex-column justify-content-between align-content-between">
-                    <span class="text_advantage">Отсутствие минимальной
-                        <br> суммы заказа </span>
+                          <span class="text_advantage">
+                            Универсальные способы получения товара -
+                            мы работаем со множеством транспортных компаний и
+                            развозим заказы нашими курьерами по Москве\МО в
+                            любое время дня и ночи</span>
                 </div>
             </div>
             <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
@@ -75,11 +78,8 @@ $APPLICATION->SetTitle("О нас");
                     <b class="font-weight-bold font-40 color-redLight">05</b>
                 </div>
                 <div class="d-flex flex-column justify-content-between align-content-between">
-                        <span class="text_advantage">
-                            Универсальные способы получения товара -
-                            мы работаем со множеством транспортных компаний и
-                            развозим заказы нашими курьерами по Москве\МО в
-                            любое время дня и ночи</span>
+                      <span class="text_advantage">Отсутствие минимальной
+                        <br> суммы заказа </span>
                 </div>
             </div>
         </div>
