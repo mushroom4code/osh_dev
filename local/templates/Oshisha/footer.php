@@ -114,11 +114,11 @@ $option = $option_site; ?>
                     <span class="li_link_footer ">
                          <a href="javascript:void(0)" class="callback js__callback text_link_footer">Обратный звонок</a>
                     </span>
-
-                    <span class="li_link_footer">
+                    <?php if ($USER->IsAuthorized()) { ?>
+                        <span class="li_link_footer">
                          <a href="/about/FAQ/" class="text_link_footer li_link_footer">FAQ</a>
                     </span>
-
+                    <?php } ?>
                     <span class="li_link_footer ">
                          <a href="/about/users_rules/" class="text_link_footer">Пользовательское соглашение</a>
                     </span>
@@ -294,7 +294,8 @@ $option = $option_site; ?>
                         <label class="form-control input_lk" style="height: auto">
                             <input name="confirm" type="checkbox" checked="checked">
                             <span class="custom__title">Подтверждаю свое согласие с
-                                <a href="/about/politics/" target="_blank">положением об обработке персональных данных</a>
+                                <a href="/about/politics/"
+                                   target="_blank">положением об обработке персональных данных</a>
                             </span>
                         </label>
                         <div class="er_FORM_CONFIRM error_field js__error_field"></div>

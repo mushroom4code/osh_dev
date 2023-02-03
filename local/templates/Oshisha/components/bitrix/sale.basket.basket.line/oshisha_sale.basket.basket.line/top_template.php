@@ -18,7 +18,6 @@ $compositeStub = (isset($arResult['COMPOSITE_STUB']) && $arResult['COMPOSITE_STU
 
 $USER_CHECK = $USER->GetId();
 $FUser_id = Fuser::getId($USER_CHECK);
-$arUserLike = DataBase_like::getLikeFavoriteAllProduct(array(), $FUser_id);
 
 $cntBasketItems = CSaleBasket::GetList(
     array(),
@@ -42,18 +41,21 @@ while ($arItems = $cntBasketItems->Fetch()) {
 <div class="box_with_loginBasket">
     <?php if (!$compositeStub && $arParams['SHOW_AUTHOR'] == 'Y'): ?>
         <div class="box_with_basket_login">
-            <?php if ($USER->IsAuthorized()):
-                $name = trim($USER->GetFirstName());
-                $newName = explode(' ', $name);
-                if (!$name)
-                    $name = trim($USER->GetLogin());
-
-                ?>
-
-                <a class="link_header" href="<?= $arParams['PATH_TO_PROFILE'] ?>">
+            <?php if ($USER->IsAuthorized() &&  !$mobile->isMobile()):
+                $name = $USER->GetFirstName();
+                $newName = $name;
+                if (empty($name)) {
+                    $newName = $USER->GetLogin();
+                }
+                $class_width = '';
+                if ($newName == '') {
+                    $newName = '';
+                    $class_width = 'style="min-width:98px"';
+                } ?>
+                <a class="link_header" <?= $class_width ?> href="<?= $arParams['PATH_TO_PROFILE'] ?>">
                     <div class="basket_icon_personal"></div>
+                    <span><?= htmlspecialcharsbx($newName) ?></span>
                 </a>
-
             <?php else:
             $arParamsToDelete = array(
                 "login",
@@ -112,9 +114,9 @@ while ($arItems = $cntBasketItems->Fetch()) {
     <div class="box_with_basket_login">
         <a href="/personal/subscribe/" id="personal_subscribe" class="link_header link_lk">
             <i class="fa fa-star-o icon_header" aria-hidden="true"></i>
-            <? if ($arUserLike['USER']['NUM'] > 0): ?>
-                <span class="spanLikeTop"><?= $arUserLike['USER']['NUM'] ?></span>
-            <? endif; ?>
+            <?php if (!$mobile->isMobile() && $USER->IsAuthorized()) { ?>
+                <span class="font-11">Избранное</span>
+            <?php } ?>
         </a>
     </div>
     <div class="box_with_basket_login">
