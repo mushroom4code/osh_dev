@@ -22,7 +22,7 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_a
 if ($REQUEST_METHOD == "POST" && ($save != "" || $apply != "") && $POST_RIGHT == "W" && check_bitrix_sessid()) {
 
 
-    COption::SetOptionString("BBRAIN", "SETTINGS_SITE", json_encode($_REQUEST['SETTINGS']));
+    \Bitrix\Main\Config\Option::set("BBRAIN", "SETTINGS_SITE", json_encode($_REQUEST['SETTINGS']));
     // если сохранение прошло удачно - перенаправим на новую страницу
     // (в целях защиты от повторной отправки формы нажатием кнопки "Обновить" в браузере)
     if ($apply != "")
@@ -83,7 +83,7 @@ $tabControl->Begin();
 $tabControl->BeginNextTab();
 //echo $str_CATEGORY_ID;
 
-$SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
+$SETTINGS = json_decode(\Bitrix\Main\Config\Option::get("BBRAIN", "SETTINGS_SITE"), 1);
 ?>
     <tr>
         <td class="heading" colspan=2>Контакты</td>
