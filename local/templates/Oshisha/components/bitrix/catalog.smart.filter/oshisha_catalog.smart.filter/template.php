@@ -182,14 +182,14 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                         continue;
                     ?>
 
-                    <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box <? if ($arItem["DISPLAY_EXPANDED"] == "Y"): ?>bx-active<? endif ?>">
+                    <div class="<?= $arItem['CODE'] == 'MODEL_KALYANA' ? 'model_kalyana' : ''?> <? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box <? if ($arItem["DISPLAY_EXPANDED"] == "Y"): ?>bx-active<? endif ?>">
                         <span class="smart-filter-container-modef"></span>
 
                         <div class="smart-filter-parameters-box-title" onclick="smartFilter.hideFilterProps(this)">
 
                             <span class="smart-filter-parameters-box-title-text"><?= $arItem["NAME"] ?></span>
 
-                            <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
+                            <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-down">
 									<i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
 								</span>
 
@@ -689,7 +689,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 ?>
                                     <div class="smart-filter-input-group-checkbox-list">
                                         <? foreach ($arItem["VALUES"] as $val => $ar): ?>
-                                            <div class="form-group form-check">
+                                            <div style="<?= $ar["DISABLED"] ? 'display:none' : ''?>" class="form-group form-check">
                                                 <label data-role="label_<?= $ar["CONTROL_ID"] ?>"
                                                        class="smart-filter-checkbox-text form-check-label"
                                                        id="<?= $ar["VALUE"]; ?>" for="<? echo $ar["CONTROL_ID"] ?>">
@@ -700,7 +700,9 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                                         value="<? echo $ar["HTML_VALUE"] ?>"
                                                         name="<? echo $ar["CONTROL_NAME"] ?>"
                                                         id="<? echo $ar["CONTROL_ID"] ?>"
-                                                        class="check_input form-check-input"
+                                                        class="check_input
+                                                        <?= $arItem['CODE'] == 'BREND' ? 'brends_checkbox' : ''?>
+                                                        form-check-input"
                                                     <? echo $ar["CHECKED"] ? 'checked="checked"' : '' ?>
                                                     <? echo $ar["DISABLED"] ? 'disabled' : '' ?>
                                                         onclick="smartFilter.click(this)"
@@ -713,23 +715,6 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                     //endregion
                                 }
                                 ?>
-                                <div class="form-group form-check">
-                                    <label data-role="label_<?= $ar["CONTROL_ID"] ?>"
-                                           class="smart-filter-checkbox-text form-check-label"
-                                           id="<?= $ar["VALUE"]; ?>" for="<? echo $ar["CONTROL_ID"] ?>">
-                                        <?= $ar["VALUE"]; ?>
-                                    </label>
-                                    <input
-                                            type="checkbox"
-                                            value="<? echo $ar["HTML_VALUE"] ?>"
-                                            name="<? echo $ar["CONTROL_NAME"] ?>"
-                                            id="<? echo $ar["CONTROL_ID"] ?>"
-                                            class="check_input form-check-input"
-                                        <? echo $ar["CHECKED"] ? 'checked="checked"' : '' ?>
-                                        <? echo $ar["DISABLED"] ? 'disabled' : '' ?>
-                                            onclick="smartFilter.click(this)"
-                                    />
-                                </div>
                             </div>
                         </div>
 
@@ -738,7 +723,8 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                 }
                 ?>
 <!--                sus-->
-                <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box bx-active">
+                <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> hide_not_available_container
+                 smart-filter-parameters-box bx-active">
                     <span class="smart-filter-container-modef"></span>
                     <div class="smart-filter-block filter_id" data-role="bx_filter_block"
                          id="hide_not_available_container_id">
@@ -747,7 +733,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 <label data-role="label_in_stoсk"
                                        class="smart-filter-checkbox-text form-check-label hide_not_available"
                                        id="hide_not_available_label" for="<? echo $ar["CONTROL_ID"] ?>">
-                                    Показать только товар в наличии
+                                    В наличии
                                 </label>
                                 <input
                                         type="checkbox"

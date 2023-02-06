@@ -29,6 +29,8 @@ $parameters = unserialize(base64_decode($paramString));
 
 if (isset($hide_not_available)) {
     $parameters['HIDE_NOT_AVAILABLE'] = $hide_not_available;
+} else {
+    $parameters['HIDE_NOT_AVAILABLE'] = "L";
 }
 
 
@@ -88,7 +90,7 @@ if ($parameters)
 
 ob_start();
 //region Filter
-$APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", $template, array(
+$APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", "oshisha_catalog.smart.filter", array(
     "IBLOCK_TYPE" => $parameters["IBLOCK_TYPE"],
     "IBLOCK_ID" => $parameters["IBLOCK_ID"],
     //TODO static parameters
@@ -99,15 +101,15 @@ $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", $template, array(
     "CACHE_TIME" => $parameters["CACHE_TIME"],
     "CACHE_GROUPS" => $parameters["CACHE_GROUPS"],
     "SAVE_IN_SESSION" => "N",
-    "FILTER_VIEW_MODE" => $parameters["FILTER_VIEW_MODE"],
+    "FILTER_VIEW_MODE" => "VERTICAL",
     "XML_EXPORT" => "N",
     "SECTION_TITLE" => "NAME",
     "SECTION_DESCRIPTION" => "DESCRIPTION",
-    'HIDE_NOT_AVAILABLE' => $parameters["HIDE_NOT_AVAILABLE"],
+    'HIDE_NOT_AVAILABLE' => $parameters["HIDE_NOT_AVAILABLE"] == "L" ? "N" : "Y",
     "TEMPLATE_THEME" => $parameters["TEMPLATE_THEME"],
     'CONVERT_CURRENCY' => $parameters['CONVERT_CURRENCY'],
     'CURRENCY_ID' => $parameters['CURRENCY_ID'],
-    "SEF_MODE" => $parameters["SEF_MODE"],
+    "SEF_MODE" => "Y",
     //TODO static parameters
     "SEF_RULE" => '/catalog/#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/',
     "SMART_FILTER_PATH" => $parameters["VARIABLES"]["SMART_FILTER_PATH"],
@@ -133,7 +135,7 @@ if( isset($_REQUEST['PAGER_BASE_LINK_ENABLE'])){
     $parameters['PAGER_BASE_LINK_ENABLE'] = $_REQUEST['PAGER_BASE_LINK_ENABLE'];
 }
 //TODO DEBUG
-$parameters['HIDE_NOT_AVAILABLE'] = 'Y';
+//$parameters['HIDE_NOT_AVAILABLE'] = 'Y';
 
 $APPLICATION->IncludeComponent(
     'bitrix:catalog.section',

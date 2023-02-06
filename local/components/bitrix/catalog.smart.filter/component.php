@@ -39,6 +39,12 @@ if($this->StartResultCache(false, array('v10', $preFilter, ($arParams["CACHE_GRO
 
 	if(!empty($arResult["ITEMS"]))
 	{
+        foreach(array_merge($_GET, $_POST) as $key => $value)
+        {
+            if($key == 'hide_not_available') {
+                $this->arParams["HIDE_NOT_AVAILABLE"] = 'Y';
+            }
+        }
 		if ($this->facet->isValid())
 		{
 			$this->facet->setPrices($arResult["PRICES"]);
@@ -936,6 +942,7 @@ foreach(array_merge($_GET, $_POST) as $key => $value)
 			"CONTROL_NAME" => htmlspecialcharsbx($key),
 			"HTML_VALUE" => htmlspecialcharsbx($value),
 		);
+
 	}
 }
 

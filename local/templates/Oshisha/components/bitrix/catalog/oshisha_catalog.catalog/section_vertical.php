@@ -205,7 +205,6 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             "PAGER_PARAMS_NAME" => $arParams["PAGER_PARAMS_NAME"],
                             "INSTANT_RELOAD" => $arParams["INSTANT_RELOAD"],
                         ),
-                        $component,
                         array('HIDE_ICONS' => 'Y')
                     );
                     ?>

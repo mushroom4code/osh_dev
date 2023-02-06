@@ -38,13 +38,19 @@ JCSmartFilter.prototype.click = function(checkbox)
 			BX(checkbox).value = 'L';
 		}
 	} else {
+		if ($(checkbox).hasClass('brends_checkbox')) {
+			if ($('input.check_input.brends_checkbox:checked').length > 0) {
+				$('div.model_kalyana.smart-filter-parameters-box').css({ display: "block" });
+			} else {
+				$('div.model_kalyana.smart-filter-parameters-box').css({ display: "none" });
+			}
+		}
 		if(BX(checkbox).checked) {
 			this.addHorizontalFilter(checkbox);
 		} else {
 			this.removeHorizontalFilter(checkbox);
 		}
 	}
-
 
 	if(!!this.timer)
 	{
@@ -260,25 +266,31 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem)
 			{
 				var value = arItem.VALUES[i];
 				var control = BX(value.CONTROL_ID);
-
 				if (!!control)
 				{
 					var label = document.querySelector('[data-role="label_'+value.CONTROL_ID+'"]');
 					if (value.DISABLED)
 					{
 						BX.adjust(control, {props: {disabled: true}});
-						if (label)
+						if (label) {
+							BX.addClass(control.parentNode, 'disabled');
 							BX.addClass(label, 'disabled');
+						}
 						else
 							BX.addClass(control.parentNode, 'disabled');
 					}
 					else
 					{
 						BX.adjust(control, {props: {disabled: false}});
-						if (label)
-							BX.removeClass(label, 'disabled');
-						else
+						if (label){
+							$(control).closest('.smart-filter-parameters-box').removeClass('disabled');
 							BX.removeClass(control.parentNode, 'disabled');
+							BX.removeClass(label, 'disabled');
+						}
+						else {
+							$(control).closest('.smart-filter-parameters-box').removeClass('disabled');
+							BX.removeClass(control.parentNode, 'disabled');
+						}
 					}
 
 					if (value.hasOwnProperty('ELEMENT_COUNT'))
@@ -306,7 +318,8 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 			}
 		}
 		this.popups = [];
-
+		$('input.check_input.form-check-input').not('#hide_not_available_id').parent().addClass('disabled');
+		$('div.smart-filter-parameters-box').not('.hide_not_available_container').not(".F").addClass('disabled');
 		for(var PID in result.ITEMS)
 		{
 			if (result.ITEMS.hasOwnProperty(PID))
