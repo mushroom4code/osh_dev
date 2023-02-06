@@ -131,6 +131,9 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                     <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                 <?php } ?>
             </a>
+            <i class="fa fa-search open-fast-window font-20"
+               data-item-id="<?= $item['ID'] ?>"
+               aria-hidden="true"></i>
         </div>
 
         <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>

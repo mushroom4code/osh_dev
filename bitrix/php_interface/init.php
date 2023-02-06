@@ -49,7 +49,6 @@ $option_site = json_decode(\Bitrix\Main\Config\Option::get("BBRAIN", 'SETTINGS_S
 
 //class used in component files before init autoload files
 require_once(__DIR__ . '/enterego_class/EnteregoGiftHandlers.php');
-require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
 require_once (__DIR__ . '/enterego_class/modules/update_service_likes.php');
 require_once (__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');

@@ -26,7 +26,7 @@ if (isset($arResult['ITEM'])) {
     $item['COUNT_LIKE'] = $arResult['COUNT_LIKE'];
     $item['COUNT_FAV'] = $arResult['COUNT_FAV'];
     $item['COUNT_LIKES'] = $arResult['COUNT_LIKES'];
-	$item['DETAIL_PAGE_URL'] = str_replace('/catalog_new/', '/catalog/', $item['DETAIL_PAGE_URL']);
+    $item['DETAIL_PAGE_URL'] = str_replace('/catalog_new/', '/catalog/', $item['DETAIL_PAGE_URL']);
     $areaId = $arResult['AREA_ID'];
 
     $itemIds = array(
@@ -55,6 +55,7 @@ if (isset($arResult['ITEM'])) {
         'PROP' => $areaId . '_prop_',
         'DISPLAY_PROP_DIV' => $areaId . '_sku_prop',
         'BASKET_PROP_DIV' => $areaId . '_basket_prop',
+        'PROD_ID' => $item['ID_PROD']
     );
     $obName = 'ob' . preg_replace("/[^a-zA-Z0-9_]/", "x", $areaId);
     $isBig = isset($arResult['BIG']) && $arResult['BIG'] === 'Y';
@@ -221,6 +222,7 @@ if (isset($arResult['ITEM'])) {
                     'PRICE_TOTAL_ID' => $itemIds['PRICE_TOTAL'],
                     'BUY_ID' => $itemIds['BUY_LINK'],
                     'BASKET_PROP_DIV' => $itemIds['BASKET_PROP_DIV'],
+                    'PROD_ID' => $itemIds['PROD_ID'],
                     'BASKET_ACTIONS_ID' => $itemIds['BASKET_ACTIONS'],
                     'NOT_AVAILABLE_MESS' => $itemIds['NOT_AVAILABLE_MESS'],
                     'COMPARE_LINK_ID' => $itemIds['COMPARE_LINK'],
@@ -337,7 +339,7 @@ if (isset($arResult['ITEM'])) {
         );
         $resBasket = $arResult['AR_BASKET'];
         ?>
-<!--        todo minimize js -->
+        <!--        todo minimize js -->
         <script>
             if (typeof <?= $obName ?> === undefined) {
                 let <?=$obName?> = new JCCatalogItem(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
