@@ -64,7 +64,7 @@ class SDEKDelivery extends CommonPVZ
 
         curl_close($curl);
 
-        return $response;
+        return json_decode($response);
     }
 
     public function getPVZ($city_name, &$result_array, &$id_feature, $code_city)
