@@ -3566,8 +3566,20 @@ class CIBlockCMLImportEe
                         elseif($prop_id == "CML2_ACTIVE")
                         {
                             $value = array_pop($value);
-                            $arElement["ACTIVE"] = ($value=="true") || intval($value)? "Y": "N";
+                            //enterego validate prev cancel active
+                            //$arElement["ACTIVE"] = ($value=="true") || intval($value)? "Y": "N";
+                            $arElement["ACTIVE"] = (($value=="true") || intval($value)) && $arElement["ACTIVE"] === 'Y'
+                                ? "Y": "N";
                         }
+                        //enterego disable prop product and validate prev status of th activate
+                        elseif($prop_id == "CML2_DISABLE")
+                        {
+                            $value = array_pop($value);
+                            if ($value=="true" || intval($value)) {
+                                $arElement["ACTIVE"] = 'N';
+                            }
+                        }
+                        //
                         elseif($prop_id == "CML2_SORT")
                             $arElement["SORT"] = array_pop($value);
                         elseif($prop_id == "CML2_ACTIVE_FROM")
