@@ -12,8 +12,8 @@ class SDEKDelivery extends CommonPVZ
     {
         $postFieldsAr = array(
             "grant_type" => "client_credentials",
-            "client_id" => $this->configs['setAccount'],
-            "client_secret" => $this->configs['setSecure']
+            "client_id" => $this->configs['setaccount'],
+            "client_secret" => $this->configs['setsecure']
         );
         $strRequest = http_build_query($postFieldsAr);
 
@@ -57,12 +57,13 @@ class SDEKDelivery extends CommonPVZ
         ));
 
         $response = curl_exec($curl);
-
         $error = curl_error($curl);
-        if ($error !== '')
-            $this->errors[] = $error;
-
         curl_close($curl);
+
+        if ($error !== '') {
+            $this->errors[] = $error;
+            return false;
+        }
 
         return json_decode($response);
     }
@@ -111,7 +112,9 @@ class SDEKDelivery extends CommonPVZ
         if ($this->token !== '') {
             $ar = ['country_codes' => 'RU', 'city' => $cityName];
             $resp = $this->request('https://api.cdek.ru/v2/location/cities', http_build_query($ar), 'GET');
-            return $resp['code'];
+            if (isset($resp['code'])) {
+                return $resp['code'];
+            }
         }
         return false;
     }
@@ -133,8 +136,9 @@ class SDEKDelivery extends CommonPVZ
                 }';
 
                 $resp = $this->request('https://api.cdek.ru/v2/calculator/tariff', $requestObjectString, 'POST');
-
-                return round($resp['total_sum']);
+                if (isset($resp['total_sum'])) {
+                    return round($resp['total_sum']);
+                }
             }
         } catch (\Exception $e) {
             $this->errors[] = $e->getMessage();
