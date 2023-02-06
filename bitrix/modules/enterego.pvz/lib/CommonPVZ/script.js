@@ -14,6 +14,7 @@ BX.SaleCommonPVZ = {
     pvzPrice: null,
     isInit: false,
     dataPVZ: null,
+    isInit: false,
 
     init: function (params) {
         console.log('... CommonPVZ init ...');
@@ -188,7 +189,8 @@ BX.SaleCommonPVZ = {
                 weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
                 fivepost_zone: obj.properties.fivepostZone,
                 hubregion: obj.properties.hubregion,
-                name_city: __this.curCityName
+                name_city: __this.curCityName,
+                code_pvz: obj.properties.code_pvz
             };
             __this.refresh();
             __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);

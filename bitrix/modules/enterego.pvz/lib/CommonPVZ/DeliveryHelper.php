@@ -137,10 +137,10 @@ class DeliveryHelper
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
         $cAsset->addString(
             "<style>
-                    div[data-property-id-row='76'] {
+                    div[data-property-id-row='".$params['arPropsAddr'][0]."'] {
                         display:none
                     }
-                    div[data-property-id-row='77'] {
+                    div[data-property-id-row='".$params['arPropsAddr'][1]."'] {
                         display:none
                     }
                  </style>

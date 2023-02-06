@@ -41,13 +41,16 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 
         $order = $shipment->getCollection()->getOrder();
         $propertyCollection = $order->getPropertyCollection();
-        $adressProperty = $propertyCollection->getAddress();
 
         $cache = Cache::createInstance();
         $cachePath = '/getAllPVZpr';
 
         if (isset($_POST['dataToHandler'])) {
-            $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
+            if ($_POST['dataToHandler']['code_pvz'] === 'undefined') {
+                $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
+            } else {
+                $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'] . ' #' . $_POST['dataToHandler']['code_pvz'];
+            }
             $f = serialize($adr);
             if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
                 $price = $cache->getVars();
@@ -70,7 +73,6 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
             if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
                 $price = $cache->getVars();
             }
-            $adressProperty->setValue(''); // при первой загрузке страницы проскакивает адрес с др СД
         }
 
         $result->setDescription(DeliveryHelper::getButton());
