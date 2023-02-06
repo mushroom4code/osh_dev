@@ -14,7 +14,6 @@ BX.SaleCommonPVZ = {
     pvzPrice: null,
     isInit: false,
     dataPVZ: null,
-    isInit: false,
 
     init: function (params) {
         console.log('... CommonPVZ init ...');
@@ -50,6 +49,7 @@ BX.SaleCommonPVZ = {
     },
 
     createPVZPopup: function () {
+        var __this = this;
         if (BX.PopupWindowManager.isPopupExists('wrap_pvz_map')) return;
         this.pvzPopup = BX.PopupWindowManager.create(
             'wrap_pvz_map',
@@ -73,6 +73,8 @@ BX.SaleCommonPVZ = {
                     onPopupShow: function () {
                     },
                     onPopupClose: function () {
+                        if (__this.propsMap)
+                            __this.propsMap.destroy();
                     }
                 },
                 closeByEsc: true
@@ -83,10 +85,8 @@ BX.SaleCommonPVZ = {
      *   Построение карты с PVZ
      */
     buildPVZMap: function () {
-        if (this.propsMap !== null) {
-            return;
-        }
         var __this = this;
+
         ymaps.ready(function () {
             var myGeocoder = ymaps.geocode(__this.curCityName, {results: 1});
             myGeocoder.then(function (res) { // получаем координаты
@@ -110,7 +110,6 @@ BX.SaleCommonPVZ = {
 
     getCityName: function () {
         var __this = this;
-
 
         BX.ajax({
             url: __this.ajaxUrlPVZ,
