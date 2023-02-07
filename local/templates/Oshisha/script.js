@@ -7,8 +7,7 @@ $(document).ready(function () {
         boxAddress = $('#edit_addressBox'),
         checkProductOrdersReady = $('#allProducts'),
         bool = $('span').is('.taste'),
-        tasted = $(div).is('#VKUS'),
-        brands = $(div).is('.box_with_brands_parents');
+        tasted = $(div).is('#VKUS');
     // WORKERS
     let workers = $(div).is('#personal_worker'),
         worker_pages = $(div).is('#worker_pages'),
@@ -617,40 +616,6 @@ $(document).ready(function () {
                 $(".box_with_message_prodNot").hide(300).remove()
             }, 2000);
         }
-    });
-
-
-//BRANDS
-
-    if (brands === true) {
-        $('#box_boxes').find('.box_with_brands_parents').each(
-            function () {
-                let heightBlock = $(this).css('height');
-                if (heightBlock < '435px') {
-                    $(this).closest('div#box_brands').find('a.link_menu_catalog ').attr('style', 'display:none');
-                }
-            }
-        )
-    }
-
-    function showHideBlockForButton(box) {
-        let height = $(box).css('height'),
-            id = $(box).attr('id'),
-            idLink = $(this).attr('id');
-        if (id === idLink) {
-            if (height === '435px') {
-                $(this).text('Скрыть');
-                $(box).attr('style', 'max-height:2000px;transition: 0.7s;');
-            } else {
-                $(this).text('Показать все');
-                $(box).attr('style', 'max-height:435px;height:435px;transition: 0.7s;');
-            }
-        }
-    }
-
-    $('a.link_brand').on('click', function () {
-        let box = $(this).closest('div#box_brands').find('.box_with_brands_parents');
-        showHideBlockForButton(box)
     });
 
 // CATALOG
