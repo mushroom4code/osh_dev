@@ -9,7 +9,7 @@ $arParamsString = array(
     'SEF_URL' => $arParams['SEF_URL'],
     'FIRST_ID' => $arParams['FIRST_ID'],
 ); ?>
-<div class="mb-5 static" id="box_boxes">
+<div class="mb-5 static mt-3" id="box_boxes">
     <h1>Бренды</h1>
     <?php $rsSections = CIBlockSection::GetList(
         array('SORT' => 'ASC'),
@@ -22,16 +22,14 @@ $arParamsString = array(
             continue;
         } ?>
         <div class="d-flex flex-column mb-5" id="box_brands">
-            <div class="d-flex flex-row">
-                <h5 class="mt-5 mb-3"><?= $arSection['NAME'] ?></h5>
-                <div class="d-flex justify-content-end m-2 box_button">
+            <div class="d-flex flex-row mt-5 mb-3 align-items-center justify-content-between">
+                <h5 class="mb-0"><?= $arSection['NAME'] ?></h5>
                     <a href="javascript:void(0)"
-                       class="link_menu_catalog color-redLight text-decoration-underline link_brand"
+                       class="color-redLight text-decoration-underline link_brand font-weight-bold"
                        data-id="click_brand_<?=
                        $arSection['ID']; ?>">Посмотреть все</a>
-                </div>
             </div>
-            <div class="box_with_brands_parents" id="click_brand_<?= $arSection['ID']; ?>">
+            <div class="box_with_brands_parents justify-content-between" id="click_brand_<?= $arSection['ID']; ?>">
                 <?php foreach ($arResult[$arSection['NAME']] as $_brands) { ?>
                     <div class="box_with_brands d-flex justify-content-center align-items-center col col-sm">
                         <?php if ($_brands['UF_FILE']) {
