@@ -39,31 +39,29 @@ class PickPointDelivery extends CommonPVZ
         }
 
         foreach ($pickPoint_result as $key => $value) {
-            if ($value['HubCity'] === $city_name) {
-                $features_obj['type'] = 'Feature';
-                $features_obj['id'] = $id_feature;
-                $id_feature += 1;
-                $features_obj['geometry'] = [
-                    'type' => 'Point',
-                    'coordinates' => [
-                        $value['Latitude'],
-                        $value['Longitude']
-                    ]
-                ];
-                $features_obj['properties'] = [
-                    'code_pvz' => $value['Number'],
-                    'fullAddress' => $value['HubCity'] . ', ' . $value['Address'],
-                    'deliveryName' => 'PickPoint',
-                    'iconCaption' => 'PickPoint',
-                    'hintContent' => $value['Address'],
-                    "hubregion" => $value['HubRegion']
-                ];
-                $features_obj['options'] = [
-                    'preset' => 'islands#darkOrangeIcon'
-                ];
+            $features_obj['type'] = 'Feature';
+            $features_obj['id'] = $id_feature;
+            $id_feature += 1;
+            $features_obj['geometry'] = [
+                'type' => 'Point',
+                'coordinates' => [
+                    $value['Latitude'],
+                    $value['Longitude']
+                ]
+            ];
+            $features_obj['properties'] = [
+                'code_pvz' => $value['Number'],
+                'fullAddress' => $value['HubRegion'] . ', ' . $value['CitiName'] . ', ' . $value['Address'],
+                'deliveryName' => 'PickPoint',
+                'iconCaption' => 'PickPoint',
+                'hintContent' => $value['CitiName'] . ', ' . $value['Address'],
+                "hubregion" => $value['HubRegion']
+            ];
+            $features_obj['options'] = [
+                'preset' => 'islands#darkOrangeIcon'
+            ];
 
-                $result_array[] = $features_obj;
-            }
+            $result_array[] = $features_obj;
         }
     }
 

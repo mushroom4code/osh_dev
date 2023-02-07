@@ -95,7 +95,7 @@ BX.SaleCommonPVZ = {
 
                 __this.propsMap = new ymaps.Map('map_for_pvz', {
                     center: [coords[0], coords[1]],
-                    zoom: 10,
+                    zoom: 12,
                     controls: ['fullscreenControl']
                 });
                 __this.getPVZList();

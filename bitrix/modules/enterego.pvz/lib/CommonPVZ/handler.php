@@ -54,10 +54,12 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
             $f = serialize($adr);
             if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
                 $price = $cache->getVars();
-            }
-            elseif ($cache->startDataCache()) {
+            } elseif ($cache->startDataCache()) {
                 $price = DeliveryHelper::getPrice($_POST['dataToHandler']);
-                $cache->endDataCache($price);
+                if ($price !== false && is_numeric($price) && $price !== '0' && (int)$price > 0)
+                    $cache->endDataCache($price);
+                else
+                    $price = 0;
             }
         } else {
             foreach ($propertyCollection as $item) {
