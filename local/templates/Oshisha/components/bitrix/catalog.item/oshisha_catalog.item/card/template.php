@@ -3,8 +3,6 @@
 use Enterego\EnteregoHelper;
 
 /**
- * @global CMain $APPLICATION
- * @var array $arParams
  * @var array $item
  * @var array $actualItem
  * @var array $minOffer
@@ -107,19 +105,21 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             <span class="taste new-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
         <?php }
         if (count($taste['VALUE']) > 0) { ?>
-            <div class="toggle_taste card-price">
-                <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
+            <div class="toggle_taste card-price <?= count($taste['VALUE'])> 2 ? 'js__tastes' : '' ?>">
+                <div class="variation_taste <?= count($taste['VALUE'])> 2 ? 'js__tastes-list' : '' ?>">
                     <?php foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                             if ($key === $keys) {
                                 $color = explode('#', $value); ?>
-                                <span class="taste" data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>">
+                                <span class="taste" data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>"
+                                      data-width="<?= mb_strlen($name, 'UTF-8') ?>">
                                     <?= $name ?>
                                 </span>
                             <?php }
                         }
                     } ?>
                 </div>
+                <div class="variation_taste_toggle js__taste_toggle"></div>
             </div>
         <?php } ?>
         <div class="image_cart <?= $not_auth ?>" data-href="<?= $href ?>">
@@ -137,6 +137,21 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
                 <div class="box_with_titles">
                     <?php
+                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                        'templates',
+                        array(
+                            'ID_PROD' => $item['ID_PROD'],
+                            'F_USER_ID' => $item['F_USER_ID'],
+                            'LOOK_LIKE' => false,
+                            'LOOK_FAVORITE' => true,
+                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                            'COUNT_FAV' => $item['COUNT_FAV'],
+                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                        )
+                        ,
+                        $component,
+                        array('HIDE_ICONS' => 'Y')
+                    );
                     $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                         'templates',
                         array(
@@ -160,6 +175,21 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                     Товара нет в наличии
                 </div>
                 <?php
+                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                    'templates',
+                    array(
+                        'ID_PROD' => $item['ID_PROD'],
+                        'F_USER_ID' => $item['F_USER_ID'],
+                        'LOOK_LIKE' => false,
+                        'LOOK_FAVORITE' => true,
+                        'COUNT_LIKE' => $item['COUNT_LIKE'],
+                        'COUNT_FAV' => $item['COUNT_FAV'],
+                        'COUNT_LIKES' => $item['COUNT_LIKES'],
+                    )
+                    ,
+                    $component,
+                    array('HIDE_ICONS' => 'Y')
+                );
                 $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                     'templates',
                     array(
@@ -345,23 +375,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                     <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
                          data-href="<?= $href ?>">Подробнее
                     </div>
-                    <?php
-                }
-                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                    'templates',
-                    array(
-                        'ID_PROD' => $item['ID_PROD'],
-                        'F_USER_ID' => $item['F_USER_ID'],
-                        'LOOK_LIKE' => false,
-                        'LOOK_FAVORITE' => true,
-                        'COUNT_LIKE' => $item['COUNT_LIKE'],
-                        'COUNT_FAV' => $item['COUNT_FAV'],
-                        'COUNT_LIKES' => $item['COUNT_LIKES'],
-                    )
-                    ,
-                    $component,
-                    array('HIDE_ICONS' => 'Y')
-                ); ?>
+                <?php } ?>
             </div>
             <div style="clear: both;"></div>
         </div>
@@ -372,24 +386,6 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                 Нет в наличии
             </div>
             <div class="detail_popup min_card"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
-            <?php
-
-            $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                'templates',
-                array(
-                    'ID_PROD' => $item['ID_PROD'],
-                    'F_USER_ID' => $item['F_USER_ID'],
-                    'LOOK_LIKE' => false,
-                    'LOOK_FAVORITE' => true,
-                    'COUNT_LIKE' => $item['COUNT_LIKE'],
-                    'COUNT_FAV' => $item['COUNT_FAV'],
-                    'COUNT_LIKES' => $item['COUNT_LIKES'],
-                )
-                ,
-                $component,
-                array('HIDE_ICONS' => 'Y')
-            );
-            ?>
         </div>
         <div style="clear: both;"></div>
         <div id="popup_mess"></div>

@@ -309,16 +309,6 @@
                         }
                     }
                 );
-
-                $('body').find('.variation_taste').each(
-                    function (index, item) {
-                        if ($(item).find('.taste').length > 2) {
-                            $(item).closest('.toggle_taste ').css('overflow', 'hidden');
-                            $(item).closest('.toggle_taste ').addClass('many_tastes_toggle');
-                            $(item).attr('visible', '0');
-                        }
-                    }
-                );
             },
 
             processDeferredLoadAction: function (result, bigData) {
