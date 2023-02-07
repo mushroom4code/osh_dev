@@ -28,7 +28,7 @@ $(document).ready(function () {
         function () {
             let heightBlock = $(this).css('height');
             if (heightBlock < '435px') {
-                $(this).closest('div#box_brands').find('a.link_menu_catalog ').attr('style', 'display:none');
+                $(this).closest('div#box_brands').find('a.link_brand ').attr('style', 'display:none');
             }
         }
     );

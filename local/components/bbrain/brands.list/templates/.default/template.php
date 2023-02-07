@@ -27,7 +27,7 @@ $arParamsString = array(
                     <a href="javascript:void(0)"
                        class="color-redLight text-decoration-underline link_brand font-weight-bold"
                        data-id="click_brand_<?=
-                       $arSection['ID']; ?>">Посмотреть все</a>
+                       $arSection['ID']; ?>">Показать все</a>
             </div>
             <div class="box_with_brands_parents justify-content-between" id="click_brand_<?= $arSection['ID']; ?>">
                 <?php foreach ($arResult[$arSection['NAME']] as $_brands) { ?>
