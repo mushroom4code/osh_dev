@@ -23,6 +23,14 @@ if (!empty($product_id) && $action === 'get_info_on_product_id') {
         ],
         'filter' => ['=ID' => $product_id]
     ]);
+
     $result = $productArray->fetch();
-    $propertyArray = CIBlockElement::GetProperty('12', $product_id, array("sort" => "asc"), array("CODE" => "BREND"));
+    $propertyArray = CIBlockElement::GetProperty(
+        '12',
+        $product_id,
+        array("sort" => "asc"),
+        array("CODE" => "BREND")
+    );
+    $resultPropArray = $propertyArray->fetch();
+
 }

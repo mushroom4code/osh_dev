@@ -2181,7 +2181,6 @@ $(document).on('click', '.open-fast-window', function () {
         },
         success: function (result) {
             console.log(result);
-            // location.href = BX.message('BASKET_URL');
         }
     });
 
