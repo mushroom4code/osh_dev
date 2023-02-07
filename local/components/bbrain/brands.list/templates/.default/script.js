@@ -40,7 +40,7 @@ $(document).ready(function () {
         if (id === idLink) {
             if (height === '435px') {
                 $(href).text('Скрыть');
-                $(box).attr('style', 'max-height:2000px;transition: 0.7s;');
+                $(box).attr('style', 'max-height: none;transition: 0.7s;');
             } else {
                 $(href).text('Показать все');
                 $(box).attr('style', 'max-height:435px;height:435px;transition: 0.7s;');
