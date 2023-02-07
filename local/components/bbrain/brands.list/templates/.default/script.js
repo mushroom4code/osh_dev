@@ -33,16 +33,16 @@ $(document).ready(function () {
         }
     );
 
-    function showHideBlockForButton(box) {
+    function showHideBlockForButton(box,href) {
         let height = $(box).css('height'),
             id = $(box).attr('id'),
-            idLink = $(this).attr('id');
+            idLink = $(href).attr('data-id');
         if (id === idLink) {
             if (height === '435px') {
-                $(this).text('Скрыть');
+                $(href).text('Скрыть');
                 $(box).attr('style', 'max-height:2000px;transition: 0.7s;');
             } else {
-                $(this).text('Показать все');
+                $(href).text('Показать все');
                 $(box).attr('style', 'max-height:435px;height:435px;transition: 0.7s;');
             }
         }
@@ -50,7 +50,7 @@ $(document).ready(function () {
 
     $('a.link_brand').on('click', function () {
         let box = $(this).closest('div#box_brands').find('.box_with_brands_parents');
-        showHideBlockForButton(box);
+        showHideBlockForButton(box,$(this));
     });
 
 });
