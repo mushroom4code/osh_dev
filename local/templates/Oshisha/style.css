@@ -255,6 +255,10 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     width: 30%;
 }
 
+.max-width-1024 {
+    max-width: 1024px;
+}
+
 .container_header, .foot_container {
     width: 75%;
     max-width: 1355px;

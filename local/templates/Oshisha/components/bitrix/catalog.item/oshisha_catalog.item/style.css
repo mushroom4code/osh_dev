@@ -1087,3 +1087,23 @@ input::-webkit-inner-spin-button {
     right: 23px;
     height: 28px;
 }
+
+.top-32 {
+    top: 32%;
+}
+
+.open-modal-product {
+    filter: drop-shadow(0px 2px 2px rgba(57, 57, 57, 0.13));
+}
+
+.box-with-image-prod {
+    background: white;
+    border: 1px solid #E5E5E5;
+    border-radius: 15px;
+    min-height: 400px;
+}
+
+.w-h-350 {
+    height: 350px;
+    width: 350px;
+}
