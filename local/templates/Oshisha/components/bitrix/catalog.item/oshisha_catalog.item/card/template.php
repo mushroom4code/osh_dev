@@ -121,6 +121,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                 </div>
                 <div class="variation_taste_toggle js__taste_toggle"></div>
             </div>
+            <div class="bx_catalog_item_overlay"></div>
         <?php } ?>
         <div class="image_cart <?= $not_auth ?>" data-href="<?= $href ?>">
             <a class=" <?= $styleForTaste ?>"

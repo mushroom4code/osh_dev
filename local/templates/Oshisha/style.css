@@ -2622,13 +2622,9 @@ div#about_contacts > .row > .form_company {
 .taste {
     margin-right: 3px;
     margin-bottom: 4px;
-    /*padding: 5px 8px;*/
+    padding: 5px 8px;
     font-weight: 500;
     border-radius: 5px;
-
-    min-width: 65px;
-    text-align: center;
-    padding: 5px 10px;
 }
 
 .new-product {
@@ -5779,6 +5775,7 @@ header {
 }
 .toggle_taste.card-price.js__tastes {
     position: relative;
+    z-index: 1200;
 }
 .js__tastes .variation_taste_toggle {
     border-top: 7px solid #666;
@@ -5816,7 +5813,26 @@ header {
 .js__tastes.active .variation_taste {
     height: auto;
 }
-.taste {
-    font-size: 12px;
+.variation_taste .taste {
+    font-size: 11px;
     display: inline-block;
+    font-weight: bold;
+    min-width: 65px;
+    text-align: center;
+    padding: 5px 10px;
+    margin: 0 5px 5px 0;
+}
+
+.bx_catalog_item_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    z-index: 1100;
+    filter: blur(3px);
+    background: transparent none;
+    backdrop-filter: blur(1px);
 }
