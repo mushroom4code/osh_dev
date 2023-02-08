@@ -2274,8 +2274,10 @@ $(document).ready(function () {
     }
 
     $(document).on('click', '.js__filter-close', function() {
-        $(this).parents('.box_filter_catalog').slideUp();
-        $(document).find('body').css({overflow: 'initial'})
+        if (!$(this).hasClass('disabled_class')) {
+            $(this).parents('.box_filter_catalog').slideUp();
+            $(document).find('body').css({overflow: 'initial'})
+        }
     })
 
     $('.shared i').on('click', function () {
