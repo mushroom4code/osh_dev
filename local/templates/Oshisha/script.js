@@ -126,8 +126,10 @@ $(document).ready(function () {
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
                 $(e.target).closest('.bx_catalog_item_container').find('.bx_catalog_item_overlay').css({height:'100%'});
+                $(e.target).closest('.bx_catalog_item_container').find('.info-prices-box-hover').css({zIndex:'1000'});
             } else {
                 $(e.target).closest('.bx_catalog_item_container').find('.bx_catalog_item_overlay').css({height:'0'});
+                $(e.target).closest('.bx_catalog_item_container').find('.info-prices-box-hover').css({zIndex:'1300'});
             }
         })
         tasteInit();
