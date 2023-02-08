@@ -88,6 +88,7 @@ foreach ($item['ACTUAL_BASKET'] as $key => $val) {
         $priceBasket = $val;
     }
 }
+
 $href = '';
 if (!$show_price) {
     $href = $item['DETAIL_PAGE_URL'];
@@ -95,9 +96,12 @@ if (!$show_price) {
 }
 
 $productTitle = str_replace("\xC2\xA0", " ", $productTitle);
-$productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
-<div class="<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
+$productTitle = str_replace("\xC2\xA0", " ", $productTitle);
+
+?>
+<div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
+    <input type="hidden" class="product-values" value="<?=json_encode($item) ?>"/>
     <div class="bx_catalog_item_container product-item position-relative
     <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
         <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>

@@ -2171,35 +2171,26 @@
 
 $(document).on('click', '.open-fast-window', function () {
 
-    let product_id = $(this).attr('data-item-id');
+    let json_product = $(this).closest('.catalog-item-product').find('input.product-values');
 
-    $.ajax({
-        type: 'POST',
-        url: '/local/ajax/product_fast_window.php',
-        data: {
-            product_id: product_id,
-            action: 'get_info_on_product_id'
-        },
-        success: function (result) {
-            let item = JSON.parse(result);
-            if (item.result === 'success') {
-                let wrapper = $('.section_wrapper');
-                let product = item.product;
-                $(wrapper).find('div.open-modal-product').remove();
-                $(wrapper).append('<div class="position-fixed width-100 top-32 d-flex justify-content-center z-index-1200">' +
-                    '<div class="open-modal-product bg-gray-white p-4 max-width-1024 width-100 br-10">' +
-                    '<h5>' + product.NAME + '</h5>' +
-                    '<div>' +
-                    '<div class="box-with-image-prod col-lg-6 col-md-6 col-12 d-flex align-items-center justify-content-center">' +
-                    '<img class="w-h-350" src="' + product.DETAIL_PICTURE + '" alt="modal" />' +
-                    '</div>' +
-                    '<div></div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>')
+    if (json_product !== '') {
 
-            }
-        }
-    });
+        let wrapper = $('.section_wrapper');
+        let product = JSON.parse(json_product);
+        $(wrapper).find('div.open-modal-product').remove();
+        console.log(product)
+        $(wrapper).append('<div class="position-fixed width-100 top-32 d-flex justify-content-center z-index-1200">' +
+            '<div class="open-modal-product bg-gray-white p-4 max-width-1024 width-100 br-10">' +
+            '<h5>' + product.NAME + '</h5>' +
+            '<div>' +
+            '<div class="box-with-image-prod col-lg-6 col-md-6 col-12 d-flex align-items-center justify-content-center">' +
+            '<img class="w-h-350" src="' + product.DETAIL_PICTURE + '" alt="modal" />' +
+            '</div>' +
+            '<div></div>' +
+            '</div>' +
+            '</div>' +
+            '</div>')
+
+    }
 
 })
