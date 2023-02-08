@@ -283,13 +283,14 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
     $prevTab = 0;
     function ShowComment($comment, $tabCount = 0, $tabSize = 2.5, $canModerate = false, $User = array(), $use_captcha = false, $bCanUserComment = false, $errorComment = false, $arParams = array())
     {
+        global $USER;
     $iblockId = (isset($_REQUEST['IBLOCK_ID']) && is_string($_REQUEST['IBLOCK_ID']) ? (int)$_REQUEST['IBLOCK_ID'] : 0);
     $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID']) ? (int)$_REQUEST['ELEMENT_ID'] : 0);
 
     $comment["urlToAuthor"] = "";
     $comment["urlToBlog"] = "";
 
-    if ($comment["SHOW_AS_HIDDEN"] == "Y" || $comment["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH || $comment["SHOW_SCREENNED"] == "Y" || $comment["ID"] == "preview")
+    if ($comment["SHOW_AS_HIDDEN"] == "Y" || $comment["AUTHOR_ID"] == $USER->GetID() || $comment["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH || $comment["SHOW_SCREENNED"] == "Y" || $comment["ID"] == "preview")
     {
     global $prevTab;
     $tabCount = intval($tabCount);
@@ -323,7 +324,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
         <div class="blog-comment" style="padding-left:<?= $paddingSize ?>em;">
             <div id="blg-comment-<?= $comment["ID"] ?>">
                 <?
-                if ($comment["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH || $comment["SHOW_SCREENNED"] == "Y" || $comment["ID"] == "preview")
+                if ($comment["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_PUBLISH || $comment["AUTHOR_ID"] == $USER->GetID() || $comment["SHOW_SCREENNED"] == "Y" || $comment["ID"] == "preview")
                 {
                 $aditStyle = "";
                 if ($arParams["is_ajax_post"] == "Y" || $comment["NEW"] == "Y")
@@ -804,45 +805,8 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
         </div>
         <?
     }
-        $arParams["RATING"] = $arResult["RATING"];
-        $arParams["component"] = $component;
-        $arParams["arImages"] = $arResult["arImages"];
-        if ($arResult["is_ajax_post"] == "Y")
-            $arParams["is_ajax_post"] = "Y";
 
-    if ($arResult["is_ajax_post"] != "Y" && $arResult["NEED_NAV"] == "Y") {
-    for ($i = 1;
-         $i <= $arResult["PAGE_COUNT"];
-         $i++) {
-        $tmp = $arResult["CommentsResult"];
-        $tmp[0] = $arResult["PagesComment"][$i];
-        ?>
-        <div id="blog-comment-page-<?= $i ?>"<? if ($arResult["PAGE"] != $i) echo "style=\"display:none;\"" ?>><? RecursiveComments($tmp, $arResult["firstLevel"], 0, true, $arResult["canModerate"], $arResult["User"], $arResult["use_captcha"], $arResult["CanUserComment"], $arResult["COMMENT_ERROR"], $arResult["Comments"], $arParams); ?></div>
-        <?
-    }
-    }
-    else
-        RecursiveComments($arResult["CommentsResult"], $arResult["firstLevel"], 0, true, $arResult["canModerate"], $arResult["User"], $arResult["use_captcha"], $arResult["CanUserComment"], $arResult["COMMENT_ERROR"], $arResult["Comments"], $arParams);
 
-    if ($arResult["is_ajax_post"] != "Y") {
-    if ($arResult["NEED_NAV"] == "Y") {
-        ?>
-        <div class="blog-comment-nav">
-            <?= GetMessage("BPC_PAGE") ?>&nbsp;<?
-            for ($i = 1; $i <= $arResult["PAGE_COUNT"]; $i++) {
-                $style = "blog-comment-nav-item";
-                if ($i == $arResult["PAGE"])
-                    $style .= " blog-comment-nav-item-sel";
-                ?><a class="<?= $style ?>" href="<?= $arResult["NEW_PAGES"][$i] ?>"
-                     onclick="return bcNav('<?= $i ?>', this)"
-                     id="blog-comment-nav-b<?= $i ?>"><?= $i ?></a>&nbsp;&nbsp;<?
-            }
-            ?>
-        </div>
-    <?
-    }
-    }
-    }
 
 
     if ($USER->IsAuthorized()){
@@ -875,13 +839,12 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
 <script>
         $('.link_header_box_new').on('click', function (event) {
             event.preventDefault();
-		
+
             $('.ctweb-smsauth-menu-block').show();
         });
-</script>		
+</script>
     <?
     }
-
     if ($arResult["CanUserComment"])
     {
     ?>
@@ -908,6 +871,46 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
         </script>
         <?
     }
+    }
+
+
+    }
+        $arParams["RATING"] = $arResult["RATING"];
+        $arParams["component"] = $component;
+        $arParams["arImages"] = $arResult["arImages"];
+        if ($arResult["is_ajax_post"] == "Y")
+            $arParams["is_ajax_post"] = "Y";
+
+        if ($arResult["is_ajax_post"] != "Y" && $arResult["NEED_NAV"] == "Y") {
+        for ($i = 1;
+        $i <= $arResult["PAGE_COUNT"];
+        $i++) {
+        $tmp = $arResult["CommentsResult"];
+        $tmp[0] = $arResult["PagesComment"][$i];
+        ?>
+        <div id="blog-comment-page-<?= $i ?>"<? if ($arResult["PAGE"] != $i) echo "style=\"display:none;\"" ?>><? RecursiveComments($tmp, $arResult["firstLevel"], 0, true, $arResult["canModerate"], $arResult["User"], $arResult["use_captcha"], $arResult["CanUserComment"], $arResult["COMMENT_ERROR"], $arResult["Comments"], $arParams); ?></div>
+    <?
+    }
+    }
+    else
+        RecursiveComments($arResult["CommentsResult"], $arResult["firstLevel"], 0, true, $arResult["canModerate"], $arResult["User"], $arResult["use_captcha"], $arResult["CanUserComment"], $arResult["COMMENT_ERROR"], $arResult["Comments"], $arParams);
+
+    if ($arResult["is_ajax_post"] != "Y" && $arResult["NEED_NAV"] == "Y") {
+    ?>
+        <div class="blog-comment-nav">
+            <?= GetMessage("BPC_PAGE") ?>&nbsp;<?
+            for ($i = 1; $i <= $arResult["PAGE_COUNT"]; $i++) {
+                $style = "blog-comment-nav-item";
+                if ($i == $arResult["PAGE"])
+                    $style .= " blog-comment-nav-item-sel";
+                ?><a class="<?= $style ?>" href="<?= $arResult["NEW_PAGES"][$i] ?>"
+                     onclick="return bcNav('<?= $i ?>', this)"
+                     id="blog-comment-nav-b<?= $i ?>"><?= $i ?></a>&nbsp;&nbsp;<?
+            }
+            ?>
+        </div>
+        <?
+
     }
     }
 
