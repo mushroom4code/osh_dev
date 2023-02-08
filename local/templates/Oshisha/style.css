@@ -1013,7 +1013,9 @@ div.card > div.card-body > div.box_with_properties > div > h4.card-title > a, .n
 .product-item-amount-field-contain input[type="number"], h1, h2, h3, h4, h5, h6, .btn_basket_collapse, .link_header, .text_catalog_link {
     color: #393939;
 }
-
+.product-item__favorite-star:hover {
+    color: #F55F5C;
+}
 .color-blue-order {
     color: #0085FF;
 }
