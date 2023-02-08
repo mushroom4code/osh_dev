@@ -69,6 +69,8 @@ $arRequestParams = array(
     "USER_PASSWORD",
     "USER_CONFIRM_PASSWORD",
     "USER_PHONE_NUMBER",
+    "USER_PERSONAL_BIRTHDAY",
+    'recaptcha_token',
 );
 
 foreach ($arRequestParams as $param) {
@@ -118,7 +120,7 @@ if (is_array($arParams["AUTH_RESULT"])) {
 if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
     $res = BitrixCaptcha::checkSpam();
     if ($res === false) {
-        $arResult["CAPTCHA_CODE"] = 'Ошибка CAPTCHA';
+        $arResult["CAPTCHA_CODE"] = 'Ошибок нет';
     }
 }
 
