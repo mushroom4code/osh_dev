@@ -1,5 +1,35 @@
-div.bx-auth input.bx-auth-input {vertical-align:middle;}
-div.bx-auth span.bx-auth-secure {background-color:#FFFAE3; border:1px solid #DEDBC8; padding:2px; display:inline-block; vertical-align:middle;}
-div.bx-auth div.bx-auth-secure-icon {background-image:url(images/sec.png); background-repeat:no-repeat; background-position:center; width:19px; height:18px;}
-div.bx-auth div.bx-auth-secure-unlock {background-image:url(images/sec-unlocked.png);}
+div.bx-auth input.bx-auth-input {
+    vertical-align: middle;
+}
 
+div.bx-auth span.bx-auth-secure {
+    background-color: #FFFAE3;
+    border: 1px solid #DEDBC8;
+    padding: 2px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+div.bx-auth div.bx-auth-secure-icon {
+    background-image: url(images/sec.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 19px;
+    height: 18px;
+}
+
+div.bx-auth div.bx-auth-secure-unlock {
+    background-image: url(images/sec-unlocked.png);
+}
+
+.block-text {
+    position: absolute;
+    font-size: 12px;
+    background-color: #F0F0F0;
+    font-weight: 500;
+    z-index: 1;
+    width: 100%;
+    filter: drop-shadow(0px 4px 3px rgba(93, 93, 93, 0.2));
+    bottom: 100%;
+    left: 61%;
+}
