@@ -114,14 +114,11 @@ if (is_array($arParams["AUTH_RESULT"])) {
     $arResult["bVarsFromForm"] = true;
 }
 
-$arResult["USE_CAPTCHA"] = (COption::GetOptionString("main", "captcha_registration", "N") == "Y" ? "Y" : "N");
 
-if ($arResult["USE_CAPTCHA"] == "Y") {
-    if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
-        $res = BitrixCaptcha::checkSpam();
-        if ($res === false) {
-            $arResult["CAPTCHA_CODE"] = 'Ошибка CAPTCHA';
-        }
+if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
+    $res = BitrixCaptcha::checkSpam();
+    if ($res === false) {
+        $arResult["CAPTCHA_CODE"] = 'Ошибка CAPTCHA';
     }
 }
 
