@@ -174,7 +174,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                             <div class="d-flex flex-row align-items-center mb-2 position-relative">
                                 <label class="col-form-label main-profile-form-label p-0"
                                        for="main-profile-name">
-                                    <span class="starrequired color-redLight">*</span>
+                                    <span class="starrequired color-redLight">* </span>
                                     <?= GetMessage("PERSONAL_BIRTHDAY") ?>
                                 </label>
                                 <i class="fa fa-question-circle-o font-20 color-redLight ml-2 block-icon-text"
