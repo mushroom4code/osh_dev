@@ -62,6 +62,7 @@ foreach ($arResult as $key => $value) {
     if (!is_array($value)) $arResult[$key] = htmlspecialcharsbx($value);
 }
 
+/*** ENTEREGO  доп параметр др*/
 $arRequestParams = array(
     "USER_NAME",
     "USER_LAST_NAME",
@@ -72,6 +73,7 @@ $arRequestParams = array(
     "USER_PERSONAL_BIRTHDAY",
     'recaptcha_token',
 );
+/*** ENTEREGO captcha 3*/
 
 foreach ($arRequestParams as $param) {
     $arResult[$param] = $_REQUEST[$param] <> '' ? $_REQUEST[$param] : "";
@@ -116,14 +118,14 @@ if (is_array($arParams["AUTH_RESULT"])) {
     $arResult["bVarsFromForm"] = true;
 }
 
-
+/*** ENTEREGO captcha 3*/
 if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
     $res = BitrixCaptcha::checkSpam();
     if ($res === false) {
         $arResult["CAPTCHA_CODE"] = 'Ошибок нет';
     }
 }
-
+/*** ENTEREGO captcha 3*/
 $arResult["AGREEMENT_ORIGINATOR_ID"] = "main/reg";
 $arResult["AGREEMENT_ORIGIN_ID"] = "register";
 $arResult["AGREEMENT_INPUT_NAME"] = "USER_AGREEMENT";
