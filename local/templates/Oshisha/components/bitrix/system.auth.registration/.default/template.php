@@ -74,6 +74,8 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
         <?php elseif (!$arResult["SHOW_EMAIL_SENT_CONFIRMATION"]): ?>
 
             <form method="post" action="<?= $arResult["AUTH_URL"] ?>" name="bform" enctype="multipart/form-data">
+                <input type="hidden" name="recaptcha_token" id="recaptchaResponse">
+                <?php echo bitrix_sessid_post(); ?>
                 <input type="hidden" name="AUTH_FORM" value="Y"/>
                 <input type="hidden" name="TYPE" value="REGISTRATION"/>
                 <h5 class="mb-3"><?= GetMessage("AUTH_REGISTER") ?></h5>
@@ -205,95 +207,10 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                             </div>
                         <?php endif ?>
                     </div>
-                    <table class="data-table bx-registration-table mb-3">
-                        <thead>
-                        <tr>
-                            <td colspan="2" class="mb-2"></td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php if ($arResult["USER_PROPERTIES"]["SHOW"] == "Y"): ?>
-                            <tr class="mb-2">
-                                <td colspan="2"><?= trim($arParams["USER_PROPERTY_NAME"]) <> '' ?
-                                        $arParams["USER_PROPERTY_NAME"] : GetMessage("USER_TYPE_EDIT_TAB") ?></td>
-                            </tr>
-                            <?php foreach ($arResult["USER_PROPERTIES"]["DATA"] as $FIELD_NAME => $arUserField): ?>
-                                <tr>
-                                    <td>
-                                        <?php if ($arUserField["MANDATORY"] == "Y"): ?>
-                                            <span class="starrequired color-redLight">*</span>
-                                        <? endif; ?>
-                                        <?= $arUserField["EDIT_FORM_LABEL"] ?>:
-                                    </td>
-                                    <td>
-                                        <?php $APPLICATION->IncludeComponent(
-                                            "bitrix:system.field.edit",
-                                            $arUserField["USER_TYPE"]["USER_TYPE_ID"],
-                                            array("bVarsFromForm" => $arResult["bVarsFromForm"], "arUserField" => $arUserField, "form_name" => "bform"), null, array("HIDE_ICONS" => "Y")); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                        <?php // ******************** /User properties ***************************************************
-
-                        /* CAPTCHA */
-                        if ($arResult["USE_CAPTCHA"] == "Y") { ?>
-                            <tr>
-                                <td colspan="2"><b class="mb-2 font-14"><?= GetMessage("CAPTCHA_REGF_TITLE") ?></b></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="font-14 mb-2">
-                                        <span class="starrequired color-redLight">* </span>
-                                        <?= GetMessage("CAPTCHA_REGF_PROMT") ?> :
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" name="captcha_word" maxlength="50" value="" autocomplete="off"
-                                           class="mb-2 input_lk form-control"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="hidden" name="captcha_sid" value="<?= $arResult["CAPTCHA_CODE"] ?>"/>
-                                    <img src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult["CAPTCHA_CODE"] ?>"
-                                         width="180" height="40" alt="CAPTCHA"/>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <?php $APPLICATION->IncludeComponent("bitrix:main.userconsent.request", "",
-                                    array(
-                                        "ID" => COption::getOptionString("main", "new_user_agreement", ""),
-                                        "IS_CHECKED" => "Y",
-                                        "AUTO_SAVE" => "N",
-                                        "IS_LOADED" => "Y",
-                                        "ORIGINATOR_ID" => $arResult["AGREEMENT_ORIGINATOR_ID"],
-                                        "ORIGIN_ID" => $arResult["AGREEMENT_ORIGIN_ID"],
-                                        "INPUT_NAME" => $arResult["AGREEMENT_INPUT_NAME"],
-                                        "REPLACE" => array(
-                                            "button_caption" => GetMessage("AUTH_REGISTER"),
-                                            "fields" => array(
-                                                rtrim(GetMessage("AUTH_NAME"), ":"),
-                                                rtrim(GetMessage("AUTH_LAST_NAME"), ":"),
-                                                rtrim(GetMessage("AUTH_LOGIN_MIN"), ":"),
-                                                rtrim(GetMessage("AUTH_PASSWORD_REQ"), ":"),
-                                                rtrim(GetMessage("AUTH_EMAIL"), ":"),
-                                            )
-                                        ),
-                                    )
-                                ); ?>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
                     <div class="mb-4">
                         <button type="submit" name="Register"
-                                class="btn red_button_cart pl-3 pr-3 font-16">
+                                class="btn red_button_cart pl-3 pr-3 font-16"
+                                onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
                             <?= GetMessage("AUTH_REGISTER") ?>
                         </button>
                     </div>
