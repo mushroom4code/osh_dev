@@ -95,7 +95,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                         </p>
                     </div>
                     <div class="d-flex flex-lg-row flex-md-row flex-column">
-                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pl-0">
+                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pl-lg-0 pl-md-0 p-0">
                             <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2 p-0 mb-2"
                                    for="main-profile-name"><?= GetMessage("AUTH_NAME") ?></label>
                             <input type="text" name="USER_NAME" maxlength="50"
@@ -103,7 +103,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                    value="<?= $arResult["USER_NAME"] ?>"/>
                         </div>
 
-                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pr-0">
+                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pr-lg-0 pr-md-0 p-0">
                             <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
                                    for="main-profile-name"><?= GetMessage("AUTH_LAST_NAME") ?></label>
                             <input type="text" name="USER_LAST_NAME" maxlength="50"
@@ -194,7 +194,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
 
                         </div>
                         <?php if ($arResult["PHONE_REGISTRATION"]): ?>
-                            <div class="form-group mb-3 width-auto ml-4">
+                            <div class="form-group mb-3 width-auto ml-lg-4 ml-md-4 ml-0">
                                 <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
                                        for="main-profile-name">
                                     <?php if ($arResult["PHONE_REQUIRED"]): ?><span
@@ -215,7 +215,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                         </button>
                     </div>
                 </div>
-                <?$APPLICATION->IncludeComponent("bitrix:main.userconsent.request", "",
+                <? $APPLICATION->IncludeComponent("bitrix:main.userconsent.request", "",
                     array(
                         "ID" => COption::getOptionString("main", "new_user_agreement", ""),
                         "IS_CHECKED" => "Y",
@@ -235,7 +235,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                             )
                         ),
                     )
-                );?>
+                ); ?>
             </form>
             <script type="text/javascript">
                 $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});

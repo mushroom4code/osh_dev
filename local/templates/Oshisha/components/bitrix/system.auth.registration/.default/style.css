@@ -33,3 +33,14 @@ div.bx-auth div.bx-auth-secure-unlock {
     bottom: 100%;
     left: 61%;
 }
+
+@media (max-width: 768px ) {
+    .width-auto {
+        width: 100%;
+    }
+
+    .block-text {
+        bottom: 100%;
+        left: 0%;
+    }
+}
