@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bitrix Framework
  * @package bitrix
@@ -95,7 +95,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                         </p>
                     </div>
                     <div class="d-flex flex-lg-row flex-md-row flex-column">
-                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pl-lg-0 pl-md-0 p-0">
+                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pl-lg-0 pl-md-0 pl-0">
                             <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2 p-0 mb-2"
                                    for="main-profile-name"><?= GetMessage("AUTH_NAME") ?></label>
                             <input type="text" name="USER_NAME" maxlength="50"
@@ -103,7 +103,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                    value="<?= $arResult["USER_NAME"] ?>"/>
                         </div>
 
-                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pr-lg-0 pr-md-0 p-0">
+                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pr-lg-0 pr-md-0 pr-0">
                             <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
                                    for="main-profile-name"><?= GetMessage("AUTH_LAST_NAME") ?></label>
                             <input type="text" name="USER_LAST_NAME" maxlength="50"
@@ -188,7 +188,8 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                             <input type="text" name="USER_PERSONAL_BIRTHDAY" required
                                    class="form-control input_lk bx-auth-input"
                                    inputmode="text"
-                                   value="<?= $arResult["PERSONAL_BIRTHDAY"] ?>"/>
+                                   placeholder="dd/mm/yyyy"
+                                   value="<?= $arResult["USER_PERSONAL_BIRTHDAY"] ?>"/>
 
                         </div>
                         <?php if ($arResult["PHONE_REGISTRATION"]): ?>
@@ -239,13 +240,13 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                 $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
                 $('input[name="USER_PERSONAL_BIRTHDAY"]').inputmask("99/99/9999", {
                     "placeholder": "dd/mm/yyyy",
-                    clearMaskOnLostFocus: false
                 });
 
                 document.bform.USER_NAME.focus();
                 $('i.block-icon-text').on('click', function () {
                     $('.block-text').toggleClass('d-none');
                 });
+
             </script>
         <?php endif; ?>
     </noindex>
