@@ -2275,7 +2275,9 @@ $(document).ready(function () {
 
     $(document).on('click', '.js__filter-close', function() {
         if (!$(this).hasClass('disabled_class')) {
-            $(this).parents('.box_filter_catalog').slideUp();
+            $(this).parents('.box_filter_catalog').slideUp(function() {
+                $('.filter-view').addClass('disabled_class');
+            });
             $(document).find('body').css({overflow: 'initial'})
         }
     })
