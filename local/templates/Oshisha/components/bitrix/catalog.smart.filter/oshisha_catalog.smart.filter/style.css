@@ -999,12 +999,3 @@ label.smart-filter-checkbox-text.form-check-label.hide_not_available {
     color: black;
 }
 
-div.model_kalyana.smart-filter-parameters-box {
-    display:none;
-}
-div.form-group.form-check.disabled {
-    display: none;
-}
-div.smart-filter-parameters-box.disabled {
-    display:none;
-}

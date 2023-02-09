@@ -41,13 +41,17 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                 foreach ($arResult["ITEMS"] as $key => $arItem)//prices
                 {
 
-                    if (((int)$arItem['ID'] !== RETAIL_PRICE) && ((int)$arItem['ID'] !== KOLVO_ZATYAZHEK_ID)) {
+                    if (((int)$arItem['ID'] !== RETAIL_PRICE) && (($arItem['PROPERTY_TYPE'] != "N") || ($arItem['DISPLAY_TYPE'] != "A")) ) {
                         continue;
                     }
                     if ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)
                         continue;
 
-                    $key = (int)$arItem['ID'] === KOLVO_ZATYAZHEK_ID ? md5($arItem['ID']) : $arItem["ENCODED_ID"];
+                    if ((($arItem['PROPERTY_TYPE'] == "N") && ($arItem['DISPLAY_TYPE'] == "A")) && ((int)$arItem['ID'] !== RETAIL_PRICE)) {
+                        $key = md5($arItem['ID']);
+                    } else {
+                        $key = $arItem["ENCODED_ID"];
+                    }
 
                     if (isset($arItem["PRICE"])):
                         $step_num = 4;
@@ -74,7 +78,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                             <div class="smart-filter-parameters-box-title"
                                  onclick="smartFilter.hideFilterProps(this)">
                                 <span class="smart-filter-parameters-box-title-text">
-                                    <?= (int)$arItem['ID'] === RETAIL_PRICE ? 'Цена' : 'Количество затяжек'?>
+                                    <?= (int)$arItem['ID'] === RETAIL_PRICE ? 'Цена' : $arItem['NAME']?>
                                 </span>
                                 <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
 									<i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
@@ -175,14 +179,14 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                 //not price
 
                 foreach ($arResult["ITEMS"] as $key => $arItem) {
-                    if (empty($arItem["VALUES"]) || isset($arItem["PRICE"]) || ((int)$arItem['ID'] === KOLVO_ZATYAZHEK_ID))
+                    if (empty($arItem["VALUES"]) || isset($arItem["PRICE"]) || (($arItem['PROPERTY_TYPE'] == "N") && ($arItem['DISPLAY_TYPE'] == "A")))
                         continue;
 
                     if ($arItem["DISPLAY_TYPE"] == "A" && ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0))
                         continue;
                     ?>
 
-                    <div class="<?= $arItem['CODE'] == 'MODEL_KALYANA' ? 'model_kalyana' : ''?> <? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box <? if ($arItem["DISPLAY_EXPANDED"] == "Y"): ?>bx-active<? endif ?>">
+                    <div class="<?= $arItem['CODE'] == 'MODEL_KALYANA' ? 'model_kalyana d-none' : ''?> <? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box <? if ($arItem["DISPLAY_EXPANDED"] == "Y"): ?>bx-active<? endif ?>">
                         <span class="smart-filter-container-modef"></span>
 
                         <div class="smart-filter-parameters-box-title" onclick="smartFilter.hideFilterProps(this)">

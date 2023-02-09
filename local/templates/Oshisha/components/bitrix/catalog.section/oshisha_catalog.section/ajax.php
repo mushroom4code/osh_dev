@@ -27,8 +27,8 @@ try {
 
 $parameters = unserialize(base64_decode($paramString));
 
-if (isset($hide_not_available)) {
-    $parameters['HIDE_NOT_AVAILABLE'] = $hide_not_available;
+if ($request->getPost('hide_not_available') == "Y") {
+    $parameters['HIDE_NOT_AVAILABLE'] = $request->getPost('hide_not_available');
 } else {
     $parameters['HIDE_NOT_AVAILABLE'] = "L";
 }
