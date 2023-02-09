@@ -160,6 +160,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         sendRequest: function (action, actionData) {
             var form;
 
+            if (($('input[name="USER_RULES"]').prop('checked') === false ||
+                $('input[name="USER_POLITICS"]').prop('checked') === false) && action === 'saveOrderAjax') {
+                this.endLoader();
+                $('#bx-soa-properties').find('.alert.alert-danger').removeAttr('style')
+                    .text('Примите условия соглашений в конце страницы');
+                this.animateScrollTo($("#bx-soa-properties .alert.alert-danger"));
+
+                return;
+            }
+
             if (!this.startLoader())
                 return;
 
@@ -1587,6 +1597,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.click_edit();
             }
             if (this.isValidForm()) {
+
                 this.allowOrderSave();
                 if (this.params.USER_CONSENT === 'Y' && BX.UserConsent) {
                     BX.onCustomEvent('bx-soa-order-save', []);
@@ -6466,6 +6477,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     propsErrors = propsErrors.concat(this.isValidProperty(data, true));
                 }
             }
+
 
             return propsErrors;
         },
