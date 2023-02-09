@@ -335,7 +335,7 @@ if ($request->get('ORDER_ID') <> '') {
                                         }
                                         if (!empty($user_object->company_user['USER'])) {
                                             foreach ($user_object->company_user['USER'] as $company) {
-                                                if ($company['ARCHIVED'] === '0' ) { ?>
+                                                if ($company['ARCHIVED'] === '0') { ?>
                                                     <option value="<?= $company['COMPANY_ID']; ?>">
                                                         <?= $company['NAME_COMP']; ?>
                                                     </option>
@@ -373,9 +373,11 @@ if ($request->get('ORDER_ID') <> '') {
                     <div id="bx-soa-region" data-visited="false" class="bx-soa-section bx-active">
                         <div class="bx-soa-section-title-container">
                             <h2 class="bx-soa-section-title col-sm-9">
-                                <span class="bx-soa-section-title-count"></span><?=$arParams['MESS_REGION_BLOCK_NAME']?>
+                                <span class="bx-soa-section-title-count"></span><?= $arParams['MESS_REGION_BLOCK_NAME'] ?>
                             </h2>
-                            <div class="col-xs-12 col-sm-3 text-right"><a href="" class="bx-soa-editstep"><?=$arParams['MESS_EDIT']?></a></div>
+                            <div class="col-xs-12 col-sm-3 text-right"><a href=""
+                                                                          class="bx-soa-editstep"><?= $arParams['MESS_EDIT'] ?></a>
+                            </div>
                         </div>
                         <div class="bx-soa-section-content container-fluid"></div>
                     </div>
@@ -443,7 +445,8 @@ if ($request->get('ORDER_ID') <> '') {
                             <div class="row">
                                 <div class="col-lg-6 col-12">
                                     <div id="pickup-address">
-                                        <span></span> <span></span> <address></address>
+                                        <span></span> <span></span>
+                                        <address></address>
                                     </div>
                                     <div id="pickup-station">
                                         <div class="pickup-station-img"></div>
@@ -482,7 +485,7 @@ if ($request->get('ORDER_ID') <> '') {
                             </div>
                             <div class="bx-soa-section-content"></div>
                         </div>
-                        <div class="new_block_with_sms bx-soa-section" id="new_block_with_sms">
+                        <div class="new_block_with_sms bx-soa-section mb-3" id="new_block_with_sms">
                             <div id="new_block_with_sms_box" class="bx-selected">
                                 <div class="mb-4 mt-2 bx-soa-section-title">Подтверждение заказа через:</div>
                                 <div class="form-check d-flex flex-row">
@@ -505,7 +508,29 @@ if ($request->get('ORDER_ID') <> '') {
 
                             </div>
                         </div>
-                        <div class="new_block_with_comments" id="new_block_with_comments">
+                        <div class="p-3">
+                            <p class="d-flex flex-row align-items-center font-14">
+                                <input type="checkbox" required class="check_input form-check-input mr-2 mt-0"
+                                       id="soa-property-USER_RULES" name="USER_RULES"/>
+                                <label class="bx-soa-custom-label m-0">
+                                    Я принимаю условия
+                                    <a class="color-redLight text-decoration-underline" href="/about/users_rules/">
+                                        Пользовательского соглашения
+                                    </a>
+                                </label>
+                            </p>
+                            <p class="d-flex flex-row align-items-center font-14">
+                                <input type="checkbox" required class="check_input form-check-input mr-2 mt-0"
+                                       name="USER_POLITICS"/>
+                                <label class="bx-soa-custom-label m-0">
+                                    Я принимаю условия
+                                    <a class="color-redLight text-decoration-underline" href="/about/politics/">
+                                        Политики конфиденциальности
+                                    </a>
+                                </label>
+                            </p>
+                        </div>
+                        <div class="new_block_with_comments mt-0" id="new_block_with_comments">
                             <div id="new_block_with_comment_box"></div>
                         </div>
                     <?php endif ?>
@@ -667,45 +692,45 @@ if ($request->get('ORDER_ID') <> '') {
     $arResult['DELIVERY_OPTIONS']['START_COST'] = Osh\Delivery\Options\Config::getStartCost();
     $arResult['DELIVERY_OPTIONS']['LIMIT_BASKET'] = Osh\Delivery\Options\Config::getLimitBasket();
     $arResult['DELIVERY_OPTIONS']['CURRENT_BASKET'] = $arResult['ORDER_PRICE'];
-    $arResult['DELIVERY_OPTIONS']['DA_DATA_ADDRESS']  = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
+    $arResult['DELIVERY_OPTIONS']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
     $arResult['DELIVERY_OPTIONS']['OSH_COURIER_ID'] = 93;
     $arResult['DELIVERY_OPTIONS']['OSH_PICKUP_ID'] = 40;
-    
+
     ?>
     <script>
         <?php if ($USER->IsAuthorized()) {?>
         let bool_contrs = $('input').is('#connection_company_contragent');
-        if(bool_contrs){
-        let contragent_json = $('#connection_company_contragent').val();
-        if (contragent_json !== '') {
-            let contragent_array = JSON.parse(contragent_json);
-            let document_container = $('#company_user_order');
+        if (bool_contrs) {
+            let contragent_json = $('#connection_company_contragent').val();
+            if (contragent_json !== '') {
+                let contragent_array = JSON.parse(contragent_json);
+                let document_container = $('#company_user_order');
 
-            function showContrsAccess(that) {
-                let id = $(that).val();
-                let box_contrs = $('#contragent_user');
-                let new_array = [];
-                let bool;
-                $.each(contragent_array, function (key, value) {
-                    $.each(value.COMPANY, function (key_company) {
-                        bool = key_company === id ? true : false;
+                function showContrsAccess(that) {
+                    let id = $(that).val();
+                    let box_contrs = $('#contragent_user');
+                    let new_array = [];
+                    let bool;
+                    $.each(contragent_array, function (key, value) {
+                        $.each(value.COMPANY, function (key_company) {
+                            bool = key_company === id ? true : false;
+                        });
+                        if (bool) {
+                            new_array.push(value);
+                        }
+                        $(box_contrs).html('');
+                        $.each(new_array, function (keys, val) {
+                            $(box_contrs).append('<option value="' + val.CONTR_AGENT_ID + '">' + val.NAME_CONT + '</option>')
+                        });
                     });
-                    if (bool) {
-                        new_array.push(value);
-                    }
-                    $(box_contrs).html('');
-                    $.each(new_array, function (keys, val) {
-                        $(box_contrs).append('<option value="' + val.CONTR_AGENT_ID + '">' + val.NAME_CONT + '</option>')
-                    });
+                }
+
+                showContrsAccess(document_container);
+
+                $(document_container).on('change', function () {
+                    showContrsAccess(this)
                 });
-            }
-
-            showContrsAccess(document_container);
-
-            $(document_container).on('change', function () {
-                showContrsAccess(this)
-            });
             }
         }
         <?php }?>
@@ -718,7 +743,7 @@ if ($request->get('ORDER_ID') <> '') {
             params: <?=CUtil::PhpToJSObject($arParams)?>,
             signedParamsString: '<?=CUtil::JSEscape($signedParams)?>',
             siteID: '<?=CUtil::JSEscape($component->getSiteId())?>',
-            ajaxUrl: '<?=CUtil::JSEscape($component->getPath().'/ajax.php')?>',
+            ajaxUrl: '<?=CUtil::JSEscape($component->getPath() . '/ajax.php')?>',
             templateFolder: '<?=CUtil::JSEscape($templateFolder)?>',
             propertyValidation: true,
             showWarnings: true,

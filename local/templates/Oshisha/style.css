@@ -5838,3 +5838,7 @@ header {
     background: transparent none;
     backdrop-filter: blur(1px);
 }
+body jdiv {
+    position: relative;
+    z-index: 1500;
+}

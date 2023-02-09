@@ -225,6 +225,8 @@
                     defaultData.AJAX_ID = this.ajaxId;
                 }
 
+                $('.js__filter-close.disabled_class').removeClass('disabled_class');
+
                 BX.ajax({
                     url: '/local/templates/Oshisha/components/bitrix/catalog.section/oshisha_catalog.section/ajax.php' +
                         (document.location.href.indexOf('clear_cache=Y') !== -1 ? '?clear_cache=Y' : ''),
