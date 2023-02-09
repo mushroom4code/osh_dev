@@ -185,12 +185,12 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                 </div>
                             </div>
                             <input type="text" name="USER_PERSONAL_BIRTHDAY" required
-                                   class="form-control input_lk bx-auth-input user-birthday"
+                                   class="form-control input_lk bx-auth-input user-birthday readonly"
                                    inputmode="text"
                                    id="main-profile-brd"
                                    autocomplete="Off"
+                                   value=""
                                    minlength="8"
-                                   readonly
                                    placeholder="dd/mm/yyyy"/>
                         </div>
                         <?php if ($arResult["PHONE_REGISTRATION"]): ?>
@@ -275,11 +275,9 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                 $('input[name="USER_PERSONAL_BIRTHDAY"]').datepicker({
                     dateFormat: 'dd/mm/yyyy',
                     maxDate: date_now,
-                    autoClose: true
-                });
-
-                $("input[name='USER_PERSONAL_BIRTHDAY']").inputmask("99/99/9999",{
-
+                    autoClose: true,
+                    toggleSelected:false,
+                    placeholder:"dd/mm/yyyy"
                 });
 
                 $("input[name='USER_EMAIL']").inputmask("email", {
@@ -287,7 +285,12 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                     clearMaskOnLostFocus: true
                 });
 
+                $(".readonly").keydown(function(e){
+                    e.preventDefault();
+                });
+
                 document.bform.USER_NAME.focus();
+
                 $('i.block-icon-text').on('click', function () {
                     $('.block-text').toggleClass('d-none');
                 });
