@@ -544,15 +544,25 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     background-image: url("/local/templates/Oshisha/images/company_logo.png");
 }
 
-.btn_search {
+.btn_search, .open-fast-window {
     height: 23px;
     width: 23px;
 }
 
-.basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search {
+.open-fast-window {
+    background-size: contain;
+    position: absolute;
+    top: 30%;
+    right: 0;
+}
+
+.basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search, .open-fast-window {
     background-image: url("/local/templates/Oshisha/images/search_basket.png");
-    background-position: left 3% center;
     background-repeat: no-repeat;
+}
+
+.basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search {
+    background-position: left 3% center;
 }
 
 .box_honesty, .box_automation, .box_display, .box_block, .box_present, .box_help, .box_house {
@@ -560,7 +570,6 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     min-width: 150px;
     max-height: 150px;
 }
-
 
 .icons_worker_contr, .icons_worker_comp, .box_company_icon {
     background-repeat: no-repeat;
@@ -993,7 +1002,7 @@ div.box_with_icons > a > i.icons_theme:first-child {
     font-size: 120px;
 }
 
-h4 > b, .orderCancel, .select2-results__option,.color-darkOsh,
+h4 > b, .orderCancel, .select2-results__option, .color-darkOsh,
 .select2-container--default .select2-search--dropdown .select2-search__field, .sort_orders, .sort_orders:hover,
 .sort_order, .sort_order:hover, .link_in_basket, .link_in_basket:hover, .box_with_brands a, .box_with_brands a:hover,
 nav.box_with_menu_header, .ul_menu, a.dropdown-toggle, .link_gram, .disabled_class .link_gram:hover, .sidebar_inform a,

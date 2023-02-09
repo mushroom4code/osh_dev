@@ -106,7 +106,8 @@ if ($show_price) {
             'COUNT_FAV' => $item['COUNT_FAV'],
         ],
         'USE_CUSTOM_SALE_PRICE' => USE_CUSTOM_SALE_PRICE,
-        'BASE_PRICE' => BASIC_PRICE
+        'BASE_PRICE' => BASIC_PRICE,
+        'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']
     ];
 }
 
@@ -138,7 +139,7 @@ if ($show_price) {
                 </div>
             </div>
         <?php } ?>
-        <div class="image_cart <?= $not_auth ?>" data-href="<?= $href ?>">
+        <div class="image_cart position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
             <a class=" <?= $styleForTaste ?>"
                href="<?= $item['DETAIL_PAGE_URL']; ?>">
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
@@ -147,9 +148,7 @@ if ($show_price) {
                     <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                 <?php } ?>
             </a>
-            <i class="fa fa-search open-fast-window font-20"
-               data-item-id="<?= $item['ID'] ?>"
-               aria-hidden="true"></i>
+            <i class="open-fast-window" data-item-id="<?= $item['ID'] ?>"></i>
         </div>
 
         <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
