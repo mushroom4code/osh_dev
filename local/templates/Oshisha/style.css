@@ -2046,7 +2046,11 @@ input.check_input {
 .form-check .form-check-input {
     float: none;
 }
-
+@media screen and (max-width: 768px) {
+    .form-check .form-check-input {
+        flex: none;
+    }
+}
 .filter_class {
     box-sizing: border-box;
     min-width: 250px;
@@ -3153,7 +3157,7 @@ table#TableWorkers.no-footer {
         height: 60px;
         justify-content: space-between;
         padding: 15px 20px;
-        z-index: 10000;
+        z-index: 1100;
         top: 0;
     }
 
@@ -4802,7 +4806,12 @@ li, ul {
 .mobile, .tablet {
     display: none;
 }
-
+.filter-view-bar {
+    display: none;
+}
+.filter-view {
+    display: none;
+}
 /*MOBILE*/
 @media (min-width: 1024px) {
     .box_with_prod {
@@ -4977,7 +4986,70 @@ li, ul {
         justify-content: space-between;
     }
 }
-
+@media (max-width: 768px) {
+    .box_filter_catalog {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0 !important;
+        bottom: 0;
+        padding: 40px 10px 80px;
+        z-index: 100500;
+    }
+    .filter-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 20px;
+        height: 20px;
+        transition: .7s ease-in-out;
+        align-self: center;
+        cursor: pointer;
+        display: flex;
+    }
+    .filter-close span {
+        position: absolute;
+        height: 2px;
+        display: inline-block;
+        width: 100%;
+        background: #303030;
+        border-radius: 80px;
+        transform: rotate(0deg);
+        transition: .3s ease-in-out;
+        top: 9px;
+        left: 0;
+    }
+    .filter-close span:nth-child(1),
+    .filter-close span:nth-child(3) {
+        transform: rotate(45deg);
+    }
+    .filter-close span:nth-child(2) {
+        transform: rotate(-45deg);
+    }
+    .filter-view-bar {
+        display: flex;
+        width: 99%;
+        position: fixed;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 0;
+        background-color: rgba(255, 255, 255, 0.5);
+        left: 0;
+        bottom: 0;
+        z-index: 1000;
+        backdrop-filter: blur(0.075em);
+    }
+    .filter-view {
+        display: inline-block;
+        font-size: 14px !important;
+        margin: 0 !important;
+        padding: 10px 45px !important;
+        position: relative;
+    }
+    .filter-view.disabled_class {
+        background-color: #a3a3a3;
+    }
+}
 @media (max-width: 480px) {
     .bx-content {
         margin-top: 10px;
@@ -5838,7 +5910,8 @@ header {
     background: transparent none;
     backdrop-filter: blur(1px);
 }
-body jdiv {
-    position: relative;
-    z-index: 1500;
+
+body.hide-jivo > jdiv {
+    position: relative !important;
+    z-index: 1500 !important;
 }
