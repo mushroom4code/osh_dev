@@ -2260,7 +2260,7 @@ $(document).ready(function () {
     $('.sort_mobile').on('click', function () {
 
         $('.box_filter_catalog').show();
-        $('body').css({'overflow': 'hidden'}).addClass('hide-jivo');
+        $('body').css({'overflow': 'hidden'});
     });
     $('.closeButtonFilter').on('click', function () {
 
@@ -2274,19 +2274,13 @@ $(document).ready(function () {
     }
 
     $(document).on('click', '.js__filter-close', function() {
-        console.log(111111);
-
         if (!$(this).hasClass('disabled_class')) {
-            $(this).parents('.box_filter_catalog').find('.filter-view-bar').css({'display':'none'})
-
             $(this).parents('.box_filter_catalog').slideUp(function() {
                 $('.filter-view').addClass('disabled_class');
-                $('.filter-view-bar').show();
             });
-            $('body').removeClass('hide-jivo');
             $(document).find('body').css({overflow: 'initial'})
         }
-    });
+    })
 
     $('.shared i').on('click', function () {
         let el_id = $(this).parent().data('element-id');
