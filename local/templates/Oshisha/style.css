@@ -4798,6 +4798,9 @@ li, ul {
 .mobile, .tablet {
     display: none;
 }
+.filter-view-bar {
+    display: none;
+}
 .filter-view {
     display: none;
 }
@@ -4982,7 +4985,7 @@ li, ul {
         right: 0;
         top: 0 !important;
         bottom: 0;
-        padding: 40px 10px 20px;
+        padding: 40px 10px 80px;
         z-index: 100500;
     }
     .filter-close {
@@ -5015,15 +5018,25 @@ li, ul {
     .filter-close span:nth-child(2) {
         transform: rotate(-45deg);
     }
+    .filter-view-bar {
+        display: flex;
+        width: 99%;
+        position: fixed;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 0;
+        background-color: rgba(255, 255, 255, 0.5);
+        left: 0;
+        bottom: 0;
+        z-index: 1000;
+        backdrop-filter: blur(0.075em);
+    }
     .filter-view {
         display: inline-block;
         font-size: 14px !important;
-        left: 50%;
-        transform: translateX(-50%);
         margin: 0 !important;
         padding: 10px 45px !important;
         position: relative;
-        bottom: 20px;
     }
     .filter-view.disabled_class {
         background-color: #a3a3a3;

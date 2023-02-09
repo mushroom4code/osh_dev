@@ -218,7 +218,10 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 <span></span>
                 <span></span>
             </div>
-            <div class="red_button_cart filter-view js__filter-close disabled_class">Применить</div>
+
+            <div class="filter-view-bar">
+                <div class="red_button_cart filter-view js__filter-close disabled_class">Применить</div>
+            </div>
         </div>
     <? endif ?>
     <? global $GLOBAL_SECTION; ?>
