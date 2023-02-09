@@ -591,38 +591,6 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                                                                        onclick="return editCommentNew('<?= $comment["ID"] ?>', <?= $comment["POST_ID"] ?>)"><?= GetMessage("BPC_MES_EDIT") ?></a></span>
                                                     <?
                                                 }
-                                                if ($comment["urlToShow"] <> '') {
-                                                    ?>
-                                                    <span class="blog-vert-separator"></span>
-                                                    <span class="blog-comment-show">
-                                                <? if ($arParams["AJAX_POST"] == "Y"): ?>
-                                                    <a href="javascript:void(0)"
-                                                       onclick="return hideShowComment('<?= $comment["urlToShow"] . "&" . bitrix_sessid_get() ?>', '<?= $comment["ID"] ?>');"
-                                                       title="<?= GetMessage("BPC_MES_SHOW") ?>">
-                                                <? else: ?>
-                                                    <a href="<?= $comment["urlToShow"] . "&" . bitrix_sessid_get() ?>"
-                                                       title="<?= GetMessage("BPC_MES_SHOW") ?>">
-                                                <?endif;
-                                                ?>
-                                                <?= GetMessage("BPC_MES_SHOW") ?></a></span>
-                                                    <?
-                                                }
-                                                if ($comment["urlToHide"] <> '') {
-                                                    ?>
-                                                    <span class="blog-vert-separator"></span>
-                                                    <span class="blog-comment-show">
-                                                <? if ($arParams["AJAX_POST"] == "Y"): ?>
-                                                    <a href="javascript:void(0)"
-                                                       onclick="return hideShowComment('<?= $comment["urlToHide"] . "&" . bitrix_sessid_get() ?>&IBLOCK_ID=<?= $iblockId; ?>&ELEMENT_ID=<?= $elementId; ?>', '<?= $comment["ID"] ?>');"
-                                                       title="<?= GetMessage("BPC_MES_HIDE") ?>">
-                                                <? else: ?>
-                                                    <a href="<?= $comment["urlToHide"] . "&" . bitrix_sessid_get() ?>&IBLOCK_ID=<?= $iblockId; ?>&ELEMENT_ID=<?= $elementId; ?>"
-                                                       title="<?= GetMessage("BPC_MES_HIDE") ?>">
-                                                <?endif;
-                                                ?>
-                                                <?= GetMessage("BPC_MES_HIDE") ?></a></span>
-                                                    <?
-                                                }
                                                 if ($comment["urlToDelete"] <> '') {
                                                     ?>
                                                     <span class="blog-vert-separator"></span>
