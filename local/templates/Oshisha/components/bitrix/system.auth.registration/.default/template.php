@@ -83,7 +83,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                     <p class="message_for_user_minzdrav font-14 mb-4">
                         Розничная дистанционная продажа (доставка) кальянов, табачной, никотинсодержащей продукции на
                         сайте не осуществляется. Сайт предназначен для потребителей старше 18 лет.</p>
-                    <div class="d-flex flex-lg-row flex-md-row flex-column justify-content-between">
+                    <div class="d-flex flex-lg-row flex-md-row flex-column justify-content-between mb-3">
                         <p class="font-12 font-weight-bold">
                             <span class="starrequired color-redLight">* </span>
                             <?= GetMessage("AUTH_REQ") ?>
@@ -94,6 +94,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                             </a>
                         </p>
                     </div>
+
                     <div class="d-flex flex-lg-row flex-md-row flex-column">
                         <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pl-lg-0 pl-md-0 pl-0">
                             <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2 p-0 mb-2"
@@ -102,7 +103,6 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                    class="form-control input_lk bx-auth-input"
                                    value="<?= $arResult["USER_NAME"] ?>"/>
                         </div>
-
                         <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pr-lg-0 pr-md-0 pr-0">
                             <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
                                    for="main-profile-name"><?= GetMessage("AUTH_LAST_NAME") ?></label>
@@ -111,12 +111,22 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                    value="<?= $arResult["USER_LAST_NAME"] ?>"/>
                         </div>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
-                               for="main-profile-name"><?= GetMessage("AUTH_LOGIN_MIN") ?></label>
-                        <input type="text" name="USER_LOGIN" maxlength="50" class="form-control input_lk bx-auth-input"
-                               value="<?= $arResult["USER_LOGIN"] ?>"/>
-                    </div>
+                    <?php if ($arResult["EMAIL_REGISTRATION"]): ?>
+                        <div class="form-group mb-3">
+                            <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
+                                   for="main-profile-name">
+                                <?php if ($arResult["EMAIL_REQUIRED"]): ?>
+                                    <span class="starrequired color-redLight  color-redLight">* </span>
+                                <?php endif ?><?= GetMessage("AUTH_EMAIL") ?>
+                            </label>
+                            <input type="text" name="USER_EMAIL" maxlength="255"
+                                   class="form-control input_lk bx-auth-input"
+                                   required minlength="5"
+                                   placeholder="_@_._"
+                                   value="<?= $arResult["USER_EMAIL"] ?>"/>
+                        </div>
+                    <?php endif ?>
+                    <input type="hidden" name="USER_LOGIN" value="<?= $arResult["USER_EMAIL"] ?>"/>
 
                     <div class="form-group mb-1">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
@@ -125,7 +135,8 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                             <?= GetMessage("AUTH_PASSWORD_REQ") ?>
                         </label>
                         <input type="password" name="USER_PASSWORD" maxlength="255"
-                               class="form-control input_lk bx-auth-input"
+                               minlength="6"
+                               class="form-control input_lk bx-auth-input" required
                                value="<?= $arResult["USER_PASSWORD"] ?>" autocomplete="off"/>
                         <?php if ($arResult["SECURE_AUTH"]): ?>
                             <span class="bx-auth-secure" id="bx_auth_secure"
@@ -152,23 +163,11 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                         </label>
                         <input type="password" name="USER_CONFIRM_PASSWORD" maxlength="255"
                                class="form-control input_lk bx-auth-input"
+                               minlength="6"
                                value="<?= $arResult["USER_CONFIRM_PASSWORD"] ?>"
+                               required
                                autocomplete="off"/>
                     </div>
-
-                    <?php if ($arResult["EMAIL_REGISTRATION"]): ?>
-                        <div class="form-group mb-3">
-                            <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
-                                   for="main-profile-name">
-                                <?php if ($arResult["EMAIL_REQUIRED"]): ?>
-                                    <span class="starrequired color-redLight  color-redLight">* </span>
-                                <?php endif ?><?= GetMessage("AUTH_EMAIL") ?>
-                            </label>
-                            <input type="text" name="USER_EMAIL" maxlength="255"
-                                   class="form-control input_lk bx-auth-input"
-                                   value="<?= $arResult["USER_EMAIL"] ?>"/>
-                        </div>
-                    <?php endif ?>
                     <div class="d-flex flex-lg-row flex-md-row flex-column align-items-center">
                         <div class="form-group mb-3 width-auto">
                             <div class="d-flex flex-row align-items-center mb-2 position-relative">
@@ -186,25 +185,49 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                 </div>
                             </div>
                             <input type="text" name="USER_PERSONAL_BIRTHDAY" required
-                                   class="form-control input_lk bx-auth-input"
+                                   class="form-control input_lk bx-auth-input user-birthday"
                                    inputmode="text"
-                                   placeholder="dd/mm/yyyy"
-                                   value="<?= $arResult["USER_PERSONAL_BIRTHDAY"] ?>"/>
-
+                                   id="main-profile-brd"
+                                   autocomplete="Off"
+                                   minlength="8"
+                                   readonly
+                                   placeholder="dd/mm/yyyy"/>
                         </div>
                         <?php if ($arResult["PHONE_REGISTRATION"]): ?>
                             <div class="form-group mb-3 width-auto ml-lg-4 ml-md-4 ml-0">
                                 <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
                                        for="main-profile-name">
-                                    <?php if ($arResult["PHONE_REQUIRED"]): ?><span
-                                            class="starrequired color-redLight">*</span><?php endif ?><?php echo GetMessage("main_register_phone_number") ?>
+                                    <?php if ($arResult["PHONE_REQUIRED"]): ?>
+                                        <span class="starrequired color-redLight">* </span>
+                                    <?php endif ?><?php echo GetMessage("main_register_phone_number") ?>
                                 </label>
-                                <input id="main-profile-phone" type="text" name="USER_PHONE_NUMBER" maxlength="255"
+                                <input id="main-profile-phone" type="text" name="USER_PHONE_NUMBER"
+                                       required
+                                       minlength="10"
                                        placeholder="+7 (___)-___-____" inputmode="text"
-                                       class="form-control input_lk bx-auth-input"
-                                       value="<?= $arResult["USER_PHONE_NUMBER"] ?>"/>
+                                       class="form-control input_lk bx-auth-input"/>
                             </div>
                         <?php endif ?>
+                    </div>
+                    <div class="d-flex flex-row align-items-center font-14 mb-3 mt-3">
+                        <input type="checkbox" required class="check_input form-check-input mt-0 ml-0"
+                               id="soa-property-USER_RULES" name="USER_RULES"/>
+                        <label class="bx-soa-custom-label mb-0 ml-3">
+                            Я принимаю условия
+                            <a class="color-redLight text-decoration-underline" href="/about/users_rules/">
+                                Пользовательского соглашения
+                            </a>
+                        </label>
+                    </div>
+                    <div class="d-flex flex-row align-items-center font-14 mb-4">
+                        <input type="checkbox" required class="check_input form-check-input mt-0 ml-0"
+                               name="USER_POLITICS"/>
+                        <label class="bx-soa-custom-label mb-0 ml-3">
+                            Я принимаю условия
+                            <a class="color-redLight text-decoration-underline" href="/about/politics/">
+                                Политики конфиденциальности
+                            </a>
+                        </label>
                     </div>
                     <div class="mb-4">
                         <button type="submit" name="Register"
@@ -214,7 +237,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                         </button>
                     </div>
                 </div>
-                <? $APPLICATION->IncludeComponent("bitrix:main.userconsent.request", "",
+                <?php $APPLICATION->IncludeComponent("bitrix:main.userconsent.request", "",
                     array(
                         "ID" => COption::getOptionString("main", "new_user_agreement", ""),
                         "IS_CHECKED" => "Y",
@@ -237,9 +260,31 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                 ); ?>
             </form>
             <script type="text/javascript">
-                $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
-                $('input[name="USER_PERSONAL_BIRTHDAY"]').inputmask("99/99/9999", {
-                    "placeholder": "dd/mm/yyyy",
+                $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (999)-999-9999", {
+                    min: 10,
+                    casing: "lower",
+                    removeMaskOnSubmit: true,
+                    clearMaskOnLostFocus: true,
+                    clearMaskOnLostHover: true
+                });
+
+                let date_now = new Date();
+                let year_now = date_now.getFullYear();
+                let date_datipicker = date_now.setFullYear(year_now - 18);
+
+                $('input[name="USER_PERSONAL_BIRTHDAY"]').datepicker({
+                    dateFormat: 'dd/mm/yyyy',
+                    maxDate: date_now,
+                    autoClose: true
+                });
+
+                $("input[name='USER_PERSONAL_BIRTHDAY']").inputmask("99/99/9999",{
+
+                });
+
+                $("input[name='USER_EMAIL']").inputmask("email", {
+                    removeMaskOnSubmit: true,
+                    clearMaskOnLostFocus: true
                 });
 
                 document.bform.USER_NAME.focus();
