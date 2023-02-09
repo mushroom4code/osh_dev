@@ -453,6 +453,7 @@ class CBlogPostCommentEdit extends CBitrixComponent
 										"AUTHOR_IP" => $UserIP[0],
 										"AUTHOR_IP1" => $UserIP[1],
 										"URL" => $arBlog["URL"],
+                                        "PUBLISH_STATUS" => BLOG_PUBLISH_STATUS_READY
 									);
 									if($this->arResult["Perm"] == BLOG_PERMS_PREMODERATE)
 										$arFields["PUBLISH_STATUS"] = BLOG_PUBLISH_STATUS_READY;
@@ -921,7 +922,7 @@ class CBlogPostCommentEdit extends CBitrixComponent
 
 
 //			PROCESS
-			$arOrder = Array("DATE_CREATE" => "DESC", "ID" => "DESC");
+			$arOrder = Array("DATE_CREATE" => "ASC", "ID" => "ASC");
 			$arFilter = Array("POST_ID" => $this->arParams["ID"], "BLOG_ID" => $this->arResult["Blog"]["ID"]);
 			if($this->arResult["is_ajax_post"] == "Y" && intval($this->arResult["ajax_comment"]) > 0)
 				$arFilter["ID"] = $this->arResult["ajax_comment"];
@@ -960,6 +961,18 @@ class CBlogPostCommentEdit extends CBitrixComponent
                     "AUTHOR_ID" => $comment["AUTHOR_ID"]
 				);
 			}
+            foreach ($this->arResult['Comments'] as $key => $val) {
+                if ($val["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_READY) {
+                    foreach ($resComments[$key] as $inner_key => $inner_val) {
+                        $resComments[$key][$inner_key]["PUBLISH_STATUS"] = BLOG_PUBLISH_STATUS_READY;
+                    }
+                }
+            }
+            foreach ($resComments as $key => $resComment) {
+                krsort($resComments[$key]);
+            }
+            krsort($resComments);
+            krsort($this->arResult["Comments"]);
 			$this->arResult["CommentsResult"] = $resComments;
 
 			if($this->arParams["SHOW_RATING"] == "Y" && !empty($this->arResult["IDS"]))
