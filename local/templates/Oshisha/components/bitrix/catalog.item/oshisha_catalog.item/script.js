@@ -2171,26 +2171,146 @@
 
 $(document).on('click', '.open-fast-window', function () {
 
-    let json_product = $(this).closest('.catalog-item-product').find('input.product-values');
+    let json_product = $(this).closest('.catalog-item-product').find('input.product-values').val();
 
     if (json_product !== '') {
 
         let wrapper = $('.section_wrapper');
         let product = JSON.parse(json_product);
-        $(wrapper).find('div.open-modal-product').remove();
+        $(wrapper).find('div.box-popup-product').remove();
         console.log(product)
-        $(wrapper).append('<div class="position-fixed width-100 top-32 d-flex justify-content-center z-index-1200">' +
-            '<div class="open-modal-product bg-gray-white p-4 max-width-1024 width-100 br-10">' +
-            '<h5>' + product.NAME + '</h5>' +
-            '<div>' +
-            '<div class="box-with-image-prod col-lg-6 col-md-6 col-12 d-flex align-items-center justify-content-center">' +
-            '<img class="w-h-350" src="' + product.DETAIL_PICTURE + '" alt="modal" />' +
-            '</div>' +
-            '<div></div>' +
-            '</div>' +
-            '</div>' +
-            '</div>')
 
+        let box_popup = BX.create('DIV', {
+            props: {
+                className: 'position-fixed width-100 top-32 d-flex justify-content-center z-index-1200 box-popup-product'
+            },
+            children: [
+                BX.create('DIV', {
+                    props: {
+                        className: 'open-modal-product bg-gray-white p-4 max-width-1024 width-100 br-10'
+                    },
+                })
+            ]
+        });
+
+        let box_product = BX.findChildByClassName(box_popup, 'open-modal-product');
+
+        box_product.appendChild(
+            BX.create('H5', {
+                props: {
+                    className: 'mb-2 d-flex flex-row font-19'
+                },
+                children: [
+                    BX.create('SPAN', {
+                        props: {
+                            className: 'col-11 font-weight-bold mb-3',
+                        },
+                        text: product.NAME
+                    }),
+                    BX.create('SPAN', {
+                        props: {
+                            className: 'col-1 text-right p-0 close-box cursor-pointer',
+                            title: 'Закрыть'
+                        },
+                        html: '<svg width="25" height="25" viewBox="0 0 9 8" fill="none"' +
+                            ' xmlns="http://www.w3.org/2000/svg"><path d="M1 7.5L8 0.5M1 0.5L8 7.5"' +
+                            ' stroke="#565656" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                    })
+                ]
+            })
+        );
+
+        box_product.appendChild(BX.create('DIV', {
+            props: {
+                className: 'd-flex flex-lg-row flex-md-row flex-column'
+            },
+            children: [
+                BX.create('DIV', {
+                    props: {
+                        className: 'box-with-image-prod col-lg-6 col-md-6 col-12 d-flex align-items-center justify-content-center'
+                    },
+                    children: [
+                        BX.create('IMG', {
+                            props: {
+                                className: 'w-h-350',
+                                src: product.MORE_PHOTO[0].SRC,
+                                alt: 'modal-product'
+                            },
+                        })
+                    ]
+                }),
+                BX.create('DIV', {
+                    props: {
+                        className: 'col-lg-6 col-md-6 col-12 d-flex color-darkOsh'
+                    },
+                    children: [
+                        BX.create('DIV', {
+                            props: {
+                                className: 'prices-box ml-lg-4 ml-md-4 ml-0',
+                            },
+                            children: [
+                                BX.create('P', {
+                                    props: {
+                                        className: 'base-price font-weight-bold font-27 mb-3'
+                                    },
+                                }),
+                                BX.create('DIV', {
+                                    props: {
+                                        className: 'price-group'
+                                    },
+                                })
+                            ]
+                        }),
+                        BX.create('DIV', {
+                            props: {
+                                className: 'props-box',
+                            },
+                        })
+                    ]
+                })
+            ]
+        }));
+
+        let price_group = BX.findChildByClassName(box_product, 'price-group');
+        let price_base = BX.findChildByClassName(box_product, 'base-price');
+
+        $.each(product.PRICE, function (i, price) {
+            console.log(price_base);
+            if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
+                price_base.innerHTML = price.PRINT_PRICE
+            }
+
+            price_group.appendChild(BX.create('P', {
+                props: {
+                    className: 'mb-2',
+                },
+                children: [
+                    BX.create('SPAN', {
+                        props: {
+                            className: 'font-16 mr-2 font-weight-bold',
+                        },
+                        html: '<b>' + price.NAME + '</b>'
+                    }),
+                    BX.create('SPAN', {
+                        props: {
+                            className: 'font-16',
+                        },
+                        html: ' - '
+                    }),
+                    BX.create('SPAN', {
+                        props: {
+                            className: 'font-16 ml-2 font-weight-bold',
+                        },
+                        html: '<b>' + price.PRINT_PRICE + '</b>'
+                    })
+                ]
+            }));
+        });
+
+        $(wrapper).append(box_popup);
     }
 
-})
+    $(document).on('click', '.close-box', function () {
+        $(this).closest('.box-popup-product').remove();
+    });
+});

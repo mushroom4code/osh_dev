@@ -368,35 +368,6 @@
     line-height: 33px;
 }
 
-@media (max-width: 767px) {
-    .product-item-label-text > div {
-        line-height: 0;
-    }
-
-    .product-item-label-text.product-item-label-small span,
-    .product-item-scalable-card.hover .product-item-label-text.product-item-label-small span {
-        margin-bottom: 1px;
-        padding: 2px 7px;
-        font-size: 10px;
-        line-height: 14px;
-    }
-
-    .product-item-big-card .product-item-label-text.product-item-label-small span,
-    .product-item-label-text.product-item-label-big span,
-    .product-item-scalable-card.hover .product-item-label-text.product-item-label-big span {
-        margin-bottom: 1px;
-        padding: 3px 12px;
-        font-size: 14px;
-        line-height: 16px;
-    }
-
-    .product-item-big-card .product-item-label-text.product-item-label-big span {
-        padding: 3px 12px;
-        font-size: 20px;
-        line-height: 25px;
-    }
-}
-
 /*RING*/
 .product-item-label-ring {
     box-sizing: border-box;
@@ -432,32 +403,6 @@
     height: 120px;
     font-size: 42px;
     line-height: 120px;
-}
-
-@media (max-width: 767px) {
-    .product-item-label-ring.product-item-label-small,
-    .product-item-scalable-card.hover .product-item-label-ring.product-item-label-small {
-        width: 35px;
-        height: 35px;
-        font-size: 12px;
-        line-height: 35px;
-    }
-
-    .product-item-big-card .product-item-label-ring.product-item-label-small,
-    .product-item-label-ring.product-item-label-big,
-    .product-item-scalable-card.hover .product-item-label-ring.product-item-label-big {
-        width: 35px;
-        height: 35px;
-        font-size: 12px;
-        line-height: 35px;
-    }
-
-    .product-item-big-card .product-item-label-ring.product-item-label-big {
-        width: 70px;
-        height: 70px;
-        font-size: 24px;
-        line-height: 70px;
-    }
 }
 
 .product-item-label-top {
@@ -545,12 +490,6 @@
 @media (max-width: 991px) {
     .product-item-big-card .product-item-title a {
         font-size: 16px;
-    }
-}
-
-@media (max-width: 767px) {
-    .product-item-big-card .product-item-title a {
-        font-size: 14px;
     }
 }
 
@@ -1100,10 +1039,71 @@ input::-webkit-inner-spin-button {
     background: white;
     border: 1px solid #E5E5E5;
     border-radius: 15px;
-    min-height: 400px;
+    min-height: 450px;
 }
 
 .w-h-350 {
     height: 350px;
     width: 350px;
+}
+
+@media (max-width: 767px) {
+    .product-item-label-text > div {
+        line-height: 0;
+    }
+
+    .product-item-label-text.product-item-label-small span,
+    .product-item-scalable-card.hover .product-item-label-text.product-item-label-small span {
+        margin-bottom: 1px;
+        padding: 2px 7px;
+        font-size: 10px;
+        line-height: 14px;
+    }
+
+    .product-item-big-card .product-item-label-text.product-item-label-small span,
+    .product-item-label-text.product-item-label-big span,
+    .product-item-scalable-card.hover .product-item-label-text.product-item-label-big span {
+        margin-bottom: 1px;
+        padding: 3px 12px;
+        font-size: 14px;
+        line-height: 16px;
+    }
+
+    .product-item-big-card .product-item-label-text.product-item-label-big span {
+        padding: 3px 12px;
+        font-size: 20px;
+        line-height: 25px;
+    }
+
+    .top-32 {
+        top: 0;
+        height: 100%;
+        z-index: 100000;
+    }
+
+    .product-item-big-card .product-item-label-ring.product-item-label-small,
+    .product-item-label-ring.product-item-label-big, .product-item-label-ring.product-item-label-small,
+    .product-item-scalable-card.hover .product-item-label-ring.product-item-label-small,
+    .product-item-scalable-card.hover .product-item-label-ring.product-item-label-big {
+        width: 35px;
+        height: 35px;
+        font-size: 12px;
+        line-height: 35px;
+    }
+
+    .product-item-big-card .product-item-label-ring.product-item-label-big {
+        width: 70px;
+        height: 70px;
+        font-size: 24px;
+        line-height: 70px;
+    }
+
+    .product-item-big-card .product-item-title a {
+        font-size: 14px;
+    }
+
+    .open-modal-product {
+        overflow: auto;
+        height: 100%;
+    }
 }
