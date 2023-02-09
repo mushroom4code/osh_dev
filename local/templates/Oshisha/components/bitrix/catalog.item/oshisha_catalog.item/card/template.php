@@ -262,6 +262,7 @@ if ($show_price) {
                                     <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
                                     <div class="position-absolute d-hide">
                                         <div class="d-flex flex-column prices-block">
+                                            <div class="prices-block-close js__prices-block-close"></div>
                                             <?php foreach ($price['PRICE_DATA'] as $items) { ?>
                                                 <p class="mb-1">
                                                     <span class="font-11 mb-2"><?= $items['NAME'] ?></span><br>

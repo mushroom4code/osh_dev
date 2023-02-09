@@ -2260,7 +2260,7 @@ $(document).ready(function () {
     $('.sort_mobile').on('click', function () {
 
         $('.box_filter_catalog').show();
-        $('body').css({'overflow': 'hidden'});
+        $('body').css({'overflow': 'hidden'}).addClass('hide-jivo');
     });
     $('.closeButtonFilter').on('click', function () {
 
@@ -2268,11 +2268,23 @@ $(document).ready(function () {
         $('body').css({'overflow': 'initial'});
     });
 
-    if (window.screen.width < 1024) {
+    if (window.screen.width < 1024 && window.screen.width > 768) {
         var top_page = $('.section_wrapper').offset().top;
         $('.box_filter_catalog').css({'top': top_page});
     }
 
+    $(document).on('click', '.js__filter-close', function() {
+        if (!$(this).hasClass('disabled_class')) {
+            $(this).parents('.box_filter_catalog').find('.filter-view-bar').css({'display':'none'})
+
+            $(this).parents('.box_filter_catalog').slideUp(function() {
+                $('.filter-view').addClass('disabled_class');
+                $('.filter-view-bar').show();
+            });
+            $('body').removeClass('hide-jivo');
+            $(document).find('body').css({overflow: 'initial'})
+        }
+    });
 
     $('.shared i').on('click', function () {
         let el_id = $(this).parent().data('element-id');
