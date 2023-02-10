@@ -90,16 +90,16 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
 <div class="<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
     <div class="bx_catalog_item_container product-item align-items-center <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
-        <?php if (count($taste['VALUE']) > 0) { ?>
+        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
+            <span class="taste new-product" data-background="#F55F5C">NEW</span>
+        <?php }
+        if ($hitProduct['VALUE'] == 'Да') { ?>
+            <span class="taste new-product" data-background="#F55F5C">ХИТ</span>
+        <?php }
+        if (count($taste['VALUE']) > 0) { ?>
             <div class="toggle_taste card-price">
                 <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                    <?php if ($hitProduct['VALUE'] == 'да') { ?>
-                        <span class="taste" data-background="#000000">Хит</span>
-                    <?php } ?>
-                    <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
-                        <span class="taste" data-background="#F55F5C">Новинка</span>
-                    <?php }
-
+                    <?php
                     foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                             if ($key === $keys) {
@@ -119,22 +119,17 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
                     <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
                 <?php } else { ?>
-                    <img src="/bitrix/components/bitrix/catalog.element/templates/bootstrap_v4/images/no_photo.png"
+                    <img src="/local/templates/Oshisha/images/no-photo.gif"
                          alt="<?= $item['PREVIEW_PICTURE']['SRC']; ?>"/>
                 <?php } ?>
             </a>
         </div>
 
-        <div class="box_with_title_like d-flex text-center" >
+        <div class="box_with_title_like d-flex text-center">
             <?php if (count($taste['VALUE']) > 0) { ?>
                 <div class="toggle_taste_line">
                     <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
-                        <?php if ($hitProduct['VALUE'] == 'да') { ?>
-                            <span class="taste" data-background="#000000">Хит</span>
-                        <?php } ?>
-                        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'да')) { ?>
-                            <span class="taste" data-background="#F55F5C">Новинка</span>
-                        <?php }
+                        <?php
 
                         foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
@@ -167,7 +162,7 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
                 </a>
                 <?php if (count($taste['VALUE']) > 0) { ?>
                 <?php }
-                if (!empty($item['DETAIL_TEXT'])) {?>
+                if (!empty($item['DETAIL_TEXT'])) { ?>
                     <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
                 <?php } ?>
             </div>
@@ -176,93 +171,93 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
         $showSubscribeBtn = false;
         $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE'));
         if (!isset($item['OFFERS']) || empty($item['OFFERS'])) { ?>
-        <div class="bx_catalog_item_controls">
+            <div class="bx_catalog_item_controls">
             <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
-            <div class="justify-content-center">
-                <?php if ($show_price) { ?>
-                    <div class="product-item-button-container" id="<?=$itemIds['BASKET_ACTIONS']?>">
-                        <button class="btn btn_red js-add2basket-gift"
-                                data-product_id="<?= $item['ID']; ?>"
-                                id="<?=$itemIds['BUY_LINK']?>"
-                                href="javascript:void(0)" rel="nofollow">
-                            <?=($arParams['ADD_TO_BASKET_ACTION'] === 'BUY' ? $arParams['MESS_BTN_BUY'] : $arParams['MESS_BTN_ADD_TO_BASKET'])?>
-                        </button>
-                    </div>
-                <?php } ?>
-            </div>
-            <div style="clear: both;"></div>
-        </div>
-        <?php }
-    $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
-    if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) {?>
-        <div id="<?= $arItemIDs['BASKET_PROP_DIV']; ?>" style="display: none;">
-            <?php
-            if (!empty($item['PRODUCT_PROPERTIES_FILL'])) {
-                foreach ($item['PRODUCT_PROPERTIES_FILL'] as $propID => $propInfo) {
-                    ?>
-                    <input type="hidden"
-                           name="<?= $arParams['PRODUCT_PROPS_VARIABLE']; ?>[<?= $propID; ?>]"
-                           value="<?= htmlspecialcharsbx($propInfo['ID']); ?>">
-                    <?php if (isset($item['PRODUCT_PROPERTIES'][$propID]))
-                        unset($item['PRODUCT_PROPERTIES'][$propID]);
-                }
-            }
-            $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']); ?>
-        </div>
-        <?php
-    }
-    } else {
-        if ('Y' == $arParams['PRODUCT_DISPLAY_MODE']) {
-            $canBuy = $item['JS_OFFERS'][$item['OFFERS_SELECTED']]['CAN_BUY'];
-
-            unset($canBuy);
-        }
-        $boolShowOfferProps = ('Y' == $arParams['PRODUCT_DISPLAY_MODE'] && $item['OFFERS_PROPS_DISPLAY']);
-        $boolShowProductProps = (isset($arItem['DISPLAY_PROPERTIES']) && !empty($arItem['DISPLAY_PROPERTIES']));
-        if ($boolShowProductProps || $boolShowOfferProps) { ?>
-            <div class="bx_catalog_item_articul">
-                <?php if ($boolShowProductProps) {
-                    foreach ($item['DISPLAY_PROPERTIES'] as $arOneProp) {
-                        ?><br><strong><?= $arOneProp['NAME']; ?></strong> <?
-                        echo(
-                        is_array($arOneProp['DISPLAY_VALUE'])
-                            ? implode(' / ', $arOneProp['DISPLAY_VALUE'])
-                            : $arOneProp['DISPLAY_VALUE']
-                        );
-                    }
-                }
-                if ($boolShowOfferProps) { ?>
-                    <span id="<?= $arItemIDs['DISPLAY_PROP_DIV']; ?>"
-                          style="display: none;"></span>
-                <?php } ?>
-            </div>
-            <?php
-        }
-        if ('Y' == $arParams['PRODUCT_DISPLAY_MODE']) {
-            if (!empty($item['OFFERS_PROP'])) {
-                $arSkuProps = array();
-                if ($item['OFFERS_PROPS_DISPLAY']) {
-                    foreach ($item['JS_OFFERS'] as $keyOffer => $arJSOffer) {
-                        $strProps = '';
-                        if (!empty($arJSOffer['DISPLAY_PROPERTIES'])) {
-                            foreach ($arJSOffer['DISPLAY_PROPERTIES'] as $arOneProp) {
-                                $strProps .= '<br>' . $arOneProp['NAME'] . ' <strong>' . (
-                                    is_array($arOneProp['VALUE'])
-                                        ? implode(' / ', $arOneProp['VALUE'])
-                                        : $arOneProp['VALUE']
-                                    ) . '</strong>';
-                            }
+                <div class="justify-content-center">
+                    <?php if ($show_price) { ?>
+                        <div class="product-item-button-container" id="<?= $itemIds['BASKET_ACTIONS'] ?>">
+                            <button class="btn btn_red js-add2basket-gift"
+                                    data-product_id="<?= $item['ID']; ?>"
+                                    id="<?= $itemIds['BUY_LINK'] ?>"
+                                    href="javascript:void(0)" rel="nofollow">
+                                <?= ($arParams['ADD_TO_BASKET_ACTION'] === 'BUY' ? $arParams['MESS_BTN_BUY'] : $arParams['MESS_BTN_ADD_TO_BASKET']) ?>
+                            </button>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div style="clear: both;"></div>
+                </div>
+            <?php }
+            $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
+            if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) { ?>
+                <div id="<?= $arItemIDs['BASKET_PROP_DIV']; ?>" style="display: none;">
+                    <?php
+                    if (!empty($item['PRODUCT_PROPERTIES_FILL'])) {
+                        foreach ($item['PRODUCT_PROPERTIES_FILL'] as $propID => $propInfo) {
+                            ?>
+                            <input type="hidden"
+                                   name="<?= $arParams['PRODUCT_PROPS_VARIABLE']; ?>[<?= $propID; ?>]"
+                                   value="<?= htmlspecialcharsbx($propInfo['ID']); ?>">
+                            <?php if (isset($item['PRODUCT_PROPERTIES'][$propID]))
+                                unset($item['PRODUCT_PROPERTIES'][$propID]);
                         }
-                        $item['JS_OFFERS'][$keyOffer]['DISPLAY_PROPERTIES'] = $strProps;
                     }
-                }
-
-
+                    $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']); ?>
+                </div>
+                <?php
             }
-        }
+        } else {
+            if ('Y' == $arParams['PRODUCT_DISPLAY_MODE']) {
+                $canBuy = $item['JS_OFFERS'][$item['OFFERS_SELECTED']]['CAN_BUY'];
 
-    }
-    ?>
-</div>
-<div id="result_box"></div>
+                unset($canBuy);
+            }
+            $boolShowOfferProps = ('Y' == $arParams['PRODUCT_DISPLAY_MODE'] && $item['OFFERS_PROPS_DISPLAY']);
+            $boolShowProductProps = (isset($arItem['DISPLAY_PROPERTIES']) && !empty($arItem['DISPLAY_PROPERTIES']));
+            if ($boolShowProductProps || $boolShowOfferProps) { ?>
+                <div class="bx_catalog_item_articul">
+                    <?php if ($boolShowProductProps) {
+                        foreach ($item['DISPLAY_PROPERTIES'] as $arOneProp) {
+                            ?><br><strong><?= $arOneProp['NAME']; ?></strong> <?
+                            echo(
+                            is_array($arOneProp['DISPLAY_VALUE'])
+                                ? implode(' / ', $arOneProp['DISPLAY_VALUE'])
+                                : $arOneProp['DISPLAY_VALUE']
+                            );
+                        }
+                    }
+                    if ($boolShowOfferProps) { ?>
+                        <span id="<?= $arItemIDs['DISPLAY_PROP_DIV']; ?>"
+                              style="display: none;"></span>
+                    <?php } ?>
+                </div>
+                <?php
+            }
+            if ('Y' == $arParams['PRODUCT_DISPLAY_MODE']) {
+                if (!empty($item['OFFERS_PROP'])) {
+                    $arSkuProps = array();
+                    if ($item['OFFERS_PROPS_DISPLAY']) {
+                        foreach ($item['JS_OFFERS'] as $keyOffer => $arJSOffer) {
+                            $strProps = '';
+                            if (!empty($arJSOffer['DISPLAY_PROPERTIES'])) {
+                                foreach ($arJSOffer['DISPLAY_PROPERTIES'] as $arOneProp) {
+                                    $strProps .= '<br>' . $arOneProp['NAME'] . ' <strong>' . (
+                                        is_array($arOneProp['VALUE'])
+                                            ? implode(' / ', $arOneProp['VALUE'])
+                                            : $arOneProp['VALUE']
+                                        ) . '</strong>';
+                                }
+                            }
+                            $item['JS_OFFERS'][$keyOffer]['DISPLAY_PROPERTIES'] = $strProps;
+                        }
+                    }
+
+
+                }
+            }
+
+        }
+        ?>
+    </div>
+    <div id="result_box"></div>
 </div>

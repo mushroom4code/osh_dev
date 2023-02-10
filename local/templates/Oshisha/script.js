@@ -1,49 +1,43 @@
 $(document).ready(function () {
-    let div = $('div');
-    let body = $('body');
-    let inputItem = $('input');
-    let href = window.location.pathname;
-    let screenWidth = window.screen.width;
-    let boxAddress = $('#edit_addressBox')
-    let checkProductOrdersReady = $('#allProducts');
-    let bool = $('span').is('.taste');
-    let tasted = $(div).is('#VKUS');
-    let brands = $(div).is('.box_with_brands_parents');
+    let div = $('div'),
+        body = $('body'),
+        inputItem = $('input'),
+        href = window.location.pathname,
+        screenWidth = window.screen.width,
+        boxAddress = $('#edit_addressBox'),
+        checkProductOrdersReady = $('#allProducts'),
+        bool = $('span').is('.taste'),
+        tasted = $(div).is('#VKUS');
     // WORKERS
-    let workers = $(div).is('#personal_worker');
-    let worker_pages = $(div).is('#worker_pages');
-    let worker_pages_home = $(div).is('#worker_pages_lk_home');
-    //
+    let workers = $(div).is('#personal_worker'),
+        worker_pages = $(div).is('#worker_pages'),
+        worker_pages_home = $(div).is('#worker_pages_lk_home');
     //CONTRAGENT
-    let workersArray;
-    let arrayCompanyId;
-    //
+    let workersArray, arrayCompanyId;
     //BASKET
-    let addToBasket = true;
-    let box_basket_elems = $('.basket-items-list').find('.basket-items-list-table');
-    let arItemsForDB = [];
-    let product_data;
-    let bars = $('#basket-card');
-    let line = $('#basket-line');
-    let bool_basket = $(div).is('#basket-items-list-container');
+    let addToBasket = $(document).find('.add2basket').length !== 0 ? true : false,
+        box_basket_elems = $('.basket-items-list').find('.basket-items-list-table'),
+        arItemsForDB = [],
+        product_data,
+        bars = $('#basket-card'),
+        line = $('#basket-line'),
+        bool_basket = $(div).is('#basket-items-list-container');
     //CATALOG
-
-    //
-    let checkInput = $(inputItem).is(checkProductOrdersReady);
-    let box_for_tasted = $(body).find('.box_for_tasted');
-    let icon = $('#icon');
-    let main_menu = $('.main_menu');
+    let checkInput = $(inputItem).is(checkProductOrdersReady),
+        box_for_tasted = $(body).find('.box_for_tasted'),
+        icon = $('#icon'),
+        main_menu = $('.main_menu');
     // HIDE
     $(main_menu).hide();
     $(boxAddress).hide();
     $('.content_for_box_delivery').hide();
     // SELECT
-    let select = $('select');
-    let select_sort_basket = ('.select_sort_basket');
-    let bool_select_orders = $(select).is('#select_orders');
-    let bool_select_order_return = $(select).is('#select_comments');
-    let bool_select_contragent_user = $(select).is('#contragent_user');
-    let bool_select_company_user_order = $(select).is('#company_user_order');
+    let select = $('select'),
+        select_sort_basket = ('.select_sort_basket'),
+        bool_select_orders = $(select).is('#select_orders'),
+        bool_select_order_return = $(select).is('#select_comments'),
+        bool_select_contragent_user = $(select).is('#contragent_user'),
+        bool_select_company_user_order = $(select).is('#company_user_order');
 
     //MAIN
     function getCookie(name) {
@@ -89,9 +83,9 @@ $(document).ready(function () {
         $("input.datepicker").datepicker();
     }
     if ($(inputItem).is('#main-profile-day')) {
-        let data = new Date()
-        let newDate = String(data.getFullYear() - 17);
-        let inputPicker = $('input#main-profile-day');
+        let data = new Date(),
+            newDate = String(data.getFullYear() - 17),
+            inputPicker = $('input#main-profile-day');
         $(inputPicker).datepicker({
             maxDate: new Date(newDate),
             altField: inputPicker,
@@ -196,25 +190,14 @@ $(document).ready(function () {
             $('.box_filter_catalog').hide();
             $('.Icon').removeClass('open');
         }
-
-        /*if (this.className === "Icon") {
-            $('header').removeAttr('style');
-            this.className = "Icon open";
-            $('body').css('overflow', 'initial');
-        } else {
-           // $('header').attr('style', 'position: fixed;z-index: 1010;width: 100%;height: 100%;');
-            this.className = "Icon";
-            $('body').css('overflow', 'hidden');
-            $('.box_filter_catalog').hide();
-        }*/
     });
 
     // width JS
 
     if (screenWidth >= 320 && screenWidth <= 800) {
-        let bool_personal = href.indexOf('personal');
-        let bool_cart = href.indexOf('cart');
-        let bool_order = href.indexOf('/order/');
+        let bool_personal = href.indexOf('personal'),
+            bool_cart = href.indexOf('cart'),
+            bool_order = href.indexOf('/order/');
         if (bool_personal !== -1 && bool_cart === -1 && bool_order === -1) {
             $('.header_top_panel')
                 .attr('style', 'background-color:#F0F0F0;filter:drop-shadow(0px 1px 3px rgba(97, 97, 97, 0));');
@@ -232,15 +215,13 @@ $(document).ready(function () {
 
 
     if ($(div).is('.bx_catalog_tile_section')) {
-        let count = 4;
-        let variableWidth = false;
+        let count = 4,
+            variableWidth = false;
         if (screenWidth <= 1380) {
             count = 4;
-
         }
         if (screenWidth <= 1080) {
             count = 3;
-
         }
         if (screenWidth <= 746) {
             count = 2;
@@ -291,9 +272,9 @@ $(document).ready(function () {
     });
 
     function changePrice() {
-        let value = parseInt($('.card_element').val());
-        let maxValue = parseInt($('.btn-plus').attr('data-max-quantity'));
-        let minValue = 0;
+        let value = parseInt($('.card_element').val()),
+            maxValue = parseInt($('.btn-plus').attr('data-max-quantity')),
+            minValue = 0;
         if (value < minValue) {
             value = minValue
             $('.card_element').val(minValue)
@@ -310,23 +291,20 @@ $(document).ready(function () {
     }
 
     $(document).on('keypress', '.card_element', function (e) {
-        if(e.which == 13) {
+        if (e.which == 13) {
             clearTimeout(window.addToBasketEventTimeout);
             changePrice.call(this);
             addToBasketEvent.call(this);
         }
     })
 
-    $(document).on('input', '.card_element', function() {
+    $(document).on('input', '.card_element', function () {
         let cardBasketAddButton = $(this).parent().parent().parent();
         if (cardBasketAddButton.hasClass('bx_catalog_item_controls')) {
             cardBasketAddButton = cardBasketAddButton.find('a.add2basket:not(.btn-plus):not(.btn-minus)');
         }
         if ($(cardBasketAddButton).is('.basket_prod_detail')) {
             if ($(cardBasketAddButton).hasClass('addProductDetailButton')) {
-                $(cardBasketAddButton).fadeOut(100, function () {
-                    $(cardBasketAddButton).text('Забронировать');
-                })
                 $(cardBasketAddButton).prop('onclick', null).off('click');
                 $(cardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').fadeIn(100);
             }
@@ -360,25 +338,25 @@ $(document).ready(function () {
 
         function addToBasketEvent() {
             function appendLoader() {
-                $('.spanBasketTop').text('').attr('style', 'padding: 4px 8px;').append('' +
+                $('.spanBasketTop').text('').attr('style', 'padding: 6px;top:0;left:0;').append('' +
                     '<div class="loader"><div class="inner one"></div><div class="inner two">' +
                     '</div> <div class="inner three"></div></div>');
             }
 
             if (!$('span').is('.spanBasketTop')) {
-                $('.basket_top').append('<span class="spanBasketTop"></span>');
+                $('.basket_top').append('<span class="spanBasketTop"></span>' +
+                    '<span class="font-12 font-weight-bold price_basket_top"></span>');
             }
             appendLoader();
-            let product_id = $(this).attr('data-product_id');
-            let product_url = $(this).attr('data-url');
-            let box_with_product = $(this).closest('.bx_catalog_item').find('div#result_box');
-            let quantityProdDet = $(this).closest('div').find('input.product-item-amount').val();
-            let box_with_products_order = $(this).closest('.bx_catalog_items').find('div#result_box');
-            let boxInput = $(this).closest('.bx_catalog_item_controls').find('input.card_element');
-            let plus = $(this).hasClass('btn-plus');
-            let minus = $(this).hasClass('btn-minus');
-
-            let max_QUANTITY = parseInt($(this).attr('data-max-quantity'));
+            let product_id = $(this).attr('data-product_id'),
+                product_url = $(this).attr('data-url'),
+                box_with_product = $(this).closest('.bx_catalog_item').find('div#result_box'),
+                quantityProdDet = $(this).closest('div').find('input.product-item-amount').val(),
+                box_with_products_order = $(this).closest('.bx_catalog_items').find('div#result_box'),
+                boxInput = $(this).closest('.bx_catalog_item_controls').find('input.card_element'),
+                plus = $(this).hasClass('btn-plus'),
+                minus = $(this).hasClass('btn-minus'),
+                max_QUANTITY = parseInt($(this).attr('data-max-quantity'));
 
             if (plus === true) {
                 if (parseInt($(boxInput).val()) < max_QUANTITY) {
@@ -460,21 +438,15 @@ $(document).ready(function () {
                     $(boxInput).val(1);
                 }
             }
-            let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="'+product_id+'"]');
+            let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="' + product_id + '"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
                     if (!$(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
-                        $(detailCardBasketAddButton).fadeOut(100, function () {
-                            $(detailCardBasketAddButton).text('Забронировано');
-                        });
                         $(detailCardBasketAddButton).attr({'onclick': "location.href='/personal/cart/'"});
                         $(detailCardBasketAddButton).removeClass('btn_basket').addClass('addProductDetailButton').fadeIn(100);
                     }
                 } else {
                     if ($(detailCardBasketAddButton).hasClass('addProductDetailButton')) {
-                        $(detailCardBasketAddButton).fadeOut(100, function () {
-                            $(detailCardBasketAddButton).text('Забронировать');
-                        });
                         $(detailCardBasketAddButton).prop('onclick', null).off('click');
                         $(detailCardBasketAddButton).addClass('btn_basket').removeClass('addProductDetailButton').fadeIn(100)
                     }
@@ -493,10 +465,12 @@ $(document).ready(function () {
 
 
         function deleteBasketItemTop(result) {
-            if (result !== '' && result !== 0) {
-                $('.spanBasketTop').attr('style', 'padding: 3px 6px;').text(result);
+            if (result.QUANTITY !== '' && result.QUANTITY !== 0) {
+                $('.spanBasketTop').attr('style', 'padding: 3px 6px;').text(result.QUANTITY);
+                $('.price_basket_top').text(result.SUM_PRICE + ' ₽');
             } else {
                 $('.spanBasketTop').remove();
+                $('.price_basket_top').remove();
             }
         }
 
@@ -519,9 +493,7 @@ $(document).ready(function () {
         }
 
         function sendArrayItems(ItemArray) {
-            let product_data = [];
-            let new_time;
-            let time;
+            let product_data = [], new_time, time;
 
             if (ItemArray.length !== 0) {
                 $(ItemArray).each(function (key, itemVal) {
@@ -540,7 +512,9 @@ $(document).ready(function () {
                             url: '/local/templates/Oshisha/include/add2basket.php',
                             data: 'product_data=' + JSON.stringify(product_data),
                             success: function (result) {
-                                deleteBasketItemTop(result);
+                                if(result.STATUS === 'success'){
+                                    deleteBasketItemTop(result);
+                                }
                             }
                         });
                         $(arItemsForDB).each(function (i, val) {
@@ -644,9 +618,9 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.btn-plus', function () {
-        let input = $('input.product-item-amount').val();
-        let popup_mess = $(this).closest('div.bx_catalog_item').find('div#popup_mess');
-        let classes = $(this).hasClass('product-item-amount-field-btn-disabled');
+        let input = $('input.product-item-amount').val(),
+            popup_mess = $(this).closest('div.bx_catalog_item').find('div#popup_mess'),
+            classes = $(this).hasClass('product-item-amount-field-btn-disabled');
         $(popup_mess).hide();
         $(popup_mess).empty();
         if (classes === true && input !== '0') {
@@ -660,45 +634,11 @@ $(document).ready(function () {
         }
     });
 
-
-//BRANDS
-
-    if (brands === true) {
-        $('#box_boxes').find('.box_with_brands_parents').each(
-            function () {
-                let heightBlock = $(this).css('height');
-                if (heightBlock < '435px') {
-                    $(this).closest('div#box_brands').find('a.link_menu_catalog ').attr('style', 'display:none');
-                }
-            }
-        )
-    }
-
-    function showHideBlockForButton(box) {
-        let height = $(box).css('height');
-        let id = $(box).attr('id');
-        let idLink = $(this).attr('id');
-        if (id === idLink) {
-            if (height === '435px') {
-                $(this).text('Скрыть');
-                $(box).attr('style', 'max-height:2000px;transition: 0.7s;');
-            } else {
-                $(this).text('Показать все');
-                $(box).attr('style', 'max-height:435px;height:435px;transition: 0.7s;');
-            }
-        }
-    }
-
-    $('a.link_brand').on('click', function () {
-        let box = $(this).closest('div#box_brands').find('.box_with_brands_parents');
-        showHideBlockForButton(box)
-    });
-
 // CATALOG
     if ($(div).is('.bx-basket')) {
         $(document).on('click', '.btn_basket_collapse', function () {
-            let box = $(this).closest('.box').find('.category');
-            let attr = $(box).hasClass('collapse_hide');
+            let box = $(this).closest('.box').find('.category'),
+                attr = $(box).hasClass('collapse_hide');
             if (attr === true) {
                 $(box).hide().removeClass('collapse_hide').show(300);
                 $(this).find('i').attr('style', 'transform:rotate(180deg)');
@@ -793,9 +733,9 @@ $(document).ready(function () {
 
             if (company_user.ADMIN !== '') {
                 $.each(company_user.ADMIN, function (i, value) {
-                    let class_item = '';
-                    let text = 'Архивировать';
-                    let button_edit = '<span class="EDIT_INFO" >Редактировать</span>';
+                    let class_item = '',
+                        text = 'Архивировать',
+                        button_edit = '<span class="EDIT_INFO" >Редактировать</span>';
                     if (value.ARCHIVED === '1') {
                         class_item = 'notActive';
                         text = 'Восстановить';
@@ -841,14 +781,14 @@ $(document).ready(function () {
 
 
         $(document).on('click', '#CreateCompany', function () {
-            let that = $(this);
-            let form_loader = $('.company_box');
-            let box = $(that).closest('#personal_company');
-            let user_id = $('#company_user').attr('data-user-id');
-            let CompanyName = $(box).find('input#CompanyName').val();
-            let CompanyTime = $(box).find('input#CompanyTime').val();
-            let CompanyAddress = $(box).find('input#CompanyAddress').val();
-            let CompanyTelephone = $(box).find('input#CompanyTelephone').val();
+            let that = $(this),
+                form_loader = $('.company_box'),
+                box = $(that).closest('#personal_company'),
+                user_id = $('#company_user').attr('data-user-id'),
+                CompanyName = $(box).find('input#CompanyName').val(),
+                CompanyTime = $(box).find('input#CompanyTime').val(),
+                CompanyAddress = $(box).find('input#CompanyAddress').val(),
+                CompanyTelephone = $(box).find('input#CompanyTelephone').val();
             $('.mess_danger').remove();
             if (CompanyTelephone !== '' && CompanyAddress !== '' && CompanyTime !== '' && CompanyName !== '') {
                 let company_array = {
@@ -879,9 +819,9 @@ $(document).ready(function () {
                             }
                             $('.form_company_many').append('<span class="mess_danger">' + error + '</span>');
                         } else {
-                            let class_item = '';
-                            let text = 'Архивировать';
-                            let button_edit = '<span class="EDIT_INFO" >Редактировать</span>';
+                            let class_item = '',
+                                text = 'Архивировать',
+                                button_edit = '<span class="EDIT_INFO" >Редактировать</span>';
                             if (result.ARCHIVED === '1') {
                                 class_item = 'notActive';
                                 text = 'Восстановить';
@@ -943,18 +883,16 @@ $(document).ready(function () {
 // CONTR_AGENT
     function send_ajax_CreateContragent(arData) {
 
-        let contrAgent_array;
-        let resultMessage = '';
-
-        contrAgent_array = {
-            'user_id': arData.user_id,
-            'INN': arData.INN,
-            'NAME_CONT': arData.NAME_CONT,
-            'UrAddress': arData.UrAddress,
-            'statusPerson': arData.statusPerson,
-            'company': arData.company,
-            'workers': arData.workers
-        }
+        let resultMessage = '',
+            contrAgent_array = {
+                'user_id': arData.user_id,
+                'INN': arData.INN,
+                'NAME_CONT': arData.NAME_CONT,
+                'UrAddress': arData.UrAddress,
+                'statusPerson': arData.statusPerson,
+                'company': arData.company,
+                'workers': arData.workers
+            }
         $.ajax({
             type: 'POST',
             url: BX.message('SITE_DIR') +
@@ -966,9 +904,9 @@ $(document).ready(function () {
                 } else {
                     result.CONTR_AGENT_ACTIVE = '0';
                     result.ARCHIVED = '0';
-                    let class_item = '';
-                    let text = 'Архивировать';
-                    let button_edit = '<span  class="EDIT_INFO">Редактировать</span>';
+                    let class_item = '',
+                        text = 'Архивировать',
+                        button_edit = '<span  class="EDIT_INFO">Редактировать</span>';
                     if (result.ARCHIVED === '1') {
                         class_item = 'notActive';
                         text = 'Восстановить';
@@ -1027,26 +965,11 @@ $(document).ready(function () {
 
     function appendListParams(company_json, boxInfoContrs, boxWorkers, arDataInfoContragent, method, id_contragent) {
         if (company_json !== '') {
-            let box_company;
-            let box_with_company_checked;
-            let box_with_line_company_checked;
-            let box_with_workers_info;
-            let step;
-            let nameOperation;
-            let button_step_company;
-            let box_with_workers;
-            let arData;
-            let bool_popup;
-            let button_send_ajax;
-            let arrayEdit;
-            let array_connection_json;
-            let array_connection;
-            let company_active = [];
-            let worker_active = [];
-            let companies = JSON.parse(company_json);
-            let company = companies.ADMIN;
-            let workers_json = $('#workersForContragentAdmin').val();
-            let check_edit;
+            let box_company, box_with_company_checked, box_with_line_company_checked, box_with_workers_info, step,
+                nameOperation, button_step_company, box_with_workers, arData, bool_popup, button_send_ajax, arrayEdit,
+                array_connection_json, array_connection, company_active = [], worker_active = [],
+                companies = JSON.parse(company_json), company = companies.ADMIN,
+                workers_json = $('#workersForContragentAdmin').val(), check_edit;
 
             if (method === 'create') {
                 box_company = $('#step_company_contragent_connection');
@@ -1224,19 +1147,15 @@ $(document).ready(function () {
     }
 
     function createContrsForm(that) {
-        let statusPerson;
-        let function_result;
-        let checkParam;
-        let arDataInfoContragent;
-        let company_json;
-        let box = $(that).closest('#personal_contr_agents');
-        let user_id = $(box).attr('data-user-id');
-        let INN = $(box).find('input#INN').val();
-        let NAME_CONT = $(box).find('input#NameCont').val();
-        let UrAddress = $(box).find('input#UrAddress').val();
-        let boxWorkers = $('#boxWithWorkerChecked');
-        let boxInfoContrs = $('#step_create_contragent');
-        let id_contragent;
+        let statusPerson, function_result, checkParam, arDataInfoContragent, company_json,
+            box = $(that).closest('#personal_contr_agents'),
+            user_id = $(box).attr('data-user-id'),
+            INN = $(box).find('input#INN').val(),
+            NAME_CONT = $(box).find('input#NameCont').val(),
+            UrAddress = $(box).find('input#UrAddress').val(),
+            boxWorkers = $('#boxWithWorkerChecked'),
+            boxInfoContrs = $('#step_create_contragent'),
+            id_contragent;
 
         $(box).find('input.input_check').each(function () {
             checkParam = $(this).prop('checked');
@@ -1318,9 +1237,9 @@ $(document).ready(function () {
 
             if (contr_agent !== '') {
                 $.each(contr_agent, function (i, value) {
-                    let class_item = '';
-                    let text = 'Архивировать';
-                    let button_edit = '<span class="EDIT_INFO" >Редактировать</span>';
+                    let class_item = '',
+                        text = 'Архивировать',
+                        button_edit = '<span class="EDIT_INFO" >Редактировать</span>';
                     if (value.ARCHIVED === '1') {
                         class_item = 'notActive';
                         text = 'Восстановить';
@@ -1357,21 +1276,15 @@ $(document).ready(function () {
 
     $(document).on('click', function (e) {
         if (e.target.className === "icon_edit_lk" || e.target.className === "close_popups") {
-            let nameObj;
-            let textEdit;
-            let user_id;
-            let archived;
-            let arch;
-            let arContr;
-            let that_block = $(e.target);
-            let block = $(that_block).closest('.box_with_company');
-            let boxes = $(block).find('.box_for_edit');
-            let option = $(that_block).find('.box_edit');
-            let whoIs = $(block).attr('data-method');
-            let boolArch = $(block).attr('data-attr-arch');
-            let id = $(block).attr('id');
-            let method = $(block).attr('data-method');
-            let texts = 'Архивировать';
+            let nameObj, textEdit, user_id, archived, arch, arContr, that_block = $(e.target),
+                block = $(that_block).closest('.box_with_company'),
+                boxes = $(block).find('.box_for_edit'),
+                option = $(that_block).find('.box_edit'),
+                whoIs = $(block).attr('data-method'),
+                boolArch = $(block).attr('data-attr-arch'),
+                id = $(block).attr('id'),
+                method = $(block).attr('data-method'),
+                texts = 'Архивировать';
 
             archived = boolArch === '0' ? 1 : 0;
             $(option).removeAttr('style').show(200);
@@ -1388,8 +1301,8 @@ $(document).ready(function () {
 
             $('.ARCHIVE').on('click', function () {
 
-                let block = $(this).closest('.box_with_company');
-                let boxes = $(block).find('.box_for_edit');
+                let block = $(this).closest('.box_with_company'),
+                    boxes = $(block).find('.box_for_edit');
                 arch = $(block).attr('data-attr-arch');
                 $(boxes).empty();
                 if (arch === '1') {
@@ -1403,8 +1316,8 @@ $(document).ready(function () {
                     '<span class="close_popups btn_black btn_s width_50">Отмена</span></div></div>').show(200);
 
                 $('#ARCHIVED').on('click', function () {
-                    let block = $(this).closest('.box_with_company');
-                    let boxes = $(block).find('.box_for_edit');
+                    let block = $(this).closest('.box_with_company'),
+                        boxes = $(block).find('.box_for_edit');
                     $(block).find('.box_edit').attr('style', 'display: none;');
                     $(boxes).hide(200).empty();
 
@@ -1457,16 +1370,12 @@ $(document).ready(function () {
             });
 
             $('.EDIT_INFO').on('click', function () {
-                let context;
-                let times;
-                let step_title;
-                let phone;
-                let user_id;
+                let context, times, step_title, phone, user_id;
                 block = $(this).closest('.box_with_company');
                 boxes = $(block).find('.box_for_edit');
-                let name_obj = $(block).find('.nameBox').text();
-                let address_obj = $(block).find('.addressEdit').text();
-                let Inn = $(block).find('.INN').text();
+                let name_obj = $(block).find('.nameBox').text(),
+                    address_obj = $(block).find('.addressEdit').text(),
+                    Inn = $(block).find('.INN').text();
                 $(boxes).empty();
 
                 if (method === 'ent_contr_agents') {
@@ -1534,13 +1443,13 @@ $(document).ready(function () {
 
 
                 $('#EditSave').on('click', function () {
-                    let name_obj = $(this).closest('.box_editArch').find('#NAME_POPUP').val();
-                    let address_obj = $(this).closest('.box_editArch').find('#ADDRESS').val();
-                    let arParams;
-                    let PHONE;
-                    let TIMES;
-                    let INN;
-                    let arObj;
+                    let name_obj = $(this).closest('.box_editArch').find('#NAME_POPUP').val(),
+                        address_obj = $(this).closest('.box_editArch').find('#ADDRESS').val(),
+                        arParams,
+                        PHONE,
+                        TIMES,
+                        INN,
+                        arObj;
 
                     if (method === 'ent_company') {
                         PHONE = $(this).closest('.box_editArch').find('#PHONE').val();
@@ -1573,13 +1482,13 @@ $(document).ready(function () {
                 })
 
                 $('#SaveParams').on('click', function () {
-                    let boxWorkers = $('#boxWithWorkerCheckedEdit');
-                    let boxInfoContrs = $('#step_create_contragent_edit');
-                    let company_json = $('#company_user').val();
-                    let name_obj = $(this).closest('.box_editArchf').find('#NAME_POPUP').val();
-                    let address_obj = $(this).closest('.box_editArch').find('#ADDRESS').val();
-                    let INN = $(this).closest('.box_editArch').find('#INN_POPUP').val();
-                    let id_contragent;
+                    let boxWorkers = $('#boxWithWorkerCheckedEdit'),
+                        boxInfoContrs = $('#step_create_contragent_edit'),
+                        company_json = $('#company_user').val(),
+                        name_obj = $(this).closest('.box_editArchf').find('#NAME_POPUP').val(),
+                        address_obj = $(this).closest('.box_editArch').find('#ADDRESS').val(),
+                        INN = $(this).closest('.box_editArch').find('#INN_POPUP').val(),
+                        id_contragent;
                     id_contragent = $(this).closest('.box_with_company').attr('id');
                     let arObj = {
                         'user_id': user_id,
@@ -1601,9 +1510,9 @@ $(document).ready(function () {
 
     $('.EDIT_INFO_USER').on('click', function () {
 
-        let nameUser = $(this).closest('tr').find('.name_user').text();
-        let emailUser = $(this).closest('tr').find('.email_user').text();
-        let phoneUser = $(this).closest('tr').find('.phone_user').text();
+        let nameUser = $(this).closest('tr').find('.name_user').text(),
+            emailUser = $(this).closest('tr').find('.email_user').text(),
+            phoneUser = $(this).closest('tr').find('.phone_user').text();
 
         if ($(this).closest('.icon_edit_lk').find('.box_editArch') !== null) {
             $(this).closest('.icon_edit_lk').find('.box_editArch').remove();
@@ -1636,10 +1545,10 @@ $(document).ready(function () {
         });
 
         $('#EditSave').on('click', function () {
-            let newNameUser = $(this).closest('.box_editArch').find('#NAME_POPUP').val();
-            let newEmailUser = $(this).closest('.box_editArch').find('#ADDRESS').val();
-            let newPhoneUser = $(this).closest('.box_editArch').find('#PHONE').val();
-            let userId = $(this).closest('tr').attr('data-user-id-worker');
+            let newNameUser = $(this).closest('.box_editArch').find('#NAME_POPUP').val(),
+                newEmailUser = $(this).closest('.box_editArch').find('#ADDRESS').val(),
+                newPhoneUser = $(this).closest('.box_editArch').find('#PHONE').val(),
+                userId = $(this).closest('tr').attr('data-user-id-worker');
 
 
             let newArrObj = {
@@ -1698,12 +1607,11 @@ $(document).ready(function () {
         });
 
         $('#ARCHIVED').on('click', function () {
-            let userId = $(this).closest('tr').attr('data-user-id-worker');
-            let archived = $(this).closest('tr').find('.sorting_1').attr('activity');
-
-            let newArrObj = {
-                'ID': userId
-            }
+            let userId = $(this).closest('tr').attr('data-user-id-worker'),
+                archived = $(this).closest('tr').find('.sorting_1').attr('activity'),
+                newArrObj = {
+                    'ID': userId
+                }
 
             if (archived === 'Y') {
                 newArrObj['ACTIVE'] = 'N';
@@ -1739,12 +1647,12 @@ $(document).ready(function () {
     function addWorker(that) {
         $('.email_error').text("");
         $('.FIOError').text("");
-        let user_id = $('#personal_worker').attr('data-user-id');
-        let user_name = $(that).closest('.form_company_many').find('#FIOWorker').val();
-        let email = $(that).closest('.form_company_many').find('#EmailWorker').val();
-        let phone = $(that).closest('.form_company_many').find('#PhoneWorker').val();
-        let arData;
-        let type;
+        let user_id = $('#personal_worker').attr('data-user-id'),
+            user_name = $(that).closest('.form_company_many').find('#FIOWorker').val(),
+            email = $(that).closest('.form_company_many').find('#EmailWorker').val(),
+            phone = $(that).closest('.form_company_many').find('#PhoneWorker').val(),
+            arData,
+            type;
 
         if (/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email) === false) {
             $('.email_error').text("Введите корректный email");
@@ -1837,81 +1745,75 @@ $(document).ready(function () {
         }
 
     })
-    $('#SaveParamsWorker').on('click', function () {
+    $('#SaveParamsWorker').on('click',
+        function () {
 
-        let worker_container = $('div.name_worker');
-        let box_with_company = $('.workers_company');
-        let worker_id = $(worker_container).attr('data-worker-id');
-        let worker_message = $(worker_container).find('span.message');
-        let box_with_contragents = $('.workers_contragents');
-        $(worker_message).text('').removeClass('color_green').removeClass('red_text');
-        let arDataWorker;
-        let id_contragents_true;
-        let id_contragents_all;
-        let id_company_all;
-        let id_company_true;
+            let worker_container = $('div.name_worker'),
+                box_with_company = $('.workers_company'),
+                worker_id = $(worker_container).attr('data-worker-id'),
+                worker_message = $(worker_container).find('span.message'),
+                box_with_contragents = $('.workers_contragents');
 
-        function eachElemAll(that) {
-            let id;
-            let ids = [];
+            $(worker_message).text('').removeClass('color_green').removeClass('red_text');
+            let arDataWorker, id_contragents_true, id_contragents_all, id_company_all, id_company_true;
 
-            $(that).find('.line_info').each(function () {
-                let method = $(this).find('input').attr('data-method-for-workers');
-                id = $(this).find('.name_box').attr('data-' + method + '-id');
-                ids.push(id);
-            });
-            return ids;
-        }
+            function eachElemAll(that) {
+                let id, ids = [];
 
-        function eachElemTrue(that) {
-            let id;
-            let ids_true = [];
-            $(that).find('.line_info').each(function () {
-                let checked = $(this).find('input').prop('checked');
-                let method = $(this).find('input').attr('data-method-for-workers');
-                if (checked === true) {
+                $(that).find('.line_info').each(function () {
+                    let method = $(this).find('input').attr('data-method-for-workers');
                     id = $(this).find('.name_box').attr('data-' + method + '-id');
-                    ids_true.push(id);
+                    ids.push(id);
+                });
+                return ids;
+            }
+
+            function eachElemTrue(that) {
+                let id, ids_true = [];
+                $(that).find('.line_info').each(function () {
+                    let checked = $(this).find('input').prop('checked'),
+                        method = $(this).find('input').attr('data-method-for-workers');
+                    if (checked === true) {
+                        id = $(this).find('.name_box').attr('data-' + method + '-id');
+                        ids_true.push(id);
+                    }
+                });
+                return ids_true;
+            }
+
+            id_contragents_true = eachElemTrue(box_with_contragents);
+            id_contragents_all = eachElemAll(box_with_contragents);
+            id_company_true = eachElemTrue(box_with_company);
+            id_company_all = eachElemAll(box_with_company);
+
+            arDataWorker = {
+                'CONTR_AGENT_ID': JSON.stringify(id_contragents_all),
+                'COMPANY_ID': JSON.stringify(id_company_all),
+                'CONTR_AGENT_TRUE': JSON.stringify(id_contragents_true),
+                'COMPANY_ID_TRUE': JSON.stringify(id_company_true),
+                'USER_ID': worker_id
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: BX.message('SITE_DIR') +
+                    'local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php',
+                data: 'editWorkerControls=' + JSON.stringify(arDataWorker),
+                success: function (result) {
+                    $(worker_message).text('');
+                    if (result === 'success') {
+                        $(worker_message).text('Изменения сохранены').addClass('color_green').show(200);
+                    } else {
+                        $(worker_message).text('Ошибка присваивания прав доступа сотруднику!').addClass('red_text').show(200);
+                    }
                 }
             });
-            return ids_true;
-        }
-
-        id_contragents_true = eachElemTrue(box_with_contragents);
-        id_contragents_all = eachElemAll(box_with_contragents);
-        id_company_true = eachElemTrue(box_with_company);
-        id_company_all = eachElemAll(box_with_company);
-
-        arDataWorker = {
-            'CONTR_AGENT_ID': JSON.stringify(id_contragents_all),
-            'COMPANY_ID': JSON.stringify(id_company_all),
-            'CONTR_AGENT_TRUE': JSON.stringify(id_contragents_true),
-            'COMPANY_ID_TRUE': JSON.stringify(id_company_true),
-            'USER_ID': worker_id
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: BX.message('SITE_DIR') +
-                'local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php',
-            data: 'editWorkerControls=' + JSON.stringify(arDataWorker),
-            success: function (result) {
-                $(worker_message).text('');
-                if (result === 'success') {
-                    $(worker_message).text('Изменения сохранены').addClass('color_green').show(200);
-                } else {
-                    $(worker_message).text('Ошибка присваивания прав доступа сотруднику!').addClass('red_text').show(200);
-                }
-            }
         });
-    });
 
     function stringToColor(str) {
-        let hash = 0;
-        let color = '#';
-        let i;
-        let value;
-        let strLength;
+        let hash = 0,
+            color = '#',
+            i, value, strLength;
 
         if (!str) {
             return color + '333333';
@@ -1932,9 +1834,7 @@ $(document).ready(function () {
     }
 
     function eachUsersColor(that) {
-        let name;
-        let letter;
-        let backgroundColor;
+        let name, letter, backgroundColor;
         name = $(that).find('span.name').text();
         letter = name.substr(0, 1);
         backgroundColor = stringToColor(name);
@@ -1961,8 +1861,8 @@ $(document).ready(function () {
         $('#TableWorkers_filter label').addClass('order-3').find('input').attr('placeholder',
             'Имя, фамилия или почта').addClass('form-control');
 
-        let company_json = $('#companyArrayForSelected').val();
-        let contrAgent_json = $('#contrAgentArrayForSelected').val();
+        let company_json = $('#companyArrayForSelected').val(),
+            contrAgent_json = $('#contrAgentArrayForSelected').val();
 
         $('#TableWorkers_filter').attr('class', 'd-flex row-section justify-content-between align-items-center')
             .append('<select class="order-1" id="CompanySelected"><option>Компании</option></select>' +
@@ -2063,8 +1963,8 @@ $(document).ready(function () {
 
 // LOCATIONS LIST START
 // Список городов для выбора местоположения
-    let all_cities = $('#cities-list');
-    let big_cities = $('#big-cities-list');
+    let all_cities = $('#cities-list'),
+        big_cities = $('#big-cities-list');
     $("#city-search").keyup(function () {
         all_cities.show();
         big_cities.hide();
@@ -2094,9 +1994,9 @@ $(document).ready(function () {
     })
 
     $('.sort').on('click', function () {
-        let basketItems = BX.namespace('BX.Sale.BasketComponent');
-        let classes = $(this).attr('data-sort');
-        let sort = false;
+        let basketItems = BX.namespace('BX.Sale.BasketComponent'),
+            classes = $(this).attr('data-sort'),
+            sort = false;
         if (basketItems !== undefined) {
             if (classes === 'grid') {
                 basketItems.listTemplate = 'grid';
@@ -2169,12 +2069,6 @@ $(document).ready(function () {
         }
     })
 
-
-    // $('.catalog_sort_item').on('click', function () {
-    //     $(this).parents('.sort_orders_element').hide();
-    // })
-
-
     $(document).on('click', function (e) {
         let elem = e.target;
         if (elem.classList.contains('close_modalWindow')) {
@@ -2189,103 +2083,6 @@ $(document).ready(function () {
             $('.bx-background-image').css('overflow-y', 'auto');
         }
     })
-    /*
-        $(".datepicker-here").datepicker({
-            onSelect: function (selectedDate) {
-                if (/\s.\s/.test(selectedDate) === false) {
-                    return;
-                }
-                let arr = selectedDate.split(/\s.\s/);
-                let arrOfDate = {
-                    'firstDate': arr[0],
-                    'secondDate': arr[arr.length - 1],
-                    'url': document.location.search,
-                }
-                $.ajax({
-                    url: BX.message('SITE_DIR') +
-                        'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax.php',
-                    type: 'POST',
-                    data: {
-                        arrOfDate: JSON.stringify(arrOfDate),
-                    },
-                    success: function (response) {
-                        let data = JSON.parse(response);
-                        $('.sale-order-list-inner-container').remove();
-                        if (data === null) {
-                            $('#content_box').append('Заказов в выбранный промежуток времени нет');
-                        } else {
-                            data.forEach((item, index) => {
-                                function addPictures() {
-                                    item['PICTURE'].forEach(item => {
-                                        $(`.sort_by_date_orders_${index}`).append(`<img class="image_box_orders" src="${item}"/>`)
-                                    })
-                                }
-
-                                function statusOrder() {
-                                    if (item['STATUS_ID'] === 'F') {
-                                        return `<span class="status_completed">Выполнен</span>`;
-                                    }
-                                    return `<span class="status_pending_payment">Принят, ожидается оплата</span>`
-                                }
-
-                                $('#content_box').append(`<div class="row mx-0 mb-5 sale-order-list-inner-container">
-                    <div class="row mx-0 sale-order-list-title-container">
-                        <h3 class="mb-1 mt-1">
-                            <div>
-                                <span>Заказ № ${item['ACCOUNT_NUMBER']} от ${item['DATE_INSERT_FORMAT'].split(' ')[0]}</span>
-                            </div>
-                            <div>
-                                ${statusOrder()}
-                            </div>
-                        </h3>
-                    </div>
-                    <div class="box_wth_delivery_number">
-                        <div class="mt-2">
-                            <span>Номер отслеживания:</span> <a href="#">24006875</a>
-                        </div>
-                    </div>
-
-                    <div class="row mx-0 mb-4 mt-4 d-flex flex_class justify-content-evenly sort_by_date_orders_${index}">
-                    </div>
-                        <div class="col pt-3">
-                        <div class="sale-order-list-inner-row">
-                            <div class="sale-order-list-inner-row">
-                                <div class=" sale-order-list-about-container">
-                                    <a class="sale-order-list-about-link"
-                                       href="/personal/orders/${item['ACCOUNT_NUMBER']}">Подробности
-                                        заказа</a>
-                                </div>
-
-                                <div class=" sale-order-list-repeat-container">
-                                    <a class=" sale-order-list-repeat-link"
-                                       href="/personal/cart/">Повторить заказ</a>
-                                </div>
-                                <div class=" sale-order-list-cancel-container">
-                                    <a class="sale-order-list-cancel-link"
-                                           href="/personal/cancel/${item['ACCOUNT_NUMBER']}?CANCEL=Y">Отменить заказ</a>
-                                </div>
-                            </div>
-                            <div class="sale-order-list-inner">
-                                <div class="sale-order-list-inner-row-body">
-                                    <div class="sale-order-list-payment">
-                                        <div class="mb-1 sale-order-list-payment-price">
-                                            <span class="sale-order-list-payment-element">Сумма заказа:</span>
-                                            <span class="sale-order-list-payment-number">${item['PRICE'].split('.')[0] + ' ₽'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                            </div>`);
-                                addPictures();
-                            })
-                        }
-                    }
-                })
-            }
-        });
-    */
 
     $(document).on('click', '.retail_orders', function () {
         $(this).closest('div').find('.wholesale_orders').css({
@@ -2479,7 +2276,7 @@ $(document).ready(function () {
     $('.sort_mobile').on('click', function () {
 
         $('.box_filter_catalog').show();
-        $('body').css({'overflow': 'hidden'});
+        $('body').css({'overflow': 'hidden'}).addClass('hide-jivo');
     });
     $('.closeButtonFilter').on('click', function () {
 
@@ -2487,11 +2284,23 @@ $(document).ready(function () {
         $('body').css({'overflow': 'initial'});
     });
 
-    if (window.screen.width < 1024) {
+    if (window.screen.width < 1024 && window.screen.width > 768) {
         var top_page = $('.section_wrapper').offset().top;
         $('.box_filter_catalog').css({'top': top_page});
     }
 
+    $(document).on('click', '.js__filter-close', function() {
+        if (!$(this).hasClass('disabled_class')) {
+            $(this).parents('.box_filter_catalog').find('.filter-view-bar').css({'display':'none'})
+
+            $(this).parents('.box_filter_catalog').slideUp(function() {
+                $('.filter-view').addClass('disabled_class');
+                $('.filter-view-bar').show();
+            });
+            $('body').removeClass('hide-jivo');
+            $(document).find('body').css({overflow: 'initial'})
+        }
+    });
 
     $('.shared i').on('click', function () {
         let el_id = $(this).parent().data('element-id');
@@ -2838,28 +2647,34 @@ $(document).on('submit', '.send_feed', function (e) {
     return false;
 });
 
-$(document).on('submit', '.callback_form', function () {
-    /*if( !$('#agree6').is(':checked') )
-    {
-        $('.checkboxes_error').html('Примите условия').show();
-        return false;
-    }*/
-    $('.callback_form .error_field').hide();
-    var err = 0;
+$(document).on('submit', '.callback_form', function (e) {
+    e.preventDefault();
+    let errors = {
+            emptyField: 'Поле не заполнено',
+            emptyConfirm: 'Не приняты условия обработки персональных данных',
+        },
+        fieldPhone = $(this).find('input[name="PHONE"]'),
+        fieldConfirm = $(this).find('input[name="confirm"]'),
+        err = 0;
+    $('.js__error_field').html('').hide();
 
-    if ($('.callback_form input[name="PHONE"]').val() == '') {
-        $('.er_CALLBACK_PHONE').html('Поле не заполнено');
-        $('.er_CALLBACK_PHONE').show();
-        var err = 1;
+    if (fieldPhone.val().length <= 0) {
+        fieldPhone.parents('.form-group').find('.js__error_field').html(errors.emptyField).show();
+        console.log('phone error');
+        err++;
     }
 
-    if (err != 1) {
+    if (!fieldConfirm.prop('checked')) {
+        fieldConfirm.parents('.form-group').find('.js__error_field').html(errors.emptyConfirm).show();
+        console.log('check error');
+        err++;
+    }
+
+    if (!err) {
         $.ajax({
             url: '/ajax/callback.php',
             method: 'POST',
             data: $(this).serialize(),
-
-
         }).done(function (dataRes) {
             if (dataRes == 1) {
                 //location.reload();
@@ -2868,8 +2683,6 @@ $(document).on('submit', '.callback_form', function () {
             } else {
                 $('.error_form').html(dataRes);
             }
-
-
         });
     }
     return false;
@@ -2878,7 +2691,7 @@ $(document).on('submit', '.callback_form', function () {
 // Открытие попап обратного звонка: начало
 $(document).ready(function () {
     $('.callback_PHONE').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
-    $('.callback').on('click', function () {
+    $('.js__callback').on('click', function () {
         $("#callbackModal").arcticmodal(
             {
                 closeOnOverlayClick: true,
@@ -2888,3 +2701,36 @@ $(document).ready(function () {
     });
 });
 // Открытие попап обратного звонка: конец
+document.addEventListener('click', (e) => {
+    const sortList = document.querySelector('.js__sort_orders_element');
+    if (sortList !== null) {
+        if (!e.composedPath().includes(sortList)) {
+            sortList.style.display = 'none';
+        }
+    }
+});
+document.addEventListener('keyup', (e) => {
+    const sortList = document.querySelector('.js__sort_orders_element');
+    if (sortList !== null) {
+        if (e.code === 'Escape') {
+            sortList.style.display = 'none';
+        }
+    }
+});
+
+// top menu scroll
+
+if ($(window).width() > 1024) {
+    $(window).scroll(function () {
+        var appended = false;
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop > 0) {
+            if (!appended) {
+                $(document).find('header').addClass('header-scroll');
+                appended = true;
+            }
+        } else {
+            $(document).find('header').removeClass('header-scroll');
+        }
+    });
+}

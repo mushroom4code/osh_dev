@@ -203,7 +203,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                                         if ($basketItem['PICTURE']['SRC'] <> '') {
                                                             $imageSrc = $basketItem['PICTURE']['SRC'];
                                                         } else {
-                                                            $imageSrc = $this->GetFolder() . '/images/no_photo.png';
+                                                            $imageSrc = '/local/templates/Oshisha/images/no-photo.gif';
                                                         }
                                                         ?>
                                                         <img class="sale-order-detail-order-item-img-container"

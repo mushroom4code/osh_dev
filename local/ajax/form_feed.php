@@ -9,6 +9,7 @@ Loader::includeModule('main');
 
 $NAME = htmlspecialcharsbx($_REQUEST['NAME']);
 $MESSAGE = htmlspecialcharsbx($_REQUEST['MESSAGE']);
+$EMAIL = htmlspecialcharsbx($_REQUEST['EMAIL']);
 $PHONE = htmlspecialcharsbx($_REQUEST['PHONE']);
 $message = '';
 
@@ -32,22 +33,25 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
         'PROPERTY_VALUES' => [
             'USER_NAME' => $NAME,
             'PHONE' => $PHONE,
-            'USER_FILES' => $_FILES,
+            'EMAIL' => $EMAIL,
+            'USER_FILES' => !empty($_FILES) ? $_FILES : []
         ],
     ];
     $elemId = $el->add($arElement);
 
     // Получение ИД изображений елемента ИБ
-    $elemFiles = [];
-    $tmpProps = CIBlockElement::GetProperty(
-        IBLOCK_NEW_SITE_COMMENTS,
-        $elemId,
-        [],
-        ['CODE'=>'USER_FILES']
-    );
+    if (!empty($_FILES)) {
+        $elemFiles = [];
+        $tmpProps = CIBlockElement::GetProperty(
+            IBLOCK_NEW_SITE_COMMENTS,
+            $elemId,
+            [],
+            ['CODE' => 'USER_FILES']
+        );
 
-    while($arrProps = $tmpProps->Fetch()) {
-        $elemFiles[] = $arrProps['VALUE'];
+        while ($arrProps = $tmpProps->Fetch()) {
+            $elemFiles[] = $arrProps['VALUE'];
+        }
     }
 
     $message .= 'Новое сообщение от' . PHP_EOL . $NAME  . PHP_EOL . PHP_EOL;
@@ -65,7 +69,7 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
         ),
         'duplicate' => 'Y',
         '',
-        'FILE' => $elemFiles
+        'FILE' => !empty($_FILES) ? $elemFiles : []
     ));
     echo 1;
 } else {

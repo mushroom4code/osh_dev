@@ -296,7 +296,7 @@ global $option_site;
                                   data-entity="slider-control-right"
                                   style="display: none;"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
                             <div class="product-item-detail-slider-images-container" data-entity="images-container">
-                                <?php if (!empty($actualItem['PICTURE'])) {
+                                <?php if (!empty($actualItem['PICTURE'][0]['SRC'])) {
                                     foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
                                         <div class="product-item-detail-slider-image<?= ($key == 0 ? ' active' : '') ?>"
                                              data-entity="image" data-id="<?= $photo['ID'] ?>">
@@ -305,6 +305,12 @@ global $option_site;
                                         </div>
                                         <?php
                                     }
+                                }else {
+                                    ?>
+                                    <div class="product-item-detail-slider-image active" data-entity="image" data-id="1">
+                                        <img src="/local/templates/Oshisha/images/no-photo.gif"  itemprop="image">
+                                    </div>
+                                    <?
                                 }
                                 if ($arParams['SLIDER_PROGRESS'] === 'Y') { ?>
                                     <div class="product-item-detail-slider-progress-bar"
@@ -526,17 +532,11 @@ global $option_site;
                 break;
             case 'quantity':
             if ($show_price) {
-            if ($actualItem['PRODUCT']['QUANTITY'] != '0') {
-            $textButton = 'Забронировать';
-            $classButton = 'btn_basket';
-            if ($priceBasket > 0) {
-                $textButton = 'Забронировано';
-                $classButton = 'addProductDetailButton';
-            } ?>
+            if ($actualItem['PRODUCT']['QUANTITY'] != '0') {?>
                 <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
                     <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
                      data-entity="quantity-block">
-                    <div class="product-item-amount-field-contain">
+                    <div class="product-item-amount-field-contain mr-3">
                                                     <span class="btn-minus no-select minus_icon add2basket basket_prod_detail"
                                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                                           data-product_id="<?= $arResult['ID']; ?>"
@@ -557,9 +557,11 @@ global $option_site;
                               id="<?= $itemIds['QUANTITY_UP_ID'] ?>"></span>
                     </div>
                     <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)" rel="nofollow"
-                       class="<?= $classButton ?> add2basket basket_prod_detail"
+                       class="add2basket basket_prod_detail btn red_button_cart"
                        data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>" data-product_id="<?= $arResult['ID']; ?>"
-                       title="Добавить в корзину"><?= $textButton ?></a>
+                       title="Добавить в корзину">
+                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
+                    </a>
                     <div id="result_box"></div>
                     <div id="popup_mess"></div>
                 </div>

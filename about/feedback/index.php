@@ -20,7 +20,7 @@ $APPLICATION->SetTitle("Обратная связь");
                 <div class="er_FORM_PHONE error_field"></div>
             </div>
             <div class="form-group mb-3">
-                <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk" id="phoneNumber"
+                <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk" id="userMail"
                        placeholder="E-mail если хотите получить ответ на почту">
             </div>
             <div class="form-group mb-3">

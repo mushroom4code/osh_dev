@@ -205,7 +205,6 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             "PAGER_PARAMS_NAME" => $arParams["PAGER_PARAMS_NAME"],
                             "INSTANT_RELOAD" => $arParams["INSTANT_RELOAD"],
                         ),
-                        $component,
                         array('HIDE_ICONS' => 'Y')
                     );
                     ?>
@@ -213,6 +212,15 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             <?php endif
             //			//endregion
             ?>
+            <div class="filter-close js__filter-close">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="filter-view-bar">
+                <div class="red_button_cart filter-view js__filter-close disabled_class">Применить</div>
+            </div>
         </div>
     <? endif ?>
     <? global $GLOBAL_SECTION; ?>
@@ -262,46 +270,35 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                     <div class="sort_panel_wrap">
                         <div class="sort_panel" id="">
-<!--                            <input type="hidden" name="sort_by" value="PROPERTY_SERVICE_FIELD_POPULARITY" form="catalog_filter_form">-->
-<!--                            <input type="hidden" name="sort_order" value="DESC" form="catalog_filter_form">-->
                             <a class="sort_order sort_tool" href="#">
-                                <?php /*
-                                if ($_GET["sort"] == "price")
-                                {
-                                    $arParams["ELEMENT_SORT_FIELD"] = "catalog_PRICE_1";
-                                    $price="asortvibor";
-                                    $brend="";
-                                }
-//
-                                if ($_GET["sort"] == "NAME")
-                                {
-                                    $arParams["ELEMENT_SORT_FIELD"] = "NAME";
-                                    $brend="";
-                                    $price="";
-                                }
-                                */ ?>
-                                <span class="sort_orders_by sort_caption" style="min-width: 150px;">Сортировать по</span>
+                                <span class="sort_orders_by sort_caption"
+                                      style="min-width: 150px;">Сортировать по</span>
                                 <i class="fa fa-angle-down" aria-hidden="true"></i>
                             </a>
-                            <div class="sort_orders_element">
+                            <div class="sort_orders_element js__sort_orders_element">
                                 <ul>
                                     <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-sort="PROPERTY_SERVICE_FIELD_POPULARITY"
-                                        data-order="DESC">По популярности</li>
+                                        data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"
+                                        data-order="DESC">По популярности
+                                    </li>
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                        data-sort="CATALOG_PRICE_2"
-                                        data-order="ASC">По возрастанию цены</li>
+                                        data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
+                                        data-order="ASC">По возрастанию цены
+                                    </li>
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                        data-sort="CATALOG_PRICE_2"
-                                        data-order="DESC">По убыванию цены</li>
+                                        data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
+                                        data-order="DESC">По убыванию цены
+                                    </li>
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-sort="NAME"
-                                        data-order="ASC">По названию</li>
+                                        data-order="ASC">По названию
+                                    </li>
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-sort="CREATED_DATE"
-                                        data-order="DESC">По новизне</li>
+                                        data-order="DESC">По новизне
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -377,7 +374,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             );
         }
         //endregion
-
+        global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
             "oshisha_catalog.section", array(

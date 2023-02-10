@@ -27,6 +27,13 @@ try {
 
 $parameters = unserialize(base64_decode($paramString));
 
+if ($request->getPost('hide_not_available') == "Y") {
+    $parameters['HIDE_NOT_AVAILABLE'] = $request->getPost('hide_not_available');
+} else {
+    $parameters['HIDE_NOT_AVAILABLE'] = "L";
+}
+
+
 if (isset($parameters['PARENT_NAME'])) {
     $parent = new CBitrixComponent();
     $parent->InitComponent($parameters['PARENT_NAME'], $parameters['PARENT_TEMPLATE_NAME']);
@@ -124,7 +131,7 @@ if (!empty($staticFilter)) {
 }
 
 if( isset($_REQUEST['PAGER_BASE_LINK_ENABLE'])){
-    $parameters['PAGER_BASE_LINK'] = $_REQUEST['PAGER_BASE_LINK'];
+    $parameters['PAGER_BASE_LINK'] = $_REQUEST['sort_request'] ?? $_REQUEST['PAGER_BASE_LINK'];
     $parameters['PAGER_BASE_LINK_ENABLE'] = $_REQUEST['PAGER_BASE_LINK_ENABLE'];
 }
 

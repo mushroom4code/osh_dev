@@ -160,6 +160,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         sendRequest: function (action, actionData) {
             var form;
 
+            if (($('input[name="USER_RULES"]').prop('checked') === false ||
+                $('input[name="USER_POLITICS"]').prop('checked') === false) && action === 'saveOrderAjax') {
+                this.endLoader();
+                $('#bx-soa-properties').find('.alert.alert-danger').removeAttr('style')
+                    .text('Примите условия соглашений в конце страницы');
+                this.animateScrollTo($("#bx-soa-properties .alert.alert-danger"));
+
+                return;
+            }
+
             if (!this.startLoader())
                 return;
 
@@ -1565,17 +1575,17 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 let elem_company = option_company[0];
                 let elem_contrs = option_contrs[0];
 
-                if(elem_contrs.children.length !== 0){
+                if (elem_contrs.children.length !== 0) {
                     let value_option_contragent_id = elem_contrs.options[elem_contrs.selectedIndex].value;
                     if (value_option_contragent_id && input_block_contragent !== null) {
                         input_block_contragent.value = value_option_contragent_id;
                     }
                 }
-                if(elem_company.children.length !== 0){
+                if (elem_company.children.length !== 0) {
                     let value_option_company_id = elem_company.options[elem_company.selectedIndex].value;
                     if (value_option_company_id && input_block_company !== null) {
                         input_block_company.value = value_option_company_id;
-                        }
+                    }
                 }
             }
         },
@@ -1583,8 +1593,11 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
          * Order saving action with validation. Doesn't send request while have errors
          */
         clickOrderSaveAction: function (event) {
-            if(this.result.IS_AUTHORIZED){this.click_edit();}
+            if (this.result.IS_AUTHORIZED) {
+                this.click_edit();
+            }
             if (this.isValidForm()) {
+
                 this.allowOrderSave();
                 if (this.params.USER_CONSENT === 'Y' && BX.UserConsent) {
                     BX.onCustomEvent('bx-soa-order-save', []);
@@ -2053,12 +2066,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             this.editActiveDeliveryBlock(true);
             this.editActivePaySystemBlock(true),
 
-            // if (this.activeSection !== null) {
-            //     this.editSection(this.activeSection);
-            //     this.activeSection = null;
-            // }
+                // if (this.activeSection !== null) {
+                //     this.editSection(this.activeSection);
+                //     this.activeSection = null;
+                // }
 
-            this.editTotalBlock();
+                this.editTotalBlock();
             this.totalBlockFixFont();
 
             this.showErrors(this.result.ERROR, false);
@@ -3773,8 +3786,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             });
         },
 
-        getPersonTypeControl: function(node)
-        {
+        getPersonTypeControl: function (node) {
             if (!this.result.PERSON_TYPE)
                 return;
 
@@ -3784,12 +3796,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 currentType, oldPersonTypeId, i,
                 input, options = [], label, delimiter = false;
 
-            if (personTypesCount > 1)
-            {
+            if (personTypesCount > 1) {
                 input = BX.create('DIV', {
                     props: {className: 'form-group'},
                     children: [
-                        BX.create('LABEL', {props: {className: 'bx-soa-custom-label'}, html: this.params.MESS_PERSON_TYPE}),
+                        BX.create('LABEL', {
+                            props: {className: 'bx-soa-custom-label'},
+                            html: this.params.MESS_PERSON_TYPE
+                        }),
                         BX.create('BR')
                     ]
                 });
@@ -3797,12 +3811,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 node = input;
             }
 
-            if (personTypesCount > 2)
-            {
-                for (i in this.result.PERSON_TYPE)
-                {
-                    if (this.result.PERSON_TYPE.hasOwnProperty(i))
-                    {
+            if (personTypesCount > 2) {
+                for (i in this.result.PERSON_TYPE) {
+                    if (this.result.PERSON_TYPE.hasOwnProperty(i)) {
                         currentType = this.result.PERSON_TYPE[i];
                         options.push(BX.create('OPTION', {
                             props: {
@@ -3824,13 +3835,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 }));
 
                 this.regionBlockNotEmpty = true;
-            }
-            else if (personTypesCount == 2)
-            {
-                for (i in this.result.PERSON_TYPE)
-                {
-                    if (this.result.PERSON_TYPE.hasOwnProperty(i))
-                    {
+            } else if (personTypesCount == 2) {
+                for (i in this.result.PERSON_TYPE) {
+                    if (this.result.PERSON_TYPE.hasOwnProperty(i)) {
                         currentType = this.result.PERSON_TYPE[i];
                         label = BX.create('LABEL', {
                             children: [
@@ -3855,16 +3862,19 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 }
 
                 this.regionBlockNotEmpty = true;
-            }
-            else
-            {
+            } else {
                 for (i in this.result.PERSON_TYPE)
                     if (this.result.PERSON_TYPE.hasOwnProperty(i))
-                        node.appendChild(BX.create('INPUT', {props: {type: 'hidden', name: 'PERSON_TYPE', value: this.result.PERSON_TYPE[i].ID}}));
+                        node.appendChild(BX.create('INPUT', {
+                            props: {
+                                type: 'hidden',
+                                name: 'PERSON_TYPE',
+                                value: this.result.PERSON_TYPE[i].ID
+                            }
+                        }));
             }
 
-            if (oldPersonTypeId)
-            {
+            if (oldPersonTypeId) {
                 node.appendChild(
                     BX.create('INPUT', {
                         props: {
@@ -4475,7 +4485,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 return;
 
             let deliveryItemsContainer = BX.create('DIV', {
-                    props: {className: 'order-md-1 order-2 bx-soa-pp-item-container'}
+                    props: {className: ' bx-soa-pp-item-container'}
                 }),
                 deliveryItemsContainerRow = BX.create('DIV', {props: {className: 'row'}}),
                 deliveryItemNode, k;
@@ -4483,12 +4493,50 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             for (k = 0; k < this.deliveryPagination.currentPage.length; k++) {
                 let item_edit = this.deliveryPagination.currentPage[k];
                 deliveryItemNode = this.createDeliveryItem(item_edit);
-
+                let check = '';
                 if (item_edit.CHECKED === "Y") {
                     this.editDeliveryInfo(deliveryItemNode, item_edit)
+                    check = 'active_box';
                 }
 
-                deliveryItemsContainerRow.appendChild(deliveryItemNode);
+                if (item_edit.GROUP_ID !== '0') {
+                    let box_with_deliveries = deliveryItemsContainerRow.querySelector('div.parent_type_' + item_edit.GROUP_ID);
+                    let box_type_id = deliveryItemsContainerRow.querySelector('div.box_' + item_edit.GROUP_ID);
+
+
+                    if (box_with_deliveries !== null && box_type_id !== null) {
+                        box_type_id.appendChild(deliveryItemNode);
+                    } else {
+                        deliveryItemsContainerRow.appendChild(BX.create('DIV', {
+                                    props: {
+                                        className: 'd-flex flex-column bx-soa-pp-company box_with_del_js parent_type_'
+                                            + item_edit.GROUP_ID + ' ' + check
+                                    },
+                                    children: [
+                                        BX.create('DIV', {
+                                            props: {
+                                                className: 'bx-soa-pp-company-smalltitle color_black font_weight_600 d-flex justify-content-between' +
+                                                    ' mb-2 box_with_delivery bx-soa-pp-company-graf-container'
+                                            },
+                                            html:
+                                                '<div>' + item_edit.PARENT_NAME + '<i class="fa fa-chevron-down ml-3" aria-hidden="true"></i></div>' +
+                                                '<div><img height="50" class="img_logo_delivery" src="' + item_edit.LOGOTIP_SRC_2X + '"/></div>'
+                                        }),
+                                        BX.create('DIV', {
+                                                props: {
+                                                    className: 'p-1 box-none container-with-profile-delivery box_' + item_edit.GROUP_ID
+                                                },
+                                            }
+                                        )
+                                    ]
+                                }
+                            )
+                        );
+                        deliveryItemsContainerRow.querySelector('.box_' + item_edit.GROUP_ID).appendChild(deliveryItemNode)
+                    }
+                } else {
+                    deliveryItemsContainerRow.appendChild(deliveryItemNode);
+                }
 
             }
             deliveryItemsContainer.appendChild(deliveryItemsContainerRow);
@@ -4505,7 +4553,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (!this.result.DELIVERY)
                 return;
 
-            let deliveryInfoContainer = BX.create('DIV', {props: {className: 'mb-3 bx-soa-pp-desc-container'}}),
+            let deliveryInfoContainer = BX.create('DIV', {props: {className: 'bx-soa-pp-desc-container'}}),
                 currentDelivery, title, clear, extraServices, extraServicesNode, child_address;
 
             BX.cleanNode(deliveryInfoContainer);
@@ -4541,7 +4589,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     children: [title, clear, extraServicesNode]
                 })
             );
-            deliveryNode.appendChild(deliveryInfoContainer);
+
+            deliveryNode.querySelector('.bx-soa-customer').appendChild(deliveryInfoContainer);
 
             if (this.params.DELIVERY_NO_AJAX != 'Y')
                 this.deliveryCachedInfo[currentDelivery.ID] = currentDelivery;
@@ -4667,7 +4716,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 ],
                 deliveryCached = this.deliveryCachedInfo[deliveryId], label, title, itemNode, logoNode;
 
-            let class_delivery;
             let delivery = 'delivery';
             if (this.params.SHOW_DELIVERY_LIST_NAMES == 'Y') {
                 title = BX.create('DIV', {
@@ -4690,27 +4738,20 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 events: {click: BX.proxy(this.selectDelivery, this)},
             });
 
-            //TODO delivery id static
-            if (deliveryId === 38) {
-                class_delivery = 'order-1';
-            } else if (deliveryId === 3) {
-                class_delivery = 'order-3';
-            } else if (deliveryId === 39) {
-                class_delivery = 'order-2';
-            }
+
             itemNode = BX.create('DIV', {
-                props: {className: delivery + ' bx-soa-pp-company ' + class_delivery},
+                props: {className: delivery + ' bx-soa-pp-company'},
                 children: [label],
             });
             checked && BX.addClass(itemNode, 'bx-selected');
 
             //enterego
             if (checked)
-            //--if (checked && this.result.LAST_ORDER_DATA.PICK_UP)
+                //--if (checked && this.result.LAST_ORDER_DATA.PICK_UP)
                 this.lastSelectedDelivery = deliveryId;
 
             if (BX.hasClass(itemNode, 'bx-selected')) {
-               this.editPropsItems(itemNode);
+                this.editPropsItems(itemNode);
             }
 
             return itemNode;
@@ -5629,14 +5670,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 propsIterator = group.getIterator();
                 while (property = propsIterator()) {
                     if (propsNode.classList.contains('delivery')) {
-                        if (this.groupDeliveryProps.find(item => item === group.getName())!==undefined) {
+                        if (this.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
                             this.getPropertyRowNode(property, propsItemsContainer, false);
                         } else {
                             continue;
                         }
 
                     } else {
-                        if (this.groupBuyerProps.find(item => item === group.getName())!==undefined) {
+                        if (this.groupBuyerProps.find(item => item === group.getName()) !== undefined) {
                             this.getPropertyRowNode(property, propsItemsContainer, false);
                         }
                         continue;
@@ -5673,15 +5714,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                             BX.adjust(BX('user_select'), {style: {display: "none"}});
                         }
                     }
-                    className += " col-6";
-                } if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
+                    className += " col-md-6 col-lg-6 col-12";
+                }
+                if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
                     || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
-                    ||  property.getSettings().CODE === 'ADDRESS' ||  property.getSettings().CODE === 'DATE_DELIVERY') {
+                    || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
                     className += " col-12";
                 } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
                     className += " d-none";
                 } else {
-                    className += " col-6";
+                    className += " col-md-6 col-lg-6 col-12";
                 }
                 BX.addClass(propsItemNode, className);
 
@@ -5813,7 +5855,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 window.Osh.bxPopup.init();
                 const oshMkad = window.Osh.oshMkadDistance.init(this.deliveryOptions);
 
-                $(propsNode).find('[data-name="ADDRESS"]').val( this.deliveryOptions?.DA_DATA_ADDRESS).addClass('d-none')
+                $(propsNode).find('[data-name="ADDRESS"]').val(this.deliveryOptions?.DA_DATA_ADDRESS).addClass('d-none')
                 const propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
                 const nodeDaData = BX.create('INPUT', {
                     props: {
@@ -5849,7 +5891,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     hint: false,
                     floating: true,
                     constraints: {
-                        locations: [{ region: "Московская" }, { region: "Москва" }],
+                        locations: [{region: "Московская"}, {region: "Москва"}],
                         // deletable: true
                     },
                     // в списке подсказок не показываем область
@@ -6436,6 +6478,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 }
             }
 
+
             return propsErrors;
         },
 
@@ -7010,7 +7053,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                                     href: 'javascript:void(0)',
                                     className: 'btn btn_basket btn-order-save'
                                 },
-                                html:'Зарезервировать',
+                                html: 'Зарезервировать',
                                 events: {
                                     click: BX.proxy(this.clickOrderSaveAction, this)
                                 }

@@ -26,6 +26,7 @@
 
         this.bigData = params.bigData || {enabled: false};
         this.container = document.querySelector('[data-entity="' + params.container + '"]');
+        this.lazyLoadContainer = document.querySelector('[data-entity="lazy-' + params.container + '"]');
         this.showMoreButton = null;
         this.showMoreButtonMessage = null;
 
@@ -65,10 +66,8 @@
                         'ajax': 'y',
                         'ajax_filter': 'y',
                         action: 'showMore',
-                        PAGEN_0: 1
+                        PAGER_BASE_LINK_ENABLE: 'Y'
                     };
-                    this.sendRequestRefreshCatalog(data);
-
                     history.pushState(
                         {
                             sort_by: data.sort_by,
@@ -77,8 +76,10 @@
                         '',
                         `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`,
                     );
+                    data['sort_request'] = `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`;
+                    this.sendRequestRefreshCatalog(data);
 
-                    sortPanel.querySelector('.sort_orders_element').style.display = 'none';
+                    sortPanel.querySelector('.js__sort_orders_element').style.display = 'none';
                     sortPanel.querySelector('.sort_caption').textContent = currentValue.textContent;
                 }, this));
             },
@@ -93,9 +94,8 @@
 
         if (params.loadOnScroll) {
             BX.bind(window, 'scroll', BX.proxy(this.loadOnScroll, this));
-
-    }
-        window.JCCatalogSectionComponentThis = this;
+        }
+		window.JCCatalogSectionComponentThis = this;
     };
 
     window.JCCatalogSectionComponent.prototype =
@@ -220,7 +220,6 @@
                     //enterego filter for special group category
                     staticFilter: this.staticFilter
                 };
-
                 if (this.ajaxId) {
                     defaultData.AJAX_ID = this.ajaxId;
                 }
@@ -248,7 +247,7 @@
                                 NavPageNomer: 0,
                                 NavPageCount: parseInt(navParams.NavPageCount) || 1
                             };
-                        }HeightTaste
+                        }
 
                         BX.ajax.processScripts(
                             BX.processHTML(result.JS).SCRIPT,
@@ -257,6 +256,7 @@
                                 this.showAction(result, data);
                             }, this)
                         );
+                        this.processPagination(result.pagination);
                     }, this)
                 });
             },
@@ -279,7 +279,7 @@
                 this.formPosting = false;
                 this.enableButton();
 
-                if (result) {
+                if (result) { 
                     this.navParams.NavPageNomer++;
                     this.processItems(result.items);
                     this.processPagination(result.pagination);
@@ -308,9 +308,9 @@
                         }
                     }
                 );
-                ё
+
                 $('body').find('.variation_taste').each(
-                    function (index, item) {
+                function (index, item) {
                         if ($(item).find('.taste').length > 2) {
                             $(item).closest('.toggle_taste ').css('overflow', 'hidden');
                             $(item).closest('.toggle_taste ').addClass('many_tastes_toggle');
@@ -383,10 +383,13 @@
             },
 
             processPagination: function (paginationHtml) {
-                if (!paginationHtml) {
-                    $('.bx-pagination').remove();
-                    return;
-                }
+                if (!paginationHtml)
+				{
+					$('.bx-pagination').remove();
+					return;
+					
+				}
+                    
 
                 var pagination = document.querySelectorAll('[data-pagination-num="' + this.navParams.NavNum + '"]');
                 for (var k in pagination) {
@@ -470,18 +473,11 @@ function HeightTaste() {
                         var left = $(".by-card .toggle_taste").eq(index).css({'height': resHeight});
                         var right = $(".by-card .toggle_taste").eq(l).css({'height': resHeight});
                     }
-
                 }
             });
-
-
         }
     }
-
-
 }
-
 $(document).ready(function () {
     HeightTaste();
-
 });

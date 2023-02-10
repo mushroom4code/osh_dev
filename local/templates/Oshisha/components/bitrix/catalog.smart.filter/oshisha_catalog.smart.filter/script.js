@@ -31,12 +31,26 @@ JCSmartFilter.prototype.keyup = function(input)
 
 JCSmartFilter.prototype.click = function(checkbox)
 {
-	if(BX(checkbox).checked) {
-		this.addHorizontalFilter(checkbox)
+	if(BX(checkbox).id == 'hide_not_available_id') {
+		if(BX(checkbox).checked) {
+			BX(checkbox).value = 'Y';
+		} else {
+			BX(checkbox).value = 'L';
+		}
 	} else {
-		this.removeHorizontalFilter(checkbox)
+		if ($(checkbox).hasClass('brends_checkbox')) {
+			if ($('input.check_input.brends_checkbox:checked').length > 0) {
+				$('div.model_kalyana.smart-filter-parameters-box').removeClass('d-none');
+			} else {
+				$('div.model_kalyana.smart-filter-parameters-box').removeClass('d-none');
+			}
+		}
+		if(BX(checkbox).checked) {
+			this.addHorizontalFilter(checkbox);
+		} else {
+			this.removeHorizontalFilter(checkbox);
+		}
 	}
-
 
 	if(!!this.timer)
 	{
@@ -164,7 +178,6 @@ JCSmartFilter.prototype.removeHorizontalFilterAll = function ()
 
 	for (let i=0; i < checkbox.length; i++) {
 		BX(checkbox[i]).checked = false;
-		console.log(BX(checkbox[i]));
 		this.countCheckboxFilter--;
 	}
 	this.updateHorizontalFilter();
@@ -253,25 +266,31 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem)
 			{
 				var value = arItem.VALUES[i];
 				var control = BX(value.CONTROL_ID);
-
 				if (!!control)
 				{
 					var label = document.querySelector('[data-role="label_'+value.CONTROL_ID+'"]');
 					if (value.DISABLED)
 					{
 						BX.adjust(control, {props: {disabled: true}});
-						if (label)
-							BX.addClass(label, 'disabled');
+						if (label) {
+							BX.addClass(control.parentNode, 'd-none');
+							BX.addClass(label, 'd-none');
+						}
 						else
-							BX.addClass(control.parentNode, 'disabled');
+							BX.addClass(control.parentNode, 'd-none');
 					}
 					else
 					{
 						BX.adjust(control, {props: {disabled: false}});
-						if (label)
-							BX.removeClass(label, 'disabled');
-						else
-							BX.removeClass(control.parentNode, 'disabled');
+						if (label){
+							$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
+							BX.removeClass(control.parentNode, 'd-none');
+							BX.removeClass(label, 'd-none');
+						}
+						else {
+							$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
+							BX.removeClass(control.parentNode, 'd-none');
+						}
 					}
 
 					if (value.hasOwnProperty('ELEMENT_COUNT'))
@@ -299,12 +318,23 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 			}
 		}
 		this.popups = [];
-
+		$('input.check_input.form-check-input').not('#hide_not_available_id').parent().addClass('d-none');
+		$('div.smart-filter-parameters-box').not('.hide_not_available_container').not(".F").addClass('d-none');
 		for(var PID in result.ITEMS)
 		{
 			if (result.ITEMS.hasOwnProperty(PID))
 			{
 				this.updateItem(PID, result.ITEMS[PID]);
+				if (Object.values(result.ITEMS[PID].VALUES).length) {
+					if (!result.ITEMS[PID].VALUES.MIN) {
+						var first_element_id = Object.values(result.ITEMS[PID].VALUES).filter(element => typeof element!==undefined).shift()['CONTROL_ID'];
+						if ($('#'+first_element_id).closest('div.smart-filter-parameters-box').hasClass('bx-active')) {
+							var filter_block = $('#'+first_element_id).closest('div.smart-filter-parameters-box').find("[data-role='bx_filter_block']");
+							filter_block.css({'display':'block','height':'auto','overflow':'hidden'});
+							filter_block.css('height', filter_block[0].offsetHeight+'px');
+						}
+					}
+				}
 			}
 		}
 	}
@@ -336,7 +366,6 @@ JCSmartFilter.prototype.proxy = function()
 	if (this.sectionCode) {
 		data['subcat'] = this.sectionCode;
 	}
-
 	window.JCCatalogSectionComponent.prototype.sendRequestRefreshCatalog.call(window.JCCatalogSectionComponentThis, data);
 	return false;
 };

@@ -32,7 +32,12 @@
     align-items: center;
     padding: 5px 0;
 }
-
+@media screen and (max-width: 768px) {
+    .smart-filter-parameters-box-title {
+        font-size: 18px;
+        font-weight: bold;
+    }
+}
 .smart-filter-parameters-box-title-text {
     cursor: pointer;
     transition: 250ms linear all;
@@ -979,11 +984,26 @@ margin-right: 20px;
 	display:block;
 }
 .catalog-section-list-item-sub a{
-font-family: 'Montserrat';
-font-style: normal;
-font-weight: 500;
-font-size: 14px;
-line-height: 110.4%;
-color: #464646;
-	
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 110.4%;
+    color: #464646;
+}
+
+div.form-group.form-check.hide_not_available {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+label.smart-filter-checkbox-text.form-check-label.hide_not_available {
+    max-width: 175px;
+    font-weight: 600;
+    color: black;
+}
+
+.js__filter-close {
+    font-size: 1500px;
 }
