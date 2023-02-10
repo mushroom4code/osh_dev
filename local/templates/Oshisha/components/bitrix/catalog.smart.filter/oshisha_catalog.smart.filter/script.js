@@ -231,8 +231,17 @@ JCSmartFilter.prototype.addHorizontalFilter = function(checkbox)
 	});
 };
 
-JCSmartFilter.prototype.updateItem = function (PID, arItem)
+JCSmartFilter.prototype.updateItem = function (PID, arItem, result)
 {
+
+	if (arItem['CODE'] == 'MODEL_KALYANA') {
+		var brend_checked = false;
+		Object.keys(result.ITEMS['56']['VALUES']).forEach(function(value, key) {
+			if (typeof result.ITEMS['56']['VALUES'][value]['CHECKED'] !== 'undefined') {
+				brend_checked = true;
+			}
+		} );
+	}
 	if (arItem.PROPERTY_TYPE === 'N' || arItem.PRICE)
 	{
 		var trackBar = window['trackBar' + PID];
@@ -283,13 +292,28 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem)
 					{
 						BX.adjust(control, {props: {disabled: false}});
 						if (label){
-							$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
-							BX.removeClass(control.parentNode, 'd-none');
-							BX.removeClass(label, 'd-none');
+							if (arItem['CODE'] == 'MODEL_KALYANA') {
+								if (brend_checked == true) {
+									$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
+									BX.removeClass(control.parentNode, 'd-none');
+									BX.removeClass(label, 'd-none');
+								}
+							} else {
+								$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
+								BX.removeClass(control.parentNode, 'd-none');
+								BX.removeClass(label, 'd-none');
+							}
 						}
 						else {
-							$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
-							BX.removeClass(control.parentNode, 'd-none');
+							if (arItem['CODE'] == 'MODEL_KALYANA') {
+								if (brend_checked == true) {
+									$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
+									BX.removeClass(control.parentNode, 'd-none');
+								}
+							} else {
+								$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
+								BX.removeClass(control.parentNode, 'd-none');
+							}
 						}
 					}
 
@@ -324,13 +348,13 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 		{
 			if (result.ITEMS.hasOwnProperty(PID))
 			{
-				this.updateItem(PID, result.ITEMS[PID]);
+				this.updateItem(PID, result.ITEMS[PID], result);
 				if (Object.values(result.ITEMS[PID].VALUES).length) {
 					if (!result.ITEMS[PID].VALUES.MIN) {
 						var first_element_id = Object.values(result.ITEMS[PID].VALUES).filter(element => typeof element!==undefined).shift()['CONTROL_ID'];
 						if ($('#'+first_element_id).closest('div.smart-filter-parameters-box').hasClass('bx-active')) {
 							var filter_block = $('#'+first_element_id).closest('div.smart-filter-parameters-box').find("[data-role='bx_filter_block']");
-							filter_block.css({'display':'block','height':'auto','overflow':'hidden'});
+							filter_block.css({'display':'block','height':'auto','overflow':''});
 							filter_block.css('height', filter_block[0].offsetHeight+'px');
 						}
 					}
