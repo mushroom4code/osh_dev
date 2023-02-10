@@ -2152,6 +2152,10 @@ input.check_input {
     font-weight: 600;
 }
 
+.font-weight-500 {
+    font-weight: 500;
+}
+
 .bx-no-touch input.card_element::-webkit-outer-spin-button, .bx-no-touch input.card_element::-webkit-inner-spin-button {
     appearance: none;
 }

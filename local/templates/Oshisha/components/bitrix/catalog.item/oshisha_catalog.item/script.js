@@ -2187,7 +2187,7 @@ $(document).on('click', '.open-fast-window', function () {
             children: [
                 BX.create('DIV', {
                     props: {
-                        className: 'open-modal-product bg-gray-white p-4 max-width-1024 width-100 br-10'
+                        className: 'open-modal-product bg-gray-white p-lg-4 p-md-4 p-3 max-width-1024 width-100 br-10'
                     },
                 })
             ]
@@ -2203,7 +2203,7 @@ $(document).on('click', '.open-fast-window', function () {
                 children: [
                     BX.create('SPAN', {
                         props: {
-                            className: 'col-11 font-weight-bold mb-3',
+                            className: 'col-11 font-weight-bold mb-2',
                         },
                         text: product.NAME
                     }),
@@ -2227,7 +2227,7 @@ $(document).on('click', '.open-fast-window', function () {
             children: [
                 BX.create('DIV', {
                     props: {
-                        className: 'box-with-image-prod col-lg-6 col-md-6 col-12 d-flex align-items-center justify-content-center'
+                        className: 'box-with-image-prod col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 flex-class'
                     },
                     children: [
                         BX.create('IMG', {
@@ -2241,12 +2241,12 @@ $(document).on('click', '.open-fast-window', function () {
                 }),
                 BX.create('DIV', {
                     props: {
-                        className: 'col-lg-6 col-md-6 col-12 d-flex color-darkOsh'
+                        className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh'
                     },
                     children: [
                         BX.create('DIV', {
                             props: {
-                                className: 'prices-box ml-lg-4 ml-md-4 ml-0',
+                                className: 'prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-4 mb-2',
                             },
                             children: [
                                 BX.create('P', {
@@ -2263,19 +2263,77 @@ $(document).on('click', '.open-fast-window', function () {
                         }),
                         BX.create('DIV', {
                             props: {
-                                className: 'props-box',
+                                className: 'props-box ml-lg-4 ml-md-4 ml-0 d-flex flex-lg-row flex-md-row flex-column ' +
+                                    'justify-content-between align-items-end',
                             },
+                            children: [
+                                BX.create('DIV', {
+                                    props: {
+                                        className: 'props-box-child col-lg-8 col-md-8 col-12 pl-0'
+                                    },
+                                }),
+                                BX.create('A', {
+                                    props: {
+                                        className: 'color-redLight font-weight-bold col-lg-4 col-md-4 col-12 ' +
+                                            'text-decoration-underline font-14 mb-2 p-0 text-lg-right text-md-right',
+                                        href: product.DETAIL_PAGE_URL
+                                    },
+                                    text: 'Подробнее'
+                                })
+                            ]
                         })
                     ]
                 })
             ]
         }));
 
+        // IMAGE && SLIDER
+
+        if (product.MORE_PHOTO.length > 1) {
+
+            let images_box = BX.findChildByClassName(box_product, 'box-with-image-prod');
+            BX.cleanNode(images_box);
+            BX.removeClass(images_box, 'flex-class');
+
+            images_box.appendChild(BX.create('DIV', {
+                props: {
+                    className: 'slick-images-box height_100',
+                },
+            }));
+
+            let slick = BX.findChildByClassName(images_box, 'slick-images-box');
+
+            $.each(product.MORE_PHOTO, function (k, image) {
+                slick.appendChild(BX.create('IMG', {
+                    props: {
+                        className: 'w-h-350',
+                        src: image.SRC,
+                        alt: 'modal-product'
+                    },
+                }))
+            });
+
+            $(slick).slick({
+                arrows: true,
+                prevArrow: '<span class="product-item-detail-slider-left carousel_elem_custom" ' +
+                    'data-entity="slider-control-left" style="">' +
+                    '<i class="fa fa-angle-left" aria-hidden="true"></i></span>',
+                nextArrow: '<span class="product-item-detail-slider-right carousel_elem_custom" ' +
+                    'data-entity="slider-control-right" style=""' +
+                    '><i class="fa fa-angle-right" aria-hidden="true"></i></span>',
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            });
+
+        }
+
+        // PRICE
+
         let price_group = BX.findChildByClassName(box_product, 'price-group');
         let price_base = BX.findChildByClassName(box_product, 'base-price');
 
         $.each(product.PRICE, function (i, price) {
-            console.log(price_base);
+
             if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
                 price_base.innerHTML = price.PRINT_PRICE
             }
@@ -2306,6 +2364,19 @@ $(document).on('click', '.open-fast-window', function () {
                 ]
             }));
         });
+
+        if (product.ADVANTAGES_PRODUCT.length > 0) {
+
+            let props_box = BX.findChildByClassName(box_product, 'props-box-child');
+            $.each(product.ADVANTAGES_PRODUCT, function (k, prop) {
+                props_box.appendChild(BX.create('P', {
+                    props: {
+                        className: 'mb-2 font-14 font-weight-500',
+                    },
+                    html: prop
+                }))
+            });
+        }
 
         $(wrapper).append(box_popup);
     }
