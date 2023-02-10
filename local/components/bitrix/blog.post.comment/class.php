@@ -444,6 +444,8 @@ class CBlogPostCommentEdit extends CBitrixComponent
 									}
 
 									$UserIP = CBlogUser::GetUserIP();
+
+                                    //enterego PUBLISH_STATUS premoderate for everyone
 									$arFields = Array(
 										"POST_ID" => $arPost["ID"],
 										"BLOG_ID" => $arBlog["ID"],
@@ -455,6 +457,8 @@ class CBlogPostCommentEdit extends CBitrixComponent
 										"URL" => $arBlog["URL"],
                                         "PUBLISH_STATUS" => BLOG_PUBLISH_STATUS_READY
 									);
+                                    //enterego
+
 									if($this->arResult["Perm"] == BLOG_PERMS_PREMODERATE)
 										$arFields["PUBLISH_STATUS"] = BLOG_PUBLISH_STATUS_READY;
 
@@ -941,9 +945,19 @@ class CBlogPostCommentEdit extends CBitrixComponent
 					if(!in_array($key, array("POST_TEXT", "TITLE")))
 						unset($comment["~".$key]);
 				}
+
+                //enterego setting moderation status depending on the PUBLISH_STATUS
+                if ($comment["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_READY) {
+                    $comment["ON_MODERATION"] = "Y";
+                } else {
+                    $comment["ON_MODERATION"] = "N";
+                }
+                //enterego
+
 //				create TREE for old-style comments. For new LIST view - we create list after, in result modifer
 				if (empty($resComments[intval($comment["PARENT_ID"])]))
 				{
+
 					$resComments[intval($comment["PARENT_ID"])] = Array();
 					if ($this->arResult["firstLevel"] === '')
 						$this->arResult["firstLevel"] = intval($comment["PARENT_ID"]);
@@ -954,13 +968,16 @@ class CBlogPostCommentEdit extends CBitrixComponent
 				$this->arResult["IDS"][] = $comment["ID"];
 
 //				save unsorted comments in another array
+                //enterego added PUBLISH_STATUS to raw comments
 				$this->arResult["Comments"][$comment["ID"]] = Array(
 					"ID" => $comment["ID"],
 					"PARENT_ID" => $comment["PARENT_ID"],
 					"PUBLISH_STATUS" => $comment["PUBLISH_STATUS"],
                     "AUTHOR_ID" => $comment["AUTHOR_ID"]
 				);
+                //enterego
 			}
+            //enterego setting the PUBLISH_STATUS of child comments depending on parent PUBLISH_STATUS
             foreach ($this->arResult['Comments'] as $key => $val) {
                 if ($val["PUBLISH_STATUS"] == BLOG_PUBLISH_STATUS_READY) {
                     foreach ($resComments[$key] as $inner_key => $inner_val) {
@@ -968,11 +985,14 @@ class CBlogPostCommentEdit extends CBitrixComponent
                     }
                 }
             }
+            //enterego
+            //enterego sorting both comment arrays to be from new to old
             foreach ($resComments as $key => $resComment) {
                 krsort($resComments[$key]);
             }
             krsort($resComments);
             krsort($this->arResult["Comments"]);
+            //enterego
 			$this->arResult["CommentsResult"] = $resComments;
 
 			if($this->arParams["SHOW_RATING"] == "Y" && !empty($this->arResult["IDS"]))
@@ -1589,6 +1609,7 @@ class CBlogPostCommentEdit extends CBitrixComponent
 		$bNeedHide = false;
 		foreach($this->arResult["Comments"] as $k => $v)
 		{
+            //enterego don't hide not published comments if current user is owner
 			if($v["SHOW_AS_HIDDEN"] != "Y" && $v["PUBLISH_STATUS"] != BLOG_PUBLISH_STATUS_PUBLISH && $v["SHOW_SCREENNED"] != "Y")
 			{
                 if ($USER->IsAuthorized()) {
@@ -1600,9 +1621,8 @@ class CBlogPostCommentEdit extends CBitrixComponent
                     unset($this->arResult["Comments"][$k]);
                     $bNeedHide = true;
                 }
-//                unset($this->arResult["Comments"][$k]);
-//                $bNeedHide = true;
             }
+            //enterego
         }
 
 //		remove HIDE COMMENTS from output

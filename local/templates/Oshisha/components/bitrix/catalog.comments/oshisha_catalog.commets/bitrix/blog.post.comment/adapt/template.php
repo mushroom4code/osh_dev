@@ -476,6 +476,11 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                                                 ?>
                                                 <div class="blog-comment-date"><span><?= $date[0] ?></span>
                                                     <span><?= $dateNews[0] . ':' . $dateNews[1] ?></span></div>
+                                                <?
+                                                if ($comment["ON_MODERATION"] == 'Y') { ?>
+                                                    <div class="d-inline ml-4 font-weight-bold">На модерации</div>
+                                                    <?
+                                                } ?>
                                             </div>
                                             <!--                            --><?php
                                             //                            /**
