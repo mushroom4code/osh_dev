@@ -1199,7 +1199,7 @@ div > div.card-body {
     position: absolute;
     top: 100%;
     left: 0;
-    z-index: 500;
+    z-index: 1500;
     background: #F0F0F0;
     width: 100%;
     border-radius: 0 0 10px 10px;
@@ -5946,6 +5946,7 @@ body.hide-jivo > jdiv {
     text-align: center;
     padding: 0 4px;
     margin: 0 3px 3px 0;
+    min-height: 24px;
 }
 @media screen and (max-width: 1366px) {
     .by-card .variation_taste .taste {

@@ -297,7 +297,7 @@
                 $(box).find('span').each(
                     function () {
                         let classes = $(this).attr('class');
-                        if (classes === 'taste') {
+                        if (classes.indexOf('taste') !== -1) {
                             let color = $(this).data('background');
                             $(this).css('background-color', color);
                             let str = '#';
