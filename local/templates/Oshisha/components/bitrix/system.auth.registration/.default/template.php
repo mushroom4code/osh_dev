@@ -96,14 +96,14 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                     </div>
 
                     <div class="d-flex flex-lg-row flex-md-row flex-column">
-                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pl-lg-0 pl-md-0 pl-0">
+                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pl-lg-0 pl-md-0 pl-0 pr-lg-3 pr-md-3 pr-0">
                             <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2 p-0 mb-2"
                                    for="main-profile-name"><?= GetMessage("AUTH_NAME") ?></label>
                             <input type="text" name="USER_NAME" maxlength="50"
                                    class="form-control input_lk bx-auth-input"
                                    value="<?= $arResult["USER_NAME"] ?>"/>
                         </div>
-                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pr-lg-0 pr-md-0 pr-0">
+                        <div class="form-group mb-3 col-md-6 col-lg-6 col-12 p-0">
                             <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
                                    for="main-profile-name"><?= GetMessage("AUTH_LAST_NAME") ?></label>
                             <input type="text" name="USER_LAST_NAME" maxlength="50"
@@ -126,7 +126,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                    value="<?= $arResult["USER_EMAIL"] ?>"/>
                         </div>
                     <?php endif ?>
-                    <input type="hidden" name="USER_LOGIN" value="<?= $arResult["USER_EMAIL"] ?>"/>
+                    <input type="hidden" name="USER_LOGIN" value="<?= rand(105,10000) ?>"/>
 
                     <div class="form-group mb-1">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
@@ -186,7 +186,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                             </div>
                             <input type="text" name="USER_PERSONAL_BIRTHDAY" required
                                    class="form-control input_lk bx-auth-input user-birthday readonly"
-                                   inputmode="text"
+                                   inputmode="none"
                                    id="main-profile-brd"
                                    autocomplete="Off"
                                    value=""
@@ -204,6 +204,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                 <input id="main-profile-phone" type="text" name="USER_PHONE_NUMBER"
                                        required
                                        minlength="10"
+                                       value=""
                                        placeholder="+7 (___)-___-____" inputmode="text"
                                        class="form-control input_lk bx-auth-input"/>
                             </div>
@@ -261,11 +262,12 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
             </form>
             <script type="text/javascript">
                 $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (999)-999-9999", {
-                    min: 10,
+                    minLength: 10,
                     casing: "lower",
                     removeMaskOnSubmit: true,
                     clearMaskOnLostFocus: true,
-                    clearMaskOnLostHover: true
+                    clearMaskOnLostHover: true,
+                    clearIncomplete: true
                 });
 
                 let date_now = new Date();
