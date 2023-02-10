@@ -579,11 +579,11 @@ $(document).ready(function () {
             $('a#sendMailForProd').on('click', function () {
                 let mailClient = $('input#send_me_mail').val();
                 if (mailClient !== '') {
-
+                    var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
                     $.ajax({
                         type: 'POST',
                         url: '/bitrix/components/bitrix/catalog.product.subscribe/ajax.php',
-                        data: 'user_email=' + JSON.stringify(mailClient),
+                        data: {user_email: mailClient, subscribe: 'Y', item_id: product_id},
                         success: function (result) {
                             if(result.STATUS === 'success'){
                                 console.log('nice');

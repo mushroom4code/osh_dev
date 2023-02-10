@@ -393,7 +393,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             ?>
         </div>
         <div style="clear: both;"></div>
-        <div id="popup_mess"></div>
+        <div id="popup_mess" data-product_id="<?= $item['ID']; ?>"></div>
 
     </div>
     <?php }
