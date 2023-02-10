@@ -155,7 +155,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .info-prices-box-hover {
-    z-index: 1300;
+    z-index: 1250;
 }
 
 
@@ -3508,7 +3508,7 @@ table#TableWorkers.no-footer {
     .block_menu_mobile {
         bottom: 0;
         right: 0;
-        z-index: 10003;
+        z-index: 12003;
     }
 
     .box_map_mobile, .bx_catalog_item, .mobile_lk, #content_box, #personal_account, #about_contacts, #personal_orders,
@@ -5750,6 +5750,8 @@ li, ul {
 /* MENU SCROLL */
 header {
     transition: 0.7s;
+    position: relative;
+    z-index: 1300;
 }
 
 .header-scroll {
@@ -5810,6 +5812,12 @@ header {
     z-index: 1200;
     min-height: 60px;
 }
+@media screen and (max-width: 768px) {
+    .toggle_taste.card-price.js__tastes {
+        min-height: 30px;
+    }
+}
+
 .js__tastes .variation_taste_toggle {
     border-top: 6px solid #666;
     border-left: 6px solid transparent;
