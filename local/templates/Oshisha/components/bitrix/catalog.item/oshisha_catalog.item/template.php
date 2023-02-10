@@ -200,6 +200,7 @@ if (isset($arResult['ITEM'])) {
                     'MORE_PHOTO' => $item['MORE_PHOTO'],
                     'MORE_PHOTO_COUNT' => $item['MORE_PHOTO_COUNT'],
                     'QUANTITY_ACTUAL' => $arResult['AR_BASKET'],
+                    'BUY_ID' => $itemIds['BUY_LINK'],
                 ),
                 'BASKET' => array(
                     'ADD_PROPS' => $arParams['ADD_PROPERTIES_TO_BASKET'] === 'Y',

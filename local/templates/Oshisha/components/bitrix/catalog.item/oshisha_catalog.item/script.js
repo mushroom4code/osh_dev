@@ -2182,7 +2182,7 @@ $(document).on('click', '.open-fast-window', function () {
 
         let box_popup = BX.create('DIV', {
             props: {
-                className: 'position-fixed width-100 top-32 d-flex justify-content-center z-index-1200 box-popup-product'
+                className: 'position-fixed width-100 top-32 d-flex justify-content-center z-index-1400 box-popup-product'
             },
             children: [
                 BX.create('DIV', {
@@ -2256,7 +2256,12 @@ $(document).on('click', '.open-fast-window', function () {
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        className: 'price-group'
+                                        className: 'price-group mb-4'
+                                    },
+                                }),
+                                BX.create('DIV', {
+                                    props: {
+                                        className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
                                     },
                                 })
                             ]
@@ -2365,6 +2370,93 @@ $(document).on('click', '.open-fast-window', function () {
             }));
         });
 
+        let basket_box = BX.findChildByClassName(box_product, 'add-to-basket');
+
+        if (parseInt(product.PRODUCT.QUANTITY) > 0) {
+
+            let product_props = product.PRODUCT;
+
+
+            basket_box.appendChild(BX.create('DIV', {
+                props: {
+                    className: 'product-item-amount-field-contain-wrap mr-4',
+                },
+                children: [
+                    BX.create('DIV', {
+                        props: {
+                            className: 'product-item-amount-field-contain d-flex flex-row align-items-center',
+                        },
+                        children: [
+                            BX.create('A', {
+                                props: {
+                                    className: 'btn-minus  minus_icon no-select add2basket removeToBasketOpenWindow',
+                                    href: 'javascript:void(0)'
+                                },
+                                dataset: {
+                                    url: product.DETAIL_PAGE_URL,
+                                    product_id: product.ID,
+                                    id: product.BUY_LINK
+                                },
+                            }),
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'product-item-amount-field-block',
+                                },
+                                children: [
+                                    BX.create('INPUT', {
+                                        props: {
+                                            className: 'product-item-amount card_element inputBasketOpenWindow',
+                                            type: 'text',
+                                            value: product.ACTUAL_BASKET,
+                                            id: product.QUANTITY_ID,
+                                            style: 'background-color:#e1e1e1'
+                                        },
+                                        dataset: {
+                                            url: product.DETAIL_PAGE_URL,
+                                            product_id: product.ID,
+                                        },
+                                    })
+                                ]
+                            }),
+                            BX.create('A', {
+                                props: {
+                                    className: 'btn-plus plus_icon no-select add2basket addToBasketOpenWindow',
+                                    href: 'javascript:void(0)',
+                                    title: 'Доступно ' + product_props.QUANTITY + 'шт.',
+                                    id: product.BUY_LINK
+                                },
+                                dataset: {
+                                    url: product.DETAIL_PAGE_URL,
+                                    product_id: product.ID,
+                                },
+                            }),
+                        ]
+                    }),
+                    BX.create('DIV', {
+                        props: {
+                            className: 'alert_quantity mt-3',
+                        },
+                        dataset: {
+                            id: product.ID,
+                        },
+                    }),
+                ],
+            }));
+
+            basket_box.appendChild(BX.create('SPAN', {
+                props: {
+                    className: 'btn red_button_cart btn-plus add2basket buttonToBasketOpenWindow',
+                },
+                dataset: {
+                    url: product.DETAIL_PAGE_URL,
+                    product_id: product.ID,
+                    id: product.BUY_LINK
+                },
+                html: '<img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>',
+            }))
+        }
+
+        //  PROPS
         if (product.ADVANTAGES_PRODUCT.length > 0) {
 
             let props_box = BX.findChildByClassName(box_product, 'props-box-child');
@@ -2379,6 +2471,10 @@ $(document).on('click', '.open-fast-window', function () {
         }
 
         $(wrapper).append(box_popup);
+        $(wrapper).find('.inputBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
+        $(wrapper).find('.addToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
+        $(wrapper).find('.removeToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
+        $(wrapper).find('.buttonToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
     }
 
     $(document).on('click', '.close-box', function () {

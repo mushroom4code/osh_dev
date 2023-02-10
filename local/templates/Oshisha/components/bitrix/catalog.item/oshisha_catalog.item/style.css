@@ -1078,6 +1078,10 @@ input::-webkit-inner-spin-button {
     left: 97%;
 }
 
+.z-index-1400 {
+    z-index: 1400;
+}
+
 @media (max-width: 767px) {
     .product-item-label-text > div {
         line-height: 0;

@@ -91,6 +91,9 @@ if (!$show_price) {
 
 if ($show_price) {
     $jsonForModal = [
+        'ID' => $item['ID'],
+        'BUY_LINK' => $arItemIDs['BUY_LINK'],
+        'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
         'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
         'MORE_PHOTO' => $morePhoto,
         'PRODUCT' => $item['PRODUCT'],
