@@ -41,16 +41,19 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                 foreach ($arResult["ITEMS"] as $key => $arItem)//prices
                 {
 
-                    if ((int)$arItem['ID'] !== RETAIL_PRICE) {
+                    if (((int)$arItem['ID'] !== RETAIL_PRICE) && (($arItem['PROPERTY_TYPE'] != "N") || ($arItem['DISPLAY_TYPE'] != "A")) ) {
                         continue;
                     }
+                    if ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)
+                        continue;
 
-                    $key = $arItem["ENCODED_ID"];
+                    if ((($arItem['PROPERTY_TYPE'] == "N") && ($arItem['DISPLAY_TYPE'] == "A")) && ((int)$arItem['ID'] !== RETAIL_PRICE)) {
+                        $key = md5($arItem['ID']);
+                    } else {
+                        $key = $arItem["ENCODED_ID"];
+                    }
 
                     if (isset($arItem["PRICE"])):
-                        if ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)
-                            continue;
-
                         $step_num = 4;
                         $step = ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"]) / $step_num;
                         $prices = array();
@@ -67,14 +70,16 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                             $prices[$step_num] = number_format($arItem["VALUES"]["MAX"]["VALUE"], $precision, ".", "");
                         }
 
-                        ?>
+                        endif;?>
 
                         <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?>F  smart-filter-parameters-box bx-active">
                             <span class="smart-filter-container-modef"></span>
 
                             <div class="smart-filter-parameters-box-title"
                                  onclick="smartFilter.hideFilterProps(this)">
-                                <span class="smart-filter-parameters-box-title-text">Цена</span>
+                                <span class="smart-filter-parameters-box-title-text">
+                                    <?= (int)$arItem['ID'] === RETAIL_PRICE ? 'Цена' : $arItem['NAME']?>
+                                </span>
                                 <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
 									<i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
 								</span>
@@ -164,27 +169,28 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 window['trackBar<?=$key?>'] = new BX.Iblock.SmartFilter(<?=CUtil::PhpToJSObject($arJsParams)?>);
                             });
                         </script>
-                    <?endif;
+                    <?
                 }
+
 
                 //not price
 
                 foreach ($arResult["ITEMS"] as $key => $arItem) {
-                    if (empty($arItem["VALUES"]) || isset($arItem["PRICE"]))
+                    if (empty($arItem["VALUES"]) || isset($arItem["PRICE"]) || (($arItem['PROPERTY_TYPE'] == "N") && ($arItem['DISPLAY_TYPE'] == "A")))
                         continue;
 
                     if ($arItem["DISPLAY_TYPE"] == "A" && ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0))
                         continue;
                     ?>
 
-                    <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box <? if ($arItem["DISPLAY_EXPANDED"] == "Y"): ?>bx-active<? endif ?>">
+                    <div class="<?= $arItem['CODE'] == 'MODEL_KALYANA' ? 'model_kalyana d-none' : ''?> <? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> smart-filter-parameters-box <? if ($arItem["DISPLAY_EXPANDED"] == "Y"): ?>bx-active<? endif ?>">
                         <span class="smart-filter-container-modef"></span>
 
                         <div class="smart-filter-parameters-box-title" onclick="smartFilter.hideFilterProps(this)">
 
                             <span class="smart-filter-parameters-box-title-text"><?= $arItem["NAME"] ?></span>
 
-                            <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
+                            <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-down">
 									<i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
 								</span>
 
@@ -684,7 +690,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 ?>
                                     <div class="smart-filter-input-group-checkbox-list">
                                         <? foreach ($arItem["VALUES"] as $val => $ar): ?>
-                                            <div class="form-group form-check">
+                                            <div style="<?= $ar["DISABLED"] ? 'display:none' : ''?>" class="form-group form-check">
                                                 <label data-role="label_<?= $ar["CONTROL_ID"] ?>"
                                                        class="smart-filter-checkbox-text form-check-label"
                                                        id="<?= $ar["VALUE"]; ?>" for="<? echo $ar["CONTROL_ID"] ?>">
@@ -695,7 +701,9 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                                         value="<? echo $ar["HTML_VALUE"] ?>"
                                                         name="<? echo $ar["CONTROL_NAME"] ?>"
                                                         id="<? echo $ar["CONTROL_ID"] ?>"
-                                                        class="check_input form-check-input"
+                                                        class="check_input
+                                                        <?= $arItem['CODE'] == 'BREND' ? 'brends_checkbox' : ''?>
+                                                        form-check-input"
                                                     <? echo $ar["CHECKED"] ? 'checked="checked"' : '' ?>
                                                     <? echo $ar["DISABLED"] ? 'disabled' : '' ?>
                                                         onclick="smartFilter.click(this)"
@@ -703,16 +711,44 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                             </div>
                                         <? endforeach; ?>
                                     </div>
+
                                 <?
                                     //endregion
                                 }
                                 ?>
                             </div>
                         </div>
+
                     </div>
                     <?
                 }
                 ?>
+<!--                sus-->
+                <div class="<? if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<? else: ?><? endif ?> hide_not_available_container
+                 smart-filter-parameters-box bx-active">
+                    <span class="smart-filter-container-modef"></span>
+                    <div class="smart-filter-block filter_id" data-role="bx_filter_block"
+                         id="hide_not_available_container_id">
+                        <div class="smart-filter-parameters-box-container">
+                            <div class="form-group form-check hide_not_available">
+                                <label data-role="label_in_stoсk"
+                                       class="smart-filter-checkbox-text form-check-label hide_not_available"
+                                       id="hide_not_available_label" for="<? echo $ar["CONTROL_ID"] ?>">
+                                    В наличии
+                                </label>
+                                <input
+                                        type="checkbox"
+                                        value="<? echo $arParams["HIDE_NOT_AVAILABLE"] ?>"
+                                        name="hide_not_available"
+                                        id="hide_not_available_id"
+                                        class="check_input form-check-input"
+                                    <? echo $arParams["HIDE_NOT_AVAILABLE"] == 'Y' ? 'checked="checked"' : '' ?>
+                                        onclick="smartFilter.click(this)"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="button_box">
                     <div class="smart-filter-button-box">
                         <div class="smart-filter-block">
