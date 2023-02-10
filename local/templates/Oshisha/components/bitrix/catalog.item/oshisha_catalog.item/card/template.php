@@ -105,21 +105,44 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             <span class="taste new-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
         <?php }
         if (count($taste['VALUE']) > 0) { ?>
-            <div class="toggle_taste card-price <?= count($taste['VALUE'])> 2 ? 'js__tastes' : '' ?>">
-                <div class="variation_taste <?= count($taste['VALUE'])> 2 ? 'js__tastes-list' : '' ?>">
+            <?php
+            $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
+            $togglerState = 'hide';
+            $listClass = '';
+
+            if (count($taste['VALUE']) > 1) {
+                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18; // поместятся на одной строке 2 вкуса или нет
+
+                if (count($taste['VALUE']) > 2) {
+                    $showToggler = true;
+                }
+
+                $togglerState = $showToggler ? ' many-tastes' : 'hide many-tastes';
+                $listClass = $showToggler ? 'js__tastes-list' : '';
+            }
+            ?>
+            <div class="toggle_taste card-price js__tastes">
+                <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>" id="<?= count($taste['VALUE']); ?>">
                     <?php foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                             if ($key === $keys) {
-                                $color = explode('#', $value); ?>
-                                <span class="taste" data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>"
-                                      data-width="<?= mb_strlen($name, 'UTF-8') ?>">
-                                    <?= $name ?>
-                                </span>
+                                $color = explode('#', $value);
+                                $tasteSize = 'taste-small';
+
+                                if (4 < mb_strlen($name) && mb_strlen($name) <=  8) {
+                                    $tasteSize = 'taste-normal';
+                                } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
+                                    $tasteSize = 'taste-long';
+                                } elseif (mb_strlen($name)  > 13 ) {
+                                    $tasteSize = 'taste-xxl';
+                                }
+                                ?>
+                                <span class="taste <?= $tasteSize ?>" data-background="<?='#' . $color[1] ?>" id="<?= $color[0] ?>"><?= $name ?> </span>
                             <?php }
                         }
                     } ?>
                 </div>
-                <div class="variation_taste_toggle js__taste_toggle"></div>
+                <div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
             </div>
             <div class="bx_catalog_item_overlay"></div>
         <?php } ?>
@@ -243,8 +266,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                    title="<?= $productTitle; ?>">
                     <?= $productTitle; ?>
                 </a>
-                <?php if (count($taste['VALUE']) > 0) { ?>
-                <?php }
+                <?php
                 if (!empty($item['DETAIL_TEXT'])) { ?>
                     <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
                 <?php } ?>
@@ -383,16 +405,15 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
         </div>
         <?php }else { ?>
         <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>"
-        <div class="box_with_fav_bask">
-            <div class="not_product detail_popup">
-                Нет в наличии
+            <div class="box_with_fav_bask">
+                <div class="not_product detail_popup">
+                    Нет в наличии
+                </div>
+                <div class="detail_popup min_card"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
             </div>
-            <div class="detail_popup min_card"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
+            <div style="clear: both;"></div>
+            <div id="popup_mess"></div>
         </div>
-        <div style="clear: both;"></div>
-        <div id="popup_mess"></div>
-
-    </div>
     <?php }
     $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
     if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) { ?>
