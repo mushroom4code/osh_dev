@@ -5808,6 +5808,7 @@ header {
 .toggle_taste.card-price.js__tastes {
     position: relative;
     z-index: 1200;
+    min-height: 60px;
 }
 .js__tastes .variation_taste_toggle {
     border-top: 6px solid #666;
