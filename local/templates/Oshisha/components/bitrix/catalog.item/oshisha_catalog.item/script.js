@@ -2434,7 +2434,7 @@ $(document).on('click', '.open-fast-window', function () {
                     }),
                     BX.create('DIV', {
                         props: {
-                            className: 'alert_quantity mt-3',
+                            className: 'alert_quantity',
                         },
                         dataset: {
                             id: product.ID,

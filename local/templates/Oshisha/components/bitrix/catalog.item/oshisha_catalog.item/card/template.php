@@ -89,6 +89,10 @@ if (!$show_price) {
     $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
 }
 
+if (empty($morePhoto[0])) {
+    $morePhoto[0]['SRC'] = '/local/templates/Oshisha/images/no-photo.gif';
+}
+
 if ($show_price) {
     $jsonForModal = [
         'ID' => $item['ID'],
