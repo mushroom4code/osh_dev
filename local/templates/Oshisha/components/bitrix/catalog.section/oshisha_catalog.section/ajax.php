@@ -1,4 +1,4 @@
-<?php
+<?
 /** @global \CMain $APPLICATION */
 define('STOP_STATISTICS', true);
 define('NOT_CHECK_PERMISSIONS', true);
@@ -26,6 +26,13 @@ try {
 }
 
 $parameters = unserialize(base64_decode($paramString));
+
+if ($request->getPost('hide_not_available') == "Y") {
+    $parameters['HIDE_NOT_AVAILABLE'] = $request->getPost('hide_not_available');
+} else {
+    $parameters['HIDE_NOT_AVAILABLE'] = "L";
+}
+
 
 if (isset($parameters['PARENT_NAME'])) {
     $parent = new CBitrixComponent();
@@ -83,37 +90,34 @@ if ($parameters)
 
 ob_start();
 //region Filter
-$APPLICATION->IncludeComponent(
-    "bitrix:catalog.smart.filter",
-    $template,
-    array(
-        "IBLOCK_TYPE" => $parameters["IBLOCK_TYPE"],
-        "IBLOCK_ID" => $parameters["IBLOCK_ID"],
-        //TODO static parameters
-        "SECTION_ID" => $arCurSection['ID'],
-        "FILTER_NAME" => $parameters["FILTER_NAME"],
-        "PRICE_CODE" => $parameters["PRICE_CODE"],
-        "CACHE_TYPE" => $parameters["CACHE_TYPE"],
-        "CACHE_TIME" => $parameters["CACHE_TIME"],
-        "CACHE_GROUPS" => $parameters["CACHE_GROUPS"],
-        "SAVE_IN_SESSION" => "N",
-        "FILTER_VIEW_MODE" => $parameters["FILTER_VIEW_MODE"],
-        "XML_EXPORT" => "N",
-        "SECTION_TITLE" => "NAME",
-        "SECTION_DESCRIPTION" => "DESCRIPTION",
-        'HIDE_NOT_AVAILABLE' => $parameters["HIDE_NOT_AVAILABLE"],
-        "TEMPLATE_THEME" => $parameters["TEMPLATE_THEME"],
-        'CONVERT_CURRENCY' => $parameters['CONVERT_CURRENCY'],
-        'CURRENCY_ID' => $parameters['CURRENCY_ID'],
-        "SEF_MODE" => $parameters["SEF_MODE"],
-        //TODO static parameters
-        "SEF_RULE" => '/catalog/#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/',
-        "SMART_FILTER_PATH" => $parameters["VARIABLES"]["SMART_FILTER_PATH"],
-        "PAGER_PARAMS_NAME" => $parameters["PAGER_PARAMS_NAME"],
-        "INSTANT_RELOAD" => $parameters["INSTANT_RELOAD"],
-    ),
-    null,
-    array('HIDE_ICONS' => 'Y')
+$APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", $template, array(
+    "IBLOCK_TYPE" => $parameters["IBLOCK_TYPE"],
+    "IBLOCK_ID" => $parameters["IBLOCK_ID"],
+    //TODO static parameters
+    "SECTION_ID" => $arCurSection['ID'],
+    "FILTER_NAME" => $parameters["FILTER_NAME"],
+    "PRICE_CODE" => $parameters["PRICE_CODE"],
+    "CACHE_TYPE" => $parameters["CACHE_TYPE"],
+    "CACHE_TIME" => $parameters["CACHE_TIME"],
+    "CACHE_GROUPS" => $parameters["CACHE_GROUPS"],
+    "SAVE_IN_SESSION" => "N",
+    "FILTER_VIEW_MODE" => $parameters["FILTER_VIEW_MODE"],
+    "XML_EXPORT" => "N",
+    "SECTION_TITLE" => "NAME",
+    "SECTION_DESCRIPTION" => "DESCRIPTION",
+    'HIDE_NOT_AVAILABLE' => $parameters["HIDE_NOT_AVAILABLE"],
+    "TEMPLATE_THEME" => $parameters["TEMPLATE_THEME"],
+    'CONVERT_CURRENCY' => $parameters['CONVERT_CURRENCY'],
+    'CURRENCY_ID' => $parameters['CURRENCY_ID'],
+    "SEF_MODE" => $parameters["SEF_MODE"],
+    //TODO static parameters
+    "SEF_RULE" => '/catalog/#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/',
+    "SMART_FILTER_PATH" => $parameters["VARIABLES"]["SMART_FILTER_PATH"],
+    "PAGER_PARAMS_NAME" => $parameters["PAGER_PARAMS_NAME"],
+    "INSTANT_RELOAD" => $parameters["INSTANT_RELOAD"],
+),
+                               null,
+                               array('HIDE_ICONS' => 'Y')
 );
 ob_get_contents();
 //endregion

@@ -205,7 +205,6 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             "PAGER_PARAMS_NAME" => $arParams["PAGER_PARAMS_NAME"],
                             "INSTANT_RELOAD" => $arParams["INSTANT_RELOAD"],
                         ),
-                        $component,
                         array('HIDE_ICONS' => 'Y')
                     );
                     ?>
@@ -375,7 +374,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             );
         }
         //endregion
-
+        global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
             "oshisha_catalog.section", array(

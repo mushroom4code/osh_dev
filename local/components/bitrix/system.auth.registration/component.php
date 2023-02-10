@@ -74,7 +74,7 @@ $arRequestParams = array(
     'recaptcha_token',
 );
 /*** ENTEREGO captcha 3*/
-
+$_REQUEST['USER_LOGIN'] = $_REQUEST['USER_EMAIL'];
 foreach ($arRequestParams as $param) {
     $arResult[$param] = $_REQUEST[$param] <> '' ? $_REQUEST[$param] : "";
     $arResult[$param] = htmlspecialcharsbx($arResult[$param]);

@@ -95,7 +95,7 @@
         if (params.loadOnScroll) {
             BX.bind(window, 'scroll', BX.proxy(this.loadOnScroll, this));
         }
-        window.JCCatalogSectionComponentThis = this;
+		window.JCCatalogSectionComponentThis = this;
     };
 
     window.JCCatalogSectionComponent.prototype =
@@ -220,7 +220,6 @@
                     //enterego filter for special group category
                     staticFilter: this.staticFilter
                 };
-
                 if (this.ajaxId) {
                     defaultData.AJAX_ID = this.ajaxId;
                 }
@@ -376,10 +375,13 @@
             },
 
             processPagination: function (paginationHtml) {
-                if (!paginationHtml) {
-                    $('.bx-pagination').remove();
-                    return;
-                }
+                if (!paginationHtml)
+				{
+					$('.bx-pagination').remove();
+					return;
+
+				}
+
 
                 var pagination = document.querySelectorAll('[data-pagination-num="' + this.navParams.NavNum + '"]');
                 for (var k in pagination) {

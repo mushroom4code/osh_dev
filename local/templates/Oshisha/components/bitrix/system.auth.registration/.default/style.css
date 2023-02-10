@@ -34,6 +34,10 @@ div.bx-auth div.bx-auth-secure-unlock {
     left: 61%;
 }
 
+.user-birthday[readonly] {
+    background-color: white;
+}
+
 @media (max-width: 768px ) {
     .width-auto {
         width: 100%;

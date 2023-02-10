@@ -39,6 +39,12 @@ if($this->StartResultCache(false, array('v10', $preFilter, ($arParams["CACHE_GRO
 
 	if(!empty($arResult["ITEMS"]))
 	{
+        //enterego add to filter "hide if note available
+        if ($_REQUEST['hide_not_available'] == "Y") {
+            $this->arParams['HIDE_NOT_AVAILABLE'] = $_REQUEST['hide_not_available'];
+        }
+        //
+
 		if ($this->facet->isValid())
 		{
 			$this->facet->setPrices($arResult["PRICES"]);
@@ -167,7 +173,8 @@ if($this->StartResultCache(false, array('v10', $preFilter, ($arParams["CACHE_GRO
 				while($arElement = $rsElements->Fetch())
 					$arElements[$arElement["IBLOCK_ELEMENT_ID"]] = $arElement;
 			}
-			else
+
+			if (empty($arElements))
 			{
 				$rsElements = CIBlockElement::GetList(array('ID' => 'ASC'), $arElementFilter, false, false, array('ID', 'IBLOCK_ID'));
 				while($arElement = $rsElements->Fetch())
@@ -583,16 +590,30 @@ foreach($arResult["ITEMS"] as $PID => $arItem)
 {
 	if(isset($arItem["PRICE"]))
 	{
+		$setValue = false;
 		if($arItem["VALUES"]["MIN"]["HTML_VALUE"] <> '' && $arItem["VALUES"]["MAX"]["HTML_VALUE"] <> '')
-			${$FILTER_NAME}["><CATALOG_PRICE_".$arItem["ID"]] = array($arItem["VALUES"]["MIN"]["HTML_VALUE"], $arItem["VALUES"]["MAX"]["HTML_VALUE"]);
+		{
+			${$FILTER_NAME}["><CATALOG_PRICE_".$arItem["ID"]] = array(
+				$arItem["VALUES"]["MIN"]["HTML_VALUE"],
+				$arItem["VALUES"]["MAX"]["HTML_VALUE"]
+			);
+			$setValue = true;
+		}
 		elseif($arItem["VALUES"]["MIN"]["HTML_VALUE"] <> '')
 		{
 			${$FILTER_NAME}[">=CATALOG_PRICE_".$arItem["ID"]] = $arItem["VALUES"]["MIN"]["HTML_VALUE"];
+			$setValue = true;
 		}
 		elseif($arItem["VALUES"]["MAX"]["HTML_VALUE"] <> '')
 		{
 			${$FILTER_NAME}["<=CATALOG_PRICE_".$arItem["ID"]] = $arItem["VALUES"]["MAX"]["HTML_VALUE"];
+			$setValue = true;
 		}
+		if ($setValue && $this->convertCurrencyId != '')
+		{
+			${$FILTER_NAME}["CATALOG_CURRENCY_SCALE_".$arItem["ID"]] = $this->convertCurrencyId;
+		}
+		unset($setValue);
 	}
 	elseif($arItem["PROPERTY_TYPE"] == "N")
 	{
@@ -862,6 +883,10 @@ if(isset($_REQUEST["ajax"]) && $_REQUEST["ajax"] === "y")
 	$arFilter = $this->makeFilter($FILTER_NAME);
 	if (!empty($preFilter))
 		$arFilter = array_merge($preFilter, $arFilter);
+	if (Loader::includeModule('catalog'))
+	{
+		$arFilter = CProductQueryBuilder::convertOldFilter($arFilter);
+	}
 	$arResult["ELEMENT_COUNT"] = CIBlockElement::GetList(array(), $arFilter, array(), false);
 
 	if (isset($_GET["bxajaxid"]))
