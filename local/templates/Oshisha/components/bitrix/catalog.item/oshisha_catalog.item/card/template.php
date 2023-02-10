@@ -108,9 +108,9 @@ if ($show_price) {
         'LIKE' => [
             'ID_PROD' => $item['ID_PROD'],
             'F_USER_ID' => $item['F_USER_ID'],
-            'COUNT_LIKE' => $item['COUNT_LIKE'],
-            'COUNT_LIKES' => $item['COUNT_LIKES'],
-            'COUNT_FAV' => $item['COUNT_FAV'],
+            'COUNT_LIKE' => $item['COUNT_LIKE'] ?? 0,
+            'COUNT_LIKES' => $item['COUNT_LIKES'] ?? 0,
+            'COUNT_FAV' => $item['COUNT_FAV'] ?? 0,
         ],
         'USE_CUSTOM_SALE_PRICE' => USE_CUSTOM_SALE_PRICE,
         'BASE_PRICE' => BASIC_PRICE,

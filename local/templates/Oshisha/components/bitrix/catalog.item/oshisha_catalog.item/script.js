@@ -2203,7 +2203,7 @@ $(document).on('click', '.open-fast-window', function () {
                 children: [
                     BX.create('SPAN', {
                         props: {
-                            className: 'col-11 font-weight-bold mb-2',
+                            className: 'col-11 font-weight-bold mb-2 p-0',
                         },
                         text: product.NAME
                     }),
@@ -2227,7 +2227,7 @@ $(document).on('click', '.open-fast-window', function () {
             children: [
                 BX.create('DIV', {
                     props: {
-                        className: 'box-with-image-prod col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 flex-class'
+                        className: 'box-with-image-prod col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 flex-class position-relative'
                     },
                     children: [
                         BX.create('IMG', {
@@ -2236,6 +2236,43 @@ $(document).on('click', '.open-fast-window', function () {
                                 src: product.MORE_PHOTO[0].SRC,
                                 alt: 'modal-product'
                             },
+                        }),
+                        BX.create('DIV', {
+                            props: {
+                                className: 'position-absolute like-with-fav',
+                            },
+                            children: [
+                                BX.create('DIV', {
+                                    props: {
+                                        className: 'box_with_like like-modal',
+                                    },
+                                    children: [
+                                        BX.create('A', {
+                                            props: {
+                                                className: 'icon_like method mb-3',
+                                                title: "Нравится",
+                                                href: 'javascript:void(0);'
+                                            },
+                                            dataset: {
+                                                method: 'like'
+                                            },
+                                            html: '<i class="fa fa-heart-o" aria-hidden="true"></i>' +
+                                                '<article class="like_span" id="likes">' + product.LIKE.COUNT_LIKES + '</article>'
+                                        }),
+                                        BX.create('A', {
+                                            props: {
+                                                className: 'product-item__favorite-star method',
+                                                title: "Добавить в избранное",
+                                                href: 'javascript:void(0);'
+                                            },
+                                            dataset: {
+                                                method: 'favorite'
+                                            },
+                                            html: '<i class="fa fa-star-o" aria-hidden="true"></i>'
+                                        })
+                                    ]
+                                })
+                            ]
                         })
                     ]
                 }),
@@ -2471,10 +2508,13 @@ $(document).on('click', '.open-fast-window', function () {
         }
 
         $(wrapper).append(box_popup);
+        // TODO - не нашла как добавлять через атрибуты BX при создании элемента тег дата с дефисом, можно только с подчеркиванием
         $(wrapper).find('.inputBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
         $(wrapper).find('.addToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
         $(wrapper).find('.removeToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
         $(wrapper).find('.buttonToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
+        $(wrapper).find('.like-modal').attr('data-product-id', product.ID).attr('data-fuser-id', product.LIKE.F_USER_ID);
+
     }
 
     $(document).on('click', '.close-box', function () {

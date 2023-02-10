@@ -1086,6 +1086,11 @@ input::-webkit-inner-spin-button {
     margin-top: 1rem;
 }
 
+.like-with-fav {
+    top: 4%;
+    right: 4%;
+}
+
 @media (max-width: 767px) {
     .product-item-label-text > div {
         line-height: 0;
