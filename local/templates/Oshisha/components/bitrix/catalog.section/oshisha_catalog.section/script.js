@@ -46,6 +46,46 @@
             BX.ready(BX.delegate(this.deferredLoad, this));
         }
 
+        // enterego catalog sort
+        let urlParams = (new URL(document.location)).searchParams;
+
+        document.querySelectorAll(this.sortElem).forEach(
+            function (currentValue, currentIndex, listObj) {
+                let sortPanel = currentValue.closest('.sort_panel');
+
+                // определение подписи сортировки при перезагрузке с параметрами
+                if (currentValue.getAttribute('data-sort') === urlParams.get("sort_by") &&
+                    currentValue.getAttribute('data-order') === urlParams.get("sort_order")) {
+                    sortPanel.querySelector('.sort_caption').textContent = currentValue.textContent;
+                }
+
+                BX.bind(currentValue, 'click', BX.proxy(function () {
+                    const data = {
+                        'sort_by': currentValue.getAttribute('data-sort'),
+                        'sort_order': currentValue.getAttribute('data-order'),
+                        'ajax': 'y',
+                        'ajax_filter': 'y',
+                        action: 'showMore',
+                        PAGER_BASE_LINK_ENABLE: 'Y'
+                    };
+                    history.pushState(
+                        {
+                            sort_by: data.sort_by,
+                            sort_order: data.sort_order
+                        },
+                        '',
+                        `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`,
+                    );
+                    data['sort_request'] = `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`;
+                    this.sendRequestRefreshCatalog(data);
+
+                    sortPanel.querySelector('.js__sort_orders_element').style.display = 'none';
+                    sortPanel.querySelector('.sort_caption').textContent = currentValue.textContent;
+                }, this));
+            },
+            this
+        );
+
         if (params.lazyLoad) {
             this.showMoreButton = document.querySelector('[data-use="show-more-' + this.navParams.NavNum + '"]');
             this.showMoreButtonMessage = this.showMoreButton.innerHTML;
@@ -54,8 +94,6 @@
 
         if (params.loadOnScroll) {
             BX.bind(window, 'scroll', BX.proxy(this.loadOnScroll, this));
-
-            
         }
 		window.JCCatalogSectionComponentThis = this;
     };
