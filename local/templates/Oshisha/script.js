@@ -605,6 +605,22 @@ $(document).ready(function () {
             $('a#sendMailForProd').on('click', function () {
                 let mailClient = $('input#send_me_mail').val();
                 if (mailClient !== '') {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/bitrix/components/bitrix/catalog.product.subscribe/ajax.php',
+                        data: 'user_email=' + JSON.stringify(mailClient),
+                        success: function (result) {
+                            if(result.STATUS === 'success'){
+                                console.log('nice');
+                            }else {
+                                console.log('not nice');
+                            }
+                        }
+                    });
+
+
+
                     $(popup_mess).empty();
                     $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot"> '
                         + '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
