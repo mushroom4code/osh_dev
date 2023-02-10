@@ -95,7 +95,7 @@
         if (params.loadOnScroll) {
             BX.bind(window, 'scroll', BX.proxy(this.loadOnScroll, this));
         }
-        window.JCCatalogSectionComponentThis = this;
+		window.JCCatalogSectionComponentThis = this;
     };
 
     window.JCCatalogSectionComponent.prototype =
@@ -220,7 +220,6 @@
                     //enterego filter for special group category
                     staticFilter: this.staticFilter
                 };
-
                 if (this.ajaxId) {
                     defaultData.AJAX_ID = this.ajaxId;
                 }
@@ -280,7 +279,7 @@
                 this.formPosting = false;
                 this.enableButton();
 
-                if (result) {
+                if (result) { 
                     this.navParams.NavPageNomer++;
                     this.processItems(result.items);
                     this.processPagination(result.pagination);
@@ -311,7 +310,7 @@
                 );
 
                 $('body').find('.variation_taste').each(
-                    function (index, item) {
+                function (index, item) {
                         if ($(item).find('.taste').length > 2) {
                             $(item).closest('.toggle_taste ').css('overflow', 'hidden');
                             $(item).closest('.toggle_taste ').addClass('many_tastes_toggle');
@@ -384,10 +383,13 @@
             },
 
             processPagination: function (paginationHtml) {
-                if (!paginationHtml) {
-                    $('.bx-pagination').remove();
-                    return;
-                }
+                if (!paginationHtml)
+				{
+					$('.bx-pagination').remove();
+					return;
+					
+				}
+                    
 
                 var pagination = document.querySelectorAll('[data-pagination-num="' + this.navParams.NavNum + '"]');
                 for (var k in pagination) {

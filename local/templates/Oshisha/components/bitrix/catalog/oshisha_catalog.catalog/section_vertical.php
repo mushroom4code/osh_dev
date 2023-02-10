@@ -205,7 +205,6 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             "PAGER_PARAMS_NAME" => $arParams["PAGER_PARAMS_NAME"],
                             "INSTANT_RELOAD" => $arParams["INSTANT_RELOAD"],
                         ),
-                        $component,
                         array('HIDE_ICONS' => 'Y')
                     );
                     ?>
@@ -213,6 +212,15 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             <?php endif
             //			//endregion
             ?>
+            <div class="filter-close js__filter-close">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="filter-view-bar">
+                <div class="red_button_cart filter-view js__filter-close disabled_class">Применить</div>
+            </div>
         </div>
     <? endif ?>
     <? global $GLOBAL_SECTION; ?>
@@ -366,7 +374,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             );
         }
         //endregion
-
+        global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
             "oshisha_catalog.section", array(

@@ -196,7 +196,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                     </div>
                 </form>
                 <div class="ctweb-button-block">
-                    <div><a class="ctweb-link email-register"
+                    <div>
+                        <a class="ctweb-link email-register"
                             id="<?= $jsParams['TEMPLATE']['REGISTRATION'] ?>"
                             href="/login/?register=yes"><?= GetMessage("EMAIL_AUTH_REGISTRATION") ?></a>
                     </div>
@@ -326,7 +327,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                                        id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>"><?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
                                 </div>
 
-                                <div>
+                                <div class="mt-2">
                                     <a class="ctweb-link email-login"
                                        id="<?= $jsParams['TEMPLATE']['AUTH_EMAIL_LOGIN'] ?>"><?= GetMessage("SMS_AUTH_EMAIL_LOGIN") ?></a>
                                 </div>
@@ -335,7 +336,9 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                                     <a class="ctweb-link" href="<? SITE_DIR ?>about/FAQ/"
                                        id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>"><?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
                                 </div>
-
+                                <div>
+                                    <a class="ctweb-link email-login" href="/auth/?register=yes"><?= GetMessage("EMAIL_AUTH_REGISTRATION") ?></a>
+                                </div>
                             </div>
                         </form>
                         <!-- STEP AUTH EMAIL LOGIN -->
@@ -368,10 +371,13 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                                        id="<?= $jsParams['TEMPLATE']['LOGIN'] ?>"
                                        type="button"
                                        value="<?= GetMessage("SMS_AUTH_LOG_IN") ?>">
-                                <div>
+                                <div class="mt-2">
                                     <a class="ctweb-link"
                                        id="<?= $jsParams['TEMPLATE']['AUTH_PHONE_LOGIN'] ?>">
                                         <?= GetMessage("AUTH_PHONE_LOGIN") ?></a>
+                                </div>
+                                <div>
+                                    <a class="ctweb-link email-login" href="/auth/?register=yes"><?= GetMessage("EMAIL_AUTH_REGISTRATION") ?></a>
                                 </div>
                             </div>
                         </form>
