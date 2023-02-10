@@ -39,12 +39,11 @@ if($this->StartResultCache(false, array('v10', $preFilter, ($arParams["CACHE_GRO
 
 	if(!empty($arResult["ITEMS"]))
 	{
-        foreach(array_merge($_GET, $_POST) as $key => $value)
-        {
-            if($key == 'hide_not_available') {
-                $this->arParams["HIDE_NOT_AVAILABLE"] = 'Y';
-            }
+
+        if ($_REQUEST['hide_not_available'] == "Y") {
+            $this->arParams['HIDE_NOT_AVAILABLE'] = $_REQUEST['hide_not_available'];
         }
+
 		if ($this->facet->isValid())
 		{
 			$this->facet->setPrices($arResult["PRICES"]);

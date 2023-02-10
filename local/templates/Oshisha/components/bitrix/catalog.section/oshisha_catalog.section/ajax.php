@@ -101,7 +101,7 @@ $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", "oshisha_catalog.s
     "CACHE_TIME" => $parameters["CACHE_TIME"],
     "CACHE_GROUPS" => $parameters["CACHE_GROUPS"],
     "SAVE_IN_SESSION" => "N",
-    "FILTER_VIEW_MODE" => "VERTICAL",
+    "FILTER_VIEW_MODE" => $parameters["FILTER_VIEW_MODE"],
     "XML_EXPORT" => "N",
     "SECTION_TITLE" => "NAME",
     "SECTION_DESCRIPTION" => "DESCRIPTION",
@@ -109,7 +109,7 @@ $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", "oshisha_catalog.s
     "TEMPLATE_THEME" => $parameters["TEMPLATE_THEME"],
     'CONVERT_CURRENCY' => $parameters['CONVERT_CURRENCY'],
     'CURRENCY_ID' => $parameters['CURRENCY_ID'],
-    "SEF_MODE" => "Y",
+    "SEF_MODE" => $parameters["SEF_MODE"],
     //TODO static parameters
     "SEF_RULE" => '/catalog/#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/',
     "SMART_FILTER_PATH" => $parameters["VARIABLES"]["SMART_FILTER_PATH"],

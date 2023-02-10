@@ -165,15 +165,12 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                     );
                     ?>
                         <script type="text/javascript">
-                            console.log('emmemememmem');
                             BX.ready(function () {
                                 window['trackBar<?=$key?>'] = new BX.Iblock.SmartFilter(<?=CUtil::PhpToJSObject($arJsParams)?>);
                             });
                         </script>
                     <?
                 }
-
-
 
 
                 //not price
@@ -752,17 +749,6 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-
-
-
-
-
-
                 <div class="button_box">
                     <div class="smart-filter-button-box">
                         <div class="smart-filter-block">
@@ -788,6 +774,5 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 </div>
 
 <script type="text/javascript">
-    console.log('ssssssssss');
     var smartFilter = new JCSmartFilter('<?echo CUtil::JSEscape($arResult["FORM_ACTION"])?>', '<?=CUtil::JSEscape($arParams["FILTER_VIEW_MODE"])?>', <?=CUtil::PhpToJSObject($arResult["JS_FILTER_PARAMS"])?>);
 </script>

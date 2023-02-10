@@ -329,11 +329,9 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 					if (!result.ITEMS[PID].VALUES.MIN) {
 						var first_element_id = Object.values(result.ITEMS[PID].VALUES).filter(element => typeof element!==undefined).shift()['CONTROL_ID'];
 						if ($('#'+first_element_id).closest('div.smart-filter-parameters-box').hasClass('bx-active')) {
-							$('#'+first_element_id).closest('div.smart-filter-parameters-box').find("[data-role='bx_filter_block']").css('display', 'block');
-							$('#'+first_element_id).closest('div.smart-filter-parameters-box').find("[data-role='bx_filter_block']").css('height', 'auto');
-							$('#'+first_element_id).closest('div.smart-filter-parameters-box').find("[data-role='bx_filter_block']").css('overflow', 'hidden');
-							var children_height = $('#'+first_element_id).closest('div.smart-filter-parameters-box').find("[data-role='bx_filter_block']")[0].offsetHeight;
-							$('#'+first_element_id).closest('div.smart-filter-parameters-box').find("[data-role='bx_filter_block']").css('height', children_height+'px');
+							var filter_block = $('#'+first_element_id).closest('div.smart-filter-parameters-box').find("[data-role='bx_filter_block']");
+							filter_block.css({'display':'block','height':'auto','overflow':'hidden'});
+							filter_block.css('height', filter_block[0].offsetHeight+'px');
 						}
 					}
 				}
