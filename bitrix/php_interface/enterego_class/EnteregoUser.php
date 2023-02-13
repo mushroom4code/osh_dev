@@ -1,57 +1,57 @@
 <?php
 
-namespace enterego;
+namespace Enterego;
 
 use CUser;
 
 class EnteregoUser
 {
+    private static ?EnteregoUser $instance = null;
 
-    public static function getFullName($arrayForm = false)
+    private $isAuthorized = false;
+    private array $name = [];
+    private $phone = '';
+    private $mail = '';
+
+    private function __construct()
     {
         global $USER;
-        $fullName = [
+
+        $this->isAuthorized = $USER->IsAuthorized();
+        $this->name = [
             'last' => $USER->GetLastName() ?? '',
             'first' => $USER->GetFirstName() ?? '',
             'second' => $USER->GetParam('SECOND_NAME') ?? ''
         ];
+        $this->mail = $USER->GetEmail();
 
-        return $arrayForm ? $fullName : implode(' ', $fullName);
+        $rsUser = CUser::GetByID($USER->GetID());
+        $arUser = $rsUser->Fetch();
+        $this->phone = $arUser['PERSONAL_PHONE'] ?? false;
     }
 
-    public static function getMail()
+    public static function getInstance(): EnteregoUser
     {
-        global $USER;
-        return $USER->GetEmail();
+        return self::$instance ?? new self();
     }
 
-    public static function getPhone()
+    public function isAuthorized()
     {
-        global $USER;
-
-        $id =$USER->GetID();
-        if ($USER->IsAuthorized()) {
-            $rsUser = CUser::GetByID($id);
-            $arUser = $rsUser->Fetch();
-        }
-
-        return $arUser['PERSONAL_PHONE'] ?? false;
+        return $this->isAuthorized;
     }
 
-    public static function isUserAuthorized()
+    public function getName()
     {
-        global $USER;
-        return $USER->IsAuthorized();
+        return $this->name;
     }
 
-    public static function getUserData()
+    public function getPhone()
     {
-        $userData = [
-            'NAME' => self::getFullName(),
-            'PHONE' => self::getPhone(),
-            'MAIL' => self::getMail()
-        ];
+        return $this->phone;
+    }
 
-        return $userData ?? false;
+    public function getMail()
+    {
+        return $this->mail;
     }
 }

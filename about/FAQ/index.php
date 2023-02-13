@@ -6,8 +6,8 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
  */
 $APPLICATION->SetTitle("FAQ");
 //Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
-$userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : false;
-if ($USER->IsAuthorized()) {
+$userData = EnteregoUser::getInstance();
+if ($userData->isAuthorized()) {
     ?>
     <div id="faq" class="box_boxes_delivery mt-3 static">
         <h1>FAQ</h1>
@@ -82,9 +82,7 @@ if ($USER->IsAuthorized()) {
                                id="Name"
                                name="NAME"
                                placeholder="Пожалуйста, представьтесь*"
-                            <?php if ($userData): ?>
-                                value="<?= $userData['NAME'] ?? '' ?>"
-                            <?php endif; ?>
+                               value="<?= implode(' ', $userData->getName()) ?>"
                         >
                         <div class="er_FORM_NAME error_field"></div>
                     </div>
@@ -95,9 +93,7 @@ if ($USER->IsAuthorized()) {
                                class="form-control input_lk"
                                id="phoneNumber"
                                placeholder="Мобильный телефон, чтобы связаться с вами*"
-                            <?php if ($userData): ?>
-                                value="<?= $userData['PHONE'] ?? '' ?>"
-                            <?php endif; ?>
+                               value="<?= $userData->getPhone()?>"
                         >
                         <div class="er_FORM_PHONE error_field"></div>
                     </div>
@@ -108,9 +104,7 @@ if ($USER->IsAuthorized()) {
                                class="form-control input_lk"
                                id="userEmail"
                                placeholder="E-mail если хотите получить ответ на почту"
-                            <?php if ($userData): ?>
-                                value="<?= $userData['MAIL'] ?? '' ?>"
-                            <?php endif; ?>
+                                value="<?= $userData->getMail() ?>"
                         >
                     </div>
                     <div class="form-group mb-3">

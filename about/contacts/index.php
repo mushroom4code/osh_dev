@@ -6,7 +6,7 @@ use enterego\EnteregoUser;
 
 $mobile = new MobileDetect();
 $option = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE'));
-$userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : false;
+$userData = EnteregoUser::getInstance();
 ?>
     <link rel="preconnect" href="//api-maps.yandex.ru">
     <link rel="dns-prefetch" href="//api-maps.yandex.ru">
@@ -103,9 +103,7 @@ $userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : fal
                                    id="Name"
                                    name="NAME"
                                    placeholder="Пожалуйста, представьтесь*"
-                                <?php if ($userData): ?>
-                                    value="<?= $userData['NAME'] ?? '' ?>"
-                                <?php endif; ?>
+                                   value="<?= implode(' ', $userData->getName()) ?>"
                             >
                             <div class="er_FORM_NAME error_field"></div>
                         </div>
@@ -116,9 +114,7 @@ $userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : fal
                                    class="form-control input_lk"
                                    id="phoneNumber"
                                    placeholder="Мобильный телефон, чтобы связаться с вами*"
-                                <?php if ($userData): ?>
-                                    value="<?= $userData['PHONE'] ?? '' ?>"
-                                <?php endif; ?>
+                                   value="<?= $userData->getPhone() ?>"
                             >
                             <div class="er_FORM_PHONE error_field"></div>
                         </div>
@@ -130,9 +126,7 @@ $userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : fal
                                        class="form-control input_lk"
                                        id="userEmail"
                                        placeholder="E-mail если хотите получить ответ на почту"
-                                    <?php if ($userData): ?>
-                                        value="<?= $userData['MAIL'] ?? '' ?>"
-                                    <?php endif; ?>
+                                       value="<?= $userData->getMail() ?>"
                                 >
                             </div>
                             <div class="form-group mb-3">

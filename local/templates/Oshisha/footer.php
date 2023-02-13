@@ -13,7 +13,7 @@ $option = $option_site; ?>
 <!--end .container.bx-content-section-->
 </div><!--end .workarea-->
 
-<?php $userData = EnteregoUser::isUserAuthorized() ? EnteregoUser::getUserData() : false; ?>
+<?php $userData = EnteregoUser::getInstance(); ?>
 <footer class="box_footer">
     <div class="foot_container">
         <div class="d-flex flex-lg-row flex-md-row flex-column mb-3">
@@ -294,9 +294,7 @@ $option = $option_site; ?>
                                 name="PHONE"
                                 class="PHONE callback_PHONE"
                                 placeholder="Ваш номер"
-                            <?php if ($userData): ?>
-                                value="<?= $userData['PHONE'] ?? '' ?>"
-                            <?php endif; ?>
+                                value="<?= $userData->getPhone() ?>"
                         >
                         <div class="er_CALLBACK_PHONE error_field js__error_field"></div>
                     </div>
@@ -395,3 +393,4 @@ $option = $option_site; ?>
 </div>
 </body>
 </html>
+a
