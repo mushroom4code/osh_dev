@@ -2341,6 +2341,8 @@ $(document).on('click', '.open-fast-window', function () {
         if (product.MORE_PHOTO.length > 1) {
 
             let product_box = BX.findChildByClassName(box_product, 'box-with-image-one');
+            let image_box = BX.findChildByClassName(box_product, 'box-with-image-prod');
+
 
             BX.cleanNode(product_box);
             BX.removeClass(product_box, 'flex-class');
@@ -2351,16 +2353,48 @@ $(document).on('click', '.open-fast-window', function () {
                 },
             }));
 
-            let slick = BX.findChildByClassName(product_box, 'slick-images-box');
+            image_box.appendChild(BX.create('DIV', {
+                props: {
+                    className: 'position-absolute slider-controls max-width-400',
+                },
+                children: [
+                    BX.create('DIV', {
+                        props: {
+                            className: 'slick-images-controls',
+                        },
+                    })
+                ]
+            }));
 
+
+            let slick = BX.findChildByClassName(product_box, 'slick-images-box');
+            let slick_controls = BX.findChildByClassName(image_box, 'slick-images-controls');
+            let count = 0;
             $.each(product.MORE_PHOTO, function (k, image) {
+                count++;
                 slick.appendChild(BX.create('IMG', {
                     props: {
                         className: 'w-h-350',
                         src: image.SRC,
                         alt: 'modal-product'
                     },
-                }))
+                }));
+
+                slick_controls.appendChild(
+                    BX.create('DIV', {
+                        props: {
+                            className: 'product-slider-controls-image',
+                        },
+                        children: [
+                            BX.create('IMG', {
+                                props: {
+                                    src: image.SRC,
+                                    alt: 'modal-product'
+                                },
+                            })
+                        ]
+                    })
+                );
             });
 
             $(slick).slick({
@@ -2373,8 +2407,16 @@ $(document).on('click', '.open-fast-window', function () {
                     '><i class="fa fa-angle-right" aria-hidden="true"></i></span>',
                 slidesToShow: 1,
                 slidesToScroll: 1,
+                asNavFor: $(slick_controls)
             });
 
+            $(slick_controls).slick({
+                slidesToScroll: 1,
+                slidesToShow: count,
+                asNavFor: $(slick),
+                arrows: false,
+                focusOnSelect: true
+            });
         }
 
         // PRICE
@@ -2416,7 +2458,6 @@ $(document).on('click', '.open-fast-window', function () {
         });
 
         let basket_box = BX.findChildByClassName(box_product, 'add-to-basket');
-
         if (parseInt(product.PRODUCT.QUANTITY) > 0) {
 
             let product_props = product.PRODUCT;
@@ -2528,8 +2569,8 @@ $(document).on('click', '.open-fast-window', function () {
             $(wrapper).find('.like-modal a[data-method="like"]').attr('data-fav-controls', 'true').attr('style', 'color:red');
         }
     }
+});
 
-    $(document).on('click', '.close-box', function () {
-        $(this).closest('.box-popup-product').remove();
-    });
+$(document).on('click', '.close-box', function () {
+    $(this).closest('.box-popup-product').remove();
 });

@@ -550,7 +550,11 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .open-fast-window {
-    background-size: contain;
+    padding: 15px;
+    background-color: rgb(255 255 255 / 68%);
+    border-radius: 5px;
+    background-size: auto;
+    background-position: center;
     position: absolute;
     top: 30%;
     right: 0;
