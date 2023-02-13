@@ -2227,15 +2227,22 @@ $(document).on('click', '.open-fast-window', function () {
             children: [
                 BX.create('DIV', {
                     props: {
-                        className: 'box-with-image-prod col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 flex-class position-relative'
+                        className: 'box-with-image-prod col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
                     },
                     children: [
-                        BX.create('IMG', {
+                        BX.create('div', {
                             props: {
-                                className: 'w-h-350',
-                                src: product.MORE_PHOTO[0].SRC,
-                                alt: 'modal-product'
+                                className: 'flex-class box-with-image-one height_100',
                             },
+                            children: [
+                                BX.create('IMG', {
+                                    props: {
+                                        className: 'w-h-350',
+                                        src: product.MORE_PHOTO[0].SRC,
+                                        alt: 'modal-product'
+                                    },
+                                }),
+                            ]
                         }),
                         BX.create('DIV', {
                             props: {
@@ -2333,17 +2340,18 @@ $(document).on('click', '.open-fast-window', function () {
 
         if (product.MORE_PHOTO.length > 1) {
 
-            let images_box = BX.findChildByClassName(box_product, 'box-with-image-prod');
-            BX.cleanNode(images_box);
-            BX.removeClass(images_box, 'flex-class');
+            let product_box = BX.findChildByClassName(box_product, 'box-with-image-one');
 
-            images_box.appendChild(BX.create('DIV', {
+            BX.cleanNode(product_box);
+            BX.removeClass(product_box, 'flex-class');
+
+            product_box.appendChild(BX.create('DIV', {
                 props: {
                     className: 'slick-images-box height_100',
                 },
             }));
 
-            let slick = BX.findChildByClassName(images_box, 'slick-images-box');
+            let slick = BX.findChildByClassName(product_box, 'slick-images-box');
 
             $.each(product.MORE_PHOTO, function (k, image) {
                 slick.appendChild(BX.create('IMG', {
@@ -2412,7 +2420,6 @@ $(document).on('click', '.open-fast-window', function () {
         if (parseInt(product.PRODUCT.QUANTITY) > 0) {
 
             let product_props = product.PRODUCT;
-
 
             basket_box.appendChild(BX.create('DIV', {
                 props: {
@@ -2514,7 +2521,12 @@ $(document).on('click', '.open-fast-window', function () {
         $(wrapper).find('.removeToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
         $(wrapper).find('.buttonToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
         $(wrapper).find('.like-modal').attr('data-product-id', product.ID).attr('data-fuser-id', product.LIKE.F_USER_ID);
-
+        if (parseInt(product.LIKE.COUNT_FAV) !== 0) {
+            $(wrapper).find('.like-modal a[data-method="favorite"]').attr('data-fav-controls', 'true').attr('style', 'color:red');
+        }
+        if (parseInt(product.LIKE.COUNT_LIKE) !== 0) {
+            $(wrapper).find('.like-modal a[data-method="like"]').attr('data-fav-controls', 'true').attr('style', 'color:red');
+        }
     }
 
     $(document).on('click', '.close-box', function () {
