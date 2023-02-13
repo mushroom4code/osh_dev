@@ -1093,6 +1093,8 @@ input::-webkit-inner-spin-button {
 
 .product-slider-controls-image img {
     padding: 3px;
+    width: 58px;
+    height: 58px;
 }
 
 .slider-controls {
@@ -1216,6 +1218,11 @@ input::-webkit-inner-spin-button {
     .product-slider-controls-image {
         margin-right: 3px;
         width: 50px !important;
+    }
+
+    product-slider-controls-image img {
+        width: 45px;
+        height: 45px;
     }
 
     .slick-images-controls .slick-slide {
