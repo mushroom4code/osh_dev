@@ -121,7 +121,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                 $listClass = $showToggler ? 'js__tastes-list' : '';
             }
             ?>
-            <div class="toggle_taste card-price js__tastes">
+            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
                 <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>" id="<?= count($taste['VALUE']); ?>">
                     <?php foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
