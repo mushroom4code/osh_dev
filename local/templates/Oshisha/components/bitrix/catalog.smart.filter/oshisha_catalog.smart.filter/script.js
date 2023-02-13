@@ -236,8 +236,14 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem, result)
 
 	if (arItem['CODE'] == 'MODEL_KALYANA') {
 		var brend_checked = false;
-		Object.keys(result.ITEMS['56']['VALUES']).forEach(function(value, key) {
-			if (typeof result.ITEMS['56']['VALUES'][value]['CHECKED'] !== 'undefined') {
+		var brends_id;
+		Object.values(result.ITEMS).forEach(function(value, key) {
+			if (value["CODE"] == "BREND") {
+				brends_id = value["ID"];
+			}
+		});
+		Object.values(result.ITEMS[brends_id]['VALUES']).forEach(function(value, key) {
+			if (typeof value['CHECKED'] !== 'undefined') {
 				brend_checked = true;
 			}
 		} );
