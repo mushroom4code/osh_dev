@@ -1045,8 +1045,8 @@ input::-webkit-inner-spin-button {
 }
 
 .box-with-image-prod img.w-h-350 {
-    height: 350px;
-    width: 350px !important;
+    max-height: 300px;
+    object-fit: contain;
 }
 
 .flex-class {

@@ -103,6 +103,12 @@ $resOption = COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE
         </button>
     </div>
     <script type="text/javascript">
+        let attributes_menu=   document.querySelector('div#global_submenu_enterego').attributes;
+        document.querySelector('div#global_submenu_desktop').attributes.class.value = 'adm-global-submenu';
+        document.querySelector('a#global_menu_desktop').attributes.class.value = 'adm-default adm-main-menu-item adm-desktop';
+        attributes_menu.class.value = 'adm-global-submenu adm-global-submenu-active adm-global-submenu-animate ';
+        document.querySelector('span#global_menu_enterego').attributes.class.value = 'adm-default adm-main-menu-item adm-enterego adm-main-menu-item-active';
+
         BX.getParamSalePrice = function () {
             let onSale = document.getElementById('on_sale');
             let checkOn = onSale.checked;
