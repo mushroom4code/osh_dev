@@ -281,7 +281,7 @@ $(document).ready(function () {
         } else if (value > maxValue) {
             value = maxValue;
             $('.card_element').val(maxValue);
-            $('.alert_quantity').html('К покупке доступно максимум: ' + maxValue + 'шт.').addClass('show_block');
+            $('.alert_quantity').html('К покупке доступно максимум: ' + maxValue + ' шт.').addClass('show_block');
 
         }
         if (value > 0) {
@@ -379,7 +379,7 @@ $(document).ready(function () {
                     $(boxInput).val(max_QUANTITY);
                     if (max_QUANTITY > 0) {
                         $('.ganerate_price_wrap').show();
-                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
+                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                     } else
                         $('.ganerate_price_wrap').hide();
                     $('.ganerate_price').text(getPriceForProduct(this) * max_QUANTITY + ' ₽');
@@ -395,7 +395,7 @@ $(document).ready(function () {
                     $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').css({'display': 'flex'});
                 }
             } else if (minus === true) {
-                $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
 
                 if (parseInt($(boxInput).val()) > 0) {
                     let beforeVal = parseInt($(boxInput).val()) - 1;
@@ -424,10 +424,10 @@ $(document).ready(function () {
                         product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
                         $(boxInput).val(quantity);
                         if (quantity > max_QUANTITY) {
-                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
 
                         } else {
-                            $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                         }
                     } else {
                         product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
@@ -438,6 +438,11 @@ $(document).ready(function () {
                     $(boxInput).val(1);
                 }
             }
+
+            $(document).on('click', '.js__close-count-alert', function() {
+                $(this).parents('.alert_quantity').html('').removeClass('show_block');
+            })
+
             let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="' + product_id + '"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
