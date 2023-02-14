@@ -155,8 +155,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .info-prices-box-hover {
-    /*z-index: 1250;*/
-    z-index: 1005;
+    z-index: 1012;
 }
 
 
@@ -5811,8 +5810,7 @@ header {
 }
 .toggle_taste.card-price.js__tastes {
     position: relative;
-    z-index: 1200;
-    z-index: 1000;
+    z-index: 1011;
     min-height: 60px;
 }
 @media screen and (max-width: 768px) {
@@ -6109,4 +6107,8 @@ body.hide-jivo > jdiv {
         line-height: 1;
         padding: 2px 4px;
     }
+}
+
+.bx-catalog-element .variation_taste .taste {
+    display: inline-block;
 }
