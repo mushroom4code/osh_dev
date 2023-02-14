@@ -8,7 +8,6 @@ class EnteregoUser
 {
     private static ?EnteregoUser $instance = null;
 
-    private $isAuthorized = false;
     private array $name = [];
     private $phone = '';
     private $mail = '';
@@ -17,7 +16,6 @@ class EnteregoUser
     {
         global $USER;
 
-        $this->isAuthorized = $USER->IsAuthorized();
         $this->name = [
             'last' => $USER->GetLastName() ?? '',
             'first' => $USER->GetFirstName() ?? '',
@@ -33,11 +31,6 @@ class EnteregoUser
     public static function getInstance(): EnteregoUser
     {
         return self::$instance ?? new self();
-    }
-
-    public function isAuthorized()
-    {
-        return $this->isAuthorized;
     }
 
     public function getName()

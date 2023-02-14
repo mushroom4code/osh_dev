@@ -4,10 +4,11 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 /**
  * @var CMain $APPLICATION
  */
+global $USER;
 $APPLICATION->SetTitle("FAQ");
 //Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js");
 $userData = EnteregoUser::getInstance();
-if ($userData->isAuthorized()) {
+if ($USER->IsAuthorized()) {
     ?>
     <div id="faq" class="box_boxes_delivery mt-3 static">
         <h1>FAQ</h1>

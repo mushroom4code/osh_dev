@@ -78,5 +78,6 @@ $userData = EnteregoUser::getInstance();
             Спасибо за отзыв! Мы стараемся стать лучше для вас!
         </div>
     </form>
+</div>
 
-x</div>
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php") ?>
