@@ -192,10 +192,12 @@ foreach ($arResult['ITEMS'] as $item) {
 
 $iblock_id = IBLOCK_CATALOG;
 $result = $DB->Query("SELECT ID,CODE,SEE_POPUP_WINDOW FROM b_iblock_property WHERE IBLOCK_ID=$iblock_id");
-
-while ($collectionPropChecked = $result->Fetch()) {
-    $prop_see_in_window[$collectionPropChecked['CODE']] = $collectionPropChecked;
+if ($result !== false) {
+    while ($collectionPropChecked = $result->Fetch()) {
+        $prop_see_in_window[$collectionPropChecked['CODE']] = $collectionPropChecked;
+    }
 }
+
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 ?>

@@ -31,9 +31,10 @@ while ($prop_fields = $properties->GetNext()) {
 }
 
 $result = $DB->Query("SELECT ID,CODE,SEE_POPUP_WINDOW FROM b_iblock_property WHERE IBLOCK_ID=$iblock_id");
-
-while ($collectionPropChecked = $result->Fetch()) {
-    $res[$collectionPropChecked['ID']] = $collectionPropChecked;
+if ($result !== false) {
+    while ($collectionPropChecked = $result->Fetch()) {
+        $res[$collectionPropChecked['ID']] = $collectionPropChecked;
+    }
 } ?>
     <link rel="stylesheet" type="text/css" href="/bitrix/panel/main/admin-public.css">
     <style>
