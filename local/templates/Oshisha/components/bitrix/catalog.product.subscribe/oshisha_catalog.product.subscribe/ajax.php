@@ -21,14 +21,20 @@ if(isset($_REQUEST['reloadCaptcha']) && $_REQUEST['reloadCaptcha'] == 'Y')
 Loc::loadMessages(__FILE__);
 global $USER;
 
+if (!$USER->IsAuthorized()) {
+    echo Bitrix\Main\Web\Json::encode(array('success' => false, 'message' => 'noauth'));
+    require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+    die();
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	if(!Loader::includeModule('catalog'))
 	{
-		echo Bitrix\Main\Web\Json::encode(array(
-			'error' => true, 'message' => Loc::getMessage('CPSA_MODULE_NOT_INSTALLED', array('#NAME#' => 'catalog'))));
-		require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
-		die();
+        echo Bitrix\Main\Web\Json::encode(array(
+            'error' => true, 'message' => Loc::getMessage('CPSA_MODULE_NOT_INSTALLED', array('#NAME#' => 'catalog'))));
+        require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+        die();
 	}
 
 	if($_POST['checkSubscribe'] == 'Y')
@@ -97,6 +103,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			if($userId)
 				$userContact = ($contactTypeId == $defaultContactTypeId) ? $USER->getEmail() : false;
 
+            //enterego response if user have no email
+            if ((preg_match('/(@noemail.sms)/', $userContact) != false) || (!$userContact)) {
+                echo Bitrix\Main\Web\Json::encode(
+                    array('success' => false, 'message' => 'noemail'));
+                require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+                die();
+            }
+            //end
             //enterego changed input params for addsubscription, changed response
 			if($userContact)
 			{
@@ -155,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $userContact = false;
         if($userId)
             $userContact = ($contactTypeId == $defaultContactTypeId) ? $USER->getEmail() : false;
+
 
         if($userContact)
         {

@@ -375,10 +375,12 @@ $found_key = array_search((string)$item['ID'], $subscription_item_ids);
         <?php }else { ?>
         <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>"
         <div class="box_with_fav_bask">
-            <div class="not_product detail_popup <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>">
+            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>">
                 Нет в наличии
             </div>
-            <div class="detail_popup <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?> min_card">
+            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?> min_card">
                 <i class="fa fa-bell-o <?= (isset($found_key) && ($found_key !== false)) ? 'filled' : ''?>" aria-hidden="true"></i>
             </div>
             <?php
@@ -401,9 +403,10 @@ $found_key = array_search((string)$item['ID'], $subscription_item_ids);
             ?>
         </div>
         <div style="clear: both;"></div>
-        <div id="popup_mess" class="<?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>"
-             data-subscription_id="<?= (isset($found_key) && ($found_key !== false)) ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>" data-product_id="<?= $item['ID']; ?>"></div>
-
+        <div id="popup_mess" class="<?= $USER->IsAuthorized() ? '' : 'noauth'?>
+            <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>"
+             data-subscription_id="<?= (isset($found_key) && ($found_key !== false)) ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>" data-product_id="<?= $item['ID']; ?>">
+        </div>
     </div>
     <?php }
     $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
@@ -469,11 +472,8 @@ $found_key = array_search((string)$item['ID'], $subscription_item_ids);
                         $item['JS_OFFERS'][$keyOffer]['DISPLAY_PROPERTIES'] = $strProps;
                     }
                 }
-
-
             }
         }
-
     }
     ?>
 </div>
