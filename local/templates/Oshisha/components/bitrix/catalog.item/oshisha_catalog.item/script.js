@@ -2289,7 +2289,7 @@ $(document).on('click', '.open-fast-window', function () {
                     children: [
                         BX.create('DIV', {
                             props: {
-                                className: 'prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-4 mb-2',
+                                className: 'prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2',
                             },
                             children: [
                                 BX.create('P', {
@@ -2299,7 +2299,7 @@ $(document).on('click', '.open-fast-window', function () {
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        className: 'price-group mb-4'
+                                        className: 'price-group mb-lg-4 mb-md-3 mb-3'
                                     },
                                 }),
                                 BX.create('DIV', {
@@ -2327,7 +2327,7 @@ $(document).on('click', '.open-fast-window', function () {
                                         }),
                                         BX.create('DIV', {
                                             props: {
-                                                className: 'props-box-child-popup mt-3 mb-3'
+                                                className: 'props-box-child-popup mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3'
                                             },
                                         })
                                     ]

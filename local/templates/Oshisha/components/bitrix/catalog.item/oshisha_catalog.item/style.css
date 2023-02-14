@@ -1124,9 +1124,33 @@ input::-webkit-inner-spin-button {
     border-radius: 10px;
 }
 
-@media (min-width: 1023px) and (max-width: 1340px) {
+@media (min-width: 1024px) and (max-width: 1340px) {
     .top-32 {
         top: 22%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .max-width-1024 {
+        max-width: 768px !important;
+    }
+
+    .font-14 {
+        font-size: 12px;
+    }
+
+    .font-27 {
+        font-size: 23px!important;
+    }
+
+    .box-with-image-prod img.w-h-350 {
+        max-height: 250px;
+    }
+
+    .box-with-image-prod {
+        min-height: 350px;
+        height: 350px;
+        width: 350px;
     }
 }
 
