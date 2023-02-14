@@ -45,6 +45,6 @@ class EnteregoUser
 
     public function getMail()
     {
-        return $this->mail;
+        return strpos($this->mail, 'noemail.sms') === false ? $this->mail : '';
     }
 }
