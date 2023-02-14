@@ -169,8 +169,9 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .info-price {
-    font-size: 21px !important;
+    font-size: 20px !important;
     color: #d5d5d5;
+    vertical-align: middle;
 }
 
 .info-prices-box-hover {
@@ -2098,11 +2099,11 @@ input.check_input {
 }
 
 .btn-plus {
-    margin-left: 10px;
+    margin-left: 5px;
 }
 
 .btn-minus {
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .btn-plus:after, .btn-minus:after {
@@ -5504,7 +5505,6 @@ li, ul {
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(1px);
-    /*background-color: #ffdcdc;*/
     background-color: #ffe2e2;
     padding: 10px 10px;
     text-align: center;
@@ -5525,10 +5525,9 @@ li, ul {
     content: '';
     position: absolute;
     bottom: -10px;
-    right: 35px;
+    right: 42.5px;
     width: 20px;
     height: 20px;
-    /*background-color: #ffdcdc;*/
     background-color: #ffe2e2;
     transform: rotate(45deg);
 }
