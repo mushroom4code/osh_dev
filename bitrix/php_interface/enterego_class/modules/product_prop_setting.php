@@ -86,9 +86,10 @@ if ($_REQUEST["mess"] == "ok")
                 <td colspan="3">Показать</td>
             </tr>
             <?php foreach ($arProps as $prop) {
-                $prop['ACTIVE'] = 'Нет';
-                if ($prop['ACTIVE'] === 'Y') {
+                if ($prop['ACTIVE'] === "Y") {
                     $prop['ACTIVE'] = 'Да';
+                } else {
+                    $prop['ACTIVE'] = 'Нет';
                 } ?>
                 <tr class="main-grid-row main-grid-row-body">
                     <td colspan="4"><b><?= $prop['NAME'] ?></b></td>

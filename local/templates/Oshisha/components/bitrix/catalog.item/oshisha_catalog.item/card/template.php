@@ -93,6 +93,13 @@ if (empty($morePhoto[0])) {
     $morePhoto[0]['SRC'] = '/local/templates/Oshisha/images/no-photo.gif';
 }
 
+$prop_see_in_window = [];
+foreach ($item['PROPERTIES'] as $key => $props_val) {
+    if ($item['POPUP_PROPS'][$key]['SEE_POPUP_WINDOW'] == 'Y') {
+        $prop_see_in_window[] = $props_val;
+    }
+}
+
 if ($show_price) {
     $jsonForModal = [
         'ID' => $item['ID'],
@@ -104,6 +111,8 @@ if ($show_price) {
         'USE_DISCOUNT' => $useDiscount['VALUE'],
         'ACTUAL_BASKET' => $priceBasket,
         'PRICE' => $price['PRICE_DATA'],
+        'SALE_PRICE' => round($price['SALE_PRICE']['PRICE']) . ' руб.',
+        'POPUP_PROPS' => $prop_see_in_window ?? 0,
         'NAME' => $productTitle,
         'LIKE' => [
             'ID_PROD' => $item['ID_PROD'],

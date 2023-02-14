@@ -24,6 +24,7 @@ if (isset($arResult['ITEM'])) {
     $item['F_USER_ID'] = $arResult['F_USER_ID'];
     $item['ID_PROD'] = $arResult['ID_PROD'];
     $item['COUNT_LIKE'] = $arResult['COUNT_LIKE'];
+    $item['POPUP_PROPS'] = $arResult['POPUP_PROPS'];
     $item['COUNT_FAV'] = $arResult['COUNT_FAV'];
     $item['COUNT_LIKES'] = $arResult['COUNT_LIKES'];
     $item['DETAIL_PAGE_URL'] = str_replace('/catalog_new/', '/catalog/', $item['DETAIL_PAGE_URL']);

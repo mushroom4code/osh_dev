@@ -2178,7 +2178,6 @@ $(document).on('click', '.open-fast-window', function () {
         let wrapper = $('.section_wrapper');
         let product = JSON.parse(json_product);
         $(wrapper).find('div.box-popup-product').remove();
-        console.log(product)
 
         let box_popup = BX.create('DIV', {
             props: {
@@ -2285,7 +2284,7 @@ $(document).on('click', '.open-fast-window', function () {
                 }),
                 BX.create('DIV', {
                     props: {
-                        className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh'
+                        className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between'
                     },
                     children: [
                         BX.create('DIV', {
@@ -2318,13 +2317,25 @@ $(document).on('click', '.open-fast-window', function () {
                             children: [
                                 BX.create('DIV', {
                                     props: {
-                                        className: 'props-box-child col-lg-8 col-md-8 col-12 pl-0'
+                                        className: 'props-box-child col-lg-8 col-md-8 col-12 pl-0 d-flex flex-column justify-content-between'
                                     },
+                                    children: [
+                                        BX.create('DIV', {
+                                            props: {
+                                                className: 'props-box-child-advanse'
+                                            },
+                                        }),
+                                        BX.create('DIV', {
+                                            props: {
+                                                className: 'props-box-child-popup mt-3 mb-3'
+                                            },
+                                        })
+                                    ]
                                 }),
                                 BX.create('A', {
                                     props: {
                                         className: 'color-redLight font-weight-bold col-lg-4 col-md-4 col-12 ' +
-                                            'text-decoration-underline font-14 mb-2 p-0 text-lg-right text-md-right',
+                                            'text-decoration-underline font-14 p-0 text-lg-right text-md-right',
                                         href: product.DETAIL_PAGE_URL
                                     },
                                     text: 'Подробнее'
@@ -2342,7 +2353,6 @@ $(document).on('click', '.open-fast-window', function () {
 
             let product_box = BX.findChildByClassName(box_product, 'box-with-image-one');
             let image_box = BX.findChildByClassName(box_product, 'box-with-image-prod');
-
 
             BX.cleanNode(product_box);
             BX.removeClass(product_box, 'flex-class');
@@ -2425,9 +2435,17 @@ $(document).on('click', '.open-fast-window', function () {
         let price_base = BX.findChildByClassName(box_product, 'base-price');
 
         $.each(product.PRICE, function (i, price) {
+            let sale = '';
+            if (product.USE_DISCOUNT === 'Да') {
+                sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
+            }
 
             if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
-                price_base.innerHTML = price.PRINT_PRICE
+                if (product.USE_DISCOUNT === 'Да') {
+                    price_base.innerHTML = product.SALE_PRICE + ' <span class="color-redLight font-14 ml-3">Старая цена ' + price.PRINT_PRICE + '</span>';
+                } else {
+                    price_base.innerHTML = price.PRINT_PRICE
+                }
             }
 
             price_group.appendChild(BX.create('P', {
@@ -2450,6 +2468,7 @@ $(document).on('click', '.open-fast-window', function () {
                     BX.create('SPAN', {
                         props: {
                             className: 'font-16 ml-2 font-weight-bold',
+                            style: sale
                         },
                         html: '<b>' + price.PRINT_PRICE + '</b>'
                     })
@@ -2544,7 +2563,7 @@ $(document).on('click', '.open-fast-window', function () {
         //  PROPS
         if (product.ADVANTAGES_PRODUCT.length > 0) {
 
-            let props_box = BX.findChildByClassName(box_product, 'props-box-child');
+            let props_box = BX.findChildByClassName(box_product, 'props-box-child-advanse');
             $.each(product.ADVANTAGES_PRODUCT, function (k, prop) {
                 props_box.appendChild(BX.create('P', {
                     props: {
@@ -2554,6 +2573,21 @@ $(document).on('click', '.open-fast-window', function () {
                 }))
             });
         }
+
+        if (product.POPUP_PROPS.length > 0) {
+            let props_popup = BX.findChildByClassName(box_product, 'props-box-child-popup');
+            $.each(product.POPUP_PROPS, function (k, prop) {
+                if (k < 3) {
+                    props_popup.appendChild(BX.create('P', {
+                        props: {
+                            className: 'mb-2 font-14 font-weight-500',
+                        },
+                        html: prop.NAME + ' : ' + ' ' + prop.VALUE
+                    }));
+                }
+            });
+        }
+
 
         $(wrapper).append(box_popup);
         // TODO - не нашла как добавлять через атрибуты BX при создании элемента тег дата с дефисом, можно только с подчеркиванием
