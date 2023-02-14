@@ -95,7 +95,13 @@ if (!$show_price) {
 }
 
 $productTitle = str_replace("\xC2\xA0", " ", $productTitle);
-$productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
+$productTitle = str_replace("\xC2\xA0", " ", $productTitle);
+
+$subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"], 'ITEM_ID');
+$found_key = array_search((string)$item['ID'], $subscription_item_ids);
+
+
+?>
 <div class="<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
     <div class="bx_catalog_item_container product-item position-relative
@@ -369,10 +375,12 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
         <?php }else { ?>
         <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>"
         <div class="box_with_fav_bask">
-            <div class="not_product detail_popup">
+            <div class="not_product detail_popup <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>">
                 Нет в наличии
             </div>
-            <div class="detail_popup min_card"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
+            <div class="detail_popup <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?> min_card">
+                <i class="fa fa-bell-o <?= (isset($found_key) && ($found_key !== false)) ? 'filled' : ''?>" aria-hidden="true"></i>
+            </div>
             <?php
 
             $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
@@ -393,7 +401,8 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             ?>
         </div>
         <div style="clear: both;"></div>
-        <div id="popup_mess" data-product_id="<?= $item['ID']; ?>"></div>
+        <div id="popup_mess" class="<?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>"
+             data-subscription_id="<?= (isset($found_key) && ($found_key !== false)) ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>" data-product_id="<?= $item['ID']; ?>"></div>
 
     </div>
     <?php }

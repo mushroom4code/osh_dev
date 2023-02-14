@@ -839,8 +839,13 @@ div.carousel-indicators > span, .li_menu_header, .catalog_tile_slider_arrow_righ
     padding: 8px;
 }
 
-div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell-o {
+div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell-o,
+div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell {
     font-weight: 100;
+}
+
+div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell-o.filled {
+    color: red;
 }
 
 label.radio_input {
@@ -956,7 +961,7 @@ div.card > div.card-body > div.box_with_properties > div > h4.card-title > a, .b
 }
 
 .btn_questions > i, .label_company, div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell-o,
-.box_with_message_prodNot > i, .btn_basket_collapse i {
+.box_with_message_prodNot > i, .btn_basket_collapse i, div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell {
     font-size: 23px;
 }
 
