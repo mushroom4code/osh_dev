@@ -394,6 +394,10 @@ $(document).ready(function () {
                     }
                 }
             } else {
+                let addBasketButton = $(this).closest('.bx_catalog_item_controls').find('.add2basket'),
+                    product_id = addBasketButton.data('product_id'),
+                    product_url = addBasketButton.data('url');
+
                 if (quantityProdDet) {
                     let quantity = parseInt(quantityProdDet);
                     if ((quantity > 1) || (quantity !== 0)) {

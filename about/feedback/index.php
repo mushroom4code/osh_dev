@@ -1,32 +1,53 @@
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+<?php use enterego\EnteregoUser;
+
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("Обратная связь");
+$userData = EnteregoUser::getInstance();
 ?>
-<h5 class="mb-3" id="form"></h5>
-<div class="mb-5">
-    <form class="form_company form-form " id="support" enctype="multipart/form-data">
-        <div class="form-form-wrap">
-            <input type="hidden" name="recaptcha_token" value="">
-            <div class="form-group mb-3">
-                <label class="label_company">Обратная связь</label>
-            </div>
-            <div class="form-group mb-3">
-                <input type="text" class="form-control input_lk" id="Name" name="NAME"
-                       placeholder="Пожалуйста, представьтесь*">
-                <div class="er_FORM_NAME error_field"></div>
-            </div>
-            <div class="form-group mb-3">
-                <input type="text" data-name="PHONE-FORM" name="PHONE" class="form-control input_lk" id="phoneNumber"
-                       placeholder="Мобильный телефон, чтобы связаться с вами*">
-                <div class="er_FORM_PHONE error_field"></div>
-            </div>
-            <div class="form-group mb-3">
-                <input type="text" data-name="EMAIL" name="EMAIL" class="form-control input_lk" id="userMail"
-                       placeholder="E-mail если хотите получить ответ на почту">
-            </div>
-            <div class="form-group mb-3">
-                <textarea class="form-control input_lk" name="MESSAGE" id="text" placeholder="Сообщение*"></textarea>
-                <div class="er_FORM_MESSAGE error_field"></div>
-            </div>
+    <h5 class="mb-3" id="form"></h5>
+    <div class="mb-5">
+        <form class="form_company form-form " id="support" enctype="multipart/form-data">
+            <div class="form-form-wrap">
+                <input type="hidden" name="recaptcha_token" value="">
+                <div class="form-group mb-3">
+                    <label class="label_company">Обратная связь</label>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text"
+                           class="form-control input_lk"
+                           id="Name"
+                           name="NAME"
+                           placeholder="Пожалуйста, представьтесь*"
+                           value="<?= implode(' ', $userData->getName()) ?>"
+                    >
+                    <div class="er_FORM_NAME error_field"></div>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text"
+                             data-name="PHONE-FORM"
+                             name="PHONE"
+                             class="form-control input_lk"
+                             id="phoneNumber"
+                             placeholder="Мобильный телефон, чтобы связаться с вами*"
+                            value="<?= $userData->getPhone() ?>"
+                    >
+                        <div class="er_FORM_PHONE error_field"></div>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text"
+                           data-name="EMAIL"
+                           name="EMAIL"
+                           class="form-control input_lk"
+                           id="userEmail"
+                           placeholder="E-mail если хотите получить ответ на почту"
+                            value="<?= $userData->getMail() ?>"
+                    >
+                </div>
+                <div class="form-group mb-3">
+                    <textarea class="form-control input_lk" name="MESSAGE" id="text"
+                              placeholder="Сообщение*"></textarea>
+                    <div class="er_FORM_MESSAGE error_field"></div>
+                </div>
 
             <div class="form-group mb-3">
                 <div class="form-control input_lk input_files drop-zone" id="drop-zone">

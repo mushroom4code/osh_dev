@@ -29,6 +29,7 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
     '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
+    '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
 ));
 // 18844
 AddEventHandler('rest', 'OnRestServiceBuildDescription', array('CatalogAPIService', 'OnRestServiceBuildDescription'));
