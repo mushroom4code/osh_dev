@@ -2436,12 +2436,13 @@ $(document).on('click', '.open-fast-window', function () {
 
         $.each(product.PRICE, function (i, price) {
             let sale = '';
-            if (product.USE_DISCOUNT === 'Да') {
+
+            if (product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true  ) {
                 sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
             }
 
             if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
-                if (product.USE_DISCOUNT === 'Да') {
+                if (product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) {
                     price_base.innerHTML = product.SALE_PRICE + ' <span class="color-redLight font-14 ml-3">Старая цена ' + price.PRINT_PRICE + '</span>';
                 } else {
                     price_base.innerHTML = price.PRINT_PRICE
