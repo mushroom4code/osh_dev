@@ -234,12 +234,16 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     width: 30%;
 }
 
+.max-width-1024 {
+    max-width: 1024px;
+}
+
 .container_header, .foot_container {
     width: 75%;
     max-width: 1355px;
 }
 
-.section_wrapper > .container_header {f
+.section_wrapper > .container_header {
     min-height: 50vh;
 }
 
@@ -519,15 +523,29 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     background-image: url("/local/templates/Oshisha/images/company_logo.png");
 }
 
-.btn_search {
+.btn_search, .open-fast-window {
     height: 23px;
     width: 23px;
 }
 
-.basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search {
+.open-fast-window {
+    padding: 15px;
+    background-color: rgb(255 255 255 / 68%);
+    border-radius: 5px;
+    background-size: auto;
+    background-position: center;
+    position: absolute;
+    top: 30%;
+    right: 0;
+}
+
+.basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search, .open-fast-window {
     background-image: url("/local/templates/Oshisha/images/search_basket.png");
-    background-position: left 3% center;
     background-repeat: no-repeat;
+}
+
+.basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search {
+    background-position: left 3% center;
 }
 
 .box_honesty, .box_automation, .box_display, .box_block, .box_present, .box_help, .box_house {
@@ -535,7 +553,6 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     min-width: 150px;
     max-height: 150px;
 }
-
 
 .icons_worker_contr, .icons_worker_comp, .box_company_icon {
     background-repeat: no-repeat;
@@ -916,13 +933,13 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
     font-size: 18px;
 }
 
-.bx_price, .text_lineHeight b, .text_font_19 {
+.bx_price, .text_font_19, .font-19 {
     font-size: 19px;
 }
 
 .font_21, .bx-catalog-tab-container .blog-comments .blog-comment .blog-comment-cont
 .blog-comment-cont-white .blog-comment-info a.link_like, .font-20 {
-    font-size: 20px;
+    font-size: 20px !important;
 }
 
 .by-line:not(.opt) .bx_price {
@@ -951,7 +968,7 @@ div.box_with_icons > a > i.icons_theme:first-child {
     margin-left: 0;
 }
 
-.box_with_net a, .by-line .icon_like {
+.box_with_net a, .by-line .icon_like, .font-27 {
     font-size: 27px;
 }
 
@@ -970,7 +987,7 @@ div.box_with_icons > a > i.icons_theme:first-child {
     font-size: 120px;
 }
 
-h4 > b, .orderCancel, .select2-results__option,
+h4 > b, .orderCancel, .select2-results__option, .color-darkOsh,
 .select2-container--default .select2-search--dropdown .select2-search__field, .sort_orders, .sort_orders:hover,
 .sort_order, .sort_order:hover, .link_in_basket, .link_in_basket:hover, .box_with_brands a, .box_with_brands a:hover,
 nav.box_with_menu_header, .ul_menu, a.dropdown-toggle, .link_gram, .disabled_class .link_gram:hover, .sidebar_inform a,
@@ -2112,6 +2129,10 @@ input.check_input {
     font-weight: 600;
 }
 
+.font-weight-500 {
+    font-weight: 500;
+}
+
 .bx-no-touch input.card_element::-webkit-outer-spin-button, .bx-no-touch input.card_element::-webkit-inner-spin-button {
     appearance: none;
 }
@@ -2793,10 +2814,6 @@ div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_
 
 #boxWithContrAgents .row_section {
     padding-right: 0;
-}
-
-.text_lineHeight {
-    line-height: 1.9;
 }
 
 #o_nas .box_text_business {
@@ -3688,7 +3705,7 @@ table#TableWorkers.no-footer {
         font-size: 11px
     }
 
-    .news_val_data, .box_msk p, .box_reg p, .bx-header-phone-number, .text_lineHeight, .text_lineHeight b,
+    .news_val_data, .box_msk p, .box_reg p, .bx-header-phone-number,
     .btn_questions span, div > div.card-body, h3.ctweb-title, .btn_basket_collapse span, .desktop-none-cat-det h6,
     .product-item-amount-field-contain input[type="number"].cat-det, .product-item-detail-properties-name,
     .product-item-detail-properties-value {
@@ -3761,7 +3778,7 @@ table#TableWorkers.no-footer {
         font-size: 35px;
     }
 
-    .span_bar > div.bar_span, div.small_bar, .ul_menu, .text_lineHeight b, #FAQ .card_delivery h3 {
+    .span_bar > div.bar_span, div.small_bar, .ul_menu, #FAQ .card_delivery h3 {
         margin-bottom: 0;
     }
 
@@ -3770,8 +3787,7 @@ table#TableWorkers.no-footer {
     }
 
     #content_box_business h2, .box_msk, .box_reg, .form_company, .width_50, #delivery_payment .btn_company,
-    #content_box_delivery > h2, #delivery_payment > h2, #o_nas p.text_lineHeight, h5,
-    #o_nas .box_with_banner_dop, #o_nas h1, #faq h2, h5 {
+    #content_box_delivery > h2, #delivery_payment > h2, h5, #o_nas .box_with_banner_dop, #o_nas h1, #faq h2, h5 {
         margin-bottom: 1rem !important;
     }
 
@@ -3890,11 +3906,7 @@ table#TableWorkers.no-footer {
         margin-right: 20px;
     }
 
-    .box_row .text_lineHeight {
-        font-size: 20px !important;
-    }
-
-    .box_msk p, .box_reg p, .text_lineHeight {
+    .box_msk p, .box_reg p {
         line-height: 1.5;
     }
 
