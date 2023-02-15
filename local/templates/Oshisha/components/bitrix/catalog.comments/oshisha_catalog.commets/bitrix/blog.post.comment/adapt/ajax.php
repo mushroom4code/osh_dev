@@ -1,1 +1,1 @@
-<? require($_SERVER["DOCUMENT_ROOT"]."/bitrix/components/bitrix/catalog.comments/templates/.default/ajax.php"); ?>
+<? require($_SERVER["DOCUMENT_ROOT"]."/local/templates/Oshisha/components/bitrix/catalog.comments/oshisha_catalog.commets/ajax.php"); ?>
