@@ -1,7 +1,5 @@
 <?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
-use Enterego\EnteregoHelper;
-
 /**
  * @global CMain $APPLICATION
  * @var array $arParams
@@ -56,31 +54,28 @@ $arItemIDs = array(
     'SMALL_CARD_PANEL_ID' => $mainId . '_small_card_panel',
     'TABS_PANEL_ID' => $mainId . '_tabs_panel'
 );
-$favorite = '';
-$styleForTaste = '';
+
 $taste = $item['PROPERTIES']['VKUS'];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
 $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES'][PROP_NEW];
 $hitProduct = $item['PROPERTIES'][PROP_HIT];
-
-
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
+
 $show_price = true;
-$not_auth = '';
+$priceBasket = 0;
+$styleForNo = $href = $not_auth = $styleForTaste = '';
+$productTitle = str_replace("\xC2\xA0", " ", $productTitle);
+$jsonForModal = [];
+
 if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
     $show_price = false;
     $not_auth = 'link_header_box';
 }
 
 
-$priceBasket = 0;
-$styleForNo = '';
-
 if ($item['PRODUCT']['QUANTITY'] == '0') {
-    /*$styleForTaste = 'blur_check';*/
     $styleForNo = 'not_av';
-
 }
 
 foreach ($item['ACTUAL_BASKET'] as $key => $val) {
@@ -88,16 +83,54 @@ foreach ($item['ACTUAL_BASKET'] as $key => $val) {
         $priceBasket = $val;
     }
 }
-$href = '';
+
 if (!$show_price) {
     $href = $item['DETAIL_PAGE_URL'];
     $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
 }
 
-$productTitle = str_replace("\xC2\xA0", " ", $productTitle);
-$productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
-<div class="<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
+if (empty($morePhoto[0])) {
+    $morePhoto[0]['SRC'] = '/local/templates/Oshisha/images/no-photo.gif';
+}
+
+$prop_see_in_window = [];
+foreach ($item['PROPERTIES'] as $key => $props_val) {
+    if ($item['POPUP_PROPS'][$key]['SEE_POPUP_WINDOW'] == 'Y' && !empty($props_val['VALUE'])) {
+        $prop_see_in_window[] = $props_val;
+    }
+}
+
+if ($show_price) {
+    $jsonForModal = [
+        'ID' => $item['ID'],
+        'BUY_LINK' => $arItemIDs['BUY_LINK'],
+        'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
+        'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
+        'MORE_PHOTO' => $morePhoto,
+        'PRODUCT' => $item['PRODUCT'],
+        'USE_DISCOUNT' => $useDiscount['VALUE'],
+        'ACTUAL_BASKET' => $priceBasket,
+        'PRICE' => $price['PRICE_DATA'],
+        'SALE_PRICE' => round($price['SALE_PRICE']['PRICE']) . ' руб.',
+        'POPUP_PROPS' => $prop_see_in_window ?? 0,
+        'NAME' => $productTitle,
+        'LIKE' => [
+            'ID_PROD' => $item['ID_PROD'],
+            'F_USER_ID' => $item['F_USER_ID'],
+            'COUNT_LIKE' => $item['COUNT_LIKE'] ?? 0,
+            'COUNT_LIKES' => $item['COUNT_LIKES'] ?? 0,
+            'COUNT_FAV' => $item['COUNT_FAV'] ?? 0,
+        ],
+        'USE_CUSTOM_SALE_PRICE' => USE_CUSTOM_SALE_PRICE,
+        'BASE_PRICE' => BASIC_PRICE,
+        'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE'] ?? []
+    ];
+}
+
+?>
+<div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
+    <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative
     <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
         <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
@@ -122,7 +155,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                 </div>
             </div>
         <?php } ?>
-        <div class="image_cart <?= $not_auth ?>" data-href="<?= $href ?>">
+        <div class="image_cart position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
             <a class=" <?= $styleForTaste ?>"
                href="<?= $item['DETAIL_PAGE_URL']; ?>">
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
@@ -131,6 +164,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                     <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                 <?php } ?>
             </a>
+            <i class="open-fast-window" data-item-id="<?= $item['ID'] ?>"></i>
         </div>
 
         <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
