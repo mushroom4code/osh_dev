@@ -2572,22 +2572,30 @@ $(document).on('click', '.open-fast-window', function () {
 
             let props_box = BX.findChildByClassName(box_product, 'props-box-child-advanse');
             $.each(product.ADVANTAGES_PRODUCT, function (k, prop) {
-                props_box.appendChild(BX.create('P', {
-                    props: {
-                        className: 'mb-2 font-14 font-weight-500',
-                    },
-                    html: prop
-                }))
+
+                let child = BX.findChildrenByClassName(props_box, 'child').length;
+
+                if (child < 3) {
+                    props_box.appendChild(BX.create('P', {
+                        props: {
+                            className: 'mb-2 font-14 font-weight-500 child',
+                        },
+                        html: prop
+                    }));
+                }
             });
         }
 
         if (product.POPUP_PROPS.length > 0) {
             let props_popup = BX.findChildByClassName(box_product, 'props-box-child-popup');
             $.each(product.POPUP_PROPS, function (k, prop) {
-                if (k < 3) {
+
+                let child = BX.findChildrenByClassName(props_popup, 'child').length;
+
+                if (child < 3) {
                     props_popup.appendChild(BX.create('P', {
                         props: {
-                            className: 'mb-2 font-14 font-weight-500',
+                            className: 'mb-2 font-14 font-weight-500 child',
                         },
                         html: prop.NAME + ' : ' + ' ' + prop.VALUE
                     }));

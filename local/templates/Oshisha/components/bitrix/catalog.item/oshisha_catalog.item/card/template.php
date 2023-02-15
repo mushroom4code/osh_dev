@@ -95,7 +95,7 @@ if (empty($morePhoto[0])) {
 
 $prop_see_in_window = [];
 foreach ($item['PROPERTIES'] as $key => $props_val) {
-    if ($item['POPUP_PROPS'][$key]['SEE_POPUP_WINDOW'] == 'Y') {
+    if ($item['POPUP_PROPS'][$key]['SEE_POPUP_WINDOW'] == 'Y' && !empty($props_val['VALUE'])) {
         $prop_see_in_window[] = $props_val;
     }
 }
