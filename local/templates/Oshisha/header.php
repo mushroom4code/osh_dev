@@ -363,7 +363,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
             <?php } ?>
         </div>
-        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/include/feedback-popup-line.php") ?>
     </header>
     <div class="section_wrapper">
         <div class="container_header">
