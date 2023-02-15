@@ -327,7 +327,7 @@ $option = $option_site; ?>
                 <div class="flex_block">
                     <div class="age-access-inner">
                         <div class="age-access__text">
-                            <div class="age-access__text-part1">
+                            <div>
                                 <p class="font-14 mb-0" style="line-height: 2">
                                     Дорогой друг,<br>
                                     Мы рады видеть тебя на нашем обновленном сайте, 😊<br>
@@ -340,10 +340,10 @@ $option = $option_site; ?>
                         </div>
                         <div class="age-access__buttons mt-3">
                             <a href="#"
-                               class="age-access__button font-12 age-access__yes link_red_button arcticmodal-close"
+                               class="age-access__button font-12 age-access__yes link_red_button arcticmodal-close mb-2"
                                data-option="1" data-auth="false">Продолжить здесь</a>
                             <a href="https://oshisha.online/"
-                               class="link_red_button age-access__button font-12 age-access__yes">
+                               class="link_red_button age-access__button font-12 age-access__yes mb-2">
                                 Перейти на старый сайт</a>
                         </div>
                     </div>
