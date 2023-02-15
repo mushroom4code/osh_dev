@@ -56,7 +56,7 @@ $arItemIDs = array(
 );
 $favorite = '';
 $styleForTaste = '';
-$taste = $item['PROPERTIES']['VKUS'];
+$taste = $item['PROPERTIES'][PROPERTY_KEY_VKUS];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
 $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES'][PROP_NEW];
@@ -110,19 +110,17 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
             $togglerState = 'hide';
             $listClass = '';
 
-            if (count($taste['VALUE']) > 1) {
-                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18; // поместятся на одной строке 2 вкуса или нет
-
-                if (count($taste['VALUE']) > 2) {
-                    $showToggler = true;
-                }
-
-                $togglerState = $showToggler ? ' many-tastes' : 'hide many-tastes';
-                $listClass = $showToggler ? 'js__tastes-list' : '';
+            if (count($taste['VALUE']) > 2) {
+                $showToggler = true;
             }
+            elseif (count($taste['VALUE']) > 1) {
+                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18; // поместятся на одной строке 2 вкуса или нет
+            }
+            $togglerState = $showToggler ? ' many-tastes' : 'hide many-tastes';
+            $listClass = $showToggler ? 'js__tastes-list' : '';
             ?>
             <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
-                <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>" id="<?= count($taste['VALUE']); ?>">
+                <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                             if ($key === $keys) {
@@ -233,7 +231,7 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
         <div class="box_with_title_like d-flex align-items-center">
             <?php if (count($taste['VALUE']) > 0) { ?>
                 <div class="toggle_taste_line">
-                    <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
+                    <div class="variation_taste">
                         <?php foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                                 if ($key === $keys) {

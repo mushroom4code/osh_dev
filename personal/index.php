@@ -60,7 +60,7 @@ if (!$USER->IsAuthorized()) {
 		"COMPONENT_TEMPLATE" => "oshisha_sale.personal.section",
 		"CUSTOM_PAGES" => "",
 		"CUSTOM_SELECT_PROPS" => array(
-			0 => "VKUS",
+			0 => PROPERTY_KEY_VKUS,
 			1 => "",
 		),
 		"MAIN_CHAIN_NAME" => "Мой кабинет",

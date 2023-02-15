@@ -127,9 +127,9 @@ foreach ($item as $row) {
 			  $rowFavData[$row['ID']] = $count['Fav'][0];
 		}
 	}
-    $res = EnteregoHelper::getItems($row['PRODUCT_ID'], 'VKUS');
+    $res = EnteregoHelper::getItems($row['PRODUCT_ID'], PROPERTY_KEY_VKUS);
     if (!empty($res)) {
-        $rowData['PROPS']['VKUS'] = $res['VKUS'];
+        $rowData['PROPS'][PROPERTY_KEY_VKUS] = $res[PROPERTY_KEY_VKUS];
     }
 
     // show price including ratio

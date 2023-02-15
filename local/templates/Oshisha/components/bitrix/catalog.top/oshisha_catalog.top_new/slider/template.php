@@ -153,7 +153,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             }
         }
 
-        $taste = $arItem['PROPERTIES']['VKUS'];
+        $taste = $arItem['PROPERTIES'][PROPERTY_KEY_VKUS];
         $catalog = CIBlockSection::GetList(array(), array('ID' => $arElement['IBLOCK_SECTION_ID'], 'IBLOCK_ID' => $arParams['IBLOCK_ID']),
             false, array('*', 'UF_*'));
         $catalogProduct = $catalog->Fetch();

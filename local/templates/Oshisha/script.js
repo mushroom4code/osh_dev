@@ -123,13 +123,16 @@ $(document).ready(function () {
     if (bool === true) {
         $(document).on('click', '.js__taste_toggle', function (e) {
             $(this).closest('.js__tastes').toggleClass('active');
+            let cardWrapper = $(e.target).closest('.bx_catalog_item_container'),
+                tasteOverlay = cardWrapper.find('.bx_catalog_item_overlay'),
+                priceBox = cardWrapper.find('.info-prices-box-hover');
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
-                $(e.target).closest('.bx_catalog_item_container').find('.bx_catalog_item_overlay').css({height:'100%'});
-                $(e.target).closest('.bx_catalog_item_container').find('.info-prices-box-hover').css({zIndex:'1000'});
+                tasteOverlay.css({height:'100%'});
+                priceBox.css({zIndex:'1000'});
             } else {
-                $(e.target).closest('.bx_catalog_item_container').find('.bx_catalog_item_overlay').css({height:'0'});
-                $(e.target).closest('.bx_catalog_item_container').find('.info-prices-box-hover').css({zIndex:'1300'});
+                tasteOverlay.css({height:'0'});
+                priceBox.css({zIndex:'1300'});
             }
         })
         tasteInit();
