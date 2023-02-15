@@ -123,7 +123,7 @@ if ($show_price) {
         ],
         'USE_CUSTOM_SALE_PRICE' => USE_CUSTOM_SALE_PRICE,
         'BASE_PRICE' => BASIC_PRICE,
-        'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE']
+        'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE'] ?? []
     ];
 }
 

@@ -2437,13 +2437,19 @@ $(document).on('click', '.open-fast-window', function () {
         $.each(product.PRICE, function (i, price) {
             let sale = '';
 
-            if (product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true  ) {
+            if (product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) {
                 sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
             }
 
             if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
                 if (product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) {
-                    price_base.innerHTML = product.SALE_PRICE + ' <span class="color-redLight font-14 ml-3">Старая цена ' + price.PRINT_PRICE + '</span>';
+                    let sale_price = price.PRINT_PRICE;
+                    let print_price = product.PRICE[0].PRINT_PRICE;
+                    if (parseInt(product.SALE_PRICE) > 0) {
+                        sale_price = product.SALE_PRICE;
+                        print_price = price.PRINT_PRICE;
+                    }
+                    price_base.innerHTML = sale_price + ' <span class="color-redLight font-14 ml-3">Старая цена ' + print_price + '</span>';
                 } else {
                     price_base.innerHTML = price.PRINT_PRICE
                 }
@@ -2562,7 +2568,7 @@ $(document).on('click', '.open-fast-window', function () {
         }
 
         //  PROPS
-        if (product.ADVANTAGES_PRODUCT.length > 0) {
+        if (Array.isArray(product.ADVANTAGES_PRODUCT) !== false) {
 
             let props_box = BX.findChildByClassName(box_product, 'props-box-child-advanse');
             $.each(product.ADVANTAGES_PRODUCT, function (k, prop) {

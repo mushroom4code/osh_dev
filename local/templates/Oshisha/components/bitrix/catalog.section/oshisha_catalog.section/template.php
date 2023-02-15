@@ -191,9 +191,9 @@ foreach ($arResult['ITEMS'] as $item) {
 }
 
 $iblock_id = IBLOCK_CATALOG;
-$result = $DB->Query("SELECT ID,CODE,SEE_POPUP_WINDOW FROM b_iblock_property WHERE IBLOCK_ID=$iblock_id");
-if ($result !== false) {
-    while ($collectionPropChecked = $result->Fetch()) {
+$resQuery = Enterego\EnteregoSettings::getPropSetting($iblock_id, 'SEE_POPUP_WINDOW');
+if (!empty($resQuery)) {
+    while ($collectionPropChecked = $resQuery->Fetch()) {
         $prop_see_in_window[$collectionPropChecked['CODE']] = $collectionPropChecked;
     }
 }

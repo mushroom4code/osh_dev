@@ -3,11 +3,15 @@
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_before.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_after.php");
 IncludeModuleLangFile(__FILE__);
-$adminPage->Init();
-$adminMenu->Init($adminPage->aModules);
 /**
  * @var CMain|CAllMain $APPLICATION
+ * @var CAdminPage $adminPage
+ * @var CAdminMenu $adminMenu
  */
+
+$adminPage->Init();
+$adminMenu->Init($adminPage->aModules);
+
 if (empty($adminMenu->aGlobalMenu)) {
     $APPLICATION->AuthForm(GetMessage("ACCESS_DENIED"));
 }
@@ -16,7 +20,6 @@ $APPLICATION->SetTitle("Настройка свойств товара для б
 
 
 $arProps = $res = [];
-global $DB;
 $iblock_id = IBLOCK_CATALOG;
 
 $properties = CIBlockProperty::GetList(
@@ -30,9 +33,11 @@ while ($prop_fields = $properties->GetNext()) {
     $arProps[$prop_fields['ID']]['CODE'] = $prop_fields['CODE'];
 }
 
-$result = $DB->Query("SELECT ID,CODE,SEE_POPUP_WINDOW FROM b_iblock_property WHERE IBLOCK_ID=$iblock_id");
-if ($result !== false) {
-    while ($collectionPropChecked = $result->Fetch()) {
+
+$resQuery = Enterego\EnteregoSettings::getPropSetting($iblock_id, 'SEE_POPUP_WINDOW');
+
+if (!empty($resQuery)) {
+    while ($collectionPropChecked = $resQuery->Fetch()) {
         $res[$collectionPropChecked['ID']] = $collectionPropChecked;
     }
 } ?>
@@ -57,10 +62,9 @@ if ($REQUEST_METHOD == "POST" && check_bitrix_sessid() && $_REQUEST['action'] ==
             $see_popup = 'Y';
         }
 
-        $result = $DB->Update(
-            'b_iblock_property',
-            array("SEE_POPUP_WINDOW" => "'$see_popup'"),
-            "WHERE IBLOCK_ID=$iblock_id AND ID=$id");
+        if ($see_popup != $checked_prop['SEE_POPUP_WINDOW']) {
+            Enterego\EnteregoSettings::updatePropSetting($iblock_id, $see_popup, 'SEE_POPUP_WINDOW', $id);
+        }
     }
 
     if ($apply != "") {
