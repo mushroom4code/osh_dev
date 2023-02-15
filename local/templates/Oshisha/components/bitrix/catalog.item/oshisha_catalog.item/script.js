@@ -2615,7 +2615,7 @@ $(document).on('click', '.open-fast-window', function () {
             $(wrapper).find('.like-modal a[data-method="favorite"]').attr('data-fav-controls', 'true').attr('style', 'color:red');
         }
         if (parseInt(product.LIKE.COUNT_LIKE) !== 0) {
-            $(wrapper).find('.like-modal a[data-method="like"]').attr('data-fav-controls', 'true').attr('style', 'color:red');
+            $(wrapper).find('.like-modal a[data-method="like"]').attr('data-like-controls', 'true').attr('style', 'color:red');
         }
     }
 });
