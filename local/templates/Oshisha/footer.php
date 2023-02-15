@@ -206,7 +206,7 @@ $option = $option_site; ?>
             </div>
         <?php } ?>
         <div class="text_footer_mini d-flex column_section p-3">
-            <span class="mr-2">© 2014-<?= date('Y'); ?> <?=  $option->COMPANY ?>.</span><span>Все права защищены</span>
+            <span class="mr-2">© 2014-<?= date('Y'); ?> <?= $option->COMPANY ?>.</span><span>Все права защищены</span>
         </div>
     </div>
     <!--FOOTER END-->
@@ -320,13 +320,65 @@ $option = $option_site; ?>
         </div>
 
     </div>
-    <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
+    <?php if (!$USER->IsAuthorized() && !$_SESSION['new_domain_oshisha']) { ?>
+        <div style="display:none;">
+            <div id="trueModalDomain" class="box-modal">
+                <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
+                <div class="flex_block">
+                    <div class="age-access-inner">
+                        <div class="age-access__text">
+                            <div class="age-access__text-part1">
+                                <p class="font-14 mb-0" style="line-height: 2">
+                                    Дорогой друг,<br>
+                                    Мы рады видеть тебя на нашем обновленном сайте, 😊<br>
+                                    OSHISHA развивается в ногу со временем,
+                                    чтобы тебе было максимально удобно и безопасно делать у нас заказ.💪<br>
+                                    Ты можешь пользоваться старым дизайном, но только до <b>28.02.2023 г.</b><br>
+                                    Мы будем очень рады твоему отзыву - он поможет нам стать ещё лучше🤜🤛<br>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="age-access__buttons mt-3">
+                            <a href="#"
+                               class="age-access__button font-12 age-access__yes link_red_button arcticmodal-close"
+                               data-option="1" data-auth="false">Продолжить здесь</a>
+                            <a href="https://oshisha.online/"
+                               class="link_red_button age-access__button font-12 age-access__yes arcticmodal-close">
+                                Перейти на старый сайт</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+
+                    let ageAccess = sessionStorage.getItem("age_access");
+                    if (ageAccess) {
+
+                        setTimeout(function () {
+                            let new_domain_oshisha = sessionStorage.getItem("new_domain_oshisha");
+                            if (!new_domain_oshisha) {
+                                $("#trueModalDomain").arcticmodal(
+                                    {
+                                        closeOnOverlayClick: false,
+                                        afterClose: function (data, el) {
+                                            sessionStorage.setItem("new_domain_oshisha", "1");
+                                        }
+                                    });
+                            }
+                        }, 3000);
+
+                    }
+
+                });
+            </script>
+        </div>
+    <? }
+    if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
         <div style="display:none;">
             <div id="trueModal" class="box-modal">
                 <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
-
                 <div class="flex_block">
-
                     <div class="age-access-inner">
                         <div class="age-access__text">
                             <div class="age-access__text-part1">
@@ -338,14 +390,11 @@ $option = $option_site; ?>
                         </div>
                         <div class="age-access__buttons">
                             <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close"
-                               data-option="1" data-auth="false">Да, мне
-                                больше 18 лет</a>
+                               data-option="1" data-auth="false">Да, мне больше 18 лет</a>
                             <a href="<?= $option->ATTENT_NOT ?>" class="age-access__button link_red_button"
                                data-option="2" rel="nofollow">Нет</a>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -358,8 +407,19 @@ $option = $option_site; ?>
                         {
                             closeOnOverlayClick: false,
                             afterClose: function (data, el) {
-                                console.log('save');
                                 sessionStorage.setItem("age_access", "1");
+                                setTimeout(function () {
+                                    let new_domain_oshisha = sessionStorage.getItem("new_domain_oshisha");
+                                    if (!new_domain_oshisha) {
+                                        $("#trueModalDomain").arcticmodal(
+                                            {
+                                                closeOnOverlayClick: false,
+                                                afterClose: function (data, el) {
+                                                    sessionStorage.setItem("new_domain_oshisha", "1");
+                                                }
+                                            });
+                                    }
+                                }, 3000);
 
                             }
                         });
@@ -367,12 +427,7 @@ $option = $option_site; ?>
             });
 
             // age access
-
-
         </script>
-    <? } ?>
-    <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
-
     <? } ?>
     <script>
         $(document).ready(function () {
