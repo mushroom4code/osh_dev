@@ -844,7 +844,8 @@ div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell 
     font-weight: 100;
 }
 
-div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell-o.filled {
+div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell-o.filled,
+div.bx_catalog_item_controls > div.detail_popup > i.fa-bell-o.filled {
     color: red;
 }
 
@@ -2473,6 +2474,15 @@ a.bx-advertisingbanner-btn {
     transform: rotate(225deg);
     top: -2.5%;
 }
+
+#popup_mess.catalog_popup .box_with_message_prodNot:after {
+    top: 96.5%;
+}
+
+#popup_mess.catalog_popup .box_with_message_prodNot {
+    top: 27%;
+}
+
 
 .link_message_box_product > i {
     margin-right: 10px;
@@ -5425,8 +5435,48 @@ li, ul {
     cursor: default;
 }
 
+@media (min-width: 1709px) {
+    .popup_mess_prods .box_with_message_prodNot {
+        top: 65% !important;
+    }
+}
+
+@media (min-width: 1564px) {
+    .popup_mess_prods div.box_with_message_prodNot {
+        left: 2% !important;
+    }
+}
+
+
+
+@media (min-width: 576px) and (max-width: 999px) {
+    .popup_mess_prods div.box_with_message_prodNot {
+        left: 26% !important;
+        top: 66% !important;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 649px){
+    .popup_mess_prods div.box_with_message_prodNot {
+        left: 26% !important;
+        top: 68% !important;
+    }
+}
+
+@media (max-width: 445px) {
+    .popup_mess_prods div.box_with_message_prodNot {
+        left: 18% !important;
+    }
+}
+
+@media (max-width: 319px) {
+    .popup_mess_prods div.box_with_message_prodNot {
+        top: 61% !important;
+    }
+}
+
 .popup_mess_prods .box_with_message_prodNot {
-    left: initial !important;
+    left: 10% !important;
 }
 
 .overlay_top {

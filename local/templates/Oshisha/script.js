@@ -556,7 +556,7 @@ $(document).ready(function () {
         if ($(this).hasClass('subscribed')) {
             $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
                 '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                'К сожалению, товара нет в наличии. Вы уже подписан на товар, вас уведомят когда товар появится в наличии.</p>' +
+                'К сожалению, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
                 '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 '<i class="fa fa-bell-o" aria-hidden="true"></i>Отменить подписку</a>' +

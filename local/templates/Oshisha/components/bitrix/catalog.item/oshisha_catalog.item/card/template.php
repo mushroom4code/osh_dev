@@ -403,9 +403,10 @@ $found_key = array_search((string)$item['ID'], $subscription_item_ids);
             ?>
         </div>
         <div style="clear: both;"></div>
-        <div id="popup_mess" class="<?= $USER->IsAuthorized() ? '' : 'noauth'?>
+        <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth'?>
             <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>"
-             data-subscription_id="<?= (isset($found_key) && ($found_key !== false)) ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>" data-product_id="<?= $item['ID']; ?>">
+             data-subscription_id="<?= (isset($found_key) && ($found_key !== false)) ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>"
+             data-product_id="<?= $item['ID']; ?>">
         </div>
     </div>
     <?php }

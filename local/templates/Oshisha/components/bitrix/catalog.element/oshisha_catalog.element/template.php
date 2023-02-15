@@ -247,6 +247,21 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
     $show_price = false;
 }
 global $option_site;
+
+
+
+$filter['USER_ID'] = $id_USER;
+$queryObject = Bitrix\Catalog\SubscribeTable::getList(array('select' => array('ID', 'ITEM_ID', 'USER_CONTACT'), 'filter' => $filter));
+$listCurrentUserSubsriptions = array();
+while ($subscribe = $queryObject->fetch())
+{
+    $listCurrentUserSubsriptions['ITEMS_IDS'][] = $subscribe['ITEM_ID'];
+    $listCurrentUserSubsriptions['SUBSCRIPTIONS'][] = $subscribe;
+}
+
+$subscription_item_ids = array_column($listCurrentUserSubsriptions["SUBSCRIPTIONS"], 'ITEM_ID');
+$found_key = array_search((string)$arResult['ID'], $subscription_item_ids);
+
 ?>
     <div class="bx-catalog-element  cat-det <?php if (!$show_price) { ?>blur_photo<?php } ?>"
          id="<?= $itemIds['ID'] ?>">
@@ -575,10 +590,10 @@ global $option_site;
                     <?php }
                     else { ?>
                         <div class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center
-                                                    justify-content-between bx_catalog_item"
+                                                     bx_catalog_item"
                             <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
                              data-entity="quantity-block">
-                            <div class="d-flex flex-row align-items-center ">
+                            <div class="d-flex flex-row align-items-center mr-3">
                                 <div class="product-item-amount-field-contain">
                                                                 <span class=" no-select minus_icon add2basket basket_prod_detail mr-3"
                                                                       style="pointer-events: none;">
@@ -593,17 +608,26 @@ global $option_site;
                                 </div>
                                 <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
                                    rel="nofollow"
-                                   class="basket_prod_detail detail_popup detail_disabled"
+                                   class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                                   <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?> detail_disabled"
                                    data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                    data-product_id="<?= $arResult['ID']; ?>"
                                    title="Добавить в корзину">Забронировать</a>
                             </div>
-                            <div id="popup_mess" class="popup_mess_prods"></div>
                             <div id="result_box" style="width: 100%;position: absolute;"></div>
-                            <div class="detail_popup"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
+                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                                <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>">
+                                <i class="fa fa-bell-o <?= (isset($found_key) && ($found_key !== false)) ? 'filled' : ''?>" aria-hidden="true"></i>
+                            </div>
+                            <div id="popup_mess" class="popup_mess_prods <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>"
+                                 data-subscription_id="<?= (isset($found_key) && ($found_key !== false)) ? $listCurrentUserSubsriptions['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>"
+                                 data-product_id="<?= $arResult['ID']; ?>"></div>
                         </div>
                         <div class="mb-4 d-flex justify-content-between align-items-center">
-                            <div class="not_product detail_popup">Нет в наличии</div>
+                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                                <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>">
+                            Нет в наличии
+                            </div>
                         </div>
                         <?php
                     }

@@ -196,11 +196,10 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 $filter['USER_ID'] = $id_USER;
 
 $queryObject = Bitrix\Catalog\SubscribeTable::getList(array('select' => array('ID', 'ITEM_ID', 'USER_CONTACT'), 'filter' => $filter));
-//$subscribeManager = new SubscribeManager;
+
 $listCurrentUserSubsriptions = array();
 while ($subscribe = $queryObject->fetch())
 {
-//    $subscribeManager->setSessionOfSibscribedProducts($subscribe['ITEM_ID']);
     $listCurrentUserSubsriptions['ITEMS_IDS'][] = $subscribe['ITEM_ID'];
     $listCurrentUserSubsriptions['SUBSCRIPTIONS'][] = $subscribe;
 }
