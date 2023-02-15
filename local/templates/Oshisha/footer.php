@@ -343,7 +343,7 @@ $option = $option_site; ?>
                                class="age-access__button font-12 age-access__yes link_red_button arcticmodal-close"
                                data-option="1" data-auth="false">Продолжить здесь</a>
                             <a href="https://oshisha.online/"
-                               class="link_red_button age-access__button font-12 age-access__yes arcticmodal-close">
+                               class="link_red_button age-access__button font-12 age-access__yes">
                                 Перейти на старый сайт</a>
                         </div>
                     </div>
