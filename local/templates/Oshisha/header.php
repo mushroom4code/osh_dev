@@ -158,6 +158,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         </button>
                     </div></a>
                     </span>
+                    <a href="https://oshisha.online/" class="red_text text_font_13 font-weight-bold">Вернуться на старый
+                        сайт</a>
                     <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
                         отзыв</a>
                 </div>
