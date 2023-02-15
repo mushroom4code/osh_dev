@@ -173,15 +173,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
         if($userContact)
         {
-            $subscribeData = array(
-                'unSubscribe' => 'Y',
-                'userContact' => $userContact,
-                'subscribeId' => $_POST['subscription_id'],
-                'productId' => $_POST['item_id'],
-            );
+            $subscribe = \Bitrix\Catalog\SubscribeTable::getList(array(
+                'select' => array('CNT'),
+                'filter' => array(
+                    '=ID' => intval($_POST['subscription_id']),
+                    '=ITEM_ID' => $_POST['item_id'],
+                    '=USER_ID' => $userId
+                ),
+                'runtime' => array(new \Bitrix\Main\Entity\ExpressionField('CNT', 'COUNT(*)'))
+            ))->fetch();
+            if(intval($subscribe['CNT']))
+            {
+                $subscribeId = \Bitrix\Catalog\SubscribeTable::delete(intval($_POST['subscription_id']));
+            }
 
-            $subscribeId = $subscribeManager->unSubscribe($subscribeData);
-            if($subscribeId)
+            if($subscribeId->isSuccess())
             {
                 echo Bitrix\Main\Web\Json::encode(
                     array('success' => true, 'message' => 'unsubscribed'));
@@ -190,16 +196,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             }
             else
             {
-                $errorObject = current($subscribeManager->getErrors());
                 $errors = array('error' => true);
-                if($errorObject)
-                {
-                    $errors['message'] = $errorObject->getMessage();
-                    if($errorObject->getCode() == $subscribeManager::ERROR_ADD_SUBSCRIBE_ALREADY_EXISTS)
-                    {
-                        $errors['setButton'] = true;
-                    }
-                }
+                $errors['message'] = "Subscription does not exist";
                 echo Bitrix\Main\Web\Json::encode($errors);
                 require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
                 die();
