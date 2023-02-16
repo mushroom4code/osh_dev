@@ -80,17 +80,17 @@ if (isset($arResult['ITEM'])) {
         $actualItem = $item;
     }
 
+//    $price = $item['ITEM_START_PRICE'];
     if ($arParams['PRODUCT_DISPLAY_MODE'] === 'N' && $haveOffers) {
-        $price = $item['ITEM_START_PRICE'];
         $minOffer = $item['OFFERS'][$item['ITEM_START_PRICE_SELECTED']];
         $measureRatio = $minOffer['ITEM_MEASURE_RATIOS'][$minOffer['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
         $morePhoto = $item['MORE_PHOTO'];
     } else {
-        $price = $item['ITEM_START_PRICE'];
         $measureRatio = $price['MIN_QUANTITY'];
         $morePhoto = $actualItem['MORE_PHOTO'];
     }
-    $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
+
+    $price = $item['PRICES_CUSTOM'];
 //print_r($item['PROPERTIES']['DISKONT']);
 //    if ($USER->IsAuthorized()) {
 //        $userId = $USER->GetID();
@@ -111,31 +111,6 @@ if (isset($arResult['ITEM'])) {
 //            }
 //        }
 //    }
-
-    foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
-
-        foreach ($PRICE['PRICES'] as $price_key => $price_val) {
-
-
-            if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
-                if ($price_key == SALE_PRICE_TYPE_ID) {
-                    $price['SALE_PRICE'] = $price_val;
-                }
-            }
-
-            if ((int)$price_val['PRICE_TYPE_ID'] === RETAIL_PRICE) {
-                $price['PRICE_DATA'][0] = $price_val;
-                $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
-            } else if ((int)$price_val['PRICE_TYPE_ID'] === BASIC_PRICE) {
-                $price['PRICE_DATA'][1] = $price_val;
-                $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
-            } elseif ((int)$price_val['PRICE_TYPE_ID'] === B2B_PRICE) {
-                $price['PRICE_DATA'][2] = $price_val;
-                $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
-            }
-            ksort($price['PRICE_DATA']);
-        }
-    }
 
     $showSlider = is_array($morePhoto) && count($morePhoto) > 1;
     $showSubscribe = $arParams['PRODUCT_SUBSCRIPTION'] === 'Y' && ($item['CATALOG_SUBSCRIBE'] === 'Y' || $haveOffers);
