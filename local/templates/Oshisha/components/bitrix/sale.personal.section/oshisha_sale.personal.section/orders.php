@@ -52,7 +52,7 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
 <div class="hides" id="personal_orders">
     <h5 class="mb-4"><b>Заказы</b></h5>
     <div class="d-flex flex-row justify-content-between mb-4 align-items-center">
-        <div style="display:none;">
+        <div style="">
             <span class="sort_orders retail_orders">Розничные заказы</span>
             <span class="sort_orders wholesale_orders" style="display:none;">Оптовые заказы</span>
         </div>
@@ -64,10 +64,10 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
                         aria-hidden="true"></i>
                 <div class="sort_orders_elements">
                     <ul>
-                        <li>Новые</li>
-                        <li>Старые</li>
-                        <li>Дешёвые</li>
-                        <li>Дорогие</li>
+                        <li class="order_sort_item">Новые</li>
+                        <li class="order_sort_item">Старые</li>
+                        <li class="order_sort_item">Дешёвые</li>
+                        <li class="order_sort_item">Дорогие</li>
                     </ul>
                 </div>
             </a>
