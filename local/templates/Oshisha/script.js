@@ -2058,6 +2058,23 @@ $(document).ready(function () {
             $(this).css('border-radius', '10px');
             $(this).find('i').css('transform', 'rotate(0)');
         }
+    });
+
+    $('.order_sort_item').on('click', function () {
+        $(this).closest('.sort_orders').find('.sort_orders_by').text($(this).text());
+        let typeSort = $(this).text();
+        let url = document.location.search;
+        $.ajax({
+            url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
+            type: 'POST',
+            data: {url: JSON.stringify(url), typeSort: JSON.stringify(typeSort)},
+            success: function (response) {
+                if (response != 'error') {
+                    $('.sale-order-list-inner-container').remove();
+                    $('div#personal_orders').append(response);
+                }
+            }
+        })
     })
 
     $(document).on('click', function (e) {
@@ -2076,6 +2093,7 @@ $(document).ready(function () {
     })
 
     $(document).on('click', '.retail_orders', function () {
+        console.log('entry', '');
         $(this).closest('div').find('.wholesale_orders').css({
             'background': '#F0F0F0',
             'borderRadius': '10px'
