@@ -193,16 +193,7 @@ foreach ($arResult['ITEMS'] as $item) {
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 
-$filter['USER_ID'] = $id_USER;
 
-$queryObject = Bitrix\Catalog\SubscribeTable::getList(array('select' => array('ID', 'ITEM_ID', 'USER_CONTACT'), 'filter' => $filter));
-
-$listCurrentUserSubsriptions = array();
-while ($subscribe = $queryObject->fetch())
-{
-    $listCurrentUserSubsriptions['ITEMS_IDS'][] = $subscribe['ITEM_ID'];
-    $listCurrentUserSubsriptions['SUBSCRIPTIONS'][] = $subscribe;
-}
 ?>
 <div class="row<?= $themeClass ?>">
     <div class="col p-0">
@@ -286,7 +277,7 @@ while ($subscribe = $queryObject->fetch())
                                             'BIG_DISCOUNT_PERCENT' => 'N',
                                             'BIG_BUTTONS' => 'N',
                                             'SCALABLE' => 'N',
-                                            'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -323,7 +314,7 @@ while ($subscribe = $queryObject->fetch())
                                                 'AR_BASKET' => $arBasketItems,
                                                 'F_USER_ID' => $FUser_id,
                                                 'ID_PROD' => $item['ID'],
-                                                'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                                'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                             ),
                                             'PARAMS' => $generalParams
                                                 + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -373,7 +364,7 @@ while ($subscribe = $queryObject->fetch())
                                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
                                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                                'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                                'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                             ),
                                             'PARAMS' => $generalParams
                                                 + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -423,7 +414,7 @@ while ($subscribe = $queryObject->fetch())
                                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                                             'COUNT_FAV' => $item['COUNT_FAV'],
                                             'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                            'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -456,7 +447,7 @@ while ($subscribe = $queryObject->fetch())
                                                         'SCALABLE' => 'N',
                                                         'AR_BASKET' => $arBasketItems,
                                                         'F_USER_ID' => $FUser_id,
-                                                        'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                                     ),
                                                     'PARAMS' => $generalParams
                                                         + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
@@ -500,7 +491,7 @@ while ($subscribe = $queryObject->fetch())
                                                         'AR_BASKET' => $arBasketItems,
                                                         'F_USER_ID' => $FUser_id,
                                                         'ID_PROD' => $item['ID'],
-                                                        'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                                     ),
                                                     'PARAMS' => $generalParams
                                                         + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
@@ -534,7 +525,7 @@ while ($subscribe = $queryObject->fetch())
                                             'AR_BASKET' => $arBasketItems,
                                             'F_USER_ID' => $FUser_id,
                                             'ID_PROD' => $item['ID'],
-                                            'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -583,7 +574,7 @@ while ($subscribe = $queryObject->fetch())
                                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
                                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                                'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                                'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                             ),
                                             'PARAMS' => $generalParams
                                                 + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -620,7 +611,7 @@ while ($subscribe = $queryObject->fetch())
                                             'AR_BASKET' => $arBasketItems,
                                             'F_USER_ID' => $FUser_id,
                                             'ID_PROD' => $item['ID'],
-                                            'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -653,7 +644,7 @@ while ($subscribe = $queryObject->fetch())
                                                         'SCALABLE' => 'N',
                                                         'AR_BASKET' => $arBasketItems,
                                                         'F_USER_ID' => $FUser_id,
-                                                        'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                                     ),
                                                     'PARAMS' => $generalParams
                                                         + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
@@ -696,7 +687,7 @@ while ($subscribe = $queryObject->fetch())
                                                         'AR_BASKET' => $arBasketItems,
                                                         'F_USER_ID' => $FUser_id,
                                                         'ID_PROD' => $item['ID'],
-                                                        'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                                     ),
                                                     'PARAMS' => $generalParams
                                                         + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
@@ -729,7 +720,7 @@ while ($subscribe = $queryObject->fetch())
                                             'AR_BASKET' => $arBasketItems,
                                             'F_USER_ID' => $FUser_id,
                                             'ID_PROD' => $item['ID'],
-                                            'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -772,7 +763,7 @@ while ($subscribe = $queryObject->fetch())
                                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                                             'COUNT_FAV' => $item['COUNT_FAV'],
                                             'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                            'CURRENT_USER_SUBSCRIPTIONS' => $listCurrentUserSubsriptions
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])

@@ -247,21 +247,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
     $show_price = false;
 }
 global $option_site;
-
-
-
-$filter['USER_ID'] = $id_USER;
-$queryObject = Bitrix\Catalog\SubscribeTable::getList(array('select' => array('ID', 'ITEM_ID', 'USER_CONTACT'), 'filter' => $filter));
-$listCurrentUserSubsriptions = array();
-while ($subscribe = $queryObject->fetch())
-{
-    $listCurrentUserSubsriptions['ITEMS_IDS'][] = $subscribe['ITEM_ID'];
-    $listCurrentUserSubsriptions['SUBSCRIPTIONS'][] = $subscribe;
-}
-
-$subscription_item_ids = array_column($listCurrentUserSubsriptions["SUBSCRIPTIONS"], 'ITEM_ID');
-$found_key = array_search((string)$arResult['ID'], $subscription_item_ids);
-
 ?>
     <div class="bx-catalog-element  cat-det <?php if (!$show_price) { ?>blur_photo<?php } ?>"
          id="<?= $itemIds['ID'] ?>">
@@ -609,23 +594,23 @@ $found_key = array_search((string)$arResult['ID'], $subscription_item_ids);
                                 <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
                                    rel="nofollow"
                                    class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                                   <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?> detail_disabled"
+                                   <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?> detail_disabled"
                                    data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                    data-product_id="<?= $arResult['ID']; ?>"
                                    title="Добавить в корзину">Забронировать</a>
                             </div>
                             <div id="result_box" style="width: 100%;position: absolute;"></div>
                             <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                                <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>">
-                                <i class="fa fa-bell-o <?= (isset($found_key) && ($found_key !== false)) ? 'filled' : ''?>" aria-hidden="true"></i>
+                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>">
+                                <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : ''?>" aria-hidden="true"></i>
                             </div>
-                            <div id="popup_mess" class="popup_mess_prods <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>"
-                                 data-subscription_id="<?= (isset($found_key) && ($found_key !== false)) ? $listCurrentUserSubsriptions['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>"
+                            <div id="popup_mess" class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>"
+                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : ''?>"
                                  data-product_id="<?= $arResult['ID']; ?>"></div>
                         </div>
                         <div class="mb-4 d-flex justify-content-between align-items-center">
                             <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                                <?= (isset($found_key) && ($found_key !== false)) ? 'subscribed' : ''?>">
+                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>">
                             Нет в наличии
                             </div>
                         </div>
