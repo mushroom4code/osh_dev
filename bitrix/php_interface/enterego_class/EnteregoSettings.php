@@ -44,14 +44,15 @@ class EnteregoSettings
     {
         $check = COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE');
         $dateOption = json_decode(COption::GetOptionString('activation_price_admin', 'PERIOD'));
-        $now = strtotime(date_format(date_create('now'), 'Y-m-dTH:s'));
+
+        define("USE_CUSTOM_SALE_PRICE", false);
+
         if (!empty($dateOption->end) && !empty($dateOption->start)) {
             $start = strtotime(date($dateOption->start));
+            $now = strtotime(date_format(date_create('now'), 'Y-m-dTH:s'));
             $end = strtotime(date($dateOption->end));
             if ($check === 'true' && ($start <= $now && $end > $now)) {
                 define("USE_CUSTOM_SALE_PRICE", true);
-            } else {
-                define("USE_CUSTOM_SALE_PRICE", false);
             }
         }
     }
