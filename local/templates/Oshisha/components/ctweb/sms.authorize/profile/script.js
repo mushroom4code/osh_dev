@@ -348,6 +348,7 @@
                     }
                 }.bind(this), 100);
 
+                this.obCode.value = '';
                 BX.show(this.obCode.closest('div'));
 
                 //установка курсора на начало
