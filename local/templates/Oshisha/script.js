@@ -167,14 +167,36 @@ $(document).ready(function () {
             function () {
                 let text_taste = $(this).closest('div.form-check').find('label').attr('id');
                 let code = $(this).closest('div.form-check').find('label').attr('for');
-                /*  $(box_for_tasted).append('<span style="padding: 8px 25px;border:1px solid #f55f5c;color: white;\n' +
-                      'margin-right: 10px;border-radius: 10px;font-size: 11px;">' + text_taste + '</span>');*/
-                /* $('#osh-filter-horizontal').append('<div id="osh-filter-horizontal-item" class="d-inline-block" data-osh-filter-state="hide">'+
-                 '<div id="item-'+code+'" class="osh-filter-item osh-filter-horizontal-border d-inline-block">' + text_taste + '<span onclick="smartFilter.removeHorizontalFilter(\''+code+'\')" class="d-inline-block osh-filter-horizontal-remove"></span></div></div>');
-     */
             }
         );
     }
+
+    $('.js__show-all-prices').on('click', function () {
+        const showButton = $(this),
+            listHeader = showButton.closest('.info-prices-box-hover'),
+            listWrap = listHeader.find('.js__all-prices'),
+            priceList = listWrap.find('.prices-block'),
+            yDelta = priceList.outerHeight();
+
+        if (listWrap.height() !== 0) {
+            listHeader.stop().animate({bottom: 0}, 600);
+            listWrap.stop().animate({height: 0}, 600, function () {
+                showButton.css({borderRadius: 0}).find('span').text('Показать доп. цены');
+            });
+
+        } else {
+            showButton.find('span').text('Скрыть доп. цены').css({borderRadius: '0 0 10px 10px'});
+            listHeader.stop().animate({bottom: yDelta}, 800);
+            listWrap.stop().animate({height: yDelta}, 800);
+        }
+        listHeader.toggleClass('active');
+        return false;
+    })
+
+
+
+
+
 
     $('.link_header_catalog').on('click', function () {
         $('#MenuHeader .Icon').click();

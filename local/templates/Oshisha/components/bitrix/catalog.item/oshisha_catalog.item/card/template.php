@@ -242,7 +242,10 @@ $productTitle = str_replace("\xC2\xA0", " ", $productTitle); ?>
                             <?php if (!$sale) { ?>
                                 <div class="info-prices-box-hover cursor-pointer ml-2">
                                     <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-                                    <div class="position-absolute d-hide">
+                                    <div class="d-flex align-items-center justify-content-center font-11 show-prices js__show-all-prices">
+                                        <span>Показать доп. цены</span>
+                                    </div>
+                                    <div class="position-absolute js__all-prices">
                                         <div class="d-flex flex-column prices-block">
                                             <div class="prices-block-close js__prices-block-close"></div>
                                             <?php foreach ($price['PRICE_DATA'] as $items) { ?>

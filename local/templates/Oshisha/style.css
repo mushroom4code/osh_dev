@@ -173,13 +173,33 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     color: #d5d5d5;
     vertical-align: middle;
 }
+.by-card .info-price {
+    display: none;
+}
 
 .info-prices-box-hover {
     z-index: 1000;
 }
 
+.by-card .info-prices-box-hover {
+    width: 100%;
+    z-index: 1012;
+    height: auto;
+    background: #E5E5E5;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin: 0 !important;
+    float: none;
+    transform: translate(0,0);
+    border-radius: 0 0 5px 5px;
+}
+.by-card .info-prices-box-hover.active {
+    border-radius: 0;
+}
 
-.info-prices-box-hover:hover .d-hide, .info-prices-box-hover:focus .d-hide {
+/*.by-line .info-prices-box-hover:hover .d-hide, */
+.by-line .info-prices-box-hover:focus .d-hide {
     display: block;
 }
 
@@ -4813,7 +4833,9 @@ li, ul {
     }
 
 }
-
+.by-card .bx_catalog_item_container {
+    padding: 15px 20px 45px;
+}
 @media (max-width: 1440px) {
     .by-card .bx_catalog_item_container {
         padding: 10px 10px;
@@ -5892,7 +5914,369 @@ header {
     width: auto;
 }
 
+.js__tastes-list {
+    position: relative;
+    padding: 0 10px 0 0;
+}
+.toggle_taste.card-price.js__tastes {
+    position: relative;
+    z-index: 1011;
+    min-height: 60px;
+}
+.by-card .toggle_taste.card-price.js__tastes {
+    z-index: 1012;
+}
+@media screen and (max-width: 768px) {
+    .toggle_taste.card-price.js__tastes {
+        min-height: 30px;
+    }
+}
+
+.js__tastes .variation_taste_toggle {
+    border-top: 6px solid #666;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 0 solid transparent;
+    position: absolute;
+    right: 0;
+    top: 7px;
+    width: 0;
+    height: 0;
+    transition: all 0.3s linear;
+    cursor: pointer;
+    z-index: 200;
+}
+
+.js__tastes .variation_taste_toggle:hover {
+    border-top-color: #F55F5C;
+}
+.js__tastes .variation_taste_toggle.hide {
+    display: none;
+}
+
+@media screen and (max-width: 1440px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: none;
+    }
+}
+@media screen and (max-width: 1340px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: block;
+    }
+}
+@media screen and (max-width: 1300px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: none;
+    }
+}
+@media screen and (max-width: 1150px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: block;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: none;
+    }
+}
+@media screen and (max-width: 768px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: block;
+    }
+}
+@media screen and (max-width: 480px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: none;
+    }
+}
+@media screen and (max-width: 365px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: block;
+    }
+}
+.js__tastes .variation_taste {
+    position: absolute;
+    flex-flow: row wrap;
+    display: flex;
+    z-index: 200;
+    width: 100%;
+    height: 26px;
+    transition: all 0.3s linear;
+    padding: 0 20px 0 0;
+    overflow: hidden;
+}
+.js__tastes .variation_taste.show_padding {
+    padding: 0;
+}
+@media screen and (max-width: 1340px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0 20px 0 0;
+    }
+}
+@media screen and (max-width: 1300px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0;
+    }
+}
+@media screen and (max-width: 1150px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0 20px 0 0;
+    }
+}
+@media screen and (max-width: 1080px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0 20px 0 0;
+    }
+}
+@media screen and (max-width: 860px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0;
+    }
+}
+.js__tastes.active .variation_taste_toggle {
+    transform: rotate(180deg);
+}
+.js__tastes.active .variation_taste {
+    height: auto;
+}
+
+.by-card .bx_catalog_item_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    /*z-index: 1100;*/
+    z-index: 1011;
+    filter: blur(3px);
+    background: transparent none;
+    backdrop-filter: blur(1px);
+}
+
 body.hide-jivo > jdiv {
     position: relative !important;
     z-index: 1500 !important;
+}
+.by-card .variation_taste .taste {
+    font-size: 11px;
+    font-weight: normal;
+    min-width: auto;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 4px;
+    margin: 0 3px 3px 0;
+    min-height: 24px;
+}
+@media screen and (max-width: 1366px) {
+    .by-card .variation_taste .taste {
+        line-height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0 3px 3px 0;
+    }
+}
+.by-card .variation_taste .taste-small {
+    min-width: 80px;
+}
+@media screen and (max-width: 1600px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 65px;
+    }
+}
+@media screen and (max-width: 1366px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 65px;
+    }
+}
+@media screen and (max-width: 1260px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 50px;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 65px;
+    }
+}
+@media screen and (max-width: 380px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 55px;
+    }
+}
+
+.by-card .variation_taste .taste-normal {
+    min-width: 65px;
+}
+@media screen and (max-width: 1450px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 60px;
+    }
+}
+@media screen and (max-width: 1340px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 75px;
+    }
+}
+@media screen and (max-width: 1260px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 65px;
+    }
+}
+@media screen and (max-width: 1260px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 70px;
+    }
+}
+@media screen and (max-width: 1080px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 70px;
+    }
+}
+
+.by-card .variation_taste .taste-long {
+    min-width: 100px;
+}
+@media screen and (max-width: 1635px) {
+    .by-card .variation_taste .taste-long {
+        min-width: 70px;
+    }
+}
+@media screen and (max-width: 1340px) {
+    .by-card .variation_taste .taste-long {
+        font-size: 10px;
+        min-width: 65px;
+    }
+}
+@media screen and (max-width: 480px) {
+    .by-card .variation_taste .taste-long {
+        min-width: 80px;
+    }
+}
+.by-card .variation_taste .taste-xxl{
+    width: 100%;
+    font-size: 11px;
+    line-height: 24px;
+    padding: 0 4px;
+}
+@media screen and (max-width: 1510px) {
+    .by-card .variation_taste .taste-xxl{
+        font-size: 10px;
+        line-height: 1;
+        padding: 7px 4px;
+    }
+}
+@media screen and (max-width: 1340px) {
+    .by-card .variation_taste .taste-xxl{
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+@media screen and (max-width: 1339px) {
+    .by-card .variation_taste .taste-xxl{
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+@media screen and (max-width: 1300px) {
+    .by-card .variation_taste .taste-xxl{
+        line-height: 24px;
+        padding: 0 4px;
+    }
+}
+@media screen and (max-width: 1173px) {
+    .by-card .variation_taste .taste-xxl{
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .by-card .variation_taste .taste-xxl{
+        line-height: 24px;
+        padding: 0 4px;
+    }
+}
+@media screen and (max-width: 767px) {
+    .by-card .variation_taste .taste-xxl{
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+@media screen and (max-width: 480px) {
+    .by-card .variation_taste .taste-xxl{
+        line-height: 24px;
+        padding: 0 4px;
+    }
+}
+
+@media screen and (max-width: 340px) {
+    .by-card .variation_taste .taste-xxl{
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+
+.bx-catalog-element .variation_taste .taste {
+    display: inline-block;
+}
+.by-line .show-prices {
+    display: none !important;
+}
+.by-card .show-prices {
+    padding: 7px 10px;
+    display: block;
+    z-index: 1015;
+    position: relative;
+}
+.by-card .show-prices span {
+    /*display: inline-flex;*/
+    /* align-items: center; */
+    /* justify-content: center; */
+    display: inline-block;
+    position: relative;
+    padding: 0 0 0 15px;
+    min-width: 130px;
+    text-align: left;
+}
+.by-card .show-prices span::before {
+    border-top: 0 solid transparent;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #666;
+    position: absolute;
+    content: '';
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform: translateY(-50%) rotate(0);
+    transition: all 0.3s linear;
+    cursor: pointer;
+    z-index: 200;
+}
+.by-card .info-prices-box-hover.active .show-prices span {}
+.by-card .info-prices-box-hover.active .show-prices span::before {
+    transform: translateY(-50%) rotate(180deg);
+}
+.by-card .prices-block {
+    background-color: #F0F0F0;
+    padding: 25px 20px 15px;
+    border-radius: 0;
+    width: 100%;
+}
+.by-card .prices-block > p br {
+    display: none;
+}
+.by-card .js__all-prices {
+    height: 0;
+    overflow: hidden;
+    top: 30px;
+    width: 100%;
+    border-radius: 0 0 8px 8px;
 }
