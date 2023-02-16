@@ -2,6 +2,7 @@
 
 namespace Enterego;
 
+use Bitrix\Calendar\Core\Role\User;
 use Bitrix\Currency\CurrencyManager;
 use Bitrix\Main;
 use Bitrix\Main\Context;
@@ -96,6 +97,7 @@ class EnteregoBasket
                 $newProp = $propsUseSale->Fetch();
 
                 if (USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') {
+
                     $price_type = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
                     $result = CIBlockElement::GetList(
                         array(),
@@ -105,13 +107,12 @@ class EnteregoBasket
                         array("$price_type"));
 
                     if ($ar_res = $result->fetch()) {
-                        if (!empty($ar_res["$price_type"])) {
-
+                        if (((int)$price_data['PRICE'] > (int)$ar_res["$price_type"]) && !empty($ar_res["$price_type"])) {
                             $product_prices[$product_id]['PRICE'] = $ar_res["$price_type"];
                             $product_prices[$product_id]['PRICE_ID'] = SALE_PRICE_TYPE_ID;
                         } else {
-
-                            $price_ids = "CATALOG_PRICE_" . $currentPriceTypeId;
+                            $ids = USE_CUSTOM_SALE_PRICE ? $currentPriceTypeId : $price_id;
+                            $price_ids = "CATALOG_PRICE_" . $ids;
                             $res = CIBlockElement::GetList(
                                 array(),
                                 array("ID" => $product_id),

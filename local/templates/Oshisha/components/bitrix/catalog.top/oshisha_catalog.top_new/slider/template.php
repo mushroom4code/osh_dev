@@ -130,7 +130,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
 
                 if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
-                    if ($price_key == SALE_PRICE_TYPE_ID) {
+                    if ($price_key == SALE_PRICE_TYPE_ID && ((int)$price_val['PRICE'] < (int)$PRICE['PRICES'][RETAIL_PRICE]['PRICE'])){
                         $price['SALE_PRICE'] = $price_val;
                     }
                     if ((int)$price_val['PRICE_TYPE_ID'] === BASIC_PRICE) {

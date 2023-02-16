@@ -113,24 +113,18 @@ if ($haveOffers) {
     $showSliderControls = $arResult['MORE_PHOTO_COUNT'] > 1;
 }
 
-$skuProps = array();
-
 $measureRatio = $actualItem['ITEM_MEASURE_RATIOS'][$actualItem['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
-
-$price = [];
-
+$price = $skuProps = [];
 $isGift = EnteregoHelper::productIsGift($arResult['ID']);
-
 $useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
 $rowResHidePrice = $arResult['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
-foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
 
+foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
 
     foreach ($PRICE['PRICES'] as $price_key => $price_val) {
 
-
         if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
-            if ($price_key == SALE_PRICE_TYPE_ID) {
+            if ($price_key == SALE_PRICE_TYPE_ID && ((int)$price_val['PRICE'] < (int)$PRICE['PRICES'][RETAIL_PRICE]['PRICE'])) {
                 $price['SALE_PRICE'] = $price_val;
             }
         }
@@ -148,9 +142,9 @@ foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
         ksort($price['PRICE_DATA']);
     }
 }
+
 if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $actualItem['PRODUCT']['QUANTITY'])
     $actualItem['PRODUCT']['QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
-
 
 $showDescription = !empty($arResult['PREVIEW_TEXT']) || !empty($arResult['DETAIL_TEXT']);
 $showDescription = false;
@@ -205,7 +199,6 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
     $arResult['COUNT_LIKES'] = $count;
 }
-
 
 $arResult['COUNT_LIKE'] = $count_likes['USER'][$arResult['ID']]['Like'][0];
 $arResult['COUNT_FAV'] = $count_likes['USER'][$arResult['ID']]['Fav'][0];
@@ -305,10 +298,11 @@ global $option_site;
                                         </div>
                                         <?php
                                     }
-                                }else {
+                                } else {
                                     ?>
-                                    <div class="product-item-detail-slider-image active" data-entity="image" data-id="1">
-                                        <img src="/local/templates/Oshisha/images/no-photo.gif"  itemprop="image">
+                                    <div class="product-item-detail-slider-image active" data-entity="image"
+                                         data-id="1">
+                                        <img src="/local/templates/Oshisha/images/no-photo.gif" itemprop="image">
                                     </div>
                                     <?
                                 }
@@ -532,7 +526,7 @@ global $option_site;
                 break;
             case 'quantity':
             if ($show_price) {
-            if ($actualItem['PRODUCT']['QUANTITY'] != '0') {?>
+            if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?>
                 <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
                     <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
                      data-entity="quantity-block">
