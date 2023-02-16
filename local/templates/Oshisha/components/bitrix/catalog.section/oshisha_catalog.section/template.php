@@ -184,10 +184,18 @@ while ($arItems = $dbBasketItems->Fetch()) {
 
 $id_USER = $USER->GetID();
 $FUser_id = Fuser::getId($id_USER);
-$item_id = [];
+$item_id = $prop_see_in_window = [];
 
 foreach ($arResult['ITEMS'] as $item) {
     $item_id[] = $item['ID'];
+}
+
+$iblock_id = IBLOCK_CATALOG;
+$resQuery = Enterego\EnteregoSettings::getPropSetting($iblock_id, 'SEE_POPUP_WINDOW');
+if (!empty($resQuery)) {
+    while ($collectionPropChecked = $resQuery->Fetch()) {
+        $prop_see_in_window[$collectionPropChecked['CODE']] = $collectionPropChecked;
+    }
 }
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
@@ -224,8 +232,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
         <div class="mb-4 catalog-section <?= $col_orientation . ' ' . $classOpt ?>" data-entity="<?= $containerName ?>">
             <!-- items-container -->
-            <?php if (!empty($arResult['ITEMS']) && !empty($arResult['ITEM_ROWS'])) { ?>
-                <?php
+            <?php if (!empty($arResult['ITEMS']) && !empty($arResult['ITEM_ROWS'])) {
+
                 $areaIds = array();
                 global $option_site;
             foreach ($arResult['ITEMS'] as $item) {
@@ -358,6 +366,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                                 'F_USER_ID' => $FUser_id,
                                                 'ID_PROD' => $item['ID'],
                                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                                'POPUP_PROPS' => $prop_see_in_window,
                                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
                                             ),
@@ -406,6 +415,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                             'AR_BASKET' => $arBasketItems,
                                             'F_USER_ID' => $FUser_id,
                                             'ID_PROD' => $item['ID'],
+                                            'POPUP_PROPS' => $prop_see_in_window,
                                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                                             'COUNT_FAV' => $item['COUNT_FAV'],
                                             'COUNT_LIKES' => $item['COUNT_LIKES'],
@@ -562,6 +572,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                                 'AR_BASKET' => $arBasketItems,
                                                 'F_USER_ID' => $FUser_id,
                                                 'ID_PROD' => $item['ID'],
+                                                'POPUP_PROPS' => $prop_see_in_window,
                                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
                                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
@@ -746,6 +757,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                             'AR_BASKET' => $arBasketItems,
                                             'F_USER_ID' => $FUser_id,
                                             'ID_PROD' => $item['ID'],
+                                            'POPUP_PROPS' => $prop_see_in_window,
                                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                                             'COUNT_FAV' => $item['COUNT_FAV'],
                                             'COUNT_LIKES' => $item['COUNT_LIKES'],

@@ -309,7 +309,9 @@ $(document).ready(function () {
         if (value > 0) {
             $('.ganerate_price_wrap').show();
         }
-        $('.ganerate_price').text(getPriceForProduct(this) * value + ' ₽');
+        if($('.ganerate_price').length >0){
+            $('.ganerate_price').text(getPriceForProduct(this) * value + ' ₽');
+        }
     }
 
     $(document).on('keypress', '.card_element', function (e) {
@@ -384,16 +386,20 @@ $(document).ready(function () {
                 if (parseInt($(boxInput).val()) < max_QUANTITY) {
                     let beforeVal = parseInt($(boxInput).val()) + 1;
                     $(boxInput).val(beforeVal);
+
                     if (beforeVal > 0)
                         $('.ganerate_price_wrap').show();
                     else
                         $('.ganerate_price_wrap').hide();
-                    $('.ganerate_price').text(getPriceForProduct(this) * beforeVal + ' ₽');
+
+                    if ($('.ganerate_price').length > 0) {
+                        $('.ganerate_price').text(getPriceForProduct(this) * beforeVal + ' ₽');
+                    }
+
                     product_data = {
                         'ID': product_id,
                         'QUANTITY': beforeVal,
                         'URL': product_url,
-                        'PRICE': getPriceForProduct(this) * beforeVal + ' ₽',
                     };
 
 
@@ -404,12 +410,13 @@ $(document).ready(function () {
                         $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                     } else
                         $('.ganerate_price_wrap').hide();
-                    $('.ganerate_price').text(getPriceForProduct(this) * max_QUANTITY + ' ₽');
+                    if ($('.ganerate_price').length > 0) {
+                        $('.ganerate_price').text(getPriceForProduct(this) * max_QUANTITY + ' ₽');
+                    }
                     product_data = {
                         'ID': product_id,
                         'QUANTITY': max_QUANTITY,
                         'URL': product_url,
-                        "PRICE": getPriceForProduct(this) * max_QUANTITY + ' ₽',
                     };
                 }
                 if ($(this).hasClass('red_button_cart')) {
@@ -426,12 +433,15 @@ $(document).ready(function () {
                         $('.ganerate_price_wrap').show();
                     else
                         $('.ganerate_price_wrap').hide();
-                    $('.ganerate_price').text(getPriceForProduct(this) * beforeVal + ' ₽');
+
+                    if ($('.ganerate_price').length > 0) {
+                        $('.ganerate_price').text(getPriceForProduct(this) * beforeVal + ' ₽');
+                    }
+
                     product_data = {
                         'ID': product_id,
                         'QUANTITY': beforeVal,
                         'URL': product_url,
-                        "PRICE": getPriceForProduct(this) * beforeVal + ' ₽',
                     };
 
                     if (beforeVal == 0) {
@@ -440,6 +450,10 @@ $(document).ready(function () {
                     }
                 }
             } else {
+                let addBasketButton = $(this).closest('.bx_catalog_item_controls').find('.add2basket'),
+                    product_id = addBasketButton.data('product_id'),
+                    product_url = addBasketButton.data('url');
+
                 if (quantityProdDet) {
                     let quantity = parseInt(quantityProdDet);
                     if ((quantity > 1) || (quantity !== 0)) {
@@ -531,7 +545,6 @@ $(document).ready(function () {
                             'QUANTITY': itemVal.QUANTITY,
                             'URL': itemVal.URL,
                             'TIME': itemVal.TIME,
-                            'PRICE': itemVal.PRICE
                         };
 
                         $.ajax({
@@ -539,7 +552,7 @@ $(document).ready(function () {
                             url: '/local/templates/Oshisha/include/add2basket.php',
                             data: 'product_data=' + JSON.stringify(product_data),
                             success: function (result) {
-                                if(result.STATUS === 'success'){
+                                if (result.STATUS === 'success') {
                                     deleteBasketItemTop(result);
                                 }
                             }
@@ -551,22 +564,16 @@ $(document).ready(function () {
                         });
                     } else {
                         time = itemVal.TIME;
-                        if (time !== 0) {
-                            new_time = (time - 1)
-                        } else {
-                            new_time = 0;
-                        }
+                        new_time = time !== 0 ? (time - 1) : 0;
                         product_data = {
                             'ID': itemVal.ID,
                             'QUANTITY': itemVal.QUANTITY,
                             'URL': itemVal.URL,
                             'TIME': new_time,
-                            'PRICE': itemVal.PRICE,
                         };
                         $(arItemsForDB).each(function (i, val) {
                             if (val.ID === product_data.ID) {
                                 val.QUANTITY = product_data.QUANTITY;
-                                val.PRICE = product_data.PRICE;
                                 val.TIME = product_data.TIME;
                             }
                         })
@@ -2300,11 +2307,11 @@ $(document).ready(function () {
         $('.box_filter_catalog').css({'top': top_page});
     }
 
-    $(document).on('click', '.js__filter-close', function() {
+    $(document).on('click', '.js__filter-close', function () {
         if (!$(this).hasClass('disabled_class')) {
-            $(this).parents('.box_filter_catalog').find('.filter-view-bar').css({'display':'none'})
+            $(this).parents('.box_filter_catalog').find('.filter-view-bar').css({'display': 'none'})
 
-            $(this).parents('.box_filter_catalog').slideUp(function() {
+            $(this).parents('.box_filter_catalog').slideUp(function () {
                 $('.filter-view').addClass('disabled_class');
                 $('.filter-view-bar').show();
             });
