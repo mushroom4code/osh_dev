@@ -181,11 +181,11 @@ $(document).ready(function () {
         if (listWrap.height() !== 0) {
             listHeader.stop().animate({bottom: 0}, 600);
             listWrap.stop().animate({height: 0}, 600, function () {
-                showButton.css({borderRadius: 0}).find('span').text('Показать доп. цены');
+                showButton.css({borderRadius: 0}).find('span').text('Показать цены');
             });
 
         } else {
-            showButton.find('span').text('Скрыть доп. цены').css({borderRadius: '0 0 10px 10px'});
+            showButton.find('span').text('Скрыть цены').css({borderRadius: '0 0 10px 10px'});
             listHeader.stop().animate({bottom: yDelta}, 800);
             listWrap.stop().animate({height: yDelta}, 800);
         }

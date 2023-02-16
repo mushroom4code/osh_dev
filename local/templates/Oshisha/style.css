@@ -4027,7 +4027,7 @@ table#TableWorkers.no-footer {
     }
 
     .by-card .product-item-container > .bx_catalog_item > .bx_catalog_item_container {
-        padding: 15px;
+        padding: 15px 10px 40px;
         margin: 5px;
     }
 
@@ -4295,7 +4295,7 @@ table#TableWorkers.no-footer {
     }
 
     .by-card .product-item-container > .bx_catalog_item > .bx_catalog_item_container {
-        padding: 10px;
+        padding: 10px 10px 40px;
         width: 100%;
         margin: 0 !important;
     }
@@ -4850,7 +4850,7 @@ li, ul {
 }
 @media (max-width: 1440px) {
     .by-card .bx_catalog_item_container {
-        padding: 10px 10px;
+        padding: 10px 10px 40px 10px;
     }
 }
 
@@ -6256,6 +6256,16 @@ body.hide-jivo > jdiv {
     min-width: 130px;
     text-align: left;
 }
+@media screen and (max-width: 1024xp) {
+    .by-card .show-prices span {
+        min-width: 100px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .by-card .show-prices span {
+        min-width: 90px;
+    }
+}
 .by-card .show-prices span::before {
     border-top: 0 solid transparent;
     border-left: 5px solid transparent;
@@ -6284,6 +6294,11 @@ body.hide-jivo > jdiv {
 }
 .by-card .prices-block > p br {
     display: none;
+}
+@media screen and (max-width: 768px) {
+    .by-card .prices-block > p br {
+        display: block;
+    }
 }
 .by-card .js__all-prices {
     height: 0;

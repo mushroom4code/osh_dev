@@ -277,7 +277,7 @@ if ($show_price) {
                                 <div class="info-prices-box-hover cursor-pointer ml-2">
                                     <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
                                     <div class="d-flex align-items-center justify-content-center font-11 show-prices js__show-all-prices">
-                                        <span>Показать доп. цены</span>
+                                        <span>Показать цены</span>
                                     </div>
                                     <div class="position-absolute js__all-prices">
                                         <div class="d-flex flex-column prices-block">
