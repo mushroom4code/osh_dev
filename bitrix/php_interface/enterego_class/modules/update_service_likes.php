@@ -25,5 +25,5 @@ function updateProductPopularity()
         }
     }
 
-    return 'updateProductPopularity()';
+    return 'updateProductPopularity();';
 }

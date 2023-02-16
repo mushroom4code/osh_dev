@@ -1,17 +1,12 @@
 <?php
 
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
+use Enterego\EnteregoSettings;
 
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
 
 require_once(__DIR__ . '/conf.php');
-
-if (COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE') === 'true') {
-    define("USE_CUSTOM_SALE_PRICE", true);
-} else {
-    define("USE_CUSTOM_SALE_PRICE", false);
-}
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
@@ -34,7 +29,6 @@ CModule::AddAutoloadClasses("", array(
 ));
 // 18844
 AddEventHandler('rest', 'OnRestServiceBuildDescription', array('CatalogAPIService', 'OnRestServiceBuildDescription'));
-
 
 require(__DIR__ . '/enterego_class/discountcouponsmanagerbase.php');
 require(__DIR__ . '/enterego_class/discountcoupon.php');
@@ -146,10 +140,10 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "icon" => "default_menu_icon",
                     "page_icon" => "default_page_icon",
                     "sort" => "100",
-                    "text" => "Скидочные цены",
-                    "title" => "Скидочные цены",
+                    "text" => "Черная пятница/Распродажа",
+                    "title" => "Черная пятница/Распродажа",
                     "url" => "/bitrix/php_interface/enterego_class/init_sale.php",
-//                    "parent_page" => "global_menu_enterego",
+                    "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "init_sale.php",
                     ),
@@ -331,3 +325,5 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
         ";
     $APPLICATION->AddHeadString($jsCode);
 }
+
+EnteregoSettings::getSalePriceOnCheckAndPeriod();
