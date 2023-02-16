@@ -3586,6 +3586,7 @@ table#TableWorkers.no-footer {
 
     .box_with_loginBasket, .box_top_panel, .top_menu {
         justify-content: space-between;
+        align-items: center;
     }
 
     #content_box_business .box_with_brands_parents, #o_nas .box_text_business, .by-line .line-price.toggle_taste {
