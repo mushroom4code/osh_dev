@@ -154,7 +154,7 @@ function showOrderBlock($listStatuses, $accountNumber)
 
 }
 
-$url = json_decode($_POST['url'], true);
+$url = substr(json_decode($_POST['url'], true), 1, -2);
 
 switch (json_decode($_POST['typeSort'], true)) {
     case "Дешёвые":
