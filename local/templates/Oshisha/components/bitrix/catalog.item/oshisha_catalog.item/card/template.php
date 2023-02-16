@@ -284,8 +284,8 @@ if ($show_price) {
                                             <div class="prices-block-close js__prices-block-close"></div>
                                             <?php foreach ($price['PRICE_DATA'] as $items) { ?>
                                                 <p class="mb-1">
-                                                    <span class="font-11 mb-2"><?= $items['NAME'] ?></span><br>
-                                                    <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                                    <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span><br>
+                                                    <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
                                                 </p>
                                             <?php } ?>
                                         </div>

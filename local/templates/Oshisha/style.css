@@ -1026,7 +1026,16 @@ div.box_with_icons > a > i.icons_theme:first-child {
 .font-120 {
     font-size: 120px;
 }
-
+@media screen and (max-width: 1024px) {
+    .font-10-md {
+        font-size: 10px;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .font-11-md {
+        font-size: 11px;
+    }
+}
 h4 > b, .orderCancel, .select2-results__option, .color-darkOsh,
 .select2-container--default .select2-search--dropdown .select2-search__field, .sort_orders, .sort_orders:hover,
 .sort_order, .sort_order:hover, .link_in_basket, .link_in_basket:hover, .box_with_brands a, .box_with_brands a:hover,
@@ -1804,7 +1813,11 @@ a.bx_catalog_item_title {
     max-width: 237px;
     min-height: 355px;
 }
-
+@media screen and (max-height: 500px) {
+    .by-card .bx_catalog_item .bx_catalog_item_container {
+        min-height: 385px;
+    }
+}
 .by-card .product-item-small-card {
     width: 25%;
     height: 100%;
@@ -3464,7 +3477,7 @@ table#TableWorkers.no-footer {
     .by-card .product-item-small-card {
         width: 48%;
         height: 100%;
-        max-height: 365px;
+        /*max-height: 365px;*/
     }
 
     .by-line .image_cart > img {
@@ -6256,7 +6269,7 @@ body.hide-jivo > jdiv {
     min-width: 130px;
     text-align: left;
 }
-@media screen and (max-width: 1024xp) {
+@media screen and (max-width: 1024px) {
     .by-card .show-prices span {
         min-width: 100px;
     }
@@ -6264,6 +6277,7 @@ body.hide-jivo > jdiv {
 @media screen and (max-width: 768px) {
     .by-card .show-prices span {
         min-width: 90px;
+        font-size: 10px;
     }
 }
 .by-card .show-prices span::before {
@@ -6288,7 +6302,7 @@ body.hide-jivo > jdiv {
 }
 .by-card .prices-block {
     background-color: #F0F0F0;
-    padding: 25px 20px 15px;
+    padding: 25px 12px 15px;
     border-radius: 0;
     width: 100%;
 }
@@ -6303,7 +6317,7 @@ body.hide-jivo > jdiv {
 .by-card .js__all-prices {
     height: 0;
     overflow: hidden;
-    top: 30px;
+    top: 29px;
     width: 100%;
     border-radius: 0 0 8px 8px;
 }

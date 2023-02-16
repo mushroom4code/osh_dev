@@ -171,7 +171,7 @@ $(document).ready(function () {
         );
     }
 
-    $('.js__show-all-prices').on('click', function () {
+    $(document).on('click', '.js__show-all-prices', function () {
         const showButton = $(this),
             listHeader = showButton.closest('.info-prices-box-hover'),
             listWrap = listHeader.find('.js__all-prices'),
