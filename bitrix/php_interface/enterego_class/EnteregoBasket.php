@@ -2,7 +2,6 @@
 
 namespace Enterego;
 
-use Bitrix\Calendar\Core\Role\User;
 use Bitrix\Currency\CurrencyManager;
 use Bitrix\Main;
 use Bitrix\Main\Context;
