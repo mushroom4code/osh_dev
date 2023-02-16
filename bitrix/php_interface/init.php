@@ -140,10 +140,10 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "icon" => "default_menu_icon",
                     "page_icon" => "default_page_icon",
                     "sort" => "100",
-                    "text" => "Скидочные цены",
-                    "title" => "Скидочные цены",
+                    "text" => "Черная пятница/Распродажа",
+                    "title" => "Черная пятница/Распродажа",
                     "url" => "/bitrix/php_interface/enterego_class/init_sale.php",
-//                    "parent_page" => "global_menu_enterego",
+                    "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "init_sale.php",
                     ),
