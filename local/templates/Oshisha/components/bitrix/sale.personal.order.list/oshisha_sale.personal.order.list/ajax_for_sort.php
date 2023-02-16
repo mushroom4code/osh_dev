@@ -20,7 +20,7 @@ function sortByField(string $field, string $params, ?string $element = null, ?st
     $listOrders = [];
 
 
-    $products = CSaleOrder::GetList(array($field => $params), array("USER_ID" => $USER->GetID()));
+    $products = CSaleOrder::GetList(array($field => $params), array($element => $index, "USER_ID" => $USER->GetID()));
 
     while ($res = $products->Fetch()) {
         $listOrders[] = $res;
