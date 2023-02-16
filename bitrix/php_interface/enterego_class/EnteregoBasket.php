@@ -177,4 +177,39 @@ class EnteregoBasket
         }
         return null;
     }
+
+    /**
+     * @param $arPrices
+     * @param $useDiscount
+     * @return array
+     */
+    public static function getPricesArForProductTemplate($arPrices, $useDiscount): array
+    {
+        $price = [];
+        $sale = $arPrices['PRICES'][SALE_PRICE_TYPE_ID];
+        $retail = $arPrices['PRICES'][RETAIL_PRICE];
+        $base = $arPrices['PRICES'][BASIC_PRICE];
+        $b2b = $arPrices['PRICES'][B2B_PRICE];
+
+        if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
+            if (!empty($sale) && ((int)$sale['PRICE'] < (int)$retail['PRICE'])) {
+                $price['SALE_PRICE'] = $sale;
+            }
+        }
+        if (!empty($retail)) {
+            $price['PRICE_DATA'][0] = $retail;
+            $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
+        }
+        if (!empty($base)) {
+            $price['PRICE_DATA'][1] = $base;
+            $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
+        }
+        if (!empty($b2b)) {
+            $price['PRICE_DATA'][2] = $b2b;
+            $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
+        }
+
+        return $price;
+    }
+
 }

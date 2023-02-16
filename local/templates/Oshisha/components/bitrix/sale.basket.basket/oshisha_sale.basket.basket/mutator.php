@@ -58,7 +58,7 @@ foreach ($item as $row) {
         $row['AVAILABLE_QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
 
     $product_prices = '';
-    $show_product_prices = false; //var_dump(USE_CUSTOM_SALE_PRICE);
+    $show_product_prices = false;
     $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
     if ($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) {
@@ -67,8 +67,7 @@ foreach ($item as $row) {
             array("CATALOG_PRICE_" . SALE_PRICE_TYPE_ID, 'CATALOG_PRICE_' . BASIC_PRICE));
         if ($ar_res = $res->fetch()) {
             $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
-            if ((int)$product_prices_sql !== (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID]
-                && !empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
+            if (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
                 && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) {
                 $show_product_prices = true;
                 $str_product_prices = explode('.', $product_prices_sql);

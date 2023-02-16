@@ -3,6 +3,7 @@
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Fuser;
 use DataBase_like;
+use Enterego\EnteregoBasket;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var array $arParams */
@@ -122,36 +123,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         $arElement = $rsElement->Fetch();
         $newStrPrice = '';
         $priceProduct = [];
-        $price = [];
         $useDiscount = $arItem['PROPERTIES']['USE_DISCOUNT'];
-        foreach ($arItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
-
-            foreach ($PRICE['PRICES'] as $price_key => $price_val) {
-
-
-                if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
-                    if ($price_key == SALE_PRICE_TYPE_ID && ((int)$price_val['PRICE'] < (int)$PRICE['PRICES'][RETAIL_PRICE]['PRICE'])){
-                        $price['SALE_PRICE'] = $price_val;
-                    }
-                    if ((int)$price_val['PRICE_TYPE_ID'] === BASIC_PRICE) {
-                        $price['PRICE_DATA'][1] = $price_val;
-                        $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
-                    }
-                }
-
-                if ((int)$price_val['PRICE_TYPE_ID'] === RETAIL_PRICE) {
-                    $price['PRICE_DATA'][0] = $price_val;
-                    $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
-                } else if ((int)$price_val['PRICE_TYPE_ID'] === BASIC_PRICE) {
-                    $price['PRICE_DATA'][1] = $price_val;
-                    $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
-                } elseif ((int)$price_val['PRICE_TYPE_ID'] === B2B_PRICE) {
-                    $price['PRICE_DATA'][2] = $price_val;
-                    $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
-                }
-                ksort($price['PRICE_DATA']);
-            }
-        }
+        $price = EnteregoBasket::getPricesArForProductTemplate($arItem['ITEM_ALL_PRICES'][0], $useDiscount);
 
         $taste = $arItem['PROPERTIES']['VKUS'];
         $catalog = CIBlockSection::GetList(array(), array('ID' => $arElement['IBLOCK_SECTION_ID'], 'IBLOCK_ID' => $arParams['IBLOCK_ID']),
