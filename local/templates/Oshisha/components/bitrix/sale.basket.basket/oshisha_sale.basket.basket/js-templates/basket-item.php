@@ -1,7 +1,6 @@
-<? if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+<?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Main\Localization\Loc;
-use Bitrix\Sale\Fuser;
 
 /**
  * @var array $mobileColumns
@@ -45,9 +44,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
 /**
  * @var CAllMain|CMain $APPLICATION
  * @var  CUser $USER
- */
-
-?>
+ */?>
 <script id="basket-item-template" type="text/html">
     <div class="d-flex justify-content-center basket-items-list-item-container{{#SHOW_RESTORE}}
      basket-items-list-item-container-expend{{/SHOW_RESTORE}}"
@@ -55,7 +52,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
         {{^SHOW_RESTORE}}
         <div class="basket-items-list-item-descriptions d-flex row_section justify-content-between">
             <div class="basket-items-list-item-descriptions-inner" id="basket-item-height-aligner-{{ID}}">
-                <? if (in_array('PREVIEW_PICTURE', $arParams['COLUMNS_LIST'])){ ?>
+                <?php if (in_array('PREVIEW_PICTURE', $arParams['COLUMNS_LIST'])){ ?>
                 <div class="basket-item-block-image<?= (!isset($mobileColumns['PREVIEW_PICTURE']) ? ' d-none d-sm-block' : '') ?>">
                     {{#DETAIL_PAGE_URL}}
                     <a href="{{DETAIL_PAGE_URL}}" class="basket-item-image-link">
@@ -75,7 +72,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         {{/LABEL_VALUES}}
                 </div>
                 {{/SHOW_LABEL}}
-                <? if ($arParams['SHOW_DISCOUNT_PERCENT'] === 'Y') { ?>
+                <?php if ($arParams['SHOW_DISCOUNT_PERCENT'] === 'Y') { ?>
                     {{#DISCOUNT_PRICE_PERCENT}}
                     <div class="basket-item-label-ring basket-item-label-small <?= $discountPositionClass ?>">
                         -{{DISCOUNT_PRICE_PERCENT_FORMATED}}
@@ -95,10 +92,10 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             {{/SHOW_LOADING}}
             <div class="basket-item-block-info d-flex flex-column justify-content-between">
                 <div>
-                    <? if (isset($mobileColumns['DELETE'])) { ?>
+                    <?php if (isset($mobileColumns['DELETE'])) { ?>
                         <span class="basket-item-actions-remove d-block d-md-none"
                               data-entity="basket-item-delete"></span>
-                    <? } ?>
+                    <?php } ?>
                     <h2 class="basket-item-info-name">
                         {{#DETAIL_PAGE_URL}}
                         <a href="{{DETAIL_PAGE_URL}}" class="basket-item-info-name-link">
@@ -355,7 +352,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             </div>
         </div>
         <div class="d-flex flex-column justify-content-between align-items-end end-column">
-            <? if ($useSumColumn) {
+            <?php if ($useSumColumn) {
                 if (!$mobile->isMobile()) { ?>
                     <div class="d-flex flex-column price-column">
                         <div class="basket-items-list-item-price<?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
@@ -441,7 +438,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             <div class="basket-items-list-item-descriptions-inner width_100 d-flex flex-column"
                  id="basket-item-height-aligner-{{ID}}">
                 <div class="basket-item-block-properties">
-                    <? if (!empty($arParams['PRODUCT_BLOCKS_ORDER'])) {
+                    <?php if (!empty($arParams['PRODUCT_BLOCKS_ORDER'])) {
                         foreach ($arParams['PRODUCT_BLOCKS_ORDER'] as $blockName) {
                             switch (trim((string)$blockName)) {
                                 case 'props':
@@ -464,7 +461,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     }
                     ?>
                 </div>
-                <? if (in_array('PREVIEW_PICTURE', $arParams['COLUMNS_LIST'])) { ?>
+                <?php if (in_array('PREVIEW_PICTURE', $arParams['COLUMNS_LIST'])) { ?>
                 <div class="basket-item-block-image border_none m-0 align-self-center
                 <?= (!isset($mobileColumns['PREVIEW_PICTURE']) ? ' d-none d-sm-block' : '') ?>">
                     {{#DETAIL_PAGE_URL}}
@@ -485,30 +482,27 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         {{/LABEL_VALUES}}
                 </div>
                 {{/SHOW_LABEL}}
-                <? if ($arParams['SHOW_DISCOUNT_PERCENT'] === 'Y') { ?>
+                <?php if ($arParams['SHOW_DISCOUNT_PERCENT'] === 'Y') { ?>
                     {{#DISCOUNT_PRICE_PERCENT}}
                     <div class="basket-item-label-ring basket-item-label-small <?= $discountPositionClass ?>">
                         -{{DISCOUNT_PRICE_PERCENT_FORMATED}}
                     </div>
                     {{/DISCOUNT_PRICE_PERCENT}}
-                    <?
-                }
-                ?>
+                <?php } ?>
                 {{#DETAIL_PAGE_URL}}
                 </a>
                 {{/DETAIL_PAGE_URL}}
             </div>
-            <?
-            } ?>
+            <?php } ?>
             {{#SHOW_LOADING}}
             <div class="basket-items-list-item-overlay"></div>
             {{/SHOW_LOADING}}
             <div class="basket-item-block-info d-flex flex-column justify-content-between">
                 <div>
-                    <? if (isset($mobileColumns['DELETE'])) { ?>
+                    <?php if (isset($mobileColumns['DELETE'])) { ?>
                         <span class="basket-item-actions-remove d-block d-md-none"
                               data-entity="basket-item-delete"></span>
-                    <? } ?>
+                    <?php } ?>
                     <h2 class="basket-item-info-name">
                         {{#DETAIL_PAGE_URL}}
                         <a href="{{DETAIL_PAGE_URL}}" class="basket-item-info-name-link font_12">
@@ -548,8 +542,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     </div>
                     {{/WARNINGS.length}}
                     <div class="basket-item-block-properties">
-                        <?
-                        if (!empty($arParams['PRODUCT_BLOCKS_ORDER'])) {
+                        <?php if (!empty($arParams['PRODUCT_BLOCKS_ORDER'])) {
                             foreach ($arParams['PRODUCT_BLOCKS_ORDER'] as $blockName) {
                                 switch (trim((string)$blockName)) {
                                     case 'sku':
@@ -626,10 +619,9 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                             </div>
                                         </div>
                                         {{/HAS_SIMILAR_ITEMS}}
-                                        <?
+                                        <?php
                                         break;
-                                    case 'columns':
-                                        ?>
+                                    case 'columns': ?>
                                         {{#COLUMN_LIST}}
                                         {{#IS_IMAGE}}
                                         <div class="basket-item-property-custom basket-item-property-custom-photo
@@ -665,7 +657,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                         </div>
                                         {{/IS_LINK}}
                                         {{/COLUMN_LIST}}
-                                        <?
+                                        <?php
                                         break;
                                 }
                             }
@@ -698,8 +690,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             </div>
         </div>
         <div class="d-flex row_section align-items-center justify-content-between">
-            <? if ($useSumColumn) {
-                ?>
+            <?php if ($useSumColumn) { ?>
                 <div class="d-flex flex-column">
                     <div class="basket-items-list-item-price<?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
                         <div class="basket-item-block-price">
@@ -739,14 +730,11 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     <div class="after_price">Старая цена: {{{SALE_PRICE}}}</div>
                     {{/SHOW_SALE_PRICE}}
                 </div>
-            <?php } ?>
-            <?php if ($useActionColumn) { ?>
+            <?php }
+            if ($useActionColumn) { ?>
                 <div class="d-flex flex-row">
-                    <div><?php
-                        /**
-                         * @var CAllMain|CMain $APPLICATION
-                         * @var  CUser $USER
-                         */
+                    <div>
+                        <?php
                         $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                             'templates',
                             array(
@@ -761,7 +749,8 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                             ,
                             $component,
                             array('HIDE_ICONS' => 'Y')
-                        ); ?></div>
+                        ); ?>
+                    </div>
                     <div class="basket-items-list-item-remove">
                         <div class="basket-item-block-actions">
                             <span class="basket-item-actions-remove" data-entity="basket-item-delete">
