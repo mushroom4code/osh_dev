@@ -975,9 +975,11 @@ div.box_with_icons > a > i.icons_theme:first-child {
 .by-line .product-item__favorite-star {
     font-size: 28px;
 }
+
 .by-card .product-item__favorite-star {
     display: flex;
 }
+
 .font-40 {
     font-size: 40px;
     line-height: 100%;
@@ -1005,9 +1007,11 @@ div.card > div.card-body > div.box_with_properties > div > h4.card-title > a, .n
 .product-item-amount-field-contain input[type="number"], h1, h2, h3, h4, h5, h6, .btn_basket_collapse, .link_header, .text_catalog_link {
     color: #393939;
 }
+
 .product-item__favorite-star:hover {
     color: #F55F5C;
 }
+
 .color-blue-order {
     color: #0085FF;
 }
@@ -1841,9 +1845,11 @@ a.bx_catalog_item_title {
     /* max-height: 200px;*/
     margin-top: 5px;
 }
+
 .by-line .box_with_titles {
     flex-direction: column;
 }
+
 .by-line .box_with_titles .box_with_like {
     /*position: absolute;*/
     right: 0;
@@ -2028,11 +2034,13 @@ input.check_input {
 .form-check .form-check-input {
     float: none;
 }
+
 @media screen and (max-width: 768px) {
     .form-check .form-check-input {
         flex: none;
     }
 }
+
 .filter_class {
     box-sizing: border-box;
     min-width: 250px;
@@ -4101,6 +4109,7 @@ table#TableWorkers.no-footer {
     .top_menu > div {
         overflow: scroll;
         height: 100%;
+        width: 100%;
     }
 
     .header_top {
@@ -4784,12 +4793,15 @@ li, ul {
 .mobile, .tablet {
     display: none;
 }
+
 .filter-view-bar {
     display: none;
 }
+
 .filter-view {
     display: none;
 }
+
 /*MOBILE*/
 @media (min-width: 1024px) {
     .box_with_prod {
@@ -4964,6 +4976,7 @@ li, ul {
         justify-content: space-between;
     }
 }
+
 @media (max-width: 768px) {
     .box_filter_catalog {
         position: fixed;
@@ -4974,6 +4987,7 @@ li, ul {
         padding: 40px 10px 80px;
         z-index: 100500;
     }
+
     .filter-close {
         position: absolute;
         top: 15px;
@@ -4985,6 +4999,7 @@ li, ul {
         cursor: pointer;
         display: flex;
     }
+
     .filter-close span {
         position: absolute;
         height: 2px;
@@ -4997,13 +5012,16 @@ li, ul {
         top: 9px;
         left: 0;
     }
+
     .filter-close span:nth-child(1),
     .filter-close span:nth-child(3) {
         transform: rotate(45deg);
     }
+
     .filter-close span:nth-child(2) {
         transform: rotate(-45deg);
     }
+
     .filter-view-bar {
         display: flex;
         width: 99%;
@@ -5017,6 +5035,7 @@ li, ul {
         z-index: 1000;
         backdrop-filter: blur(0.075em);
     }
+
     .filter-view {
         display: inline-block;
         font-size: 14px !important;
@@ -5024,10 +5043,12 @@ li, ul {
         padding: 10px 45px !important;
         position: relative;
     }
+
     .filter-view.disabled_class {
         background-color: #a3a3a3;
     }
 }
+
 @media (max-width: 480px) {
     .bx-content {
         margin-top: 10px;
@@ -5828,11 +5849,13 @@ header {
     position: relative;
     padding: 0 10px 0 0;
 }
+
 .toggle_taste.card-price.js__tastes {
     position: relative;
     z-index: 1011;
     min-height: 60px;
 }
+
 @media screen and (max-width: 768px) {
     .toggle_taste.card-price.js__tastes {
         min-height: 30px;
@@ -5857,6 +5880,7 @@ header {
 .js__tastes .variation_taste_toggle:hover {
     border-top-color: #F55F5C;
 }
+
 .js__tastes .variation_taste_toggle.hide {
     display: none;
 }
@@ -5866,41 +5890,49 @@ header {
         display: none;
     }
 }
+
 @media screen and (max-width: 1340px) {
     .js__tastes .variation_taste_toggle.hide.many-tastes {
         display: block;
     }
 }
+
 @media screen and (max-width: 1300px) {
     .js__tastes .variation_taste_toggle.hide.many-tastes {
         display: none;
     }
 }
+
 @media screen and (max-width: 1150px) {
     .js__tastes .variation_taste_toggle.hide.many-tastes {
         display: block;
     }
 }
+
 @media screen and (max-width: 1024px) {
     .js__tastes .variation_taste_toggle.hide.many-tastes {
         display: none;
     }
 }
+
 @media screen and (max-width: 768px) {
     .js__tastes .variation_taste_toggle.hide.many-tastes {
         display: block;
     }
 }
+
 @media screen and (max-width: 480px) {
     .js__tastes .variation_taste_toggle.hide.many-tastes {
         display: none;
     }
 }
+
 @media screen and (max-width: 365px) {
     .js__tastes .variation_taste_toggle.hide.many-tastes {
         display: block;
     }
 }
+
 .js__tastes .variation_taste {
     position: absolute;
     flex-flow: row wrap;
@@ -5912,37 +5944,45 @@ header {
     padding: 0 20px 0 0;
     overflow: hidden;
 }
+
 .js__tastes .variation_taste.show_padding {
     padding: 0;
 }
+
 @media screen and (max-width: 1340px) {
     .js__tastes .variation_taste.show_padding {
         padding: 0 20px 0 0;
     }
 }
+
 @media screen and (max-width: 1300px) {
     .js__tastes .variation_taste.show_padding {
         padding: 0;
     }
 }
+
 @media screen and (max-width: 1150px) {
     .js__tastes .variation_taste.show_padding {
         padding: 0 20px 0 0;
     }
 }
+
 @media screen and (max-width: 1080px) {
     .js__tastes .variation_taste.show_padding {
         padding: 0 20px 0 0;
     }
 }
+
 @media screen and (max-width: 860px) {
     .js__tastes .variation_taste.show_padding {
         padding: 0;
     }
 }
+
 .js__tastes.active .variation_taste_toggle {
     transform: rotate(180deg);
 }
+
 .js__tastes.active .variation_taste {
     height: auto;
 }
@@ -5966,6 +6006,7 @@ body.hide-jivo > jdiv {
     position: relative !important;
     z-index: 1500 !important;
 }
+
 .by-card .variation_taste .taste {
     font-size: 11px;
     font-weight: normal;
@@ -5979,6 +6020,7 @@ body.hide-jivo > jdiv {
     margin: 0 3px 3px 0;
     min-height: 24px;
 }
+
 @media screen and (max-width: 1366px) {
     .by-card .variation_taste .taste {
         line-height: 24px;
@@ -5989,29 +6031,35 @@ body.hide-jivo > jdiv {
         margin: 0 3px 3px 0;
     }
 }
+
 .by-card .variation_taste .taste-small {
     min-width: 80px;
 }
+
 @media screen and (max-width: 1600px) {
     .by-card .variation_taste .taste-small {
         min-width: 65px;
     }
 }
+
 @media screen and (max-width: 1366px) {
     .by-card .variation_taste .taste-small {
         min-width: 65px;
     }
 }
+
 @media screen and (max-width: 1260px) {
     .by-card .variation_taste .taste-small {
         min-width: 50px;
     }
 }
+
 @media screen and (max-width: 1024px) {
     .by-card .variation_taste .taste-small {
         min-width: 65px;
     }
 }
+
 @media screen and (max-width: 380px) {
     .by-card .variation_taste .taste-small {
         min-width: 55px;
@@ -6021,26 +6069,31 @@ body.hide-jivo > jdiv {
 .by-card .variation_taste .taste-normal {
     min-width: 65px;
 }
+
 @media screen and (max-width: 1450px) {
     .by-card .variation_taste .taste-normal {
         min-width: 60px;
     }
 }
+
 @media screen and (max-width: 1340px) {
     .by-card .variation_taste .taste-normal {
         min-width: 75px;
     }
 }
+
 @media screen and (max-width: 1260px) {
     .by-card .variation_taste .taste-normal {
         min-width: 65px;
     }
 }
+
 @media screen and (max-width: 1260px) {
     .by-card .variation_taste .taste-normal {
         min-width: 70px;
     }
 }
+
 @media screen and (max-width: 1080px) {
     .by-card .variation_taste .taste-normal {
         min-width: 70px;
@@ -6050,80 +6103,92 @@ body.hide-jivo > jdiv {
 .by-card .variation_taste .taste-long {
     min-width: 100px;
 }
+
 @media screen and (max-width: 1635px) {
     .by-card .variation_taste .taste-long {
         min-width: 70px;
     }
 }
+
 @media screen and (max-width: 1340px) {
     .by-card .variation_taste .taste-long {
         font-size: 10px;
         min-width: 65px;
     }
 }
+
 @media screen and (max-width: 480px) {
     .by-card .variation_taste .taste-long {
         min-width: 80px;
     }
 }
-.by-card .variation_taste .taste-xxl{
+
+.by-card .variation_taste .taste-xxl {
     width: 100%;
     font-size: 11px;
     line-height: 24px;
     padding: 0 4px;
 }
+
 @media screen and (max-width: 1510px) {
-    .by-card .variation_taste .taste-xxl{
+    .by-card .variation_taste .taste-xxl {
         font-size: 10px;
         line-height: 1;
         padding: 7px 4px;
     }
 }
+
 @media screen and (max-width: 1340px) {
-    .by-card .variation_taste .taste-xxl{
+    .by-card .variation_taste .taste-xxl {
         line-height: 1;
         padding: 2px 4px;
     }
 }
+
 @media screen and (max-width: 1339px) {
-    .by-card .variation_taste .taste-xxl{
+    .by-card .variation_taste .taste-xxl {
         line-height: 1;
         padding: 2px 4px;
     }
 }
+
 @media screen and (max-width: 1300px) {
-    .by-card .variation_taste .taste-xxl{
+    .by-card .variation_taste .taste-xxl {
         line-height: 24px;
         padding: 0 4px;
     }
 }
+
 @media screen and (max-width: 1173px) {
-    .by-card .variation_taste .taste-xxl{
+    .by-card .variation_taste .taste-xxl {
         line-height: 1;
         padding: 2px 4px;
     }
 }
+
 @media screen and (max-width: 1024px) {
-    .by-card .variation_taste .taste-xxl{
+    .by-card .variation_taste .taste-xxl {
         line-height: 24px;
         padding: 0 4px;
     }
 }
+
 @media screen and (max-width: 767px) {
-    .by-card .variation_taste .taste-xxl{
+    .by-card .variation_taste .taste-xxl {
         line-height: 1;
         padding: 2px 4px;
     }
 }
+
 @media screen and (max-width: 480px) {
-    .by-card .variation_taste .taste-xxl{
+    .by-card .variation_taste .taste-xxl {
         line-height: 24px;
         padding: 0 4px;
     }
 }
 
 @media screen and (max-width: 340px) {
-    .by-card .variation_taste .taste-xxl{
+    .by-card .variation_taste .taste-xxl {
         line-height: 1;
         padding: 2px 4px;
     }
