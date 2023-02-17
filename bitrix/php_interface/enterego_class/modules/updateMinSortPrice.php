@@ -42,5 +42,5 @@ function updateMinSortPrice()
         }
     }
 
-    return 'updateMinSortPrice()';
+    return 'updateMinSortPrice();';
 }

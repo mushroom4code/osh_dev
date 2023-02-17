@@ -224,12 +224,12 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                                             }
                                                         } ?>
                                                     </div>
-                                                    <?php $res = EnteregoHelper::getItems($basketItem['PRODUCT_ID'], 'VKUS');
+                                                    <?php $res = EnteregoHelper::getItems($basketItem['PRODUCT_ID'], PROPERTY_KEY_VKUS);
                                                     if (!empty($res)) {
                                                         ?>
                                                         <div class="variation_taste mb-5"
-                                                             id="<?= count($res['VKUS']); ?>">
-                                                            <?php foreach ($res['VKUS'] as $key) { ?>
+                                                             id="<?= count($res[PROPERTY_KEY_VKUS]); ?>">
+                                                            <?php foreach ($res[PROPERTY_KEY_VKUS] as $key) { ?>
                                                                 <span class="taste"
                                                                       data-background="#<?= $key['VALUE'] ?>"
                                                                       id="<?= $key['ID'] ?>">

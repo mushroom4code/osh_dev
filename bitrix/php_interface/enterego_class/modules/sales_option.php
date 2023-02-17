@@ -14,6 +14,10 @@ if (!$USER->IsAuthorized()) {
     $act = $_POST['action'];
     if ($act === 'SetParamSale') {
         COption::SetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE', $_POST['param']);
+        if (!empty($_POST['date_start']) && !empty($_POST['date_end'])) {
+            COption::SetOptionString('activation_price_admin', 'PERIOD',
+                json_encode(['start' => $_POST['date_start'], 'end' => $_POST['date_end']]));
+        }
         exit($_POST['param']);//управление использования специального вида цен для скидок
     } elseif ($act === 'SetParamPriceList') {
         COption::SetOptionString('priceList_xlsx', 'priceListArrayCustom', $_POST['param']);
