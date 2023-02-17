@@ -318,7 +318,9 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                     </div>
                                 </div>
                                 {{#SHOW_SALE_PRICE}}
-                                <div class="after_price">Старая цена: {{{SALE_PRICE}}}</div>
+                                <div class="after_price text-right">Старая цена: {{{SALE_PRICE}}}
+                                    <span class="d-lg-block d-md-block d-none"> {{{SALE_TEXT}}}</span>
+                                </div>
                                 {{/SHOW_SALE_PRICE}}
                             </div>
                         <?php } ?>
@@ -389,7 +391,9 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                             </div>
                         </div>
                         {{#SHOW_SALE_PRICE}}
-                        <div class="after_price">Старая цена: {{{SALE_PRICE}}}</div>
+                        <div class="after_price text-right">Старая цена: {{{SALE_PRICE}}}
+                            <span class="d-lg-block d-md-block d-none"> {{{SALE_TEXT}}}</span>
+                        </div>
                         {{/SHOW_SALE_PRICE}}
                     </div>
                 <?php }
@@ -727,7 +731,9 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         </div>
                     </div>
                     {{#SHOW_SALE_PRICE}}
-                    <div class="after_price">Старая цена: {{{SALE_PRICE}}}</div>
+                    <div class="after_price text-right">Старая цена: {{{SALE_PRICE}}}
+                        <span class="d-lg-block d-md-block d-none"> {{{SALE_TEXT}}}</span>
+                    </div>
                     {{/SHOW_SALE_PRICE}}
                 </div>
             <?php }

@@ -61,19 +61,42 @@ foreach ($item as $row) {
     $show_product_prices = false;
     $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
-    if ($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) {
 
-        $res = CIBlockElement::GetList(array(), array("ID" => $row['PRODUCT_ID']), false, false,
-            array("CATALOG_PRICE_" . SALE_PRICE_TYPE_ID, 'CATALOG_PRICE_' . BASIC_PRICE));
-        if ($ar_res = $res->fetch()) {
-            $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
-            if (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
-                && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) {
-                $show_product_prices = true;
-                $str_product_prices = explode('.', $product_prices_sql);
+    $res = CIBlockElement::GetList(
+        array(),
+        array("ID" => $row['PRODUCT_ID']),
+        false,
+        false,
+        array(
+            "CATALOG_PRICE_" . RETAIL_PRICE,
+            "CATALOG_PRICE_" . B2B_PRICE,
+            'CATALOG_PRICE_' . BASIC_PRICE,
+            "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID)
+    );
 
-                $product_prices = $str_product_prices[0] . ' ₽';
+    if ($ar_res = $res->fetch()) {
+        if (!empty($ar_res)) {
+            $str_product_prices = '';
+            if ($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) {
+                $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
+                if (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
+                    && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) {
+                    $show_product_prices = true;
+                    $str_product_prices = explode('.', $product_prices_sql);
+                }
+            } else {
+                $sale_text = '';
+                if ((int)$row['PRICE_TYPE_ID'] == BASIC_PRICE) {
+                    $show_product_prices = true;
+                    $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE]);
+                    $sale_text = 'Скидка от 10к до 30к';
+                } else if ((int)$row['PRICE_TYPE_ID'] == B2B_PRICE) {
+                    $show_product_prices = true;
+                    $sale_text = 'Скидка от 30к';
+                    $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE]);
+                }
             }
+            $product_prices = $str_product_prices[0] . ' ₽';
         }
     }
 
@@ -86,6 +109,7 @@ foreach ($item as $row) {
         'PROPS_ALL' => $row['PROPS_ALL'],
         'HASH' => $row['HASH'],
         'SORT' => $row['SORT'],
+        'SALE_TEXT' => $sale_text,
         'DETAIL_PAGE_URL' => $row['DETAIL_PAGE_URL'],
         'CURRENCY' => $row['CURRENCY'],
         'DISCOUNT_PRICE_PERCENT' => $row['DISCOUNT_PRICE_PERCENT'],
