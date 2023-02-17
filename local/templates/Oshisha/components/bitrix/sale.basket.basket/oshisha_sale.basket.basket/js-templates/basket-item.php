@@ -318,8 +318,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                     </div>
                                 </div>
                                 {{#SHOW_SALE_PRICE}}
-                                <div class="after_price text-right">Старая цена: {{{SALE_PRICE}}}
-                                    <span class="d-lg-block d-md-block d-none"> {{{SALE_TEXT}}}</span>
+                                <div class="after_price text-right">Старая цена: <b>{{{SALE_PRICE}}}</b> {{{SALE_TEXT}}}
                                 </div>
                                 {{/SHOW_SALE_PRICE}}
                             </div>
@@ -391,8 +390,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                             </div>
                         </div>
                         {{#SHOW_SALE_PRICE}}
-                        <div class="after_price text-right">Старая цена: {{{SALE_PRICE}}}
-                            <span class="d-lg-block d-md-block d-none"> {{{SALE_TEXT}}}</span>
+                        <div class="after_price text-right">Старая цена: <b>{{{SALE_PRICE}}}</b> {{{SALE_TEXT}}}
                         </div>
                         {{/SHOW_SALE_PRICE}}
                     </div>
@@ -478,9 +476,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         {{#SHOW_LABEL}}
                         <div class="basket-item-label-text basket-item-label-big <?= $labelPositionClass ?>">
                             {{#LABEL_VALUES}}
-                            <div
-                                    {{#HIDE_MOBILE}} class="d-none d-sm-block" {{
-                            /HIDE_MOBILE}}>
+                            <div {{#HIDE_MOBILE}} class="d-none d-sm-block" {{/HIDE_MOBILE}}>
                             <span title="{{NAME}}">{{NAME}}</span>
                         </div>
                         {{/LABEL_VALUES}}
@@ -731,8 +727,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         </div>
                     </div>
                     {{#SHOW_SALE_PRICE}}
-                    <div class="after_price text-right">Старая цена: {{{SALE_PRICE}}}
-                        <span class="d-lg-block d-md-block d-none"> {{{SALE_TEXT}}}</span>
+                    <div class="after_price text-right">Старая цена: <b>{{{SALE_PRICE}}}</b>  {{{SALE_TEXT}}}
                     </div>
                     {{/SHOW_SALE_PRICE}}
                 </div>

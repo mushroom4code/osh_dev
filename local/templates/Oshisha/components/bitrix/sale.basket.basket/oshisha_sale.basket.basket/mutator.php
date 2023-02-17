@@ -58,10 +58,10 @@ foreach ($item as $row) {
         $row['AVAILABLE_QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
 
     $product_prices = '';
+    $price = [];
     $show_product_prices = false;
     $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
-
     $res = CIBlockElement::GetList(
         array(),
         array("ID" => $row['PRODUCT_ID']),
@@ -81,21 +81,33 @@ foreach ($item as $row) {
                 $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
                 if (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
                     && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) {
-                    $show_product_prices = true;
                     $str_product_prices = explode('.', $product_prices_sql);
+                    $price['SALE_PRICE'] = $str_product_prices[0] . ' ₽';                    $show_product_prices = true;
+
                 }
             } else {
-                $sale_text = '';
                 if ((int)$row['PRICE_TYPE_ID'] == BASIC_PRICE) {
                     $show_product_prices = true;
                     $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE]);
-                    $sale_text = 'Скидка от 10к до 30к';
                 } else if ((int)$row['PRICE_TYPE_ID'] == B2B_PRICE) {
                     $show_product_prices = true;
-                    $sale_text = 'Скидка от 30к';
                     $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE]);
                 }
             }
+
+            if (!empty($ar_res["CATALOG_PRICE_" . RETAIL_PRICE])) {
+                $price['PRICE_DATA'][0] = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE])[0];
+                $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
+            }
+            if (!empty($ar_res["CATALOG_PRICE_" . BASIC_PRICE])) {
+                $price['PRICE_DATA'][1] = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE])[0];
+                $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
+            }
+            if (!empty($ar_res["CATALOG_PRICE_" . B2B_PRICE])) {
+                $price['PRICE_DATA'][2] = explode('.', $ar_res["CATALOG_PRICE_" . B2B_PRICE])[0];
+                $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
+            }
+
             $product_prices = $str_product_prices[0] . ' ₽';
         }
     }
@@ -108,8 +120,8 @@ foreach ($item as $row) {
         'PROPS' => $row['PROPS'],
         'PROPS_ALL' => $row['PROPS_ALL'],
         'HASH' => $row['HASH'],
+        'PRICES_NET' => $price,
         'SORT' => $row['SORT'],
-        'SALE_TEXT' => $sale_text,
         'DETAIL_PAGE_URL' => $row['DETAIL_PAGE_URL'],
         'CURRENCY' => $row['CURRENCY'],
         'DISCOUNT_PRICE_PERCENT' => $row['DISCOUNT_PRICE_PERCENT'],
