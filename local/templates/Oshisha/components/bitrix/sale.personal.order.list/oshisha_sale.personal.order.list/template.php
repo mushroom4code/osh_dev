@@ -120,7 +120,8 @@ function showOrderBlock($arResult, $accountNumber)
 
                         <div class=" sale-order-list-repeat-container">
                             <a class=" sale-order-list-repeat-link font-w-m-600"
-                               href="/personal/cart/"><?= Loc::getMessage('SPOL_TPL_REPEAT_ORDER') ?></a>
+                               href="<?= $arResult['CURRENT_PAGE'].'?COPY_ORDER=Y&ID='.$order['ACCOUNT_NUMBER'] ?>"><?= Loc::getMessage('SPOL_TPL_REPEAT_ORDER') ?></a>
+                            <div id="popup_mess_order_copy"></div>
                         </div>
                         <?
                         if ($order['CAN_CANCEL'] !== 'N') {
@@ -182,7 +183,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
     $filter = array('USER_ID' => $USER->GetID());
 
     if ($_REQUEST["filter_history"] !== 'Y' && $_REQUEST["show_canceled"] !== 'Y' && $_REQUEST['show_delivery'] !== 'Y') {
-        $filter = array('USER_ID' => $USER->GetID(),'STATUS_ID'=>['N','P']);
+        $filter = array('USER_ID' => $USER->GetID(), 'STATUS_ID' => ['N', 'P']);
     } else if ($_REQUEST['show_canceled'] === 'Y') {
         $filter = array('STATUS_ID' => "F", 'USER_ID' => $USER->GetID());
 
@@ -199,3 +200,4 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
 
     showOrderBlock($arResult, $listOrders);
 }
+?>

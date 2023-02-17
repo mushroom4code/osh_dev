@@ -2261,6 +2261,25 @@ $(document).ready(function () {
                 })
             }
         })
+    });
+
+    $('a.sale-order-list-repeat-link').on('click', function (event) {
+        event.preventDefault();
+        let popup_mess = $(this).parent().find('#popup_mess_order_copy');
+        $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_copy_order" > ' +
+            '<p>' +
+            'Очистить корзину перед добавлением товаров?</p>' +
+            '<div class="confirmation_container">' +
+            '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+            'justify-content-center align-items-center">' +
+            'Да</a>' +
+            '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
+            'justify-content-center align-items-center">' +
+            'Нет</a></div>' +
+            '<span class="close_photo" id="close_photo"></span></div>').show();
+        $('#close_photo').on('click', function () {
+            $(".box_with_message_copy_order").hide(500).remove()
+        });
     })
 
     /*NEW*/
