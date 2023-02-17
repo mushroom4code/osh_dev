@@ -433,7 +433,7 @@ global $option_site;
                         $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
                         $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
                     } else {
-                        $price_new = $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                        $price_new = '<span class="font-14">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
                         $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
                     }
                     $styles = ''; ?>

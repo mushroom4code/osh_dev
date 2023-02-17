@@ -2451,7 +2451,7 @@ $(document).on('click', '.open-fast-window', function () {
                     }
                     price_base.innerHTML = sale_price + ' <span class="color-redLight font-14 ml-3">Старая цена ' + print_price + '</span>';
                 } else {
-                    price_base.innerHTML = price.PRINT_PRICE
+                    price_base.innerHTML = '<span class="font-14">от </span>'.price.PRINT_PRICE
                 }
             }
 

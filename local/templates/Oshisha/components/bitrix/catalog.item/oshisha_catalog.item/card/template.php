@@ -150,8 +150,7 @@ if ($show_price) {
 
             if (count($taste['VALUE']) > 2) {
                 $showToggler = true;
-            }
-            elseif (count($taste['VALUE']) > 1) {
+            } elseif (count($taste['VALUE']) > 1) {
                 $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18; // поместятся на одной строке 2 вкуса или нет
             }
             $togglerState = $showToggler ? ' many-tastes' : 'hide many-tastes';
@@ -165,15 +164,16 @@ if ($show_price) {
                                 $color = explode('#', $value);
                                 $tasteSize = 'taste-small';
 
-                                if (4 < mb_strlen($name) && mb_strlen($name) <=  8) {
+                                if (4 < mb_strlen($name) && mb_strlen($name) <= 8) {
                                     $tasteSize = 'taste-normal';
                                 } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
                                     $tasteSize = 'taste-long';
-                                } elseif (mb_strlen($name)  > 13 ) {
+                                } elseif (mb_strlen($name) > 13) {
                                     $tasteSize = 'taste-xxl';
                                 }
                                 ?>
-                                <span class="taste <?= $tasteSize ?>" data-background="<?='#' . $color[1] ?>" id="<?= $color[0] ?>"><?= $name ?> </span>
+                                <span class="taste <?= $tasteSize ?>" data-background="<?= '#' . $color[1] ?>"
+                                      id="<?= $color[0] ?>"><?= $name ?> </span>
                             <?php }
                         }
                     } ?>
@@ -319,20 +319,20 @@ if ($show_price) {
                 <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
                     <div class="box_with_price card-price font_weight_600 d-flex flex-column">
                         <div class="d-flex flex-row align-items-center">
-                            <div class="bx_price <?= $styleForNo ?>">
+                            <div class="bx_price <?= $styleForNo ?> position-relative">
                                 <?php $sale = false;
                                 if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
                                     $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
                                     echo(round($price['SALE_PRICE']['PRICE']));
                                     $sale = true;
                                 } else {
-                                    echo(round($price['PRICE_DATA'][1]['PRICE']));
+                                    echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
                                 } ?>₽
                             </div>
                             <?php if (!$sale) { ?>
                                 <div class="info-prices-box-hover cursor-pointer ml-2">
                                     <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-                                    <div class="position-absolute d-hide">
+                                    <div class="position-absolute d-hide width-max-content">
                                         <div class="d-flex flex-column prices-block">
                                             <div class="prices-block-close js__prices-block-close"></div>
                                             <?php foreach ($price['PRICE_DATA'] as $items) { ?>
@@ -410,7 +410,7 @@ if ($show_price) {
                                 <?php if (!$sale) { ?>
                                     <div class="info-prices-box-hover ml-2">
                                         <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-                                        <div class="position-absolute d-hide">
+                                        <div class="position-absolute d-hide width-max-content">
                                             <div class="d-flex flex-column prices-block">
                                                 <?php foreach ($price['PRICE_DATA'] as $items) { ?>
                                                     <p class="mb-1">
@@ -442,15 +442,15 @@ if ($show_price) {
         </div>
         <?php }else { ?>
         <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>"
-            <div class="box_with_fav_bask">
-                <div class="not_product detail_popup">
-                    Нет в наличии
-                </div>
-                <div class="detail_popup min_card"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
+        <div class="box_with_fav_bask">
+            <div class="not_product detail_popup">
+                Нет в наличии
             </div>
-            <div style="clear: both;"></div>
-            <div id="popup_mess"></div>
+            <div class="detail_popup min_card"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
         </div>
+        <div style="clear: both;"></div>
+        <div id="popup_mess"></div>
+    </div>
     <?php }
     $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
     if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) { ?>

@@ -177,7 +177,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .prices-block {
-    width: fit-content;
+    width: max-content;
     background-color: #F0F0F0;
     padding: 15px;
     border-radius: 10px;
@@ -232,6 +232,10 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 
 .search_header {
     width: 30%;
+}
+
+.width-max-content {
+    width: max-content;
 }
 
 .max-width-1024 {
@@ -3015,6 +3019,13 @@ label.radio_input {
     min-height: 20px;
 }
 
+.card-price-text {
+    position: absolute;
+    top: 0;
+    left: -14px;
+    font-size: 10px;
+}
+
 #TableWorkers tbody th, #TableWorkers tbody td {
     padding: 12px 15px;
     border-bottom: 1px solid #e2e2e2;
@@ -4113,7 +4124,7 @@ table#TableWorkers.no-footer {
     }
 
     .header_top {
-        padding-top: 0px;
+        padding-top: 0;
         z-index: 10001;
         height: 100%;
         top: 0;
