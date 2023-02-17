@@ -1,4 +1,6 @@
-<?if(!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+<? use Enterego\EnteregoBasket;
+
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 $item = &$arResult['ITEM'];
 
@@ -29,4 +31,5 @@ if ($item["PREVIEW_PICTURE"]["ID"]) {
     );
 }
 
-?>
+$useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
+$item['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($item['ITEM_ALL_PRICES'][0], $useDiscount);

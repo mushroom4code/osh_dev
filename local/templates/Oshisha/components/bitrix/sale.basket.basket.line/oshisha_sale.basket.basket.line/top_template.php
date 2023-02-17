@@ -41,7 +41,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
 <div class="box_with_loginBasket">
     <?php if (!$compositeStub && $arParams['SHOW_AUTHOR'] == 'Y'): ?>
         <div class="box_with_basket_login">
-            <?php if ($USER->IsAuthorized() &&  !$mobile->isMobile()):
+            <?php if ($USER->IsAuthorized()):
                 $name = $USER->GetFirstName();
                 $newName = $name;
                 if (empty($name)) {

@@ -30,12 +30,12 @@ $FUser_id = Fuser::getId($id_USER);
 $item_id = [];
 
 foreach ($item as $row) {
-	if($row['CAN_BUY'] == 'N'){
-		CSaleBasket::Delete($row['ID']);
-		continue;
-	}
-	
-	$item_id[] =  $row['ID'];
+    if ($row['CAN_BUY'] == 'N') {
+        CSaleBasket::Delete($row['ID']);
+        continue;
+    }
+
+    $item_id[] = $row['ID'];
 }
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
@@ -44,34 +44,39 @@ echo '<pre>';
 print_r($item);*/
 
 foreach ($item as $row) {
-	/*if($row['CAN_BUY'] == 'N')
-		CSaleBasket::Delete($row['ID']);*/
+    /*if($row['CAN_BUY'] == 'N')
+        CSaleBasket::Delete($row['ID']);*/
     //enterego - remove gift from basket if condition not execute
-    if (\Enterego\EnteregoHelper::productIsGift($row['PRODUCT_ID']) && $row['PRICE']!==0.0) {
+    if (\Enterego\EnteregoHelper::productIsGift($row['PRODUCT_ID']) && $row['PRICE'] !== 0.0) {
         (new CSaleBasket)->Delete($row['ID']);
         unset($row);
         continue;
     }
     //
 
-	if( intval($SETTINGS['MAX_QUANTITY'])  > 0 && $SETTINGS['MAX_QUANTITY'] < $row['AVAILABLE_QUANTITY'] )
-		$row['AVAILABLE_QUANTITY'] = $SETTINGS['MAX_QUANTITY'];	
+    if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $row['AVAILABLE_QUANTITY'])
+        $row['AVAILABLE_QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
 
     $product_prices = '';
-    $show_product_prices = false; //var_dump(USE_CUSTOM_SALE_PRICE);
+    $show_product_prices = false;
     $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
     if ($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) {
-        $show_product_prices = true;
+
         $res = CIBlockElement::GetList(array(), array("ID" => $row['PRODUCT_ID']), false, false,
-            array("CATALOG_PRICE_" . SALE_PRICE_TYPE_ID,'CATALOG_PRICE_'.BASIC_PRICE));
+            array("CATALOG_PRICE_" . SALE_PRICE_TYPE_ID, 'CATALOG_PRICE_' . BASIC_PRICE));
         if ($ar_res = $res->fetch()) {
             $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
-            $str_product_prices = explode('.', $product_prices_sql);
-            $product_prices = $str_product_prices[0] . ' ₽';
+            if (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
+                && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) {
+                $show_product_prices = true;
+                $str_product_prices = explode('.', $product_prices_sql);
+
+                $product_prices = $str_product_prices[0] . ' ₽';
+            }
         }
     }
-	
+
     $rowData = array(
         'ID' => $row['ID'],
         'PRODUCT_ID' => $row['PRODUCT_ID'],
@@ -117,19 +122,19 @@ foreach ($item as $row) {
         'BRAND' => isset($row[$this->arParams['BRAND_PROPERTY'] . '_VALUE'])
             ? $row[$this->arParams['BRAND_PROPERTY'] . '_VALUE']
             : '',
-        'GIFT' =>  $row['GIFT'] ?? false,
+        'GIFT' => $row['GIFT'] ?? false,
     );
-	foreach ($count_likes['USER'] as $keyLike => $count) {
-		if ($keyLike == $row['ID']) {
-			//$item['COUNT_LIKE'] = $count['Like'][0];
-			 $rowData['COUNT_FAV'] = $count['Fav'][0];
-			 global $rowFavData;
-			  $rowFavData[$row['ID']] = $count['Fav'][0];
-		}
-	}
+    foreach ($count_likes['USER'] as $keyLike => $count) {
+        if ($keyLike == $row['ID']) {
+            //$item['COUNT_LIKE'] = $count['Like'][0];
+            $rowData['COUNT_FAV'] = $count['Fav'][0];
+            global $rowFavData;
+            $rowFavData[$row['ID']] = $count['Fav'][0];
+        }
+    }
     $res = EnteregoHelper::getItems($row['PRODUCT_ID'], 'VKUS');
     if (!empty($res)) {
-        $rowData['PROPS']['VKUS'] = $res['VKUS'];
+        $rowData['PROPS'][PROPERTY_KEY_VKUS] = $res[PROPERTY_KEY_VKUS];
     }
 
     // show price including ratio

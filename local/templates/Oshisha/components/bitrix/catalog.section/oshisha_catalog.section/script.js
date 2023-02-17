@@ -224,6 +224,8 @@
                     defaultData.AJAX_ID = this.ajaxId;
                 }
 
+                $('.js__filter-close.disabled_class').removeClass('disabled_class');
+
                 BX.ajax({
                     url: '/local/templates/Oshisha/components/bitrix/catalog.section/oshisha_catalog.section/ajax.php' +
                         (document.location.href.indexOf('clear_cache=Y') !== -1 ? '?clear_cache=Y' : ''),
@@ -279,7 +281,7 @@
                 this.formPosting = false;
                 this.enableButton();
 
-                if (result) { 
+                if (result) {
                     this.navParams.NavPageNomer++;
                     this.processItems(result.items);
                     this.processPagination(result.pagination);
@@ -295,7 +297,7 @@
                 $(box).find('span').each(
                     function () {
                         let classes = $(this).attr('class');
-                        if (classes === 'taste') {
+                        if (classes.indexOf('taste') !== -1) {
                             let color = $(this).data('background');
                             $(this).css('background-color', color);
                             let str = '#';
@@ -305,16 +307,6 @@
                             } else {
                                 $(this).css('color', 'white');
                             }
-                        }
-                    }
-                );
-
-                $('body').find('.variation_taste').each(
-                function (index, item) {
-                        if ($(item).find('.taste').length > 2) {
-                            $(item).closest('.toggle_taste ').css('overflow', 'hidden');
-                            $(item).closest('.toggle_taste ').addClass('many_tastes_toggle');
-                            $(item).attr('visible', '0');
                         }
                     }
                 );
@@ -387,9 +379,9 @@
 				{
 					$('.bx-pagination').remove();
 					return;
-					
+
 				}
-                    
+
 
                 var pagination = document.querySelectorAll('[data-pagination-num="' + this.navParams.NavNum + '"]');
                 for (var k in pagination) {

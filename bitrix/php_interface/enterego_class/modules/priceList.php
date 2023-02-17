@@ -113,6 +113,13 @@ $resOption = COption::getOptionString('priceList_xlsx', 'priceListArrayCustom');
         <div class="text_mess"></div>
     </div>
     <script type="text/javascript">
+        let attributes_menu=   document.querySelector('div#global_submenu_enterego').attributes;
+        document.querySelector('div#global_submenu_desktop').attributes.class.value = 'adm-global-submenu';
+        document.querySelector('a#global_menu_desktop').attributes.class.value = 'adm-default adm-main-menu-item adm-desktop';
+        attributes_menu.class.value = 'adm-global-submenu adm-global-submenu-active adm-global-submenu-animate ';
+        document.querySelector('span#global_menu_enterego').attributes.class.value = 'adm-default adm-main-menu-item adm-enterego adm-main-menu-item-active';
+
+
         BX.getParamPriceList = function () {
             let ids = '', dom = document.getElementsByClassName('text_mess'), arrParams = [], i;
             dom.innerHTML = "";
