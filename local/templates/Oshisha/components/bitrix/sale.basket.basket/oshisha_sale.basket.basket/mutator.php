@@ -71,6 +71,7 @@ foreach ($item as $row) {
                 && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) {
                 $show_product_prices = true;
                 $str_product_prices = explode('.', $product_prices_sql);
+
                 $product_prices = $str_product_prices[0] . ' ₽';
             }
         }
@@ -133,7 +134,7 @@ foreach ($item as $row) {
     }
     $res = EnteregoHelper::getItems($row['PRODUCT_ID'], 'VKUS');
     if (!empty($res)) {
-        $rowData['PROPS']['VKUS'] = $res['VKUS'];
+        $rowData['PROPS'][PROPERTY_KEY_VKUS] = $res[PROPERTY_KEY_VKUS];
     }
 
     // show price including ratio

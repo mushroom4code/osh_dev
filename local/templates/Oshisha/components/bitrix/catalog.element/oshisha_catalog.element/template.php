@@ -180,7 +180,7 @@ foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
 $arResult['COUNT_LIKE'] = $count_likes['USER'][$arResult['ID']]['Like'][0];
 $arResult['COUNT_FAV'] = $count_likes['USER'][$arResult['ID']]['Fav'][0];
 
-$taste = $arResult['PROPERTIES']['VKUS'];
+$taste = $arResult['PROPERTIES'][PROPERTY_KEY_VKUS];
 $themeClass = isset($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_THEME'] : '';
 
 $arItems = CSaleBasket::GetList(

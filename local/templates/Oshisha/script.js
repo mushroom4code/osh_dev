@@ -105,7 +105,7 @@ $(document).ready(function () {
         $(box).find('span').each(
             function () {
                 let classes = $(this).attr('class');
-                if (classes === 'taste') {
+                if (classes.indexOf('taste') !== -1) {
                     let color = $(this).data('background');
                     $(this).css('background-color', color);
                     let str = '#';
@@ -121,43 +121,19 @@ $(document).ready(function () {
     }
 
     if (bool === true) {
-        $(body).find('.variation_taste').each(
-            function (index, item) {
-                if ($(item).closest('.bx_catalog_item ').find('.taste').length > 2 && $(item).closest('.bx_catalog_item_container') !== null) {
-                    //$(item).closest('.toggle_taste ').css('overflow', 'hidden');
-                    // $(item).closest('.toggle_taste ').addClass('many_tastes_toggle');
-                    $(item).attr('visible', '0');
-                }
-            }
-        );
-        $(document).on('click', function (e) {
-            if ($(e.target).attr('visible') === '0' && $(e.target).closest('.bx_catalog_item ').find('.taste').length > 2) {
-                //$(e.target).closest('.toggle_taste ').removeClass('many_tastes_toggle');
-                $(e.target).addClass('many_tastes');
-                $(e.target).closest('.toggle_taste ').css({
-                    'overflow': 'visible',
-                    'zIndex': 500,
-                });
-                $(e.target).closest('.bx_catalog_item_container').find('.image_cart ').css('filter', 'blur(3px)');
-                $(e.target).closest('.bx_catalog_item_container').find('.bx_catalog_item_price ').css('filter', 'blur(3px)');
-                $(e.target).closest('.bx_catalog_item_container').find('.box_with_title_like  ').css('filter', 'blur(3px)');
-                $(e.target).closest('.bx_catalog_item_container').find('.bx_catalog_item_controls ').css('filter', 'blur(3px)');
-                $(e.target).attr('visible', '1');
-            } else if ($(e.target).attr('visible') === '1' && $(e.target).closest('.bx_catalog_item ').find('.taste').length > 2) {
-                // $(e.target).closest('.toggle_taste ').addClass('many_tastes_toggle');
-                $(e.target).removeClass('many_tastes');
-                $(e.target).closest('.toggle_taste ').css({
-                    'overflow': 'hidden',
-                    'zIndex': 'auto'
-                });
-                $(e.target).attr('visible', '0');
-                0
-                $(e.target).closest('.bx_catalog_item_container').find('.image_cart ').css('filter', 'blur(0px)');
-                $(e.target).closest('.bx_catalog_item_container').find('.bx_catalog_item_price ').css('filter', 'blur(0px)');
-                $(e.target).closest('.bx_catalog_item_container').find('.box_with_title_like  ').css('filter', 'blur(0px)');
-                $(e.target).closest('.bx_catalog_item_container').find('.bx_catalog_item_controls ').css('filter', 'blur(0px)');
-            }
+        $(document).on('click', '.js__taste_toggle', function (e) {
+            $(this).closest('.js__tastes').toggleClass('active');
+            let cardWrapper = $(e.target).closest('.bx_catalog_item_container'),
+                tasteOverlay = cardWrapper.find('.bx_catalog_item_overlay'),
+                priceBox = cardWrapper.find('.info-prices-box-hover');
 
+            if ($(this).closest('.js__tastes').hasClass('active')) {
+                tasteOverlay.css({height:'100%'});
+                priceBox.css({zIndex:'1000'});
+            } else {
+                tasteOverlay.css({height:'0'});
+                priceBox.css({zIndex:'1300'});
+            }
         })
         tasteInit();
     }

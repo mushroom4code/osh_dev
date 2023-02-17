@@ -58,7 +58,7 @@ $arItemIDs = array(
 );
 $favorite = '';
 $styleForTaste = '';
-$taste = $item['PROPERTIES']['VKUS'];
+$taste = $item['PROPERTIES'][PROPERTY_KEY_VKUS];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
 $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES'][PROP_NEW];
@@ -98,7 +98,7 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
         <?php }
         if (count($taste['VALUE']) > 0) { ?>
             <div class="toggle_taste card-price">
-                <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
+                <div class="variation_taste">
                     <?php
                     foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
@@ -128,7 +128,7 @@ $item['DETAIL_PAGE_URL'] = '/catalog/product/' . $item['CODE'] . '/'; ?>
         <div class="box_with_title_like d-flex text-center">
             <?php if (count($taste['VALUE']) > 0) { ?>
                 <div class="toggle_taste_line">
-                    <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
+                    <div class="variation_taste">
                         <?php
 
                         foreach ($taste['VALUE'] as $key => $name) {
