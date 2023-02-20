@@ -155,17 +155,79 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 .by-card .info-price {
     display: none;
 }
-
+.by-card .show-prices {
+    padding: 7px 10px;
+    display: block;
+    z-index: 1015;
+    position: relative;
+}
+.by-card .show-prices span {
+    display: inline-block;
+    position: relative;
+    padding: 0 0 0 15px;
+    min-width: 100px;
+    text-align: left;
+}
+.by-card .show-prices span::before {
+    border-top: 0 solid transparent;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #666;
+    position: absolute;
+    content: '';
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform: translateY(-50%) rotate(0);
+    transition: all 0.3s linear;
+    cursor: pointer;
+    z-index: 200;
+}
+.by-card .info-prices-box-hover.active .show-prices span::before {
+    transform: translateY(-50%) rotate(-180deg);
+}
+.by-card .js__all-prices {
+    height: 0;
+    overflow: hidden;
+    top: 29px;
+    width: 100%;
+    border-radius: 0 0 8px 8px;
+}
+.by-card .prices-block {
+    /*background-color: #F0F0F0;*/
+    background-color: #ffffff;
+    /*padding: 25px 12px 15px;*/
+    padding: 15px 12px;
+    border-radius: 0;
+    width: 100%;
+}
 .info-prices-box-hover {
     z-index: 1012;
 }
+
+.by-line .info-prices-box-hover {
+    display: block;
+}
+.by-line .info-prices-box-bottom {
+    display: none;
+}
+
+d
+.by-card .info-prices-box-hover {
+    display: none;
+}
+.by-card .info-prices-box-bottom {
+    display: block;
+}
+
 
 .by-card .info-prices-box-hover {
     width: 100%;
     z-index: 1012;
     height: auto;
-    background: #E5E5E5;
-    position: absolute;
+    background: #f0f0f0;
+    position: relative;
     left: 0;
     bottom: 0;
     margin: 0 !important;
@@ -196,14 +258,18 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 .slick-slide .info-prices-box-hover > div {
     top: 14%
 }
-
 .prices-block {
     width: fit-content;
     background-color: #F0F0F0;
     padding: 15px;
     border-radius: 10px;
 }
-
+.by-card .prices-block {
+    width: 100%;
+}
+.by-card .prices-block > p br {
+    display: none;
+}
 .z-index-1000 {
     z-index: 1000;
 }
@@ -893,6 +959,15 @@ a.link_like, .catalog-section-list-item-link > i, .box_with_net a {
 
 .after_price {
     font-size: 9px;
+}
+.by-card .after_price {
+    position: absolute;
+    color: #999;
+    text-decoration-color: #f55f5c;
+    text-decoration-line: line-through;
+    top: 0;
+    right: 0;
+    transform: translateX(100%);
 }
 
 .color_blue, .taste, .font-10 {
@@ -1841,11 +1916,13 @@ a.bx_catalog_item_title {
     grid-column-end: 3;
 }
 
-.by-line:not(.opt) .product-item {
+.by-line:not(.opt) .product-item {}
+.by-line .item-product-info {
     display: grid;
     grid-template-columns: 0.9fr 2fr 0.7fr;
     grid-template-rows: 1fr 0.5fr 0.1fr;
     grid-column-gap: 20px;
+    padding: 0;
 }
 
 .by-line .toggle_taste {
@@ -1952,6 +2029,11 @@ a.bx_catalog_item_title {
 
 .by-line .detail-text, .by-line .line-price, .by-card .card-price {
     display: block;
+}
+.by-card .card-price {
+    display: block !important;
+    position: relative;
+    width: auto;
 }
 
 .detail-text {
@@ -4022,7 +4104,7 @@ table#TableWorkers.no-footer {
     }
 
     .by-card .product-item-container > .bx_catalog_item > .bx_catalog_item_container {
-        padding: 15px 10px 40px;
+        /*padding: 15px 10px;*/
         margin: 5px;
     }
 
@@ -4291,7 +4373,7 @@ table#TableWorkers.no-footer {
     }
 
     .by-card .product-item-container > .bx_catalog_item > .bx_catalog_item_container {
-        padding: 10px 10px 40px;
+        /*padding: 10px 10px;*/
         width: 100%;
         margin: 0 !important;
     }
@@ -4845,11 +4927,12 @@ li, ul {
 
 }
 .by-card .bx_catalog_item_container {
-    padding: 15px 20px 45px;
+    padding: 0;
 }
 @media (max-width: 1440px) {
     .by-card .bx_catalog_item_container {
-        padding: 10px 10px 40px 10px;
+        /*padding: 10px 10px 40px 10px;*/
+        /*padding: 10px;*/
     }
 }
 
@@ -5945,12 +6028,13 @@ header {
 .toggle_taste.card-price.js__tastes {
     position: relative;
     z-index: 1011;
-    min-height: 60px;
+    /*min-height: 60px;*/
+    min-height: 30px;
 }
 
 @media screen and (max-width: 768px) {
     .toggle_taste.card-price.js__tastes {
-        min-height: 30px;
+        /*min-height: 30px;*/
     }
 }
 
@@ -6288,4 +6372,13 @@ body.hide-jivo > jdiv {
 
 .bx-catalog-element .variation_taste .taste {
     display: inline-block;
+}
+
+.item-product-info {
+    padding: 15px 20px;
+}
+@media screen and (max-width: 768px) {
+    .by-card .item-product-info {
+        padding: 15px 10px;
+    }
 }
