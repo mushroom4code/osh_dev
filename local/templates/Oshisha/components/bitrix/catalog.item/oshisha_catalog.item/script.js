@@ -2437,21 +2437,20 @@ $(document).on('click', '.open-fast-window', function () {
         $.each(product.PRICE, function (i, price) {
             let sale = '';
 
-            if (product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) {
+            if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(product.SALE_PRICE) > 0) {
                 sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
             }
 
             if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
-                if (product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) {
-                    let sale_price = price.PRINT_PRICE;
+                if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(product.SALE_PRICE) > 0) {
                     let print_price = product.PRICE[0].PRINT_PRICE;
-                    if (parseInt(product.SALE_PRICE) > 0) {
-                        sale_price = product.SALE_PRICE;
-                        print_price = price.PRINT_PRICE;
-                    }
-                    price_base.innerHTML = sale_price + ' <span class="color-redLight font-14 ml-3">Старая цена ' + print_price + '</span>';
+                    let sale_price = product.SALE_PRICE;
+                    let print_price_sum = (parseInt(product.PRICE[0].PRICE) - parseInt(sale_price)) ?? 0;
+                    price_base.innerHTML = sale_price + ' руб. <span class="font-14 ml-3">' +
+                        ' <b class="decoration-color-red mr-2">' + print_price + '</b>' +
+                        '<b class="sale-percent"> - ' + print_price_sum + ' руб.</b></span>';
                 } else {
-                    price_base.innerHTML = '<span class="font-14">от </span>'.price.PRINT_PRICE
+                    price_base.innerHTML = '<span class="font-14 card-price-text">от </span>' + price.PRINT_PRICE;
                 }
             }
 

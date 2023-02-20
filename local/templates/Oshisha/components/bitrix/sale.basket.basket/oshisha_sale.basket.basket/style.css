@@ -703,14 +703,7 @@ button.btn_basket {
 }
 
 .sale-percent {
-    padding: 3px 2px;
-    border: 1px solid red;
     font-size: 11px;
-    border-radius: 4px;
-}
-
-b.decoration-color-red {
-    text-decoration: line-through red;
 }
 
 .basket-item-image-link {

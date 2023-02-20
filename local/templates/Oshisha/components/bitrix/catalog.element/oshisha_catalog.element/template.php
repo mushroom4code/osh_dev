@@ -433,7 +433,7 @@ global $option_site;
                         $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
                         $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
                     } else {
-                        $price_new = '<span class="font-14">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                        $price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
                         $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
                     }
                     $styles = ''; ?>
@@ -445,8 +445,12 @@ global $option_site;
                             <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRINT_PRICE']) ||
                                 $useDiscount['VALUE_XML_ID'] === 'true' &&
                                 !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
-                                $styles = 'price-discount'; ?>
-                                <span class="span">Старая цена <?= $price['PRICE_DATA'][1]['PRINT_PRICE']; ?></span>
+                                $styles = 'price-discount';
+                                $old_sum = (int)$price['PRICE_DATA'][0]['PRICE'] - (int)$price['SALE_PRICE']['PRICE'] ?? 0; ?>
+                                <span class="font-14 ml-3">
+                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
+                                    <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
+                                </span>
                             <?php } ?>
                         </div>
                         <div class="d-flex flex-column prices-block">
