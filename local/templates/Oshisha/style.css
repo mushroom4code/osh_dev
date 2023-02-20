@@ -3144,6 +3144,10 @@ table#TableWorkers.no-footer {
         left: 93%;
     }
 
+    .header_top, .block_menu_mobile {
+        position: fixed;
+    }
+
     .box_with_search, .box_right_header, .banners_footer, .banner_big, .banner_small, .btn_footer, .custom_field {
         width: 100%;
     }

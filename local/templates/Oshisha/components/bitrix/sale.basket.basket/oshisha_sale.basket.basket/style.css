@@ -669,10 +669,15 @@ button.btn_basket {
 .basket-items-list-item-descriptions {
     -ms-flex-order: 1;
     margin: 1.5rem 0;
-    width: 95%;
+    width: 100%;
     vertical-align: top;
     -webkit-box-ordinal-group: 2;
     order: 1;
+}
+
+.box-with-prices-net {
+    border: 2px solid #F0F0F0;
+    border-radius: 10px;
 }
 
 .basket-items-list-item-descriptions-inner {
@@ -680,7 +685,6 @@ button.btn_basket {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    width: 75%;
 }
 
 /*region Image*/
@@ -688,16 +692,26 @@ button.btn_basket {
     position: relative;
     padding: 2px;
     min-width: 50px;
-    max-width: 136px;
+    max-width: 145px;
     border: 1.205px solid #E5E5E5;
     background-color: #fdfdfd;
     cursor: pointer;
     border-radius: 10px;
     text-align: center;
-    margin-right: 15px;
+    margin-right: 10px;
     height: min-content;
 }
 
+.sale-percent {
+    padding: 3px 2px;
+    border: 1px solid red;
+    font-size: 11px;
+    border-radius: 4px;
+}
+
+b.decoration-color-red {
+    text-decoration: line-through red;
+}
 
 .basket-item-image-link {
     position: relative;
@@ -808,10 +822,9 @@ button.btn_basket {
     }
 
     .basket-item-image {
-        margin: 10px auto 15px;
         padding-right: 0;
-        max-width: 74px;
-        max-height: 74px;
+        max-width: 63px;
+        max-height: 63px;
         width: auto;
         height: auto;
     }
@@ -905,7 +918,16 @@ button.btn_basket {
 
     .basket-item-price-current-text {
         font-size: 15px;
+        line-height: initial;
     }
+
+}
+
+.basket-item-info-name-link span {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
 }
 
 /*RING*/
@@ -1165,14 +1187,14 @@ h2.basket-item-info-name {
 }
 
 .product-item-amount {
-    padding: 1px !important;
-    width: 34px;
+    padding: 3px !important;
+    width: 41px;
     background: #E5E5E5;
     border-radius: 8.01973px;
     color: #000;
     text-align: center;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 14px;
     transition: border 300ms ease;
     border: none;
 }
@@ -2201,7 +2223,12 @@ tr.basket-items-list-item-container {
     display: none;
 }
 
-@media (max-width: 767px) {
+.width-inherit {
+    width: inherit;
+}
+
+
+@media (max-width: 1024px) {
     .mobile_price {
         display: flex;
         flex-direction: column;
@@ -2212,8 +2239,27 @@ tr.basket-items-list-item-container {
         width: 100%;
     }
 
+    .basket-item-amount-btn-plus, .basket-item-amount-btn-minus {
+        width: 17px;
+        height: 17px;
+    }
+
+    .box-with-prices-net {
+        width: max-content;
+        z-index: 1;
+        background-color: white;
+        box-shadow: 0 0 8px 2px #e9e9e9;
+        border: none;
+        transition: 0.3s;
+    }
+
+    .js--open-price-list {
+        color: #adadad;
+        transition: 0.3s;
+    }
+
     .basket-item-info-name {
-        margin-right: 20px;
+        margin-right: 27px;
     }
 
     .basket-item-info-name-link {
@@ -2225,6 +2271,7 @@ tr.basket-items-list-item-container {
     .basket-items-list-item-amount {
         display: flex;
         margin-bottom: 0 !important;
+        width: 100%;
     }
 
     .price-column {
@@ -2234,12 +2281,15 @@ tr.basket-items-list-item-container {
     .like-column {
         display: block !important;
         width: 22px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
     }
 
     .like-column .like-block {
         position: absolute;
         bottom: 6px;
-
         height: 22px;
         line-height: 1 !important;
     }
@@ -2257,13 +2307,14 @@ tr.basket-items-list-item-container {
     }
 
     .product-item-amount {
-        width: 30px !important;
-        max-width: 30px !important;
+        max-width: 35px !important;
         font-size: 12px;
+        padding: 5px;
     }
 
     .basket-item-block-properties .variation_taste .taste {
         margin-bottom: 3px;
+        padding: 3px;
     }
 
     .variation_taste {
@@ -2288,6 +2339,11 @@ tr.basket-items-list-item-container {
         top: 0px;
         height: 20px;
         line-height: 1;
+    }
+
+    .sale-percent {
+        padding: 2px 1px;
+        font-size: 10px;
     }
 }
 

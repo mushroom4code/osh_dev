@@ -82,7 +82,8 @@ foreach ($item as $row) {
                 if (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
                     && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) {
                     $str_product_prices = explode('.', $product_prices_sql);
-                    $price['SALE_PRICE'] = $str_product_prices[0] . ' ₽';                    $show_product_prices = true;
+                    $price['SALE_PRICE'] = $str_product_prices[0] . ' ₽';
+                    $show_product_prices = true;
 
                 }
             } else {
@@ -96,19 +97,21 @@ foreach ($item as $row) {
             }
 
             if (!empty($ar_res["CATALOG_PRICE_" . RETAIL_PRICE])) {
-                $price['PRICE_DATA'][0] = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE])[0];
+                $price['PRICE_DATA'][0]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE])[0];
                 $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
             }
             if (!empty($ar_res["CATALOG_PRICE_" . BASIC_PRICE])) {
-                $price['PRICE_DATA'][1] = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE])[0];
+                $price['PRICE_DATA'][1]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE])[0];
                 $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
             }
             if (!empty($ar_res["CATALOG_PRICE_" . B2B_PRICE])) {
-                $price['PRICE_DATA'][2] = explode('.', $ar_res["CATALOG_PRICE_" . B2B_PRICE])[0];
+                $price['PRICE_DATA'][2]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . B2B_PRICE])[0];
                 $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
             }
 
             $product_prices = $str_product_prices[0] . ' ₽';
+            $sale_price_val = (int)$str_product_prices[0];
+            $sum_sale = ((round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']) - round($row['SUM_VALUE']));
         }
     }
 
@@ -135,12 +138,14 @@ foreach ($item as $row) {
         'DISCOUNT_PRICE_FORMATED' => $row['DISCOUNT_PRICE_FORMATED'],
         'SUM_PRICE' => $row['SUM_VALUE'],
         'SUM_PRICE_FORMATED' => $row['SUM'],
+        'SUM_SALE_PRICE' => '',
         'SUM_FULL_PRICE' => $row['SUM_FULL_PRICE'],
         'SUM_FULL_PRICE_FORMATED' => $row['SUM_FULL_PRICE_FORMATED'],
         'SUM_DISCOUNT_PRICE' => $row['SUM_DISCOUNT_PRICE'],
         'SUM_DISCOUNT_PRICE_FORMATED' => $row['SUM_DISCOUNT_PRICE_FORMATED'],
         //SALE PRICE
         'SALE_PRICE' => $product_prices,
+        'SALE_PRICE_VAL' => $sum_sale ?? 0,
         'SHOW_SALE_PRICE' => $show_product_prices,
         //
         'MEASURE_RATIO' => isset($row['MEASURE_RATIO']) ? $row['MEASURE_RATIO'] : 1,

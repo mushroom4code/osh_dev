@@ -44,16 +44,19 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
 /**
  * @var CAllMain|CMain $APPLICATION
  * @var  CUser $USER
- */?>
+ */ ?>
 <script id="basket-item-template" type="text/html">
     <div class="d-flex justify-content-center basket-items-list-item-container{{#SHOW_RESTORE}}
      basket-items-list-item-container-expend{{/SHOW_RESTORE}}"
          id="basket-item-{{ID}}" data-gift="{{GIFT}}" data-entity="basket-item" data-id="{{ID}}">
         {{^SHOW_RESTORE}}
         <div class="basket-items-list-item-descriptions d-flex row_section justify-content-between">
-            <div class="basket-items-list-item-descriptions-inner" id="basket-item-height-aligner-{{ID}}">
+            <div class="basket-items-list-item-descriptions-inner col-lg-7 col-md-12 col-12 p-0"
+            <div class="basket-items-list-item-descriptions-inner col-lg-7 col-md-12 col-12 p-0"
+                 id="basket-item-height-aligner-{{ID}}">
                 <?php if (in_array('PREVIEW_PICTURE', $arParams['COLUMNS_LIST'])){ ?>
-                <div class="basket-item-block-image<?= (!isset($mobileColumns['PREVIEW_PICTURE']) ? ' d-none d-sm-block' : '') ?>">
+                <div class="basket-item-block-image col-lg-3 col-md-3 p-3
+                 <?= (!isset($mobileColumns['PREVIEW_PICTURE']) ? ' d-none d-sm-block' : '') ?>">
                     {{#DETAIL_PAGE_URL}}
                     <a href="{{DETAIL_PAGE_URL}}" class="basket-item-image-link">
                         {{/DETAIL_PAGE_URL}}
@@ -90,7 +93,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             {{#SHOW_LOADING}}
             <div class="basket-items-list-item-overlay"></div>
             {{/SHOW_LOADING}}
-            <div class="basket-item-block-info d-flex flex-column justify-content-between">
+            <div class="basket-item-block-info d-flex flex-column justify-content-between width-inherit">
                 <div>
                     <?php if (isset($mobileColumns['DELETE'])) { ?>
                         <span class="basket-item-actions-remove d-block d-md-none"
@@ -278,85 +281,135 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         ?>
                     </div>
                 </div>
-                <div>
-                    <div class="basket-items-list-item-amount mb-2 justify-content-between align-items-end">
-                        <?php if ($mobile->isMobile()) { ?>
-                            <div class=" mobile_price">
-                                <div class="basket-items-list-item-price<?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
-                                    <div class="basket-item-block-price">
-                                        {{#GIFT}}
-                                        {{#SHOW_DISCOUNT_PRICE}}
-                                        <div class="basket-item-price-old">
+                <div class="d-flex flex-lg-row flx-md-row flex-column align-items-center width_100">
+                    <div class="basket-items-list-item-amount justify-content-between align-items-end">
+                        <div class="d-flex flex-row">
+                            <?php if ($mobile->isMobile() || $mobile->isTablet()) { ?>
+                                <div class="mobile_price mr-md-4">
+                                    <div class="basket-items-list-item-price d-flex flex-row <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
+                                        <div class="basket-item-block-price">
+                                            {{#GIFT}}
+                                            {{#SHOW_DISCOUNT_PRICE}}
+                                            <div class="basket-item-price-old">
                                         <span class="basket-item-price-old-text" id="basket-item-sum-price-old-{{ID}}">
                                             {{{SUM_FULL_PRICE_FORMATED}}}
                                         </span>
-                                        </div>
-                                        {{/SHOW_DISCOUNT_PRICE}}
-                                        {{/GIFT}}
+                                            </div>
+                                            {{/SHOW_DISCOUNT_PRICE}}
+                                            {{/GIFT}}
 
-                                        <div class="basket-item-price-current d-flex justify-content-end">
+                                            <div class="basket-item-price-current d-flex justify-content-end">
                                     <span class="basket-item-price-current-text" id="basket-item-sum-price-{{ID}}">
                                         {{{SUM_PRICE_FORMATED}}}
                                     </span>
-                                        </div>
+                                            </div>
 
-                                        {{^GIFT}}
-                                        {{#SHOW_DISCOUNT_PRICE}}
-                                        <div class="basket-item-price-difference">
-                                            <?= Loc::getMessage('SBB_BASKET_ITEM_ECONOMY') ?>
-                                            <span id="basket-item-sum-price-difference-{{ID}}"
-                                                  style="white-space: nowrap;">
+                                            {{^GIFT}}
+                                            {{#SHOW_DISCOUNT_PRICE}}
+                                            <div class="basket-item-price-difference">
+                                                <?= Loc::getMessage('SBB_BASKET_ITEM_ECONOMY') ?>
+                                                <span id="basket-item-sum-price-difference-{{ID}}"
+                                                      style="white-space: nowrap;">
                                             {{{SUM_DISCOUNT_PRICE_FORMATED}}}
                                         </span>
+                                            </div>
+                                            {{/SHOW_DISCOUNT_PRICE}}
+                                            {{/GIFT}}
+
+                                            {{#SHOW_LOADING}}
+                                            <div class="basket-items-list-item-overlay"></div>
+                                            {{/SHOW_LOADING}}
                                         </div>
-                                        {{/SHOW_DISCOUNT_PRICE}}
-                                        {{/GIFT}}
-
-                                        {{#SHOW_LOADING}}
-                                        <div class="basket-items-list-item-overlay"></div>
-                                        {{/SHOW_LOADING}}
+                                        <i class="fa fa-caret-down font-20 ml-2 js--open-price-list"
+                                           aria-hidden="true"></i>
                                     </div>
+                                    {{#SHOW_SALE_PRICE}}
+                                    <div class="position-relative d-flex flex-row">
+                                        <div class="text-right font-11">
+                                            <b class="decoration-color-red mr-2">{{{SALE_PRICE}}}</b>
+                                            <b class="sale-percent"> - {{{SALE_PRICE_VAL}}} ₽</b>
+                                        </div>
+                                        <div class="box-with-prices-net d-none position-absolute p-2">
+                                            {{#PRICES_NET}}
+                                            {{#PRICE_DATA}}
+                                            <p class="font-12 mb-2"><b>{{{NAME}}}</b> - <b>{{{VAL}}} ₽</b></p>
+                                            {{/PRICE_DATA}}
+                                            {{/PRICES_NET}}
+                                        </div>
+                                    </div>
+                                    {{/SHOW_SALE_PRICE}}
                                 </div>
-                                {{#SHOW_SALE_PRICE}}
-                                <div class="after_price text-right">Старая цена: <b>{{{SALE_PRICE}}}</b> {{{SALE_TEXT}}}
+                            <?php } ?>
+                            <div class="basket-item-block-amount{{#NOT_AVAILABLE}} disabled{{/NOT_AVAILABLE}}"
+                                 data-entity="basket-item-quantity-block">
+                                {{^GIFT}}
+                                <span class="basket-item-amount-btn-minus" data-max="{{AVAILABLE_QUANTITY}}"
+                                      data-entity="basket-item-quantity-minus"></span>
+                                {{/GIFT}}
+                                <div class="basket-item-amount-filed-block">
+
+                                    <input type="text" class="product-item-amount" value="{{QUANTITY}}"
+                                           {{#GIFT}} disabled="disabled" {{/GIFT}}
+                                    {{#NOT_AVAILABLE}} disabled="disabled" {{/NOT_AVAILABLE}}
+
+                                    data-value="{{QUANTITY}}" data-max="{{AVAILABLE_QUANTITY}}"
+                                    data-entity="basket-item-quantity-field"
+                                    id="basket-item-quantity-{{ID}}">
                                 </div>
-                                {{/SHOW_SALE_PRICE}}
+                                {{^GIFT}}
+                                <span class="basket-item-amount-btn-plus" data-max="{{AVAILABLE_QUANTITY}}"
+                                      data-entity="basket-item-quantity-plus"></span>
+                                {{/GIFT}}
+                                {{#SHOW_LOADING}}
+                                <div class="basket-items-list-item-overlay"></div>
+                                {{/SHOW_LOADING}}
                             </div>
-                        <?php } ?>
-                        <div class="basket-item-block-amount{{#NOT_AVAILABLE}} disabled{{/NOT_AVAILABLE}}"
-                             data-entity="basket-item-quantity-block">
-                            {{^GIFT}}
-                            <span class="basket-item-amount-btn-minus" data-max="{{AVAILABLE_QUANTITY}}"
-                                  data-entity="basket-item-quantity-minus"></span>
-                            {{/GIFT}}
-                            <div class="basket-item-amount-filed-block">
-
-                                <input type="text" class="product-item-amount" value="{{QUANTITY}}"
-                                       {{#GIFT}} disabled="disabled" {{/GIFT}}
-                                {{#NOT_AVAILABLE}} disabled="disabled" {{/NOT_AVAILABLE}}
-
-                                data-value="{{QUANTITY}}" data-max="{{AVAILABLE_QUANTITY}}"
-                                data-entity="basket-item-quantity-field"
-                                id="basket-item-quantity-{{ID}}">
-                            </div>
-                            {{^GIFT}}
-                            <span class="basket-item-amount-btn-plus" data-max="{{AVAILABLE_QUANTITY}}"
-                                  data-entity="basket-item-quantity-plus"></span>
-                            {{/GIFT}}
-                            {{#SHOW_LOADING}}
-                            <div class="basket-items-list-item-overlay"></div>
-                            {{/SHOW_LOADING}}
                         </div>
                         <div class="alert_quantity" data-id="{{PRODUCT_ID}}"></div>
                     </div>
+                    <?php if ($useActionColumn) { ?>
+                        <div class="d-flex flex-row like-column ml-2">
+                            <div class="like-block"><?php
+                                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                                    'templates',
+                                    array(
+                                        'ID_PROD' => "{{ID}}",
+                                        'F_USER_ID' => $USER->getId(),
+                                        'LOOK_LIKE' => false,
+                                        'LOOK_FAVORITE' => true,
+                                        'COUNT_LIKE' => $arResult['COUNT_LIKE'],
+                                        'COUNT_FAV' => "{{COUNT_FAV}}",//$arResult['COUNT_FAV'],
+                                        'COUNT_LIKES' => $arResult['COUNT_LIKES'],
+                                    ),
+                                    $component,
+                                    array('HIDE_ICONS' => 'Y')
+                                ); ?></div>
+                            <div class="basket-items-list-item-remove">
+                                <div class="basket-item-block-actions">
+                            <span class="basket-item-actions-remove" data-entity="basket-item-delete">
+                                <i class="fa fa-trash-o" title="Удалить товар" aria-hidden="true"></i></span>
+                                    {{#SHOW_LOADING}}
+                                    <div class="basket-items-list-item-overlay"></div>
+                                    {{/SHOW_LOADING}}
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column justify-content-between align-items-end end-column">
-            <?php if ($useSumColumn) {
-                if (!$mobile->isMobile()) { ?>
-                    <div class="d-flex flex-column price-column">
-                        <div class="basket-items-list-item-price<?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
+        <div class="d-flex flex-column justify-content-between align-items-end end-column col-lg-5 col-md-12 col-12 pr-0">
+            <?php if (!$mobile->isMobile() || $mobile->isTablet()) { ?>
+                <div class="d-flex flex-row width_100 justify-content-between">
+                    <div class="box-with-prices-net p-2">
+                        {{#PRICES_NET}}
+                        {{#PRICE_DATA}}
+                        <p class="font-12 mb-2"><b>{{{NAME}}}</b> - <b>{{{VAL}}} ₽</b></p>
+                        {{/PRICE_DATA}}
+                        {{/PRICES_NET}}
+                    </div>
+                    <div class="d-flex flex-column price-column ml-3">
+                        <div class="basket-items-list-item-price mb-1 <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
                             <div class="basket-item-block-price">
                                 {{^GIFT}}
                                 {{#SHOW_DISCOUNT_PRICE}}
@@ -369,11 +422,10 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                 {{/GIFT}}
 
                                 <div class="basket-item-price-current d-flex justify-content-end">
-							<span class="basket-item-price-current-text" id="basket-item-sum-price-{{ID}}">
-								{{{SUM_PRICE_FORMATED}}}
-							</span>
+                                        <span class="basket-item-price-current-text" id="basket-item-sum-price-{{ID}}">
+                                            {{{SUM_PRICE_FORMATED}}}
+                                        </span>
                                 </div>
-
                                 {{^GIFT}}
                                 {{#SHOW_DISCOUNT_PRICE}}
                                 <div class="basket-item-price-difference">
@@ -390,37 +442,11 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                             </div>
                         </div>
                         {{#SHOW_SALE_PRICE}}
-                        <div class="after_price text-right">Старая цена: <b>{{{SALE_PRICE}}}</b> {{{SALE_TEXT}}}
+                        <div class="text-right font-11">
+                            <b class="decoration-color-red mr-2">{{{SALE_PRICE}}}</b>
+                            <b class="sale-percent"> - {{{SALE_PRICE_VAL}}} ₽</b>
                         </div>
                         {{/SHOW_SALE_PRICE}}
-                    </div>
-                <?php }
-            } ?>
-            <?php if ($useActionColumn) { ?>
-                <div class="d-flex flex-row like-column">
-                    <div class="like-block"><?php
-                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                            'templates',
-                            array(
-                                'ID_PROD' => "{{ID}}",
-                                'F_USER_ID' => $USER->getId(),
-                                'LOOK_LIKE' => false,
-                                'LOOK_FAVORITE' => true,
-                                'COUNT_LIKE' => $arResult['COUNT_LIKE'],
-                                'COUNT_FAV' => "{{COUNT_FAV}}",//$arResult['COUNT_FAV'],
-                                'COUNT_LIKES' => $arResult['COUNT_LIKES'],
-                            ),
-                            $component,
-                            array('HIDE_ICONS' => 'Y')
-                        ); ?></div>
-                    <div class="basket-items-list-item-remove">
-                        <div class="basket-item-block-actions">
-                            <span class="basket-item-actions-remove" data-entity="basket-item-delete">
-                                <i class="fa fa-trash-o" title="Удалить товар" aria-hidden="true"></i></span>
-                            {{#SHOW_LOADING}}
-                            <div class="basket-items-list-item-overlay"></div>
-                            {{/SHOW_LOADING}}
-                        </div>
                     </div>
                 </div>
             <?php } ?>
@@ -464,7 +490,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     ?>
                 </div>
                 <?php if (in_array('PREVIEW_PICTURE', $arParams['COLUMNS_LIST'])) { ?>
-                <div class="basket-item-block-image border_none m-0 align-self-center
+                <div class="basket-item-block-image border_none m-0 align-self-center col-lg-3 col-md-3 p-3
                 <?= (!isset($mobileColumns['PREVIEW_PICTURE']) ? ' d-none d-sm-block' : '') ?>">
                     {{#DETAIL_PAGE_URL}}
                     <a href="{{DETAIL_PAGE_URL}}" class="basket-item-image-link">
@@ -476,7 +502,8 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         {{#SHOW_LABEL}}
                         <div class="basket-item-label-text basket-item-label-big <?= $labelPositionClass ?>">
                             {{#LABEL_VALUES}}
-                            <div {{#HIDE_MOBILE}} class="d-none d-sm-block" {{/HIDE_MOBILE}}>
+                            <div {{#HIDE_MOBILE}} class="d-none d-sm-block" {{
+                            /HIDE_MOBILE}}>
                             <span title="{{NAME}}">{{NAME}}</span>
                         </div>
                         {{/LABEL_VALUES}}
@@ -497,7 +524,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             {{#SHOW_LOADING}}
             <div class="basket-items-list-item-overlay"></div>
             {{/SHOW_LOADING}}
-            <div class="basket-item-block-info d-flex flex-column justify-content-between">
+            <div class="basket-item-block-info d-flex flex-column justify-content-between width-inherit">
                 <div>
                     <?php if (isset($mobileColumns['DELETE'])) { ?>
                         <span class="basket-item-actions-remove d-block d-md-none"
@@ -727,13 +754,15 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         </div>
                     </div>
                     {{#SHOW_SALE_PRICE}}
-                    <div class="after_price text-right">Старая цена: <b>{{{SALE_PRICE}}}</b>  {{{SALE_TEXT}}}
+                    <div class="text-right font-11">
+                        <b class="decoration-color-red mr-2">{{{SALE_PRICE}}}</b>
+                        <b class="sale-percent"> - {{{SALE_PRICE_VAL}}} ₽</b>
                     </div>
                     {{/SHOW_SALE_PRICE}}
                 </div>
             <?php }
             if ($useActionColumn) { ?>
-                <div class="d-flex flex-row">
+                <div class="d-flex flex-row width_100 justify-content-between">
                     <div>
                         <?php
                         $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
