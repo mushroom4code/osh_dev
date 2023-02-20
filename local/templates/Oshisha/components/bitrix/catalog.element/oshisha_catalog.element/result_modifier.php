@@ -1,4 +1,6 @@
-<? if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+<? use Enterego\EnteregoBasket;
+
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 /**
  * @var CBitrixComponentTemplate $this
@@ -15,13 +17,12 @@ while ($subscribe = $queryObject->fetch())
     $arResult['ITEM_SUBSCRIPTION'] = $subscribe;
 }
 
-//$subscription_item_ids = array_column($listCurrentUserSubsriptions["SUBSCRIPTIONS"], 'ITEM_ID');
-//$found_key = array_search((string)$arResult['ID'], $subscription_item_ids);
 $is_key_found = (isset($arResult['ITEM_SUBSCRIPTION']) && ($arResult['ITEM_SUBSCRIPTION'] !== false)) ? true : false;
 
-//$arResult["CURRENT_USER_SUBSCRIPTION"] = $listCurrentUserSubsriptions;
-//$arResult["SUBSCRIPTION_KEY"] = $found_key;
 $arResult["IS_SUBSCRIPTION_KEY_FOUND"] =$is_key_found;
+
+$useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
+$arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($arResult['ITEM_ALL_PRICES'][0], $useDiscount);
 
 $component = $this->getComponent();
 $arParams = $component->applyTemplateModifications();

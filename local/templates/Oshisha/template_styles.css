@@ -437,7 +437,7 @@ a:hover,
     }
 
     .get_code_button.profile {
-        margin-left:6px;
+        margin-left: 6px;
     }
 
     .ctweb-label {
@@ -662,6 +662,7 @@ h3.ctweb-title {
     top: 27vh;
     position: fixed !important;
 }
+
 .ctweb-smsauth-menu-form.profile {
     padding-left: unset;
     padding-right: unset;
@@ -782,6 +783,10 @@ h3.ctweb-title {
 
 .box_with_fav_bask .product-item-amount-field-contain-wrap {
     display: none;
+}
+
+.arcticmodal-container .box-modal {
+    box-shadow: none;
 }
 
 .box-modal-white {
@@ -958,9 +963,11 @@ h3.ctweb-title {
     font-weight: 300 !important;
     transition: 0.3s;
 }
+
 .btn.link_menu_catalog.get_code_button.profile:not(:disabled):not(.disabled) {
-    cursor:pointer;
+    cursor: pointer;
 }
+
 .btn.link_menu_catalog.get_code_button.profile:hover {
     background-color: #f17775;
 }
@@ -973,7 +980,7 @@ h3.ctweb-title {
     color: #F55F5C;
 }
 
-.profile.ctweb-smsauth-menu-step div.col-sm-12.col-md-12{
+.profile.ctweb-smsauth-menu-step div.col-sm-12.col-md-12 {
     padding-left: unset;
 }
 

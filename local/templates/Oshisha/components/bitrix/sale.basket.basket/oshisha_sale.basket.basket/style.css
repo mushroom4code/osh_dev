@@ -13,9 +13,9 @@
 }
 
 .basket-item-block-properties .variation_taste .taste {
-    margin-right: 4px;
+    margin-right: 3px;
     margin-bottom: 0;
-    padding: 1px 8px;
+    padding: 5px;
     border-radius: 5px;
     width: max-content;
 }

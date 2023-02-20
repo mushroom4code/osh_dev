@@ -24,9 +24,10 @@ if (isset($arResult['ITEM'])) {
     $item['F_USER_ID'] = $arResult['F_USER_ID'];
     $item['ID_PROD'] = $arResult['ID_PROD'];
     $item['COUNT_LIKE'] = $arResult['COUNT_LIKE'];
+    $item['POPUP_PROPS'] = $arResult['POPUP_PROPS'];
     $item['COUNT_FAV'] = $arResult['COUNT_FAV'];
     $item['COUNT_LIKES'] = $arResult['COUNT_LIKES'];
-	$item['DETAIL_PAGE_URL'] = str_replace('/catalog_new/', '/catalog/', $item['DETAIL_PAGE_URL']);
+    $item['DETAIL_PAGE_URL'] = str_replace('/catalog_new/', '/catalog/', $item['DETAIL_PAGE_URL']);
     $areaId = $arResult['AREA_ID'];
 
     $itemIds = array(
@@ -55,6 +56,7 @@ if (isset($arResult['ITEM'])) {
         'PROP' => $areaId . '_prop_',
         'DISPLAY_PROP_DIV' => $areaId . '_sku_prop',
         'BASKET_PROP_DIV' => $areaId . '_basket_prop',
+        'PROD_ID' => $item['ID_PROD']
     );
     $obName = 'ob' . preg_replace("/[^a-zA-Z0-9_]/", "x", $areaId);
     $isBig = isset($arResult['BIG']) && $arResult['BIG'] === 'Y';
@@ -78,17 +80,17 @@ if (isset($arResult['ITEM'])) {
         $actualItem = $item;
     }
 
+//    $price = $item['ITEM_START_PRICE'];
     if ($arParams['PRODUCT_DISPLAY_MODE'] === 'N' && $haveOffers) {
-        $price = $item['ITEM_START_PRICE'];
         $minOffer = $item['OFFERS'][$item['ITEM_START_PRICE_SELECTED']];
         $measureRatio = $minOffer['ITEM_MEASURE_RATIOS'][$minOffer['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
         $morePhoto = $item['MORE_PHOTO'];
     } else {
-        $price = $item['ITEM_START_PRICE'];
         $measureRatio = $price['MIN_QUANTITY'];
         $morePhoto = $actualItem['MORE_PHOTO'];
     }
-    $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
+
+    $price = $item['PRICES_CUSTOM'];
 //print_r($item['PROPERTIES']['DISKONT']);
 //    if ($USER->IsAuthorized()) {
 //        $userId = $USER->GetID();
@@ -109,31 +111,6 @@ if (isset($arResult['ITEM'])) {
 //            }
 //        }
 //    }
-
-    foreach ($actualItem['ITEM_ALL_PRICES'] as $key => $PRICE) {
-
-        foreach ($PRICE['PRICES'] as $price_key => $price_val) {
-
-
-            if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
-                if ($price_key == SALE_PRICE_TYPE_ID) {
-                    $price['SALE_PRICE'] = $price_val;
-                }
-            }
-
-            if ((int)$price_val['PRICE_TYPE_ID'] === RETAIL_PRICE) {
-                $price['PRICE_DATA'][0] = $price_val;
-                $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
-            } else if ((int)$price_val['PRICE_TYPE_ID'] === BASIC_PRICE) {
-                $price['PRICE_DATA'][1] = $price_val;
-                $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
-            } elseif ((int)$price_val['PRICE_TYPE_ID'] === B2B_PRICE) {
-                $price['PRICE_DATA'][2] = $price_val;
-                $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
-            }
-            ksort($price['PRICE_DATA']);
-        }
-    }
 
     $showSlider = is_array($morePhoto) && count($morePhoto) > 1;
     $showSubscribe = $arParams['PRODUCT_SUBSCRIPTION'] === 'Y' && ($item['CATALOG_SUBSCRIBE'] === 'Y' || $haveOffers);
@@ -199,6 +176,7 @@ if (isset($arResult['ITEM'])) {
                     'MORE_PHOTO' => $item['MORE_PHOTO'],
                     'MORE_PHOTO_COUNT' => $item['MORE_PHOTO_COUNT'],
                     'QUANTITY_ACTUAL' => $arResult['AR_BASKET'],
+                    'BUY_ID' => $itemIds['BUY_LINK'],
                 ),
                 'BASKET' => array(
                     'ADD_PROPS' => $arParams['ADD_PROPERTIES_TO_BASKET'] === 'Y',
@@ -221,6 +199,7 @@ if (isset($arResult['ITEM'])) {
                     'PRICE_TOTAL_ID' => $itemIds['PRICE_TOTAL'],
                     'BUY_ID' => $itemIds['BUY_LINK'],
                     'BASKET_PROP_DIV' => $itemIds['BASKET_PROP_DIV'],
+                    'PROD_ID' => $itemIds['PROD_ID'],
                     'BASKET_ACTIONS_ID' => $itemIds['BASKET_ACTIONS'],
                     'NOT_AVAILABLE_MESS' => $itemIds['NOT_AVAILABLE_MESS'],
                     'COMPARE_LINK_ID' => $itemIds['COMPARE_LINK'],
@@ -337,7 +316,7 @@ if (isset($arResult['ITEM'])) {
         );
         $resBasket = $arResult['AR_BASKET'];
         ?>
-<!--        todo minimize js -->
+        <!--        todo minimize js -->
         <script>
             if (typeof <?= $obName ?> === undefined) {
                 let <?=$obName?> = new JCCatalogItem(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);

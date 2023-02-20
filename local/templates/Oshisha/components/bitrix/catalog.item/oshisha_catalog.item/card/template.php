@@ -58,29 +58,27 @@ $arItemIDs = array(
 );
 $favorite = '';
 $styleForTaste = '';
-$taste = $item['PROPERTIES']['VKUS'];
+$taste = $item['PROPERTIES'][PROPERTY_KEY_VKUS];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
 $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES'][PROP_NEW];
 $hitProduct = $item['PROPERTIES'][PROP_HIT];
-
-
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
+
 $show_price = true;
-$not_auth = '';
+$priceBasket = 0;
+$styleForNo = $href = $not_auth = $styleForTaste = '';
+$productTitle = str_replace("\xC2\xA0", " ", $productTitle);
+$jsonForModal = [];
+
 if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
     $show_price = false;
     $not_auth = 'link_header_box';
 }
 
 
-$priceBasket = 0;
-$styleForNo = '';
-
 if ($item['PRODUCT']['QUANTITY'] == '0') {
-    /*$styleForTaste = 'blur_check';*/
     $styleForNo = 'not_av';
-
 }
 
 foreach ($item['ACTUAL_BASKET'] as $key => $val) {
@@ -88,7 +86,7 @@ foreach ($item['ACTUAL_BASKET'] as $key => $val) {
         $priceBasket = $val;
     }
 }
-$href = '';
+
 if (!$show_price) {
     $href = $item['DETAIL_PAGE_URL'];
     $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
@@ -101,10 +99,48 @@ $subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["S
 $found_key = array_search((string)$item['ID'], $subscription_item_ids);
 $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
 
+if (empty($morePhoto[0])) {
+    $morePhoto[0]['SRC'] = '/local/templates/Oshisha/images/no-photo.gif';
+}
+
+$prop_see_in_window = [];
+foreach ($item['PROPERTIES'] as $key => $props_val) {
+    if ($item['POPUP_PROPS'][$key]['SEE_POPUP_WINDOW'] == 'Y' && !empty($props_val['VALUE'])) {
+        $prop_see_in_window[] = $props_val;
+    }
+}
+
+if ($show_price) {
+    $jsonForModal = [
+        'ID' => $item['ID'],
+        'BUY_LINK' => $arItemIDs['BUY_LINK'],
+        'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
+        'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
+        'MORE_PHOTO' => $morePhoto,
+        'PRODUCT' => $item['PRODUCT'],
+        'USE_DISCOUNT' => $useDiscount['VALUE'],
+        'ACTUAL_BASKET' => $priceBasket,
+        'PRICE' => $price['PRICE_DATA'],
+        'SALE_PRICE' => round($price['SALE_PRICE']['PRICE']) . ' руб.',
+        'POPUP_PROPS' => $prop_see_in_window ?? 0,
+        'NAME' => $productTitle,
+        'LIKE' => [
+            'ID_PROD' => $item['ID_PROD'],
+            'F_USER_ID' => $item['F_USER_ID'],
+            'COUNT_LIKE' => $item['COUNT_LIKE'] ?? 0,
+            'COUNT_LIKES' => $item['COUNT_LIKES'] ?? 0,
+            'COUNT_FAV' => $item['COUNT_FAV'] ?? 0,
+        ],
+        'USE_CUSTOM_SALE_PRICE' => USE_CUSTOM_SALE_PRICE,
+        'BASE_PRICE' => BASIC_PRICE,
+        'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE'] ?? []
+    ];
+}
 
 ?>
-<div class="<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
+<div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
+    <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative
     <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
         <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
@@ -114,22 +150,46 @@ $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
             <span class="taste new-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
         <?php }
         if (count($taste['VALUE']) > 0) { ?>
-            <div class="toggle_taste card-price">
-                <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
+            <?php
+            $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
+            $togglerState = 'hide';
+            $listClass = '';
+
+            if (count($taste['VALUE']) > 2) {
+                $showToggler = true;
+            }
+            elseif (count($taste['VALUE']) > 1) {
+                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18; // поместятся на одной строке 2 вкуса или нет
+            }
+            $togglerState = $showToggler ? ' many-tastes' : 'hide many-tastes';
+            $listClass = $showToggler ? 'js__tastes-list' : '';
+            ?>
+            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
+                <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                             if ($key === $keys) {
-                                $color = explode('#', $value); ?>
-                                <span class="taste" data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>">
-                                    <?= $name ?>
-                                </span>
+                                $color = explode('#', $value);
+                                $tasteSize = 'taste-small';
+
+                                if (4 < mb_strlen($name) && mb_strlen($name) <=  8) {
+                                    $tasteSize = 'taste-normal';
+                                } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
+                                    $tasteSize = 'taste-long';
+                                } elseif (mb_strlen($name)  > 13 ) {
+                                    $tasteSize = 'taste-xxl';
+                                }
+                                ?>
+                                <span class="taste <?= $tasteSize ?>" data-background="<?='#' . $color[1] ?>" id="<?= $color[0] ?>"><?= $name ?> </span>
                             <?php }
                         }
                     } ?>
                 </div>
+                <div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
             </div>
+            <div class="bx_catalog_item_overlay"></div>
         <?php } ?>
-        <div class="image_cart <?= $not_auth ?>" data-href="<?= $href ?>">
+        <div class="image_cart position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
             <a class=" <?= $styleForTaste ?>"
                href="<?= $item['DETAIL_PAGE_URL']; ?>">
                 <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
@@ -138,12 +198,28 @@ $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
                     <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                 <?php } ?>
             </a>
+            <i class="open-fast-window" data-item-id="<?= $item['ID'] ?>"></i>
         </div>
 
         <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
             <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
                 <div class="box_with_titles">
                     <?php
+                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                        'templates',
+                        array(
+                            'ID_PROD' => $item['ID_PROD'],
+                            'F_USER_ID' => $item['F_USER_ID'],
+                            'LOOK_LIKE' => false,
+                            'LOOK_FAVORITE' => true,
+                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                            'COUNT_FAV' => $item['COUNT_FAV'],
+                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                        )
+                        ,
+                        $component,
+                        array('HIDE_ICONS' => 'Y')
+                    );
                     $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                         'templates',
                         array(
@@ -170,6 +246,21 @@ $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
                 $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                     'templates',
                     array(
+                        'ID_PROD' => $item['ID_PROD'],
+                        'F_USER_ID' => $item['F_USER_ID'],
+                        'LOOK_LIKE' => false,
+                        'LOOK_FAVORITE' => true,
+                        'COUNT_LIKE' => $item['COUNT_LIKE'],
+                        'COUNT_FAV' => $item['COUNT_FAV'],
+                        'COUNT_LIKES' => $item['COUNT_LIKES'],
+                    )
+                    ,
+                    $component,
+                    array('HIDE_ICONS' => 'Y')
+                );
+                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                    'templates',
+                    array(
                         'ID' => $item['ID_PROD'],
                         'F_USER_ID' => $item['F_USER_ID'],
                         'LOOK_LIKE' => true,
@@ -186,7 +277,7 @@ $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
         <div class="box_with_title_like d-flex align-items-center">
             <?php if (count($taste['VALUE']) > 0) { ?>
                 <div class="toggle_taste_line">
-                    <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
+                    <div class="variation_taste">
                         <?php foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                                 if ($key === $keys) {
@@ -219,8 +310,7 @@ $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
                    title="<?= $productTitle; ?>">
                     <?= $productTitle; ?>
                 </a>
-                <?php if (count($taste['VALUE']) > 0) { ?>
-                <?php }
+                <?php
                 if (!empty($item['DETAIL_TEXT'])) { ?>
                     <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
                 <?php } ?>
@@ -353,23 +443,7 @@ $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
                     <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
                          data-href="<?= $href ?>">Подробнее
                     </div>
-                    <?php
-                }
-                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                    'templates',
-                    array(
-                        'ID_PROD' => $item['ID_PROD'],
-                        'F_USER_ID' => $item['F_USER_ID'],
-                        'LOOK_LIKE' => false,
-                        'LOOK_FAVORITE' => true,
-                        'COUNT_LIKE' => $item['COUNT_LIKE'],
-                        'COUNT_FAV' => $item['COUNT_FAV'],
-                        'COUNT_LIKES' => $item['COUNT_LIKES'],
-                    )
-                    ,
-                    $component,
-                    array('HIDE_ICONS' => 'Y')
-                ); ?>
+                <?php } ?>
             </div>
             <div style="clear: both;"></div>
         </div>

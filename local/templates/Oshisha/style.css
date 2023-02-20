@@ -85,31 +85,6 @@ a.link_header:hover *, .text_link_footer, .product-item__favorite-star, .btn_bas
     justify-content: center;
 }
 
-.variation_taste {
-    position: relative;
-    flex-flow: row wrap;
-    display: flex;
-    z-index: 200;
-    width: 100%;
-}
-
-.many_tastes {
-    cursor: pointer;
-    position: relative;
-}
-
-.many_tastes::after {
-    border: 7px solid transparent;
-    border-top-color: black;
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 100%;
-    width: 10px;
-    height: 10px;
-    transform: scale(-1);
-}
-
 header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, .box_with_basket_login, .link_header,
 .box_with_brands, .box_with_menu_header, .box_with_city, .avatar, .select2-container .select2-selection--single,
 .select2-container--default .select2-selection--single .select2-selection__arrow, .btn_questions,
@@ -131,6 +106,10 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 .bx-soa-cart-total, .box_with_fav_bask, .link_menu_top, .catalog-section-list-item-link, .blog-comment-info,
 #o_nas .box_text_business, .btn_questions, .btn_basket_collapse {
     justify-content: space-between;
+}
+
+.by-card .box_with_titles {
+    width: 100%;
 }
 
 .flex_header_right {
@@ -174,7 +153,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .info-prices-box-hover {
-    z-index: 1000;
+    z-index: 1012;
 }
 
 
@@ -253,6 +232,10 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 
 .search_header {
     width: 30%;
+}
+
+.max-width-1024 {
+    max-width: 1024px;
 }
 
 .container_header, .foot_container {
@@ -540,15 +523,29 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     background-image: url("/local/templates/Oshisha/images/company_logo.png");
 }
 
-.btn_search {
+.btn_search, .open-fast-window {
     height: 23px;
     width: 23px;
 }
 
-.basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search {
+.open-fast-window {
+    padding: 15px;
+    background-color: rgb(255 255 255 / 68%);
+    border-radius: 5px;
+    background-size: auto;
+    background-position: center;
+    position: absolute;
+    top: 30%;
+    right: 0;
+}
+
+.basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search, .open-fast-window {
     background-image: url("/local/templates/Oshisha/images/search_basket.png");
-    background-position: left 3% center;
     background-repeat: no-repeat;
+}
+
+.basket-items-search-field .search_input, .btn_search, #placeModal form input#city-search {
+    background-position: left 3% center;
 }
 
 .box_honesty, .box_automation, .box_display, .box_block, .box_present, .box_help, .box_house {
@@ -556,7 +553,6 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     min-width: 150px;
     max-height: 150px;
 }
-
 
 .icons_worker_contr, .icons_worker_comp, .box_company_icon {
     background-repeat: no-repeat;
@@ -943,13 +939,13 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
     font-size: 18px;
 }
 
-.bx_price, .text_lineHeight b, .text_font_19 {
+.bx_price, .text_font_19, .font-19 {
     font-size: 19px;
 }
 
 .font_21, .bx-catalog-tab-container .blog-comments .blog-comment .blog-comment-cont
 .blog-comment-cont-white .blog-comment-info a.link_like, .font-20 {
-    font-size: 20px!important;
+    font-size: 20px !important;
 }
 
 .by-line:not(.opt) .bx_price {
@@ -978,12 +974,16 @@ div.box_with_icons > a > i.icons_theme:first-child {
     margin-left: 0;
 }
 
-.box_with_net a, .by-line .icon_like {
+.box_with_net a, .by-line .icon_like, .font-27 {
     font-size: 27px;
 }
 
 .by-line .product-item__favorite-star {
     font-size: 28px;
+}
+
+.by-card .product-item__favorite-star {
+    display: flex;
 }
 
 .font-40 {
@@ -995,7 +995,7 @@ div.box_with_icons > a > i.icons_theme:first-child {
     font-size: 120px;
 }
 
-h4 > b, .orderCancel, .select2-results__option,
+h4 > b, .orderCancel, .select2-results__option, .color-darkOsh,
 .select2-container--default .select2-search--dropdown .select2-search__field, .sort_orders, .sort_orders:hover,
 .sort_order, .sort_order:hover, .link_in_basket, .link_in_basket:hover, .box_with_brands a, .box_with_brands a:hover,
 nav.box_with_menu_header, .ul_menu, a.dropdown-toggle, .link_gram, .disabled_class .link_gram:hover, .sidebar_inform a,
@@ -1012,6 +1012,10 @@ div.card > div.card-body > div.box_with_properties > div > h4.card-title > a, .n
 .bx-pagination .bx-pagination-container ul li.bx-pag-next a:hover span, .product_item_title > a, input.btn-link,
 .product-item-amount-field-contain input[type="number"], h1, h2, h3, h4, h5, h6, .btn_basket_collapse, .link_header, .text_catalog_link {
     color: #393939;
+}
+
+.product-item__favorite-star:hover {
+    color: #F55F5C;
 }
 
 .color-blue-order {
@@ -1222,7 +1226,7 @@ div > div.card-body {
     position: absolute;
     top: 100%;
     left: 0;
-    z-index: 500;
+    z-index: 1500;
     background: #F0F0F0;
     width: 100%;
     border-radius: 0 0 10px 10px;
@@ -1491,23 +1495,6 @@ span > i.header_icon {
     z-index: 200;
     /*max-height: 23px;*/
 }
-
-.many_tastes_toggle {
-    position: relative;
-    cursor: pointer;
-}
-
-.many_tastes_toggle::after {
-    border: 7px solid transparent;
-    /*border-top-color: black;*/
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 5px;
-    width: 10px;
-    height: 10px;
-}
-
 
 .menu_items, #boxWithCompanyChecked, #boxWithWorkerChecked {
     overflow: auto;
@@ -1811,9 +1798,14 @@ a.bx_catalog_item_title {
 }
 
 .by-line .bx_catalog_item_price {
-    grid-row-start: 3;
+    /*grid-row-start: 3;*/
+    /*grid-column-end: 4;*/
+    /*grid-column-start: 2;*/
+    grid-row-start: 1;
+    grid-row-end: 5;
     grid-column-end: 4;
     grid-column-start: 2;
+    height: 100%;
 }
 
 .box_with_price.line-price {
@@ -1860,8 +1852,12 @@ a.bx_catalog_item_title {
     margin-top: 5px;
 }
 
+.by-line .box_with_titles {
+    flex-direction: column;
+}
+
 .by-line .box_with_titles .box_with_like {
-    position: absolute;
+    /*position: absolute;*/
     right: 0;
 }
 
@@ -2044,11 +2040,13 @@ input.check_input {
 .form-check .form-check-input {
     float: none;
 }
+
 @media screen and (max-width: 768px) {
     .form-check .form-check-input {
         flex: none;
     }
 }
+
 .filter_class {
     box-sizing: border-box;
     min-width: 250px;
@@ -2143,6 +2141,10 @@ input.check_input {
 
 .font-weight-600 {
     font-weight: 600;
+}
+
+.font-weight-500 {
+    font-weight: 500;
 }
 
 .bx-no-touch input.card_element::-webkit-outer-spin-button, .bx-no-touch input.card_element::-webkit-inner-spin-button {
@@ -2835,10 +2837,6 @@ div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_
 
 #boxWithContrAgents .row_section {
     padding-right: 0;
-}
-
-.text_lineHeight {
-    line-height: 1.9;
 }
 
 #o_nas .box_text_business {
@@ -3557,7 +3555,7 @@ table#TableWorkers.no-footer {
     .block_menu_mobile {
         bottom: 0;
         right: 0;
-        z-index: 10003;
+        z-index: 12003;
     }
 
     .box_map_mobile, .bx_catalog_item, .mobile_lk, #content_box, #personal_account, #about_contacts, #personal_orders,
@@ -3584,6 +3582,7 @@ table#TableWorkers.no-footer {
 
     .box_with_loginBasket, .box_top_panel, .top_menu {
         justify-content: space-between;
+        align-items: center;
     }
 
     #content_box_business .box_with_brands_parents, #o_nas .box_text_business, .by-line .line-price.toggle_taste {
@@ -3730,7 +3729,7 @@ table#TableWorkers.no-footer {
         font-size: 11px
     }
 
-    .news_val_data, .box_msk p, .box_reg p, .bx-header-phone-number, .text_lineHeight, .text_lineHeight b,
+    .news_val_data, .box_msk p, .box_reg p, .bx-header-phone-number,
     .btn_questions span, div > div.card-body, h3.ctweb-title, .btn_basket_collapse span, .desktop-none-cat-det h6,
     .product-item-amount-field-contain input[type="number"].cat-det, .product-item-detail-properties-name,
     .product-item-detail-properties-value {
@@ -3803,7 +3802,7 @@ table#TableWorkers.no-footer {
         font-size: 35px;
     }
 
-    .span_bar > div.bar_span, div.small_bar, .ul_menu, .text_lineHeight b, #FAQ .card_delivery h3 {
+    .span_bar > div.bar_span, div.small_bar, .ul_menu, #FAQ .card_delivery h3 {
         margin-bottom: 0;
     }
 
@@ -3812,8 +3811,7 @@ table#TableWorkers.no-footer {
     }
 
     #content_box_business h2, .box_msk, .box_reg, .form_company, .width_50, #delivery_payment .btn_company,
-    #content_box_delivery > h2, #delivery_payment > h2, #o_nas p.text_lineHeight, h5,
-    #o_nas .box_with_banner_dop, #o_nas h1, #faq h2, h5 {
+    #content_box_delivery > h2, #delivery_payment > h2, h5, #o_nas .box_with_banner_dop, #o_nas h1, #faq h2, h5 {
         margin-bottom: 1rem !important;
     }
 
@@ -3932,11 +3930,7 @@ table#TableWorkers.no-footer {
         margin-right: 20px;
     }
 
-    .box_row .text_lineHeight {
-        font-size: 20px !important;
-    }
-
-    .box_msk p, .box_reg p, .text_lineHeight {
+    .box_msk p, .box_reg p {
         line-height: 1.5;
     }
 
@@ -4130,6 +4124,7 @@ table#TableWorkers.no-footer {
     .top_menu > div {
         overflow: scroll;
         height: 100%;
+        width: 100%;
     }
 
     .header_top {
@@ -4813,12 +4808,15 @@ li, ul {
 .mobile, .tablet {
     display: none;
 }
+
 .filter-view-bar {
     display: none;
 }
+
 .filter-view {
     display: none;
 }
+
 /*MOBILE*/
 @media (min-width: 1024px) {
     .box_with_prod {
@@ -4993,6 +4991,7 @@ li, ul {
         justify-content: space-between;
     }
 }
+
 @media (max-width: 768px) {
     .box_filter_catalog {
         position: fixed;
@@ -5003,6 +5002,7 @@ li, ul {
         padding: 40px 10px 80px;
         z-index: 100500;
     }
+
     .filter-close {
         position: absolute;
         top: 15px;
@@ -5014,6 +5014,7 @@ li, ul {
         cursor: pointer;
         display: flex;
     }
+
     .filter-close span {
         position: absolute;
         height: 2px;
@@ -5026,13 +5027,16 @@ li, ul {
         top: 9px;
         left: 0;
     }
+
     .filter-close span:nth-child(1),
     .filter-close span:nth-child(3) {
         transform: rotate(45deg);
     }
+
     .filter-close span:nth-child(2) {
         transform: rotate(-45deg);
     }
+
     .filter-view-bar {
         display: flex;
         width: 99%;
@@ -5046,6 +5050,7 @@ li, ul {
         z-index: 1000;
         backdrop-filter: blur(0.075em);
     }
+
     .filter-view {
         display: inline-block;
         font-size: 14px !important;
@@ -5053,10 +5058,12 @@ li, ul {
         padding: 10px 45px !important;
         position: relative;
     }
+
     .filter-view.disabled_class {
         background-color: #a3a3a3;
     }
 }
+
 @media (max-width: 480px) {
     .bx-content {
         margin-top: 10px;
@@ -5839,10 +5846,13 @@ li, ul {
 /* MENU SCROLL */
 header {
     transition: 0.7s;
+    position: relative;
+    /*z-index: 1300;*/
+    z-index: 1015;
 }
 
 .header-scroll {
-    z-index: 100000;
+    z-index: 10000;
     top: 0;
     position: fixed;
     filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
@@ -5890,7 +5900,355 @@ header {
     width: auto;
 }
 
+.js__tastes-list {
+    position: relative;
+    padding: 0 10px 0 0;
+}
+
+.toggle_taste.card-price.js__tastes {
+    position: relative;
+    z-index: 1011;
+    min-height: 60px;
+}
+
+@media screen and (max-width: 768px) {
+    .toggle_taste.card-price.js__tastes {
+        min-height: 30px;
+    }
+}
+
+.js__tastes .variation_taste_toggle {
+    border-top: 6px solid #666;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 0 solid transparent;
+    position: absolute;
+    right: 0;
+    top: 7px;
+    width: 0;
+    height: 0;
+    transition: all 0.3s linear;
+    cursor: pointer;
+    z-index: 200;
+}
+
+.js__tastes .variation_taste_toggle:hover {
+    border-top-color: #F55F5C;
+}
+
+.js__tastes .variation_taste_toggle.hide {
+    display: none;
+}
+
+@media screen and (max-width: 1440px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1340px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 365px) {
+    .js__tastes .variation_taste_toggle.hide.many-tastes {
+        display: block;
+    }
+}
+
+.js__tastes .variation_taste {
+    position: absolute;
+    flex-flow: row wrap;
+    display: flex;
+    z-index: 200;
+    width: 100%;
+    height: 26px;
+    transition: all 0.3s linear;
+    padding: 0 20px 0 0;
+    overflow: hidden;
+}
+
+.js__tastes .variation_taste.show_padding {
+    padding: 0;
+}
+
+@media screen and (max-width: 1340px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0 20px 0 0;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0 20px 0 0;
+    }
+}
+
+@media screen and (max-width: 1080px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0 20px 0 0;
+    }
+}
+
+@media screen and (max-width: 860px) {
+    .js__tastes .variation_taste.show_padding {
+        padding: 0;
+    }
+}
+
+.js__tastes.active .variation_taste_toggle {
+    transform: rotate(180deg);
+}
+
+.js__tastes.active .variation_taste {
+    height: auto;
+}
+
+.bx_catalog_item_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    /*z-index: 1100;*/
+    z-index: 1010;
+    filter: blur(3px);
+    background: transparent none;
+    backdrop-filter: blur(1px);
+}
+
 body.hide-jivo > jdiv {
     position: relative !important;
     z-index: 1500 !important;
+}
+
+.by-card .variation_taste .taste {
+    font-size: 11px;
+    font-weight: normal;
+    min-width: auto;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 4px;
+    margin: 0 3px 3px 0;
+    min-height: 24px;
+}
+
+@media screen and (max-width: 1366px) {
+    .by-card .variation_taste .taste {
+        line-height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0 3px 3px 0;
+    }
+}
+
+.by-card .variation_taste .taste-small {
+    min-width: 80px;
+}
+
+@media screen and (max-width: 1600px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 65px;
+    }
+}
+
+@media screen and (max-width: 1366px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 65px;
+    }
+}
+
+@media screen and (max-width: 1260px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 50px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 65px;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .by-card .variation_taste .taste-small {
+        min-width: 55px;
+    }
+}
+
+.by-card .variation_taste .taste-normal {
+    min-width: 65px;
+}
+
+@media screen and (max-width: 1450px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 60px;
+    }
+}
+
+@media screen and (max-width: 1340px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 75px;
+    }
+}
+
+@media screen and (max-width: 1260px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 65px;
+    }
+}
+
+@media screen and (max-width: 1260px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 70px;
+    }
+}
+
+@media screen and (max-width: 1080px) {
+    .by-card .variation_taste .taste-normal {
+        min-width: 70px;
+    }
+}
+
+.by-card .variation_taste .taste-long {
+    min-width: 100px;
+}
+
+@media screen and (max-width: 1635px) {
+    .by-card .variation_taste .taste-long {
+        min-width: 70px;
+    }
+}
+
+@media screen and (max-width: 1340px) {
+    .by-card .variation_taste .taste-long {
+        font-size: 10px;
+        min-width: 65px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .by-card .variation_taste .taste-long {
+        min-width: 80px;
+    }
+}
+
+.by-card .variation_taste .taste-xxl {
+    width: 100%;
+    font-size: 11px;
+    line-height: 24px;
+    padding: 0 4px;
+}
+
+@media screen and (max-width: 1510px) {
+    .by-card .variation_taste .taste-xxl {
+        font-size: 10px;
+        line-height: 1;
+        padding: 7px 4px;
+    }
+}
+
+@media screen and (max-width: 1340px) {
+    .by-card .variation_taste .taste-xxl {
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+
+@media screen and (max-width: 1339px) {
+    .by-card .variation_taste .taste-xxl {
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .by-card .variation_taste .taste-xxl {
+        line-height: 24px;
+        padding: 0 4px;
+    }
+}
+
+@media screen and (max-width: 1173px) {
+    .by-card .variation_taste .taste-xxl {
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .by-card .variation_taste .taste-xxl {
+        line-height: 24px;
+        padding: 0 4px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .by-card .variation_taste .taste-xxl {
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .by-card .variation_taste .taste-xxl {
+        line-height: 24px;
+        padding: 0 4px;
+    }
+}
+
+@media screen and (max-width: 340px) {
+    .by-card .variation_taste .taste-xxl {
+        line-height: 1;
+        padding: 2px 4px;
+    }
+}
+
+.bx-catalog-element .variation_taste .taste {
+    display: inline-block;
 }

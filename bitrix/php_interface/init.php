@@ -1,17 +1,12 @@
 <?php
 
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
+use Enterego\EnteregoSettings;
 
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
 
 require_once(__DIR__ . '/conf.php');
-
-if (COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE') === 'true') {
-    define("USE_CUSTOM_SALE_PRICE", true);
-} else {
-    define("USE_CUSTOM_SALE_PRICE", false);
-}
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
@@ -29,11 +24,11 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
     '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
+    '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
 ));
 // 18844
 AddEventHandler('rest', 'OnRestServiceBuildDescription', array('CatalogAPIService', 'OnRestServiceBuildDescription'));
-
 
 require(__DIR__ . '/enterego_class/discountcouponsmanagerbase.php');
 require(__DIR__ . '/enterego_class/discountcoupon.php');
@@ -50,10 +45,9 @@ $option_site = json_decode(\Bitrix\Main\Config\Option::get("BBRAIN", 'SETTINGS_S
 
 //class used in component files before init autoload files
 require_once(__DIR__ . '/enterego_class/EnteregoGiftHandlers.php');
-require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
-require_once (__DIR__ . '/enterego_class/modules/update_service_likes.php');
-require_once (__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
+require_once(__DIR__ . '/enterego_class/modules/update_service_likes.php');
+require_once(__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
 
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
@@ -118,22 +112,6 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 {
 
     $aModuleMenu[] = array(
-        "parent_menu" => "global_menu_custom",
-        "icon" => "default_menu_icon",
-        "page_icon" => "default_page_icon",
-        "sort" => "100",
-        "text" => "Скидочные цены",
-        "title" => "Скидочные цены",
-        "url" => "/bitrix/php_interface/enterego_class/init_sale.php",
-        "parent_page" => "global_menu_custom",
-        "more_url" => array(
-            "init_sale.php",
-        ),
-        "items" => array(),
-    );
-
-
-    $aModuleMenu[] = array(
         "parent_menu" => "global_menu_content",
         'menu_id' => 'global_menu_osh',
         'text' => 'Настройки сайта',
@@ -146,34 +124,64 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
     );
 
     $arRes = array(
-        "global_menu_custom" => array(
-            "menu_id" => "custom",
+        "global_menu_enterego" => array(
+            "menu_id" => "enterego",
             "page_icon" => "services_page_enterego_icon",
             "index_icon" => "services_page_enterego_icon",
             "text" => "Enterego",
+            'section' => 'enterego',
             "title" => "Enterego",
             "sort" => 900,
-            "items_id" => "global_menu_custom",
-            "help_section" => "custom",
-            "items" => array()
+            "items_id" => "global_menu_enterego",
+            "help_section" => "enterego",
+            "items" => array(
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "100",
+                    "text" => "Черная пятница/Распродажа",
+                    "title" => "Черная пятница/Распродажа",
+                    "url" => "/bitrix/php_interface/enterego_class/init_sale.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "init_sale.php",
+                    ),
+                    "items" => array(),
+                ),
+
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "100",
+                    "text" => "Свойства товара",
+                    "title" => "Свойства товара",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/product_prop_setting.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "product_prop_setting.php",
+                    ),
+                    "items" => array(),
+                ),
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "200",
+                    "text" => "Прайс-лист",
+                    "title" => "Прайс-лист",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/priceList.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "priceList.php",
+                    ),
+                    "items" => array(),
+                )
+            )
         ),
     );
 
-
-    $aModuleMenu[] = array(
-        "parent_menu" => "global_menu_custom",
-        "icon" => "default_menu_icon",
-        "page_icon" => "default_page_icon",
-        "sort" => "200",
-        "text" => "Прайс-лист",
-        "title" => "Прайс-лист",
-        "url" => "/bitrix/php_interface/enterego_class/modules/priceList.php",
-        "parent_page" => "global_menu_custom",
-        "more_url" => array(
-            "priceList.php",
-        ),
-        "items" => array(),
-    );
 
     return $arRes;
 }
@@ -317,3 +325,5 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
         ";
     $APPLICATION->AddHeadString($jsCode);
 }
+
+EnteregoSettings::getSalePriceOnCheckAndPeriod();
