@@ -666,6 +666,12 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 			/** @var Sale\BasketItem $oldBasketItem*/
 			foreach ($oldBasketItems as $oldBasketItem)
 			{
+                //enterego check if item is active before adding to basket
+                $product = CIBlockElement::GetByID($oldBasketItem->getField('PRODUCT_ID'))->GetNext();
+                if ($product['ACTIVE'] == 'N')
+                    continue;
+                //end
+
 				$propertyList = array();
 				if ($oldPropertyCollection = $oldBasketItem->getPropertyCollection())
 				{
