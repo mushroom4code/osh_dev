@@ -153,7 +153,7 @@ $APPLICATION->IncludeComponent(
         "PAGER_SHOW_ALL" => "N",
         "ADD_PICT_PROP" => "MORE_PHOTO",
         "LABEL_PROP" => array(
-            0 => "VKUS",
+            0 => PROPERTY_KEY_VKUS,
         ),
         "PRODUCT_DISPLAY_MODE" => "Y",
         "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",

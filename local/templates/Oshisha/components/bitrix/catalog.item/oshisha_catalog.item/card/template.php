@@ -1,5 +1,7 @@
 <?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
+use Enterego\EnteregoHelper;
+
 /**
  * @global CMain $APPLICATION
  * @var array $arParams
@@ -54,8 +56,9 @@ $arItemIDs = array(
     'SMALL_CARD_PANEL_ID' => $mainId . '_small_card_panel',
     'TABS_PANEL_ID' => $mainId . '_tabs_panel'
 );
-
-$taste = $item['PROPERTIES']['VKUS'];
+$favorite = '';
+$styleForTaste = '';
+$taste = $item['PROPERTIES'][PROPERTY_KEY_VKUS];
 $codeProp = $item['PROPERTIES']['CML2_TRAITS'];
 $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES'][PROP_NEW];
@@ -140,20 +143,44 @@ if ($show_price) {
             <span class="taste new-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
         <?php }
         if (count($taste['VALUE']) > 0) { ?>
-            <div class="toggle_taste card-price">
-                <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
+            <?php
+            $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
+            $togglerState = 'hide';
+            $listClass = '';
+
+            if (count($taste['VALUE']) > 2) {
+                $showToggler = true;
+            }
+            elseif (count($taste['VALUE']) > 1) {
+                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18; // поместятся на одной строке 2 вкуса или нет
+            }
+            $togglerState = $showToggler ? ' many-tastes' : 'hide many-tastes';
+            $listClass = $showToggler ? 'js__tastes-list' : '';
+            ?>
+            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
+                <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                             if ($key === $keys) {
-                                $color = explode('#', $value); ?>
-                                <span class="taste" data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>">
-                                    <?= $name ?>
-                                </span>
+                                $color = explode('#', $value);
+                                $tasteSize = 'taste-small';
+
+                                if (4 < mb_strlen($name) && mb_strlen($name) <=  8) {
+                                    $tasteSize = 'taste-normal';
+                                } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
+                                    $tasteSize = 'taste-long';
+                                } elseif (mb_strlen($name)  > 13 ) {
+                                    $tasteSize = 'taste-xxl';
+                                }
+                                ?>
+                                <span class="taste <?= $tasteSize ?>" data-background="<?='#' . $color[1] ?>" id="<?= $color[0] ?>"><?= $name ?> </span>
                             <?php }
                         }
                     } ?>
                 </div>
+                <div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
             </div>
+            <div class="bx_catalog_item_overlay"></div>
         <?php } ?>
         <div class="image_cart position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
             <a class=" <?= $styleForTaste ?>"
@@ -171,6 +198,21 @@ if ($show_price) {
             <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
                 <div class="box_with_titles">
                     <?php
+                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                        'templates',
+                        array(
+                            'ID_PROD' => $item['ID_PROD'],
+                            'F_USER_ID' => $item['F_USER_ID'],
+                            'LOOK_LIKE' => false,
+                            'LOOK_FAVORITE' => true,
+                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                            'COUNT_FAV' => $item['COUNT_FAV'],
+                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                        )
+                        ,
+                        $component,
+                        array('HIDE_ICONS' => 'Y')
+                    );
                     $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                         'templates',
                         array(
@@ -197,6 +239,21 @@ if ($show_price) {
                 $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                     'templates',
                     array(
+                        'ID_PROD' => $item['ID_PROD'],
+                        'F_USER_ID' => $item['F_USER_ID'],
+                        'LOOK_LIKE' => false,
+                        'LOOK_FAVORITE' => true,
+                        'COUNT_LIKE' => $item['COUNT_LIKE'],
+                        'COUNT_FAV' => $item['COUNT_FAV'],
+                        'COUNT_LIKES' => $item['COUNT_LIKES'],
+                    )
+                    ,
+                    $component,
+                    array('HIDE_ICONS' => 'Y')
+                );
+                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                    'templates',
+                    array(
                         'ID' => $item['ID_PROD'],
                         'F_USER_ID' => $item['F_USER_ID'],
                         'LOOK_LIKE' => true,
@@ -213,7 +270,7 @@ if ($show_price) {
         <div class="box_with_title_like d-flex align-items-center">
             <?php if (count($taste['VALUE']) > 0) { ?>
                 <div class="toggle_taste_line">
-                    <div class="variation_taste" id="<?= count($taste['VALUE']); ?>">
+                    <div class="variation_taste">
                         <?php foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                                 if ($key === $keys) {
@@ -246,8 +303,7 @@ if ($show_price) {
                    title="<?= $productTitle; ?>">
                     <?= $productTitle; ?>
                 </a>
-                <?php if (count($taste['VALUE']) > 0) { ?>
-                <?php }
+                <?php
                 if (!empty($item['DETAIL_TEXT'])) { ?>
                     <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
                 <?php } ?>
@@ -380,56 +436,21 @@ if ($show_price) {
                     <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
                          data-href="<?= $href ?>">Подробнее
                     </div>
-                    <?php
-                }
-                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                    'templates',
-                    array(
-                        'ID_PROD' => $item['ID_PROD'],
-                        'F_USER_ID' => $item['F_USER_ID'],
-                        'LOOK_LIKE' => false,
-                        'LOOK_FAVORITE' => true,
-                        'COUNT_LIKE' => $item['COUNT_LIKE'],
-                        'COUNT_FAV' => $item['COUNT_FAV'],
-                        'COUNT_LIKES' => $item['COUNT_LIKES'],
-                    )
-                    ,
-                    $component,
-                    array('HIDE_ICONS' => 'Y')
-                ); ?>
+                <?php } ?>
             </div>
             <div style="clear: both;"></div>
         </div>
         <?php }else { ?>
         <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>"
-        <div class="box_with_fav_bask">
-            <div class="not_product detail_popup">
-                Нет в наличии
+            <div class="box_with_fav_bask">
+                <div class="not_product detail_popup">
+                    Нет в наличии
+                </div>
+                <div class="detail_popup min_card"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
             </div>
-            <div class="detail_popup min_card"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
-            <?php
-
-            $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                'templates',
-                array(
-                    'ID_PROD' => $item['ID_PROD'],
-                    'F_USER_ID' => $item['F_USER_ID'],
-                    'LOOK_LIKE' => false,
-                    'LOOK_FAVORITE' => true,
-                    'COUNT_LIKE' => $item['COUNT_LIKE'],
-                    'COUNT_FAV' => $item['COUNT_FAV'],
-                    'COUNT_LIKES' => $item['COUNT_LIKES'],
-                )
-                ,
-                $component,
-                array('HIDE_ICONS' => 'Y')
-            );
-            ?>
+            <div style="clear: both;"></div>
+            <div id="popup_mess"></div>
         </div>
-        <div style="clear: both;"></div>
-        <div id="popup_mess"></div>
-
-    </div>
     <?php }
     $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
     if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) { ?>
