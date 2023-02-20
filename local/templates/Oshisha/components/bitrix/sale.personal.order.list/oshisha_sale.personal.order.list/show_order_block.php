@@ -69,11 +69,12 @@ function showOrderBlock($listStatuses, $accountNumber)
                             <a class="sale-order-list-about-link font-w-m-600"
                                href="/personal/orders/<?= $order['ACCOUNT_NUMBER'] ?>/">Подробности
                                 заказа</a>
-                        </div>
 
+                        </div>
                         <div class=" sale-order-list-repeat-container">
                             <a class=" sale-order-list-repeat-link font-w-m-600"
                                href="/personal/orders/?COPY_ORDER=Y&ID=<?= $order['ACCOUNT_NUMBER'] ?>"><?= Loc::getMessage('SPOL_TPL_REPEAT_ORDER') ?></a>
+                            <div id="popup_mess_order_copy"></div>
                         </div>
                         <?
                         if ($order['CAN_CANCEL'] !== 'N') {

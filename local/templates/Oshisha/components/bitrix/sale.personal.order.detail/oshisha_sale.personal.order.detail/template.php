@@ -129,7 +129,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                 <? if ($arResult["CAN_CANCEL"] === "Y") {
                                     ?>
                                     <a href="<?= $arResult["URL_TO_CANCEL"] ?>"
-                                       class="link_repeat_orders mb-1">Отменить заказ</a>
+                                       class="link_repeat_orders sale-order-list-repeat-link mb-1">Отменить заказ</a>
                                     <?
                                 }
                                 ?>
