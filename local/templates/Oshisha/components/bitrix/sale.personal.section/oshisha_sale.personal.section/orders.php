@@ -16,6 +16,9 @@ if ($arParams["MAIN_CHAIN_NAME"] <> '') {
     $APPLICATION->AddChainItem(htmlspecialcharsbx($arParams["MAIN_CHAIN_NAME"]), $arResult['SEF_FOLDER']);
 }
 
+$orders_status = $_REQUEST['show_canceled'] ? 'show_canceled' : ($_REQUEST['show_delivery'] ? 'show_delivery' : 'filter_history');
+
+
 $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_TO_ORDERS']);
 //$APPLICATION->IncludeComponent(
 //	"bitrix:sale.personal.order.list",
@@ -52,7 +55,7 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
 <div class="hides" id="personal_orders">
     <h5 class="mb-4"><b>Заказы</b></h5>
     <div class="d-flex flex-row justify-content-between mb-4 align-items-center">
-        <div style="">
+        <div style="display: none">
             <span class="sort_orders retail_orders">Розничные заказы</span>
             <span class="sort_orders wholesale_orders" style="display:none;">Оптовые заказы</span>
         </div>
@@ -62,12 +65,12 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
             <a class="sort_orders" href="javascript:void(0)"><span class="sort_orders_by">Сортировать по</span><i
                         class="fa fa-angle-down"
                         aria-hidden="true"></i>
-                <div class="sort_orders_elements">
+                <div class="sort_orders_elements" data-sort-status="<?= $orders_status ?>">
                     <ul>
-                        <li class="order_sort_item">Новые</li>
-                        <li class="order_sort_item">Старые</li>
-                        <li class="order_sort_item">Дешёвые</li>
-                        <li class="order_sort_item">Дорогие</li>
+                        <li class="order_sort_item" data-sort-order="new">Новые</li>
+                        <li class="order_sort_item" data-sort-order="old">Старые</li>
+                        <li class="order_sort_item" data-sort-order="cheap">Дешёвые</li>
+                        <li class="order_sort_item" data-sort-order="expensive">Дорогие</li>
                     </ul>
                 </div>
             </a>

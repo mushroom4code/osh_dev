@@ -2062,12 +2062,12 @@ $(document).ready(function () {
 
     $('.order_sort_item').on('click', function () {
         $(this).closest('.sort_orders').find('.sort_orders_by').text($(this).text());
-        let typeSort = $(this).text();
-        let url = document.location.search;
+        let typeSort = $(this).attr('data-sort-order');
+        let sortStatus = $(this).closest('.sort_orders_elements').attr('data-sort-status');
         $.ajax({
             url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
             type: 'POST',
-            data: {url: JSON.stringify(url), typeSort: JSON.stringify(typeSort)},
+            data: {sortStatus: sortStatus, typeSort: typeSort},
             success: function (response) {
                 if (response != 'error') {
                     $('.sale-order-list-inner-container').remove();
