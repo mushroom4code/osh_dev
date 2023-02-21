@@ -924,7 +924,7 @@ div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell 
 }
 
 div.bx_catalog_item_controls > div.box_with_fav_bask > div.min_card > i.fa-bell-o.filled,
-div.bx_catalog_item_controls > div.detail_popup > i.fa-bell-o.filled {
+div.bx_catalog_item_controls div.detail_popup > i.fa-bell-o.filled {
     color: red;
 }
 
@@ -2595,7 +2595,8 @@ a.bx-advertisingbanner-btn {
 }
 
 div > i.fa-bell-o {
-    font-size: 36px;
+    font-size: 28px;
+    padding-left: 5px;
 }
 
 div#error {
