@@ -144,17 +144,18 @@ if ($show_price) {
         <?php }
 
         $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
-        $togglerState = 'hide';
+        $togglerState = 'd-none';
         $listClass = '';
 
         if (count($taste['VALUE']) > 0) {
             if (count($taste['VALUE']) > 2) {
                 $showToggler = true;
             } elseif (count($taste['VALUE']) > 1) {
-                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18; // поместятся на одной строке 2 вкуса или нет
+                // поместятся на одной строке 2 вкуса или нет
+                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18;
             }
-            $togglerState = $showToggler ? ' many-tastes' : 'hide many-tastes';
-            $listClass = $showToggler ? 'js__tastes-list' : '';
+            $togglerState = $showToggler ? ' many-tastes' : ' d-none many-tastes';
+            $listClass = $showToggler ? ' js__tastes-list' : '';
         } ?>
 
         <div class="item-product-info">
@@ -317,8 +318,7 @@ if ($show_price) {
             </div>
             <?php
             $showSubscribeBtn = false;
-            $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE'));
-            //            if (!isset($item['OFFERS']) || empty($item['OFFERS'])) { ?>
+            $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
             <div class="bx_catalog_item_controls">
                 <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
                     <div class="box_with_fav_bask">
