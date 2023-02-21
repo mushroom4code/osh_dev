@@ -2061,6 +2061,23 @@ $(document).ready(function () {
             $(this).css('border-radius', '10px');
             $(this).find('i').css('transform', 'rotate(0)');
         }
+    });
+
+    $('.order_sort_item').on('click', function () {
+        $(this).closest('.sort_orders').find('.sort_orders_by').text($(this).text());
+        let typeSort = $(this).attr('data-sort-order');
+        let sortStatus = $(this).closest('.sort_orders_elements').attr('data-sort-status');
+        $.ajax({
+            url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
+            type: 'POST',
+            data: {sortStatus: sortStatus, typeSort: typeSort},
+            success: function (response) {
+                if (response != 'error') {
+                    $('.sale-order-list-inner-container').remove();
+                    $('div#personal_orders').append(response);
+                }
+            }
+        })
     })
 
     $(document).on('click', function (e) {
@@ -2079,6 +2096,7 @@ $(document).ready(function () {
     })
 
     $(document).on('click', '.retail_orders', function () {
+        console.log('entry', '');
         $(this).closest('div').find('.wholesale_orders').css({
             'background': '#F0F0F0',
             'borderRadius': '10px'
@@ -2264,6 +2282,27 @@ $(document).ready(function () {
                 })
             }
         })
+    });
+
+    $('a.sale-order-list-repeat-link').on('click', function (event) {
+        event.preventDefault();
+        let popup_mess = $(this).parent().find('#popup_mess_order_copy');
+        $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_copy_order" > ' +
+            '<p>' +
+            'Очистить корзину перед добавлением товаров?</p>' +
+            ($(this).hasClass('not-active') ? '<p style="font-size: 0.75rem; color: grey; margin-top: unset;">' +
+                '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
+            '<div class="confirmation_container">' +
+            '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+            'justify-content-center align-items-center">' +
+            'Да</a>' +
+            '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
+            'justify-content-center align-items-center">' +
+            'Нет</a></div>' +
+            '<span class="close_photo" id="close_photo"></span></div>').show();
+        $('#close_photo').on('click', function () {
+            $(".box_with_message_copy_order").hide(500).remove()
+        });
     })
 
     /*NEW*/
