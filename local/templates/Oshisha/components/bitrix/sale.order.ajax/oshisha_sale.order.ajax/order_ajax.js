@@ -5582,97 +5582,23 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
         },
 
-        // editFadePropsBlock: function () {
-        //     var propsContent = this.propsBlockNode.querySelector('.bx-soa-section-content'), newContent;
-        //
-        //     if (this.initialized.props) {
-        //         this.propsHiddenBlockNode.appendChild(propsContent);
-        //     } else {
-        //         this.editActivePropsBlock(false);
-        //         BX.remove(BX.lastChild(this.propsBlockNode));
-        //     }
-        //
-        //     newContent = this.getNewContainer();
-        //     this.propsBlockNode.appendChild(newContent);
-        //
-        //     // this.editFadePropsContent(newContent);
-        // },
-
-        // editFadePropsContent: function (node) {
-        //     if (!node || !this.locationsInitialized)
-        //         return;
-        //
-        //     var errorNode = this.propsHiddenBlockNode.querySelector('.alert'),
-        //         personType = this.getSelectedPersonType(),
-        //         fadeParamName, props,
-        //         group, property, groupIterator, propsIterator, i, validPropsErrors;
-        //
-        //     BX.cleanNode(node);
-        //
-        //     if (errorNode)
-        //         node.appendChild(errorNode.cloneNode(true));
-        //
-        //     if (personType) {
-        //         fadeParamName = 'PROPS_FADE_LIST_' + personType.ID;
-        //         props = this.params[fadeParamName];
-        //     }
-        //
-        //     if (!props || props.length === 0) {
-        //         node.innerHTML += '<strong>' + BX.message('SOA_ORDER_PROPS') + '</strong>';
-        //     } else {
-        //         groupIterator = this.fadedPropertyCollection.getGroupIterator();
-        //         while (group = groupIterator()) {
-        //             propsIterator = group.getIterator();
-        //             while (property = propsIterator()) {
-        //                 for (i = 0; i < props.length; i++)
-        //                     if (props[i] == property.getId() && property.getSettings()['IS_ZIP'] != 'Y')
-        //                         this.getPropertyRowNode(property, node, true);
-        //             }
-        //         }
-        //     }
-        //
-        //     if (this.propsBlockNode.getAttribute('data-visited') === 'true') {
-        //         validPropsErrors = this.isValidPropertiesBlock();
-        //         if (validPropsErrors.length)
-        //             this.showError(this.propsBlockNode, validPropsErrors);
-        //     }
-        //
-        //     BX.bind(node.querySelector('.alert.alert-danger'), 'click', BX.proxy(this.showByClick, this));
-        //     BX.bind(node.querySelector('.alert.alert-warning'), 'click', BX.proxy(this.showByClick, this));
-        // },
-
-        // clickByChecked: function (propsNode) {
-        //
-        //     let divs = BX.findChildren(this.UserCheckType),
-        //         i, input;
-        //
-        //     for (i = 0; i < divs.length; i++) {
-        //         input = BX.findChildren(divs[i], {tagName: 'INPUT'});
-        //
-        //         let elem_input = input[0];
-        //
-        //         BX.bind(elem_input, 'click', this.editShowHideContent);
-        //     }
-        // },
-        // editShowHideContent: function(element){
-        //     console.log(element)
-        // },
         editPropsItems: function (propsNode) {
             if (!this.result.ORDER_PROP || !this.propertyCollection)
                 return;
+
             let propsItemsContainer = BX.create('DIV', {props: {className: 'bx-soa-customer p-0'}}),
                 group, property, groupIterator = this.propertyCollection.getGroupIterator(), propsIterator;
 
             if (!propsItemsContainer)
                 propsItemsContainer = this.propsBlockNode.querySelector('.col-sm-12.bx-soa-customer');
-
+            console.log(propsNode)
+            console.log(this.result);
             while (group = groupIterator()) {
                 propsIterator = group.getIterator();
                 while (property = propsIterator()) {
                     if (propsNode.classList.contains('delivery')) {
+                        console.log(property.getSettings());
                         if (this.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
-                            console.log(this.groupDeliveryProps);
-                            console.log(propsIterator);
                             this.getPropertyRowNode(property, propsItemsContainer, false);
                         } else {
                             continue;
