@@ -366,78 +366,90 @@ if ($show_price) {
                         <span class="font-12 ml-1"><?= $item['PRODUCT']['QUANTITY'] ?></span>
                         <span class="font-12">шт.</span>
                     </div>
-                    <div class="d-flex row-line-reverse justify-content-between box-basket">
-                        <?php if ($show_price) { ?>
-                            <div class="btn red_button_cart btn-plus add2basket"
-                                 data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                 data-product_id="<?= $item['ID']; ?>"
-                                 data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                 id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                 <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
-                                <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
-                            </div>
-                            <div class="product-item-amount-field-contain-wrap"
-                                 <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
-                                 data-product_id="<?= $item['ID']; ?>">
-                                <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
-                                    <a class="btn-minus  minus_icon no-select add2basket"
-                                       id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                       href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                       data-product_id="<?= $item['ID']; ?>">
-                                    </a>
-                                    <div class="product-item-amount-field-block">
-                                        <input class="product-item-amount card_element"
-                                               id="<?= $arItemIDs['QUANTITY_ID'] ?>"
-                                               type="text"
-                                               value="<?= $priceBasket ?>">
+                    <?if($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'):?>
+                         <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                            <?= $is_key_found ? 'subscribed' : ''?> min_card">
+                            <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : ''?>" aria-hidden="true"></i>
+                        </div>
+                        <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                             <?= $is_key_found ? 'subscribed' : ''?>"
+                             data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>"
+                             data-product_id="<?= $item['ID']; ?>">
+                        </div>
+                    <?else:?>
+                        <div class="d-flex row-line-reverse justify-content-between box-basket">
+                            <?php if ($show_price) { ?>
+                                <div class="btn red_button_cart btn-plus add2basket"
+                                     data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                     data-product_id="<?= $item['ID']; ?>"
+                                     data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                     id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                     <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
+                                    <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
+                                </div>
+                                <div class="product-item-amount-field-contain-wrap"
+                                     <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
+                                     data-product_id="<?= $item['ID']; ?>">
+                                    <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
+                                        <a class="btn-minus  minus_icon no-select add2basket"
+                                           id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                           href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                           data-product_id="<?= $item['ID']; ?>">
+                                        </a>
+                                        <div class="product-item-amount-field-block">
+                                            <input class="product-item-amount card_element"
+                                                   id="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                                                   type="text"
+                                                   value="<?= $priceBasket ?>">
+                                        </div>
+                                        <a class="btn-plus plus_icon no-select add2basket"
+                                           data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                           id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
+                                           data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                           data-product_id="<?= $item['ID']; ?>"
+                                           title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
                                     </div>
-                                    <a class="btn-plus plus_icon no-select add2basket"
-                                       data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                       id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
-                                       data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                       data-product_id="<?= $item['ID']; ?>"
-                                       title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
+                                    <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
                                 </div>
-                                <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
-                            </div>
-                        <?php } ?>
-                        <div class="box_with_price line-price font_weight_600 mb-2">
-                            <div class="d-flex flex-row align-items-center">
-                                <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>" data-href="<?= $href ?>">
-                                    <?php
-                                    $sale = false;
-                                    if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                        $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-                                        $sale = true;
-                                        echo(round($price['SALE_PRICE']['PRICE']));
-                                    } else {
-                                        echo(round($price['PRICE_DATA'][1]['PRICE']));
-                                    } ?>₽
-                                </div>
-                                <?php if (!$sale) { ?>
-                                    <div class="info-prices-box-hover ml-2">
-                                        <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-                                        <div class="position-absolute d-hide">
-                                            <div class="d-flex flex-column prices-block">
-                                                <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                                                    <p class="mb-1">
-                                                        <span class="font-11"><?= $items['NAME'] ?></span><br>
-                                                        <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                                                    </p>
-                                                <?php } ?>
+                            <?php } ?>
+                            <div class="box_with_price line-price font_weight_600 mb-2">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>" data-href="<?= $href ?>">
+                                        <?php
+                                        $sale = false;
+                                        if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                            $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
+                                            $sale = true;
+                                            echo(round($price['SALE_PRICE']['PRICE']));
+                                        } else {
+                                            echo(round($price['PRICE_DATA'][1]['PRICE']));
+                                        } ?>₽
+                                    </div>
+                                    <?php if (!$sale) { ?>
+                                        <div class="info-prices-box-hover ml-2">
+                                            <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
+                                            <div class="position-absolute d-hide">
+                                                <div class="d-flex flex-column prices-block">
+                                                    <?php foreach ($price['PRICE_DATA'] as $items) { ?>
+                                                        <p class="mb-1">
+                                                            <span class="font-11"><?= $items['NAME'] ?></span><br>
+                                                            <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                                        </p>
+                                                    <?php } ?>
+                                                </div>
                                             </div>
                                         </div>
+                                    <?php } ?>
+                                </div>
+                                <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                    $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
+                                    <div class="after_price">
+                                        Старая цена: <?= $price['PRICE_DATA'][1]['PRICE'] ?>₽
                                     </div>
                                 <?php } ?>
                             </div>
-                            <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-                                <div class="after_price">
-                                    Старая цена: <?= $price['PRICE_DATA'][1]['PRICE'] ?>₽
-                                </div>
-                            <?php } ?>
                         </div>
-                    </div>
+                    <?endif;?>
                 <?php }
                 if (!$USER->IsAuthorized() && !$show_price) { ?>
                     <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
@@ -458,24 +470,6 @@ if ($show_price) {
                 <?= $is_key_found ? 'subscribed' : ''?> min_card">
                 <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : ''?>" aria-hidden="true"></i>
             </div>
-            <?php
-
-            $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                'templates',
-                array(
-                    'ID_PROD' => $item['ID_PROD'],
-                    'F_USER_ID' => $item['F_USER_ID'],
-                    'LOOK_LIKE' => false,
-                    'LOOK_FAVORITE' => true,
-                    'COUNT_LIKE' => $item['COUNT_LIKE'],
-                    'COUNT_FAV' => $item['COUNT_FAV'],
-                    'COUNT_LIKES' => $item['COUNT_LIKES'],
-                )
-                ,
-                $component,
-                array('HIDE_ICONS' => 'Y')
-            );
-            ?>
         </div>
         <div style="clear: both;"></div>
         <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth'?>

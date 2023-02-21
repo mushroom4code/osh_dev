@@ -155,6 +155,7 @@ $SUBSCRIPTIONS_FILTER = array(
                     "USE_PRICE_COUNT" => "N",
                     "USE_PRODUCT_QUANTITY" => "N",
                     "FILL_ITEM_ALL_PRICES"=>"Y",
+                    "IS_SUBSCRIPTION_PAGE"=>"Y",
                 )
             );
         }
