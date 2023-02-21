@@ -2263,6 +2263,8 @@ $(document).ready(function () {
         $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_copy_order" > ' +
             '<p>' +
             'Очистить корзину перед добавлением товаров?</p>' +
+            ($(this).hasClass('not-active') ? '<p style="font-size: 0.75rem; color: grey; margin-top: unset;">' +
+                '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
             '<div class="confirmation_container">' +
             '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
             'justify-content-center align-items-center">' +

@@ -72,7 +72,7 @@ function showOrderBlock($listStatuses, $accountNumber)
 
                         </div>
                         <div class=" sale-order-list-repeat-container">
-                            <a class=" sale-order-list-repeat-link font-w-m-600"
+                            <a class=" sale-order-list-repeat-link font-w-m-600 <?= array_search('N', $order['ACTIVE']) !== false ? 'not-active' : '' ?>"
                                href="/personal/orders/?COPY_ORDER=Y&ID=<?= $order['ACCOUNT_NUMBER'] ?>"><?= Loc::getMessage('SPOL_TPL_REPEAT_ORDER') ?></a>
                             <div id="popup_mess_order_copy"></div>
                         </div>

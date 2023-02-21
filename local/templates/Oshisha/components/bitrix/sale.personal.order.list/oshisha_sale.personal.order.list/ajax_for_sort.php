@@ -35,9 +35,10 @@ function sortByField(string $field, string $params, ?string $element = null, ?st
                     array("ID" => $result['PRODUCT_ID']),
                     false,
                     false,
-                    array('ID', 'NAME', 'DETAIL_PAGE_URL', 'PREVIEW_PICTURE', 'DETAIL_PICTURE')
+                    array('ID', 'NAME', 'ACTIVE', 'DETAIL_PAGE_URL', 'PREVIEW_PICTURE', 'DETAIL_PICTURE')
                 );
                 $ar_fields = $my_elements->GetNext();
+                $itemOrder['ACTIVE'][] = $ar_fields['ACTIVE'];
                 $itemOrder['PICTURE'][] = CFile::GetPath($ar_fields['PREVIEW_PICTURE']);
             }
         }
