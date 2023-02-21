@@ -143,14 +143,36 @@ $(document).ready(function () {
             function () {
                 let text_taste = $(this).closest('div.form-check').find('label').attr('id');
                 let code = $(this).closest('div.form-check').find('label').attr('for');
-                /*  $(box_for_tasted).append('<span style="padding: 8px 25px;border:1px solid #f55f5c;color: white;\n' +
-                      'margin-right: 10px;border-radius: 10px;font-size: 11px;">' + text_taste + '</span>');*/
-                /* $('#osh-filter-horizontal').append('<div id="osh-filter-horizontal-item" class="d-inline-block" data-osh-filter-state="hide">'+
-                 '<div id="item-'+code+'" class="osh-filter-item osh-filter-horizontal-border d-inline-block">' + text_taste + '<span onclick="smartFilter.removeHorizontalFilter(\''+code+'\')" class="d-inline-block osh-filter-horizontal-remove"></span></div></div>');
-     */
             }
         );
     }
+
+    $(document).on('click', '.js__show-all-prices', function () {
+        const showButton = $(this),
+            listHeader = showButton.closest('.info-prices-box-hover'),
+            listWrap = listHeader.find('.js__all-prices'),
+            priceList = listWrap.find('.prices-block'),
+            yDelta = priceList.outerHeight();
+
+        if (listWrap.height() !== 0) {
+            listHeader.stop().animate({bottom: 0}, 600);
+            listWrap.stop().animate({height: 0}, 600, function () {
+                showButton.css({borderRadius: 0}).find('span').text('Показать цены');
+            });
+
+        } else {
+            showButton.find('span').text('Скрыть цены').css({borderRadius: '0 0 10px 10px'});
+            listHeader.stop().animate({bottom: yDelta}, 800);
+            listWrap.stop().animate({height: yDelta}, 800);
+        }
+        listHeader.toggleClass('active');
+        return false;
+    })
+
+
+
+
+
 
     $('.link_header_catalog').on('click', function () {
         $('#MenuHeader .Icon').click();
@@ -257,7 +279,7 @@ $(document).ready(function () {
         } else if (value > maxValue) {
             value = maxValue;
             $('.card_element').val(maxValue);
-            $('.alert_quantity').html('К покупке доступно максимум: ' + maxValue + 'шт.').addClass('show_block');
+            $('.alert_quantity').html('К покупке доступно максимум: ' + maxValue + ' шт.').addClass('show_block');
 
         }
         if (value > 0) {
@@ -361,7 +383,7 @@ $(document).ready(function () {
                     $(boxInput).val(max_QUANTITY);
                     if (max_QUANTITY > 0) {
                         $('.ganerate_price_wrap').show();
-                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
+                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                     } else
                         $('.ganerate_price_wrap').hide();
                     if ($('.ganerate_price').length > 0) {
@@ -378,7 +400,7 @@ $(document).ready(function () {
                     $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').css({'display': 'flex'});
                 }
             } else if (minus === true) {
-                $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
 
                 if (parseInt($(boxInput).val()) > 0) {
                     let beforeVal = parseInt($(boxInput).val()) - 1;
@@ -414,10 +436,10 @@ $(document).ready(function () {
                         product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
                         $(boxInput).val(quantity);
                         if (quantity > max_QUANTITY) {
-                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
 
                         } else {
-                            $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                         }
                     } else {
                         product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
@@ -428,6 +450,11 @@ $(document).ready(function () {
                     $(boxInput).val(1);
                 }
             }
+
+            $(document).on('click', '.js__close-count-alert', function() {
+                $(this).parents('.alert_quantity').html('').removeClass('show_block');
+            })
+
             let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="' + product_id + '"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
@@ -2075,6 +2102,23 @@ $(document).ready(function () {
             $(this).css('border-radius', '10px');
             $(this).find('i').css('transform', 'rotate(0)');
         }
+    });
+
+    $('.order_sort_item').on('click', function () {
+        $(this).closest('.sort_orders').find('.sort_orders_by').text($(this).text());
+        let typeSort = $(this).attr('data-sort-order');
+        let sortStatus = $(this).closest('.sort_orders_elements').attr('data-sort-status');
+        $.ajax({
+            url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
+            type: 'POST',
+            data: {sortStatus: sortStatus, typeSort: typeSort},
+            success: function (response) {
+                if (response != 'error') {
+                    $('.sale-order-list-inner-container').remove();
+                    $('div#personal_orders').append(response);
+                }
+            }
+        })
     })
 
     $(document).on('click', function (e) {
@@ -2093,6 +2137,7 @@ $(document).ready(function () {
     })
 
     $(document).on('click', '.retail_orders', function () {
+        console.log('entry', '');
         $(this).closest('div').find('.wholesale_orders').css({
             'background': '#F0F0F0',
             'borderRadius': '10px'
@@ -2278,6 +2323,27 @@ $(document).ready(function () {
                 })
             }
         })
+    });
+
+    $('a.sale-order-list-repeat-link').on('click', function (event) {
+        event.preventDefault();
+        let popup_mess = $(this).parent().find('#popup_mess_order_copy');
+        $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_copy_order" > ' +
+            '<p>' +
+            'Очистить корзину перед добавлением товаров?</p>' +
+            ($(this).hasClass('not-active') ? '<p style="font-size: 0.75rem; color: grey; margin-top: unset;">' +
+                '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
+            '<div class="confirmation_container">' +
+            '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+            'justify-content-center align-items-center">' +
+            'Да</a>' +
+            '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
+            'justify-content-center align-items-center">' +
+            'Нет</a></div>' +
+            '<span class="close_photo" id="close_photo"></span></div>').show();
+        $('#close_photo').on('click', function () {
+            $(".box_with_message_copy_order").hide(500).remove()
+        });
     })
 
     /*NEW*/

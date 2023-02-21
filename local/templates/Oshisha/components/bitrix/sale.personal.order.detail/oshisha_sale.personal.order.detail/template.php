@@ -124,11 +124,12 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                             </div>
                             <div class="d-flex flex-column custom_item">
                                 <a href="<?= $arResult["URL_TO_COPY"] ?>"
-                                   class="link_repeat_orders mb-1"><?= Loc::getMessage('SPOD_ORDER_REPEAT') ?></a>
+                                   class="link_repeat_orders sale-order-list-repeat-link mb-1"><?= Loc::getMessage('SPOD_ORDER_REPEAT') ?></a>
+                                <div id="popup_mess_order_copy"></div>
                                 <? if ($arResult["CAN_CANCEL"] === "Y") {
                                     ?>
                                     <a href="<?= $arResult["URL_TO_CANCEL"] ?>"
-                                       class="link_repeat_orders mb-1">Отменить заказ</a>
+                                       class="link_repeat_orders sale-order-list-repeat-link mb-1">Отменить заказ</a>
                                     <?
                                 }
                                 ?>
