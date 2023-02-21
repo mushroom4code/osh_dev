@@ -2017,6 +2017,7 @@ a.bx_catalog_item_title {
     display: block !important;
     position: relative;
     width: auto;
+    min-height: 30px;
 }
 
 .detail-text {
