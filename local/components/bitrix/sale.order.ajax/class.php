@@ -2785,6 +2785,7 @@ class SaleOrderAjax extends \CBitrixComponent
                 $arDelivery['ID'] = $deliveryObj->getId();
                 $arDelivery['NAME'] = $deliveryObj->isProfile() ? $deliveryObj->getNameWithParent() : $deliveryObj->getName();
                 $arDelivery['OWN_NAME'] = $deliveryObj->getName();
+
                 $arDelivery['DESCRIPTION'] = $this->sanitize($deliveryObj->getDescription());
                 $arDelivery['FIELD_NAME'] = 'DELIVERY_ID';
                 $arDelivery["CURRENCY"] = $this->order->getCurrency();

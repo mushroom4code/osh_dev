@@ -5544,7 +5544,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
                 propsNode = BX.create('DIV', {props: {className: 'row'}});
                 selectedDelivery = this.getSelectedDelivery();
-
+                console.log(selectedDelivery)
 
                 if (
                     selectedDelivery && this.params.SHOW_MAP_IN_PROPS === 'Y'
@@ -5671,6 +5671,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 while (property = propsIterator()) {
                     if (propsNode.classList.contains('delivery')) {
                         if (this.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
+                            console.log(this.groupDeliveryProps);
+                            console.log(propsIterator);
                             this.getPropertyRowNode(property, propsItemsContainer, false);
                         } else {
                             continue;
@@ -6093,6 +6095,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
                 property.appendTo(propContainer);
                 propsItemNode.appendChild(propContainer);
+                property.parent = propsItemNode;
                 this.alterProperty(property, propContainer);
                 this.bindValidation(property.getId(), propContainer);
             }
@@ -6223,8 +6226,15 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 if (value_string.indexOf('noemail') !== -1 || value_string.indexOf('<') !== -1) {
                     inputs[i].value = '';
                 }
+                // console.log(propContainer);
+
                 BX.addClass(inputs[i], 'form-control bx-soa-customer-input bx-ios-fix');
                 if (settings.CODE === 'ADDRESS') {
+                    // console.log(property.getParentNode())
+                    // console.log(settings)
+                    // console.log(property)
+                    // console.log(propContainer);
+                    // console.log(property);
                     //    Адрес
                     // if (settings.VALUE !== '' && settings.VALUE !== null) {
                     //     inputs[i].setAttribute('value', settings.VALUE[0]);

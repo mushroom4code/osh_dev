@@ -22,9 +22,6 @@ use Bitrix\Sale\PropertyValueCollection;
 $context = Application::getInstance()->getContext();
 $request = $context->getRequest();
 
-//const GROUP_DELIVERY_ID_ALL = '32';
-//const GROUP_DELIVERY_ID_SDEK = '5';
-
 $this->addExternalJs('/bitrix/js/osh.shipping/jquery.suggestions.min.js');
 $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css');
 CJSCore::Init(array("osh_pickup"));
