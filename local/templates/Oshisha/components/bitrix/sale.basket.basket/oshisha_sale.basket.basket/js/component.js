@@ -2038,7 +2038,7 @@
                     }
                 }
             }
-
+            console.log(clonedData)
             return Mustache.render(template, clonedData);
         },
 

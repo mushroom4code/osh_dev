@@ -255,7 +255,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     top: 14%
 }
 .prices-block {
-    width: fit-content;
+    width: max-content;
     background-color: #F0F0F0;
     padding: 15px;
     border-radius: 10px;
@@ -315,6 +315,10 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 
 .search_header {
     width: 30%;
+}
+
+.width-max-content {
+    width: max-content;
 }
 
 .max-width-1024 {
@@ -953,7 +957,7 @@ a.link_like, .catalog-section-list-item-link > i, .box_with_net a {
     font-weight: 700;
 }
 
-.after_price {
+.after_price, .font-9 {
     font-size: 9px;
 }
 .by-card .after_price {
@@ -1017,15 +1021,15 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
     font-size: 16px;
 }
 
-.catalog-section-list-item-link > i, .link_header > .icon_header {
-    font-size: 21px;
+.bx_price {
+    font-size: 17px;
 }
 
 .font_18, .by-line:not(.opt) a.bx_catalog_item_title {
     font-size: 18px;
 }
 
-.bx_price, .text_font_19, .font-19 {
+.text_font_19, .font-19 {
     font-size: 19px;
 }
 
@@ -1034,7 +1038,7 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
     font-size: 20px !important;
 }
 
-.by-line:not(.opt) .bx_price {
+.by-line:not(.opt) .bx_price,.catalog-section-list-item-link > i, .link_header > .icon_header {
     font-size: 21px;
 }
 
@@ -1598,11 +1602,6 @@ span > i.header_icon {
     margin: 7rem 0 2.5rem 0;
 }
 
-
-.bx_price {
-    padding: 5px 0;
-}
-
 .like_span {
     margin-top: 3px;
 }
@@ -2037,7 +2036,7 @@ a.bx_catalog_item_title {
 
 .bx_catalog_item_container {
     box-sizing: border-box;
-    padding: 15px 20px;
+    padding: 15px;
     margin-bottom: 30px;
 }
 
@@ -3115,6 +3114,10 @@ label.radio_input {
     min-height: 20px;
 }
 
+.card-price-text {
+    margin-right: 2px;
+}
+
 #TableWorkers tbody th, #TableWorkers tbody td {
     padding: 12px 15px;
     border-bottom: 1px solid #e2e2e2;
@@ -3206,6 +3209,16 @@ table#TableWorkers.no-footer {
     filter: drop-shadow(0px 1px 3px rgba(97, 97, 97, 0));
 }
 
+b.decoration-color-red {
+    text-decoration: line-through red;
+}
+
+.sale-percent {
+    padding: 3px;
+    border: 1px solid #F55F5C;
+    border-radius: 5px;
+}
+
 @media (min-width: 320px) and (max-width: 1024px) {
     .card {
         width: auto;
@@ -3231,6 +3244,10 @@ table#TableWorkers.no-footer {
     .link_banner {
         border-radius: 7px;
         left: 93%;
+    }
+
+    .header_top, .block_menu_mobile {
+        position: fixed;
     }
 
     .box_with_search, .box_right_header, .banners_footer, .banner_big, .banner_small, .btn_footer, .custom_field {
@@ -4210,7 +4227,7 @@ table#TableWorkers.no-footer {
     }
 
     .header_top {
-        padding-top: 0px;
+        padding-top: 0;
         z-index: 10001;
         height: 100%;
         top: 0;

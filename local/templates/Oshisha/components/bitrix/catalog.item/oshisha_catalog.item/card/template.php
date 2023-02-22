@@ -114,7 +114,7 @@ if ($show_price) {
         'USE_DISCOUNT' => $useDiscount['VALUE'],
         'ACTUAL_BASKET' => $priceBasket,
         'PRICE' => $price['PRICE_DATA'],
-        'SALE_PRICE' => round($price['SALE_PRICE']['PRICE']) . ' руб.',
+        'SALE_PRICE' => round($price['SALE_PRICE']['PRICE']),
         'POPUP_PROPS' => $prop_see_in_window ?? 0,
         'NAME' => $productTitle,
         'LIKE' => [
@@ -324,21 +324,26 @@ if ($show_price) {
                     <div class="box_with_fav_bask">
                         <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
                             <div class="box_with_price card-price font_weight_600 d-flex flex-column">
-                                <div class="d-flex flex-row align-items-center">
-                                    <div class="bx_price <?= $styleForNo ?>">
+                                <div class="d-flex flex-column">
+                                    <div class="bx_price <?= $styleForNo ?> position-relative">
                                         <?php $sale = false;
                                         if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
                                             $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
                                             echo(round($price['SALE_PRICE']['PRICE']));
                                             $sale = true;
                                         } else {
-                                            echo(round($price['PRICE_DATA'][1]['PRICE']));
+                                            echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
                                         } ?>₽
                                     </div>
 
                                     <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
                                         $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-                                        <div class="after_price"><?= $price['PRICE_DATA'][1]['PRICE'] ?>₽</div>
+                                        <div class="font-10">
+                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
+                                            <b class="sale-percent">
+                                                - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>₽
+                                            </b>
+                                        </div>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -399,7 +404,12 @@ if ($show_price) {
 
                                         <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
                                             $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-                                            <div class="after_price"><?= $price['PRICE_DATA'][1]['PRICE'] ?>₽</div>
+                                            <div class="font-10">
+                                                <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
+                                                <b class="sale-percent">
+                                                    - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>₽
+                                                </b>
+                                            </div>
                                         <?php } ?>
                                     </div>
                                 </div>
