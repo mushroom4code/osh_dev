@@ -52,6 +52,7 @@ function get_orders(array $filter = []): array
 
 require('show_order_block.php');
 
+
 if (!empty($arResult['ERRORS']['FATAL'])) {
     foreach ($arResult['ERRORS']['FATAL'] as $code => $error) {
         if ($code !== $component::E_NOT_AUTHORIZED)

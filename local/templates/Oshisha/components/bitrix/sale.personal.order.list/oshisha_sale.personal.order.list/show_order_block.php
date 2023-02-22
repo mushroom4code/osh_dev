@@ -2,8 +2,34 @@
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages('template.php');
 
+global $arBasketItems;
+$arBasketItems = array();
+
+$dbBasketItems = CSaleBasket::GetList(
+    array(
+        "NAME" => "ASC",
+        "ID" => "ASC"
+    ),
+    array(
+        "FUSER_ID" => CSaleBasket::GetBasketUserID(),
+        "LID" => SITE_ID,
+        "ORDER_ID" => "NULL"
+    ),
+    false,
+    false,
+    array("ID", "CALLBACK_FUNC", "MODULE",
+        "PRODUCT_ID", "QUANTITY", "DELAY",
+        "CAN_BUY", "PRICE", "WEIGHT")
+);
+
+while ($arItems = $dbBasketItems->Fetch())
+{
+    $arBasketItems[] = $arItems;
+}
+
 function showOrderBlock($listStatuses, $accountNumber)
 {
+    global $arBasketItems;
     foreach ($accountNumber as $key => $order) {
 
         $classStatus = '';
@@ -72,9 +98,9 @@ function showOrderBlock($listStatuses, $accountNumber)
 
                         </div>
                         <div class=" sale-order-list-repeat-container">
-                            <a class=" sale-order-list-repeat-link font-w-m-600 <?= array_search('N', $order['ACTIVE']) !== false ? 'not-active' : '' ?>"
+                            <a class=" sale-order-list-repeat-link font-w-m-600 <?= empty($arBasketItems) ? 'basket-empty' : 'basket-not-empty'?> <?= array_search('N', $order['ACTIVE']) !== false ? 'not-active' : '' ?>"
                                href="/personal/orders/?COPY_ORDER=Y&ID=<?= $order['ACCOUNT_NUMBER'] ?>"><?= Loc::getMessage('SPOL_TPL_REPEAT_ORDER') ?></a>
-                            <div id="popup_mess_order_copy"></div>
+                            <div id="popup_mess_order_copy" ></div>
                         </div>
                         <?
                         if ($order['CAN_CANCEL'] !== 'N') {

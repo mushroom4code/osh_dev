@@ -15,6 +15,37 @@ CJSCore::Init(array('clipboard', 'fx'));
 /** @var CUser|CAllUser $USER
  */
 
+global $arBasketItems;
+$arBasketItems = array();
+
+
+$dbBasketItems = CSaleBasket::GetList(
+    array(
+        "NAME" => "ASC",
+        "ID" => "ASC"
+    ),
+    array(
+        "FUSER_ID" => CSaleBasket::GetBasketUserID(),
+        "LID" => SITE_ID,
+        "ORDER_ID" => "NULL"
+    ),
+    false,
+    false,
+    array("ID", "CALLBACK_FUNC", "MODULE",
+        "PRODUCT_ID", "QUANTITY", "DELAY",
+        "CAN_BUY", "PRICE", "WEIGHT")
+);
+while ($arItems = $dbBasketItems->Fetch())
+{
+    $arBasketItems[] = $arItems;
+}
+
+$orderBasketItemsStatuses = [];
+foreach($arResult["BASKET"] as $orderBasketItem) {
+    $product = CIBlockElement::GetByID($orderBasketItem['PRODUCT_ID'])->GetNext();
+    $orderBasketItemsStatuses[] = $product['ACTIVE'];
+}
+
 
 $APPLICATION->SetTitle("");
 
@@ -124,7 +155,8 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                             </div>
                             <div class="d-flex flex-column custom_item">
                                 <a href="<?= $arResult["URL_TO_COPY"] ?>"
-                                   class="link_repeat_orders sale-order-list-repeat-link mb-1"><?= Loc::getMessage('SPOD_ORDER_REPEAT') ?></a>
+                                   class="link_repeat_orders sale-order-list-repeat-link mb-1 <?= empty($arBasketItems) ? 'basket-empty' : 'basket-not-empty'?> <?= array_search('N', $orderBasketItemsStatuses) !== false ? 'not-active' : '' ?>">
+                                    <?= Loc::getMessage('SPOD_ORDER_REPEAT') ?></a>
                                 <div id="popup_mess_order_copy"></div>
                                 <? if ($arResult["CAN_CANCEL"] === "Y") {
                                     ?>
