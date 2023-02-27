@@ -96,6 +96,7 @@ class EnteregoBasket
                 $newProp = $propsUseSale->Fetch();
 
                 if (USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') {
+
                     $price_type = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
                     $result = CIBlockElement::GetList(
                         array(),
@@ -105,13 +106,12 @@ class EnteregoBasket
                         array("$price_type"));
 
                     if ($ar_res = $result->fetch()) {
-                        if (!empty($ar_res["$price_type"])) {
-
+                        if (((int)$price_data['PRICE'] > (int)$ar_res["$price_type"]) && !empty($ar_res["$price_type"])) {
                             $product_prices[$product_id]['PRICE'] = $ar_res["$price_type"];
                             $product_prices[$product_id]['PRICE_ID'] = SALE_PRICE_TYPE_ID;
                         } else {
-
-                            $price_ids = "CATALOG_PRICE_" . $currentPriceTypeId;
+                            $ids = USE_CUSTOM_SALE_PRICE ? $currentPriceTypeId : $price_id;
+                            $price_ids = "CATALOG_PRICE_" . $ids;
                             $res = CIBlockElement::GetList(
                                 array(),
                                 array("ID" => $product_id),
@@ -121,7 +121,7 @@ class EnteregoBasket
 
                             if ($arData = $res->fetch()) {
                                 $product_prices[$product_id]['PRICE'] = $arData["$price_ids"];
-                                $product_prices[$product_id]['PRICE_ID'] = SALE_PRICE_TYPE_ID;
+                                $product_prices[$product_id]['PRICE_ID'] = $ids;
                             }
                         }
                     }
@@ -177,4 +177,39 @@ class EnteregoBasket
         }
         return null;
     }
+
+    /**
+     * @param $arPrices
+     * @param $useDiscount
+     * @return array
+     */
+    public static function getPricesArForProductTemplate($arPrices, $useDiscount): array
+    {
+        $price = [];
+        $sale = $arPrices['PRICES'][SALE_PRICE_TYPE_ID];
+        $retail = $arPrices['PRICES'][RETAIL_PRICE];
+        $base = $arPrices['PRICES'][BASIC_PRICE];
+        $b2b = $arPrices['PRICES'][B2B_PRICE];
+
+        if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
+            if (!empty($sale) && ((int)$sale['PRICE'] < (int)$retail['PRICE'])) {
+                $price['SALE_PRICE'] = $sale;
+            }
+        }
+        if (!empty($retail)) {
+            $price['PRICE_DATA'][0] = $retail;
+            $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
+        }
+        if (!empty($base)) {
+            $price['PRICE_DATA'][1] = $base;
+            $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
+        }
+        if (!empty($b2b)) {
+            $price['PRICE_DATA'][2] = $b2b;
+            $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
+        }
+
+        return $price;
+    }
+
 }

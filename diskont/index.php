@@ -7,8 +7,8 @@ $APPLICATION->AddChainItem('Дисконт','/diskont/');
 
 ?>
     <div id="o_nas" class="mb-5">
-    
-		
+
+
 <?php
 
 define("HIDE_SIDEBAR", true);
@@ -19,8 +19,11 @@ define("HIDE_SIDEBAR", true);
 
 $GLOBALS['ArFilter'] = array(
     'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
-	
 );
+$GLOBALS['ArPreFilter'] = array(
+    'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
+);
+
 
 $APPLICATION->IncludeComponent(
     "bitrix:catalog",
@@ -37,8 +40,6 @@ $APPLICATION->IncludeComponent(
         "SECTION_ID_VARIABLE" => "SECTION_ID",
         "PRODUCT_QUANTITY_VARIABLE" => "quantity",
         "PRODUCT_PROPS_VARIABLE" => "prop",
-        "SEF_MODE" => "Y",
-        "SEF_FOLDER" => "/diskont/",
         "AJAX_MODE" => "N",
         "AJAX_OPTION_JUMP" => "N",
         "AJAX_OPTION_STYLE" => "Y",
@@ -55,6 +56,7 @@ $APPLICATION->IncludeComponent(
         "USE_ELEMENT_COUNTER" => "Y",
         "USE_FILTER" => "Y",
         "FILTER_NAME" => "ArFilter",
+        "PREFILTER_NAME" => "ArPreFilter",
         "FILTER_VIEW_MODE" => "VERTICAL",
         "USE_COMPARE" => "N",
         "PRICE_CODE" => BXConstants::PriceCode(),
@@ -151,7 +153,7 @@ $APPLICATION->IncludeComponent(
         "PAGER_SHOW_ALL" => "N",
         "ADD_PICT_PROP" => "MORE_PHOTO",
         "LABEL_PROP" => array(
-            0 => "VKUS",
+            0 => PROPERTY_KEY_VKUS,
         ),
         "PRODUCT_DISPLAY_MODE" => "Y",
         "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
@@ -164,7 +166,7 @@ $APPLICATION->IncludeComponent(
         "SHOW_DISCOUNT_PERCENT" => "Y",
         "SHOW_OLD_PRICE" => "Y",
         "MESS_BTN_BUY" => "Купить",
-        "MESS_BTN_ADD_TO_BASKET" => "В корзину",
+        "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
         "MESS_BTN_COMPARE" => "Сравнение",
         "MESS_BTN_DETAIL" => "Подробнее",
         "MESS_NOT_AVAILABLE" => "Нет в наличии",
@@ -309,10 +311,12 @@ $APPLICATION->IncludeComponent(
         "DETAIL_SET_VIEWED_IN_COMPONENT" => "N",
         "LIST_ENLARGE_PROP" => "-",
         "MESS_BTN_LAZY_LOAD" => "Показать ещё",
+        "SEF_MODE" => "Y",
+        "SEF_FOLDER" => "/diskont/",
         "SEF_URL_TEMPLATES" => array(
             "sections" => "",
             "section" => "#SECTION_CODE#/",
-            "element" => "/product/#ELEMENT_CODE#/",
+            "element" => "product/#ELEMENT_CODE#/",
             "compare" => "compare/",
             "smart_filter" => "#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/",
         )

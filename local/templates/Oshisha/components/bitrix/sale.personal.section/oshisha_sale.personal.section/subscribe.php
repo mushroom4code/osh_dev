@@ -91,7 +91,7 @@ if( count($arIsd_product) > 0)
                 "IBLOCK_ID" => IBLOCK_CATALOG,
                 "IBLOCK_TYPE" => "1c_catalog",
                 "INCLUDE_SUBSECTIONS" => "A",
-                "LABEL_PROP" => array("VKUS","USE_DISCOUNT"),
+                "LABEL_PROP" => array(PROPERTY_KEY_VKUS,"USE_DISCOUNT"),
                 "LABEL_PROP_MOBILE" => array(),""=>array("USE_DISCOUNT"),
                 "LABEL_PROP_POSITION" => "top-left",
                 "LAZY_LOAD" => "N",

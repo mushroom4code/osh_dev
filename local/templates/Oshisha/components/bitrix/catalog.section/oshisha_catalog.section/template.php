@@ -184,14 +184,21 @@ while ($arItems = $dbBasketItems->Fetch()) {
 
 $id_USER = $USER->GetID();
 $FUser_id = Fuser::getId($id_USER);
-$item_id = [];
+$item_id = $prop_see_in_window = [];
 
 foreach ($arResult['ITEMS'] as $item) {
     $item_id[] = $item['ID'];
 }
 
+$iblock_id = IBLOCK_CATALOG;
+$resQuery = Enterego\EnteregoSettings::getPropSetting($iblock_id, 'SEE_POPUP_WINDOW');
+if (!empty($resQuery)) {
+    while ($collectionPropChecked = $resQuery->Fetch()) {
+        $prop_see_in_window[$collectionPropChecked['CODE']] = $collectionPropChecked;
+    }
+}
+
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
-$count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID']));
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 ?>
 <div class="row<?= $themeClass ?>">
@@ -225,35 +232,78 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
 
         <div class="mb-4 catalog-section <?= $col_orientation . ' ' . $classOpt ?>" data-entity="<?= $containerName ?>">
             <!-- items-container -->
-            <?php if (!empty($arResult['ITEMS']) && !empty($arResult['ITEM_ROWS'])) { ?>
-                <?php
+            <?php if (!empty($arResult['ITEMS']) && !empty($arResult['ITEM_ROWS'])) {
+
                 $areaIds = array();
+                global $option_site;
+            foreach ($arResult['ITEMS'] as $item) {
 
-                foreach ($arResult['ITEMS'] as $item) {
+            if ($item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'] == 'Нет') {
+            if ($GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] !== 'Нет'){
+                $GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] = 'Нет'; ?>
+                <script type="application/javascript">
+                    $(document).find('.message_for_user_minzdrav').text('<?=$option_site->text_rospetrebnadzor_catalog?>');
+                </script>
+            <?php
+            }
+            }
 
-                    $uniqueId = $item['ID'] . '_' . md5($this->randString() . $component->getAction());
-                    $areaIds[$item['ID']] = $this->GetEditAreaId($uniqueId);
-                    $this->AddEditAction($uniqueId, $item['EDIT_LINK'], $elementEdit);
-                    $this->AddDeleteAction($uniqueId, $item['DELETE_LINK'], $elementDelete, $elementDeleteParams);
-                }
-                foreach ($arResult['ITEM_ROWS'] as $rowData) {
-                    $rowItems = array_splice($arResult['ITEMS'], 0, $rowData['COUNT']);
+            $uniqueId = $item['ID'] . '_' . md5($this->randString() . $component->getAction());
+            $areaIds[$item['ID']] = $this->GetEditAreaId($uniqueId);
+            $this->AddEditAction($uniqueId, $item['EDIT_LINK'], $elementEdit);
+            $this->AddDeleteAction($uniqueId, $item['DELETE_LINK'], $elementDelete, $elementDeleteParams);
+            }
+            foreach ($arResult['ITEM_ROWS'] as $rowData) {
+            $rowItems = array_splice($arResult['ITEMS'], 0, $rowData['COUNT']);
 
-                    if ($_COOKIE['items'] === 'line') {
-                        $cols = 'col-md-12 col-lg-12';
-                        $rowData['CLASS'] = 'product-item-list-col-12';
-                    } else {
-                        $cols = 'col-md-5 col-lg-3';
-                    };
-                    ?>
-                    <div class="row <?= $rowData['CLASS'] ?> products_box" data-entity="items-row">
-                        <?php
-                        switch ($rowData['VARIANT']) {
-                            case 0:
+            if ($_COOKIE['items'] === 'line') {
+                $cols = 'col-md-12 col-lg-12';
+                $rowData['CLASS'] = 'product-item-list-col-12';
+            } else {
+                $cols = 'col-md-5 col-lg-3';
+            };
+            ?>
+                <div class="row <?= $rowData['CLASS'] ?> products_box" data-entity="items-row">
+                    <?php
+                    switch ($rowData['VARIANT']) {
+                        case 0:
+                            ?>
+                            <div class="col product-item-big-card bx_catalog_item double">
+                                <?php
+                                $item = reset($rowItems);
+                                $APPLICATION->IncludeComponent(
+                                    'bitrix:catalog.item',
+                                    'oshisha_catalog.item',
+                                    array(
+                                        'RESULT' => array(
+                                            'ITEM' => $item,
+                                            'AREA_ID' => $areaIds[$item['ID']],
+                                            'TYPE' => $rowData['TYPE'],
+                                            'BIG_LABEL' => 'N',
+                                            'BIG_DISCOUNT_PERCENT' => 'N',
+                                            'BIG_BUTTONS' => 'N',
+                                            'SCALABLE' => 'N'
+                                        ),
+                                        'PARAMS' => $generalParams
+                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+                                    ),
+                                    $component,
+                                    array('HIDE_ICONS' => 'Y')
+                                );
                                 ?>
-                                <div class="col product-item-big-card bx_catalog_item double">
+                                <div id="result_box"></div>
+                            </div>
+
+                            <?php
+                            break;
+
+                        case 1:
+                            foreach ($rowItems as $item) {
+                                ?>
+                                <div class="col-6 product-item-big-card bx_catalog_item double">
+
                                     <?php
-                                    $item = reset($rowItems);
+
                                     $APPLICATION->IncludeComponent(
                                         'bitrix:catalog.item',
                                         'oshisha_catalog.item',
@@ -265,7 +315,10 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                                                 'BIG_LABEL' => 'N',
                                                 'BIG_DISCOUNT_PERCENT' => 'N',
                                                 'BIG_BUTTONS' => 'N',
-                                                'SCALABLE' => 'N'
+                                                'SCALABLE' => 'N',
+                                                'AR_BASKET' => $arBasketItems,
+                                                'F_USER_ID' => $FUser_id,
+                                                'ID_PROD' => $item['ID'],
                                             ),
                                             'PARAMS' => $generalParams
                                                 + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -278,95 +331,12 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                                 </div>
 
                                 <?php
-                                break;
+                            }
+                            break;
 
-                            case 1:
-                                foreach ($rowItems as $item) {
-                                    ?>
-                                    <div class="col-6 product-item-big-card bx_catalog_item double">
-
-                                        <?php
-
-                                        $APPLICATION->IncludeComponent(
-                                            'bitrix:catalog.item',
-                                            'oshisha_catalog.item',
-                                            array(
-                                                'RESULT' => array(
-                                                    'ITEM' => $item,
-                                                    'AREA_ID' => $areaIds[$item['ID']],
-                                                    'TYPE' => $rowData['TYPE'],
-                                                    'BIG_LABEL' => 'N',
-                                                    'BIG_DISCOUNT_PERCENT' => 'N',
-                                                    'BIG_BUTTONS' => 'N',
-                                                    'SCALABLE' => 'N',
-                                                    'AR_BASKET' => $arBasketItems,
-                                                    'F_USER_ID' => $FUser_id,
-                                                    'ID_PROD' => $item['ID'],
-                                                ),
-                                                'PARAMS' => $generalParams
-                                                    + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-                                            ),
-                                            $component,
-                                            array('HIDE_ICONS' => 'Y')
-                                        );
-                                        ?>
-                                        <div id="result_box"></div>
-                                    </div>
-
-                                    <?php
-                                }
-                                break;
-
-                            case 2:
-                            case 3:
-                                foreach ($rowItems as $item) {
-                                    foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
-                                        if ($keyLike == $item['ID']) {
-                                            $item['COUNT_LIKES'] = $count;
-                                        }
-                                    }
-                                    foreach ($count_likes['USER'] as $keyLike => $count) {
-                                        if ($keyLike == $item['ID']) {
-                                            $item['COUNT_LIKE'] = $count['Like'][0];
-                                            $item['COUNT_FAV'] = $count['Fav'][0];
-                                        }
-                                    }
-                                    ?>
-                                    <div class="product-item-small-card">
-                                        <?php $APPLICATION->IncludeComponent(
-                                            'bitrix:catalog.item',
-                                            'oshisha_catalog.item',
-                                            array(
-                                                'RESULT' => array(
-                                                    'ITEM' => $item,
-                                                    'AREA_ID' => $areaIds[$item['ID']],
-                                                    'TYPE' => $rowData['TYPE'],
-                                                    'BIG_LABEL' => 'N',
-                                                    'BIG_DISCOUNT_PERCENT' => 'N',
-                                                    'BIG_BUTTONS' => 'Y',
-                                                    'SCALABLE' => 'N',
-                                                    'AR_BASKET' => $arBasketItems,
-                                                    'F_USER_ID' => $FUser_id,
-                                                    'ID_PROD' => $item['ID'],
-                                                    'COUNT_LIKE' => $item['COUNT_LIKE'],
-                                                    'COUNT_FAV' => $item['COUNT_FAV'],
-                                                    'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                                ),
-                                                'PARAMS' => $generalParams
-                                                    + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-                                            ),
-                                            $component,
-                                            array('HIDE_ICONS' => 'Y')
-                                        );
-                                        ?>
-                                        <div id="result_box"></div>
-                                    </div>
-                                    <?php
-                                }
-                                break;
-
-                            case 4:
-                                $rowItemsCount = count($rowItems);
+                        case 2:
+                        case 3:
+                            foreach ($rowItems as $item) {
                                 foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
                                     if ($keyLike == $item['ID']) {
                                         $item['COUNT_LIKES'] = $count;
@@ -379,10 +349,8 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                                     }
                                 }
                                 ?>
-                                <div class="col-sm-6 product-item-big-card bx_catalog_item double">
-                                    <?php
-                                    $item = array_shift($rowItems);
-                                    $APPLICATION->IncludeComponent(
+                                <div class="product-item-small-card">
+                                    <?php $APPLICATION->IncludeComponent(
                                         'bitrix:catalog.item',
                                         'oshisha_catalog.item',
                                         array(
@@ -393,11 +361,12 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                                                 'BIG_LABEL' => 'N',
                                                 'BIG_DISCOUNT_PERCENT' => 'N',
                                                 'BIG_BUTTONS' => 'Y',
-                                                'SCALABLE' => 'Y',
+                                                'SCALABLE' => 'N',
                                                 'AR_BASKET' => $arBasketItems,
                                                 'F_USER_ID' => $FUser_id,
                                                 'ID_PROD' => $item['ID'],
                                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                                'POPUP_PROPS' => $prop_see_in_window,
                                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
                                             ),
@@ -407,326 +376,191 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                                         $component,
                                         array('HIDE_ICONS' => 'Y')
                                     );
-                                    unset($item);
-                                    ?>
-                                    <div id="result_box"></div>
-                                </div>
-                                <div class="col-sm-6 product-item-small-card bx_catalog_item double">
-                                    <div class="row">
-                                        <?php
-                                        for ($i = 0; $i < $rowItemsCount - 1; $i++) {
-                                            ?>
-                                            <div class="col-6">
-                                                <?php
-                                                $APPLICATION->IncludeComponent(
-                                                    'bitrix:catalog.item',
-                                                    'oshisha_catalog.item',
-                                                    array(
-                                                        'RESULT' => array(
-                                                            'ITEM' => $rowItems[$i],
-                                                            'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
-                                                            'TYPE' => $rowData['TYPE'],
-                                                            'BIG_LABEL' => 'N',
-                                                            'BIG_DISCOUNT_PERCENT' => 'N',
-                                                            'BIG_BUTTONS' => 'N',
-                                                            'SCALABLE' => 'N',
-                                                            'AR_BASKET' => $arBasketItems,
-                                                            'F_USER_ID' => $FUser_id,
-                                                        ),
-                                                        'PARAMS' => $generalParams
-                                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
-                                                    ),
-                                                    $component,
-                                                    array('HIDE_ICONS' => 'Y')
-                                                );
-                                                ?>
-                                            </div>
-                                            <?php
-                                        }
-                                        ?>
-                                    </div>
-                                    <div id="result_box"></div>
-                                </div>
-                                <?php
-                                break;
-
-                            case 5:
-                                $rowItemsCount = count($rowItems);
-                                ?>
-                                <div class="col-sm-6 col-12 product-item-small-card bx_catalog_item double">
-                                    <div class="row">
-                                        <?php
-                                        for ($i = 0; $i < $rowItemsCount - 1; $i++) {
-                                            ?>
-                                            <div class="col-6">
-                                                <?php
-                                                $APPLICATION->IncludeComponent(
-                                                    'bitrix:catalog.item',
-                                                    'oshisha_catalog.item',
-                                                    array(
-                                                        'RESULT' => array(
-                                                            'ITEM' => $rowItems[$i],
-                                                            'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
-                                                            'TYPE' => $rowData['TYPE'],
-                                                            'BIG_LABEL' => 'N',
-                                                            'BIG_DISCOUNT_PERCENT' => 'N',
-                                                            'BIG_BUTTONS' => 'N',
-                                                            'SCALABLE' => 'N',
-                                                            'AR_BASKET' => $arBasketItems,
-                                                            'F_USER_ID' => $FUser_id,
-                                                            'ID_PROD' => $item['ID'],
-                                                        ),
-                                                        'PARAMS' => $generalParams
-                                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
-                                                    ),
-                                                    $component,
-                                                    array('HIDE_ICONS' => 'Y')
-                                                );
-                                                ?>
-                                            </div>
-                                            <?php
-                                        }
-                                        ?>
-                                    </div>
-                                    <div id="result_box"></div>
-                                </div>
-                                <div class="col-sm-6 product-item-big-card bx_catalog_item double">
-                                    <?php
-                                    $item = end($rowItems);
-                                    $APPLICATION->IncludeComponent(
-                                        'bitrix:catalog.item',
-                                        'oshisha_catalog.item',
-                                        array(
-                                            'RESULT' => array(
-                                                'ITEM' => $item,
-                                                'AREA_ID' => $areaIds[$item['ID']],
-                                                'TYPE' => $rowData['TYPE'],
-                                                'BIG_LABEL' => 'N',
-                                                'BIG_DISCOUNT_PERCENT' => 'N',
-                                                'BIG_BUTTONS' => 'Y',
-                                                'SCALABLE' => 'Y',
-                                                'AR_BASKET' => $arBasketItems,
-                                                'F_USER_ID' => $FUser_id,
-                                                'ID_PROD' => $item['ID'],
-                                            ),
-                                            'PARAMS' => $generalParams
-                                                + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-                                        ),
-                                        $component,
-                                        array('HIDE_ICONS' => 'Y')
-                                    );
-                                    unset($item);
                                     ?>
                                     <div id="result_box"></div>
                                 </div>
                                 <?php
-                                break;
+                            }
+                            break;
 
-                            case 6:
-                                foreach ($rowItems as $item) {
-                                    foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
-                                        if ($keyLike == $item['ID']) {
-                                            $item['COUNT_LIKES'] = $count;
-                                        }
-                                    }
-                                    foreach ($count_likes['USER'] as $keyLike => $count) {
-                                        if ($keyLike == $item['ID']) {
-                                            $item['COUNT_LIKE'] = $count['Like'][0];
-                                            $item['COUNT_FAV'] = $count['Fav'][0];
-                                        }
-                                    }
-                                    ?>
-                                    <div class="col-6 col-sm-4 col-md-4 col-lg-2 product-item-small-card bx_catalog_item double">
-                                        <?php
-                                        $APPLICATION->IncludeComponent(
-                                            'bitrix:catalog.item',
-                                            'oshisha_catalog.item',
-                                            array(
-                                                'RESULT' => array(
-                                                    'ITEM' => $item,
-                                                    'AREA_ID' => $areaIds[$item['ID']],
-                                                    'TYPE' => $rowData['TYPE'],
-                                                    'BIG_LABEL' => 'N',
-                                                    'BIG_DISCOUNT_PERCENT' => 'N',
-                                                    'BIG_BUTTONS' => 'N',
-                                                    'SCALABLE' => 'N',
-                                                    'AR_BASKET' => $arBasketItems,
-                                                    'F_USER_ID' => $FUser_id,
-                                                    'ID_PROD' => $item['ID'],
-                                                    'COUNT_LIKE' => $item['COUNT_LIKE'],
-                                                    'COUNT_FAV' => $item['COUNT_FAV'],
-                                                    'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                                ),
-                                                'PARAMS' => $generalParams
-                                                    + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-                                            ),
-                                            $component,
-                                            array('HIDE_ICONS' => 'Y')
-                                        );
-                                        ?>
-                                        <div id="result_box"></div>
-                                    </div>
-                                    <?php
+                        case 4:
+                            $rowItemsCount = count($rowItems);
+                            foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
+                                if ($keyLike == $item['ID']) {
+                                    $item['COUNT_LIKES'] = $count;
                                 }
-
-                                break;
-
-                            case 7:
-                                $rowItemsCount = count($rowItems);
+                            }
+                            foreach ($count_likes['USER'] as $keyLike => $count) {
+                                if ($keyLike == $item['ID']) {
+                                    $item['COUNT_LIKE'] = $count['Like'][0];
+                                    $item['COUNT_FAV'] = $count['Fav'][0];
+                                }
+                            }
+                            ?>
+                            <div class="col-sm-6 product-item-big-card bx_catalog_item double">
+                                <?php
+                                $item = array_shift($rowItems);
+                                $APPLICATION->IncludeComponent(
+                                    'bitrix:catalog.item',
+                                    'oshisha_catalog.item',
+                                    array(
+                                        'RESULT' => array(
+                                            'ITEM' => $item,
+                                            'AREA_ID' => $areaIds[$item['ID']],
+                                            'TYPE' => $rowData['TYPE'],
+                                            'BIG_LABEL' => 'N',
+                                            'BIG_DISCOUNT_PERCENT' => 'N',
+                                            'BIG_BUTTONS' => 'Y',
+                                            'SCALABLE' => 'Y',
+                                            'AR_BASKET' => $arBasketItems,
+                                            'F_USER_ID' => $FUser_id,
+                                            'ID_PROD' => $item['ID'],
+                                            'POPUP_PROPS' => $prop_see_in_window,
+                                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                            'COUNT_FAV' => $item['COUNT_FAV'],
+                                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                                        ),
+                                        'PARAMS' => $generalParams
+                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+                                    ),
+                                    $component,
+                                    array('HIDE_ICONS' => 'Y')
+                                );
+                                unset($item);
                                 ?>
-                                <div class="col-sm-6 col-12 product-item-big-card bx_catalog_item double">
+                                <div id="result_box"></div>
+                            </div>
+                            <div class="col-sm-6 product-item-small-card bx_catalog_item double">
+                                <div class="row">
                                     <?php
-                                    $item = array_shift($rowItems);
+                                    for ($i = 0; $i < $rowItemsCount - 1; $i++) {
+                                        ?>
+                                        <div class="col-6">
+                                            <?php
+                                            $APPLICATION->IncludeComponent(
+                                                'bitrix:catalog.item',
+                                                'oshisha_catalog.item',
+                                                array(
+                                                    'RESULT' => array(
+                                                        'ITEM' => $rowItems[$i],
+                                                        'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
+                                                        'TYPE' => $rowData['TYPE'],
+                                                        'BIG_LABEL' => 'N',
+                                                        'BIG_DISCOUNT_PERCENT' => 'N',
+                                                        'BIG_BUTTONS' => 'N',
+                                                        'SCALABLE' => 'N',
+                                                        'AR_BASKET' => $arBasketItems,
+                                                        'F_USER_ID' => $FUser_id,
+                                                    ),
+                                                    'PARAMS' => $generalParams
+                                                        + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
+                                                ),
+                                                $component,
+                                                array('HIDE_ICONS' => 'Y')
+                                            );
+                                            ?>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <div id="result_box"></div>
+                            </div>
+                            <?php
+                            break;
+
+                        case 5:
+                            $rowItemsCount = count($rowItems);
+                            ?>
+                            <div class="col-sm-6 col-12 product-item-small-card bx_catalog_item double">
+                                <div class="row">
+                                    <?php
+                                    for ($i = 0; $i < $rowItemsCount - 1; $i++) {
+                                        ?>
+                                        <div class="col-6">
+                                            <?php
+                                            $APPLICATION->IncludeComponent(
+                                                'bitrix:catalog.item',
+                                                'oshisha_catalog.item',
+                                                array(
+                                                    'RESULT' => array(
+                                                        'ITEM' => $rowItems[$i],
+                                                        'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
+                                                        'TYPE' => $rowData['TYPE'],
+                                                        'BIG_LABEL' => 'N',
+                                                        'BIG_DISCOUNT_PERCENT' => 'N',
+                                                        'BIG_BUTTONS' => 'N',
+                                                        'SCALABLE' => 'N',
+                                                        'AR_BASKET' => $arBasketItems,
+                                                        'F_USER_ID' => $FUser_id,
+                                                        'ID_PROD' => $item['ID'],
+                                                    ),
+                                                    'PARAMS' => $generalParams
+                                                        + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
+                                                ),
+                                                $component,
+                                                array('HIDE_ICONS' => 'Y')
+                                            );
+                                            ?>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <div id="result_box"></div>
+                            </div>
+                            <div class="col-sm-6 product-item-big-card bx_catalog_item double">
+                                <?php
+                                $item = end($rowItems);
+                                $APPLICATION->IncludeComponent(
+                                    'bitrix:catalog.item',
+                                    'oshisha_catalog.item',
+                                    array(
+                                        'RESULT' => array(
+                                            'ITEM' => $item,
+                                            'AREA_ID' => $areaIds[$item['ID']],
+                                            'TYPE' => $rowData['TYPE'],
+                                            'BIG_LABEL' => 'N',
+                                            'BIG_DISCOUNT_PERCENT' => 'N',
+                                            'BIG_BUTTONS' => 'Y',
+                                            'SCALABLE' => 'Y',
+                                            'AR_BASKET' => $arBasketItems,
+                                            'F_USER_ID' => $FUser_id,
+                                            'ID_PROD' => $item['ID'],
+                                        ),
+                                        'PARAMS' => $generalParams
+                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+                                    ),
+                                    $component,
+                                    array('HIDE_ICONS' => 'Y')
+                                );
+                                unset($item);
+                                ?>
+                                <div id="result_box"></div>
+                            </div>
+                            <?php
+                            break;
+
+                        case 6:
+                            foreach ($rowItems as $item) {
+                                foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
+                                    if ($keyLike == $item['ID']) {
+                                        $item['COUNT_LIKES'] = $count;
+                                    }
+                                }
+                                foreach ($count_likes['USER'] as $keyLike => $count) {
+                                    if ($keyLike == $item['ID']) {
+                                        $item['COUNT_LIKE'] = $count['Like'][0];
+                                        $item['COUNT_FAV'] = $count['Fav'][0];
+                                    }
+                                }
+                                ?>
+                                <div class="col-6 col-sm-4 col-md-4 col-lg-2 product-item-small-card bx_catalog_item double">
+                                    <?php
                                     $APPLICATION->IncludeComponent(
                                         'bitrix:catalog.item',
                                         'oshisha_catalog.item',
                                         array(
-                                            'RESULT' => array(
-                                                'ITEM' => $item,
-                                                'AREA_ID' => $areaIds[$item['ID']],
-                                                'TYPE' => $rowData['TYPE'],
-                                                'BIG_LABEL' => 'N',
-                                                'BIG_DISCOUNT_PERCENT' => 'N',
-                                                'BIG_BUTTONS' => 'Y',
-                                                'SCALABLE' => 'Y',
-                                                'AR_BASKET' => $arBasketItems,
-                                                'F_USER_ID' => $FUser_id,
-                                                'ID_PROD' => $item['ID'],
-                                            ),
-                                            'PARAMS' => $generalParams
-                                                + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-                                        ),
-                                        $component,
-                                        array('HIDE_ICONS' => 'Y')
-                                    );
-                                    unset($item);
-                                    ?>
-                                    <div id="result_box"></div>
-                                </div>
-                                <div class="col-sm-6 col-12 product-item-small-card">
-                                    <div class="row">
-                                        <?php
-                                        for ($i = 0; $i < $rowItemsCount - 1; $i++) {
-                                            ?>
-                                            <div class="col-6 col-md-4">
-                                                <?php
-                                                $APPLICATION->IncludeComponent(
-                                                    'bitrix:catalog.item',
-                                                    'oshisha_catalog.item',
-                                                    array(
-                                                        'RESULT' => array(
-                                                            'ITEM' => $rowItems[$i],
-                                                            'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
-                                                            'TYPE' => $rowData['TYPE'],
-                                                            'BIG_LABEL' => 'N',
-                                                            'BIG_DISCOUNT_PERCENT' => 'N',
-                                                            'BIG_BUTTONS' => 'N',
-                                                            'SCALABLE' => 'N',
-                                                            'AR_BASKET' => $arBasketItems,
-                                                            'F_USER_ID' => $FUser_id,
-                                                        ),
-                                                        'PARAMS' => $generalParams
-                                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
-                                                    ),
-                                                    $component,
-                                                    array('HIDE_ICONS' => 'Y')
-                                                );
-                                                ?>
-                                            </div>
-                                            <?php
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
-                                <?php
-                                break;
-
-                            case 8:
-                                $rowItemsCount = count($rowItems);
-                                ?>
-                                <div class="col-sm-6 col-12 product-item-small-card">
-                                    <div class="row">
-                                        <?php
-                                        for ($i = 0; $i < $rowItemsCount - 1; $i++) {
-                                            ?>
-                                            <div class="col-6 col-md-4">
-                                                <?php
-                                                $APPLICATION->IncludeComponent(
-                                                    'bitrix:catalog.item',
-                                                    'oshisha_catalog.item',
-                                                    array(
-                                                        'RESULT' => array(
-                                                            'ITEM' => $rowItems[$i],
-                                                            'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
-                                                            'TYPE' => $rowData['TYPE'],
-                                                            'BIG_LABEL' => 'N',
-                                                            'BIG_DISCOUNT_PERCENT' => 'N',
-                                                            'BIG_BUTTONS' => 'N',
-                                                            'SCALABLE' => 'N',
-                                                            'AR_BASKET' => $arBasketItems,
-                                                            'F_USER_ID' => $FUser_id,
-                                                            'ID_PROD' => $item['ID'],
-                                                        ),
-                                                        'PARAMS' => $generalParams
-                                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
-                                                    ),
-                                                    $component,
-                                                    array('HIDE_ICONS' => 'Y')
-                                                );
-                                                ?>
-                                            </div>
-                                            <?php
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 col-12 product-item-big-card">
-                                    <?php
-                                    $item = end($rowItems);
-                                    $APPLICATION->IncludeComponent(
-                                        'bitrix:catalog.item',
-                                        'oshisha_catalog.item',
-                                        array(
-                                            'RESULT' => array(
-                                                'ITEM' => $item,
-                                                'AREA_ID' => $areaIds[$item['ID']],
-                                                'TYPE' => $rowData['TYPE'],
-                                                'BIG_LABEL' => 'N',
-                                                'BIG_DISCOUNT_PERCENT' => 'N',
-                                                'BIG_BUTTONS' => 'Y',
-                                                'SCALABLE' => 'Y',
-                                                'AR_BASKET' => $arBasketItems,
-                                                'F_USER_ID' => $FUser_id,
-                                                'ID_PROD' => $item['ID'],
-                                            ),
-                                            'PARAMS' => $generalParams
-                                                + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-                                        ),
-                                        $component,
-                                        array('HIDE_ICONS' => 'Y')
-                                    );
-                                    unset($item);
-                                    ?>
-                                </div>
-                                <?php
-                                break;
-
-                            case 9:
-                                foreach ($rowItems as $item) {
-                                    foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
-                                        if ($keyLike == $item['ID']) {
-                                            $item['COUNT_LIKES'] = $count;
-                                        }
-                                    }
-                                    foreach ($count_likes['USER'] as $keyLike => $count) {
-                                        if ($keyLike == $item['ID']) {
-                                            $item['COUNT_LIKE'] = $count['Like'][0];
-                                            $item['COUNT_FAV'] = $count['Fav'][0];
-                                        }
-                                    }
-                                    ?>
-                                    <div class="col product-item-line-card">
-                                        <?php $APPLICATION->IncludeComponent('bitrix:catalog.item', 'oshisha_catalog.item:line', array(
                                             'RESULT' => array(
                                                 'ITEM' => $item,
                                                 'AREA_ID' => $areaIds[$item['ID']],
@@ -734,9 +568,11 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                                                 'BIG_LABEL' => 'N',
                                                 'BIG_DISCOUNT_PERCENT' => 'N',
                                                 'BIG_BUTTONS' => 'N',
+                                                'SCALABLE' => 'N',
                                                 'AR_BASKET' => $arBasketItems,
                                                 'F_USER_ID' => $FUser_id,
                                                 'ID_PROD' => $item['ID'],
+                                                'POPUP_PROPS' => $prop_see_in_window,
                                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
                                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
@@ -744,20 +580,205 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                                             'PARAMS' => $generalParams
                                                 + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
                                         ),
-                                            $component,
-                                            array('HIDE_ICONS' => 'Y')
-                                        );
-                                        ?>
-                                    </div>
-                                    <?php
-                                }
+                                        $component,
+                                        array('HIDE_ICONS' => 'Y')
+                                    );
+                                    ?>
+                                    <div id="result_box"></div>
+                                </div>
+                                <?php
+                            }
 
-                                break;
-                        }
-                        ?>
-                    </div>
-                    <?php
-                }
+                            break;
+
+                        case 7:
+                            $rowItemsCount = count($rowItems);
+                            ?>
+                            <div class="col-sm-6 col-12 product-item-big-card bx_catalog_item double">
+                                <?php
+                                $item = array_shift($rowItems);
+                                $APPLICATION->IncludeComponent(
+                                    'bitrix:catalog.item',
+                                    'oshisha_catalog.item',
+                                    array(
+                                        'RESULT' => array(
+                                            'ITEM' => $item,
+                                            'AREA_ID' => $areaIds[$item['ID']],
+                                            'TYPE' => $rowData['TYPE'],
+                                            'BIG_LABEL' => 'N',
+                                            'BIG_DISCOUNT_PERCENT' => 'N',
+                                            'BIG_BUTTONS' => 'Y',
+                                            'SCALABLE' => 'Y',
+                                            'AR_BASKET' => $arBasketItems,
+                                            'F_USER_ID' => $FUser_id,
+                                            'ID_PROD' => $item['ID'],
+                                        ),
+                                        'PARAMS' => $generalParams
+                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+                                    ),
+                                    $component,
+                                    array('HIDE_ICONS' => 'Y')
+                                );
+                                unset($item);
+                                ?>
+                                <div id="result_box"></div>
+                            </div>
+                            <div class="col-sm-6 col-12 product-item-small-card">
+                                <div class="row">
+                                    <?php
+                                    for ($i = 0; $i < $rowItemsCount - 1; $i++) {
+                                        ?>
+                                        <div class="col-6 col-md-4">
+                                            <?php
+                                            $APPLICATION->IncludeComponent(
+                                                'bitrix:catalog.item',
+                                                'oshisha_catalog.item',
+                                                array(
+                                                    'RESULT' => array(
+                                                        'ITEM' => $rowItems[$i],
+                                                        'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
+                                                        'TYPE' => $rowData['TYPE'],
+                                                        'BIG_LABEL' => 'N',
+                                                        'BIG_DISCOUNT_PERCENT' => 'N',
+                                                        'BIG_BUTTONS' => 'N',
+                                                        'SCALABLE' => 'N',
+                                                        'AR_BASKET' => $arBasketItems,
+                                                        'F_USER_ID' => $FUser_id,
+                                                    ),
+                                                    'PARAMS' => $generalParams
+                                                        + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
+                                                ),
+                                                $component,
+                                                array('HIDE_ICONS' => 'Y')
+                                            );
+                                            ?>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <?php
+                            break;
+
+                        case 8:
+                            $rowItemsCount = count($rowItems);
+                            ?>
+                            <div class="col-sm-6 col-12 product-item-small-card">
+                                <div class="row">
+                                    <?php
+                                    for ($i = 0; $i < $rowItemsCount - 1; $i++) {
+                                        ?>
+                                        <div class="col-6 col-md-4">
+                                            <?php
+                                            $APPLICATION->IncludeComponent(
+                                                'bitrix:catalog.item',
+                                                'oshisha_catalog.item',
+                                                array(
+                                                    'RESULT' => array(
+                                                        'ITEM' => $rowItems[$i],
+                                                        'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
+                                                        'TYPE' => $rowData['TYPE'],
+                                                        'BIG_LABEL' => 'N',
+                                                        'BIG_DISCOUNT_PERCENT' => 'N',
+                                                        'BIG_BUTTONS' => 'N',
+                                                        'SCALABLE' => 'N',
+                                                        'AR_BASKET' => $arBasketItems,
+                                                        'F_USER_ID' => $FUser_id,
+                                                        'ID_PROD' => $item['ID'],
+                                                    ),
+                                                    'PARAMS' => $generalParams
+                                                        + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
+                                                ),
+                                                $component,
+                                                array('HIDE_ICONS' => 'Y')
+                                            );
+                                            ?>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-12 product-item-big-card">
+                                <?php
+                                $item = end($rowItems);
+                                $APPLICATION->IncludeComponent(
+                                    'bitrix:catalog.item',
+                                    'oshisha_catalog.item',
+                                    array(
+                                        'RESULT' => array(
+                                            'ITEM' => $item,
+                                            'AREA_ID' => $areaIds[$item['ID']],
+                                            'TYPE' => $rowData['TYPE'],
+                                            'BIG_LABEL' => 'N',
+                                            'BIG_DISCOUNT_PERCENT' => 'N',
+                                            'BIG_BUTTONS' => 'Y',
+                                            'SCALABLE' => 'Y',
+                                            'AR_BASKET' => $arBasketItems,
+                                            'F_USER_ID' => $FUser_id,
+                                            'ID_PROD' => $item['ID'],
+                                        ),
+                                        'PARAMS' => $generalParams
+                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+                                    ),
+                                    $component,
+                                    array('HIDE_ICONS' => 'Y')
+                                );
+                                unset($item);
+                                ?>
+                            </div>
+                            <?php
+                            break;
+
+                        case 9:
+                            foreach ($rowItems as $item) {
+                                foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
+                                    if ($keyLike == $item['ID']) {
+                                        $item['COUNT_LIKES'] = $count;
+                                    }
+                                }
+                                foreach ($count_likes['USER'] as $keyLike => $count) {
+                                    if ($keyLike == $item['ID']) {
+                                        $item['COUNT_LIKE'] = $count['Like'][0];
+                                        $item['COUNT_FAV'] = $count['Fav'][0];
+                                    }
+                                }
+                                ?>
+                                <div class="col product-item-line-card">
+                                    <?php $APPLICATION->IncludeComponent('bitrix:catalog.item', 'oshisha_catalog.item:line', array(
+                                        'RESULT' => array(
+                                            'ITEM' => $item,
+                                            'AREA_ID' => $areaIds[$item['ID']],
+                                            'TYPE' => $rowData['TYPE'],
+                                            'BIG_LABEL' => 'N',
+                                            'BIG_DISCOUNT_PERCENT' => 'N',
+                                            'BIG_BUTTONS' => 'N',
+                                            'AR_BASKET' => $arBasketItems,
+                                            'F_USER_ID' => $FUser_id,
+                                            'ID_PROD' => $item['ID'],
+                                            'POPUP_PROPS' => $prop_see_in_window,
+                                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                            'COUNT_FAV' => $item['COUNT_FAV'],
+                                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                                        ),
+                                        'PARAMS' => $generalParams
+                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+                                    ),
+                                        $component,
+                                        array('HIDE_ICONS' => 'Y')
+                                    );
+                                    ?>
+                                </div>
+                                <?php
+                            }
+
+                            break;
+                    }
+                    ?>
+                </div>
+                <?php
+            }
                 unset($generalParams, $rowItems);
 
             } else {
@@ -817,6 +838,13 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
         $signer = new Signer;
         $signedTemplate = $signer->sign($templateName, 'catalog.section');
         $signedParams = $signer->sign(base64_encode(serialize($arResult['ORIGINAL_PARAMETERS'])), 'catalog.section');
+
+        //enterego filter for special group category
+        $staticFilter = [];
+        if (!empty($GLOBALS[$arParams['FILTER_NAME']]['PROPERTY_USE_DISCOUNT_VALUE'])) {
+            $staticFilter['PROPERTY_USE_DISCOUNT_VALUE'] = $GLOBALS[$arParams['FILTER_NAME']]['PROPERTY_USE_DISCOUNT_VALUE'];
+        }
+
         ?>
         <!-- ajax_filter --><?php
         if ($_REQUEST['ajax_filter'] && $_REQUEST['ajax_filter'] === 'y') {
@@ -863,7 +891,11 @@ $count_elem_category = CIBlockSection::GetSectionElementsCount(($arResult['ID'])
                 template: '<?=CUtil::JSEscape($signedTemplate)?>',
                 ajaxId: '<?=CUtil::JSEscape($arParams['AJAX_ID'])?>',
                 parameters: '<?=CUtil::JSEscape($signedParams)?>',
-                container: '<?=$containerName?>'
+                container: '<?=$containerName?>',
+                //enterego filter for special group category
+                staticFilter: <?= CUtil::PhpToJSObject($staticFilter) ?>,
+                //enterego sort selector
+                sortCatalogId: <?= CUtil::PhpToJSObject('.js__catalog-sort-item') ?>,
             });
         </script>
 

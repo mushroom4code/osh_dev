@@ -6,15 +6,18 @@ $APPLICATION->SetTitle($arResult['UF_NAME']);
 //$APPLICATION->AddChainItem('Бренды', '/brands/');
 $APPLICATION->AddChainItem($arResult['UF_NAME'],'/brands/'.$arResult['UF_CODE'].'/');
 
-//print_r($arResult);
 ?>
+
 <div class="brand_detail">
 	<div class="brand_detail_first">
 		<?if( $arResult['UF_FILE']):?>
 		<?$UF_FILE = CFile::ResizeImageGet($arResult['UF_FILE'], array('width'=>150, 'height'=>150), BX_RESIZE_IMAGE_PROPORTIONAL, true)?>	
 		<div class="brand_logo"><img src="<?=$UF_FILE['src']?>"></div>
 		<?endif;?>
-		<div class="brand_name"><h1><?=$arResult['UF_NAME']?></h1></div>
+		<div class="brand_name">
+            <h1><?=$arResult['UF_NAME']?></h1>
+            <span><?=$arResult['UF_DESCRIPTION']?></span>
+        </div>
 	</div>
 	<div class="brand_detail_second">
 	<?=$arResult['UF_DESCR']?>
@@ -158,7 +161,7 @@ $APPLICATION->IncludeComponent(
         "PAGER_SHOW_ALL" => "N",
         "ADD_PICT_PROP" => "MORE_PHOTO",
         "LABEL_PROP" => array(
-            0 => "VKUS",
+            0 => PROPERTY_KEY_VKUS,
         ),
         "PRODUCT_DISPLAY_MODE" => "Y",
         "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",

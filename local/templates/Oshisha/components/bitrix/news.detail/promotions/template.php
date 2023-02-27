@@ -303,7 +303,7 @@ $APPLICATION->IncludeComponent(
         "PAGER_SHOW_ALL" => "N",
         "ADD_PICT_PROP" => "MORE_PHOTO",
         "LABEL_PROP" => array(
-            0 => "VKUS",
+            0 => PROPERTY_KEY_VKUS,
         ),
         "PRODUCT_DISPLAY_MODE" => "Y",
         "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
@@ -316,7 +316,7 @@ $APPLICATION->IncludeComponent(
         "SHOW_DISCOUNT_PERCENT" => "Y",
         "SHOW_OLD_PRICE" => "Y",
         "MESS_BTN_BUY" => "Купить",
-        "MESS_BTN_ADD_TO_BASKET" => "В корзину",
+        "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
         "MESS_BTN_COMPARE" => "Сравнение",
         "MESS_BTN_DETAIL" => "Подробнее",
         "MESS_NOT_AVAILABLE" => "Нет в наличии",

@@ -92,7 +92,7 @@
 }
 @media(max-width:480px){
 	.bx_catalog_tile_home_type_2 .bx_catalog_item {
-		width:178px !important;
+		width:226px !important;
 }	
 }
 .new_custom_button_slick_right_cat{
@@ -115,9 +115,7 @@
     width: 260px;
 	position:relative;
 }
-.bx_catalog_tile_home_type_2 .bx_catalog_item .bx_catalog_item_container .product-item-amount-field-contain{
-	
-}
+
 .bx_catalog_tile_home_type_2 .bx_catalog_item .bx_catalog_item_container .box_with_fav_bask .box_with_like{
   position: absolute;
   top: 8px;

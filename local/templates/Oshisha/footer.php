@@ -1,19 +1,60 @@
-<?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
+<?php use enterego\EnteregoUser;
+
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var  CAllMain|CMain $APPLICATION
  ** @var  CAllUser $USER
  */
-
-if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
-?></div><?php } ?>
-
-
-</div><!--end .bx-content -->
-</div><!--end .container.bx-content-section-->
+global $option_site;
+if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')) {
+    ?>
+    </div><?php }
+$option = $option_site; ?>
+</div>
+<!--end .container.bx-content-section-->
 </div><!--end .workarea-->
+
+<?php $userData = EnteregoUser::getInstance(); ?>
 <footer class="box_footer">
     <div class="foot_container">
-        <div class="row">
-            <div class="col-11 col-lg-3  mb-4 mb-lg-0 order-lg-2">
+        <div class="d-flex flex-lg-row flex-md-row flex-column mb-3">
+            <div class="col-11 col-lg-3 col-md-3 box_footer_with_boxes box_color order-lg-1">
+                <div class="desktop">
+                    <a class="bx-footer-logo" href="<?= SITE_DIR ?>">
+                        <?php $APPLICATION->IncludeComponent(
+                            "bitrix:main.include",
+                            "",
+                            array(
+                                "AREA_FILE_SHOW" => "file",
+                                "PATH" => SITE_DIR . "include/logo_footer.php"
+                            ),
+                            false
+                        ); ?>
+                    </a>
+                    <div class="mb-3 d-flex align-items-center">
+							<span class="text-white">
+
+								<?php $APPLICATION->IncludeComponent(
+                                    "bitrix:main.include",
+                                    "", array(
+                                    "AREA_FILE_SHOW" => "file",
+                                    "PATH" => SITE_DIR . "include/about_title.php"
+                                ),
+                                    false
+                                ); ?>
+								<span class="phone_footer phone_footer_first">
+                                    <a href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
+                                </span>
+								<span class="phone_footer"><a href="tel:88006004424">8-800-600-44-24</a></span>
+								<span class="work_time">Время работы <br>
+                                    <div class="mt-2"> 10:00 - 20:00, ежедневно.</div>
+                                </span>
+								<span class="email_footer">
+                                    <a href="mailto:info@oshisha.net">info@oshisha.net </a></span>
+							</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-11 col-lg-3 col-md-3 mb-4 mb-lg-0 order-lg-2">
                 <span class="text_footer_weight d-flex justify-content-between">
                     <span> Каталог</span>
                     <span class="icon_footer_menu">
@@ -46,7 +87,7 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                     ); ?>
                 </div>
             </div>
-            <div class="col-11 col-lg-3 mb-4 mb-lg-0 order-lg-3">
+            <div class="col-11 col-lg-3 col-md-3 mb-4 mb-lg-0 order-lg-3">
                 <span class="text_footer_weight desktop">
                    Поддержка
                 </span>
@@ -74,13 +115,13 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                          <a href="/about/feedback/" class="text_link_footer">Обратная связь</a>
                     </span>
                     <span class="li_link_footer ">
-                         <a href="javascript:void(0)" class="callback text_link_footer">Обратный звонок</a>
+                         <a href="javascript:void(0)" class="callback js__callback text_link_footer">Обратный звонок</a>
                     </span>
-
-                    <span class="li_link_footer">
+                    <?php if ($USER->IsAuthorized()) { ?>
+                        <span class="li_link_footer">
                          <a href="/about/FAQ/" class="text_link_footer li_link_footer">FAQ</a>
                     </span>
-
+                    <?php } ?>
                     <span class="li_link_footer ">
                          <a href="/about/users_rules/" class="text_link_footer">Пользовательское соглашение</a>
                     </span>
@@ -89,7 +130,7 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                     </span>
                 </nav>
             </div>
-            <div class="col-lg-2  col-11 mb-4 mb-lg-0 order-lg-4">
+            <div class="col-lg-3 col-md-3 col-11 mb-4 mb-lg-0 order-lg-4">
                 <div class="d-flex justify-content-between flex-row">
                 <span class="text_footer_weight">
                 О компании
@@ -120,37 +161,34 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                         ),
                         false
                     ); ?>
+                    <li class="nav-item li_link_footer">
+                        <?php if ($USER->IsAuthorized()) { ?>
+                            <a href="<?= $option->price_list_link; ?>" class="text_link_footer ">Прайс-лист</a>
+                        <?php } else { ?> <a href="/login/" class="text_link_footer ">Прайс-лист</a><?php } ?>
+                    </li>
                 </div>
                 <span class="text_footer_weight desktop social_block">
                   Социальные сети
                 </span>
                 <div class="box_with_icons_new">
                     <div class="social-line-1">
-                        <a href="https://t.me/oshishanet" target="_blank">
+                        <a href="<?= $option->TG; ?>" target="_blank">
                             <img class="tg" src="<?= SITE_TEMPLATE_PATH ?>/images/tg.svg">
                         </a>
-                        <a href="https://api.whatsapp.com/send?phone=79031182939" target="_blank">
+                        <a href="https://api.whatsapp.com/send?phone=<?= $option->PHONE_WTS; ?>" target="_blank">
                             <img class="ws" src="<?= SITE_TEMPLATE_PATH ?>/images/ws.svg">
                         </a>
-                        <a href="https://vk.com/oshishacc"  target="_blank">
+                        <a href="<?= $option->VK_LINK; ?>" target="_blank">
                             <img class="vk" src="<?= SITE_TEMPLATE_PATH ?>/images/vk.svg">
                         </a>
-                        <a href="https://dzen.ru/id/6125150216123a2f95667201"  target="_blank">
+                        <a href="<?= $option->DZEN; ?>" target="_blank">
                             <img class="dzen" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
                         </a>
                     </div>
                 </div>
             </div>
-
-            <div class="mobile width_100 p-0">
-                <!--                <div class="box_mail_footer col-11 d-flex flex-column align-items-center mb-5 m-3">-->
-                <!--                    <label class="mb-3 mail_footer" for="mail_footer">Будьте в курсе всех новостей!</label>-->
-                <!--                    <input class="form-control input_footer mb-3" data-name="EMAIL" type="text" name="EMAIL"-->
-                <!--                           maxlength="50"-->
-                <!--                           placeholder="Введите вашу почту" id="mail_footer"/>-->
-                <!--                    <button class="btn font_15 btn_footer">Подписаться на рассылку</button>-->
-                <!--                </div>-->
-                <p class="m-3 mail_footer col-11"><a href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a>
+            <div class="mobile width_100 p-0 mb-4">
+                <p class="m-3 mail_footer col-11"><a href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
                 </p>
                 <div class="box_with_contact pl-3">
                     <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
@@ -160,47 +198,19 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                     </a>
                 </div>
             </div>
-            <div class="col-11 col-lg-3 box_footer_with_boxes box_color order-lg-1">
-                <div class="desktop">
-                    <a class="bx-footer-logo" href="<?= SITE_DIR ?>">
-                        <?php $APPLICATION->IncludeComponent(
-                            "bitrix:main.include",
-                            "",
-                            array(
-                                "AREA_FILE_SHOW" => "file",
-                                "PATH" => SITE_DIR . "include/logo_footer.php"
-                            ),
-                            false
-                        ); ?>
-                    </a>
-
-                    <div class="mb-3 d-flex align-items-center">
-							<span class="text-white">
-							
-								<?php $APPLICATION->IncludeComponent(
-                                    "bitrix:main.include",
-                                    "", array(
-                                    "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_DIR . "include/about_title.php"
-                                ),
-                                    false
-                                ); ?>
-								<span class="phone_footer phone_footer_first"><a
-                                            href="tel:<?= $SETTINGS['PHONE'] ?>"><?= $SETTINGS['PHONE'] ?></a></span>
-								<span class="phone_footer"><a href="tel:88006004424">8-800-600-44-24</a></span>
-								<span class="work_time">Время работы: 10:00 - 20:00, <br>ежедневно.</span>
-								
-								<span class="email_footer"><a
-                                            href="mailto:info@oshisha.net">info@oshisha.net </a></span>
-							</span>
-                    </div>
-                </div>
-                <div class="mb-3 text_footer_mini d-flex column_section">
-                    <span class="mr-2">© 2014-<?= date('Y'); ?> <?= $SETTINGS['COMPANY'] ?>.</span><span>Все права защищены</span>
-                </div>
+        </div>
+        <?php if (!empty($option->text_rospetrebnadzor_row)) { ?>
+            <div class="text_footer_mini d-flex flex-column p-3">
+                <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_row; ?></p>
+                <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_column; ?></p>
             </div>
+        <?php } ?>
+        <div class="text_footer_mini d-flex column_section p-3">
+            <span class="mr-2">© 2014-<?= date('Y'); ?> <?= $option->COMPANY ?>.</span><span>Все права защищены</span>
         </div>
     </div>
+    <!--FOOTER END-->
+    <!-- MODALS -->
     <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="placeModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -276,10 +286,30 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                 <div class="block_text">Оставьте ваш номер и мы перезвоним вам в ближайшее рабочее время</div>
                 <div class="block_text_sub">Отдел поддержки работает с 10:00 до 20:00, ежедневно</div>
                 <form method="POST" class="callback_form">
-                    <input type="hidden" name="recaptcha_token" value="">
+                    <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
 
-                    <input type="text" name="PHONE" class="PHONE callback_PHONE" placeholder="Ваш номер">
-                    <div class="er_CALLBACK_PHONE"></div>
+                    <div class="form-group mb-3">
+                        <input
+                                type="text"
+                                name="PHONE"
+                                class="PHONE callback_PHONE"
+                                placeholder="Ваш номер"
+                                value="<?= $userData->getPhone() ?>"
+                        >
+                        <div class="er_CALLBACK_PHONE error_field js__error_field"></div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-control input_lk" style="height: auto">
+                            <input name="confirm" type="checkbox" checked="checked">
+                            <span class="custom__title">Подтверждаю свое согласие с
+                                <a href="/about/politics/"
+                                   target="_blank">положением об обработке персональных данных</a>
+                            </span>
+                        </label>
+                        <div class="er_FORM_CONFIRM error_field js__error_field"></div>
+                    </div>
+
                     <div class="submit-wrap">
                         <input type=submit class="btn btn-submit" value="Отправить"
                                onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
@@ -290,33 +320,81 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
         </div>
 
     </div>
+    <?php if (!$USER->IsAuthorized() && !$_SESSION['new_domain_oshisha']) { ?>
+        <div style="display:none;">
+            <div id="trueModalDomain" class="box-modal">
+                <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
+                <div class="flex_block">
+                    <div class="age-access-inner">
+                        <div class="age-access__text">
+                            <div>
+                                <p class="font-14 mb-0" style="line-height: 2">
+                                    Дорогой друг,<br>
+                                    Мы рады видеть тебя на нашем обновленном сайте, 😊<br>
+                                    OSHISHA развивается в ногу со временем,
+                                    чтобы тебе было максимально удобно и безопасно делать у нас заказ.💪<br>
+                                    Ты можешь пользоваться старым дизайном, но только до <b>28.02.2023 г.</b><br>
+                                    Мы будем очень рады твоему отзыву - он поможет нам стать ещё лучше🤜🤛<br>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="age-access__buttons mt-3">
+                            <a href="#"
+                               class="age-access__button font-12 age-access__yes link_red_button arcticmodal-close mb-2"
+                               data-option="1" data-auth="false">Продолжить здесь</a>
+                            <a href="https://oshisha.online/"
+                               class="link_red_button age-access__button font-12 age-access__yes mb-2">
+                                Перейти на старый сайт</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
 
-    <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
+                    let ageAccess = sessionStorage.getItem("age_access");
+                    if (ageAccess) {
+
+                        setTimeout(function () {
+                            let new_domain_oshisha = sessionStorage.getItem("new_domain_oshisha");
+                            if (!new_domain_oshisha) {
+                                $("#trueModalDomain").arcticmodal(
+                                    {
+                                        closeOnOverlayClick: false,
+                                        afterClose: function (data, el) {
+                                            sessionStorage.setItem("new_domain_oshisha", "1");
+                                        }
+                                    });
+                            }
+                        }, 3000);
+
+                    }
+
+                });
+            </script>
+        </div>
+    <? }
+    if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
         <div style="display:none;">
             <div id="trueModal" class="box-modal">
                 <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
-
                 <div class="flex_block">
-
                     <div class="age-access-inner">
                         <div class="age-access__text">
                             <div class="age-access__text-part1">
-                                <?= $SETTINGS['ATTENT_TEXT'] ?>
+                                <?= $option->ATTENT_TEXT ?>
                             </div>
                             <div class="age-access__text-part2">
-                                <?= $SETTINGS['ATTENT_TEXT2'] ?>
+                                <?= $option->ATTENT_TEXT2 ?>
                             </div>
                         </div>
                         <div class="age-access__buttons">
                             <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close"
-                               data-option="1" data-auth="false">Да, мне
-                                больше 18 лет</a>
-                            <a href="<?= $SETTINGS['ATTENT_NOT'] ?>" class="age-access__button link_red_button"
+                               data-option="1" data-auth="false">Да, мне больше 18 лет</a>
+                            <a href="<?= $option->ATTENT_NOT ?>" class="age-access__button link_red_button"
                                data-option="2" rel="nofollow">Нет</a>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -329,8 +407,19 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
                         {
                             closeOnOverlayClick: false,
                             afterClose: function (data, el) {
-                                console.log('save');
                                 sessionStorage.setItem("age_access", "1");
+                                setTimeout(function () {
+                                    let new_domain_oshisha = sessionStorage.getItem("new_domain_oshisha");
+                                    if (!new_domain_oshisha) {
+                                        $("#trueModalDomain").arcticmodal(
+                                            {
+                                                closeOnOverlayClick: false,
+                                                afterClose: function (data, el) {
+                                                    sessionStorage.setItem("new_domain_oshisha", "1");
+                                                }
+                                            });
+                                    }
+                                }, 3000);
 
                             }
                         });
@@ -338,12 +427,7 @@ if (!$USER->IsAuthorized() && strripos($_SERVER['REQUEST_URI'], 'catalog')){
             });
 
             // age access
-
-
         </script>
-    <? } ?>
-    <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
-
     <? } ?>
     <script>
         $(document).ready(function () {

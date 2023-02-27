@@ -1,29 +1,16 @@
 <?php
 
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
-use Enterego\EnteregoHelper;
-require_once(__DIR__ . '/conf.php');
-
-const IBLOCK_CATALOG = 12;
-
-
+use Enterego\EnteregoSettings;
 
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
-setcookie("PHPSESSID", "", 1, '/', '.oshisha.net');
 
-
-
-if (COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE') === 'true') {
-    define("USE_CUSTOM_SALE_PRICE", true);
-} else {
-    define("USE_CUSTOM_SALE_PRICE", false);
-}
-
-
+require_once(__DIR__ . '/conf.php');
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
+    '\PriceList' => '/bitrix/php_interface/enterego_class/PriceList.php',
     '\Enterego\ProductDeactivation' => '/bitrix/php_interface/enterego_class/ProductDeactivation.php',
     'DataBase_like' => '/bitrix/modules/osh.like_favorites/lib/DataBase_like.php',
     '\Bitrix\Like\ORM_like_favoritesTable' => '/bitrix/modules/osh.like_favorites/lib/ORM_like_favoritesTable.php',
@@ -35,21 +22,34 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
+    '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
+    '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
+    '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
+    '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
 ));
 
+// add rest api web hook  - validate products without photo
+AddEventHandler('rest', 'OnRestServiceBuildDescription',
+    array('CatalogAPIService', 'OnRestServiceBuildDescription'));
+
+require(__DIR__ . '/enterego_class/discountcouponsmanagerbase.php');
+require(__DIR__ . '/enterego_class/discountcoupon.php');
+
 global $PRICE_TYPE_ID;
-global $UserTypeOpt, $arIskCode, $SETTINGS;
+global $UserTypeOpt, $arIskCode, $SETTINGS_;
 $arIskCode = array(
     'USE_AVAILABLE', 'BLOG_POST_ID', 'GRAMMOVKA_VES_NETTO'
-
 );
-$SETTINGS = json_decode(COption::GetOptionString("BBRAIN", "SETTINGS_SITE"), 1);
+
+global $option_site;
+$option_site = json_decode(\Bitrix\Main\Config\Option::get("BBRAIN", 'SETTINGS_SITE'));
+
 
 //class used in component files before init autoload files
 require_once(__DIR__ . '/enterego_class/EnteregoGiftHandlers.php');
-require_once(__DIR__ . '/enterego_class/EnteregoHandlers.php');
 require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
-
+require_once(__DIR__ . '/enterego_class/modules/update_service_likes.php');
+require_once(__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
 
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
@@ -66,7 +66,6 @@ AddEventHandler("main", "OnBuildGlobalMenu", "DoBuildGlobalMenu");
 #AddEventHandler("main", "OnEndBufferContent", "deleteKernelJs");
 AddEventHandler("main", "OnBeforeProlog", "PriceTypeANDStatusUser", 50);
 AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
-
 
 
 function PriceTypeANDStatusUser()
@@ -115,22 +114,6 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 {
 
     $aModuleMenu[] = array(
-        "parent_menu" => "global_menu_custom",
-        "icon" => "default_menu_icon",
-        "page_icon" => "default_page_icon",
-        "sort" => "100",
-        "text" => "Скидочные цены",
-        "title" => "Скидочные цены",
-        "url" => "/bitrix/php_interface/enterego_class/init_sale.php",
-        "parent_page" => "global_menu_custom",
-        "more_url" => array(
-            "init_sale.php",
-        ),
-        "items" => array(),
-    );
-
-
-    $aModuleMenu[] = array(
         "parent_menu" => "global_menu_content",
         'menu_id' => 'global_menu_osh',
         'text' => 'Настройки сайта',
@@ -138,23 +121,69 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
         'sort' => 9,
         'items_id' => 'global_menu_osh',
         'icon' => 'imi_corp',
-        'url' => '/bitrix/admin/bbrain_options.php?lang=' . LANG,
+        'url' => '/bitrix/php_interface/enterego_class/site_options.php?lang=' . LANG,
 
     );
 
     $arRes = array(
-        "global_menu_custom" => array(
-            "menu_id" => "custom",
+        "global_menu_enterego" => array(
+            "menu_id" => "enterego",
             "page_icon" => "services_page_enterego_icon",
             "index_icon" => "services_page_enterego_icon",
             "text" => "Enterego",
+            'section' => 'enterego',
             "title" => "Enterego",
             "sort" => 900,
-            "items_id" => "global_menu_custom",
-            "help_section" => "custom",
-            "items" => array()
+            "items_id" => "global_menu_enterego",
+            "help_section" => "enterego",
+            "items" => array(
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "100",
+                    "text" => "Черная пятница/Распродажа",
+                    "title" => "Черная пятница/Распродажа",
+                    "url" => "/bitrix/php_interface/enterego_class/init_sale.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "init_sale.php",
+                    ),
+                    "items" => array(),
+                ),
+
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "100",
+                    "text" => "Свойства товара",
+                    "title" => "Свойства товара",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/product_prop_setting.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "product_prop_setting.php",
+                    ),
+                    "items" => array(),
+                ),
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "200",
+                    "text" => "Прайс-лист",
+                    "title" => "Прайс-лист",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/priceList.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "priceList.php",
+                    ),
+                    "items" => array(),
+                )
+            )
         ),
     );
+
 
     return $arRes;
 }
@@ -246,9 +275,15 @@ function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
 
 }
 
-require(__DIR__ . '/enterego_class/newProductAssignment_function.php');
-
-
+require_once(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
+/**
+ * @return string
+ */
+function price_list(): string
+{
+    $new = new PriceList();
+    return 'price_list();';
+}
 
 /**
  * @param $a
@@ -262,3 +297,35 @@ function sort_by_sort($a, $b): int
     }
     return ($a["SORT"] < $b["SORT"]) ? -1 : 1;
 }
+
+
+// #000018950
+// используем события модуля пикпоинт
+AddEventHandler("pickpoint.deliveryservice", "onJSHandlersSet", "onJSHandlersSetHandler");
+function onJSHandlersSetHandler(&$arHandlers)
+{
+    if (array_key_exists('onAfterPostamatSelected', $arHandlers))
+        $arHandlers['onAfterPostamatSelected'] = 'PPDSExtension.onAfterPostamatSelectedHandler';
+}
+
+AddEventHandler("sale", "OnSaleComponentOrderOneStepPersonType", "setAdditionalPPDSJS");
+function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
+{
+    global $APPLICATION;
+    $jsCode = "
+        <script type='text/javascript'>
+            var PPDSExtension = {onAfterPostamatSelectedHandler: function(data) {
+                if (data.zone != '1') {
+                    BX.Sale.OrderAjaxComponent.showError(BX.Sale.OrderAjaxComponent.deliveryBlockNode, 'Доставка PickPoint работает только в Москве и Московской области!', true);
+                    var adr = $('#soa-property-7'); // TODO - получить из списка св-в
+                    adr.val('');
+                    adr.attr('readonly', 'readonly');
+                    throw new Error('Only Moscow'); // чтобы небыло перезагрузки страницы (sendRequest)
+                }
+            }};
+        </script>
+        ";
+    $APPLICATION->AddHeadString($jsCode);
+}
+
+EnteregoSettings::getSalePriceOnCheckAndPeriod();

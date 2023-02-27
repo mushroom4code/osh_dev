@@ -408,7 +408,7 @@ a:hover,
 
 /*CTweb auth*/
 /*********************************************/
-.ctweb-smsauth-menu-block {
+.ctweb-smsauth-menu-block:not(.profile) {
     background-color: #F0F0F0;
     filter: drop-shadow(0px 4px 3px rgba(93, 93, 93, 0.2));
     z-index: 10000;
@@ -420,7 +420,7 @@ a:hover,
 
 @media (min-width: 320px) and (max-width: 800px) {
 
-    .ctweb-smsauth-menu-block {
+    .ctweb-smsauth-menu-block:not(.profile) {
         top: auto;
         width: 98%;
         height: auto;
@@ -429,18 +429,22 @@ a:hover,
         position: absolute;
     }
 
-    .get_code_button {
+    .get_code_button:not(.profile) {
         display: flex !important;
         padding: 6px 22px !important;
         height: auto !important;
         font-size: 12px;
     }
 
+    .get_code_button.profile {
+        margin-left: 6px;
+    }
+
     .ctweb-label {
         font-size: 10px;
     }
 
-    .auth_code {
+    .auth_code:not(.profile) {
         font-size: 13px;
         border: none;
     }
@@ -457,7 +461,7 @@ a:hover,
     outline: none;
 }
 
-.ctweb-smsauth-box {
+.ctweb-smsauth-box:not(.profile) {
     padding: 30px;
 }
 
@@ -643,7 +647,6 @@ h3.ctweb-title {
     pointer-events: none;
 }
 
-.blur_photo .bx_price,
 .blur_photo .product-item-amount-field-contain,
 .blur_photo .product-item-detail-price-current {
     display: none !important;
@@ -654,23 +657,17 @@ h3.ctweb-title {
     min-height: 160px;
 }
 
-.ctweb-smsauth-menu-block {
+.ctweb-smsauth-menu-block:not(.profile) {
     left: calc(50% - 134px);
-    top: 20%;
+    top: 27vh;
     position: fixed !important;
 }
 
-.overlay {
-    display: none;
-    background-color: rgb(0, 0, 0);
-    opacity: 0.6;
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9000;
+.ctweb-smsauth-menu-form.profile {
+    padding-left: unset;
+    padding-right: unset;
 }
+
 
 .email-register {
     display: none;
@@ -769,7 +766,7 @@ h3.ctweb-title {
 
 .red_button_cart {
     background-color: #F55F5C;
-    border-radius: 5px;
+    border-radius: 7px;
     text-decoration: none;
     font-weight: 500 !important;
     color: #fff;
@@ -786,6 +783,10 @@ h3.ctweb-title {
 
 .box_with_fav_bask .product-item-amount-field-contain-wrap {
     display: none;
+}
+
+.arcticmodal-container .box-modal {
+    box-shadow: none;
 }
 
 .box-modal-white {
@@ -951,4 +952,46 @@ h3.ctweb-title {
 
 .bottom-0 {
     bottom: 0;
+}
+
+.btn.link_menu_catalog.get_code_button.profile {
+    border-radius: 9px;
+    padding: 8px 15px;
+    width: 170px;
+    сolor: white !important;
+    font-size: 14px;
+    font-weight: 300 !important;
+    transition: 0.3s;
+}
+
+.btn.link_menu_catalog.get_code_button.profile:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.btn.link_menu_catalog.get_code_button.profile:hover {
+    background-color: #f17775;
+}
+
+.form-control.input_lk.profile {
+    /*max-width: 447px;*/
+}
+
+.ctweb-button-block.profile a {
+    color: #F55F5C;
+}
+
+.profile.ctweb-smsauth-menu-step div.col-sm-12.col-md-12 {
+    padding-left: unset;
+}
+
+.ctweb-button-block.profile > div {
+    /*text-align: left;*/
+}
+
+p.profile-asterisk {
+    font-size: 14px
+}
+
+.profile .ctweb-label-error {
+    margin-bottom: 25px;
 }

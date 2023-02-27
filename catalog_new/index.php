@@ -12,6 +12,9 @@ $APPLICATION->SetTitle("Новинки");
 $GLOBALS['ArFilter'] = array(
     'PROPERTY_NEW_VALUE' => 'Да'
 );
+$GLOBALS['PREFILTER_NAME'] = array(
+    'PROPERTY_NEW_VALUE' => 'Да'
+);
 
 $APPLICATION->IncludeComponent(
     "bitrix:catalog",
@@ -46,6 +49,7 @@ $APPLICATION->IncludeComponent(
         "USE_ELEMENT_COUNTER" => "Y",
         "USE_FILTER" => "Y",
         "FILTER_NAME" => "ArFilter",
+        "PREFILTER_NAME" => "ArPreFilter",
         "FILTER_VIEW_MODE" => "VERTICAL",
         "USE_COMPARE" => "N",
         "PRICE_CODE" => BXConstants::PriceCode(),
@@ -142,7 +146,7 @@ $APPLICATION->IncludeComponent(
         "PAGER_SHOW_ALL" => "N",
         "ADD_PICT_PROP" => "MORE_PHOTO",
         "LABEL_PROP" => array(
-            0 => "VKUS",
+            0 => PROPERTY_KEY_VKUS,
         ),
         "PRODUCT_DISPLAY_MODE" => "Y",
         "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
@@ -155,7 +159,7 @@ $APPLICATION->IncludeComponent(
         "SHOW_DISCOUNT_PERCENT" => "Y",
         "SHOW_OLD_PRICE" => "Y",
         "MESS_BTN_BUY" => "Купить",
-        "MESS_BTN_ADD_TO_BASKET" => "В корзину",
+        "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
         "MESS_BTN_COMPARE" => "Сравнение",
         "MESS_BTN_DETAIL" => "Подробнее",
         "MESS_NOT_AVAILABLE" => "Нет в наличии",
@@ -303,7 +307,7 @@ $APPLICATION->IncludeComponent(
         "SEF_URL_TEMPLATES" => array(
             "sections" => "",
             "section" => "#SECTION_CODE#/",
-            "element" => "#SECTION_CODE#/#ELEMENT_CODE#/",
+            "element" => "product/#ELEMENT_CODE#/",
             "compare" => "compare/",
             "smart_filter" => "#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/",
         )

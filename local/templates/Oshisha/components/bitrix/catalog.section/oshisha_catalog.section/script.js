@@ -10,7 +10,11 @@
         this.ajaxId = params.ajaxId || '';
         this.template = params.template || '';
         this.componentPath = params.componentPath || '';
-        this.parameters = params.parameters || '';
+        this.parameters = params.parameters || {};
+        this.sortElem = params.sortCatalogId || '';
+
+        //enterego filter for special group category
+        this.staticFilter = params.staticFilter || '';
 
         if (params.navParams) {
             this.navParams = {
@@ -42,6 +46,46 @@
             BX.ready(BX.delegate(this.deferredLoad, this));
         }
 
+        // enterego catalog sort
+        let urlParams = (new URL(document.location)).searchParams;
+
+        document.querySelectorAll(this.sortElem).forEach(
+            function (currentValue, currentIndex, listObj) {
+                let sortPanel = currentValue.closest('.sort_panel');
+
+                // определение подписи сортировки при перезагрузке с параметрами
+                if (currentValue.getAttribute('data-sort') === urlParams.get("sort_by") &&
+                    currentValue.getAttribute('data-order') === urlParams.get("sort_order")) {
+                    sortPanel.querySelector('.sort_caption').textContent = currentValue.textContent;
+                }
+
+                BX.bind(currentValue, 'click', BX.proxy(function () {
+                    const data = {
+                        'sort_by': currentValue.getAttribute('data-sort'),
+                        'sort_order': currentValue.getAttribute('data-order'),
+                        'ajax': 'y',
+                        'ajax_filter': 'y',
+                        action: 'showMore',
+                        PAGER_BASE_LINK_ENABLE: 'Y'
+                    };
+                    history.pushState(
+                        {
+                            sort_by: data.sort_by,
+                            sort_order: data.sort_order
+                        },
+                        '',
+                        `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`,
+                    );
+                    data['sort_request'] = `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`;
+                    this.sendRequestRefreshCatalog(data);
+
+                    sortPanel.querySelector('.js__sort_orders_element').style.display = 'none';
+                    sortPanel.querySelector('.sort_caption').textContent = currentValue.textContent;
+                }, this));
+            },
+            this
+        );
+
         if (params.lazyLoad) {
             this.showMoreButton = document.querySelector('[data-use="show-more-' + this.navParams.NavNum + '"]');
             this.showMoreButtonMessage = this.showMoreButton.innerHTML;
@@ -50,8 +94,6 @@
 
         if (params.loadOnScroll) {
             BX.bind(window, 'scroll', BX.proxy(this.loadOnScroll, this));
-
-            
         }
 		window.JCCatalogSectionComponentThis = this;
     };
@@ -174,13 +216,16 @@
                 var defaultData = {
                     siteId: this.siteId,
                     template: this.template,
-                    parameters: this.parameters
+                    parameters: this.parameters,
+                    //enterego filter for special group category
+                    staticFilter: this.staticFilter
                 };
-
                 if (this.ajaxId) {
                     defaultData.AJAX_ID = this.ajaxId;
                 }
-//console.log(data);
+
+                $('.js__filter-close.disabled_class').removeClass('disabled_class');
+
                 BX.ajax({
                     url: '/local/templates/Oshisha/components/bitrix/catalog.section/oshisha_catalog.section/ajax.php' +
                         (document.location.href.indexOf('clear_cache=Y') !== -1 ? '?clear_cache=Y' : ''),
@@ -191,8 +236,8 @@
                     onsuccess: BX.delegate(function (result) {
                         if (!result || !result.JS)
                             return;
-						
-						BX.cleanNode(window.JCCatalogSectionComponentThis.container);
+
+                        BX.cleanNode(window.JCCatalogSectionComponentThis.container);
                         if (result.parameters) {
                             this.parameters = result.parameters;
                         }
@@ -205,7 +250,7 @@
                                 NavPageCount: parseInt(navParams.NavPageCount) || 1
                             };
                         }
-//console.log(result);
+
                         BX.ajax.processScripts(
                             BX.processHTML(result.JS).SCRIPT,
                             false,
@@ -213,6 +258,7 @@
                                 this.showAction(result, data);
                             }, this)
                         );
+                        this.processPagination(result.pagination);
                     }, this)
                 });
             },
@@ -235,7 +281,7 @@
                 this.formPosting = false;
                 this.enableButton();
 
-                if (result) { 
+                if (result) {
                     this.navParams.NavPageNomer++;
                     this.processItems(result.items);
                     this.processPagination(result.pagination);
@@ -251,7 +297,7 @@
                 $(box).find('span').each(
                     function () {
                         let classes = $(this).attr('class');
-                        if (classes === 'taste') {
+                        if (classes.indexOf('taste') !== -1) {
                             let color = $(this).data('background');
                             $(this).css('background-color', color);
                             let str = '#';
@@ -261,16 +307,6 @@
                             } else {
                                 $(this).css('color', 'white');
                             }
-                        }
-                    }
-                );
-
-                $('body').find('.variation_taste').each(
-                function (index, item) {
-                        if ($(item).find('.taste').length > 2) {
-                            $(item).closest('.toggle_taste ').css('overflow', 'hidden');
-                            $(item).closest('.toggle_taste ').addClass('many_tastes_toggle');
-                            $(item).attr('visible', '0');
                         }
                     }
                 );
@@ -343,9 +379,9 @@
 				{
 					$('.bx-pagination').remove();
 					return;
-					
+
 				}
-                    
+
 
                 var pagination = document.querySelectorAll('[data-pagination-num="' + this.navParams.NavNum + '"]');
                 for (var k in pagination) {
@@ -395,61 +431,45 @@
             }
         };
 })();
-function HeightTaste()
-{
-	const breakpointCheck = window.matchMedia( '(min-width:481px)' );
-	if( breakpointCheck.matches === true)
-	{ 
-		if( $('.catalog-section').hasClass('by-card') )
-		{
-			var max_height = 0;
-			$(".toggle_taste").each(function (index, el){
-				//console.log($(this).height());
-				if( $(this).height() > max_height)
-					max_height = $(this).height();
-			});
-			$(".toggle_taste").css({'height': max_height});		
-			
-			
-		}
-		else
-		{
-			$(".toggle_taste").removeAttr('style');
-		}	
-	}
-	else
-	{ 	
-		if( $('.catalog-section').hasClass('by-card') )
-		{
-			var max_height = 0;
-			var k = 0;
-			$(".by-card .toggle_taste").each(function (index, el){
-				if ( index % 2 === 0)
-				{
-					var left = $(".by-card .toggle_taste").eq(index).height();
-					var l = index + 1;
-					var right = $(".by-card .toggle_taste").eq(l).height();
-					if( right > left)
-						var resHeight = right;
-					else
-						var resHeight = left;
-					if( resHeight > 0 )
-					{
-						var left = $(".by-card .toggle_taste").eq(index).css({'height': resHeight});
-						var right = $(".by-card .toggle_taste").eq(l).css({'height': resHeight});
-					}
-						
-				}
-			});
-		
-			
-			
-		}		
-	}
-	
 
+function HeightTaste() {
+    const breakpointCheck = window.matchMedia('(min-width:481px)');
+    if (breakpointCheck.matches === true) {
+        if ($('.catalog-section').hasClass('by-card')) {
+            var max_height = 0;
+            $(".toggle_taste").each(function (index, el) {
+                //console.log($(this).height());
+                if ($(this).height() > max_height)
+                    max_height = $(this).height();
+            });
+            $(".toggle_taste").css({'height': max_height});
+
+
+        } else {
+            $(".toggle_taste").removeAttr('style');
+        }
+    } else {
+        if ($('.catalog-section').hasClass('by-card')) {
+            var max_height = 0;
+            var k = 0;
+            $(".by-card .toggle_taste").each(function (index, el) {
+                if (index % 2 === 0) {
+                    var left = $(".by-card .toggle_taste").eq(index).height();
+                    var l = index + 1;
+                    var right = $(".by-card .toggle_taste").eq(l).height();
+                    if (right > left)
+                        var resHeight = right;
+                    else
+                        var resHeight = left;
+                    if (resHeight > 0) {
+                        var left = $(".by-card .toggle_taste").eq(index).css({'height': resHeight});
+                        var right = $(".by-card .toggle_taste").eq(l).css({'height': resHeight});
+                    }
+                }
+            });
+        }
+    }
 }
 $(document).ready(function () {
-HeightTaste();
-
+    HeightTaste();
 });

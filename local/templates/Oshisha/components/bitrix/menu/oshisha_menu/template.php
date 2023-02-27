@@ -97,7 +97,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         <!--                <span class="text_catalog_link">Акции</span>-->
         <!--            </a>-->
         <!--        </li>		-->
-        <div class="open_menu" id="main_menu">
+        <div class="open_menu" style="display: none" id="main_menu">
             <div class="parent_menu"></div>
             <div class="menu_items hide"></div>
         </div>
@@ -189,11 +189,11 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                  }
              });
          });*/
-        $(document).on('mouseover', 'li.link_js', function () {
-            let id = $(this).find('a').attr('id');
+        $(document).on('mouseover', 'li.link_js .text_catalog_link', function () {
+            let id = $(this).closest('li').find('a').attr('id');
             $(document).find('.active_item_menu').removeClass('active_item_menu');
 
-            $(this).addClass('active_item_menu');
+            $(this).closest('li').addClass('active_item_menu');
             $(menu_items).addClass('hide').empty();
 
             $.each(menu_items_array.ELEMENT, function (key_item, value_item) {

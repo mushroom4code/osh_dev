@@ -402,3 +402,5 @@ function JCTitleSearch(arParams)
 	};
 	BX.ready(function (){_this.Init(arParams)});
 }
+
+

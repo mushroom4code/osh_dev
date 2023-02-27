@@ -71,3 +71,23 @@ flex-wrap:wrap;
 		width:calc(100% + 20px); 
 	}
 }
+.sort_panel {
+	margin-right: 11px;
+}
+.sort_panel .sort_orders_element {
+	min-width: auto;
+	transition: all 0.3s linear;
+}
+.sort_panel .sort_order {
+	margin-right: 0;
+}
+.sort_panel li.catalog_sort_item {
+	cursor: pointer;
+	transition: all 0.3s linear;
+	padding: 8px 0 8px 15px;
+	font-size: 12px;
+}
+.sort_panel li.catalog_sort_item:hover {
+	background-color: #dbdbdb;
+	box-sizing: border-box;
+}

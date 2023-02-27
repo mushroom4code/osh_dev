@@ -87,14 +87,14 @@ class EnteregoHelper
             while ($props = $res->Fetch()) {
                 $arItems['PROPERTIES'] = $props;
             }
-        } else if ($method === 'VKUS') {
+        } else if ($method === PROPERTY_KEY_VKUS) {
             $rsElement = CIBlockElement::GetList(array(), array('ID' => $id), false, false, array());
             while ($arElement = $rsElement->Fetch()) {
-                $res = CIBlockElement::GetProperty($arElement['IBLOCK_ID'], $id, false, array('CODE' => 'VKUS'));
+                $res = CIBlockElement::GetProperty($arElement['IBLOCK_ID'], $id, false, array('CODE' => PROPERTY_KEY_VKUS));
                 while ($results = $res->Fetch()) {
-                    if ($results['CODE'] === 'VKUS' && !empty($results['VALUE_XML_ID'])) {
+                    if ($results['CODE'] === PROPERTY_KEY_VKUS && !empty($results['VALUE_XML_ID'])) {
                         $colorId = explode('#', $results['VALUE_XML_ID']);
-                        $arItems['VKUS'][] = ['NAME' => $results['VALUE_ENUM'],
+                        $arItems[PROPERTY_KEY_VKUS][] = ['NAME' => $results['VALUE_ENUM'],
                             'VALUE' => $colorId[1],
                             'ID' => $colorId[0]];
                     }
@@ -199,22 +199,6 @@ class EnteregoHelper
         }
 
         return $result;
-    }
-
-    /**
-     * @param string $duringTime
-     * @return bool
-     * @throws \Exception
-     */
-    public static function checkNewProduct(string $duringTime): bool
-    {
-        $nowDate = date("d.m.Y H:i:s");
-        $date = new DateTime($nowDate);
-        $dateAMonthAgo = $date->sub(new DateInterval('P0Y1M0DT0H0M0S'))->format('d.m.Y H:i:s');
-        if (strtotime($duringTime) < strtotime($dateAMonthAgo)) {
-            return false;
-        }
-        return true;
     }
 
     /** Return product type for discount gift

@@ -3,6 +3,7 @@
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
+use Enterego\EnteregoDiscount;
 
 /**
  * @global CMain $APPLICATION
@@ -20,19 +21,16 @@ if (isset($arParams['USE_COMMON_SETTINGS_BASKET_POPUP']) && $arParams['USE_COMMO
 
 $sort = [
     'by' => [
-        'by' => 'PROPERTY_MINIMUM_PRICE',//'CATALOG_PRICE_'.$GLOBALS['PRICE_TYPE_ID'],
-        'order' => 'asc'
+        'by' => 'SERVICE_FIELD_POPULARITY', // 'PROPERTY_MINIMUM_PRICE',//'CATALOG_PRICE_'.$GLOBALS['PRICE_TYPE_ID'],
+        'order' => 'DESC'
     ],
 
 ];
 
-
 if ($_GET['sort_by']) {
     $_SESSION['sort']['by']['by'] = $_GET['sort_by'];
     $_SESSION['sort']['by']['order'] = $_GET['sort_order'];
-
 }
-
 
 if ($_SESSION['sort']) {
     $sort = [
@@ -125,28 +123,6 @@ if (!isset($sort['by']['order']) || empty($sort['by']['order']))
 $contentBlockClass = "col";
 $sort_active = $_COOKIE['orientation'] === 'line' ? "icon_sort_line_active" : "icon_sort_bar_active";
 
-$arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG, 'GLOBAL_ACTIVE' => 'Y',);
-
-$arSelectS = array('*');
-$arOrderS = array('DEPTH_LEVEL' => 'ASC', 'SORT' => 'ASC',);
-
-$rsSections = CIBlockSection::GetList($arOrderS, $arFilterS, false, $arSelectS);
-$sectionLinc = array();
-$arResult['ROOT'] = array();
-$sectionLinc[0] = &$arResult['ROOT'];
-while ($arSection = $rsSections->GetNext()) {
-    $arSection['TEXT'] = $arSection['NAME'];
-    $arSection['LINK'] = $arSection['CODE'];
-    if ($arSection['DEPTH_LEVEL'] > 1) {
-        $arSection['DEPTH_LEVEL'] = $arSection['DEPTH_LEVEL'] - 1;
-
-    }
-
-
-    $arSections[$arSection['ID']] = $arSection;
-}
-
-
 function sort_by_name($a, $b)
 {
     if ($a["NAME"] == $b["NAME"]) {
@@ -154,20 +130,6 @@ function sort_by_name($a, $b)
     }
     return ($a["NAME"] < $b["NAME"]) ? -1 : 1;
 }
-
-foreach ($arSections as $arSection) {
-    if ($arSection['DEPTH_LEVEL'] == 1 && $arSection['IBLOCK_SECTION_ID'] > 0) {
-        $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']] = $arSection;
-        $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILDS'][$arSection['ID']];
-    } else {
-        $sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILD'][$arSection['ID']] = $arSection;
-        $sectionLinc[$arSection['ID']] = &$sectionLinc[intval($arSection['IBLOCK_SECTION_ID'])]['CHILD'][$arSection['ID']];
-    }
-
-}
-
-$arResultSection = $sectionLinc[0]['CHILD'];
-
 
 $catalogElementField = $APPLICATION->get_cookie("PAGE_ELEMENT_COUNT") ? $APPLICATION->get_cookie("PAGE_ELEMENT_COUNT") : "36";
 if ($_GET['page'] != '') {
@@ -184,22 +146,19 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
                 <div class="catalog-section-list-tile-list">
-                    <?php foreach ($arResultSection as $arSection):
-                        if ($arSection['SECTION_PAGE_URL'] === '/catalog/diskont/') {
-                            $arSection['SECTION_PAGE_URL'] = '/diskont/';
-                        } ?>
+                    <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap">
                                 <a href="<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
-                                <?php if ($arSection['CHILDS']): ?>
+                                <? if ($arSection['CHILDS']): ?>
                                     <span data-role="prop_angle"
                                           class="smart-filter-tog smart-filter-angle"
                                           data-code-vis="<?= $arSection['ID'] ?>">
 					                    <i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
                                     </span>
-                                <?php endif; ?>
+                                <? endif; ?>
                             </div>
-                            <?php if ($arSection['CHILDS']):
+                            <? if ($arSection['CHILDS']):
                                 usort($arSection['CHILDS'], 'sort_by_name');
                                 foreach ($arSection['CHILDS'] as $arSectionSub): ?>
                                     <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
@@ -219,19 +178,14 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             if ($isFilter): ?>
                 <div class="bx-sidebar-block">
                     <?php
-                    if ($APPLICATION->GetCurPage(false) == '/catalog_new/' || $APPLICATION->GetCurPage(false) == '/diskont/') {
-                        unset($arCurSection['ID']);
-                        $PREFILTER_NAME = 'ArFilter';
-                    }
-
 
                     $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
                         "oshisha_catalog.smart.filter", array(
                             "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
                             "IBLOCK_ID" => $arParams["IBLOCK_ID"],
                             "SECTION_ID" => $arCurSection['ID'],
+                            "PREFILTER_NAME" => $arParams["PREFILTER_NAME"],
                             "FILTER_NAME" => $arParams["FILTER_NAME"],
-                            "PREFILTER_NAME" => $PREFILTER_NAME,
                             "PRICE_CODE" => $arParams["PRICE_CODE"],
                             "CACHE_TYPE" => $arParams["CACHE_TYPE"],
                             "CACHE_TIME" => $arParams["CACHE_TIME"],
@@ -251,7 +205,6 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             "PAGER_PARAMS_NAME" => $arParams["PAGER_PARAMS_NAME"],
                             "INSTANT_RELOAD" => $arParams["INSTANT_RELOAD"],
                         ),
-                        $component,
                         array('HIDE_ICONS' => 'Y')
                     );
                     ?>
@@ -259,11 +212,19 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             <?php endif
             //			//endregion
             ?>
+            <div class="filter-close js__filter-close">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="filter-view-bar">
+                <div class="red_button_cart filter-view js__filter-close disabled_class">Применить</div>
+            </div>
         </div>
     <? endif ?>
     <? global $GLOBAL_SECTION; ?>
-    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> padding_product_box
-    <? if ($GLOBAL_SECTION['UF_HIDE_PRICE'] == 1 && !$USER->IsAuthorized()): ?>blur_photo<? endif; ?>">
+    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> padding_product_box">
         <div class="row navigation-wrap">
             <div class="col" id="navigation">
                 <?php $APPLICATION->IncludeComponent(
@@ -280,6 +241,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             </div>
         </div>
         <h1 id="pagetitle"><?php $APPLICATION->ShowTitle(false); ?></h1>
+        <p class="message_for_user_minzdrav font-14"></p>
         <div id="osh-filter-horizontal2"></div>
         <div class="osh-block-panel">
             <div id="osh-filter-horizontal">
@@ -307,47 +269,35 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             <div class="sort-panel mb-4">
                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                     <div class="sort_panel_wrap">
-                        <div class="sort_panel">
-                            <a class="sort_order" href="#">
-                                Сортировать по
+                        <div class="sort_panel" id="">
+                            <a class="sort_order sort_tool" href="#">
+                                <span class="sort_orders_by sort_caption"
+                                      style="min-width: 150px;">Сортировать по</span>
                                 <i class="fa fa-angle-down" aria-hidden="true"></i>
                             </a>
-                            <div class="sort_orders_element">
+                            <div class="sort_orders_element js__sort_orders_element">
                                 <ul>
-                                    <li>
-                                        <a class="urlsort_popular"
-                                           href="<?= str_replace("#", "%23",
-                                               $APPLICATION->GetCurPageParam(
-                                                   "sort_by=SHOW_COUNTER&sort_order=ASC",
-                                                   array('sort_by', 'sort_order'))) ?>">По популярности</a>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"
+                                        data-order="DESC">По популярности
                                     </li>
-                                    <li>
-                                        <a class="urlsort_price_max" data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                           href="<?= str_replace("#", "%23",
-                                               $APPLICATION->GetCurPageParam(
-                                                   "sort_by=PROPERTY_MINIMUM_PRICE&sort_order=desc",
-                                                   array('sort_by', 'sort_order'))) ?>">По цене (дорогие вначале)</a>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                        data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
+                                        data-order="ASC">По возрастанию цены
                                     </li>
-                                    <li>
-                                        <a class="urlsort_price_min" data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                           href="<?= str_replace("#", "%23",
-                                               $APPLICATION->GetCurPageParam(
-                                                   "sort_by=PROPERTY_MINIMUM_PRICE&sort_order=asc",
-                                                   array('sort_by', 'sort_order'))) ?>">По цене (дешевые вначале)</a>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                        data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
+                                        data-order="DESC">По убыванию цены
                                     </li>
-                                    <li>
-                                        <a class="urlsort_name"
-                                           href="<?= str_replace("#", "%23",
-                                               $APPLICATION->GetCurPageParam(
-                                                   "sort_by=NAME&sort_order=ASC",
-                                                   array('sort_by', 'sort_order'))) ?>">По названию</a>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-sort="NAME"
+                                        data-order="ASC">По названию
                                     </li>
-
-                                    <li>
-                                        <a class="urlsort_created"
-                                           href="<?= str_replace("#", "%23", $APPLICATION->GetCurPageParam(
-                                               "sort_by=CREATED_DATE&sort_order=desc",
-                                               array('sort_by', 'sort_order'))) ?>">По новизне</a>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-sort="CREATED_DATE"
+                                        data-order="DESC">По новизне
                                     </li>
                                 </ul>
                             </div>
@@ -424,7 +374,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             );
         }
         //endregion
-
+        global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
             "oshisha_catalog.section", array(
@@ -545,7 +495,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             'BRAND_PROPERTY' => (isset($arParams['BRAND_PROPERTY']) ? $arParams['BRAND_PROPERTY'] : ''),
 
             'TEMPLATE_THEME' => (isset($arParams['TEMPLATE_THEME']) ? $arParams['TEMPLATE_THEME'] : ''),
-            "ADD_SECTIONS_CHAIN" => "N",
+            "ADD_SECTIONS_CHAIN" => $arParams["ADD_SECTIONS_CHAIN"],
             'ADD_TO_BASKET_ACTION' => $basketAction,
             'SHOW_CLOSE_POPUP' => isset($arParams['COMMON_SHOW_CLOSE_POPUP']) ? $arParams['COMMON_SHOW_CLOSE_POPUP'] : '',
             'COMPARE_PATH' => $arResult['FOLDER'] . $arResult['URL_TEMPLATES']['compare'],
@@ -600,7 +550,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                     "SET_META_KEYWORDS" => "N",
                                     "SET_META_DESCRIPTION" => "N",
                                     "SET_LAST_MODIFIED" => "N",
-                                    "ADD_SECTIONS_CHAIN" => "N",
+                                    "ADD_SECTIONS_CHAIN" => $arParams["ADD_SECTIONS_CHAIN"],
 
                                     "PRICE_VAT_INCLUDE" => $arParams["PRICE_VAT_INCLUDE"],
                                     "USE_PRODUCT_QUANTITY" => $arParams['USE_PRODUCT_QUANTITY'],

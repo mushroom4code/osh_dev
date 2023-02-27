@@ -1,6 +1,6 @@
 <?php
 $arUrlRewrite=array (
-  14 => 
+  14 =>
   array (
     'CONDITION' => '#^/personal/certificate/#',
     'RULE' => '',
@@ -8,14 +8,21 @@ $arUrlRewrite=array (
     'PATH' => '/personal/certificate/index.php',
     'SORT' => 2,
   ),
-  105 => 
+  105 =>
   array (
     'CONDITION' => '#^/catalog_new/#',
     'RULE' => '',
     'PATH' => '/catalog_new/index.php',
     'SORT' => 10,
   ),
-  4 => 
+    106 =>
+        array(
+            'CONDITION' => '#^/diskont/#',
+            'RULE' => '',
+            'PATH' => '/diskont/index.php',
+            'SORT' => 10,
+        ),
+  4 =>
   array (
     'CONDITION' => '#^\\/?\\/mobileapp/jn\\/(.*)\\/.*#',
     'RULE' => 'componentName=$1',
@@ -23,7 +30,7 @@ $arUrlRewrite=array (
     'PATH' => '/bitrix/services/mobileapp/jn.php',
     'SORT' => 100,
   ),
-  27 => 
+  27 =>
   array (
     'CONDITION' => '#^/personal/workers/user/#',
     'RULE' => '',
@@ -31,7 +38,7 @@ $arUrlRewrite=array (
     'PATH' => '/personal/workers/user/index.php',
     'SORT' => 100,
   ),
-  25 => 
+  25 =>
   array (
     'CONDITION' => '#^/personal/contragents/#',
     'RULE' => '',
@@ -39,7 +46,7 @@ $arUrlRewrite=array (
     'PATH' => '/personal/contragents/index.php',
     'SORT' => 100,
   ),
-  23 => 
+  23 =>
   array (
     'CONDITION' => '#^/about/address-shops/#',
     'RULE' => '',
@@ -47,7 +54,7 @@ $arUrlRewrite=array (
     'PATH' => '/about/address-shops/index.php',
     'SORT' => 100,
   ),
-  15 => 
+  15 =>
   array (
     'CONDITION' => '#^/personal/support/#',
     'RULE' => '',
@@ -55,7 +62,7 @@ $arUrlRewrite=array (
     'PATH' => '/personal/support/index.php',
     'SORT' => 100,
   ),
-  26 => 
+  26 =>
   array (
     'CONDITION' => '#^/personal/workers/#',
     'RULE' => '',
@@ -63,7 +70,7 @@ $arUrlRewrite=array (
     'PATH' => '/personal/workers/index.php',
     'SORT' => 100,
   ),
-  21 => 
+  21 =>
   array (
     'CONDITION' => '#^/about/delivery/#',
     'RULE' => '',
@@ -71,7 +78,7 @@ $arUrlRewrite=array (
     'PATH' => '/about/delivery/index.php',
     'SORT' => 100,
   ),
-  22 => 
+  22 =>
   array (
     'CONDITION' => '#^/about/contacts/#',
     'RULE' => '',
@@ -79,7 +86,7 @@ $arUrlRewrite=array (
     'PATH' => '/about/contacts/index.php',
     'SORT' => 100,
   ),
-  9 => 
+  9 =>
   array (
     'CONDITION' => '#^/personal/order/#',
     'RULE' => '',
@@ -87,7 +94,7 @@ $arUrlRewrite=array (
     'PATH' => '/personal/order/index.php',
     'SORT' => 100,
   ),
-  20 => 
+  20 =>
   array (
     'CONDITION' => '#^/about/o-nas/#',
     'RULE' => '',
@@ -95,7 +102,7 @@ $arUrlRewrite=array (
     'PATH' => '/about/o-nas/index.php',
     'SORT' => 100,
   ),
-  24 => 
+  24 =>
   array (
     'CONDITION' => '#^/about/FAQ/#',
     'RULE' => '',
@@ -103,7 +110,7 @@ $arUrlRewrite=array (
     'PATH' => '/about/FAQ/index.php',
     'SORT' => 100,
   ),
-  16 => 
+  16 =>
   array (
     'CONDITION' => '#^/personal/#',
     'RULE' => '',
@@ -111,7 +118,7 @@ $arUrlRewrite=array (
     'PATH' => '/personal/index.php',
     'SORT' => 100,
   ),
-  12 => 
+  12 =>
   array (
     'CONDITION' => '#^/loyalty/#',
     'RULE' => NULL,
@@ -119,7 +126,7 @@ $arUrlRewrite=array (
     'PATH' => '/loyalty/index.php',
     'SORT' => 100,
   ),
-  171 => 
+  171 =>
   array (
     'CONDITION' => '#^/catalog/#',
     'RULE' => '',
@@ -127,7 +134,7 @@ $arUrlRewrite=array (
     'PATH' => '/catalog/index.php',
     'SORT' => 100,
   ),
-  17 => 
+  17 =>
   array (
     'CONDITION' => '#^/brands/#',
     'RULE' => '',
@@ -135,7 +142,7 @@ $arUrlRewrite=array (
     'PATH' => '/brands/index.php',
     'SORT' => 100,
   ),
-  5 => 
+  5 =>
   array (
     'CONDITION' => '#^/rest/#',
     'RULE' => '',
@@ -143,4 +150,12 @@ $arUrlRewrite=array (
     'PATH' => '/bitrix/services/rest/index.php',
     'SORT' => 100,
   ),
+    18 =>
+        array (
+            'CONDITION' => '#^/local/osh-rest/hook/#',
+            'RULE' => '',
+            'ID' => 'bitrix:rest.hook',
+            'PATH' => '/local/osh-rest/hook/index.php',
+            'SORT' => 100,
+        )
 );

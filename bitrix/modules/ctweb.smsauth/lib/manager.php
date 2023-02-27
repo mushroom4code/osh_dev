@@ -28,6 +28,8 @@ class Manager
     const STATE_AUTH = 1;
     const STATE_REGISTER = 2;
 
+    const STATE_PHONE_CHANGE = 3;
+
     const SESSION_FIELD_EXPIRE_TIME = 'EXPIRE';
     const SESSION_FIELD_REUSE_TIME = 'REUSE';
     const SESSION_FIELD_STATE = 'STATE';
@@ -280,6 +282,36 @@ class Manager
         return true;
     }
 
+    public function StartUserPhoneChange($arFields): bool
+    {
+        if (!$this->isTimeReused()) {
+            $this->setStep(self::STEP_CODE_WAITING);
+            $this->errors[] = 'CODE_ALREADY_SENT';
+            return false;
+        }
+
+        $phoneField = $this->options['PHONE_FIELD'];
+        $arFields[$phoneField] = $arFields['PHONE'];
+        $minlength = $this->options['MIN_PHONE_LENGTH'];
+
+        // check phone length
+        if (strlen($arFields[$phoneField]) < $minlength) {
+            $this->errors[] = 'PHONE_SHORT_LENGTH';
+            return false;
+        }
+
+        $res = $this->SendAuthCode($arFields[$phoneField]);
+        if ($res) {
+            $this->setState(self::STATE_PHONE_CHANGE);
+            $this->setStep(self::STEP_CODE_WAITING);
+        } else {
+            $this->errors[] = 'CODE_NOT_SEND';
+            return false;
+        }
+
+        return true;
+    }
+
     public function GetUsersByPhone($phone, $all = false)
     {
         $arResult = array();
@@ -420,6 +452,35 @@ class Manager
                 $this->clearSession();
                 $this->setStep(self::STEP_SUCCESS);
 
+                return true;
+            } else {
+                $this->errors[] = $user->LAST_ERROR;
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+
+    public function ChangePhoneByCode($code, $phone) {
+        global $USER;
+
+        if ($this->getState() === self::STATE_AUTH) {
+            return $this->AuthByCode($code);
+        }
+
+        if (empty($this->errors)) {
+            $arFields = [];
+            $phoneField = $this->options['PHONE_FIELD'];
+            $arFields[$phoneField] = $this->NormalizePhone($phone);
+
+            //duplicate registration phone to personal phone (for lk and orders)
+            $arFields["PERSONAL_PHONE"] = $arFields[$phoneField] ;
+
+            $user = new CUser;
+            if ($user->Update($USER->getContext()->getUserId(), $arFields)) {
+                $this->clearSession();
+                $this->setStep(self::STEP_SUCCESS);
                 return true;
             } else {
                 $this->errors[] = $user->LAST_ERROR;

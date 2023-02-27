@@ -126,8 +126,6 @@ foreach ($jsTemplates->getChildren() as $jsTemplate) {
 $displayModeClass = $arParams['DISPLAY_MODE'] === 'compact' ? ' basket-items-list-wrapper-compact' : '';
 
 
-
-
 if (empty($arResult['ERROR_MESSAGE'])) {
     if ($arParams['USE_GIFTS'] === 'Y' && $arParams['GIFTS_PLACE'] === 'TOP') { ?>
         <div data-entity="parent-container">
@@ -153,7 +151,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
     <?php } ?>
     <div id="basket-root" class="bx-basket bx-<?= $arParams['TEMPLATE_THEME'] ?> bx-step-opacity row"
          style="opacity: 0;">
-        <div class="col-md-8 col-12">
+        <div class="col col-lg-8 col-md-12 col-12">
             <div class="row">
                 <div class="alert alert-warning alert-dismissable" id="basket-warning" style="display: none;">
                     <span class="close" data-entity="basket-items-warning-notification-close">&times;</span>
@@ -170,26 +168,29 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                          data-entity="basket-filter">
                         <input type="text" class="form-control basket_input search_input"
                                data-entity="basket-filter-input" placeholder="Искать в корзине"/>
-                      <div class="d-flex flex-row box_select">
-                             <?/* <select class="select_sort_basket">
+                        <div class="d-flex flex-row box_select">
+                            <?/* <select class="select_sort_basket">
                                 <option>Сортировать по</option>
                                 <option value="price_min">Цене: самые дешевые</option>
                                 <option value="price_max">Цене: самые дорогие</option>
-                            </select>*/?>
+                            </select>*/ ?>
                             <h4 class="mb-lg-4 mb-md-4 mb-0 d-block d-lg-none d-md-none font-m-21"><b>Корзина</b></h4>
                             <div class="d-flex flex-row">
-                            <div class="icon_sort_bar sort" id="basket-card" data-sort="grid" style="display:none;"></div>
-                            <div class="icon_sort_line sort" id="basket-line" data-sort="line" style="display:none;"></div>
- 							<form action="" method="POST" class="col-xs-6 BasketClearForm">
-								<button type="submit" class="clear-cart" name="BasketClear">Очистить корзину</button>
-							</form>
-							<?
-							if (isset($_POST["BasketClear"]) && CModule::IncludeModule("sale")) {
-								CSaleBasket::DeleteAll(CSaleBasket::GetBasketUserID());
-								header("Location: ".$_SERVER['REQUEST_URI']);
-							}
-							?>                           
-							</div>
+                                <div class="icon_sort_bar sort" id="basket-card" data-sort="grid"
+                                     style="display:none;"></div>
+                                <div class="icon_sort_line sort" id="basket-line" data-sort="line"
+                                     style="display:none;"></div>
+                                <form action="" method="POST" class="col-xs-6 BasketClearForm">
+                                    <button type="submit" class="clear-cart" name="BasketClear">Очистить корзину
+                                    </button>
+                                </form>
+                                <?
+                                if (isset($_POST["BasketClear"]) && CModule::IncludeModule("sale")) {
+                                    CSaleBasket::DeleteAll(CSaleBasket::GetBasketUserID());
+                                    header("Location: " . $_SERVER['REQUEST_URI']);
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
 
@@ -210,7 +211,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                             foreach ($arResult['BASKET_ITEM_RENDER_DATA_CUSTOM'] as $key => $item) {
                                 $classCat = '';
                                 $styleIcon = '';
-								 $styleIcon = 'style="transform:rotate(180deg);"';
+                                $styleIcon = 'style="transform:rotate(180deg);"';
                                 if ($i === 0) {
                                     $styleIcon = 'style="transform:rotate(180deg);"';
                                 } else {
@@ -240,7 +241,8 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                     </div>
                 </div>
             </div>
-            <div class="d-lg-flex d-md-flex d-none row_section justify-content-between align-items-center block_with_action_basket mb-3" style="display:none !important;">
+            <div class="d-lg-flex d-md-flex d-none row_section justify-content-between align-items-center block_with_action_basket mb-3"
+                 style="display:none !important;">
                 <div class="d-flex row_section align-items-center mb-1">
                     <span class="circle_black_basket"></span>
                     <span>Акция! 2+1 на табак Шпаковский!</span>
@@ -254,7 +256,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             </div>
         <?php }
         if ($arParams['BASKET_WITH_ORDER_INTEGRATION'] !== 'Y' && in_array('top', $arParams['TOTAL_BLOCK_DISPLAY'])) { ?>
-            <div class="col-md-4 pl-lg-4 pl-md-4  basket-items-list-wrapper">
+            <div class="col-md-12 col-lg-4 col-12 pl-lg-4 pl-md-4  basket-items-list-wrapper">
                 <h4 class="mb-4 d-none d-lg-block d-md-block"><b>Корзина</b></h4>
                 <div data-entity="basket-total-block" class="mb-lg-0 mb-md-0 mb-5">
                 </div>
@@ -298,7 +300,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                 $component
             ); ?>
         </div>
-		<?/*
+        <?/*
         <h3 class="mb-5 mt-5 d-lg-block d-md-block d-none" ><b>Рекомендуемые товары </b></h3>
         <div class="d-lg-block d-md-block d-none">
             <?php $APPLICATION->IncludeComponent(
@@ -383,7 +385,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                     "VIEW_MODE" => "SLIDER"
                 ),
                 false
-            ); ?></div>*/?>
+            ); ?></div>*/ ?>
         <?php
     }
 }
@@ -393,32 +395,26 @@ if ($arResult['ERROR_MESSAGE'] && !$arResult['EMPTY_BASKET']) {
     ShowError($arResult['ERROR_MESSAGE']);
 }
 ?>
-  <?php if ( !$USER->IsAuthorized() ): ?>
-<script>
-$(document).ready(function () {
+<?php if (!$USER->IsAuthorized()): ?>
+    <script>
+        $(document).ready(function () {
 // лайки
-
-	
-		$('.ctweb-smsauth-menu-block').show();	
-		$('.overlay').show();	
-	
-
-		
-	});
-</script>
-<?endif;?>
+            $('.ctweb-smsauth-menu-block').show();
+        });
+    </script>
+<? endif; ?>
 <script>
-$(document).ready(function () {
-<?global $rowFavData; 
-	foreach( $rowFavData as $key =>$dataEl )
-	{
-?>
-		$('.box_with_like[data-product-id="<?=$key?>"] .fa-star-o').css('color', 'red');
-		$('.box_with_like[data-product-id="<?=$key?>"] .product-item__favorite-star').attr('data-fav-controls', 'true');
-	
-<?		
-	}
-?>
-	});
+    $(document).ready(function () {
+        <?global $rowFavData;
+        foreach( $rowFavData as $key =>$dataEl )
+        {
+        ?>
+        $('.box_with_like[data-product-id="<?=$key?>"] .fa-star-o').css('color', 'red');
+        $('.box_with_like[data-product-id="<?=$key?>"] .product-item__favorite-star').attr('data-fav-controls', 'true');
+
+        <?
+        }
+        ?>
+    });
 </script>
 

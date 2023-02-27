@@ -37,11 +37,11 @@ if (Loader::includeModule('search')) {
         array(
             "RESTART" => $arParams["RESTART"],
             "NO_WORD_LOGIC" => $arParams["NO_WORD_LOGIC"],
-            "USE_LANGUAGE_GUESS" => 'N',
+            "USE_LANGUAGE_GUESS" => $arParams["USE_LANGUAGE_GUESS"],
             "CHECK_DATES" => $arParams["CHECK_DATES"],
             "arrFILTER" => array("iblock_" . $arParams["IBLOCK_TYPE"]),
             "arrFILTER_iblock_" . $arParams["IBLOCK_TYPE"] => array($arParams["IBLOCK_ID"]),
-            "USE_TITLE_RANK" => $arParams['USE_TITLE_RANK'],
+            "USE_TITLE_RANK" => "Y",
             "DEFAULT_SORT" => "rank",
             "FILTER_NAME" => "",
             "SHOW_WHERE" => "N",

@@ -17,30 +17,41 @@ Extension::load("ui.bootstrap4");
 
 $curPage = $APPLICATION->GetCurPage(true);
 $MESS["CITY_CHOOSE_TITLE"] = 'Выберите город';
-
+global $option_site;
+$option = $option_site;
 $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 ?><!DOCTYPE html>
 <html xml:lang="<?= LANGUAGE_ID ?>" lang="<?= LANGUAGE_ID ?>">
 <head>
 
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();
-   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () {
+                (m[i].a = m[i].a || []).push(arguments)
+            };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) {
+                if (document.scripts[j].src === r) {
+                    return;
+                }
+            }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-   ym(92030744, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true,
-        ecommerce:"dataLayer"
-   });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/92030744" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+        ym(92030744, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true,
+            ecommerce: "dataLayer"
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/92030744" style="position:absolute; left:-9999px;" alt=""/></div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
 
     <title><?php $APPLICATION->ShowTitle() ?></title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -78,6 +89,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     $APPLICATION->ShowHead(); ?>
     <link rel="stylesheet" href="/local/assets/js/swiper/swiper-bundle.min.css">
     <script src="/local/assets/js/swiper/swiper-bundle.min.js"></script>
+    <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
 <body class="bx-background-image">
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
@@ -148,14 +160,21 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </span>
                     <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
                         отзыв</a>
-                    <a href="https://oshisha.net/" class="red_text text_font_13 font-weight-bold">Вернуться на старый
+                    <a href="https://oshisha.online/" class="red_text text_font_13 font-weight-bold ">Вернуться на старый
                         сайт</a>
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-7 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
-                    <a href="/about/contacts/" class="text_header">Контакты</a>
-                    <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
-                    <a href="javascript:void(0)" class="text_header callback">Обратный звонок</a>
+                    <?php if ($USER->IsAuthorized()) { ?>
+                        <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
+                    <?php } else { ?>
+                        <a href="/login/" class="text_header ">Прайс-лист</a>
+                    <?php } ?>
+                        <a href="/about/contacts/" class="text_header">Контакты</a>
+                    <?php if ($USER->IsAuthorized()) { ?>
+                        <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
+                    <?php } ?>
+                        <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
                     <?php } else { ?>
@@ -196,9 +215,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
                                 </a>
-                                <a href="/about/delivery/" class="link_menu_top ">
-                                    <span class="text_catalog_link not_weight">Доставка и оплата</span>
-                                </a>
+                                <?php if ($USER->IsAuthorized()) { ?>
+                                    <a href="/about/delivery/" class="link_menu_top ">
+                                        <span class="text_catalog_link not_weight">Доставка и оплата</span>
+                                    </a>
+                                <?php } ?>
 
                                 <a href="/about/FAQ/" class="link_menu_top ">
                                     <span class="text_catalog_link not_weight">FAQ</span>
@@ -233,10 +254,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             <a href="/about/feedback_new_site/" class="link_menu_top">
                                 <span class="red_text text_font_13 font-weight-bold ">Написать отзыв</span>
                             </a>
-                            <a href="https://oshisha.net/" class="link_menu_top">
-                                <span class="red_text text_font_13 font-weight-bold">
-                                    Вернуться на старый сайт</span>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -258,50 +275,42 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             ); ?>
                         </a>
                     </div>
-                    <div class="text_header_menu">
-                            <span>Вся продукция <br>для кальяна
-                </span>
-                    </div>
+                    <div class="text_header_menu"><span>Вся продукция <br>для кальяна</span></div>
                 </div>
                 <div class="box_right_header">
-                    <div class="box_with_search ">
+                    <div class="box_with_search">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:search.title",
                             "oshisha_search.title",
                             array(
-                                "NUM_CATEGORIES" => "1",
-                                "TOP_COUNT" => "5",
+                                "CATEGORY_0" => array("iblock_1c_catalog"),
+                                "CATEGORY_0_TITLE" => "",
+                                "CATEGORY_0_iblock_1c_catalog" => array("all"),
+                                "CATEGORY_1" => array(),
+                                "CATEGORY_1_TITLE" => "",
                                 "CHECK_DATES" => "N",
-                                "SHOW_OTHERS" => "N",
-                                "PAGE" => SITE_DIR . "catalog/",
-                                "CATEGORY_0_TITLE" => GetMessage("SEARCH_GOODS"),
-                                "CATEGORY_0" => array(
-                                    0 => "iblock_catalog",
-                                ),
-                                "CATEGORY_0_iblock_catalog" => array(
-                                    0 => "all",
-                                ),
-                                "CATEGORY_OTHERS_TITLE" => GetMessage("SEARCH_OTHER"),
+                                "CONTAINER_ID" => "title-search_desktop",
+                                "CONVERT_CURRENCY" => "N",
+                                "INPUT_ID" => "input_search_desktop",
+                                "NUM_CATEGORIES" => "2",
+                                "ORDER" => "date",
+                                "PAGE" => "#SITE_DIR#catalog/",
+                                "PREVIEW_HEIGHT" => "150",
+                                "PREVIEW_TRUNCATE_LEN" => "",
+                                "PREVIEW_WIDTH" => "150",
+                                "PRICE_CODE" => BXConstants::PriceCode(),
+                                "PRICE_VAT_INCLUDE" => "Y",
                                 "SHOW_INPUT" => "Y",
-                                "INPUT_ID" => "title-search-input",
-                                "CONTAINER_ID" => "search",
-                                "PRICE_CODE" => array(
-                                    2 => "Розничная",
-                                    7 => "b2b",
-                                    8 => "Сайт скидка"
-                                ),
-                                "FILL_ITEM_ALL_PRICES" => "Y",
+                                "SHOW_OTHERS" => "N",
                                 "SHOW_PREVIEW" => "Y",
-                                "PREVIEW_WIDTH" => "75",
-                                "PREVIEW_HEIGHT" => "75",
-                                "CONVERT_CURRENCY" => "Y",
+                                "TEMPLATE_THEME" => "blue",
+                                "TOP_COUNT" => "5",
                                 "USE_LANGUAGE_GUESS" => "N"
                             ),
                             true
                         ); ?>
                     </div>
-
-                    <div class="block_menu_mobile bx-header-personal">
+                    <div class="block_menu_mobile bx-header-personal z-index-1200">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:sale.basket.basket.line",
                             "oshisha_sale.basket.basket.line",
@@ -354,15 +363,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
             <?php } ?>
         </div>
-        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/include/feedback-popup-line.php") ?>
     </header>
-
     <div class="section_wrapper">
         <div class="container_header">
-
-
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
-            <div>
                 <div class="bx-content <?= STATIC_P ?>">
-
-
