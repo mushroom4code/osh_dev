@@ -1,10 +1,13 @@
 <?php
+
+use CommonPVZ\DeliveryHelper;
+
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
 if (!Bitrix\Main\Loader::includeModule('enterego.pvz'))
     return;
 
-use CommonPVZ\DeliveryHelper;
+$request = Bitrix\Main\Context::getCurrent()->getRequest();
 
 $CONFIG_DELIVERIES = DeliveryHelper::getConfigs();
 
@@ -13,10 +16,15 @@ foreach ($CONFIG_DELIVERIES as $k => $v) {
     $deliveries[] = $k;
 }
 
-if ($_POST['action'] === 'getCityName') {
-    exit(\CommonPVZ\DeliveryHelper::getCityName($_POST['codeCity']));
-}
+$action = $request->get('action');
+$codeCity = $request->get('codeCity');
+$cityName = $request->get('cityName');
 
-if ($_POST['action'] === 'getPVZList') {
-    exit(json_encode(\CommonPVZ\DeliveryHelper::getAllPVZ($deliveries, $_POST['cityName'], $_POST['codeCity'])));
+switch ($action) {
+    case 'getCityName':
+        exit(DeliveryHelper::getCityName($codeCity));
+    case 'getPVZList':
+        exit(json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity)));
+    default:
+        exit(json_encode(['status'=>'error', 'errors'=>['not correct action']]));
 }

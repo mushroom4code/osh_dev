@@ -65,10 +65,11 @@ class DeliveryHelper
                 $points_Array = $cache->getVars();
             } elseif ($cache->startDataCache()) {
                 foreach ($deliveries as $delName) {
-                    $deliveryClass = '\CommonPVZ\\' . $delName . 'Delivery';
-                    $delivery = new $deliveryClass();
-                    $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity);
-                    $result_array['errors'][$delName] = $delivery->errors;
+                    $delivery = CommonPVZ::getInstanceObject($delName);
+                    if ($delivery!=null) {
+                        $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity);
+                        $result_array['errors'][$delName] = $delivery->errors;
+                    }
                 }
                 $cache->endDataCache($points_Array);
             }
@@ -80,23 +81,6 @@ class DeliveryHelper
         $result_array['features'] = $points_Array;
 
         return $result_array;
-    }
-
-    public static function getPrice($req_data)
-    {
-        if ($req_data['delivery'] === 'PickPoint') {
-            $delivery = new PickPointDelivery();
-            return $delivery->getPrice($req_data);
-        } elseif ($req_data['delivery'] === 'СДЭК') {
-            $delivery = new SDEKDelivery();
-            return $delivery->getPrice($req_data);
-        } elseif ($req_data['delivery'] === 'ПЭК') {
-            $delivery = new PEKDelivery();
-            return $delivery->getPrice($req_data);
-        } elseif ($req_data['delivery'] === '5Post') {
-            $delivery = new FivePostDelivery();
-            return $delivery->getPrice($req_data);
-        }
     }
 
     public static function addAssets($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)

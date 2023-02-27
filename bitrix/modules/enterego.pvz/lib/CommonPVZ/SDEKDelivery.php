@@ -6,7 +6,7 @@ namespace CommonPVZ;
 class SDEKDelivery extends CommonPVZ
 {
     protected $delivery_name = 'SDEK';
-    private $token = '';
+    private string $token = '';
 
     protected function connect()
     {
@@ -23,8 +23,8 @@ class SDEKDelivery extends CommonPVZ
             $this->errors[] = "Ошибка, сервер CDEK вернул ответ не в JSON формате.";
             return false;
         }
-        if (isset($authRequest['access_token']) && (($authRequest['access_token'] . "") != "")) {
-            $this->token = $authRequest['access_token'];
+        if (isset($authRequest->access_token) && !empty($authRequest->access_token)) {
+            $this->token = $authRequest->access_token;
             return true;
         } else {
             $this->errors[] = "Ошибка, ответ сервера CDEK не содержит свойства access_token или этот параметр пустой.";
@@ -42,6 +42,9 @@ class SDEKDelivery extends CommonPVZ
             $header[] = "Content-Type: application/json; charset=utf-8";
         } else {
             $header[] = "Content-Type: application/x-www-form-urlencoded";
+        }
+        if ($method==='GET') {
+            $url .= "?$strReq";
         }
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -74,30 +77,28 @@ class SDEKDelivery extends CommonPVZ
         $sdek_city_code = $this->getSDEKCityCode($city_name);
 
         if ($this->token !== '' && $sdek_city_code) {
-            $requestObjectString = '{
-                "city_code":"' . $sdek_city_code . '"
-            }';
-
-            $sdek_result = $this->request('https://api.cdek.ru/v2/deliverypoints', $requestObjectString, 'GET');
+            $searchParams = ['city_code'=>$sdek_city_code];
+            $sdek_result = $this->request('https://api.cdek.ru/v2/deliverypoints',
+                http_build_query($searchParams), 'GET');
         }
 
-        foreach ($sdek_result as $key => $value) {
+        foreach ($sdek_result as $value) {
             $features_obj['type'] = 'Feature';
             $features_obj['id'] = $id_feature;
             $id_feature += 1;
             $features_obj['geometry'] = [
                 'type' => 'Point',
                 'coordinates' => [
-                    $value['location']['latitude'],
-                    $value['location']['longitude']
+                    $value->location->latitude,
+                    $value->location->longitude
                 ]
             ];
             $features_obj['properties'] = [
-                'code_pvz' => $value['code'],
-                'fullAddress' => $value['location']['address_full'],
+                'code_pvz' => $value->code,
+                'fullAddress' => $value->location->address_full,
                 'deliveryName' => 'СДЭК',
                 'iconCaption' => 'СДЭК',
-                'hintContent' => $value['location']['address']
+                'hintContent' => $value->location->address
             ];
             $features_obj['options'] = [
                 'preset' => 'islands#darkGreenIcon'
@@ -107,37 +108,48 @@ class SDEKDelivery extends CommonPVZ
         }
     }
 
-    public function getSDEKCityCode($cityName)
+    /** TODO find by name not unambiguous result
+     * @param $cityName
+     * @return false|string
+     */
+    private function getSDEKCityCode($cityName)
     {
         if ($this->token !== '') {
             $ar = ['country_codes' => 'RU', 'city' => $cityName];
             $resp = $this->request('https://api.cdek.ru/v2/location/cities', http_build_query($ar), 'GET');
-            if (isset($resp['code'])) {
-                return $resp['code'];
+            if (!empty($resp) && count($resp)>0 && isset($resp[0]->code)) {
+                return $resp[0]->code;
             }
         }
         return false;
     }
 
+    /** Return calculate price delivery
+     * @param $array
+     * @return float|int|bool - false if error calculate
+     */
     public function getPrice($array)
     {
         try {
             $sdek_city_code = $this->getSDEKCityCode($array['name_city']);
 
             if ($this->token !== '' && $sdek_city_code) {
+                $searchParams = [
+                    'tariff_code' => $this->configs['tariff'],
+                    'from_location' => ['code'=>$this->configs['from']],
+                    'to_location' => ['code'=>$sdek_city_code, 'address'=>$array['to']],
+                    'packages' => ['weight'=>$array['weight']],
+                ];
 
-                $requestObjectString = '{
-                    "tariff_code":"' . $this->configs['tariff_code'] . '",
-                    "from_location":{"code": "' . $this->configs['from_location'] . '"},
-                    "to_location":{"code":"' . $sdek_city_code . '", "address": "' . $array['to'] . '"},
-                    "packages":[{
-                    "weight":"' . $array['weight'] . '"
-                    }]
-                }';
+                $resp = $this->request('https://api.cdek.ru/v2/calculator/tariff',
+                    json_encode($searchParams), 'POST');
 
-                $resp = $this->request('https://api.cdek.ru/v2/calculator/tariff', $requestObjectString, 'POST');
-                if (isset($resp['total_sum'])) {
-                    return round($resp['total_sum']);
+                //todo errors calculation
+                if (isset($resp->errors)) {
+                    return false;
+                }
+                if (isset($resp->total_sum)) {
+                    return round($resp->total_sum);
                 }
             }
         } catch (\Exception $e) {

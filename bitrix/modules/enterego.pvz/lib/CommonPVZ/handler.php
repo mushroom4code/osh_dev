@@ -3,8 +3,10 @@
 namespace Sale\Handlers\Delivery;
 
 use Bitrix\Main\Data\Cache;
+use Bitrix\Main\Error;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale\Delivery\CalculationResult;
+use CommonPVZ\CommonPVZ;
 use CommonPVZ\DeliveryHelper;
 
 Loc::loadMessages(__FILE__);
@@ -55,7 +57,15 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
             if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
                 $price = $cache->getVars();
             } elseif ($cache->startDataCache()) {
-                $price = DeliveryHelper::getPrice($_POST['dataToHandler']);
+                $delivery = CommonPVZ::getInstanceObject($_POST['dataToHandler']['delivery']);
+                $price = $delivery->getPrice($_POST['dataToHandler']);
+                if ($price === false) {
+                    return $result->addError(
+                        new Error(
+                            Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
+                            'DELIVERY_CALCULATION'
+                        ));
+                }
                 if ($price !== false && is_numeric($price) && $price !== '0' && (int)$price > 0)
                     $cache->endDataCache($price);
                 else
