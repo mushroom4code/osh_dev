@@ -14,7 +14,7 @@ var countryRequesting = false;
         suggestTimeout: null,
         hideTimeout: null,
         options: {
-            default_prefix: '',
+            default_prefix: '7',
             prefix: '',
             preferCo: 'Российская Федерация'
         },
@@ -274,16 +274,21 @@ var countryRequesting = false;
             var new_box = sel.replace('+' + code, '');
             var flags = new_box.split('</span>');
             $(selector).html(flags[0] + '</span>');
-
-            this.container.find('input[data-input-type="phone"]').inputmask("+ " + code + " (999)-999-9999", {
+            let new_code = String(code).split('');
+            let str_code ='';
+            $.each(new_code,function(i,val){
+                str_code +='\\'+val;
+            });
+            this.container.find('input[data-input-type="phone"]').inputmask("+ " + str_code + " (***)-***-****", {
                 minLength: 10,
                 removeMaskOnSubmit: true,
                 clearMaskOnLostFocus: true,
                 clearMaskOnLostHover: true,
-                clearIncomplete: true
+                clearIncomplete: true,
             });
 
-            this.container.find('input[data-input-type="phone"]').attr('placeholder', '+ ' + code + ' (___)-___-____');
+            // this.container.find('input[data-input-type="phone"]').attr('placeholder', '+ ' + code + ' (___)-___-____');
+            this.container.find('input[data-input-type="phone"]').val();
             this.prefixField.val(code);
 
             return code;

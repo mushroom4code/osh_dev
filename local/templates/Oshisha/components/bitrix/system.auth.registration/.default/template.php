@@ -206,6 +206,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                            required
                                            minlength="10"
                                            data-input-type="phone"
+                                           autocomplete="Off"
                                            value=""
                                            placeholder="+_ (___)-___-____" inputmode="text"
                                            class="form-control input_lk bx-auth-input"/>
@@ -272,13 +273,15 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                 });
             </script>
             <script type="text/javascript">
-
-                $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (###)-###-####", {
+                // $.inputmask.definitions['9'] = '';
+                // $.inputmask.definitions['*'] = '[0-9]';
+                $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (***)-***-****", {
                     minLength: 10,
                     removeMaskOnSubmit: true,
                     clearMaskOnLostFocus: true,
                     clearMaskOnLostHover: true,
-                    clearIncomplete: true
+                    clearIncomplete: true,
+                    definitionSymbol: "*"
                 });
 
                 let date_now = new Date();

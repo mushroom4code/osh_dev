@@ -73,11 +73,22 @@ $arRequestParams = array(
     "USER_PERSONAL_BIRTHDAY",
     'recaptcha_token',
 );
+
 /*** ENTEREGO captcha 3*/
 $_REQUEST['USER_LOGIN'] = $_REQUEST['USER_EMAIL'];
+
 foreach ($arRequestParams as $param) {
+
     $arResult[$param] = $_REQUEST[$param] <> '' ? $_REQUEST[$param] : "";
     $arResult[$param] = htmlspecialcharsbx($arResult[$param]);
+    /*** ENTEREGO input mask phone */
+    if ($param === 'USER_PHONE_NUMBER') {
+        $arResult[$param] = "";
+        if (!empty($_REQUEST[$param]) && !empty($_REQUEST['__phone_prefix'])) {
+            $arResult[$param] = '+'.$_REQUEST['__phone_prefix'].$_REQUEST[$param];
+        }
+        $arResult[$param] = htmlspecialcharsbx($arResult[$param]);
+    }
 }
 
 $arResult["USER_EMAIL"] = htmlspecialcharsbx($_REQUEST["sf_EMAIL"] <> '' ? $_REQUEST["sf_EMAIL"] : $_REQUEST["USER_EMAIL"]);
