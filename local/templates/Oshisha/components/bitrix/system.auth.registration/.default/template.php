@@ -126,7 +126,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                    value="<?= $arResult["USER_EMAIL"] ?>"/>
                         </div>
                     <?php endif ?>
-                    <input type="hidden" name="USER_LOGIN" value="<?= rand(105,10000) ?>"/>
+                    <input type="hidden" name="USER_LOGIN" value="<?= rand(105, 10000) ?>"/>
 
                     <div class="form-group mb-1">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
@@ -201,12 +201,15 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                         <span class="starrequired color-redLight">* </span>
                                     <?php endif ?><?php echo GetMessage("main_register_phone_number") ?>
                                 </label>
-                                <input id="main-profile-phone" type="text" name="USER_PHONE_NUMBER"
-                                       required
-                                       minlength="10"
-                                       value=""
-                                       placeholder="+7 (___)-___-____" inputmode="text"
-                                       class="form-control input_lk bx-auth-input"/>
+                                <div class="code position-relative">
+                                    <input id="main-profile-phone" type="text" name="USER_PHONE_NUMBER"
+                                           required
+                                           minlength="10"
+                                           data-input-type="phone"
+                                           value=""
+                                           placeholder="+_ (___)-___-____" inputmode="text"
+                                           class="form-control input_lk bx-auth-input"/>
+                                </div>
                             </div>
                         <?php endif ?>
                     </div>
@@ -260,10 +263,18 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                     )
                 ); ?>
             </form>
+
+            <script>
+                $(function () {
+                    $('input[name="USER_PHONE_NUMBER"]').phonecode({
+                        preferCo: 'ru'
+                    });
+                });
+            </script>
             <script type="text/javascript">
-                $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (999)-999-9999", {
+
+                $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (###)-###-####", {
                     minLength: 10,
-                    casing: "lower",
                     removeMaskOnSubmit: true,
                     clearMaskOnLostFocus: true,
                     clearMaskOnLostHover: true,
@@ -278,8 +289,8 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                     dateFormat: 'dd/mm/yyyy',
                     maxDate: date_now,
                     autoClose: true,
-                    toggleSelected:false,
-                    placeholder:"dd/mm/yyyy"
+                    toggleSelected: false,
+                    placeholder: "dd/mm/yyyy"
                 });
 
                 $("input[name='USER_EMAIL']").inputmask("email", {
@@ -287,7 +298,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                     clearMaskOnLostFocus: true
                 });
 
-                $(".readonly").keydown(function(e){
+                $(".readonly").keydown(function (e) {
                     e.preventDefault();
                 });
 
