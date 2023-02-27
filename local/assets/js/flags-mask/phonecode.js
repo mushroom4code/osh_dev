@@ -5,7 +5,7 @@ var countryRequesting = false;
  * @email jakulov@gmail.com
  * @line jakuov.ru
  */
-(function($) {
+(function ($) {
     $.widget('custom.phonecode', {
         data: [],
         container: null,
@@ -18,7 +18,7 @@ var countryRequesting = false;
             prefix: '',
             preferCo: 'Российская Федерация'
         },
-        _create: function() {
+        _create: function () {
             this._loadData();
             this.element.wrap('<div class="country-phone d-flex flex-row">');
             var container = this.element.parent('.country-phone');
@@ -31,35 +31,33 @@ var countryRequesting = false;
 
             var prefixName = this.options.prefix ?
                 this.options.prefix : '__phone_prefix';
-            var hidden = $('<input type="hidden" name="'+ prefixName +'" value="'+ this.options.default_prefix +'">');
+            var hidden = $('<input type="hidden" name="' + prefixName + '" value="' + this.options.default_prefix + '">');
             $(hidden).appendTo(container);
 
             this.container = container;
             this.prefixField = hidden;
         },
 
-        _loadData : function() {
+        _loadData: function () {
             var self = this;
-            if(!countryCache && !countryRequesting) {
+            if (!countryCache && !countryRequesting) {
                 countryRequesting = $.getJSON('/local/assets/js/flags-mask/countries.json', {})
-                    .done(function(json) {
+                    .done(function (json) {
                         self.data = json;
                         countryCache = self.data;
                         self._initSelector();
                     })
-                    .fail(function(xhr, status, error) {
+                    .fail(function (xhr, status, error) {
                         //alert(status + ' ' + error);
                         self.data = countries;
                         countryCache = self.data;
                         self._initSelector();
                     });
-            }
-            else if(countryCache) {
+            } else if (countryCache) {
                 this.data = countryCache;
                 self._initSelector();
-            }
-            else if(countryRequesting) {
-                countryRequesting.done(function(json) {
+            } else if (countryRequesting) {
+                countryRequesting.done(function (json) {
                     self.data = json;
                     countryCache = self.data;
                     self._initSelector();
@@ -67,7 +65,7 @@ var countryRequesting = false;
             }
         },
 
-        _initSelector: function() {
+        _initSelector: function () {
             var options = this.container.find('.country-phone-options');
             /** Enterego search country */
             var option_list = this.container.find('.options-list');
@@ -82,19 +80,19 @@ var countryRequesting = false;
                 }
                 var input = this;
                 var ev = e;
-                self.suggestTimeout = window.setTimeout(function(){
+                self.suggestTimeout = window.setTimeout(function () {
                     var text = $(input).val().toLowerCase();
                     self.suggestCountry(text);
-                    if(ev.keyCode == 40) {
+                    if (ev.keyCode == 40) {
                         self._moveSuggestDown(options);
                     }
-                    if(ev.keyCode == 38) {
+                    if (ev.keyCode == 38) {
                         self._moveSuggestUp(options);
                     }
-                    if(ev.keyCode == 13) {
+                    if (ev.keyCode == 13) {
                         var hovered = $(options).find('.hovered:visible');
-                        if(hovered.length) {
-                            if(!$(hovered).hasClass('country-phone-search')) {
+                        if (hovered.length) {
+                            if (!$(hovered).hasClass('country-phone-search')) {
                                 self.setElementSelected(hovered);
                                 self._toggleSelector();
                             }
@@ -111,36 +109,37 @@ var countryRequesting = false;
                 }
             });
 
-            for(var i = 0; i < this.data.length; i++) {
-                if(i == 0) {
+            for (var i = 0; i < this.data.length; i++) {
+                if (i == 0) {
                     selected = this.data[i];
                 }
                 var country = this.data[i];
                 var prefCountry = country.co;
 
                 var option = $(`<div data-phone="${country.ph}" data-co="${prefCountry.toLowerCase()}" 
-                class="country-phone-option"> <span>+${country.ph}
-                ${country.ic}
-                </span>${country.na}
+                class="country-phone-option"> 
+                <span class="d-flex flex-row align-items-center justify-content-end">+${country.ph} 
+                    <div class="flag flag-${country.ph} ml-1"> ${country.ic}</div>
+                </span>
+                  ${country.na}
                 </div>`
                 );
                 $(option).appendTo(option_list);
-                if(this.options.preferCo && (this.options.preferCo != undefined)) {
-                    if(prefCountry == this.options.preferCo) {
+                if (this.options.preferCo && (this.options.preferCo != undefined)) {
+                    if (prefCountry == this.options.preferCo) {
                         selected = country;
                     }
-                }
-                else {
-                    if(country.ph == this.options.default_prefix) {
+                } else {
+                    if (country.ph == this.options.default_prefix) {
                         selected = country;
                     }
                 }
             }
-            if(selected) {
+            if (selected) {
                 this.container.find('.country-phone-selected')
-                    .html('<img src="/local/assets/images/blank.gif" class="flag flag-' + selected.co + '">');
+                    .html('<div class="flag flag-' + selected.co + '"> ' + selected.ic + '</div>');
             }
-            $(selector).bind('click', function(e){
+            $(selector).bind('click', function (e) {
                 self._toggleSelector();
             });
             $(option_list).find('.country-phone-option').bind('click', function () {
@@ -151,7 +150,7 @@ var countryRequesting = false;
                 if (self.hideTimeout) {
                     window.clearTimeout(self.hideTimeout);
                 }
-            }, function(){
+            }, function () {
                 var select = this;
                 self.hideTimeout = window.setTimeout(self._mouseOverHide, 1000, select, self);
                 self.hideTimeout = window.setTimeout(self._mouseOverHide, 1000, options, self);
@@ -160,61 +159,58 @@ var countryRequesting = false;
             this._initInput();
         },
 
-        _mouseOverHide: function(select, self) {
-            if(self.container) {
+        _mouseOverHide: function (select, self) {
+            if (self.container) {
                 var searchInput = self.container.find('.country-phone-search');
-                if(!$(searchInput).is(':focus')) {
+                if (!$(searchInput).is(':focus')) {
                     $(select).hide();
-                }
-                else {
+                } else {
                     self.hideTimeout = window.setTimeout(self._mouseOverHide, 1000, select, self);
                 }
             }
         },
 
-        _moveSuggestDown: function(options) {
+        _moveSuggestDown: function (options) {
             var select = null;
             var hovered = $(options).find('.hovered:visible');
-            if(hovered.length) {
+            if (hovered.length) {
                 var next = $(hovered).next(':visible');
-                if(next.length) {
+                if (next.length) {
                     select = next;
-                }
-                else {
+                } else {
                     next = $(hovered).nextUntil(':visible').last().next();
-                    if(next.length) {
+                    if (next.length) {
                         select = next;
                     }
                 }
             }
-            if(!select) {
+            if (!select) {
                 select = $(options).find('.country-phone-option:visible').first();
             }
-            if(select) {
+            if (select) {
                 $(options).find('.country-phone-option').add('.country-phone-search').removeClass('hovered');
                 $(select).addClass('hovered');
             }
         },
 
-        _moveSuggestUp: function(options) {
+        _moveSuggestUp: function (options) {
             var select = null;
             var hovered = $(options).find('.hovered:visible');
-            if(hovered.length) {
+            if (hovered.length) {
                 var next = $(hovered).prev(':visible');
-                if(next.length) {
+                if (next.length) {
                     select = next;
-                }
-                else {
+                } else {
                     next = $(hovered).prevUntil(':visible').last().prev();
-                    if(next.length) {
+                    if (next.length) {
                         select = next;
                     }
                 }
             }
-            if(!select) {
+            if (!select) {
                 select = $(options).find('.country-phone-option:visible').last();
             }
-            if(select) {
+            if (select) {
                 $(options).find('.country-phone-option').add('.country-phone-search').removeClass('hovered');
                 $(select).addClass('hovered');
             }
@@ -228,29 +224,27 @@ var countryRequesting = false;
             $(options).find('.country-phone-option').each(function () {
                 if (text !== '') {
                     var match = $(this).text().toLowerCase();
-                    if(match.indexOf(text) >= 0) {
+                    if (match.indexOf(text) >= 0) {
                         $(this).show();
-                        if(checkCode && checkCode != undefined) {
+                        if (checkCode && checkCode != undefined) {
                             var code = $(this).data('phone');
                             var selCode = self.prefixField.val();
-                            if(selCode == code) {
+                            if (selCode == code) {
                                 self.setElementSelected(this);
                             }
                         }
-                    }
-                    else {
-                        if(!checkCode) {
+                    } else {
+                        if (!checkCode) {
                             $(this).hide();
                         }
                     }
-                }
-                else {
+                } else {
                     $(this).show();
                 }
             });
         },
 
-        _toggleSelector: function(){
+        _toggleSelector: function () {
             var options = this.container.find('.country-phone-options');
             var opt_list = this.container.find('.options-list');
             if ($(options).is(':visible')) {
@@ -259,8 +253,7 @@ var countryRequesting = false;
                 $(options).find('.country-phone-search').val('').blur();
                 this.element.focus();
                 this.suggestCountry('');
-            }
-            else {
+            } else {
                 $(options).show('fast');
                 $(opt_list).show('fast');
                 window.setTimeout(function () {
@@ -270,7 +263,7 @@ var countryRequesting = false;
             }
         },
 
-        setElementSelected: function(el) {
+        setElementSelected: function (el) {
             var selector = this.container.find('.country-phone-selected');
             var code = $(el).data('phone');
             var sel = $(el).html();
@@ -296,19 +289,19 @@ var countryRequesting = false;
             return code;
         },
 
-        _initInput: function() {
+        _initInput: function () {
             var self = this;
-            this.element.bind('keyup', function(){
+            this.element.bind('keyup', function () {
                 var text = $(this).val();
-                if(text.length > 1 && text[0] == '+') {
+                if (text.length > 1 && text[0] == '+') {
                     var code = text.substring(1);
-                    if(self.searchTimeout) {
+                    if (self.searchTimeout) {
                         window.clearTimeout(self.searchTimeout);
                     }
                     var input = this;
-                    window.setTimeout(function(){
+                    window.setTimeout(function () {
                         var found = self.searchCountryCode(code);
-                        if(found) {
+                        if (found) {
                             text = $(input).val();
                             text = text.replace('+' + found, '');
                             $(input).val(text);
@@ -320,22 +313,21 @@ var countryRequesting = false;
             this.initInputVal();
         },
 
-        initInputVal: function() {
+        initInputVal: function () {
             var text = this.element.val();
             var self = this;
-            if(text.length > 1 && text[0] == '+') {
-                for(var i = 6; i >= 1; i--) {
+            if (text.length > 1 && text[0] == '+') {
+                for (var i = 6; i >= 1; i--) {
                     var code = text.substring(1, i);
                     var found = self.searchCountryCode(code);
-                    if(found) {
+                    if (found) {
                         text = this.element.val();
                         text = text.replace('+' + found, '');
                         this.element.val(text);
                         break;
                     }
                 }
-            }
-            else if(text.length == 1 && text[0] == '+') {
+            } else if (text.length == 1 && text[0] == '+') {
                 this.element.val('');
             }
         },
@@ -346,8 +338,8 @@ var countryRequesting = false;
             var self = this;
             var found = false;
             var foundItems = [];
-            $(options).find('.country-phone-option').each(function(){
-                if(search == $(this).data('phone')) {
+            $(options).find('.country-phone-option').each(function () {
+                if (search == $(this).data('phone')) {
                     foundItems.push({
                         co: $(this).data('co'),
                         el: this
@@ -355,23 +347,21 @@ var countryRequesting = false;
                 }
             });
 
-            if(foundItems.length == 1) {
+            if (foundItems.length == 1) {
                 found = self.setElementSelected(foundItems[0].el);
-            }
-            else if(foundItems.length > 1) {
-                for(var i = 0; i < foundItems.length; i++) {
-                    if(self.options.preferCo) {
-                        if(self.options.preferCo == foundItems[i].co) {
+            } else if (foundItems.length > 1) {
+                for (var i = 0; i < foundItems.length; i++) {
+                    if (self.options.preferCo) {
+                        if (self.options.preferCo == foundItems[i].co) {
                             found = self.setElementSelected(foundItems[i].el);
                             break;
                         }
-                    }
-                    else {
+                    } else {
                         found = self.setElementSelected(foundItems[i].el);
                         break;
                     }
                 }
-                if(!found) {
+                if (!found) {
                     found = self.setElementSelected(foundItems[0].el);
                 }
             }
