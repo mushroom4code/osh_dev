@@ -76,8 +76,9 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                                            data-input-type="phone"
                                            placeholder="+_ (___)-___-____"
                                            inputmode="text"
-                                           value=""
-                                           class="form-control profile custom_style_auth" id="<?= $mainID . "phone" ?>"
+                                           value="<?= $arParams['USER_PHONE'] ?? '' ?>"
+                                           class="form-control profile input_lk auth-phone-profile"
+                                           id="<?= $mainID . "phone" ?>"
                                            autocomplete="off"/>
                                 </div>
                             </div>
@@ -259,8 +260,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                                     <div class="code position-relative">
                                         <input type="text" name="PHONE" placeholder="+_ (___)-___-____" inputmode="text"
                                                data-input-type="phone"
-                                               value=""
-                                               class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
+                                               value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
+                                               class="form-control custom_style_auth auth-phone" id="<?= $mainID . "phone" ?>"
                                                autocomplete="off"/>
                                     </div>
                                 </div>
@@ -402,12 +403,17 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
 <?endif;?>
 
 <script>
-    $(function () {
-        $('input[name="PHONE"]').phonecode({
-            preferCo: 'ru'
-        });
+
+    $('input.auth-phone').phonecode({
+        preferCo: 'ru'
     });
-    $('input[name="PHONE"]').inputmask("+7 (999)-999-9999", {
+
+    $('input.auth-phone-profile').phonecode({
+        phone_val :$('input.auth-phone-profile').val(),
+    });
+
+
+    $('input.auth-phone').inputmask("+7 (999)-999-9999", {
         minLength: 10,
         removeMaskOnSubmit: true,
         clearMaskOnLostFocus: true,
@@ -415,6 +421,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
         clearIncomplete: true,
         definitionSymbol: "*"
     });
+
+
     BX.message(<?= json_encode(array(
         'SMS_AUTH_TIME_LEFT' => GetMessage('SMS_AUTH_TIME_LEFT'),
         'SMS_AUTH_TIME_EXPIRED' => GetMessage('SMS_AUTH_TIME_OUT'),

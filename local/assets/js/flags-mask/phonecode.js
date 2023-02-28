@@ -14,9 +14,10 @@ var countryRequesting = false;
         suggestTimeout: null,
         hideTimeout: null,
         options: {
-            default_prefix: '7',
+            default_prefix: '',
+            phone_val : '',
             prefix: '',
-            preferCo: 'Российская Федерация'
+            preferCo: ''
         },
         _create: function () {
             this._loadData();
@@ -33,7 +34,6 @@ var countryRequesting = false;
                 this.options.prefix : '__phone_prefix';
             var hidden = $('<input type="hidden" name="' + prefixName + '" value="' + this.options.default_prefix + '">');
             $(hidden).appendTo(container);
-
             this.container = container;
             this.prefixField = hidden;
         },
@@ -67,6 +67,9 @@ var countryRequesting = false;
 
         _initSelector: function () {
             var options = this.container.find('.country-phone-options');
+            /** Enterego * Выставление страны по номеру тел */
+            var bool_init_mask = false;
+            var val_country_code = '', code_input = '';
             /** Enterego search country */
             var option_list = this.container.find('.options-list');
             /** Enterego search country */
@@ -116,6 +119,14 @@ var countryRequesting = false;
                 var country = this.data[i];
                 var prefCountry = country.co;
 
+                /** Enterego * Выставление страны по номеру тел */
+                if(this.options.phone_val !== '' &&  this.options.phone_val.search(country.ph) === 1){
+                    bool_init_mask = country.mask;
+                    val_country_code = prefCountry.toLowerCase();
+                    code_input = country.ph;
+                    selected = country;
+                }
+
                 var option = $(`<div data-phone="${country.ph}" data-mask="${country.mask}" data-co="${prefCountry.toLowerCase()}" 
                 class="country-phone-option"> 
                 <span class="d-flex flex-row align-items-center justify-content-end">+${country.ph} 
@@ -130,7 +141,8 @@ var countryRequesting = false;
                         selected = country;
                     }
                 } else {
-                    if (country.ph == this.options.default_prefix) {
+                    /** Enterego * Выставление страны по номеру тел */
+                    if (bool_init_mask !== false) {
                         selected = country;
                     }
                 }
@@ -157,6 +169,26 @@ var countryRequesting = false;
             });
 
             this._initInput();
+            /** Enterego * Выставление страны по номеру тел */
+            if (bool_init_mask !== false && val_country_code !== '') {
+                var new_str = this.options.phone_val.replace('+' + code_input, '');
+                var new_code = String(code_input).split('');
+                var str_code = '';
+                $.each(new_code, function (i, val) {
+                    str_code += '\\' + val;
+                });
+                this.container.find('input[data-input-type="phone"]').val(new_str);
+                this.container.find('input[data-input-type="phone"]').inputmask("+ " + str_code + ' ' + bool_init_mask, {
+                    minLength: 10,
+                    removeMaskOnSubmit: true,
+                    clearMaskOnLostFocus: true,
+                    clearMaskOnLostHover: true,
+                    clearIncomplete: true,
+                });
+
+                this.options.preferCo = val_country_code;
+                this.container.find('input[name="__phone_prefix"]').val(code_input);
+            }
         },
 
         _mouseOverHide: function (select, self) {

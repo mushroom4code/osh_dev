@@ -23,7 +23,7 @@
 .country-phone-option {
     cursor: pointer;
     background: white;
-    padding: 5px 10px;
+    padding: 5px;
     font-size: 13px;
     display: flex;
     justify-content: space-between;
@@ -42,6 +42,10 @@
 
 .flag-list {
     font-size: 20px;
+}
+
+.ctweb-smsauth-menu-step .country-phone-selected {
+    right: 33px;
 }
 
 .country-phone-selected {
