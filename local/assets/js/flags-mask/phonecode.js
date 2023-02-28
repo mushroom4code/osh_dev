@@ -66,7 +66,6 @@ var countryRequesting = false;
         },
 
         _initSelector: function () {
-            console.log(this.container);
             var options = this.container.find('.country-phone-options');
             /** Enterego * Выставление страны по номеру тел */
             var bool_init_mask = false;
@@ -126,6 +125,7 @@ var countryRequesting = false;
                     val_country_code = prefCountry.toLowerCase();
                     code_input = country.ph;
                     selected = country;
+                    this.options.preferCo = val_country_code;
                 }
 
                 var option = $(`<div data-phone="${country.ph}" data-mask="${country.mask}" data-co="${prefCountry.toLowerCase()}" 
