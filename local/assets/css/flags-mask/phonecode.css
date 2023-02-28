@@ -44,15 +44,19 @@
     font-size: 20px;
 }
 
-.ctweb-smsauth-menu-step .country-phone-selected {
+.col-md-12 .country-phone-selected {
     right: 33px;
+}
+
+.form-group .country-phone-selected {
+    right: 16px;
 }
 
 .country-phone-selected {
     position: absolute;
-    top: 6px;
+    top: 5px;
     cursor: pointer;
-    right: 16px;
+    right: 9px;
 }
 
 .country-phone-option span {

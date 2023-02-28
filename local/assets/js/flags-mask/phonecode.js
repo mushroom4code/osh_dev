@@ -66,6 +66,7 @@ var countryRequesting = false;
         },
 
         _initSelector: function () {
+            console.log(this.container);
             var options = this.container.find('.country-phone-options');
             /** Enterego * Выставление страны по номеру тел */
             var bool_init_mask = false;

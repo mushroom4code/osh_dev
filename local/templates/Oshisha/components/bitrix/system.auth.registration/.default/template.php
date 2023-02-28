@@ -264,15 +264,11 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                     )
                 ); ?>
             </form>
-
-            <script>
-                $(function () {
-                    $('input[name="USER_PHONE_NUMBER"]').phonecode({
-                        preferCo: 'ru'
-                    });
-                });
-            </script>
             <script type="text/javascript">
+                $('input[name="USER_PHONE_NUMBER"]').phonecode({
+                    preferCo: 'ru',
+                    default_prefix: '7'
+                });
                 $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (***)-***-****", {
                     minLength: 10,
                     removeMaskOnSubmit: true,
