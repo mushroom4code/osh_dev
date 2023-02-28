@@ -71,9 +71,12 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                                 <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                        for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                 <span id="flag"></span>
-                                <div class="col-sm-12 col-md-12">
-                                    <input class="form-control input_lk profile" type="text" name="PHONE" placeholder="+7 (___)-___-____"
-                                           value="<?= $arParams['USER_PHONE'] ?? '' ?>"
+                                <div class="col-sm-12 col-md-12 code position-relative">
+                                    <input type="text" name="PHONE"
+                                           data-input-type="phone"
+                                           placeholder="+_ (___)-___-____"
+                                           inputmode="text"
+                                           value=""
                                            class="form-control profile custom_style_auth" id="<?= $mainID . "phone" ?>"
                                            autocomplete="off"/>
                                 </div>
@@ -253,10 +256,13 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                                     <label class="ctweb-label"
                                            for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                     <span id="flag"></span>
-                                    <input type="text" name="PHONE" placeholder="+7 ___ ___ __ __"
-                                           value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
-                                           class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
-                                           autocomplete="off"/>
+                                    <div class="code position-relative">
+                                        <input type="text" name="PHONE" placeholder="+_ (___)-___-____" inputmode="text"
+                                               data-input-type="phone"
+                                               value=""
+                                               class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
+                                               autocomplete="off"/>
+                                    </div>
                                 </div>
                                 <div class="checkbox d-none">
                                     <label>
@@ -396,6 +402,19 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
 <?endif;?>
 
 <script>
+    $(function () {
+        $('input[name="PHONE"]').phonecode({
+            preferCo: 'ru'
+        });
+    });
+    $('input[name="PHONE"]').inputmask("+7 (999)-999-9999", {
+        minLength: 10,
+        removeMaskOnSubmit: true,
+        clearMaskOnLostFocus: true,
+        clearMaskOnLostHover: true,
+        clearIncomplete: true,
+        definitionSymbol: "*"
+    });
     BX.message(<?= json_encode(array(
         'SMS_AUTH_TIME_LEFT' => GetMessage('SMS_AUTH_TIME_LEFT'),
         'SMS_AUTH_TIME_EXPIRED' => GetMessage('SMS_AUTH_TIME_OUT'),

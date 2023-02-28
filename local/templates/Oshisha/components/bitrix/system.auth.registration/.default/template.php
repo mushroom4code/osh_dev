@@ -273,8 +273,6 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                 });
             </script>
             <script type="text/javascript">
-                // $.inputmask.definitions['9'] = '';
-                // $.inputmask.definitions['*'] = '[0-9]';
                 $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (***)-***-****", {
                     minLength: 10,
                     removeMaskOnSubmit: true,

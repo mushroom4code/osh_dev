@@ -274,12 +274,15 @@ var countryRequesting = false;
             var new_box = sel.replace('+' + code, '');
             var flags = new_box.split('</span>');
             $(selector).html(flags[0] + '</span>');
-            let new_code = String(code).split('');
-            let str_code ='';
+
+            var new_code = String(code).split('');
+            var str_code ='';
+
             $.each(new_code,function(i,val){
                 str_code +='\\'+val;
             });
-            this.container.find('input[data-input-type="phone"]').inputmask("+ " + str_code + " (***)-***-****", {
+
+            this.container.find('input[data-input-type="phone"]').inputmask("+ " + str_code + " (999)-999-9999", {
                 minLength: 10,
                 removeMaskOnSubmit: true,
                 clearMaskOnLostFocus: true,
@@ -287,10 +290,7 @@ var countryRequesting = false;
                 clearIncomplete: true,
             });
 
-            // this.container.find('input[data-input-type="phone"]').attr('placeholder', '+ ' + code + ' (___)-___-____');
-            this.container.find('input[data-input-type="phone"]').val();
             this.prefixField.val(code);
-
             return code;
         },
 

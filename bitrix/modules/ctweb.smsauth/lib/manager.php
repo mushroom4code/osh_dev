@@ -188,13 +188,13 @@ class Manager
      * @param string $phone
      * @return string
      */
-    public function NormalizePhone($phone)
+    public function NormalizePhone($phone,$codePhone='')
     {
         $digits =  str_split(preg_replace("/[^\d]/", "", (string) $phone));
         if (count($digits) === 11 && $digits[0] == '8')
             $digits[0] = '7';
-        elseif (count($digits) === 10)
-            array_unshift($digits, '7');
+        elseif (count($digits) === 10 && !empty($codePhone))
+            array_unshift($digits, $codePhone);
 
         $result = '+' . join('',$digits);
 
