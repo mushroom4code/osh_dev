@@ -51,7 +51,8 @@ class Manager
         $this->step = $_SESSION[self::class][self::SESSION_FIELD_STEP] ?? '1';
     }
 
-    public function addError($error){
+    public function addError($error)
+    {
         $this->errors[] = $error;
     }
 
@@ -188,16 +189,15 @@ class Manager
      * @param string $phone
      * @return string
      */
-    public function NormalizePhone($phone,$codePhone='')
+    public function NormalizePhone($phone, $codePhone = '')
     {
-        $digits =  str_split(preg_replace("/[^\d]/", "", (string) $phone));
-        if (count($digits) === 11 && $digits[0] == '8')
-            $digits[0] = '7';
-        elseif (count($digits) === 10 && !empty($codePhone))
+        $digits = str_split(preg_replace("/[^\d]/", "", (string)$phone));
+
+        if (!empty($codePhone) && !strripos($phone, '+' . $codePhone)) {
             array_unshift($digits, $codePhone);
+        }
 
-        $result = '+' . join('',$digits);
-
+        $result = '+' . join('', $digits);
         $event = new Event(Module::MODULE_ID, "OnNormalizePhone", array($phone, &$result));
         $event->send();
 
@@ -405,7 +405,7 @@ class Manager
             $arFields[$phoneField] = $this->NormalizePhone($phone);
 
             //duplicate registration phone to personal phone (for lk and orders)
-            $arFields["PERSONAL_PHONE"] = $arFields[$phoneField] ;
+            $arFields["PERSONAL_PHONE"] = $arFields[$phoneField];
             if (!trim($arFields['EMAIL'])) {
                 switch ($this->options['NEW_EMAIL_AS']) {
                     case "PHONE":
@@ -442,7 +442,7 @@ class Manager
                 $arFields['GROUP_ID'] = $groups;
             }
 
-            $arFields['ACTIVE']='Y';
+            $arFields['ACTIVE'] = 'Y';
             $user = new CUser;
             if ($user_id = $user->Add($arFields)) {
                 $USER->Authorize($user_id);
@@ -457,12 +457,13 @@ class Manager
                 $this->errors[] = $user->LAST_ERROR;
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }
 
-    public function ChangePhoneByCode($code, $phone) {
+    public function ChangePhoneByCode($code, $phone)
+    {
         global $USER;
 
         if ($this->getState() === self::STATE_AUTH) {
@@ -475,7 +476,7 @@ class Manager
             $arFields[$phoneField] = $this->NormalizePhone($phone);
 
             //duplicate registration phone to personal phone (for lk and orders)
-            $arFields["PERSONAL_PHONE"] = $arFields[$phoneField] ;
+            $arFields["PERSONAL_PHONE"] = $arFields[$phoneField];
 
             $user = new CUser;
             if ($user->Update($USER->getContext()->getUserId(), $arFields)) {
@@ -486,7 +487,7 @@ class Manager
                 $this->errors[] = $user->LAST_ERROR;
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }

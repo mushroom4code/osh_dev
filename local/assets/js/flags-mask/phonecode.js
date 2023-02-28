@@ -116,7 +116,7 @@ var countryRequesting = false;
                 var country = this.data[i];
                 var prefCountry = country.co;
 
-                var option = $(`<div data-phone="${country.ph}" data-co="${prefCountry.toLowerCase()}" 
+                var option = $(`<div data-phone="${country.ph}" data-mask="${country.mask}" data-co="${prefCountry.toLowerCase()}" 
                 class="country-phone-option"> 
                 <span class="d-flex flex-row align-items-center justify-content-end">+${country.ph} 
                     <div class="flag flag-${country.ph} ml-1"> ${country.ic}</div>
@@ -266,6 +266,7 @@ var countryRequesting = false;
         setElementSelected: function (el) {
             var selector = this.container.find('.country-phone-selected');
             var code = $(el).data('phone');
+            var mask = $(el).data('mask');
             var sel = $(el).html();
             /**
              * Enterego
@@ -282,7 +283,7 @@ var countryRequesting = false;
                 str_code +='\\'+val;
             });
 
-            this.container.find('input[data-input-type="phone"]').inputmask("+ " + str_code + " (999)-999-9999", {
+            this.container.find('input[data-input-type="phone"]').inputmask("+ " + str_code + ' ' + mask, {
                 minLength: 10,
                 removeMaskOnSubmit: true,
                 clearMaskOnLostFocus: true,
