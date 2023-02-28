@@ -201,7 +201,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                         <span class="starrequired color-redLight">* </span>
                                     <?php endif ?><?php echo GetMessage("main_register_phone_number") ?>
                                 </label>
-                                <div class="code position-relative">
+                                <div class="code position-relative register">
                                     <input id="main-profile-phone" type="text" name="USER_PHONE_NUMBER"
                                            required
                                            minlength="10"

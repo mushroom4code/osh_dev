@@ -44,17 +44,27 @@
     font-size: 20px;
 }
 
-.col-md-12 .country-phone-selected {
+.form-group .col-md-12 .country-phone-selected {
     right: 33px;
 }
 
 .form-group .country-phone-selected {
+    right: 10px;
+}
+
+.register .country-phone-selected{
     right: 16px;
+    top: 9px;
+}
+
+.size-wh-22 {
+    width: 22px;
+    height: 22px;
 }
 
 .country-phone-selected {
     position: absolute;
-    top: 5px;
+    top: 7px;
     cursor: pointer;
     right: 9px;
 }
@@ -74,10 +84,6 @@
 .country-phone-options, .country-phone-searched {
     width: 298px;
     margin: 30px 0 0 -5px;
-}
-
-.flag {
-    font-size: 20px;
 }
 
 .country-phone-search-label {

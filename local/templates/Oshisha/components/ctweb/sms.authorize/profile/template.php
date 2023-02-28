@@ -405,7 +405,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
 <script>
 
     $('input.auth-phone').phonecode({
-        preferCo: 'ru'
+        preferCo: 'ru',
+        default_prefix: '7'
     });
 
     $('input.auth-phone-profile').phonecode({

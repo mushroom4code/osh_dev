@@ -27,7 +27,7 @@ var countryRequesting = false;
                 '<div class="country-phone-selected"></div>' +
                 '<div class="country-phone-options">' +
                 '<input type="text" class="country-phone-search input-search-in-box form-control input_lk bx-auth-input" ' +
-                'placeholder="Введите страну" value=""><div class="options-list mt-2 p-2"></div></div></div>');
+                'placeholder="Введите страну" value=""><div class="options-list mt-2"></div></div></div>');
             $(selector).prependTo(container);
 
             var prefixName = this.options.prefix ?
