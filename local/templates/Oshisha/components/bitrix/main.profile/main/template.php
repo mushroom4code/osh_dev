@@ -102,7 +102,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         <div class="col-sm-12 col-md-12">
                             <input class="form-control input_lk" type="email" name="EMAIL" maxlength="50"
                                    id="main-profile-email" value="<?= $arResult["arUser"]["EMAIL"] ?>"
-                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
                                    oninvalid="setCustomValidity('Неверный формат почты. Почта должна иметь вид *@*.*')"/>
                         </div>
                     </div>
