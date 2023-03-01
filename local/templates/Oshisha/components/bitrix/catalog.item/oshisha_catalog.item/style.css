@@ -1061,13 +1061,17 @@ input::-webkit-inner-spin-button {
     top: 48%;
 }
 
-.slick-list, .slick-track, .slick-slide, .slick-slide div {
-    height: 100%;
+div.slick-track {
+    height: 25.6rem;
 }
 
-.slick-slide div {
-    align-items: center;
-    display: flex;
+.slick-slide {
+    margin-right: 10px;
+    margin-left: 10px
+}
+
+.slick-slide > div {
+    height: 100%;
 }
 
 .slick-images-box .product-item-detail-slider-left {
@@ -1224,8 +1228,8 @@ input::-webkit-inner-spin-button {
         width: auto;
     }
 
-    .slick-images-box, .slick-list, .slick-track, .slick-slide, .slick-slide div, .box-with-image-one {
-        min-height: inherit;
+    .by-card .slick-slide .product-item-container > .bx_catalog_item > .bx_catalog_item_container {
+        margin: 0 !important;
     }
 
     .slick-images-box .carousel_elem_custom {

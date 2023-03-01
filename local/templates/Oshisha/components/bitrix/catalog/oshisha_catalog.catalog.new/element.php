@@ -277,7 +277,7 @@ $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDE
                             <div data-entity="header" data-showed="false" style="display: none; opacity: 0;">
                                 <h4 class="mb-lg-5 mb-md-5 mb-3 font-19"><b>С этим товаром покупают</b></h4>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12 by-card">
                                 <?php $APPLICATION->IncludeComponent(
                                     "bitrix:catalog.top",
                                     "oshisha_catalog.top_new",

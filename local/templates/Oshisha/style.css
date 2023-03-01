@@ -251,9 +251,6 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
 }
 
-.slick-slide .info-prices-box-hover > div {
-    top: 14%
-}
 .prices-block {
     width: max-content;
     background-color: #F0F0F0;
@@ -3056,7 +3053,7 @@ label.radio_input {
         width: auto;
     }
 
-    .bx-touch .product-item {
+    :not(.slick-slide) .bx-touch .product-item {
         padding: 12px;
         margin: 6px;
     }
@@ -3426,7 +3423,7 @@ b.decoration-color-red {
 
     .bx_catalog_tile_home_type_2 .bx_catalog_item .bx_catalog_item_container {
         width: auto;
-        height: 325px;
+        /*height: 325px;*/
         min-height: 295px;
     }
 

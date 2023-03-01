@@ -223,7 +223,6 @@ $(document).ready(function () {
         }
         if (screenWidth <= 746) {
             count = 2;
-            variableWidth = true;
         }
         $('.bx_catalog_tile_section').slick({
             slidesToShow: count,

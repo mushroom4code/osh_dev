@@ -182,7 +182,7 @@ $resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('MainPageActual', $actu
     </script>
 
     <div class="h1">Распродажа</div>
-    <div>
+    <div class="by-card">
         <?php
         $GLOBALS['FILTER_SALE'] = array(
             'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
