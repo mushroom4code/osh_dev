@@ -114,7 +114,7 @@ if ($show_price) {
         'USE_DISCOUNT' => $useDiscount['VALUE'],
         'ACTUAL_BASKET' => $priceBasket,
         'PRICE' => $price['PRICE_DATA'],
-        'SALE_PRICE' => round($price['SALE_PRICE']['PRICE']) . ' руб.',
+        'SALE_PRICE' => round($price['SALE_PRICE']['PRICE']),
         'POPUP_PROPS' => $prop_see_in_window ?? 0,
         'NAME' => $productTitle,
         'LIKE' => [
@@ -134,69 +134,113 @@ if ($show_price) {
 <div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
-    <div class="bx_catalog_item_container product-item position-relative
-    <?php if (count($taste['VALUE']) > 0): ?>is-taste<?php endif; ?>">
+    <div class="bx_catalog_item_container product-item position-relative <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
         <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
             <span class="taste new-product" data-background="#F55F5C">NEW</span>
         <?php }
+
         if ($hitProduct['VALUE'] === 'Да') { ?>
             <span class="taste new-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
         <?php }
-        if (count($taste['VALUE']) > 0) { ?>
-            <?php
-            $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
-            $togglerState = 'hide';
-            $listClass = '';
 
+        $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
+        $togglerState = 'd-none';
+        $listClass = '';
+
+        if (count($taste['VALUE']) > 0) {
             if (count($taste['VALUE']) > 2) {
                 $showToggler = true;
+            } elseif (count($taste['VALUE']) > 1) {
+                // поместятся на одной строке 2 вкуса или нет
+                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18;
             }
-            elseif (count($taste['VALUE']) > 1) {
-                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18; // поместятся на одной строке 2 вкуса или нет
-            }
-            $togglerState = $showToggler ? ' many-tastes' : 'hide many-tastes';
-            $listClass = $showToggler ? 'js__tastes-list' : '';
-            ?>
+            $togglerState = $showToggler ? ' many-tastes' : ' d-none many-tastes';
+            $listClass = $showToggler ? ' js__tastes-list' : '';
+        } ?>
+
+        <div class="item-product-info">
             <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
                 <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
+
                     <?php foreach ($taste['VALUE'] as $key => $name) {
                         foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                             if ($key === $keys) {
                                 $color = explode('#', $value);
                                 $tasteSize = 'taste-small';
 
-                                if (4 < mb_strlen($name) && mb_strlen($name) <=  8) {
+                                if (4 < mb_strlen($name) && mb_strlen($name) <= 8) {
                                     $tasteSize = 'taste-normal';
                                 } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
                                     $tasteSize = 'taste-long';
-                                } elseif (mb_strlen($name)  > 13 ) {
+                                } elseif (mb_strlen($name) > 13) {
                                     $tasteSize = 'taste-xxl';
                                 }
                                 ?>
-                                <span class="taste <?= $tasteSize ?>" data-background="<?='#' . $color[1] ?>" id="<?= $color[0] ?>"><?= $name ?> </span>
+                                <span class="taste <?= $tasteSize ?>" data-background="<?= '#' . $color[1] ?>"
+                                      id="<?= $color[0] ?>"><?= $name ?> </span>
                             <?php }
                         }
                     } ?>
+
                 </div>
                 <div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
             </div>
             <div class="bx_catalog_item_overlay"></div>
-        <?php } ?>
-        <div class="image_cart position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
-            <a class=" <?= $styleForTaste ?>"
-               href="<?= $item['DETAIL_PAGE_URL']; ?>">
-                <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
-                    <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $productTitle ?>"/>
-                <?php } else { ?>
-                    <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
-                <?php } ?>
-            </a>
-            <i class="open-fast-window" data-item-id="<?= $item['ID'] ?>"></i>
-        </div>
 
-        <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
-            <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
+            <div class="image_cart position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
+                <a class=" <?= $styleForTaste ?>"
+                   href="<?= $item['DETAIL_PAGE_URL']; ?>">
+                    <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
+                        <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $productTitle ?>"/>
+                    <?php } else { ?>
+                        <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
+                    <?php } ?>
+                </a>
+                <i class="open-fast-window" data-item-id="<?= $item['ID'] ?>"></i>
+            </div>
+
+            <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
+                <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
+                    <div class="box_with_titles">
+                        <?php
+                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                            'templates',
+                            [
+                                'ID_PROD' => $item['ID_PROD'],
+                                'F_USER_ID' => $item['F_USER_ID'],
+                                'LOOK_LIKE' => false,
+                                'LOOK_FAVORITE' => true,
+                                'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                'COUNT_FAV' => $item['COUNT_FAV'],
+                                'COUNT_LIKES' => $item['COUNT_LIKES'],
+                            ],
+                            $component,
+                            [
+                                'HIDE_ICONS' => 'Y'
+                            ]
+                        );
+                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                            'templates',
+                            array(
+                                'ID_PROD' => $item['ID_PROD'],
+                                'F_USER_ID' => $item['F_USER_ID'],
+                                'LOOK_LIKE' => true,
+                                'LOOK_FAVORITE' => false,
+                                'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                'COUNT_FAV' => $item['COUNT_FAV'],
+                                'COUNT_LIKES' => $item['COUNT_LIKES'],
+                            ),
+                            $component,
+                            array('HIDE_ICONS' => 'Y'),
+                        );
+                        ?>
+                    </div>
+                </div>
+            <?php } else { ?>
                 <div class="box_with_titles">
+                    <div class="not_product">
+                        Товара нет в наличии
+                    </div>
                     <?php
                     $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                         'templates',
@@ -216,7 +260,7 @@ if ($show_price) {
                     $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                         'templates',
                         array(
-                            'ID_PROD' => $item['ID_PROD'],
+                            'ID' => $item['ID_PROD'],
                             'F_USER_ID' => $item['F_USER_ID'],
                             'LOOK_LIKE' => true,
                             'LOOK_FAVORITE' => false,
@@ -225,303 +269,266 @@ if ($show_price) {
                             'COUNT_LIKES' => $item['COUNT_LIKES'],
                         ),
                         $component,
-                        array('HIDE_ICONS' => 'Y'),
-                    );
-                    ?>
+                        array('HIDE_ICONS' => 'Y')
+                    ); ?>
                 </div>
-            </div>
-        <?php } else { ?>
-            <div class="box_with_titles">
-                <div class="not_product">
-                    Товара нет в наличии
-                </div>
-                <?php
-                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                    'templates',
-                    array(
-                        'ID_PROD' => $item['ID_PROD'],
-                        'F_USER_ID' => $item['F_USER_ID'],
-                        'LOOK_LIKE' => false,
-                        'LOOK_FAVORITE' => true,
-                        'COUNT_LIKE' => $item['COUNT_LIKE'],
-                        'COUNT_FAV' => $item['COUNT_FAV'],
-                        'COUNT_LIKES' => $item['COUNT_LIKES'],
-                    )
-                    ,
-                    $component,
-                    array('HIDE_ICONS' => 'Y')
-                );
-                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                    'templates',
-                    array(
-                        'ID' => $item['ID_PROD'],
-                        'F_USER_ID' => $item['F_USER_ID'],
-                        'LOOK_LIKE' => true,
-                        'LOOK_FAVORITE' => false,
-                        'COUNT_LIKE' => $item['COUNT_LIKE'],
-                        'COUNT_FAV' => $item['COUNT_FAV'],
-                        'COUNT_LIKES' => $item['COUNT_LIKES'],
-                    ),
-                    $component,
-                    array('HIDE_ICONS' => 'Y')
-                ); ?>
-            </div>
-        <?php } ?>
-        <div class="box_with_title_like d-flex align-items-center">
-            <?php if (count($taste['VALUE']) > 0) { ?>
-                <div class="toggle_taste_line">
-                    <div class="variation_taste">
-                        <?php foreach ($taste['VALUE'] as $key => $name) {
-                            foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
-                                if ($key === $keys) {
-                                    $color = explode('#', $value); ?>
-                                    <span class="taste" data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>">
-                                    <?= $name ?>
-                            </span>
-                                <?php }
+            <?php } ?>
+            <div class="box_with_title_like d-flex align-items-center">
+                <?php if (count($taste['VALUE']) > 0) { ?>
+                    <div class="toggle_taste_line">
+                        <div class="variation_taste">
+                            <?php foreach ($taste['VALUE'] as $key => $name) {
+                                foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
+                                    if ($key === $keys) {
+                                        $color = explode('#', $value); ?>
+                                        <span class="taste" data-background="<?= '#' . $color[1] ?>"
+                                              id="<?= $color[0] ?>">
+                                        <?= $name ?>
+                                </span>
+                                    <?php }
+                                }
+                            } ?>
+                        </div>
+                    </div>
+                <?php } ?>
+
+                <?php if ($GLOBALS['UserTypeOpt'] === true) { ?>
+                    <div class="codeProduct font-10 mr-4">
+                        <?php
+                        foreach ($codeProp['DESCRIPTION'] as $key => $code) {
+                            if ($code === 'Код') {
+                                echo $codeProp['VALUE'][$key];
                             }
                         } ?>
                     </div>
-                </div>
-            <?php } ?>
-
-            <?php if ($GLOBALS['UserTypeOpt'] === true) { ?>
-                <div class="codeProduct font-10 mr-4">
+                <?php }
+                ?>
+                <div class="box_with_text">
+                    <a class="bx_catalog_item_title <?= $styleForNo . ' ' . $not_auth ?>"
+                       href="<?= $item['DETAIL_PAGE_URL']; ?>"
+                       data-href="<?= $href ?>"
+                       title="<?= $productTitle; ?>">
+                        <?= $productTitle; ?>
+                    </a>
                     <?php
-                    foreach ($codeProp['DESCRIPTION'] as $key => $code) {
-                        if ($code === 'Код') {
-                            echo $codeProp['VALUE'][$key];
-                        }
-                    } ?>
+                    if (!empty($item['DETAIL_TEXT'])) { ?>
+                        <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
+                    <?php } ?>
                 </div>
-            <?php }
-            ?>
-            <div class="box_with_text">
-                <a class="bx_catalog_item_title <?= $styleForNo . ' ' . $not_auth ?>"
-                   href="<?= $item['DETAIL_PAGE_URL']; ?>"
-                   data-href="<?= $href ?>"
-                   title="<?= $productTitle; ?>">
-                    <?= $productTitle; ?>
-                </a>
-                <?php
-                if (!empty($item['DETAIL_TEXT'])) { ?>
-                    <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
-                <?php } ?>
             </div>
-        </div>
-        <?php
-        $showSubscribeBtn = false;
-        $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE'));
-        if (!isset($item['OFFERS']) || empty($item['OFFERS'])) { ?>
-        <div class="bx_catalog_item_controls">
-            <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
-            <div class="box_with_fav_bask">
-                <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
-                    <div class="box_with_price card-price font_weight_600 d-flex flex-column">
-                        <div class="d-flex flex-row align-items-center">
-                            <div class="bx_price <?= $styleForNo ?>">
-                                <?php $sale = false;
-                                if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                    $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-                                    echo(round($price['SALE_PRICE']['PRICE']));
-                                    $sale = true;
-                                } else {
-                                    echo(round($price['PRICE_DATA'][1]['PRICE']));
-                                } ?>₽
-                            </div>
-                            <?php if (!$sale) { ?>
-                                <div class="info-prices-box-hover cursor-pointer ml-2">
-                                    <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-                                    <div class="position-absolute d-hide">
-                                        <div class="d-flex flex-column prices-block">
-                                            <div class="prices-block-close js__prices-block-close"></div>
-                                            <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                                                <p class="mb-1">
-                                                    <span class="font-11 mb-2"><?= $items['NAME'] ?></span><br>
-                                                    <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                                                </p>
-                                            <?php } ?>
-                                        </div>
+            <?php
+            $showSubscribeBtn = false;
+            $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
+            <div class="bx_catalog_item_controls">
+                <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
+                    <div class="box_with_fav_bask">
+                        <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
+                            <div class="box_with_price card-price font_weight_600 d-flex flex-column">
+                                <div class="d-flex flex-column">
+                                    <div class="bx_price <?= $styleForNo ?> position-relative">
+                                        <?php $sale = false;
+                                        if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                            $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
+                                            echo(round($price['SALE_PRICE']['PRICE']));
+                                            $sale = true;
+                                        } else {
+                                            echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
+                                        } ?>₽
                                     </div>
-                                </div>
-                            <?php } ?>
-                        </div>
-                        <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                            $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-                            <div class="after_price">
-                                Старая цена: <?= $price['PRICE_DATA'][1]['PRICE'] ?>₽
-                            </div>
-                        <?php }
-                        ?>
-                    </div>
 
-                    <div class="box_quantity_for_uric_line">
-                        <span class="font-12 ml-1"><?= $item['PRODUCT']['QUANTITY'] ?></span>
-                        <span class="font-12">шт.</span>
-                    </div>
-                    <div class="d-flex row-line-reverse justify-content-between box-basket">
-                        <?php if ($show_price) { ?>
-                            <div class="btn red_button_cart btn-plus add2basket"
-                                 data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                 data-product_id="<?= $item['ID']; ?>"
-                                 data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                 id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                 <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
-                                <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
-                            </div>
-                            <div class="product-item-amount-field-contain-wrap"
-                                 <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
-                                 data-product_id="<?= $item['ID']; ?>">
-                                <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
-                                    <a class="btn-minus  minus_icon no-select add2basket"
-                                       id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                       href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                       data-product_id="<?= $item['ID']; ?>">
-                                    </a>
-                                    <div class="product-item-amount-field-block">
-                                        <input class="product-item-amount card_element"
-                                               id="<?= $arItemIDs['QUANTITY_ID'] ?>"
-                                               type="text"
-                                               value="<?= $priceBasket ?>">
-                                    </div>
-                                    <a class="btn-plus plus_icon no-select add2basket"
-                                       data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                       id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
-                                       data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                       data-product_id="<?= $item['ID']; ?>"
-                                       title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
-                                </div>
-                                <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
-                            </div>
-                        <?php } ?>
-                        <div class="box_with_price line-price font_weight_600 mb-2">
-                            <div class="d-flex flex-row align-items-center">
-                                <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>" data-href="<?= $href ?>">
-                                    <?php
-                                    $sale = false;
-                                    if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                        $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-                                        $sale = true;
-                                        echo(round($price['SALE_PRICE']['PRICE']));
-                                    } else {
-                                        echo(round($price['PRICE_DATA'][1]['PRICE']));
-                                    } ?>₽
-                                </div>
-                                <?php if (!$sale) { ?>
-                                    <div class="info-prices-box-hover ml-2">
-                                        <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-                                        <div class="position-absolute d-hide">
-                                            <div class="d-flex flex-column prices-block">
-                                                <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                                                    <p class="mb-1">
-                                                        <span class="font-11"><?= $items['NAME'] ?></span><br>
-                                                        <span class="font-12"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                                                    </p>
-                                                <?php } ?>
-                                            </div>
+                                    <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                        $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
+                                        <div class="font-10">
+                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
+                                            <b class="sale-percent">
+                                                - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>₽
+                                            </b>
                                         </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+                            <div class="box_quantity_for_uric_line">
+                                <span class="font-12 ml-1"><?= $item['PRODUCT']['QUANTITY'] ?></span>
+                                <span class="font-12">шт.</span>
+                            </div>
+                            <div class="d-flex row-line-reverse justify-content-between box-basket">
+                                <?php if ($show_price) { ?>
+                                    <div class="btn red_button_cart btn-plus add2basket"
+                                         data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                         data-product_id="<?= $item['ID']; ?>"
+                                         data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                         id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                         <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
+                                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
+                                    </div>
+                                    <div class="product-item-amount-field-contain-wrap"
+                                         <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
+                                         data-product_id="<?= $item['ID']; ?>">
+                                        <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
+                                            <a class="btn-minus  minus_icon no-select add2basket"
+                                               id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                               href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                               data-product_id="<?= $item['ID']; ?>">
+                                            </a>
+                                            <div class="product-item-amount-field-block">
+                                                <input class="product-item-amount card_element"
+                                                       id="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                                                       type="text"
+                                                       value="<?= $priceBasket ?>">
+                                            </div>
+                                            <a class="btn-plus plus_icon no-select add2basket"
+                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                               id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
+                                               data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                               data-product_id="<?= $item['ID']; ?>"
+                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
+                                        </div>
+                                        <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
                                     </div>
                                 <?php } ?>
-                            </div>
-                            <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-                                <div class="after_price">
-                                    Старая цена: <?= $price['PRICE_DATA'][1]['PRICE'] ?>₽
+                                <div class="box_with_price line-price font_weight_600 mb-2">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>"
+                                             data-href="<?= $href ?>">
+                                            <?php
+                                            $sale = false;
+                                            if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                                $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
+                                                $sale = true;
+                                                echo(round($price['SALE_PRICE']['PRICE']));
+                                            } else {
+                                                echo(round($price['PRICE_DATA'][1]['PRICE']));
+                                            } ?>₽
+                                        </div>
+
+                                        <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                            $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
+                                            <div class="font-10">
+                                                <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
+                                                <b class="sale-percent">
+                                                    - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>₽
+                                                </b>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
                                 </div>
-                            <?php } ?>
+                            </div>
+                        <?php }
+                        if (!$USER->IsAuthorized() && !$show_price) { ?>
+                            <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
+                                 data-href="<?= $href ?>">Подробнее
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div style="clear: both;"></div>
+                <?php } else { ?>
+                    <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>">
+                        <div class="box_with_fav_bask">
+                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                <?= $is_key_found ? 'subscribed' : '' ?>">
+                                Нет в наличии
+                            </div>
+                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                <?= $is_key_found ? 'subscribed' : '' ?> min_card">
+                                <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div style="clear: both;"></div>
+                        <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                         <?= $is_key_found ? 'subscribed' : '' ?>"
+                             data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
+                             data-product_id="<?= $item['ID']; ?>">
                         </div>
                     </div>
-                <?php }
-                if (!$USER->IsAuthorized() && !$show_price) { ?>
-                    <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
-                         data-href="<?= $href ?>">Подробнее
-                    </div>
                 <?php } ?>
             </div>
-            <div style="clear: both;"></div>
         </div>
-        <?php }else { ?>
-        <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>"
-            <div class="box_with_fav_bask">
-                <div class="not_product detail_popup">
-                    Нет в наличии
-                </div>
-                <div class="detail_popup min_card"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
+        <div class="info-prices-box-hover info-prices-box-bottom cursor-pointer ml-2">
+            <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
+            <div class="d-flex align-items-center justify-content-center font-11 show-prices js__show-all-prices">
+                <span>Показать цены</span>
             </div>
-            <div style="clear: both;"></div>
-            <div id="popup_mess"></div>
-        </div>
-    <?php }
-    $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
-    if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) { ?>
-        <div id="<?= $arItemIDs['BASKET_PROP_DIV']; ?>" style="display: none;">
-            <?php
-            if (!empty($item['PRODUCT_PROPERTIES_FILL'])) {
-                foreach ($item['PRODUCT_PROPERTIES_FILL'] as $propID => $propInfo) {
-                    ?>
-                    <input type="hidden"
-                           name="<?= $arParams['PRODUCT_PROPS_VARIABLE']; ?>[<?= $propID; ?>]"
-                           value="<?= htmlspecialcharsbx($propInfo['ID']); ?>">
-                    <?php if (isset($item['PRODUCT_PROPERTIES'][$propID]))
-                        unset($item['PRODUCT_PROPERTIES'][$propID]);
-                }
-            }
-            $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']); ?>
+            <div class="position-absolute js__all-prices">
+                <div class="d-flex flex-column prices-block">
+                    <div class="prices-block-close js__prices-block-close"></div>
+                    <?php foreach ($price['PRICE_DATA'] as $items) { ?>
+                        <p class="mb-1">
+                            <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span><br>
+                            <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                        </p>
+                    <?php } ?>
+                </div>
+            </div>
         </div>
         <?php
-    }
-    } else {
-        if ('Y' == $arParams['PRODUCT_DISPLAY_MODE']) {
-            $canBuy = $item['JS_OFFERS'][$item['OFFERS_SELECTED']]['CAN_BUY'];
-
-            unset($canBuy);
-        }
-        $boolShowOfferProps = ('Y' == $arParams['PRODUCT_DISPLAY_MODE'] && $item['OFFERS_PROPS_DISPLAY']);
-        $boolShowProductProps = (isset($arItem['DISPLAY_PROPERTIES']) && !empty($arItem['DISPLAY_PROPERTIES']));
-        if ($boolShowProductProps || $boolShowOfferProps) { ?>
-            <div class="bx_catalog_item_articul">
-                <?php if ($boolShowProductProps) {
-                    foreach ($item['DISPLAY_PROPERTIES'] as $arOneProp) {
-                        ?><br><strong><?= $arOneProp['NAME']; ?></strong> <?
-                        echo(
-                        is_array($arOneProp['DISPLAY_VALUE'])
-                            ? implode(' / ', $arOneProp['DISPLAY_VALUE'])
-                            : $arOneProp['DISPLAY_VALUE']
-                        );
+        $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
+        if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) { ?>
+            <div id="<?= $arItemIDs['BASKET_PROP_DIV']; ?>" style="display: none;">
+                <?php
+                if (!empty($item['PRODUCT_PROPERTIES_FILL'])) {
+                    foreach ($item['PRODUCT_PROPERTIES_FILL'] as $propID => $propInfo) {
+                        ?>
+                        <input type="hidden"
+                               name="<?= $arParams['PRODUCT_PROPS_VARIABLE']; ?>[<?= $propID; ?>]"
+                               value="<?= htmlspecialcharsbx($propInfo['ID']); ?>">
+                        <?php if (isset($item['PRODUCT_PROPERTIES'][$propID]))
+                            unset($item['PRODUCT_PROPERTIES'][$propID]);
                     }
                 }
-                if ($boolShowOfferProps) { ?>
-                    <span id="<?= $arItemIDs['DISPLAY_PROP_DIV']; ?>"
-                          style="display: none;"></span>
-                <?php } ?>
+                $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']); ?>
             </div>
             <?php
-        }
-        if ('Y' == $arParams['PRODUCT_DISPLAY_MODE']) {
-            if (!empty($item['OFFERS_PROP'])) {
-                $arSkuProps = array();
-                if ($item['OFFERS_PROPS_DISPLAY']) {
-                    foreach ($item['JS_OFFERS'] as $keyOffer => $arJSOffer) {
-                        $strProps = '';
-                        if (!empty($arJSOffer['DISPLAY_PROPERTIES'])) {
-                            foreach ($arJSOffer['DISPLAY_PROPERTIES'] as $arOneProp) {
-                                $strProps .= '<br>' . $arOneProp['NAME'] . ' <strong>' . (
-                                    is_array($arOneProp['VALUE'])
-                                        ? implode(' / ', $arOneProp['VALUE'])
-                                        : $arOneProp['VALUE']
-                                    ) . '</strong>';
-                            }
+
+        } else {
+            if ('Y' == $arParams['PRODUCT_DISPLAY_MODE']) {
+                $canBuy = $item['JS_OFFERS'][$item['OFFERS_SELECTED']]['CAN_BUY'];
+
+                unset($canBuy);
+            }
+            $boolShowOfferProps = ('Y' == $arParams['PRODUCT_DISPLAY_MODE'] && $item['OFFERS_PROPS_DISPLAY']);
+            $boolShowProductProps = (isset($arItem['DISPLAY_PROPERTIES']) && !empty($arItem['DISPLAY_PROPERTIES']));
+            if ($boolShowProductProps || $boolShowOfferProps) { ?>
+                <div class="bx_catalog_item_articul">
+                    <?php if ($boolShowProductProps) {
+                        foreach ($item['DISPLAY_PROPERTIES'] as $arOneProp) {
+                            ?><br><strong><?= $arOneProp['NAME']; ?></strong> <?
+                            echo(
+                            is_array($arOneProp['DISPLAY_VALUE'])
+                                ? implode(' / ', $arOneProp['DISPLAY_VALUE'])
+                                : $arOneProp['DISPLAY_VALUE']
+                            );
                         }
-                        $item['JS_OFFERS'][$keyOffer]['DISPLAY_PROPERTIES'] = $strProps;
+                    }
+                    if ($boolShowOfferProps) { ?>
+                        <span id="<?= $arItemIDs['DISPLAY_PROP_DIV']; ?>"
+                              style="display: none;"></span>
+                    <?php } ?>
+                </div>
+                <?php
+            }
+            if ('Y' == $arParams['PRODUCT_DISPLAY_MODE']) {
+                if (!empty($item['OFFERS_PROP'])) {
+                    $arSkuProps = array();
+                    if ($item['OFFERS_PROPS_DISPLAY']) {
+                        foreach ($item['JS_OFFERS'] as $keyOffer => $arJSOffer) {
+                            $strProps = '';
+                            if (!empty($arJSOffer['DISPLAY_PROPERTIES'])) {
+                                foreach ($arJSOffer['DISPLAY_PROPERTIES'] as $arOneProp) {
+                                    $strProps .= '<br>' . $arOneProp['NAME'] . ' <strong>' . (
+                                        is_array($arOneProp['VALUE'])
+                                            ? implode(' / ', $arOneProp['VALUE'])
+                                            : $arOneProp['VALUE']
+                                        ) . '</strong>';
+                                }
+                            }
+                            $item['JS_OFFERS'][$keyOffer]['DISPLAY_PROPERTIES'] = $strProps;
+                        }
                     }
                 }
-
-
             }
         }
-
-    }
-    ?>
-</div>
-<div id="result_box"></div>
+        ?>
+    </div>
+    <div id="result_box"></div>
 </div>
