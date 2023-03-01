@@ -109,6 +109,7 @@ if (!$USER->IsAuthorized()) {
 			"index" => "index.php",
 			"orders" => "orders/",
 			"account" => "account/",
+            "subscriptions" => "subscriptions/",
 			"subscribe" => "subscribe/",
 			"profile" => "profiles/",
 			"profile_detail" => "profiles/#ID#/",

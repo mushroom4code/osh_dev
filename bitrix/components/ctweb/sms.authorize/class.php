@@ -68,8 +68,9 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
         return $arParams;
     }
 
-    protected function setPhone($phone){
-        $this->setSessionField('PHONE', $this->manager->NormalizePhone($phone));
+    protected function setPhone($phone, $codePhone = '')
+    {
+        $this->setSessionField('PHONE', $this->manager->NormalizePhone($phone, $codePhone));
     }
 
     protected function setSessionField($key, $value)
@@ -112,13 +113,14 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
             if ($arUsers) {
                 if (strlen($this->request->get('USER_ID'))) {
                     if (($chosedUser = intval($this->request->get('USER_ID')))) {
-                        $arUser = reset(array_filter($arUsers, function ($e) use ($chosedUser) {
+                        $array = array_filter($arUsers, function ($e) use ($chosedUser) {
                             return $e['ID'] == $chosedUser;
-                        }));
+                        });
+                        $arUser = reset($array);
                         if ($arUser['ID']) {
                             $res = $this->manager->StartUserAuth($arUser['ID']);
                             if (!$res) {
-                                $this->manager->addError(elf::ERROR_UNKNOWN_ERROR);
+                                $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
                             }
                         }
                     }
@@ -204,8 +206,9 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
 
             $this->setSessionField('IS_AJAX_POST', $isAjaxRequest);
 
-            if (strlen($this->request->get('PHONE')))
-                $this->setPhone($this->request->get('PHONE'));
+            if (strlen($this->request->get('PHONE'))) {
+                $this->setPhone($this->request->get('PHONE'), $this->request->get('__phone_prefix') ?? '');
+            }
 
             if (strlen($this->request->get('SAVE_SESSION')))
                 $this->setSessionField('SAVE_SESSION', $this->request->get('SAVE_SESSION'));

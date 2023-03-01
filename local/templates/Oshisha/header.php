@@ -84,11 +84,16 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addJs("https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js");
     Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.css");
     Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css");
-
-
+    Asset::getInstance()->addJs("/local/assets/js/swiper/swiper-bundle.min.js");
+    Asset::getInstance()->addCss("/local/assets/js/swiper/swiper-bundle.min.css");
+    /** Enterego
+     * Mask with code country for user phone in forms
+     */
+    Asset::getInstance()->addJs("/local/assets/js/flags-mask/jquery.ui.widget.js");
+    Asset::getInstance()->addJs("/local/assets/js/flags-mask/phonecode.js");
+    Asset::getInstance()->addJs("/local/assets/js/flags-mask/counties.js");
+    Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
     $APPLICATION->ShowHead(); ?>
-    <link rel="stylesheet" href="/local/assets/js/swiper/swiper-bundle.min.css">
-    <script src="/local/assets/js/swiper/swiper-bundle.min.js"></script>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
 <body class="bx-background-image">
