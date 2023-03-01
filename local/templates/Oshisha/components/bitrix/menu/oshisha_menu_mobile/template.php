@@ -71,19 +71,31 @@ print_r($arResult["MENU_STRUCTURE"]);*/
 						<?endif;?>					
 					</div>
 					<? if (is_array($arColumns) && count($arColumns) > 0):?>
-						<?foreach($arColumns as $key=>$arRow){?>
+						<?foreach($arColumns as $key=>$arRow){
+                            $newSort = [];
+
+                            foreach ($arRow as $key => $elem) {
+                                $newSort[$key] = $arResult["ALL_ITEMS"][$key];
+                            }
+
+                            uasort($newSort, function ($a, $b) {
+                                if ($a["TEXT"] == $b["TEXT"]) {
+                                    return 0;
+                                }
+                                return ($a["TEXT"] < $b["TEXT"]) ? -1 : 1;
+                            }); ?>
 							<ul class="bx-nav-list-2-lvl">
-							<?foreach($arRow as $itemIdLevel_2=>$arLevel_3):?>
+                                <?php foreach ($newSort as $id => $item): ?>
 								<li class="bx-nav-2-lvl">
 									<a class="bx-nav-2-lvl-link"
-										href="<?=$arResult["ALL_ITEMS"][$itemIdLevel_2]["LINK"]?>"
+                                       href="<?= $item["LINK"] ?>"
 										<?if ($existPictureDescColomn):?>
-											onmouseover="window.obj_<?=$menuBlockId?> && obj_<?=$menuBlockId?>.changeSectionPicure(this, '<?=$itemIdLevel_2?>');"
+											onmouseover="window.obj_<?=$menuBlockId?> && obj_<?=$menuBlockId?>.changeSectionPicure(this, '<?=$id?>');"
 										<?endif?>
-										data-picture="<?=$arResult["ALL_ITEMS"][$itemIdLevel_2]["PARAMS"]["picture_src"]?>"
-										<?if($arResult["ALL_ITEMS"][$itemIdLevel_2]["SELECTED"]):?>class="bx-active"<?endif?>
+                                       data-picture="<?= $item["PARAMS"]["picture_src"] ?>"
+										<?if($item["SELECTED"]):?>class="bx-active"<?endif?>
 									>
-										<span class="bx-nav-2-lvl-link-text"><?=$arResult["ALL_ITEMS"][$itemIdLevel_2]["TEXT"]?></span>
+										<span class="bx-nav-2-lvl-link-text"><?=$item["TEXT"]?></span>
 									</a>
 								</li>
 							<?endforeach;?>
@@ -96,4 +108,3 @@ print_r($arResult["MENU_STRUCTURE"]);*/
             ?>
         </ul>
     </nav>
-
