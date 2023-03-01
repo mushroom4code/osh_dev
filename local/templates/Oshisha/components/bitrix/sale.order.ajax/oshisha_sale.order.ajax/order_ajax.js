@@ -4749,7 +4749,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (checked)
                 //--if (checked && this.result.LAST_ORDER_DATA.PICK_UP)
                 this.lastSelectedDelivery = deliveryId;
-
             if (BX.hasClass(itemNode, 'bx-selected')) {
                 this.editPropsItems(itemNode);
             }
@@ -5544,7 +5543,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
                 propsNode = BX.create('DIV', {props: {className: 'row'}});
                 selectedDelivery = this.getSelectedDelivery();
-                console.log(selectedDelivery)
 
                 if (
                     selectedDelivery && this.params.SHOW_MAP_IN_PROPS === 'Y'
@@ -5591,15 +5589,19 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             if (!propsItemsContainer)
                 propsItemsContainer = this.propsBlockNode.querySelector('.col-sm-12.bx-soa-customer');
-            console.log(propsNode)
-            console.log(this.result);
+
             while (group = groupIterator()) {
                 propsIterator = group.getIterator();
                 while (property = propsIterator()) {
                     if (propsNode.classList.contains('delivery')) {
-                        console.log(property.getSettings());
+                        const disabled = false;
                         if (this.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
-                            this.getPropertyRowNode(property, propsItemsContainer, false);
+                            const id_del = parseInt(this.result.DELIVERY.find(item => item.CHECKED === 'Y').ID);
+                            const arDelivery = this.result.AR_DELIVERY_PICKUP;
+                            if(arDelivery?.indexOf(id_del) !== -1){
+                                disabled = true;
+                            }
+                            this.getPropertyRowNode(property, propsItemsContainer, disabled);
                         } else {
                             continue;
                         }
@@ -5630,10 +5632,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 propertyType = property.getType() || '',
                 propertyDesc = property.getDescription() || '',
                 label;
-
-            if (disabled) {
-                propsItemNode.innerHTML = '<strong>' + BX.util.htmlspecialchars(property.getName()) + ':</strong> ';
-            } else {
+            //
+            // if (disabled) {
+            //     propsItemNode.innerHTML = '<strong>' + BX.util.htmlspecialchars(property.getName()) + ':</strong> ';
+            // } else {
                 let className = "form-group bx-soa-customer-field p-2";
 
                 if (property.getSettings().CODE === 'EMAIL') {
@@ -5666,7 +5668,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 });
                 propsItemNode.setAttribute('data-property-id-row', property.getId());
                 propsItemNode.appendChild(label);
-            }
+            // }
 
 
             switch (propertyType) {
@@ -6022,7 +6024,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 property.appendTo(propContainer);
                 propsItemNode.appendChild(propContainer);
                 property.parent = propsItemNode;
-                this.alterProperty(property, propContainer);
+                this.alterProperty(property, propContainer,disabled);
                 this.bindValidation(property.getId(), propContainer);
             }
         },
@@ -6112,7 +6114,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             return str.length ? BX.util.htmlspecialchars(str) : BX.message('SOA_NOT_SELECTED');
         },
 
-        alterProperty: function (property, propContainer) {
+        alterProperty: function (property, propContainer, disabled = false) {
             var divs = BX.findChildren(propContainer, {tagName: 'DIV'}),
                 settings = property.getSettings(),
                 i, textNode, inputs, del, add,
@@ -6152,21 +6154,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 if (value_string.indexOf('noemail') !== -1 || value_string.indexOf('<') !== -1) {
                     inputs[i].value = '';
                 }
-                // console.log(propContainer);
 
+                if (disabled === true) {
+                    inputs[i].setAttribute('readonly', 'readonly');
+                }
                 BX.addClass(inputs[i], 'form-control bx-soa-customer-input bx-ios-fix');
                 if (settings.CODE === 'ADDRESS') {
-                    // console.log(property.getParentNode())
-                    // console.log(settings)
-                    // console.log(property)
-                    // console.log(propContainer);
-                    // console.log(property);
-                    //    Адрес
-                    // if (settings.VALUE !== '' && settings.VALUE !== null) {
-                    //     inputs[i].setAttribute('value', settings.VALUE[0]);
-                    // } else {
-                    //     inputs[i].setAttribute('value', this.result.ORDER_PROP.properties[6].VALUE[0]);
-                    // }
                     inputs[i].setAttribute('data-name', settings.CODE);
                 }
                 if (settings.CODE === 'DATE') {
