@@ -2289,10 +2289,10 @@ $(document).ready(function () {
         event.preventDefault();
         let popup_mess = $(this).parent().find('#popup_mess_order_copy');
         let content;
-        if ($(this).hasClass('basket-empty')) {
+        if ($(this).hasClass('js--basket-empty') || $('div#personal_orders').hasClass('js--basket-empty')) {
             content = '<p style="font-size: 1rem; font-weight: 500">' +
                 'Вы точно хотите повторить заказ?</p>' +
-                ($(this).hasClass('not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
+                ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
                 '<a href="'+$(this).attr('href')+'" id="yes_mess" class="d-flex  link_message_box_product ' +
@@ -2304,7 +2304,7 @@ $(document).ready(function () {
         } else {
             content = '<p style="font-size: 1rem; font-weight: 500">' +
                 'Очистить корзину перед добавлением товаров?</p>' +
-                ($(this).hasClass('not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
+                ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
                 '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
