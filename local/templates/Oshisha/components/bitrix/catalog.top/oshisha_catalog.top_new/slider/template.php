@@ -249,7 +249,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                         $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
                                         $sale = true;
                                     } else {
-                                        $price_new = $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                                        $price_new = '<span class="font-10 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
                                         $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
                                     } ?>
                                     <div class="bx_price font-weight-600" id="<?= $price_id ?>">
@@ -258,7 +258,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                     <?php if (!$sale) { ?>
                                         <div class="info-prices-box-hover cursor-pointer ml-2">
                                             <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-                                            <div class="position-absolute d-hide">
+                                            <div class="position-absolute d-hide width-max-content">
                                                 <div class="d-flex flex-column prices-block">
                                                     <?php foreach ($price['PRICE_DATA'] as $items) { ?>
                                                         <p class="mb-1">
@@ -271,12 +271,13 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                         </div>
                                     <?php } ?>
                                 </div>
-                                <?php if (!empty($price['SALE_PRICE'])) { ?>
-                                    <div class="after_price font-weight-600">
-                                        Старая цена: <?= $price['PRICE_DATA'][1]['PRINT_PRICE'] ?>
-                                    </div>
-                                <?php }
-                                ?>
+                                <?php if (!empty($price['SALE_PRICE'])) {
+                                    $old_sum = (int)$price['PRICE_DATA'][0]['PRICE'] - (int)$price['SALE_PRICE']['PRICE'] ?? 0;?>
+                                    <span class="font-10">
+                                        <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
+                                        <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
+                                    </span>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                         <div class="box_with_fav_bask">

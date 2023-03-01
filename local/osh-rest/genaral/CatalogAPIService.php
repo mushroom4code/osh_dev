@@ -26,14 +26,13 @@ class CatalogAPIService extends \IRestService
         }
 
         $arSelect = array('ID', 'EXTERNAL_ID', 'QUANTITY');
-        $arFilter = array("IBLOCK_ID" => 12, 'ACTIVE' => 'Y');
+        $arFilter = array("IBLOCK_ID" => IBLOCK_CATALOG, 'ACTIVE' => 'Y');
         $res_ar = [];
 
         $res = CIBlockElement::GetList(array(), $arFilter, false, array(), $arSelect);
         while ($ob = $res->GetNextElement(true, false)) {
             $res_ar[] = $ob->GetFields();
         }
-
 
         return array('catalog' => $res_ar, 'count' => count($res_ar), 'response' => 'ok');
     }
@@ -49,7 +48,7 @@ class CatalogAPIService extends \IRestService
         }
 
         $arSelect = array('ID', 'EXTERNAL_ID', 'PREVIEW_PICTURE', 'DETAIL_PICTURE');
-        $arFilter = array("IBLOCK_ID" => 12, 'ACTIVE' => 'Y');
+        $arFilter = array("IBLOCK_ID" => IBLOCK_CATALOG, 'ACTIVE' => 'Y');
         $res_ar = [];
 
         $res = CIBlockElement::GetList(array(), $arFilter, false, array(), $arSelect);
