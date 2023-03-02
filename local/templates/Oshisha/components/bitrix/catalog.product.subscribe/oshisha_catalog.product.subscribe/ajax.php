@@ -16,19 +16,25 @@ if(isset($_REQUEST['reloadCaptcha']) && $_REQUEST['reloadCaptcha'] == 'Y')
 	die();
 }
 
-//if(!check_bitrix_sessid()) die();
+//enterego deleted sessionid check
 
 Loc::loadMessages(__FILE__);
 global $USER;
+
+if (!$USER->IsAuthorized()) {
+    echo Bitrix\Main\Web\Json::encode(array('success' => false, 'message' => 'noauth'));
+    require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+    die();
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	if(!Loader::includeModule('catalog'))
 	{
-		echo Bitrix\Main\Web\Json::encode(array(
-			'error' => true, 'message' => Loc::getMessage('CPSA_MODULE_NOT_INSTALLED', array('#NAME#' => 'catalog'))));
-		require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
-		die();
+        echo Bitrix\Main\Web\Json::encode(array(
+            'error' => true, 'message' => Loc::getMessage('CPSA_MODULE_NOT_INSTALLED', array('#NAME#' => 'catalog'))));
+        require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+        die();
 	}
 
 	if($_POST['checkSubscribe'] == 'Y')
@@ -97,12 +103,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			if($userId)
 				$userContact = ($contactTypeId == $defaultContactTypeId) ? $USER->getEmail() : false;
 
+            //enterego response if user have no email
+            if ((preg_match('/(@noemail.sms)/', $userContact) != false) || (!$userContact)) {
+                echo Bitrix\Main\Web\Json::encode(
+                    array('success' => false, 'message' => 'noemail'));
+                require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+                die();
+            }
+            //end
+            //enterego changed input params for addsubscription, changed response
 			if($userContact)
 			{
 				$subscribeData = array(
 					'USER_CONTACT' => $userContact,
-					'ITEM_ID' => $_POST['itemId'],
-					'SITE_ID' => $_POST['siteId'],
+					'ITEM_ID' => $_POST['item_id'],
+					'SITE_ID' => SITE_ID,
 					'CONTACT_TYPE' => $contactTypeId,
 					'USER_ID' => $userId,
 				);
@@ -114,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				if($subscribeId)
 				{
 					echo Bitrix\Main\Web\Json::encode(
-						array('success' => true, 'message' => Loc::getMessage('CPSA_SUCCESS_SUBSCRIBE')));
+						array('success' => true, 'message' => 'subscribed', 'subscribeId' => $subscribeId));
 					require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
 					die();
 				}
@@ -134,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 					require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
 					die();
 				}
+                //enterego end
 			}
 			else
 			{
@@ -147,8 +163,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				die();
 			}
 		}
-	}
-	elseif($_POST['contactFormSubmit'] == 'Y')
+    //enterego added unsibscribe logic
+	}elseif ($_POST['subscribe'] == 'N') {
+        $contactTypeId = key($contactTypes);
+        $userContact = false;
+        if($userId)
+            $userContact = ($contactTypeId == $defaultContactTypeId) ? $USER->getEmail() : false;
+
+
+        if($userContact)
+        {
+            $subscribe = \Bitrix\Catalog\SubscribeTable::getList(array(
+                'select' => array('CNT'),
+                'filter' => array(
+                    '=ID' => intval($_POST['subscription_id']),
+                    '=ITEM_ID' => $_POST['item_id'],
+                    '=USER_ID' => $userId
+                ),
+                'runtime' => array(new \Bitrix\Main\Entity\ExpressionField('CNT', 'COUNT(*)'))
+            ))->fetch();
+            if(intval($subscribe['CNT']))
+            {
+                $subscribeId = \Bitrix\Catalog\SubscribeTable::delete(intval($_POST['subscription_id']));
+            }
+
+            if($subscribeId->isSuccess())
+            {
+                echo Bitrix\Main\Web\Json::encode(
+                    array('success' => true, 'message' => 'unsubscribed'));
+                require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+                die();
+            }
+            else
+            {
+                $errors = array('error' => true);
+                $errors['message'] = "Subscription does not exist";
+                echo Bitrix\Main\Web\Json::encode($errors);
+                require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+                die();
+            }
+        }
+        else
+        {
+            if(isset($_SESSION['SUBSCRIBE_PRODUCT']['useCaptcha'])
+                && $_SESSION['SUBSCRIBE_PRODUCT']['useCaptcha'] == 'Y')
+            {
+                $contactFormData['captchaCode'] = $APPLICATION->captchaGetCode();
+            }
+            echo Bitrix\Main\Web\Json::encode($contactFormData);
+            require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+            die();
+        }
+    //enterego end
+    }elseif($_POST['contactFormSubmit'] == 'Y')
 	{
 		if(empty($_POST['contact']) || !is_array($_POST['contact']))
 		{

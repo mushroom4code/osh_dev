@@ -41,6 +41,7 @@ if (!$name)
             <a href="/personal/orders/?show_canceled=Y" class="link_lk_mini" id="#">Завершено</a>
             <a href="/personal/orders/?show_delivery=Y" class="link_lk_mini" id="#">В доставке</a>
         </div>
+        <a href="/personal/subscriptions/" class="link_lk" title="Подписки на товары">Подписки на товары</a>
         <a style="display:none;"  href="/personal/profiles/" class="link_lk" title="Мои компании">Мои компании</a>
         <?php
         $user_id = $USER->GetId();

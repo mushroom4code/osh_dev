@@ -563,48 +563,89 @@ $(document).ready(function () {
     $(document).on('click', '.detail_popup', function () {
         let popup_mess = $(this).closest('.bx_catalog_item_controls').find('div#popup_mess');
         $(".box_with_message_prodNot").hide(500).remove();
-        $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
-            '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-            'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться.</p>' +
-            '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
-            'justify-content-center align-items-center">' +
-            '<i class="fa fa-bell-o" aria-hidden="true"></i>Уведомить меня</a>' +
-            '<span class="close_photo" id="close_photo"></span></div>').show();
+        if ($(this).hasClass('subscribed')) {
+            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                'К сожалению, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
+                '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
+                'justify-content-center align-items-center">' +
+                '<i class="fa fa-bell-o" aria-hidden="true"></i>Отменить подписку</a>' +
+                '<span class="close_photo" id="close_photo"></span></div>').show();
+        } else if ($(this).hasClass('noauth')) {
+            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться. Авторизуйтесь для подписки на товар</p>' +
+                '<span class="close_photo" id="close_photo"></span></div>').show();
+        } else {
+            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться.</p>' +
+                '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
+                'justify-content-center align-items-center">' +
+                '<i class="fa fa-bell-o" aria-hidden="true"></i>Уведомить меня</a>' +
+                '<span class="close_photo" id="close_photo"></span></div>').show();
+        }
         $('#close_photo').on('click', function () {
             $(".box_with_message_prodNot").hide(500).remove()
         });
         $('a#yes_mess').on('click', function () {
-            $(popup_mess).hide();
-            $(popup_mess).empty();
-            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot"> ' +
-                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться.</p>' +
-                '<input type="text" class="input_sendMe_mail" id="send_me_mail"  placeholder="Введите свою почту"/>' +
-                '<a href="javascript:void(0);" id="sendMailForProd" class="d-flex link_message_box_product ' +
-                'justify-content-center align-items-center">Отправить</a><span class="close_photo" id="close_photo">' +
-                '</span></div>').show();
+            var popup_mess = $(this).closest('div#popup_mess');
+            var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
+            if ($(this).closest('div#popup_mess').hasClass('subscribed')){
+                var subscribe = "N";
+                var subscription_id = popup_mess.attr('data-subscription_id');
+            } else {
+                var subscribe = "Y";
+                var subscription_id = "N";
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/local/templates/Oshisha/components/bitrix/catalog.product.subscribe/oshisha_catalog.product.subscribe/ajax.php',
+                data: {subscribe: subscribe, item_id: product_id, subscription_id: subscription_id},
+                success: function (result_jsn) {
+                    var result = JSON.parse(result_jsn);
+                    if(result.success === true){
+                        var item_controls = popup_mess.parent();
+                        if(result.message === "subscribed") {
+                            popup_mess.addClass('subscribed');
+                            popup_mess.attr('data-subscription_id', result.subscribeId);
+                            item_controls.find('.detail_popup').addClass('subscribed');
+                            item_controls.find('.fa-bell-o').addClass('filled');
+                            popup_mess.empty();
+                        } else if (result.message === "unsubscribed") {
+                            popup_mess.removeClass('subscribed');
+                            popup_mess.removeAttr('data-subscription_id');
+                            item_controls.find('.detail_popup').removeClass('subscribed');
+                            item_controls.find('.fa-bell-o').removeClass('filled');
+                            popup_mess.empty();
+                        }
+                    }else if (result.success == false){
+                        if (result.message === "noauth") {
+                            popup_mess.empty();
+                            popup_mess.append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                                'Для того чтобы получать уведомления вам нужно авторизоваться</p>' +
+                                '<span class="close_photo" id="close_photo"></span></div>');
+                            popup_mess.find('#close_photo').on('click', function () {
+                                $(".box_with_message_prodNot").hide(500).remove()
+                            });
+                        }else if (result.message === "noemail") {
+                            popup_mess.empty();
+                            popup_mess.append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                                'Для того чтобы получать уведомления вам нужно указать почту в настройках профиля</p>' +
+                                '<span class="close_photo" id="close_photo"></span></div>');
+                            popup_mess.find('#close_photo').on('click', function () {
+                                $(".box_with_message_prodNot").hide(500).remove()
+                            });
+                        }
+                    }
+                }
+            });
             $('#close_photo').on('click', function () {
                 $(".box_with_message_prodNot").hide(500).remove()
             });
-            $('a#sendMailForProd').on('click', function () {
-                let mailClient = $('input#send_me_mail').val();
-                if (mailClient !== '') {
-                    $(popup_mess).empty();
-                    $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot"> '
-                        + '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                        'Спасибо!<br> Мы обязательно сообщим вам, когда товар появится на складе и в магазинах!</p>' +
-                        '<span class="close_photo" id="close_photo"></span></div>').show();
-                    $('#close_photo').on('click', function () {
-                        $(".box_with_message_prodNot").hide(500).remove()
-                    });
-                } else {
-                    $('div#error').empty();
-                    $('div.box_with_message_prodNot').append('<div id="error">Заполните почту для отправки!</div>').show(300);
-                }
-            });
-
         });
-
     });
 
     $('.switch-btn').on('click', function () {

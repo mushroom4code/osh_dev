@@ -92,6 +92,10 @@ if (!$show_price) {
     $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
 }
 
+$subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"], 'ITEM_ID');
+$found_key = array_search((string)$item['ID'], $subscription_item_ids);
+$is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
+
 if (empty($morePhoto[0])) {
     $morePhoto[0]['SRC'] = '/local/templates/Oshisha/images/no-photo.gif';
 }
@@ -352,6 +356,17 @@ if ($show_price) {
                                 <span class="font-12 ml-1"><?= $item['PRODUCT']['QUANTITY'] ?></span>
                                 <span class="font-12">шт.</span>
                             </div>
+                            <?if($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'):?>
+                                <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                            <?= $is_key_found ? 'subscribed' : ''?> min_card">
+                                    <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : ''?>" aria-hidden="true"></i>
+                                </div>
+                                <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                             <?= $is_key_found ? 'subscribed' : ''?>"
+                                     data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>"
+                                     data-product_id="<?= $item['ID']; ?>">
+                                </div>
+                            <?else:?>
                             <div class="d-flex row-line-reverse justify-content-between box-basket">
                                 <?php if ($show_price) { ?>
                                     <div class="btn red_button_cart btn-plus add2basket"
@@ -414,6 +429,7 @@ if ($show_price) {
                                     </div>
                                 </div>
                             </div>
+                            <?endif;?>
                         <?php }
                         if (!$USER->IsAuthorized() && !$show_price) { ?>
                             <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
