@@ -4716,7 +4716,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 ],
                 deliveryCached = this.deliveryCachedInfo[deliveryId], label, title, itemNode, logoNode;
 
-            let delivery = 'delivery';
             if (this.params.SHOW_DELIVERY_LIST_NAMES == 'Y') {
                 title = BX.create('DIV', {
                     props: {className: 'bx-soa-pp-company-smalltitle color_black font_weight_600'},
@@ -4738,9 +4737,15 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 events: {click: BX.proxy(this.selectDelivery, this)},
             });
 
-
+            // TODO Enterego pickup
+            const id_del = parseInt(deliveryId);
+            const arDelivery = this.result.AR_DELIVERY_PICKUP;
+            let empty = false;
+            if (arDelivery?.indexOf(id_del) !== -1) {
+                empty = true;
+            }
             itemNode = BX.create('DIV', {
-                props: {className: delivery + ' bx-soa-pp-company'},
+                props: {className: 'delivery bx-soa-pp-company'},
                 children: [label],
             });
             checked && BX.addClass(itemNode, 'bx-selected');
@@ -4750,7 +4755,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 //--if (checked && this.result.LAST_ORDER_DATA.PICK_UP)
                 this.lastSelectedDelivery = deliveryId;
             if (BX.hasClass(itemNode, 'bx-selected')) {
-                this.editPropsItems(itemNode);
+                this.editPropsItems(itemNode, empty);
             }
 
             return itemNode;
@@ -5580,7 +5585,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
         },
 
-        editPropsItems: function (propsNode) {
+        editPropsItems: function (propsNode, empty = false) {
             if (!this.result.ORDER_PROP || !this.propertyCollection)
                 return;
 
@@ -5593,22 +5598,24 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             while (group = groupIterator()) {
                 propsIterator = group.getIterator();
                 while (property = propsIterator()) {
+                    // TODO Enterego pickup
+                    let disabled = false;
                     if (propsNode.classList.contains('delivery')) {
-                        const disabled = false;
                         if (this.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
+                            // TODO Enterego pickup
                             const id_del = parseInt(this.result.DELIVERY.find(item => item.CHECKED === 'Y').ID);
                             const arDelivery = this.result.AR_DELIVERY_PICKUP;
                             if(arDelivery?.indexOf(id_del) !== -1){
                                 disabled = true;
                             }
-                            this.getPropertyRowNode(property, propsItemsContainer, disabled);
+                            this.getPropertyRowNode(property, propsItemsContainer, disabled, empty);
                         } else {
                             continue;
                         }
 
                     } else {
                         if (this.groupBuyerProps.find(item => item === group.getName()) !== undefined) {
-                            this.getPropertyRowNode(property, propsItemsContainer, false);
+                            this.getPropertyRowNode(property, propsItemsContainer, disabled);
                         }
                         continue;
                     }
@@ -5626,49 +5633,45 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
         },
 
-        getPropertyRowNode: function (property, propsItemsContainer, disabled) {
+        getPropertyRowNode: function (property, propsItemsContainer, disabled, empty = false) {
             let propsItemNode = BX.create('DIV'),
                 textHtml = '',
                 propertyType = property.getType() || '',
                 propertyDesc = property.getDescription() || '',
                 label;
-            //
-            // if (disabled) {
-            //     propsItemNode.innerHTML = '<strong>' + BX.util.htmlspecialchars(property.getName()) + ':</strong> ';
-            // } else {
-                let className = "form-group bx-soa-customer-field p-2";
+            //TODO Enterego pickup
+            let className = "form-group bx-soa-customer-field p-2";
 
-                if (property.getSettings().CODE === 'EMAIL') {
-                    if (this.result.IS_AUTHORIZED) {
-                        if (BX('user_select')) {
-                            BX.adjust(BX('user_select'), {style: {display: "none"}});
-                        }
+            if (property.getSettings().CODE === 'EMAIL') {
+                if (this.result.IS_AUTHORIZED) {
+                    if (BX('user_select')) {
+                        BX.adjust(BX('user_select'), {style: {display: "none"}});
                     }
-                    className += " col-md-6 col-lg-6 col-12";
                 }
-                if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
-                    || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
-                    || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
-                    className += " col-12";
-                } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
-                    className += " d-none";
-                } else {
-                    className += " col-md-6 col-lg-6 col-12";
-                }
-                BX.addClass(propsItemNode, className);
+                className += " col-md-6 col-lg-6 col-12";
+            }
+            if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
+                || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
+                || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
+                className += " col-12";
+            } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
+                className += " d-none";
+            } else {
+                className += " col-md-6 col-lg-6 col-12";
+            }
+            BX.addClass(propsItemNode, className);
 
-                textHtml += propertyDesc.length && propertyType !== 'STRING' && propertyType !== 'NUMBER' &&
-                propertyType !== 'DATE' ? ' <small>(' + BX.util.htmlspecialchars(propertyDesc) + ')</small>'
-                    : BX.util.htmlspecialchars(property.getName());
+            textHtml += propertyDesc.length && propertyType !== 'STRING' && propertyType !== 'NUMBER' &&
+            propertyType !== 'DATE' ? ' <small>(' + BX.util.htmlspecialchars(propertyDesc) + ')</small>'
+                : BX.util.htmlspecialchars(property.getName());
 
-                label = BX.create('LABEL', {
-                    attrs: {'for': 'soa-property-' + property.getId()},
-                    props: {className: 'bx-soa-custom-label'},
-                    html: textHtml
-                });
-                propsItemNode.setAttribute('data-property-id-row', property.getId());
-                propsItemNode.appendChild(label);
-            // }
+            label = BX.create('LABEL', {
+                attrs: {'for': 'soa-property-' + property.getId()},
+                props: {className: 'bx-soa-custom-label'},
+                html: textHtml
+            });
+            propsItemNode.setAttribute('data-property-id-row', property.getId());
+            propsItemNode.appendChild(label);
 
 
             switch (propertyType) {
@@ -5682,7 +5685,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     this.insertFileProperty(property, propsItemNode, disabled);
                     break;
                 case 'STRING':
-                    this.insertStringProperty(property, propsItemNode, disabled);
+                    this.insertStringProperty(property, propsItemNode, disabled, empty);
                     break;
                 case 'ENUM':
                     this.insertEnumProperty(property, propsItemNode, disabled);
@@ -6001,32 +6004,15 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
         },
 
-        insertStringProperty: function (property, propsItemNode, disabled) {
-            var prop, inputs, values, i, propContainer, className;
-            if (disabled) {
-                prop = this.propsHiddenBlockNode.querySelector('div[data-property-id-row="' + property.getId() + '"]');
-                if (prop) {
-                    values = [];
-                    inputs = prop.querySelectorAll('input[type=text]');
-
-
-                    if (inputs.length) {
-                        for (i = 0; i < inputs.length; i++) {
-                            if (inputs[i].value.length)
-                                values.push(inputs[i].value);
-                        }
-                    }
-
-                    propsItemNode.innerHTML += this.valuesToString(values);
-                }
-            } else {
-                propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
-                property.appendTo(propContainer);
-                propsItemNode.appendChild(propContainer);
-                property.parent = propsItemNode;
-                this.alterProperty(property, propContainer,disabled);
-                this.bindValidation(property.getId(), propContainer);
-            }
+        insertStringProperty: function (property, propsItemNode, disabled, empty = false) {
+            var  propContainer;
+            // TODO Enterego pickup
+            propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
+            property.appendTo(propContainer);
+            propsItemNode.appendChild(propContainer);
+            property.parent = propsItemNode;
+            this.alterProperty(property, propContainer, disabled, empty);
+            this.bindValidation(property.getId(), propContainer);
         },
 
         insertEnumProperty: function (property, propsItemNode, disabled) {
@@ -6114,7 +6100,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             return str.length ? BX.util.htmlspecialchars(str) : BX.message('SOA_NOT_SELECTED');
         },
 
-        alterProperty: function (property, propContainer, disabled = false) {
+        alterProperty: function (property, propContainer, disabled = false, empty = false) {
             var divs = BX.findChildren(propContainer, {tagName: 'DIV'}),
                 settings = property.getSettings(),
                 i, textNode, inputs, del, add,
@@ -6155,11 +6141,15 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     inputs[i].value = '';
                 }
 
-                if (disabled === true) {
-                    inputs[i].setAttribute('readonly', 'readonly');
-                }
                 BX.addClass(inputs[i], 'form-control bx-soa-customer-input bx-ios-fix');
                 if (settings.CODE === 'ADDRESS') {
+                    // TODO Enterego pickup
+                    if (disabled === true) {
+                        inputs[i].setAttribute('readonly', 'readonly');
+                    }
+                    if (empty === true) {
+                        inputs[i].value = '';
+                    }
                     inputs[i].setAttribute('data-name', settings.CODE);
                 }
                 if (settings.CODE === 'DATE') {
