@@ -78,7 +78,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                    id="main-profile-day2" disabled value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
 								<?$dateChange = '<br><b>Изменить дату рождения можно будет '.date('d/m/Y',strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])).'</b>';?>
 							<?else:?>
-                            <input class="form-control input_lk" type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
+                            <input class="form-control input_lk datepicker-here date_input mr-3" type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
                                    id="main-profile-day2" value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
 							<?endif;?>
                         </div>
@@ -102,8 +102,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         <div class="col-sm-12 col-md-12">
                             <input class="form-control input_lk" type="email" name="EMAIL" maxlength="50"
                                    id="main-profile-email" value="<?= $arResult["arUser"]["EMAIL"] ?>"
-                                   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
-                                   oninvalid="setCustomValidity('Неверный формат почты. Почта должна иметь вид *@*.*')"/>
+                                   pattern="[^@\s]+@[^@\s]+\.[^@\s]+"/>
                         </div>
                     </div>
                     <div class="form-group  mb-5" style="display:none">

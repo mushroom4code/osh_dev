@@ -162,50 +162,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
 
                 </div>
                 </form>
-                <!-- STEP AUTH EMAIL LOGIN -->
-                <form id="<?= $jsParams['TEMPLATE']['MAIL_FORM'] ?>"
-                      action="/bitrix/components/ctweb/sms.authorize_profile/ajax.php"
-                      method="POST" class="ctweb-smsauth-menu-step d-none">
-                    <?= bitrix_sessid_post(); ?>
-                    <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
-                    <div class="form-group">
-                        <input type="hidden" name="METHOD" placeholder="" value="EMAIL_AUTH"/>
-                        <label class="ctweb-label"><?= GetMessage("SMS_AUTH_EMAIL") ?></label>
-                        <input type="text" name="EMAIL" placeholder=""
-                               value="<?= $arResult['USER_VALUES']['EMAIL'] ?? '' ?>"
-                               class="form-control auth-by-email"
-                               id="<?= $mainID . "email" ?>"/>
-                        <label class="ctweb-label"><?= GetMessage("SMS_AUTH_PASSWORD") ?></label>
-                        <span style="float: right"><a href="/auth/?forgot_password=yes" class="ctweb-link ctweb-link-fargot"
-                                                      idk="<?= $jsParams['TEMPLATE']['FORGOT_PASSWORD'] ?>">Забыли пароль?</a></span>
-                        <input type="password" name="PASSWORD" placeholder=""
-                               value="<?= $arResult['USER_VALUES']['PASSWORD'] ?? '' ?>"
-                               class="form-control auth-by-email"
-                               id="<?= $mainID . "password" ?>"/>
-                        <div class="ctweb-error-alert" style="display: none"
-                             id="<?= $jsParams['TEMPLATE']['ERROR_ALERT'] ?>">
-                            <?= GetMessage("SMS_AUTH_ERROR_EMPTY_FIELD") ?>
-                        </div>
-                    </div>
-                    <div class="ctweb-button-block">
-                        <input class="btn link_menu_catalog login_button"
-                               id="<?= $jsParams['TEMPLATE']['LOGIN'] ?>"
-                               type="button"
-                               value="<?= GetMessage("SMS_AUTH_LOG_IN") ?>">
-                        <div>
-                            <a class="ctweb-link"
-                               id="<?= $jsParams['TEMPLATE']['AUTH_PHONE_LOGIN'] ?>">
-                                <?= GetMessage("AUTH_PHONE_LOGIN") ?></a>
-                        </div>
-                    </div>
-                </form>
-                <div class="ctweb-button-block">
-                    <div>
-                        <a class="ctweb-link email-register"
-                            id="<?= $jsParams['TEMPLATE']['REGISTRATION'] ?>"
-                            href="/login/?register=yes"><?= GetMessage("EMAIL_AUTH_REGISTRATION") ?></a>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
