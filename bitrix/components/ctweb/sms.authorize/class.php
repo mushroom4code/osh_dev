@@ -261,11 +261,11 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     $this->clearSession();
                 }
             }
-            if ($this->arParams['PROFILE_AUTH'] == "Y") {
-                if (!$isAjaxRequest) {
-                    LocalRedirect($APPLICATION->GetCurPageParam());
-                }
-            }
+//            if ($this->arParams['PROFILE_AUTH'] == "Y") {
+//                if (!$isAjaxRequest) {
+//                    LocalRedirect($APPLICATION->GetCurPageParam());
+//                }
+//            }
         }
     }
 

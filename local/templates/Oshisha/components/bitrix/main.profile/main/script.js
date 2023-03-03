@@ -41,6 +41,13 @@ BX.namespace('BX.Sale.PersonalProfileComponent');
 				});
 
 				BX.bind(BX('main-profile-submit'), 'click', function () {
+					if ($('#main-profile-password').val() !== $('#main-profile-password-confirm').val()) {
+						event.preventDefault();
+						$('#password-notification-error').text('Пароли не совпадают').removeClass('d-none');
+					} else {
+						$('#password-notification-error').addClass('d-none');
+					}
+
 					if (BX('notification').checked !== true) {
 						BX.removeClass(
 							BX("notification-error"),

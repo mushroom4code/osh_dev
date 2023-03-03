@@ -74,12 +74,12 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                for="main-profile-day">Дата рождения</label>
                         <div class="col-sm-12 col-md-12">
 							<?if(strtotime(date('m/d/Y')) < strtotime($arResult['arUser']['UF_DATE_CHANGE_BH'])):?>
-                            <input class="form-control input_lk" type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
+                            <input class="form-control input_lk" type="text" name="PERSONAL_BIRTHDAY_INACTIVE" maxlength="50"
                                    id="main-profile-day2" disabled value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
 								<?$dateChange = '<br><b>Изменить дату рождения можно будет '.date('d/m/Y',strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])).'</b>';?>
 							<?else:?>
-                            <input class="form-control input_lk datepicker-here date_input mr-3" type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
-                                   id="main-profile-day2" value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
+                            <input class="form-control input_lk user-birthday" readonly type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
+                                   id="main-profile-day2"  value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
 							<?endif;?>
                         </div>
 						<div class="info-date">
@@ -88,14 +88,6 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
 						<?=$dateChange?>
 						</div>
                     </div>
-					<script>//$('input[name="PERSONAL_BIRTHDAY"]').inputmask("99/99/9999",{ "placeholder": "dd/mm/yyyy" });;
-					    Inputmask("datetime", {
-        inputFormat: "dd/mm/yyyy",
-        placeholder: "_",
-        leapday: "-02-29",
-        alias: "tt/mm/jjjj"
-    }).mask("input[name='PERSONAL_BIRTHDAY']");
-					</script>
                     <div class="form-group  mb-2">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-email">Почта</label>
@@ -105,6 +97,34 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"/>
                         </div>
                     </div>
+                    <? if ($arResult['CAN_EDIT_PASSWORD']) { ?>
+                        <div class="form-group  mb-2">
+                            <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
+                                   for="main-profile-password">Новый пароль</label>
+                            <div class="col-sm-12 col-md-12">
+                                <input class=" form-control input_lk bx-auth-input main-profile-password"
+                                       type="password"
+                                       name="NEW_PASSWORD" minlength="6" maxlength="50" id="main-profile-password" value=""
+                                       autocomplete="new-password"/>
+                            </div>
+                        </div>
+                        <div class="form-group  mb-2">
+                            <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label main-profile-password"
+                                   for="main-profile-password-confirm">
+                                    Подтвердите пароль
+                            </label>
+                            <div class="col-sm-12 col-md-12">
+                                <input class="form-control input_lk" type="password" name="NEW_PASSWORD_CONFIRM"
+                                       minlength="6"
+                                       maxlength="50" value="" id="main-profile-password-confirm" autocomplete="new-password"/>
+                                <small id="emailHelp" class="text_small">
+                                    <? echo $arResult["GROUP_POLICY"]["PASSWORD_REQUIREMENTS"]; ?>
+                                </small>
+                            </div>
+                        </div>
+                        <label class="col-sm-12 col-md-12 link_input_address d-none" id="password-notification-error">
+                        </label>
+                    <? } ?>
                     <div class="form-group  mb-5" style="display:none">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                for="main-profile-radio">Информировать меня по заказам через</label>
@@ -120,36 +140,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         </div>
                     </div>
 
-                    <!--                    --><? //
-                    //                    if ($arResult['CAN_EDIT_PASSWORD']) {
-                    //                        ?>
-                    <!--                        <div class="form-group  mb-2">-->
-                    <!--                            <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"-->
-                    <!--                                   for="main-profile-password">Новый пароль</label>-->
-                    <!--                            <div class="col-sm-12 col-md-12">-->
-                    <!--                                <input class=" form-control input_lk bx-auth-input main-profile-password"-->
-                    <!--                                       type="password"-->
-                    <!--                                       name="NEW_PASSWORD" maxlength="50" id="main-profile-password" value=""-->
-                    <!--                                       autocomplete="off"/>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="form-group  mb-2">-->
-                    <!--                            <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label main-profile-password"-->
-                    <!--                                   for="main-profile-password-confirm">-->
-                    <!--                                Подтвердите пароль-->
-                    <!--                            </label>-->
-                    <!--                            <div class="col-sm-12 col-md-12">-->
-                    <!--                                <input class="form-control input_lk" type="password" name="NEW_PASSWORD_CONFIRM"-->
-                    <!--                                       maxlength="50" value="" id="main-profile-password-confirm" autocomplete="off"/>-->
-                    <!--                                <small id="emailHelp" class="text_small">-->
-                    <!--                                    -->
-                    <? // echo $arResult["GROUP_POLICY"]["PASSWORD_REQUIREMENTS"]; ?><!--</small>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--                        --><? //
-                    //
-                    //                    }?>
-                    <h5 class="mt-2 mb-4" style="margin-top:35px !important; "><b>Данные доставки</b></h5>
+                    <!--<h5 class="mt-2 mb-4" style="margin-top:35px !important; "><b>Данные доставки</b></h5>-->
 
                     <?php
                     $address = [];
@@ -295,6 +286,19 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
     ); ?>
 
     <div class="clearfix"></div>
+    <script>
+        let date_now = new Date();
+        let year_now = date_now.getFullYear();
+        let date_datipicker = date_now.setFullYear(year_now - 18);
+
+        $('input[name="PERSONAL_BIRTHDAY"]').datepicker({
+            dateFormat: 'dd/mm/yyyy',
+            maxDate: date_now,
+            autoClose: true,
+            toggleSelected: false,
+            placeholder: "dd/mm/yyyy"
+        });
+    </script>
     <script>
         BX.Sale.PrivateProfileComponent.init();
     </script>
