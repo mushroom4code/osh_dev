@@ -51,6 +51,20 @@ class DeliveryHelper
         return $city['LOCATION_NAME'];
     }
 
+    /** Обновляет ПВЗ для службы доставки PickPoint
+     * @return string[]
+     */
+    public static function updatePickPointPVZ(): array
+    {
+        try {
+            $pickPoint = new PickPointDelivery();
+            $pickPoint->updatePointsForPickPoint();
+        } catch (\Exception $e) {
+            return ['status'=>'failed'];
+        }
+        return ['status'=>'success'];
+    }
+
     public static function getAllPVZ($deliveries, $city_name, $codeCity)
     {
         $id_feature = 0;

@@ -1,5 +1,7 @@
 <?php
 
+/** @var $APPLICATION */
+
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\HttpApplication;
 use Bitrix\Main\Loader;
@@ -14,7 +16,7 @@ Loader::includeModule($module_id);
 $aTabs = array(
     // PickPoint
     array(
-        'DIV'     => 'edit1',
+        'DIV'     => 'pickpoint',
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_PP'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_PP'),
         'OPTIONS' => array(
@@ -102,6 +104,7 @@ $aTabs = array(
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
         'OPTIONS' => array(
+            Loc::getMessage('PickPoint_ikn'),
             array(
                 'PEK_login',
                 Loc::getMessage('PEK_login'),
@@ -151,6 +154,22 @@ $tabControl->begin();
             if ($aTab['OPTIONS']) {
                 $tabControl->beginNextTab();
                 __AdmSettingsDrawList($module_id, $aTab['OPTIONS']);
+
+                if ($aTab['DIV'] === 'pickpoint') {
+                    ?>
+                    <tr>
+                        <td>
+                            <div style="display: none" id="pickpoint_load_points_label"
+                                     class="adm-info-message-wrap">
+                        </td>
+                        <td>
+                            <input type="button" id="pickpoint_load_points"
+                                   value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                }
             }
         }
         $tabControl->buttons();
@@ -172,7 +191,6 @@ if ($request->isPost() && check_bitrix_sessid()) {
 
     foreach ($aTabs as $aTab) {
         foreach ($aTab['OPTIONS'] as $arOption) {
-
             if (!is_array($arOption)) {
                 continue;
             }
@@ -190,4 +208,46 @@ if ($request->isPost() && check_bitrix_sessid()) {
 
     LocalRedirect($APPLICATION->getCurPage().'?mid='.$module_id.'&lang='.LANGUAGE_ID);
 
-}
+} ?>
+
+<script>
+    BX.ready(()=>{
+        BX.bind(BX('pickpoint_load_points'), 'click', BX.proxy((event)=>{
+            event.preventDefault()
+            const label = BX('pickpoint_load_points_label');
+            BX.cleanNode(label)
+            BX.removeClass(label, 'adm-info-message-green')
+            BX.removeClass(label, 'adm-info-message-red')
+
+            BX.append(BX.create('div', {
+                attrs: {className: 'adm-info-message'},
+                text: 'Загружается...'
+            }), label)
+            BX.show(label);
+
+            BX.ajax({
+                url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
+                data: {action: 'updatePickPointPoints'},
+                method: 'POST',
+                dataType: 'json',
+                onsuccess: (data) => {
+                    if (data.status === 'success') {
+                        BX.cleanNode(label)
+                        BX.addClass(label, 'adm-info-message-green')
+                        BX.append(BX.create('div', {
+                            attrs: {className: 'adm-info-message'},
+                            text: 'Успешно загружено'
+                        }), label)
+                    } else {
+                        BX.cleanNode(label)
+                        BX.addClass(label, 'adm-info-message-red')
+                        BX.append(BX.create('div', {
+                            attrs: {className: 'adm-info-message'},
+                            text: 'Ошибка'
+                        }), label)
+                    }
+                },
+            })
+        }))
+    })
+</script>

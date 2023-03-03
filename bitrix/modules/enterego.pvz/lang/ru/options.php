@@ -1,11 +1,10 @@
 <?php
 
-
-
 $MESS["EE_PVZ_OPTIONS_PP"] = "PickPoint";
 $MESS["PickPoint_host"] = "Хост";
 $MESS["PickPoint_login"] = "Логин";
 $MESS["PickPoint_password"] = "Пароль";
+$MESS["PickPoint_ikn"] = "ЛКН";
 $MESS["PickPoint_ikn"] = "ЛКН";
 
 $MESS["EE_PVZ_OPTIONS_FP"] = "FivePost";
@@ -27,3 +26,5 @@ $MESS["PEK_apilink"] = "apiLink";
 
 $MESS["EE_PVZ_OPTIONS_INPUT_APPLY"] = "Сохранить";
 $MESS["EE_PVZ_OPTIONS_INPUT_DEFAULT"] = "Отменить";
+
+$MESS["PVZ_UPDATE_POINTS"] = 'Обновить пункты выдачи';

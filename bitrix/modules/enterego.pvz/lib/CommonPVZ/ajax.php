@@ -23,6 +23,8 @@ $cityName = $request->get('cityName');
 switch ($action) {
     case 'getCityName':
         exit(DeliveryHelper::getCityName($codeCity));
+    case 'updatePickPointPoints':
+        exit(json_encode(DeliveryHelper::updatePickPointPVZ()));
     case 'getPVZList':
         exit(json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity)));
     default:

@@ -61,6 +61,46 @@ class enterego_pvz extends CModule
         return true;
     }
 
+    protected function getDB(){
+        return array(
+            'ent_pickpoint_points'    => 'Points',
+        );
+    }
+    function InstallDB(){
+        global $DB, $APPLICATION;
+        $this->errors = false;
+
+        $arDB = $this->getDB();
+
+        foreach($arDB as $name => $path)
+            if(!$DB->Query("SELECT 'x' FROM ".$name, true)){
+                $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/".$this->MODULE_ID."/install/db/mysql/install".$path.".sql");
+                if($this->errors !== false){
+                    $APPLICATION->ThrowException(implode("", $this->errors));
+                    return false;
+                }
+            }
+
+        return true;
+    }
+
+    function UnInstallDB(){
+        global $DB, $APPLICATION;
+        $this->errors = false;
+
+        $arDB = $this->getDB();
+
+        foreach($arDB as $path){
+            $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/".$this->MODULE_ID."/install/db/mysql/uninstall".$path.".sql");
+            if(!empty($this->errors)){
+                $APPLICATION->ThrowException(implode("", $this->errors));
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     function InstallFiles()
     {
         CopyDirFiles($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . $this->MODULE_ID . "/install/CommonPVZ/", $_SERVER["DOCUMENT_ROOT"] . "/bitrix/php_interface/include/sale_delivery/CommonPVZ/", true, true);
@@ -75,6 +115,7 @@ class enterego_pvz extends CModule
 
     function DoInstall()
     {
+        $this->InstallDB();
         $this->InstallFiles();
         $this->InstallEvents();
         ModuleManager::registerModule($this->MODULE_ID);
@@ -82,6 +123,7 @@ class enterego_pvz extends CModule
 
     function DoUninstall()
     {
+        $this->UnInstallDB();
         $this->UnInstallFiles();
         $this->UnInstallEvents();
         ModuleManager::unRegisterModule($this->MODULE_ID);
