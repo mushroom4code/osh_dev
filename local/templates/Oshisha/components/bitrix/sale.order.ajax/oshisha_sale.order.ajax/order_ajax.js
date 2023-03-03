@@ -4738,16 +4738,15 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             });
 
             // TODO Enterego pickup
-            const id_del = parseInt(deliveryId);
-            const arDelivery = this.result.AR_DELIVERY_PICKUP;
-            let empty = false;
-            if (arDelivery?.indexOf(id_del) !== -1) {
-                empty = true;
-            }
+            const arDelivery = this.params.AR_DELIVERY_PICKUP;
+            let empty;
+            empty = arDelivery.indexOf(String(deliveryId)) !== -1;
+
             itemNode = BX.create('DIV', {
                 props: {className: 'delivery bx-soa-pp-company'},
                 children: [label],
             });
+
             checked && BX.addClass(itemNode, 'bx-selected');
 
             //enterego
@@ -5595,6 +5594,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (!propsItemsContainer)
                 propsItemsContainer = this.propsBlockNode.querySelector('.col-sm-12.bx-soa-customer');
 
+            const arDelivery = this.params.AR_DELIVERY_PICKUP;
             while (group = groupIterator()) {
                 propsIterator = group.getIterator();
                 while (property = propsIterator()) {
@@ -5603,9 +5603,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     if (propsNode.classList.contains('delivery')) {
                         if (this.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
                             // TODO Enterego pickup
-                            const id_del = parseInt(this.result.DELIVERY.find(item => item.CHECKED === 'Y').ID);
-                            const arDelivery = this.result.AR_DELIVERY_PICKUP;
-                            if(arDelivery?.indexOf(id_del) !== -1){
+                            const id_del = this.result.DELIVERY.find(item => item.CHECKED === 'Y').ID;
+                            if (arDelivery.indexOf(String(id_del)) !== -1) {
                                 disabled = true;
                             }
                             this.getPropertyRowNode(property, propsItemsContainer, disabled, empty);
@@ -6005,7 +6004,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         },
 
         insertStringProperty: function (property, propsItemNode, disabled, empty = false) {
-            var  propContainer;
+            var propContainer;
             // TODO Enterego pickup
             propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
             property.appendTo(propContainer);
@@ -6147,6 +6146,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     if (disabled === true) {
                         inputs[i].setAttribute('readonly', 'readonly');
                     }
+                    console.log(empty)
                     if (empty === true) {
                         inputs[i].value = '';
                     }

@@ -693,7 +693,7 @@ if ($request->get('ORDER_ID') <> '') {
 
     $arResult['DELIVERY_OPTIONS']['OSH_COURIER_ID'] = 93;
     $arResult['DELIVERY_OPTIONS']['OSH_PICKUP_ID'] = 40;
-
+    $arParams['AR_DELIVERY_PICKUP'] = AR_DELIVERY_PICKUP;
     ?>
     <script>
         <?php if ($USER->IsAuthorized()) {?>

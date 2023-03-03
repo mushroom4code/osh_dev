@@ -4474,10 +4474,6 @@ class SaleOrderAjax extends \CBitrixComponent
         $result['WARNING'] = $arResult["WARNING"];
 
         $arResult['LOCATIONS'] = $this->getLocationsResult();
-        /**
-         * Enterego - delivery ids pickup
-         */
-        $this->arResult['JS_DATA']['AR_DELIVERY_PICKUP'] = AR_DELIVERY_PICKUP;
         foreach (GetModuleEvents("sale", 'OnSaleComponentOrderJsData', true) as $arEvent) {
             ExecuteModuleEventEx($arEvent, [&$this->arResult, &$this->arParams]);
         }
