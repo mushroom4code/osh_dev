@@ -20,6 +20,66 @@ $this->setFrameMode(true);
 
 global $searchFilter;
 
+if (Loader::includeModule("sale")) {
+    $recommendedData = array();
+    $recommendedCacheId = array('IBLOCK_ID' => $arParams['IBLOCK_ID']);
+
+    $obCache = new CPHPCache();
+    if ($obCache->InitCache(36000, serialize($recommendedCacheId), '/catalog/recommended')) {
+        $recommendedData = $obCache->GetVars();
+    } elseif ($obCache->StartDataCache()) {
+        if (Loader::includeModule('catalog')) {
+            $arSku = CCatalogSku::GetInfoByProductIBlock($arParams['IBLOCK_ID']);
+            $recommendedData['OFFER_IBLOCK_ID'] = (!empty($arSku) ? $arSku['IBLOCK_ID'] : 0);
+            $recommendedData['IBLOCK_LINK'] = '';
+            $recommendedData['ALL_LINK'] = '';
+            $rsProps = CIBlockProperty::GetList(
+                array('SORT' => 'ASC', 'ID' => 'ASC'),
+                array('IBLOCK_ID' => $arParams['IBLOCK_ID'], 'PROPERTY_TYPE' => 'E', 'ACTIVE' => 'Y')
+            );
+            $found = false;
+            while ($arProp = $rsProps->Fetch()) {
+                if ($found) {
+                    break;
+                }
+
+                if ($arProp['CODE'] == '') {
+                    $arProp['CODE'] = $arProp['ID'];
+                }
+
+                $arProp['LINK_IBLOCK_ID'] = intval($arProp['LINK_IBLOCK_ID']);
+                if ($arProp['LINK_IBLOCK_ID'] != 0 && $arProp['LINK_IBLOCK_ID'] != $arParams['IBLOCK_ID']) {
+                    continue;
+                }
+
+                if ($arProp['LINK_IBLOCK_ID'] > 0) {
+                    if ($recommendedData['IBLOCK_LINK'] == '') {
+                        $recommendedData['IBLOCK_LINK'] = $arProp['CODE'];
+                        $found = true;
+                    }
+                } else {
+                    if ($recommendedData['ALL_LINK'] == '') {
+                        $recommendedData['ALL_LINK'] = $arProp['CODE'];
+                    }
+                }
+            }
+
+            if ($found) {
+                if (defined('BX_COMP_MANAGED_CACHE')) {
+                    global $CACHE_MANAGER;
+                    $CACHE_MANAGER->StartTagCache('/catalog/recommended');
+                    $CACHE_MANAGER->RegisterTag('iblock_id_' . $arParams['IBLOCK_ID']);
+                    $CACHE_MANAGER->EndTagCache();
+                }
+            }
+        }
+
+        $obCache->EndDataCache($recommendedData);
+    }
+}
+
+
+
 $elementOrder = array();
 if ($arParams['USE_SEARCH_RESULT_ORDER'] === 'N') {
     $elementOrder = array(
@@ -73,6 +133,103 @@ if (Loader::includeModule('search')) {
     } else {
         if (is_array($arElements)) {
             echo '<div class="mb-5" style="color: #999999;font-weight: 600;font-size: 37px;">К сожалению, такого товара нет на сайте.</div>';
+
+            if (!isset($arParams['USE_BIG_DATA']) || $arParams['USE_BIG_DATA'] != 'N') {
+
+                ?>
+                <div class="row mb-3 mt-5">
+                    <div class="col" data-entity="parent-container">
+                        <h4><b>Рекомендации для вас</b></h4>
+                        <?php $APPLICATION->IncludeComponent(
+                            "bitrix:catalog.top",
+                            "oshisha_catalog.top_new",
+                            array(
+                                "ACTION_VARIABLE" => "action",
+                                "ADD_PICT_PROP" => "-",
+                                "ADD_PROPERTIES_TO_BASKET" => "Y",
+                                "ADD_TO_BASKET_ACTION" => "ADD",
+                                "BASKET_URL" => "/personal/basket.php",
+                                "CACHE_FILTER" => "N",
+                                "CACHE_GROUPS" => "Y",
+                                "CACHE_TIME" => "36000000",
+                                "CACHE_TYPE" => "A",
+                                "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
+                                "COMPATIBLE_MODE" => "Y",
+                                "COMPONENT_TEMPLATE" => "oshisha_catalog.top_new",
+                                "CONVERT_CURRENCY" => "N",
+                                "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
+                                "DETAIL_URL" => "",
+                                "DISPLAY_COMPARE" => "N",
+                                "ELEMENT_COUNT" => "16",
+                                "ELEMENT_SORT_FIELD" => "timestamp_x",
+                                "ELEMENT_SORT_FIELD2" => "id",
+                                "ELEMENT_SORT_ORDER" => "asc",
+                                "ELEMENT_SORT_ORDER2" => "desc",
+                                "ENLARGE_PRODUCT" => "PROP",
+                                "ENLARGE_PROP" => "-",
+                                "FILTER_NAME" => "",
+                                "HIDE_NOT_AVAILABLE" => "Y",
+                                "HIDE_NOT_AVAILABLE_OFFERS" => "N",
+                                "IBLOCK_ID" => IBLOCK_CATALOG,
+                                "IBLOCK_TYPE" => "1c_catalog",
+                                "LABEL_PROP" => array(),
+                                "LABEL_PROP_MOBILE" => "",
+                                "LABEL_PROP_POSITION" => "top-left",
+                                "LINE_ELEMENT_COUNT" => "4",
+                                "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
+                                "MESS_BTN_BUY" => "Купить",
+                                "MESS_BTN_COMPARE" => "Сравнить",
+                                "MESS_BTN_DETAIL" => "Подробнее",
+                                "MESS_NOT_AVAILABLE" => "Нет в наличии",
+                                "OFFERS_FIELD_CODE" => array(
+                                    0 => "",
+                                    1 => "",
+                                ),
+                                "OFFERS_LIMIT" => "4",
+                                "OFFERS_SORT_FIELD" => "sort",
+                                "OFFERS_SORT_FIELD2" => "id",
+                                "OFFERS_SORT_ORDER" => "asc",
+                                "OFFERS_SORT_ORDER2" => "desc",
+                                "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
+                                "PARTIAL_PRODUCT_PROPERTIES" => "N",
+                                "PRICE_CODE" => BXConstants::PriceCode(),
+                                "FILL_ITEM_ALL_PRICES" => "Y",
+                                "PRICE_VAT_INCLUDE" => "Y",
+                                "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
+                                "PRODUCT_DISPLAY_MODE" => "Y",
+                                "PRODUCT_ID_VARIABLE" => "id",
+                                "PRODUCT_PROPS_VARIABLE" => "prop",
+                                "PRODUCT_QUANTITY_VARIABLE" => "quantity",
+                                "PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false}]",
+                                "PRODUCT_SUBSCRIPTION" => "Y",
+                                "PROPERTY_CODE_MOBILE" => "",
+                                "ROTATE_TIMER" => "30",
+                                "SECTION_URL" => "",
+                                "SEF_MODE" => "N",
+                                "SHOW_CLOSE_POPUP" => "N",
+                                "SHOW_DISCOUNT_PERCENT" => "N",
+                                "SHOW_MAX_QUANTITY" => "N",
+                                "SHOW_OLD_PRICE" => "N",
+                                "SHOW_PAGINATION" => "Y",
+                                "SHOW_PRICE_COUNT" => "1",
+                                "SHOW_SLIDER" => "Y",
+                                "SLIDER_INTERVAL" => "3000",
+                                "SLIDER_PROGRESS" => "N",
+                                "TEMPLATE_THEME" => "blue",
+                                "USE_ENHANCED_ECOMMERCE" => "N",
+                                "USE_PRICE_COUNT" => "N",
+                                "USE_PRODUCT_QUANTITY" => "N",
+                                "VIEW_MODE" => "SLIDER"
+                            ),
+                            false
+                        ); ?>
+                            ),
+                            false
+                        ); ?>
+                    </div>
+                </div>
+                <?
+            }
             return;
         }
     }
