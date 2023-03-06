@@ -99,7 +99,7 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                             : $section['NAME'],
                     ];
 
-                    $style = "background-image: url(" . $section['PICTURE']['SRC'] . ");";
+                    $style = "background-image: url(" . $section['PICTURE']['SRC'] . "); background-size: 80%;";
                 }
                 if (strripos($style, 'empty.svg') !== false) {
                     $style = "background-image: url('/local/assets/images/osh.png');    background-size: 69%;";
