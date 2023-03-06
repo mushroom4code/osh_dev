@@ -99,15 +99,15 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                             : $section['NAME'],
                     ];
 
-                    $style = "background-image: url(" . $section['PICTURE']['SRC'] . "); background-size: 80%;";
+                    $style = "background-image: url(" . $section['PICTURE']['SRC'] . ");";
                 }
                 if (strripos($style, 'empty.svg') !== false) {
-                    $style = "background-image: url('/local/assets/images/osh.png');    background-size: 69%;";
+                    $style = "background-image: url('/local/assets/images/osh.png');";
                 } ?>
                 <li id="<?= $this->getEditAreaId($section['ID']) ?>"
                     class="catalog-section-list-item col-lg-4 col-md-4 col-12 p-3"
                     data-item-number="<?= $sectionNumber; ?>">
-                    <a class="catalog-section-list-tile-img-container p-4 br-10 bg-gray-white" style="<?= $style ?>"
+                    <a class="catalog-section-list-tile-img-container p-4 br-10 bg-gray-white" style="<?= $style ?> background-size: 75%; "
                        href="<?= $section['SECTION_PAGE_URL'] ?>">
                         <span class="catalog-section-list-item-inner">
                                 <h3 class="catalog-section-list-item-title"><?= $section['NAME'] ?></h3>
