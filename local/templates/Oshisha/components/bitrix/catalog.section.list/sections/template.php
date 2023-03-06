@@ -57,37 +57,7 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                 $this->addDeleteAction($section['ID'], $section['DELETE_LINK'], $sectionDelete, $sectionDeleteParams);
 
                 if (!empty($section['PICTURE'])) {
-                    $xResizedImage = \CFile::ResizeImageGet(
-                        $section['PICTURE'],
-                        [
-                            'width' => 200,
-                            'height' => 200,
-                        ]
-                    );
-
-                    $x2ResizedImage = \CFile::ResizeImageGet(
-                        $section['PICTURE'],
-                        [
-                            'width' => 400,
-                            'height' => 400,
-                        ]
-                    );
-
-                    if (!$xResizedImage || !$x2ResizedImage) {
-                        $xResizedImage = [
-                            'src' => $section['PICTURE']['SRC'],
-                        ];
-                        $x2ResizedImage = $xResizedImage;
-                    }
-
-                    $xResizedImage = \Bitrix\Iblock\Component\Tools::getImageSrc([
-                        'SRC' => $xResizedImage['src']
-                    ]);
-                    $x2ResizedImage = \Bitrix\Iblock\Component\Tools::getImageSrc([
-                        'SRC' => $x2ResizedImage['src']
-                    ]);
-
-                    $style = "background-image: url('{$xResizedImage}');";
+                    $style = "background-image: url('{$section['PICTURE']['SRC']}');";
                 } else {
                     $section['PICTURE'] = [
                         'SRC' => $emptyImagePath,
@@ -102,12 +72,12 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                     $style = "background-image: url(" . $section['PICTURE']['SRC'] . ");";
                 }
                 if (strripos($style, 'empty.svg') !== false) {
-                    $style = "background-image: url('/local/assets/images/osh.png');";
+                    $style = "background-image: url('/local/assets/images/osh.png'); background-size: 75%;";
                 } ?>
                 <li id="<?= $this->getEditAreaId($section['ID']) ?>"
                     class="catalog-section-list-item col-lg-4 col-md-4 col-12 p-3"
                     data-item-number="<?= $sectionNumber; ?>">
-                    <a class="catalog-section-list-tile-img-container p-4 br-10 bg-gray-white" style="<?= $style ?> background-size: 75%; "
+                    <a class="catalog-section-list-tile-img-container p-4 br-10 bg-gray-white" style="<?= $style ?> "
                        href="<?= $section['SECTION_PAGE_URL'] ?>">
                         <span class="catalog-section-list-item-inner">
                                 <h3 class="catalog-section-list-item-title"><?= $section['NAME'] ?></h3>
