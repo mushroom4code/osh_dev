@@ -680,12 +680,13 @@ class CBitrixPersonalOrderListComponent extends CBitrixComponent
 
                 //enterego changed from getExistsItem to getExsistsItems
 				$item = $basket->getExistsItems($oldBasketItem->getField('MODULE'), $oldBasketItem->getField('PRODUCT_ID'), $propertyList);
-                //enterego end
+
 
 				if ($item)
 				{
-					$item->setField('QUANTITY', $item->getQuantity() + $oldBasketItem->getQuantity());
+					$item[0]->setField('QUANTITY', $item[0]->getQuantity() + $oldBasketItem->getQuantity());
 				}
+                //enterego end
 				else
 				{
 					$item = $basket->createItem($oldBasketItem->getField('MODULE'), $oldBasketItem->getField('PRODUCT_ID'));
