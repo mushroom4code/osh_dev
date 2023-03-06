@@ -27,6 +27,7 @@ function sortByField(string $field, string $params, ?string $element = null, ?st
     }
 
     foreach ($listOrders as &$itemOrder) {
+        $itemOrder['IS_NOT_ACTIVE_ITEMS_PRESENT'] = false;
         $ordersBasket = CSaleBasket::GetList(array(), array('ORDER_ID' => $itemOrder['ID']), false, ['nTopCount' => 5]);
         if (!empty($ordersBasket)) {
             while ($result = $ordersBasket->Fetch()) {
@@ -38,12 +39,13 @@ function sortByField(string $field, string $params, ?string $element = null, ?st
                     array('ID', 'NAME', 'ACTIVE', 'DETAIL_PAGE_URL', 'PREVIEW_PICTURE', 'DETAIL_PICTURE')
                 );
                 $ar_fields = $my_elements->GetNext();
-                $itemOrder['ACTIVE'][] = $ar_fields['ACTIVE'];
+                if ($ar_fields['ACTIVE'] == 'N') {
+                    $itemOrder['IS_NOT_ACTIVE_ITEMS_PRESENT'] = true;
+                }
                 $itemOrder['PICTURE'][] = CFile::GetPath($ar_fields['PREVIEW_PICTURE']);
             }
         }
     }
-
     return $listOrders;
 }
 
