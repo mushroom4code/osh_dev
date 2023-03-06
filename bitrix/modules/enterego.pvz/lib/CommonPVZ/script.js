@@ -14,12 +14,17 @@ BX.SaleCommonPVZ = {
     pvzPrice: null,
     isInit: false,
     dataPVZ: null,
+    objectManager: null,
 
     init: function (params) {
         console.log('... CommonPVZ init ...');
         this.params = params.params;
         this.refresh();
         this.isInit = true;
+
+        $(document).on("click", "#commmon_pvz_select_point", function() {
+            console.log(this)
+        });
     },
 
     openMap: function () {
@@ -152,17 +157,87 @@ BX.SaleCommonPVZ = {
             }
         });
     },
+
+    getPointData: function (point) {
+        this.pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
+        if (typeof point.properties.code_pvz !== 'undefined') {
+            this.pvzFullAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress + ' #' + point.properties.code_pvz;
+        }
+        else {
+            this.pvzFullAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
+        }
+
+        var dataToHandler = {
+            action: 'getPrice',
+            code_city: this.curCityCode,
+            delivery: point.properties.deliveryName,
+            to: point.properties.fullAddress,
+            weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
+            fivepost_zone: point.properties.fivepostZone,
+            hubregion: point.properties.hubregion,
+            name_city: this.curCityName,
+            code_pvz: point.properties.code_pvz
+        };
+
+        return dataToHandler;
+    },
+
+    selectPvz: function (objectId) {
+
+        const __this = this
+        if (!BX.Sale.OrderAjaxComponent.startLoader())
+            return;
+
+        __this.pvzPopup.close();
+
+        var obj = this.objectManager.objects.getById(objectId);
+        var dataToHandler = this.getPointData(obj);
+
+        __this.refresh();
+        __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
+    },
+
+    getSelectPvzPrice: function (point) {
+        var dataToHandler = this.getPointData(point);
+
+        const __this = this;
+        BX.ajax({
+            url: __this.ajaxUrlPVZ,
+            method: 'POST',
+            data: {
+                'dataToHandler': dataToHandler,
+                'action': 'getPVZPrice'
+            },
+            onsuccess: function (res) {
+                point.properties = {
+                    ...point.properties,
+                    balloonContent: `
+                        <div>Цена: ${res}</div> 
+                        <a href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${point.id})" >Выбрать</a>
+                    `
+                };
+                __this.objectManager.objects.balloon.setData(point);
+            },
+            onfailure: function (res) {
+                console.log('error getPVZList');
+                BX.Sale.OrderAjaxComponent.endLoader();
+                BX.Sale.OrderAjaxComponent.showError(BX('bx-soa-delivery'), 'Ошибка запроса ПВЗ. Попробуйте позже.');
+                __this.pvzPopup.close();
+
+            }
+        });
+    },
+
     /**
      *  Установка маркеров на карту PVZ
      */
     setPVZOnMap: function () {
-
         var objectManager = new ymaps.ObjectManager({
             clusterize: true,
             clusterHasBalloon: true
         });
         objectManager.add(this.pvzObj);
-
+        this.objectManager = objectManager;
         var __this = this;
 
         __this.propsMap.geoObjects.add(objectManager);
@@ -190,40 +265,9 @@ BX.SaleCommonPVZ = {
                 object = objectManager.objects.getById(objectId);
 
             if (objectManager.objects.balloon.isOpen(objectId)) {
-                object.properties = {balloonContent: 'load'};
-                objectManager.objects.balloon.setData(object);
+                __this.getSelectPvzPrice(object);
             }
-
-            const t = 1;
         });
-        __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
-
-        // objectManager.objects.events.add(['click', 'multitouchstart'], function (e) {
-            // if (!BX.Sale.OrderAjaxComponent.startLoader())
-            //     return;
-            // __this.pvzPopup.close();
-            // var objectId = e.get('objectId'),
-            //     obj = objectManager.objects.getById(objectId);
-            // __this.pvzAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
-            // if (typeof obj.properties.code_pvz !== 'undefined')
-            //     __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress + ' #' + obj.properties.code_pvz;
-            // else
-            //     __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
-            //
-            // var dataToHandler = {
-            //     action: 'getPrice',
-            //     code_city: __this.curCityCode,
-            //     delivery: obj.properties.deliveryName,
-            //     to: obj.properties.fullAddress,
-            //     weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
-            //     fivepost_zone: obj.properties.fivepostZone,
-            //     hubregion: obj.properties.hubregion,
-            //     name_city: __this.curCityName,
-            //     code_pvz: obj.properties.code_pvz
-            // };
-            // __this.refresh();
-            // __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
-        // });
     },
 
     sendRequestToComponent: function (action, actionData) {

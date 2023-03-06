@@ -1,5 +1,6 @@
 <?php
 
+use CommonPVZ\CommonPVZ;
 use CommonPVZ\DeliveryHelper;
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
@@ -26,7 +27,18 @@ switch ($action) {
     case 'updatePickPointPoints':
         exit(json_encode(DeliveryHelper::updatePickPointPVZ()));
     case 'getPVZList':
-        exit(json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity)));
+        $response  = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity));
+        exit($response);
+    case 'getPVZPrice':
+        $dataToHandler = $request->get('dataToHandler');
+        if ($dataToHandler['code_pvz'] === 'undefined') {
+            $adr = $dataToHandler['delivery'] . ': ' . $dataToHandler['to'];
+        } else {
+            $adr = $dataToHandler['delivery'] . ': ' . $dataToHandler['to'] . ' #' . $dataToHandler['code_pvz'];
+        }
+        $delivery = CommonPVZ::getInstanceObject($dataToHandler['delivery']);
+        $price = $delivery->getPrice($dataToHandler);
+        exit($price);
     default:
         exit(json_encode(['status'=>'error', 'errors'=>['not correct action']]));
 }
