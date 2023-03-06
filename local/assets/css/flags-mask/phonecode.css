@@ -1,0 +1,94 @@
+.country-phone-options {
+    display: none;
+    position: absolute;
+    width: 340px;
+    margin-top: 20px;
+    z-index: 600;
+    background-color: white;
+    filter: drop-shadow(0px 0px 6px rgba(93, 93, 93, 0.2));
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.options-list {
+    max-height: 400px;
+    margin-top: 10px;
+    overflow: auto;
+}
+
+.br-0 {
+    border-radius: 0;
+}
+
+.country-phone-option {
+    cursor: pointer;
+    background: white;
+    padding: 5px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-direction: row-reverse;
+}
+
+.country-phone-option:hover, .country-phone-option.hovered {
+    background-color: #eeeeee;
+}
+
+.country-phone-search {
+    width: 100%;
+}
+
+.flag-list {
+    font-size: 20px;
+}
+
+.form-group .col-md-12 .country-phone-selected {
+    right: 33px;
+}
+
+.form-group .country-phone-selected {
+    right: 10px;
+}
+
+.register .country-phone-selected{
+    right: 16px;
+    top: 9px;
+}
+
+.size-wh-22 {
+    width: 22px;
+    height: 22px;
+}
+
+.country-phone-selected {
+    position: absolute;
+    top: 7px;
+    cursor: pointer;
+    right: 9px;
+}
+
+.country-phone-option span {
+    float: right;
+    color: #999999;
+    min-width: 66px;
+    text-align: right;
+    font-size: 13px;
+}
+
+.country-phone-option:hover span, .country-phone-option.hovered span {
+    color: #000;
+}
+
+.country-phone-options, .country-phone-searched {
+    width: 298px;
+    margin: 30px 0 0 -5px;
+}
+
+.country-phone-search-label {
+    position: absolute;
+    margin: -20px 0 0 4px;
+    color: #999 !important;
+    font-size: 13px !important;
+}

@@ -6197,7 +6197,6 @@ body.hide-jivo > jdiv {
 #popup_mess_order_copy .confirmation_container {
     display: flex;
     justify-content: space-between;
-    width: 80%
 }
 
 #popup_mess_order_copy .confirmation_container a {
@@ -6428,4 +6427,10 @@ body.hide-jivo > jdiv {
     .by-card .item-product-info {
         padding: 15px 10px;
     }
+}
+
+#popup_mess_order_copy .popup-window-close-icon:after {
+    background-image: url('/local/templates/Oshisha/images/close_mini.png');
+    height: 30px;
+    width: 31px;
 }
