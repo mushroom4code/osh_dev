@@ -30,6 +30,7 @@ function get_orders(array $filter = []): array
     }
 
     foreach ($listOrders as &$itemOrder) {
+        $itemOrder['IS_NOT_ACTIVE_ITEMS_PRESENT'] = false;
         $ordersBasket = CSaleBasket::GetList(array(), array('ORDER_ID' => $itemOrder['ID']), false, ['nTopCount' => 5]);
         if (!empty($ordersBasket)) {
             while ($result = $ordersBasket->Fetch()) {
@@ -41,16 +42,18 @@ function get_orders(array $filter = []): array
                     array('ID', 'NAME', 'ACTIVE','DETAIL_PAGE_URL', 'PREVIEW_PICTURE', 'DETAIL_PICTURE')
                 );
                 $ar_fields = $my_elements->GetNext();
-                $itemOrder['ACTIVE'][] = $ar_fields['ACTIVE'];
+                if($ar_fields['ACTIVE'] == 'N') {
+                    $itemOrder['IS_NOT_ACTIVE_ITEMS_PRESENT'] = true;
+                }
                 $itemOrder['PICTURE'][] = CFile::GetPath($ar_fields['PREVIEW_PICTURE']);
             }
         }
     }
-
     return $listOrders;
 }
 
-require('show_order_block.php');
+require_once('show_order_block.php');
+
 
 if (!empty($arResult['ERRORS']['FATAL'])) {
     foreach ($arResult['ERRORS']['FATAL'] as $code => $error) {
