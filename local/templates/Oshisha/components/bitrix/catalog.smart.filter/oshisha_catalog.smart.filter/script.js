@@ -348,8 +348,6 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 			}
 		}
 		this.popups = [];
-		$('input.check_input.form-check-input').not('#hide_not_available_id').parent().addClass('d-none');
-		$('div.smart-filter-parameters-box').not('.hide_not_available_container').not(".F").addClass('d-none');
 		for(var PID in result.ITEMS)
 		{
 			if (result.ITEMS.hasOwnProperty(PID))
@@ -384,7 +382,7 @@ JCSmartFilter.prototype.proxy = function()
 	// data['action'] = 'initialLoad';
 	var data = {};
 	data['action'] = 'showMore';
-	data['PAGEN_' + 0] = 1;
+	data['PAGEN_' + 1] = 1;
 
 	var values = [];
 	values[0] = {name: 'ajax', value: 'y'};
