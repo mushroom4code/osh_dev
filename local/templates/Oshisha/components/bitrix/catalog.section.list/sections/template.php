@@ -107,18 +107,16 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                 <li id="<?= $this->getEditAreaId($section['ID']) ?>"
                     class="catalog-section-list-item col-lg-4 col-md-4 col-12 p-3"
                     data-item-number="<?= $sectionNumber; ?>">
-                    <div class="catalog-section-list-item-inner mb-2">
-                        <a href="<?= $section['SECTION_PAGE_URL'] ?>">
-                            <h3 class="catalog-section-list-item-title"><?= $section['NAME'] ?></h3>
-                        </a>
-                        <?php if ($arParams['COUNT_ELEMENTS'] && $section['ELEMENT_CNT'] !== null) { ?>
-                            <span class="catalog-section-list-item-counter font-14">
-										<?= $section['ELEMENT_CNT_TITLE'] ?>
-                            </span>
-                        <?php } ?>
-                    </div>
                     <a class="catalog-section-list-tile-img-container p-4 br-10 bg-gray-white" style="<?= $style ?>"
                        href="<?= $section['SECTION_PAGE_URL'] ?>">
+                        <span class="catalog-section-list-item-inner">
+                                <h3 class="catalog-section-list-item-title"><?= $section['NAME'] ?></h3>
+                            <?php if ($arParams['COUNT_ELEMENTS'] && $section['ELEMENT_CNT'] !== null) { ?>
+                                <span class="catalog-section-list-item-counter font-14">
+										<?= $section['ELEMENT_CNT_TITLE'] ?>
+                            </span>
+                            <?php } ?>
+                        </span>
                     </a>
                 </li>
                 <?php
