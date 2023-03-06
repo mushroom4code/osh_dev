@@ -159,7 +159,7 @@ BX.SaleCommonPVZ = {
 
         var objectManager = new ymaps.ObjectManager({
             clusterize: true,
-            clusterHasBalloon: false
+            clusterHasBalloon: true
         });
         objectManager.add(this.pvzObj);
 
@@ -168,32 +168,62 @@ BX.SaleCommonPVZ = {
         __this.propsMap.geoObjects.add(objectManager);
         BX.Sale.OrderAjaxComponent.endLoader();
 
-        objectManager.objects.events.add(['click', 'multitouchstart'], function (e) {
-            if (!BX.Sale.OrderAjaxComponent.startLoader())
-                return;
-            __this.pvzPopup.close();
-            var objectId = e.get('objectId'),
-                obj = objectManager.objects.getById(objectId);
-            __this.pvzAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
-            if (typeof obj.properties.code_pvz !== 'undefined')
-                __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress + ' #' + obj.properties.code_pvz;
-            else
-                __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
+        objectManager.clusters.events.add(['balloonopen'], function (e){
+            const clusterId = e.get('objectId');
+            const cluster = objectManager.clusters.getById(clusterId);
+            if (objectManager.clusters.balloon.isOpen(clusterId)) {
+                console.log('is open')
+            }
 
-            var dataToHandler = {
-                action: 'getPrice',
-                code_city: __this.curCityCode,
-                delivery: obj.properties.deliveryName,
-                to: obj.properties.fullAddress,
-                weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
-                fivepost_zone: obj.properties.fivepostZone,
-                hubregion: obj.properties.hubregion,
-                name_city: __this.curCityName,
-                code_pvz: obj.properties.code_pvz
-            };
-            __this.refresh();
-            __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
+            cluster.features = cluster.features.map((feature)=> {
+                // feature.properties.set('balloonContent', "Идет загрузка данных...");
+                const y = 2;
+            });
+
+            objectManager.objects.balloon.close();
+
+            const t = 1;
         });
+
+        objectManager.objects.events.add(['balloonopen'], function (e) {
+            var objectId = e.get('objectId'),
+                object = objectManager.objects.getById(objectId);
+
+            if (objectManager.objects.balloon.isOpen(objectId)) {
+                object.properties = {balloonContent: 'load'};
+                objectManager.objects.balloon.setData(object);
+            }
+
+            const t = 1;
+        });
+        __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
+
+        // objectManager.objects.events.add(['click', 'multitouchstart'], function (e) {
+            // if (!BX.Sale.OrderAjaxComponent.startLoader())
+            //     return;
+            // __this.pvzPopup.close();
+            // var objectId = e.get('objectId'),
+            //     obj = objectManager.objects.getById(objectId);
+            // __this.pvzAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
+            // if (typeof obj.properties.code_pvz !== 'undefined')
+            //     __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress + ' #' + obj.properties.code_pvz;
+            // else
+            //     __this.pvzFullAddress = obj.properties.deliveryName + ': ' + obj.properties.fullAddress;
+            //
+            // var dataToHandler = {
+            //     action: 'getPrice',
+            //     code_city: __this.curCityCode,
+            //     delivery: obj.properties.deliveryName,
+            //     to: obj.properties.fullAddress,
+            //     weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
+            //     fivepost_zone: obj.properties.fivepostZone,
+            //     hubregion: obj.properties.hubregion,
+            //     name_city: __this.curCityName,
+            //     code_pvz: obj.properties.code_pvz
+            // };
+            // __this.refresh();
+            // __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
+        // });
     },
 
     sendRequestToComponent: function (action, actionData) {

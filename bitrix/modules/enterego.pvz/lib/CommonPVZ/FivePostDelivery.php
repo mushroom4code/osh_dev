@@ -51,6 +51,8 @@ class FivePostDelivery extends CommonPVZ
                     'fivepostZone' => $value['ID'],
                     'iconCaption' => '5Post',
                     'hintContent' => $value['FULL_ADDRESS'],
+                    "openEmptyBalloon" => true,
+                    "balloonContent" => "Текст балуна",
                 ];
                 $features_obj['options'] = [
                     'preset' => 'islands#darkBlueIcon'

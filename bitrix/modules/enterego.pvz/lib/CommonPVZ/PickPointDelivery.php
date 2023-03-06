@@ -93,7 +93,9 @@ class PickPointDelivery extends CommonPVZ
                 'deliveryName' => 'PickPoint',
                 'iconCaption' => 'PickPoint',
                 'hintContent' => $point['FULL_ADDRESS'],
-                "hubregion" => $point['ADDRESS_REGION']
+                "hubregion" => $point['ADDRESS_REGION'],
+                "openEmptyBalloon" => true,
+                "balloonContent" => "Текст балуна",
             ];
             $features_obj['options'] = [
                 'preset' => 'islands#darkOrangeIcon'

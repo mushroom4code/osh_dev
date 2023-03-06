@@ -98,7 +98,9 @@ class SDEKDelivery extends CommonPVZ
                 'fullAddress' => $value->location->address_full,
                 'deliveryName' => 'СДЭК',
                 'iconCaption' => 'СДЭК',
-                'hintContent' => $value->location->address
+                'hintContent' => $value->location->address,
+                "openEmptyBalloon" => true,
+                "balloonContent" => "Текст балуна",
             ];
             $features_obj['options'] = [
                 'preset' => 'islands#darkGreenIcon'
