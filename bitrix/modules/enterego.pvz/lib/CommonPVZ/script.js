@@ -133,7 +133,7 @@ BX.SaleCommonPVZ = {
     },
 
     getPVZList: function () {
-        var loaderTimer, __this = this;
+        const __this = this;
         if (!BX.Sale.OrderAjaxComponent.startLoader())
             return;
         BX.ajax({
@@ -158,16 +158,14 @@ BX.SaleCommonPVZ = {
         });
     },
 
+    /**
+     *
+     * @param point
+     * @returns {{delivery: *, fivepost_zone: *, code_city: null, hubregion, action: string, weight: *, code_pvz, id, to: *, name_city: null}}
+     */
     getPointData: function (point) {
-        this.pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
-        if (typeof point.properties.code_pvz !== 'undefined') {
-            this.pvzFullAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress + ' #' + point.properties.code_pvz;
-        }
-        else {
-            this.pvzFullAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
-        }
-
-        var dataToHandler = {
+        return {
+            id: point.id,
             action: 'getPrice',
             code_city: this.curCityCode,
             delivery: point.properties.deliveryName,
@@ -178,45 +176,85 @@ BX.SaleCommonPVZ = {
             name_city: this.curCityName,
             code_pvz: point.properties.code_pvz
         };
-
-        return dataToHandler;
     },
 
     selectPvz: function (objectId) {
-
         const __this = this
         if (!BX.Sale.OrderAjaxComponent.startLoader())
             return;
 
         __this.pvzPopup.close();
 
-        var obj = this.objectManager.objects.getById(objectId);
-        var dataToHandler = this.getPointData(obj);
+        const point = this.objectManager.objects.getById(objectId);
+        __this.pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
+        this.pvzFullAddress = typeof point.properties.code_pvz !== 'undefined'
+            ? point.properties.deliveryName + ': ' + point.properties.fullAddress + ' #' + point.properties.code_pvz
+            : point.properties.deliveryName + ': ' + point.properties.fullAddress;
+
+        const dataToHandler = this.getPointData(point);
 
         __this.refresh();
         __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
     },
 
-    getSelectPvzPrice: function (point) {
-        var dataToHandler = this.getPointData(point);
-
+    /**
+     *
+     * @param points
+     * @param clusterId
+     */
+    getSelectPvzPrice: function (points, clusterId=undefined) {
         const __this = this;
+
+        const data = points.reduce((result, point) => {
+            if (!point.properties.balloonContent) {
+                point.properties.balloonContent = "Идет загрузка данных...";
+                if (clusterId===undefined) {
+                    __this.objectManager.objects.balloon.setData(point);
+                }
+                return result.concat (this.getPointData(point))
+            }
+            return result;
+        }, [])
+
+        if (data.length === 0)
+            return;
+
+        if (clusterId !== undefined && __this.objectManager.clusters.balloon.isOpen(clusterId)) {
+            __this.objectManager.clusters.balloon.setData(__this.objectManager.clusters.balloon.getData());
+        }
+
         BX.ajax({
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
-                'dataToHandler': dataToHandler,
+                'dataToHandler': data,
                 'action': 'getPVZPrice'
             },
+            dataType: 'json',
             onsuccess: function (res) {
-                point.properties = {
-                    ...point.properties,
-                    balloonContent: `
-                        <div>Цена: ${res}</div> 
-                        <a href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${point.id})" >Выбрать</a>
-                    `
-                };
-                __this.objectManager.objects.balloon.setData(point);
+                if (res?.status === 'success') {
+                    res.data.forEach(item => {
+                        const point = __this.objectManager.objects.getById(item.id)
+                        const balloonContent = "".concat(
+                            `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ' } - ${item.price} руб.</b></div>`,
+                            `<div>${point.properties.fullAddress}</div>`,
+                            point.properties.phone  ? `<div>${point.properties.phone}</div>` : '',
+                            point.properties.workTime  ? `<div>${point.properties.workTime}</div>` : '',
+                            point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
+                            `<a class="btn btn_basket mt-2" href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${item.id})" >Выбрать</a>`
+                        )
+                        point.properties = {
+                            ...point.properties,
+                            balloonContent: balloonContent,
+                        };
+                        if (clusterId===undefined) {
+                            __this.objectManager.objects.balloon.setData(point);
+                        }
+                    })
+                    if (clusterId !== undefined && __this.objectManager.clusters.balloon.isOpen(clusterId)) {
+                        __this.objectManager.clusters.balloon.setData(__this.objectManager.clusters.balloon.getData());
+                    }
+                }
             },
             onfailure: function (res) {
                 console.log('error getPVZList');
@@ -243,29 +281,26 @@ BX.SaleCommonPVZ = {
         __this.propsMap.geoObjects.add(objectManager);
         BX.Sale.OrderAjaxComponent.endLoader();
 
+        function hasBalloonData (objectId) {
+            return objectManager.objects.getById(objectId).properties.balloonContent;
+        }
+
         objectManager.clusters.events.add(['balloonopen'], function (e){
             const clusterId = e.get('objectId');
             const cluster = objectManager.clusters.getById(clusterId);
             if (objectManager.clusters.balloon.isOpen(clusterId)) {
-                console.log('is open')
+                __this.getSelectPvzPrice(cluster.properties.geoObjects, clusterId);
             }
-
-            cluster.features = cluster.features.map((feature)=> {
-                // feature.properties.set('balloonContent', "Идет загрузка данных...");
-                const y = 2;
-            });
-
-            objectManager.objects.balloon.close();
-
-            const t = 1;
         });
 
-        objectManager.objects.events.add(['balloonopen'], function (e) {
+        objectManager.objects.events.add('click', function (e) {
             var objectId = e.get('objectId'),
-                object = objectManager.objects.getById(objectId);
-
-            if (objectManager.objects.balloon.isOpen(objectId)) {
-                __this.getSelectPvzPrice(object);
+                obj = objectManager.objects.getById(objectId);
+            if (hasBalloonData(objectId)) {
+                objectManager.objects.balloon.open(objectId);
+            } else {
+                objectManager.objects.balloon.open(objectId);
+                __this.getSelectPvzPrice([obj]);
             }
         });
     },

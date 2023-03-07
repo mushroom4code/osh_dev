@@ -52,10 +52,14 @@ class PEKDelivery extends CommonPVZ
                 ]
             ];
             $features_obj['properties'] = [
+                'type' => 'PVZ',
                 'fullAddress' => $value['warehouses'][0]['addressDivision'],
                 'deliveryName' => 'ПЭК',
                 'iconCaption' => 'ПЭК',
-                'hintContent' => $value['warehouses'][0]['address']
+                'hintContent' => $value['warehouses'][0]['address'],
+                'phone' => $value['warehouses'][0]['telephone'],
+                'comment' => $value['warehouses'][0]['pointerDescription'],
+                'clusterCaption' => 'ПЭК',
             ];
             $features_obj['options'] = [
                 'preset' => 'islands#nightIcon'

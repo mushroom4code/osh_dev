@@ -31,14 +31,18 @@ switch ($action) {
         exit($response);
     case 'getPVZPrice':
         $dataToHandler = $request->get('dataToHandler');
-        if ($dataToHandler['code_pvz'] === 'undefined') {
-            $adr = $dataToHandler['delivery'] . ': ' . $dataToHandler['to'];
-        } else {
-            $adr = $dataToHandler['delivery'] . ': ' . $dataToHandler['to'] . ' #' . $dataToHandler['code_pvz'];
+        $data = [];
+        foreach ($dataToHandler as $pointData) {
+            if ($pointData['code_pvz'] === 'undefined') {
+                $adr = $pointData['delivery'] . ': ' . $pointData['to'];
+            } else {
+                $adr = $pointData['delivery'] . ': ' . $pointData['to'] . ' #' . $pointData['code_pvz'];
+            }
+            $delivery = CommonPVZ::getInstanceObject($pointData['delivery']);
+            $price = $delivery->getPrice($pointData);
+            $data[] = ['id'=>$pointData['id'], 'price'=>$price];
         }
-        $delivery = CommonPVZ::getInstanceObject($dataToHandler['delivery']);
-        $price = $delivery->getPrice($dataToHandler);
-        exit($price);
+        exit(json_encode(['status'=>'success', 'data'=>$data]));
     default:
         exit(json_encode(['status'=>'error', 'errors'=>['not correct action']]));
 }

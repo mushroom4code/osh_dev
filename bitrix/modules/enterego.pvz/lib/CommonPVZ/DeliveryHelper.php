@@ -75,8 +75,7 @@ class DeliveryHelper
         $delName = '0';
 
         try {
-            //TODO DEBUG
-            if (false && $cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
+            if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
                 $points_Array = $cache->getVars();
             } elseif ($cache->startDataCache()) {
                 foreach ($deliveries as $delName) {

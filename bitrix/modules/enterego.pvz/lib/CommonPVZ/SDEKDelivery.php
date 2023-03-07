@@ -95,13 +95,19 @@ class SDEKDelivery extends CommonPVZ
             ];
             $features_obj['properties'] = [
                 'code_pvz' => $value->code,
+                'type' => $value->type === 'PVZ' ? "PVZ" : 'POSTAMAT',
+                'workTime'=> $value->work_time,
+                'comment' => $value->address_comment,
                 'fullAddress' => $value->location->address_full,
                 'deliveryName' => 'СДЭК',
                 'iconCaption' => 'СДЭК',
                 'hintContent' => $value->location->address,
                 "openEmptyBalloon" => true,
-                "balloonContent" => "Текст балуна",
+                "clusterCaption" => 'СДЭК',
             ];
+            if (!empty($value->phones)) {
+                $features_obj['properties']['phone'] = $value->phones[0]->number;
+            }
             $features_obj['options'] = [
                 'preset' => 'islands#darkGreenIcon'
             ];

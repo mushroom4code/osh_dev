@@ -46,13 +46,15 @@ class FivePostDelivery extends CommonPVZ
                 }
                 $features_obj['properties'] = [
                     'code_pvz' => $value['POINT_GUID'],
+                    'type' => 'POSTAMAT',
                     'fullAddress' => $value['ADDRESS_COUNTRY'] . ', ' . $value['ADDRESS_ZIP_CODE'] . $region . ', ' . $value['FULL_ADDRESS'],
+                    'comment' => $value['ADDITIONAL'],
                     'deliveryName' => '5Post',
                     'fivepostZone' => $value['ID'],
                     'iconCaption' => '5Post',
                     'hintContent' => $value['FULL_ADDRESS'],
-                    "openEmptyBalloon" => true,
-                    "balloonContent" => "Текст балуна",
+                    'openEmptyBalloon' => true,
+                    'clusterCaption' => '5Post',
                 ];
                 $features_obj['options'] = [
                     'preset' => 'islands#darkBlueIcon'
