@@ -374,6 +374,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
     $('input.auth-phone').inputmask("+7 (999)-999-9999", {
         minLength: 10,
         removeMaskOnSubmit: true,
+        autoUnmask: true,
         clearMaskOnLostFocus: true,
         clearMaskOnLostHover: true,
         clearIncomplete: true,
