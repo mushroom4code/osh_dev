@@ -89,6 +89,18 @@ JCSmartFilter.prototype.reload = function(input)
 		for (var i = 0; i < values.length; i++)
 			this.cacheKey += values[i].name + ':' + values[i].value + '|';
 
+		var url = new URL(window.location.href);
+		url.search = '';
+		url.searchParams.forEach((value, key) => {
+			url.searchParams.delete(key);
+		});
+		values.forEach(function callback(value, key) {
+			if (key != 0) {
+				url.searchParams.set(value['name'], value['value']);
+			}
+		});
+		window.history.replaceState(null, null, url);
+
 		if (this.cache[this.cacheKey])
 		{
 			this.curFilterinput = input;
