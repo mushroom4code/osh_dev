@@ -215,7 +215,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                         <?php endif ?>
                     </div>
                     <div class="d-flex flex-row align-items-center font-14 mb-3 mt-3">
-                        <input type="checkbox" required class="check_input form-check-input mt-0 ml-0"
+                        <input type="checkbox" required checked class="check_input form-check-input mt-0 ml-0"
                                id="soa-property-USER_RULES" name="USER_RULES"/>
                         <label class="bx-soa-custom-label mb-0 ml-3">
                             Я принимаю условия
@@ -225,7 +225,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                         </label>
                     </div>
                     <div class="d-flex flex-row align-items-center font-14 mb-4">
-                        <input type="checkbox" required class="check_input form-check-input mt-0 ml-0"
+                        <input type="checkbox" required checked class="check_input form-check-input mt-0 ml-0"
                                name="USER_POLITICS"/>
                         <label class="bx-soa-custom-label mb-0 ml-3">
                             Я принимаю условия
@@ -269,6 +269,7 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                     preferCo: 'ru',
                     default_prefix: '7'
                 });
+
                 $('input[name="USER_PHONE_NUMBER"]').inputmask("+7 (***)-***-****", {
                     minLength: 10,
                     removeMaskOnSubmit: true,
@@ -305,6 +306,16 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                     $('.block-text').toggleClass('d-none');
                 });
 
+                $(document).on('click', 'input[name="USER_RULES"], input[type="USER_POLITICS"]', function () {
+                    let check_rules = $('input[name="USER_RULES"]').prop('checked');
+                    console.log(check_rules)
+                    let check_politics = $('input[name="USER_POLITICS"]').prop('checked');
+                    if (check_rules === true && check_politics === true) {
+                        $('button[name="Register"]').removeAttr('disabled');
+                    } else {
+                        $('button[name="Register"]').attr('disabled', 'disabled');
+                    }
+                });
             </script>
         <?php endif; ?>
     </noindex>

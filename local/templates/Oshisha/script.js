@@ -2832,7 +2832,7 @@ if ($(window).width() > 1024) {
         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         if (scrollTop > 0) {
             if (!appended) {
-                $(document).find('header').addClass('header-scroll');
+                $(document).find('header').addClass('header-scroll').show(500);
                 appended = true;
             }
         } else {
