@@ -128,6 +128,9 @@ $option = $option_site; ?>
                     <span class="li_link_footer ">
                          <a href="/about/politics/" class="text_link_footer">Политика конфиденциальности</a>
                     </span>
+                    <span>
+                        <a href="/about/cookie/" class="text_link_footer">Политика обработки Cookie</a>
+                    </span>
                 </nav>
             </div>
             <div class="col-lg-3 col-md-3 col-11 mb-4 mb-lg-0 order-lg-4">
@@ -362,6 +365,13 @@ $option = $option_site; ?>
             // age access
         </script>
     <? } ?>
+    <div id="consent-cookie-popup" class="d-none">
+        <p>Мы используем файлы Cookie, чтоб улучшить сайт для Вас</p>
+        <div>
+            <a href="/about/cookie/">Подробнее</a>
+            <a href="#">Принять</a>
+        </div>
+    </div>
     <script>
         $(document).ready(function () {
             $(document).on('click', '.close_header_box', function () {
