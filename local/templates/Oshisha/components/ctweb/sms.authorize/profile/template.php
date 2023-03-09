@@ -375,8 +375,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
         minLength: 10,
         removeMaskOnSubmit: true,
         autoUnmask: true,
-        clearMaskOnLostFocus: true,
-        clearMaskOnLostHover: true,
+        clearMaskOnLostFocus: false,
+        clearMaskOnLostHover: false,
         clearIncomplete: true,
         definitionSymbol: "*"
     });
