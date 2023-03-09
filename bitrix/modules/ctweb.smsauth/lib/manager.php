@@ -2,6 +2,8 @@
 
 namespace Ctweb\SMSAuth;
 
+use Bitrix\Main\ArgumentNullException;
+use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\Event;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Security\Random;
@@ -387,8 +389,8 @@ class Manager
      * @param $code
      * @param $phone
      * @return bool
-     * @throws \Bitrix\Main\ArgumentNullException
-     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @throws ArgumentNullException
+     * @throws ArgumentOutOfRangeException
      */
     public function RegisterByCode($code, $phone): bool
     {

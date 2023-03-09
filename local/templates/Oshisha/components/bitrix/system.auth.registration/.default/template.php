@@ -15,64 +15,29 @@
  */
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
-
-if ($arResult["SHOW_SMS_FIELD"] == true) {
-    CJSCore::Init('phone_auth');
-}
 ?>
 <div class="bx-auth mb-5">
-    <?php
-    ShowMessage($arParams["~AUTH_RESULT"]);
+    <?php ShowMessage($arParams["~AUTH_RESULT"]);
     if ($arResult["SHOW_EMAIL_SENT_CONFIRMATION"]): ?>
-        <p><?php echo GetMessage("AUTH_EMAIL_SENT") ?></p>
+        <p><?= GetMessage("AUTH_EMAIL_SENT") ?></p>
     <?php endif;
     if (!$arResult["SHOW_EMAIL_SENT_CONFIRMATION"] && $arResult["USE_EMAIL_CONFIRMATION"] === "Y"): ?>
-        <p><?php echo GetMessage("AUTH_EMAIL_WILL_BE_SENT") ?></p>
+        <p><?= GetMessage("AUTH_EMAIL_WILL_BE_SENT") ?></p>
     <?php endif ?>
     <noindex>
-        <?php if ($arResult["SHOW_SMS_FIELD"] == true): ?>
-            <form method="post" action="<?= $arResult["AUTH_URL"] ?>" name="regform">
-                <input type="hidden" name="SIGNED_DATA" value="<?= htmlspecialcharsbx($arResult["SIGNED_DATA"]) ?>"/>
-                <table class="data-table bx-registration-table">
-                    <tbody>
-                    <tr>
-                        <td>
-                            <span class="starrequired  color-redLight">*</span><?php echo GetMessage("main_register_sms_code") ?>
-                        </td>
-                        <td><input size="30" type="text" name="SMS_CODE"
-                                   value="<?= htmlspecialcharsbx($arResult["SMS_CODE"]) ?>" autocomplete="off"/></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </form>
-            <script>
-                new BX.PhoneAuth({
-                    containerId: 'bx_register_resend',
-                    errorContainerId: 'bx_register_error',
-                    interval: <?=$arResult["PHONE_CODE_RESEND_INTERVAL"]?>,
-                    data:
-                        <?=CUtil::PhpToJSObject([
-                            'signedData' => $arResult["SIGNED_DATA"],
-                        ])?>,
-                    onError:
-                        function (response) {
-                            var errorDiv = BX('bx_register_error');
-                            var errorNode = BX.findChildByClassName(errorDiv, 'errortext');
-                            errorNode.innerHTML = '';
-                            for (var i = 0; i < response.errors.length; i++) {
-                                errorNode.innerHTML = errorNode.innerHTML + BX.util.htmlspecialchars(response.errors[i].message) + '<br>';
-                            }
-                            errorDiv.style.display = '';
-                        }
-                });
-            </script>
+        <?php if ($arResult["SHOW_SMS_FIELD"] == true) :
 
-            <div id="bx_register_error" style="display:none"><?php ShowError("error") ?></div>
-
-            <div id="bx_register_resend"></div>
-
-        <?php elseif (!$arResult["SHOW_EMAIL_SENT_CONFIRMATION"]): ?>
-
+            $APPLICATION->IncludeComponent(
+                "ctweb:sms.authorize",
+                "profile",
+                array(
+                    "ALLOW_MULTIPLE_USERS" => "Y",
+                    "PROFILE_AUTH" => "N",
+                    "REGISTER" => "Y",
+                    "USER_PHONE" => $arResult['USER_PHONE_NUMBER']
+                )
+            );
+        elseif (!$arResult["SHOW_EMAIL_SENT_CONFIRMATION"]): ?>
             <form method="post" action="<?= $arResult["AUTH_URL"] ?>" name="bform" enctype="multipart/form-data">
                 <input type="hidden" name="recaptcha_token" id="recaptchaResponse">
                 <?php echo bitrix_sessid_post(); ?>
@@ -126,7 +91,11 @@ if ($arResult["SHOW_SMS_FIELD"] == true) {
                                    value="<?= $arResult["USER_EMAIL"] ?>"/>
                         </div>
                     <?php endif ?>
-                    <input type="hidden" name="USER_LOGIN" value="<?= rand(105, 10000) ?>"/>
+                    <input type="hidden" name="USER_LOGIN" value="<? if (!empty($arResult["USER_EMAIL"])) {
+                        echo $arResult["USER_EMAIL"];
+                    } else {
+                        echo 'noemails@' . rand(105, 10000);
+                    } ?>"/>
 
                     <div class="form-group mb-1">
                         <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"

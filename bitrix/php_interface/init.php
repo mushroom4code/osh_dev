@@ -242,7 +242,7 @@ class CUserEx
         /*else $arFields["LOGIN"] = "";*/
     }
 
-    function OnBeforeUserRegister($arFields)
+    function OnBeforeUserRegister(&$arFields)
     {
         $arFields["LOGIN"] = $arFields["EMAIL"];
     }

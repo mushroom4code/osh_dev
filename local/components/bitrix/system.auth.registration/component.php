@@ -149,26 +149,24 @@ if (!CMain::IsHTTPS() && COption::GetOptionString('main', 'use_encrypted_auth', 
 
 // verify phone code
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_REQUEST["code_submit_button"] <> '' && !$USER->IsAuthorized()) {
-    if ($_REQUEST["SIGNED_DATA"] <> '') {
-        if (($params = \Bitrix\Main\Controller\PhoneAuth::extractData($_REQUEST["SIGNED_DATA"])) !== false) {
-            if (($userId = CUser::VerifyPhoneCode($params['phoneNumber'], $_REQUEST["SMS_CODE"]))) {
-                if ($arResult["PHONE_REQUIRED"]) {
-                    //the user was added as inactive, now phone number is confirmed, activate them
-                    $user = new CUser();
-                    $user->Update($userId, ["ACTIVE" => "Y"]);
-                }
-                // authorize user
-                $USER->Authorize($userId);
-                LocalRedirect($APPLICATION->GetCurPageParam("", $arParamsToDelete));
-            } else {
-                $arParams["~AUTH_RESULT"] = array(
-                    "MESSAGE" => GetMessage("main_register_sms_error"),
-                    "TYPE" => "ERROR",
-                );
-                $arResult["SHOW_SMS_FIELD"] = true;
-                $arResult["SMS_CODE"] = $_REQUEST["SMS_CODE"];
-                $arResult["SIGNED_DATA"] = $_REQUEST["SIGNED_DATA"];
+    if (!empty($arResult['USER_PHONE_NUMBER'])) {
+        if (($userId = CUser::VerifyPhoneCode($params['phoneNumber'], $_REQUEST["SMS_CODE"]))) {
+            if ($arResult["PHONE_REQUIRED"]) {
+                //the user was added as inactive, now phone number is confirmed, activate them
+                $user = new CUser();
+                $user->Update($userId, ["ACTIVE" => "Y"]);
             }
+            // authorize user
+            $USER->Authorize($userId);
+            LocalRedirect($APPLICATION->GetCurPageParam("", $arParamsToDelete));
+        } else {
+            $arParams["~AUTH_RESULT"] = array(
+                "MESSAGE" => GetMessage("main_register_sms_error"),
+                "TYPE" => "ERROR",
+            );
+            $arResult["SHOW_SMS_FIELD"] = true;
+            $arResult["CODE"] = $_REQUEST["CODE"];
+            $arResult["SIGNED_DATA"] = $_REQUEST["SIGNED_DATA"];
         }
     }
 }

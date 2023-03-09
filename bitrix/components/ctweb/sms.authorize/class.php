@@ -238,22 +238,14 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     } else {
                         //TODO enable registration
                         if ($this->arParams['PROFILE_AUTH'] == "Y") {
-                            if (true) {
-                                $res = $this->manager->StartUserPhoneChange(['PHONE' => $this->getSessionField('PHONE')]);
-                                if ($res!==true) {
-                                    $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
-                                }
-                            } else {
-                                $this->manager->addError(self::ERROR_USER_NOT_FOUND);
+                            $res = $this->manager->StartUserPhoneChange(['PHONE' => $this->getSessionField('PHONE')]);
+                            if ($res !== true) {
+                                $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
                             }
                         } else {
-                            if (true) {
-                                $res = $this->manager->StartUserRegister(['PHONE' => $this->getSessionField('PHONE')]);
-                                if ($res!==true) {
-                                    $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
-                                }
-                            } else {
-                                $this->manager->addError(self::ERROR_USER_NOT_FOUND);
+                            $res = $this->manager->StartUserRegister(['PHONE' => $this->getSessionField('PHONE')]);
+                            if ($res !== true) {
+                                $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
                             }
                         }
                     }
@@ -261,11 +253,6 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     $this->clearSession();
                 }
             }
-//            if ($this->arParams['PROFILE_AUTH'] == "Y") {
-//                if (!$isAjaxRequest) {
-//                    LocalRedirect($APPLICATION->GetCurPageParam());
-//                }
-//            }
         }
     }
 
@@ -351,6 +338,23 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     $this->actionStepUserWaiting();
                     break;
 
+                case Manager::STEP_CODE_WAITING : // user found, code waiting for auth
+                    $this->actionStepCodeWaiting($isAjaxRequest);
+                    break;
+
+                case Manager::STEP_PHONE_WAITING: // no action, phone waiting
+                default: // no action, phone waiting
+                    $this->actionStepPhoneWaiting($isAjaxRequest);
+            }
+
+            $this->arResult['ERRORS'] = $this->manager->getErrors();
+            $this->arResult['USER_VALUES']['SAVE_SESSION'] = $this->getSessionField('SAVE_SESSION');
+            $this->arResult['USER_VALUES']['PHONE'] = $this->getSessionField('PHONE');
+            $this->arResult['EXPIRE_TIME'] = $this->manager->getExpireTime() - time();
+            $this->arResult['REUSE_TIME'] = $this->manager->getReuseTime() - time();
+            ($this->arResult['STEP'] = $this->manager->getStep()) || ($this->arResult['STEP'] = Manager::STEP_PHONE_WAITING);
+        } elseif ($this->arParams['REGISTER'] == "Y") {
+            switch ($this->manager->getStep()) {
                 case Manager::STEP_CODE_WAITING : // user found, code waiting for auth
                     $this->actionStepCodeWaiting($isAjaxRequest);
                     break;

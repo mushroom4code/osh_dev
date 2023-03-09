@@ -40,8 +40,7 @@ $jsParams = array(
     )
 );
 
-if ($arParams['PROFILE_AUTH'] == "Y"):
-?>
+if ($arParams['PROFILE_AUTH'] == "Y"):?>
     <div style="display: block" class="ctweb-smsauth-menu-block profile col-12 col-md-7">
         <div class="ctweb-smsauth-box profile">
             <div>
@@ -166,7 +165,99 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
             </div>
         </div>
     </div>
-<?else:?>
+<?php elseif ($arParams['PROFILE_AUTH'] !== "Y" && $arParams['REGISTER'] === "Y") : ?>
+    <div class="ctweb-smsauth-box profile">
+        <div class="row">
+            <form id="<?= $mainID ?>" class="ctweb-smsauth-menu-form profile"
+                  action="/bitrix/components/ctweb/sms.authorize/ajax.php"
+                  method="POST" name="auth">
+                <?php echo bitrix_sessid_post(); ?>
+                <input type="hidden" name="FORM_ID" value="<?= $arResult['FORM_ID'] ?>">
+                <input type="hidden" name="PROFILE_AUTH" value="<?= $arParams['PROFILE_AUTH'] ?>">
+                <input type="hidden" name="REGISTER" value="<?= $arParams['REGISTER'] ?>">
+                <input type="hidden" name="recaptcha_token" value="">
+                <input id="<?= $jsParams['TEMPLATE']['STATE'] ?? Manager::STEP_PHONE_WAITING ?>" type="hidden"
+                       name=""
+                       value="<?= $arResult['STEP'] ?>">
+                <?php if ($arResult['AUTH_RESULT'] === 'SUCCESS') : ?>
+                    <? ShowNote(GetMessage('SMS_PHONE_SAVED')); ?>
+                <?php elseif ($arResult['AUTH_RESULT'] === 'FAILED'): ?>
+                    <? ShowError($arResult["strProfileError"]); ?>
+                <?php endif; ?>
+
+                <!-- STEP CODE WAITING -->
+                <div id="ctweb_form_step_3"
+                     class="profile ctweb-smsauth-menu-step <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'd-none' ?> ">
+                    <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
+
+                    <div class="form-group mb-2">
+                        <label style="margin-bottom: 10px" class="ctweb-label" for="sms-auth-code"></label>
+                        <div style="display: none">
+                            <a class="ctweb-link"><?= GetMessage("SMS_AUTH_CHANGE_NUMBER_PHONE") ?></a>
+                        </div>
+                        <label style="display: none" class="ctweb-label"
+                               for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
+                        <div class="col-sm-12 col-md-12">
+                            <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
+                                   class="form-control input_lk profile auth_code" autocomplete="off">
+                        </div>
+                        <span id="result"></span>
+                    </div>
+
+                    <div <?= $arResult['REUSE_TIME'] <= 0 ? 'style="display: none"' : 0 ?>
+                            id="<?= $jsParams['TEMPLATE']['TIMER'] ?>" class="ctweb-timer"></div>
+                    <input type="submit" id="submit_code" class="d-none">
+                </div>
+
+                <!-- ERROR STEP -->
+                <div id="ctweb_form_step_error" class="ctweb-smsauth-menu-step d-none">
+                    <h3 class="ctweb-title" id="<?= $jsParams['TEMPLATE']['ERROR_TITLE'] ?>"></h3>
+                    <div class="form-group">
+                        <label class="ctweb-label ctweb-label-error"
+                               id="<?= $jsParams['TEMPLATE']['ERROR_TEXT'] ?>"></label>
+                    </div>
+                </div>
+
+                <!--Навигация по форме авторизации-->
+                <div class="ctweb-button-block profile">
+                    <input class="btn link_menu_catalog get_code_button profile"
+                           id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
+                           type="submit"
+                           value="Сохранить"
+                           onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
+
+                    <div style="display: none" class="ctweb-button-back">
+                        <a class="ctweb-link"
+                           id="<?= $jsParams['TEMPLATE']['BACK'] ?>"><?= GetMessage("SMS_AUTH_BACK") ?></a>
+                    </div>
+
+                    <div style="display: none" class="ctweb-button-send-code-again">
+                        <a class="ctweb-link"
+                           id="<?= $jsParams['TEMPLATE']['RESEND'] ?>"><?= GetMessage("SMS_AUTH_SEND_CODE_AGAIN") ?></a>
+                    </div>
+
+                    <div class="ctweb-button-new-code" id="new_code_block">
+                        <a class="ctweb-link glowing-text"
+                           id="<?= $mainID . 'REUSE' ?>"><?= GetMessage('SMS_AUTH_REUSE_CODE') ?></a>
+                    </div>
+
+                    <div>
+                        <a class="ctweb-link"
+                           id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>"><?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
+                    </div>
+
+
+                    <div style="display:none">
+                        <a class="ctweb-link" href="<? SITE_DIR ?>about/FAQ/"
+                           id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>"><?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+<?php else: ?>
     <div style="display: none" class="ctweb-smsauth-menu-block radius_10 position-absolute">
         <div class="close_login_menu">
             <a class="close_header_box" href="">
@@ -357,7 +448,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
             <?php endif; ?>
         </div>
     </div>
-<?endif;?>
+<?php endif; ?>
 
 <script>
 
