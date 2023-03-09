@@ -1078,6 +1078,10 @@ div.box_with_icons > a > i.icons_theme:first-child {
     font-size: 28px;
 }
 
+i.p-4-8 {
+    padding: 4px 8px;
+}
+
 .by-card .product-item__favorite-star {
     display: flex;
 }
@@ -2018,11 +2022,16 @@ a.bx_catalog_item_title {
 .by-line .detail-text, .by-line .line-price, .by-card .card-price {
     display: block;
 }
+
 .by-card .card-price {
     display: block !important;
     position: relative;
     width: auto;
     min-height: 30px;
+}
+
+.by-card .card-price.min-height-auto {
+    min-height: auto;
 }
 
 .detail-text {
@@ -6006,7 +6015,7 @@ header {
     position: fixed;
     filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
     width: 100%;
-    transition: 0.7s;
+    transition: 1s;
     background-color: white;
 }
 

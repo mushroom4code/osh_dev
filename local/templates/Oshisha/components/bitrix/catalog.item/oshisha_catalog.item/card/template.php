@@ -325,9 +325,9 @@ if ($show_price) {
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
             <div class="bx_catalog_item_controls">
                 <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
-                    <div class="box_with_fav_bask">
+                    <div class="box_with_fav_bask align-items-lg-center align-items-md-center align-items-end">
                         <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
-                            <div class="box_with_price card-price font_weight_600 d-flex flex-column">
+                            <div class="box_with_price card-price font_weight_600 d-flex flex-column min-height-auto">
                                 <div class="d-flex flex-column">
                                     <div class="bx_price <?= $styleForNo ?> position-relative">
                                         <?php $sale = false;
@@ -342,7 +342,7 @@ if ($show_price) {
 
                                     <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
                                         $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-                                        <div class="font-10">
+                                        <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
                                             <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
                                             <b class="sale-percent">
                                                 - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>₽
@@ -419,7 +419,7 @@ if ($show_price) {
 
                                         <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
                                             $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-                                            <div class="font-10">
+                                            <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
                                                 <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
                                                 <b class="sale-percent">
                                                     - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>₽
@@ -432,8 +432,11 @@ if ($show_price) {
                             <?endif;?>
                         <?php }
                         if (!$USER->IsAuthorized() && !$show_price) { ?>
-                            <div class="btn red_button_cart btn-plus <?= $not_auth ?>"
-                                 data-href="<?= $href ?>">Подробнее
+                            <div class="btn-plus <?= $not_auth ?>"
+                                 data-href="<?= $href ?>">
+                                <span class="btn red_button_cart d-lg-block d-md-block d-none">Подробнее</span>
+                                <i class="fa fa-question d-lg-none d-md-none d-block red_button_cart font-16 p-4-8"
+                                   aria-hidden="true"></i>
                             </div>
                         <?php } ?>
                     </div>
