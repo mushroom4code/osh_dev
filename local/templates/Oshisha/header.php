@@ -94,7 +94,20 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addJs("/local/assets/js/flags-mask/counties.js");
     Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
     $APPLICATION->ShowHead(); ?>
-    <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
+    <script>
+        $(function (){
+            setTimeout(()=> {
+                (function (w, d, u) {
+                    var s = d.createElement('script');
+                    s.async = true;
+                    s.src = u + '?' + (Date.now() / 60000 | 0);
+                    var h = d.getElementsByTagName('script')[0];
+                    h.parentNode.insertBefore(s, h);
+                })(window, document, 'https://cdn-ru.bitrix24.ru/b23116278/crm/site_button/loader_1_j9d1gm.js')
+            }, 3000)
+        })
+
+    </script>
 </head>
 <body class="bx-background-image">
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
