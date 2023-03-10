@@ -79,7 +79,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
 								<?$dateChange = '<br><b>Изменить дату рождения можно будет '.date('d/m/Y',strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])).'</b>';?>
 							<?else:?>
                             <input class="form-control input_lk datepicker-here date_input mr-3" type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
-                                   id="main-profile-day2" value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
+                                   id="main-profile-day2" readonly value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
 							<?endif;?>
                         </div>
 						<div class="info-date">
