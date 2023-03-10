@@ -6434,3 +6434,135 @@ body.hide-jivo > jdiv {
     height: 30px;
     width: 31px;
 }
+
+#consent-cookie-popup {
+    display: flex;
+    justify-content: space-between;
+    justify-items: center;
+    align-items: center;
+    height: 6rem;
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    /*border: 2px solid #212529;*/
+    border-radius: 9px;
+    margin: 2rem;
+    opacity: 1;
+    background-color: #F0F0F0;
+    z-index: 2000;
+    filter: drop-shadow(0px 4px 3px rgba(93, 93, 93, 0.4));
+    transition: opacity .6s ease;
+
+}
+
+#consent-cookie-popup.hidden {
+    opacity: 0;
+}
+
+#consent-cookie-popup p {
+    margin-left: 3rem;
+    margin-bottom: 0;
+    margin-right: 10px
+}
+
+#cookie-popup-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 3rem;
+}
+
+#cookie-popup-about {
+    border: 1px solid #212529;
+    border-radius: 9px;
+    padding: 9px;
+    font-weight: 600;
+    width: 45%;
+    min-width: 122px;
+    display: flex;
+    justify-content: center;
+}
+
+#cookie-popup-about:hover {
+    border-color: #F55F5C;
+}
+
+#cookie-popup-accept {
+    border: 1px;
+    border-radius: 9px;
+    padding: 9px;
+    background-color: #F55F5C;
+    color: white;
+    font-weight: 600;
+    width: 45%;
+    min-width: 122px;
+    display: flex;
+    justify-content: center;
+}
+
+@media (min-width: 1120px) {
+    #cookie-popup-controls {
+        width: 25%;
+    }
+}
+
+@media (min-width: 950px) and (max-width: 1119px){
+    #cookie-popup-controls {
+        width: 40%;
+    }
+}
+
+@media (min-width: 800px) and (max-width: 949px) {
+    #cookie-popup-controls {
+        width: 50%;
+    }
+}
+
+@media (min-width: 650px) and (max-width: 799px) {
+    #cookie-popup-controls {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 649px) {
+    #consent-cookie-popup {
+        padding: 22px;
+        flex-direction: column;
+        justify-content: center;
+        height: auto;
+    }
+    #consent-cookie-popup p {
+        text-align: center;
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+    #cookie-popup-about {
+        width: 25%;
+        font-size: 24px;
+        min-width: 0;
+    }
+    #cookie-popup-controls {
+        margin-right: 0;
+    }
+    #cookie-popup-about.desktop {
+        display: none !important;
+    }
+    #cookie-popup-about.mobile {
+        display: flex !important;
+        border: none;
+    }
+}
+
+@media (min-width: 650px) {
+    #cookie-popup-about.desktop {
+        display: flex !important;
+    }
+    #cookie-popup-about.mobile {
+        display: none !important;
+    }
+}
+
+div.carousel-item-elems > div > div {
+    z-index: 100 !important;
+}
+
