@@ -171,7 +171,17 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                         $this->manager->addError(self::ERROR_CODE_NOT_CORRECT);
                     }
                 }elseif ($this->manager->getState() === $this->manager::STATE_REGISTER) {
-                    if ($this->manager->RegisterByCode($this->request->get('CODE'), $this->getSessionField('PHONE'))) {
+                    $arFieldUser = [];
+                    if ($this->request->get('register') === 'yes') {
+                        $arFieldUser = [
+                            'NAME' => $this->getSessionField('NAME'),
+                            'LAST_NAME' => $this->getSessionField('LAST_NAME'),
+                            'LOGIN' => $this->getSessionField('LOGIN'),
+                            'PERSONAL_BIRTHDAY' => $this->getSessionField('PERSONAL_BIRTHDAY'),
+                            'PERSONAL_PHONE' => $this->getSessionField('PERSONAL_PHONE'),
+                        ];
+                    }
+                    if ($this->manager->RegisterByCode($this->request->get('CODE'), $this->getSessionField('PHONE'),$arFieldUser)) {
                         $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
                     } else {
                         $this->arResult['AUTH_RESULT'] = self::RESULT_FAILED;
@@ -208,6 +218,15 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
 
             if (strlen($this->request->get('PHONE'))) {
                 $this->setPhone($this->request->get('PHONE'), $this->request->get('__phone_prefix') ?? '');
+            }
+
+            if ($this->request->get('register') === 'yes') {
+                $this->setSessionField('LOGIN', $this->request->get('EMAIL'));
+                $this->setSessionField('NAME', $this->request->get('NAME'));
+                $this->setSessionField('LAST_NAME', $this->request->get('LAST_NAME'));
+                $this->setSessionField('EMAIL', $this->request->get('EMAIL'));
+                $this->setSessionField('PERSONAL_BIRTHDAY', $this->request->get('PERSONAL_BIRTHDAY'));
+                $this->setSessionField('PERSONAL_PHONE', $this->request->get('PERSONAL_PHONE'));
             }
 
             if (strlen($this->request->get('SAVE_SESSION')))
@@ -355,6 +374,14 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
             ($this->arResult['STEP'] = $this->manager->getStep()) || ($this->arResult['STEP'] = Manager::STEP_PHONE_WAITING);
         } elseif ($this->arParams['REGISTER'] == "Y") {
             switch ($this->manager->getStep()) {
+                case Manager::STEP_SUCCESS : // all ok, redirect waiting
+                    $this->actionStepSuccess();
+                    break;
+
+                case Manager::STEP_USER_WAITING :
+                    $this->actionStepUserWaiting();
+                    break;
+
                 case Manager::STEP_CODE_WAITING : // user found, code waiting for auth
                     $this->actionStepCodeWaiting($isAjaxRequest);
                     break;

@@ -10,7 +10,8 @@ $APPLICATION->IncludeComponent(
     "profile",
     array(
         "ALLOW_MULTIPLE_USERS" => "Y",
-        "PROFILE_AUTH" => $_REQUEST['PROFILE_AUTH']
+        "PROFILE_AUTH" => $_REQUEST['PROFILE_AUTH'],
+        "REGISTER" => $_REQUEST['REGISTER'],
     )
 );
 

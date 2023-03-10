@@ -392,7 +392,7 @@ class Manager
      * @throws ArgumentNullException
      * @throws ArgumentOutOfRangeException
      */
-    public function RegisterByCode($code, $phone): bool
+    public function RegisterByCode($code, $phone, $arFieldRegisterForm = []): bool
     {
         global $USER;
 
@@ -404,30 +404,35 @@ class Manager
             $timestamp = time();
             $arFields = [];
             $phoneField = $this->options['PHONE_FIELD'];
+            if(!empty($arFieldRegisterForm)){
+                $arFields = $arFieldRegisterForm;
+            }
             $arFields[$phoneField] = $this->NormalizePhone($phone);
 
             //duplicate registration phone to personal phone (for lk and orders)
             $arFields["PERSONAL_PHONE"] = $arFields[$phoneField];
-            if (!trim($arFields['EMAIL'])) {
-                switch ($this->options['NEW_EMAIL_AS']) {
-                    case "PHONE":
-                        $arFields['EMAIL'] = "{$arFields[$phoneField]}@noemail.sms";
-                        break;
-                    default:
-                        $arFields['EMAIL'] = "{$timestamp}@noemail.sms";
+            if (empty($arFieldRegisterForm)) {
+                if (!trim($arFields['EMAIL'])) {
+                    switch ($this->options['NEW_EMAIL_AS']) {
+                        case "PHONE":
+                            $arFields['EMAIL'] = "{$arFields[$phoneField]}@noemail.sms";
+                            break;
+                        default:
+                            $arFields['EMAIL'] = "{$timestamp}@noemail.sms";
+                    }
                 }
-            }
 
-            if (!trim($arFields['LOGIN'])) {
-                switch ($this->options['NEW_LOGIN_AS']) {
-                    case "EMAIL":
-                        $arFields['LOGIN'] = $arFields['EMAIL'];
-                        break;
-                    case "PHONE":
-                        $arFields['LOGIN'] = $arFields[$phoneField];
-                        break;
-                    default:
-                        $arFields['LOGIN'] = "user_{$timestamp}";
+                if (!trim($arFields['LOGIN'])) {
+                    switch ($this->options['NEW_LOGIN_AS']) {
+                        case "EMAIL":
+                            $arFields['LOGIN'] = $arFields['EMAIL'];
+                            break;
+                        case "PHONE":
+                            $arFields['LOGIN'] = $arFields[$phoneField];
+                            break;
+                        default:
+                            $arFields['LOGIN'] = "user_{$timestamp}";
+                    }
                 }
             }
 
