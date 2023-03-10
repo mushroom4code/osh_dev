@@ -688,6 +688,7 @@ if ($request->get('ORDER_ID') <> '') {
     $arResult['DELIVERY_OPTIONS']['DELIVERY_COST'] = Osh\Delivery\Options\Config::getCost();
     $arResult['DELIVERY_OPTIONS']['START_COST'] = Osh\Delivery\Options\Config::getStartCost();
     $arResult['DELIVERY_OPTIONS']['LIMIT_BASKET'] = Osh\Delivery\Options\Config::getLimitBasket();
+    $arResult['DELIVERY_OPTIONS']['ACTIVE_DISCOUNT_HOLIDAY'] = Osh\Delivery\Options\Config::getActiveDiscountHoliday();
     $arResult['DELIVERY_OPTIONS']['CURRENT_BASKET'] = $arResult['ORDER_PRICE'];
     $arResult['DELIVERY_OPTIONS']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 

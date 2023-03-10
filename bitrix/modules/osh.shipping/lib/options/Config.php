@@ -39,6 +39,11 @@ class Config
         'address_type',
         'ymaps_key',
         'da_data_token',
+        'active_discount_holiday',
+        'pickup_discount_holiday',
+        'pickpoint_discount_holiday',
+        'sdek_discount_holiday',
+        'fivepost_discount_holiday',
         'timeDeliveryEndNight',
         'timeDeliveryStartNight',
         'timeDeliveryStartDay',
@@ -346,6 +351,31 @@ class Config
     public static function getDaDataToken()
     {
         return self::getDataValue("da_data_token");
+    }
+
+    public static function getActiveDiscountHoliday()
+    {
+        return self::getDataValue("active_discount_holiday");
+    }
+
+    public static function getPickupDiscountHoliday()
+    {
+        return self::getDataValue("pickup_discount_holiday");
+    }
+
+    public static function getPickpointDiscountHoliday()
+    {
+        return self::getDataValue("pickpoint_discount_holiday");
+    }
+
+    public static function getSdekDiscountHoliday()
+    {
+        return self::getDataValue("sdek_discount_holiday");
+    }
+
+    public static function getFivepostDiscountHoliday()
+    {
+        return self::getDataValue("fivepost_discount_holiday");
     }
 
     public static function getCost()

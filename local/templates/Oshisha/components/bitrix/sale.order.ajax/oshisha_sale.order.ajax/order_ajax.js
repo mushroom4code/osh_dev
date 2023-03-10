@@ -202,6 +202,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     url: this.ajaxUrl,
                     data: this.getData(action, actionData),
                     onsuccess: BX.delegate(function (result) {
+                        console.log(result);
+                        console.log(eventArgs.action);
                         if (result.redirect && result.redirect.length)
                             document.location.href = result.redirect;
                         this.saveFiles();
@@ -4861,7 +4863,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             if (deliveryCheckbox) {
                 deliveryId = deliveryCheckbox.value;
-
+                console.log(deliveryCheckbox);
+                console.log(deliveryId);
+                console.log(i);
+                console.log(this.result.DELIVERY);
                 for (i in this.result.DELIVERY) {
                     if (this.result.DELIVERY[i].ID == deliveryId) {
                         currentDelivery = this.result.DELIVERY[i];
@@ -6909,6 +6914,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             params = {};
             curDelivery = this.getSelectedDelivery();
+            console.log(curDelivery);
             deliveryError = curDelivery && curDelivery.CALCULATE_ERRORS && curDelivery.CALCULATE_ERRORS.length;
 
             if (deliveryError) {

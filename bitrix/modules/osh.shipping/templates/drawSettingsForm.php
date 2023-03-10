@@ -36,6 +36,10 @@ $activeModule = array(
     'N' => GetMessage('OSH_SETTINGS_MODULE_N'),
     'Y' => GetMessage('OSH_SETTINGS_MODULE_Y')
 );
+$activeDiscountHoliday = array(
+    'N' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_N'),
+    'Y' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_Y')
+);
 
 $arAddressTypeOptions = array(
     Config::ADDRESS_SIMPLE => GetMessage('OSH_SETTINGS_ADDRESS_TYPE_SIMPLE'),
@@ -53,6 +57,16 @@ $arOptions = array(
         'cost' => array('type' => 'text', 'size' => '5', 'name' => GetMessage('OSH_SETTINGS_COST')),
         "pvzStrict" => array("type" => "select", "multiple" => false, "options" => $arPvzStrictOptions,
             "name" => GetMessage('OSH_SETTINGS_STRICT_PVZ'), "hint" => GetMessage('OSH_SETTINGS_STRICT_PVZ_HINT')),
+        "active_discount_holiday" => array("type" => "select", 'name' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_ACTIVITY'), "multiple" => false,
+            "options" => $activeDiscountHoliday),
+        'pickup_discount_holiday' => array('type' => 'number', 'max' => '100', 'name' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_PICKUP'),
+            'hint' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_PICKUP_HINT')),
+        'pickpoint_discount_holiday' => array('type' => 'number', 'max' => '100', 'name' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_PICKPOINT'),
+            'hint' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_PICKPOINT_HINT')),
+        'sdek_discount_holiday' => array('type' => 'number', 'size' => '100', 'name' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_SDEK'),
+            'hint' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_SDEK_HINT')),
+        'fivepost_discount_holiday' => array('type' => 'number', 'size' => '100', 'name' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_FIVEPOST'),
+            'hint' => GetMessage('OSH_SETTINGS_DISCOUNT_HOLIDAY_FIVEPOST_HINT')),
     ),
     "delivery_time_period" => array(
         "timeDelivery" => array(
