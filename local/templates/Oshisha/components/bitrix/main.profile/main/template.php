@@ -78,9 +78,9 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                    id="main-profile-day2" disabled value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
 								<?$dateChange = '<br><b>Изменить дату рождения можно будет '.date('d/m/Y',strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])).'</b>';?>
 							<?else:?>
-                            <input class="form-control input_lk datepicker-here date_input mr-3" type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
-                                   id="main-profile-day2" readonly value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
-							<?endif;?>
+                                <input class="form-control input_lk user-birthday" readonly type="text" name="PERSONAL_BIRTHDAY" maxlength="50"
+                                       id="main-profile-day2"  value="<?= strtotime($arResult['arUser']['PERSONAL_BIRTHDAY']) !== false ? date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) : $arResult['arUser']['PERSONAL_BIRTHDAY'] ?>"/>
+                            <?endif;?>
                         </div>
 						<div class="info-date">
 						В день рождения вам будут доступны персональные скидки<br>
@@ -304,7 +304,6 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
             maxDate: date_now,
             autoClose: true,
             toggleSelected: false,
-            placeholder: "dd/mm/yyyy"
         });
     </script>
     <script>

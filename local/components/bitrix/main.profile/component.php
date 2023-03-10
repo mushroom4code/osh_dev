@@ -166,6 +166,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
                 if ($rowUser['PERSONAL_BIRTHDAY'] == $arFields['PERSONAL_BIRTHDAY']) {
                     unset($arFields['PERSONAL_BIRTHDAY']);
                 } elseif (strtotime('+18 years', strtotime($arFields['PERSONAL_BIRTHDAY'])) > time()) {
+                    $strError .= GetMessage('main_profile_birthday_old_error').'<br />';
                     unset($arFields['PERSONAL_BIRTHDAY']);
                 } else {
                     $arFields['UF_DATE_CHANGE_BH'] = date('m/d/Y', strtotime('+1 year'));
