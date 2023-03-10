@@ -15,6 +15,15 @@ CJSCore::Init(array('clipboard', 'fx'));
 /** @var CUser|CAllUser $USER
  */
 
+$orderIsNotActiveItemsPresent = false;
+foreach($arResult["BASKET"] as $orderBasketItem) {
+    $product = CIBlockElement::GetByID($orderBasketItem['PRODUCT_ID'])->GetNext();
+    if ($product['ACTIVE'] == 'N') {
+        $orderIsNotActiveItemsPresent = true;
+        break;
+    }
+}
+
 
 $APPLICATION->SetTitle("");
 
@@ -124,7 +133,8 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                             </div>
                             <div class="d-flex flex-column custom_item">
                                 <a href="<?= $arResult["URL_TO_COPY"] ?>"
-                                   class="link_repeat_orders sale-order-list-repeat-link mb-1"><?= Loc::getMessage('SPOD_ORDER_REPEAT') ?></a>
+                                   class="link_repeat_orders sale-order-list-repeat-link mb-1 <?= empty($arResult['BASKET_ITEMS']) ? 'js--basket-empty' : 'js--basket-not-empty'?> <?= $orderIsNotActiveItemsPresent === true ? 'js--not-active' : '' ?>">
+                                    <?= Loc::getMessage('SPOD_ORDER_REPEAT') ?></a>
                                 <div id="popup_mess_order_copy"></div>
                                 <? if ($arResult["CAN_CANCEL"] === "Y") {
                                     ?>

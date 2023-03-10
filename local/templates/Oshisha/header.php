@@ -40,7 +40,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         })
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-        ym(92030744, "init", {
+        ym(65421508, "init", {
             clickmap: true,
             trackLinks: true,
             accurateTrackBounce: true,
@@ -49,7 +49,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         });
     </script>
     <noscript>
-        <div><img src="https://mc.yandex.ru/watch/92030744" style="position:absolute; left:-9999px;" alt=""/></div>
+        <div><img src="https://mc.yandex.ru/watch/65421508" style="position:absolute; left:-9999px;" alt=""/></div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
 
@@ -173,11 +173,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <?php } else { ?>
                         <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
-                        <a href="/about/contacts/" class="text_header">Контакты</a>
+                    <a href="/about/contacts/" class="text_header">Контакты</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
                     <?php } ?>
-                        <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
+                    <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
                     <?php } else { ?>
@@ -370,4 +370,4 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     <div class="section_wrapper">
         <div class="container_header">
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
-                <div class="bx-content <?= STATIC_P ?>">
+            <div class="bx-content <?= STATIC_P ?>">

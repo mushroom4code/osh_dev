@@ -406,7 +406,7 @@ if (CModule::IncludeModule("blog"))
 			$arResult["arBlogUser"][$key] = htmlspecialcharsbx($val);
 		}
 	}
-
+	
 	if (!isset($arResult["arBlogUser"]["ALLOW_POST"]) || ($arResult["arBlogUser"]["ALLOW_POST"]!="Y" && $arResult["arBlogUser"]["ALLOW_POST"]!="N"))
 		$arResult["arBlogUser"]["ALLOW_POST"] = "Y";
 }
@@ -523,7 +523,7 @@ if (!empty($arParams["USER_PROPERTY"]))
 if($arParams["SET_TITLE"] == "Y")
 	$APPLICATION->SetTitle(GetMessage("PROFILE_DEFAULT_TITLE"));
 
-if($bOk)
+if($bOk) 
 	$arResult['DATA_SAVED'] = 'Y';
 
 //time zones
