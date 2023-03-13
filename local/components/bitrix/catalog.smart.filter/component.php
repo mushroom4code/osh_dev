@@ -42,6 +42,8 @@ if($this->StartResultCache(false, array('v10', $preFilter, ($arParams["CACHE_GRO
         //enterego add to filter "hide if note available
         if ($_REQUEST['hide_not_available'] == "Y") {
             $this->arParams['HIDE_NOT_AVAILABLE'] = $_REQUEST['hide_not_available'];
+        } elseif ($arParams["SAVE_IN_SESSION"] && ($_SESSION[$FILTER_NAME][$this->SECTION_ID]['hide_not_available'] == "Y")) {
+            $this->arParams['HIDE_NOT_AVAILABLE'] = $_SESSION[$FILTER_NAME][$this->SECTION_ID]['hide_not_available'];
         }
         //
 

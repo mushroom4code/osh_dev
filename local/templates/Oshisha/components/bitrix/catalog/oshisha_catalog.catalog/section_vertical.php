@@ -374,6 +374,11 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             );
         }
         //endregion
+
+        if ($_SESSION[$arParams["FILTER_NAME"]][$GLOBAL_SECTION['ID']]['hide_not_available'] == "Y") {
+            $arParams["HIDE_NOT_AVAILABLE"] = "Y";
+        }
+
         global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
