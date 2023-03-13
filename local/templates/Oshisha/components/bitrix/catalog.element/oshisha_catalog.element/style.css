@@ -561,7 +561,6 @@ line-height: 130%;
     border-radius: 15px;
     height: 100%;
     min-height: 500px;
-    /*max-height: 590px;*/
 }
 
 .margin_block_element {
@@ -771,6 +770,8 @@ line-height: 130%;
     animation-name: imgPopupShow;
     animation-duration: 300ms;
     height: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .product-item-detail-slider-container.popup .product-item-detail-slider-block {
