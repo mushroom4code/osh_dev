@@ -2585,6 +2585,7 @@ $(document).on('submit', '.form-form', function (e) {
         },
         fieldName = $(this).find('input[name="NAME"]'),
         fieldPhone = $(this).find('input[name="PHONE"]'),
+        fieldMail = $(this).find('input[name="EMAIL"]'),
         fieldMessage = $(this).find('textarea[name="MESSAGE"]'),
         fileTrueTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'],
         fieldConfirm = $(this).find('input[name="confirm"]'),
@@ -2602,6 +2603,11 @@ $(document).on('submit', '.form-form', function (e) {
 
     if (fieldPhone.val().length <= 0) {
         $('.er_FORM_PHONE').html(errors.emptyField).show();
+        err++;
+    }
+
+    if (fieldMail.val().length <= 0) {
+        $('.er_FORM_EMAIL').html(errors.emptyField).show();
         err++;
     }
 
