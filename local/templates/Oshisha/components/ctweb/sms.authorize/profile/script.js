@@ -62,6 +62,7 @@
     BX.Ctweb.SMSAuth.Controller.prototype.constructor = function (params) {
         this.obForm = BX(params['TEMPLATE']['MAIN_ID']);
         this.obCode = BX(params['TEMPLATE']['CODE']);
+        this.obFormId = BX(params['TEMPLATE']['COMPONENT_ID_BUTTON_CODE']);
         this.obTimer = BX(params['TEMPLATE']['TIMER']);
         this.obReuse = BX(params['TEMPLATE']['MAIN_ID'] + 'REUSE');
         this.obSubmit = BX(params['TEMPLATE']['SUBMIT']);
@@ -73,7 +74,6 @@
         this.obChangePhone = BX(params['TEMPLATE']['CHANGE_PHONE']);
         this.obAuthEmailLogin = BX(params['TEMPLATE']['AUTH_EMAIL_LOGIN']);
         this.obRegistration = BX(params['TEMPLATE']['REGISTRATION']);
-
         //email
         this.mailForm = BX(params['TEMPLATE']['MAIL_FORM']);
         this.obAuthPhoneLogin = BX(params['TEMPLATE']['AUTH_PHONE_LOGIN']);
@@ -87,6 +87,7 @@
         this.errorTitleExpired = BX(params['TEMPLATE']['ERROR_TEXT_EXPIRED']);
         this.errorTextExpired = BX(params['TEMPLATE']['ERROR_TEXT_EXPIRED']);
         this.errorAlert = BX(params['TEMPLATE']['ERROR_ALERT']);
+        this.id_button = params['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'];
 
         this.timeLeft = params['DATA']['TIME_LEFT'] ? parseInt(params['DATA']['TIME_LEFT']) : 0;
         this.error_not_correct = params['DATA']['ERROR_ALERT_NOT_CORRECT'];
@@ -109,18 +110,19 @@
         if (this.obState) {
             this.setState(this.obState.value);
         }
+
         $(document).on('click', '.link_header_box', function (event) {
             event.preventDefault();
             if ($(this).attr('data-href') !== '') {
-              PRODUCT_URL = $(this).attr('data-href');
+                PRODUCT_URL = $(this).attr('data-href');
             }
-            $('.ctweb-smsauth-menu-block').show();
-        });
+            $(document).find('[data-id="' + this.id_button + '"]').show();
+        }.bind(this));
 
         $('.close_header_box').on('click', function (event) {
             event.preventDefault();
-            $('.ctweb-smsauth-menu-block').hide();
-        });
+            $(document).find('[data-id="' + this.id_button + '"]').hide();
+        }.bind(this));
 
         BX.bind(this.obBack, 'click', function () {
             event.preventDefault();
@@ -132,7 +134,7 @@
 
             BX.style(this.obReuse, 'visibility', 'hidden');
 
-            let form = $(BX(this.obForm));
+            let form = $(this.obFormId);
             let url = form.attr('action');
             let data = form.serializeArray();
 
@@ -146,7 +148,7 @@
 
             clearInterval(this.timerId);
 
-            let form = $(BX(this.obForm));
+            let form = $(this.obFormId);
             let url = form.attr('action');
             let data = form.serializeArray();
 
@@ -160,7 +162,7 @@
         BX.bind(this.obResend, 'click', function () {
             event.preventDefault();
 
-            let form = $(BX(this.obForm));
+            let form = $(this.obFormId);
             let url = form.attr('action');
             let data = form.serializeArray();
 
@@ -198,10 +200,10 @@
             }
         }.bind(this));
 
-        $('.ctweb-smsauth-menu-block').on('submit', '.ctweb-smsauth-menu-form', function (event) {
+        $('[data-id="' + this.id_button + '"]').on('submit', this.obFormId , function (event) {
             event.preventDefault();
 
-            let form = $(BX(this.obForm));
+            let form = $(this.obFormId);
             let url = form.attr('action');
             let data = form.serializeArray();
 
@@ -218,6 +220,7 @@
             url: url,
             data: data,
             success: function (response) {
+                console.log(response)
                 let objResponse = JSON.parse(response);
                 let step = objResponse['STEP'];
 
@@ -234,7 +237,7 @@
                 }
 
                 if (step === STATE_SUCCESS) {
-                    $('.ctweb-smsauth-menu-block').hide();
+                    $('[data-id="'+this.id_button+'"]').hide();
                     if(product_url !== ''){
                         location.href = window.location.origin + product_url;
                     }else {
@@ -276,7 +279,7 @@
                 let step = objResponse['STEP'];
 
                 if (step === STATE_SUCCESS) {
-                    $('.ctweb-smsauth-menu-block').hide();
+                    $('[data-id="'+this.id_button+'"]').hide();
                     if(product_url !== ''){
                         location.href = window.location.origin + product_url;
                     }else {
@@ -468,7 +471,7 @@
         clearInterval(this.timerId);
         BX.hide(this.errorAlert);
         BX.toggleClass(this.mailForm, 'd-none');
-        BX.toggleClass(this.obForm, 'd-none');
+        BX.toggleClass(this.obFormId, 'd-none');
     }
 
 })();

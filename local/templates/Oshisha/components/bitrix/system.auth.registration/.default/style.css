@@ -38,6 +38,10 @@ div.bx-auth div.bx-auth-secure-unlock {
     background-color: white;
 }
 
+noindex .form-group .country-phone-selected {
+    right: 19px;
+}
+
 @media (max-width: 768px ) {
     .width-auto {
         width: 100%;

@@ -195,7 +195,7 @@ class Manager
     {
         $digits = str_split(preg_replace("/[^\d]/", "", (string)$phone));
 
-        if (!empty($codePhone) && !strripos($phone, '+' . $codePhone)) {
+        if (!empty($codePhone) && !strripos($phone, '+' . $codePhone) && !strripos($phone, '+')) {
             array_unshift($digits, $codePhone);
         }
 
@@ -434,12 +434,13 @@ class Manager
                             $arFields['LOGIN'] = "user_{$timestamp}";
                     }
                 }
+
+
+                if ($this->options['NEW_LOGIN_AS'])
+                    $arFields['PASSWORD'] = Random::getString(self::GEN_PASSWORD_LENGTH);
+
+                $arFields['CONFIRM_PASSWORD'] = $arFields['PASSWORD'];
             }
-
-            if ($this->options['NEW_LOGIN_AS'])
-                $arFields['PASSWORD'] = Random::getString(self::GEN_PASSWORD_LENGTH);
-
-            $arFields['CONFIRM_PASSWORD'] = $arFields['PASSWORD'];
 
             $arFields['ACTIVE'] = 'N';
 
