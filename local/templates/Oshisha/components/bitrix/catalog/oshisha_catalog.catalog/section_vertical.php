@@ -375,6 +375,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         }
         //endregion
 
+//        (empty($_GET) || (count($_GET) == 1 && !empty($_GET['PAGEN_1']))
+
         if ($_SESSION[$arParams["FILTER_NAME"]][$GLOBAL_SECTION['ID']]['hide_not_available'] == "Y") {
             $arParams["HIDE_NOT_AVAILABLE"] = "Y";
         }

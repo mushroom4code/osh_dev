@@ -88,13 +88,16 @@ JCSmartFilter.prototype.reload = function(input)
 
 		for (var i = 0; i < values.length; i++)
 			this.cacheKey += values[i].name + ':' + values[i].value + '|';
-
 		var url = new URL(window.location.href);
 		url.search = '';
 		url.searchParams.forEach((value, key) => {
 			url.searchParams.delete(key);
 		});
 		values.forEach(function callback(value, key) {
+			if(value['name'] == 'PAGEN_1') {
+				value['value'] = '1';
+				url.searchParams.set(value['name'], value['value']);
+			}
 			if (key != 0) {
 				url.searchParams.set(value['name'], value['value']);
 			}
@@ -395,14 +398,14 @@ JCSmartFilter.prototype.proxy = function()
 	var data = {};
 	data['action'] = 'showMore';
 	data['PAGEN_' + 1] = 1;
-
 	var values = [];
+	console.log('sus');
 	values[0] = {name: 'ajax', value: 'y'};
 	values[1] = {name: 'ajax_filter', value: 'y'};
 	this.gatherInputsValues(values, BX.findChildren(this.form, {'tag': new RegExp('^(input|select)$', 'i')}, true));
 	for (var i = 0; i < values.length; i++)
 		data[values[i].name] = values[i].value;
-
+	data['PAGEN_' + 1] = 1;
 	if (this.sectionCode) {
 		data['subcat'] = this.sectionCode;
 	}
