@@ -27,8 +27,10 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
 ));
-// 18844
-AddEventHandler('rest', 'OnRestServiceBuildDescription', array('CatalogAPIService', 'OnRestServiceBuildDescription'));
+
+// add rest api web hook  - validate products without photo
+AddEventHandler('rest', 'OnRestServiceBuildDescription',
+    array('CatalogAPIService', 'OnRestServiceBuildDescription'));
 
 require(__DIR__ . '/enterego_class/discountcouponsmanagerbase.php');
 require(__DIR__ . '/enterego_class/discountcoupon.php');

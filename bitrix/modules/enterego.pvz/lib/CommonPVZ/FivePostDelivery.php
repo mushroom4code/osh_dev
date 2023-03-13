@@ -20,7 +20,6 @@ class FivePostDelivery extends CommonPVZ
 
         try {
             if (!empty(\COption::GetOptionString('ipol.fivepost', 'apiKey'))) {
-                //$fipostClient = new LapayGroup\FivePostSdk\Client('api-key', 60, \LapayGroup\FivePostSdk\Client::API_URI_TEST);
                 $resultPVZ = \Enterego\EnteregoDBDelivery::getPoints5postForALLMap($code_city);
             }
         } catch (\Exception $e) {
@@ -47,11 +46,15 @@ class FivePostDelivery extends CommonPVZ
                 }
                 $features_obj['properties'] = [
                     'code_pvz' => $value['POINT_GUID'],
+                    'type' => 'POSTAMAT',
                     'fullAddress' => $value['ADDRESS_COUNTRY'] . ', ' . $value['ADDRESS_ZIP_CODE'] . $region . ', ' . $value['FULL_ADDRESS'],
+                    'comment' => $value['ADDITIONAL'],
                     'deliveryName' => '5Post',
                     'fivepostZone' => $value['ID'],
                     'iconCaption' => '5Post',
                     'hintContent' => $value['FULL_ADDRESS'],
+                    'openEmptyBalloon' => true,
+                    'clusterCaption' => '5Post',
                 ];
                 $features_obj['options'] = [
                     'preset' => 'islands#darkBlueIcon'

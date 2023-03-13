@@ -16,7 +16,7 @@ if(isset($_REQUEST['reloadCaptcha']) && $_REQUEST['reloadCaptcha'] == 'Y')
 	die();
 }
 
-if(!check_bitrix_sessid()) die();
+//if(!check_bitrix_sessid()) die();
 
 Loc::loadMessages(__FILE__);
 global $USER;

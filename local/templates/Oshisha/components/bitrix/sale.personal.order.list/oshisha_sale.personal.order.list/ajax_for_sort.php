@@ -6,20 +6,29 @@ if (!CModule::IncludeModule('sale')) {
     exit();
 }
 
-function sortByField(string $field, string $params, ?string $element = null, ?string $index = null): string
-{
-    $accountNumber = [];
-    $picture = [];
 
-    $products = CSaleOrder::GetList(array($field => $params), array($element => $index),
-        false, false, array('ACCOUNT_NUMBER', 'DATE_INSERT_FORMAT', 'PRICE', 'STATUS_ID'));
+$listStatuses = [];
+$listStatusNames = Bitrix\Sale\OrderStatus::getAllStatusesNames(LANGUAGE_ID);
+foreach($listStatusNames as $key => $data)
+{
+    $listStatuses['STATUS'][$key] = array('ID'=>$key,'NAME'=>$data);
+}
+
+function sortByField(string $field, string $params, ?string $element = null, ?string $index = null): array
+{
+    global $USER;
+    $listOrders = [];
+
+
+    $products = CSaleOrder::GetList(array($field => $params), array($element => $index, "USER_ID" => $USER->GetID()));
 
     while ($res = $products->Fetch()) {
-        $accountNumber[] = $res;
+        $listOrders[] = $res;
     }
 
-    for ($i = 0; $i < count($accountNumber); $i++) {
-        $ordersBasket = CSaleBasket::GetList(array(), array('ORDER_ID' => $accountNumber[$i]['ACCOUNT_NUMBER']));
+    foreach ($listOrders as &$itemOrder) {
+        $itemOrder['IS_NOT_ACTIVE_ITEMS_PRESENT'] = false;
+        $ordersBasket = CSaleBasket::GetList(array(), array('ORDER_ID' => $itemOrder['ID']), false, ['nTopCount' => 5]);
         if (!empty($ordersBasket)) {
             while ($result = $ordersBasket->Fetch()) {
                 $my_elements = CIBlockElement::GetList(
@@ -27,56 +36,53 @@ function sortByField(string $field, string $params, ?string $element = null, ?st
                     array("ID" => $result['PRODUCT_ID']),
                     false,
                     false,
-                    array('ID', 'NAME', 'DETAIL_PAGE_URL', 'PREVIEW_PICTURE', 'DETAIL_PICTURE')
+                    array('ID', 'NAME', 'ACTIVE', 'DETAIL_PAGE_URL', 'PREVIEW_PICTURE', 'DETAIL_PICTURE')
                 );
                 $ar_fields = $my_elements->GetNext();
-                $picture['url'][] = CFile::GetPath($ar_fields['PREVIEW_PICTURE']);
-                $accountNumber[$i]['PICTURE'] = array_slice($picture['url'], 0, 6, true);
+                if ($ar_fields['ACTIVE'] == 'N') {
+                    $itemOrder['IS_NOT_ACTIVE_ITEMS_PRESENT'] = true;
+                }
+                $itemOrder['PICTURE'][] = CFile::GetPath($ar_fields['PREVIEW_PICTURE']);
             }
         }
     }
-
-    return json_encode($accountNumber);
+    return $listOrders;
 }
 
-$url = substr(json_decode($_POST['url'], true), 1, -2);
+require('show_order_block.php');
 
-switch (json_decode($_POST['typeSort'], true)) {
-    case "Дешёвые":
-        if ($url !== 'show_canceled' && $url !== 'show_delivery') {
-            print_r(sortByField("PRICE", 'ASC'));
-        } else if ($url === 'show_canceled') {
-            print_r(sortByField("PRICE", 'ASC', 'STATUS_ID', 'F'));
-        } else if ($url === 'show_delivery') {
-            print_r(sortByField("PRICE", 'ASC', 'RESERVED', 'Y'));
-        }
+if($_POST['sortStatus'] === 'show_canceled') {
+    $element = 'STATUS_ID';
+    $index = 'F';
+} else if ($_POST['sortStatus'] === 'show_delivery') {
+    $element = 'RESERVED';
+    $index = 'Y';
+} else {
+    $element = null;
+    $index = null;
+}
+
+switch ($_POST['typeSort']) {
+    case "cheap":
+        $listOrders = sortByField("PRICE", 'ASC', $element, $index);
         break;
-    case "Дорогие":
-        if ($url !== 'show_canceled' && $url !== 'show_delivery') {
-            print_r(sortByField("PRICE", 'DESC'));
-        } else if ($url === 'show_canceled') {
-            print_r(sortByField("PRICE", 'DESC', 'STATUS_ID', 'F'));
-        } else if ($url === 'show_delivery') {
-            print_r(sortByField("PRICE", 'DESC', 'RESERVED', 'Y'));
-        }
+    case "expensive":
+        $listOrders = sortByField("PRICE", 'DESC', $element, $index);
         break;
-    case "Старые":
-        if ($url !== 'show_canceled' && $url !== 'show_delivery') {
-            print_r(sortByField("DATE_INSERT", 'ASC'));
-        } else if ($url === 'show_canceled') {
-            print_r(sortByField("DATE_INSERT", 'ASC', 'STATUS_ID', 'F'));
-        } else if ($url === 'show_delivery') {
-            print_r(sortByField("DATE_INSERT", 'ASC', 'RESERVED', 'Y'));
-        }
+    case "old":
+        $listOrders = sortByField("DATE_INSERT", 'ASC', $element, $index);
         break;
-    case "Новые":
-        if ($url !== 'show_canceled' && $url !== 'show_delivery') {
-            print_r(sortByField("DATE_INSERT", 'DESC'));
-        } else if ($url === 'show_canceled') {
-            print_r(sortByField("DATE_INSERT", 'DESC', 'STATUS_ID', 'F'));
-        } else if ($url === 'show_delivery') {
-            print_r(sortByField("DATE_INSERT", 'DESC', 'RESERVED', 'Y'));
-        }
+    case "new":
+        $listOrders = sortByField("DATE_INSERT", 'DESC', $element, $index);
         break;
+}
+
+
+if (isset($listOrders) && $listOrders !== false) {
+    showOrderBlock($listStatuses, $listOrders);
+    die();
+} else {
+    echo 'error';
+    die();
 }
 

@@ -2038,7 +2038,6 @@
                     }
                 }
             }
-
             return Mustache.render(template, clonedData);
         },
 

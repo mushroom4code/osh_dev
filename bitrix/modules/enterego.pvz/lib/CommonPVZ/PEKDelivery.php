@@ -52,10 +52,14 @@ class PEKDelivery extends CommonPVZ
                 ]
             ];
             $features_obj['properties'] = [
+                'type' => 'PVZ',
                 'fullAddress' => $value['warehouses'][0]['addressDivision'],
                 'deliveryName' => 'ПЭК',
                 'iconCaption' => 'ПЭК',
-                'hintContent' => $value['warehouses'][0]['address']
+                'hintContent' => $value['warehouses'][0]['address'],
+                'phone' => $value['warehouses'][0]['telephone'],
+                'comment' => $value['warehouses'][0]['pointerDescription'],
+                'clusterCaption' => 'ПЭК',
             ];
             $features_obj['options'] = [
                 'preset' => 'islands#nightIcon'
@@ -76,9 +80,9 @@ class PEKDelivery extends CommonPVZ
             $pek_bitrix_id = $pek_result->bitrixId;
             $pek_result = $this->client->call('CALCULATOR', 'CALCULATEPRICE',
                 array(
-                    "senderCityId" => $this->configs['senderCityId'],
+                    "senderCityId" => $this->configs['sendercityid'],
                     "receiverCityId" => $pek_bitrix_id,
-                    "senderDistanceType" => $this->configs['senderDistanceType'],
+                    "senderDistanceType" => $this->configs['senderdistancetype'],
                     "cargos" => array(
                         array(
                             'weight' => $array['weight'] / 1000

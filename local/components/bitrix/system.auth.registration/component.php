@@ -62,7 +62,11 @@ foreach ($arResult as $key => $value) {
     if (!is_array($value)) $arResult[$key] = htmlspecialcharsbx($value);
 }
 
-/*** ENTEREGO  доп параметр др*/
+/*** ENTEREGO  доп параметры
+ *
+ * USER_PERSONAL_BIRTHDAY,
+ * __phone_prefix
+ */
 $arRequestParams = array(
     "USER_NAME",
     "USER_LAST_NAME",
@@ -72,9 +76,12 @@ $arRequestParams = array(
     "USER_PHONE_NUMBER",
     "USER_PERSONAL_BIRTHDAY",
     'recaptcha_token',
+    '__phone_prefix'
 );
+
 /*** ENTEREGO captcha 3*/
 $_REQUEST['USER_LOGIN'] = $_REQUEST['USER_EMAIL'];
+
 foreach ($arRequestParams as $param) {
     $arResult[$param] = $_REQUEST[$param] <> '' ? $_REQUEST[$param] : "";
     $arResult[$param] = htmlspecialcharsbx($arResult[$param]);

@@ -121,7 +121,7 @@ class EnteregoBasket
 
                             if ($arData = $res->fetch()) {
                                 $product_prices[$product_id]['PRICE'] = $arData["$price_ids"];
-                                $product_prices[$product_id]['PRICE_ID'] = SALE_PRICE_TYPE_ID;
+                                $product_prices[$product_id]['PRICE_ID'] = $ids;
                             }
                         }
                     }

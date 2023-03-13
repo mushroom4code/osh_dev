@@ -71,10 +71,14 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                                 <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                        for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                 <span id="flag"></span>
-                                <div class="col-sm-12 col-md-12">
-                                    <input class="form-control input_lk profile" type="text" name="PHONE" placeholder="+7 (___)-___-____"
+                                <div class="col-sm-12 col-md-12 code position-relative">
+                                    <input type="text" name="PHONE"
+                                           data-input-type="phone"
+                                           placeholder="+_ (___)-___-____"
+                                           inputmode="text"
                                            value="<?= $arParams['USER_PHONE'] ?? '' ?>"
-                                           class="form-control profile custom_style_auth" id="<?= $mainID . "phone" ?>"
+                                           class="form-control profile input_lk auth-phone-profile"
+                                           id="<?= $mainID . "phone" ?>"
                                            autocomplete="off"/>
                                 </div>
                             </div>
@@ -158,50 +162,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
 
                 </div>
                 </form>
-                <!-- STEP AUTH EMAIL LOGIN -->
-                <form id="<?= $jsParams['TEMPLATE']['MAIL_FORM'] ?>"
-                      action="/bitrix/components/ctweb/sms.authorize_profile/ajax.php"
-                      method="POST" class="ctweb-smsauth-menu-step d-none">
-                    <?= bitrix_sessid_post(); ?>
-                    <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
-                    <div class="form-group">
-                        <input type="hidden" name="METHOD" placeholder="" value="EMAIL_AUTH"/>
-                        <label class="ctweb-label"><?= GetMessage("SMS_AUTH_EMAIL") ?></label>
-                        <input type="text" name="EMAIL" placeholder=""
-                               value="<?= $arResult['USER_VALUES']['EMAIL'] ?? '' ?>"
-                               class="form-control auth-by-email"
-                               id="<?= $mainID . "email" ?>"/>
-                        <label class="ctweb-label"><?= GetMessage("SMS_AUTH_PASSWORD") ?></label>
-                        <span style="float: right"><a href="/auth/?forgot_password=yes" class="ctweb-link ctweb-link-fargot"
-                                                      idk="<?= $jsParams['TEMPLATE']['FORGOT_PASSWORD'] ?>">Забыли пароль?</a></span>
-                        <input type="password" name="PASSWORD" placeholder=""
-                               value="<?= $arResult['USER_VALUES']['PASSWORD'] ?? '' ?>"
-                               class="form-control auth-by-email"
-                               id="<?= $mainID . "password" ?>"/>
-                        <div class="ctweb-error-alert" style="display: none"
-                             id="<?= $jsParams['TEMPLATE']['ERROR_ALERT'] ?>">
-                            <?= GetMessage("SMS_AUTH_ERROR_EMPTY_FIELD") ?>
-                        </div>
-                    </div>
-                    <div class="ctweb-button-block">
-                        <input class="btn link_menu_catalog login_button"
-                               id="<?= $jsParams['TEMPLATE']['LOGIN'] ?>"
-                               type="button"
-                               value="<?= GetMessage("SMS_AUTH_LOG_IN") ?>">
-                        <div>
-                            <a class="ctweb-link"
-                               id="<?= $jsParams['TEMPLATE']['AUTH_PHONE_LOGIN'] ?>">
-                                <?= GetMessage("AUTH_PHONE_LOGIN") ?></a>
-                        </div>
-                    </div>
-                </form>
-                <div class="ctweb-button-block">
-                    <div>
-                        <a class="ctweb-link email-register"
-                            id="<?= $jsParams['TEMPLATE']['REGISTRATION'] ?>"
-                            href="/login/?register=yes"><?= GetMessage("EMAIL_AUTH_REGISTRATION") ?></a>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -253,10 +214,13 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
                                     <label class="ctweb-label"
                                            for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                     <span id="flag"></span>
-                                    <input type="text" name="PHONE" placeholder="+7 ___ ___ __ __"
-                                           value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
-                                           class="form-control custom_style_auth" id="<?= $mainID . "phone" ?>"
-                                           autocomplete="off"/>
+                                    <div class="code position-relative">
+                                        <input type="text" name="PHONE" placeholder="+_ (___)-___-____" inputmode="text"
+                                               data-input-type="phone"
+                                               value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
+                                               class="form-control custom_style_auth auth-phone" id="<?= $mainID . "phone" ?>"
+                                               autocomplete="off"/>
+                                    </div>
                                 </div>
                                 <div class="checkbox d-none">
                                     <label>
@@ -396,6 +360,28 @@ if ($arParams['PROFILE_AUTH'] == "Y"):
 <?endif;?>
 
 <script>
+
+    $('input.auth-phone').phonecode({
+        preferCo: 'ru',
+        default_prefix: '7'
+    });
+
+    $('input.auth-phone-profile').phonecode({
+        phone_val :$('input.auth-phone-profile').val(),
+    });
+
+
+    $('input.auth-phone').inputmask("+7 (999)-999-9999", {
+        minLength: 10,
+        removeMaskOnSubmit: true,
+        autoUnmask: true,
+        clearMaskOnLostFocus: false,
+        clearMaskOnLostHover: false,
+        clearIncomplete: true,
+        definitionSymbol: "*"
+    });
+
+
     BX.message(<?= json_encode(array(
         'SMS_AUTH_TIME_LEFT' => GetMessage('SMS_AUTH_TIME_LEFT'),
         'SMS_AUTH_TIME_EXPIRED' => GetMessage('SMS_AUTH_TIME_OUT'),

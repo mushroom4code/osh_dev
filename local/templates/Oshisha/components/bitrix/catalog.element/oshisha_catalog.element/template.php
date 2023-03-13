@@ -433,7 +433,7 @@ global $option_site;
                         $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
                         $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
                     } else {
-                        $price_new = $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                        $price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
                         $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
                     }
                     $styles = ''; ?>
@@ -445,8 +445,12 @@ global $option_site;
                             <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRINT_PRICE']) ||
                                 $useDiscount['VALUE_XML_ID'] === 'true' &&
                                 !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
-                                $styles = 'price-discount'; ?>
-                                <span class="span">Старая цена <?= $price['PRICE_DATA'][1]['PRINT_PRICE']; ?></span>
+                                $styles = 'price-discount';
+                                $old_sum = (int)$price['PRICE_DATA'][0]['PRICE'] - (int)$price['SALE_PRICE']['PRICE'] ?? 0; ?>
+                                <span class="font-14 ml-3">
+                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
+                                    <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
+                                </span>
                             <?php } ?>
                         </div>
                         <div class="d-flex flex-column prices-block">
@@ -546,10 +550,10 @@ global $option_site;
                     <?php }
                     else { ?>
                         <div class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center
-                                                    justify-content-between bx_catalog_item"
+                                                     bx_catalog_item"
                             <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
                              data-entity="quantity-block">
-                            <div class="d-flex flex-row align-items-center ">
+                            <div class="d-flex flex-row align-items-center mr-3">
                                 <div class="product-item-amount-field-contain">
                                                                 <span class=" no-select minus_icon add2basket basket_prod_detail mr-3"
                                                                       style="pointer-events: none;">
@@ -564,17 +568,26 @@ global $option_site;
                                 </div>
                                 <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
                                    rel="nofollow"
-                                   class="basket_prod_detail detail_popup detail_disabled"
+                                   class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                                   <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?> detail_disabled"
                                    data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                    data-product_id="<?= $arResult['ID']; ?>"
                                    title="Добавить в корзину">Забронировать</a>
                             </div>
-                            <div id="popup_mess" class="popup_mess_prods"></div>
                             <div id="result_box" style="width: 100%;position: absolute;"></div>
-                            <div class="detail_popup"><i class="fa fa-bell-o" aria-hidden="true"></i></div>
+                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>">
+                                <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : ''?>" aria-hidden="true"></i>
+                            </div>
+                            <div id="popup_mess" class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>"
+                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : ''?>"
+                                 data-product_id="<?= $arResult['ID']; ?>"></div>
                         </div>
                         <div class="mb-4 d-flex justify-content-between align-items-center">
-                            <div class="not_product detail_popup">Нет в наличии</div>
+                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>">
+                            Нет в наличии
+                            </div>
                         </div>
                         <?php
                     }

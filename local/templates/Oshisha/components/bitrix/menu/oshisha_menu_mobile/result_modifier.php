@@ -204,7 +204,7 @@ FillAllPicturesAndDescriptions($arAllItems, $arMenuItemsIDs, $arImgDesc);
 $arMenuStructure = array();
 foreach ($arMenuItemsIDs as $itemIdLevel_1=>$arLevels2)
 {
-	$countItemsInRow = 18;
+	$countItemsInRow = 1000;
 	$arMenuStructure[$itemIdLevel_1] = array();
 	$countLevels2 = count($arLevels2);
 

@@ -98,7 +98,7 @@
                 this.obState.value = STATE_PHONE_WAITING;
             }
             let phone = this.formatPhoneNumber(this.obPhone.value, false);
-            $(this.obPhone).mask("+7 999 999 99 99");
+            // $(this.obPhone).mask("+7 999 999 99 99");
             // let phoneMask = new BX.MaskedInput({
             //     mask: '+7 (999) 999-99-99', // устанавливаем маску
             //     input: this.obPhone,

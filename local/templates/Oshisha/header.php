@@ -40,7 +40,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         })
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-        ym(92030744, "init", {
+        ym(65421508, "init", {
             clickmap: true,
             trackLinks: true,
             accurateTrackBounce: true,
@@ -49,7 +49,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         });
     </script>
     <noscript>
-        <div><img src="https://mc.yandex.ru/watch/92030744" style="position:absolute; left:-9999px;" alt=""/></div>
+        <div><img src="https://mc.yandex.ru/watch/65421508" style="position:absolute; left:-9999px;" alt=""/></div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
 
@@ -84,11 +84,16 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addJs("https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js");
     Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.css");
     Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css");
-
-
+    Asset::getInstance()->addJs("/local/assets/js/swiper/swiper-bundle.min.js");
+    Asset::getInstance()->addCss("/local/assets/js/swiper/swiper-bundle.min.css");
+    /** Enterego
+     * Mask with code country for user phone in forms
+     */
+    Asset::getInstance()->addJs("/local/assets/js/flags-mask/jquery.ui.widget.js");
+    Asset::getInstance()->addJs("/local/assets/js/flags-mask/phonecode.js");
+    Asset::getInstance()->addJs("/local/assets/js/flags-mask/counties.js");
+    Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
     $APPLICATION->ShowHead(); ?>
-    <link rel="stylesheet" href="/local/assets/js/swiper/swiper-bundle.min.css">
-    <script src="/local/assets/js/swiper/swiper-bundle.min.js"></script>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
 <body class="bx-background-image">
@@ -160,8 +165,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </span>
                     <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
                         отзыв</a>
-                    <a href="https://oshisha.online/" class="red_text text_font_13 font-weight-bold ">Вернуться на старый
-                        сайт</a>
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-7 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
@@ -170,11 +173,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <?php } else { ?>
                         <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
-                        <a href="/about/contacts/" class="text_header">Контакты</a>
+                    <a href="/about/contacts/" class="text_header">Контакты</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
                     <?php } ?>
-                        <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
+                    <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
                     <?php } else { ?>
@@ -367,4 +370,4 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     <div class="section_wrapper">
         <div class="container_header">
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
-                <div class="bx-content <?= STATIC_P ?>">
+            <div class="bx-content <?= STATIC_P ?>">
