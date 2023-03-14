@@ -42,16 +42,17 @@ $(document).ready(function () {
 
     let cookieStorage = {
         getItem: (key) => {
-            let cookies = document.cookie
+            let cookie = document.cookie
                 .split(';')
-                .map(cookie => cookie.split('='))
-                .reduce((acc, [key, value]) => ({...acc, [key.trim()]: value }));
-            return cookies[key]
+                .find((row) => row.startsWith(key))
+                ?.split("=")[1];
+            return cookie
         },
         setItem: (key, value) => {
             document.cookie = `${key}=${value}`;
         }
     }
+
     let storageType = cookieStorage, consentPropertyName = 'cookie_consent';
 
     let shouldShowPopup = () => !storageType.getItem(consentPropertyName);
@@ -63,8 +64,11 @@ $(document).ready(function () {
         event.preventDefault();
         saveToStorage(storageType);
         consentPopup.classList.add('hidden');
-    }
+        setTimeout(() => {
+            consentPopup.remove();
+        }, 700);
 
+    }
     consentAcceptBtn.addEventListener('click', acceptFn);
 
     if (shouldShowPopup(storageType)) {
