@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Bitrix Framework
  * @package bitrix
@@ -13,9 +13,11 @@
  * @var array $arParams
  * @var array $arResult
  * @var CBitrixComponent $this
+ * @var CUser|CAllUser $USER
  */
 
 use B01110011ReCaptcha\BitrixCaptcha;
+use Bitrix\Main\UserPhoneAuthTable;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
@@ -113,8 +115,8 @@ $arResult["bVarsFromForm"] = false;
 if (is_array($arParams["AUTH_RESULT"])) {
     if (isset($arParams["~AUTH_RESULT"]["SIGNED_DATA"])) {
         //special key "SIGNED_DATA" was added after the SMS was sent in CUser::Register()
-        $arResult["SHOW_SMS_FIELD"] = true;
-        $arResult["SIGNED_DATA"] = $arParams["~AUTH_RESULT"]["SIGNED_DATA"];
+//        $arResult["SHOW_SMS_FIELD"] = true;
+//        $arResult["SIGNED_DATA"] = $arParams["~AUTH_RESULT"]["SIGNED_DATA"];
     } elseif ($arParams['AUTH_RESULT']["TYPE"] == "ERROR") {
         $arResult["bVarsFromForm"] = true;
     }
@@ -148,27 +150,35 @@ if (!CMain::IsHTTPS() && COption::GetOptionString('main', 'use_encrypted_auth', 
 }
 
 // verify phone code
-if ($_SERVER["REQUEST_METHOD"] == "POST" && $_REQUEST["code_submit_button"] <> '' && !$USER->IsAuthorized()) {
-    if ($_REQUEST["SIGNED_DATA"] <> '') {
-        if (($params = \Bitrix\Main\Controller\PhoneAuth::extractData($_REQUEST["SIGNED_DATA"])) !== false) {
-            if (($userId = CUser::VerifyPhoneCode($params['phoneNumber'], $_REQUEST["SMS_CODE"]))) {
-                if ($arResult["PHONE_REQUIRED"]) {
-                    //the user was added as inactive, now phone number is confirmed, activate them
-                    $user = new CUser();
-                    $user->Update($userId, ["ACTIVE" => "Y"]);
-                }
-                // authorize user
-                $USER->Authorize($userId);
-                LocalRedirect($APPLICATION->GetCurPageParam("", $arParamsToDelete));
-            } else {
-                $arParams["~AUTH_RESULT"] = array(
-                    "MESSAGE" => GetMessage("main_register_sms_error"),
-                    "TYPE" => "ERROR",
-                );
-                $arResult["SHOW_SMS_FIELD"] = true;
-                $arResult["SMS_CODE"] = $_REQUEST["SMS_CODE"];
-                $arResult["SIGNED_DATA"] = $_REQUEST["SIGNED_DATA"];
-            }
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !$USER->IsAuthorized() && isset($_REQUEST['Register'])) {
+    if (!empty($arResult['USER_PHONE_NUMBER'])) {
+        if (true) {
+//            if ($arResult["PHONE_REQUIRED"]) {
+            //the user was added as inactive, now phone number is confirmed, activate them
+//            $user = new CUser();
+//            $phone='+' . $arResult['__phone_prefix'] . $arResult['USER_PHONE_NUMBER'];
+//            $user->Add([
+//                'LOGIN' => $arResult['USER_EMAIL'],
+//                'ACTIVE' => 'Y',
+//                'EMAIL' => $arResult['USER_EMAIL'],
+//                'NAME' => $arResult['USER_NAME'] ?? '',
+//                'LAST_NAME' => $arResult['USER_LAST_NAME'] ?? '',
+//                'PASSWORD' => $arResult['USER_PASSWORD'],
+//                'CONFIRM_PASSWORD' => $arResult['USER_CONFIRM_PASSWORD'],
+//                'PERSONAL_BIRTHDAY' => $arResult['USER_PERSONAL_BIRTHDAY'],
+//                'PERSONAL_PHONE' => $phone,
+//                'PHONE_NUMBER' => $phone,
+//            ]);
+
+//            }
+        } else {
+            $arParams["~AUTH_RESULT"] = array(
+                "MESSAGE" => GetMessage("main_register_sms_error"),
+                "TYPE" => "ERROR",
+            );
+            $arResult["SHOW_SMS_FIELD"] = true;
+            $arResult["CODE"] = $_REQUEST["CODE"];
+            $arResult["SIGNED_DATA"] = $_REQUEST["SIGNED_DATA"];
         }
     }
 }

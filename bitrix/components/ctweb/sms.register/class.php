@@ -140,7 +140,17 @@ class CtwebSMSRegisterComponent extends \CBitrixComponent
 		} else {
 			if ($this->isPost()) {
 				if (strlen($this->request->get('CODE'))) {
-					if ($this->manager->RegisterByCode($this->request->get('CODE'))) {
+                    $arFieldUser = [];
+                    if ($this->request->get('registered') === 'yes') {
+                        $arFieldUser = [
+                            'NAME' => $this->getSessionField('NAME'),
+                            'LAST_NAME' => $this->getSessionField('LAST_NAME'),
+                            'LOGIN' => $this->getSessionField('LOGIN'),
+                            'PERSONAL_BIRTHDAY' => $this->getSessionField('PERSONAL_BIRTHDAY'),
+                            'PERSONAL_PHONE' => $this->getSessionField('PERSONAL_PHONE'),
+                        ];
+                    }
+					if ($this->manager->RegisterByCode($this->request->get('CODE'),$this->request->get('PHONE'),$arFieldUser)) {
 						$this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
 					} else {
 						$this->arResult['AUTH_RESULT'] = self::RESULT_FAILED;

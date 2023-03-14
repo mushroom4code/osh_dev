@@ -269,8 +269,7 @@ $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDE
 
                 $obCache->EndDataCache($recommendedData);
             }
-            if ($USER->IsAdmin()) {
-                if (!empty($recommendedData) && $USER->IsAuthorized()) {
+            if ($USER->IsAuthorized()) {
                     if (!isset($arParams['DETAIL_SHOW_POPULAR']) || $arParams['DETAIL_SHOW_POPULAR'] != 'N') { ?>
                         <div class="mb-5 mt-5">
                             <div data-entity="parent-container">
@@ -366,7 +365,6 @@ $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDE
                         </div>
                         <?
                     }
-                }
             }
         }
         ?>

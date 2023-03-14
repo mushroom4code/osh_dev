@@ -11,7 +11,7 @@
 }
 
 .options-list {
-    max-height: 400px;
+    max-height: 165px;
     margin-top: 10px;
     overflow: auto;
 }
