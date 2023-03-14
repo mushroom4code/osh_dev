@@ -33,6 +33,10 @@ class OshishaDelivery extends CommonPVZ
         $params = ['filter' => ['ACTIVE'=>'Y', 'ISSUING_CENTER' => 'Y', '!=GPS_N'=>'0', '!=GPS_S'=>'0'] ];
         $rsRes = StoreTable::getList($params);
 
+        if ($code_city!=='0000073738') {
+            return;
+        }
+
         while ($arStore = $rsRes->fetch()) {
             $features_obj = [];
             $features_obj['type'] = 'Feature';
@@ -45,9 +49,7 @@ class OshishaDelivery extends CommonPVZ
                     $arStore['GPS_S']
                 ]
             ];
-            if (!strripos($value['ADDRESS_REGION'], ' город')) {
-                $region = ', ' . $value['ADDRESS_REGION'];
-            }
+
             $features_obj['properties'] = [
                 'code_pvz' => $arStore['ID'],
                 'type' => 'PVZ',
@@ -61,8 +63,10 @@ class OshishaDelivery extends CommonPVZ
 
             ];
             $features_obj['options'] = [
-                'iconLayout'=> 'default#image',
-                'iconImageHref'=> '/local/templates/Oshisha/images/osh.png',
+                'iconImageSize' => [64, 64],
+                'iconImageOffset' => [-30, -60],
+                'iconLayout'=> 'default#imageWithContent',
+                'iconImageHref'=> '/bitrix/modules/enterego.pvz/assets/images/osh.png',
             ];
 
             $result_array[] = $features_obj;

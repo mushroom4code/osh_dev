@@ -108,24 +108,16 @@ class DeliveryHelper
             }
         }
 
-        $dbRes = \Bitrix\Sale\Property::getList([
-            'select' => ['ID', 'CODE'],
-            'filter' => [],
-            'runtime' => [
-                new \Bitrix\Main\Entity\ReferenceField(
-                    'REL_DLV',
-                    '\Bitrix\Sale\Internals\OrderPropsRelationTable',
-                    array("=this.ID" => "ref.PROPERTY_ID", "=ref.ENTITY_TYPE" => new \Bitrix\Main\DB\SqlExpression('?', 'D')),
-                    array("join_type" => "left")
-                ),
-            ],
-            'group' => ['ID'],
-            'order' => ['ID' => 'DESC']
-        ]);
-
-        while ($property = $dbRes->fetch()) {
-            if ($property['CODE'] === 'COMMON_PVZ') {
-                $params['arPropsAddr'][] = $property['ID'];
+        $propertyCollection = $order->getPropertyCollection();
+        foreach ($propertyCollection as $orderProp)
+        {
+            $prop = $orderProp->getProperty();
+            if ($prop['CODE'] === 'COMMON_PVZ') {
+                $params['propCommonPVZ'] = $prop['ID'];
+            } elseif ($prop['CODE'] === 'ADDRESS') {
+                $params['propAddress'] = $prop['ID'];
+            } elseif ($prop['CODE'] === 'TYPE_DELIVERY') {
+                $params['propTypeDelivery'] = $prop['ID'];
             }
         }
 
@@ -134,15 +126,7 @@ class DeliveryHelper
         $cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
         $cAsset->addString(
-            "<style>
-                    div[data-property-id-row='".$params['arPropsAddr'][0]."'] {
-                        display:none
-                    }
-                    div[data-property-id-row='".$params['arPropsAddr'][1]."'] {
-                        display:none
-                    }
-                 </style>
-                 <script id='' data-params=''>
+            "<script id='' data-params=''>
                     window.addEventListener('load', function () {
                         BX.SaleCommonPVZ.init({
                             params: " . CUtil::PhpToJSObject($params) . "

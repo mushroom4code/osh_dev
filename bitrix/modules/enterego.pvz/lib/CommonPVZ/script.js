@@ -17,14 +17,9 @@ BX.SaleCommonPVZ = {
     objectManager: null,
 
     init: function (params) {
-        console.log('... CommonPVZ init ...');
         this.params = params.params;
         this.refresh();
         this.isInit = true;
-
-        $(document).on("click", "#commmon_pvz_select_point", function() {
-            console.log(this)
-        });
     },
 
     openMap: function () {
@@ -34,23 +29,25 @@ BX.SaleCommonPVZ = {
     },
 
     refresh: function () {
-        var __this = this;
-        var adr = $('[name="ORDER_PROP_' + __this.params.arPropsAddr[1] + '"]') || $('[name="ORDER_PROP_' + __this.params.arPropsAddr[0] + '"]');
-        if (__this.pvzFullAddress) {
-            adr.val(__this.pvzFullAddress);
-            $('#pvz_address').html('Вы выбрали: <span>' + __this.pvzAddress + '</span>');
-        }
-        adr.attr('readonly', 'readonly');
+        const __this = this
+        if (this.params.propCommonPVZ) {
+            const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.params.propCommonPVZ + '"]');
+            const address = document.querySelector('[name="ORDER_PROP_' + this.params.propAddress + '"]');
+            commonPVZ.readOnly = true;
+            address.readOnly = true;
 
-        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
-            if (item.IS_LOCATION === 'Y') {
-                if (__this.curCityCode !== item.VALUE[0]) {
-                    __this.curCityCode = item.VALUE[0];
-                    __this.propsMap = null;
-                    __this.getCityName();
+            BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
+                if (item.IS_LOCATION === 'Y') {
+                    if (__this.curCityCode !== item.VALUE[0]) {
+                        __this.curCityCode = item.VALUE[0];
+                        __this.propsMap = null;
+                        __this.getCityName();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            console.log('Property common PVZ not defined')
+        }
     },
 
     createPVZPopup: function () {
@@ -191,9 +188,18 @@ BX.SaleCommonPVZ = {
             ? point.properties.deliveryName + ': ' + point.properties.fullAddress + ' #' + point.properties.code_pvz
             : point.properties.deliveryName + ': ' + point.properties.fullAddress;
 
-        const dataToHandler = this.getPointData(point);
+        const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.params.propCommonPVZ + '"]');
+        const address = document.querySelector('[name="ORDER_PROP_' + this.params.propAddress + '"]');
+        const typeDelivery = document.querySelector('[name="ORDER_PROP_' + this.params.propTypeDelivery + '"]');
 
-        __this.refresh();
+        if (this.pvzFullAddress) {
+            commonPVZ.value = this.pvzFullAddress;
+            address.value = this.pvzFullAddress;
+            typeDelivery.value = point.properties.deliveryName
+            BX('pvz_address').innerHTML = 'Вы выбрали: <span>' + this.pvzAddress + '</span>';
+        }
+
+        const dataToHandler = this.getPointData(point);
         __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
     },
 
@@ -278,35 +284,29 @@ BX.SaleCommonPVZ = {
         this.objectManager = objectManager;
         var __this = this;
 
-
-        const button = new ymaps.control.Button({
-            data: {
-                // Зададим иконку для кнопки.
-                image: 'images/button.jpg',
-                // Текст на кнопке.
-                content: 'Save',
-                // Текст всплывающей подсказки.
-                title: 'Click to save the route'
-            },
-            options: {
-                // Зададим опции кнопки.
-                selectOnClick: false,
-                // У кнопки будет три состояния: иконка, текст и текст + иконка.
-                // Зададим три значения ширины кнопки для всех состояний.
-                maxWidth: [30, 100, 150]
-            }
-        });
-        button.events.add('click', ()=>{
-            console.log('test')
-        })
-        __this.propsMap.controls.add(button, { float: 'right', floatIndex: 100 });
-
         __this.propsMap.geoObjects.add(objectManager);
-        BX.Sale.OrderAjaxComponent.endLoader();
+        const osh_pvz = objectManager.objects.getAll()
+            .find((item) => item?.properties?.deliveryName==='OSHISHA');
 
-        function hasBalloonData (objectId) {
-            return objectManager.objects.getById(objectId).properties.balloonContent;
+        if (osh_pvz) {
+            const button = new ymaps.control.Button({
+                data: {
+                    image: 'images/button.jpg',
+                    content: 'Пукнт выдачи OSHISHA',
+                    title: 'Показать на карте пункт выдачи'
+                },
+                options: {
+                    selectOnClick: false,
+                    maxWidth: [230, 230, 230]
+                }
+            });
+            button.events.add('click', () => {
+                __this.propsMap.setZoom(15)
+                objectManager.objects.balloon.open(osh_pvz.id);
+            })
+            __this.propsMap.controls.add(button, { float: 'right', floatIndex: 100 });
         }
+        BX.Sale.OrderAjaxComponent.endLoader();
 
         objectManager.clusters.events.add(['balloonopen'], function (e){
             const clusterId = e.get('objectId');
@@ -317,14 +317,15 @@ BX.SaleCommonPVZ = {
         });
 
         objectManager.objects.events.add('click', function (e) {
+            var objectId = e.get('objectId')
+            objectManager.objects.balloon.open(objectId);
+        });
+
+        objectManager.objects.events.add('balloonopen', function (e) {
             var objectId = e.get('objectId'),
                 obj = objectManager.objects.getById(objectId);
-            if (hasBalloonData(objectId)) {
-                objectManager.objects.balloon.open(objectId);
-            } else {
-                objectManager.objects.balloon.open(objectId);
-                __this.getSelectPvzPrice([obj]);
-            }
+
+            __this.getSelectPvzPrice([obj]);
         });
     },
 
