@@ -136,6 +136,20 @@ $aTabs = array(
                 array('text')
             )
         )
+    ),
+    // ПЭК
+    array(
+        'DIV'     => 'oshisha_pvz',
+        'TAB'     => Loc::getMessage('PVZ_OPTIONS_OSHISHA'),
+        'TITLE'   => Loc::getMessage('PVZ_OPTIONS_OSHISHA'),
+        'OPTIONS' => array(
+            array(
+                'OSHISHA_PVZ_ENABLE',
+                Loc::getMessage('PVZ_ENABLE'),
+                Option::get($module_id, 'OSHISHA_PVZ_ENABLE'),
+                array('checkbox')
+            ),
+        )
     )
 );
 

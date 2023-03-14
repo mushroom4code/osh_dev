@@ -20,7 +20,7 @@ class PEKDelivery extends CommonPVZ
         }
     }
 
-    public function getPVZ($city_name, &$result_array, &$id_feature, $code_city)
+    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city)
     {
 
         try {

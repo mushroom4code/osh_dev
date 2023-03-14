@@ -278,6 +278,29 @@ BX.SaleCommonPVZ = {
         this.objectManager = objectManager;
         var __this = this;
 
+
+        const button = new ymaps.control.Button({
+            data: {
+                // Зададим иконку для кнопки.
+                image: 'images/button.jpg',
+                // Текст на кнопке.
+                content: 'Save',
+                // Текст всплывающей подсказки.
+                title: 'Click to save the route'
+            },
+            options: {
+                // Зададим опции кнопки.
+                selectOnClick: false,
+                // У кнопки будет три состояния: иконка, текст и текст + иконка.
+                // Зададим три значения ширины кнопки для всех состояний.
+                maxWidth: [30, 100, 150]
+            }
+        });
+        button.events.add('click', ()=>{
+            console.log('test')
+        })
+        __this.propsMap.controls.add(button, { float: 'right', floatIndex: 100 });
+
         __this.propsMap.geoObjects.add(objectManager);
         BX.Sale.OrderAjaxComponent.endLoader();
 

@@ -24,7 +24,10 @@ $MESS["PEK_sendercityid"] = "ID города отправки";
 $MESS["PEK_senderdistancetype"] = "Код типа отправителя";
 $MESS["PEK_apilink"] = "apiLink";
 
+$MESS['PVZ_OPTIONS_OSHISHA'] = 'Самовывоз OSHISHA';
+
 $MESS["EE_PVZ_OPTIONS_INPUT_APPLY"] = "Сохранить";
 $MESS["EE_PVZ_OPTIONS_INPUT_DEFAULT"] = "Отменить";
 
+$MESS["PVZ_ENABLE"] = 'Включена';
 $MESS["PVZ_UPDATE_POINTS"] = 'Обновить пункты выдачи';

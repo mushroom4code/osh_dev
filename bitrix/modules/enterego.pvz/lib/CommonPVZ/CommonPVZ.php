@@ -13,7 +13,7 @@ abstract class CommonPVZ
 
     /** Get object of delivery type
      * @param string $typeDelivery
-     * @return FivePostDelivery|PEKDelivery|PickPointDelivery|SDEKDelivery|null
+     * @return FivePostDelivery|OshishaDelivery|PEKDelivery|PickPointDelivery|SDEKDelivery|null
      */
     public static function getInstanceObject(string $typeDelivery) {
         switch ($typeDelivery) {
@@ -23,6 +23,8 @@ abstract class CommonPVZ
             case 'FivePost':
             case '5Post':
                 return new FivePostDelivery();
+            case 'OSHISHA':
+                return new OshishaDelivery();
             case 'PEK':
             case 'ПЭК':
                 return new PEKDelivery();
@@ -48,7 +50,14 @@ abstract class CommonPVZ
 
     abstract protected function connect();
 
-    abstract public function getPVZ($city_name, &$result_array, &$id_feature, $code_city);
+    /**
+     * @param $city_name string
+     * @param $result_array array
+     * @param $id_feature int
+     * @param $code_city string
+     * @return mixed
+     */
+    abstract public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city);
 
     /** Return calculate price delivery
      * @param $array
