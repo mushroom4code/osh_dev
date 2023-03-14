@@ -200,6 +200,8 @@ if (!empty($resQuery)) {
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
+
+
 ?>
 <div class="row<?= $themeClass ?>">
     <div class="col p-0">
@@ -282,7 +284,9 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                             'BIG_LABEL' => 'N',
                                             'BIG_DISCOUNT_PERCENT' => 'N',
                                             'BIG_BUTTONS' => 'N',
-                                            'SCALABLE' => 'N'
+                                            'SCALABLE' => 'N',
+                                            'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -319,6 +323,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                                 'AR_BASKET' => $arBasketItems,
                                                 'F_USER_ID' => $FUser_id,
                                                 'ID_PROD' => $item['ID'],
+                                                'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                                'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                             ),
                                             'PARAMS' => $generalParams
                                                 + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -369,6 +375,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                                 'POPUP_PROPS' => $prop_see_in_window,
                                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
+                                                'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                                'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                             ),
                                             'PARAMS' => $generalParams
                                                 + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -419,6 +427,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                                             'COUNT_FAV' => $item['COUNT_FAV'],
                                             'COUNT_LIKES' => $item['COUNT_LIKES'],
+                                            'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -451,6 +461,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                                         'SCALABLE' => 'N',
                                                         'AR_BASKET' => $arBasketItems,
                                                         'F_USER_ID' => $FUser_id,
+                                                        'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                                     ),
                                                     'PARAMS' => $generalParams
                                                         + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
@@ -494,6 +506,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                                         'AR_BASKET' => $arBasketItems,
                                                         'F_USER_ID' => $FUser_id,
                                                         'ID_PROD' => $item['ID'],
+                                                        'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                                     ),
                                                     'PARAMS' => $generalParams
                                                         + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
@@ -527,6 +541,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                             'AR_BASKET' => $arBasketItems,
                                             'F_USER_ID' => $FUser_id,
                                             'ID_PROD' => $item['ID'],
+                                            'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -576,6 +592,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
                                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
+                                                'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                                'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                             ),
                                             'PARAMS' => $generalParams
                                                 + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -612,6 +630,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                             'AR_BASKET' => $arBasketItems,
                                             'F_USER_ID' => $FUser_id,
                                             'ID_PROD' => $item['ID'],
+                                            'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -644,6 +664,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                                         'SCALABLE' => 'N',
                                                         'AR_BASKET' => $arBasketItems,
                                                         'F_USER_ID' => $FUser_id,
+                                                        'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                                     ),
                                                     'PARAMS' => $generalParams
                                                         + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
@@ -686,6 +708,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                                         'AR_BASKET' => $arBasketItems,
                                                         'F_USER_ID' => $FUser_id,
                                                         'ID_PROD' => $item['ID'],
+                                                        'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                                     ),
                                                     'PARAMS' => $generalParams
                                                         + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
@@ -718,6 +742,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                             'AR_BASKET' => $arBasketItems,
                                             'F_USER_ID' => $FUser_id,
                                             'ID_PROD' => $item['ID'],
+                                            'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
@@ -761,6 +787,8 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                                             'COUNT_FAV' => $item['COUNT_FAV'],
                                             'COUNT_LIKES' => $item['COUNT_LIKES'],
+                                            'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                         ),
                                         'PARAMS' => $generalParams
                                             + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])

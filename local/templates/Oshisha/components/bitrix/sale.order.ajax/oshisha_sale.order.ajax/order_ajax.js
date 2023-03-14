@@ -320,7 +320,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
 
                 // #18618
-                BX.SaleCommonPVZ && BX.SaleCommonPVZ.refresh();
+                if (typeof BX.SaleCommonPVZ != "undefined")
+                    BX.SaleCommonPVZ.isInit && BX.SaleCommonPVZ.refresh();
             }
             return true;
         },
@@ -4716,7 +4717,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 ],
                 deliveryCached = this.deliveryCachedInfo[deliveryId], label, title, itemNode, logoNode;
 
-            let delivery = 'delivery';
             if (this.params.SHOW_DELIVERY_LIST_NAMES == 'Y') {
                 title = BX.create('DIV', {
                     props: {className: 'bx-soa-pp-company-smalltitle color_black font_weight_600'},
@@ -4740,16 +4740,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 
             itemNode = BX.create('DIV', {
-                props: {className: delivery + ' bx-soa-pp-company'},
+                props: {className: 'delivery bx-soa-pp-company'},
                 children: [label],
             });
+
             checked && BX.addClass(itemNode, 'bx-selected');
 
             //enterego
             if (checked)
                 //--if (checked && this.result.LAST_ORDER_DATA.PICK_UP)
                 this.lastSelectedDelivery = deliveryId;
-
             if (BX.hasClass(itemNode, 'bx-selected')) {
                 this.editPropsItems(itemNode);
             }
@@ -4837,7 +4837,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 actionInput = actionSection.querySelector('input[type=radio]');
                 BX.addClass(actionSection, 'bx-selected');
                 actionInput.checked = true;
-
+                $('input[data-name="ADDRESS"]').val('');
             }
             if (selectedSection) {
                 selectedInput = selectedSection.querySelector('input[type=radio]');
@@ -5545,7 +5545,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 propsNode = BX.create('DIV', {props: {className: 'row'}});
                 selectedDelivery = this.getSelectedDelivery();
 
-
                 if (
                     selectedDelivery && this.params.SHOW_MAP_IN_PROPS === 'Y'
                     && this.params.SHOW_MAP_FOR_DELIVERIES && this.params.SHOW_MAP_FOR_DELIVERIES.length
@@ -5582,103 +5581,37 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
         },
 
-        // editFadePropsBlock: function () {
-        //     var propsContent = this.propsBlockNode.querySelector('.bx-soa-section-content'), newContent;
-        //
-        //     if (this.initialized.props) {
-        //         this.propsHiddenBlockNode.appendChild(propsContent);
-        //     } else {
-        //         this.editActivePropsBlock(false);
-        //         BX.remove(BX.lastChild(this.propsBlockNode));
-        //     }
-        //
-        //     newContent = this.getNewContainer();
-        //     this.propsBlockNode.appendChild(newContent);
-        //
-        //     // this.editFadePropsContent(newContent);
-        // },
-
-        // editFadePropsContent: function (node) {
-        //     if (!node || !this.locationsInitialized)
-        //         return;
-        //
-        //     var errorNode = this.propsHiddenBlockNode.querySelector('.alert'),
-        //         personType = this.getSelectedPersonType(),
-        //         fadeParamName, props,
-        //         group, property, groupIterator, propsIterator, i, validPropsErrors;
-        //
-        //     BX.cleanNode(node);
-        //
-        //     if (errorNode)
-        //         node.appendChild(errorNode.cloneNode(true));
-        //
-        //     if (personType) {
-        //         fadeParamName = 'PROPS_FADE_LIST_' + personType.ID;
-        //         props = this.params[fadeParamName];
-        //     }
-        //
-        //     if (!props || props.length === 0) {
-        //         node.innerHTML += '<strong>' + BX.message('SOA_ORDER_PROPS') + '</strong>';
-        //     } else {
-        //         groupIterator = this.fadedPropertyCollection.getGroupIterator();
-        //         while (group = groupIterator()) {
-        //             propsIterator = group.getIterator();
-        //             while (property = propsIterator()) {
-        //                 for (i = 0; i < props.length; i++)
-        //                     if (props[i] == property.getId() && property.getSettings()['IS_ZIP'] != 'Y')
-        //                         this.getPropertyRowNode(property, node, true);
-        //             }
-        //         }
-        //     }
-        //
-        //     if (this.propsBlockNode.getAttribute('data-visited') === 'true') {
-        //         validPropsErrors = this.isValidPropertiesBlock();
-        //         if (validPropsErrors.length)
-        //             this.showError(this.propsBlockNode, validPropsErrors);
-        //     }
-        //
-        //     BX.bind(node.querySelector('.alert.alert-danger'), 'click', BX.proxy(this.showByClick, this));
-        //     BX.bind(node.querySelector('.alert.alert-warning'), 'click', BX.proxy(this.showByClick, this));
-        // },
-
-        // clickByChecked: function (propsNode) {
-        //
-        //     let divs = BX.findChildren(this.UserCheckType),
-        //         i, input;
-        //
-        //     for (i = 0; i < divs.length; i++) {
-        //         input = BX.findChildren(divs[i], {tagName: 'INPUT'});
-        //
-        //         let elem_input = input[0];
-        //
-        //         BX.bind(elem_input, 'click', this.editShowHideContent);
-        //     }
-        // },
-        // editShowHideContent: function(element){
-        //     console.log(element)
-        // },
         editPropsItems: function (propsNode) {
             if (!this.result.ORDER_PROP || !this.propertyCollection)
                 return;
+
             let propsItemsContainer = BX.create('DIV', {props: {className: 'bx-soa-customer p-0'}}),
                 group, property, groupIterator = this.propertyCollection.getGroupIterator(), propsIterator;
 
             if (!propsItemsContainer)
                 propsItemsContainer = this.propsBlockNode.querySelector('.col-sm-12.bx-soa-customer');
 
+            const arDelivery = this.params.AR_DELIVERY_PICKUP;
             while (group = groupIterator()) {
                 propsIterator = group.getIterator();
                 while (property = propsIterator()) {
+                    // TODO Enterego pickup
+                    let disabled = false;
                     if (propsNode.classList.contains('delivery')) {
                         if (this.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
-                            this.getPropertyRowNode(property, propsItemsContainer, false);
+                            // TODO Enterego pickup
+                            const id_del = this.result.DELIVERY.find(item => item.CHECKED === 'Y').ID;
+                            if (arDelivery.indexOf(String(id_del)) !== -1) {
+                                disabled = true;
+                            }
+                            this.getPropertyRowNode(property, propsItemsContainer, disabled);
                         } else {
                             continue;
                         }
 
                     } else {
                         if (this.groupBuyerProps.find(item => item === group.getName()) !== undefined) {
-                            this.getPropertyRowNode(property, propsItemsContainer, false);
+                            this.getPropertyRowNode(property, propsItemsContainer, disabled);
                         }
                         continue;
                     }
@@ -5702,43 +5635,39 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 propertyType = property.getType() || '',
                 propertyDesc = property.getDescription() || '',
                 label;
+            //TODO Enterego pickup
+            let className = "form-group bx-soa-customer-field p-2";
 
-            if (disabled) {
-                propsItemNode.innerHTML = '<strong>' + BX.util.htmlspecialchars(property.getName()) + ':</strong> ';
-            } else {
-                let className = "form-group bx-soa-customer-field p-2";
-
-                if (property.getSettings().CODE === 'EMAIL') {
-                    if (this.result.IS_AUTHORIZED) {
-                        if (BX('user_select')) {
-                            BX.adjust(BX('user_select'), {style: {display: "none"}});
-                        }
+            if (property.getSettings().CODE === 'EMAIL') {
+                if (this.result.IS_AUTHORIZED) {
+                    if (BX('user_select')) {
+                        BX.adjust(BX('user_select'), {style: {display: "none"}});
                     }
-                    className += " col-md-6 col-lg-6 col-12";
                 }
-                if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
-                    || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
-                    || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
-                    className += " col-12";
-                } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
-                    className += " d-none";
-                } else {
-                    className += " col-md-6 col-lg-6 col-12";
-                }
-                BX.addClass(propsItemNode, className);
-
-                textHtml += propertyDesc.length && propertyType !== 'STRING' && propertyType !== 'NUMBER' &&
-                propertyType !== 'DATE' ? ' <small>(' + BX.util.htmlspecialchars(propertyDesc) + ')</small>'
-                    : BX.util.htmlspecialchars(property.getName());
-
-                label = BX.create('LABEL', {
-                    attrs: {'for': 'soa-property-' + property.getId()},
-                    props: {className: 'bx-soa-custom-label'},
-                    html: textHtml
-                });
-                propsItemNode.setAttribute('data-property-id-row', property.getId());
-                propsItemNode.appendChild(label);
+                className += " col-md-6 col-lg-6 col-12";
             }
+            if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
+                || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
+                || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
+                className += " col-12";
+            } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
+                className += " d-none";
+            } else {
+                className += " col-md-6 col-lg-6 col-12";
+            }
+            BX.addClass(propsItemNode, className);
+
+            textHtml += propertyDesc.length && propertyType !== 'STRING' && propertyType !== 'NUMBER' &&
+            propertyType !== 'DATE' ? ' <small>(' + BX.util.htmlspecialchars(propertyDesc) + ')</small>'
+                : BX.util.htmlspecialchars(property.getName());
+
+            label = BX.create('LABEL', {
+                attrs: {'for': 'soa-property-' + property.getId()},
+                props: {className: 'bx-soa-custom-label'},
+                html: textHtml
+            });
+            propsItemNode.setAttribute('data-property-id-row', property.getId());
+            propsItemNode.appendChild(label);
 
 
             switch (propertyType) {
@@ -6072,30 +6001,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         },
 
         insertStringProperty: function (property, propsItemNode, disabled) {
-            var prop, inputs, values, i, propContainer, className;
-            if (disabled) {
-                prop = this.propsHiddenBlockNode.querySelector('div[data-property-id-row="' + property.getId() + '"]');
-                if (prop) {
-                    values = [];
-                    inputs = prop.querySelectorAll('input[type=text]');
-
-
-                    if (inputs.length) {
-                        for (i = 0; i < inputs.length; i++) {
-                            if (inputs[i].value.length)
-                                values.push(inputs[i].value);
-                        }
-                    }
-
-                    propsItemNode.innerHTML += this.valuesToString(values);
-                }
-            } else {
-                propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
-                property.appendTo(propContainer);
-                propsItemNode.appendChild(propContainer);
-                this.alterProperty(property, propContainer);
-                this.bindValidation(property.getId(), propContainer);
-            }
+            var propContainer;
+            // TODO Enterego pickup
+            propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
+            property.appendTo(propContainer);
+            propsItemNode.appendChild(propContainer);
+            property.parent = propsItemNode;
+            this.alterProperty(property, propContainer, disabled);
+            this.bindValidation(property.getId(), propContainer);
         },
 
         insertEnumProperty: function (property, propsItemNode, disabled) {
@@ -6183,7 +6096,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             return str.length ? BX.util.htmlspecialchars(str) : BX.message('SOA_NOT_SELECTED');
         },
 
-        alterProperty: function (property, propContainer) {
+        alterProperty: function (property, propContainer, disabled = false) {
             var divs = BX.findChildren(propContainer, {tagName: 'DIV'}),
                 settings = property.getSettings(),
                 i, textNode, inputs, del, add,
@@ -6223,14 +6136,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 if (value_string.indexOf('noemail') !== -1 || value_string.indexOf('<') !== -1) {
                     inputs[i].value = '';
                 }
+
                 BX.addClass(inputs[i], 'form-control bx-soa-customer-input bx-ios-fix');
                 if (settings.CODE === 'ADDRESS') {
-                    //    Адрес
-                    // if (settings.VALUE !== '' && settings.VALUE !== null) {
-                    //     inputs[i].setAttribute('value', settings.VALUE[0]);
-                    // } else {
-                    //     inputs[i].setAttribute('value', this.result.ORDER_PROP.properties[6].VALUE[0]);
-                    // }
+                    // TODO Enterego pickup
+                    if (disabled === true) {
+                        inputs[i].setAttribute('readonly', 'readonly');
+                    }
                     inputs[i].setAttribute('data-name', settings.CODE);
                 }
                 if (settings.CODE === 'DATE') {

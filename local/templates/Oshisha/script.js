@@ -39,6 +39,39 @@ $(document).ready(function () {
         bool_select_contragent_user = $(select).is('#contragent_user'),
         bool_select_company_user_order = $(select).is('#company_user_order');
 
+
+    let cookieStorage = {
+        getItem: (key) => {
+            let cookies = document.cookie
+                .split(';')
+                .map(cookie => cookie.split('='))
+                .reduce((acc, [key, value]) => ({...acc, [key.trim()]: value }));
+            return cookies[key]
+        },
+        setItem: (key, value) => {
+            document.cookie = `${key}=${value}`;
+        }
+    }
+    let storageType = cookieStorage, consentPropertyName = 'cookie_consent';
+
+    let shouldShowPopup = () => !storageType.getItem(consentPropertyName);
+    let saveToStorage = () => storageType.setItem(consentPropertyName, true);
+    let consentPopup = document.getElementById('consent-cookie-popup');
+    let consentAcceptBtn = document.getElementById('cookie-popup-accept');
+
+    let acceptFn = event => {
+        event.preventDefault();
+        saveToStorage(storageType);
+        consentPopup.classList.add('hidden');
+    }
+
+    consentAcceptBtn.addEventListener('click', acceptFn);
+
+    if (shouldShowPopup(storageType)) {
+        setTimeout(() => {
+            consentPopup.classList.remove('hidden');
+        }, 2000);
+    }
     //MAIN
     function getCookie(name) {
         let matches = document.cookie.match(new RegExp(
@@ -143,14 +176,36 @@ $(document).ready(function () {
             function () {
                 let text_taste = $(this).closest('div.form-check').find('label').attr('id');
                 let code = $(this).closest('div.form-check').find('label').attr('for');
-                /*  $(box_for_tasted).append('<span style="padding: 8px 25px;border:1px solid #f55f5c;color: white;\n' +
-                      'margin-right: 10px;border-radius: 10px;font-size: 11px;">' + text_taste + '</span>');*/
-                /* $('#osh-filter-horizontal').append('<div id="osh-filter-horizontal-item" class="d-inline-block" data-osh-filter-state="hide">'+
-                 '<div id="item-'+code+'" class="osh-filter-item osh-filter-horizontal-border d-inline-block">' + text_taste + '<span onclick="smartFilter.removeHorizontalFilter(\''+code+'\')" class="d-inline-block osh-filter-horizontal-remove"></span></div></div>');
-     */
             }
         );
     }
+
+    $(document).on('click', '.js__show-all-prices', function () {
+        const showButton = $(this),
+            listHeader = showButton.closest('.info-prices-box-hover'),
+            listWrap = listHeader.find('.js__all-prices'),
+            priceList = listWrap.find('.prices-block'),
+            yDelta = priceList.outerHeight();
+
+        if (listWrap.height() !== 0) {
+            listHeader.stop().animate({bottom: 0}, 600);
+            listWrap.stop().animate({height: 0}, 600, function () {
+                showButton.css({borderRadius: 0}).find('span').text('Показать цены');
+            });
+
+        } else {
+            showButton.find('span').text('Скрыть цены').css({borderRadius: '0 0 10px 10px'});
+            listHeader.stop().animate({bottom: yDelta}, 800);
+            listWrap.stop().animate({height: yDelta}, 800);
+        }
+        listHeader.toggleClass('active');
+        return false;
+    })
+
+
+
+
+
 
     $('.link_header_catalog').on('click', function () {
         $('#MenuHeader .Icon').click();
@@ -257,7 +312,7 @@ $(document).ready(function () {
         } else if (value > maxValue) {
             value = maxValue;
             $('.card_element').val(maxValue);
-            $('.alert_quantity').html('К покупке доступно максимум: ' + maxValue + 'шт.').addClass('show_block');
+            $('.alert_quantity').html('К покупке доступно максимум: ' + maxValue + ' шт.').addClass('show_block');
 
         }
         if (value > 0) {
@@ -361,7 +416,7 @@ $(document).ready(function () {
                     $(boxInput).val(max_QUANTITY);
                     if (max_QUANTITY > 0) {
                         $('.ganerate_price_wrap').show();
-                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
+                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                     } else
                         $('.ganerate_price_wrap').hide();
                     if ($('.ganerate_price').length > 0) {
@@ -378,7 +433,7 @@ $(document).ready(function () {
                     $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').css({'display': 'flex'});
                 }
             } else if (minus === true) {
-                $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
 
                 if (parseInt($(boxInput).val()) > 0) {
                     let beforeVal = parseInt($(boxInput).val()) - 1;
@@ -414,10 +469,10 @@ $(document).ready(function () {
                         product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
                         $(boxInput).val(quantity);
                         if (quantity > max_QUANTITY) {
-                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + 'шт.').addClass('show_block');
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
 
                         } else {
-                            $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block');
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                         }
                     } else {
                         product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
@@ -428,6 +483,11 @@ $(document).ready(function () {
                     $(boxInput).val(1);
                 }
             }
+
+            $(document).on('click', '.js__close-count-alert', function() {
+                $(this).parents('.alert_quantity').html('').removeClass('show_block');
+            })
+
             let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="' + product_id + '"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
@@ -536,48 +596,89 @@ $(document).ready(function () {
     $(document).on('click', '.detail_popup', function () {
         let popup_mess = $(this).closest('.bx_catalog_item_controls').find('div#popup_mess');
         $(".box_with_message_prodNot").hide(500).remove();
-        $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
-            '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-            'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться.</p>' +
-            '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
-            'justify-content-center align-items-center">' +
-            '<i class="fa fa-bell-o" aria-hidden="true"></i>Уведомить меня</a>' +
-            '<span class="close_photo" id="close_photo"></span></div>').show();
+        if ($(this).hasClass('subscribed')) {
+            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                'К сожалениюf, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
+                '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
+                'justify-content-center align-items-center">' +
+                '<i class="fa fa-bell-o" aria-hidden="true"></i>Отменить подписку</a>' +
+                '<span class="close_photo" id="close_photo"></span></div>').show();
+        } else if ($(this).hasClass('noauth')) {
+            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться. Авторизуйтесь для подписки на товар</p>' +
+                '<span class="close_photo" id="close_photo"></span></div>').show();
+        } else {
+            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться.</p>' +
+                '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
+                'justify-content-center align-items-center">' +
+                '<i class="fa fa-bell-o" aria-hidden="true"></i>Уведомить меня</a>' +
+                '<span class="close_photo" id="close_photo"></span></div>').show();
+        }
         $('#close_photo').on('click', function () {
             $(".box_with_message_prodNot").hide(500).remove()
         });
         $('a#yes_mess').on('click', function () {
-            $(popup_mess).hide();
-            $(popup_mess).empty();
-            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot"> ' +
-                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться.</p>' +
-                '<input type="text" class="input_sendMe_mail" id="send_me_mail"  placeholder="Введите свою почту"/>' +
-                '<a href="javascript:void(0);" id="sendMailForProd" class="d-flex link_message_box_product ' +
-                'justify-content-center align-items-center">Отправить</a><span class="close_photo" id="close_photo">' +
-                '</span></div>').show();
+            var popup_mess = $(this).closest('div#popup_mess');
+            var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
+            if ($(this).closest('div#popup_mess').hasClass('subscribed')){
+                var subscribe = "N";
+                var subscription_id = popup_mess.attr('data-subscription_id');
+            } else {
+                var subscribe = "Y";
+                var subscription_id = "N";
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/local/templates/Oshisha/components/bitrix/catalog.product.subscribe/oshisha_catalog.product.subscribe/ajax.php',
+                data: {subscribe: subscribe, item_id: product_id, subscription_id: subscription_id},
+                success: function (result_jsn) {
+                    var result = JSON.parse(result_jsn);
+                    if(result.success === true){
+                        var item_controls = popup_mess.parent();
+                        if(result.message === "subscribed") {
+                            popup_mess.addClass('subscribed');
+                            popup_mess.attr('data-subscription_id', result.subscribeId);
+                            item_controls.find('.detail_popup').addClass('subscribed');
+                            item_controls.find('.fa-bell-o').addClass('filled');
+                            popup_mess.empty();
+                        } else if (result.message === "unsubscribed") {
+                            popup_mess.removeClass('subscribed');
+                            popup_mess.removeAttr('data-subscription_id');
+                            item_controls.find('.detail_popup').removeClass('subscribed');
+                            item_controls.find('.fa-bell-o').removeClass('filled');
+                            popup_mess.empty();
+                        }
+                    }else if (result.success == false){
+                        if (result.message === "noauth") {
+                            popup_mess.empty();
+                            popup_mess.append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                                'Для того чтобы получать уведомления вам нужно авторизоваться</p>' +
+                                '<span class="close_photo" id="close_photo"></span></div>');
+                            popup_mess.find('#close_photo').on('click', function () {
+                                $(".box_with_message_prodNot").hide(500).remove()
+                            });
+                        }else if (result.message === "noemail") {
+                            popup_mess.empty();
+                            popup_mess.append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+                                '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
+                                'Для того чтобы получать уведомления вам нужно указать почту в настройках профиля</p>' +
+                                '<span class="close_photo" id="close_photo"></span></div>');
+                            popup_mess.find('#close_photo').on('click', function () {
+                                $(".box_with_message_prodNot").hide(500).remove()
+                            });
+                        }
+                    }
+                }
+            });
             $('#close_photo').on('click', function () {
                 $(".box_with_message_prodNot").hide(500).remove()
             });
-            $('a#sendMailForProd').on('click', function () {
-                let mailClient = $('input#send_me_mail').val();
-                if (mailClient !== '') {
-                    $(popup_mess).empty();
-                    $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot"> '
-                        + '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                        'Спасибо!<br> Мы обязательно сообщим вам, когда товар появится на складе и в магазинах!</p>' +
-                        '<span class="close_photo" id="close_photo"></span></div>').show();
-                    $('#close_photo').on('click', function () {
-                        $(".box_with_message_prodNot").hide(500).remove()
-                    });
-                } else {
-                    $('div#error').empty();
-                    $('div.box_with_message_prodNot').append('<div id="error">Заполните почту для отправки!</div>').show(300);
-                }
-            });
-
         });
-
     });
 
     $('.switch-btn').on('click', function () {
@@ -2034,6 +2135,24 @@ $(document).ready(function () {
             $(this).css('border-radius', '10px');
             $(this).find('i').css('transform', 'rotate(0)');
         }
+    });
+
+    $('.order_sort_item').on('click', function () {
+        $(this).closest('.sort_orders').find('.sort_orders_by').text($(this).text());
+        let typeSort = $(this).attr('data-sort-order');
+        let sortStatus = $(this).closest('.sort_orders_elements').attr('data-sort-status');
+        $.ajax({
+            url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
+            type: 'POST',
+            data: {sortStatus: sortStatus, typeSort: typeSort},
+            success: function (response) {
+                if (response != 'error') {
+                    $('.sale-order-list-inner-container').remove();
+                    $('div#personal_orders').append(response);
+                    $('a.sale-order-list-repeat-link').on('click', copyOrderPopups);
+                }
+            }
+        })
     })
 
     $(document).on('click', function (e) {
@@ -2052,6 +2171,7 @@ $(document).ready(function () {
     })
 
     $(document).on('click', '.retail_orders', function () {
+        console.log('entry', '');
         $(this).closest('div').find('.wholesale_orders').css({
             'background': '#F0F0F0',
             'borderRadius': '10px'
@@ -2237,7 +2357,59 @@ $(document).ready(function () {
                 })
             }
         })
-    })
+    });
+
+    function copyOrderPopups(event) {
+        event.preventDefault();
+        let popup_mess = $(this).parent().find('#popup_mess_order_copy');
+        let content;
+        if ($(this).hasClass('js--basket-empty') || $('div#personal_orders').hasClass('js--basket-empty')) {
+            content = '<p style="font-size: 1rem; font-weight: 500">' +
+                'Вы точно хотите повторить заказ?</p>' +
+                ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
+                    '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
+                '<div class="confirmation_container">' +
+                '<a href="'+$(this).attr('href')+'" id="yes_mess" class="d-flex  link_message_box_product ' +
+                'justify-content-center align-items-center">' +
+                'Да</a>' +
+                '<a href="#" id="no_mess" class="d-flex basket-empty link_message_box_product ' +
+                'justify-content-center align-items-center">' +
+                'Нет</a></div>';
+        } else {
+            content = '<p style="font-size: 1rem; font-weight: 500">' +
+                'Очистить корзину перед добавлением товаров?</p>' +
+                ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
+                    '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
+                '<div class="confirmation_container">' +
+                '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+                'justify-content-center align-items-center">' +
+                'Да</a>' +
+                '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
+                'justify-content-center align-items-center">' +
+                'Нет</a></div>';
+        }
+        var Confirmer = new BX.PopupWindow("popup_mess_order_copy", null, {
+            content: content,
+            max_width: "300px",
+            closeIcon: {width: "31px", height: "30px", top: '3%', left: '88%', color: 'black'},
+            zIndex: 300,
+            offsetLeft: 0,
+            offsetTop: 0,
+            className: 'flex-column align-items-center box_with_message_copy_order',
+            draggable: {restrict: false},
+            overlay: {backgroundColor: 'black', opacity: '80' },  /* затемнение фона */
+        });
+
+        Confirmer.show();
+
+        $('#no_mess.basket-empty').click({ Confirmer: Confirmer}, popupWindowClose);
+        function popupWindowClose(event) {
+            event.preventDefault();
+            Confirmer.close();
+        }
+    }
+
+    $('a.sale-order-list-repeat-link').on('click', copyOrderPopups);
 
     /*NEW*/
     $('.sort_mobile').on('click', function () {

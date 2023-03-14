@@ -576,3 +576,15 @@ div.sale-order-detail-payment-options-methods-template {
         text-align: center;
     }
 }
+
+.sale-order-list-cancel-link, .sale-order-list-repeat-link, .sale-order-list-about-link, .sale-order-list-cancel-link:hover,
+.sale-order-list-repeat-link:hover, .sale-order-list-about-link:hover {
+    font-size: 13px;
+    color: white;
+    border-radius: 10px;
+    padding: 5px 15px;
+}
+.sale-order-list-repeat-link, .sale-order-list-cancel-link {
+    background-color: #F55F5C;
+}
+

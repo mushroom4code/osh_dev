@@ -5,4 +5,6 @@ $MESS["USER_DONT_KNOW"] = "(неизвестно)";
 $MESS["main_profile_sess_expired"] = "Ваша сессия истекла, повторите попытку.";
 $MESS["main_profile_decode_err"] = "Ошибка при дешифровании пароля (#ERRCODE#).";
 $MESS["main_profile_sms_error"] = "Неверный код подтверждения из СМС.";
+$MESS["main_profile_birthday_error"] = "Дату рождения можно изменить только раз в год";
+$MESS["main_profile_birthday_old_error"] = "Вам не может быть меньше 18 лет";
 ?>

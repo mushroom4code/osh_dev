@@ -161,10 +161,20 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
             $arFields['PERSONAL_BIRTHDAY'] = date(
                 'm/d/Y',
                 strtotime(str_replace('/', '-', $arFields['PERSONAL_BIRTHDAY'])));
-            if( $rowUser['PERSONAL_BIRTHDAY'] != $arFields['PERSONAL_BIRTHDAY'] )
-            {
-                $arFields['UF_DATE_CHANGE_BH'] = date('m/d/Y', strtotime('+1 year'));
-            } else {
+
+            if (strtotime(date('m/d/Y')) > strtotime($rowUser['UF_DATE_CHANGE_BH'])) {
+                if ($rowUser['PERSONAL_BIRTHDAY'] == $arFields['PERSONAL_BIRTHDAY']) {
+                    unset($arFields['PERSONAL_BIRTHDAY']);
+                } elseif (strtotime('+18 years', strtotime($arFields['PERSONAL_BIRTHDAY'])) > time()) {
+                    $strError .= GetMessage('main_profile_birthday_old_error').'<br />';
+                    unset($arFields['PERSONAL_BIRTHDAY']);
+                } else {
+                    $arFields['UF_DATE_CHANGE_BH'] = date('m/d/Y', strtotime('+1 year'));
+                }
+            }else {
+                if ($rowUser['PERSONAL_BIRTHDAY'] != $arFields['PERSONAL_BIRTHDAY'])
+                    $strError .= GetMessage('main_profile_birthday_error').'<br />';
+
                 unset($arFields['PERSONAL_BIRTHDAY']);
             }
             $USER_FIELD_MANAGER->EditFormAddFields("USER", $arFields);

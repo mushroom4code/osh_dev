@@ -151,7 +151,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
     <?php } ?>
     <div id="basket-root" class="bx-basket bx-<?= $arParams['TEMPLATE_THEME'] ?> bx-step-opacity row"
          style="opacity: 0;">
-        <div class="col-md-8 col-12">
+        <div class="col col-lg-8 col-md-12 col-12">
             <div class="row">
                 <div class="alert alert-warning alert-dismissable" id="basket-warning" style="display: none;">
                     <span class="close" data-entity="basket-items-warning-notification-close">&times;</span>
@@ -256,7 +256,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             </div>
         <?php }
         if ($arParams['BASKET_WITH_ORDER_INTEGRATION'] !== 'Y' && in_array('top', $arParams['TOTAL_BLOCK_DISPLAY'])) { ?>
-            <div class="col-md-4 pl-lg-4 pl-md-4  basket-items-list-wrapper">
+            <div class="col-md-12 col-lg-4 col-12 pl-lg-4 pl-md-4  basket-items-list-wrapper">
                 <h4 class="mb-4 d-none d-lg-block d-md-block"><b>Корзина</b></h4>
                 <div data-entity="basket-total-block" class="mb-lg-0 mb-md-0 mb-5">
                 </div>
