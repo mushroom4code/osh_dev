@@ -4,6 +4,6 @@
 	font-style:italic;
 }
 
-input.form-control[readonly] {
-	background-color: unset;
+input.form-control.input_lk[readonly]{
+	background-color: inherit;
 }
