@@ -1171,7 +1171,7 @@ var KladrJsObj = {
 
                                 if (res != "" && res.indexOf("error") == -1) {
 
-                                    KladrJsObj.FuckKladr();
+                                    // KladrJsObj.FuckKladr();
 
                                     var resJson = JSON.parse(res);
                                     obj = {'ajax': true};
