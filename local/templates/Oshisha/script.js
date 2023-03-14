@@ -53,29 +53,62 @@ $(document).ready(function () {
         }
     }
 
-    let storageType = cookieStorage, consentPropertyName = 'cookie_consent';
+    var storageType = cookieStorage, consentPropertyName = 'cookie_consent';
+    var saveToStorage = () => storageType.setItem(consentPropertyName, true);
+    var consentPopup = document.getElementById('consent-cookie-popup');
+    var consentAcceptBtn = document.getElementById('cookie-popup-accept');
 
-    let shouldShowPopup = () => !storageType.getItem(consentPropertyName);
-    let saveToStorage = () => storageType.setItem(consentPropertyName, true);
-    let consentPopup = document.getElementById('consent-cookie-popup');
-    let consentAcceptBtn = document.getElementById('cookie-popup-accept');
 
-    let acceptFn = event => {
-        event.preventDefault();
-        saveToStorage(storageType);
-        consentPopup.classList.add('hidden');
-        setTimeout(() => {
-            consentPopup.remove();
-        }, 700);
+    $.ajax({
+        type: 'POST',
+        url: '/local/templates/Oshisha/include/addCookieConsent.php',
+        data: 'action=getConsent',
+        success: function (result) {
+            var shouldShow = result;
 
-    }
-    consentAcceptBtn.addEventListener('click', acceptFn);
+            if (shouldShow == '0') {
+                shouldShow = true;
+            } else if (shouldShow == '1') {
+                shouldShow = false;
+            } else if (shouldShow == 'noauth') {
+                if (!storageType.getItem(consentPropertyName)) {
+                    shouldShow = true;
+                } else {
+                    shouldShow = false;
+                }
+            }
 
-    if (shouldShowPopup(storageType)) {
-        setTimeout(() => {
-            consentPopup.classList.remove('hidden');
-        }, 2000);
-    }
+            var acceptFn = event => {
+                event.preventDefault();
+                saveToStorage(storageType);
+                consentPopup.classList.add('hidden');
+                setTimeout(() => {
+                    consentPopup.remove();
+                }, 700);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/local/templates/Oshisha/include/addCookieConsent.php',
+                    data: 'action=setConsent',
+                    success: function (result) {
+                        if (result == 'success') {
+                        } else if (result == 'error') {
+                        } else if (result == 'noauth') {
+                        }
+                    }
+                });
+            }
+            consentAcceptBtn.addEventListener('click', acceptFn);
+            console.log(shouldShow);
+            if (shouldShow) {
+                setTimeout(() => {
+                    consentPopup.classList.remove('hidden');
+                }, 2000);
+            }
+
+        }
+    });
+
     //MAIN
     function getCookie(name) {
         let matches = document.cookie.match(new RegExp(
