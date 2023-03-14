@@ -200,14 +200,19 @@
             }
         }.bind(this));
 
-        $('[data-id="' + this.id_button + '"]').on('submit', this.obFormId , function (event) {
+        $('[data-id="' + this.id_button + '"]').on('submit', this.obFormId, function (event) {
             event.preventDefault();
-
             let form = $(this.obFormId);
-            let url = form.attr('action');
-            let data = form.serializeArray();
+            if ($(form).find('input[name="PASSWORD"]').val() !== $(form).find('input[name="CONFIRM_PASSWORD"]').val()) {
+                $(form).find('input[name="CONFIRM_PASSWORD"]').closest('div').find('span.errors').remove();
+                $(form).find('input[name="CONFIRM_PASSWORD"]').closest('div')
+                    .append('<span class="color-redLight font-16 mt-2 mb-2 errors">' + BX.message('ERROR_NOT_CORRECT_PASSWORD') + '</span>');
+            } else {
+                let url = form.attr('action');
+                let data = form.serializeArray();
+                this.getCode(data, url, PRODUCT_URL);
+            }
 
-            this.getCode(data, url, PRODUCT_URL);
         }.bind(this));
     };
 
@@ -220,7 +225,6 @@
             url: url,
             data: data,
             success: function (response) {
-                console.log(response)
                 let objResponse = JSON.parse(response);
                 let step = objResponse['STEP'];
 

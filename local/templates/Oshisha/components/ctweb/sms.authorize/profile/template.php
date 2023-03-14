@@ -698,6 +698,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
         'SMS_AUTH_CHANGE_PHONE' => GetMessage('SMS_AUTH_CHANGE_PHONE'),
         'ERROR_ALERT_NOT_CORRECT' => GetMessage("SMS_AUTH_ERROR_EMAIL_OR_PASS_NOT_CORRECT"),
         'ERROR_ALERT_EMPTY_FIELD' => GetMessage("SMS_AUTH_ERROR_EMPTY_FIELD"),
+        'ERROR_NOT_CORRECT_PASSWORD' => GetMessage("ERROR_NOT_CORRECT_PASSWORD"),
     ))?>);
 
     BX(function () {
