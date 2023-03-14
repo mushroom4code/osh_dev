@@ -80,8 +80,7 @@
                     if (Array.from(url.searchParams).length == 2) {
                         data['sort_without_filter_data'] = 'Y';
                     }
-                    // console.log(Array.from(url.searchParams).length == 2);
-                    console.log(data);
+
                     window.history.replaceState(null, null, url);
                     data['sort_request'] = `${window.location.pathname}?sort_by=${data.sort_by}&sort_order=${data.sort_order}`;
                     this.sendRequestRefreshCatalog(data);
