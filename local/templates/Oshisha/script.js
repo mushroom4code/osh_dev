@@ -66,7 +66,7 @@ $(document).ready(function () {
         success: function (result) {
             var shouldShow = result;
 
-            if (shouldShow == '0') {
+            if (shouldShow != '1' && shouldShow != 'noauth') {
                 shouldShow = true;
             } else if (shouldShow == '1') {
                 shouldShow = false;
