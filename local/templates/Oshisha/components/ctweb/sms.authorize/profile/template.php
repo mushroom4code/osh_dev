@@ -675,8 +675,9 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
     $('input.auth-phone').inputmask("+7 (999)-999-9999", {
         minLength: 10,
         removeMaskOnSubmit: true,
-        clearMaskOnLostFocus: true,
-        clearMaskOnLostHover: true,
+        autoUnmask: true,
+        clearMaskOnLostFocus: false,
+        clearMaskOnLostHover: false,
         clearIncomplete: true,
         definitionSymbol: "*"
     });

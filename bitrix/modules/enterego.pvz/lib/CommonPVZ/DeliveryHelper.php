@@ -2,32 +2,41 @@
 
 namespace CommonPVZ;
 
+use Bitrix\Main\Config\Option;
 use Bitrix\Main\Data\Cache,
     Bitrix\Main\Page\Asset;
 use Bitrix\Sale\Location\LocationTable;
 use \Bitrix\Main\Localization\Loc;
+use CUtil;
 
 Loc::loadMessages(__FILE__);
 
 class DeliveryHelper
 {
+    public static $MODULE_ID = 'enterego.pvz';
+
+    public static function getConfigs()
+    {
+        $arConfgs = Option::getForModule(self::$MODULE_ID, SITE_ID);
+        $CONFIG_DELIVERIES = [];
+        foreach ($arConfgs as $k => $v) {
+            $arDel = explode('_', $k);
+            $CONFIG_DELIVERIES[$arDel[0]][$arDel[1]] = $v;
+        }
+        return $CONFIG_DELIVERIES;
+    }
+
 
     public static function getButton($address = '')
     {
-
-        ob_start();
-        ?>
-        <a class="btn btn_basket btn_pvz btn-default"
-           onclick="BX.SaleCommonPVZ.openMap(); return false;">
-            <?= Loc::getMessage('COMMONPVZ_BTN_CHOOSE') ?>
-        </a>
-        <?php
-
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = "<a class='btn btn_basket btn_pvz btn-default'
+           onclick='BX.SaleCommonPVZ.openMap(); return false;'>";
+        $content .= Loc::getMessage('COMMONPVZ_BTN_CHOOSE');
+        $content .= " </a>";
+        $content .= "<span id='pvz_address'></span>";
 
         return $content;
-    }
+}
 
     public static function getCityName($locationCode)
     {
@@ -42,6 +51,20 @@ class DeliveryHelper
         return $city['LOCATION_NAME'];
     }
 
+    /** Обновляет ПВЗ для службы доставки PickPoint
+     * @return string[]
+     */
+    public static function updatePickPointPVZ(): array
+    {
+        try {
+            $pickPoint = new PickPointDelivery();
+            $pickPoint->updatePointsForPickPoint();
+        } catch (\Exception $e) {
+            return ['status'=>'failed'];
+        }
+        return ['status'=>'success'];
+    }
+
     public static function getAllPVZ($deliveries, $city_name, $codeCity)
     {
         $id_feature = 0;
@@ -49,17 +72,23 @@ class DeliveryHelper
         $points_Array = [];
         $cache = Cache::createInstance();
         $cachePath = '/getAllPVZPoints';
+        $delName = '0';
 
-        if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
-            $points_Array = $cache->getVars();
-        } elseif ($cache->startDataCache()) {
-            foreach ($deliveries as $delName) {
-                $deliveryClass = '\CommonPVZ\\' . $delName . 'Delivery';
-                $delivery = new $deliveryClass();
-                $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity);
-                $result_array['errors'][$delName] = $delivery->errors;
+        try {
+            if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
+                $points_Array = $cache->getVars();
+            } elseif ($cache->startDataCache()) {
+                foreach ($deliveries as $delName) {
+                    $delivery = CommonPVZ::getInstanceObject($delName);
+                    if ($delivery!=null) {
+                        $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity);
+                        $result_array['errors'][$delName] = $delivery->errors;
+                    }
+                }
+                $cache->endDataCache($points_Array);
             }
-            $cache->endDataCache($points_Array);
+        } catch (\Exception $e) {
+            $result_array['errors'][$delName] = $e->getMessage();
         }
 
         $result_array['type'] = 'FeatureCollection';
@@ -68,27 +97,59 @@ class DeliveryHelper
         return $result_array;
     }
 
-    public static function getPrice($req_data)
+    public static function addAssets($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
     {
-        if ($req_data['delivery'] === 'PickPoint') {
-            $delivery = new PickPointDelivery();
-            return $delivery->getPrice($req_data);
-        } elseif ($req_data['delivery'] === 'СДЭК') {
-            $delivery = new SDEKDelivery();
-            return $delivery->getPrice($req_data);
-        } elseif ($req_data['delivery'] === 'ПЭК') {
-            $delivery = new PEKDelivery();
-            return $delivery->getPrice($req_data);
-        } elseif ($req_data['delivery'] === '5Post') {
-            $delivery = new FivePostDelivery();
-            return $delivery->getPrice($req_data);
-        }
-    }
+        $params = [];
+        $params['delID'] = 96;
 
-    public function registerJSComponent($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
-    {
+        foreach ($arDeliveryServiceAll as $k => $v) {
+            if ($v->getHandlerCode() === self::$MODULE_ID) {
+                $params['delID'] = $k;
+            }
+        }
+
+        $dbRes = \Bitrix\Sale\Property::getList([
+            'select' => ['ID', 'CODE'],
+            'filter' => [],
+            'runtime' => [
+                new \Bitrix\Main\Entity\ReferenceField(
+                    'REL_DLV',
+                    '\Bitrix\Sale\Internals\OrderPropsRelationTable',
+                    array("=this.ID" => "ref.PROPERTY_ID", "=ref.ENTITY_TYPE" => new \Bitrix\Main\DB\SqlExpression('?', 'D')),
+                    array("join_type" => "left")
+                ),
+            ],
+            'group' => ['ID'],
+            'order' => ['ID' => 'DESC']
+        ]);
+
+        while ($property = $dbRes->fetch()) {
+            if ($property['CODE'] === 'COMMON_PVZ') {
+                $params['arPropsAddr'][] = $property['ID'];
+            }
+        }
+
         $cAsset = Asset::getInstance();
+
         $cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
+        $cAsset->addString(
+            "<style>
+                    div[data-property-id-row='".$params['arPropsAddr'][0]."'] {
+                        display:none
+                    }
+                    div[data-property-id-row='".$params['arPropsAddr'][1]."'] {
+                        display:none
+                    }
+                 </style>
+                 <script id='' data-params=''>
+                    window.addEventListener('load', function () {
+                        BX.SaleCommonPVZ.init({
+                            params: " . CUtil::PhpToJSObject($params) . "
+                        });
+                    });
+                </script>",
+            true
+        );
     }
 }
