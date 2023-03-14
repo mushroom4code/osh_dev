@@ -190,7 +190,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             "CACHE_TYPE" => $arParams["CACHE_TYPE"],
                             "CACHE_TIME" => $arParams["CACHE_TIME"],
                             "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                            "SAVE_IN_SESSION" => "N",
+                            "SAVE_IN_SESSION" => "Y",
                             "FILTER_VIEW_MODE" => $arParams["FILTER_VIEW_MODE"],
                             "XML_EXPORT" => "N",
                             "SECTION_TITLE" => "NAME",
@@ -374,6 +374,11 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             );
         }
         //endregion
+
+        if ($_SESSION[$arParams["FILTER_NAME"]][$GLOBAL_SECTION['ID']]['hide_not_available'] == "Y") {
+            $arParams["HIDE_NOT_AVAILABLE"] = "Y";
+        }
+
         global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
