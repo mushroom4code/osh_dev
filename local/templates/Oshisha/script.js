@@ -44,7 +44,7 @@ $(document).ready(function () {
         getItem: (key) => {
             let cookie = document.cookie
                 .split(';')
-                .find((row) => row.startsWith(key))
+                .find((row) => row.trim().startsWith(key))
                 ?.split("=")[1];
             return cookie
         },
