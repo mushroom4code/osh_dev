@@ -2572,12 +2572,18 @@ $(document).on('click', '.file-list .file-remove', function (e) {
     delete uploadFiles[fileToRemoveId];
 });
 
+// маска ввода для формы обратной связи
+$(document).ready(function() {
+    $('.form-form [data-name="EMAIL"]').inputmask('email');
+});
+
 $(document).on('submit', '.form-form', function (e) {
     e.preventDefault();
 
     let postData = new FormData(this),
         errors = {
             emptyField: 'Поле не заполнено',
+            wrongFieldData: 'Поле заполнено не до конца',
             wrongFilesSize: 'Некоторые из файлов больше 5 Мб',
             wrongFilesType: 'Некоторые из файлов недопустимого типа',
             wrongFilesCombo: 'Некоторые файлы не отвечают требованиям',
@@ -2597,22 +2603,27 @@ $(document).on('submit', '.form-form', function (e) {
     $('.form-form .error_field').hide();
 
     if (fieldName.val().length <= 0) {
-        $('.er_FORM_NAME').html(errors.emptyField).show();
+        $('.form-form .er_FORM_NAME').html(errors.emptyField).show();
         err++;
     }
 
     if (fieldPhone.val().length <= 0) {
-        $('.er_FORM_PHONE').html(errors.emptyField).show();
+        $('.form-form .er_FORM_PHONE').html(errors.emptyField).show();
         err++;
     }
 
     if (fieldMail.val().length <= 0) {
-        $('.er_FORM_EMAIL').html(errors.emptyField).show();
+        $('.form-form .er_FORM_EMAIL').html(errors.emptyField).show();
+        err++;
+    }
+
+    if(!fieldMail.inputmask("isComplete")) {
+        $('.form-form .er_FORM_EMAIL').html(errors.wrongFieldData).show();
         err++;
     }
 
     if (fieldMessage.val().length <= 0) {
-        $('.er_FORM_MESSAGE').html(errors.emptyField).show();
+        $('.form-form .er_FORM_MESSAGE').html(errors.emptyField).show();
         err++;
     }
 
