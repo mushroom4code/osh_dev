@@ -85,25 +85,26 @@ JCSmartFilter.prototype.reload = function(input)
 		var values = [];
 		values[0] = {name: 'ajax', value: 'y'};
 		this.gatherInputsValues(values, BX.findChildren(this.form, {'tag': new RegExp('^(input|select)$', 'i')}, true));
-
 		for (var i = 0; i < values.length; i++)
 			this.cacheKey += values[i].name + ':' + values[i].value + '|';
 		var url = new URL(window.location.href);
+		if (url.searchParams.get('sort_by'))
+			values.push({name: 'sort_by', value:  url.searchParams.get('sort_by')});
+		if (url.searchParams.get('sort_order'))
+			values.push({name: 'sort_order', value:  url.searchParams.get('sort_order')});
+
 		url.search = '';
-		url.searchParams.forEach((value, key) => {
-			url.searchParams.delete(key);
-		});
 		values.forEach(function callback(value, key) {
-			if(value['name'] == 'PAGEN_1') {
-				value['value'] = '1';
-				url.searchParams.set(value['name'], value['value']);
-			}
+
 			if (key != 0) {
-				url.searchParams.set(value['name'], value['value']);
+				if(value['name'] == 'PAGEN_1') {
+
+				} else {
+					url.searchParams.set(value['name'], value['value']);
+				}
 			}
 		});
 		window.history.replaceState(null, null, url);
-
 		if (this.cache[this.cacheKey])
 		{
 			this.curFilterinput = input;
@@ -397,12 +398,15 @@ JCSmartFilter.prototype.proxy = function()
 	// data['action'] = 'initialLoad';
 	var data = {};
 	data['action'] = 'showMore';
-	data['PAGEN_' + 1] = 1;
 	var values = [];
-	console.log('sus');
 	values[0] = {name: 'ajax', value: 'y'};
 	values[1] = {name: 'ajax_filter', value: 'y'};
 	this.gatherInputsValues(values, BX.findChildren(this.form, {'tag': new RegExp('^(input|select)$', 'i')}, true));
+	var url = new URL(window.location.href);
+	if (url.searchParams.get('sort_by'))
+		values.push({name: 'sort_by', value:  url.searchParams.get('sort_by')});
+	if (url.searchParams.get('sort_order'))
+		values.push({name: 'sort_order', value:  url.searchParams.get('sort_order')});
 	for (var i = 0; i < values.length; i++)
 		data[values[i].name] = values[i].value;
 	data['PAGEN_' + 1] = 1;

@@ -33,6 +33,11 @@ if ($request->getPost('hide_not_available') == "Y") {
     $parameters['HIDE_NOT_AVAILABLE'] = "L";
 }
 
+if ($request->getPost('sort_without_filter_data') == 'Y') {
+    if (!empty($_SESSION[$parameters["FILTER_NAME"]][$_SESSION['GLOBAL_CURRENT_SECTION']['ID']])) {
+        $_REQUEST = array_merge($_REQUEST, $_SESSION[$parameters["FILTER_NAME"]][$_SESSION['GLOBAL_CURRENT_SECTION']['ID']]);
+    }
+}
 
 if (isset($parameters['PARENT_NAME'])) {
     $parent = new CBitrixComponent();
@@ -130,10 +135,8 @@ if (!empty($staticFilter)) {
     $parameters['GLOBAL_FILTER'] = array_merge($parameters['GLOBAL_FILTER'], $staticFilter);
 }
 
-if( isset($_REQUEST['PAGER_BASE_LINK_ENABLE'])){
-    $parameters['PAGER_BASE_LINK'] = $_REQUEST['sort_request'] ?? $_REQUEST['PAGER_BASE_LINK'];
-    $parameters['PAGER_BASE_LINK_ENABLE'] = $_REQUEST['PAGER_BASE_LINK_ENABLE'];
-}
+$parameters['PAGER_BASE_LINK'] = $_SERVER["HTTP_REFERER"];
+$parameters['PAGER_BASE_LINK_ENABLE'] = 'Y';
 
 if (isset($_REQUEST['sort_by'])) {
     $parameters['ELEMENT_SORT_FIELD'] = $request->get('sort_by');
