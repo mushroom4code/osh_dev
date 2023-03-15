@@ -89,7 +89,7 @@
 	display: initial;
 }
 
-.product-item-small-card {
+.by-card .product-item-small-card {
 	width: 100% !important;
 	max-width: 268px;
 	min-height: 355px;
