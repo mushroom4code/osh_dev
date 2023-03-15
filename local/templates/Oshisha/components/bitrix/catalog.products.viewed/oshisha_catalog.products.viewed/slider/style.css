@@ -102,6 +102,20 @@
 	left:12px !important;
 }
 
+.bx_catalog_tile_home_type_2 :not(.slick-slide) .bx_catalog_item .bx_catalog_item_container {
+    border-radius: 10px;
+    border: 1px solid #E5E5E5;
+    -webkit-animation: borderview 0.5s;
+    animation: borderview 0.5s;
+    min-height: 320px;
+    height:360px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 260px;
+	position:relative;
+}
+
 .bx_catalog_tile_home_type_2 .bx_catalog_item .bx_catalog_item_container .box_with_fav_bask .box_with_like{
   position: absolute;
   top: 8px;
@@ -705,3 +719,5 @@
     max-width: 11px;
     cursor: pointer;
 }
+
+

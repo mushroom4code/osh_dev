@@ -33,10 +33,8 @@ $strContID = 'cat_top_cont_' . $strRand;
 $item_id = [];
 $id_USER = $USER->GetID();
 $FUser_id = Fuser::getId($id_USER);
-foreach ($arResult['ITEMS'] as $rowKey => $arOneRow) {
-    foreach($arOneRow as $item) {
-        $item_id[] = $item['ID'];
-    }
+foreach ($arResult['ITEMS'] as $item => $arOneRow) {
+        $item_id[] = $arOneRow['ID'];
 }
 
 $positionClassMap = array(
@@ -119,17 +117,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
      class="bx_catalog_tile_home_type_2 col2 <?= $templateData['TEMPLATE_CLASS']; ?>">
     <div class="bx_catalog_tile_section" data-init="<?= count($arResult['ITEMS']) ?>">
         <?php
-        $boolFirst = true;
-        $arRowIDs = array();
-        foreach ($arResult['ITEMS'] as $keyRow => $arOneRow) {
-        $strRowID = 'cat-top-' . $keyRow . '_' . $strRand;
-        $arRowIDs[] = $strRowID;
-
-        foreach ($arOneRow
-
-        as $keyItem => $arItem) {
-            $strRowID = 'cat-top-' . $keyRow . '_' . $strRand;
-//        $arRowIDs[] = $strRowID;
+        foreach ($arResult['ITEMS'] as $keyItem => $arItem) {
             $areaIds = array();
             $uniqueId = $arItem['ID'] . '_' . md5($this->randString() . $component->getAction());
             $areaIds[$arItem['ID']] = $this->GetEditAreaId($uniqueId);
@@ -147,40 +135,38 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                     $arItem['COUNT_FAV'] = $count['Fav'][0];
                 }
             }
-            ?>
+?>
             <div class="product-item-small-card">
                 <?php $APPLICATION->IncludeComponent(
-                    'bitrix:catalog.item',
-                    'oshisha_catalog.item',
+                        'bitrix:catalog.item',
+                        'oshisha_catalog.item',
                     array(
-                        'RESULT' => array(
-                            'ITEM' => $arItem,
-                            'AREA_ID' => $areaIds[$item['ID']],
-                            'TYPE' => 'CARD',
-                            'BIG_LABEL' => 'N',
-                            'BIG_DISCOUNT_PERCENT' => 'N',
-                            'BIG_BUTTONS' => 'Y',
-                            'SCALABLE' => 'N',
-                            'AR_BASKET' => $arBasketItems,
-                            'F_USER_ID' => $FUser_id,
-                            'ID_PROD' => $arItem['ID'],
-                            'COUNT_LIKE' => $arItem['COUNT_LIKE'],
-                            'POPUP_PROPS' => $prop_see_in_window,
-                            'COUNT_FAV' => $arItem['COUNT_FAV'],
-                            'COUNT_LIKES' => $arItem['COUNT_LIKES'],
-                        ),
-                        'PARAMS' => $generalParams
-                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-                    ),
+                            'RESULT' => array(
+                                    'ITEM' => $arItem,
+                                    'AREA_ID' => $areaIds[$item['ID']],
+                                    'TYPE' => 'CARD',
+                                    'BIG_LABEL' => 'N',
+                                    'BIG_DISCOUNT_PERCENT' => 'N',
+                                    'BIG_BUTTONS' => 'Y',
+                                    'SCALABLE' => 'N',
+                                    'AR_BASKET' => $arResult['BASKET_ITEMS'],
+                                    'F_USER_ID' => $FUser_id,
+                                    'ID_PROD' => $arItem['ID'],
+                                    'COUNT_LIKE' => $arItem['COUNT_LIKE'],
+                                    'POPUP_PROPS' => $prop_see_in_window,
+                                    'COUNT_FAV' => $arItem['COUNT_FAV'],
+                                    'COUNT_LIKES' => $arItem['COUNT_LIKES'],
+                            ),
+                            'PARAMS' => $generalParams
+                                + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+                            ),
                     $component,
                     array('HIDE_ICONS' => 'Y')
                 );
                 ?>
                 <div id="result_box"></div>
             </div>
-            <?php
-        }
-    $boolFirst = false;
+    <?php
     } ?>
 </div>
 <?php
@@ -197,7 +183,7 @@ if (1 < $intRowsCount) {
             'className' => 'bx_catalog_tile_slider_arrow_right',
             'classNameIcon' => 'fa fa-angle-right',
         ),
-        'rows' => $arRowIDs,
+        'rows' => 1,
         'rotate' => (0 < $arParams['ROTATE_TIMER']),
         'rotateTimer' => $arParams['ROTATE_TIMER']
     );
