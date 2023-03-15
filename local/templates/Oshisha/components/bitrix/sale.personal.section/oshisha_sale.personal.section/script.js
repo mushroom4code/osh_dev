@@ -35,7 +35,5 @@ $(document).ready(function () {
             }
     })
 
-    $(document).on('change', '.date_input', function () {
-        alert(1)
-    })
+
 });

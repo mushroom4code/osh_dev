@@ -171,7 +171,21 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                         $this->manager->addError(self::ERROR_CODE_NOT_CORRECT);
                     }
                 }elseif ($this->manager->getState() === $this->manager::STATE_REGISTER) {
-                    if ($this->manager->RegisterByCode($this->request->get('CODE'), $this->getSessionField('PHONE'))) {
+                    $arFieldUser = [];
+                    if ($this->request->get('register') === 'yes') {
+                        $arFieldUser = [
+                            'NAME' => $this->getSessionField('NAME'),
+                            'LAST_NAME' => $this->getSessionField('LAST_NAME'),
+                            'EMAIL' => $this->getSessionField('EMAIL'),
+                            'LOGIN' => $this->getSessionField('LOGIN'),
+                            'PERSONAL_BIRTHDATE' => $this->getSessionField('PERSONAL_BIRTHDATE'),
+                            'PERSONAL_BIRTHDAY' => $this->getSessionField('PERSONAL_BIRTHDAY'),
+                            'PASSWORD' => $this->getSessionField('PASSWORD'),
+                            'CONFIRM_PASSWORD' => $this->getSessionField('CONFIRM_PASSWORD'),
+                            'PERSONAL_PHONE' => $this->getSessionField('PERSONAL_PHONE'),
+                        ];
+                    }
+                    if ($this->manager->RegisterByCode($this->request->get('CODE'), $this->getSessionField('PHONE'),$arFieldUser)) {
                         $this->arResult['AUTH_RESULT'] = self::RESULT_SUCCESS;
                     } else {
                         $this->arResult['AUTH_RESULT'] = self::RESULT_FAILED;
@@ -210,6 +224,18 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                 $this->setPhone($this->request->get('PHONE'), $this->request->get('__phone_prefix') ?? '');
             }
 
+            if ($this->request->get('register') === 'yes') {
+                $this->setSessionField('LOGIN', $this->request->get('EMAIL'));
+                $this->setSessionField('PASSWORD', $this->request->get('PASSWORD'));
+                $this->setSessionField('CONFIRM_PASSWORD', $this->request->get('CONFIRM_PASSWORD'));
+                $this->setSessionField('NAME', $this->request->get('NAME'));
+                $this->setSessionField('LAST_NAME', $this->request->get('LAST_NAME'));
+                $this->setSessionField('EMAIL', $this->request->get('EMAIL'));
+                $this->setSessionField('PERSONAL_BIRTHDATE', $this->request->get('PERSONAL_BIRTHDAY'));
+                $this->setSessionField('PERSONAL_BIRTHDAY',  date_format(date_create($this->getSessionField('PERSONAL_BIRTHDAY')), 'd.m.Y'));
+                $this->setSessionField('PERSONAL_PHONE', $this->request->get('PERSONAL_PHONE'));
+            }
+
             if (strlen($this->request->get('SAVE_SESSION')))
                 $this->setSessionField('SAVE_SESSION', $this->request->get('SAVE_SESSION'));
 
@@ -224,6 +250,13 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                             if ($this->arParams['ALLOW_MULTIPLE_USERS'] === 'Y' && count($arUsers) > 1) {
                                 $this->manager->setStep(Manager::STEP_USER_WAITING);
                             } else {
+                                /**
+                                 * Enterego register form
+                                 */
+                                if ($this->arParams['REGISTER'] === 'Y') {
+                                    $this->manager->addError(self::ERROR_PHONE_EXISTS);
+                                    return;
+                                }
                                 $this->manager->setStep(Manager::STEP_CODE_WAITING);
                                 $arUser = reset($arUsers);
 
@@ -238,22 +271,22 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     } else {
                         //TODO enable registration
                         if ($this->arParams['PROFILE_AUTH'] == "Y") {
-                            if (true) {
-                                $res = $this->manager->StartUserPhoneChange(['PHONE' => $this->getSessionField('PHONE')]);
-                                if ($res!==true) {
-                                    $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
-                                }
-                            } else {
-                                $this->manager->addError(self::ERROR_USER_NOT_FOUND);
+                            $res = $this->manager->StartUserPhoneChange(['PHONE' => $this->getSessionField('PHONE')]);
+                            if ($res !== true) {
+                                $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
                             }
                         } else {
-                            if (true) {
-                                $res = $this->manager->StartUserRegister(['PHONE' => $this->getSessionField('PHONE')]);
-                                if ($res!==true) {
-                                    $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
-                                }
-                            } else {
-                                $this->manager->addError(self::ERROR_USER_NOT_FOUND);
+                            /**
+                             * Enterego
+                             * обновление номера телефона при изменении номера
+                             */
+                            if (!empty($this->request->get('__phone_prefix')) && $this->request->get('PHONE')) {
+                                $this->setPhone($this->request->get('PHONE'), $this->request->get('__phone_prefix') ?? '');
+                            }
+
+                            $res = $this->manager->StartUserRegister(['PHONE' => $this->getSessionField('PHONE')]);
+                            if ($res !== true) {
+                                $this->manager->addError(self::ERROR_UNKNOWN_ERROR);
                             }
                         }
                     }
@@ -261,11 +294,6 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     $this->clearSession();
                 }
             }
-//            if ($this->arParams['PROFILE_AUTH'] == "Y") {
-//                if (!$isAjaxRequest) {
-//                    LocalRedirect($APPLICATION->GetCurPageParam());
-//                }
-//            }
         }
     }
 
@@ -315,6 +343,31 @@ class CtwebSMSAuthComponent extends \CBitrixComponent
                     }
                     $this->clearSession();
                 }
+            } elseif ($this->request->get('REGISTER') == "Y") {
+                switch ($this->manager->getStep()) {
+                    case Manager::STEP_SUCCESS : // all ok, redirect waiting
+                        $this->actionStepSuccess();
+                        break;
+
+                    case Manager::STEP_USER_WAITING :
+                        $this->actionStepUserWaiting();
+                        break;
+
+                    case Manager::STEP_CODE_WAITING :
+                        // user found, code waiting for auth
+                        $this->actionStepCodeWaiting($isAjaxRequest);
+                        break;
+
+                    case Manager::STEP_PHONE_WAITING: // no action, phone waiting
+                    default: // no action, phone waiting
+                        $this->actionStepPhoneWaiting($isAjaxRequest);
+                }
+                $this->arResult['ERRORS'] = $this->manager->getErrors();
+                $this->arResult['USER_VALUES']['SAVE_SESSION'] = $this->getSessionField('SAVE_SESSION');
+                $this->arResult['USER_VALUES']['PHONE'] = $this->getSessionField('PHONE');
+                $this->arResult['EXPIRE_TIME'] = $this->manager->getExpireTime() - time();
+                $this->arResult['REUSE_TIME'] = $this->manager->getReuseTime() - time();
+                ($this->arResult['STEP'] = $this->manager->getStep()) || ($this->arResult['STEP'] = Manager::STEP_PHONE_WAITING);
             } else {
                 switch ($this->manager->getStep()) {
                     case Manager::STEP_SUCCESS : // all ok, redirect waiting
