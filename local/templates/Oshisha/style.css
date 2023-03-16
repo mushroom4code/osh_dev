@@ -6683,6 +6683,9 @@ div.carousel-item-elems > div > div {
     padding-top: 0;
 }
 @media screen and (max-width: 768px) {
+    .by-line .not_avail+.box_with_titles.line-view {
+        padding-top: 8px;
+    }
     .by-line a.product-item__favorite-star.method {
         font-size: 30px;
     }
