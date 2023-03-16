@@ -9,7 +9,7 @@ use Bitrix\Main\SystemException;
 
 class OshishaDelivery extends CommonPVZ
 {
-    protected $delivery_name = 'OSHISHA';
+    public string $delivery_name = 'OSHISHA';
 
     protected function connect()
     {
@@ -74,6 +74,11 @@ class OshishaDelivery extends CommonPVZ
     }
 
     public function getPrice($array)
+    {
+        return 0;
+    }
+
+    public function getPriceDoorDelivery($params)
     {
         return 0;
     }

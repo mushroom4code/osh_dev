@@ -12,7 +12,7 @@ use PickPointSdk\Components\ReceiverDestination;
 
 class PickPointDelivery extends CommonPVZ
 {
-    protected $delivery_name = 'PickPoint';
+    public string $delivery_name = 'PickPoint';
 
     protected function connect()
     {
@@ -118,4 +118,11 @@ class PickPointDelivery extends CommonPVZ
         }
         return 0;
     }
+
+    public function getPriceDoorDelivery($params)
+    {
+        return 100;
+    }
+
+
 }

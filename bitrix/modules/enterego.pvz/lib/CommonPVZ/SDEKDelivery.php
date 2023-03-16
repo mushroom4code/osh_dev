@@ -5,7 +5,7 @@ namespace CommonPVZ;
 
 class SDEKDelivery extends CommonPVZ
 {
-    protected $delivery_name = 'SDEK';
+    public string $delivery_name = 'SDEK';
     private string $token = '';
 
     protected function connect()
@@ -165,4 +165,11 @@ class SDEKDelivery extends CommonPVZ
         }
         return 0;
     }
+
+    public function getPriceDoorDelivery($params)
+    {
+        return 250;
+    }
+
+
 }

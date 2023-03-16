@@ -5,7 +5,7 @@ namespace CommonPVZ;
 
 class PEKDelivery extends CommonPVZ
 {
-    protected $delivery_name = 'PEK';
+    public string $delivery_name = 'PEK';
 
     protected function connect()
     {
@@ -99,4 +99,11 @@ class PEKDelivery extends CommonPVZ
         }
         return 0;
     }
+
+    public function getPriceDoorDelivery($params)
+    {
+        // TODO: Implement getPriceDoorDelivery() method.
+    }
+
+
 }

@@ -5,7 +5,7 @@ namespace CommonPVZ;
 class FivePostDelivery extends CommonPVZ
 {
 
-    protected $delivery_name = 'FivePost';
+    public string $delivery_name = 'FivePost';
 
 
     protected function connect()
@@ -76,4 +76,11 @@ class FivePostDelivery extends CommonPVZ
         return 0;
 
     }
+
+    public function getPriceDoorDelivery($params)
+    {
+        // TODO: Implement getPriceDoorDelivery() method.
+    }
+
+
 }

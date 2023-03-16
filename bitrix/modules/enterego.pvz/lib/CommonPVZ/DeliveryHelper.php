@@ -131,7 +131,9 @@ class DeliveryHelper
                         BX.SaleCommonPVZ.init({
                             params: " . CUtil::PhpToJSObject($params) . "
                         });
-                    });
+                         if (typeof BX !== 'undefined' && BX.addCustomEvent)
+                            BX.addCustomEvent('onAjaxSuccess', BX.SaleCommonPVZ.update);
+                        });
                 </script>",
             true
         );

@@ -15,11 +15,26 @@ BX.SaleCommonPVZ = {
     isInit: false,
     dataPVZ: null,
     objectManager: null,
+    propAddressId: null,
+    propCommonPVZId: null,
+    propTypeDeliveryId: null,
 
     init: function (params) {
-        this.params = params.params;
+        this.propAddressId = params.params?.propAddress;
+        this.propCommonPVZId = params.params?.propCommonPVZ;
+        this.propTypeDeliveryId = params.params?.propTypeDelivery;
+
         this.refresh();
         this.isInit = true;
+    },
+
+    update: function (ajaxAns) {
+        if (Object.keys(ajaxAns).indexOf("order") !== -1) {
+            BX.SaleCommonPVZ.propAddressId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
+            BX.SaleCommonPVZ.propCommonPVZId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
+            BX.SaleCommonPVZ.propTypeDeliveryId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
+            BX.SaleCommonPVZ.refresh();
+        }
     },
 
     openMap: function () {
@@ -30,11 +45,21 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         const __this = this
-        if (this.params.propCommonPVZ) {
-            const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.params.propCommonPVZ + '"]');
-            const address = document.querySelector('[name="ORDER_PROP_' + this.params.propAddress + '"]');
-            commonPVZ.readOnly = true;
-            address.readOnly = true;
+        if (this.propCommonPVZId) {
+
+            if (this.propAddressId ) {
+                const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
+                if (address) {
+                    address.readOnly = true;
+                }
+            }
+
+            if (this.propCommonPVZId ) {
+                const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.propCommonPVZId + '"]');
+                if (commonPVZ) {
+                    commonPVZ.readOnly = true;
+                }
+            }
 
             BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
                 if (item.IS_LOCATION === 'Y') {
@@ -188,15 +213,26 @@ BX.SaleCommonPVZ = {
             ? point.properties.deliveryName + ': ' + point.properties.fullAddress + ' #' + point.properties.code_pvz
             : point.properties.deliveryName + ': ' + point.properties.fullAddress;
 
-        const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.params.propCommonPVZ + '"]');
-        const address = document.querySelector('[name="ORDER_PROP_' + this.params.propAddress + '"]');
-        const typeDelivery = document.querySelector('[name="ORDER_PROP_' + this.params.propTypeDelivery + '"]');
+        if (this.propCommonPVZId) {
+            const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.propCommonPVZId + '"]');
+            if (commonPVZ) {
+                commonPVZ.value = this.pvzFullAddress;
+                BX('pvz_address').innerHTML = 'Вы выбрали: <span>' + this.pvzAddress + '</span>';
+            }
+        }
 
-        if (this.pvzFullAddress) {
-            commonPVZ.value = this.pvzFullAddress;
-            address.value = this.pvzFullAddress;
-            typeDelivery.value = point.properties.deliveryName
-            BX('pvz_address').innerHTML = 'Вы выбрали: <span>' + this.pvzAddress + '</span>';
+        if (this.propAddressId ) {
+            const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
+            if (address) {
+                address.value = this.pvzFullAddress;
+            }
+        }
+
+        if (this.propTypeDeliveryId ) {
+            const typeDelivery = document.querySelector('[name="ORDER_PROP_' + this.propTypeDeliveryId + '"]');
+            if (typeDelivery) {
+                typeDelivery.value = point.properties.deliveryName
+            }
         }
 
         const dataToHandler = this.getPointData(point);

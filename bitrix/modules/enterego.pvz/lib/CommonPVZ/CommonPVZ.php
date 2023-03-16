@@ -7,7 +7,9 @@ abstract class CommonPVZ
 {
     protected $configs = [];
     protected $client = null;
-    protected $delivery_name = null;
+    public string $delivery_name = '';
+
+    public string $title = '';
 
     public $errors = null;
 
@@ -64,4 +66,6 @@ abstract class CommonPVZ
      * @return float|int|bool - false if error calculate
      */
     abstract public function getPrice($array);
+
+    abstract public function getPriceDoorDelivery($params);
 }
