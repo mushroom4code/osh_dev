@@ -3922,6 +3922,10 @@ b.decoration-color-red {
     .product-item__favorite-star, .by-line .product-item__favorite-star {
         font-size: 22px;
     }
+    .by-line .product-item__favorite-star {
+        font-size: 30px;
+        margin-right: 20px;
+    }
 
     #content_box_delivery > h2, #delivery_payment > h2 {
         font-size: 23px;
