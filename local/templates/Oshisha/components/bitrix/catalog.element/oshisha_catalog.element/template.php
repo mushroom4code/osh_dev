@@ -183,21 +183,10 @@ $arResult['COUNT_FAV'] = $count_likes['USER'][$arResult['ID']]['Fav'][0];
 $taste = $arResult['PROPERTIES'][PROPERTY_KEY_VKUS];
 $themeClass = isset($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_THEME'] : '';
 
-$arItems = CSaleBasket::GetList(
-    array(),
-    array(
-        "PRODUCT_ID" => $arResult["ID"],
-        "FUSER_ID" => $FUser_id),
-    false,
-    false,
-    array("QUANTITY"));
-
 $priceBasket = 0;
 
-while ($res = $arItems->Fetch()) {
-    if (!empty($res["QUANTITY"]) && $res !== false) {
-        $priceBasket = $res["QUANTITY"];
-    }
+if (!empty($arParams['BASKET_ITEMS'][$arResult["ID"]])) {
+    $priceBasket = $arParams['BASKET_ITEMS'][$arResult["ID"]];
 }
 
 $actualItem['PICTURE'] = [];

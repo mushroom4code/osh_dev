@@ -54,7 +54,9 @@ if (!empty($viewModeValue))
 		'blue' => GetMessage('CP_BCT_TPL_THEME_BLUE'),
 		'green' => GetMessage('CP_BCT_TPL_THEME_GREEN'),
 		'red' => GetMessage('CP_BCT_TPL_THEME_RED'),
+		'wood' => GetMessage('CP_BCT_TPL_THEME_WOOD'),
 		'yellow' => GetMessage('CP_BCT_TPL_THEME_YELLOW'),
+		'black' => GetMessage('CP_BCT_TPL_THEME_BLACK')
 	);
 
 	$dir = trim(preg_replace("'[\\\\/]+'", "/", dirname(__FILE__).'/'.ToLower($arCurrentValues['VIEW_MODE']).'/themes/'));
@@ -154,7 +156,7 @@ if ($iblockExists)
 				$showedProperties = $arCurrentValues['PROPERTY_CODE'];
 			}
 		}
-		if ($showedProperties)
+		if (!empty($showedProperties))
 		{
 			$selected = array();
 
@@ -188,7 +190,7 @@ if ($iblockExists)
 		'VALUES' => $defaultValue + $arFilePropList
 	);
 
-	if ($viewModeValue === 'SECTION')
+	if ($viewModeValue === 'SECTION' || $viewModeValue === 'SLIDER')
 	{
 		$arTemplateParameters['LABEL_PROP'] = array(
 			'PARENT' => 'VISUAL',
@@ -398,7 +400,7 @@ if ($boolCatalog)
 	);
 }
 
-if ($viewModeValue === 'SLIDER' || $viewModeValue === 'BANNER')
+if ($viewModeValue === 'SECTION' || $viewModeValue === 'SLIDER')
 {
 	$arTemplateParameters['ROTATE_TIMER'] = array(
 		'PARENT' => 'VISUAL',
@@ -412,10 +414,6 @@ if ($viewModeValue === 'SLIDER' || $viewModeValue === 'BANNER')
 		'TYPE' => 'CHECKBOX',
 		'DEFAULT' => 'Y'
 	);
-}
-
-if ($viewModeValue === 'SECTION')
-{
 	$arTemplateParameters['PRODUCT_SUBSCRIPTION'] = array(
 		'PARENT' => 'VISUAL',
 		'NAME' => GetMessage('CP_BCT_TPL_PRODUCT_SUBSCRIPTION'),
@@ -447,6 +445,7 @@ if ($viewModeValue === 'SECTION')
 
 	$lineElementCount = (int)$arCurrentValues['LINE_ELEMENT_COUNT'] ?: 3;
 	$pageElementCount = (int)$arCurrentValues['ELEMENT_COUNT'] ?: 9;
+	$variantsMap = $viewModeValue === 'SLIDER' ? CatalogTopComponent::getTemplateVariantsMapForSlider() : CatalogTopComponent::getTemplateVariantsMap();
 
 	$arTemplateParameters['PRODUCT_ROW_VARIANTS'] = array(
 		'PARENT' => 'VISUAL',
@@ -462,7 +461,7 @@ if ($viewModeValue === 'SECTION')
 			'quantity' => GetMessage('CP_BCT_TPL_SETTINGS_QUANTITY'),
 			'quantityBigData' => GetMessage('CP_BCT_TPL_SETTINGS_QUANTITY_BIG_DATA')
 		)),
-		'JS_DATA' => Json::encode(CatalogTopComponent::getTemplateVariantsMap()),
+		'JS_DATA' => Json::encode($variantsMap),
 		'DEFAULT' => Json::encode(CatalogTopComponent::predictRowVariants($lineElementCount, $pageElementCount))
 	);
 	$arTemplateParameters['ENLARGE_PRODUCT'] = array(

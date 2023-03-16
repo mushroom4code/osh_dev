@@ -189,7 +189,7 @@ $resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('MainPageActual', $actu
         );
         $APPLICATION->IncludeComponent(
             "bitrix:catalog.top",
-            "oshisha_catalog.top_new",
+            "oshisha_catalog.top",
             array(
                 "ACTION_VARIABLE" => "action",
                 "ADD_PICT_PROP" => "-",
@@ -202,7 +202,7 @@ $resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('MainPageActual', $actu
                 "CACHE_TYPE" => "A",
                 "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
                 "COMPATIBLE_MODE" => "Y",
-                "COMPONENT_TEMPLATE" => "oshisha_catalog.top_new",
+                "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
                 "CONVERT_CURRENCY" => "N",
                 "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
                 "DETAIL_URL" => "",

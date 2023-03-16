@@ -1528,6 +1528,12 @@ span > i.header_icon {
     filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
 }
 
+.by-card .catalog_tile_slider_arrow_right, .by-card .catalog_tile_slider_arrow_left, .by-card .new_custom_button_slick_right,
+.by-card .new_custom_button_slick_left,.by-card .new_custom_button_slick_right_cat,.by-card .new_custom_button_slick_left_cat {
+    margin-right: -13px;
+    margin-left: -13px
+}
+
 .catalog_tile_slider_arrow_right, .catalog_tile_slider_arrow_left, .new_custom_button_slick_right,
 .new_custom_button_slick_left {
     top: 43%;

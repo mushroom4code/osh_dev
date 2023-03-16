@@ -12,7 +12,6 @@
  */
 
 $this->setFrameMode(true);
-
 if (!empty($arResult['ITEMS']))
 {
 	$elementEdit = CIBlock::GetArrayByID($arParams['IBLOCK_ID'], 'ELEMENT_EDIT');
@@ -31,7 +30,7 @@ if (!empty($arResult['ITEMS']))
 
 	$templateData = array(
 		'TEMPLATE_THEME' => $arParams['TEMPLATE_THEME'],
-		'TEMPLATE_CLASS' => ($arParams['TEMPLATE_THEME'] != '' ? 'bx-'.$arParams['TEMPLATE_THEME'] : ''),
+		'TEMPLATE_CLASS' => 'bx_'.$arParams['TEMPLATE_THEME'],
 		'TEMPLATE_LIBRARY' => $templateLibrary,
 		'CURRENCIES' => $currencyList
 	);

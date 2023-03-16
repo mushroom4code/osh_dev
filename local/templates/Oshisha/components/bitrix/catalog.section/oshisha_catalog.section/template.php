@@ -5,6 +5,7 @@ use Bitrix\Catalog\PriceTable;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Security\Sign\Signer;
 use Bitrix\Sale\Fuser;
+use Bitrix\Catalog;
 use DataBase_like;
 
 
@@ -156,11 +157,11 @@ $containerName = 'container-' . $navParams['NavNum'];
 $themeClass = isset($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_THEME'] : '';
 
 
+$fUser = CSaleBasket::GetBasketUserID();
 $arBasketItems = array();
-
 $dbBasketItems = CSaleBasket::GetList(
     array("NAME" => "ASC", "ID" => "ASC"),
-    array("FUSER_ID" => CSaleBasket::GetBasketUserID(), "LID" => SITE_ID, "ORDER_ID" => "NULL"),
+    array("FUSER_ID" => $fUser, "LID" => SITE_ID, "ORDER_ID" => "NULL"),
     false,
     false,
     array("ID", "PRODUCT_ID", "QUANTITY",)
@@ -177,8 +178,26 @@ while ($arItems = $dbBasketItems->Fetch()) {
 
     $arBasketItems[$arItems["PRODUCT_ID"]] = $arItems["QUANTITY"];
 }
-
 // Печатаем массив, содержащий актуальную на текущий момент корзину
+
+GLOBAL $arrFilterTop;
+$arrFilterTop = array();
+
+$basketUserId = (int)$fUser;
+if ($basketUserId <= 0)
+{
+    $ids = array();
+}
+$ids = array_values(Catalog\CatalogViewedProductTable::getProductSkuMap(
+    IBLOCK_CATALOG,
+    $arResult['VARIABLES']['SECTION_ID'],
+    $basketUserId,
+    $arParams['SECTION_ELEMENT_ID'],
+    $arParams['PAGE_ELEMENT_COUNT'],
+    $arParams['DEPTH']
+));
+
+$arrFilterTop['ID'] = $ids;
 
 // получение лайков и избранного для всех элементов каталога НАЧАЛО
 
@@ -853,18 +872,20 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         }
         //endregion
         ?>
-        <? if ($USER->IsAuthorized()) { ?>
+        <? if ($USER->IsAuthorized()) {
+            if (!empty($arrFilterTop['ID'])) { ?>
             <div class="mb-5 mt-5">
                 <div data-entity="parent-container">
                     <div data-entity="header" data-showed="false">
                         <h4 class="font-19"><b>Вы смотрели</b></h4>
                     </div>
                     <div class="by-card viewed-slider">
-                        <?$APPLICATION->IncludeComponent(
-                            "bitrix:catalog.products.viewed",
-                            "oshisha_catalog.products.viewed",
+                        <?php $APPLICATION->IncludeComponent(
+                            "bitrix:catalog.top",
+                            "oshisha_catalog.top",
                             array(
                                 "ACTION_VARIABLE" => "action",
+                                "PRODUCTS_VIEWED" => "Y",
                                 "ADD_PICT_PROP" => "-",
                                 "ADD_PROPERTIES_TO_BASKET" => "Y",
                                 "ADD_TO_BASKET_ACTION" => "ADD",
@@ -875,6 +896,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                 "CACHE_TYPE" => "A",
                                 "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
                                 "COMPATIBLE_MODE" => "Y",
+                                "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
                                 "CONVERT_CURRENCY" => "N",
                                 "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
                                 "DETAIL_URL" => "",
@@ -886,7 +908,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                 "ELEMENT_SORT_ORDER2" => "desc",
                                 "ENLARGE_PRODUCT" => "PROP",
                                 "ENLARGE_PROP" => "-",
-                                "FILTER_NAME" => "",
+                                "FILTER_NAME" => "arrFilterTop",
                                 "HIDE_NOT_AVAILABLE" => "Y",
                                 "HIDE_NOT_AVAILABLE_OFFERS" => "N",
                                 "IBLOCK_ID" => IBLOCK_CATALOG,
@@ -939,21 +961,15 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                 "USE_PRICE_COUNT" => "N",
                                 "USE_PRODUCT_QUANTITY" => "N",
                                 "VIEW_MODE" => "SLIDER",
-                                "IBLOCK_MODE" => "single",
-                                "IBLOCK_TYPE" => "1c_catalog",
-                                "IBLOCK_ID" => IBLOCK_CATALOG,
-                                "SHOW_FROM_SECTION" => "N",
-                                "HIDE_NOT_AVAILABLE" => "N",
-                                "CONVERT_CURRENCY" => "Y",
-                                "SHOW_SLIDER" => "Y",
-                                "PRICE_CODE" => BXConstants::PriceCode(),
+                                "BASKET_ITEMS" => $arBasketItems
                             ),
                             false
-                        );?>
+                        ); ?>
                     </div>
                 </div>
             </div>
         <? }
+        }
         //region Description
         if (($arParams['HIDE_SECTION_DESCRIPTION'] !== 'Y') && !empty($arResult['DESCRIPTION'])) {
             ?>
