@@ -508,7 +508,7 @@ if ($request->get('ORDER_ID') <> '') {
                         <div class="p-3">
                             <p class="d-flex flex-row align-items-center font-14">
                                 <input type="checkbox" required class="check_input form-check-input mr-2 mt-0"
-                                       id="soa-property-USER_RULES" name="USER_RULES"/>
+                                       id="soa-property-USER_RULES" checked name="USER_RULES"/>
                                 <label class="bx-soa-custom-label m-0">
                                     Я принимаю условия
                                     <a class="color-redLight text-decoration-underline" href="/about/users_rules/">
@@ -517,7 +517,7 @@ if ($request->get('ORDER_ID') <> '') {
                                 </label>
                             </p>
                             <p class="d-flex flex-row align-items-center font-14">
-                                <input type="checkbox" required class="check_input form-check-input mr-2 mt-0"
+                                <input type="checkbox" required checked class="check_input form-check-input mr-2 mt-0"
                                        name="USER_POLITICS"/>
                                 <label class="bx-soa-custom-label m-0">
                                     Я принимаю условия
@@ -778,6 +778,14 @@ if ($request->get('ORDER_ID') <> '') {
             var deferreds = [];
 
             BX.closeWait('bx-soa-order-form', wait); // прячем прелоадер
+        });
+        $(document).on('click', 'input[name="USER_RULES"], input[type="USER_POLITICS"]', function () {
+            if ($('input[name="USER_RULES"]').prop('checked') === true
+                && $('input[name="USER_POLITICS"]').prop('checked') === true) {
+                $(document).find('.btn-order-save').removeAttr('style');
+            } else {
+                $(document).find('.btn-order-save').attr('style','opacity: 0.65');
+            }
         });
     </script>
     <script>
