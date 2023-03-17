@@ -59,4 +59,5 @@ $MESS["EMAIL_AUTH_REGISTRATION"] = "Зарегистрироваться";
 $MESS["AUTH_PHONE_LOGIN"] = "Войти по номеру телефона";
 
 $MESS["CAPTCHA_REGF_PROMT"] = "Введите слово на картинке";
+$MESS["ERROR_NOT_CORRECT_PASSWORD"] = "Неверно подтвержден пароль";
 ?>

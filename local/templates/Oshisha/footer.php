@@ -1,4 +1,7 @@
 <?php use enterego\EnteregoUser;
+use Bitrix\Conversion\Internals\MobileDetect;
+
+$mobile = new MobileDetect();
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var  CAllMain|CMain $APPLICATION
@@ -127,6 +130,9 @@ $option = $option_site; ?>
                     </span>
                     <span class="li_link_footer ">
                          <a href="/about/politics/" class="text_link_footer">Политика конфиденциальности</a>
+                    </span>
+                    <span>
+                        <a href="/about/cookie/" class="text_link_footer">Политика обработки Cookie</a>
                     </span>
                 </nav>
             </div>
@@ -362,6 +368,14 @@ $option = $option_site; ?>
             // age access
         </script>
     <? } ?>
+    <div id="consent-cookie-popup" class="hidden">
+        <p>Мы используем файлы Cookie, чтобы улучшить сайт для вас</p>
+        <div id="cookie-popup-controls">
+                <a id="cookie-popup-about" class="mobile" href="/about/cookie/"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                <a id="cookie-popup-about" class="desktop" href="/about/cookie/">Подробнее</a>
+            <a id="cookie-popup-accept" href="#">Принять</a>
+        </div>
+    </div>
     <script>
         $(document).ready(function () {
             $(document).on('click', '.close_header_box', function () {

@@ -2,11 +2,12 @@
 
 namespace Sale\Handlers\Delivery;
 
-use \Bitrix\Main\Localization\Loc;
-use \Bitrix\Sale\Delivery\CalculationResult;
-use CModule;
-use CSaleOrderProps;
-use CSaleOrderPropsValue;
+use Bitrix\Main\Data\Cache;
+use Bitrix\Main\Error;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Sale\Delivery\CalculationResult;
+use CommonPVZ\CommonPVZ;
+use CommonPVZ\DeliveryHelper;
 
 Loc::loadMessages(__FILE__);
 
@@ -15,6 +16,7 @@ if (!\Bitrix\Main\Loader::includeModule('enterego.pvz'))
 
 class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 {
+    protected $handlerCode = 'enterego.pvz';
     protected static $canHasProfiles = false;
     protected static $isCalculatePriceImmediately = true;
     protected static $whetherAdminExtraServicesShow = false;
@@ -36,14 +38,56 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
     protected function calculateConcrete(\Bitrix\Sale\Shipment $shipment)
     {
         $result = new \Bitrix\Sale\Delivery\CalculationResult();
+        $price = 0;
+        $adr = '';
 
-        if (isset($_POST['price'])) {
-            $_SESSION['CommonPVZ']['pricePVZ'] = $_POST['price'];
+        $order = $shipment->getCollection()->getOrder();
+        $propertyCollection = $order->getPropertyCollection();
+
+        $cache = Cache::createInstance();
+        $cachePath = '/getAllPVZpr';
+
+        if (isset($_POST['dataToHandler'])) {
+            if ($_POST['dataToHandler']['code_pvz'] === 'undefined') {
+                $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
+            } else {
+                $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'] . ' #' . $_POST['dataToHandler']['code_pvz'];
+            }
+            $f = serialize($adr);
+            if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
+                $price = $cache->getVars();
+            } elseif ($cache->startDataCache()) {
+                $delivery = CommonPVZ::getInstanceObject($_POST['dataToHandler']['delivery']);
+                $price = $delivery->getPrice($_POST['dataToHandler']);
+                if ($price === false) {
+                    return $result->addError(
+                        new Error(
+                            Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
+                            'DELIVERY_CALCULATION'
+                        ));
+                }
+                if ($price !== false && is_numeric($price) && $price !== '0' && (int)$price > 0)
+                    $cache->endDataCache($price);
+                else
+                    $price = 0;
+            }
+        } else {
+            foreach ($propertyCollection as $item) {
+                if ($item->getField('CODE') == "COMMON_PVZ") {
+                    $adr = $item->getValue();
+                    break;
+                }
+            }
         }
 
-        $price = $_SESSION['CommonPVZ']['pricePVZ'] ?? 0;
+        if ($price === 0) {
+            $f = serialize($adr);
+            if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
+                $price = $cache->getVars();
+            }
+        }
 
-        $result->setDescription(\CommonPVZ\DeliveryHelper::getButton());
+        $result->setDescription(DeliveryHelper::getButton());
         $result->setDeliveryPrice(
             roundEx(
                 $price,

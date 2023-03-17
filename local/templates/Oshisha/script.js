@@ -39,6 +39,43 @@ $(document).ready(function () {
         bool_select_contragent_user = $(select).is('#contragent_user'),
         bool_select_company_user_order = $(select).is('#company_user_order');
 
+
+    let cookieStorage = {
+        getItem: (key) => {
+            let cookie = document.cookie
+                .split(';')
+                .find((row) => row.trim().startsWith(key))
+                ?.split("=")[1];
+            return cookie
+        },
+        setItem: (key, value) => {
+            document.cookie = `${key}=${value}`;
+        }
+    }
+
+    let storageType = cookieStorage, consentPropertyName = 'cookie_consent';
+
+    let shouldShowPopup = () => !storageType.getItem(consentPropertyName);
+    let saveToStorage = () => storageType.setItem(consentPropertyName, true);
+    let consentPopup = document.getElementById('consent-cookie-popup');
+    let consentAcceptBtn = document.getElementById('cookie-popup-accept');
+
+    let acceptFn = event => {
+        event.preventDefault();
+        saveToStorage(storageType);
+        consentPopup.classList.add('hidden');
+        setTimeout(() => {
+            consentPopup.remove();
+        }, 700);
+
+    }
+    consentAcceptBtn.addEventListener('click', acceptFn);
+
+    if (shouldShowPopup(storageType)) {
+        setTimeout(() => {
+            consentPopup.classList.remove('hidden');
+        }, 2000);
+    }
     //MAIN
     function getCookie(name) {
         let matches = document.cookie.match(new RegExp(
@@ -566,7 +603,7 @@ $(document).ready(function () {
         if ($(this).hasClass('subscribed')) {
             $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
                 '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                'К сожалению, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
+                'К сожалениюf, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
                 '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 '<i class="fa fa-bell-o" aria-hidden="true"></i>Отменить подписку</a>' +
