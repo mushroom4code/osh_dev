@@ -37,6 +37,42 @@ class PVZDeliveryProfile extends Base
     }
 
     /**
+     * @return string Class, service description.
+     */
+    public static function getClassDescription()
+    {
+        return Loc::getMessage("COMMONPVZ_DESCRIPTION");
+    }
+
+    /**
+     * @return string Class title.
+     */
+    public static function getClassTitle()
+    {
+        return Loc::getMessage("COMMONPVZ_TITLE");
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    protected function getConfigStructure()
+    {
+        return array();
+    }
+
+    public function isCalculatePriceImmediately()
+    {
+        return self::$isCalculatePriceImmediately;
+    }
+
+    public static function isProfile()
+    {
+        return self::$isProfile;
+    }
+
+
+    /**
      * @param Shipment|null $shipment
      * @return CalculationResult
      * @throws ArgumentException
@@ -102,59 +138,6 @@ class PVZDeliveryProfile extends Base
         );
 
         return $result;
-    }
-
-    public static function canHasProfiles()
-    {
-        return self::$canHasProfiles;
-    }
-
-    /**
-     * @return string Class, service description.
-     */
-    public static function getClassDescription()
-    {
-        return Loc::getMessage("COMMONPVZ_DESCRIPTION");
-    }
-
-    /**
-     * @return string Class title.
-     */
-    public static function getClassTitle()
-    {
-        return Loc::getMessage("COMMONPVZ_TITLE");
-    }
-
-    /**
-     * @return array
-     * @throws Exception
-     */
-    protected function getConfigStructure()
-    {
-        return array();
-    }
-
-    /**
-     * @return array
-     * @throws ArgumentException
-     */
-    protected function getLocationGroups()
-    {
-        $result = [];
-
-
-        return $result;
-    }
-
-
-    public function isCalculatePriceImmediately()
-    {
-        return self::$isCalculatePriceImmediately;
-    }
-
-    public static function whetherAdminExtraServicesShow()
-    {
-        return self::$whetherAdminExtraServicesShow;
     }
 
 }
