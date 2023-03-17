@@ -396,7 +396,6 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         <div class="ctweb-button-block col-md-6 col-lg-6 col-12 p-0">
                             <input class="btn link_menu_catalog get_code_button red_button_cart pl-3 pr-3 font-16"
                                    id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
-                                   style="width: 265px;"
                                    type="submit"
                                    value="Регистрация"
                                    name="registered"
@@ -455,7 +454,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         $('.block-text').toggleClass('d-none');
                     });
 
-                    $(document).on('click', 'input[name="USER_RULES"], input[type="USER_POLITICS"]', function () {
+                    $(document).on('click', 'input.form-check-input', function () {
                         if ($('input[name="USER_RULES"]').prop('checked') === true
                             && $('input[name="USER_POLITICS"]').prop('checked') === true) {
                             $('input[name="registered"]').removeAttr('style');

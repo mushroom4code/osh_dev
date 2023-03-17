@@ -507,7 +507,8 @@ if ($request->get('ORDER_ID') <> '') {
                         </div>
                         <div class="p-3">
                             <p class="d-flex flex-row align-items-center font-14">
-                                <input type="checkbox" required class="check_input form-check-input mr-2 mt-0"
+                                <input type="checkbox" required
+                                       class="check_input form-check-input mr-2 mt-0 checked_active_button"
                                        id="soa-property-USER_RULES" checked name="USER_RULES"/>
                                 <label class="bx-soa-custom-label m-0">
                                     Я принимаю условия
@@ -517,7 +518,8 @@ if ($request->get('ORDER_ID') <> '') {
                                 </label>
                             </p>
                             <p class="d-flex flex-row align-items-center font-14">
-                                <input type="checkbox" required checked class="check_input form-check-input mr-2 mt-0"
+                                <input type="checkbox" required checked
+                                       class="check_input form-check-input mr-2 mt-0 checked_active_button"
                                        name="USER_POLITICS"/>
                                 <label class="bx-soa-custom-label m-0">
                                     Я принимаю условия
@@ -779,7 +781,7 @@ if ($request->get('ORDER_ID') <> '') {
 
             BX.closeWait('bx-soa-order-form', wait); // прячем прелоадер
         });
-        $(document).on('click', 'input[name="USER_RULES"], input[type="USER_POLITICS"]', function () {
+        $(document).on('click', 'input.checked_active_button', function () {
             if ($('input[name="USER_RULES"]').prop('checked') === true
                 && $('input[name="USER_POLITICS"]').prop('checked') === true) {
                 $(document).find('.btn-order-save').removeAttr('style');
