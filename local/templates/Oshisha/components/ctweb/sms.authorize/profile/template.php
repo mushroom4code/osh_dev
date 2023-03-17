@@ -456,7 +456,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                     });
 
                     $(document).on('click', 'input[name="USER_RULES"], input[type="USER_POLITICS"]', function () {
-                        if (('input[name="USER_RULES"]').prop('checked') === true
+                        if ($('input[name="USER_RULES"]').prop('checked') === true
                             && $('input[name="USER_POLITICS"]').prop('checked') === true) {
                             $('input[name="registered"]').removeAttr('style');
                         } else {
