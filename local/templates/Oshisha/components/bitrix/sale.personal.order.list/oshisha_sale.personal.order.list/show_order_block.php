@@ -79,11 +79,12 @@ function showOrderBlock($listStatuses, $accountNumber)
                         </div>
                         <?
                         if ($order['CAN_CANCEL'] !== 'N') {
+//                            TODO отмена заказа
                             ?>
-                            <div class=" sale-order-list-cancel-container">
-                                <a class="sale-order-list-cancel-link font-w-m-600"
-                                   href="/personal/cancel/<?= $order['ACCOUNT_NUMBER'] ?>?CANCEL=Y"><?= Loc::getMessage('SPOL_TPL_CANCEL_ORDER') ?></a>
-                            </div>
+<!--                            <div class=" sale-order-list-cancel-container">-->
+<!--                                <a class="sale-order-list-cancel-link font-w-m-600"-->
+<!--                                   href="/personal/cancel/--><?php //= $order['ACCOUNT_NUMBER'] ?><!--?CANCEL=Y">--><?php //= Loc::getMessage('SPOL_TPL_CANCEL_ORDER') ?><!--</a>-->
+<!--                            </div>-->
                             <?
                         }
                         ?>

@@ -32,6 +32,7 @@ $this->setFrameMode(true);
             "TOP_DEPTH" => $arParams["SECTION_TOP_DEPTH"],
             "SECTION_URL" => $arResult["FOLDER"] . $arResult["URL_TEMPLATES"]["section"],
             "VIEW_MODE" => $arParams["SECTIONS_VIEW_MODE"],
+            "SECTION_USER_FIELDS"=> ['UF_COLOR_TEXT'],
             "SHOW_PARENT_NAME" => $arParams["SECTIONS_SHOW_PARENT_NAME"],
             "HIDE_SECTION_NAME" => (isset($arParams["SECTIONS_HIDE_SECTION_NAME"]) ? $arParams["SECTIONS_HIDE_SECTION_NAME"] : "N"),
             "ADD_SECTIONS_CHAIN" => (isset($arParams["ADD_SECTIONS_CHAIN"]) ? $arParams["ADD_SECTIONS_CHAIN"] : '')

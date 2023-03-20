@@ -318,7 +318,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                 <div class="col-md-8 col-lg-8 col-12 pl-0 flex-column">
                                     <div class="d-flex flex-row align-items-center font-14 mb-3 mt-3">
                                         <input type="checkbox" required class="check_input form-check-input mt-0 ml-0"
-                                               id="soa-property-USER_RULES" name="USER_RULES"/>
+                                               id="soa-property-USER_RULES" checked name="USER_RULES"/>
                                         <label class="bx-soa-custom-label mb-0 ml-3">
                                             Я принимаю условия
                                             <a class="color-redLight text-decoration-underline"
@@ -328,7 +328,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                         </label>
                                     </div>
                                     <div class="d-flex flex-row align-items-center font-14 mb-4">
-                                        <input type="checkbox" required class="check_input form-check-input mt-0 ml-0"
+                                        <input type="checkbox" required checked class="check_input  form-check-input mt-0 ml-0"
                                                name="USER_POLITICS"/>
                                         <label class="bx-soa-custom-label mb-0 ml-3">
                                             Я принимаю условия
@@ -396,7 +396,6 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         <div class="ctweb-button-block col-md-6 col-lg-6 col-12 p-0">
                             <input class="btn link_menu_catalog get_code_button red_button_cart pl-3 pr-3 font-16"
                                    id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
-                                   style="width: 265px;"
                                    type="submit"
                                    value="Регистрация"
                                    name="registered"
@@ -455,6 +454,14 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         $('.block-text').toggleClass('d-none');
                     });
 
+                    $(document).on('click', 'input.form-check-input', function () {
+                        if ($('input[name="USER_RULES"]').prop('checked') === true
+                            && $('input[name="USER_POLITICS"]').prop('checked') === true) {
+                            $('input[name="registered"]').removeAttr('style');
+                        } else {
+                            $('input[name="registered"]').attr('style','opacity: 0.65');
+                        }
+                    });
                 </script>
             <?php endif; ?>
         </div>
