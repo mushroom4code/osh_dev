@@ -332,9 +332,7 @@ if(isset($_REQUEST["ajax"]) && $_REQUEST["ajax"] === "y")
 	$_CHECK = &$_REQUEST;
 elseif(isset($_REQUEST["del_filter"]))
 	$_CHECK = array();
-elseif(!empty($_GET) &&
-    !(count($_GET) == 1 && !empty($_GET['PAGEN_1'])) &&
-    !(count($_GET) == 3 && !empty($_GET['PAGEN_1']) && !empty($_GET['sort_by']) && !empty($_GET['sort_order'])))
+elseif(!empty($_GET))
 	$_CHECK = &$_GET;
 elseif($arParams["SMART_FILTER_PATH"])
 	$_CHECK = $this->convertUrlToCheck($arParams["~SMART_FILTER_PATH"]);

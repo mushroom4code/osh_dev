@@ -302,13 +302,7 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem, result)
 					var label = document.querySelector('[data-role="label_'+value.CONTROL_ID+'"]');
 					if (value.DISABLED)
 					{
-						BX.adjust(control, {props: {disabled: true}});
-						if (label) {
-							BX.addClass(control.parentNode, 'd-none');
-							BX.addClass(label, 'd-none');
-						}
-						else
-							BX.addClass(control.parentNode, 'd-none');
+
 					}
 					else
 					{
@@ -319,6 +313,10 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem, result)
 									$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
 									BX.removeClass(control.parentNode, 'd-none');
 									BX.removeClass(label, 'd-none');
+								} else {
+									$(control).closest('.smart-filter-parameters-box').addClass('d-none');
+									BX.addClass(control.parentNode, 'd-none');
+									BX.addClass(label, 'd-none');
 								}
 							} else {
 								$(control).closest('.smart-filter-parameters-box').removeClass('d-none');

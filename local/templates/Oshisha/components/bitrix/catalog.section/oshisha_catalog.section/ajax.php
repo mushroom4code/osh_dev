@@ -33,11 +33,11 @@ if ($request->getPost('hide_not_available') == "Y") {
     $parameters['HIDE_NOT_AVAILABLE'] = "L";
 }
 
-if ($request->getPost('sort_without_filter_data') == 'Y') {
-    if (!empty($_SESSION[$parameters["FILTER_NAME"]][$_SESSION['GLOBAL_CURRENT_SECTION']['ID']])) {
-        $_REQUEST = array_merge($_REQUEST, $_SESSION[$parameters["FILTER_NAME"]][$_SESSION['GLOBAL_CURRENT_SECTION']['ID']]);
-    }
-}
+//if ($request->getPost('sort_without_filter_data') == 'Y') {
+//    if (!empty($_SESSION[$parameters["FILTER_NAME"]][$_SESSION['GLOBAL_CURRENT_SECTION']['ID']])) {
+//        $_REQUEST = array_merge($_REQUEST, $_SESSION[$parameters["FILTER_NAME"]][$_SESSION['GLOBAL_CURRENT_SECTION']['ID']]);
+//    }
+//}
 
 if (isset($parameters['PARENT_NAME'])) {
     $parent = new CBitrixComponent();
