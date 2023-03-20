@@ -48,7 +48,7 @@
     <h3 class="mb-lg-5 mb-md-5 mb-0 mt-5 font-m-20"><b>Рекомендуемые товары </b></h3>
     <?php $APPLICATION->IncludeComponent(
         "bitrix:catalog.top",
-        "oshisha_catalog.top_new",
+        "oshisha_catalog.top",
         array(
             "ACTION_VARIABLE" => "action",
             "ADD_PICT_PROP" => "-",
@@ -61,7 +61,7 @@
             "CACHE_TYPE" => "A",
             "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
             "COMPATIBLE_MODE" => "Y",
-            "COMPONENT_TEMPLATE" => "oshisha_catalog.top_new",
+            "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
             "CONVERT_CURRENCY" => "N",
             "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
             "DETAIL_URL" => "",

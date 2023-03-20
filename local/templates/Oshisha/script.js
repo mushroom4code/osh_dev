@@ -42,16 +42,17 @@ $(document).ready(function () {
 
     let cookieStorage = {
         getItem: (key) => {
-            let cookies = document.cookie
+            let cookie = document.cookie
                 .split(';')
-                .map(cookie => cookie.split('='))
-                .reduce((acc, [key, value]) => ({...acc, [key.trim()]: value }));
-            return cookies[key]
+                .find((row) => row.trim().startsWith(key))
+                ?.split("=")[1];
+            return cookie
         },
         setItem: (key, value) => {
             document.cookie = `${key}=${value}`;
         }
     }
+
     let storageType = cookieStorage, consentPropertyName = 'cookie_consent';
 
     let shouldShowPopup = () => !storageType.getItem(consentPropertyName);
@@ -63,8 +64,11 @@ $(document).ready(function () {
         event.preventDefault();
         saveToStorage(storageType);
         consentPopup.classList.add('hidden');
-    }
+        setTimeout(() => {
+            consentPopup.remove();
+        }, 700);
 
+    }
     consentAcceptBtn.addEventListener('click', acceptFn);
 
     if (shouldShowPopup(storageType)) {
@@ -256,7 +260,6 @@ $(document).ready(function () {
         }
         if (screenWidth <= 746) {
             count = 2;
-            variableWidth = true;
         }
         $('.bx_catalog_tile_section').slick({
             slidesToShow: count,
@@ -2882,7 +2885,7 @@ if ($(window).width() > 1024) {
         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         if (scrollTop > 0) {
             if (!appended) {
-                $(document).find('header').addClass('header-scroll');
+                $(document).find('header').addClass('header-scroll').show(500);
                 appended = true;
             }
         } else {
@@ -2890,3 +2893,20 @@ if ($(window).width() > 1024) {
         }
     });
 }
+
+$(window).on('resize', function() {
+    const catalog = $('.catalog-section.by-line'),
+          cardViewBtn = $('#card_catalog'),
+          lineViewBtn = $('#line_catalog');
+
+    if (catalog.length > 0) {
+        if ($(window).width() < 500) {
+            catalog.removeClass('by-line').addClass('by-card');
+
+            if (lineViewBtn.hasClass('icon_sort_line_active')) {
+                lineViewBtn.addClass('icon_sort_line').removeClass('icon_sort_line_active');
+                cardViewBtn.addClass('icon_sort_bar_active').removeClass('icon_sort_line');
+            }
+        }
+    }
+});

@@ -183,21 +183,10 @@ $arResult['COUNT_FAV'] = $count_likes['USER'][$arResult['ID']]['Fav'][0];
 $taste = $arResult['PROPERTIES'][PROPERTY_KEY_VKUS];
 $themeClass = isset($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_THEME'] : '';
 
-$arItems = CSaleBasket::GetList(
-    array(),
-    array(
-        "PRODUCT_ID" => $arResult["ID"],
-        "FUSER_ID" => $FUser_id),
-    false,
-    false,
-    array("QUANTITY"));
-
 $priceBasket = 0;
 
-while ($res = $arItems->Fetch()) {
-    if (!empty($res["QUANTITY"]) && $res !== false) {
-        $priceBasket = $res["QUANTITY"];
-    }
+if (!empty($arParams['BASKET_ITEMS'][$arResult["ID"]])) {
+    $priceBasket = $arParams['BASKET_ITEMS'][$arResult["ID"]];
 }
 
 $actualItem['PICTURE'] = [];
@@ -352,7 +341,7 @@ global $option_site;
                     } else { ?>
                         <div class="product-item-detail-slider-controls-block margin_block_element"
                              id="<?= $itemIds['SLIDER_CONT_ID'] ?>">
-                            <?php if (!empty($actualItem['PICTURE']) && count($actualItem['PICTURE']) > 1) {
+                            <?php if (!empty($actualItem['PICTURE']) && count($actualItem['PICTURE']) > 0) {
                                 foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
                                     <div class="product-item-detail-slider-controls-image<?= ($key == 0 ? ' active' : '') ?>"
                                          data-entity="slider-control" data-value="<?= $photo['ID'] ?>">
@@ -1166,13 +1155,9 @@ global $option_site;
         </div>
         <?php
     }
-    if (count($actualItem['PICTURE']) > 1) {
-        $count = count($actualItem['PICTURE']);
-        $arraySlider = $actualItem['PICTURE'];
-    } else {
-        $count = 0;
-        $arraySlider = [];
-    }
+
+    $count = count($actualItem['PICTURE']);
+    $arraySlider = $actualItem['PICTURE'];
 
     $jsParams = array(
         'CONFIG' => array(
