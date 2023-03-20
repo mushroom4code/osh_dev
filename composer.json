@@ -5,7 +5,8 @@
     "sch-group/pickpoint": "^4.2",
     "symfony/http-client": "^5.4",
     "cdek-it/sdk2.0": "^0.1.5",
-    "lapaygroup/fivepost-sdk": "^0.6.0"
+    "lapaygroup/fivepost-sdk": "^0.6.0",
+    "antistress-store/cdek-sdk-v2": "^1.1"
   },
   "require-dev": {
     "symfony/var-dumper": "^5.3"

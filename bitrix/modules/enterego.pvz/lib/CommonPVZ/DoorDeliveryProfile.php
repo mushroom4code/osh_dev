@@ -12,6 +12,7 @@ use Bitrix\Sale\Delivery\Services\Manager;
 use Bitrix\Sale\Shipment;
 use CommonPVZ\CommonPVZ;
 use CommonPVZ\DeliveryHelper;
+use http\Params;
 
 Loc::loadMessages(__FILE__);
 
@@ -65,6 +66,7 @@ class DoorDeliveryProfile extends Base
         ];
         $currentDelivery = '';
         $propTypeDeliveryId = '';
+        $deliveryParams = array();
         $propertyCollection = $shipment->getOrder()->getPropertyCollection();
         foreach ($propertyCollection as $propertyItem) {
             $prop = $propertyItem->getProperty();
@@ -72,11 +74,27 @@ class DoorDeliveryProfile extends Base
                 $propTypeDeliveryId = $prop['ID'];
                 $currentDelivery = $propertyItem->getValue();
             }
+            if ($prop['CODE'] === 'LOCATION') {
+                $deliveryParams['location_name'] = DeliveryHelper::getCityName($propertyItem->getValue());
+            }
+        }
+        $deliveryParams['shipment_weight'] = $shipment->getWeight();
+        $deliveryParams['packages'] = array();
+        $orderBasket = $shipment->getOrder()->getBasket();
+        foreach ($orderBasket as $orderBasketItem) {
+            $packageParams = array();
+            $basketItemFields = $orderBasketItem->getFields();
+            $productDimensions =  unserialize($basketItemFields['DIMENSIONS']);
+            $packageParams['height'] = (int)$productDimensions['HEIGHT'];
+            $packageParams['lenght'] = (int)$productDimensions['LENGTH'];
+            $packageParams['width'] = (int)$productDimensions['WIDTH'];
+            $packageParams['weight'] = (int)$basketItemFields['WEIGHT'];
+            $deliveryParams['packages'][] = $packageParams;
         }
         if ($propTypeDeliveryId) {
             foreach ($deliveries as $delivery) {
                 $deliveryInstance = CommonPVZ::getInstanceObject($delivery);
-                $price = $deliveryInstance->getPriceDoorDelivery([]);
+                $price = $deliveryInstance->getPriceDoorDelivery($deliveryParams);
 
                 if ($currentDelivery===$deliveryInstance->delivery_name) {
                     $result->setDeliveryPrice(

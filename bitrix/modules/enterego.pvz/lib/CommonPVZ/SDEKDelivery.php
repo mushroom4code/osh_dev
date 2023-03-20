@@ -2,85 +2,23 @@
 
 namespace CommonPVZ;
 
-
 class SDEKDelivery extends CommonPVZ
 {
     public string $delivery_name = 'SDEK';
-    private string $token = '';
+    private $cdek_client;
 
     protected function connect()
     {
-        $postFieldsAr = array(
-            "grant_type" => "client_credentials",
-            "client_id" => $this->configs['setaccount'],
-            "client_secret" => $this->configs['setsecure']
-        );
-        $strRequest = http_build_query($postFieldsAr);
-
-        $authRequest = $this->request("https://api.cdek.ru/v2/oauth/token", $strRequest, 'POST');
-
-        if ($authRequest === false) {
-            $this->errors[] = "Ошибка, сервер CDEK вернул ответ не в JSON формате.";
-            return false;
-        }
-        if (isset($authRequest->access_token) && !empty($authRequest->access_token)) {
-            $this->token = $authRequest->access_token;
-            return true;
-        } else {
-            $this->errors[] = "Ошибка, ответ сервера CDEK не содержит свойства access_token или этот параметр пустой.";
-            return false;
-        }
-    }
-
-    private function request($url, $strReq, $method)
-    {
-        $curl = curl_init();
-        $header = array();
-
-        if ($this->token !== '') {
-            $header[] = "Authorization: Bearer " . $this->token;
-            $header[] = "Content-Type: application/json; charset=utf-8";
-        } else {
-            $header[] = "Content-Type: application/x-www-form-urlencoded";
-        }
-        if ($method==='GET') {
-            $url .= "?$strReq";
-        }
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 5,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_POSTFIELDS => $strReq,
-            CURLOPT_HTTPHEADER => $header
-        ));
-
-        $response = curl_exec($curl);
-        $error = curl_error($curl);
-        curl_close($curl);
-
-        if ($error !== '') {
-            $this->errors[] = $error;
-            return false;
-        }
-
-        return json_decode($response);
+        $this->cdek_client = new \AntistressStore\CdekSDK2\CdekClientV2($this->configs['setaccount'], $this->configs['setsecure']);
+        return true;
     }
 
     public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city)
     {
-        $sdek_result = [];
         $sdek_city_code = $this->getSDEKCityCode($city_name);
-
-        if ($this->token !== '' && $sdek_city_code) {
-            $searchParams = ['city_code'=>$sdek_city_code];
-            $sdek_result = $this->request('https://api.cdek.ru/v2/deliverypoints',
-                http_build_query($searchParams), 'GET');
-        }
+        $requestPvz = (new \AntistressStore\CdekSDK2\Entity\Requests\DeliveryPoints())
+            ->setCityCode($sdek_city_code);
+        $sdek_result = $this->cdek_client->getDeliveryPoints($requestPvz);
 
         foreach ($sdek_result as $value) {
             $features_obj['type'] = 'Feature';
@@ -89,24 +27,24 @@ class SDEKDelivery extends CommonPVZ
             $features_obj['geometry'] = [
                 'type' => 'Point',
                 'coordinates' => [
-                    $value->location->latitude,
-                    $value->location->longitude
+                    $value->getLocation()->getLatitude(),
+                    $value->getLocation()->getLongitude()
                 ]
             ];
             $features_obj['properties'] = [
-                'code_pvz' => $value->code,
-                'type' => $value->type === 'PVZ' ? "PVZ" : 'POSTAMAT',
-                'workTime'=> $value->work_time,
-                'comment' => $value->address_comment,
-                'fullAddress' => $value->location->address_full,
+                'code_pvz' => $value->getCode(),
+                'type' => $value->getType() === 'PVZ' ? "PVZ" : 'POSTAMAT',
+                'workTime'=> $value->getWorkTime(),
+                'comment' => $value->getAddressComment(),
+                'fullAddress' => $value->getLocation()->getAddressFull(),
                 'deliveryName' => 'СДЭК',
                 'iconCaption' => 'СДЭК',
-                'hintContent' => $value->location->address,
+                'hintContent' => $value->getLocation()->getAddress(),
                 "openEmptyBalloon" => true,
                 "clusterCaption" => 'СДЭК',
             ];
             if (!empty($value->phones)) {
-                $features_obj['properties']['phone'] = $value->phones[0]->number;
+                $features_obj['properties']['phone'] = $value->getPhones()[0]->getNumber();
             }
             $features_obj['options'] = [
                 'preset' => 'islands#darkGreenIcon'
@@ -122,14 +60,11 @@ class SDEKDelivery extends CommonPVZ
      */
     private function getSDEKCityCode($cityName)
     {
-        if ($this->token !== '') {
-            $ar = ['country_codes' => 'RU', 'city' => $cityName];
-            $resp = $this->request('https://api.cdek.ru/v2/location/cities', http_build_query($ar), 'GET');
-            if (!empty($resp) && count($resp)>0 && isset($resp[0]->code)) {
-                return $resp[0]->code;
-            }
-        }
-        return false;
+        $location = (new \AntistressStore\CdekSDK2\Entity\Requests\Location())
+            ->setCountryCodes('RU')
+            ->setCity($cityName);
+        $locationList = $this->cdek_client->getCities($location);
+        return $locationList[0]->getCode();
     }
 
     /** Return calculate price delivery
@@ -168,8 +103,28 @@ class SDEKDelivery extends CommonPVZ
 
     public function getPriceDoorDelivery($params)
     {
-        return 250;
+        try {
+            $location_to = $this->getSDEKCityCode($params['location_name']);
+
+            $tariff = (new \AntistressStore\CdekSDK2\Entity\Requests\Tariff())
+                ->setTariffCode($this->configs['tariff'])
+                ->setCityCodes($this->configs['from'], $location_to)
+                ->addServices(['PART_DELIV']);
+
+            foreach ($params['packages'] as $package) {
+                $tariff->setPackages((new \AntistressStore\CdekSDK2\Entity\Requests\Package())
+                    ->setHeight(!empty($package['height']) ? $package['height'] : 0)
+                    ->setLength(!empty($package['length']) ? $package['length'] : 0)
+                    ->setWidth(!empty($package['width']) ? $package['width'] : 0)
+                    ->setWeight(!empty($package['weight']) ? $package['weight'] : 0));
+            }
+
+            $calculatedTariff = $this->cdek_client->calculateTariff($tariff);
+            $delivery_price = $calculatedTariff->getTotalSum();
+            return $delivery_price;
+        } catch (\Exception $e) {
+            $this->errors[] = $e->getMessage();
+        }
+        return 0;
     }
-
-
 }
