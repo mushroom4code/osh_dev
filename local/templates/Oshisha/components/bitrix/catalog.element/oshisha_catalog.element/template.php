@@ -341,7 +341,7 @@ global $option_site;
                     } else { ?>
                         <div class="product-item-detail-slider-controls-block margin_block_element"
                              id="<?= $itemIds['SLIDER_CONT_ID'] ?>">
-                            <?php if (!empty($actualItem['PICTURE']) && count($actualItem['PICTURE']) > 1) {
+                            <?php if (!empty($actualItem['PICTURE']) && count($actualItem['PICTURE']) > 0) {
                                 foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
                                     <div class="product-item-detail-slider-controls-image<?= ($key == 0 ? ' active' : '') ?>"
                                          data-entity="slider-control" data-value="<?= $photo['ID'] ?>">
@@ -1155,13 +1155,9 @@ global $option_site;
         </div>
         <?php
     }
-    if (count($actualItem['PICTURE']) > 1) {
-        $count = count($actualItem['PICTURE']);
-        $arraySlider = $actualItem['PICTURE'];
-    } else {
-        $count = 0;
-        $arraySlider = [];
-    }
+
+    $count = count($actualItem['PICTURE']);
+    $arraySlider = $actualItem['PICTURE'];
 
     $jsParams = array(
         'CONFIG' => array(
