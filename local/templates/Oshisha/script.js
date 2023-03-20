@@ -2876,3 +2876,20 @@ if ($(window).width() > 1024) {
         }
     });
 }
+
+$(window).on('resize', function() {
+    const catalog = $('.catalog-section.by-line'),
+          cardViewBtn = $('#card_catalog'),
+          lineViewBtn = $('#line_catalog');
+
+    if (catalog.length > 0) {
+        if ($(window).width() < 500) {
+            catalog.removeClass('by-line').addClass('by-card');
+
+            if (lineViewBtn.hasClass('icon_sort_line_active')) {
+                lineViewBtn.addClass('icon_sort_line').removeClass('icon_sort_line_active');
+                cardViewBtn.addClass('icon_sort_bar_active').removeClass('icon_sort_line');
+            }
+        }
+    }
+});
