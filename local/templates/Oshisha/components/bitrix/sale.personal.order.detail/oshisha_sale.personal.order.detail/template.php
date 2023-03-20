@@ -137,9 +137,10 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                     <?= Loc::getMessage('SPOD_ORDER_REPEAT') ?></a>
                                 <div id="popup_mess_order_copy"></div>
                                 <? if ($arResult["CAN_CANCEL"] === "Y") {
+//                                    TODO отмена заказа
                                     ?>
-                                    <a href="<?= $arResult["URL_TO_CANCEL"] ?>"
-                                       class="link_repeat_orders sale-order-list-repeat-link mb-1">Отменить заказ</a>
+<!--                                    <a href="--><?php //= $arResult["URL_TO_CANCEL"] ?><!--"-->
+<!--                                       class="link_repeat_orders sale-order-list-repeat-link mb-1">Отменить заказ</a>-->
                                     <?
                                 }
                                 ?>

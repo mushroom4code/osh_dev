@@ -162,6 +162,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             if (($('input[name="USER_RULES"]').prop('checked') === false ||
                 $('input[name="USER_POLITICS"]').prop('checked') === false) && action === 'saveOrderAjax') {
+                $('input[name="registered"]').attr('style','opacity: 0.65');
                 this.endLoader();
                 $('#bx-soa-properties').find('.alert.alert-danger').removeAttr('style')
                     .text('Примите условия соглашений в конце страницы');
