@@ -129,8 +129,14 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 <div class="box_with_city flex_header col-5 pl-0">
                     <span class="d-flex flex-row align-items-center">
                         <img src="/local/assets/images/icon_location.svg" class="icon_location">
-                        <a href="#" class="text_header"><div class="place">
-                        <button type="button" class="place__button" data-toggle="modal" data-target="#placeModal">
+                        <a href="#" class="text_header">
+                            <div class="place">
+                                <?php $styleNone = '';
+                                if (strripos($_SERVER['REQUEST_URI'], '/personal/order/make') !== false) {
+                                    $styleNone = 'style="display:none;"';
+                                } ?>
+                        <button type="button" class="place__button" data-toggle="modal"
+                                data-target="#placeModal" <?= $styleNone ?>>
                             <?php
                             // отключение композитного кеша вне компонента
                             Bitrix\Main\Page\Frame::getInstance()->startDynamicWithID("city-title");

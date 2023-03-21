@@ -59,6 +59,17 @@
     color: #F55F5C;
 }
 
+.bx-sls .dropdown-block{
+    box-shadow: none;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+}
+
+.dropdown-item-text{
+    font-size: 13px;
+    padding: 0;
+}
+
 .datepicker--cell {
     border-radius: 7px;
     font-size: 13px;

@@ -101,13 +101,6 @@ function getCurrentPriceId()
     return $currentPrice;
 }
 
-
-function initProperty(&$arUserResult)
-{
-    // TODO - id типа свойства задан статично - исправить!
-    $arUserResult['ORDER_PROP'][LOCATION_ID] = $_SESSION["code_region"];
-}
-
 // custom admin menu
 
 function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
