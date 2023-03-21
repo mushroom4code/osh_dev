@@ -94,14 +94,9 @@ JCSmartFilter.prototype.reload = function(input)
 			values.push({name: 'sort_order', value:  url.searchParams.get('sort_order')});
 
 		url.search = '';
-		values.forEach(function callback(value, key) {
-
-			if (key != 0) {
-				if(value['name'] == 'PAGEN_1') {
-
-				} else {
-					url.searchParams.set(value['name'], value['value']);
-				}
+		values.forEach((value, key) => {
+			if (key !== 0 && value['name'] !== 'PAGEN_1') {
+				url.searchParams.set(value['name'], value['value']);
 			}
 		});
 		window.history.replaceState(null, null, url);
