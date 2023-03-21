@@ -34,11 +34,11 @@ $userData = EnteregoUser::getInstance();
                         <div class="d-flex flex-column justify-content-between align-content-between">
                             <span class="mb-3">
                                 Общий: <br>
-                                <span class="red_text mb-3"><a href="tel:+74993506201">+7 (499) 350-62-01</a></span>
+                                <span class="red_text mb-3"><a href="tel:88006004424">8 (800) 600-44-24</a></span>
                             </span>
                             <span class="mb-3">
                                 Для связи с менеджером: <br>
-                                 <span class="red_text"><a href="tel:+79268895090">+7 (926) 889-50-90</a></span>
+                                 <span class="red_text"><a href="tel:+79031184521">+7 (903) 118-45-21</a></span>
                             </span>
                         </div>
                     </div>
