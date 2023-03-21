@@ -614,8 +614,8 @@ h3.ctweb-title {
     margin-right: -12px !important;
 }
 
-.by-card .bx_catalog_item .bx_catalog_item_container {
-    max-width: auto;
+.by-card .slick-list .bx_catalog_item .bx_catalog_item_container {
+    max-width: none;
 }
 
 .place__button {

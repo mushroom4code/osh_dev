@@ -190,7 +190,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             "CACHE_TYPE" => $arParams["CACHE_TYPE"],
                             "CACHE_TIME" => $arParams["CACHE_TIME"],
                             "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                            "SAVE_IN_SESSION" => "Y",
+                            "SAVE_IN_SESSION" => "N",
                             "FILTER_VIEW_MODE" => $arParams["FILTER_VIEW_MODE"],
                             "XML_EXPORT" => "N",
                             "SECTION_TITLE" => "NAME",
@@ -305,8 +305,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                     </div>
                     <div class="button_panel_wrap">
                         <div class="sort_mobile"></div>
-                        <div class="icon_sort_bar" id="card_catalog"></div>
-                        <div class="icon_sort_line" id="line_catalog"></div>
+                        <div class="icon_sort_bar xs-d-none" id="card_catalog"></div>
+                        <div class="icon_sort_line xs-d-none" id="line_catalog"></div>
                     </div>
                 </div>
             </div>
@@ -375,9 +375,11 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         }
         //endregion
 
-        if ($_SESSION[$arParams["FILTER_NAME"]][$GLOBAL_SECTION['ID']]['hide_not_available'] == "Y") {
+        if ($_SESSION[$arParams["FILTER_NAME"]][$GLOBAL_SECTION['ID']]['hide_not_available'] == "Y")
+        {
             $arParams["HIDE_NOT_AVAILABLE"] = "Y";
         }
+
 
         global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
@@ -461,7 +463,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             "USE_MAIN_ELEMENT_SECTION" => $arParams["USE_MAIN_ELEMENT_SECTION"],
             'CONVERT_CURRENCY' => $arParams['CONVERT_CURRENCY'],
             'CURRENCY_ID' => $arParams['CURRENCY_ID'],
-            'HIDE_NOT_AVAILABLE' => $arParams["HIDE_NOT_AVAILABLE"],
+            'HIDE_NOT_AVAILABLE' => $_GET['hide_not_available'] == 'Y' ? 'Y' : $arParams["HIDE_NOT_AVAILABLE"],
             'HIDE_NOT_AVAILABLE_OFFERS' => $arParams["HIDE_NOT_AVAILABLE_OFFERS"],
 
             'LABEL_PROP' => $arParams['LABEL_PROP'],

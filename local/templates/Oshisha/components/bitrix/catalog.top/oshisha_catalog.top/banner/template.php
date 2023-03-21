@@ -9,14 +9,13 @@
 /** @var array $arSkuTemplate */
 /** @var array $templateData */
 $intCount = count($arResult['ITEMS']);
-//$strItemWidth = 100/$intCount;
+$strItemWidth = 100/$intCount;
 $strAllWidth = 100*$intCount;
 $arRowIDs = array();
-
-$strContID = 'js_catalog_top_banner_s'.$this->randString();
+$strContID = 'bx_catalog_slider_'.$this->randString();
 ?>
-<div class="catalog-top-banner mb-4 <? echo $templateData['TEMPLATE_CLASS']; ?>" id="<? echo $strContID; ?>">
-	<div class="catalog-top-banner-slider" style="width:<? echo $strAllWidth; ?>%;">
+<div class="bx_slider_section <? echo $templateData['TEMPLATE_CLASS']; ?>" id="<? echo $strContID; ?>">
+	<div class="bx_slider_container" style="width:<? echo $strAllWidth; ?>%;">
 		<?
 		$boolFirst = true;
 		foreach ($arResult['ITEMS'] as $key => $arItem)
@@ -47,97 +46,60 @@ $strContID = 'js_catalog_top_banner_s'.$this->randString();
 			$strObName = 'ob'.preg_replace("/[^a-zA-Z0-9_]/", "x", $strMainID);
 
 			$productTitle = (
-				isset($arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']) && $arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE'] != ''
+			isset($arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE'])&& $arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE'] != ''
 				? $arItem['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']
 				: $arItem['NAME']
 			);
 			$imgTitle = (
-				isset($arItem['IPROPERTY_VALUES']['ELEMENT_PREVIEW_PICTURE_FILE_TITLE']) && $arItem['IPROPERTY_VALUES']['ELEMENT_PREVIEW_PICTURE_FILE_TITLE'] != ''
+			isset($arItem['IPROPERTY_VALUES']['ELEMENT_PREVIEW_PICTURE_FILE_TITLE']) && $arItem['IPROPERTY_VALUES']['ELEMENT_PREVIEW_PICTURE_FILE_TITLE'] != ''
 				? $arItem['IPROPERTY_VALUES']['ELEMENT_PREVIEW_PICTURE_FILE_TITLE']
 				: $arItem['NAME']
 			);
-
-			$showPrice = false;
-			$price = null;
-			if ($arItem['PRODUCT']['TYPE'] === null)
-			{
-				if (!empty($arItem['MIN_PRICE']) && is_array($arItem['MIN_PRICE']))
-				{
-					$showPrice = true;
-					$price = $arItem['MIN_PRICE'];
-					$price['PERCENT'] = $price['DISCOUNT_DIFF_PERCENT'];
-					$price['PRINT_BASE_PRICE'] = $price['PRINT_VALUE'];
-					$price['PRINT_PRICE'] = $price['PRINT_DISCOUNT_VALUE'];
-				}
-			}
-			else
-			{
-				if (isset($arItem['ITEM_START_PRICE']) && is_array($arItem['ITEM_START_PRICE']))
-				{
-					$showPrice = true;
-					$price = $arItem['ITEM_START_PRICE'];
-				}
-				elseif (!empty($arItem['ITEM_PRICES']) && isset($arItem['ITEM_PRICES'][$arItem['ITEM_PRICE_SELECTED']]))
-				{
-					$showPrice = true;
-					$price = $arItem['ITEM_PRICES'][$arItem['ITEM_PRICE_SELECTED']];
-				}
-			}
-
 			?>
-			<div id="<? echo $strMainID; ?>" class="catalog-top-banner-slide<? echo ($boolFirst ? ' active' : ''); ?>">
-				<div class="catalog-top-banner-img-block">
-					<div class="catalog-top-banner-img-canvas">
-						<div class="catalog-top-banner-img-understratum"></div>
-						<a id="<? echo $arItemIDs['PICT']; ?>"
-						   href="<? echo $arItem['DETAIL_PAGE_URL']; ?>"
-						   class="catalog-top-banner-img-element"
-						   style="background-image: url(<? echo $arItem['PREVIEW_PICTURE']['SRC']; ?>);"
-						   title="<? echo $imgTitle; ?>">
-							<?
-							if ($showPrice && 'Y' == $arParams['SHOW_DISCOUNT_PERCENT'])
-							{
-								?>
-								<span id="<? echo $arItemIDs['DSC_PERC']; ?>" class="catalog-top-banner-disc right bottom" style="display:<?=($price['PERCENT'] > 0 ? '' : 'none'); ?>;">-<?=$price['PERCENT']; ?>%</span>
-								<?
-							}
-							if ($arItem['LABEL'])
-							{
-								?>
-								<span class="catalog-top-banner-stick average left top" title="<? echo $arItem['LABEL_VALUE']; ?>"><? echo $arItem['LABEL_VALUE']; ?></span>
-								<?
-							}
+			<div id="<? echo $strMainID; ?>" class="bx_slider_block<? echo ($boolFirst ? ' active' : ''); ?>" style="width: <? echo $strItemWidth; ?>%;">
+				<div class="bx_slider_photo_container">
+					<div class="bx_slider_photo_background"></div>
+					<a id="<? echo $arItemIDs['PICT']; ?>" href="<? echo $arItem['DETAIL_PAGE_URL']; ?>" class="bx_slider_photo_element" style="background:#fff url(<? echo $arItem['PREVIEW_PICTURE']['SRC']; ?>) no-repeat center;" title="<? echo $imgTitle; ?>">
+						<?
+						if ('Y' == $arParams['SHOW_DISCOUNT_PERCENT'])
+						{
 							?>
-						</a>
-					</div>
+							<div id="<? echo $arItemIDs['DSC_PERC']; ?>" class="bx_stick_disc right bottom" style="display:<? echo (0 < $arItem['MIN_PRICE']['DISCOUNT_DIFF_PERCENT'] ? '' : 'none'); ?>;">-<? echo $arItem['MIN_PRICE']['DISCOUNT_DIFF_PERCENT']; ?>%</div>
+							<?
+						}
+						if ($arItem['LABEL'])
+						{
+							?>
+							<div class="bx_stick average left top" title="<? echo $arItem['LABEL_VALUE']; ?>"><? echo $arItem['LABEL_VALUE']; ?></div>
+							<?
+						}
+						?>
+					</a>
 				</div>
-				<div class="catalog-top-banner-info-block">
-					<h2 class="catalog-top-banner-title">
-						<a href="<? echo $arItem['DETAIL_PAGE_URL']; ?>" title="<? echo $productTitle; ?>"><? echo $productTitle; ?></a>
-					</h2>
+				<div class="bx_slider_content_container">
+					<h2 class="bx_slider_title"><a href="<? echo $arItem['DETAIL_PAGE_URL']; ?>" title="<? echo $productTitle; ?>"><? echo $productTitle; ?></a></h2>
 					<?
 					if ('' != $arItem['PREVIEW_TEXT'])
 					{
 						?>
-						<div class="catalog-top-banner-description" itemprop="description"><? echo $arItem['PREVIEW_TEXT']; ?></div>
+						<div class="bx_slider_content_description"><? echo $arItem['PREVIEW_TEXT']; ?></div>
 						<?
 					}
 					?>
-					<div class="catalog-top-banner-price-container">
-						<div class="catalog-top-banner-price-container-background"></div>
-						<div class="catalog-top-banner-price-left-block">
+					<div class="bx_slider_price_container">
+						<div class="bx_slider_price_leftblock">
 							<?
-							if ($showPrice)
+							if (!empty($arItem['MIN_PRICE']))
 							{
 								if ('N' == $arParams['PRODUCT_DISPLAY_MODE'] && isset($arItem['OFFERS']) && !empty($arItem['OFFERS']))
 								{
 									?>
-									<div id="<? echo $arItemIDs['PRICE']; ?>" class="catalog-top-banner-price">
+									<div id="<? echo $arItemIDs['PRICE']; ?>" class="bx_slider_current_price bx_no_oldprice">
 										<?
 										echo GetMessage(
 											'CT_BCT_TPL_MESS_PRICE_SIMPLE_MODE_SHORT',
 											array(
-												'#PRICE#' => $price['PRINT_PRICE']
+												'#PRICE#' => $arItem['MIN_PRICE']['PRINT_DISCOUNT_VALUE']
 											)
 										);
 										?>
@@ -146,34 +108,28 @@ $strContID = 'js_catalog_top_banner_s'.$this->randString();
 								}
 								else
 								{
-									$boolOldPrice = ('Y' == $arParams['SHOW_OLD_PRICE'] && $price['PRICE'] < $price['BASE_PRICE']);
+									$boolOldPrice = ('Y' == $arParams['SHOW_OLD_PRICE'] && $arItem['MIN_PRICE']['DISCOUNT_VALUE'] < $arItem['MIN_PRICE']['VALUE']);
 									?>
-									<div id="<? echo $arItemIDs['PRICE']; ?>" class="catalog-top-banner-price">
-										<div>
-											<?
-											echo $price['PRINT_PRICE'];
-											if ($boolOldPrice)
-											{
-												?>
-												<div id="<? echo $arItemIDs['OLD_PRICE']; ?>" class="catalog-top-banner-price-old"><?=$price['PRINT_BASE_PRICE'];
-													?></div>
-												<?
-											}
+									<div id="<? echo $arItemIDs['PRICE']; ?>" class="bx_slider_current_price<? echo ($boolOldPrice ? '' : ' bx_no_oldprice'); ?>">
+										<?
+										echo $arItem['MIN_PRICE']['PRINT_DISCOUNT_VALUE'];
+										if ($boolOldPrice)
+										{
 											?>
-										</div>
+											<div id="<? echo $arItemIDs['OLD_PRICE']; ?>" class="bx_slider_old_price"><? echo $arItem['MIN_PRICE']['PRINT_VALUE']; ?></div>
+											<?
+										}
+										?>
 									</div>
 									<?
 								}
 							}
-
 							if (isset($arItem['OFFERS']) && !empty($arItem['OFFERS']))
 							{
 								?>
-								<a href="<? echo $arItem['DETAIL_PAGE_URL']; ?>" class="btn btn-primary">
-									<?
+								<a href="<? echo $arItem['DETAIL_PAGE_URL']; ?>" class="bx_bt_button big shadow cart"><span></span><strong><?
 										echo ('' != $arParams['MESS_BTN_DETAIL'] ? $arParams['MESS_BTN_DETAIL'] : GetMessage('CT_BCT_TPL_MESS_BTN_DETAIL'));
-										?>
-								</a>
+										?></strong></a>
 								<?
 							}
 							else
@@ -181,8 +137,8 @@ $strContID = 'js_catalog_top_banner_s'.$this->randString();
 								if ($arItem['CAN_BUY'])
 								{
 									?>
-									<a id="<? echo $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)" rel="nofollow" class="btn btn-primary">
-										<? if ($arParams['ADD_TO_BASKET_ACTION'] == 'BUY')
+									<a id="<? echo $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)" rel="nofollow" class="bx_bt_button big shadow cart"><span></span><strong><?
+											if ($arParams['ADD_TO_BASKET_ACTION'] == 'BUY')
 											{
 												echo ('' != $arParams['MESS_BTN_BUY'] ? $arParams['MESS_BTN_BUY'] : GetMessage('CT_BCT_TPL_MESS_BTN_BUY'));
 											}
@@ -190,8 +146,7 @@ $strContID = 'js_catalog_top_banner_s'.$this->randString();
 											{
 												echo ('' != $arParams['MESS_BTN_ADD_TO_BASKET'] ? $arParams['MESS_BTN_ADD_TO_BASKET'] : GetMessage('CT_BCT_TPL_MESS_BTN_ADD_TO_BASKET'));
 											}
-											?>
-									</a>
+											?></strong></a>
 									<?
 								}
 								else
@@ -207,29 +162,9 @@ echo ('' != $arParams['MESS_NOT_AVAILABLE'] ? $arParams['MESS_NOT_AVAILABLE'] : 
 							}
 							?>
 						</div>
-						<svg class="catalog-top-banner-price-right-block" preserveAspectRatio="none" width="15" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 100">
-							<polygon fill-rule="evenodd" points="0 0 15 50 0 100"></polygon>
-						</svg>
+						<div class="bx_slider_price_rightblock"></div>
 					</div>
 				</div>
-				<script type="application/ld+json">
-					{
-						"@context": "http://schema.org/",
-						"@type": "Product",
-						"name": "<?=$productTitle; ?>",
-						"image": {
-							"@type": "ImageObject",
-							"caption": "<?=$productTitle; ?>",
-							"contentUrl": "<?=$arItem['PREVIEW_PICTURE']['SRC']; ?>"
-						},
-						<?=$arItem['PREVIEW_TEXT'] != '' ? '"description": "'.$arItem['PREVIEW_TEXT'].'",' : "" ?>
-						"offers": {
-							"@type": "Offer",
-							<?=$price['CURRENCY'] != '' ? '"priceCurrency": "'.$price['CURRENCY'].'",' : "" ?>
-							<?=$price['PRICE'] != '' ? '"price": "'.$price['PRICE'].'"' : "" ?>
-						}
-					}
-				</script>
 			</div>
 		<?
 		if (!isset($arItem['OFFERS']) || empty($arItem['OFFERS']))
@@ -344,15 +279,15 @@ echo ('' != $arParams['MESS_NOT_AVAILABLE'] ? $arParams['MESS_NOT_AVAILABLE'] : 
 			'cont' => $strContID,
 			'arrows' => array(
 				'id' => $strContID.'_arrows',
-				'className' => 'catalog-top-banner-controls'
+				'className' => 'bx_slider_controls'
 			),
 			'left' => array(
 				'id' => $strContID.'_left_arr',
-				'className' => 'catalog-top-banner-arrow-left'
+				'className' => 'bx_slider_arrow_left'
 			),
 			'right' => array(
 				'id' => $strContID.'_right_arr',
-				'className' => 'catalog-top-banner-arrow-right'
+				'className' => 'bx_slider_arrow_right'
 			),
 			'items' => $arRowIDs,
 			'rotate' => (0 < $arParams['ROTATE_TIMER']),
@@ -362,7 +297,7 @@ echo ('' != $arParams['MESS_NOT_AVAILABLE'] ? $arParams['MESS_NOT_AVAILABLE'] : 
 		{
 			$arJSParams['pagination'] = array(
 				'id' => $strContID.'_pagination',
-				'className' => 'catalog-top-banner-pagination'
+				'className' => 'bx_slider_pagination'
 			);
 		}
 		?>

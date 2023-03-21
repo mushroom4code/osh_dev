@@ -260,7 +260,6 @@ $(document).ready(function () {
         }
         if (screenWidth <= 746) {
             count = 2;
-            variableWidth = true;
         }
         $('.bx_catalog_tile_section').slick({
             slidesToShow: count,
@@ -2609,12 +2608,18 @@ $(document).on('click', '.file-list .file-remove', function (e) {
     delete uploadFiles[fileToRemoveId];
 });
 
+// маска ввода для формы обратной связи
+$(document).ready(function() {
+    $('.form-form [data-name="EMAIL"]').inputmask('email');
+});
+
 $(document).on('submit', '.form-form', function (e) {
     e.preventDefault();
 
     let postData = new FormData(this),
         errors = {
             emptyField: 'Поле не заполнено',
+            wrongFieldData: 'Поле заполнено не до конца',
             wrongFilesSize: 'Некоторые из файлов больше 5 Мб',
             wrongFilesType: 'Некоторые из файлов недопустимого типа',
             wrongFilesCombo: 'Некоторые файлы не отвечают требованиям',
@@ -2622,6 +2627,7 @@ $(document).on('submit', '.form-form', function (e) {
         },
         fieldName = $(this).find('input[name="NAME"]'),
         fieldPhone = $(this).find('input[name="PHONE"]'),
+        fieldMail = $(this).find('input[name="EMAIL"]'),
         fieldMessage = $(this).find('textarea[name="MESSAGE"]'),
         fileTrueTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'],
         fieldConfirm = $(this).find('input[name="confirm"]'),
@@ -2633,17 +2639,27 @@ $(document).on('submit', '.form-form', function (e) {
     $('.form-form .error_field').hide();
 
     if (fieldName.val().length <= 0) {
-        $('.er_FORM_NAME').html(errors.emptyField).show();
+        $('.form-form .er_FORM_NAME').html(errors.emptyField).show();
         err++;
     }
 
     if (fieldPhone.val().length <= 0) {
-        $('.er_FORM_PHONE').html(errors.emptyField).show();
+        $('.form-form .er_FORM_PHONE').html(errors.emptyField).show();
+        err++;
+    }
+
+    if (fieldMail.val().length <= 0) {
+        $('.form-form .er_FORM_EMAIL').html(errors.emptyField).show();
+        err++;
+    }
+
+    if(!fieldMail.inputmask("isComplete")) {
+        $('.form-form .er_FORM_EMAIL').html(errors.wrongFieldData).show();
         err++;
     }
 
     if (fieldMessage.val().length <= 0) {
-        $('.er_FORM_MESSAGE').html(errors.emptyField).show();
+        $('.form-form .er_FORM_MESSAGE').html(errors.emptyField).show();
         err++;
     }
 
@@ -2877,3 +2893,20 @@ if ($(window).width() > 1024) {
         }
     });
 }
+
+$(window).on('resize', function() {
+    const catalog = $('.catalog-section.by-line'),
+          cardViewBtn = $('#card_catalog'),
+          lineViewBtn = $('#line_catalog');
+
+    if (catalog.length > 0) {
+        if ($(window).width() < 500) {
+            catalog.removeClass('by-line').addClass('by-card');
+
+            if (lineViewBtn.hasClass('icon_sort_line_active')) {
+                lineViewBtn.addClass('icon_sort_line').removeClass('icon_sort_line_active');
+                cardViewBtn.addClass('icon_sort_bar_active').removeClass('icon_sort_line');
+            }
+        }
+    }
+});

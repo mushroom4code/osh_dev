@@ -13,6 +13,8 @@ use \Bitrix\Main\Localization\Loc;
  * @var string $elementDeleteParams
  */
 
+$this->addExternalCss('/bitrix/css/main/bootstrap.css');
+
 global $APPLICATION;
 
 $positionClassMap = array(
@@ -123,153 +125,197 @@ $containerName = 'catalog-top-container';
 				{
 					case 0:
 						?>
-						<div class="col product-item-small-card">
-							<?
-							$item = reset($rowItems);
-							$APPLICATION->IncludeComponent(
-								'bitrix:catalog.item',
-								'bootstrap_v4',
-								array(
-									'RESULT' => array(
-										'ITEM' => $item,
-										'AREA_ID' => $areaIds[$item['ID']],
-										'TYPE' => $rowData['TYPE'],
-										'BIG_LABEL' => 'N',
-										'BIG_DISCOUNT_PERCENT' => 'N',
-										'BIG_BUTTONS' => 'N',
-										'SCALABLE' => 'N'
-									),
-									'PARAMS' => $generalParams
-										+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-								),
-								$component,
-								array('HIDE_ICONS' => 'Y')
-							);
-							?>
+						<div class="col-xs-12 product-item-small-card">
+							<div class="row">
+								<div class="col-xs-12 product-item-big-card">
+									<div class="row">
+										<div class="col-md-12">
+											<?
+											$item = reset($rowItems);
+											$APPLICATION->IncludeComponent(
+												'bitrix:catalog.item',
+												'',
+												array(
+													'RESULT' => array(
+														'ITEM' => $item,
+														'AREA_ID' => $areaIds[$item['ID']],
+														'TYPE' => $rowData['TYPE'],
+														'BIG_LABEL' => 'N',
+														'BIG_DISCOUNT_PERCENT' => 'N',
+														'BIG_BUTTONS' => 'N',
+														'SCALABLE' => 'N'
+													),
+													'PARAMS' => $generalParams
+														+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+												),
+												$component,
+												array('HIDE_ICONS' => 'Y')
+											);
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<?
 						break;
 
 					case 1:
-						foreach ($rowItems as $item)
-						{
-							?>
-							<div class="col-6 product-item-big-card">
+						?>
+						<div class="col-xs-12 product-item-small-card">
+							<div class="row">
 								<?
-								$APPLICATION->IncludeComponent(
-									'bitrix:catalog.item',
-									'bootstrap_v4',
-									array(
-										'RESULT' => array(
-											'ITEM' => $item,
-											'AREA_ID' => $areaIds[$item['ID']],
-											'TYPE' => $rowData['TYPE'],
-											'BIG_LABEL' => 'N',
-											'BIG_DISCOUNT_PERCENT' => 'N',
-											'BIG_BUTTONS' => 'N',
-											'SCALABLE' => 'N'
-										),
-										'PARAMS' => $generalParams
-											+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-									),
-									$component,
-									array('HIDE_ICONS' => 'Y')
-								);
+								foreach ($rowItems as $item)
+								{
+									?>
+									<div class="col-xs-6 product-item-big-card">
+										<div class="row">
+											<div class="col-md-12">
+												<?
+												$APPLICATION->IncludeComponent(
+													'bitrix:catalog.item',
+													'',
+													array(
+														'RESULT' => array(
+															'ITEM' => $item,
+															'AREA_ID' => $areaIds[$item['ID']],
+															'TYPE' => $rowData['TYPE'],
+															'BIG_LABEL' => 'N',
+															'BIG_DISCOUNT_PERCENT' => 'N',
+															'BIG_BUTTONS' => 'N',
+															'SCALABLE' => 'N'
+														),
+														'PARAMS' => $generalParams
+															+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+													),
+													$component,
+													array('HIDE_ICONS' => 'Y')
+												);
+												?>
+											</div>
+										</div>
+									</div>
+									<?
+								}
 								?>
 							</div>
-							<?
-						}
+						</div>
+						<?
 						break;
 
 					case 2:
-						foreach ($rowItems as $item)
-						{
-							?>
-							<div class="col-sm-4 product-item-small-card">
+						?>
+						<div class="col-xs-12 product-item-small-card">
+							<div class="row">
 								<?
-								$APPLICATION->IncludeComponent(
-									'bitrix:catalog.item',
-									'bootstrap_v4',
-									array(
-										'RESULT' => array(
-											'ITEM' => $item,
-											'AREA_ID' => $areaIds[$item['ID']],
-											'TYPE' => $rowData['TYPE'],
-											'BIG_LABEL' => 'N',
-											'BIG_DISCOUNT_PERCENT' => 'N',
-											'BIG_BUTTONS' => 'Y',
-											'SCALABLE' => 'N'
-										),
-										'PARAMS' => $generalParams
-											+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-									),
-									$component,
-									array('HIDE_ICONS' => 'Y')
-								);
+								foreach ($rowItems as $item)
+								{
+									?>
+									<div class="col-sm-4 product-item-big-card">
+										<div class="row">
+											<div class="col-md-12">
+												<?
+												$APPLICATION->IncludeComponent(
+													'bitrix:catalog.item',
+													'',
+													array(
+														'RESULT' => array(
+															'ITEM' => $item,
+															'AREA_ID' => $areaIds[$item['ID']],
+															'TYPE' => $rowData['TYPE'],
+															'BIG_LABEL' => 'N',
+															'BIG_DISCOUNT_PERCENT' => 'N',
+															'BIG_BUTTONS' => 'Y',
+															'SCALABLE' => 'N'
+														),
+														'PARAMS' => $generalParams
+															+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+													),
+													$component,
+													array('HIDE_ICONS' => 'Y')
+												);
+												?>
+											</div>
+										</div>
+									</div>
+									<?
+								}
 								?>
 							</div>
-							<?
-						}
+						</div>
+						<?
 						break;
 
 					case 3:
-						foreach ($rowItems as $item)
-						{
-							?>
-							<div class="col-6 col-md-3 product-item-small-card">
+						?>
+						<div class="col-xs-12 product-item-small-card">
+							<div class="row">
 								<?
-								$APPLICATION->IncludeComponent(
-									'bitrix:catalog.item',
-									'bootstrap_v4',
-									array(
-										'RESULT' => array(
-											'ITEM' => $item,
-											'AREA_ID' => $areaIds[$item['ID']],
-											'TYPE' => $rowData['TYPE'],
-											'BIG_LABEL' => 'N',
-											'BIG_DISCOUNT_PERCENT' => 'N',
-											'BIG_BUTTONS' => 'N',
-											'SCALABLE' => 'N'
-										),
-										'PARAMS' => $generalParams
-											+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-									),
-									$component,
-									array('HIDE_ICONS' => 'Y')
-								);
+								foreach ($rowItems as $item)
+								{
+									?>
+									<div class="col-xs-6 col-md-3">
+										<?
+										$APPLICATION->IncludeComponent(
+											'bitrix:catalog.item',
+											'',
+											array(
+												'RESULT' => array(
+													'ITEM' => $item,
+													'AREA_ID' => $areaIds[$item['ID']],
+													'TYPE' => $rowData['TYPE'],
+													'BIG_LABEL' => 'N',
+													'BIG_DISCOUNT_PERCENT' => 'N',
+													'BIG_BUTTONS' => 'N',
+													'SCALABLE' => 'N'
+												),
+												'PARAMS' => $generalParams
+													+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+											),
+											$component,
+											array('HIDE_ICONS' => 'Y')
+										);
+										?>
+									</div>
+									<?
+								}
 								?>
 							</div>
-							<?
-						}
+						</div>
+						<?
 						break;
 
 					case 4:
 						$rowItemsCount = count($rowItems);
 						?>
 						<div class="col-sm-6 product-item-big-card">
-							<?
-							$item = array_shift($rowItems);
-							$APPLICATION->IncludeComponent(
-								'bitrix:catalog.item',
-								'bootstrap_v4',
-								array(
-									'RESULT' => array(
-										'ITEM' => $item,
-										'AREA_ID' => $areaIds[$item['ID']],
-										'TYPE' => $rowData['TYPE'],
-										'BIG_LABEL' => 'N',
-										'BIG_DISCOUNT_PERCENT' => 'N',
-										'BIG_BUTTONS' => 'Y',
-										'SCALABLE' => 'Y'
-									),
-									'PARAMS' => $generalParams
-										+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-								),
-								$component,
-								array('HIDE_ICONS' => 'Y')
-							);
-							unset($item);
-							?>
+							<div class="row">
+								<div class="col-md-12">
+									<?
+									$item = array_shift($rowItems);
+									$APPLICATION->IncludeComponent(
+										'bitrix:catalog.item',
+										'',
+										array(
+											'RESULT' => array(
+												'ITEM' => $item,
+												'AREA_ID' => $areaIds[$item['ID']],
+												'TYPE' => $rowData['TYPE'],
+												'BIG_LABEL' => 'N',
+												'BIG_DISCOUNT_PERCENT' => 'N',
+												'BIG_BUTTONS' => 'Y',
+												'SCALABLE' => 'Y'
+											),
+											'PARAMS' => $generalParams
+												+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+										),
+										$component,
+										array('HIDE_ICONS' => 'Y')
+									);
+									unset($item);
+									?>
+								</div>
+							</div>
 						</div>
 						<div class="col-sm-6 product-item-small-card">
 							<div class="row">
@@ -277,11 +323,11 @@ $containerName = 'catalog-top-container';
 								for ($i = 0; $i < $rowItemsCount - 1; $i++)
 								{
 									?>
-									<div class="col-6">
+									<div class="col-xs-6">
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'bootstrap_v4',
+											'',
 											array(
 												'RESULT' => array(
 													'ITEM' => $rowItems[$i],
@@ -311,17 +357,17 @@ $containerName = 'catalog-top-container';
 					case 5:
 						$rowItemsCount = count($rowItems);
 						?>
-						<div class="col-sm-6 col-12 product-item-small-card">
+						<div class="col-sm-6 product-item-small-card">
 							<div class="row">
 								<?
 								for ($i = 0; $i < $rowItemsCount - 1; $i++)
 								{
 									?>
-									<div class="col-6">
+									<div class="col-xs-6">
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'bootstrap_v4',
+											'',
 											array(
 												'RESULT' => array(
 													'ITEM' => $rowItems[$i],
@@ -346,103 +392,119 @@ $containerName = 'catalog-top-container';
 							</div>
 						</div>
 						<div class="col-sm-6 product-item-big-card">
-							<?
-							$item = end($rowItems);
-							$APPLICATION->IncludeComponent(
-								'bitrix:catalog.item',
-								'bootstrap_v4',
-								array(
-									'RESULT' => array(
-										'ITEM' => $item,
-										'AREA_ID' => $areaIds[$item['ID']],
-										'TYPE' => $rowData['TYPE'],
-										'BIG_LABEL' => 'N',
-										'BIG_DISCOUNT_PERCENT' => 'N',
-										'BIG_BUTTONS' => 'Y',
-										'SCALABLE' => 'Y'
-									),
-									'PARAMS' => $generalParams
-										+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-								),
-								$component,
-								array('HIDE_ICONS' => 'Y')
-							);
-							unset($item);
-							?>
+							<div class="row">
+								<div class="col-md-12">
+									<?
+									$item = end($rowItems);
+									$APPLICATION->IncludeComponent(
+										'bitrix:catalog.item',
+										'',
+										array(
+											'RESULT' => array(
+												'ITEM' => $item,
+												'AREA_ID' => $areaIds[$item['ID']],
+												'TYPE' => $rowData['TYPE'],
+												'BIG_LABEL' => 'N',
+												'BIG_DISCOUNT_PERCENT' => 'N',
+												'BIG_BUTTONS' => 'Y',
+												'SCALABLE' => 'Y'
+											),
+											'PARAMS' => $generalParams
+												+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+										),
+										$component,
+										array('HIDE_ICONS' => 'Y')
+									);
+									unset($item);
+									?>
+								</div>
+							</div>
 						</div>
 						<?
 						break;
 
 					case 6:
-						foreach ($rowItems as $item)
-						{
-							?>
-							<div class="col-6 col-sm-4 col-md-4 col-lg-2 product-item-small-card">
+						?>
+						<div class="col-xs-12 product-item-small-card">
+							<div class="row">
 								<?
-								$APPLICATION->IncludeComponent(
-									'bitrix:catalog.item',
-									'bootstrap_v4',
-									array(
-										'RESULT' => array(
-											'ITEM' => $item,
-											'AREA_ID' => $areaIds[$item['ID']],
-											'TYPE' => $rowData['TYPE'],
-											'BIG_LABEL' => 'N',
-											'BIG_DISCOUNT_PERCENT' => 'N',
-											'BIG_BUTTONS' => 'N',
-											'SCALABLE' => 'N'
-										),
-										'PARAMS' => $generalParams
-											+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-									),
-									$component,
-									array('HIDE_ICONS' => 'Y')
-								);
+								foreach ($rowItems as $item)
+								{
+									?>
+									<div class="col-xs-6 col-sm-4 col-md-2">
+										<?
+										$APPLICATION->IncludeComponent(
+											'bitrix:catalog.item',
+											'',
+											array(
+												'RESULT' => array(
+													'ITEM' => $item,
+													'AREA_ID' => $areaIds[$item['ID']],
+													'TYPE' => $rowData['TYPE'],
+													'BIG_LABEL' => 'N',
+													'BIG_DISCOUNT_PERCENT' => 'N',
+													'BIG_BUTTONS' => 'N',
+													'SCALABLE' => 'N'
+												),
+												'PARAMS' => $generalParams
+													+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+											),
+											$component,
+											array('HIDE_ICONS' => 'Y')
+										);
+										?>
+									</div>
+									<?
+								}
 								?>
 							</div>
-							<?
-						}
+						</div>
+						<?
 						break;
 
 					case 7:
 						$rowItemsCount = count($rowItems);
 						?>
-						<div class="col-sm-6 col-12 product-item-big-card">
-							<?
-							$item = array_shift($rowItems);
-							$APPLICATION->IncludeComponent(
-								'bitrix:catalog.item',
-								'bootstrap_v4',
-								array(
-									'RESULT' => array(
-										'ITEM' => $item,
-										'AREA_ID' => $areaIds[$item['ID']],
-										'TYPE' => $rowData['TYPE'],
-										'BIG_LABEL' => 'N',
-										'BIG_DISCOUNT_PERCENT' => 'N',
-										'BIG_BUTTONS' => 'Y',
-										'SCALABLE' => 'Y'
-									),
-									'PARAMS' => $generalParams
-										+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-								),
-								$component,
-								array('HIDE_ICONS' => 'Y')
-							);
-							unset($item);
-							?>
+						<div class="col-sm-6 product-item-big-card">
+							<div class="row">
+								<div class="col-md-12">
+									<?
+									$item = array_shift($rowItems);
+									$APPLICATION->IncludeComponent(
+										'bitrix:catalog.item',
+										'',
+										array(
+											'RESULT' => array(
+												'ITEM' => $item,
+												'AREA_ID' => $areaIds[$item['ID']],
+												'TYPE' => $rowData['TYPE'],
+												'BIG_LABEL' => 'N',
+												'BIG_DISCOUNT_PERCENT' => 'N',
+												'BIG_BUTTONS' => 'Y',
+												'SCALABLE' => 'Y'
+											),
+											'PARAMS' => $generalParams
+												+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+										),
+										$component,
+										array('HIDE_ICONS' => 'Y')
+									);
+									unset($item);
+									?>
+								</div>
+							</div>
 						</div>
-						<div class="col-sm-6 col-12 product-item-small-card">
+						<div class="col-sm-6 product-item-small-card">
 							<div class="row">
 								<?
 								for ($i = 0; $i < $rowItemsCount - 1; $i++)
 								{
 									?>
-									<div class="col-6 col-md-4">
+									<div class="col-xs-6 col-md-4">
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'bootstrap_v4',
+											'',
 											array(
 												'RESULT' => array(
 													'ITEM' => $rowItems[$i],
@@ -472,7 +534,7 @@ $containerName = 'catalog-top-container';
 					case 8:
 						$rowItemsCount = count($rowItems);
 						?>
-						<div class="col-sm-6 col-12 product-item-small-card">
+						<div class="col-sm-6 product-item-small-card">
 							<div class="row">
 								<?
 								for ($i = 0; $i < $rowItemsCount - 1; $i++)
@@ -482,7 +544,7 @@ $containerName = 'catalog-top-container';
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'bootstrap_v4',
+											'',
 											array(
 												'RESULT' => array(
 													'ITEM' => $rowItems[$i],
@@ -506,62 +568,75 @@ $containerName = 'catalog-top-container';
 								?>
 							</div>
 						</div>
-						<div class="col-sm-6 col-12 product-item-big-card">
-							<?
-							$item = end($rowItems);
-							$APPLICATION->IncludeComponent(
-								'bitrix:catalog.item',
-								'bootstrap_v4',
-								array(
-									'RESULT' => array(
-										'ITEM' => $item,
-										'AREA_ID' => $areaIds[$item['ID']],
-										'TYPE' => $rowData['TYPE'],
-										'BIG_LABEL' => 'N',
-										'BIG_DISCOUNT_PERCENT' => 'N',
-										'BIG_BUTTONS' => 'Y',
-										'SCALABLE' => 'Y'
-									),
-									'PARAMS' => $generalParams
-										+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-								),
-								$component,
-								array('HIDE_ICONS' => 'Y')
-							);
-							unset($item);
-							?>
+						<div class="col-sm-6 product-item-big-card">
+							<div class="row">
+								<div class="col-md-12">
+									<?
+									$item = end($rowItems);
+									$APPLICATION->IncludeComponent(
+										'bitrix:catalog.item',
+										'',
+										array(
+											'RESULT' => array(
+												'ITEM' => $item,
+												'AREA_ID' => $areaIds[$item['ID']],
+												'TYPE' => $rowData['TYPE'],
+												'BIG_LABEL' => 'N',
+												'BIG_DISCOUNT_PERCENT' => 'N',
+												'BIG_BUTTONS' => 'Y',
+												'SCALABLE' => 'Y'
+											),
+											'PARAMS' => $generalParams
+												+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+										),
+										$component,
+										array('HIDE_ICONS' => 'Y')
+									);
+									unset($item);
+									?>
+								</div>
+							</div>
 						</div>
 						<?
 						break;
 
 					case 9:
-						foreach ($rowItems as $item)
-						{
-							?>
-							<div class="col product-item-line-card">
+						?>
+						<div class="col-xs-12">
+							<div class="row">
 								<?
-								$APPLICATION->IncludeComponent(
-									'bitrix:catalog.item',
-									'bootstrap_v4',
-									array(
-										'RESULT' => array(
-											'ITEM' => $item,
-											'AREA_ID' => $areaIds[$item['ID']],
-											'TYPE' => $rowData['TYPE'],
-											'BIG_LABEL' => 'N',
-											'BIG_DISCOUNT_PERCENT' => 'N',
-											'BIG_BUTTONS' => 'N'
-										),
-										'PARAMS' => $generalParams
-											+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-									),
-									$component,
-									array('HIDE_ICONS' => 'Y')
-								);
+								foreach ($rowItems as $item)
+								{
+									?>
+									<div class="col-xs-12 product-line-item-card">
+										<?
+										$APPLICATION->IncludeComponent(
+											'bitrix:catalog.item',
+											'',
+											array(
+												'RESULT' => array(
+													'ITEM' => $item,
+													'AREA_ID' => $areaIds[$item['ID']],
+													'TYPE' => $rowData['TYPE'],
+													'BIG_LABEL' => 'N',
+													'BIG_DISCOUNT_PERCENT' => 'N',
+													'BIG_BUTTONS' => 'N'
+												),
+												'PARAMS' => $generalParams
+													+ array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
+											),
+											$component,
+											array('HIDE_ICONS' => 'Y')
+										);
+										?>
+									</div>
+									<?
+								}
 								?>
+
 							</div>
-							<?
-						}
+						</div>
+						<?
 						break;
 				}
 				?>
@@ -578,7 +653,7 @@ $containerName = 'catalog-top-container';
 		// load css for bigData/deferred load
 		$APPLICATION->IncludeComponent(
 			'bitrix:catalog.item',
-			'bootstrap_v4',
+			'',
 			array(),
 			$component,
 			array('HIDE_ICONS' => 'Y')

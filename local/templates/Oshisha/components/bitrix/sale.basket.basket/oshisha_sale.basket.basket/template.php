@@ -305,7 +305,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
         <div class="d-lg-block d-md-block d-none">
             <?php $APPLICATION->IncludeComponent(
                 "bitrix:catalog.top",
-                "oshisha_catalog.top_new",
+                "oshisha_catalog.top",
                 array(
                     "ACTION_VARIABLE" => "action",
                     "ADD_PICT_PROP" => "-",
@@ -318,7 +318,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                     "CACHE_TYPE" => "N",
                     "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
                     "COMPATIBLE_MODE" => "Y",
-                    "COMPONENT_TEMPLATE" => "oshisha_catalog.top_new",
+                    "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
                     "CONVERT_CURRENCY" => "N",
                     "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
                     "DETAIL_URL" => "",

@@ -632,11 +632,11 @@
 			if (!!RowItems && 0 < RowItems.length)
 			{
 				countShow = showID.length;
-				// strNewLen = (5 < countShow ? (100/countShow)+'%' : '20%');
+				strNewLen = (5 < countShow ? (100/countShow)+'%' : '20%');
 				var obData = {
 					props: { className: '' },
 					style: {
-						// width: strNewLen
+						width: strNewLen
 					}
 				};
 				if ('PICT' == this.treeProps[intNumber].SHOW_MODE)
