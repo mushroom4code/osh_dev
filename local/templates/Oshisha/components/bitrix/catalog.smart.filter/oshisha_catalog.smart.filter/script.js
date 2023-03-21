@@ -197,7 +197,7 @@ JCSmartFilter.prototype.removeHorizontalFilterAll = function ()
 		this.countCheckboxFilter--;
 	}
 	this.updateHorizontalFilter();
-	this.proxy();
+	this.proxy(true);
 };
 
 JCSmartFilter.prototype.removeHorizontalFilter = function(checkbox)
@@ -389,7 +389,7 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 	this.cacheKey = '';
 };
 
-JCSmartFilter.prototype.proxy = function()
+JCSmartFilter.prototype.proxy = function(clearFilterAll = false)
 {
 	BX.cleanNode(window.JCCatalogSectionComponentThis.container);
 
@@ -405,6 +405,19 @@ JCSmartFilter.prototype.proxy = function()
 		values.push({name: 'sort_by', value:  url.searchParams.get('sort_by')});
 	if (url.searchParams.get('sort_order'))
 		values.push({name: 'sort_order', value:  url.searchParams.get('sort_order')});
+	if (clearFilterAll === true) {
+		url.search = '';
+		values.forEach(function callback(value, key) {
+			if (key != 0 && key != 1) {
+				if(value['name'] == 'PAGEN_1') {
+
+				} else {
+					url.searchParams.set(value['name'], value['value']);
+				}
+			}
+		});
+		window.history.replaceState(null, null, url);
+	}
 	for (var i = 0; i < values.length; i++)
 		data[values[i].name] = values[i].value;
 	data['PAGEN_' + 1] = 1;
