@@ -58,34 +58,20 @@ $(document).ready(function () {
     var consentPopup = document.getElementById('consent-cookie-popup');
     var consentAcceptBtn = document.getElementById('cookie-popup-accept');
 
+    if (consentPopup !== null) {
+        var shouldShow = true;
+        if (consentPopup.classList.contains('js-noauth')) {
+            shouldShow = !storageType.getItem(consentPropertyName) ? true : false;
+        }
 
-    $.ajax({
-        type: 'POST',
-        url: '/local/templates/Oshisha/include/addCookieConsent.php',
-        data: 'action=getConsent',
-        success: function (result) {
-            var shouldShow = result;
-
-            if (shouldShow != '1' && shouldShow != 'noauth') {
-                shouldShow = true;
-            } else if (shouldShow == '1') {
-                shouldShow = false;
-            } else if (shouldShow == 'noauth') {
-                if (!storageType.getItem(consentPropertyName)) {
-                    shouldShow = true;
-                } else {
-                    shouldShow = false;
-                }
-            }
-
-            var acceptFn = event => {
-                event.preventDefault();
-                saveToStorage(storageType);
-                consentPopup.classList.add('hidden');
-                setTimeout(() => {
-                    consentPopup.remove();
-                }, 700);
-
+        var acceptFn = event => {
+            event.preventDefault();
+            saveToStorage(storageType);
+            consentPopup.classList.add('hidden');
+            setTimeout(() => {
+                consentPopup.remove();
+            }, 700);
+            if (consentPopup.classList.contains('js-auth')) {
                 $.ajax({
                     type: 'POST',
                     url: '/local/templates/Oshisha/include/addCookieConsent.php',
@@ -98,16 +84,16 @@ $(document).ready(function () {
                     }
                 });
             }
-            consentAcceptBtn.addEventListener('click', acceptFn);
-            console.log(shouldShow);
-            if (shouldShow) {
-                setTimeout(() => {
-                    consentPopup.classList.remove('hidden');
-                }, 2000);
-            }
-
         }
-    });
+
+        consentAcceptBtn.addEventListener('click', acceptFn);
+
+        if (shouldShow) {
+            setTimeout(() => {
+                consentPopup.classList.remove('hidden');
+            }, 2000);
+        }
+    }
 
     //MAIN
     function getCookie(name) {

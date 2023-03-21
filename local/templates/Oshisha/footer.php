@@ -368,14 +368,33 @@ $option = $option_site; ?>
             // age access
         </script>
     <? } ?>
-    <div id="consent-cookie-popup" class="hidden">
-        <p>Мы используем файлы Cookie, чтобы улучшить сайт для вас</p>
-        <div id="cookie-popup-controls">
+
+
+    <?if ($USER->IsAuthorized()) {
+        $obUser = new CUser;
+        $rowUser = $obUser->GetByID($USER->GetId())->Fetch();
+        if ($rowUser['UF_USER_COOKIE_CONSENT'] != '1') {?>
+            <div id="consent-cookie-popup" class="hidden js-auth">
+                <p>Мы используем файлы Cookie, чтобы улучшить сайт для вас</p>
+                <div id="cookie-popup-controls">
+                    <a id="cookie-popup-about" class="mobile" href="/about/cookie/"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                    <a id="cookie-popup-about" class="desktop" href="/about/cookie/">Подробнее</a>
+                    <a id="cookie-popup-accept" href="#">Принять</a>
+                </div>
+            </div>
+        <?
+        }
+        ?>
+    <?}else {?>
+        <div id="consent-cookie-popup" class="hidden js-noauth">
+            <p>Мы используем файлы Cookie, чтобы улучшить сайт для вас</p>
+            <div id="cookie-popup-controls">
                 <a id="cookie-popup-about" class="mobile" href="/about/cookie/"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
                 <a id="cookie-popup-about" class="desktop" href="/about/cookie/">Подробнее</a>
-            <a id="cookie-popup-accept" href="#">Принять</a>
+                <a id="cookie-popup-accept" href="#">Принять</a>
+            </div>
         </div>
-    </div>
+    <?}?>
     <script>
         $(document).ready(function () {
             $(document).on('click', '.close_header_box', function () {
