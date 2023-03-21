@@ -690,7 +690,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 ?>
                                     <div class="smart-filter-input-group-checkbox-list">
                                         <? foreach ($arItem["VALUES"] as $val => $ar): ?>
-                                            <div style="<?= $ar["DISABLED"] ? 'display:none' : ''?>" class="form-group form-check">
+                                            <div style="" class="form-group form-check">
                                                 <label data-role="label_<?= $ar["CONTROL_ID"] ?>"
                                                        class="smart-filter-checkbox-text form-check-label"
                                                        id="<?= $ar["VALUE"]; ?>" for="<? echo $ar["CONTROL_ID"] ?>">
@@ -705,7 +705,6 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                                         <?= $arItem['CODE'] == 'BREND' ? 'brends_checkbox' : ''?>
                                                         form-check-input"
                                                     <? echo $ar["CHECKED"] ? 'checked="checked"' : '' ?>
-                                                    <? echo $ar["DISABLED"] ? 'disabled' : '' ?>
                                                         onclick="smartFilter.click(this)"
                                                 />
                                             </div>
@@ -775,4 +774,9 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
 <script type="text/javascript">
     var smartFilter = new JCSmartFilter('<?echo CUtil::JSEscape($arResult["FORM_ACTION"])?>', '<?=CUtil::JSEscape($arParams["FILTER_VIEW_MODE"])?>', <?=CUtil::PhpToJSObject($arResult["JS_FILTER_PARAMS"])?>);
+    $(document).ready(function() {
+        $('input.check_input.form-check-input:checked').each(function () {
+            smartFilter.addHorizontalFilter(this);
+        });
+    });
 </script>

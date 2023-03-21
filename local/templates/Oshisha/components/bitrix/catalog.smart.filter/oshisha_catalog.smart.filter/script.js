@@ -85,10 +85,21 @@ JCSmartFilter.prototype.reload = function(input)
 		var values = [];
 		values[0] = {name: 'ajax', value: 'y'};
 		this.gatherInputsValues(values, BX.findChildren(this.form, {'tag': new RegExp('^(input|select)$', 'i')}, true));
-
 		for (var i = 0; i < values.length; i++)
 			this.cacheKey += values[i].name + ':' + values[i].value + '|';
+		var url = new URL(window.location.href);
+		if (url.searchParams.get('sort_by'))
+			values.push({name: 'sort_by', value:  url.searchParams.get('sort_by')});
+		if (url.searchParams.get('sort_order'))
+			values.push({name: 'sort_order', value:  url.searchParams.get('sort_order')});
 
+		url.search = '';
+		values.forEach((value, key) => {
+			if (key !== 0 && value['name'] !== 'PAGEN_1') {
+				url.searchParams.set(value['name'], value['value']);
+			}
+		});
+		window.history.replaceState(null, null, url);
 		if (this.cache[this.cacheKey])
 		{
 			this.curFilterinput = input;
@@ -181,7 +192,7 @@ JCSmartFilter.prototype.removeHorizontalFilterAll = function ()
 		this.countCheckboxFilter--;
 	}
 	this.updateHorizontalFilter();
-	this.proxy();
+	this.proxy(true);
 };
 
 JCSmartFilter.prototype.removeHorizontalFilter = function(checkbox)
@@ -286,13 +297,7 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem, result)
 					var label = document.querySelector('[data-role="label_'+value.CONTROL_ID+'"]');
 					if (value.DISABLED)
 					{
-						BX.adjust(control, {props: {disabled: true}});
-						if (label) {
-							BX.addClass(control.parentNode, 'd-none');
-							BX.addClass(label, 'd-none');
-						}
-						else
-							BX.addClass(control.parentNode, 'd-none');
+
 					}
 					else
 					{
@@ -303,6 +308,10 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem, result)
 									$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
 									BX.removeClass(control.parentNode, 'd-none');
 									BX.removeClass(label, 'd-none');
+								} else {
+									$(control).closest('.smart-filter-parameters-box').addClass('d-none');
+									BX.addClass(control.parentNode, 'd-none');
+									BX.addClass(label, 'd-none');
 								}
 							} else {
 								$(control).closest('.smart-filter-parameters-box').removeClass('d-none');
@@ -348,8 +357,6 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 			}
 		}
 		this.popups = [];
-		$('input.check_input.form-check-input').not('#hide_not_available_id').parent().addClass('d-none');
-		$('div.smart-filter-parameters-box').not('.hide_not_available_container').not(".F").addClass('d-none');
 		for(var PID in result.ITEMS)
 		{
 			if (result.ITEMS.hasOwnProperty(PID))
@@ -377,22 +384,38 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 	this.cacheKey = '';
 };
 
-JCSmartFilter.prototype.proxy = function()
+JCSmartFilter.prototype.proxy = function(clearFilterAll = false)
 {
 	BX.cleanNode(window.JCCatalogSectionComponentThis.container);
 
 	// data['action'] = 'initialLoad';
 	var data = {};
 	data['action'] = 'showMore';
-	data['PAGEN_' + 0] = 1;
-
 	var values = [];
 	values[0] = {name: 'ajax', value: 'y'};
 	values[1] = {name: 'ajax_filter', value: 'y'};
 	this.gatherInputsValues(values, BX.findChildren(this.form, {'tag': new RegExp('^(input|select)$', 'i')}, true));
+	var url = new URL(window.location.href);
+	if (url.searchParams.get('sort_by'))
+		values.push({name: 'sort_by', value:  url.searchParams.get('sort_by')});
+	if (url.searchParams.get('sort_order'))
+		values.push({name: 'sort_order', value:  url.searchParams.get('sort_order')});
+	if (clearFilterAll === true) {
+		url.search = '';
+		values.forEach(function callback(value, key) {
+			if (key != 0 && key != 1) {
+				if(value['name'] == 'PAGEN_1') {
+
+				} else {
+					url.searchParams.set(value['name'], value['value']);
+				}
+			}
+		});
+		window.history.replaceState(null, null, url);
+	}
 	for (var i = 0; i < values.length; i++)
 		data[values[i].name] = values[i].value;
-
+	data['PAGEN_' + 1] = 1;
 	if (this.sectionCode) {
 		data['subcat'] = this.sectionCode;
 	}
