@@ -2169,6 +2169,18 @@
     };
 })(window);
 
+// OFFERS
+$(document).on('click', '.js__show-block', function () {
+   $(this).closest('.catalog-item-product').find('.js__all-block');
+   if($(this).closest('.catalog-item-product').find('.info-prices-box-hover').hasClass('d-block')){
+       $(this).closest('.catalog-item-product').find('.info-prices-box-hover').removeClass('d-block').addClass('d-none')
+   }else {
+       $(this).closest('.catalog-item-product').find('.info-prices-box-hover').removeClass('d-none').addClass('d-block')
+   }
+})
+
+
+// FAST WINDOW
 $(document).on('click', '.open-fast-window', function () {
 
     let json_product = $(this).closest('.catalog-item-product').find('input.product-values').val();
@@ -2622,3 +2634,4 @@ $(document).on('click', '.open-fast-window', function () {
 $(document).on('click', '.close-box', function () {
     $(this).closest('.box-popup-product').remove();
 });
+

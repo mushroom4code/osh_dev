@@ -206,15 +206,11 @@ $(document).ready(function () {
         return false;
     })
 
-
-
-
-
-
     $('.link_header_catalog').on('click', function () {
         $('#MenuHeader .Icon').click();
         return false;
     });
+
     $('.Icon').on('click', function () {
         if ($('.header_top').hasClass('show')) {
             $('header').removeAttr('style');

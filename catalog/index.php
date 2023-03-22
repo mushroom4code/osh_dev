@@ -55,6 +55,7 @@ $APPLICATION->IncludeComponent(
 		"CONVERT_CURRENCY" => "N",
 		"QUANTITY_FLOAT" => "N",
 		"OFFERS_CART_PROPERTIES" => array(
+            0 => "GRAMMOVKA_TP"
 		),
 		"SHOW_TOP_ELEMENTS" => "N",
 		"SECTION_COUNT_ELEMENTS" => "Y",
@@ -82,17 +83,17 @@ $APPLICATION->IncludeComponent(
 			0 => "NAME",
 			1 => "PREVIEW_PICTURE",
 			2 => "DETAIL_PICTURE",
-			3 => "",
+			3 => "GRAMMOVKA_TP",
 		),
 		"LIST_OFFERS_PROPERTY_CODE" => array(
 			0 => "MORE_PHOTO",
 			1 => "SIZES_SHOES",
-			2 => "SIZES_CLOTHES",
+			2 => "GRAMMOVKA_TP",
 			3 => "COLOR_REF",
 			4 => "ARTNUMBER",
 			5 => "",
 		),
-		"LIST_OFFERS_LIMIT" => "0",
+		"LIST_OFFERS_LIMIT" => "5",
 		"SECTION_BACKGROUND_IMAGE" => "-",
 		"DETAIL_PROPERTY_CODE" => array(
 			0 => "BREND",
@@ -102,7 +103,7 @@ $APPLICATION->IncludeComponent(
 		"DETAIL_BROWSER_TITLE" => "-",
 		"DETAIL_OFFERS_FIELD_CODE" => array(
 			0 => "NAME",
-			1 => "",
+			1 => "GRAMMOVKA_TP",
 		),
 		"DETAIL_OFFERS_PROPERTY_CODE" => array(
 			0 => "MORE_PHOTO",

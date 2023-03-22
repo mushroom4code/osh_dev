@@ -150,6 +150,16 @@
     margin-bottom: 25px;
 }
 
+.js__all-block {
+    border-radius: 10px;
+    height: 100%;
+}
+
+.by-card .info-prices-box-hover.box-offers {
+    position: absolute;
+    height: 100%;
+}
+
 /*Image Slider*/
 .product-item-image-slider-slide-container {
     position: absolute;
@@ -1140,7 +1150,7 @@ div.slick-track {
     }
 
     .font-27 {
-        font-size: 23px!important;
+        font-size: 23px !important;
     }
 
     .box-with-image-prod img.w-h-350 {
