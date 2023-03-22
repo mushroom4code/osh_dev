@@ -419,45 +419,10 @@ if ($show_price) {
                                 </div>
                             <? else: ?>
                                 <div class="d-flex row-line-reverse justify-content-between box-basket">
-                                    <?php if ($show_price) { ?>
-<!--                                        <div class="btn red_button_cart btn-plus add2basket"-->
-<!--                                             data-url="--><?php //= $item['DETAIL_PAGE_URL'] ?><!--"-->
-<!--                                             data-product_id="--><?php //= $item['ID']; ?><!--"-->
-<!--                                             data-max-quantity="--><?php //= $item['PRODUCT']['QUANTITY'] ?><!--"-->
-<!--                                             id="--><?php //= $arItemIDs['BUY_LINK']; ?><!--"-->
-<!--                                            <img class="image-cart"-->
-<!--                                                 src="/local/templates/Oshisha/images/cart-white.png"/>-->
-<!--                                        </div>-->
-                                        <div class="btn red_button_cart js__show-block">
-                                            <img class="image-cart"
-                                                 src="/local/templates/Oshisha/images/cart-white.png"/>
-                                        </div>
-                                        <div class="product-item-amount-field-contain-wrap"
-<!--                                             --><?// if ($priceBasket > 0): ?><!--style="display:flex;"--><?// endif; ?>
-                                             data-product_id="<?= $item['ID']; ?>">
-                                            <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
-                                                <a class="btn-minus  minus_icon no-select add2basket"
-                                                   id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                                   href="javascript:void(0)"
-                                                   data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                                   data-product_id="<?= $item['ID']; ?>">
-                                                </a>
-                                                <div class="product-item-amount-field-block">
-                                                    <input class="product-item-amount card_element"
-                                                           id="<?= $arItemIDs['QUANTITY_ID'] ?>"
-                                                           type="text"
-                                                           value="<?= $priceBasket ?>">
-                                                </div>
-                                                <a class="btn-plus plus_icon no-select add2basket"
-                                                   data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                                   id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
-                                                   data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                                   data-product_id="<?= $item['ID']; ?>"
-                                                   title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
-                                            </div>
-                                            <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
-                                        </div>
-                                    <?php } ?>
+                                    <div class="btn red_button_cart js__show-block">
+                                        <img class="image-cart"
+                                             src="/local/templates/Oshisha/images/cart-white.png"/>
+                                    </div>
                                 </div>
                             <? endif; ?>
                         <?php }
@@ -541,6 +506,40 @@ if ($show_price) {
                             <?= $skuProperty['PROPERTIES']['GRAMMOVKA_TP']['VALUE'] . 'гр.' ?>
                         </div>
                     <?php } ?>
+                    <div class="d-flex row-line-reverse justify-content-between box-basket">
+                        <div class="btn red_button_cart btn-plus add2basket"
+                             data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                             data-product_id="<?= $item['ID']; ?>"
+                             data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                             id="<?= $arItemIDs['BUY_LINK']; ?>"
+                             <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
+                            <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
+                        </div>
+                        <div class="product-item-amount-field-contain-wrap"
+                             <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
+                             data-product_id="<?= $item['ID']; ?>">
+                            <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
+                                <a class="btn-minus  minus_icon no-select add2basket"
+                                   id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                   href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                   data-product_id="<?= $item['ID']; ?>">
+                                </a>
+                                <div class="product-item-amount-field-block">
+                                    <input class="product-item-amount card_element"
+                                           id="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                                           type="text"
+                                           value="<?= $priceBasket ?>">
+                                </div>
+                                <a class="btn-plus plus_icon no-select add2basket"
+                                   data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                   id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
+                                   data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                   data-product_id="<?= $item['ID']; ?>"
+                                   title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
+                            </div>
+                            <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
+                        </div>
+                    </div>
                 </div>
             <?php } ?>
             <div class="prices-block-close js__prices-block-close"></div>
