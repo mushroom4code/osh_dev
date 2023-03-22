@@ -104,16 +104,23 @@ class DoorDeliveryProfile extends Base
                         )
                     );
                     $checked = 'checked';
+                    if (!empty($price['errors'])) {
+                        $result->addError(new Error(
+                            Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
+                            'DELIVERY_CALCULATION'
+                        ));
+                    }
                 } else {
                     $checked = '';
                 }
 
-                $description .= "<div class=\"bx-soa-pp-company-graf-container  box_with_delivery mb-3\">
+                if (empty($price['errors'])){
+                    $description .= "<div class=\"bx-soa-pp-company-graf-container  box_with_delivery mb-3\">
                     <input id=\"TYPE_DELIVERY_{$delivery['name']}\"   onclick='BX.Sale.OrderAjaxComponent.sendRequest();' 
                         name=\"ORDER_PROP_$propTypeDeliveryId\" type=\"radio\" $checked value='{$deliveryInstance->delivery_name}' >
                     <div class=\"bx-soa-pp-company-smalltitle color_black font_weight_600\">{$deliveryInstance->delivery_name} - $price</div>
-                </div>";
-
+                    </div>";
+                }
             }
 
             $result->setDescription($description);

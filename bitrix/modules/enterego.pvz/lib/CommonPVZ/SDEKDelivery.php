@@ -9,8 +9,13 @@ class SDEKDelivery extends CommonPVZ
 
     protected function connect()
     {
-        $this->cdek_client = new \AntistressStore\CdekSDK2\CdekClientV2($this->configs['setaccount'], $this->configs['setsecure']);
-        return true;
+        try {
+            $this->cdek_client = new \AntistressStore\CdekSDK2\CdekClientV2($this->configs['setaccount'], $this->configs['setsecure']);
+            return true;
+        } catch (\Throwable $e) {
+            return false;
+        }
+
     }
 
     public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city)
@@ -74,31 +79,24 @@ class SDEKDelivery extends CommonPVZ
     public function getPrice($array)
     {
         try {
-            $sdek_city_code = $this->getSDEKCityCode($array['name_city']);
+            $location_to = $this->getSDEKCityCode($array['name_city']);
+            $location_to = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($location_to);
+            $location_to->setAddress($array['to']);
+            $location_from = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($this->configs['from']);
+            $tariff = (new \AntistressStore\CdekSDK2\Entity\Requests\Tariff())
+                ->setTariffCode($this->configs['tariff'])
+                ->setFromLocation($location_from)
+                ->setToLocation($location_to)
+                ->setPackageWeight($array['weight'])
+                ->addServices(['PART_DELIV']);
 
-            if ($this->token !== '' && $sdek_city_code) {
-                $searchParams = [
-                    'tariff_code' => $this->configs['tariff'],
-                    'from_location' => ['code'=>$this->configs['from']],
-                    'to_location' => ['code'=>$sdek_city_code, 'address'=>$array['to']],
-                    'packages' => ['weight'=>$array['weight']],
-                ];
-
-                $resp = $this->request('https://api.cdek.ru/v2/calculator/tariff',
-                    json_encode($searchParams), 'POST');
-
-                //todo errors calculation
-                if (isset($resp->errors)) {
-                    return false;
-                }
-                if (isset($resp->total_sum)) {
-                    return round($resp->total_sum);
-                }
-            }
-        } catch (\Exception $e) {
+            $calculatedTariff = $this->cdek_client->calculateTariff($tariff);
+            $delivery_price = $calculatedTariff->getTotalSum();
+            return $delivery_price;
+        } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();
+            return array('errors' => $this->errors);
         }
-        return 0;
     }
 
     public function getPriceDoorDelivery($params)
@@ -122,9 +120,9 @@ class SDEKDelivery extends CommonPVZ
             $calculatedTariff = $this->cdek_client->calculateTariff($tariff);
             $delivery_price = $calculatedTariff->getTotalSum();
             return $delivery_price;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();
+            return array('errors' => $this->errors);
         }
-        return 0;
     }
 }
