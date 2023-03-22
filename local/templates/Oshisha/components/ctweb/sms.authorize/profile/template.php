@@ -467,7 +467,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
         </div>
     </div>
 <?php else:
-    if (strripos($_SERVER['REQUEST_URI'], '/auth/?register=yes') === false) {?>
+    if (strripos($_SERVER['REQUEST_URI'], '/?register=yes') === false) {?>
         <div style="display: none" class="ctweb-smsauth-menu-block radius_10 position-absolute" data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
             <div class="close_login_menu">
                 <a class="close_header_box" href="">
