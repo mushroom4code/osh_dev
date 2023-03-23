@@ -648,18 +648,17 @@
                         newData = result.BASKET_ITEM_RENDER_DATA[i];
                         newData.WARNINGS = this.checkBasketItemWarnings(newData, result.WARNING_MESSAGE_WITH_CODE);
 
-                        if (this.items[newData.ID]) {
-                            if (JSON.stringify(this.items[newData.ID]) === JSON.stringify(newData)) {
+                        if (this.items[newData.PRODUCT_ID]) {
+                            if (JSON.stringify(this.items[newData.PRODUCT_ID]) === JSON.stringify(newData)) {
                                 continue;
                             }
                         } else {
-                            this.addSortedItem(newData.ID, true);
+                            this.addSortedItem(newData.PRODUCT_ID, true);
                         }
-
-                        this.changedItems.push(newData.ID);
+                        this.changedItems.push(newData.PRODUCT_ID);
 
                         newData = this.checkBasketItemsAnimation(newData);
-                        this.items[newData.ID] = newData;
+                        this.items[newData.PRODUCT_ID] = newData;
                     }
                 }
 
@@ -1091,22 +1090,20 @@
                 if (!itemIds.hasOwnProperty(i) || !BX.type.isPlainObject(this.items[itemIds[i]])) {
                     continue;
                 }
-
                 item = this.items[itemIds[i]];
 
-                if (this.actionPool.isItemInPool(item.ID)) {
-                    if (!BX.util.in_array(item.ID, this.postponedItems)) {
-                        this.postponedItems.push(item.ID);
+                if (this.actionPool.isItemInPool(item.PRODUCT_ID)) {
+                    if (!BX.util.in_array(item.PRODUCT_ID, this.postponedItems)) {
+                        this.postponedItems.push(item.PRODUCT_ID);
                     }
 
                     continue;
                 }
-                // console.log(item.ID)
-                if (BX.type.isDomNode(BX(this.ids.item + item.ID))) {
-                    this.redrawBasketItemNode(item.ID);
-                    this.applyQuantityAnimation(item.ID);
+                if (BX.type.isDomNode(BX(this.ids.item + item.PRODUCT_ID))) {
+                    this.redrawBasketItemNode(item.PRODUCT_ID);
+                    this.applyQuantityAnimation(item.PRODUCT_ID);
                 } else {
-                    this.createBasketItem(item.ID);
+                    this.createBasketItem(item.PRODUCT_ID);
                 }
             }
         },
