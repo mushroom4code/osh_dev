@@ -2169,16 +2169,47 @@
     };
 })(window);
 
-// OFFERS
-$(document).on('click', '.js__show-block', function () {
-   $(this).closest('.catalog-item-product').find('.js__all-block');
-   if($(this).closest('.catalog-item-product').find('.info-prices-box-hover').hasClass('d-block')){
-       $(this).closest('.catalog-item-product').find('.info-prices-box-hover').removeClass('d-block').addClass('d-none')
-   }else {
-       $(this).closest('.catalog-item-product').find('.info-prices-box-hover').removeClass('d-none').addClass('d-block')
-   }
-})
+/**
+ * Enterego - switch block offer for add to basket
+ * @param box_offers
+ * @param that
+ * @param className
+ * @param allHide
+ * @param boxHide
+ */
+function showHideBlock(box_offers, that, className = 'd-block', allHide = false, boxHide = null) {
+    if (allHide) {
+        boxHide.find('.box-prices').each(function () {
+            $(this).removeClass(className).addClass('d-none');
+        });
+    }
+    if ($(box_offers).hasClass(className)) {
+        $(box_offers).removeClass(className).addClass('d-none')
+    } else {
+        $(box_offers).removeClass('d-none').addClass(className)
+    }
+    $(that).closest('div.d-flex').find('.red_button_cart').each(function () {
+        $(this).attr('data-active', 'false');
+    });
+    $(that).attr('data-active', 'true');
+}
 
+/**
+ * Enterego switch block with offers
+ */
+$(document).on('click', '.js__show-block', function () {
+    showHideBlock($(this).closest('.catalog-item-product').find('.info-prices-box-hover'), $(this), 'd-flex');
+});
+
+$(document).on('click', '.offer-box', function () {
+    let box_parent = $(this).closest('.catalog-item-product');
+    let box_offers = $(box_parent).find('div[data-offer-id="' + $(this).attr('data-product_id') + '"]');
+    showHideBlock(box_offers, $(this), 'd-block', true, $(box_parent).find('.prices-all'));
+    $(box_parent).find('.product-item-amount-field-contain-wrap').attr('data-product_id', $(this).attr('data-product_id'));
+    $(box_parent).find('.add2basket').each(function(){
+        $(this).attr('data-product_id', $(this).attr('data-product_id'));
+    });
+});
 
 // FAST WINDOW
 $(document).on('click', '.open-fast-window', function () {

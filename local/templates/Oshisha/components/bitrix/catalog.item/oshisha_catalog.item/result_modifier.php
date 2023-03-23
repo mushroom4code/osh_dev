@@ -33,3 +33,8 @@ if ($item["PREVIEW_PICTURE"]["ID"]) {
 
 $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $item['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($item['ITEM_ALL_PRICES'][0], $useDiscount);
+
+foreach($item['OFFERS']  as &$offer){
+    $useDiscount = $offer['PROPERTIES']['USE_DISCOUNT'];
+    $offer['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($offer['ITEM_ALL_PRICES'][0], $useDiscount)['PRICE_DATA'];
+}

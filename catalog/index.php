@@ -55,7 +55,7 @@ $APPLICATION->IncludeComponent(
 		"CONVERT_CURRENCY" => "N",
 		"QUANTITY_FLOAT" => "N",
 		"OFFERS_CART_PROPERTIES" => array(
-            0 => "GRAMMOVKA_TP"
+			0 => "GRAMMOVKA_TP",
 		),
 		"SHOW_TOP_ELEMENTS" => "N",
 		"SECTION_COUNT_ELEMENTS" => "Y",
@@ -178,8 +178,7 @@ $APPLICATION->IncludeComponent(
 		"SIDEBAR_PATH" => "/catalog/sidebar.php",
 		"COMPONENT_TEMPLATE" => "oshisha_catalog.catalog",
 		"HIDE_NOT_AVAILABLE_OFFERS" => "N",
-		"LABEL_PROP_MOBILE" => array(
-		),
+		"LABEL_PROP_MOBILE" => "",
 		"LABEL_PROP_POSITION" => "top-left",
 		"COMMON_SHOW_CLOSE_POPUP" => "N",
 		"PRODUCT_SUBSCRIPTION" => "Y",
@@ -217,8 +216,7 @@ $APPLICATION->IncludeComponent(
 		"SEARCH_USE_LANGUAGE_GUESS" => "Y",
 		"SEARCH_CHECK_DATES" => "Y",
 		"SECTIONS_HIDE_SECTION_NAME" => "N",
-		"LIST_PROPERTY_CODE_MOBILE" => array(
-		),
+		"LIST_PROPERTY_CODE_MOBILE" => "",
 		"LIST_PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
 		"LIST_PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false}]",
 		"LIST_ENLARGE_PRODUCT" => "PROP",
@@ -228,8 +226,7 @@ $APPLICATION->IncludeComponent(
 		"DETAIL_SET_CANONICAL_URL" => "N",
 		"DETAIL_CHECK_SECTION_ID_VARIABLE" => "N",
 		"SHOW_DEACTIVATED" => "N",
-		"DETAIL_MAIN_BLOCK_PROPERTY_CODE" => array(
-		),
+		"DETAIL_MAIN_BLOCK_PROPERTY_CODE" => "",
 		"DETAIL_BLOG_URL" => "catalog_comments",
 		"DETAIL_BLOG_EMAIL_NOTIFY" => "N",
 		"DETAIL_FB_APP_ID" => "",
@@ -291,8 +288,8 @@ $APPLICATION->IncludeComponent(
 		"MESS_BTN_LAZY_LOAD" => "Показать ещё",
 		"MESS_SHOW_MAX_QUANTITY" => "Наличие",
 		"SHOW_SKU_DESCRIPTION" => "N",
-		"DETAIL_MAIN_BLOCK_OFFERS_PROPERTY_CODE" => array(
-		),
+		"DETAIL_MAIN_BLOCK_OFFERS_PROPERTY_CODE" => "",
+		"FILE_404" => "",
 		"SEF_URL_TEMPLATES" => array(
 			"sections" => "",
 			"section" => "#SECTION_CODE#/",

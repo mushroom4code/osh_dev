@@ -427,7 +427,7 @@ $(document).ready(function () {
                         'URL': product_url,
                     };
                 }
-                if ($(this).hasClass('red_button_cart')) {
+                if ($(this).hasClass('red_button_cart') && $(this).hasClass('offer-box') === false) {
                     $('.red_button_cart[data-product_id="' + product_id + '"]').hide();
                     $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').css({'display': 'flex'});
                 }
