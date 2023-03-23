@@ -79,7 +79,9 @@ $(document).ready(function () {
                     success: function (result) {
                         if (result == 'success') {
                         } else if (result == 'error') {
+                            console.log(result);
                         } else if (result == 'noauth') {
+                            console.log(result);
                         }
                     }
                 });

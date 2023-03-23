@@ -7,7 +7,7 @@ $obUser = new CUser;
 global $USER;
 
 if ($USER->IsAuthorized() && $_REQUEST['action'] == 'setConsent') {
-    $arFields = ['UF_USER_COOKIE_CONSENT'=>'1'];
+    $arFields = [USER_CONSENT_PROPERTY => '1'];
     if ($obUser->Update($USER->GetId(), $arFields)) {
         echo 'success';
     } else {
