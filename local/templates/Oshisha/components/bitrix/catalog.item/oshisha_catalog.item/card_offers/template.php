@@ -506,6 +506,8 @@ if ($show_price) {
                              title="<?= $offer['NAME'] ?>"
                              data-active="<?= $active ?>"
                              data-product_id="<?= $offer['ID'] ?>"
+                             data-product-quantity="<?=$offer_price['PRODUCT']['QUANTITY']?>"
+                             data-price-base="<?=$offer['PRICES_CUSTOM'][1]['PRINT_PRICE']?>"
                              data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
                              data-onevalue="<?= $offer['ID'] ?>">
                             <?= $offer['PROPERTIES']['GRAMMOVKA_TP']['VALUE'] . 'гр.' ?>
@@ -535,8 +537,8 @@ if ($show_price) {
                             </div>
                         <?php } ?>
                     </div>
-                    <div class="d-flex row-line-reverse justify-content-between box-basket">
-                        <div class="bx_price position-relative">
+                    <div class="d-flex row-line-reverse justify-content-between align-items-center box-basket mb-lg-2 m-md-2 m-1">
+                        <div class="bx_price position-relative font-weight-bolder">
                             <?php $sale = false;
                             if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][1]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
                                 $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
