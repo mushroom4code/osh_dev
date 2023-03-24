@@ -386,7 +386,6 @@ if ($show_price) {
                                             echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
                                         } ?>₽
                                     </div>
-
                                     <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
                                         $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
                                         <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
@@ -417,17 +416,18 @@ if ($show_price) {
                                      data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
                                      data-product_id="<?= $item['ID']; ?>">
                                 </div>
-                            <? else: ?>
-                                <div class="d-flex row-line-reverse justify-content-between box-basket">
-                                    <div class="btn red_button_cart js__show-block">
-                                        <img class="image-cart"
-                                             src="/local/templates/Oshisha/images/cart-white.png"/>
+                            <?php else:
+                                if ($USER->IsAuthorized()) { ?>
+                                    <div class="d-flex row-line-reverse justify-content-between box-basket">
+                                        <div class="btn red_button_cart js__show-block">
+                                            <img class="image-cart"
+                                                 src="/local/templates/Oshisha/images/cart-white.png"/>
+                                        </div>
                                     </div>
-                                </div>
-                            <? endif; ?>
-                        <?php }
+                                <? } endif;
+                        }
                         if (!$USER->IsAuthorized() && !$show_price) { ?>
-                            <div class="btn-plus <?= $not_auth ?>"
+                            <div class="btn-plus js__show-block"
                                  data-href="<?= $href ?>">
                                 <span class="btn red_button_cart d-lg-block d-md-block d-none">Подробнее</span>
                                 <i class="fa fa-question d-lg-none d-md-none d-block red_button_cart font-16 p-4-8"
@@ -495,24 +495,31 @@ if ($show_price) {
         </div>
         <div class="info-prices-box-hover info-prices-box-bottom box-offers cursor-pointer ml-2 d-none bg-white p-2 justify-content-between flex-column">
             <?php if (!empty($item['OFFERS'])) { ?>
-                <div class="d-flex flex-wrap flex-row mb-2">
-                    <?php foreach ($item['OFFERS'] as $key => $offer) {
-                        $active = 'false';
-                        if ($key === 1) {
-                            $active = 'true';
-                        }
-                        $offer['NAME'] = htmlspecialcharsbx($offer['NAME']); ?>
-                        <div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
-                             title="<?= $offer['NAME'] ?>"
-                             data-active="<?= $active ?>"
-                             data-product_id="<?= $offer['ID'] ?>"
-                             data-product-quantity="<?=$offer_price['PRODUCT']['QUANTITY']?>"
-                             data-price-base="<?=$offer['PRICES_CUSTOM'][1]['PRINT_PRICE']?>"
-                             data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-                             data-onevalue="<?= $offer['ID'] ?>">
-                            <?= $offer['PROPERTIES']['GRAMMOVKA_TP']['VALUE'] . 'гр.' ?>
-                        </div>
-                    <?php } ?>
+                <div>
+                    <span class="p-0 close-box-price cursor-pointer text-right" title="Закрыть">
+                    <svg width="15" height="15" viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 7.5L8 0.5M1 0.5L8 7.5" stroke="#565656" stroke-linecap="round"
+                              stroke-linejoin="round"></path></svg>
+                </span>
+                    <div class="d-flex flex-wrap flex-row mb-2 justify-content-evenly">
+                        <?php foreach ($item['OFFERS'] as $key => $offer) {
+                            $active = 'false';
+                            if ($key === 1) {
+                                $active = 'true';
+                            }
+                            $offer['NAME'] = htmlspecialcharsbx($offer['NAME']); ?>
+                            <div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
+                                 title="<?= $offer['NAME'] ?>"
+                                 data-active="<?= $active ?>"
+                                 data-product_id="<?= $offer['ID'] ?>"
+                                 data-product-quantity="<?= $offer_price['PRODUCT']['QUANTITY'] ?>"
+                                 data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
+                                 data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+                                 data-onevalue="<?= $offer['ID'] ?>">
+                                <?= $offer['PROPERTIES']['GRAMMOVKA_TP']['VALUE'] . 'гр.' ?>
+                            </div>
+                        <?php } ?>
+                    </div>
                 </div>
                 <div class="mt-1">
                     <div class="prices-all mb-3">

@@ -2671,4 +2671,7 @@ $(document).on('click', '.open-fast-window', function () {
 $(document).on('click', '.close-box', function () {
     $(this).closest('.box-popup-product').remove();
 });
+$(document).on('click', '.close-box-price', function () {
+    $(this).closest('.info-prices-box-hover').removeClass('d-flex').addClass('d-none');
+});
 
