@@ -15,7 +15,7 @@ abstract class CommonPVZ
 
     /** Get object of delivery type
      * @param string $typeDelivery
-     * @return FivePostDelivery|OshishaDelivery|PEKDelivery|PickPointDelivery|SDEKDelivery|null
+     * @return FivePostDelivery|OshishaDelivery|PEKDelivery|PickPointDelivery|SDEKDelivery|RussianPostDelivery|null
      */
     public static function getInstanceObject(string $typeDelivery) {
         switch ($typeDelivery) {
@@ -32,6 +32,8 @@ abstract class CommonPVZ
                 return new PEKDelivery();
             case 'PickPoint':
                 return new PickPointDelivery();
+            case 'RussianPost':
+                return new RussianPostDelivery();
             default:
                 return null;
         }

@@ -105,7 +105,7 @@ function getCurrentPriceId()
 function initProperty(&$arUserResult)
 {
     // TODO - id типа свойства задан статично - исправить!
-    $arUserResult['ORDER_PROP'][LOCATION_ID] = $_SESSION["code_region"];
+//    $arUserResult['ORDER_PROP'][LOCATION_ID] = $_SESSION["code_region"];
 }
 
 // custom admin menu

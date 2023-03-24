@@ -137,6 +137,31 @@ $aTabs = array(
             )
         )
     ),
+    array(
+        'DIV'     => 'edit5',
+        'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
+        'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
+        'OPTIONS' => array(
+            array(
+                'RussianPost_authtoken',
+                Loc::getMessage('RussianPost_authtoken'),
+                Option::get($module_id, 'RussianPost_authtoken'),
+                array('text')
+            ),
+            array(
+                'RussianPost_authkey',
+                Loc::getMessage('RussianPost_authkey'),
+                Option::get($module_id, 'RussianPost_authkey'),
+                array('text')
+            ),
+            array(
+                'RussianPost_fromzip',
+                Loc::getMessage('RussianPost_fromzip'),
+                Option::get($module_id, 'RussianPost_fromzip'),
+                array('text')
+            )
+        )
+    ),
     // ПЭК
     array(
         'DIV'     => 'oshisha_pvz',

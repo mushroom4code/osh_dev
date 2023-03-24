@@ -17,6 +17,11 @@ $MESS["SDEK_setsecure"] = "Пароль";
 $MESS["SDEK_tariff_code"] = "Код тарифа";
 $MESS["SDEK_from_location"] = "Город отправителя";
 
+$MESS["EE_PVZ_OPTIONS_RUSSIAN_POST"] = "Почта России";
+$MESS['RussianPost_authtoken'] = "Токен авторизации для сервиса \"Отправка\"";
+$MESS['RussianPost_authkey'] = "Ключ авторизации для сервиса \"Отправка\"";
+$MESS['RussianPost_fromzip'] = "Почтовый индекс отправителя";
+
 $MESS["EE_PVZ_OPTIONS_PEK"] = "ПЭК";
 $MESS["PEK_login"] = "Логин";
 $MESS["PEK_password"] = "Пароль";

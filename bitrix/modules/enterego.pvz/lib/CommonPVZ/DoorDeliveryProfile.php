@@ -61,6 +61,7 @@ class DoorDeliveryProfile extends Base
 
         $description = '';
         $deliveries = [
+            'RussianPost',
             'SDEK',
             'PickPoint',
         ];
@@ -77,8 +78,12 @@ class DoorDeliveryProfile extends Base
             if ($prop['CODE'] === 'LOCATION') {
                 $deliveryParams['location_name'] = DeliveryHelper::getCityName($propertyItem->getValue());
             }
+            if ($prop['CODE'] === 'ZIP') {
+                $deliveryParams['zip_to'] = $propertyItem->getValue();
+            }
         }
         $deliveryParams['shipment_weight'] = $shipment->getWeight();
+        $deliveryParams['shipment_cost'] = $shipment->getOrder()->getBasePrice();
         $deliveryParams['packages'] = array();
         $orderBasket = $shipment->getOrder()->getBasket();
         foreach ($orderBasket as $orderBasketItem) {
