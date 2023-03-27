@@ -2931,3 +2931,26 @@ $(window).on('resize', function() {
         }
     }
 });
+
+
+
+jQuery(function() {
+    let input = jQuery('.js__show-pass');
+    input.wrap('<div class="show-pass-wrap"></div>');
+    input.after('<span class="show-pass-btn js__show-pass-btn"></span>');
+
+    jQuery('.js__show-pass-btn').on('click', function (e) {
+        e.preventDefault();
+
+        const btn = jQuery(this),
+            input = jQuery(this).parents('.show-pass-wrap').find('input');
+
+        if (input.attr('type') === 'password') {
+            btn.addClass('active');
+            input.attr('type', 'text');
+        } else {
+            btn.removeClass('active');
+            input.attr('type', 'password');
+        }
+    })
+});

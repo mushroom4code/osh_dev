@@ -6755,3 +6755,25 @@ div.carousel-item-elems > div > div {
 .ctweb-smsauth-menu-step .form-group {
     margin-bottom: 1.5em;
 }
+.show-pass-wrap {
+    position: relative;
+}
+.show-pass-btn {
+    position: absolute;
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+    top: 50%;
+    right: 5px;
+    z-index: 10;
+    background-image: url(/local/templates/Oshisha/images/eye-on.svg);
+    transform: translateY(-50%);
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: all 0.3s linear;
+}
+.show-pass-btn.active {
+    background-image: url(/local/templates/Oshisha/images/eye-off.svg);
+}

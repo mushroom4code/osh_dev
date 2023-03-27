@@ -282,7 +282,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                 </label>
                                 <input type="password" name="PASSWORD" maxlength="255"
                                        minlength="6"
-                                       class="form-control input_lk bx-auth-input" required
+                                       class="form-control input_lk bx-auth-input js__show-pass" required
                                        value="<?= $arResult["PASSWORD"] ?>" autocomplete="off"/>
                                 <?php if ($arResult["SECURE_AUTH"]): ?>
                                     <span class="bx-auth-secure" id="bx_auth_secure"
@@ -308,7 +308,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                     <?= GetMessage("AUTH_CONFIRM") ?>
                                 </label>
                                 <input type="password" name="CONFIRM_PASSWORD" maxlength="255"
-                                       class="form-control input_lk bx-auth-input"
+                                       class="form-control input_lk bx-auth-input js__show-pass"
                                        minlength="6"
                                        value="<?= $arResult["CONFIRM_PASSWORD"] ?>"
                                        required
@@ -630,7 +630,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                                   idk="<?= $jsParams['TEMPLATE']['FORGOT_PASSWORD'] ?>">Забыли пароль?</a></span>
                                     <input type="password" name="PASSWORD" placeholder=""
                                            value="<?= $arResult['USER_VALUES']['PASSWORD'] ?? '' ?>"
-                                           class="form-control auth-by-email"
+                                           class="form-control auth-by-email js__show-pass"
                                            id="<?= $mainID . "password" ?>"/>
                                     <div class="ctweb-error-alert" style="display: none"
                                          id="<?= $jsParams['TEMPLATE']['ERROR_ALERT'] ?>">
