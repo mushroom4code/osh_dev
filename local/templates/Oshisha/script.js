@@ -53,29 +53,50 @@ $(document).ready(function () {
         }
     }
 
-    let storageType = cookieStorage, consentPropertyName = 'cookie_consent';
+    var storageType = cookieStorage, consentPropertyName = 'cookie_consent';
+    var saveToStorage = () => storageType.setItem(consentPropertyName, true);
+    var consentPopup = document.getElementById('consent-cookie-popup');
+    var consentAcceptBtn = document.getElementById('cookie-popup-accept');
 
-    let shouldShowPopup = () => !storageType.getItem(consentPropertyName);
-    let saveToStorage = () => storageType.setItem(consentPropertyName, true);
-    let consentPopup = document.getElementById('consent-cookie-popup');
-    let consentAcceptBtn = document.getElementById('cookie-popup-accept');
+    if (consentPopup !== null) {
+        var shouldShow = true;
+        if (consentPopup.classList.contains('js-noauth')) {
+            shouldShow = !storageType.getItem(consentPropertyName) ? true : false;
+        }
 
-    let acceptFn = event => {
-        event.preventDefault();
-        saveToStorage(storageType);
-        consentPopup.classList.add('hidden');
-        setTimeout(() => {
-            consentPopup.remove();
-        }, 700);
+        var acceptFn = event => {
+            event.preventDefault();
+            saveToStorage(storageType);
+            consentPopup.classList.add('hidden');
+            setTimeout(() => {
+                consentPopup.remove();
+            }, 700);
+            if (consentPopup.classList.contains('js-auth')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/local/templates/Oshisha/include/addCookieConsent.php',
+                    data: 'action=setConsent',
+                    success: function (result) {
+                        if (result == 'success') {
+                        } else if (result == 'error') {
+                            console.log(result);
+                        } else if (result == 'noauth') {
+                            console.log(result);
+                        }
+                    }
+                });
+            }
+        }
 
+        consentAcceptBtn.addEventListener('click', acceptFn);
+
+        if (shouldShow) {
+            setTimeout(() => {
+                consentPopup.classList.remove('hidden');
+            }, 2000);
+        }
     }
-    consentAcceptBtn.addEventListener('click', acceptFn);
 
-    if (shouldShowPopup(storageType)) {
-        setTimeout(() => {
-            consentPopup.classList.remove('hidden');
-        }, 2000);
-    }
     //MAIN
     function getCookie(name) {
         let matches = document.cookie.match(new RegExp(
