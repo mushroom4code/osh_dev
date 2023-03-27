@@ -5,6 +5,23 @@ namespace CommonPVZ;
 class RussianPostDelivery extends CommonPVZ
 {
     public string $delivery_name = 'RussianPost';
+    public string $delivery_type = '';
+
+    protected function __construct(string $delivery_type) {
+        parent::__construct();
+        $this->delivery_type = $delivery_type;
+        switch ($delivery_type) {
+            case 'RussianPostEms':
+                $this->delivery_name = 'Почта России (EMS)';
+                break;
+            case 'RussianPostFirstClass':
+                $this->delivery_name = 'Почта России (Посылка 1 класса)';
+                break;
+            case 'RussianPostRegular':
+                $this->delivery_name = 'Почта России (Посылка обычная)';
+                break;
+        }
+    }
 
     protected function connect()
     {
@@ -45,7 +62,18 @@ class RussianPostDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         try {
-            $objectId = 4020;
+            $objectId = false;
+            switch ($this->delivery_type) {
+                case 'RussianPostEms':
+                    $objectId = 7020;
+                    break;
+                case 'RussianPostFirstClass':
+                    $objectId = 47020;
+                    break;
+                case 'RussianPostRegular':
+                    $objectId = 4020;
+                    break;
+            }
 
             $params = [
                 'weight' => $params['shipment_weight'],
@@ -53,6 +81,10 @@ class RussianPostDelivery extends CommonPVZ
                 'from' => $this->configs['fromzip'],
                 'to' => $params['zip_to']
             ];
+
+            if ($this->delivery_type === 'RussianPostEms') {
+                $params['group'] = 0;
+            }
 
             $TariffCalculation = new \LapayGroup\RussianPost\TariffCalculation();
             $calcInfo = $TariffCalculation->calculate($objectId, $params);

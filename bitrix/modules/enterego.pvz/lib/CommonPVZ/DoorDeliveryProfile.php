@@ -61,7 +61,9 @@ class DoorDeliveryProfile extends Base
 
         $description = '';
         $deliveries = [
-            'RussianPost',
+            'RussianPostEms',
+            'RussianPostFirstClass',
+            'RussianPostRegular',
             'SDEK',
             'PickPoint',
         ];
