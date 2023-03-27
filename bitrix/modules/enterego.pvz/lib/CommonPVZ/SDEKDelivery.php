@@ -103,23 +103,41 @@ class SDEKDelivery extends CommonPVZ
     {
         try {
             $location_to = $this->getSDEKCityCode($params['location_name']);
+            $tariffPriority = array(137,482,420);
 
             $tariff = (new \AntistressStore\CdekSDK2\Entity\Requests\Tariff())
-                ->setTariffCode($this->configs['tariff'])
                 ->setCityCodes($this->configs['from'], $location_to)
                 ->addServices(['PART_DELIV']);
 
             foreach ($params['packages'] as $package) {
-                $tariff->setPackages((new \AntistressStore\CdekSDK2\Entity\Requests\Package())
-                    ->setHeight(!empty($package['height']) ? $package['height'] : 0)
-                    ->setLength(!empty($package['length']) ? $package['length'] : 0)
-                    ->setWidth(!empty($package['width']) ? $package['width'] : 0)
-                    ->setWeight(!empty($package['weight']) ? $package['weight'] : 0));
+                $packageObj = new \AntistressStore\CdekSDK2\Entity\Requests\Package();
+                !empty($package['height']) ? $packageObj->setHeight($package['height']) : '';
+                !empty($package['length']) ? $packageObj->setLength($package['length']) : '';
+                !empty($package['width']) ? $packageObj->setWidth($package['width']) : '';
+                !empty($package['weight']) ? $packageObj->setWeight($package['weight']) : '';
+                $tariff->setPackages($packageObj);
             }
 
-            $calculatedTariff = $this->cdek_client->calculateTariff($tariff);
-            $delivery_price = $calculatedTariff->getTotalSum();
-            return $delivery_price;
+            $calculatedTariffList = $this->cdek_client->calculateTariffList($tariff);
+
+            $calculatedTariffs = [];
+            foreach ($calculatedTariffList as $tariff) {
+                $calculatedTariffs[$tariff->getTariffCode()] = [
+                    "price"           => $tariff->getDeliverySum(),
+                    "termMin"         => $tariff->getPeriodMin(),
+                    "termMax"         => $tariff->getPeriodMax(),
+                    "tarif"           => $tariff->getTariffCode()
+                ];
+            }
+
+            foreach ($tariffPriority as $tariffCode) {
+                if (array_key_exists($tariffCode, $calculatedTariffs)) {
+                    $arReturn = $calculatedTariffs[$tariffCode];
+                    break;
+                }
+            }
+
+            return $arReturn['price'];
         } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();
             return array('errors' => $this->errors);
