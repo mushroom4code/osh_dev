@@ -202,7 +202,7 @@ class EnteregoHelper
                         $parentNameCategory = $itemInfo['NAME'];
                         $parent_id = $itemInfo['ID'];
                         if (!empty($parent_id) && !empty($parentNameCategory)) {
-                            $temp_ar[$parentNameCategory . '_' . $parent_id][] = $product_item['PRODUCT_ID'];
+                            $temp_ar[$parentNameCategory . '_' . $parent_id][] = $product_item['ID'];
                         } else {
                             $temp_ar["Без категории"][] = $product_item;
                         }

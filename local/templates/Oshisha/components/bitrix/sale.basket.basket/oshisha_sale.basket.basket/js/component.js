@@ -577,7 +577,7 @@
 
                         // if (deletedItems)
                         // {
-                            this.deleteBasketItems(result.DELETED_BASKET_ITEMS, this.params.SHOW_RESTORE === 'Y');
+                        this.deleteBasketItems(result.DELETED_BASKET_ITEMS, this.params.SHOW_RESTORE === 'Y');
                         // }
                     }
 
@@ -648,17 +648,18 @@
                         newData = result.BASKET_ITEM_RENDER_DATA[i];
                         newData.WARNINGS = this.checkBasketItemWarnings(newData, result.WARNING_MESSAGE_WITH_CODE);
 
-                        if (this.items[newData.PRODUCT_ID]) {
-                            if (JSON.stringify(this.items[newData.PRODUCT_ID]) === JSON.stringify(newData)) {
+                        if (this.items[newData.ID]) {
+                            if (JSON.stringify(this.items[newData.ID]) === JSON.stringify(newData)) {
                                 continue;
                             }
                         } else {
-                            this.addSortedItem(newData.PRODUCT_ID, true);
+                            this.addSortedItem(newData.ID, true);
                         }
-                        this.changedItems.push(newData.PRODUCT_ID);
+
+                        this.changedItems.push(newData.ID);
 
                         newData = this.checkBasketItemsAnimation(newData);
-                        this.items[newData.PRODUCT_ID] = newData;
+                        this.items[newData.ID] = newData;
                     }
                 }
 
@@ -1090,20 +1091,22 @@
                 if (!itemIds.hasOwnProperty(i) || !BX.type.isPlainObject(this.items[itemIds[i]])) {
                     continue;
                 }
+
                 item = this.items[itemIds[i]];
 
-                if (this.actionPool.isItemInPool(item.PRODUCT_ID)) {
-                    if (!BX.util.in_array(item.PRODUCT_ID, this.postponedItems)) {
-                        this.postponedItems.push(item.PRODUCT_ID);
+                if (this.actionPool.isItemInPool(item.ID)) {
+                    if (!BX.util.in_array(item.ID, this.postponedItems)) {
+                        this.postponedItems.push(item.ID);
                     }
 
                     continue;
                 }
-                if (BX.type.isDomNode(BX(this.ids.item + item.PRODUCT_ID))) {
-                    this.redrawBasketItemNode(item.PRODUCT_ID);
-                    this.applyQuantityAnimation(item.PRODUCT_ID);
+                // console.log(item.ID)
+                if (BX.type.isDomNode(BX(this.ids.item + item.ID))) {
+                    this.redrawBasketItemNode(item.ID);
+                    this.applyQuantityAnimation(item.ID);
                 } else {
-                    this.createBasketItem(item.PRODUCT_ID);
+                    this.createBasketItem(item.ID);
                 }
             }
         },
@@ -1565,7 +1568,7 @@
         },
 
         quantityChange: function () {
-           
+
             var itemData = this.getItemDataByTarget(BX.proxy_context);
             if (itemData) {
                 var quantityField, quantity;
@@ -1595,27 +1598,27 @@
                 quantity = measureRatio;
             }
 
-			if( quantity > parseInt(itemData.AVAILABLE_QUANTITY) )
-			{
-				let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
-				//alert('К покупке доступно максимум '+AVAILABLE_QUANTITY+'шт.');
-					$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('К покупке доступно максимум: '+AVAILABLE_QUANTITY+'шт.').addClass('show_block');
-				
-			} 
-			else
-			{
-				$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('').removeClass('show_block');
-			}
-				 
-            
-			if (itemData.CHECK_MAX_QUANTITY === 'Y') {
+            if( quantity > parseInt(itemData.AVAILABLE_QUANTITY) )
+            {
+                let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
+                //alert('К покупке доступно максимум '+AVAILABLE_QUANTITY+'шт.');
+                $('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('К покупке доступно максимум: '+AVAILABLE_QUANTITY+'шт.').addClass('show_block');
+
+            }
+            else
+            {
+                $('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('').removeClass('show_block');
+            }
+
+
+            if (itemData.CHECK_MAX_QUANTITY === 'Y') {
                 availableQuantity = isQuantityFloat ? parseFloat(itemData.AVAILABLE_QUANTITY) : parseInt(itemData.AVAILABLE_QUANTITY);
                 if (availableQuantity > 0 && quantity > availableQuantity) {
                     quantity = availableQuantity;
                 }
             }
 
-			
+
             var reminder = (quantity / measureRatio - ((quantity / measureRatio).toFixed(0))).toFixed(5),
                 remain;
 
@@ -1648,8 +1651,8 @@
         setQuantity: function (itemData, quantity) {
             var quantityField = BX(this.ids.quantity + itemData.ID),
                 currentQuantity;
-			 
-			 
+
+
             if (quantityField) {
                 quantity = parseFloat(quantity);
                 currentQuantity = parseFloat(quantityField.getAttribute('data-value'));
