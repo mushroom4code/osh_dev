@@ -1080,9 +1080,14 @@ div.slick-track {
     height: 100%;
 }
 
-.red_button_cart[data-active="true"], .red_button_cart[data-active="true"]:hover {
+.red_button_cart[data-active="true"]:not(.js__show-block), .red_button_cart[data-active="true"]:hover:not(.js__show-block) {
     color: #f55f5c;
     background-color: #ffffff;
+}
+
+.disabled_not_pay {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .red_button_cart {
@@ -1090,8 +1095,13 @@ div.slick-track {
     font-weight: 600 !important;
 }
 
-.offer-box {
-    padding: 5px 9px;
+.offer-box.red_button_cart {
+    padding: 3px 8px;
+}
+
+.box-offers-auto {
+    max-height: 176px;
+    overflow: auto;
 }
 
 .slick-images-box .product-item-detail-slider-left {

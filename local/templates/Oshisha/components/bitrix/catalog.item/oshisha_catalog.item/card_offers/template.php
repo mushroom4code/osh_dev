@@ -134,6 +134,19 @@ if ($show_price) {
     ];
 }
 
+$boolShow = false;
+$active = null;
+$priceDef = 0;
+foreach ($item['OFFERS'] as $keys => $quantityNull) {
+    if ($quantityNull['CATALOG_QUANTITY'] > 0 && $boolShow === false) {
+        $boolShow = true;
+    }
+    if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
+        $active = $keys;
+        $priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRINT_PRICE'];
+    }
+}
+
 ?>
 <div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
@@ -224,7 +237,7 @@ if ($show_price) {
                                     echo(round($price['SALE_PRICE']['PRICE']));
                                     $sale = true;
                                 } else {
-                                    echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
+                                    echo '<span class="font-10 card-price-text">от </span> ' . (round($priceDef));
                                 } ?>₽
                             </div>
 
@@ -355,7 +368,7 @@ if ($show_price) {
                 <?php }
                 ?>
                 <div class="box_with_text">
-                    <a class="bx_catalog_item_title <?= $styleForNo . ' ' . $not_auth ?>"
+                    <a class="bx_catalog_item_title <?= $not_auth ?>"
                        href="<?= $item['DETAIL_PAGE_URL']; ?>"
                        data-href="<?= $href ?>"
                        title="<?= $productTitle; ?>">
@@ -371,19 +384,19 @@ if ($show_price) {
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
             <div class="bx_catalog_item_controls">
-                <?php if (!empty($item['OFFERS'])) { ?>
+                <?php if (!empty($item['OFFERS']) && $boolShow) { ?>
                     <div class="box_with_fav_bask align-items-lg-center align-items-md-center align-items-end">
-                        <?php if ($item['OFFERS'][0]['PRICES_CUSTOM'][1]['PRICE'] !== '') { ?>
+                        <?php if ($priceDef) { ?>
                             <div class="box_with_price card-price font_weight_600 d-flex flex-column min-height-auto">
                                 <div class="d-flex flex-column">
-                                    <div class="bx_price <?= $styleForNo ?> position-relative">
+                                    <div class="bx_price position-relative">
                                         <?php $sale = false;
                                         if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][0]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
                                             $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
                                             echo(round($price['SALE_PRICE']['PRICE']));
                                             $sale = true;
                                         } else {
-                                            echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
+                                            echo '<span class="font-10 card-price-text">от </span> ' . (round($priceDef));
                                         } ?>₽
                                     </div>
                                     <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
@@ -398,11 +411,6 @@ if ($show_price) {
                                         </div>
                                     <?php } ?>
                                 </div>
-                            </div>
-
-                            <div class="box_quantity_for_uric_line">
-                                <span class="font-12 ml-1"><?= $item['PRODUCT']['QUANTITY'] ?></span>
-                                <span class="font-12">шт.</span>
                             </div>
                             <? if ($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'): ?>
                                 <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
@@ -496,29 +504,42 @@ if ($show_price) {
         <div class="info-prices-box-hover info-prices-box-bottom box-offers cursor-pointer ml-2 d-none bg-white p-2 justify-content-between flex-column">
             <?php if (!empty($item['OFFERS'])) { ?>
                 <div>
-                    <span class="p-0 close-box-price cursor-pointer text-right" title="Закрыть">
-                    <svg width="15" height="15" viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 7.5L8 0.5M1 0.5L8 7.5" stroke="#565656" stroke-linecap="round"
-                              stroke-linejoin="round"></path></svg>
-                </span>
-                    <div class="d-flex flex-wrap flex-row mb-2 justify-content-evenly">
-                        <?php foreach ($item['OFFERS'] as $key => $offer) {
-                            $active = 'false';
-                            if ($key === 1) {
-                                $active = 'true';
-                            }
-                            $offer['NAME'] = htmlspecialcharsbx($offer['NAME']); ?>
-                            <div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
-                                 title="<?= $offer['NAME'] ?>"
-                                 data-active="<?= $active ?>"
-                                 data-product_id="<?= $offer['ID'] ?>"
-                                 data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-                                 data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
-                                 data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-                                 data-onevalue="<?= $offer['ID'] ?>">
-                                <?= $offer['PROPERTIES']['GRAMMOVKA_TP']['VALUE'] . 'гр.' ?>
-                            </div>
-                        <?php } ?>
+                    <p class="p-0 mb-1 close-box-price cursor-pointer text-right" title="Закрыть">
+                        <svg width="15" height="15" viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 7.5L8 0.5M1 0.5L8 7.5" stroke="#565656" stroke-linecap="round"
+                                  stroke-linejoin="round"></path>
+                        </svg>
+                    </p>
+                    <div class="d-flex flex-wrap flex-row mb-2 justify-content-end box-offers-auto">
+                        <?php
+                        $quantity_basket_default = 0;
+                        foreach ($item['OFFERS'] as $key => $offer) {
+                            if ((int)$offer['CATALOG_QUANTITY'] > 0) {
+
+                                $active_box = 'false';
+                                $basketItem = 0;
+                                if (!empty($item['ACTUAL_BASKET'][$offer['ID']])) {
+                                    $basketItem = $item['ACTUAL_BASKET'][$offer['ID']];
+                                }
+                                if ($active === $key && (int)$offer['CATALOG_QUANTITY'] > 0) {
+                                    $active_box = 'true';
+                                    $quantity_basket_default = $basketItem;
+                                }
+
+                                $offer['NAME'] = htmlspecialcharsbx($offer['NAME']); ?>
+                                <div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box "
+                                     title="<?= $offer['NAME'] ?>"
+                                     data-active="<?= $active_box ?>"
+                                     data-product_id="<?= $offer['ID'] ?>"
+                                     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+                                     data-basket-quantity="<?= $basketItem ?>"
+                                     data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
+                                     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+                                     data-onevalue="<?= $offer['ID'] ?>">
+                                    <?= $offer['PROPERTIES']['GRAMMOVKA_TP']['VALUE'] . 'гр.' ?>
+                                </div>
+                            <?php }
+                        } ?>
                     </div>
                 </div>
                 <div class="mt-1">
@@ -527,7 +548,7 @@ if ($show_price) {
                         $prod_off_quantity = 0;
                         foreach ($item['OFFERS'] as $key_offer => $offer_price) { ?>
                             <?php $dNone = 'd-none';
-                            if ($key_offer == 1) {
+                            if ($key_offer == $active) {
                                 $prod_off_id = $offer_price['ID'];
                                 $prod_off_quantity = $offer_price['CATALOG_QUANTITY'];
                                 $dNone = '';
@@ -547,44 +568,36 @@ if ($show_price) {
                     <div class="d-flex row-line-reverse justify-content-between align-items-center box-basket mb-lg-2 m-md-2 m-1 bx_catalog_item_controls">
                         <div class="bx_price position-relative font-weight-bolder">
                             <?php $sale = false;
-                            if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][1]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
+                            if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
                                 $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
                                 echo(round($price['SALE_PRICE']['PRICE']));
                                 $sale = true;
                             } else {
-                                echo '<span class="font-10 card-price-text">от </span> ' . (round($item['OFFERS'][1]['PRICES_CUSTOM'][0]['PRINT_PRICE']));
+                                echo '<span class="font-10 card-price-text">от </span> ' . (round($item['OFFERS'][$active]['PRICES_CUSTOM'][1]['PRINT_PRICE']));
                             } ?>₽
                         </div>
-                        <div class="btn red_button_cart btn-plus add2basket"
-                             data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                             data-product_id="<?= $prod_off_id; ?>"
-                             data-max-quantity="<?= $prod_off_quantity ?>"
-                             id="<?= $arItemIDs['BUY_LINK']; ?>"
-                             <?php if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
-                            <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
-                        </div>
-                        <div class="product-item-amount-field-contain-wrap"
-                             <?php if ($priceBasket > 0) { ?>style="display:flex;"
-                             <?php } else { ?>style="display:none;"<?php } ?>
-                             data-product_id="<?= $prod_off_id; ?>">
-                            <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
-                                <a class="btn-minus  minus_icon no-select add2basket"
-                                   href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                   data-product_id="<?= $prod_off_id; ?>">
-                                </a>
-                                <div class="product-item-amount-field-block">
-                                    <input class="product-item-amount card_element"
-                                           type="text"
-                                           value="<?= $priceBasket ?>">
+                        <?php if ($USER->IsAuthorized()) { ?>
+                            <div class="product-item-amount-field-contain-wrap" style="display:flex;"
+                                 data-product_id="<?= $prod_off_id; ?>">
+                                <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
+                                    <a class="btn-minus  minus_icon no-select add2basket"
+                                       href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                       data-product_id="<?= $prod_off_id; ?>">
+                                    </a>
+                                    <div class="product-item-amount-field-block">
+                                        <input class="product-item-amount card_element"
+                                               type="text"
+                                               value="<?= $quantity_basket_default ?>">
+                                    </div>
+                                    <a class="btn-plus plus_icon no-select add2basket"
+                                       data-max-quantity="<?= $prod_off_quantity ?>" href="javascript:void(0)"
+                                       data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                       data-product_id="<?= $prod_off_id; ?>"
+                                       title="Доступно <?= $prod_off_quantity ?> товар"></a>
                                 </div>
-                                <a class="btn-plus plus_icon no-select add2basket"
-                                   data-max-quantity="<?= $prod_off_quantity ?>" href="javascript:void(0)"
-                                   data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                   data-product_id="<?= $prod_off_id; ?>"
-                                   title="Доступно <?= $prod_off_quantity ?> товар"></a>
+                                <div class="alert_quantity" data-id="<?= $prod_off_id ?>"></div>
                             </div>
-                            <div class="alert_quantity" data-id="<?= $prod_off_id ?>"></div>
-                        </div>
+                        <?php } ?>
                     </div>
                 </div>
             <?php } ?>

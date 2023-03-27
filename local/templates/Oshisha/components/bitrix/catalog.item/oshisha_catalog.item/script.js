@@ -2207,13 +2207,18 @@ $(document).on('click', '.offer-box', function () {
     let box_offers = $(box_parent).find('div[data-offer-id="' + $(elem).attr('data-product_id') + '"]');
 
     showHideBlock(box_offers, $(elem), 'd-block', true, $(box_parent).find('.prices-all'));
+
     $(box_parent).find('.product-item-amount-field-contain-wrap').attr('data-product_id', $(elem).attr('data-product_id'));
     $(box_parent).find('.add2basket').each(function () {
         $(this).attr('data-product_id', $(elem).attr('data-product_id'));
     });
+
     $(box_parent).find('.bx_price').text($(elem).attr('data-price-base'));
+    $(box_parent).find('input.card_element').val($(elem).attr('data-basket-quantity'));
+
+
     $(box_parent).find('.btn-plus').each(function () {
-        $(this).attr('data-max-quantity', $(elem).attr('data-product-quantity'))
+        $(this).attr('data-max-quantity', $(elem).attr('data-product-quantity'));
     })
 });
 

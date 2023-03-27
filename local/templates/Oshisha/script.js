@@ -76,6 +76,7 @@ $(document).ready(function () {
             consentPopup.classList.remove('hidden');
         }, 2000);
     }
+
     //MAIN
     function getCookie(name) {
         let matches = document.cookie.match(new RegExp(
@@ -165,11 +166,11 @@ $(document).ready(function () {
                 priceBox = cardWrapper.find('.info-prices-box-hover');
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
-                tasteOverlay.css({height:'100%'});
-                priceBox.css({zIndex:'1000'});
+                tasteOverlay.css({height: '100%'});
+                priceBox.css({zIndex: '1000'});
             } else {
-                tasteOverlay.css({height:'0'});
-                priceBox.css({zIndex:'1300'});
+                tasteOverlay.css({height: '0'});
+                priceBox.css({zIndex: '1300'});
             }
         })
         tasteInit();
@@ -317,7 +318,7 @@ $(document).ready(function () {
         if (value > 0) {
             $('.ganerate_price_wrap').show();
         }
-        if($('.ganerate_price').length >0){
+        if ($('.ganerate_price').length > 0) {
             $('.ganerate_price').text(getPriceForProduct(this) * value + ' ₽');
         }
     }
@@ -427,10 +428,11 @@ $(document).ready(function () {
                         'URL': product_url,
                     };
                 }
-                if ($(this).hasClass('red_button_cart') && !$(this).hasClass('offer-box')) {
-                    $('.red_button_cart[data-product_id="' + product_id + '"]').hide();
-                    $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').css({'display': 'flex'});
-                }
+                    if ($(this).hasClass('red_button_cart')) {
+                        $('.red_button_cart:not(.offer-box)[data-product_id="' + product_id + '"]').hide();
+                        $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').css({'display': 'flex'});
+                    }
+
             } else if (minus === true) {
                 $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
 
@@ -452,7 +454,8 @@ $(document).ready(function () {
                         'URL': product_url,
                     };
 
-                    if (beforeVal == 0) {
+                    if (beforeVal == 0 && $(this).closest('.info-prices-box-bottom').length === 0) {
+
                         $('.red_button_cart[data-product_id="' + product_id + '"]').show();
                         $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').hide();
                     }
@@ -483,7 +486,7 @@ $(document).ready(function () {
                 }
             }
 
-            $(document).on('click', '.js__close-count-alert', function() {
+            $(document).on('click', '.js__close-count-alert', function () {
                 $(this).parents('.alert_quantity').html('').removeClass('show_block');
             })
 
@@ -623,7 +626,7 @@ $(document).ready(function () {
         $('a#yes_mess').on('click', function () {
             var popup_mess = $(this).closest('div#popup_mess');
             var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
-            if ($(this).closest('div#popup_mess').hasClass('subscribed')){
+            if ($(this).closest('div#popup_mess').hasClass('subscribed')) {
                 var subscribe = "N";
                 var subscription_id = popup_mess.attr('data-subscription_id');
             } else {
@@ -636,9 +639,9 @@ $(document).ready(function () {
                 data: {subscribe: subscribe, item_id: product_id, subscription_id: subscription_id},
                 success: function (result_jsn) {
                     var result = JSON.parse(result_jsn);
-                    if(result.success === true){
+                    if (result.success === true) {
                         var item_controls = popup_mess.parent();
-                        if(result.message === "subscribed") {
+                        if (result.message === "subscribed") {
                             popup_mess.addClass('subscribed');
                             popup_mess.attr('data-subscription_id', result.subscribeId);
                             item_controls.find('.detail_popup').addClass('subscribed');
@@ -651,7 +654,7 @@ $(document).ready(function () {
                             item_controls.find('.fa-bell-o').removeClass('filled');
                             popup_mess.empty();
                         }
-                    }else if (result.success == false){
+                    } else if (result.success == false) {
                         if (result.message === "noauth") {
                             popup_mess.empty();
                             popup_mess.append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
@@ -661,7 +664,7 @@ $(document).ready(function () {
                             popup_mess.find('#close_photo').on('click', function () {
                                 $(".box_with_message_prodNot").hide(500).remove()
                             });
-                        }else if (result.message === "noemail") {
+                        } else if (result.message === "noemail") {
                             popup_mess.empty();
                             popup_mess.append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
                                 '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
@@ -2368,7 +2371,7 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
                 '<a href="#" id="no_mess" class="d-flex basket-empty link_message_box_product ' +
@@ -2380,10 +2383,10 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
-                '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="no_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Нет</a></div>';
         }
@@ -2396,12 +2399,13 @@ $(document).ready(function () {
             offsetTop: 0,
             className: 'flex-column align-items-center box_with_message_copy_order',
             draggable: {restrict: false},
-            overlay: {backgroundColor: 'black', opacity: '80' },  /* затемнение фона */
+            overlay: {backgroundColor: 'black', opacity: '80'},  /* затемнение фона */
         });
 
         Confirmer.show();
 
-        $('#no_mess.basket-empty').click({ Confirmer: Confirmer}, popupWindowClose);
+        $('#no_mess.basket-empty').click({Confirmer: Confirmer}, popupWindowClose);
+
         function popupWindowClose(event) {
             event.preventDefault();
             Confirmer.close();
@@ -2605,7 +2609,7 @@ $(document).on('click', '.file-list .file-remove', function (e) {
 });
 
 // маска ввода для формы обратной связи
-$(document).ready(function() {
+$(document).ready(function () {
     $('.form-form [data-name="EMAIL"]').inputmask('email');
 });
 
@@ -2649,7 +2653,7 @@ $(document).on('submit', '.form-form', function (e) {
         err++;
     }
 
-    if(!fieldMail.inputmask("isComplete")) {
+    if (!fieldMail.inputmask("isComplete")) {
         $('.form-form .er_FORM_EMAIL').html(errors.wrongFieldData).show();
         err++;
     }
@@ -2890,10 +2894,10 @@ if ($(window).width() > 1024) {
     });
 }
 
-$(window).on('resize', function() {
+$(window).on('resize', function () {
     const catalog = $('.catalog-section.by-line'),
-          cardViewBtn = $('#card_catalog'),
-          lineViewBtn = $('#line_catalog');
+        cardViewBtn = $('#card_catalog'),
+        lineViewBtn = $('#line_catalog');
 
     if (catalog.length > 0) {
         if ($(window).width() < 500) {
