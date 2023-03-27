@@ -527,7 +527,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                    autocomplete="off"/>
                                         </div>
                                     </div>
-                                    <div class="checkbox d-none">
+                                    <div class="checkbox">
                                         <label>
                                             <input type="checkbox" name="SAVE_SESSION" value="Y"
                                                    id="<?= $jsParams['TEMPLATE']['SAVE_SESSION'] ?>"
@@ -636,6 +636,14 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                          id="<?= $jsParams['TEMPLATE']['ERROR_ALERT'] ?>">
                                         <?= GetMessage("SMS_AUTH_ERROR_EMPTY_FIELD") ?>
                                     </div>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="SAVE_SESSION" value="Y"
+                                               id="<?= $jsParams['TEMPLATE']['SAVE_SESSION'] ?>"
+                                            <?= ($arResult['USER_VALUES']['SAVE_SESSION'] === "Y") ? 'checked="checked"' : ""; ?> />
+                                        <?= GetMessage("SMS_AUTH_SAVE_SESSION") ?>
+                                    </label>
                                 </div>
                                 <div class="ctweb-button-block">
                                     <input class="btn link_menu_catalog login_button"

@@ -6751,3 +6751,7 @@ div.carousel-item-elems > div > div {
         display: none;
     }
 }
+
+.ctweb-smsauth-menu-step .form-group {
+    margin-bottom: 1.5em;
+}

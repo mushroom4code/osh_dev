@@ -1,7 +1,11 @@
 <?php
 
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
+use Enterego\AuthTokenTable;
 use Enterego\EnteregoSettings;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
 
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
@@ -26,6 +30,7 @@ CModule::AddAutoloadClasses("", array(
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
     '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
+    '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
 ));
 
 // add rest api web hook  - validate products without photo
@@ -322,3 +327,80 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
 }
 
 EnteregoSettings::getSalePriceOnCheckAndPeriod();
+
+addEventHandler ('main', 'OnPageStart', 'loginByAuthToken');
+function loginByAuthToken()
+{
+    global $USER;
+
+    if (!is_object($USER)) {
+        $USER = new CUser;
+    }
+
+    if (!$USER->IsAuthorized() && isset($_COOKIE['authToken'])) {
+        $userToken = $_COOKIE['authToken'];
+        $decodedToken = JWT::decode($userToken, new Key(AUTH_TOKEN_GENERATION_SECRET, 'HS512'));
+
+        $serverToken = AuthTokenTable::getByPrimary($userToken)->fetch();
+        $User = CUser::GetByID($decodedToken->userId)->fetch();
+
+            if ($decodedToken->server === $_SERVER['SERVER_NAME'] &&
+                $decodedToken->expire > time() &&
+                $User &&
+                $decodedToken->login === $User['LOGIN'] &&
+                $User['ACTIVE'] == 'Y') {
+
+
+                // JWT update token data
+                $newTokenExpiraton =  time() + AUTH_TOKEN_PROLONGATION;
+                $data = [
+                    'userId' => $USER->GetID(),
+                    'login' => $USER->GetLogin(),
+                    'server' => $_SERVER['SERVER_NAME'],
+                    'expire' => $newTokenExpiraton,
+                ];
+
+                $newUserToken = JWT::encode($data, AUTH_TOKEN_GENERATION_SECRET, 'HS512');
+
+                    // обновить срок токена в таблице
+                    setcookie('authToken', $serverToken, $newTokenExpiraton, '/');
+                    AuthTokenTable::update($userToken,
+                        [
+                            'EXPIRATION' => $newTokenExpiraton
+                        ]);
+                    (new CUser)->Authorize($serverToken['USER_ID']);
+            }
+        }
+}
+
+AddEventHandler('main', 'OnAfterUserAuthorize', 'generateAuthToken');
+function generateAuthToken() {
+    global $USER;
+
+    if ($_REQUEST['SAVE_SESSION'] == 'Y' && !isset($_COOKIE['authToken'])) {
+        // JWT token
+        $newTokenExpiraton =  time() + AUTH_TOKEN_PROLONGATION;
+        $data = [
+            'userId' => $USER->GetID(),
+            'login' => $USER->GetLogin(),
+            'server' => $_SERVER['SERVER_NAME'],
+            'expire' => $newTokenExpiraton,
+        ];
+        $newUserToken = JWT::encode($data, AUTH_TOKEN_GENERATION_SECRET, 'HS512');
+
+        setcookie('authToken', $newUserToken, $newTokenExpiraton, '/');
+        AuthTokenTable::add([
+            'TOKEN' => $newUserToken,
+            'USER_ID' => $USER->GetID(),
+            'EXPIRATION' => $newTokenExpiraton
+        ]);
+    }
+}
+
+AddEventHandler('main', 'OnUserLogout', 'removeAuthToken');
+function removeAuthToken() {
+    if (isset($_COOKIE['authToken'])) {
+        AuthTokenTable::delete($_COOKIE['authToken']);
+        setcookie('authToken', '', time(), '/');
+    }
+}
