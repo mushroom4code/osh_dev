@@ -512,7 +512,7 @@ if ($show_price) {
                                  title="<?= $offer['NAME'] ?>"
                                  data-active="<?= $active ?>"
                                  data-product_id="<?= $offer['ID'] ?>"
-                                 data-product-quantity="<?= $offer_price['PRODUCT']['QUANTITY'] ?>"
+                                 data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
                                  data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
                                  data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
                                  data-onevalue="<?= $offer['ID'] ?>">
@@ -529,7 +529,7 @@ if ($show_price) {
                             <?php $dNone = 'd-none';
                             if ($key_offer == 1) {
                                 $prod_off_id = $offer_price['ID'];
-                                $prod_off_quantity = $offer_price['PRODUCT']['QUANTITY'];
+                                $prod_off_quantity = $offer_price['CATALOG_QUANTITY'];
                                 $dNone = '';
                             } ?>
                             <div class="<?= $dNone ?> mb-lg-2 m-md-2 m-1 box-prices"
@@ -544,7 +544,7 @@ if ($show_price) {
                             </div>
                         <?php } ?>
                     </div>
-                    <div class="d-flex row-line-reverse justify-content-between align-items-center box-basket mb-lg-2 m-md-2 m-1">
+                    <div class="d-flex row-line-reverse justify-content-between align-items-center box-basket mb-lg-2 m-md-2 m-1 bx_catalog_item_controls">
                         <div class="bx_price position-relative font-weight-bolder">
                             <?php $sale = false;
                             if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][1]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
@@ -569,19 +569,16 @@ if ($show_price) {
                              data-product_id="<?= $prod_off_id; ?>">
                             <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
                                 <a class="btn-minus  minus_icon no-select add2basket"
-                                   id="<?= $arItemIDs['BUY_LINK']; ?>"
                                    href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                    data-product_id="<?= $prod_off_id; ?>">
                                 </a>
                                 <div class="product-item-amount-field-block">
                                     <input class="product-item-amount card_element"
-                                           id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                            type="text"
                                            value="<?= $priceBasket ?>">
                                 </div>
                                 <a class="btn-plus plus_icon no-select add2basket"
-                                   data-max-quantity="<?= $prod_off_quantity ?>"
-                                   id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
+                                   data-max-quantity="<?= $prod_off_quantity ?>" href="javascript:void(0)"
                                    data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                    data-product_id="<?= $prod_off_id; ?>"
                                    title="Доступно <?= $prod_off_quantity ?> товар"></a>
