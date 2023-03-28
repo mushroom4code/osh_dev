@@ -2931,3 +2931,9 @@ $(window).on('resize', function() {
         }
     }
 });
+
+$(document).ready(function () {
+    $(document).on('click', '.close_header_box', function () {
+        $('.overlay').hide();
+    });
+});
