@@ -444,7 +444,7 @@ $option = $option_site; ?>
 
 
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
-                <span class="col-title">Каталог</span>
+                <span class="col-title js__collapse-list">Каталог</span>
                 <ul class="col-menu">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
@@ -468,7 +468,7 @@ $option = $option_site; ?>
 
 
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
-                <span class="col-title">Покупателям</span>
+                <span class="col-title js__collapse-list">Покупателям</span>
                 <ul class="col-menu">
                     <li class="col-menu-item">
                         <a class="col-menu-link" href="/about/contacts/">Контакты</a>
@@ -504,7 +504,7 @@ $option = $option_site; ?>
 
 
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
-                <span class="col-title">О компании</span>
+                <span class="col-title js__collapse-list">О компании</span>
                 <ul class="col-menu">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
@@ -547,19 +547,6 @@ $option = $option_site; ?>
                             <img class="dzen" src="<?= SITE_TEMPLATE_PATH . '/images/dzen.svg' ?>">
                         </a>
                     </nav>
-                </div>
-            </div>
-
-
-            <div class="mobile width_100 p-0 mb-4">
-                <p class="m-3 mail_footer col-11"><a href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
-                </p>
-                <div class="box_with_contact pl-3">
-                    <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                    <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                    <a href="javascript:void(0)" class="link_menu_top " data-toggle="modal"
-                       data-target="#placeModal"><span class="mail_footer not_weight">Москва, Россия</span>
-                    </a>
                 </div>
             </div>
         </div>

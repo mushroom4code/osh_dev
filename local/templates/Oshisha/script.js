@@ -2489,6 +2489,22 @@ $(document).ready(function () {
         $(this).toggleClass('smart-filter-angle-up');
     });
 
+
+    $('.js__collapse-list').on('click', function() {
+        if (!$(this).parents('.socials').length) {
+            let elem = $(this),
+                lists = $('.js__collapse-list.active');
+
+            lists.next('.col-menu').stop().slideToggle();
+
+            if (!elem.hasClass('active')) {
+                lists.toggleClass('active');
+                elem.addClass('active').next('.col-menu').stop().slideDown();
+            } else {
+                lists.toggleClass('active');
+            }
+        }
+    });
 });
 
 window.onresize = function (event) {

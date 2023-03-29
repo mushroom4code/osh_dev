@@ -6836,26 +6836,112 @@ footer.footer .container .row {
 footer.footer .container .row .footer-col {
     color: #fff;
 }
+@media screen and (max-width: 991px) {
+    footer.footer .container .row .footer-col:nth-of-type(1) {
+        order: 1;
+        margin-bottom: 3em;
+    }
+    footer.footer .container .row .footer-col:nth-of-type(2) {
+        order: 2;
+        margin-bottom: 3em;
+    }
+    footer.footer .container .row .footer-col:nth-of-type(4) {
+        order: 3;
+    }
+    footer.footer .container .row .footer-col:nth-of-type(3) {
+        order: 4;
+    }
+}
+@media screen and (max-width: 575px) {
+    footer.footer .container .row .footer-col:nth-of-type(1) {
+        order: 1;
+        margin-bottom: 2em;
+    }
+    footer.footer .container .row .footer-col:nth-of-type(2) {
+        order: 2;
+        margin-bottom: 2em;
+    }
+    footer.footer .container .row .footer-col:nth-of-type(3) {
+        order: 3;
+        margin-bottom: 2em;
+    }
+    footer.footer .container .row .footer-col:nth-of-type(4) {
+        order: 4;
+        margin-bottom: 2em;
+    }
+}
 
-
-footer.footer .container .row .footer-col .col-title,
-.footer.footer .container .row .footer-col .socials .col-title {
+footer.footer .container .row .footer-col .col-title {
     font-weight: 700;
     font-size: 16px;
     line-height: 1.5;
 }
+@media screen and (max-width: 575px) {
+    footer.footer .container .row .footer-col .col-title {
+        position: relative;;
+        display: block;
+        padding-bottom: 1px;
+        border-bottom: 1px solid #fff;
+        margin-bottom: 15px;
+        color: #fff;
+    }
+    footer.footer .container .row .footer-col .col-title::after {
+        position: absolute;
+        display: block;
+        content: '';
+        width: 0;
+        height: 0;
+        border-top: 6px solid #fff;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 0 solid transparent;
+        top: 50%;
+        right: 0;
+        transform: translateY(-1px) rotate(0deg);
+        z-index: 1;
+        cursor: pointer;
+        transition: all 0.3s linear;
+    }
+    footer.footer .container .row .footer-col .col-title.active,
+    footer.footer .container .row .footer-col .col-title.active:hover {
+        /*color: #FF0500;*/
+        /*border-color: #FF0500;*/
+    }
+    footer.footer .container .row .footer-col .col-title.active::after {
+        transform: translateY(-1px) rotate(-180deg);
+        /*border-top-color: #FF0500;*/
+    }
+}
 
-.footer.footer .container .row .footer-col .socials .col-title {
+footer.footer .container .row .footer-col .socials .col-title {
     display: block;
     margin: 0 0 15px 0;
 }
+@media screen and (max-width: 575px) {
+    footer.footer .container .row .footer-col .socials .col-title {
+        border: none;
+    }
+    footer.footer .container .row .footer-col .socials .col-title::after {
+        display: none;
+    }
 
-footer.footer .container .row .footer-col .col-menu {
 }
-
+@media screen and (max-width: 575px) {
+    footer.footer .container .row .footer-col .col-menu {
+        display: none;
+    }
+    footer.footer .container .row .footer-col .socials .col-title + .col-menu {
+        display: block;
+    }
+}
 footer.footer .container .row .footer-col .col-menu .col-menu-item {
     display: block;
     margin: 12px 0;
+}
+@media screen and (max-width: 991px) {
+    footer.footer .container .row .footer-col .col-menu .col-menu-item {
+        margin: 8px 0;
+    }
 }
 
 footer.footer .container .row .footer-col .col-menu .col-menu-item .col-menu-link {
@@ -6867,7 +6953,11 @@ footer.footer .container .row .footer-col .col-menu .col-menu-item .col-menu-lin
     line-height: 1.5;
     transition: all 0.3s linear;
 }
-
+@media screen and (max-width: 768px){
+    footer.footer .container .row .footer-col .col-menu .col-menu-item .col-menu-link {
+        font-size: 16px;
+    }
+}
 footer.footer .container .row .footer-col .col-menu .col-menu-item .col-menu-link:hover {
     color: #FF0500;
 }
@@ -6876,14 +6966,20 @@ footer.footer .container .row .footer-col .col-menu .col-menu-item .col-menu-lin
     color: #666;
 }
 
-.footer.footer .container .row .footer-col .socials {
+@media screen and (max-width: 575px) {
+    footer.footer .container .row .footer-col .col-menu .col-menu-item .col-menu-link {
+        font-size: 16px;
+    }
+}
+
+footer.footer .container .row .footer-col .socials {
     margin: 50px 0 10px 0;
 }
 
-.footer.footer .container .row .footer-col .socials .col-menu {
+footer.footer .container .row .footer-col .socials .col-menu {
 }
 
-.footer.footer .container .row .footer-col .socials .col-menu a {
+footer.footer .container .row .footer-col .socials .col-menu a {
     margin-right: 15px;
 }
 
@@ -6909,7 +7005,11 @@ footer.footer .container .row .footer-col .company-info .about {
 footer.footer .container .row .footer-col .company-info .about .text_footer {
     margin-bottom: 20px;
 }
-
+@media screen and (max-width: 768px) {
+    footer.footer .container .row .footer-col .company-info .about .text_footer {
+        font-size: 16px;
+    }
+}
 footer.footer .container .row .footer-col .company-info .about .info-row {
     display: block;
     margin: 15px 0;
@@ -6937,13 +7037,21 @@ footer.footer .container .row .footer-col .company-info .about .info-row:nth-of-
 footer.footer .container .row .footer-col .company-info .about .info-row.info-row--email {
     font-size: 13px;
 }
-
+@media screen and (max-width: 768px){
+    footer.footer .container .row .footer-col .company-info .about .info-row.info-row--email {
+        font-size: 16px;
+    }
+}
 footer.footer .container .row .footer-col .company-info .about .info-row.info-row--worktime {
     font-size: 13px;
 }
-
-footer.footer .container .row .footer-col .company-info .about .info-row.info-row--worktime .worktime {
+@media screen and (max-width: 768px) {
+    footer.footer .container .row .footer-col .company-info .about .info-row.info-row--worktime {
+        font-size: 16px;
+    }
 }
+
+footer.footer .container .row .footer-col .company-info .about .info-row.info-row--worktime .worktime {}
 
 footer.footer .container .row .footer-col .company-info .about .info-row .link {
     color: #fff;
