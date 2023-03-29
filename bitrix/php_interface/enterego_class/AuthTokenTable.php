@@ -3,11 +3,13 @@
 namespace Enterego;
 
 use Bitrix\Main\Entity\DataManager;
-use Bitrix\Main\Entity\DatetimeField;
 use Bitrix\Main\Entity\IntegerField;
 use Bitrix\Main\Entity\StringField;
 use Bitrix\Main\SystemException;
-use Cassandra\Bigint;
+use CUser;
+use Exception;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 /*
  * CREATE TABLE
@@ -22,6 +24,7 @@ use Cassandra\Bigint;
         foreign key (USER_ID) references b_user (ID)
  );
  */
+
 class AuthTokenTable extends DataManager
 {
     /**
@@ -64,6 +67,103 @@ class AuthTokenTable extends DataManager
             )
         ];
 
+    }
+
+    public static function generateToken(): array
+    {
+        global $USER;
+
+        $expiraton = time() + AUTH_TOKEN_PROLONGATION;
+        $data = [
+            'userId' => $USER->GetID(),
+            'login' => $USER->GetLogin(),
+            'server' => $_SERVER['SERVER_NAME'],
+            'expire' => $expiraton,
+        ];
+        $token = JWT::encode($data, AUTH_TOKEN_GENERATION_SECRET, 'HS512');
+
+        return ['token' => $token, 'expiration' => $expiraton];
+    }
+
+    /**
+     * @param array{token: string, expiration: int} $tokenData
+     * @return void
+     * @throws Exception
+     */
+    public static function saveToken(array $tokenData): void
+    {
+        global $USER;
+
+        setcookie('authToken', $tokenData['token'], $tokenData['expiration'], '/');
+        self::add([
+            'TOKEN' => $tokenData['token'],
+            'USER_ID' => $USER->GetID(),
+            'EXPIRATION' => $tokenData['expiration']
+        ]);
+    }
+
+    /**
+     * @param array{token: string, expiration: int} $tokenData
+     * @return void
+     * @throws Exception
+     */
+    public static function updateToken(array $tokenData): void
+    {
+        setcookie('authToken', $tokenData['token'], $tokenData['expiration'], '/');
+
+        AuthTokenTable::update(
+            $tokenData['token'],
+            ['EXPIRATION' => $tokenData['expiration']]
+        );
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public static function getNewToken(): void
+    {
+        if ($_REQUEST['SAVE_SESSION'] == 'Y' && !isset($_COOKIE['authToken'])) {
+            $tokenData = self::generateToken();
+            self::saveToken($tokenData);
+        }
+    }
+
+
+    public static function removeToken(): void
+    {
+        if (isset($_COOKIE['authToken'])) {
+            self::delete($_COOKIE['authToken']);
+            setcookie('authToken', '', time(), '/');
+        }
+    }
+
+    public static function getTokenAuth(): void
+    {
+        global $USER;
+
+        if (!is_object($USER)) {
+            $USER = new CUser;
+        }
+
+        if (!$USER->IsAuthorized() && isset($_COOKIE['authToken'])) {
+            $userToken = $_COOKIE['authToken'];
+            $decodedToken = JWT::decode($userToken, new Key(AUTH_TOKEN_GENERATION_SECRET, 'HS512'));
+
+            $serverToken = AuthTokenTable::getByPrimary($userToken)->fetch();
+            $User = CUser::GetByID($decodedToken->userId)->fetch();
+
+            if ($decodedToken->server === $_SERVER['SERVER_NAME'] &&
+                $decodedToken->expire > time() &&
+                $User && $User['ACTIVE'] == 'Y' &&
+                $decodedToken->login === $User['LOGIN']) {
+
+                $tokenData = self::generateToken();
+                self::updateToken($tokenData);
+
+                (new CUser)->Authorize($serverToken['USER_ID']);
+            }
+        }
     }
 }
 
