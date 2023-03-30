@@ -6920,11 +6920,14 @@ footer.footer .container .row .footer-col .socials .col-title {
     }
 
 }
+footer.footer .container .row .footer-col .col-menu {
+    display: block;
+}
 @media screen and (max-width: 575px) {
     footer.footer .container .row .footer-col .col-menu {
         display: none;
     }
-    footer.footer .container .row .footer-col .socials .col-title + .col-menu {
+    footer.footer .container .row .footer-col .socials .col-title+.col-menu {
         display: block;
     }
 }

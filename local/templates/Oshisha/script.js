@@ -2497,6 +2497,10 @@ window.onresize = function (event) {
     if ($('div').is('.basket_category') && window.screen.width <= 746) {
         $('.basket_category').css('width', window.screen.width - 20);
     }
+
+    if (window.screen.width >= 768) {
+        $('footer.footer .col-menu').css({display: 'block'});
+    }
 };
 
 
