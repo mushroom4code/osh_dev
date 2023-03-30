@@ -3320,6 +3320,10 @@ b.decoration-color-red {
     .header_top, .block_menu_mobile {
         position: fixed;
     }
+    .header_top {
+        width: 100%;
+        background-color: #fff;
+    }
 
     .box_with_search, .box_right_header, .banners_footer, .banner_big, .banner_small, .btn_footer, .custom_field {
         width: 100%;
@@ -3451,6 +3455,54 @@ b.decoration-color-red {
     }
 }
 
+@media screen and (max-width: 1024px) {
+    .bx-header-personal {
+        width: 100%;
+        padding: 1rem;
+        display: flex !important;
+        justify-content: space-around;
+        background-color: white;a
+        align-items: center;
+    }
+    .block_menu_mobile {
+        bottom: 0;
+        right: 0;
+        z-index: 12003;
+        position: fixed;
+        background-color: #fff;
+        filter: drop-shadow(0px -4px 30px rgba(196, 196, 196, 0.2));
+    }
+    #bx_basketFKauiI {
+        width: 100%;
+    }
+    .box_with_loginBasket {
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+    }
+    .box_with_basket_login {
+        margin: 0 7px;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+    }
+    .mobile {
+        display: block !important;
+    }
+    .link_header > .icon_header {
+        margin-bottom: 4px;
+        font-size: 21px;
+    }
+    .box-image-empty-basket-mobile, .span_bar {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-image: url(/local/templates/Oshisha/images/menu_cat.svg);
+        background-size: contain;
+    }
+}
 @media (min-width: 320px) and (max-width: 767px) {
     .mobile, .icon_footer_menu {
         display: block !important;
@@ -5772,7 +5824,9 @@ li, ul {
 }
 
 @media (max-width: 1024px) {
-
+    .right_mobile_top {
+        display: block;
+    }
     .box_with_search {
         display: none;
     }
@@ -5780,6 +5834,8 @@ li, ul {
     #MenuHeader .box_with_contact {
         background: #F0F0F0;
         margin: 5px 0px;
+        display: flex;
+        padding: 0.5em 1.2em;
     }
 
     #placeModal {
@@ -7087,4 +7143,39 @@ footer.footer .container .copyrights {
 footer.footer .container .copyrights > span {
     display: block;
     margin: 0;
+}
+
+/* TABLET MENU */
+@media screen and (max-width: 1024px) {
+    .d-1024-hide {
+        display: none !important;
+    }
+    .box_with_menu_header .ul_menu {}
+    .box_with_menu_header .ul_menu .li_menu_top {}
+    .box_with_menu_header .ul_menu .li_menu_top .wrap_block_menu.link_menu_top_active {
+        padding-right: 0;
+    }
+    .box_with_menu_header .ul_menu .li_menu_top .wrap_block_menu.link_menu_top_active .fa_icon.fa {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0;
+        left: auto;
+        z-index: 100;
+        height: 100%;
+        width: 2em;
+        margin: 0 0.25em 0 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .block_menu_mobile.mobile-menu {
+        width: 100%;
+    }
+    .block_menu_mobile.mobile-menu .bx-basket {
+        width: 100%;
+    }
+
 }
