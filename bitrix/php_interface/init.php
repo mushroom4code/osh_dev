@@ -3,7 +3,6 @@
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Enterego\EnteregoSettings;
 
-
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
 
@@ -29,6 +28,9 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
     '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
 ));
+
+//redefine sale  basket condition
+require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
