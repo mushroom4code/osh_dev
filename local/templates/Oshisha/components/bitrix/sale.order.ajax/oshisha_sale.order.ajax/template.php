@@ -22,8 +22,8 @@ use Bitrix\Sale\PropertyValueCollection;
 $context = Application::getInstance()->getContext();
 $request = $context->getRequest();
 
-$this->addExternalJs('/bitrix/js/osh.shipping/jquery.suggestions.min.js');
-$this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css');
+$this->addExternalJs('/bitrix/js/enterego.pvz/jquery.suggestions.min.js');
+$this->addExternalCss('/bitrix/modules/enterego.pvz/install/css/suggestions.css');
 CJSCore::Init(array("osh_pickup"));
 
 if (!isset($arParams['SHOW_ORDER_BUTTON'])) {

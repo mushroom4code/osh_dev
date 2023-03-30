@@ -45,34 +45,30 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         const __this = this
-        if (this.propCommonPVZId) {
 
-            if (this.propAddressId ) {
-                const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
-                if (address) {
-                    address.readOnly = true;
-                }
+        // if (this.propAddressId ) {
+        //     const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
+        //     if (address) {
+        //         address.readOnly = true;
+        //     }
+        // }
+
+        if (this.propCommonPVZId ) {
+            const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.propCommonPVZId + '"]');
+            if (commonPVZ) {
+                commonPVZ.readOnly = true;
             }
-
-            if (this.propCommonPVZId ) {
-                const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.propCommonPVZId + '"]');
-                if (commonPVZ) {
-                    commonPVZ.readOnly = true;
-                }
-            }
-
-            BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
-                if (item.IS_LOCATION === 'Y') {
-                    if (__this.curCityCode !== item.VALUE[0]) {
-                        __this.curCityCode = item.VALUE[0];
-                        __this.propsMap = null;
-                        __this.getCityName();
-                    }
-                }
-            });
-        } else {
-            console.log('Property common PVZ not defined')
         }
+
+        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
+            if (item.IS_LOCATION === 'Y') {
+                if (__this.curCityCode !== item.VALUE[0]) {
+                    __this.curCityCode = item.VALUE[0];
+                    __this.propsMap = null;
+                    __this.getCityName();
+                }
+            }
+        });
     },
 
     createPVZPopup: function () {

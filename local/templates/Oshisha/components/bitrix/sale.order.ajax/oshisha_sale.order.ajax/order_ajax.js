@@ -5555,7 +5555,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.UserCheckType.innerHTML = '';
                 this.getPersonTypeControl(this.UserCheckType);
                 this.getProfilesControl(this.UserCheckType);
-
                 this.editPropsItems(propsNode);
 
                 showPropMap && this.editPropsMap(propsNode);
@@ -5616,11 +5615,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             propsNode.appendChild(propsItemsContainer);
 
             if (propsNode.classList.contains('delivery')) {
+
                 if (this.isOshPickUp()) {
                     this.initOshPickUp(propsNode);
                 }
                 if (this.isOshCourier()) {
                     this.initOshCourier(propsNode);
+                } else {
+                    this.initDadataAddress(propsNode);
                 }
             }
         },
@@ -5646,7 +5648,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
                 || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
                 className += " col-12";
-            } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY') {
+            } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY'
+                || property.getSettings().CODE === 'FIAS' || property.getSettings().CODE === 'KLADR' || property.getSettings().CODE === 'ZIP') {
                 className += " d-none";
             } else {
                 className += " col-md-6 col-lg-6 col-12";
@@ -5775,25 +5778,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         },
 
         initOshCourier: function (propsNode) {
-
+            const nodeDaData = $(propsNode).find('[data-name="ADDRESS"]');
             if (this.deliveryOptions.DA_DATA_TOKEN !== undefined) {
                 window.Osh.bxPopup.init();
                 const oshMkad = window.Osh.oshMkadDistance.init(this.deliveryOptions);
-
-                $(propsNode).find('[data-name="ADDRESS"]').val(this.deliveryOptions?.DA_DATA_ADDRESS).addClass('d-none')
                 const propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
-                const nodeDaData = BX.create('INPUT', {
-                    props: {
-                        className: 'form-control bx-soa-customer-input bx-ios-fix mb-2',
-                        name: 'dadata_input',
-                        type: 'text',
-                        size: 40,
-                        value: this.deliveryOptions?.DA_DATA_ADDRESS
-                    },
-                    events: {keypress: BX.proxy(this.checkKeyPress, this)}
-                })
 
-                propContainer.append(nodeDaData)
                 const nodeOpenMap = BX.create('a',
                     {
                         props: {className: 'btn btn-primary'},
@@ -5809,29 +5799,68 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     });
                 propContainer.append(nodeOpenMap);
                 propsNode.append(propContainer);
+                if (!nodeDaData.hasClass('suggestions-input')) {
+                    nodeDaData.suggestions({
+                        token: this.deliveryOptions.DA_DATA_TOKEN,
+                        type: "ADDRESS",
+                        hint: false,
+                        floating: true,
+                        constraints: {
+                            locations: [{region: 'Москва'}],
+                            // deletable: true
+                        },
+                        // в списке подсказок не показываем область
+                        // restrict_value: true,
+                        onSelect: function (suggestion) {
+                            let address = document.querySelector('input[data-name="ADDRESS"]');
+                            document.querySelector('input[data-name="ZIP"]').value = suggestion.data.postal_code;
+                            document.querySelector('input[data-name="CITY"]').value = suggestion.data.city;
+                            document.querySelector('input[data-name="FIAS"]').value = suggestion.data.fias_id;
+                            document.querySelector('input[data-name="KLADR"]').value = suggestion.data.kladr_id;
+                            address.setAttribute('data-geo-lat', suggestion.data.geo_lat);
+                            address.setAttribute('data-geo-lon', suggestion.data.geo_lon);
+                            if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+                                oshMkad.afterSave = null;
+                                this.deliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                                oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon], true);
+                            }
+                        }.bind(this)
+                    });
+                }
+            }
+        },
 
-                $(nodeDaData).suggestions({
+        initDadataAddress: function (propsNode) {
+            var nodeDaData = $(propsNode).find('[data-name="ADDRESS"]');
+            if (this.deliveryOptions.DA_DATA_TOKEN !== undefined && !nodeDaData.hasClass('suggestions-input')) {
+                nodeDaData.suggestions({
                     token: this.deliveryOptions.DA_DATA_TOKEN,
                     type: "ADDRESS",
                     hint: false,
                     floating: true,
-                    constraints: {
-                        locations: [{region: "Московская"}, {region: "Москва"}],
-                        // deletable: true
-                    },
                     // в списке подсказок не показываем область
                     // restrict_value: true,
                     onSelect: function (suggestion) {
-                        let address = propsNode.querySelector('input[data-name="ADDRESS"]');
+                        let address = document.querySelector('input[data-name="ADDRESS"]');
+                        document.querySelector('input[data-name="ZIP"]').value = suggestion.data.postal_code;
+                        document.querySelector('input[data-name="CITY"]').value = suggestion.data.city;
+                        document.querySelector('input[data-name="FIAS"]').value = suggestion.data.fias_id;
+                        document.querySelector('input[data-name="KLADR"]').value = suggestion.data.kladr_id;
                         address.setAttribute('data-geo-lat', suggestion.data.geo_lat);
                         address.setAttribute('data-geo-lon', suggestion.data.geo_lon);
                         if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                            oshMkad.afterSave = null;
                             this.deliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                            oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon], true);
                         }
+                        BX.onCustomEvent('onDeliveryExtraServiceValueChange');
                     }.bind(this)
                 });
+                setTimeout(function () {
+                    nodeDaData.suggestions().setOptions({
+                        constraints: {
+                            locations: [{city: BX.SaleCommonPVZ.curCityName}]
+                        }
+                    })
+                },1800, nodeDaData);
             }
         },
 
@@ -6009,7 +6038,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
         insertEnumProperty: function (property, propsItemNode, disabled) {
             var prop, inputs, values, i, propContainer;
-
             if (disabled) {
                 prop = this.propsHiddenBlockNode.querySelector('div[data-property-id-row="' + property.getId() + '"]');
                 if (prop) {
@@ -6137,7 +6165,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 if (settings.CODE === 'ADDRESS') {
                     // TODO Enterego pickup
                     if (disabled === true) {
-                        inputs[i].setAttribute('readonly', 'readonly');
+                        // inputs[i].setAttribute('readonly', 'readonly');
                     }
                     inputs[i].setAttribute('data-name', settings.CODE);
                 }
