@@ -6473,7 +6473,7 @@ body.hide-jivo > jdiv {
     opacity: 1;
     visibility: visible;
     background-color: #F0F0F0;
-    z-index: 2000;
+    z-index: 100000;
     filter: drop-shadow(0px 4px 3px rgba(93, 93, 93, 0.4));
     transition: opacity .6s ease, visibility .6s ease;
 }
@@ -6750,4 +6750,30 @@ div.carousel-item-elems > div > div {
     .xs-d-none {
         display: none;
     }
+}
+
+.ctweb-smsauth-menu-step .form-group {
+    margin-bottom: 1.5em;
+}
+.show-pass-wrap {
+    position: relative;
+}
+.show-pass-btn {
+    position: absolute;
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+    top: 50%;
+    right: 5px;
+    z-index: 10;
+    background-image: url(/local/templates/Oshisha/images/eye-on.svg);
+    transform: translateY(-50%);
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: all 0.3s linear;
+}
+.show-pass-btn.active {
+    background-image: url(/local/templates/Oshisha/images/eye-off.svg);
 }

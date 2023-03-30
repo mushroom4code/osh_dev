@@ -368,14 +368,19 @@ $option = $option_site; ?>
             // age access
         </script>
     <? } ?>
-    <div id="consent-cookie-popup" class="hidden">
-        <p>Мы используем файлы Cookie, чтобы улучшить сайт для вас</p>
-        <div id="cookie-popup-controls">
+
+    <? $user_consent = $USER->IsAuthorized() ? (new Cuser)->GetById($USER->GetID())->Fetch()[USER_CONSENT_PROPERTY] : false;
+    if (!$USER->IsAuthorized() || $user_consent != '1') {?>
+        <div id="consent-cookie-popup" class="hidden <?= $USER->IsAuthorized() ? 'js-auth' : 'js-noauth'?>">
+            <p>Мы используем файлы Cookie, чтобы улучшить сайт для вас</p>
+            <div id="cookie-popup-controls">
                 <a id="cookie-popup-about" class="mobile" href="/about/cookie/"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
                 <a id="cookie-popup-about" class="desktop" href="/about/cookie/">Подробнее</a>
-            <a id="cookie-popup-accept" href="#">Принять</a>
-        </div>
-    </div>
+                <a id="cookie-popup-accept" href="#">Принять</a>
+            </div>
+        </div><?
+    }
+    ?>
     <script>
         $(document).ready(function () {
             $(document).on('click', '.close_header_box', function () {
