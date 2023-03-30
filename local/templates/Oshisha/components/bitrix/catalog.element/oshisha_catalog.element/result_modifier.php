@@ -23,6 +23,12 @@ $arResult["IS_SUBSCRIPTION_KEY_FOUND"] =$is_key_found;
 
 $useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
 $arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($arResult['ITEM_ALL_PRICES'][0], $useDiscount);
+if(!empty($arResult['OFFERS'])){
+    foreach($arResult['OFFERS']  as &$offer){
+        $useDiscount = $offer['PROPERTIES']['USE_DISCOUNT'];
+        $offer['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($offer['ITEM_ALL_PRICES'][0], $useDiscount)['PRICE_DATA'];
+    }
+}
 
 $component = $this->getComponent();
 $arParams = $component->applyTemplateModifications();

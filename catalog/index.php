@@ -111,7 +111,7 @@ $APPLICATION->IncludeComponent(
 			2 => "SIZES_SHOES",
 			3 => "SIZES_CLOTHES",
 			4 => "COLOR_REF",
-			5 => "",
+			5 => "GRAMMOVKA_TP",
 		),
 		"DETAIL_BACKGROUND_IMAGE" => "-",
 		"LINK_IBLOCK_TYPE" => "",
