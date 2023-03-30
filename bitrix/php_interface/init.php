@@ -26,6 +26,7 @@ CModule::AddAutoloadClasses("", array(
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
     '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
+    '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
 ));
 
 //redefine sale  basket condition
@@ -325,3 +326,8 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
 }
 
 EnteregoSettings::getSalePriceOnCheckAndPeriod();
+
+// JWT-token authorization
+addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);
+AddEventHandler('main', 'OnAfterUserAuthorize', ['\Enterego\AuthTokenTable', 'getNewToken']);
+AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToken']);
