@@ -5837,6 +5837,21 @@ li, ul {
     background-repeat: no-repeat;
 }
 
+@media (max-width: 1024px) {
+    .right_mobile_top {
+        display: flex;
+        align-items: center;
+    }
+    .right_mobile_top .search_mobile {
+        margin-right: 17px;
+        width: 22px;
+        height: 22px;
+        background-image: url("/local/templates/Oshisha/images/search_basket.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        margin-top: 4px;
+    }
+}
 @media (max-width: 768px) {
     .container_header {
         margin-top: 10px
