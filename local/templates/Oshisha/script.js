@@ -39,21 +39,7 @@ $(document).ready(function () {
         bool_select_contragent_user = $(select).is('#contragent_user'),
         bool_select_company_user_order = $(select).is('#company_user_order');
 
-
-    let cookieStorage = {
-        getItem: (key) => {
-            let cookie = document.cookie
-                .split(';')
-                .find((row) => row.trim().startsWith(key))
-                ?.split("=")[1];
-            return cookie
-        },
-        setItem: (key, value) => {
-            document.cookie = `${key}=${value}`;
-        }
-    }
-
-    var storageType = cookieStorage, consentPropertyName = 'cookie_consent';
+    var storageType = localStorage, consentPropertyName = 'cookie_consent';
     var saveToStorage = () => storageType.setItem(consentPropertyName, true);
     var consentPopup = document.getElementById('consent-cookie-popup');
     var consentAcceptBtn = document.getElementById('cookie-popup-accept');

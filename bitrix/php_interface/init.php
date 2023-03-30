@@ -28,6 +28,9 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
 ));
 
+//redefine sale  basket condition
+require_once(__DIR__ . '/enterego_class/sale_cond.php');
+
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
     array('CatalogAPIService', 'OnRestServiceBuildDescription'));
