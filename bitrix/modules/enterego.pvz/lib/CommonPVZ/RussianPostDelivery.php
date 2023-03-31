@@ -6,6 +6,7 @@ class RussianPostDelivery extends CommonPVZ
 {
     public string $delivery_name = 'RussianPost';
     public string $delivery_type = '';
+    private string $russian_post_id_postfix = '_delivery_price';
 
     protected function __construct(string $delivery_type) {
         parent::__construct();
@@ -82,14 +83,35 @@ class RussianPostDelivery extends CommonPVZ
                 'to' => $params['zip_to']
             ];
 
+            $cache = \Bitrix\Main\Application::getInstance()->getManagedCache();
+            $hashed_values = array($params['weight'], $params['sumoc'], $params['from'], $params['to']);
+            $hash_string = md5(implode('', $hashed_values));
+
+            if ($cache->read(3600, $this->delivery_type.$this->russian_post_id_postfix)) {
+                $cached_vars = $cache->get($this->delivery_type.$this->russian_post_id_postfix);
+                if (!empty($cached_vars)) {
+                    foreach ($cached_vars as $varKey => $var) {
+                        if($varKey === $hash_string) {
+                            return $var;
+                        }
+                    }
+                }
+            }
+
             if ($this->delivery_type === 'RussianPostEms') {
                 $params['group'] = 0;
             }
 
             $TariffCalculation = new \LapayGroup\RussianPost\TariffCalculation();
             $calcInfo = $TariffCalculation->calculate($objectId, $params);
+            $finalPrice = $calcInfo->getGroundNds();
 
-            return $calcInfo->getGroundNds();
+            $cache->set($this->delivery_type.$this->russian_post_id_postfix, (isset($cached_vars) && !empty($cached_vars))
+                ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                : array($hash_string => $finalPrice));
+            $cache->finalize();
+
+            return $finalPrice;
         } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();
             return array('errors' => $this->errors);

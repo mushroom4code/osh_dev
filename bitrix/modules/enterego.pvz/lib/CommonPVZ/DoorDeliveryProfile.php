@@ -80,6 +80,9 @@ class DoorDeliveryProfile extends Base
             if ($prop['CODE'] === 'LOCATION') {
                 $deliveryParams['location_name'] = DeliveryHelper::getCityName($propertyItem->getValue());
             }
+            if ($prop['CODE'] === 'ADDRESS') {
+                $deliveryParams['address'] = $propertyItem->getValue();
+            }
             if ($prop['CODE'] === 'ZIP') {
                 $deliveryParams['zip_to'] = $propertyItem->getValue();
             }
@@ -96,8 +99,9 @@ class DoorDeliveryProfile extends Base
             $packageParams['lenght'] = (int)$productDimensions['LENGTH'];
             $packageParams['width'] = (int)$productDimensions['WIDTH'];
             $packageParams['weight'] = (int)$basketItemFields['WEIGHT'];
-            $deliveryParams['packages'][] = $packageParams;
+            $deliveryParams['packages'][$basketItemFields['PRODUCT_ID']] = $packageParams;
         }
+        ksort($deliveryParams['packages']);
         if ($propTypeDeliveryId) {
             foreach ($deliveries as $delivery) {
                 $deliveryInstance = CommonPVZ::getInstanceObject($delivery);

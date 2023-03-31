@@ -95,7 +95,7 @@ $aTabs = array(
                 Loc::getMessage('SDEK_from_location'),
                 Option::get($module_id, 'SDEK_from_location'),
                 array('text')
-            )
+            ),
         )
     ),
     // ПЭК
@@ -208,6 +208,34 @@ $tabControl->begin();
                         </td>
                     </tr>
                     <?php
+                } elseif ($aTab['DIV'] === 'edit3') {?>
+                    <tr>
+                    <td>
+                    <table style="width: 200%; margin-top: 15px;">
+                        <tr>
+                            <td colspan="4" valign="top" align="center"><strong>Управление тарифами</strong>
+                            </td>
+                        </tr>
+                        <?php $arTarifs = sdekHelperAllPvz::getExtraTarifs(); ?>
+                        <tr>
+                            <th style="width:20px"></th>
+                            <th>Название тарифа (код)</th>
+                            <th>Отключить тариф для расчета</th>
+                        </tr>
+                        <?php
+	                    foreach($arTarifs as $tarifId => $tarifOption){?>
+                            <tr>
+                                <td style='text-align:center'><?php if($tarifOption['DESC']) { ?><?php } ?></td>
+                                <td><?= $tarifOption['NAME'] ?></td>
+                                <td align='center'><input type='checkbox' name='sdek_tarifs[<?=$tarifId?>][BLOCK]' value='Y' <?=($tarifOption['BLOCK']=='Y')?"checked":""?>></td>
+                            </tr>
+	                    <?php } ?>
+	                    <tr>
+                            <td colspan='2'><br></td>
+                        </tr>
+                    </table>
+                    </td>
+                    </tr><?
                 }
             }
         }
@@ -227,7 +255,8 @@ $tabControl->end();
 
 
 if ($request->isPost() && check_bitrix_sessid()) {
-
+    $_REQUEST['sdek_tarifs'] = ($_REQUEST['sdek_tarifs']) ? serialize($_REQUEST['sdek_tarifs']) : 'a:0:{}';
+    Option::set($module_id, 'sdek_tarifs', $_REQUEST['sdek_tarifs']);
     foreach ($aTabs as $aTab) {
         foreach ($aTab['OPTIONS'] as $arOption) {
             if (!is_array($arOption)) {
