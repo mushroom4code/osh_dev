@@ -45,6 +45,9 @@
 				{
 					if (postamat && address)
 						chosenProp.val(address + ' [' + postamat + ']');
+					//enterego - no address in session no in field
+					else
+						chosenProp.val('');
 					chosenProp.css('background-color', '#eee').attr('readonly', 'readonly');
 					break;
 				}
