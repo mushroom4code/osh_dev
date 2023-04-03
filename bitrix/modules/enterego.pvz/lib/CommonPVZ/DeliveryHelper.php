@@ -108,6 +108,8 @@ class DeliveryHelper
             }
         }
 
+        $params['curDeliveryId'] = $order->getField('DELIVERY_ID');
+
         $propertyCollection = $order->getPropertyCollection();
         foreach ($propertyCollection as $orderProp)
         {
@@ -118,13 +120,27 @@ class DeliveryHelper
                 $params['propAddress'] = $prop['ID'];
             } elseif ($prop['CODE'] === 'TYPE_DELIVERY') {
                 $params['propTypeDelivery'] = $prop['ID'];
+            } elseif ($prop['CODE'] === 'ZIP') {
+                $params['propZip'] = $prop['ID'];
+            } elseif ($prop['CODE'] === 'CITY') {
+                $params['propCity'] = $prop['ID'];
+            }elseif ($prop['CODE'] === 'FIAS') {
+                $params['propFias'] = $prop['ID'];
+            }elseif ($prop['CODE'] === 'KLADR') {
+                $params['propKladr'] = $prop['ID'];
+            }elseif ($prop['CODE'] === 'LATITUDE') {
+                $params['propLatitude'] = $prop['ID'];
+            }elseif ($prop['CODE'] === 'LONGITUDE') {
+                $params['propLongitude'] = $prop['ID'];
             }
         }
 
         $cAsset = Asset::getInstance();
 
         $cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);
+        $cAsset->addJs('/bitrix/js/enterego.pvz/jquery.suggestions.min.js', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
+        $cAsset->addCss('/bitrix/modules/osh.shipping/install/css/suggestions.css', true);
         $cAsset->addString(
             "<script id='' data-params=''>
                     window.addEventListener('load', function () {
