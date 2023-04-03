@@ -13,13 +13,13 @@ $EMAIL = htmlspecialcharsbx($_REQUEST['EMAIL']);
 $PHONE = htmlspecialcharsbx($_REQUEST['PHONE']);
 $message = '';
 
-if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
-    $res = BitrixCaptcha::checkSpam();
-    if ($res === false) {
-        echo 'Ошибка CAPTCHA';
-        die;
-    }
-}
+//if (class_exists('B01110011ReCaptcha\BitrixCaptcha')) {
+//    $res = BitrixCaptcha::checkSpam();
+//    if ($res === false) {
+//        echo 'Ошибка CAPTCHA';
+//        die;
+//    }
+//}
 
 if (!empty($PHONE) && !empty($MESSAGE)) {
 
@@ -39,6 +39,7 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
     ];
     $elemId = $el->add($arElement);
 
+    /*
     // Получение ИД изображений елемента ИБ
     if (!empty($_FILES)) {
         $elemFiles = [];
@@ -70,7 +71,7 @@ if (!empty($PHONE) && !empty($MESSAGE)) {
         'duplicate' => 'Y',
         '',
         'FILE' => !empty($_FILES) ? $elemFiles : []
-    ));
+    ));*/
     echo 1;
 } else {
     echo 'ошибка';

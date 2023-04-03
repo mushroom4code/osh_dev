@@ -55,9 +55,9 @@ class EnteregoBitrix24
                         'ASSIGNED_BY_ID' => DEFAULT_ASSIGNED_USER,
                         'EXPORT' => 'Y',
                         "PHONE" => [["VALUE" => $arFields['PROPERTY_VALUES']['PHONE'], "VALUE_TYPE" => "WORK"]],
-                        'HAS_PHONE' => 'Y',
+                        'HAS_PHONE' => $arFields['PROPERTY_VALUES']['PHONE'] ? 'Y' : 'N',
                         "EMAIL" => [["VALUE" => $arFields['PROPERTY_VALUES']['EMAIL'], "VALUE_TYPE" => "WORK"]],
-                        "HAS_EMAIL" => 'Y',
+                        "HAS_EMAIL" => $arFields['PROPERTY_VALUES']['EMAIL'] ? 'Y' : 'N',
 
                     ],
                     'params' => [
