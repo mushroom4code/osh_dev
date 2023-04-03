@@ -172,6 +172,9 @@ $option = $option_site; ?>
                             <a href="<?= $option->price_list_link; ?>" class="text_link_footer ">Прайс-лист</a>
                         <?php } else { ?> <a href="/login/" class="text_link_footer ">Прайс-лист</a><?php } ?>
                     </li>
+                    <li class="nav-item li_link_footer">
+                            <a href="/about/vacancy/" class="text_link_footer ">Вакансии</a>
+                    </li>
                 </div>
                 <span class="text_footer_weight desktop social_block">
                   Социальные сети

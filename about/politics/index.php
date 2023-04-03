@@ -438,4 +438,4 @@ $APPLICATION->SetTitle("Политика конфиденциальности");
             https://oshisha.net/about/politics/</p>
         <p>Обновлено «10 октября» 2022 г.</p>
     </div>
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>

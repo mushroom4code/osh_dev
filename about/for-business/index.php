@@ -109,4 +109,4 @@ Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js"); ?>
 
        
     </div>
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>

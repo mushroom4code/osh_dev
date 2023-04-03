@@ -4,7 +4,7 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 /**
  * @var CMain $APPLICATION
  */
-$APPLICATION->SetTitle("О нас");
+$APPLICATION->SetTitle("Вакансии");
 ?>
     <div id="o_nas" class="mb-5">
         <h1 class="font-120 font-weight-bold color-black mb-7 mt-lg-5 mt-md-5 mt-3">О нас</h1>

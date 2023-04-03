@@ -110,6 +110,14 @@ $arUrlRewrite=array (
     'PATH' => '/about/FAQ/index.php',
     'SORT' => 100,
   ),
+  29 =>
+  array (
+    'CONDITION' => '#^/about/vacancy/#',
+    'RULE' => '',
+    'ID' => '',
+    'PATH' => '/about/vacancy/index.php',
+    'SORT' => 100,
+  ),
   16 =>
   array (
     'CONDITION' => '#^/personal/#',
