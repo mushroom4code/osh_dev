@@ -158,17 +158,19 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                     </span>
                                 <? endif; ?>
                             </div>
-                            <? if ($arSection['CHILDS']):
+                            <?php if ($arSection['CHILDS']):
                                 usort($arSection['CHILDS'], 'sort_by_name');
-                                foreach ($arSection['CHILDS'] as $arSectionSub): ?>
+                                foreach ($arSection['CHILDS'] as $arSectionSub):
+                                    if(CIBlockSection::GetSectionElementsCount($arSectionSub['ID'],['CNT_ACTIVE'=>'Y']) > 0 ){?>
                                     <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
                                          data-code="<?= $arSection['ID'] ?>">
                                         <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
                                     </div>
-                                <? endforeach; ?>
-                            <? endif; ?>
+                                <?php }
+                                    endforeach; ?>
+                            <?php endif; ?>
                         </div>
-                    <? endforeach; ?>
+                    <?php endforeach; ?>
 
                 </div>
             </div>
