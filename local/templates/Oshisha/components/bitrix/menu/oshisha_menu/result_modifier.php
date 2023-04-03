@@ -185,12 +185,14 @@ foreach($arResult as $key=>$arItem)
 	}
 	elseif($arItem["DEPTH_LEVEL"] == "2")
 	{
-		$arMenuItemsIDs[$curItemLevel_1][$arItem["PARAMS"]["item_id"]] = array();
-		if ($arItem["IS_PARENT"])
-		{
-			$curItemLevel_2 = $arItem["PARAMS"]["item_id"];
+		$res = CIBlockSection::GetList(array(), ['NAME' => $arItem['TEXT']], false, ['ID'])->Fetch()['ID'];
+		if (CIBlockSection::GetSectionElementsCount($res, ['CNT_ACTIVE' => 'Y']) > 0) {
+			$arMenuItemsIDs[$curItemLevel_1][$arItem["PARAMS"]["item_id"]] = array();
+			if ($arItem["IS_PARENT"]) {
+				$curItemLevel_2 = $arItem["PARAMS"]["item_id"];
+			}
+			$arAllItems[$arItem["PARAMS"]["item_id"]] = $arItem;
 		}
-		$arAllItems[$arItem["PARAMS"]["item_id"]] = $arItem;
 	}
 	elseif($arItem["DEPTH_LEVEL"] == "3")
 	{
