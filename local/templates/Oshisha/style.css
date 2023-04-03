@@ -7162,3 +7162,14 @@ footer.footer .container .copyrights > span {
 .show-pass-btn.active {
     background-image: url(/local/templates/Oshisha/images/eye-off.svg);
 }
+
+.banner-vacancy div, .banner-vacancy img {
+    height: 100%;
+    object-fit: cover;
+    max-height: 500px;
+    object-position: top;
+}
+
+.banner-vacancy {
+    max-height: 500px;
+}

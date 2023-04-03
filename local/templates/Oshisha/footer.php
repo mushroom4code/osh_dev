@@ -151,6 +151,9 @@ $option = $option_site; ?>
                         <?php $href = $USER->IsAuthorized() ? $option->price_list_link : '/login/' ?>
                         <a class="col-menu-link" href="<?= $href ?>">Прайс-лист</a>
                     </li>
+                    <li class="nav-item li_link_footer">
+                        <a href="/about/vacancy/" class="text_link_footer ">Вакансии</a>
+                    </li>
                 </ul>
 
 
