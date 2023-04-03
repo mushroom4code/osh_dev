@@ -2470,7 +2470,6 @@ $(document).ready(function () {
 
     $('.smart-filter-tog').on('click', function () {
         var code_vis = $(this).data('code-vis');
-        console.log(code_vis);
         $('.catalog-section-list-item-sub[data-code="' + code_vis + '"]').toggleClass('active');
         $(this).toggleClass('smart-filter-angle-up');
     });
