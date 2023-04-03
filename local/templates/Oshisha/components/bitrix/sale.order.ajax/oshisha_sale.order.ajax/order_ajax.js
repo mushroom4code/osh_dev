@@ -5620,9 +5620,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     this.initOshPickUp(propsNode);
                 }
                 if (this.isOshCourier()) {
-                    this.initOshCourier(propsNode);
-                } else {
-                    this.initDadataAddress(propsNode);
+                    // this.initOshCourier(propsNode);
                 }
             }
         },
@@ -5649,7 +5647,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
                 className += " col-12";
             } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY'
-                || property.getSettings().CODE === 'FIAS' || property.getSettings().CODE === 'KLADR' || property.getSettings().CODE === 'ZIP') {
+                || property.getSettings().CODE === 'FIAS' || property.getSettings().CODE === 'KLADR'
+                || property.getSettings().CODE === 'ZIP' || property.getSettings().CODE === 'LATITUDE' || property.getSettings().CODE === 'LONGITUDE') {
                 className += " d-none";
             } else {
                 className += " col-md-6 col-lg-6 col-12";
@@ -5775,93 +5774,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
         isOshCourier: function () {
             return parseInt(this.deliveryOptions?.OSH_COURIER_ID) === this.lastSelectedDelivery;
-        },
-
-        initOshCourier: function (propsNode) {
-            const nodeDaData = $(propsNode).find('[data-name="ADDRESS"]');
-            if (this.deliveryOptions.DA_DATA_TOKEN !== undefined) {
-                window.Osh.bxPopup.init();
-                const oshMkad = window.Osh.oshMkadDistance.init(this.deliveryOptions);
-                const propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
-
-                const nodeOpenMap = BX.create('a',
-                    {
-                        props: {className: 'btn btn-primary'},
-                        text: 'Выбрать адрес на карте',
-                        events: {
-                            click: BX.proxy(function () {
-                                oshMkad.afterSave = function (address) {
-                                    this.deliveryOptions.DA_DATA_ADDRESS = address;
-                                }.bind(this);
-                                window.Osh.bxPopup.onPickerClick(this)
-                            }, this)
-                        }
-                    });
-                propContainer.append(nodeOpenMap);
-                propsNode.append(propContainer);
-                if (!nodeDaData.hasClass('suggestions-input')) {
-                    nodeDaData.suggestions({
-                        token: this.deliveryOptions.DA_DATA_TOKEN,
-                        type: "ADDRESS",
-                        hint: false,
-                        floating: true,
-                        constraints: {
-                            locations: [{region: 'Москва'}],
-                            // deletable: true
-                        },
-                        // в списке подсказок не показываем область
-                        // restrict_value: true,
-                        onSelect: function (suggestion) {
-                            let address = document.querySelector('input[data-name="ADDRESS"]');
-                            document.querySelector('input[data-name="ZIP"]').value = suggestion.data.postal_code;
-                            document.querySelector('input[data-name="CITY"]').value = suggestion.data.city;
-                            document.querySelector('input[data-name="FIAS"]').value = suggestion.data.fias_id;
-                            document.querySelector('input[data-name="KLADR"]').value = suggestion.data.kladr_id;
-                            address.setAttribute('data-geo-lat', suggestion.data.geo_lat);
-                            address.setAttribute('data-geo-lon', suggestion.data.geo_lon);
-                            if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                                oshMkad.afterSave = null;
-                                this.deliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                                oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon], true);
-                            }
-                        }.bind(this)
-                    });
-                }
-            }
-        },
-
-        initDadataAddress: function (propsNode) {
-            var nodeDaData = $(propsNode).find('[data-name="ADDRESS"]');
-            if (this.deliveryOptions.DA_DATA_TOKEN !== undefined && !nodeDaData.hasClass('suggestions-input')) {
-                nodeDaData.suggestions({
-                    token: this.deliveryOptions.DA_DATA_TOKEN,
-                    type: "ADDRESS",
-                    hint: false,
-                    floating: true,
-                    // в списке подсказок не показываем область
-                    // restrict_value: true,
-                    onSelect: function (suggestion) {
-                        let address = document.querySelector('input[data-name="ADDRESS"]');
-                        document.querySelector('input[data-name="ZIP"]').value = suggestion.data.postal_code;
-                        document.querySelector('input[data-name="CITY"]').value = suggestion.data.city;
-                        document.querySelector('input[data-name="FIAS"]').value = suggestion.data.fias_id;
-                        document.querySelector('input[data-name="KLADR"]').value = suggestion.data.kladr_id;
-                        address.setAttribute('data-geo-lat', suggestion.data.geo_lat);
-                        address.setAttribute('data-geo-lon', suggestion.data.geo_lon);
-                        if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                            this.deliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                        }
-                        BX.onCustomEvent('onDeliveryExtraServiceValueChange');
-                    }.bind(this)
-                });
-                setTimeout(function () {
-                    nodeDaData.suggestions().setOptions({
-                        constraints: {
-                            locations: [{city: BX.SaleCommonPVZ.curCityName}]
-                        }
-                    })
-                },1800, nodeDaData);
-            }
         },
 
         insertLocationProperty: function (property, propsItemNode, disabled) {
