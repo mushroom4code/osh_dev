@@ -96,7 +96,7 @@ class EnteregoBitrix24
                     "TITLE" => $dealTitle,
                     "TYPE_ID" => DEAL_TYPE_ID,
                     'IS_NEW' => 'Y',
-                    "STAGE_ID" => "NEW",
+                    "STAGE_ID" => DEAL_STAGE_STATUS_ID,
                     "CONTACT_ID" => $clientId,
                     "OPENED" => "Y",
                     "ASSIGNED_BY_ID" => $clientAssigned,
