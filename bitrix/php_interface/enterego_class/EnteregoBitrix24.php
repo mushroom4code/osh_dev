@@ -94,7 +94,7 @@ class EnteregoBitrix24
             $query = [
                 'fields' => [
                     "TITLE" => $dealTitle,
-                    "TYPE_ID" => 1,
+                    "TYPE_ID" => DEAL_TYPE_ID,
                     'IS_NEW' => 'Y',
                     "STAGE_ID" => "NEW",
                     "CONTACT_ID" => $clientId,
