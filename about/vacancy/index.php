@@ -96,6 +96,7 @@ $APPLICATION->SetTitle("Вакансии");?>
                                 </p>
 								<?php if (!empty($rowFaq['PROPERTY_LINK_IN_SPACE_VALUE'])) { ?> <a
                                         href="<?= $rowFaq['PROPERTY_LINK_IN_SPACE_VALUE']; ?>"
+                                        target="_blank"
                                         class="red_button_cart color-white p-2 mb-3">Подробнее</a>
 								<?php } ?>
                             </div>
