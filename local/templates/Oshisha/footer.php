@@ -17,60 +17,61 @@ $option = $option_site; ?>
 </div><!--end .workarea-->
 
 <?php $userData = EnteregoUser::getInstance(); ?>
-<footer class="box_footer">
-    <div class="foot_container">
-        <div class="d-flex flex-lg-row flex-md-row flex-column mb-3">
-            <div class="col-11 col-lg-3 col-md-3 box_footer_with_boxes box_color order-lg-1">
-                <div class="desktop">
-                    <a class="bx-footer-logo" href="<?= SITE_DIR ?>">
+<footer class="footer">
+    <div class="container foot_container">
+        <div class="row">
+            <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
+                <a class="logo" href="<?= SITE_DIR ?>">
+                    <?php
+                    $APPLICATION->IncludeComponent(
+                        'bitrix:main.include',
+                        '',
+                        [
+                            'AREA_FILE_SHOW' => 'file',
+                            'PATH' => SITE_DIR . 'include/logo_footer.php'
+                        ],
+                        false
+                    );
+                    ?>
+                </a>
+
+                <div class='company-info'>
+                    <span class='about'>
+                        <span class="info-row info-row--about">
                         <?php $APPLICATION->IncludeComponent(
-                            "bitrix:main.include",
-                            "",
-                            array(
-                                "AREA_FILE_SHOW" => "file",
-                                "PATH" => SITE_DIR . "include/logo_footer.php"
-                            ),
+                            'bitrix:main.include',
+                            '',
+                            [
+                                'AREA_FILE_SHOW' => 'file',
+                                'PATH' => SITE_DIR . 'include/about_title.php'
+                            ],
                             false
                         ); ?>
-                    </a>
-                    <div class="mb-3 d-flex align-items-center">
-							<span class="text-white">
+                        </span>
 
-								<?php $APPLICATION->IncludeComponent(
-                                    "bitrix:main.include",
-                                    "", array(
-                                    "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_DIR . "include/about_title.php"
-                                ),
-                                    false
-                                ); ?>
-								<span class="phone_footer phone_footer_first">
-                                    <a href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
-                                </span>
-								<span class="phone_footer"><a href="tel:88006004424">8-800-600-44-24</a></span>
-								<span class="work_time">Время работы <br>
-                                    <div class="mt-2"> 10:00 - 20:00, ежедневно.</div>
-                                </span>
-								<span class="email_footer">
-                                    <a href="mailto:info@oshisha.net">info@oshisha.net </a></span>
-							</span>
-                    </div>
+                        <span class="info-row info-row--phone">
+                            <a class="link" href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
+                        </span>
+
+                        <span class="info-row info-row--phone">
+                            <a class="link" href="tel:88006004424">8-800-600-44-24</a>
+                        </span>
+
+                        <span class="info-row info-row--worktime">Время работы <br>
+                            <span class="worktime"> 10:00 - 20:00, ежедневно.</span>
+                        </span>
+
+                        <span class="info-row info-row--email">
+                            <a class="link" href="mailto:info@oshisha.net">info@oshisha.net </a>
+                        </span>
+                    </span>
                 </div>
             </div>
-            <div class="col-11 col-lg-3 col-md-3 mb-4 mb-lg-0 order-lg-2">
-                <span class="text_footer_weight d-flex justify-content-between">
-                    <span> Каталог</span>
-                    <span class="icon_footer_menu">
-                        <input type="checkbox" id="checkbox1" class="checkbox1 visuallyHidden">
-                        <label for="checkbox1">
-                            <div class="hamburger hamburger1">
-                                <span class="bar bar2"></span>
-                                <span class="bar bar3"></span>
-                            </div>
-                        </label>
-                    </span>
-                </span>
-                <div data-id="checkbox1" data-hide="true" class="hides_box box_footer_js">
+
+
+            <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
+                <span class="col-title js__collapse-list">Каталог</span>
+                <ul class="col-menu">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "bottom_menu",
@@ -88,134 +89,110 @@ $option = $option_site; ?>
                         ),
                         false
                     ); ?>
-                </div>
+                </ul>
             </div>
-            <div class="col-11 col-lg-3 col-md-3 mb-4 mb-lg-0 order-lg-3">
-                <span class="text_footer_weight desktop">
-                   Поддержка
-                </span>
-                <span class="mobile">
-                    <div class="d-flex justify-content-between flex-row text_footer_weight">
-                        <span>Покупателям </span>
-                         <span class="icon_footer_menu">
-                            <input type="checkbox" checked id="checkbox3" class="checkbox3 visuallyHidden">
-                            <label for="checkbox3">
-                                <div class="hamburger hamburger3">
-                                    <span class="bar bar5"></span>
-                                    <span class="bar bar6"></span>
-                                </div>
-                            </label>
-                        </span>
-                    </div>
-                </span>
-                <nav class="li_link_footer box_with_link_footer hides_box box_footer_js" data-hide="false"
-                     data-id="checkbox3">
-                    <span class="li_link_footer">
-                         <a href="/about/contacts/" class="text_link_footer">Контакты</a>
-                    </span>
 
-                    <span class="li_link_footer ">
-                         <a href="/about/feedback/" class="text_link_footer">Обратная связь</a>
-                    </span>
-                    <span class="li_link_footer ">
-                         <a href="javascript:void(0)" class="callback js__callback text_link_footer">Обратный звонок</a>
-                    </span>
-                    <?php if ($USER->IsAuthorized()) { ?>
-                        <span class="li_link_footer">
-                         <a href="/about/FAQ/" class="text_link_footer li_link_footer">FAQ</a>
-                    </span>
-                    <?php } ?>
-                    <span class="li_link_footer ">
-                         <a href="/about/users_rules/" class="text_link_footer">Пользовательское соглашение</a>
-                    </span>
-                    <span class="li_link_footer ">
-                         <a href="/about/politics/" class="text_link_footer">Политика конфиденциальности</a>
-                    </span>
-                    <span>
-                        <a href="/about/cookie/" class="text_link_footer">Политика обработки Cookie</a>
-                    </span>
-                </nav>
+
+            <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
+                <span class="col-title js__collapse-list">Покупателям</span>
+                <ul class="col-menu">
+                    <li class="col-menu-item">
+                        <a class="col-menu-link" href="/about/contacts/">Контакты</a>
+                    </li>
+
+                    <li class="col-menu-item">
+                        <a class="col-menu-link" href="/about/feedback/">Обратная связь</a>
+                    </li>
+
+                    <li class="col-menu-item">
+                        <a class="col-menu-link js__callback" href="javascript:void(0)">Обратный звонок</a>
+                    </li>
+
+                    <?php if ($USER->IsAuthorized()): ?>
+                        <li class="col-menu-item">
+                            <a class="col-menu-link" href="/about/FAQ/">FAQ</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <li class="col-menu-item">
+                        <a class="col-menu-link" href="/about/users_rules/">Пользовательское соглашение</a>
+                    </li>
+
+                    <li class="col-menu-item">
+                        <a class="col-menu-link" href="/about/politics/">Политика конфиденциальности</a>
+                    </li>
+
+                    <li class="col-menu-item">
+                        <a class="col-menu-link" href="/about/cookie/">Политика обработки Cookie</a>
+                    </li>
+                </ul>
             </div>
-            <div class="col-lg-3 col-md-3 col-11 mb-4 mb-lg-0 order-lg-4">
-                <div class="d-flex justify-content-between flex-row">
-                <span class="text_footer_weight">
-                О компании
-                </span>
-                    <span class="icon_footer_menu">
-                    <input type="checkbox" id="checkbox4" class="checkbox4 visuallyHidden">
-                    <label for="checkbox4">
-                        <div class="hamburger hamburger4">
-                            <span class="bar bar7"></span>
-                            <span class="bar bar8"></span>
-                        </div>
-                    </label>
-                </span>
-                </div>
-                <div data-id="checkbox4" class="hides_box box_footer_js li_link_footer box_with_link_footer"
-                     data-hide="true">
+
+
+            <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
+                <span class="col-title js__collapse-list">О компании</span>
+                <ul class="col-menu">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "bottom_menu",
-                        array(
+                        [
                             "ROOT_MENU_TYPE" => "bottom",
                             "MAX_LEVEL" => "1",
                             "MENU_CACHE_TYPE" => "A",
                             "CACHE_SELECTED_ITEMS" => "N",
                             "MENU_CACHE_TIME" => "36000000",
                             "MENU_CACHE_USE_GROUPS" => "Y",
-                            "MENU_CACHE_GET_VARS" => array(),
-                        ),
+                            "MENU_CACHE_GET_VARS" => [],
+                        ],
                         false
                     ); ?>
-                    <li class="nav-item li_link_footer">
-                        <?php if ($USER->IsAuthorized()) { ?>
-                            <a href="<?= $option->price_list_link; ?>" class="text_link_footer ">Прайс-лист</a>
-                        <?php } else { ?> <a href="/login/" class="text_link_footer ">Прайс-лист</a><?php } ?>
+
+                    <li class="col-menu-item">
+                        <?php $href = $USER->IsAuthorized() ? $option->price_list_link : '/login/' ?>
+                        <a class="col-menu-link" href="<?= $href ?>">Прайс-лист</a>
                     </li>
-                </div>
-                <span class="text_footer_weight desktop social_block">
-                  Социальные сети
-                </span>
-                <div class="box_with_icons_new">
-                    <div class="social-line-1">
+                    <li class="col-menu-item">
+                        <a href="/about/vacancy/" class="col-menu-link">Вакансии</a>
+                    </li>
+                </ul>
+
+
+                <div class="socials">
+                    <span class="col-title">Социальные сети</span>
+                    <nav class="col-menu">
                         <a href="<?= $option->TG; ?>" target="_blank">
-                            <img class="tg" src="<?= SITE_TEMPLATE_PATH ?>/images/tg.svg">
+                            <img class="tg" src="<?= SITE_TEMPLATE_PATH . '/images/tg.svg' ?>">
                         </a>
-                        <a href="https://api.whatsapp.com/send?phone=<?= $option->PHONE_WTS; ?>" target="_blank">
-                            <img class="ws" src="<?= SITE_TEMPLATE_PATH ?>/images/ws.svg">
+
+                        <a href="<?= 'https://api.whatsapp.com/send?phone=' . $option->PHONE_WTS ?>" target="_blank">
+                            <img class="ws" src="<?= SITE_TEMPLATE_PATH . '/images/ws.svg' ?>">
                         </a>
+
                         <a href="<?= $option->VK_LINK; ?>" target="_blank">
-                            <img class="vk" src="<?= SITE_TEMPLATE_PATH ?>/images/vk.svg">
+                            <img class="vk" src="<?= SITE_TEMPLATE_PATH . '/images/vk.svg' ?>">
                         </a>
+
                         <a href="<?= $option->DZEN; ?>" target="_blank">
-                            <img class="dzen" src="<?= SITE_TEMPLATE_PATH ?>/images/dzen.svg">
+                            <img class="dzen" src="<?= SITE_TEMPLATE_PATH . '/images/dzen.svg' ?>">
                         </a>
-                    </div>
-                </div>
-            </div>
-            <div class="mobile width_100 p-0 mb-4">
-                <p class="m-3 mail_footer col-11"><a href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
-                </p>
-                <div class="box_with_contact pl-3">
-                    <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                    <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                    <a href="javascript:void(0)" class="link_menu_top " data-toggle="modal"
-                       data-target="#placeModal"><span class="mail_footer not_weight">Москва, Россия</span>
-                    </a>
+                    </nav>
                 </div>
             </div>
         </div>
-        <?php if (!empty($option->text_rospetrebnadzor_row)) { ?>
-            <div class="text_footer_mini d-flex flex-column p-3">
-                <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_row; ?></p>
-                <p class="font-12 color-white"><?= $option->text_rospetrebnadzor_column; ?></p>
+
+        <?php if (!empty($option->text_rospetrebnadzor_row)): ?>
+            <div class="medical-warning">
+                <p class=""><?= $option->text_rospetrebnadzor_row; ?></p>
+                <p class=""><?= $option->text_rospetrebnadzor_column; ?></p>
             </div>
-        <?php } ?>
-        <div class="text_footer_mini d-flex column_section p-3">
-            <span class="mr-2">© 2014-<?= date('Y'); ?> <?= $option->COMPANY ?>.</span><span>Все права защищены</span>
+        <?php endif; ?>
+
+        <div class="copyrights">
+            <span class="year">© 2014-<?= date('Y'); ?> <?= $option->COMPANY ?>.</span>
+            <span>Все права защищены</span>
         </div>
     </div>
-    <!--FOOTER END-->
+
     <!-- MODALS -->
     <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="placeModalLabel"
          aria-hidden="true">
@@ -324,7 +301,6 @@ $option = $option_site; ?>
                 <div class="result-callback" style="display:none;">Ваша заявка отправлена</div>
             </div>
         </div>
-
     </div>
     <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
         <div style="display:none;">
@@ -369,28 +345,27 @@ $option = $option_site; ?>
         </script>
     <? } ?>
 
-    <? $user_consent = $USER->IsAuthorized() ? (new Cuser)->GetById($USER->GetID())->Fetch()[USER_CONSENT_PROPERTY] : false;
-    if (!$USER->IsAuthorized() || $user_consent != '1') {?>
-        <div id="consent-cookie-popup" class="hidden <?= $USER->IsAuthorized() ? 'js-auth' : 'js-noauth'?>">
+    <?php
+
+    $user_consent = $USER->IsAuthorized() ? (new Cuser)->GetById($USER->GetID())->Fetch()[USER_CONSENT_PROPERTY] : false;
+
+    if (!$USER->IsAuthorized() || $user_consent != '1'): ?>
+        <div id="consent-cookie-popup" class="hidden <?= $USER->IsAuthorized() ? 'js-auth' : 'js-noauth' ?>">
             <p>Мы используем файлы Cookie, чтобы улучшить сайт для вас</p>
             <div id="cookie-popup-controls">
-                <a id="cookie-popup-about" class="mobile" href="/about/cookie/"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+                <a id="cookie-popup-about" class="mobile" href="/about/cookie/"><i class="fa fa-question-circle"
+                                                                                   aria-hidden="true"></i></a>
                 <a id="cookie-popup-about" class="desktop" href="/about/cookie/">Подробнее</a>
                 <a id="cookie-popup-accept" href="#">Принять</a>
             </div>
-        </div><?
-    }
-    ?>
-    <script>
-        $(document).ready(function () {
-            $(document).on('click', '.close_header_box', function () {
-                $('.overlay').hide();
-            });
-        });
-    </script>
+        </div>
+    <?php endif; ?>
 </footer>
+
+
 </div>
-</div><!-- //bx-wrapper -->
+</div>
+<!-- //bx-wrapper -->
 <div class="overlay"></div>
 <div class="page-scroller">
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20"

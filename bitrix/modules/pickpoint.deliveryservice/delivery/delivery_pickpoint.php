@@ -138,8 +138,12 @@ class CDeliveryPickPoint
 		
 		if (!self::$isRequiredOptionsSet)
 		{
-			$arReturn = array("RESULT" => "ERROR", "TEXT" => GetMessage("PP_DELIVERY_ERROR_MODULE_OPTIONS_NOT_SET"));		
+			$arReturn = array("RESULT" => "ERROR", "TEXT" => GetMessage("PP_DELIVERY_ERROR_MODULE_OPTIONS_NOT_SET"));
 		}
+        //enterego - add validate not init pickpoint select pvz
+        elseif (!isset($_SESSION['PICKPOINT']) || !isset($_SESSION['PICKPOINT']['PP_ADDRESS'])) {
+            $arReturn = array("RESULT" => "ERROR", "TEXT" => 'Выберите пункт выдачи заказа.');
+        }
 		else
 		{
 			$arReturn = array("RESULT" => "OK", "VALUE" => CPickpoint::Calculate($arOrder));

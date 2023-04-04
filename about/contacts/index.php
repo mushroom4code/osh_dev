@@ -38,7 +38,7 @@ $userData = EnteregoUser::getInstance();
                             </span>
                             <span class="mb-3">
                                 Для связи с менеджером: <br>
-                                 <span class="red_text"><a href="tel:+79031184521">+7 (903) 118-45-21</a></span>
+                                 <span class="red_text"><a href="https://api.whatsapp.com/send?phone=79031184521">+7 (903) 118-45-21</a></span>
                             </span>
                         </div>
                     </div>
@@ -204,4 +204,4 @@ $userData = EnteregoUser::getInstance();
     </div>
     </div>
     <br></div>
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>

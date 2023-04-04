@@ -828,17 +828,9 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             }
                 unset($generalParams, $rowItems);
 
-            } else {
-                // load css for bigData/deferred load
-                $APPLICATION->IncludeComponent(
-                    'bitrix:catalog.item',
-                    'oshisha_catalog.item',
-                    array(),
-                    $component,
-                    array('HIDE_ICONS' => 'Y')
-                );
-            }
-            ?>
+            } else { ?>
+                <p> В этой категроии сейчас нет товаров</p>
+            <?php } ?>
             <!-- items-container -->
         </div>
         <?php
