@@ -28,7 +28,7 @@ class EnteregoBitrix24
 
     public static function sendToBitrix24(&$arFields)
     {
-        if ($arFields['RESULT'] &&
+        if ($arFields['RESULT'] && CRM_API_ENDPOINT &&
             in_array($arFields['IBLOCK_ID'], [IBLOCK_FEEDBACK_ID, IBLOCK_CALLBACK_ID, IBLOCK_NEW_SITE_COMMENTS])) {
 
             // check if the contact exists
