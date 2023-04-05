@@ -112,6 +112,7 @@ if ($show_price) {
         'ID' => $item['ID'],
         'BUY_LINK' => $arItemIDs['BUY_LINK'],
         'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
+        'TYPE_PRODUCT'=> 'PRODUCT',
         'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
         'MORE_PHOTO' => $morePhoto,
         'PRODUCT' => $item['PRODUCT'],

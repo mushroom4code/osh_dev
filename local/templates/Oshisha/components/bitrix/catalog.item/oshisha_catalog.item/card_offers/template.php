@@ -109,18 +109,38 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
 	}
 }
 
+$boolShow = false;
+$active = null;
+$priceDef = 0;
+$offersForModal = [];
+foreach ($item['OFFERS'] as $keys => $quantityNull) {
+	if ($quantityNull['CATALOG_QUANTITY'] > 0 && $boolShow === false) {
+		$boolShow = true;
+	}
+	if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
+		$active = $keys;
+		$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRICE'];
+	}
+
+	$offersForModal[$quantityNull['ID']] = [
+		'ID' => $quantityNull['ID'],
+		'PRICE' => $quantityNull['PRICES_CUSTOM'],
+		'SALE_PRICE' => '',
+		'DETAIL_PICTURE' => $quantityNull['DETAIL_PICTURE']['SRC'],
+		'QUANTITY'=> $quantityNull['CATALOG_QUANTITY'],
+		'PROPS'=> $quantityNull['PROPERTIES'],
+ 	];
+}
+
 if ($show_price) {
 	$jsonForModal = [
 		'ID' => $item['ID'],
 		'BUY_LINK' => $arItemIDs['BUY_LINK'],
+		'TYPE_PRODUCT' => 'OFFERS',
+		'OFFERS' => $offersForModal,
 		'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
-		'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
-		'MORE_PHOTO' => $morePhoto,
 		'PRODUCT' => $item['PRODUCT'],
 		'USE_DISCOUNT' => $useDiscount['VALUE'],
-		'ACTUAL_BASKET' => $priceBasket,
-		'PRICE' => $price['PRICE_DATA'],
-		'SALE_PRICE' => round($price['SALE_PRICE']['PRICE']),
 		'POPUP_PROPS' => $prop_see_in_window ?? 0,
 		'NAME' => $productTitle,
 		'LIKE' => [
@@ -134,19 +154,6 @@ if ($show_price) {
 		'BASE_PRICE' => BASIC_PRICE,
 		'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE'] ?? []
 	];
-}
-
-$boolShow = false;
-$active = null;
-$priceDef = 0;
-foreach ($item['OFFERS'] as $keys => $quantityNull) {
-	if ($quantityNull['CATALOG_QUANTITY'] > 0 && $boolShow === false) {
-		$boolShow = true;
-	}
-	if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
-		$active = $keys;
-		$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRICE'];
-	}
 }
 
 ?>

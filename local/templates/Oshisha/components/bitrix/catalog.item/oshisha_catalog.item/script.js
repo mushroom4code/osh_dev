@@ -2171,9 +2171,7 @@
 
 // FAST WINDOW
 $(document).on('click', '.open-fast-window', function () {
-
     let json_product = $(this).closest('.catalog-item-product').find('input.product-values').val();
-
     if (json_product !== '') {
 
         let wrapper = $('.section_wrapper');
@@ -2220,351 +2218,626 @@ $(document).on('click', '.open-fast-window', function () {
             })
         );
 
-        box_product.appendChild(BX.create('DIV', {
-            props: {
-                className: 'd-flex flex-lg-row flex-md-row flex-column'
-            },
-            children: [
-                BX.create('DIV', {
+        if(product.TYPE_PRODUCT === 'OFFERS'){
+            $.each(product.OFFERS , function(key,offer){
+                console.log(offer)
+
+                    box_product.appendChild(BX.create('DIV', {
+                        props: {
+                            className: 'd-flex flex-lg-row flex-md-row flex-column'
+                        },
+                        children: [
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'box-with-image-prod col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
+                                },
+                                children: [
+                                    BX.create('div', {
+                                        props: {
+                                            className: 'flex-class box-with-image-one height_100',
+                                        },
+                                        children: [
+                                            BX.create('IMG', {
+                                                props: {
+                                                    className: 'w-h-350',
+                                                    src: offer.DETAIL_PICTURE,
+                                                    alt: 'modal-product'
+                                                },
+                                            }),
+                                        ]
+                                    }),
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'position-absolute like-with-fav',
+                                        },
+                                        children: [
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'box_with_like like-modal',
+                                                },
+                                                children: [
+                                                    BX.create('A', {
+                                                        props: {
+                                                            className: 'icon_like method mb-3',
+                                                            title: "Нравится",
+                                                            href: 'javascript:void(0);'
+                                                        },
+                                                        dataset: {
+                                                            method: 'like'
+                                                        },
+                                                        html: '<i class="fa fa-heart-o" aria-hidden="true"></i>' +
+                                                            '<article class="like_span" id="likes">' + product.LIKE.COUNT_LIKES + '</article>'
+                                                    }),
+                                                    BX.create('A', {
+                                                        props: {
+                                                            className: 'product-item__favorite-star method',
+                                                            title: "Добавить в избранное",
+                                                            href: 'javascript:void(0);'
+                                                        },
+                                                        dataset: {
+                                                            method: 'favorite'
+                                                        },
+                                                        html: '<i class="fa fa-star-o" aria-hidden="true"></i>'
+                                                    })
+                                                ]
+                                            })
+                                        ]
+                                    })
+                                ]
+                            }),
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between'
+                                },
+                                children: [
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2',
+                                        },
+                                        children: [
+                                            BX.create('P', {
+                                                props: {
+                                                    className: 'base-price font-weight-bold font-27 mb-3'
+                                                },
+                                            }),
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'price-group mb-lg-4 mb-md-3 mb-3'
+                                                },
+                                            }),
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
+                                                },
+                                            })
+                                        ]
+                                    }),
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'props-box ml-lg-4 ml-md-4 ml-0 d-flex flex-lg-row flex-md-row flex-column ' +
+                                                'justify-content-between align-items-end',
+                                        },
+                                        children: [
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'props-box-child col-lg-8 col-md-8 col-12 pl-0 d-flex flex-column justify-content-between'
+                                                },
+                                                children: [
+                                                    BX.create('DIV', {
+                                                        props: {
+                                                            className: 'props-box-child-advanse'
+                                                        },
+                                                    }),
+                                                    BX.create('DIV', {
+                                                        props: {
+                                                            className: 'props-box-child-popup mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3'
+                                                        },
+                                                    })
+                                                ]
+                                            }),
+                                            BX.create('A', {
+                                                props: {
+                                                    className: 'color-redLight font-weight-bold col-lg-4 col-md-4 col-12 ' +
+                                                        'text-decoration-underline font-14 p-0 text-lg-right text-md-right',
+                                                    href: product.DETAIL_PAGE_URL
+                                                },
+                                                text: 'Подробнее'
+                                            })
+                                        ]
+                                    })
+                                ]
+                            })
+                        ]
+                    }));
+
+                // PRICE
+
+                let price_group = BX.findChildByClassName(box_product, 'price-group');
+                let price_base = BX.findChildByClassName(box_product, 'base-price');
+
+               let new_contain_fot_price = price_group.appendChild(BX.create('DIV', {
                     props: {
-                        className: 'box-with-image-prod col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
+                        className: 'price-box-with-child mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3'
+                    },
+                }))
+
+                $.each(offer.PRICE, function (i, price) {
+                    let sale = '';
+
+                    if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(product.SALE_PRICE) > 0) {
+                        sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
+                    }
+
+                    if (parseInt(price.PRICE_TYPE_ID) === offer.BASE_PRICE) {
+                        if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(offer.SALE_PRICE) > 0) {
+                            let print_price = offer.PRICE[0].PRINT_PRICE;
+                            let sale_price = offer.SALE_PRICE;
+                            let print_price_sum = (parseInt(offer.PRICE[0].PRICE) - parseInt(sale_price)) ?? 0;
+                            price_base.innerHTML = sale_price + ' руб. <span class="font-14 ml-3">' +
+                                ' <b class="decoration-color-red mr-2">' + print_price + '</b>' +
+                                '<b class="sale-percent"> - ' + print_price_sum + ' руб.</b></span>';
+                        } else {
+                            price_base.innerHTML = '<span class="font-14 card-price-text">от </span>' + price.PRINT_PRICE;
+                        }
+                    }
+
+                    new_contain_fot_price.appendChild(BX.create('P', {
+                        props: {
+                            className: 'mb-2',
+                        },
+                        children: [
+                            BX.create('SPAN', {
+                                props: {
+                                    className: 'font-16 mr-2 font-weight-bold',
+                                },
+                                html: '<b>' + price.NAME + '</b>'
+                            }),
+                            BX.create('SPAN', {
+                                props: {
+                                    className: 'font-16',
+                                },
+                                html: ' - '
+                            }),
+                            BX.create('SPAN', {
+                                props: {
+                                    className: 'font-16 ml-2 font-weight-bold',
+                                    style: sale
+                                },
+                                html: '<b>' + price.PRINT_PRICE + '</b>'
+                            })
+                        ]
+                    }));
+                });
+
+                let basket_box = BX.findChildByClassName(box_product, 'add-to-basket');
+                if (parseInt(offer.QUANTITY) > 0) {
+
+                    basket_box.appendChild(BX.create('DIV', {
+                        props: {
+                            className: 'product-item-amount-field-contain-wrap mr-4',
+                        },
+                        children: [
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'product-item-amount-field-contain d-flex flex-row align-items-center',
+                                },
+                                children: [
+                                    BX.create('A', {
+                                        props: {
+                                            className: 'btn-minus  minus_icon no-select add2basket removeToBasketOpenWindow',
+                                            href: 'javascript:void(0)'
+                                        },
+                                        dataset: {
+                                            url: product.DETAIL_PAGE_URL,
+                                            product_id: offer.ID,
+                                            id: product.BUY_LINK
+                                        },
+                                    }),
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'product-item-amount-field-block',
+                                        },
+                                        children: [
+                                            BX.create('INPUT', {
+                                                props: {
+                                                    className: 'product-item-amount card_element inputBasketOpenWindow',
+                                                    type: 'text',
+                                                    value: product.ACTUAL_BASKET,
+                                                    id: product.QUANTITY_ID,
+                                                    style: 'background-color:#e1e1e1'
+                                                },
+                                                dataset: {
+                                                    url: product.DETAIL_PAGE_URL,
+                                                    product_id: offer.ID,
+                                                },
+                                            })
+                                        ]
+                                    }),
+                                    BX.create('A', {
+                                        props: {
+                                            className: 'btn-plus plus_icon no-select add2basket addToBasketOpenWindow',
+                                            href: 'javascript:void(0)',
+                                            title: 'Доступно ' + offer.QUANTITY + 'шт.',
+                                            id: product.BUY_LINK
+                                        },
+                                        dataset: {
+                                            url: product.DETAIL_PAGE_URL,
+                                            product_id: offer.ID,
+                                        },
+                                    }),
+                                ]
+                            }),
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'alert_quantity',
+                                },
+                                dataset: {
+                                    id: offer.ID,
+                                },
+                            }),
+                        ],
+                    }));
+
+                    basket_box.appendChild(BX.create('SPAN', {
+                        props: {
+                            className: 'btn red_button_cart btn-plus add2basket buttonToBasketOpenWindow',
+                        },
+                        dataset: {
+                            url: product.DETAIL_PAGE_URL,
+                            product_id: offer.ID,
+                            id: product.BUY_LINK
+                        },
+                        html: '<img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>',
+                    }))
+                }
+            })
+        } else {
+            box_product.appendChild(BX.create('DIV', {
+                props: {
+                    className: 'd-flex flex-lg-row flex-md-row flex-column'
+                },
+                children: [
+                    BX.create('DIV', {
+                        props: {
+                            className: 'box-with-image-prod col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
+                        },
+                        children: [
+                            BX.create('div', {
+                                props: {
+                                    className: 'flex-class box-with-image-one height_100',
+                                },
+                                children: [
+                                    BX.create('IMG', {
+                                        props: {
+                                            className: 'w-h-350',
+                                            src: product.MORE_PHOTO[0].SRC,
+                                            alt: 'modal-product'
+                                        },
+                                    }),
+                                ]
+                            }),
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'position-absolute like-with-fav',
+                                },
+                                children: [
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'box_with_like like-modal',
+                                        },
+                                        children: [
+                                            BX.create('A', {
+                                                props: {
+                                                    className: 'icon_like method mb-3',
+                                                    title: "Нравится",
+                                                    href: 'javascript:void(0);'
+                                                },
+                                                dataset: {
+                                                    method: 'like'
+                                                },
+                                                html: '<i class="fa fa-heart-o" aria-hidden="true"></i>' +
+                                                    '<article class="like_span" id="likes">' + product.LIKE.COUNT_LIKES + '</article>'
+                                            }),
+                                            BX.create('A', {
+                                                props: {
+                                                    className: 'product-item__favorite-star method',
+                                                    title: "Добавить в избранное",
+                                                    href: 'javascript:void(0);'
+                                                },
+                                                dataset: {
+                                                    method: 'favorite'
+                                                },
+                                                html: '<i class="fa fa-star-o" aria-hidden="true"></i>'
+                                            })
+                                        ]
+                                    })
+                                ]
+                            })
+                        ]
+                    }),
+                    BX.create('DIV', {
+                        props: {
+                            className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between'
+                        },
+                        children: [
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2',
+                                },
+                                children: [
+                                    BX.create('P', {
+                                        props: {
+                                            className: 'base-price font-weight-bold font-27 mb-3'
+                                        },
+                                    }),
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'price-group mb-lg-4 mb-md-3 mb-3'
+                                        },
+                                    }),
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
+                                        },
+                                    })
+                                ]
+                            }),
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'props-box ml-lg-4 ml-md-4 ml-0 d-flex flex-lg-row flex-md-row flex-column ' +
+                                        'justify-content-between align-items-end',
+                                },
+                                children: [
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'props-box-child col-lg-8 col-md-8 col-12 pl-0 d-flex flex-column justify-content-between'
+                                        },
+                                        children: [
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'props-box-child-advanse'
+                                                },
+                                            }),
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'props-box-child-popup mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3'
+                                                },
+                                            })
+                                        ]
+                                    }),
+                                    BX.create('A', {
+                                        props: {
+                                            className: 'color-redLight font-weight-bold col-lg-4 col-md-4 col-12 ' +
+                                                'text-decoration-underline font-14 p-0 text-lg-right text-md-right',
+                                            href: product.DETAIL_PAGE_URL
+                                        },
+                                        text: 'Подробнее'
+                                    })
+                                ]
+                            })
+                        ]
+                    })
+                ]
+            }));
+
+            // IMAGE && SLIDER
+
+            if (product.MORE_PHOTO.length > 1) {
+
+                let product_box = BX.findChildByClassName(box_product, 'box-with-image-one');
+                let image_box = BX.findChildByClassName(box_product, 'box-with-image-prod');
+
+                BX.cleanNode(product_box);
+                BX.removeClass(product_box, 'flex-class');
+
+                product_box.appendChild(BX.create('DIV', {
+                    props: {
+                        className: 'slick-images-box height_100',
+                    },
+                }));
+
+                image_box.appendChild(BX.create('DIV', {
+                    props: {
+                        className: 'position-absolute slider-controls max-width-400',
                     },
                     children: [
-                        BX.create('div', {
+                        BX.create('DIV', {
                             props: {
-                                className: 'flex-class box-with-image-one height_100',
+                                className: 'slick-images-controls',
+                            },
+                        })
+                    ]
+                }));
+
+
+                let slick = BX.findChildByClassName(product_box, 'slick-images-box');
+                let slick_controls = BX.findChildByClassName(image_box, 'slick-images-controls');
+                let count = 0;
+                $.each(product.MORE_PHOTO, function (k, image) {
+                    count++;
+                    slick.appendChild(BX.create('IMG', {
+                        props: {
+                            className: 'w-h-350',
+                            src: image.SRC,
+                            alt: 'modal-product'
+                        },
+                    }));
+
+                    slick_controls.appendChild(
+                        BX.create('DIV', {
+                            props: {
+                                className: 'product-slider-controls-image',
                             },
                             children: [
                                 BX.create('IMG', {
                                     props: {
-                                        className: 'w-h-350',
-                                        src: product.MORE_PHOTO[0].SRC,
+                                        src: image.SRC,
                                         alt: 'modal-product'
                                     },
-                                }),
-                            ]
-                        }),
-                        BX.create('DIV', {
-                            props: {
-                                className: 'position-absolute like-with-fav',
-                            },
-                            children: [
-                                BX.create('DIV', {
-                                    props: {
-                                        className: 'box_with_like like-modal',
-                                    },
-                                    children: [
-                                        BX.create('A', {
-                                            props: {
-                                                className: 'icon_like method mb-3',
-                                                title: "Нравится",
-                                                href: 'javascript:void(0);'
-                                            },
-                                            dataset: {
-                                                method: 'like'
-                                            },
-                                            html: '<i class="fa fa-heart-o" aria-hidden="true"></i>' +
-                                                '<article class="like_span" id="likes">' + product.LIKE.COUNT_LIKES + '</article>'
-                                        }),
-                                        BX.create('A', {
-                                            props: {
-                                                className: 'product-item__favorite-star method',
-                                                title: "Добавить в избранное",
-                                                href: 'javascript:void(0);'
-                                            },
-                                            dataset: {
-                                                method: 'favorite'
-                                            },
-                                            html: '<i class="fa fa-star-o" aria-hidden="true"></i>'
-                                        })
-                                    ]
                                 })
                             ]
                         })
-                    ]
-                }),
-                BX.create('DIV', {
+                    );
+                });
+
+                $(slick).slick({
+                    arrows: true,
+                    prevArrow: '<span class="product-item-detail-slider-left carousel_elem_custom" ' +
+                        'data-entity="slider-control-left" style="">' +
+                        '<i class="fa fa-angle-left" aria-hidden="true"></i></span>',
+                    nextArrow: '<span class="product-item-detail-slider-right carousel_elem_custom" ' +
+                        'data-entity="slider-control-right" style=""' +
+                        '><i class="fa fa-angle-right" aria-hidden="true"></i></span>',
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    asNavFor: $(slick_controls)
+                });
+
+                $(slick_controls).slick({
+                    slidesToScroll: 1,
+                    slidesToShow: count,
+                    asNavFor: $(slick),
+                    arrows: false,
+                    focusOnSelect: true
+                });
+            }
+
+            // PRICE
+
+            let price_group = BX.findChildByClassName(box_product, 'price-group');
+            let price_base = BX.findChildByClassName(box_product, 'base-price');
+
+            $.each(product.PRICE, function (i, price) {
+                let sale = '';
+
+                if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(product.SALE_PRICE) > 0) {
+                    sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
+                }
+
+                if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
+                    if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(product.SALE_PRICE) > 0) {
+                        let print_price = product.PRICE[0].PRINT_PRICE;
+                        let sale_price = product.SALE_PRICE;
+                        let print_price_sum = (parseInt(product.PRICE[0].PRICE) - parseInt(sale_price)) ?? 0;
+                        price_base.innerHTML = sale_price + ' руб. <span class="font-14 ml-3">' +
+                            ' <b class="decoration-color-red mr-2">' + print_price + '</b>' +
+                            '<b class="sale-percent"> - ' + print_price_sum + ' руб.</b></span>';
+                    } else {
+                        price_base.innerHTML = '<span class="font-14 card-price-text">от </span>' + price.PRINT_PRICE;
+                    }
+                }
+
+                price_group.appendChild(BX.create('P', {
                     props: {
-                        className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between'
+                        className: 'mb-2',
+                    },
+                    children: [
+                        BX.create('SPAN', {
+                            props: {
+                                className: 'font-16 mr-2 font-weight-bold',
+                            },
+                            html: '<b>' + price.NAME + '</b>'
+                        }),
+                        BX.create('SPAN', {
+                            props: {
+                                className: 'font-16',
+                            },
+                            html: ' - '
+                        }),
+                        BX.create('SPAN', {
+                            props: {
+                                className: 'font-16 ml-2 font-weight-bold',
+                                style: sale
+                            },
+                            html: '<b>' + price.PRINT_PRICE + '</b>'
+                        })
+                    ]
+                }));
+            });
+
+            let basket_box = BX.findChildByClassName(box_product, 'add-to-basket');
+            if (parseInt(product.PRODUCT.QUANTITY) > 0) {
+
+                let product_props = product.PRODUCT;
+
+                basket_box.appendChild(BX.create('DIV', {
+                    props: {
+                        className: 'product-item-amount-field-contain-wrap mr-4',
                     },
                     children: [
                         BX.create('DIV', {
                             props: {
-                                className: 'prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2',
+                                className: 'product-item-amount-field-contain d-flex flex-row align-items-center',
                             },
                             children: [
-                                BX.create('P', {
+                                BX.create('A', {
                                     props: {
-                                        className: 'base-price font-weight-bold font-27 mb-3'
+                                        className: 'btn-minus  minus_icon no-select add2basket removeToBasketOpenWindow',
+                                        href: 'javascript:void(0)'
+                                    },
+                                    dataset: {
+                                        url: product.DETAIL_PAGE_URL,
+                                        product_id: product.ID,
+                                        id: product.BUY_LINK
                                     },
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        className: 'price-group mb-lg-4 mb-md-3 mb-3'
-                                    },
-                                }),
-                                BX.create('DIV', {
-                                    props: {
-                                        className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
-                                    },
-                                })
-                            ]
-                        }),
-                        BX.create('DIV', {
-                            props: {
-                                className: 'props-box ml-lg-4 ml-md-4 ml-0 d-flex flex-lg-row flex-md-row flex-column ' +
-                                    'justify-content-between align-items-end',
-                            },
-                            children: [
-                                BX.create('DIV', {
-                                    props: {
-                                        className: 'props-box-child col-lg-8 col-md-8 col-12 pl-0 d-flex flex-column justify-content-between'
+                                        className: 'product-item-amount-field-block',
                                     },
                                     children: [
-                                        BX.create('DIV', {
+                                        BX.create('INPUT', {
                                             props: {
-                                                className: 'props-box-child-advanse'
+                                                className: 'product-item-amount card_element inputBasketOpenWindow',
+                                                type: 'text',
+                                                value: product.ACTUAL_BASKET,
+                                                id: product.QUANTITY_ID,
+                                                style: 'background-color:#e1e1e1'
                                             },
-                                        }),
-                                        BX.create('DIV', {
-                                            props: {
-                                                className: 'props-box-child-popup mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3'
+                                            dataset: {
+                                                url: product.DETAIL_PAGE_URL,
+                                                product_id: product.ID,
                                             },
                                         })
                                     ]
                                 }),
                                 BX.create('A', {
                                     props: {
-                                        className: 'color-redLight font-weight-bold col-lg-4 col-md-4 col-12 ' +
-                                            'text-decoration-underline font-14 p-0 text-lg-right text-md-right',
-                                        href: product.DETAIL_PAGE_URL
+                                        className: 'btn-plus plus_icon no-select add2basket addToBasketOpenWindow',
+                                        href: 'javascript:void(0)',
+                                        title: 'Доступно ' + product_props.QUANTITY + 'шт.',
+                                        id: product.BUY_LINK
                                     },
-                                    text: 'Подробнее'
-                                })
+                                    dataset: {
+                                        url: product.DETAIL_PAGE_URL,
+                                        product_id: product.ID,
+                                    },
+                                }),
                             ]
-                        })
-                    ]
-                })
-            ]
-        }));
-
-        // IMAGE && SLIDER
-
-        if (product.MORE_PHOTO.length > 1) {
-
-            let product_box = BX.findChildByClassName(box_product, 'box-with-image-one');
-            let image_box = BX.findChildByClassName(box_product, 'box-with-image-prod');
-
-            BX.cleanNode(product_box);
-            BX.removeClass(product_box, 'flex-class');
-
-            product_box.appendChild(BX.create('DIV', {
-                props: {
-                    className: 'slick-images-box height_100',
-                },
-            }));
-
-            image_box.appendChild(BX.create('DIV', {
-                props: {
-                    className: 'position-absolute slider-controls max-width-400',
-                },
-                children: [
-                    BX.create('DIV', {
-                        props: {
-                            className: 'slick-images-controls',
-                        },
-                    })
-                ]
-            }));
-
-
-            let slick = BX.findChildByClassName(product_box, 'slick-images-box');
-            let slick_controls = BX.findChildByClassName(image_box, 'slick-images-controls');
-            let count = 0;
-            $.each(product.MORE_PHOTO, function (k, image) {
-                count++;
-                slick.appendChild(BX.create('IMG', {
-                    props: {
-                        className: 'w-h-350',
-                        src: image.SRC,
-                        alt: 'modal-product'
-                    },
+                        }),
+                        BX.create('DIV', {
+                            props: {
+                                className: 'alert_quantity',
+                            },
+                            dataset: {
+                                id: product.ID,
+                            },
+                        }),
+                    ],
                 }));
 
-                slick_controls.appendChild(
-                    BX.create('DIV', {
-                        props: {
-                            className: 'product-slider-controls-image',
-                        },
-                        children: [
-                            BX.create('IMG', {
-                                props: {
-                                    src: image.SRC,
-                                    alt: 'modal-product'
-                                },
-                            })
-                        ]
-                    })
-                );
-            });
-
-            $(slick).slick({
-                arrows: true,
-                prevArrow: '<span class="product-item-detail-slider-left carousel_elem_custom" ' +
-                    'data-entity="slider-control-left" style="">' +
-                    '<i class="fa fa-angle-left" aria-hidden="true"></i></span>',
-                nextArrow: '<span class="product-item-detail-slider-right carousel_elem_custom" ' +
-                    'data-entity="slider-control-right" style=""' +
-                    '><i class="fa fa-angle-right" aria-hidden="true"></i></span>',
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                asNavFor: $(slick_controls)
-            });
-
-            $(slick_controls).slick({
-                slidesToScroll: 1,
-                slidesToShow: count,
-                asNavFor: $(slick),
-                arrows: false,
-                focusOnSelect: true
-            });
-        }
-
-        // PRICE
-
-        let price_group = BX.findChildByClassName(box_product, 'price-group');
-        let price_base = BX.findChildByClassName(box_product, 'base-price');
-
-        $.each(product.PRICE, function (i, price) {
-            let sale = '';
-
-            if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(product.SALE_PRICE) > 0) {
-                sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
+                basket_box.appendChild(BX.create('SPAN', {
+                    props: {
+                        className: 'btn red_button_cart btn-plus add2basket buttonToBasketOpenWindow',
+                    },
+                    dataset: {
+                        url: product.DETAIL_PAGE_URL,
+                        product_id: product.ID,
+                        id: product.BUY_LINK
+                    },
+                    html: '<img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>',
+                }))
             }
-
-            if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
-                if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(product.SALE_PRICE) > 0) {
-                    let print_price = product.PRICE[0].PRINT_PRICE;
-                    let sale_price = product.SALE_PRICE;
-                    let print_price_sum = (parseInt(product.PRICE[0].PRICE) - parseInt(sale_price)) ?? 0;
-                    price_base.innerHTML = sale_price + ' руб. <span class="font-14 ml-3">' +
-                        ' <b class="decoration-color-red mr-2">' + print_price + '</b>' +
-                        '<b class="sale-percent"> - ' + print_price_sum + ' руб.</b></span>';
-                } else {
-                    price_base.innerHTML = '<span class="font-14 card-price-text">от </span>' + price.PRINT_PRICE;
-                }
-            }
-
-            price_group.appendChild(BX.create('P', {
-                props: {
-                    className: 'mb-2',
-                },
-                children: [
-                    BX.create('SPAN', {
-                        props: {
-                            className: 'font-16 mr-2 font-weight-bold',
-                        },
-                        html: '<b>' + price.NAME + '</b>'
-                    }),
-                    BX.create('SPAN', {
-                        props: {
-                            className: 'font-16',
-                        },
-                        html: ' - '
-                    }),
-                    BX.create('SPAN', {
-                        props: {
-                            className: 'font-16 ml-2 font-weight-bold',
-                            style: sale
-                        },
-                        html: '<b>' + price.PRINT_PRICE + '</b>'
-                    })
-                ]
-            }));
-        });
-
-        let basket_box = BX.findChildByClassName(box_product, 'add-to-basket');
-        if (parseInt(product.PRODUCT.QUANTITY) > 0) {
-
-            let product_props = product.PRODUCT;
-
-            basket_box.appendChild(BX.create('DIV', {
-                props: {
-                    className: 'product-item-amount-field-contain-wrap mr-4',
-                },
-                children: [
-                    BX.create('DIV', {
-                        props: {
-                            className: 'product-item-amount-field-contain d-flex flex-row align-items-center',
-                        },
-                        children: [
-                            BX.create('A', {
-                                props: {
-                                    className: 'btn-minus  minus_icon no-select add2basket removeToBasketOpenWindow',
-                                    href: 'javascript:void(0)'
-                                },
-                                dataset: {
-                                    url: product.DETAIL_PAGE_URL,
-                                    product_id: product.ID,
-                                    id: product.BUY_LINK
-                                },
-                            }),
-                            BX.create('DIV', {
-                                props: {
-                                    className: 'product-item-amount-field-block',
-                                },
-                                children: [
-                                    BX.create('INPUT', {
-                                        props: {
-                                            className: 'product-item-amount card_element inputBasketOpenWindow',
-                                            type: 'text',
-                                            value: product.ACTUAL_BASKET,
-                                            id: product.QUANTITY_ID,
-                                            style: 'background-color:#e1e1e1'
-                                        },
-                                        dataset: {
-                                            url: product.DETAIL_PAGE_URL,
-                                            product_id: product.ID,
-                                        },
-                                    })
-                                ]
-                            }),
-                            BX.create('A', {
-                                props: {
-                                    className: 'btn-plus plus_icon no-select add2basket addToBasketOpenWindow',
-                                    href: 'javascript:void(0)',
-                                    title: 'Доступно ' + product_props.QUANTITY + 'шт.',
-                                    id: product.BUY_LINK
-                                },
-                                dataset: {
-                                    url: product.DETAIL_PAGE_URL,
-                                    product_id: product.ID,
-                                },
-                            }),
-                        ]
-                    }),
-                    BX.create('DIV', {
-                        props: {
-                            className: 'alert_quantity',
-                        },
-                        dataset: {
-                            id: product.ID,
-                        },
-                    }),
-                ],
-            }));
-
-            basket_box.appendChild(BX.create('SPAN', {
-                props: {
-                    className: 'btn red_button_cart btn-plus add2basket buttonToBasketOpenWindow',
-                },
-                dataset: {
-                    url: product.DETAIL_PAGE_URL,
-                    product_id: product.ID,
-                    id: product.BUY_LINK
-                },
-                html: '<img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>',
-            }))
         }
 
         //  PROPS
@@ -2602,7 +2875,6 @@ $(document).on('click', '.open-fast-window', function () {
                 }
             });
         }
-
 
         $(wrapper).append(box_popup);
         // TODO - не нашла как добавлять через атрибуты BX при создании элемента тег дата с дефисом, можно только с подчеркиванием
