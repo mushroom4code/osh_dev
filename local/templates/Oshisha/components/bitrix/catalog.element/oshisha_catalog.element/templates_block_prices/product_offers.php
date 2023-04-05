@@ -251,13 +251,13 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											$prod_off_quantity = $offer_price['CATALOG_QUANTITY'];
 											$dNone = '';
 										} ?>
-										<div class="<?= $dNone ?> mb-lg-2 m-md-2 m-1 box-prices"
+										<div class="<?= $dNone ?> mb-lg-2 m-md-2 m-1 box-prices width-auto"
 										     data-offer-id="<?= $offer_price['ID'] ?>">
 											<?php foreach ($offer_price['PRICES_CUSTOM'] as $price) { ?>
 												<p class="mb-1">
-													<span class="font-11 font-10-md mb-2"><?= $price['NAME'] ?></span>
+													<span class="font-14 mb-2"><?= $price['NAME'] ?></span>
 													<span class="dash"> - </span>
-													<span class="font-12 font-11-md"><b><?= $price['PRINT_PRICE'] ?></b></span>
+													<span class="font-14"><b><?= $price['PRINT_PRICE'] ?></b></span>
 												</p>
 											<?php } ?>
 										</div>
@@ -325,7 +325,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											}
 										}
 										?>
-										<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box "
+										<div class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box "
 										     title="<?= $offer['NAME'] ?>"
 										     data-active="<?= $active_box ?>"
 										     data-product_id="<?= $offer['ID'] ?>"
