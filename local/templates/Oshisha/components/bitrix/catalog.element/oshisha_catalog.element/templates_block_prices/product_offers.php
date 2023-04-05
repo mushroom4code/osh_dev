@@ -302,8 +302,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 
 										$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
 										foreach ($offer['PROPERTIES'] as $prop) {
-											$prop_value = '';
-											if (!empty($prop['VALUE'])) {
+											if (!empty($prop['VALUE']) && strripos($prop['CODE'],'CML2_') === false ) {
 												$prop_value = $prop['VALUE'];
 											}
 										}
@@ -317,7 +316,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
                                              data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
                                              data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
                                              data-onevalue="<?= $offer['ID'] ?>">
-											<?= $prop_value ?>
+											<?= $prop_value ?? '0'?>
                                         </div>
 									<?php }
 								} ?>

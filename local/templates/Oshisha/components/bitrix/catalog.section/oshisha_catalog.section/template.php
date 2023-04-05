@@ -914,10 +914,9 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                 "MESS_BTN_COMPARE" => "Сравнить",
                                 "MESS_BTN_DETAIL" => "Подробнее",
                                 "MESS_NOT_AVAILABLE" => "Нет в наличии",
-                                "OFFERS_FIELD_CODE" => array(
-                                    0 => "",
-                                    1 => "",
-                                ),
+                                "OFFERS_CART_PROPERTIES" => $arParams["OFFERS_CART_PROPERTIES"],
+                                "OFFERS_FIELD_CODE" => $arParams["OFFERS_FIELD_CODE"],
+                                "OFFERS_PROPERTY_CODE" => $arParams["OFFERS_PROPERTY_CODE"],
                                 "OFFERS_LIMIT" => "4",
                                 "OFFERS_SORT_FIELD" => "sort",
                                 "OFFERS_SORT_FIELD2" => "id",

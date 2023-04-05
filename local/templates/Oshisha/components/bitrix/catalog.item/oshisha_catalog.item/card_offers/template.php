@@ -145,7 +145,7 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 	}
 	if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
 		$active = $keys;
-		$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRINT_PRICE'];
+		$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRICE'];
 	}
 }
 
@@ -530,8 +530,7 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 
 								$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
 								foreach ($offer['PROPERTIES'] as $prop) {
-									$prop_value = '';
-									if (!empty($prop['VALUE'])) {
+									if (!empty($prop['VALUE']) && strripos($prop['CODE'],'CML2_') === false ) {
 										$prop_value = $prop['VALUE'];
 									}
 								} ?>
@@ -544,7 +543,7 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
                                      data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
                                      data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
                                      data-onevalue="<?= $offer['ID'] ?>">
-									<?= $prop_value ?>
+									<?= $prop_value ?? '0'?>
                                 </div>
 							<?php }
 						} ?>
@@ -563,11 +562,11 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 							} ?>
                             <div class="<?= $dNone ?> mb-lg-2 m-md-2 m-1 box-prices"
                                  data-offer-id="<?= $offer_price['ID'] ?>">
-								<?php foreach ($offer_price['PRICES_CUSTOM'] as $price) { ?>
+								<?php foreach ($offer_price['PRICES_CUSTOM'] as $prices) { ?>
                                     <p class="mb-1">
-                                        <span class="font-11 font-10-md mb-2"><?= $price['NAME'] ?></span>
+                                        <span class="font-11 font-10-md mb-2"><?= $prices['NAME'] ?></span>
                                         <span class="dash"> - </span>
-                                        <span class="font-12 font-11-md"><b><?= $price['PRINT_PRICE'] ?></b></span>
+                                        <span class="font-12 font-11-md"><b><?= $prices['PRINT_PRICE'] ?></b></span>
                                     </p>
 								<?php } ?>
                             </div>
@@ -581,7 +580,7 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 								echo(round($price['SALE_PRICE']['PRICE']));
 								$sale = true;
 							} else {
-								echo '<span class="font-10 card-price-text">от </span> ' . (round($item['OFFERS'][$active]['PRICES_CUSTOM'][1]['PRINT_PRICE']));
+								echo '<span class="font-10 card-price-text">от </span> ' . (round($item['OFFERS'][$active]['PRICES_CUSTOM'][1]['PRICE']));
 							} ?>₽
                         </div>
 						<?php if ($USER->IsAuthorized()) { ?>
