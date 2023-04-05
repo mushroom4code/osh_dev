@@ -39,20 +39,21 @@ foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
 				      data-entity="slider-control-right"
 				      style="display: none;"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
 				<div class="product-item-detail-slider-images-container" data-entity="images-container">
-					<?php if(!empty($arResult['OFFERS'])) {
+					<?php if (!empty($arResult['OFFERS'])) {
 						foreach ($arResult['OFFERS'] as $key => $photo) {
 							$dNone = 'd-none';
 							$boolShowImage = false;
-							if($key === $active){
+							if ($key === $active) {
 								$dNone = 'active';
 								$boolShowImage = true;
 							} ?>
 							<picture class="product-item-detail-slider-image <?= $dNone ?>"
-							     data-entity="image" data-id="<?= $photo['ID'] ?>">
-								<img data-src="<?= $photo['DETAIL_PICTURE']['SRC'] ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
-								     alt="<?= $photo['NAME'] ?>"
-								     src="<?=$boolShowImage ? $photo['DETAIL_PICTURE']['SRC'] : '' ?>"
-								     title="<?= $photo['NAME'] ?>"<?= ($key == 0 ? ' itemprop="image"' : '') ?>>
+							         data-entity="image" data-id="<?= $photo['ID'] ?>">
+								<img
+									data-src="<?= $photo['DETAIL_PICTURE']['SRC'] ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
+									alt="<?= $photo['NAME'] ?>"
+									src="<?= $boolShowImage ? $photo['DETAIL_PICTURE']['SRC'] : '' ?>"
+									title="<?= $photo['NAME'] ?>"<?= ($key == 0 ? ' itemprop="image"' : '') ?>>
 							</picture>
 						<?php }
 					} else { ?>
@@ -207,118 +208,122 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 						}
 					}
 					break;
-				case 'quantity':?>
-						<div>
-							<div class="bx_price position-relative font-weight-bolder font-22 mb-3">
-								<?php $sale = false;
-								if (USE_CUSTOM_SALE_PRICE && !empty($arResult['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
-									$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-									echo(round($price['SALE_PRICE']['PRICE']));
-									$sale = true;
-								} else {
-									echo '<span class="font-12 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM'][1]['PRICE']));
-								} ?> руб.
+				case 'quantity':
+					?>
+					<div>
+						<div class="bx_price position-relative font-weight-bolder font-22 mb-3">
+							<?php $sale = false;
+							if (USE_CUSTOM_SALE_PRICE && !empty($arResult['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
+								$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
+								echo(round($price['SALE_PRICE']['PRICE']));
+								$sale = true;
+							} else {
+								echo '<span class="font-12 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM'][1]['PRICE']));
+							} ?> руб.
+						</div>
+						<div class="mt-1">
+							<div class="prices-all mb-3">
+								<?php $prod_off_id = $actualItem['ID'];
+								$prod_off_quantity = 0;
+								foreach ($arResult['OFFERS'] as $key_offer => $offer_price) { ?>
+									<?php $dNone = 'd-none';
+									$active_box = 'false';
+									$basketItem = 0;
+									if (!empty($item['ACTUAL_BASKET'][$offer['ID']])) {
+										$basketItem = $item['ACTUAL_BASKET'][$offer_price['ID']];
+									}
+									if ($active === $key_offer && (int)$offer_price['CATALOG_QUANTITY'] > 0) {
+										$active_box = 'true';
+										$prod_off_id = $offer_price['ID'];
+										$quantity_basket_default = $basketItem;
+										$prod_off_quantity = $offer_price['CATALOG_QUANTITY'];
+										$dNone = '';
+									} ?>
+									<div class="<?= $dNone ?> mb-2 box-prices p-3 width-fit-content br-10 bg-gray-white"
+									     data-offer-id="<?= $offer_price['ID'] ?>">
+										<?php foreach ($offer_price['PRICES_CUSTOM'] as $price) { ?>
+											<p class="mb-1">
+												<span class="font-14 mb-2"><?= $price['NAME'] ?></span>
+												<span class="dash"> - </span>
+												<span class="font-14"><b><?= $price['PRINT_PRICE'] ?></b></span>
+											</p>
+										<?php } ?>
+									</div>
+								<?php } ?>
 							</div>
-							<div class="mt-1">
-								<div class="prices-all mb-3">
-									<?php $prod_off_id = $actualItem['ID'];
-									$prod_off_quantity = 0;
-									foreach ($arResult['OFFERS'] as $key_offer => $offer_price) { ?>
-										<?php $dNone = 'd-none';
-										$active_box = 'false';
-										$basketItem = 0;
-										if (!empty($item['ACTUAL_BASKET'][$offer['ID']])) {
-											$basketItem = $item['ACTUAL_BASKET'][$offer_price['ID']];
-										}
-										if ($active === $key_offer && (int)$offer_price['CATALOG_QUANTITY'] > 0) {
-											$active_box = 'true';
-											$prod_off_id = $offer_price['ID'];
-											$quantity_basket_default = $basketItem;
-											$prod_off_quantity = $offer_price['CATALOG_QUANTITY'];
-											$dNone = '';
-										} ?>
-										<div class="<?= $dNone ?> mb-2 box-prices p-3 width-fit-content br-10 bg-gray-white"
-										     data-offer-id="<?= $offer_price['ID'] ?>">
-											<?php foreach ($offer_price['PRICES_CUSTOM'] as $price) { ?>
-												<p class="mb-1">
-													<span class="font-14 mb-2"><?= $price['NAME'] ?></span>
-													<span class="dash"> - </span>
-													<span class="font-14"><b><?= $price['PRINT_PRICE'] ?></b></span>
-												</p>
-											<?php } ?>
-										</div>
-									<?php } ?>
-								</div>
-								<div
-									class="d-flex row-line-reverse justify-content-between align-items-center box-basket mb-3 bx_catalog_item_controls">
-									<?php if ($USER->IsAuthorized()) { ?>
-										<div class="product-item-amount-field-contain-wrap" style="display:flex;"
-										     data-product_id="<?= $prod_off_id; ?>">
-											<div
-												class="product-item-amount-field-contain d-flex flex-row align-items-center">
-												<a class="btn-minus  minus_icon no-select add2basket"
-												   href="javascript:void(0)"
-												   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-												   data-product_id="<?= $prod_off_id; ?>">
-												</a>
-												<div class="product-item-amount-field-block">
-													<input class="product-item-amount card_element"
-													       type="text"
-													       value="<?= $quantity_basket_default ?>">
-												</div>
-												<a class="btn-plus plus_icon no-select add2basket"
-												   data-max-quantity="<?= $prod_off_quantity ?>"
-												   href="javascript:void(0)"
-												   data-url="<?= $actualItem['DETAIL_PAGE_URL'] ?>"
-												   data-product_id="<?= $prod_off_id; ?>"
-												   title="Доступно <?= $prod_off_quantity ?> товар"></a>
+							<div
+								class="d-flex row-line-reverse justify-content-between align-items-center box-basket mb-3 bx_catalog_item_controls">
+								<?php if ($USER->IsAuthorized()) { ?>
+									<div class="product-item-amount-field-contain-wrap" style="display:flex;"
+									     data-product_id="<?= $prod_off_id; ?>">
+										<div
+											class="product-item-amount-field-contain d-flex flex-row align-items-center">
+											<a class="btn-minus  minus_icon no-select add2basket"
+											   href="javascript:void(0)"
+											   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+											   data-product_id="<?= $prod_off_id; ?>">
+											</a>
+											<div class="product-item-amount-field-block">
+												<input class="product-item-amount card_element"
+												       type="text"
+												       value="<?= $quantity_basket_default ?>">
 											</div>
-											<div class="alert_quantity" data-id="<?= $prod_off_id ?>"></div>
+											<a class="btn-plus plus_icon no-select add2basket"
+											   data-max-quantity="<?= $prod_off_quantity ?>"
+											   href="javascript:void(0)"
+											   data-url="<?= $actualItem['DETAIL_PAGE_URL'] ?>"
+											   data-product_id="<?= $prod_off_id; ?>"
+											   title="Доступно <?= $prod_off_quantity ?> товар"></a>
 										</div>
-									<?php } ?>
-								</div>
+										<div class="alert_quantity" data-id="<?= $prod_off_id ?>"></div>
+									</div>
+								<?php } ?>
 							</div>
-							<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto">
-								<?php
-								$quantity_basket_default = 0;
-								foreach ($arResult['OFFERS'] as $key => $offer) {
-									if ((int)$offer['CATALOG_QUANTITY'] > 0) {
+						</div>
+						<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto">
+							<?php
+							$quantity_basket_default = 0;
+							foreach ($arResult['OFFERS'] as $key => $offer) {
+								if ((int)$offer['CATALOG_QUANTITY'] > 0) {
 
-										$active_box = 'false';
-										$basketItem = 0;
-										if (!empty($actualItem['ACTUAL_BASKET'][$offer['ID']])) {
-											$basketItem = $actualItem['ACTUAL_BASKET'][$offer['ID']];
-										}
-										if ($active === $key && (int)$offer['CATALOG_QUANTITY'] > 0) {
-											$active_box = 'true';
-											$quantity_basket_default = $basketItem;
-										}
+									$active_box = 'false';
+									$basketItem = 0;
+									if (!empty($actualItem['ACTUAL_BASKET'][$offer['ID']])) {
+										$basketItem = $actualItem['ACTUAL_BASKET'][$offer['ID']];
+									}
+									if ($active === $key && (int)$offer['CATALOG_QUANTITY'] > 0) {
+										$active_box = 'true';
+										$quantity_basket_default = $basketItem;
+									}
 
-										$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
-										foreach ($offer['PROPERTIES'] as $prop) {
-											if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2_') === false) {
-												$prop_value = $prop['VALUE'];
-												if($prop['CODE'] === 'GRAMMOVKA_G'){
-													$prop_value .= ' гр.';
-												}
+									$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
+									foreach ($offer['PROPERTIES'] as $prop) {
+										if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2_') === false) {
+											$prop_value = $prop['VALUE'];
+											$typeProp = $prop['CODE'];
+											if ($prop['CODE'] === 'GRAMMOVKA_G') {
+												$prop_value .= ' гр.';
 											}
 										}
-										?>
-										<div class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
-										     title="<?= $offer['NAME'] ?>"
-										     data-active="<?= $active_box ?>"
-										     data-product_id="<?= $offer['ID'] ?>"
-										     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-										     data-basket-quantity="<?= $basketItem ?>"
-										     data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
-										     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-										     data-onevalue="<?= $offer['ID'] ?>">
+									}
+									if ($typeProp === 'GRAMMOVKA_G') { ?>
+										<div
+											class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
+											title="<?= $offer['NAME'] ?>"
+											data-active="<?= $active_box ?>"
+											data-product_id="<?= $offer['ID'] ?>"
+											data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+											data-basket-quantity="<?= $basketItem ?>"
+											data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
+											data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+											data-onevalue="<?= $offer['ID'] ?>">
 											<?= $prop_value ?? '0' ?>
 										</div>
 									<?php }
-								} ?>
-							</div>
+								}
+							} ?>
 						</div>
+					</div>
 					<?php
 					break;
 			}
