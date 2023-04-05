@@ -1080,19 +1080,9 @@ div.slick-track {
     height: 100%;
 }
 
-.red_button_cart[data-active="true"]:not(.js__show-block), .red_button_cart[data-active="true"]:hover:not(.js__show-block) {
-    color: #f55f5c;
-    background-color: #ffffff;
-}
-
 .disabled_not_pay {
     opacity: 0.5;
     pointer-events: none;
-}
-
-.red_button_cart {
-    border: 2px solid #f55f5c;
-    font-weight: 600 !important;
 }
 
 .offer-box.red_button_cart {

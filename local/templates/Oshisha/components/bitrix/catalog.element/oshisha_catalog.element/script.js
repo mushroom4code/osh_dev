@@ -1909,7 +1909,7 @@
 		quantitySet: function(index)
 		{
 			var strLimit, resetQuantity;
-			
+
 			var newOffer = this.offers[index],
 				oldOffer = this.offers[this.offerNum];
 
@@ -3493,3 +3493,10 @@
 		}
 	}
 })(window);
+
+$(document).on('click', '.offer-box', function () {
+	let parent = $(this).closest('.box_with_photo_product');
+	let new_active_image = $(parent).find('.product-item-detail-slider-image[data-id="' + $(this).attr('data-product_id') + '"]');
+	$(document).find('.product-item-detail-slider-image.active').removeClass('active').addClass('d-none');
+	$(new_active_image).removeClass('d-none').addClass('active').find('img').attr('src', $(new_active_image).find('img').attr('data-src'));
+})

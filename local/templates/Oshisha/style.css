@@ -7101,6 +7101,16 @@ footer.footer .container .copyrights > span {
     margin: 0;
 }
 
+.red_button_cart {
+    border: 2px solid #f55f5c;
+    font-weight: 600 !important;
+}
+
+.red_button_cart[data-active="true"]:not(.js__show-block), .red_button_cart[data-active="true"]:hover:not(.js__show-block) {
+    color: #f55f5c;
+    background-color: #ffffff;
+}
+
 /* TABLET MENU */
 @media screen and (max-width: 1024px) {
     .d-1024-hide {

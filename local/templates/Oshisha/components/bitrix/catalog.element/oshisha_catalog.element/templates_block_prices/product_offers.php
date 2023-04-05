@@ -1,6 +1,21 @@
+<?php
+$show = false;
+$active = null;
+$priceDef = 0;
+foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
+	if ($quantityNull['CATALOG_QUANTITY'] > 0 && $show === false) {
+		$show = true;
+	}
+	if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
+		$active = $keys;
+		$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRICE'];
+	}
+}
+?>
 <div class="col-md-6 col-sm-6 col-lg-6 product_left col-12">
 	<div class="product-item-detail-slider-container
-<?php if (!empty($taste['VALUE'])) { ?> p-lg-md-25 <?php } ?>" id="<?= $itemIds['BIG_SLIDER_ID'] ?>">
+		<?php if (!empty($taste['VALUE'])) { ?> p-lg-md-25 <?php } ?>"
+	     id="<?= $itemIds['BIG_SLIDER_ID'] ?>">
 		<div class="variation_taste" style="max-width: 10%; height: 90%">
 			<?php foreach ($taste['VALUE'] as $key => $nameTaste) {
 				foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
@@ -24,13 +39,21 @@
 				      data-entity="slider-control-right"
 				      style="display: none;"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
 				<div class="product-item-detail-slider-images-container" data-entity="images-container">
-					<?php if (!empty($actualItem['PICTURE'][0]['SRC'])) {
-						foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
-							<div class="product-item-detail-slider-image<?= ($key == 0 ? ' active' : '') ?>"
+					<?php if(!empty($arResult['OFFERS'])) {
+						foreach ($arResult['OFFERS'] as $key => $photo) {
+							$dNone = 'd-none';
+							$boolShowImage = false;
+							if($key === $active){
+								$dNone = 'active';
+								$boolShowImage = true;
+							} ?>
+							<picture class="product-item-detail-slider-image <?= $dNone ?>"
 							     data-entity="image" data-id="<?= $photo['ID'] ?>">
-								<img src="<?= $photo['SRC'] ?>" alt="<?= $alt ?>"
-								     title="<?= $title ?>"<?= ($key == 0 ? ' itemprop="image"' : '') ?>>
-							</div>
+								<img data-src="<?= $photo['DETAIL_PICTURE']['SRC'] ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
+								     alt="<?= $photo['NAME'] ?>"
+								     src="<?=$boolShowImage ? $photo['DETAIL_PICTURE']['SRC'] : '' ?>"
+								     title="<?= $photo['NAME'] ?>"<?= ($key == 0 ? ' itemprop="image"' : '') ?>>
+							</picture>
 						<?php }
 					} else { ?>
 						<div class="product-item-detail-slider-image active" data-entity="image"
@@ -85,42 +108,7 @@
 				</a>
 			</div>
 		</div>
-		<?php if ($haveOffers) {
-			foreach ($arResult['OFFERS'] as $keyOffer => $offer) {
-				if (!isset($offer['MORE_PHOTO_COUNT']) || $offer['MORE_PHOTO_COUNT'] <= 0) {
-					continue;
-				}
 
-				$strVisible = $arResult['OFFERS_SELECTED'] == $keyOffer ? '' : 'none'; ?>
-				<div class="product-item-detail-slider-controls-block mt-2"
-				     id="<?= $itemIds['SLIDER_CONT_OF_ID'] . $offer['ID'] ?>"
-				     style="display: <?= $strVisible ?>;">
-					<?php foreach ($offer['MORE_PHOTO'] as $keyPhoto => $photo) { ?>
-						<div class="product-item-detail-slider-controls-image<?= ($keyPhoto == 0 ? ' active' : '') ?>"
-						     data-entity="slider-control"
-						     data-value="<?= $offer['ID'] . '_' . $photo['ID'] ?>">
-							<img src="<?= $photo['SRC'] ?>">
-						</div>
-					<?php } ?>
-				</div>
-				<?php
-			}
-		} else { ?>
-			<div class="product-item-detail-slider-controls-block margin_block_element"
-			     id="<?= $itemIds['SLIDER_CONT_ID'] ?>">
-				<?php if (!empty($actualItem['PICTURE']) && count($actualItem['PICTURE']) > 0) {
-					foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
-						<div class="product-item-detail-slider-controls-image<?= ($key == 0 ? ' active' : '') ?>"
-						     data-entity="slider-control" data-value="<?= $photo['ID'] ?>">
-							<img src="<?= $photo['SRC'] ?>">
-						</div>
-						<?php
-					}
-				} ?>
-			</div>
-			<?php
-		}
-		?>
 	</div>
 </div>
 <?php
@@ -219,19 +207,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 						}
 					}
 					break;
-				case 'quantity':
-						$show = false;
-						$active = null;
-						$priceDef = 0;
-						foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
-							if ($quantityNull['CATALOG_QUANTITY'] > 0 && $show === false) {
-								$show = true;
-							}
-							if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
-								$active = $keys;
-								$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRICE'];
-							}
-						}?>
+				case 'quantity':?>
 						<div>
 							<div class="bx_price position-relative font-weight-bolder font-22 mb-3">
 								<?php $sale = false;
@@ -252,9 +228,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 										$active_box = 'false';
 										$basketItem = 0;
 										if (!empty($item['ACTUAL_BASKET'][$offer['ID']])) {
-											$basketItem = $item['ACTUAL_BASKET'][$offer['ID']];
+											$basketItem = $item['ACTUAL_BASKET'][$offer_price['ID']];
 										}
-										if ($active === $key_offer && (int)$offer['CATALOG_QUANTITY'] > 0) {
+										if ($active === $key_offer && (int)$offer_price['CATALOG_QUANTITY'] > 0) {
 											$active_box = 'true';
 											$prod_off_id = $offer_price['ID'];
 											$quantity_basket_default = $basketItem;
