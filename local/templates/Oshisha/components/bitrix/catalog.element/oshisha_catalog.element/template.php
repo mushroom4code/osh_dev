@@ -230,6 +230,7 @@ global $option_site;
         <div class="box_with_photo_product row">
             <?php
             if(!empty($arResult['OFFERS'])){
+
                 require_once(__DIR__.'/templates_block_prices/product_offers.php');
             } else {
                 require_once(__DIR__.'/templates_block_prices/product.php');

@@ -2967,3 +2967,58 @@ $(document).ready(function () {
         $('.overlay').hide();
     });
 });
+
+//OFFERS
+
+/**
+ * Enterego - switch block offer for add to basket
+ * @param box_offers
+ * @param that
+ * @param className
+ * @param allHide
+ * @param boxHide
+ */
+function showHideBlock(box_offers, that, className = 'd-block', allHide = false, boxHide = null) {
+    if (allHide) {
+        boxHide.find('.box-prices').each(function () {
+            $(this).removeClass(className).addClass('d-none');
+        });
+    }
+    if ($(box_offers).hasClass(className)) {
+        $(box_offers).removeClass(className).addClass('d-none')
+    } else {
+        $(box_offers).removeClass('d-none').addClass(className)
+    }
+    $(that).closest('div.d-flex').find('.red_button_cart').each(function () {
+        $(this).attr('data-active', 'false');
+    });
+    $(that).attr('data-active', 'true');
+}
+
+/**
+ * Enterego switch block with offers
+ */
+$(document).on('click', '.js__show-block', function () {
+    showHideBlock($(this).closest('.catalog-item-product').find('.info-prices-box-hover'), $(this), 'd-flex');
+});
+
+$(document).on('click', '.offer-box', function () {
+    let elem = $(this);
+    let box_parent = $(elem).closest('.catalog-item-product');
+    let box_offers = $(box_parent).find('div[data-offer-id="' + $(elem).attr('data-product_id') + '"]');
+
+    showHideBlock(box_offers, $(elem), 'd-block', true, $(box_parent).find('.prices-all'));
+
+    $(box_parent).find('.product-item-amount-field-contain-wrap').attr('data-product_id', $(elem).attr('data-product_id'));
+    $(box_parent).find('.add2basket').each(function () {
+        $(this).attr('data-product_id', $(elem).attr('data-product_id'));
+    });
+
+    $(box_parent).find('.bx_price').text($(elem).attr('data-price-base'));
+    $(box_parent).find('input.card_element').val($(elem).attr('data-basket-quantity'));
+
+
+    $(box_parent).find('.btn-plus').each(function () {
+        $(this).attr('data-max-quantity', $(elem).attr('data-product-quantity'));
+    })
+});
