@@ -233,6 +233,16 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 							}
 						}?>
 						<div>
+							<div class="bx_price position-relative font-weight-bolder font-22 mb-3">
+								<?php $sale = false;
+								if (USE_CUSTOM_SALE_PRICE && !empty($arResult['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
+									$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
+									echo(round($price['SALE_PRICE']['PRICE']));
+									$sale = true;
+								} else {
+									echo '<span class="font-12 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM'][1]['PRICE']));
+								} ?> руб.
+							</div>
 							<div class="mt-1">
 								<div class="prices-all mb-3">
 									<?php $prod_off_id = $actualItem['ID'];
@@ -251,7 +261,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											$prod_off_quantity = $offer_price['CATALOG_QUANTITY'];
 											$dNone = '';
 										} ?>
-										<div class="<?= $dNone ?> mb-lg-2 m-md-2 m-1 box-prices width-auto"
+										<div class="<?= $dNone ?> mb-2 box-prices p-3 width-fit-content br-10 bg-gray-white"
 										     data-offer-id="<?= $offer_price['ID'] ?>">
 											<?php foreach ($offer_price['PRICES_CUSTOM'] as $price) { ?>
 												<p class="mb-1">
@@ -264,17 +274,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 									<?php } ?>
 								</div>
 								<div
-									class="d-flex row-line-reverse justify-content-between align-items-center box-basket mb-lg-2 m-md-2 m-1 bx_catalog_item_controls">
-									<div class="bx_price position-relative font-weight-bolder">
-										<?php $sale = false;
-										if (USE_CUSTOM_SALE_PRICE && !empty($arResult['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
-											$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-											echo(round($price['SALE_PRICE']['PRICE']));
-											$sale = true;
-										} else {
-											echo '<span class="font-10 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM'][1]['PRICE']));
-										} ?>₽
-									</div>
+									class="d-flex row-line-reverse justify-content-between align-items-center box-basket mb-3 bx_catalog_item_controls">
 									<?php if ($USER->IsAuthorized()) { ?>
 										<div class="product-item-amount-field-contain-wrap" style="display:flex;"
 										     data-product_id="<?= $prod_off_id; ?>">
@@ -302,7 +302,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 									<?php } ?>
 								</div>
 							</div>
-							<div class="d-flex flex-wrap flex-row mb-2 justify-content-end box-offers-auto">
+							<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto">
 								<?php
 								$quantity_basket_default = 0;
 								foreach ($arResult['OFFERS'] as $key => $offer) {
@@ -322,10 +322,13 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 										foreach ($offer['PROPERTIES'] as $prop) {
 											if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2_') === false) {
 												$prop_value = $prop['VALUE'];
+												if($prop['CODE'] === 'GRAMMOVKA_G'){
+													$prop_value .= ' гр.';
+												}
 											}
 										}
 										?>
-										<div class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box "
+										<div class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
 										     title="<?= $offer['NAME'] ?>"
 										     data-active="<?= $active_box ?>"
 										     data-product_id="<?= $offer['ID'] ?>"
