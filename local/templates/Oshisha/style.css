@@ -7119,7 +7119,7 @@ footer.footer .container .copyrights > span {
     width: 90px;
 }
 
-.color-hookah[data-active="true"] {
+.color-hookah[data-active="true"],.box-offer-fast[data-active="true"] {
     border: 2px solid #f55f5c;
 }
 
