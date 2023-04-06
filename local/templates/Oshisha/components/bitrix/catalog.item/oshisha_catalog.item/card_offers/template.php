@@ -127,9 +127,9 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 		'PRICE' => $quantityNull['PRICES_CUSTOM'],
 		'SALE_PRICE' => '',
 		'DETAIL_PICTURE' => $quantityNull['DETAIL_PICTURE']['SRC'],
-		'QUANTITY'=> $quantityNull['CATALOG_QUANTITY'],
-		'PROPS'=> $quantityNull['PROPERTIES'],
- 	];
+		'QUANTITY' => $quantityNull['CATALOG_QUANTITY'],
+		'PROPS' => $quantityNull['PROPERTIES'],
+	];
 }
 
 if ($show_price) {
@@ -535,19 +535,23 @@ if ($show_price) {
 									$active_box = 'true';
 									$quantity_basket_default = $basketItem;
 								}
-
+								$typeProp = '';
 								$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
 								foreach ($offer['PROPERTIES'] as $prop) {
-									if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2_') === false) {
+									if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2_') === false
+										&& strripos($prop['CODE'], 'MORE_PHOTO') === false) {
 										$prop_value = $prop['VALUE'];
 										$typeProp = $prop['CODE'];
 										if ($prop['CODE'] === 'GRAMMOVKA_G') {
 											$prop_value .= ' гр.';
 										}
+										if ($prop['CODE'] === 'SHTUK_V_UPAKOVKE') {
+											$prop_value .= ' шт.';
+										}
 									}
 								}
-								if ($typeProp === 'GRAMMOVKA_G') { ?>
-									<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box "
+								if ($typeProp === 'GRAMMOVKA_G' || $typeProp === 'SHTUK_V_UPAKOVKE') { ?>
+									<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
 									     title="<?= $offer['NAME'] ?>"
 									     data-active="<?= $active_box ?>"
 									     data-product_id="<?= $offer['ID'] ?>"
@@ -557,6 +561,23 @@ if ($show_price) {
 									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 									     data-onevalue="<?= $offer['ID'] ?>">
 										<?= $prop_value ?? '0' ?>
+									</div>
+								<?php } elseif ($typeProp === 'TSVET') { ?>
+									<div title="<?= $offer['NAME'] ?>"
+									     data-active="<?= $active_box ?>"
+									     data-product_id="<?= $offer['ID'] ?>"
+									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-basket-quantity="<?= $basketItem ?>"
+									     data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
+									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+									     data-onevalue="<?= $offer['ID'] ?>"
+									     class="mr-1 offer-box color-hookah br-10">
+										<img src="<?= $offer['PREVIEW_PICTURE']['SRC'] ?>"
+										     class="br-10"
+										     width="50"
+										     height="50"
+										     alt="<?= $offer['NAME'] ?>"
+										     loading="lazy"/>
 									</div>
 								<?php }
 							}

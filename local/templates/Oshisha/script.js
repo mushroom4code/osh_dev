@@ -2989,7 +2989,7 @@ function showHideBlock(box_offers, that, className = 'd-block', allHide = false,
     } else {
         $(box_offers).removeClass('d-none').addClass(className)
     }
-    $(that).closest('div.d-flex').find('.red_button_cart').each(function () {
+    $(that).closest('div.d-flex').find('.offer-box').each(function () {
         $(this).attr('data-active', 'false');
     });
     $(that).attr('data-active', 'true');

@@ -7111,6 +7111,18 @@ footer.footer .container .copyrights > span {
     background-color: #ffffff;
 }
 
+.color-hookah {
+    border: 2px solid #eeeeee;
+    width: 65px;
+}
+.box_with_photo_product .color-hookah{
+    width: 90px;
+}
+
+.color-hookah[data-active="true"] {
+    border: 2px solid #f55f5c;
+}
+
 /* TABLET MENU */
 @media screen and (max-width: 1024px) {
     .d-1024-hide {
