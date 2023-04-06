@@ -22,9 +22,12 @@ BX.SaleCommonPVZ = {
     propCityId: null,
     propFiasId: null,
     propKladrId: null,
+    propStreetKladrId: null,
     propLatitudeId: null,
     propLongitudeId: null,
     curDeliveryId: null,
+    shipmentCost: null,
+    orderPackages: null,
 
 
     init: function (params) {
@@ -35,9 +38,12 @@ BX.SaleCommonPVZ = {
         this.propCityId = params.params?.propCity;
         this.propFiasId = params.params?.propFias;
         this.propKladrId = params.params?.propKladr;
+        this.propStreetKladrId = params.params?.propStreetKladr;
         this.propLatitudeId = params.params?.propLatitude;
         this.propLongitudeId = params.params?.propLongitude;
         this.curDeliveryId = params.params?.curDeliveryId;
+        this.shipmentCost = params.params?.shipmentCost;
+        this.orderPackages = params.params?.packages;
 
         this.refresh();
         this.isInit = true;
@@ -52,6 +58,7 @@ BX.SaleCommonPVZ = {
             BX.SaleCommonPVZ.propCityId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'CITY')?.ID;
             BX.SaleCommonPVZ.propFiasId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'FIAS')?.ID;
             BX.SaleCommonPVZ.propKladrId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'KLADR')?.ID;
+            BX.SaleCommonPVZ.propStreetKladrId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'STREET_KLADR')?.ID;
             BX.SaleCommonPVZ.propLatitudeId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'LATITUDE')?.ID;
             BX.SaleCommonPVZ.propLongitudeId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
             BX.SaleCommonPVZ.curDeliveryId = ajaxAns.order.DELIVERY.find(field => field.CHECKED === 'Y')?.ID;
@@ -107,6 +114,7 @@ BX.SaleCommonPVZ = {
                         (this.propCityId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propCityId + '"]').value = suggestion.data.city) : '';
                         (this.propFiasId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propFiasId + '"]').value = suggestion.data.fias_id) : '';
                         (this.propKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propKladrId + '"]').value = suggestion.data.kladr_id) : '';
+                        (this.propStreetKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propStreetKladrId + '"]').value = suggestion.data.street_kladr_id) : '';
                         (this.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propLatitudeId + '"]').value = suggestion.data.geo_lat) : '';
                         (this.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propLongitudeId + '"]').value = suggestion.data.geo_lon) : '';
                         if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
@@ -291,6 +299,11 @@ BX.SaleCommonPVZ = {
             delivery: point.properties.deliveryName,
             to: point.properties.fullAddress,
             weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
+            cost: this.shipmentCost,
+            packages: this.orderPackages,
+            street_kladr: point.properties.street_kladr ?? '',
+            latitude: point.geometry.coordinates[0],
+            longitude: point.geometry.coordinates[1],
             fivepost_zone: point.properties.fivepostZone,
             hubregion: point.properties.hubregion,
             name_city: this.curCityName,
@@ -304,7 +317,6 @@ BX.SaleCommonPVZ = {
             return;
 
         __this.pvzPopup.close();
-
         const point = this.objectManager.objects.getById(objectId);
         __this.pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
         this.pvzFullAddress = typeof point.properties.code_pvz !== 'undefined'
@@ -344,7 +356,6 @@ BX.SaleCommonPVZ = {
      */
     getSelectPvzPrice: function (points, clusterId=undefined) {
         const __this = this;
-
         const data = points.reduce((result, point) => {
             if (!point.properties.balloonContent) {
                 point.properties.balloonContent = "Идет загрузка данных...";

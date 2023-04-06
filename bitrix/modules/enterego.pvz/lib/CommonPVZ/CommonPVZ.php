@@ -38,6 +38,9 @@ abstract class CommonPVZ
                 return new RussianPostDelivery('RussianPostFirstClass');
             case 'RussianPostRegular':
                 return new RussianPostDelivery('RussianPostRegular');
+            case 'Dellin':
+            case 'Деловые линии':
+                return new DellinDelivery();
             default:
                 return null;
         }

@@ -65,6 +65,20 @@ class DeliveryHelper
         return ['status'=>'success'];
     }
 
+    /** Обновляет ПВЗ для службы доставки Деловых линий
+     * @return string[]
+     */
+    public static function updateDellinPVZ(): array
+    {
+        try {
+            $pickPoint = new DellinDelivery();
+            $pickPoint->updatePointsForDellin();
+        } catch (\Exception $e) {
+            return ['status'=>'failed'];
+        }
+        return ['status'=>'success'];
+    }
+
     public static function getAllPVZ($deliveries, $city_name, $codeCity)
     {
         $id_feature = 0;
@@ -128,12 +142,29 @@ class DeliveryHelper
                 $params['propFias'] = $prop['ID'];
             }elseif ($prop['CODE'] === 'KLADR') {
                 $params['propKladr'] = $prop['ID'];
+            }elseif ($prop['CODE'] === 'STREET_KLADR') {
+                $params['propStreetKladr'] = $prop['ID'];
             }elseif ($prop['CODE'] === 'LATITUDE') {
                 $params['propLatitude'] = $prop['ID'];
             }elseif ($prop['CODE'] === 'LONGITUDE') {
                 $params['propLongitude'] = $prop['ID'];
             }
         }
+
+        $params['shipmentCost'] = $order->getBasePrice();
+        $params['packages'] = array();
+        $orderBasket = $order->getBasket();
+        foreach ($orderBasket as $orderBasketItem) {
+            $packageParams = array();
+            $basketItemFields = $orderBasketItem->getFields();
+            $productDimensions =  unserialize($basketItemFields['DIMENSIONS']);
+            $packageParams['height'] = (int)$productDimensions['HEIGHT'];
+            $packageParams['lenght'] = (int)$productDimensions['LENGTH'];
+            $packageParams['width'] = (int)$productDimensions['WIDTH'];
+            $packageParams['weight'] = (int)$basketItemFields['WEIGHT'];
+            $params['packages'][$basketItemFields['PRODUCT_ID']] = $packageParams;
+        }
+        ksort($params['packages']);
 
         $cAsset = Asset::getInstance();
 

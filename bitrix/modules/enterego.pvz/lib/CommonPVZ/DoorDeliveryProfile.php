@@ -61,11 +61,12 @@ class DoorDeliveryProfile extends Base
 
         $description = '';
         $deliveries = [
+            'Dellin',
             'RussianPostEms',
             'RussianPostFirstClass',
             'RussianPostRegular',
             'SDEK',
-            'PickPoint',
+            'PickPoint'
         ];
         $currentDelivery = '';
         $propTypeDeliveryId = '';
@@ -85,6 +86,9 @@ class DoorDeliveryProfile extends Base
             }
             if ($prop['CODE'] === 'ZIP') {
                 $deliveryParams['zip_to'] = $propertyItem->getValue();
+            }
+            if ($prop['CODE'] === 'STREET_KLADR') {
+                $deliveryParams['street_kladr_to'] = $propertyItem->getValue();
             }
         }
         $deliveryParams['shipment_weight'] = $shipment->getWeight();

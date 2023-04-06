@@ -103,15 +103,15 @@ class SDEKDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         try {
-            $cache = \Bitrix\Main\Application::getInstance()->getManagedCache();
             $hashed_values = array($params['location_name']);
             foreach ($params['packages'] as $package) {
                 $hashed_values[] = $package['weight'];
             }
             $hash_string = md5(implode('', $hashed_values));
 
-            if ($cache->read(3600, $this->cdek_cache_id)) {
-                $cached_vars = $cache->get($this->cdek_cache_id);
+            $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
+            if ($cache->initCache(3600, $this->cdek_cache_id)) { // проверяем кеш и задаём настройки
+                $cached_vars = $cache->getVars();
                 if (!empty($cached_vars)) {
                     foreach ($cached_vars as $varKey => $var) {
                         if($varKey === $hash_string) {
@@ -153,10 +153,12 @@ class SDEKDelivery extends CommonPVZ
                 }
             }
 
-            $cache->set($this->cdek_cache_id, (isset($cached_vars) && !empty($cached_vars))
-                ? array_merge($cached_vars, array($hash_string => $finalPrice))
-                : array($hash_string => $finalPrice));
-            $cache->finalize();
+            $cache->forceRewriting(true);
+            if ($cache->startDataCache()) {
+                $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                    ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                    : array($hash_string => $finalPrice));
+            }
             return $finalPrice;
         } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();

@@ -48,7 +48,7 @@ $aTabs = array(
     ),
     // 5post
     array(
-        'DIV'     => 'edit2',
+        'DIV'     => '5post',
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_FP'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_FP'),
         'OPTIONS' => array(
@@ -68,7 +68,7 @@ $aTabs = array(
     ),
     // СДЭК
     array(
-        'DIV'     => 'edit3',
+        'DIV'     => 'sdek',
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_SDEK'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_SDEK'),
         'OPTIONS' => array(
@@ -100,7 +100,7 @@ $aTabs = array(
     ),
     // ПЭК
     array(
-        'DIV'     => 'edit4',
+        'DIV'     => 'pek',
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
         'OPTIONS' => array(
@@ -137,8 +137,9 @@ $aTabs = array(
             )
         )
     ),
+    // RussianPost
     array(
-        'DIV'     => 'edit5',
+        'DIV'     => 'russian_post',
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
         'OPTIONS' => array(
@@ -158,6 +159,74 @@ $aTabs = array(
                 'RussianPost_fromzip',
                 Loc::getMessage('RussianPost_fromzip'),
                 Option::get($module_id, 'RussianPost_fromzip'),
+                array('text')
+            )
+        )
+    ),
+    // Dellin
+    array(
+        'DIV'     => 'dellin',
+        'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_DELLIN'),
+        'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_DELLIN'),
+        'OPTIONS' => array(
+            array(
+                'Dellin_apikey',
+                Loc::getMessage('Dellin_apikey'),
+                Option::get($module_id, 'Dellin_apikey'),
+                array('text')
+            ),
+            array(
+                'Dellin_login',
+                Loc::getMessage('Dellin_login'),
+                Option::get($module_id, 'Dellin_login'),
+                array('text')
+            ),
+            array(
+                'Dellin_password',
+                Loc::getMessage('Dellin_password'),
+                Option::get($module_id, 'Dellin_password'),
+                array('text')
+            ),
+            array(
+                'Dellin_derivalkladr',
+                Loc::getMessage('Dellin_derivalkladr'),
+                Option::get($module_id, 'Dellin_derivalkladr'),
+                array('text')
+            ),
+            array(
+                'Dellin_defaultwidth',
+                Loc::getMessage('Dellin_defaultwidth'),
+                Option::get($module_id, 'Dellin_defaultwidth'),
+                array('text')
+            ),
+            array(
+                'Dellin_defaultlength',
+                Loc::getMessage('Dellin_defaultlength'),
+                Option::get($module_id, 'Dellin_defaultlength'),
+                array('text')
+            ),
+            array(
+                'Dellin_defaultheight',
+                Loc::getMessage('Dellin_defaultheight'),
+                Option::get($module_id, 'Dellin_defaultheight'),
+                array('text')
+            ),
+            array(
+                'Dellin_defaultweight',
+                Loc::getMessage('Dellin_defaultweight'),
+                Option::get($module_id, 'Dellin_defaultweight'),
+                array('text')
+            ),
+            array(
+                'Dellin_derivalstarttime',
+                Loc::getMessage('Dellin_derivalstarttime'),
+                Option::get($module_id, 'Dellin_derivalstarttime'),
+                array('text')
+            ),
+            array(
+                'Dellin_derivalendtime',
+                Loc::getMessage('Dellin_derivalendtime'),
+                Option::get($module_id, 'Dellin_derivalendtime'),
                 array('text')
             )
         )
@@ -208,7 +277,7 @@ $tabControl->begin();
                         </td>
                     </tr>
                     <?php
-                } elseif ($aTab['DIV'] === 'edit3') {?>
+                } elseif ($aTab['DIV'] === 'sdek') {?>
                     <tr>
                     <td>
                     <table style="width: 200%; margin-top: 15px;">
@@ -236,6 +305,19 @@ $tabControl->begin();
                     </table>
                     </td>
                     </tr><?
+                } else if ($aTab['DIV'] === 'dellin'){?>
+                    <tr>
+                        <td>
+                            <div style="display: none" id="dellin_load_points_label"
+                                 class="adm-info-message-wrap">
+                        </td>
+                        <td>
+                            <input type="button" id="dellin_load_points"
+                                   value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <?
                 }
             }
         }
@@ -296,6 +378,43 @@ if ($request->isPost() && check_bitrix_sessid()) {
             BX.ajax({
                 url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
                 data: {action: 'updatePickPointPoints'},
+                method: 'POST',
+                dataType: 'json',
+                onsuccess: (data) => {
+                    if (data.status === 'success') {
+                        BX.cleanNode(label)
+                        BX.addClass(label, 'adm-info-message-green')
+                        BX.append(BX.create('div', {
+                            attrs: {className: 'adm-info-message'},
+                            text: 'Успешно загружено'
+                        }), label)
+                    } else {
+                        BX.cleanNode(label)
+                        BX.addClass(label, 'adm-info-message-red')
+                        BX.append(BX.create('div', {
+                            attrs: {className: 'adm-info-message'},
+                            text: 'Ошибка'
+                        }), label)
+                    }
+                },
+            })
+        }));
+        BX.bind(BX('dellin_load_points'), 'click', BX.proxy((event)=>{
+            event.preventDefault()
+            const label = BX('dellin_load_points_label');
+            BX.cleanNode(label)
+            BX.removeClass(label, 'adm-info-message-green')
+            BX.removeClass(label, 'adm-info-message-red')
+
+            BX.append(BX.create('div', {
+                attrs: {className: 'adm-info-message'},
+                text: 'Загружается...'
+            }), label)
+            BX.show(label);
+
+            BX.ajax({
+                url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
+                data: {action: 'updateDellinPoints'},
                 method: 'POST',
                 dataType: 'json',
                 onsuccess: (data) => {

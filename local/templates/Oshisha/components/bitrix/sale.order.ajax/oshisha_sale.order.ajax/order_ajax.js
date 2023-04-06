@@ -5648,7 +5648,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 className += " col-12";
             } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY'
                 || property.getSettings().CODE === 'FIAS' || property.getSettings().CODE === 'KLADR'
-                || property.getSettings().CODE === 'ZIP' || property.getSettings().CODE === 'LATITUDE' || property.getSettings().CODE === 'LONGITUDE') {
+                || property.getSettings().CODE === 'ZIP' || property.getSettings().CODE === 'LATITUDE'
+                || property.getSettings().CODE === 'LONGITUDE' || property.getSettings().CODE === 'STREET_KLADR') {
                 className += " d-none";
             } else {
                 className += " col-md-6 col-lg-6 col-12";

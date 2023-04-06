@@ -1,5 +1,7 @@
 <?php
 
+use CommonPVZ\DellindeliveryApicore;
+
 class sdekHelperAllPvz
 {
     static $MODULE_ID = "enterego.pvz";
@@ -94,6 +96,9 @@ CModule::AddAutoloadClasses("", array(
     '\CommonPVZ\PVZDeliveryProfile' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/PVZDeliveryProfile.php',
     '\CommonPVZ\SDEKDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/SDEKDelivery.php',
     '\CommonPVZ\RussianPostDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/RussianPostDelivery.php',
+    '\CommonPVZ\DellinDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/DellinDelivery.php',
+    '\CommonPVZ\DellindeliveryApicore' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/DellindeliveryApicore.php',
+    '\CommonPVZ\DellinPointsTable' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/DellinPointsTable.php',
     '\CommonPVZ\PEKDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/PEKDelivery.php',
     '\CommonPVZ\FivePostDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/FivePostDelivery.php',
     '\CommonPVZ\PickPointDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/PickPointDelivery.php',
