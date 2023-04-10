@@ -2192,7 +2192,7 @@ $(document).on('click', '.open-fast-window', function () {
         });
 
         let box_product = BX.findChildByClassName(box_popup, 'open-modal-product');
-
+let match = 0;
         box_product.appendChild(
             BX.create('H5', {
                 props: {
@@ -2293,7 +2293,7 @@ $(document).on('click', '.open-fast-window', function () {
                                 children: [
                                     BX.create('P', {
                                         props: {
-                                            className: 'base-price font-weight-bold font-27 mb-3'
+                                            className: 'base-price bx_price font-weight-bold font-27 mb-3'
                                         },
                                     }),
                                     BX.create('DIV', {
@@ -2381,7 +2381,8 @@ $(document).on('click', '.open-fast-window', function () {
                                 active: active_box,
                                 product_id: offer.ID,
                                 product_quantity: offer.QUANTITY,
-                                price_base: offer.PRICE[1].PRINT_PRICE
+                                price_base: offer.PRICE[1].PRICE,
+                                basket_quantity: offer.BASKET
                             }
                         }))
                     } else if (prop.CODE === 'TSVET' && prop.VALUE !== '') {
@@ -2396,7 +2397,8 @@ $(document).on('click', '.open-fast-window', function () {
                                 active: active_box,
                                 product_id: offer.ID,
                                 product_quantity: offer.QUANTITY,
-                                price_base: offer.PRICE[1].PRINT_PRICE
+                                price_base: offer.PRICE[1].PRICE,
+                                basket_quantity: offer.BASKET
                             }
                         }))
                     }
@@ -2417,7 +2419,6 @@ $(document).on('click', '.open-fast-window', function () {
 
                 $.each(offer.PRICE, function (i, price) {
                     let sale = '';
-                    console.log(price)
                     if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true)
                         && parseInt(product.SALE_PRICE) > 0) {
                         sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
@@ -2427,15 +2428,15 @@ $(document).on('click', '.open-fast-window', function () {
                         if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true)
                             && parseInt(offer.SALE_PRICE) > 0) {
 
-                            let print_price = offer.PRICE[0].PRINT_PRICE;
+                            let print_price = offer.PRICE[0].PRICE;
                             let sale_price = offer.SALE_PRICE;
                             let print_price_sum = (parseInt(offer.PRICE[0].PRICE) - parseInt(sale_price)) ?? 0;
                             price_base.innerHTML = sale_price + ' руб. <span class="font-14 ml-3">' +
-                                ' <b class="decoration-color-red mr-2">' + print_price + '</b>' +
-                                '<b class="sale-percent"> - ' + print_price_sum + ' руб.</b></span>';
+                                ' <b class="decoration-color-red mr-2">' + print_price + '₽</b>' +
+                                '<b class="sale-percent"> - ' + print_price_sum + '₽</b></span>';
 
                         } else {
-                            price_base.innerHTML = '<span class="font-14 card-price-text">от </span>' + price.PRINT_PRICE;
+                            price_base.innerHTML = '<span class="font-14 card-price-text">от </span>' + price.PRICE + '₽';
                         }
                     }
 
@@ -2549,6 +2550,7 @@ $(document).on('click', '.open-fast-window', function () {
                     html: '<img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>',
                 }))
             }
+            match = product.OFFERS[active].QUANTITY;
         } else {
             box_product.appendChild(BX.create('DIV', {
                 props: {
@@ -2679,7 +2681,6 @@ $(document).on('click', '.open-fast-window', function () {
             }));
 
             // IMAGE && SLIDER
-
             if (product.MORE_PHOTO.length > 1) {
 
                 let product_box = BX.findChildByClassName(box_product, 'box-with-image-one');
@@ -2761,7 +2762,6 @@ $(document).on('click', '.open-fast-window', function () {
             }
 
             // PRICE
-
             let price_group = BX.findChildByClassName(box_product, 'price-group');
             let price_base = BX.findChildByClassName(box_product, 'base-price');
 
@@ -2814,6 +2814,8 @@ $(document).on('click', '.open-fast-window', function () {
             });
 
             let basket_box = BX.findChildByClassName(box_product, 'add-to-basket');
+            match = product.PRODUCT.QUANTITY;
+
             if (parseInt(product.PRODUCT.QUANTITY) > 0) {
 
                 let product_props = product.PRODUCT;
@@ -2898,6 +2900,10 @@ $(document).on('click', '.open-fast-window', function () {
             }
         }
 
+        $(BX.findChildByClassName(box_product,'inputBasketOpenWindow')).attr('data-max-quantity',match);
+        $(BX.findChildByClassName(box_product,'addToBasketOpenWindow')).attr('data-max-quantity', match)
+        $(BX.findChildByClassName(box_product,'removeToBasketOpenWindow')).attr('data-max-quantity', match)
+        $(BX.findChildByClassName(box_product,'buttonToBasketOpenWindow')).attr('data-max-quantity', match)
         //  PROPS
         if (Array.isArray(product.ADVANTAGES_PRODUCT) !== false) {
 
@@ -2936,10 +2942,6 @@ $(document).on('click', '.open-fast-window', function () {
 
         $(wrapper).append(box_popup);
         // TODO - не нашла как добавлять через атрибуты BX при создании элемента тег дата с дефисом, можно только с подчеркиванием
-        $(wrapper).find('.inputBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
-        $(wrapper).find('.addToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
-        $(wrapper).find('.removeToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
-        $(wrapper).find('.buttonToBasketOpenWindow').attr('data-max-quantity', product.PRODUCT.QUANTITY);
         $(wrapper).find('.like-modal').attr('data-product-id', product.ID).attr('data-fuser-id', product.LIKE.F_USER_ID);
         if (parseInt(product.LIKE.COUNT_FAV) !== 0) {
             $(wrapper).find('.like-modal a[data-method="favorite"]').attr('data-fav-controls', 'true').attr('style', 'color:red');

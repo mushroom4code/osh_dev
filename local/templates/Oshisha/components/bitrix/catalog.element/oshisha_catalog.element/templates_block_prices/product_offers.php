@@ -269,7 +269,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 												       value="<?= $quantity_basket_default ?>">
 											</div>
 											<a class="btn-plus plus_icon no-select add2basket"
-											   data-max-quantity="<?= $prod_off_quantity ?>"
+											   data-max_quantity="<?= $prod_off_quantity ?>"
 											   href="javascript:void(0)"
 											   data-url="<?= $actualItem['DETAIL_PAGE_URL'] ?>"
 											   data-product_id="<?= $prod_off_id; ?>"
@@ -317,9 +317,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											title="<?= $offer['NAME'] ?>"
 											data-active="<?= $active_box ?>"
 											data-product_id="<?= $offer['ID'] ?>"
-											data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-											data-basket-quantity="<?= $basketItem ?>"
-											data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
+											data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+											data-basket_quantity="<?= $basketItem ?>"
+											data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
 											data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 											data-onevalue="<?= $offer['ID'] ?>">
 											<?= $prop_value ?? '0' ?>
@@ -328,9 +328,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 									<div title="<?= $offer['NAME'] ?>"
 									     data-active="<?= $active_box ?>"
 									     data-product_id="<?= $offer['ID'] ?>"
-									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-									     data-basket-quantity="<?= $basketItem ?>"
-									     data-price-base="<?= $offer['PRICES_CUSTOM'][1]['PRINT_PRICE'] ?>"
+									     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-basket_quantity="<?= $basketItem ?>"
+									     data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
 									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 									     data-onevalue="<?= $offer['ID'] ?>"
 									     class="mr-1 offer-box color-hookah br-10">

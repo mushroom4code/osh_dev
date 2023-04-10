@@ -1007,7 +1007,7 @@ span.color_black, .btn_company, .btn_company:hover, .select2-container--default 
 a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-section-description p, .btn-plus,
 .btn-minus, .basket-checkout-section-inner input.input_code, .basket-checkout-section-inner input.input_code:focus,
 .text_catalog_button, div.card > div.card-body > p.card-text, span.text_footer, .sidebar_inform a.link_about,
-.text_small, .name_box, .font-14, .by-line.opt .bx_price, .text_header_menu > span {
+.text_small, .name_box, .font-14, .by-line.opt .bx_price, .text_header_menu > span, .base-price .font-10 {
     font-size: 14px;
 }
 

@@ -3014,11 +3014,11 @@ $(document).on('click', '.offer-box', function () {
         $(this).attr('data-product_id', $(elem).attr('data-product_id'));
     });
 
-    $(box_parent).find('.bx_price').text($(elem).attr('data-price-base'));
-    $(box_parent).find('input.card_element').val($(elem).attr('data-basket-quantity'));
+    $(box_parent).find('.bx_price').html( '<span class="font-10">от</span> ' + $(elem).attr('data-price_base') + '₽');
+    $(box_parent).find('input.card_element').val($(elem).attr('data-basket_quantity'));
 
 
     $(box_parent).find('.btn-plus').each(function () {
-        $(this).attr('data-max-quantity', $(elem).attr('data-product-quantity'));
+        $(this).attr('data-max_quantity', $(elem).attr('data-product_quantity'));
     })
 });
