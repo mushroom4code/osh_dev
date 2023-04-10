@@ -2900,10 +2900,10 @@ let match = 0;
             }
         }
 
-        $(BX.findChildByClassName(box_product,'inputBasketOpenWindow')).attr('data-max-quantity',match);
-        $(BX.findChildByClassName(box_product,'addToBasketOpenWindow')).attr('data-max-quantity', match)
-        $(BX.findChildByClassName(box_product,'removeToBasketOpenWindow')).attr('data-max-quantity', match)
-        $(BX.findChildByClassName(box_product,'buttonToBasketOpenWindow')).attr('data-max-quantity', match)
+        $(BX.findChildByClassName(box_product,'inputBasketOpenWindow')).attr('data-max_quantity',match);
+        $(BX.findChildByClassName(box_product,'addToBasketOpenWindow')).attr('data-max_quantity', match)
+        $(BX.findChildByClassName(box_product,'removeToBasketOpenWindow')).attr('data-max_quantity', match)
+        $(BX.findChildByClassName(box_product,'buttonToBasketOpenWindow')).attr('data-max_quantity', match)
         //  PROPS
         if (Array.isArray(product.ADVANTAGES_PRODUCT) !== false) {
 
