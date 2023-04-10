@@ -114,6 +114,7 @@ $active = null;
 $priceDef = 0;
 $offersForModal = [];
 foreach ($item['OFFERS'] as $keys => $quantityNull) {
+	$basketItem = 0;
 	if ($quantityNull['CATALOG_QUANTITY'] > 0 && $boolShow === false) {
 		$boolShow = true;
 	}
@@ -135,7 +136,7 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 			'DETAIL_PICTURE' => $quantityNull['DETAIL_PICTURE']['SRC'],
 			'QUANTITY' => $quantityNull['CATALOG_QUANTITY'],
 			'PROPS' => $quantityNull['PROPERTIES'],
-			'BASKET' => $basketItem ?? 0
+			'BASKET' => $basketItem
 		];
 	}
 }

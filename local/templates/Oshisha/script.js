@@ -3017,8 +3017,8 @@ $(document).on('click', '.offer-box', function () {
     });
 
     $(box_parent).find('.bx_price').html( '<span class="font-10">от</span> ' + $(elem).attr('data-price_base') + '₽');
-    $(box_parent).find('input.card_element').val($(elem).attr('data-basket_quantity'));
-    $(box_parent).find('input.card_element').attr('data-max-quantity', $(elem).attr('data-product_quantity'))
+    $(box_parent).find('input.card_element').val($(elem).attr('data-basket_quantity'))
+        .attr('data-max-quantity', $(elem).attr('data-product_quantity'))
         .attr('data-max_quantity', $(elem).attr('data-product_quantity'));
 
     // $(box_parent).find('.btn-plus').each(function () {
