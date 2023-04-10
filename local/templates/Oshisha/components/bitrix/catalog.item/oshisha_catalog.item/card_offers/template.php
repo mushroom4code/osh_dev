@@ -566,6 +566,8 @@ if ($show_price) {
 									     data-active="<?= $active_box ?>"
 									     data-product_id="<?= $offer['ID'] ?>"
 									     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-basket-quantity="<?= $basketItem ?>"
 									     data-basket_quantity="<?= $basketItem ?>"
 									     data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
 									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
@@ -577,6 +579,8 @@ if ($show_price) {
 									     data-active="<?= $active_box ?>"
 									     data-product_id="<?= $offer['ID'] ?>"
 									     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-basket-quantity="<?= $basketItem ?>"
 									     data-basket_quantity="<?= $basketItem ?>"
 									     data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
 									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
@@ -643,7 +647,9 @@ if ($show_price) {
 										       value="<?= $quantity_basket_default ?>">
 									</div>
 									<a class="btn-plus plus_icon no-select add2basket"
-									   data-max_quantity="<?= $prod_off_quantity ?>" href="javascript:void(0)"
+									   data-max_quantity="<?= $prod_off_quantity ?>"
+									   data-max-quantity="<?= $prod_off_quantity ?>"
+									   href="javascript:void(0)"
 									   data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
 									   data-product_id="<?= $prod_off_id; ?>"
 									   title="Доступно <?= $prod_off_quantity ?> товар"></a>
