@@ -3021,7 +3021,8 @@ $(document).on('click', '.offer-box', function () {
         .attr('data-max-quantity', $(elem).attr('data-product_quantity'))
         .attr('data-max_quantity', $(elem).attr('data-product_quantity'));
 
-    // $(box_parent).find('.btn-plus').each(function () {
-    //     $(this).attr('data-max_quantity', $(elem).attr('data-product_quantity'));
-    // })
+    let elem_modal = $(elem).closest('.open-modal-product');
+    if ($(elem_modal).length !== 0 && ($(elem).attr('src') !== '' && $(elem).attr('src') !== null)) {
+        $(elem_modal).find('.box-with-image-one img').attr('src', $(elem).attr('src'))
+    }
 });
