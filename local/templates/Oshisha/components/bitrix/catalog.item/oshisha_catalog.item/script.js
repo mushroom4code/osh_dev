@@ -2192,7 +2192,9 @@ $(document).on('click', '.open-fast-window', function () {
         });
 
         let box_product = BX.findChildByClassName(box_popup, 'open-modal-product');
-let match = 0;
+        let match = 0;
+        let attr_val = 'data-max-quantity';
+
         box_product.appendChild(
             BX.create('H5', {
                 props: {
@@ -2347,7 +2349,6 @@ let match = 0;
             }));
 
             $.each(product.OFFERS, function (key, offer) {
-                console.log(offer)
                 let active_price = 'd-none';
                 let active_box = 'false';
                 if (i === 0) {
@@ -2551,6 +2552,7 @@ let match = 0;
                 }))
             }
             match = product.OFFERS[active].QUANTITY;
+            attr_val = 'data-max_quantity'
         } else {
             box_product.appendChild(BX.create('DIV', {
                 props: {
@@ -2900,10 +2902,10 @@ let match = 0;
             }
         }
 
-        $(BX.findChildByClassName(box_product,'inputBasketOpenWindow')).attr('data-max_quantity',match);
-        $(BX.findChildByClassName(box_product,'addToBasketOpenWindow')).attr('data-max_quantity', match)
-        $(BX.findChildByClassName(box_product,'removeToBasketOpenWindow')).attr('data-max_quantity', match)
-        $(BX.findChildByClassName(box_product,'buttonToBasketOpenWindow')).attr('data-max_quantity', match)
+        $(BX.findChildByClassName(box_product, 'inputBasketOpenWindow')).attr(attr_val, match);
+        $(BX.findChildByClassName(box_product, 'addToBasketOpenWindow')).attr(attr_val, match)
+        $(BX.findChildByClassName(box_product, 'removeToBasketOpenWindow')).attr(attr_val, match)
+        $(BX.findChildByClassName(box_product, 'buttonToBasketOpenWindow')).attr(attr_val, match)
         //  PROPS
         if (Array.isArray(product.ADVANTAGES_PRODUCT) !== false) {
 

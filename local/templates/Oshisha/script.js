@@ -3012,13 +3012,16 @@ $(document).on('click', '.offer-box', function () {
     $(box_parent).find('.product-item-amount-field-contain-wrap').attr('data-product_id', $(elem).attr('data-product_id'));
     $(box_parent).find('.add2basket').each(function () {
         $(this).attr('data-product_id', $(elem).attr('data-product_id'));
+        $(this).attr('data-max_quantity', $(elem).attr('data-product_quantity'));
+        $(this).attr('data-max-quantity', $(elem).attr('data-product_quantity'));
     });
 
     $(box_parent).find('.bx_price').html( '<span class="font-10">от</span> ' + $(elem).attr('data-price_base') + '₽');
     $(box_parent).find('input.card_element').val($(elem).attr('data-basket_quantity'));
+    $(box_parent).find('input.card_element').attr('data-max-quantity', $(elem).attr('data-product_quantity'))
+        .attr('data-max_quantity', $(elem).attr('data-product_quantity'));
 
-
-    $(box_parent).find('.btn-plus').each(function () {
-        $(this).attr('data-max_quantity', $(elem).attr('data-product_quantity'));
-    })
+    // $(box_parent).find('.btn-plus').each(function () {
+    //     $(this).attr('data-max_quantity', $(elem).attr('data-product_quantity'));
+    // })
 });

@@ -123,8 +123,8 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 		$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRICE'];
 	}
 
-	if (!empty($actualItem['ACTUAL_BASKET'][$offer['ID']])) {
-		$basketItem = $actualItem['ACTUAL_BASKET'][$offer['ID']];
+	if (!empty($actualItem['ACTUAL_BASKET'][$quantityNull['ID']])) {
+		$basketItem = $actualItem['ACTUAL_BASKET'][$quantityNull['ID']];
 	}
 
 	if ((int)$quantityNull['CATALOG_QUANTITY'] > 0) {
