@@ -117,22 +117,27 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 	if ($quantityNull['CATALOG_QUANTITY'] > 0 && $boolShow === false) {
 		$boolShow = true;
 	}
+
 	if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
 		$active = $keys;
 		$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRICE'];
 	}
+
 	if (!empty($actualItem['ACTUAL_BASKET'][$offer['ID']])) {
 		$basketItem = $actualItem['ACTUAL_BASKET'][$offer['ID']];
 	}
-	$offersForModal[$quantityNull['ID']] = [
-		'ID' => $quantityNull['ID'],
-		'PRICE' => $quantityNull['PRICES_CUSTOM'],
-		'SALE_PRICE' => '',
-		'DETAIL_PICTURE' => $quantityNull['DETAIL_PICTURE']['SRC'],
-		'QUANTITY' => $quantityNull['CATALOG_QUANTITY'],
-		'PROPS' => $quantityNull['PROPERTIES'],
-		'BASKET' => $basketItem ?? 0
-	];
+
+	if ((int)$quantityNull['CATALOG_QUANTITY'] > 0) {
+		$offersForModal[$quantityNull['ID']] = [
+			'ID' => $quantityNull['ID'],
+			'PRICE' => $quantityNull['PRICES_CUSTOM'],
+			'SALE_PRICE' => '',
+			'DETAIL_PICTURE' => $quantityNull['DETAIL_PICTURE']['SRC'],
+			'QUANTITY' => $quantityNull['CATALOG_QUANTITY'],
+			'PROPS' => $quantityNull['PROPERTIES'],
+			'BASKET' => $basketItem ?? 0
+		];
+	}
 }
 
 if ($show_price) {
