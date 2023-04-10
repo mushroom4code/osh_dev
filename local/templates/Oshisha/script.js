@@ -3005,7 +3005,7 @@ $(document).on('click', '.js__show-block', function () {
 $(document).on('click', '.offer-box', function () {
     let elem = $(this);
     let box_parent = $(elem).closest('.catalog-item-product');
-    let box_offers = $(box_parent).find('div[data-offer-id="' + $(elem).attr('data-product_id') + '"]');
+    let box_offers = $(box_parent).find('div[data-offer_id="' + $(elem).attr('data-product_id') + '"]');
 
     showHideBlock(box_offers, $(elem), 'd-block', true, $(box_parent).find('.prices-all'));
 

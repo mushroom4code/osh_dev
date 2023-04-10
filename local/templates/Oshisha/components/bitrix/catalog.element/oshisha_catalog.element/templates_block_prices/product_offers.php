@@ -240,7 +240,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 										$dNone = '';
 									} ?>
 									<div class="<?= $dNone ?> mb-2 box-prices p-3 width-fit-content br-10 bg-gray-white"
-									     data-offer-id="<?= $offer_price['ID'] ?>">
+									     data-offer_id="<?= $offer_price['ID'] ?>">
 										<?php foreach ($offer_price['PRICES_CUSTOM'] as $price) { ?>
 											<p class="mb-1">
 												<span class="font-14 mb-2"><?= $price['NAME'] ?></span>
@@ -310,7 +310,8 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											}
 										}
 									}
-									if ($typeProp === 'GRAMMOVKA_G' || $typeProp === 'SHTUK_V_UPAKOVKE') { ?>
+									if ($typeProp === 'GRAMMOVKA_G' || $typeProp === 'SHTUK_V_UPAKOVKE'
+										|| $typeProp === 'VKUS' ||$typeProp === 'KOLICHESTVO_ZATYAZHEK') {?>
 										<div
 											class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
 											title="<?= $offer['NAME'] ?>"

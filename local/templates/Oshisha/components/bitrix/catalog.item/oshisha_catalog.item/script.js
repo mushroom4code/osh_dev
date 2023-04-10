@@ -2278,7 +2278,7 @@ $(document).on('click', '.open-fast-window', function () {
                     }),
                     BX.create('DIV', {
                         props: {
-                            className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between'
+                            className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between catalog-item-product'
                         },
                         children: [
                             BX.create('DIV', {
@@ -2298,7 +2298,7 @@ $(document).on('click', '.open-fast-window', function () {
                                     }),
                                     BX.create('DIV', {
                                         props: {
-                                            className: 'price-group mb-lg-4 mb-md-3 mb-3'
+                                            className: 'price-group prices-all mb-lg-4 mb-md-3 mb-3'
                                         },
                                     }),
                                     BX.create('DIV', {
@@ -2348,10 +2348,10 @@ $(document).on('click', '.open-fast-window', function () {
 
             $.each(product.OFFERS, function (key, offer) {
                 console.log(offer)
-                let dBlock = 'd-none';
+                let active_price = 'd-none';
                 let active_box = 'false';
                 if (i === 0) {
-                    dBlock = 'd-flex';
+                    active_price = 'd-block';
                     active = key;
                     active_box = 'true'
                     let box_mages = BX.findChildByClassName(box_product, 'box-with-image-one');
@@ -2368,8 +2368,8 @@ $(document).on('click', '.open-fast-window', function () {
                 let box_offers = BX.findChildByClassName(box_product, 'offers-box');
 
                 $.each(offer.PROPS, function (key_prop, prop) {
-                    if(prop.CODE === 'SHTUK_V_UPAKOVKE' && prop.VALUE !== ''
-                        || prop.CODE === 'GRAMMOVKA_G' && prop.VALUE !== '' ){
+                    if (prop.CODE === 'SHTUK_V_UPAKOVKE' && prop.VALUE !== ''
+                        || prop.CODE === 'GRAMMOVKA_G' && prop.VALUE !== '') {
                         box_offers.appendChild(BX.create('DIV', {
                             props: {
                                 className: 'red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box ',
@@ -2377,26 +2377,26 @@ $(document).on('click', '.open-fast-window', function () {
                                 alt: 'modal-product',
                             },
                             html: prop.VALUE,
-                            dataset : {
+                            dataset: {
                                 active: active_box,
-                                product_id:offer.ID,
-                                product_quantity:offer.QUANTITY,
-                                price_base:offer.PRICE[1].PRINT_PRICE
+                                product_id: offer.ID,
+                                product_quantity: offer.QUANTITY,
+                                price_base: offer.PRICE[1].PRINT_PRICE
                             }
                         }))
-                    }else if(prop.CODE === 'TSVET' && prop.VALUE !== ''){
+                    } else if (prop.CODE === 'TSVET' && prop.VALUE !== '') {
                         box_offers.appendChild(BX.create('IMG', {
                             props: {
-                                className: 'mr-2 br-10 box-offer-fast',
-                                style:'width:90px; height:90px',
+                                className: 'mr-2 br-10 box-offer-fast offer-box',
+                                style: 'width:90px; height:90px',
                                 src: offer.DETAIL_PICTURE,
                                 alt: 'modal-product'
                             },
-                            dataset : {
+                            dataset: {
                                 active: active_box,
-                                product_id:offer.ID,
-                                product_quantity:offer.QUANTITY,
-                                price_base:offer.PRICE[1].PRINT_PRICE
+                                product_id: offer.ID,
+                                product_quantity: offer.QUANTITY,
+                                price_base: offer.PRICE[1].PRINT_PRICE
                             }
                         }))
                     }
@@ -2404,13 +2404,15 @@ $(document).on('click', '.open-fast-window', function () {
 
 
                 // PRICE
-
                 let price_group = BX.findChildByClassName(box_product, 'price-group');
                 let price_base = BX.findChildByClassName(box_product, 'base-price');
                 let new_contain_fot_price = price_group.appendChild(BX.create('DIV', {
                     props: {
-                        className: 'price-box-with-child mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3 flex-column ' + dBlock
+                        className: 'price-box-with-child box-prices mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3 flex-column ' + active_price
                     },
+                    dataset: {
+                        offer_id: offer.ID
+                    }
                 }))
 
                 $.each(offer.PRICE, function (i, price) {
