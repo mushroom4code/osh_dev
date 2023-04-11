@@ -185,7 +185,17 @@ foreach($arResult as $key=>$arItem)
 	}
 	elseif($arItem["DEPTH_LEVEL"] == "2")
 	{
-		$res = CIBlockSection::GetList(array(), ['NAME' => $arItem['TEXT']], false, ['ID'])->Fetch()['ID'];
+		$code = explode('/', explode('/catalog/', $arItem['LINK'])[1])[0];
+		$res = CIBlockSection::GetList(
+			array(),
+			[
+				'DEPTH_LEVEL' => 2,
+				'ACTIVE' => 'Y',
+				'CODE' => $code
+			],
+			false,
+			['ID'])->Fetch()['ID'];
+
 		if (CIBlockSection::GetSectionElementsCount($res, ['CNT_ACTIVE' => 'Y']) > 0) {
 			$arMenuItemsIDs[$curItemLevel_1][$arItem["PARAMS"]["item_id"]] = array();
 			if ($arItem["IS_PARENT"]) {
