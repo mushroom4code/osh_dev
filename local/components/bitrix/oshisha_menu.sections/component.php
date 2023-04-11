@@ -47,6 +47,10 @@ if($this->StartResultCache())
 			"DEPTH_LEVEL",
 			"NAME",
 			"SECTION_PAGE_URL",
+			/**
+			 * Enterego append active and child !== 0 category
+			 */
+			"ACTIVE"
 		));
 		if($arParams["IS_SEF"] !== "Y")
 			$rsSections->SetUrlTemplates("", $arParams["SECTION_URL"]);
@@ -59,6 +63,10 @@ if($this->StartResultCache())
 				"DEPTH_LEVEL" => $arSection["DEPTH_LEVEL"],
 				"~NAME" => $arSection["~NAME"],
 				"~SECTION_PAGE_URL" => $arSection["~SECTION_PAGE_URL"],
+				/**
+				 * Enterego append active and child !== 0 category
+				 */
+				"ACTIVE" => $arSection["ACTIVE"]
 			);
 			$arResult["ELEMENT_LINKS"][$arSection["ID"]] = array();
 		}
@@ -118,23 +126,35 @@ if(($arParams["ID"] > 0) && (intval($arVariables["SECTION_ID"]) <= 0) && CModule
 $aMenuLinksNew = array();
 $menuIndex = 0;
 $previousDepthLevel = 1;
-foreach($arResult["SECTIONS"] as $arSection)
-{
-	if ($menuIndex > 0)
-		$aMenuLinksNew[$menuIndex - 1][3]["IS_PARENT"] = $arSection["DEPTH_LEVEL"] > $previousDepthLevel;
-	$previousDepthLevel = $arSection["DEPTH_LEVEL"];
+foreach ($arResult["SECTIONS"] as $arSection) {
+	/**
+	 * Enterego append active and child !== 0 category
+	 */
+		if (!isset($arParams['CUSTOM_PARAM_MENU'])
+			|| $arParams['CUSTOM_PARAM_MENU'] !== 'Y'
+			|| (CIBlockSection::GetSectionElementsCount($arSection['ID'],
+				['CNT_ACTIVE' => 'Y']) > 0 && $arSection['ACTIVE'] === 'Y')) {
 
-	$arResult["ELEMENT_LINKS"][$arSection["ID"]][] = urldecode($arSection["~SECTION_PAGE_URL"]);
-	$aMenuLinksNew[$menuIndex++] = array(
-		htmlspecialcharsbx($arSection["~NAME"]),
-		$arSection["~SECTION_PAGE_URL"],
-		$arResult["ELEMENT_LINKS"][$arSection["ID"]],
-		array(
-			"FROM_IBLOCK" => true,
-			"IS_PARENT" => false,
-			"DEPTH_LEVEL" => $arSection["DEPTH_LEVEL"],
-		),
-	);
+		if ($menuIndex > 0) {
+			$aMenuLinksNew[$menuIndex - 1][3]["IS_PARENT"] = $arSection["DEPTH_LEVEL"] > $previousDepthLevel;
+		}
+		$previousDepthLevel = $arSection["DEPTH_LEVEL"];
+
+		$arResult["ELEMENT_LINKS"][$arSection["ID"]][] = urldecode($arSection["~SECTION_PAGE_URL"]);
+
+		$aMenuLinksNew[$menuIndex++] = array(
+			htmlspecialcharsbx($arSection["~NAME"]),
+			$arSection["~SECTION_PAGE_URL"],
+			$arResult["ELEMENT_LINKS"][$arSection["ID"]],
+			array(
+				"FROM_IBLOCK" => true,
+				"IS_PARENT" => false,
+				"DEPTH_LEVEL" => $arSection["DEPTH_LEVEL"],
+			),
+			'ID' => $arSection["ID"]
+		);
+	}
+
 }
 
 return $aMenuLinksNew;
