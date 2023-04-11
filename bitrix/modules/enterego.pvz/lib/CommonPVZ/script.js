@@ -71,12 +71,8 @@ BX.SaleCommonPVZ = {
             BX.SaleCommonPVZ.propLongitudeId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
             BX.SaleCommonPVZ.propDateDelivery = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
             BX.SaleCommonPVZ.propDeliveryTimeInterval = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
-
-            $oldCurDeliveryId = BX.SaleCommonPVZ.curDeliveryId;
             BX.SaleCommonPVZ.curDeliveryId = ajaxAns.order.DELIVERY.find(field => field.CHECKED === 'Y')?.ID;
-            if ($oldCurDeliveryId != BX.SaleCommonPVZ.curDeliveryId) {
-                BX.SaleCommonPVZ.checkMoscowOrNot();
-            }
+
             BX.SaleCommonPVZ.refresh();
         }
     },
@@ -141,8 +137,8 @@ BX.SaleCommonPVZ = {
                     __this.curCityCode = item.VALUE[0];
                     __this.propsMap = null;
                     __this.getCityName();
-                    __this.checkMoscowOrNot();
                 }
+                __this.checkMoscowOrNot();
             }
         });
     },
@@ -262,26 +258,29 @@ BX.SaleCommonPVZ = {
                             document.querySelector('select[name="ORDER_PROP_' + __this.propDeliveryTimeInterval + '"]').disabled = false;
                             document.querySelector('div[data-property-id-row="' + __this.propDeliveryTimeInterval + '"]').classList.remove('d-none');
                         }
+
                         var propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected');
                         window.Osh.bxPopup.init();
                         var oshMkad = window.Osh.oshMkadDistance.init(__this.oshishaDeliveryOptions);
-                        var propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
 
-                        var nodeOpenMap = BX.create('a',
-                            {
-                                props: {className: 'btn btn-primary'},
-                                text: 'Выбрать адрес на карте (Oshisha)',
-                                events: {
-                                    click: BX.proxy(function () {
-                                        oshMkad.afterSave = function (address) {
-                                            __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
-                                        }.bind(this);
-                                        window.Osh.bxPopup.onPickerClick(this)
-                                    }, this)
-                                }
-                            });
-                        propContainer.append(nodeOpenMap);
-                        propsNode.append(propContainer);
+                        if (!document.querySelector('#oshMapButton')) {
+                            var propContainer = BX.create('DIV', {props: {id: 'oshMapButton', className: 'soa-property-container'}});
+                            var nodeOpenMap = BX.create('a',
+                                {
+                                    props: {className: 'btn btn-primary'},
+                                    text: 'Выбрать адрес на карте (Oshisha)',
+                                    events: {
+                                        click: BX.proxy(function () {
+                                            oshMkad.afterSave = function (address) {
+                                                __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
+                                            }.bind(this);
+                                            window.Osh.bxPopup.onPickerClick(this)
+                                        }, this)
+                                    }
+                                });
+                            propContainer.append(nodeOpenMap);
+                            propsNode.append(propContainer);
+                        }
                     }
                     $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
                             onSelect: function (suggestion) {
