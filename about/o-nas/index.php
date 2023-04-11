@@ -147,6 +147,11 @@ $APPLICATION->SetTitle("О нас");
                     <img src="/about/o-nas/severnei.png" class="severnei"/>
                 </a>
             </div>
+            <div class="m-4 box_with_picture">
+                <a href="/catalog/bonche/">
+                    <img src="/about/o-nas/bonche.png" class="bonche"/>
+                </a>
+            </div>
         </div>
     </div>
     <div class="section_wrapper mb-5">

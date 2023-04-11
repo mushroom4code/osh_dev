@@ -5816,19 +5816,23 @@ li, ul {
 }
 
 .severnei {
-    max-width: 386px;
+    max-width: 315px;
+}
+
+.bonche {
+    max-width: 165px;
 }
 
 .burn {
-    max-width: 209px;
+    max-width: 195px;
 }
 
 .sebero {
-    max-width: 260px;
+    max-width: 200px;
 }
 
 .duft {
-    max-width: 189px;
+    max-width: 140px;
 }
 
 .o-nas-image {
