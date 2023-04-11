@@ -81,6 +81,10 @@ $arComponentParameters = array(
 			"DEFAULT" => "1",
 		),
 		"CACHE_TIME"  =>  Array("DEFAULT"=>36000000),
+		/**
+		 * Enterego append active category
+		 */
+		"CUSTOM_PARAM_MENU" => "N"
 	),
 );
 if($arCurrentValues["IS_SEF"] === "Y")
