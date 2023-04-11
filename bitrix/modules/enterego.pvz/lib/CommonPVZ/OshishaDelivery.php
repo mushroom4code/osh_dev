@@ -9,7 +9,7 @@ use Bitrix\Main\SystemException;
 
 class OshishaDelivery extends CommonPVZ
 {
-    public string $delivery_name = 'OSHISHA';
+    public string $delivery_name = 'Oshisha';
 
     protected function connect()
     {
@@ -80,8 +80,21 @@ class OshishaDelivery extends CommonPVZ
 
     public function getPriceDoorDelivery($params)
     {
-        return 0;
+        try {
+            $cost = $this->configs['cost'];
+            $startCost = \HelperAllPvz::getOshishaStartCost();
+            $distance = ceil(($_SESSION['Osh']['delivery_address_info']['distance'] ?? 0) - 0.8);
+
+            $limitBasket = 4000;
+            if (intval($params['shipment_cost']) >= $limitBasket) {
+                $delivery_price = max($distance - 5, 0) * $cost;
+            } else {
+                $delivery_price = $startCost + $distance * $cost;
+            }
+            return $delivery_price;
+        } catch(\Throwable $e) {
+            $this->errors[] = $e->getMessage();
+            return array('errors' => $this->errors);
+        }
     }
-
-
 }

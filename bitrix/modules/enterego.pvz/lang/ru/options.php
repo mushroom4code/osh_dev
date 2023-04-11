@@ -42,6 +42,21 @@ $MESS["PEK_senderdistancetype"] = "Код типа отправителя";
 $MESS["PEK_apilink"] = "apiLink";
 
 $MESS['PVZ_OPTIONS_OSHISHA'] = 'Самовывоз OSHISHA';
+$MESS['OSH_SETTINGS_STRICT_PVZ_Y'] = 'Выводить ошибку';
+$MESS['OSH_SETTINGS_STRICT_PVZ_N'] = 'Выводить предупреждение';
+$MESS['OSH_SETTINGS_STRICT_PVZ'] = 'Если не выбран ПВЗ на странице оформления заказа';
+$MESS['OSH_SETTINGS_STRICT_PVZ_HINT'] = 'При выборе варианта &quot;Выводить ошибку&quot; оформление заказа будет невозможно, пока покупатель не выберет ПВЗ.';
+$MESS['OSH_SETTINGS_MODULE_Y'] = 'Вкл';
+$MESS['OSH_SETTINGS_MODULE_N'] = 'Выкл';
+$MESS['OSH_SETTINGS_ACTIVITY'] = 'Активность модуля';
+$MESS['OSH_SETTINGS_YMAPSKEY_NAME'] = 'Ключ для API Яндекс.Карт';
+$MESS['OSH_SETTINGS_DA_DATA_NAME'] = 'TOKEN для API Da Data';
+$MESS['OSH_SETTINGS_YMAPSKEY_HINT'] = 'Ключ сервиса геокодирования от Яндекс для поиска по карте ПВЗ';
+$MESS['OSH_SETTINGS_DA_DATA_HINT'] = 'Ключ сервиса геокодирования от сервиса Da Data для подбора адреса';
+$MESS['OSH_SETTINGS_COST'] = 'Стоимость 1км за пределами МКАД';
+$MESS['OSH_SETTINGS_TIME_DELIVERY_DAY'] = 'Дневная доставка';
+$MESS['OSH_SETTINGS_TIME_DELIVERY_NIGHT'] = 'Ночная доставка';
+
 
 $MESS["EE_PVZ_OPTIONS_INPUT_APPLY"] = "Сохранить";
 $MESS["EE_PVZ_OPTIONS_INPUT_DEFAULT"] = "Отменить";

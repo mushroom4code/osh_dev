@@ -25,7 +25,7 @@ abstract class CommonPVZ
             case 'FivePost':
             case '5Post':
                 return new FivePostDelivery();
-            case 'OSHISHA':
+            case 'Oshisha':
                 return new OshishaDelivery();
             case 'PEK':
             case 'ПЭК':

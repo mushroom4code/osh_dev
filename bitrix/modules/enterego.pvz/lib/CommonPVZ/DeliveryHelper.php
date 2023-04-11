@@ -5,6 +5,7 @@ namespace CommonPVZ;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Data\Cache,
     Bitrix\Main\Page\Asset;
+use Bitrix\Sale\Delivery\DeliveryLocationTable;
 use Bitrix\Sale\Location\LocationTable;
 use \Bitrix\Main\Localization\Loc;
 use CUtil;
@@ -49,6 +50,15 @@ class DeliveryHelper
         )->fetch();
 
         return $city['LOCATION_NAME'];
+    }
+
+    public static function checkMoscowOrNot($locationCode) {
+        $result = DeliveryLocationTable::checkConnectionExists(DOOR_DELIVERY_ID, $locationCode,
+            array(
+                'LOCATION_LINK_TYPE' => 'AUTO'
+            )
+        );
+        return $result;
     }
 
     /** Обновляет ПВЗ для службы доставки PickPoint
@@ -123,6 +133,41 @@ class DeliveryHelper
         }
 
         $params['curDeliveryId'] = $order->getField('DELIVERY_ID');
+        $params['doorDeliveryId'] = DOOR_DELIVERY_ID;
+
+
+        $PeriodDelivery = [];
+        $start_json_day = Option::get('enterego.pvz', 'Oshisha_timeDeliveryStartDay');
+        $end_json_day = Option::get('enterego.pvz', 'Oshisha_timeDeliveryEndDay');
+        $start_json_night = Option::get('enterego.pvz', 'Oshisha_timeDeliveryStartNight');
+        $end_json_night = Option::get('enterego.pvz', 'Oshisha_timeDeliveryEndNight');
+        $start_day = json_decode($start_json_day);
+        $end_day = json_decode($end_json_day);
+        $start_night = json_decode($start_json_night);
+        $end_night = json_decode($end_json_night);
+
+        if (!empty($start_day) && !empty($end_day)) {
+            foreach ($start_day as $key => $elems_start) {
+                $PeriodDelivery[] = $elems_start . '-' . $end_day[$key];
+            }
+        }
+
+        if (!empty($start_night) && !empty($end_night)) {
+            foreach ($start_night as $keys => $elems_start_night) {
+                $PeriodDelivery[] .= $elems_start_night . '-' . $end_night[$keys];
+            }
+        }
+
+
+
+        $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
+        $params['deliveryOptions']['DA_DATA_TOKEN'] = \HelperAllPvz::getOshishaDaDataToken();
+        $params['deliveryOptions']['YA_API_KEY'] = \HelperAllPvz::getOshishaYMapsKey();
+        $params['deliveryOptions']['DELIVERY_COST'] = \HelperAllPvz::getOshishaCost();
+        $params['deliveryOptions']['START_COST'] = \HelperAllPvz::getOshishaStartCost();
+        $params['deliveryOptions']['LIMIT_BASKET'] = \HelperAllPvz::getOshishaLimitBasket();
+        $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
+        $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
         $propertyCollection = $order->getPropertyCollection();
         foreach ($propertyCollection as $orderProp)
@@ -148,6 +193,10 @@ class DeliveryHelper
                 $params['propLatitude'] = $prop['ID'];
             }elseif ($prop['CODE'] === 'LONGITUDE') {
                 $params['propLongitude'] = $prop['ID'];
+            }elseif ($prop['CODE'] === 'DATE_DELIVERY') {
+                $params['propDateDelivery'] = $prop['ID'];
+            }elseif ($prop['CODE'] === 'DELIVERYTIME_INTERVAL') {
+                $params['propDeliveryTimeInterval'] = $prop['ID'];
             }
         }
 
@@ -165,13 +214,14 @@ class DeliveryHelper
             $params['packages'][$basketItemFields['PRODUCT_ID']] = $packageParams;
         }
         ksort($params['packages']);
-
         $cAsset = Asset::getInstance();
 
         $cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);
         $cAsset->addJs('/bitrix/js/enterego.pvz/jquery.suggestions.min.js', true);
+        $cAsset->addJs('/bitrix/js/enterego.pvz/async.js', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
         $cAsset->addCss('/bitrix/modules/osh.shipping/install/css/suggestions.css', true);
+        \CJSCore::Init(array("osh_pickup"));
         $cAsset->addString(
             "<script id='' data-params=''>
                     window.addEventListener('load', function () {

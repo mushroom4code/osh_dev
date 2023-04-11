@@ -5613,16 +5613,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 }
             }
             propsNode.appendChild(propsItemsContainer);
-
-            if (propsNode.classList.contains('delivery')) {
-
-                if (this.isOshPickUp()) {
-                    this.initOshPickUp(propsNode);
-                }
-                if (this.isOshCourier()) {
-                    // this.initOshCourier(propsNode);
-                }
-            }
         },
 
         getPropertyRowNode: function (property, propsItemsContainer, disabled) {
@@ -5644,13 +5634,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
             if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
                 || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
-                || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
+                || property.getSettings().CODE === 'ADDRESS') {
                 className += " col-12";
             } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY'
                 || property.getSettings().CODE === 'FIAS' || property.getSettings().CODE === 'KLADR'
                 || property.getSettings().CODE === 'ZIP' || property.getSettings().CODE === 'LATITUDE'
-                || property.getSettings().CODE === 'LONGITUDE' || property.getSettings().CODE === 'STREET_KLADR') {
+                || property.getSettings().CODE === 'LONGITUDE' || property.getSettings().CODE === 'STREET_KLADR'
+                || property.getSettings().CODE === 'DATE_DELIVERY' || property.getSettings().CODE === 'DELIVERYTIME_INTERVAL') {
                 className += " d-none";
+                if (property.getSettings().CODE === 'DELIVERYTIME_INTERVAL' || property.getSettings().CODE === 'DATE_DELIVERY')
+                    className += " col-12";
             } else {
                 className += " col-md-6 col-lg-6 col-12";
             }
@@ -5692,89 +5685,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     this.insertNumberProperty(property, propsItemNode, disabled);
             }
             propsItemsContainer.appendChild(propsItemNode);
-        },
-
-        isOshPickUp: function () {
-            return parseInt(this.deliveryOptions?.OSH_PICKUP_ID) === this.lastSelectedDelivery;
-        },
-
-        initOshPickUp: function (propsNode) {
-            let resultPickupList = this.result.STORE_LIST, address;
-
-            let oshPickupMap = BX.create('div', {
-                attrs: {'id': 'osh-pickup'},
-                html: $('#osh-pickup-template').html()
-            })
-
-            for (let item in resultPickupList) {
-                oshPickupMap.querySelector('address').innerHTML = address = resultPickupList[item].ADDRESS;
-                oshPickupMap.querySelector('.pickup-time-img').innerHTML = resultPickupList[item].SCHEDULE;
-                oshPickupMap.querySelector('.pickup-info-img').innerHTML = resultPickupList[item].DESCRIPTION;
-                // Проверяем если ли склады в запросе, если есть, скрываем карту в модальном окне
-                break;
-            }
-
-            propsNode.appendChild(oshPickupMap);
-
-            let myMap;
-
-            // Дождёмся загрузки API и готовности DOM.
-            ymaps.ready(init);
-
-            function init() {
-                // Создание экземпляра карты и его привязка к контейнеру с
-                // заданным id ("map-pick-up").
-                myMap = new ymaps.Map('map-pick-up', {
-                    // При инициализации карты обязательно нужно указать
-                    // её центр и коэффициент масштабирования.
-                    center: [55.76, 37.64], // Москва
-                    zoom: 10
-                });
-
-                let initStation = false;
-
-                for (let item in resultPickupList) {
-                    let c = ymaps.geocode('г. Москва ' + resultPickupList[item].ADDRESS, {json: true});
-                    (function (item) {
-                        c.then(function (res) {
-                            let cent = res.GeoObjectCollection.featureMember[0];
-                            let center = cent.GeoObject.Point;
-                            let point = center.pos.split(" ")
-
-                            let myPlacemark = new ymaps.Placemark([point[1], point[0]]);
-                            $('input[data-name="ADDRESS"]').val(address)
-                            $('.alert-warning, #shd_pvz_info, #shd_pvz_pick, #bx-soa-pickup').css('display', 'none')
-
-                            myMap.geoObjects.add(myPlacemark);
-
-                            ymaps.geocode([point[1], point[0]], {
-                                kind: 'metro',
-                                results: 1
-                            }).then(function (metro) {
-                                metro.geoObjects.each(function (obj) {
-
-                                    if (!initStation) {
-                                        $('#pickup-station .pickup-station-img').html(obj.properties.get('name'))
-                                    }
-
-                                    myPlacemark.events.add('click', function (e) {
-                                        $('#pickup-address address').html(resultPickupList[item].ADDRESS)
-                                        $('input[data-name="ADDRESS"]').val(resultPickupList[item].ADDRESS)
-                                        $('#pickup-time .pickup-time-img').html(resultPickupList[item].SCHEDULE)
-                                        $('#pickup-info .pickup-info-img').html(resultPickupList[item].DESCRIPTION)
-                                        $('#pickup-station .pickup-station-img').html(obj.properties.get('name'))
-                                    });
-                                });
-                            })
-
-                        });
-                    })(item);
-                }
-            }
-        },
-
-        isOshCourier: function () {
-            return parseInt(this.deliveryOptions?.OSH_COURIER_ID) === this.lastSelectedDelivery;
         },
 
         insertLocationProperty: function (property, propsItemNode, disabled) {

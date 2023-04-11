@@ -25,9 +25,13 @@ BX.SaleCommonPVZ = {
     propStreetKladrId: null,
     propLatitudeId: null,
     propLongitudeId: null,
+    propDateDelivery: null,
+    propDeliveryTimeInterval: null,
     curDeliveryId: null,
+    doorDeliveryId: null,
     shipmentCost: null,
     orderPackages: null,
+    oshishaDeliveryOptions: null,
 
 
     init: function (params) {
@@ -41,9 +45,13 @@ BX.SaleCommonPVZ = {
         this.propStreetKladrId = params.params?.propStreetKladr;
         this.propLatitudeId = params.params?.propLatitude;
         this.propLongitudeId = params.params?.propLongitude;
+        this.propDateDelivery = params.params?.propDateDelivery;
+        this.propDeliveryTimeInterval = params.params?.propDateTimeInterval;
         this.curDeliveryId = params.params?.curDeliveryId;
+        this.doorDeliveryId = params.params?.doorDeliveryId;
         this.shipmentCost = params.params?.shipmentCost;
         this.orderPackages = params.params?.packages;
+        this.oshishaDeliveryOptions = params.params?.deliveryOptions;
 
         this.refresh();
         this.isInit = true;
@@ -61,7 +69,14 @@ BX.SaleCommonPVZ = {
             BX.SaleCommonPVZ.propStreetKladrId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'STREET_KLADR')?.ID;
             BX.SaleCommonPVZ.propLatitudeId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'LATITUDE')?.ID;
             BX.SaleCommonPVZ.propLongitudeId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
+            BX.SaleCommonPVZ.propDateDelivery = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
+            BX.SaleCommonPVZ.propDeliveryTimeInterval = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
+
+            $oldCurDeliveryId = BX.SaleCommonPVZ.curDeliveryId;
             BX.SaleCommonPVZ.curDeliveryId = ajaxAns.order.DELIVERY.find(field => field.CHECKED === 'Y')?.ID;
+            if ($oldCurDeliveryId != BX.SaleCommonPVZ.curDeliveryId) {
+                BX.SaleCommonPVZ.checkMoscowOrNot();
+            }
             BX.SaleCommonPVZ.refresh();
         }
     },
@@ -76,39 +91,12 @@ BX.SaleCommonPVZ = {
         const __this = this;
         if (this.propAddressId) {
             var addressField = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
-            if (BX.Sale.OrderAjaxComponent.deliveryOptions.DA_DATA_TOKEN !== undefined && !addressField.hasClass('suggestions-input')) {
-                if (this.curDeliveryId == BX.Sale.OrderAjaxComponent.deliveryOptions?.OSH_COURIER_ID
-                    || this.curDeliveryId == BX.Sale.OrderAjaxComponent.deliveryOptions?.OSH_PICKUP_ID) {
-                    var propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected');
-
-                    window.Osh.bxPopup.init();
-                    var oshMkad = window.Osh.oshMkadDistance.init(BX.Sale.OrderAjaxComponent.deliveryOptions);
-                    var propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
-
-                    var nodeOpenMap = BX.create('a',
-                        {
-                            props: {className: 'btn btn-primary'},
-                            text: 'Выбрать адрес на карте',
-                            events: {
-                                click: BX.proxy(function () {
-                                    oshMkad.afterSave = function (address) {
-                                        BX.Sale.OrderAjaxComponent.deliveryOptions.DA_DATA_ADDRESS = address;
-                                    }.bind(this);
-                                    window.Osh.bxPopup.onPickerClick(this)
-                                }, this)
-                            }
-                        });
-                    propContainer.append(nodeOpenMap);
-                    propsNode.append(propContainer);
-                }
-
+            if (this.oshishaDeliveryOptions.DA_DATA_TOKEN !== undefined && !addressField.hasClass('suggestions-input')) {
                 addressField.suggestions({
-                    token: BX.Sale.OrderAjaxComponent.deliveryOptions.DA_DATA_TOKEN,
+                    token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
                     type: "ADDRESS",
                     hint: false,
                     floating: true,
-                    // в списке подсказок не показываем область
-                    // restrict_value: true,
                     onSelect: function (suggestion) {
                         (this.propZipId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propZipId + '"]').value = suggestion.data.postal_code) : '';
                         (this.propCityId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propCityId + '"]').value = suggestion.data.city) : '';
@@ -117,14 +105,6 @@ BX.SaleCommonPVZ = {
                         (this.propStreetKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propStreetKladrId + '"]').value = suggestion.data.street_kladr_id) : '';
                         (this.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propLatitudeId + '"]').value = suggestion.data.geo_lat) : '';
                         (this.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propLongitudeId + '"]').value = suggestion.data.geo_lon) : '';
-                        if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                            if (this.curDeliveryId == BX.Sale.OrderAjaxComponent.deliveryOptions?.OSH_COURIER_ID
-                                || this.curDeliveryId == BX.Sale.OrderAjaxComponent.deliveryOptions?.OSH_PICKUP_ID) {
-                                BX.Sale.OrderAjaxComponent.deliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                                oshMkad.afterSave = null;
-                                oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon], true);
-                            }
-                        }
                         BX.onCustomEvent('onDeliveryExtraServiceValueChange');
                     }.bind(this)
                 });
@@ -161,6 +141,7 @@ BX.SaleCommonPVZ = {
                     __this.curCityCode = item.VALUE[0];
                     __this.propsMap = null;
                     __this.getCityName();
+                    __this.checkMoscowOrNot();
                 }
             }
         });
@@ -256,6 +237,84 @@ BX.SaleCommonPVZ = {
             },
             onfailure: function (res) {
                 console.log('error getCityName');
+            }
+        });
+    },
+
+    checkMoscowOrNot: function() {
+        var __this = this;
+        BX.ajax({
+            url: __this.ajaxUrlPVZ,
+            method: 'POST',
+            data: {
+                codeCity: __this.curCityCode,
+                'action': 'checkMoscowOrNot'
+            },
+            onsuccess: function (res) {
+                __this.isMoscow = res;
+                if (__this.isMoscow == '1') {
+                    if (__this.curDeliveryId == __this.doorDeliveryId) {
+                        if (__this.propDateDelivery) {
+                            document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').removeAttribute('disabled');
+                            document.querySelector('div[data-property-id-row="' + __this.propDateDelivery + '"]').classList.remove('d-none');
+                        }
+                        if (__this.propDeliveryTimeInterval) {
+                            document.querySelector('select[name="ORDER_PROP_' + __this.propDeliveryTimeInterval + '"]').disabled = false;
+                            document.querySelector('div[data-property-id-row="' + __this.propDeliveryTimeInterval + '"]').classList.remove('d-none');
+                        }
+                        var propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected');
+                        window.Osh.bxPopup.init();
+                        var oshMkad = window.Osh.oshMkadDistance.init(__this.oshishaDeliveryOptions);
+                        var propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
+
+                        var nodeOpenMap = BX.create('a',
+                            {
+                                props: {className: 'btn btn-primary'},
+                                text: 'Выбрать адрес на карте (Oshisha)',
+                                events: {
+                                    click: BX.proxy(function () {
+                                        oshMkad.afterSave = function (address) {
+                                            __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
+                                        }.bind(this);
+                                        window.Osh.bxPopup.onPickerClick(this)
+                                    }, this)
+                                }
+                            });
+                        propContainer.append(nodeOpenMap);
+                        propsNode.append(propContainer);
+                    }
+                    $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                            onSelect: function (suggestion) {
+                                (__this.propZipId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propZipId + '"]').value = suggestion.data.postal_code) : '';
+                                (__this.propCityId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propCityId + '"]').value = suggestion.data.city) : '';
+                                (__this.propFiasId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propFiasId + '"]').value = suggestion.data.fias_id) : '';
+                                (__this.propKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propKladrId + '"]').value = suggestion.data.kladr_id) : '';
+                                (__this.propStreetKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propStreetKladrId + '"]').value = suggestion.data.street_kladr_id) : '';
+                                (__this.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLatitudeId + '"]').value = suggestion.data.geo_lat) : '';
+                                (__this.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLongitudeId + '"]').value = suggestion.data.geo_lon) : '';
+                                if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+                                    if (__this.curDeliveryId == __this.doorDeliveryId) {
+                                        __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                                        oshMkad.afterSave = null;
+                                        oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon], true);
+                                    }
+                                }
+                                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
+                            }
+                        });
+                } else {
+                    if (__this.propDateDelivery) {
+                        document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').setAttribute('disabled', '');
+                        document.querySelector('div[data-property-id-row="' + __this.propDateDelivery + '"]').classList.add('d-none');
+                    }
+                    if (__this.propDeliveryTimeInterval) {
+                        document.querySelector('select[name="ORDER_PROP_' + __this.propDeliveryTimeInterval + '"]').disabled = true;
+                        document.querySelector('div[data-property-id-row="' + __this.propDeliveryTimeInterval + '"]').classList.add('d-none');
+                    }
+                }
+            },
+            onfailure: function (res) {
+                console.log('error checkMoscowOrNot');
             }
         });
     },

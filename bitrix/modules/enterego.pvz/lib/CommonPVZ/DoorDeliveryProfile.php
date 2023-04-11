@@ -13,6 +13,7 @@ use Bitrix\Sale\Shipment;
 use CommonPVZ\CommonPVZ;
 use CommonPVZ\DeliveryHelper;
 use http\Params;
+use Bitrix\Sale\Delivery\DeliveryLocationTable;
 
 Loc::loadMessages(__FILE__);
 
@@ -23,6 +24,7 @@ class DoorDeliveryProfile extends Base
 {
     protected static $isProfile = true;
     protected static $parent = null;
+    protected static $doorDeliveryId = DOOR_DELIVERY_ID;
 
     public function __construct(array $initParams)
     {
@@ -66,7 +68,8 @@ class DoorDeliveryProfile extends Base
             'RussianPostFirstClass',
             'RussianPostRegular',
             'SDEK',
-            'PickPoint'
+            'PickPoint',
+            'Oshisha'
         ];
         $currentDelivery = '';
         $propTypeDeliveryId = '';
@@ -80,6 +83,11 @@ class DoorDeliveryProfile extends Base
             }
             if ($prop['CODE'] === 'LOCATION') {
                 $deliveryParams['location_name'] = DeliveryHelper::getCityName($propertyItem->getValue());
+                $location_check = DeliveryLocationTable::checkConnectionExists(self::$doorDeliveryId,$propertyItem->getValue(),
+                    array(
+                        'LOCATION_LINK_TYPE' => 'AUTO'
+                    )
+                );
             }
             if ($prop['CODE'] === 'ADDRESS') {
                 $deliveryParams['address'] = $propertyItem->getValue();
@@ -106,6 +114,8 @@ class DoorDeliveryProfile extends Base
             $deliveryParams['packages'][$basketItemFields['PRODUCT_ID']] = $packageParams;
         }
         ksort($deliveryParams['packages']);
+        if ($location_check === false)
+            unset($deliveries[array_key_last($deliveries)]);
         if ($propTypeDeliveryId) {
             foreach ($deliveries as $delivery) {
                 $deliveryInstance = CommonPVZ::getInstanceObject($delivery);

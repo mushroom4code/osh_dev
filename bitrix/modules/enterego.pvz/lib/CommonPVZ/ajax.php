@@ -24,6 +24,8 @@ $cityName = $request->get('cityName');
 switch ($action) {
     case 'getCityName':
         exit(DeliveryHelper::getCityName($codeCity));
+    case 'checkMoscowOrNot':
+        exit(DeliveryHelper::checkMoscowOrNot($codeCity));
     case 'updatePickPointPoints':
         exit(json_encode(DeliveryHelper::updatePickPointPVZ()));
     case 'updateDellinPoints':
