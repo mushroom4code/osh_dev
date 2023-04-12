@@ -586,7 +586,7 @@ if ($show_price) {
 									     data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
 									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 									     data-onevalue="<?= $offer['ID'] ?>"
-									     class="mr-1 offer-box color-hookah br-10">
+									     class="mr-1 offer-box color-hookah br-10 mb-1">
 										<img src="<?= $offer['PREVIEW_PICTURE']['SRC'] ?>"
 										     class="br-10"
 										     width="50"
