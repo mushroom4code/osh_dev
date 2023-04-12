@@ -528,13 +528,15 @@ $(document).ready(function () {
             let basketItem = $(boxInput).val();
             let offer = $(this).hasClass('offers');
             let boxUpdateAfterAppend = $(this).closest('.catalog-item-product');
-            let parseUpdate = JSON.parse($(boxUpdateAfterAppend).find('.product-values').val());
-            let boxUpdate = $(boxUpdateAfterAppend).closest('.product-item-container');
+            let parseUpdate, boxUpdate;
 
-            if (boxUpdateAfterAppend.hasClass('open-modal-product')) {
+            if (!boxUpdateAfterAppend.hasClass('open-modal-product')) {
+                parseUpdate = JSON.parse($(boxUpdateAfterAppend).find('.product-values').val());
+                boxUpdate = $(boxUpdateAfterAppend).closest('.product-item-container');
+            } else {
                 parseUpdate = JSON.parse(
                     $(document).find('.catalog-item-product[data-product="' + $(boxUpdateAfterAppend).attr('data-product') + '"]')
-                    .find('.product-values').val());
+                        .find('.product-values').val());
                 boxUpdate = $(document).find('div[data-product="' + $(boxUpdateAfterAppend).attr('data-product') + '"]');
             }
 
