@@ -365,7 +365,8 @@ BX.SaleCommonPVZ = {
             fivepost_zone: point.properties.fivepostZone,
             hubregion: point.properties.hubregion,
             name_city: this.curCityName,
-            code_pvz: point.properties.code_pvz
+            code_pvz: point.properties.code_pvz,
+            type_pvz: point.properties.type ?? ''
         };
     },
 

@@ -9,7 +9,7 @@ use Bitrix\Main\Config\Option,
 class HelperAllDeliveries
 {
     static $MODULE_ID = "enterego.pvz";
-    static $sdek_tarifs = array(233,137,139,16,18,482,480,11,1,3,61,60,59,58,57,83);
+    static $sdek_tarifs = array(136,137,138,139,233,234,1,3,5,10,11,12,15,16,17,18,57,58,59,60,61,62,63,483,482,481,480,83,378,376,368,366,363,361,486,485);
     const OSHISHA_ADDRESS_SIMPLE = "simple";
     const OSHISHA_ADDRESS_COMPLEX = "complex";
     static $oshisha_fields = array(
@@ -91,20 +91,63 @@ class HelperAllDeliveries
         return $arOptions;
     }
 
-    public static function getSdekCurrentTarifs() {
-        $arTarifs = self::$sdek_tarifs;
+    static function getSdekTarifList($params=array()){
+        $arList = array(
+            'pickup'  => array(
+                'usual'   => array(234,136,138),
+                'heavy'   => array(15,17),
+                'express' => array(483,481,62,63,5,10,12)
+            ),
+            'courier' => array(
+                'usual'   => array(233,137,139),
+                'heavy'   => array(16,18),
+                'express' => array(482,480,11,1,3,61,60,59,58,57,83)
+            ),
+            'postamat' => array(
+                'usual' => array(378,376,368,366),
+                'express' => array(363,361,486,485)
+            )
+        );
         $blocked = self::sdekGet('sdek_tarifs');
-        if($blocked && count($blocked)){
+        if($blocked && count($blocked) && (!array_key_exists('fSkipCheckBlocks',$params) || !$params['fSkipCheckBlocks'])){
             foreach($blocked as $key => $val)
                 if(!array_key_exists('BLOCK',$val))
                     unset($blocked[$key]);
             if(count($blocked))
-                foreach($arTarifs as $arTarifKey => $arTarif)
-                    if(array_key_exists($arTarif,$blocked))
-                        unset($arTarifs[$arTarifKey]);
+                foreach($arList as $tarType => $arTars)
+                    foreach($arTars as $tarMode => $arTarIds)
+                        foreach($arTarIds as $key => $arTarId)
+                            if(array_key_exists($arTarId,$blocked))
+                                unset($arList[$tarType][$tarMode][$key]);
+        }
+        $answer = $arList;
+        if($params['type']){
+            if(is_numeric($params['type'])) $type = ($params['type']==136)?$type='pickup':$type='courier';
+            else $type = $params['type'];
+            $answer = $answer[$type];
+
+            if((array_key_exists('mode', $params) && $params['mode']) && array_key_exists($params['mode'], $answer))
+                $answer = $answer[$params['mode']];
         }
 
-        return $arTarifs;
+        if(array_key_exists('answer',$params)){
+            $answer = self::sdekArrVals($answer);
+            if($params['answer'] == 'string'){
+                $answer = implode(',',$answer);
+                $answer = substr($answer,0,strlen($answer));
+            }
+        }
+        return $answer;
+    }
+
+    static function sdekArrVals($arr){
+        $return = array();
+        foreach($arr as $key => $val)
+            if(is_array($val))
+                $return = array_merge($return,self::sdekArrVals($val));
+            else
+                $return []= $val;
+        return $return;
     }
 
     public static function getOshishaDataValue($name)

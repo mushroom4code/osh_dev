@@ -80,20 +80,67 @@ class SDEKDelivery extends CommonPVZ
     public function getPrice($array)
     {
         try {
+            $hashed_values = array($array['name_city']);
+            foreach ($array['packages'] as $package) {
+                $hashed_values[] = $package['weight'];
+            }
+            $hashed_values[] = $array['type_pvz'] === "POSTAMAT" ? 'postamat' : 'pickup';
+            $hash_string = md5(implode('', $hashed_values));
+
+            $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
+            if ($cache->initCache(3600, $this->cdek_cache_id)) { // проверяем кеш и задаём настройки
+                $cached_vars = $cache->getVars();
+                if (!empty($cached_vars)) {
+                    foreach ($cached_vars as $varKey => $var) {
+                        if($varKey === $hash_string) {
+                            return $var;
+                        }
+                    }
+                }
+            }
+
+            $tariffPriority = \HelperAllDeliveries::getSdekTarifList(array(
+                'type' => $array['type_pvz'] === "POSTAMAT" ? 'postamat' : 'pickup', 'answer' => 'array'));
             $location_to = $this->getSDEKCityCode($array['name_city']);
             $location_to = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($location_to);
             $location_to->setAddress($array['to']);
             $location_from = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($this->configs['from']);
             $tariff = (new \AntistressStore\CdekSDK2\Entity\Requests\Tariff())
-                ->setTariffCode($this->configs['tariff'])
                 ->setFromLocation($location_from)
-                ->setToLocation($location_to)
-                ->setPackageWeight($array['weight'])
-                ->addServices(['PART_DELIV']);
+                ->setToLocation($location_to);
 
-            $calculatedTariff = $this->cdek_client->calculateTariff($tariff);
-            $delivery_price = $calculatedTariff->getTotalSum();
-            return $delivery_price;
+            foreach ($array['packages'] as $package) {
+                $packageObj = new \AntistressStore\CdekSDK2\Entity\Requests\Package();
+                !empty($package['weight']) ? $packageObj->setWeight($package['weight']) : '';
+                $tariff->setPackages($packageObj);
+            }
+
+            $calculatedTariffList = $this->cdek_client->calculateTariffList($tariff);
+
+            $calculatedTariffs = [];
+            foreach ($calculatedTariffList as $tariff) {
+                $calculatedTariffs[$tariff->getTariffCode()] = [
+                    "price"           => $tariff->getDeliverySum()
+                ];
+            }
+
+            foreach ($tariffPriority as $tariffCode) {
+                if (array_key_exists($tariffCode, $calculatedTariffs)) {
+                    if (!isset($finalPrice)) {
+                        $finalPrice = $calculatedTariffs[$tariffCode]['price'];
+                    } else if($calculatedTariffs[$tariffCode]['price'] < $finalPrice) {
+                        $finalPrice = $calculatedTariffs[$tariffCode]['price'];
+                    }
+                }
+            }
+
+            $cache->forceRewriting(true);
+            if ($cache->startDataCache()) {
+                $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                    ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                    : array($hash_string => $finalPrice));
+            }
+            return $finalPrice;
         } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();
             return array('errors' => $this->errors);
@@ -107,6 +154,7 @@ class SDEKDelivery extends CommonPVZ
             foreach ($params['packages'] as $package) {
                 $hashed_values[] = $package['weight'];
             }
+            $hashed_values[] = 'courier';
             $hash_string = md5(implode('', $hashed_values));
 
             $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
@@ -122,11 +170,15 @@ class SDEKDelivery extends CommonPVZ
             }
 
             $location_to = $this->getSDEKCityCode($params['location_name']);
+            $location_to = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($location_to);
+            $location_to->setAddress($params['address']);
+            $location_from = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($this->configs['from']);
 
-            $tariffPriority = \HelperAllDeliveries::getSdekCurrentTarifs();
+            $tariffPriority = \HelperAllDeliveries::getSdekTarifList(array('type' => 'courier', 'answer' => 'array'));
 
             $tariff = (new \AntistressStore\CdekSDK2\Entity\Requests\Tariff())
-                ->setCityCodes($this->configs['from'], $location_to);
+                ->setFromLocation($location_from)
+                ->setToLocation($location_to);
 
             foreach ($params['packages'] as $package) {
                 $packageObj = new \AntistressStore\CdekSDK2\Entity\Requests\Package();
