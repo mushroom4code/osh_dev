@@ -685,7 +685,12 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 if ($arItem['PROPERTY_TYPE'] !== 'S') {
                                     uasort($arItem["VALUES"], 'sort_by_sort');
                                 } else {
-                                    ksort($arItem["VALUES"]);
+                                    usort(
+                                        $arItem["VALUES"],
+                                        function ($a, $b) {
+                                            return strcmp($a['VALUE'], $b['VALUE']);
+                                        }
+                                    );
                                 }
                                 ?>
                                     <div class="smart-filter-input-group-checkbox-list">
