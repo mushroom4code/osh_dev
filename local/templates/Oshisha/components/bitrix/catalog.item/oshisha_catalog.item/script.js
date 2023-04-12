@@ -2177,7 +2177,7 @@ $(document).on('click', '.open-fast-window', function () {
         let wrapper = $('.section_wrapper');
         let product = JSON.parse(json_product);
         $(wrapper).find('div.box-popup-product').remove();
-
+        $(this).closest('.catalog-item-product').attr('data-product',product.ID)
         let box_popup = BX.create('DIV', {
             props: {
                 className: 'position-fixed width-100 top-32 d-flex justify-content-center z-index-1400 box-popup-product'
@@ -2185,8 +2185,11 @@ $(document).on('click', '.open-fast-window', function () {
             children: [
                 BX.create('DIV', {
                     props: {
-                        className: 'open-modal-product bg-gray-white p-lg-4 p-md-4 p-3 max-width-1024 width-100 br-10'
+                        className: 'open-modal-product catalog-item-product bg-gray-white p-lg-4 p-md-4 p-3 max-width-1024 width-100 br-10'
                     },
+                    dataset: {
+                        product: product.ID
+                    }
                 })
             ]
         });
@@ -2280,7 +2283,7 @@ $(document).on('click', '.open-fast-window', function () {
                     }),
                     BX.create('DIV', {
                         props: {
-                            className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between catalog-item-product'
+                            className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between'
                         },
                         children: [
                             BX.create('DIV', {
