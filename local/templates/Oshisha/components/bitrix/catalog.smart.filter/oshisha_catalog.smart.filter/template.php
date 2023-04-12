@@ -682,16 +682,17 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                                 //region CHECKBOXES +
                                 default:
-                                if ($arItem['PROPERTY_TYPE'] !== 'S') {
-                                    uasort($arItem["VALUES"], 'sort_by_sort');
-                                } else {
                                     usort(
                                         $arItem["VALUES"],
                                         function ($a, $b) {
-                                            return strcmp($a['VALUE'], $b['VALUE']);
+                                            if (is_string($a['VALUE']) && is_string($a['VALUE'])) {
+                                                $a['VALUE'] = str_replace(['Ё', 'ё'], ['Е', 'е'], $a['VALUE']);
+                                                $b['VALUE'] = str_replace(['Ё', 'ё'], ['Е', 'е'], $b['VALUE']);
+                                            }
+
+                                            return $a["VALUE"] <=> $b["VALUE"];
                                         }
                                     );
-                                }
                                 ?>
                                     <div class="smart-filter-input-group-checkbox-list">
                                         <? foreach ($arItem["VALUES"] as $val => $ar): ?>
