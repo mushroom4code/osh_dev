@@ -410,7 +410,6 @@ $(document).ready(function () {
                         $('.catalog-item-product').find('.offer-box[data-active="true"]')
                             .attr('data-basket-quantity',beforeVal).attr('data-basket_quantity',beforeVal)
                     }
-
                     if (beforeVal > 0)
                         $('.ganerate_price_wrap').show();
                     else
@@ -425,7 +424,6 @@ $(document).ready(function () {
                         'QUANTITY': beforeVal,
                         'URL': product_url,
                     };
-
 
                 } else {
                     $(boxInput).val(max_QUANTITY);
@@ -453,6 +451,11 @@ $(document).ready(function () {
                 if (parseInt($(boxInput).val()) > 0) {
                     let beforeVal = parseInt($(boxInput).val()) - 1;
                     $(boxInput).val(beforeVal);
+                    // OFFERS
+                    if($(this).hasClass('offers')){
+                        $('.catalog-item-product').find('.offer-box[data-active="true"]')
+                            .attr('data-basket-quantity',beforeVal).attr('data-basket_quantity',beforeVal)
+                    }
                     if (beforeVal > 0)
                         $('.ganerate_price_wrap').show();
                     else
@@ -518,6 +521,14 @@ $(document).ready(function () {
                     }
                 }
             }
+            // OFFERS
+            if($(this).hasClass('offers')){
+                let basketItem = $(boxInput).val();
+                $('.catalog-item-product').find('.offer-box[data-active="true"]')
+                    .attr('data-basket-quantity',basketItem).attr('data-basket_quantity',basketItem)
+            }
+
+
             $(box_with_product).empty();
             $(box_with_products_order).empty();
 

@@ -638,16 +638,16 @@ if ($show_price) {
 							<div class="product-item-amount-field-contain-wrap" style="display:flex;"
 							     data-product_id="<?= $prod_off_id; ?>">
 								<div class="product-item-amount-field-contain d-flex flex-row align-items-center">
-									<a class="btn-minus  minus_icon no-select add2basket"
+									<a class="btn-minus minus_icon no-select add2basket offers"
 									   href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
 									   data-product_id="<?= $prod_off_id; ?>">
 									</a>
 									<div class="product-item-amount-field-block">
-										<input class="product-item-amount card_element"
+										<input class="product-item-amount card_element offers"
 										       type="text"
 										       value="<?= $quantity_basket_default ?>">
 									</div>
-									<a class="btn-plus plus_icon no-select add2basket"
+									<a class="btn-plus plus_icon no-select add2basket offers"
 									   data-max_quantity="<?= $prod_off_quantity ?>"
 									   data-max-quantity="<?= $prod_off_quantity ?>"
 									   href="javascript:void(0)"
