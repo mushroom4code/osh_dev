@@ -80,6 +80,8 @@ class FivePostDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         // TODO: Implement getPriceDoorDelivery() method.
+        $this->errors[] = 'no pricedoordelivery implementation';
+        return array('errors' => $this->errors);
     }
 
 

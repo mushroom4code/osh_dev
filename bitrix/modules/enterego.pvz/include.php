@@ -3,9 +3,10 @@
 use Bitrix\Main\Config\Option,
     CommonPVZ\DellindeliveryApicore,
     Bitrix\Main\Entity,
-    Bitrix\Sale\Internals\PersonTypeTable;
+    Bitrix\Sale\Internals\PersonTypeTable,
+    CommonPVZ\DeliveryHelper;
 
-class HelperAllPvz
+class HelperAllDeliveries
 {
     static $MODULE_ID = "enterego.pvz";
     static $sdek_tarifs = array(233,137,139,16,18,482,480,11,1,3,61,60,59,58,57,83);
@@ -27,9 +28,9 @@ class HelperAllPvz
 //        'quantity_override'
     );
 
-    static function getExtraTarifs(){
+    static function getSdekExtraTarifs(){
         $arTarifs = self::$sdek_tarifs;
-        $svdOpts = self::get('sdek_tarifs');
+        $svdOpts = self::sdekGet('sdek_tarifs');
         $arReturn = array();
         foreach($arTarifs as $tarifId)
             $arReturn[$tarifId] = array(
@@ -41,12 +42,12 @@ class HelperAllPvz
         return $arReturn;
     }
 
-    public static function get($option,$noRemake = true)
+    public static function sdekGet($option,$noRemake = true)
     {
-        $self = \COption::GetOptionString(self::$MODULE_ID,$option,self::getDefault($option));
+        $self = \COption::GetOptionString(self::$MODULE_ID,$option,self::sdekGetDefault($option));
 
         if($self && $noRemake) {
-            $handlingType = self::getHandling($option);
+            $handlingType = self::sdekGetHandling($option);
             switch ($handlingType) {
                 case 'serialize' :
                     $self = unserialize($self);
@@ -60,23 +61,23 @@ class HelperAllPvz
         return $self;
     }
 
-    public static function getDefault($option)
+    public static function sdekGetDefault($option)
     {
-        $opt = self::collection();
+        $opt = self::sdekCollection();
         if(array_key_exists($option,$opt))
             return $opt[$option]['default'];
         return false;
     }
 
-    public static function getHandling($option)
+    public static function sdekGetHandling($option)
     {
-        $opt = self::collection();
+        $opt = self::sdekCollection();
         if(array_key_exists($option,$opt) && array_key_exists('handling',$opt[$option]))
             return $opt[$option]['handling'];
         return false;
     }
 
-    public static function collection()
+    public static function sdekCollection()
     {
         $arOptions = array(
             'sdek_tarifs' => array(
@@ -90,9 +91,9 @@ class HelperAllPvz
         return $arOptions;
     }
 
-    public static function getCurrentTarifs() {
+    public static function getSdekCurrentTarifs() {
         $arTarifs = self::$sdek_tarifs;
-        $blocked = self::get('sdek_tarifs');
+        $blocked = self::sdekGet('sdek_tarifs');
         if($blocked && count($blocked)){
             foreach($blocked as $key => $val)
                 if(!array_key_exists('BLOCK',$val))
@@ -106,24 +107,24 @@ class HelperAllPvz
         return $arTarifs;
     }
 
-    public static function getDataValue($name)
+    public static function getOshishaDataValue($name)
     {
         return Option::get(self::$MODULE_ID, "Oshisha_{$name}");
     }
 
     public static function getOshishaYMapsKey()
     {
-        return self::getDataValue('ymapskey');
+        return self::getOshishaDataValue('ymapskey');
     }
 
     public static function getOshishaDaDataToken()
     {
-        return self::getDataValue('dadatatoken');
+        return self::getOshishaDataValue('dadatatoken');
     }
 
     public static function getOshishaCost()
     {
-        return self::getDataValue('cost');
+        return self::getOshishaDataValue('cost');
     }
 
     public static function getOshishaStartCost()
@@ -135,7 +136,7 @@ class HelperAllPvz
         return 4000;
     }
 
-    public static function getPersonTypes(){
+    public static function getOshishaPersonTypes(){
         $arSelectPt = array("ID","NAME_WS");
         $arOrderPt = array("SORT" => "ASC");
         $arFilter = array("ACTIVE" => "Y");
@@ -149,15 +150,15 @@ class HelperAllPvz
         return $arPersonTypes;
     }
 
-    public static function getOptionsData()
+    public static function getOshishaOptionsData()
     {
         $data = array();
         foreach (self::$oshisha_fields as $field) {
-            $data[$field] = self::getDataValue($field);
+            $data[$field] = self::getOshishaDataValue($field);
         }
 //        $this->data['debug'] = boolval($this->data['debug']);
 //        $this->data['direct'] = boolval($this->data['direct']);
-        $arPersonTypes = self::getPersonTypes();
+        $arPersonTypes = self::getOshishaPersonTypes();
         $isAddressSimple = boolval($data["address_type"] != self::OSHISHA_ADDRESS_COMPLEX);
 //        if($isAddressSimple) {
 //            $this->data["mirror_pvz_address"] = boolval($this->getDataValue('mirror_pvz_address'));
@@ -168,18 +169,18 @@ class HelperAllPvz
             if ($isAddressSimple) {
                 self::$oshisha_fields[] = 'address_prop_id_' . $id;
                 self::$oshisha_fields[] = 'time_period_' . $id;
-                $data['address_prop_id_' . $id] = self::getDataValue('address_prop_id_' . $id);
-                $data['time_period_' . $id] = self::getDataValue('time_period_' . $id);
+                $data['address_prop_id_' . $id] = self::getOshishaDataValue('address_prop_id_' . $id);
+                $data['time_period_' . $id] = self::getOshishaDataValue('time_period_' . $id);
 
             } else {
                 self::$oshisha_fields[] = 'street_prop_id_' . $id;
-                $data['street_prop_id_' . $id] = self::getDataValue('street_prop_id_' . $id);
+                $data['street_prop_id_' . $id] = self::getOshishaDataValue('street_prop_id_' . $id);
                 self::$oshisha_fields[] = 'corp_prop_id_' . $id;
-                $data['corp_prop_id_' . $id] = self::getDataValue('corp_prop_id_' . $id);
+                $data['corp_prop_id_' . $id] = self::getOshishaDataValue('corp_prop_id_' . $id);
                 self::$oshisha_fields[] = 'bld_prop_id_' . $id;
-                $data['bld_prop_id_' . $id] = self::getDataValue('bld_prop_id_' . $id);
+                $data['bld_prop_id_' . $id] = self::getOshishaDataValue('bld_prop_id_' . $id);
                 self::$oshisha_fields[] = 'flat_prop_id_' . $id;
-                $data['flat_prop_id_' . $id] = self::getDataValue('flat_prop_id_' . $id);
+                $data['flat_prop_id_' . $id] = self::getOshishaDataValue('flat_prop_id_' . $id);
             }
             return $data;
         }
@@ -353,6 +354,14 @@ class HelperAllPvz
 
         return "<{$tagName} " . implode(" ", $params) . " />";
     }
+
+    public static function getDeliveriesStatuses() {
+        $deliveriesStatuses = [];
+        foreach (DeliveryHelper::getConfigs() as $delivery => $values) {
+            $deliveriesStatuses[$delivery] = $values['active'];
+        }
+        return $deliveriesStatuses;
+    }
 }
 
 CModule::AddAutoloadClasses("", array(
@@ -385,9 +394,9 @@ if(!\CJSCore::IsExtRegistered('osh_pickup')){
     \CJSCore::RegisterExt(
         "osh_pickup",
         array(
-            "js" => "/bitrix/js/".HelperAllPvz::$MODULE_ID."/pickup.js",
-            "css" => "/bitrix/css/".HelperAllPvz::$MODULE_ID."/styles.css",
-            "lang" => "/bitrix/modules/".HelperAllPvz::$MODULE_ID."/lang/".LANGUAGE_ID."/js/pickup.php",
+            "js" => "/bitrix/js/".HelperAllDeliveries::$MODULE_ID."/pickup.js",
+            "css" => "/bitrix/css/".HelperAllDeliveries::$MODULE_ID."/styles.css",
+            "lang" => "/bitrix/modules/".HelperAllDeliveries::$MODULE_ID."/lang/".LANGUAGE_ID."/js/pickup.php",
             "rel" => Array("ajax","popup"),
             "skip_core" => false,
         )

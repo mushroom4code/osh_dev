@@ -99,7 +99,11 @@ class DeliveryHelper
         $delName = '0';
 
         try {
-            if ($cache->initCache(7200, 'pvz_' . $city_name, $cachePath)) {
+            $uniqueCacheString = 'pvz_'.$city_name;
+            foreach ($deliveries as $delivery) {
+                $uniqueCacheString .= $uniqueCacheString.'_'.$delivery;
+            }
+            if ($cache->initCache(7200, $uniqueCacheString, $cachePath)) {
                 $points_Array = $cache->getVars();
             } elseif ($cache->startDataCache()) {
                 foreach ($deliveries as $delName) {
@@ -161,11 +165,11 @@ class DeliveryHelper
 
 
         $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
-        $params['deliveryOptions']['DA_DATA_TOKEN'] = \HelperAllPvz::getOshishaDaDataToken();
-        $params['deliveryOptions']['YA_API_KEY'] = \HelperAllPvz::getOshishaYMapsKey();
-        $params['deliveryOptions']['DELIVERY_COST'] = \HelperAllPvz::getOshishaCost();
-        $params['deliveryOptions']['START_COST'] = \HelperAllPvz::getOshishaStartCost();
-        $params['deliveryOptions']['LIMIT_BASKET'] = \HelperAllPvz::getOshishaLimitBasket();
+        $params['deliveryOptions']['DA_DATA_TOKEN'] = \HelperAllDeliveries::getOshishaDaDataToken();
+        $params['deliveryOptions']['YA_API_KEY'] = \HelperAllDeliveries::getOshishaYMapsKey();
+        $params['deliveryOptions']['DELIVERY_COST'] = \HelperAllDeliveries::getOshishaCost();
+        $params['deliveryOptions']['START_COST'] = \HelperAllDeliveries::getOshishaStartCost();
+        $params['deliveryOptions']['LIMIT_BASKET'] = \HelperAllDeliveries::getOshishaLimitBasket();
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 

@@ -1,4 +1,7 @@
 <?php
+$MESS['ACTIVE_DELIVERY_Y'] = 'Вкл';
+$MESS['ACTIVE_DELIVERY_N'] = 'Выкл';
+$MESS['DELIVERY_SETTINGS_ACTIVITY'] = 'Активность доставки';
 
 $MESS["EE_PVZ_OPTIONS_PP"] = "PickPoint";
 $MESS["PickPoint_host"] = "Хост";
@@ -46,9 +49,6 @@ $MESS['OSH_SETTINGS_STRICT_PVZ_Y'] = 'Выводить ошибку';
 $MESS['OSH_SETTINGS_STRICT_PVZ_N'] = 'Выводить предупреждение';
 $MESS['OSH_SETTINGS_STRICT_PVZ'] = 'Если не выбран ПВЗ на странице оформления заказа';
 $MESS['OSH_SETTINGS_STRICT_PVZ_HINT'] = 'При выборе варианта &quot;Выводить ошибку&quot; оформление заказа будет невозможно, пока покупатель не выберет ПВЗ.';
-$MESS['OSH_SETTINGS_MODULE_Y'] = 'Вкл';
-$MESS['OSH_SETTINGS_MODULE_N'] = 'Выкл';
-$MESS['OSH_SETTINGS_ACTIVITY'] = 'Активность модуля';
 $MESS['OSH_SETTINGS_YMAPSKEY_NAME'] = 'Ключ для API Яндекс.Карт';
 $MESS['OSH_SETTINGS_DA_DATA_NAME'] = 'TOKEN для API Da Data';
 $MESS['OSH_SETTINGS_YMAPSKEY_HINT'] = 'Ключ сервиса геокодирования от Яндекс для поиска по карте ПВЗ';

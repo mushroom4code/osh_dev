@@ -82,7 +82,7 @@ class OshishaDelivery extends CommonPVZ
     {
         try {
             $cost = $this->configs['cost'];
-            $startCost = \HelperAllPvz::getOshishaStartCost();
+            $startCost = \HelperAllDeliveries::getOshishaStartCost();
             $distance = ceil(($_SESSION['Osh']['delivery_address_info']['distance'] ?? 0) - 0.8);
 
             $limitBasket = 4000;

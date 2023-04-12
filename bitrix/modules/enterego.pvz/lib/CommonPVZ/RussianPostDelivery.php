@@ -8,7 +8,7 @@ class RussianPostDelivery extends CommonPVZ
     public string $delivery_type = '';
     private string $russian_post_id_postfix = '_delivery_price';
 
-    protected function __construct(string $delivery_type) {
+    protected function __construct(string $delivery_type = 'RussianPostRegular') {
         parent::__construct();
         $this->delivery_type = $delivery_type;
         switch ($delivery_type) {

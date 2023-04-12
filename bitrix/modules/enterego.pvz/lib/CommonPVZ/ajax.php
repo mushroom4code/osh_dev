@@ -13,8 +13,10 @@ $request = Bitrix\Main\Context::getCurrent()->getRequest();
 $CONFIG_DELIVERIES = DeliveryHelper::getConfigs();
 
 $deliveries = [];
-foreach ($CONFIG_DELIVERIES as $k => $v) {
-    $deliveries[] = $k;
+
+foreach (\HelperAllDeliveries::getDeliveriesStatuses() as $delivery => $status) {
+    if ($status === 'Y')
+        $deliveries[] = $delivery;
 }
 
 $action = $request->get('action');

@@ -123,7 +123,7 @@ class SDEKDelivery extends CommonPVZ
 
             $location_to = $this->getSDEKCityCode($params['location_name']);
 
-            $tariffPriority = \HelperAllPvz::getCurrentTarifs();
+            $tariffPriority = \HelperAllDeliveries::getSdekCurrentTarifs();
 
             $tariff = (new \AntistressStore\CdekSDK2\Entity\Requests\Tariff())
                 ->setCityCodes($this->configs['from'], $location_to);

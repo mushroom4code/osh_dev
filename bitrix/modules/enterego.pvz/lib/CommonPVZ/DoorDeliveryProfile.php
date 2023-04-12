@@ -62,15 +62,19 @@ class DoorDeliveryProfile extends Base
         $result = new CalculationResult();
 
         $description = '';
-        $deliveries = [
-            'Dellin',
-            'RussianPostEms',
-            'RussianPostFirstClass',
-            'RussianPostRegular',
-            'SDEK',
-            'PickPoint',
-            'Oshisha'
-        ];
+        $deliveries = [];
+        foreach(\HelperAllDeliveries::getDeliveriesStatuses() as $delivery => $status) {
+               if ($status === 'Y') {
+                   if ($delivery === 'RussianPost') {
+                       $deliveries[] = 'RussianPostEms';
+                       $deliveries[] = 'RussianPostFirstClass';
+                       $deliveries[] = 'RussianPostRegular';
+                   } else {
+                       $deliveries[] = $delivery;
+                   }
+               }
+
+        }
         $currentDelivery = '';
         $propTypeDeliveryId = '';
         $deliveryParams = array();
@@ -115,7 +119,7 @@ class DoorDeliveryProfile extends Base
         }
         ksort($deliveryParams['packages']);
         if ($location_check === false)
-            unset($deliveries[array_key_last($deliveries)]);
+            unset($deliveries[array_search('Oshisha', $deliveries)]);
         if ($propTypeDeliveryId) {
             foreach ($deliveries as $delivery) {
                 $deliveryInstance = CommonPVZ::getInstanceObject($delivery);

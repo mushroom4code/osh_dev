@@ -17,9 +17,9 @@ $oshishaArPvzStrictOptions = array(
     'N' => GetMessage('OSH_SETTINGS_STRICT_PVZ_N'),
     'Y' => GetMessage('OSH_SETTINGS_STRICT_PVZ_Y')
 );
-$oshishaActiveModule = array(
-    'N' => GetMessage('OSH_SETTINGS_MODULE_N'),
-    'Y' => GetMessage('OSH_SETTINGS_MODULE_Y')
+$activeDelivery = array(
+    'N' => GetMessage('ACTIVE_DELIVERY_N'),
+    'Y' => GetMessage('ACTIVE_DELIVERY_Y')
 );
 
 $aTabs = array(
@@ -29,6 +29,12 @@ $aTabs = array(
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_PP'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_PP'),
         'OPTIONS' => array(
+            array(
+                'PickPoint_active',
+                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
+                Option::get($module_id,'PickPoint_active'),
+                array("selectbox", $activeDelivery)
+            ),
             array(
                 'PickPoint_host',
                 Loc::getMessage('PickPoint_host'),
@@ -62,6 +68,12 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_FP'),
         'OPTIONS' => array(
             array(
+                'FivePost_active',
+                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
+                Option::get($module_id,'FivePost_active'),
+                array("selectbox", $activeDelivery)
+            ),
+            array(
                 'FivePost_login',
                 Loc::getMessage('FivePost_login'),
                 Option::get($module_id, 'FivePost_login'),
@@ -81,6 +93,12 @@ $aTabs = array(
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_SDEK'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_SDEK'),
         'OPTIONS' => array(
+            array(
+                'SDEK_active',
+                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
+                Option::get($module_id,'SDEK_active'),
+                array("selectbox", $activeDelivery)
+            ),
             array(
                 'SDEK_setaccount',
                 Loc::getMessage('SDEK_setaccount'),
@@ -113,6 +131,12 @@ $aTabs = array(
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
         'OPTIONS' => array(
+            array(
+                'PEK_active',
+                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
+                Option::get($module_id,'PEK_active'),
+                array("selectbox", $activeDelivery)
+            ),
             Loc::getMessage('PickPoint_ikn'),
             array(
                 'PEK_login',
@@ -153,6 +177,12 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
         'OPTIONS' => array(
             array(
+                'RussianPost_active',
+                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
+                Option::get($module_id,'RussianPost_active'),
+                array("selectbox", $activeDelivery)
+            ),
+            array(
                 'RussianPost_authtoken',
                 Loc::getMessage('RussianPost_authtoken'),
                 Option::get($module_id, 'RussianPost_authtoken'),
@@ -178,6 +208,12 @@ $aTabs = array(
         'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_DELLIN'),
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_DELLIN'),
         'OPTIONS' => array(
+            array(
+                'Dellin_active',
+                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
+                Option::get($module_id,'Dellin_active'),
+                array("selectbox", $activeDelivery)
+            ),
             array(
                 'Dellin_apikey',
                 Loc::getMessage('Dellin_apikey'),
@@ -247,23 +283,11 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('PVZ_OPTIONS_OSHISHA'),
         'OPTIONS' => array(
             array(
-                'OSHISHA_PVZ_ENABLE',
-                Loc::getMessage('PVZ_ENABLE'),
-                Option::get($module_id, 'OSHISHA_PVZ_ENABLE'),
-                array('checkbox')
+                    'Oshisha_active',
+                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
+                Option::get($module_id,'Oshisha_active'),
+                array("selectbox", $activeDelivery)
             ),
-//            array(
-//                    'Oshisha_active',
-//                GetMessage('OSH_SETTINGS_ACTIVITY'),
-//                Option::get($module_id,'Oshisha_active'),
-//                array("select")
-//            ),
-//            'active' => array(
-//                    "type" => "select",
-//                'name' => GetMessage('OSH_SETTINGS_ACTIVITY'),
-//                "multiple" => false,
-//                "options" => $oshishaActiveModule
-//            ),
             array(
                 'Oshisha_ymapskey',
                 GetMessage('OSH_SETTINGS_YMAPSKEY_NAME'),
@@ -403,7 +427,7 @@ $tabControl->begin();
                             <td colspan="4" valign="top" align="center"><strong>Управление тарифами</strong>
                             </td>
                         </tr>
-                        <?php $arTarifs = HelperAllPvz::getExtraTarifs(); ?>
+                        <?php $arTarifs = HelperAllDeliveries::getSdekExtraTarifs(); ?>
                         <tr>
                             <th style="width:20px"></th>
                             <th>Название тарифа (код)</th>
@@ -437,7 +461,7 @@ $tabControl->begin();
                     </tr>
                     <?
                 } else if ($aTab['DIV'] === 'oshisha') {
-                    HelperAllPvz::generate($oshishaOptions["delivery_time_period"], HelperAllPvz::getOptionsData());
+                    HelperAllDeliveries::generate($oshishaOptions["delivery_time_period"], HelperAllDeliveries::getOshishaOptionsData());
                 }
             }
         }
