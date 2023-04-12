@@ -315,6 +315,10 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     width: max-content;
 }
 
+.width-20 {
+    width: 20%;
+}
+
 .max-width-1024 {
     max-width: 1024px;
 }
@@ -5933,6 +5937,10 @@ li, ul {
 
     .burn {
         max-width: 188px;
+    }
+
+    .width-20 {
+        width: auto;
     }
 }
 

@@ -126,30 +126,35 @@ $APPLICATION->SetTitle("О нас");
     </div>
     <div class="bg-dark-osh p-lg-5 p-md-5 p-3 mb-7">
         <h1 class="font-40 color-white font-weight-bold text-center mb-lg-5 mb-md-5 mb-3">Эксклюзивные продукты</h1>
-        <div class="d-flex flex-lg-row flex-md-row flex-column align-items-center justify-content-evenly p-lg-5 p-md-5 p-0">
-            <div class="m-4 box_with_picture d-flex justify-content-center">
+        <div class="d-flex flex-lg-row flex-md-row flex-wrap flex-column align-items-center justify-content-center p-lg-5 p-md-5 p-0">
+            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
                 <a href="/catalog/burn/">
                     <img src="/about/o-nas/burn.png" class="burn"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture">
+            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
                 <a href="/catalog/duft/">
                     <img src="/about/o-nas/duft.png" class="duft"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture ">
+            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
                 <a href="/catalog/sebero/">
                     <img src="/about/o-nas/sebro.png" class="sebero"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture">
+            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
+                <a href="/catalog/bonche/">
+                    <img src="/about/o-nas/bonche.png" class="bonche"/>
+                </a>
+            </div>
+            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
                 <a href="/catalog/severnyy/">
                     <img src="/about/o-nas/severnei.png" class="severnei"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture">
-                <a href="/catalog/bonche/">
-                    <img src="/about/o-nas/bonche.png" class="bonche"/>
+            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
+                <a href="/catalog/sarma_1/">
+                    <img src="/about/o-nas/sarma.png" class="bonche"/>
                 </a>
             </div>
         </div>
