@@ -529,29 +529,40 @@ $(document).ready(function () {
             let offer = $(this).hasClass('offers');
             let boxUpdateAfterAppend = $(this).closest('.catalog-item-product');
             let parseUpdate, boxUpdate;
+            let productDef =$(this).closest('.catalog-item-product').hasClass('product_right');
 
             if (!boxUpdateAfterAppend.hasClass('open-modal-product')) {
-                parseUpdate = JSON.parse($(boxUpdateAfterAppend).find('.product-values').val());
+                if(!productDef) {
+                    parseUpdate = JSON.parse($(boxUpdateAfterAppend).find('.product-values').val());
+                }
                 boxUpdate = $(boxUpdateAfterAppend).closest('.product-item-container');
             } else {
-                parseUpdate = JSON.parse(
-                    $(document).find('.catalog-item-product[data-product="' + $(boxUpdateAfterAppend).attr('data-product') + '"]')
-                        .find('.product-values').val());
+                if(!productDef) {
+                    parseUpdate = JSON.parse(
+                        $(document).find('.catalog-item-product[data-product="' + $(boxUpdateAfterAppend).attr('data-product') + '"]')
+                            .find('.product-values').val());
+                }
                 boxUpdate = $(document).find('div[data-product="' + $(boxUpdateAfterAppend).attr('data-product') + '"]');
             }
 
-            parseUpdate.ACTUAL_BASKET = basketItem;
 
-            if (offer) {
+            if (offer && !productDef) {
                 parseUpdate.OFFERS[product_id].BASKET = basketItem;
-                $(this).closest('.catalog-item-product').find('.offer-box[data-active="true"]')
-                    .attr('data-basket-quantity', basketItem).attr('data-basket_quantity', basketItem)
                 $(boxUpdate).find('.offer-box[data-product_id="' + product_id + '"]').attr('data-basket-quantity', basketItem)
                     .attr('data-basket_quantity', basketItem);
             }
 
+            if (offer) {
+                $(this).closest('.catalog-item-product').find('.offer-box[data-active="true"]')
+                    .attr('data-basket-quantity', basketItem).attr('data-basket_quantity', basketItem)
+            }
+
+            if(!productDef){
+                parseUpdate.ACTUAL_BASKET = basketItem;
+                $(boxUpdate).find('.product-values').val(JSON.stringify(parseUpdate));
+            }
+
             $(boxUpdate).find('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"] .card_element').val(basketItem);
-            $(boxUpdate).find('.product-values').val(JSON.stringify(parseUpdate));
             //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
 
             $(box_with_product).empty();
