@@ -2485,7 +2485,7 @@ $(document).on('click', '.open-fast-window', function () {
                             children: [
                                 BX.create('A', {
                                     props: {
-                                        className: 'btn-minus  minus_icon no-select add2basket removeToBasketOpenWindow',
+                                        className: 'btn-minus  minus_icon no-select add2basket removeToBasketOpenWindow offers',
                                         href: 'javascript:void(0)'
                                     },
                                     dataset: {
@@ -2501,9 +2501,9 @@ $(document).on('click', '.open-fast-window', function () {
                                     children: [
                                         BX.create('INPUT', {
                                             props: {
-                                                className: 'product-item-amount card_element inputBasketOpenWindow',
+                                                className: 'product-item-amount card_element inputBasketOpenWindow offers',
                                                 type: 'text',
-                                                value: 0,
+                                                value: product.OFFERS[active].BASKET,
                                                 id: product.QUANTITY_ID,
                                                 style: 'background-color:#e1e1e1'
                                             },
@@ -2516,7 +2516,7 @@ $(document).on('click', '.open-fast-window', function () {
                                 }),
                                 BX.create('A', {
                                     props: {
-                                        className: 'btn-plus plus_icon no-select add2basket addToBasketOpenWindow',
+                                        className: 'btn-plus plus_icon no-select add2basket addToBasketOpenWindow offers',
                                         href: 'javascript:void(0)',
                                         title: 'Доступно ' + product.OFFERS[active].QUANTITY + 'шт.',
                                         id: product.BUY_LINK
@@ -2541,7 +2541,7 @@ $(document).on('click', '.open-fast-window', function () {
 
                 basket_box.appendChild(BX.create('SPAN', {
                     props: {
-                        className: 'btn red_button_cart btn-plus add2basket buttonToBasketOpenWindow',
+                        className: 'btn red_button_cart btn-plus add2basket buttonToBasketOpenWindow offers',
                     },
                     dataset: {
                         url: product.DETAIL_PAGE_URL,
