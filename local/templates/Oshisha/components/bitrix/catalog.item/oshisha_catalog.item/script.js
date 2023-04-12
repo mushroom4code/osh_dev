@@ -2177,7 +2177,8 @@ $(document).on('click', '.open-fast-window', function () {
         let wrapper = $('.section_wrapper');
         let product = JSON.parse(json_product);
         $(wrapper).find('div.box-popup-product').remove();
-        $(this).closest('.catalog-item-product').attr('data-product',product.ID)
+        $(this).closest('.catalog-item-product').attr('data-product',product.ID);
+
         let box_popup = BX.create('DIV', {
             props: {
                 className: 'position-fixed width-100 top-32 d-flex justify-content-center z-index-1400 box-popup-product'

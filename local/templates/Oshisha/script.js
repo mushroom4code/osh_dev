@@ -522,22 +522,20 @@ $(document).ready(function () {
                 }
             }
 
-
-
             //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
             let basketItem = $(boxInput).val();
             let offer = $(this).hasClass('offers');
             let boxUpdateAfterAppend = $(this).closest('.catalog-item-product');
             let parseUpdate, boxUpdate;
-            let productDef =$(this).closest('.catalog-item-product').hasClass('product_right');
+            let productDef = $(this).closest('.catalog-item-product').hasClass('product_right');
 
             if (!boxUpdateAfterAppend.hasClass('open-modal-product')) {
-                if(!productDef) {
+                if (!productDef) {
                     parseUpdate = JSON.parse($(boxUpdateAfterAppend).find('.product-values').val());
                 }
                 boxUpdate = $(boxUpdateAfterAppend).closest('.product-item-container');
             } else {
-                if(!productDef) {
+                if (!productDef) {
                     parseUpdate = JSON.parse(
                         $(document).find('.catalog-item-product[data-product="' + $(boxUpdateAfterAppend).attr('data-product') + '"]')
                             .find('.product-values').val());
@@ -557,7 +555,7 @@ $(document).ready(function () {
                     .attr('data-basket-quantity', basketItem).attr('data-basket_quantity', basketItem)
             }
 
-            if(!productDef){
+            if (!productDef) {
                 parseUpdate.ACTUAL_BASKET = basketItem;
                 $(boxUpdate).find('.product-values').val(JSON.stringify(parseUpdate));
             }
