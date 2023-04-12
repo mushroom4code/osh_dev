@@ -18,7 +18,7 @@ $APPLICATION->SetTitle("О нас");
                     бизнеса.
                 </p>
                 <p class="mb-lg-5 mb-md-5 mb-3">
-                    Уже более 6 лет мы являемся одним
+                    Уже более 8 лет мы являемся одним
                     из крупнейших оптово-розничных поставщиков на рынке кальянной продукции и вейп индустрии.
                     Мы стремимся к предоставлению исключительного качества сервиса и услуг для наших партнёров и
                     клиентов.
@@ -145,6 +145,11 @@ $APPLICATION->SetTitle("О нас");
             <div class="m-4 box_with_picture">
                 <a href="/catalog/severnyy/">
                     <img src="/about/o-nas/severnei.png" class="severnei"/>
+                </a>
+            </div>
+            <div class="m-4 box_with_picture">
+                <a href="/catalog/bonche/">
+                    <img src="/about/o-nas/bonche.png" class="bonche"/>
                 </a>
             </div>
         </div>
