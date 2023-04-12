@@ -224,16 +224,14 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 						<div class="mt-1">
 							<div class="prices-all mb-3">
 								<?php $prod_off_id = $actualItem['ID'];
-								$prod_off_quantity = 0;
+								$prod_off_quantity = $quantity_basket_default = 0;
 								foreach ($arResult['OFFERS'] as $key_offer => $offer_price) { ?>
 									<?php $dNone = 'd-none';
-									$active_box = 'false';
 									$basketItem = 0;
-									if (!empty($item['ACTUAL_BASKET'][$offer['ID']])) {
-										$basketItem = $item['ACTUAL_BASKET'][$offer_price['ID']];
+									if (!empty($arParams['BASKET_ITEMS'][$offer_price["ID"]])) {
+										$basketItem = $arParams['BASKET_ITEMS'][$offer_price["ID"]];
 									}
 									if ($active === $key_offer && (int)$offer_price['CATALOG_QUANTITY'] > 0) {
-										$active_box = 'true';
 										$prod_off_id = $offer_price['ID'];
 										$quantity_basket_default = $basketItem;
 										$prod_off_quantity = $offer_price['CATALOG_QUANTITY'];
@@ -258,17 +256,17 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 									     data-product_id="<?= $prod_off_id; ?>">
 										<div
 											class="product-item-amount-field-contain d-flex flex-row align-items-center">
-											<a class="btn-minus  minus_icon no-select add2basket"
+											<a class="btn-minus  minus_icon no-select add2basket offers"
 											   href="javascript:void(0)"
 											   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
 											   data-product_id="<?= $prod_off_id; ?>">
 											</a>
 											<div class="product-item-amount-field-block">
-												<input class="product-item-amount card_element"
+												<input class="product-item-amount card_element offers"
 												       type="text"
 												       value="<?= $quantity_basket_default ?>">
 											</div>
-											<a class="btn-plus plus_icon no-select add2basket"
+											<a class="btn-plus plus_icon no-select add2basket offers"
 											   data-max_quantity="<?= $prod_off_quantity ?>"
 											   data-max-quantity="<?= $prod_off_quantity ?>"
 											   href="javascript:void(0)"
@@ -283,18 +281,16 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 						</div>
 						<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto">
 							<?php
-							$quantity_basket_default = 0;
+
 							foreach ($arResult['OFFERS'] as $key => $offer) {
 								if ((int)$offer['CATALOG_QUANTITY'] > 0) {
-
 									$active_box = 'false';
 									$basketItem = 0;
-									if (!empty($actualItem['ACTUAL_BASKET'][$offer['ID']])) {
-										$basketItem = $actualItem['ACTUAL_BASKET'][$offer['ID']];
+									if (!empty($arParams['BASKET_ITEMS'][$offer["ID"]])) {
+										$basketItem = $arParams['BASKET_ITEMS'][$offer['ID']];
 									}
 									if ($active === $key && (int)$offer['CATALOG_QUANTITY'] > 0) {
 										$active_box = 'true';
-										$quantity_basket_default = $basketItem;
 									}
 									$typeProp = '';
 									$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
