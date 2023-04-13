@@ -2423,9 +2423,19 @@ $(document).on('click', '.open-fast-window', function () {
                         }))
                         $.each(prop.VALUE, function (i, item_taste) {
                             let color = prop.VALUE_XML_ID[i].split('#');
+                            let str = '#';
+                            let color_type = '';
+                            if (parseInt(color[1].replace(str, ''), 16) > 0xffffff / 1.1
+                                && color[1] !== '#F55F5C' && color[1] !== '#FF0E15' && color[1] !== '#FF0F17'
+                                || color[1] === '#9FFEB0' || color[1] === '#CBF4FF') {
+                                color_type = 'black';
+                            } else {
+                                color_type = 'white';
+                            }
                             box_taste.appendChild(BX.create('SPAN', {
                                 props: {
-                                    className: 'taste mb-0', style: 'background-color: #' + color[1] + ';'
+                                    className: 'taste mb-0',
+                                    style: 'background-color: #' + color[1] + '; color: ' + color_type
                                 }, text: item_taste, dataset: {
                                     background: '#' + color[1],
                                 }
