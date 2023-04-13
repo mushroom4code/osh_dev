@@ -8,7 +8,9 @@ foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
 	}
 	if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
 		$active = $keys;
-		$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRICE'];
+		$priceDef = !empty($quantityNull['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ?
+			$quantityNull['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] :
+			$quantityNull['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'];
 	}
 }
 ?>
@@ -213,13 +215,23 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 					<div>
 						<div class="bx_price position-relative font-weight-bolder font-22 mb-3">
 							<?php $sale = false;
+							$price_sale = $arResult['OFFERS'][$active]['PRICES_CUSTOM'];
 							if (USE_CUSTOM_SALE_PRICE && !empty($arResult['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
-								$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-								echo(round($price['SALE_PRICE']['PRICE']));
+								$arResult['PROPERTIES']['USE_DISCOUNT']['VALUE_XML_ID'] == 'true' && !empty($price_sale['SALE_PRICE']['PRICE'])) {
+
+								echo (round($price_sale['SALE_PRICE']['PRICE']));
+								$old_sum = (int)$price_sale['PRICE_DATA'][0]['PRICE'] - (int)$price_sale['SALE_PRICE']['PRICE'] ?? 0;
 								$sale = true;
+								?>
+								руб.
+								<span class="font-14 ml-3">
+                                    <b class="decoration-color-red mr-2"><?= $price_sale['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
+                                    <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
+								</span>
+								<?php
 							} else {
-								echo '<span class="font-12 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM'][1]['PRICE']));
-							} ?> руб.
+								echo '<span class="font-12 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'])).' руб.';
+							} ?>
 						</div>
 						<div class="mt-1">
 							<div class="prices-all mb-3">
@@ -239,11 +251,12 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 									} ?>
 									<div class="<?= $dNone ?> mb-2 box-prices p-3 width-fit-content br-10 bg-gray-white"
 									     data-offer_id="<?= $offer_price['ID'] ?>">
-										<?php foreach ($offer_price['PRICES_CUSTOM'] as $price) { ?>
+										<?php foreach ($offer_price['PRICES_CUSTOM']['PRICE_DATA'] as $price) { ?>
 											<p class="mb-1">
 												<span class="font-14 mb-2"><?= $price['NAME'] ?></span>
 												<span class="dash"> - </span>
-												<span class="font-14"><b><?= $price['PRINT_PRICE'] ?></b></span>
+												<span
+													class="font-14 <?= $sale ? 'price-discount' : '' ?>"><b><?= $price['PRINT_PRICE'] ?></b></span>
 											</p>
 										<?php } ?>
 									</div>
@@ -292,6 +305,8 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 									if ($active === $key && (int)$offer['CATALOG_QUANTITY'] > 0) {
 										$active_box = 'true';
 									}
+
+									$base_price = $offer['PRICES_CUSTOM']['SALE_PRICE']['PRICE'] ?? $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'];
 									$typeProp = '';
 									$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
 									$taste = [];
@@ -327,7 +342,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
 											data-basket-quantity="<?= $basketItem ?>"
 											data-basket_quantity="<?= $basketItem ?>"
-											data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
+											data-price_base="<?= $base_price ?>"
 											data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 											data-onevalue="<?= $offer['ID'] ?>">
 											<?= $prop_value ?? '0' ?>
@@ -340,7 +355,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 										     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
 										     data-basket-quantity="<?= $basketItem ?>"
 										     data-basket_quantity="<?= $basketItem ?>"
-										     data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
+										     data-price_base="<?= $base_price ?>"
 										     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 										     data-onevalue="<?= $offer['ID'] ?>"
 										     class="mr-1 offer-box color-hookah br-10 mb-1">
@@ -362,7 +377,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 												data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
 												data-basket-quantity="<?= $basketItem ?>"
 												data-basket_quantity="<?= $basketItem ?>"
-												data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
+												data-price_base="<?= $base_price ?>"
 												data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 												data-onevalue="<?= $offer['ID'] ?>">
 												<?php foreach ($taste as $elem_taste) { ?>
