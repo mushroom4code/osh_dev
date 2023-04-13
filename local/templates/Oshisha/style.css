@@ -49,7 +49,7 @@ a.link_header:hover *, .text_link_footer, .product-item__favorite-star, .btn_bas
 .box_with_brands, .btn_questions, .avatar, .select2-container .select2-selection--single, .image_cart, .menu_items,
 .select2-container--default .select2-selection--single .select2-selection__arrow, .link_header > .icon_header, .Icon,
 .select2-container .select2-selection--single, .carousel_custom, .carousel_custom_next, .li_menu_header, .li_menu_top,
-.text_header_menu, a.dropdown-toggle, div#about_contacts > .row, .box_footer, .slick-slide > div,
+.text_header_menu, a.dropdown-toggle, div#about_contacts > .row, .box_footer, .slick-slide > div, .display-flex,
 .product-item-amount-field-block, .btn_basket_collapse, .by-line:not(.opt) .box_with_title_like, .by-line.opt .box_quantity_for_uric_line {
     display: flex;
 }

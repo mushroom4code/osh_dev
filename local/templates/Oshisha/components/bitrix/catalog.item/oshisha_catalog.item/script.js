@@ -2407,7 +2407,6 @@ $(document).on('click', '.open-fast-window', function () {
                             }
                         }))
                     } else if (prop.CODE === 'VKUS' && prop.VALUE !== false) {
-                        console.log(prop)
                         let box_taste = box_offers.appendChild(BX.create('DIV', {
                             props: {
                                 className: 'red_button_cart width-fit-content mr-1 mb-1 offer-box p-1 taste variation_taste cursor-pointer',
