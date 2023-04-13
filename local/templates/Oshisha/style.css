@@ -6042,6 +6042,10 @@ li, ul {
     border-color: #eeeeee;
 }
 
+.open-modal-product .red_button_cart.taste, .open-modal-product .red_button_cart.taste[data-active="true"] {
+    background-color: transparent;
+}
+
 .red_button_cart.taste[data-active="true"] {
     border-color: #EC524D;
     color: inherit!important;

@@ -606,7 +606,7 @@ if ($show_price) {
 								<?php } elseif ($typeProp === 'VKUS') {
 									if (!empty($taste)) { ?>
 										<div
-											class="red_button_cart p-1 variation_taste taste font-14 width-fit-content mb-1 mr-1 offer-box cursor-pointer"
+											class="red_button_cart d-flex flex-row p-1 variation_taste taste font-14 width-fit-content mb-1 mr-1 offer-box cursor-pointer"
 											title="<?= $offer['NAME'] ?>"
 											data-active="<?= $active_box ?>"
 											data-product_id="<?= $offer['ID'] ?>"
@@ -618,11 +618,12 @@ if ($show_price) {
 											data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 											data-onevalue="<?= $offer['ID'] ?>">
 											<?php foreach ($taste as $elem_taste) { ?>
-												<span class="taste"
+												<span class="taste mb-0"
 												      data-background="<?= $elem_taste['color'] ?>"
 												      style="background-color: <?= $elem_taste['color'] ?>;
 													      border-color:<?= $elem_taste['color'] ?>;
 													      padding: 4px 8px;
+													      line-height: 1.5;
 													      display: block">
 															<?= $elem_taste['name'] ?>
 												</span>

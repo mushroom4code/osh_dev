@@ -145,7 +145,6 @@ $(document).ready(function () {
     // COLOR TASTE
     function tasteInit() {
         let box = $(document).find('.variation_taste');
-        console.log('test')
         $.each(box,function(i,item){
             $(item).find('span').each(
                 function () {
@@ -3075,7 +3074,7 @@ $(document).on('click', '.offer-box', function () {
         .attr('data-max_quantity', $(elem).attr('data-product_quantity'));
 
     let elem_modal = $(elem).closest('.open-modal-product');
-    if ($(elem_modal).length !== 0 && ($(elem).attr('src') !== '' && $(elem).attr('src') !== null)) {
-        $(elem_modal).find('.box-with-image-one img').attr('src', $(elem).attr('src'))
+    if ($(elem_modal).length !== 0 && ((($(elem).attr('src') !== '' && $(elem).attr('src') !== null)) || $(elem).attr('data-src') !== '')) {
+        $(elem_modal).find('.box-with-image-one img').attr('src', ($(elem).attr('src') || $(elem).attr('data-src')))
     }
 });

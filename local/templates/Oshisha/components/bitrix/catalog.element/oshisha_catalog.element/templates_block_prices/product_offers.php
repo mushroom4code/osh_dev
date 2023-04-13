@@ -354,7 +354,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 									<?php } elseif ($typeProp === 'VKUS') {
 										if (!empty($taste)) { ?>
 											<div
-												class="red_button_cart p-2 taste variation_taste font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
+												class="red_button_cart p-1 taste variation_taste font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
 												title="<?= $offer['NAME'] ?>"
 												data-active="<?= $active_box ?>"
 												data-product_id="<?= $offer['ID'] ?>"
@@ -366,12 +366,11 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 												data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 												data-onevalue="<?= $offer['ID'] ?>">
 												<?php foreach ($taste as $elem_taste) { ?>
-													<span class="taste"
+													<span class="taste mb-0"
 													      data-background="<?= $elem_taste['color'] ?>"
 													      style="background-color: <?= $elem_taste['color'] ?>;
 														      border-color: <?= $elem_taste['color'] ?>;
-														      font-size: 13px;
-														      margin-bottom: 0;">
+														      font-size: 13px;">
 															<?= $elem_taste['name'] ?>
 													</span>
 												<?php } ?>

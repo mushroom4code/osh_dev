@@ -2377,7 +2377,7 @@ $(document).on('click', '.open-fast-window', function () {
                         || prop.CODE === 'GRAMMOVKA_G' && prop.VALUE !== '') {
                         box_offers.appendChild(BX.create('DIV', {
                             props: {
-                                className: 'red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box ',
+                                className: 'red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer',
                                 src: offer.DETAIL_PICTURE,
                                 alt: 'modal-product',
                             },
@@ -2393,7 +2393,7 @@ $(document).on('click', '.open-fast-window', function () {
                     } else if (prop.CODE === 'TSVET' && prop.VALUE !== '') {
                         box_offers.appendChild(BX.create('IMG', {
                             props: {
-                                className: 'mr-2 br-10 box-offer-fast offer-box',
+                                className: 'mr-2 br-10 box-offer-fast offer-box cursor-pointer',
                                 style: 'width:90px; height:90px',
                                 src: offer.DETAIL_PICTURE,
                                 alt: 'modal-product'
@@ -2406,6 +2406,32 @@ $(document).on('click', '.open-fast-window', function () {
                                 basket_quantity: offer.BASKET
                             }
                         }))
+                    } else if (prop.CODE === 'VKUS' && prop.VALUE !== false) {
+                        console.log(prop)
+                        let box_taste = box_offers.appendChild(BX.create('DIV', {
+                            props: {
+                                className: 'red_button_cart width-fit-content mr-1 mb-1 offer-box p-1 taste variation_taste cursor-pointer',
+                                src: offer.DETAIL_PICTURE,
+                                alt: 'modal-product',
+                            }, dataset: {
+                                active: active_box,
+                                src: offer.DETAIL_PICTURE,
+                                product_id: offer.ID,
+                                product_quantity: offer.QUANTITY,
+                                price_base: offer.PRICE[1].PRICE,
+                                basket_quantity: offer.BASKET
+                            }
+                        }))
+                        $.each(prop.VALUE, function (i, item_taste) {
+                            let color = prop.VALUE_XML_ID[i].split('#');
+                            box_taste.appendChild(BX.create('SPAN', {
+                                props: {
+                                    className: 'taste mb-0', style: 'background-color: #' + color[1] + ';'
+                                }, text: item_taste, dataset: {
+                                    background: '#' + color[1],
+                                }
+                            }))
+                        })
                     }
                 });
 
