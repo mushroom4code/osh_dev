@@ -144,24 +144,27 @@ $(document).ready(function () {
 
     // COLOR TASTE
     function tasteInit() {
-        let box = $('.variation_taste');
-
-        $(box).find('span').each(
-            function () {
-                let classes = $(this).attr('class');
-                if (classes.indexOf('taste') !== -1) {
-                    let color = $(this).data('background');
-                    $(this).css('background-color', color);
-                    let str = '#';
-                    if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
-                        && color !== '#F55F5C' && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
-                        $(this).css('color', 'black');
-                    } else {
-                        $(this).css('color', 'white');
+        let box = $(document).find('.variation_taste');
+        console.log('test')
+        $.each(box,function(i,item){
+            $(item).find('span').each(
+                function () {
+                    let classes = $(this).attr('class');
+                    if (classes.indexOf('taste') !== -1) {
+                        let color = $(this).data('background');
+                        $(this).css('background-color', color);
+                        let str = '#';
+                        if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
+                            && color !== '#F55F5C' && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
+                            $(this).css('color', 'black');
+                        } else {
+                            $(this).css('color', 'white');
+                        }
                     }
                 }
-            }
-        );
+            );
+        });
+
     }
 
     if (bool === true) {
