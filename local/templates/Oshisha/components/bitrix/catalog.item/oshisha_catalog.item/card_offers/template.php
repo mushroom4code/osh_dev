@@ -546,6 +546,7 @@ if ($show_price) {
 									$quantity_basket_default = $basketItem;
 								}
 								$typeProp = '';
+								$taste = [];
 								$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
 								foreach ($offer['PROPERTIES'] as $prop) {
 									if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2_') === false
@@ -558,10 +559,18 @@ if ($show_price) {
 										if ($prop['CODE'] === 'SHTUK_V_UPAKOVKE') {
 											$prop_value .= ' шт.';
 										}
+										if ($prop['CODE'] === 'VKUS') {
+											foreach ($prop['VALUE_XML_ID'] as $key => $listProp) {
+												$taste[$key] = [
+													'color' => '#' . explode('#', $listProp)[1],
+													'name' => $prop['VALUE'][$key]
+												];
+											}
+										}
 									}
 								}
 								if ($typeProp === 'GRAMMOVKA_G' || $typeProp === 'SHTUK_V_UPAKOVKE'
-									|| $typeProp === 'VKUS' ||$typeProp === 'KOLICHESTVO_ZATYAZHEK') { ?>
+									|| $typeProp === 'KOLICHESTVO_ZATYAZHEK') { ?>
 									<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
 									     title="<?= $offer['NAME'] ?>"
 									     data-active="<?= $active_box ?>"
@@ -594,7 +603,31 @@ if ($show_price) {
 										     alt="<?= $offer['NAME'] ?>"
 										     loading="lazy"/>
 									</div>
-								<?php }
+								<?php } elseif ($typeProp === 'VKUS') {
+									if (!empty($taste)) { ?>
+										<div
+											class="red_button_cart p-2 taste font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
+											title="<?= $offer['NAME'] ?>"
+											data-active="<?= $active_box ?>"
+											data-product_id="<?= $offer['ID'] ?>"
+											data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+											data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+											data-basket-quantity="<?= $basketItem ?>"
+											data-basket_quantity="<?= $basketItem ?>"
+											data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
+											data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+											data-onevalue="<?= $offer['ID'] ?>">
+											<?php foreach ($taste as $elem_taste) { ?>
+												<span class="taste"
+												      style="background-color: <?= $elem_taste['color'] ?>;
+													      border-color:<?= $elem_taste['color'] ?>;">
+															<?= $elem_taste['name'] ?>
+														</span>
+											<?php } ?>
+										</div>
+										<?php
+									}
+								}
 							}
 						} ?>
 					</div>

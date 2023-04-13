@@ -6037,6 +6037,15 @@ li, ul {
     background-color: #c3c0c070;
 }
 
+.red_button_cart.taste {
+    background-color: white;
+    border-color: #eeeeee;
+}
+
+.red_button_cart.taste[data-active="true"] {
+    border-color: #EC524D;
+    color: inherit!important;
+}
 
 .input_files.drop-zone .drop-message {
     position: relative;
