@@ -60,7 +60,16 @@ foreach ($item as $row) {
     $product_prices = '';
     $price = [];
     $show_product_prices = false;
-    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
+	// OFFERS OR PRODUCT
+	$offer = CIBlockElement::GetProperty(
+		IBLOCK_CATALOG_OFFERS ?? 19,
+		$row['PRODUCT_ID'],
+		array(),
+		array('CODE' => 'CML2_LINK'));
+	$productIdOnOffer = $offer->Fetch();
+	$productId = !empty($productIdOnOffer['VALUE']) ? $productIdOnOffer['VALUE'] : $row['PRODUCT_ID'];
+	// OFFERS OR PRODUCT
+    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG,$productId, array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
     $res = CIBlockElement::GetList(
         array(),
