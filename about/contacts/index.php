@@ -32,13 +32,17 @@ $userData = EnteregoUser::getInstance();
                     <div class="box_text_business mb-3">
                         <h5 class="mb-3">Телефоны</h5>
                         <div class="d-flex flex-column justify-content-between align-content-between">
-                            <span class="mb-3">
-                                Общий: <br>
-                                <span class="red_text mb-3"><a href="tel:88006004424">8 (800) 600-44-24</a></span>
+                            <span class="mb-2">
+                                Общий :
+                                <span class="red_text mb-2"> <a href="tel:88006004424"> +7 (800) 600-44-24</a></span>
                             </span>
-                            <span class="mb-3">
-                                Для связи с менеджером: <br>
-                                 <span class="red_text"><a href="https://api.whatsapp.com/send?phone=79031184521">+7 (903) 118-45-21</a></span>
+                            <span class="mb-2">
+                               Для розничных покупателей : <br>
+                                 <span class="red_text"> <a href="https://api.whatsapp.com/send?phone=79031184521"> +7 (903) 118-45-21</a></span>
+                            </span>
+                            <span>
+                                Для оптовых партнеров : <br>
+                                 <span class="red_text"><a href="https://api.whatsapp.com/send?phone=79031184957"> +7 (903) 118-49-57</a></span>
                             </span>
                         </div>
                     </div>
