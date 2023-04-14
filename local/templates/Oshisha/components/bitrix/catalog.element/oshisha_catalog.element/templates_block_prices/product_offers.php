@@ -219,7 +219,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 							if (USE_CUSTOM_SALE_PRICE && !empty($arResult['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
 								$arResult['PROPERTIES']['USE_DISCOUNT']['VALUE_XML_ID'] == 'true' && !empty($price_sale['SALE_PRICE']['PRICE'])) {
 
-								echo (round($price_sale['SALE_PRICE']['PRICE']));
+								echo(round($price_sale['SALE_PRICE']['PRICE']));
 								$old_sum = (int)$price_sale['PRICE_DATA'][0]['PRICE'] - (int)$price_sale['SALE_PRICE']['PRICE'] ?? 0;
 								$sale = true;
 								?>
@@ -230,7 +230,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 								</span>
 								<?php
 							} else {
-								echo '<span class="font-12 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'])).' руб.';
+								echo '<span class="font-12 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'])) . ' руб.';
 							} ?>
 						</div>
 						<div class="mt-1">
@@ -343,6 +343,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											data-basket-quantity="<?= $basketItem ?>"
 											data-basket_quantity="<?= $basketItem ?>"
 											data-price_base="<?= $base_price ?>"
+											data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
+											data-sale_base="<?=$offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE']?>"
+											data-sale="<?= $sale ?>"
 											data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 											data-onevalue="<?= $offer['ID'] ?>">
 											<?= $prop_value ?? '0' ?>
@@ -356,6 +359,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 										     data-basket-quantity="<?= $basketItem ?>"
 										     data-basket_quantity="<?= $basketItem ?>"
 										     data-price_base="<?= $base_price ?>"
+										     data-sale_base="<?=$offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE']?>"
+										     data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
+										     data-sale="<?= $sale ?>"
 										     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 										     data-onevalue="<?= $offer['ID'] ?>"
 										     class="mr-1 offer-box color-hookah br-10 mb-1">
@@ -377,6 +383,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 												data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
 												data-basket-quantity="<?= $basketItem ?>"
 												data-basket_quantity="<?= $basketItem ?>"
+												data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
+												data-sale_base="<?=$offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE']?>"
+												data-sale="<?= $sale ?>"
 												data-price_base="<?= $base_price ?>"
 												data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 												data-onevalue="<?= $offer['ID'] ?>">

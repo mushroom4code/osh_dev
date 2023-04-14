@@ -3068,7 +3068,16 @@ $(document).on('click', '.offer-box', function () {
         $(this).attr('data-max-quantity', $(elem).attr('data-product_quantity'));
     });
 
-    $(box_parent).find('.bx_price').html( '<span class="font-10">от</span> ' + $(elem).attr('data-price_base') + '₽');
+    if ($(elem).attr('data-sale') === '1' && $(elem).attr('data-sale_price') !== '') {
+        let old_sum = parseInt($(elem).attr('data-sale_base')) - parseInt($(elem).attr('data-sale_price'));
+        $(box_parent).find('.bx_price').html($(elem).attr('data-sale_price') + ' руб. ' +
+            '<span class="font-14 ml-3">' +
+            '<b class="decoration-color-red mr-2">'+$(elem).attr('data-sale_base')+' руб.</b>' +
+            '<b class="sale-percent"> - '+old_sum+' руб.</b></span>');
+    } else {
+        $(box_parent).find('.bx_price').html('<span class="font-10">от</span> ' + $(elem).attr('data-price_base') + '₽');
+    }
+
     $(box_parent).find('input.card_element').val($(elem).attr('data-basket_quantity'))
         .attr('data-max-quantity', $(elem).attr('data-product_quantity'))
         .attr('data-max_quantity', $(elem).attr('data-product_quantity'));
