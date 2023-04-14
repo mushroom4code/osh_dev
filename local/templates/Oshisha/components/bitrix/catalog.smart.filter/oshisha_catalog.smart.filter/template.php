@@ -682,11 +682,17 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                                 //region CHECKBOXES +
                                 default:
-                                if ($arItem['PROPERTY_TYPE'] !== 'S') {
-                                    uasort($arItem["VALUES"], 'sort_by_sort');
-                                } else {
-                                    ksort($arItem["VALUES"]);
-                                }
+                                    usort(
+                                        $arItem["VALUES"],
+                                        function ($a, $b) {
+                                            if (is_string($a['VALUE']) && is_string($a['VALUE'])) {
+                                                $a['VALUE'] = str_replace(['Ё', 'ё'], ['Е', 'е'], $a['VALUE']);
+                                                $b['VALUE'] = str_replace(['Ё', 'ё'], ['Е', 'е'], $b['VALUE']);
+                                            }
+
+                                            return $a["VALUE"] <=> $b["VALUE"];
+                                        }
+                                    );
                                 ?>
                                     <div class="smart-filter-input-group-checkbox-list">
                                         <? foreach ($arItem["VALUES"] as $val => $ar): ?>
@@ -774,6 +780,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
 <script type="text/javascript">
     var smartFilter = new JCSmartFilter('<?echo CUtil::JSEscape($arResult["FORM_ACTION"])?>', '<?=CUtil::JSEscape($arParams["FILTER_VIEW_MODE"])?>', <?=CUtil::PhpToJSObject($arResult["JS_FILTER_PARAMS"])?>);
+    window.smartFilter = smartFilter
     $(document).ready(function() {
         $('input.check_input.form-check-input:checked').each(function () {
             smartFilter.addHorizontalFilter(this);
