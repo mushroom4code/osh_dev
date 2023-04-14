@@ -223,14 +223,14 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 								$old_sum = (int)$price_sale['PRICE_DATA'][0]['PRICE'] - (int)$price_sale['SALE_PRICE']['PRICE'] ?? 0;
 								$sale = true;
 								?>
-								руб.
+								₽
 								<span class="font-14 ml-3">
                                     <b class="decoration-color-red mr-2"><?= $price_sale['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
-                                    <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
+                                    <b class="sale-percent"> - <?= $old_sum ?> ₽</b>
 								</span>
 								<?php
 							} else {
-								echo '<span class="font-12 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'])) . ' руб.';
+								echo '<span class="font-12 card-price-text">от </span> ' . (round($arResult['OFFERS'][$active]['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'])) . '₽';
 							} ?>
 						</div>
 						<div class="mt-1">

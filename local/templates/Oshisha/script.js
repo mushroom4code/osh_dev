@@ -3069,13 +3069,17 @@ $(document).on('click', '.offer-box', function () {
     });
 
     if ($(elem).attr('data-sale') === '1' && $(elem).attr('data-sale_price') !== '') {
+        let classType = 'font-14 ml-3'
+        if ($(box_parent).hasClass('bx_catalog_item')) {
+            classType = 'font-10'
+        }
         let old_sum = parseInt($(elem).attr('data-sale_base')) - parseInt($(elem).attr('data-sale_price'));
-        $(box_parent).find('.bx_price').html($(elem).attr('data-sale_price') + ' руб. ' +
-            '<span class="font-14 ml-3">' +
-            '<b class="decoration-color-red mr-2">'+$(elem).attr('data-sale_base')+' руб.</b>' +
-            '<b class="sale-percent"> - '+old_sum+' руб.</b></span>');
+        $(box_parent).find('.bx_price').html('<span>' + $(elem).attr('data-sale_price') + ' ₽ </span>' +
+            '<span class="' + classType + '">' +
+            '<b class="decoration-color-red mr-2">' + $(elem).attr('data-sale_base') + ' ₽</b>' +
+            '<b class="sale-percent"> - ' + old_sum + ' ₽</b></span>');
     } else {
-        $(box_parent).find('.bx_price').html('<span class="font-10">от</span> ' + $(elem).attr('data-price_base') + '₽');
+        $(box_parent).find('.bx_price').html('<span><span class="font-10">от</span> ' + $(elem).attr('data-price_base') + '₽</span>');
     }
 
     $(box_parent).find('input.card_element').val($(elem).attr('data-basket_quantity'))

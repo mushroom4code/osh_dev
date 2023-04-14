@@ -36,5 +36,5 @@ $item['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($item['IT
 
 foreach($item['OFFERS']  as &$offer){
     $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
-    $offer['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($offer['ITEM_ALL_PRICES'][0], $useDiscount)['PRICE_DATA'];
+    $offer['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($offer['ITEM_ALL_PRICES'][0], $useDiscount);
 }

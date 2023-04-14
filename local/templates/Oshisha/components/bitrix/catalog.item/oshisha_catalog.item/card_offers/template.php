@@ -121,7 +121,7 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 
 	if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
 		$active = $keys;
-		$priceDef = $quantityNull['PRICES_CUSTOM'][1]['PRICE'];
+		$priceDef = $quantityNull['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'];
 	}
 
 	if (!empty($item['ACTUAL_BASKET'][$quantityNull['ID']])) {
@@ -131,8 +131,8 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 	if ((int)$quantityNull['CATALOG_QUANTITY'] > 0) {
 		$offersForModal[$quantityNull['ID']] = [
 			'ID' => $quantityNull['ID'],
-			'PRICE' => $quantityNull['PRICES_CUSTOM'],
-			'SALE_PRICE' => '',
+			'PRICE' => $quantityNull['PRICES_CUSTOM']['PRICE_DATA'],
+			'SALE_PRICE' => $quantityNull['PRICES_CUSTOM']['SALE_PRICE'],
 			'DETAIL_PICTURE' => $quantityNull['DETAIL_PICTURE']['SRC'],
 			'QUANTITY' => $quantityNull['CATALOG_QUANTITY'],
 			'PROPS' => $quantityNull['PROPERTIES'],
@@ -166,6 +166,7 @@ if ($show_price) {
 	];
 }
 
+$price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 ?>
 <div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
@@ -258,18 +259,18 @@ if ($show_price) {
 								} else {
 									echo '<span class="font-10 card-price-text">от </span> ' . (round($priceDef));
 								} ?>₽
+								<?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+									$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
+									<div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
+										<b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>
+											₽</b>
+										<b class="sale-percent">
+											- <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>
+											₽
+										</b>
+									</div>
+								<?php } ?>
 							</div>
-
-							<?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-								$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-								<div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
-									<b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
-									<b class="sale-percent">
-										- <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>
-										₽
-									</b>
-								</div>
-							<?php } ?>
 						</div>
 					</div>
 
@@ -407,17 +408,15 @@ if ($show_price) {
 					<div class="box_with_fav_bask align-items-lg-center align-items-md-center align-items-end">
 						<?php if ($priceDef) { ?>
 							<div class="box_with_price card-price font_weight_600 d-flex flex-column min-height-auto">
-								<div class="d-flex flex-column">
-									<div class="bx_price position-relative">
-										<?php $sale = false;
-										if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][0]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
-											$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-											echo(round($price['SALE_PRICE']['PRICE']));
-											$sale = true;
-										} else {
-											echo '<span class="font-10 card-price-text">от </span> ' . (round($priceDef));
-										} ?>₽
-									</div>
+								<div class="bx_price position-relative d-flex flex-column">
+									<?php $sale = false;
+									if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
+										$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
+										echo(round($price['SALE_PRICE']['PRICE'])).'₽';
+										$sale = true;
+									} else {
+										echo '<span><span class="font-10 card-price-text">от </span> ' . (round($priceDef)).'₽</span>';
+									} ?>
 									<?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
 										$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
 										<div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
@@ -579,7 +578,10 @@ if ($show_price) {
 									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
 									     data-basket-quantity="<?= $basketItem ?>"
 									     data-basket_quantity="<?= $basketItem ?>"
-									     data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
+									     data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
+									     data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
+									     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
+									     data-sale="<?= $sale ?>"
 									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 									     data-onevalue="<?= $offer['ID'] ?>">
 										<?= $prop_value ?? '0' ?>
@@ -592,7 +594,10 @@ if ($show_price) {
 									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
 									     data-basket-quantity="<?= $basketItem ?>"
 									     data-basket_quantity="<?= $basketItem ?>"
-									     data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
+									     data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
+									     data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
+									     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
+									     data-sale="<?= $sale ?>"
 									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 									     data-onevalue="<?= $offer['ID'] ?>"
 									     class="mr-1 offer-box color-hookah br-10 mb-1">
@@ -614,7 +619,10 @@ if ($show_price) {
 											data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
 											data-basket-quantity="<?= $basketItem ?>"
 											data-basket_quantity="<?= $basketItem ?>"
-											data-price_base="<?= $offer['PRICES_CUSTOM'][1]['PRICE'] ?>"
+											data-price_base=  data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
+											data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
+											data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
+											data-sale="<?= $sale ?>"
 											data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 											data-onevalue="<?= $offer['ID'] ?>">
 											<?php foreach ($taste as $elem_taste) { ?>
@@ -648,7 +656,7 @@ if ($show_price) {
 							} ?>
 							<div class="<?= $dNone ?> mb-lg-2 m-md-2 m-1 box-prices"
 							     data-offer_id="<?= $offer_price['ID'] ?>">
-								<?php foreach ($offer_price['PRICES_CUSTOM'] as $prices) { ?>
+								<?php foreach ($offer_price['PRICES_CUSTOM']['PRICE_DATA'] as $prices) { ?>
 									<p class="mb-1">
 										<span class="font-11 font-10-md mb-2"><?= $prices['NAME'] ?></span>
 										<span class="dash"> - </span>
@@ -660,15 +668,16 @@ if ($show_price) {
 					</div>
 					<div
 						class="d-flex row-line-reverse justify-content-between align-items-center box-basket mb-lg-2 m-md-2 m-1 bx_catalog_item_controls">
-						<div class="bx_price position-relative font-weight-bolder">
+						<div class="bx_price position-relative font-weight-bolder d-flex flex-column">
 							<?php $sale = false;
 							if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
 								$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-								echo(round($price['SALE_PRICE']['PRICE']));
+								echo(round($price['SALE_PRICE']['PRICE'])).'₽';
 								$sale = true;
 							} else {
-								echo '<span class="font-10 card-price-text">от </span> ' . (round($item['OFFERS'][$active]['PRICES_CUSTOM'][1]['PRICE']));
-							} ?>₽
+								echo '<span><span class="font-10 card-price-text">от </span>
+ 								' . (round($item['OFFERS'][$active]['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'])).'₽</span>';
+							} ?>
 						</div>
 						<?php if ($USER->IsAuthorized()) { ?>
 							<div class="product-item-amount-field-contain-wrap" style="display:flex;"
