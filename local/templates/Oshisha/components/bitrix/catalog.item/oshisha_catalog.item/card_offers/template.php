@@ -131,11 +131,11 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 	if ((int)$quantityNull['CATALOG_QUANTITY'] > 0) {
 		$offersForModal[$quantityNull['ID']] = [
 			'ID' => $quantityNull['ID'],
-			'PRICE' => $quantityNull['PRICES_CUSTOM']['PRICE_DATA'],
-			'SALE_PRICE' => $quantityNull['PRICES_CUSTOM']['SALE_PRICE'],
+			'PRICE' => $quantityNull['PRICES_CUSTOM']['PRICE_DATA'] ?? [],
+			'SALE_PRICE' => $quantityNull['PRICES_CUSTOM']['SALE_PRICE'] ?? [],
 			'DETAIL_PICTURE' => $quantityNull['DETAIL_PICTURE']['SRC'],
 			'QUANTITY' => $quantityNull['CATALOG_QUANTITY'],
-			'PROPS' => $quantityNull['PROPERTIES'],
+			'PROPS' => $quantityNull['PROPERTIES'] ?? [],
 			'BASKET' => $basketItem
 		];
 	}

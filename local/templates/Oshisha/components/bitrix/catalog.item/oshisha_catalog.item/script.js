@@ -2371,7 +2371,7 @@ $(document).on('click', '.open-fast-window', function () {
                 }
                 i++;
                 let box_offers = BX.findChildByClassName(box_product, 'offers-box');
-
+                let boolSale = (product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) ? 1 : 0;
                 $.each(offer.PROPS, function (key_prop, prop) {
                     if (prop.CODE === 'SHTUK_V_UPAKOVKE' && prop.VALUE !== ''
                         || prop.CODE === 'GRAMMOVKA_G' && prop.VALUE !== '') {
@@ -2384,6 +2384,9 @@ $(document).on('click', '.open-fast-window', function () {
                             html: prop.VALUE,
                             dataset: {
                                 active: active_box,
+                                sale_price:offer.SALE_PRICE.PRICE ?? '',
+                                sale: boolSale,
+                                sale_base:offer.PRICE[0].PRICE ?? '',
                                 product_id: offer.ID,
                                 product_quantity: offer.QUANTITY,
                                 price_base: offer.PRICE[1].PRICE,
@@ -2401,6 +2404,9 @@ $(document).on('click', '.open-fast-window', function () {
                             dataset: {
                                 active: active_box,
                                 product_id: offer.ID,
+                                sale_price:offer.SALE_PRICE.PRICE ?? '',
+                                sale: boolSale,
+                                sale_base:offer.PRICE[0].PRICE ?? '',
                                 product_quantity: offer.QUANTITY,
                                 price_base: offer.PRICE[1].PRICE,
                                 basket_quantity: offer.BASKET
@@ -2413,6 +2419,9 @@ $(document).on('click', '.open-fast-window', function () {
                             }, dataset: {
                                 active: active_box,
                                 src: offer.DETAIL_PICTURE,
+                                sale_price:offer.SALE_PRICE.PRICE ?? '',
+                                sale: boolSale,
+                                sale_base:offer.PRICE[0].PRICE ?? '',
                                 product_id: offer.ID,
                                 product_quantity: offer.QUANTITY,
                                 price_base: offer.PRICE[1].PRICE,
@@ -2454,18 +2463,18 @@ $(document).on('click', '.open-fast-window', function () {
                 $.each(offer.PRICE, function (i, price) {
                     let sale = '';
                     if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true)
-                        && parseInt(product.SALE_PRICE) > 0) {
+                        && parseInt(offer.SALE_PRICE.PRICE) > 0) {
                         sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
                     }
 
                     if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
                         if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true)
-                            && parseInt(offer.SALE_PRICE) > 0) {
+                            && parseInt(offer.SALE_PRICE.PRICE) > 0) {
 
                             let print_price = offer.PRICE[0].PRICE;
-                            let sale_price = offer.SALE_PRICE;
+                            let sale_price = offer.SALE_PRICE.PRICE;
                             let print_price_sum = (parseInt(offer.PRICE[0].PRICE) - parseInt(sale_price)) ?? 0;
-                            price_base.innerHTML = sale_price + ' руб. <span class="font-14 ml-3">' +
+                            price_base.innerHTML = sale_price + ' ₽ <span class="font-14 ml-3">' +
                                 ' <b class="decoration-color-red mr-2">' + print_price + '₽</b>' +
                                 '<b class="sale-percent"> - ' + print_price_sum + '₽</b></span>';
 
