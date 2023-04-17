@@ -180,9 +180,14 @@ if ($show_price) {
                                 } elseif (mb_strlen($name) > 13) {
                                     $tasteSize = 'taste-xxl';
                                 }
+
+                                $propId = $taste['ID'];
+                                $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
                                 ?>
-                                <span class="taste <?= $tasteSize ?>" data-background="<?= '#' . $color[1] ?>"
-                                      id="<?= $color[0] ?>"><?= $name ?> </span>
+                                <span class="taste js__taste <?= $tasteSize ?>"
+                                      data-background="<?= '#' . $color[1] ?>"
+                                      id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
+                                      data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?></span>
                             <?php }
                         }
                     } ?>

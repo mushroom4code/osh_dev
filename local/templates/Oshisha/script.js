@@ -3018,6 +3018,17 @@ $(document).ready(function () {
     $(document).on('click', '.close_header_box', function () {
         $('.overlay').hide();
     });
+
+    $(document).on('click', '.js__taste ', function() {
+        let tasteCheckId = $(this).attr('data-filter-get');
+        $('#VKUS').find('.check_input').prop('checked', false);
+        $('#'+tasteCheckId).prop('checked', true);
+
+        window.smartFilter.addHorizontalFilter(BX(tasteCheckId))
+        window.smartFilter.timer = setTimeout(BX.delegate(function(){
+            this.reload(BX(tasteCheckId));
+        }, window.smartFilter), 500);
+    })
 });
 
 //OFFERS

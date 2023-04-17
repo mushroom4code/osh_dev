@@ -6177,7 +6177,13 @@ header {
     z-index: 1011;
     min-height: 30px;
 }
-
+.js__taste {
+    cursor: pointer;
+    transition: all 0.15s linear;
+}
+.js__taste:hover {
+    opacity: 0.75;
+}
 .js__tastes .variation_taste_toggle {
     border-top: 6px solid #666;
     border-left: 6px solid transparent;
