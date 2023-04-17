@@ -207,13 +207,14 @@ class DellinDelivery extends CommonPVZ
                 $this->errors[] = $result->errors;
                 return array('errors' => $this->errors);
             } else {
+                $finalPrice = $result->data->price - $result->data->derival->price;
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {
                     $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                        ? array_merge($cached_vars, array($hash_string => $result->data->price))
-                        : array($hash_string => $result->data->price));
+                        ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                        : array($hash_string => $finalPrice));
                 }
-                return $result->data->price;
+                return $finalPrice;
             }
         } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();
@@ -318,13 +319,14 @@ class DellinDelivery extends CommonPVZ
                 $this->errors[] = $result->errors;
                 return array('errors' => $this->errors);
             } else {
+                $finalPrice = $result->data->price - $result->data->derival->price;
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {
                     $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                        ? array_merge($cached_vars, array($hash_string => $result->data->price))
-                        : array($hash_string => $result->data->price));
+                        ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                        : array($hash_string => $finalPrice));
                 }
-                return $result->data->price;
+                return $finalPrice;
             }
         } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();
