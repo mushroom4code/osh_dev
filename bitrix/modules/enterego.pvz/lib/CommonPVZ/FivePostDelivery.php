@@ -2,11 +2,16 @@
 
 namespace CommonPVZ;
 
+use Bitrix\Main\Config\Option;
+
 class FivePostDelivery extends CommonPVZ
 {
 
     public string $delivery_name = 'FivePost';
 
+    public static function getDeliveryStatus() {
+        return array('FivePost' => Option::get(DeliveryHelper::$MODULE_ID, 'FivePost_active'));
+    }
 
     protected function connect()
     {

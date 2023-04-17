@@ -34,6 +34,10 @@ class OshishaDelivery extends CommonPVZ
 //        'quantity_override'
     );
 
+    public static function getDeliveryStatus() {
+        return array('Oshisha' => Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_active'));
+    }
+
     public static function getOshishaDataValue($name)
     {
         return Option::get(self::$MODULE_ID, "Oshisha_{$name}");

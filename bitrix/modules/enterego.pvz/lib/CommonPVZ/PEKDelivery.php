@@ -3,9 +3,15 @@
 namespace CommonPVZ;
 
 
+use Bitrix\Main\Config\Option;
+
 class PEKDelivery extends CommonPVZ
 {
     public string $delivery_name = 'PEK';
+
+    public static function getDeliveryStatus() {
+        return array('PEK' => Option::get(DeliveryHelper::$MODULE_ID, 'PEK_active'));
+    }
 
     protected function connect()
     {

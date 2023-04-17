@@ -62,19 +62,7 @@ class DoorDeliveryProfile extends Base
         $result = new CalculationResult();
 
         $description = '';
-        $deliveries = [];
-        foreach(\HelperAllDeliveries::getDeliveriesStatuses() as $delivery => $status) {
-               if ($status === 'Y') {
-                   if ($delivery === 'RussianPost') {
-                       $deliveries[] = 'RussianPostEms';
-                       $deliveries[] = 'RussianPostFirstClass';
-                       $deliveries[] = 'RussianPostRegular';
-                   } else {
-                       $deliveries[] = $delivery;
-                   }
-               }
-
-        }
+        $deliveries = DeliveryHelper::getActiveDeliveries();
         $currentDelivery = '';
         $propTypeDeliveryId = '';
         $deliveryParams = array();
@@ -107,16 +95,7 @@ class DoorDeliveryProfile extends Base
         $deliveryParams['shipment_cost'] = $shipment->getOrder()->getBasePrice();
         $deliveryParams['packages'] = array();
         $orderBasket = $shipment->getOrder()->getBasket();
-        foreach ($orderBasket as $orderBasketItem) {
-            $packageParams = array();
-            $basketItemFields = $orderBasketItem->getFields();
-            $productDimensions =  unserialize($basketItemFields['DIMENSIONS']);
-            $packageParams['height'] = (int)$productDimensions['HEIGHT'];
-            $packageParams['lenght'] = (int)$productDimensions['LENGTH'];
-            $packageParams['width'] = (int)$productDimensions['WIDTH'];
-            $packageParams['weight'] = (int)$basketItemFields['WEIGHT'];
-            $deliveryParams['packages'][$basketItemFields['PRODUCT_ID']] = $packageParams;
-        }
+        $deliveryParams['packages'] = DeliveryHelper::getPackagesFromOrderBasket($orderBasket);
         ksort($deliveryParams['packages']);
         if ($location_check === false)
             unset($deliveries[array_search('Oshisha', $deliveries)]);

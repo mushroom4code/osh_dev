@@ -3,6 +3,7 @@
 namespace CommonPVZ;
 
 use Bitrix\Sale\Location\LocationTable;
+use Bitrix\Main\Config\Option;
 
 class DellinDelivery extends CommonPVZ
 {
@@ -14,6 +15,10 @@ class DellinDelivery extends CommonPVZ
         parent::__construct();
         $this->api_key = $this->configs['apikey'];
         $this->delivery_name = "Деловые Линии";
+    }
+
+    public static function getDeliveryStatus() {
+        return array( 'Dellin' => Option::get(DeliveryHelper::$MODULE_ID, 'Dellin_active'));
     }
 
     protected function connect()

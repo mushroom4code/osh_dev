@@ -12,12 +12,7 @@ $request = Bitrix\Main\Context::getCurrent()->getRequest();
 
 $CONFIG_DELIVERIES = DeliveryHelper::getConfigs();
 
-$deliveries = [];
-
-foreach (\HelperAllDeliveries::getDeliveriesStatuses() as $delivery => $status) {
-    if ($status === 'Y')
-        $deliveries[] = $delivery;
-}
+$deliveries = DeliveryHelper::getActiveDeliveries(true);
 
 $action = $request->get('action');
 $codeCity = $request->get('codeCity');

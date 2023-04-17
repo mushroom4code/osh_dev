@@ -2,6 +2,7 @@
 
 namespace CommonPVZ;
 
+use Bitrix\Main\Config\Option;
 use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
@@ -13,6 +14,10 @@ class SDEKDelivery extends CommonPVZ
     private $cdek_cache_id = 'sdek_delivery_prices';
     static $sdek_tarifs = array(136,137,138,139,233,234,1,3,5,10,11,12,15,16,17,18,57,58,59,60,61,62,63,483,482,481,480,83,378,376,368,366,363,361,486,485);
     private $cdek_client;
+
+    public static function getDeliveryStatus() {
+        return array('SDEK' => Option::get(DeliveryHelper::$MODULE_ID, 'SDEK_active'));
+    }
 
     static function getSdekExtraTarifs(){
         IncludeModuleLangFile('bitrix/modules/enterego.pvz/lang/ru/include.php');

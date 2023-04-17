@@ -2,6 +2,8 @@
 
 namespace CommonPVZ;
 
+use Bitrix\Main\Config\Option;
+
 class RussianPostDelivery extends CommonPVZ
 {
     public string $delivery_name = 'RussianPost';
@@ -22,6 +24,14 @@ class RussianPostDelivery extends CommonPVZ
                 $this->delivery_name = 'Почта России (Посылка обычная)';
                 break;
         }
+    }
+
+    public static function getDeliveryStatus($isPvz = false) {
+        $opt = Option::get(DeliveryHelper::$MODULE_ID, 'RussianPost_active');
+        if ($isPvz)
+            return array('RussianPost' => $opt);
+        else
+            return array('RussianPostEms' => $opt, 'RussianPostFirstClass' => $opt, 'RussianPostRegular' => $opt);
     }
 
     protected function connect()

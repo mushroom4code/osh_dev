@@ -1,26 +1,5 @@
 <?php
 
-use Bitrix\Main\Config\Option,
-    CommonPVZ\DellindeliveryApicore,
-    Bitrix\Main\Entity,
-    Bitrix\Sale\Internals\PersonTypeTable,
-    CommonPVZ\DeliveryHelper;
-
-class HelperAllDeliveries
-{
-    static $MODULE_ID = "enterego.pvz";
-
-
-
-    public static function getDeliveriesStatuses() {
-        $deliveriesStatuses = [];
-        foreach (DeliveryHelper::getConfigs() as $delivery => $values) {
-            $deliveriesStatuses[$delivery] = $values['active'];
-        }
-        return $deliveriesStatuses;
-    }
-}
-
 CModule::AddAutoloadClasses("", array(
     '\CommonPVZ\DeliveryHelper' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/DeliveryHelper.php',
     '\CommonPVZ\CommonPVZ' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/CommonPVZ.php',

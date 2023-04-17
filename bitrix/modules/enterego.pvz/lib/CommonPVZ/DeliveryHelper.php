@@ -27,10 +27,36 @@ class DeliveryHelper
         return $CONFIG_DELIVERIES;
     }
 
-//    public function getAllDelivery() {
-//        $res = [];
-//        $res[] = PickPointDelivery::getInstanceObject()
-//    }
+    public static function getActiveDeliveries($isPvz = false) {
+        $deliveriesStatuses = [];
+        $deliveriesStatuses = array_merge($deliveriesStatuses, DellinDelivery::getDeliveryStatus());
+        $deliveriesStatuses = array_merge($deliveriesStatuses, FivePostDelivery::getDeliveryStatus());
+        $deliveriesStatuses = array_merge($deliveriesStatuses, OshishaDelivery::getDeliveryStatus());
+        $deliveriesStatuses = array_merge($deliveriesStatuses, PEKDelivery::getDeliveryStatus());
+        $deliveriesStatuses = array_merge($deliveriesStatuses, PickPointDelivery::getDeliveryStatus());
+        $deliveriesStatuses = array_merge($deliveriesStatuses, RussianPostDelivery::getDeliveryStatus($isPvz));
+        $deliveriesStatuses = array_merge($deliveriesStatuses, SDEKDelivery::getDeliveryStatus());
+        foreach ($deliveriesStatuses as $delivery => $status) {
+            if ($status === 'N')
+                unset($deliveriesStatuses[$delivery]);
+        }
+        return array_keys($deliveriesStatuses);
+    }
+
+    public static function getPackagesFromOrderBasket($orderBasket) {
+        $packages = [];
+        foreach ($orderBasket as $orderBasketItem) {
+            $packageParams = array();
+            $basketItemFields = $orderBasketItem->getFields();
+            $productDimensions =  unserialize($basketItemFields['DIMENSIONS']);
+            $packageParams['height'] = (int)$productDimensions['HEIGHT'];
+            $packageParams['lenght'] = (int)$productDimensions['LENGTH'];
+            $packageParams['width'] = (int)$productDimensions['WIDTH'];
+            $packageParams['weight'] = (int)$basketItemFields['WEIGHT'];
+            $packages[$basketItemFields['PRODUCT_ID']] = $packageParams;
+        }
+        return $packages;
+    }
 
     public static function getButton($address = '')
     {
@@ -211,16 +237,7 @@ class DeliveryHelper
         $params['shipmentCost'] = $order->getBasePrice();
         $params['packages'] = array();
         $orderBasket = $order->getBasket();
-        foreach ($orderBasket as $orderBasketItem) {
-            $packageParams = array();
-            $basketItemFields = $orderBasketItem->getFields();
-            $productDimensions =  unserialize($basketItemFields['DIMENSIONS']);
-            $packageParams['height'] = (int)$productDimensions['HEIGHT'];
-            $packageParams['lenght'] = (int)$productDimensions['LENGTH'];
-            $packageParams['width'] = (int)$productDimensions['WIDTH'];
-            $packageParams['weight'] = (int)$basketItemFields['WEIGHT'];
-            $params['packages'][$basketItemFields['PRODUCT_ID']] = $packageParams;
-        }
+        $params['packages'] = self::getPackagesFromOrderBasket($orderBasket);
         ksort($params['packages']);
         $cAsset = Asset::getInstance();
 

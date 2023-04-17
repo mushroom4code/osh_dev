@@ -2,6 +2,7 @@
 
 namespace CommonPVZ;
 
+use Bitrix\Main\Config\Option;
 use Bitrix\Sale\Location\LocationTable;
 use Exception;
 use PickPointSdk\Components\PackageSize;
@@ -13,6 +14,10 @@ use PickPointSdk\Components\ReceiverDestination;
 class PickPointDelivery extends CommonPVZ
 {
     public string $delivery_name = 'PickPoint';
+
+    public static function getDeliveryStatus() {
+        return array('PickPoint' => Option::get(DeliveryHelper::$MODULE_ID, 'PickPoint_active'));
+    }
 
     protected function connect()
     {
