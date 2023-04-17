@@ -2,11 +2,140 @@
 
 namespace CommonPVZ;
 
+use Bitrix\Main\Localization\Loc;
+
+Loc::loadMessages(__FILE__);
+
 class SDEKDelivery extends CommonPVZ
 {
+    static $MODULE_ID = 'enterego.pvz';
     public string $delivery_name = 'SDEK';
     private $cdek_cache_id = 'sdek_delivery_prices';
+    static $sdek_tarifs = array(136,137,138,139,233,234,1,3,5,10,11,12,15,16,17,18,57,58,59,60,61,62,63,483,482,481,480,83,378,376,368,366,363,361,486,485);
     private $cdek_client;
+
+    static function getSdekExtraTarifs(){
+        IncludeModuleLangFile('bitrix/modules/enterego.pvz/lang/ru/include.php');
+        $arTarifs = self::$sdek_tarifs;
+        $svdOpts = self::sdekGet('SDEK_tarifs');
+        $arReturn = array();
+        foreach($arTarifs as $tarifId)
+            $arReturn[$tarifId] = array(
+                'NAME'  => GetMessage("ENTEREGO_PVZ_SDEK_tarif_".$tarifId."_NAME")." (".$tarifId.")",
+                'DESC'  => GetMessage("ENTEREGO_PVZ_SDEK_tarif_".$tarifId."_DESCR"),
+                'SHOW'  => (array_key_exists($tarifId, $svdOpts) && array_key_exists('SHOW', $svdOpts[$tarifId]) && $svdOpts[$tarifId]['SHOW']) ? $svdOpts[$tarifId]['SHOW'] : "N",
+                'BLOCK' => (array_key_exists($tarifId, $svdOpts) && array_key_exists('BLOCK', $svdOpts[$tarifId]) && $svdOpts[$tarifId]['BLOCK']) ? $svdOpts[$tarifId]['BLOCK']: "N",
+            );
+        return $arReturn;
+    }
+
+    public static function sdekGet($option,$noRemake = true)
+    {
+        $self = \COption::GetOptionString(self::$MODULE_ID,$option,self::sdekGetDefault($option));
+
+        if($self && $noRemake) {
+            $handlingType = self::sdekGetHandling($option);
+            switch ($handlingType) {
+                case 'serialize' :
+                    $self = unserialize($self);
+                    break;
+                case 'json'      :
+                    $self = json_decode($self,true);
+                    break;
+            }
+        }
+
+        return $self;
+    }
+
+    public static function sdekGetDefault($option)
+    {
+        $opt = self::sdekCollection();
+        if(array_key_exists($option,$opt))
+            return $opt[$option]['default'];
+        return false;
+    }
+
+    public static function sdekGetHandling($option)
+    {
+        $opt = self::sdekCollection();
+        if(array_key_exists($option,$opt) && array_key_exists('handling',$opt[$option]))
+            return $opt[$option]['handling'];
+        return false;
+    }
+
+    public static function sdekCollection()
+    {
+        $arOptions = array(
+            'SDEK_tarifs' => array(
+                'group' => 'addingService',
+                'hasHint' => '',
+                'default' => 'a:0:{}', // Empty array
+                'type' => "special",
+                'handling' => 'serialize'
+            ),
+        );
+        return $arOptions;
+    }
+
+    static function getSdekTarifList($params=array()){
+        $arList = array(
+            'pickup'  => array(
+                'usual'   => array(234,136,138),
+                'heavy'   => array(15,17),
+                'express' => array(483,481,62,63,5,10,12)
+            ),
+            'courier' => array(
+                'usual'   => array(233,137,139),
+                'heavy'   => array(16,18),
+                'express' => array(482,480,11,1,3,61,60,59,58,57,83)
+            ),
+            'postamat' => array(
+                'usual' => array(378,376,368,366),
+                'express' => array(363,361,486,485)
+            )
+        );
+        $blocked = self::sdekGet('SDEK_tarifs');
+        if($blocked && count($blocked) && (!array_key_exists('fSkipCheckBlocks',$params) || !$params['fSkipCheckBlocks'])){
+            foreach($blocked as $key => $val)
+                if(!array_key_exists('BLOCK',$val))
+                    unset($blocked[$key]);
+            if(count($blocked))
+                foreach($arList as $tarType => $arTars)
+                    foreach($arTars as $tarMode => $arTarIds)
+                        foreach($arTarIds as $key => $arTarId)
+                            if(array_key_exists($arTarId,$blocked))
+                                unset($arList[$tarType][$tarMode][$key]);
+        }
+        $answer = $arList;
+        if($params['type']){
+            if(is_numeric($params['type'])) $type = ($params['type']==136)?$type='pickup':$type='courier';
+            else $type = $params['type'];
+            $answer = $answer[$type];
+
+            if((array_key_exists('mode', $params) && $params['mode']) && array_key_exists($params['mode'], $answer))
+                $answer = $answer[$params['mode']];
+        }
+
+        if(array_key_exists('answer',$params)){
+            $answer = self::sdekArrVals($answer);
+            if($params['answer'] == 'string'){
+                $answer = implode(',',$answer);
+                $answer = substr($answer,0,strlen($answer));
+            }
+        }
+        return $answer;
+    }
+
+    static function sdekArrVals($arr){
+        $return = array();
+        foreach($arr as $key => $val)
+            if(is_array($val))
+                $return = array_merge($return,self::sdekArrVals($val));
+            else
+                $return []= $val;
+        return $return;
+    }
 
     protected function connect()
     {
@@ -99,7 +228,7 @@ class SDEKDelivery extends CommonPVZ
                 }
             }
 
-            $tariffPriority = \HelperAllDeliveries::getSdekTarifList(array(
+            $tariffPriority = self::getSdekTarifList(array(
                 'type' => $array['type_pvz'] === "POSTAMAT" ? 'postamat' : 'pickup', 'answer' => 'array'));
             $location_to = $this->getSDEKCityCode($array['name_city']);
             $location_to = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($location_to);
@@ -174,7 +303,7 @@ class SDEKDelivery extends CommonPVZ
             $location_to->setAddress($params['address']);
             $location_from = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($this->configs['from']);
 
-            $tariffPriority = \HelperAllDeliveries::getSdekTarifList(array('type' => 'courier', 'answer' => 'array'));
+            $tariffPriority = self::getSdekTarifList(array('type' => 'courier', 'answer' => 'array'));
 
             $tariff = (new \AntistressStore\CdekSDK2\Entity\Requests\Tariff())
                 ->setFromLocation($location_from)

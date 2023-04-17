@@ -427,7 +427,7 @@ $tabControl->begin();
                             <td colspan="4" valign="top" align="center"><strong>Управление тарифами</strong>
                             </td>
                         </tr>
-                        <?php $arTarifs = HelperAllDeliveries::getSdekExtraTarifs(); ?>
+                        <?php $arTarifs = \CommonPVZ\SDEKDelivery::getSdekExtraTarifs(); ?>
                         <tr>
                             <th style="width:20px"></th>
                             <th>Название тарифа (код)</th>
@@ -438,7 +438,7 @@ $tabControl->begin();
                             <tr>
                                 <td style='text-align:center'><?php if($tarifOption['DESC']) { ?><?php } ?></td>
                                 <td><?= $tarifOption['NAME'] ?></td>
-                                <td align='center'><input type='checkbox' name='sdek_tarifs[<?=$tarifId?>][BLOCK]' value='Y' <?=($tarifOption['BLOCK']=='Y')?"checked":""?>></td>
+                                <td align='center'><input type='checkbox' name='SDEK_tarifs[<?=$tarifId?>][BLOCK]' value='Y' <?=($tarifOption['BLOCK']=='Y')?"checked":""?>></td>
                             </tr>
 	                    <?php } ?>
 	                    <tr>
@@ -461,7 +461,7 @@ $tabControl->begin();
                     </tr>
                     <?
                 } else if ($aTab['DIV'] === 'oshisha') {
-                    HelperAllDeliveries::generate($oshishaOptions["delivery_time_period"], HelperAllDeliveries::getOshishaOptionsData());
+                    \CommonPVZ\OshishaDelivery::generate($oshishaOptions["delivery_time_period"], \CommonPVZ\OshishaDelivery::getOshishaOptionsData());
                 }
             }
         }
@@ -481,8 +481,8 @@ $tabControl->end();
 
 
 if ($request->isPost() && check_bitrix_sessid()) {
-    $_REQUEST['sdek_tarifs'] = ($_REQUEST['sdek_tarifs']) ? serialize($_REQUEST['sdek_tarifs']) : 'a:0:{}';
-    Option::set($module_id, 'sdek_tarifs', $_REQUEST['sdek_tarifs']);
+    $_REQUEST['SDEK_tarifs'] = ($_REQUEST['SDEK_tarifs']) ? serialize($_REQUEST['SDEK_tarifs']) : 'a:0:{}';
+    Option::set($module_id, 'SDEK_tarifs', $_REQUEST['SDEK_tarifs']);
     foreach ($aTabs as $aTab) {
         foreach ($aTab['OPTIONS'] as $arOption) {
             if (!is_array($arOption)) {
