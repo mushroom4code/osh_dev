@@ -19,8 +19,14 @@
 
 .smart-filter-parameters-box {
     position: relative;
+    order: 3;
 }
-
+.smart-filter-parameters-box:first-child {
+    order: 1;
+}
+.hide_not_available_container {
+    order: 2;
+}
 .smart-filter-parameters-box-title {
     margin-bottom: 5px;
     font-size: 14px;
@@ -1007,7 +1013,12 @@ label.smart-filter-checkbox-text.form-check-label.hide_not_available {
     font-weight: 600;
     color: black;
 }
-
+@media screen and (max-width: 768px) {
+    label.smart-filter-checkbox-text.form-check-label.hide_not_available {
+        font-size: 18px;
+        font-weight: bold;
+    }
+}
 .js__filter-close {
     font-size: 1500px;
 }
