@@ -91,15 +91,19 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
         "PREVIEW_TEXT",
         "PREVIEW_PICTURE",
         "DETAIL_PICTURE",
+	    "CATALOG_QUANTITY",
+		"QUANTITY",
 	    "PRODUCT_ID",
-	    "PROPERTY_CML2_LINK_VALUE",
-	    "PROPERTY_GRAMMOVKA_G_VALUE",
+	    "PROPERTY_CML2_LINK",
+	    "PROPERTY_GRAMMOVKA_G",
 	    "PROPERTY_VKUS",
-	    "SHTUK_V_UPAKOVKE_VALUE",
-	    "KOLICHESTVO_ZATYAZHEK_VALUE",
+	    "PROPERTY_SHTUK_V_UPAKOVKE",
+	    "PROPERTY_KOLICHESTVO_ZATYAZHEK",
+	    "PROPERTY_TSVET",
 	    "ACTIVE",
-	    "USE_DISCOUNT_VALUE"
+	    "PROPERTY_USE_DISCOUNT"
     );
+
     $arFilter = array(
         "IBLOCK_LID" => SITE_ID,
         "IBLOCK_ACTIVE" => "Y",
@@ -127,7 +131,11 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
 				    $arParams["PREVIEW_TRUNCATE_LEN"]);
 		    }
 
-		    $arResult["ELEMENTS"][$arElement["ID"]] = $arElement;
+			if(!empty($arElement['PROPERTY_CML2_LINK_VALUE'])){
+				$arResult["ELEMENTS"][$arElement['PROPERTY_CML2_LINK_VALUE']]['OFFERS'][$arElement["ID"]] = $arElement;
+			} else {
+				$arResult["ELEMENTS"][$arElement["ID"]] = $arElement;
+			}
 	    }
     }
 }
