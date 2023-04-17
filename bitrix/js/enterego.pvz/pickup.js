@@ -28,11 +28,49 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
         setPriceDelivery: "/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajaxOshishaSetPricePVZ.php",
     };
     selfObj.afterSave = null;
+    selfObj.date_delivery = '';
+    selfObj.address_property_id = '';
+    selfObj.date_property_id = '';
 
     var mkad_poly = null,
+        wednesday_saturday_poly = null,
+        monday_thursday_poly = null,
+        tuesday_friday_poly = null,
         msk_center_point = [55.75119082121071, 37.61699737548825],
         msk_250km_boundedBy = [[53.45159731566762, 33.63312692442719], [57.938891029311215, 41.58884573182265]],
         myMap = null,
+
+        wednesday_saturday_points = [[55.828543, 37.394084], [56.471988, 36.107156],
+            [56.032525, 35.669637], [55.436232, 35.785215], [54.724356, 36.478780],
+            [54.805781, 37.720554], [55.573340, 37.641119], [55.576425, 37.592249],
+            [55.595279, 37.513669],  [55.600438, 37.503670], [55.660009, 37.434495],
+            [55.682509, 37.416327], [55.691595, 37.412032], [55.710099, 37.388017],
+            [55.747122, 37.369275], [55.783033, 37.369473], [55.789887, 37.371811],
+            [55.803473, 37.385317], [55.806569, 37.387237]],
+
+        tuesday_friday_points = [[54.805781, 37.720554], [55.573340, 37.641119],
+            [55.571919, 37.667939], [55.573081, 37.679293], [55.573631, 37.681889],
+            [55.601439, 37.752504],[55.625211, 37.796341],[55.650285, 37.834331],
+            [55.654067, 37.838116], [55.661022, 37.839846],[55.689804, 37.829573],
+            [55.697727, 37.830005], [55.714848, 37.838548], [55.773013, 37.843193],
+            [55.820846, 37.837584], [55.827411, 37.832303], [55.874911, 37.740843],
+            [56.293210, 39.639279], [55.330949, 40.117631], [54.628927, 38.942431],
+        ],
+
+        monday_thursday_points = [[55.874911, 37.740843], [56.293210, 39.639279],
+            [56.831933, 38.606204], [56.847491, 36.954449], [56.471988, 36.107156],
+            [55.828543, 37.394084], [55.837792, 37.395910], [55.845472, 37.391980], [55.848223, 37.391827], [55.860283, 37.398411],
+            [55.863376, 37.400912], [55.867815, 37.406423], [55.872110, 37.414793],
+            [55.874687, 37.421938], [55.881872, 37.446282], [55.882760, 37.454958],
+            [55.882989, 37.464399], [55.884363, 37.471799], [55.888656, 37.488131],
+            [55.890860, 37.493949], [55.905885, 37.529228], [55.906751, 37.533863],
+            [55.911012, 37.575672], [55.910812, 37.582154], [55.910010, 37.587813],
+            [55.902166, 37.616787], [55.898083, 37.638576], [55.895973, 37.657875],
+            [55.895231, 37.672769], [55.894285, 37.697815], [55.892707, 37.704455],
+            [55.889591, 37.711817]
+        ],
+
+
 
         //Для отображения на яндекс карты полигона МКАД
         mkad_points = [[55.77682929150693, 37.8427186924053], [55.77271261339107, 37.843152686304705],
@@ -156,6 +194,8 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
         currentBasket = parseFloat(param.CURRENT_BASKET),
         distKm = 0,
         is_mobile_api = true,
+        no_markup = false,
+        delivery_date_week_day = null,
         delivery_address,
         delivery_price;
 
@@ -205,9 +245,9 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     };
 
     selfObj.initCircleControl = function (){
-        let myCircle = new ymaps.Circle([myMap.getCenter(), 100000], {}, {
+        let myCircle = new ymaps.Circle([myMap.getCenter(), 140000], {}, {
             opacity: 0,
-            penBalloonOnClick: false
+            penBalloonOnClick: false,
         });
         myCircle.events.add('click', function (e) {
             selfObj.showByGeo(e.get('coords'));
@@ -290,7 +330,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
      * @param selectGeo - координаты точки для расчета
      * @param saveDelivery
      */
-    selfObj.getDistance = function (selectGeo, saveDelivery=false) {
+    selfObj.getDistance = function (selectGeo, addressPropertyId = '', datePropertyId = '', deliveryDate = '', saveDelivery=false) {
         collection.removeAll();
 
         selectGeo[0] = Number('' + selectGeo[0]).toPrecision(6);
@@ -298,16 +338,44 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
 
         // Местоположение
         delivery_address = selfObj.getAddress(selectGeo);
+        selfObj.address_property_id = addressPropertyId ? addressPropertyId : selfObj.address_property_id;
+        selfObj.date_property_id = datePropertyId ? datePropertyId : selfObj.date_property_id;
+
         selfObj.setDisabled();
+        var deliveryDateArray = (deliveryDate)
+            ? deliveryDate.split('.')
+            : ((selfObj.date_delivery) ? selfObj.date_delivery.split('.') : false);
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        if (!selfObj.date_delivery)
+            selfObj.date_delivery = deliveryDate
+                ? deliveryDate
+                : tomorrow.toLocaleString("ru", {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    timezone: 'UTC'
+                });
+        delivery_date_week_day = deliveryDateArray
+            ? new Date(deliveryDateArray[2], deliveryDateArray[1] - 1, deliveryDateArray[0]).getDay()
+            : tomorrow.getDay();
 
         if (selfObj.getDistanceCache[selectGeo] !== undefined) {
+            balloon.close();
             selfObj.showResults(selfObj.getDistanceCache[selectGeo], selectGeo, delivery_address, saveDelivery);
+            selfObj.removeDisabled();
             return;
         } else {
-            selfObj.getDistanceCache[selectGeo] = {inMkad: 0, geometry: undefined}
+            selfObj.getDistanceCache[selectGeo] = {inMkad: 0, inMondayThursdayZone: 0, inTuesdayFridayZone: 0, inWednesdaySaturdayZone: 0, geometry: undefined}
         }
 
-        selfObj.getDistanceCache[selectGeo].inMkad = selfObj.checkIn(selectGeo);
+
+        var checkInResult = selfObj.checkIn(selectGeo);
+        selfObj.getDistanceCache[selectGeo].inMkad = checkInResult['inMkad'];
+        selfObj.getDistanceCache[selectGeo].inMondayThursdayZone = checkInResult['inMondayThursdayZone'];
+        selfObj.getDistanceCache[selectGeo].inTuesdayFridayZone = checkInResult['inTuesdayFridayZone'];
+        selfObj.getDistanceCache[selectGeo].inWednesdaySaturdayZone = checkInResult['inWednesdaySaturdayZone'];
+
         if (selfObj.getDistanceCache[selectGeo].inMkad) {
             selfObj.showResults(selfObj.getDistanceCache[selectGeo], selectGeo, delivery_address, saveDelivery);
         } else {
@@ -349,10 +417,14 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
      * Отправляет результаты расчета доставки
      */
     selfObj.saveDelivery = function () {
+        selfObj.address_property_id ? document.querySelector('input[name="ORDER_PROP_' + selfObj.address_property_id + '"]').value = delivery_address : '';
+        selfObj.date_property_id ? document.querySelector('input[name="ORDER_PROP_' + selfObj.date_property_id + '"]').value = selfObj.date_delivery : '';
+        selfObj.date_delivery = '';
         var sessid = BX.bitrix_sessid();
         BX.ajax.post(selfObj.oUrls.setPriceDelivery, {
             address: delivery_address,
             price: delivery_price,
+            no_markup: no_markup,
             distance: distKm,
             sessid: sessid
         }, function () {
@@ -396,8 +468,12 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
         d = new ymaps.Placemark(d);
 
         var b = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(mkad_poly).getLength();
+        var m = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(monday_thursday_poly).getLength();
+        var t = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(tuesday_friday_poly).getLength();
+        var w = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(wednesday_saturday_poly).getLength();
+
         myMap.geoObjects.remove(d);
-        return b;
+        return {'inMkad': b, 'inMondayThursdayZone': m, 'inTuesdayFridayZone': t, 'inWednesdaySaturdayZone': w};
     };
 
     selfObj.routeFromCenter = function (d, b) {
@@ -458,11 +534,10 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     };
 
     selfObj.showResults = function (result, d, delivery_address = '', saveDelivery=false) {
-
         if (result.inMkad) {
             distKm = 0
             delivery_price = this.calculateCost(0);
-            let str = `В пределах МКАД - ${delivery_price}.`;
+            let str = `В пределах МКАД - ${delivery_price} руб.`;
             selfObj.showText(delivery_address);
 
             balloon.open(d, str);
@@ -470,6 +545,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             var i = result.geometry;
             distKm = i.getLength() / 1000;
             delivery_price = this.calculateCost(distKm);
+            no_markup = false;
 
             let g, b;
             i.getPaths().options.set({
@@ -484,8 +560,38 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                 } else {
                     c.options.set("preset", "islands#redStretchyIcon");
 
-                    c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
-                        + delivery_price.toFixed() + ' руб');
+                    switch (true) {
+                        case (result.inMondayThursdayZone && (delivery_date_week_day == 1 || delivery_date_week_day == 4)) :
+                            no_markup = true;
+                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                                + cost + ' руб. Без наценки в понедельник и четверг в этом регионе');
+                            break;
+                        case (result.inMondayThursdayZone && !(delivery_date_week_day == 1 || delivery_date_week_day == 4)) :
+                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                                + delivery_price.toFixed() + ' руб. Без наценки в понедельник и четверг в этом регионе');
+                            break;
+                        case (result.inTuesdayFridayZone && (delivery_date_week_day == 2 || delivery_date_week_day == 5)) :
+                            no_markup = true;
+                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                                + cost + ' руб. Без наценки во вторник и пятницу в этом регионе');
+                            break;
+                        case (result.inTuesdayFridayZone && !(delivery_date_week_day == 2 || delivery_date_week_day == 5)) :
+                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                                + delivery_price.toFixed() + ' руб. Без наценки во вторник и пятницу в этом регионе');
+                            break;
+                        case (result.inWednesdaySaturdayZone && (delivery_date_week_day == 3 || delivery_date_week_day == 6)) :
+                            no_markup = true;
+                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                                + cost + 'руб. Без наценки в среду и субботу в этом регионе');
+                            break;
+                        case (result.inWednesdaySaturdayZone && !(delivery_date_week_day == 3 || delivery_date_week_day == 6)) :
+                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                                + delivery_price.toFixed() + ' руб. Без наценки в среду и субботу в этом регионе');
+                            break;
+                        default :
+                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                                + delivery_price.toFixed() + ' руб');
+                    }
 
                     g = c.geometry.getCoordinates();
                     c.properties.set("balloonContent", "");
@@ -516,6 +622,48 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             zIndexActive: -999,
         });
 
+        wednesday_saturday_poly = new ymaps.Polygon([wednesday_saturday_points], {}, {
+            // цвет заливки.
+            fillColor: 'rgba(245, 20, 39, 0.15)',
+            // цвет обводки.
+            strokeColor: 'rgba(245,20,39,0.2)',
+            // Прозрачность.
+            opacity: 1,
+            // ширина обводки.
+            strokeWidth: 0.1,
+            zIndex: -999,
+            zIndexActive: -999,
+            cursor: 'none',
+        });
+
+        monday_thursday_poly = new ymaps.Polygon([monday_thursday_points], {}, {
+            // цвет заливки.
+            fillColor: 'rgba(154, 251, 0, 0.11)',
+            // цвет обводки.
+            strokeColor: 'rgba(154,251,0,0.22)',
+            // Прозрачность.
+            opacity: 1,
+            // ширина обводки.
+            strokeWidth: 0.1,
+            zIndex: -999,
+            zIndexActive: -999,
+            cursor: 'none',
+        });
+
+        tuesday_friday_poly = new ymaps.Polygon([tuesday_friday_points], {}, {
+            // цвет заливки.
+            fillColor: 'rgba(0, 195, 250, 0.11)',
+            // цвет обводки.
+            strokeColor: 'rgba(0,195,250,0.22)',
+            // Прозрачность.
+            opacity: 1,
+            // ширина обводки.
+            strokeWidth: 0.1,
+            zIndex: -999,
+            zIndexActive: -999,
+            cursor: 'none',
+        });
+
         balloon = new ymaps.Balloon(myMap, {
             closeButton: false
         });
@@ -525,6 +673,9 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
         myMap.geoObjects.add(collection);
 
         ymaps.geoQuery(mkad_poly).addToMap(myMap);
+        ymaps.geoQuery(wednesday_saturday_poly).addToMap(myMap);
+        ymaps.geoQuery(monday_thursday_poly).addToMap(myMap);
+        ymaps.geoQuery(tuesday_friday_poly).addToMap(myMap);
 
         let d = new ymaps.GeoObjectCollection({}),
             b = new ymaps.GeoObjectCollection({});
@@ -825,6 +976,100 @@ window.Osh.bxPopup = {
                 id: 'osh-map-action',
             },
             children: [
+                BX.create("DIV", {
+                   props: {
+                       className: 'osh-regions-container'
+                   },
+                    children: [
+                        BX.create('DIV', {
+                            props: {
+                                id: 'monday-thursday-block'
+                            },
+                            style: {
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: '5px'
+                            },
+                            children: [
+                                BX.create('DIV', {
+                                    props: {
+                                        id: 'monday-thursday-color'
+                                    },
+                                    style: {
+                                        width: '30px',
+                                        height: '30px',
+                                        marginRight: '15px',
+                                        backgroundColor: 'rgba(154, 251, 0, 0.22)'
+                                    }
+                                }),
+                                BX.create('DIV', {
+                                    props: {
+                                        id: 'monday-thursday-text'
+                                    },
+                                    text: '- Без наценки в понедельник и четверг'
+                                })
+                            ]
+                        }),
+                        BX.create('DIV', {
+                            props: {
+                                id: 'tuesday-friday-block'
+                            },
+                            style: {
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: '5px'
+                            },
+                            children: [
+                                BX.create('DIV', {
+                                    props: {
+                                        id: 'tuesday-friday-color'
+                                    },
+                                    style: {
+                                        width: '30px',
+                                        height: '30px',
+                                        marginRight: '15px',
+                                        backgroundColor: 'rgba(0, 195, 250, 0.22)'
+                                    }
+                                }),
+                                BX.create('DIV', {
+                                    props: {
+                                        id: 'tuesday-friday-text'
+                                    },
+                                    text: '- Без наценки во вторник и пятницу'
+                                })
+                            ]
+                        }),
+                        BX.create('DIV', {
+                            props: {
+                                id: 'wednesday-saturday-block'
+                            },
+                            style: {
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: '5px'
+                            },
+                            children: [
+                                BX.create('DIV', {
+                                    props: {
+                                        id: 'wednesday-saturday-color'
+                                    },
+                                    style: {
+                                        width: '30px',
+                                        height: '30px',
+                                        marginRight: '15px',
+                                        backgroundColor: 'rgba(245, 20, 39, 0.22)'
+                                    }
+                                }),
+                                BX.create('DIV', {
+                                    props: {
+                                        id: 'wednesday-saturday-text'
+                                    },
+                                    text: '- Без наценки в среду и субботу'
+                                })
+                            ]
+                        })
+                    ]
+                }),
                 BX.create("input", {
                     props: {
                         className: 'form-control',
@@ -851,12 +1096,14 @@ window.Osh.bxPopup = {
         this.instance = nodeOshOverlay;
     },
 
-    onPickerClick: function () {
+    onPickerClick: function (address_property_id = '', date_property_id = '', date_delivery = '') {
         this.init();
         document.body.style.overflow = "hidden";
         BX('osh_map_overlay').style.display = "flex";
-
         this.oshMkadDelivery = window.Osh.oshMkadDistance.getInstance();
+        this.oshMkadDelivery.address_property_id = address_property_id;
+        this.oshMkadDelivery.date_property_id = date_property_id;
+        this.oshMkadDelivery.date_delivery = date_delivery;
         this.oshMkadDelivery.show();
 
         return false;

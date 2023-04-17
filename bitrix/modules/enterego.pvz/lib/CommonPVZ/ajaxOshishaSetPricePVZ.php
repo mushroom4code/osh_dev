@@ -21,6 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == 'POST' && check_bitrix_sessid() && !empty($oReq
     $_SESSION['Osh']['delivery_address_info']['price'] = $oRequest->getPost('price');
     $_SESSION['Osh']['delivery_address_info']['delivery_id'] = $oRequest->getPost('delivery_id');
     $_SESSION['Osh']['delivery_address_info']['distance'] = $oRequest->getPost('distance');
+    $_SESSION['Osh']['delivery_address_info']['no_markup'] = $oRequest->getPost('no_markup');
 
     $arResult['success'] = true;
     $arResult['message'] = Loc::getMessage("ST_OSH_SELECT_PVZ_SUCCESS",array("#delivery_address#" => $oRequest->getPost('address')));

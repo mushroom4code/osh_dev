@@ -81,15 +81,20 @@ class OshishaDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         try {
-            $cost = $this->configs['cost'];
+            $cost = \HelperAllDeliveries::getOshishaCost();
             $startCost = \HelperAllDeliveries::getOshishaStartCost();
             $distance = ceil(($_SESSION['Osh']['delivery_address_info']['distance'] ?? 0) - 0.8);
+            $noMarkup = $_SESSION['Osh']['delivery_address_info']['no_markup'];
 
-            $limitBasket = 4000;
-            if (intval($params['shipment_cost']) >= $limitBasket) {
+            $limitBasket = \HelperAllDeliveries::getOshishaLimitBasket();
+            if (intval($params['shipment_cost']) >= $limitBasket && $noMarkup === 'false') {
                 $delivery_price = max($distance - 5, 0) * $cost;
             } else {
-                $delivery_price = $startCost + $distance * $cost;
+                if ($noMarkup === 'true') {
+                    $delivery_price = $startCost;
+                } else {
+                    $delivery_price = $startCost + $distance * $cost;
+                }
             }
             return $delivery_price;
         } catch(\Throwable $e) {

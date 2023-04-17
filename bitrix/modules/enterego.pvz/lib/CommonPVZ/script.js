@@ -274,7 +274,17 @@ BX.SaleCommonPVZ = {
                                             oshMkad.afterSave = function (address) {
                                                 __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
                                             }.bind(this);
-                                            window.Osh.bxPopup.onPickerClick(this)
+                                            window.Osh.bxPopup.onPickerClick(
+                                                (__this.propAddressId)
+                                                    ? __this.propAddressId
+                                                    : '',
+                                                (__this.propDateDelivery)
+                                                    ? __this.propDateDelivery
+                                                    : '',
+                                                (__this.propDateDelivery)
+                                                ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
+                                                : ''
+                                            );
                                         }, this)
                                     }
                                 });
@@ -282,6 +292,7 @@ BX.SaleCommonPVZ = {
                             propsNode.append(propContainer);
                         }
                     }
+                    if (__this.propAddressId) {
                     $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
                             onSelect: function (suggestion) {
                                 (__this.propZipId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propZipId + '"]').value = suggestion.data.postal_code) : '';
@@ -295,12 +306,23 @@ BX.SaleCommonPVZ = {
                                     if (__this.curDeliveryId == __this.doorDeliveryId) {
                                         __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
                                         oshMkad.afterSave = null;
-                                        oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon], true);
+                                        oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
+                                            (__this.propAddressId)
+                                                ? __this.propAddressId
+                                                : '',
+                                            (__this.propDateDelivery)
+                                                ? __this.propDateDelivery
+                                                : '',
+                                            (__this.propDateDelivery)
+                                                ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
+                                                : '',
+                                            true);
                                     }
                                 }
                                 BX.onCustomEvent('onDeliveryExtraServiceValueChange');
                             }
                         });
+                    }
                 } else {
                     if (__this.propDateDelivery) {
                         document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').setAttribute('disabled', '');

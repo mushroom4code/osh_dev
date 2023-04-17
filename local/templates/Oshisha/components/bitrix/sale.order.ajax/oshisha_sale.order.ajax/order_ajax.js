@@ -6132,31 +6132,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
         alterDateProperty: function (settings, inputText) {
             var parentNode = BX.findParent(inputText, {tagName: 'DIV'}),
-                appendNode;
-
-            BX.addClass(parentNode, 'input-group');
-            appendNode = BX.create('DIV', {
-                props: {className: 'input-group-append bx-no-alter-margin'},
-                html: '<span class="input-group-text"><i class="fa fa-calendar"></i></span>'
+                tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            inputText.setAttribute('class', 'datepicker_order form-control bx-soa-customer-input bx-ios-fix');
+            $(inputText).datepicker({
+                minDate: tomorrow,
             });
-            BX.insertAfter(appendNode, inputText);
-            BX.remove(parentNode.querySelector('input[type=button]'));
-
-            BX.bind(appendNode, 'click', BX.delegate(function (e) {
-                var target = e.target || e.srcElement,
-                    parentNode = BX.findParent(target, {tagName: 'DIV', className: 'input-group'});
-
-                BX.calendar({
-                    node: parentNode.querySelector('.input-group-append'),
-                    field: parentNode.querySelector('input[type=text]').name,
-                    form: '',
-                    bTime: settings.TIME === 'Y',
-                    bHideTime: false
-                });
-            }, this));
+             BX.remove(parentNode.querySelector('input[type=button]'));
         },
 
-        isValidForm: function () {
+    isValidForm: function () {
             if (!this.options.propertyValidation)
                 return true;
 
