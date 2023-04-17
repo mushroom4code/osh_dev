@@ -32,6 +32,7 @@ BX.SaleCommonPVZ = {
     shipmentCost: null,
     orderPackages: null,
     oshishaDeliveryOptions: null,
+    oshishaDeliveryStatus: null,
 
 
     init: function (params) {
@@ -52,6 +53,7 @@ BX.SaleCommonPVZ = {
         this.shipmentCost = params.params?.shipmentCost;
         this.orderPackages = params.params?.packages;
         this.oshishaDeliveryOptions = params.params?.deliveryOptions;
+        this.oshishaDeliveryStatus = params.params?.oshishaDeliveryStatus;
 
         this.refresh();
         this.isInit = true;
@@ -87,7 +89,7 @@ BX.SaleCommonPVZ = {
         const __this = this;
         if (this.propAddressId) {
             var addressField = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
-            if (this.oshishaDeliveryOptions.DA_DATA_TOKEN !== undefined && !addressField.hasClass('suggestions-input')) {
+            if (this.oshishaDeliveryOptions.DA_DATA_TOKEN && !addressField.hasClass('suggestions-input')) {
                 addressField.suggestions({
                     token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
                     type: "ADDRESS",
@@ -249,7 +251,7 @@ BX.SaleCommonPVZ = {
             onsuccess: function (res) {
                 __this.isMoscow = res;
                 if (__this.isMoscow == '1') {
-                    if (__this.curDeliveryId == __this.doorDeliveryId) {
+                    if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
                         if (__this.propDateDelivery) {
                             document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').removeAttribute('disabled');
                             document.querySelector('div[data-property-id-row="' + __this.propDateDelivery + '"]').classList.remove('d-none');
@@ -303,7 +305,7 @@ BX.SaleCommonPVZ = {
                                 (__this.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLatitudeId + '"]').value = suggestion.data.geo_lat) : '';
                                 (__this.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLongitudeId + '"]').value = suggestion.data.geo_lon) : '';
                                 if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                                    if (__this.curDeliveryId == __this.doorDeliveryId) {
+                                    if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
                                         __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
                                         oshMkad.afterSave = null;
                                         oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],

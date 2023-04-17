@@ -171,10 +171,10 @@ class DeliveryHelper
 
 
         $PeriodDelivery = [];
-        $start_json_day = Option::get('enterego.pvz', 'Oshisha_timeDeliveryStartDay');
-        $end_json_day = Option::get('enterego.pvz', 'Oshisha_timeDeliveryEndDay');
-        $start_json_night = Option::get('enterego.pvz', 'Oshisha_timeDeliveryStartNight');
-        $end_json_night = Option::get('enterego.pvz', 'Oshisha_timeDeliveryEndNight');
+        $start_json_day = Option::get(self::$MODULE_ID, 'Oshisha_timeDeliveryStartDay');
+        $end_json_day = Option::get(self::$MODULE_ID, 'Oshisha_timeDeliveryEndDay');
+        $start_json_night = Option::get(self::$MODULE_ID, 'Oshisha_timeDeliveryStartNight');
+        $end_json_night = Option::get(self::$MODULE_ID, 'Oshisha_timeDeliveryEndNight');
         $start_day = json_decode($start_json_day);
         $end_day = json_decode($end_json_day);
         $start_night = json_decode($start_json_night);
@@ -192,17 +192,20 @@ class DeliveryHelper
             }
         }
 
-
-
-        $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
         $params['deliveryOptions']['DA_DATA_TOKEN'] = \CommonPVZ\OshishaDelivery::getOshishaDaDataToken();
-        $params['deliveryOptions']['YA_API_KEY'] = \CommonPVZ\OshishaDelivery::getOshishaYMapsKey();
-        $params['deliveryOptions']['DELIVERY_COST'] = \CommonPVZ\OshishaDelivery::getOshishaCost();
-        $params['deliveryOptions']['START_COST'] = \CommonPVZ\OshishaDelivery::getOshishaStartCost();
-        $params['deliveryOptions']['LIMIT_BASKET'] = \CommonPVZ\OshishaDelivery::getOshishaLimitBasket();
-        $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
-        $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
+        if (\CommonPVZ\OshishaDelivery::getDeliveryStatus()['Oshisha'] === 'Y') {
+            $params['oshishaDeliveryStatus'] = true;
+            $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
+            $params['deliveryOptions']['YA_API_KEY'] = \CommonPVZ\OshishaDelivery::getOshishaYMapsKey();
+            $params['deliveryOptions']['DELIVERY_COST'] = \CommonPVZ\OshishaDelivery::getOshishaCost();
+            $params['deliveryOptions']['START_COST'] = \CommonPVZ\OshishaDelivery::getOshishaStartCost();
+            $params['deliveryOptions']['LIMIT_BASKET'] = \CommonPVZ\OshishaDelivery::getOshishaLimitBasket();
+            $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
+            $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
+        } else {
+            $params['oshishaDeliveryStatus'] = false;
+        }
         $propertyCollection = $order->getPropertyCollection();
         foreach ($propertyCollection as $orderProp)
         {
