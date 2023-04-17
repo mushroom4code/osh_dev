@@ -44,8 +44,7 @@ foreach($arResult["CATEGORIES"] as $category_id => $arCategory)
                     }
                 }
 
-                if (array_key_exists($arItem["PARAM2"], $arCatalogs))
-                {
+                if (array_key_exists($arItem["PARAM2"], $arCatalogs) || (int)$arItem["PARAM2"] == IBLOCK_CATALOG_OFFERS) {
                     $arResult["ELEMENTS"][$arItem["ITEM_ID"]] = $arItem["ITEM_ID"];
                 }
             }
@@ -92,6 +91,14 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
         "PREVIEW_TEXT",
         "PREVIEW_PICTURE",
         "DETAIL_PICTURE",
+	    "PRODUCT_ID",
+	    "PROPERTY_CML2_LINK_VALUE",
+	    "PROPERTY_GRAMMOVKA_G_VALUE",
+	    "PROPERTY_VKUS",
+	    "SHTUK_V_UPAKOVKE_VALUE",
+	    "KOLICHESTVO_ZATYAZHEK_VALUE",
+	    "ACTIVE",
+	    "USE_DISCOUNT_VALUE"
     );
     $arFilter = array(
         "IBLOCK_LID" => SITE_ID,
@@ -101,20 +108,27 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
         "CHECK_PERMISSIONS" => "Y",
         "MIN_PERMISSION" => "R",
     );
+
     foreach($arResult["PRICES"] as $value)
     {
         $arSelect[] = $value["SELECT"];
         $arFilter["CATALOG_SHOP_QUANTITY_".$value["ID"]] = 1;
     }
+
     $arFilter["=ID"] = $arResult["ELEMENTS"];
     $rsElements = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
     while($arElement = $rsElements->Fetch())
     {
-        $arElement["PRICES"] = CIBlockPriceTools::GetItemPrices($arElement["IBLOCK_ID"], $arResult["PRICES"], $arElement, $arParams['PRICE_VAT_INCLUDE'], $arConvertParams);
-        if($arParams["PREVIEW_TRUNCATE_LEN"] > 0)
-            $arElement["PREVIEW_TEXT"] = $obParser->html_cut($arElement["PREVIEW_TEXT"], $arParams["PREVIEW_TRUNCATE_LEN"]);
+	    if($arElement["ACTIVE"] === "Y") {
+		    $arElement["PRICES"] = CIBlockPriceTools::GetItemPrices($arElement["IBLOCK_ID"], $arResult["PRICES"],
+			    $arElement, $arParams['PRICE_VAT_INCLUDE'], $arConvertParams);
+		    if ($arParams["PREVIEW_TRUNCATE_LEN"] > 0) {
+			    $arElement["PREVIEW_TEXT"] = $obParser->html_cut($arElement["PREVIEW_TEXT"],
+				    $arParams["PREVIEW_TRUNCATE_LEN"]);
+		    }
 
-        $arResult["ELEMENTS"][$arElement["ID"]] = $arElement;
+		    $arResult["ELEMENTS"][$arElement["ID"]] = $arElement;
+	    }
     }
 }
 
@@ -139,6 +153,56 @@ foreach($arResult["SEARCH"] as $i=>$arItem)
     }
 
     $arResult["SEARCH"][$i]["ICON"] = true;
+}
+
+foreach ($arResult['ELEMENTS'] as $product_id => $product) {
+	$db_props = CIBlockElement::GetProperty($product['IBLOCK_ID'], $product['ID'], array("sort" => "asc"), Array("CODE"=>"USE_DISCOUNT"));
+	if($ar_props = $db_props->Fetch()) {
+		$arResult['ELEMENTS'][$product_id]['USE_DISCOUNT'] = $ar_props['VALUE_ENUM'];
+	}
+}
+
+$arBasketItems = array();
+$dbBasketItems = CSaleBasket::GetList(
+	array("NAME" => "ASC", "ID" => "ASC"),
+	array("FUSER_ID" => CSaleBasket::GetBasketUserID(), "LID" => SITE_ID, "ORDER_ID" => "NULL"),
+	false,
+	false,
+	array("ID", "PRODUCT_ID", "QUANTITY",)
+);
+
+while ($arItems = $dbBasketItems->Fetch()) {
+	$arBasketItems[$arItems["PRODUCT_ID"]] = $arItems["QUANTITY"];
+}
+
+foreach ($arBasketItems as $key => $val) {
+	if ($key == $arResult['ELEMENTS'][$key]['ID']) {
+		$arResult['ELEMENTS'][$key]['BASKET_QUANTITY'] = $val;
+	}
+}
+
+foreach($arResult["ELEMENTS"] as $searchItem) {
+	$uniqueId = $this->GetEditAreaId($searchItem["ID"]);
+	$arResult['ELEMENTS'][$searchItem['ID']]['BUY_LINK'] = $uniqueId.'_buy_link';
+	$arResult['ELEMENTS'][$searchItem['ID']]['QUANTITY_DOWN_ID'] = $uniqueId.'_quant_down';
+	$arResult['ELEMENTS'][$searchItem['ID']]['QUANTITY_UP_ID'] = $uniqueId.'_quant_up';
+	$arResult['ELEMENTS'][$searchItem['ID']]['QUANTITY_ID'] = $uniqueId.'_quantity';
+	$arResult['ELEMENTS'][$searchItem['ID']]['PRICE_ID'] = $uniqueId.'_price';
+	if (empty($searchItem['BASKET_QUANTITY'])) {
+		$arResult['ELEMENTS'][$searchItem['ID']]['BASKET_QUANTITY'] = 0;
+	}
+}
+
+$dbStatistic = CSearchStatistic::GetList(
+	array("TIMESTAMP_X"=>'DESC'),
+	array("STAT_SESS_ID" => $_SESSION['SESS_SESSION_ID']),
+	array('TIMESTAMP_X', 'PHRASE')
+);
+$dbStatistic->NavStart(3);
+$arResult['popularSearches'] = [];
+$component = $this->getComponent();
+while( $arStatistic = $dbStatistic->Fetch()){
+	$arResult['popularSearches'][] = $arStatistic;
 }
 
 ?>

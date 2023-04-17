@@ -3,58 +3,6 @@ if (empty($arResult["CATEGORIES"]))
     return;
 ?>
 <div tabindex="0" id="search_results_container" class="bx_searche">
-    <?
-    foreach ($arResult['ELEMENTS'] as $product_id => $product) {
-        $db_props = CIBlockElement::GetProperty($product['IBLOCK_ID'], $product['ID'], array("sort" => "asc"), Array("CODE"=>"USE_DISCOUNT"));
-        if($ar_props = $db_props->Fetch()) {
-            $arResult['ELEMENTS'][$product_id]['USE_DISCOUNT'] = $ar_props['VALUE_ENUM'];
-        }
-    }
-    $dbStatistic = CSearchStatistic::GetList(
-            array("TIMESTAMP_X"=>'DESC'),
-            array("STAT_SESS_ID" => $_SESSION['SESS_SESSION_ID']),
-            array('TIMESTAMP_X', 'PHRASE')
-    );
-    $dbStatistic->NavStart(3);
-    $popularSearches = [];
-    $component = $this->getComponent();
-    while( $arStatistic = $dbStatistic->Fetch()){
-        $popularSearches[] = $arStatistic;
-    }
-
-    $arBasketItems = array();
-    $dbBasketItems = CSaleBasket::GetList(
-        array("NAME" => "ASC", "ID" => "ASC"),
-        array("FUSER_ID" => CSaleBasket::GetBasketUserID(), "LID" => SITE_ID, "ORDER_ID" => "NULL"),
-        false,
-        false,
-        array("ID", "PRODUCT_ID", "QUANTITY",)
-    );
-    while ($arItems = $dbBasketItems->Fetch()) {
-        $arBasketItems[$arItems["PRODUCT_ID"]] = $arItems["QUANTITY"];
-    }
-    foreach ($arBasketItems as $key => $val) {
-        if ($key == $arResult['ELEMENTS'][$key]['ID']) {
-            $arResult['ELEMENTS'][$key]['BASKET_QUANTITY'] = $val;
-        }
-    }
-
-    $searchElementsIds = [];
-    $uniqueIds = [];
-    $searchElements = [];
-    foreach($arResult["ELEMENTS"] as $searchItem) {
-        $uniqueId = $this->GetEditAreaId($searchItem["ID"]);
-        $arResult['ELEMENTS'][$searchItem['ID']]['BUY_LINK'] = $uniqueId.'_buy_link';
-        $arResult['ELEMENTS'][$searchItem['ID']]['QUANTITY_DOWN_ID'] = $uniqueId.'_quant_down';
-        $arResult['ELEMENTS'][$searchItem['ID']]['QUANTITY_UP_ID'] = $uniqueId.'_quant_up';
-        $arResult['ELEMENTS'][$searchItem['ID']]['QUANTITY_ID'] = $uniqueId.'_quantity';
-        $arResult['ELEMENTS'][$searchItem['ID']]['PRICE_ID'] = $uniqueId.'_price';
-        if (empty($searchItem['BASKET_QUANTITY'])) {
-            $arResult['ELEMENTS'][$searchItem['ID']]['BASKET_QUANTITY'] = 0;
-        }
-    }
-
-?>
     <?foreach($arResult["CATEGORIES"] as $category_id => $arCategory):?>
         <?foreach($arCategory["ITEMS"] as $i => $arItem):?>
             <?if($category_id === "all"):?>
@@ -182,11 +130,11 @@ if (empty($arResult["CATEGORIES"]))
             <?endif;?>
         <?endforeach;?>
     <?endforeach;?>
-    <?if(!empty($popularSearches)):?>
+    <?if(!empty($arResult['popularSearches'])):?>
         <div class="bx_item_block popular_searches_title" onclick="">
             <span>Популярные запросы</span>
         </div>
-        <?foreach ($popularSearches as $popularSearch):?>
+        <?foreach ($arResult['popularSearches'] as $popularSearch):?>
             <div class="bx_item_block popular_searches_result" onclick="popularSearchResultSubmit(this)">
                 <div class="bx_item_element"
                      onclick="window.location='<?echo $arResult["FORM_ACTION"].'?q='.$popularSearch["PHRASE"]?>';"
