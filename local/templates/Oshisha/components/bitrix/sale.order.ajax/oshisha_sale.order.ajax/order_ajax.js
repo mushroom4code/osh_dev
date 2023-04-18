@@ -5640,7 +5640,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 || property.getSettings().CODE === 'FIAS' || property.getSettings().CODE === 'KLADR'
                 || property.getSettings().CODE === 'ZIP' || property.getSettings().CODE === 'LATITUDE'
                 || property.getSettings().CODE === 'LONGITUDE' || property.getSettings().CODE === 'STREET_KLADR'
-                || property.getSettings().CODE === 'DATE_DELIVERY' || property.getSettings().CODE === 'DELIVERYTIME_INTERVAL') {
+                || property.getSettings().CODE === 'DATE_DELIVERY' || property.getSettings().CODE === 'DELIVERYTIME_INTERVAL'
+                || property.getSettings().CODE === 'COMMON_PVZ' || property.getSettings().CODE === 'TYPE_DELIVERY') {
                 className += " d-none";
                 if (property.getSettings().CODE === 'DELIVERYTIME_INTERVAL' || property.getSettings().CODE === 'DATE_DELIVERY')
                     className += " col-12";
