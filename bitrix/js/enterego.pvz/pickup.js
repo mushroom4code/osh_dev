@@ -563,33 +563,33 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                     switch (true) {
                         case (result.inMondayThursdayZone && (delivery_date_week_day == 1 || delivery_date_week_day == 4)) :
                             no_markup = true;
-                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                            c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + cost + ' руб. Без наценки в понедельник и четверг в этом регионе');
                             break;
                         case (result.inMondayThursdayZone && !(delivery_date_week_day == 1 || delivery_date_week_day == 4)) :
-                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                            c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + delivery_price.toFixed() + ' руб. Без наценки в понедельник и четверг в этом регионе');
                             break;
                         case (result.inTuesdayFridayZone && (delivery_date_week_day == 2 || delivery_date_week_day == 5)) :
                             no_markup = true;
-                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                            c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + cost + ' руб. Без наценки во вторник и пятницу в этом регионе');
                             break;
                         case (result.inTuesdayFridayZone && !(delivery_date_week_day == 2 || delivery_date_week_day == 5)) :
-                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                            c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + delivery_price.toFixed() + ' руб. Без наценки во вторник и пятницу в этом регионе');
                             break;
                         case (result.inWednesdaySaturdayZone && (delivery_date_week_day == 3 || delivery_date_week_day == 6)) :
                             no_markup = true;
-                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                            c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + cost + 'руб. Без наценки в среду и субботу в этом регионе');
                             break;
                         case (result.inWednesdaySaturdayZone && !(delivery_date_week_day == 3 || delivery_date_week_day == 6)) :
-                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                            c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + delivery_price.toFixed() + ' руб. Без наценки в среду и субботу в этом регионе');
                             break;
                         default :
-                            c.properties.set("iconContent", '' + distKm.toFixed(1) + ' км, '
+                            c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + delivery_price.toFixed() + ' руб');
                     }
 
