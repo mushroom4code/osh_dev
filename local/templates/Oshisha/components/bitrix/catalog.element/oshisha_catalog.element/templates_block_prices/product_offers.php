@@ -120,7 +120,7 @@ $mainBlockProperties = array_intersect_key($arResult['DISPLAY_PROPERTIES'], $arP
 $showPropsBlock = !empty($mainBlockProperties) || $arResult['SHOW_OFFERS_PROPS'];
 $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 <div
-	class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column product_right catalog-item-product justify-content-between">
+	class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column product_right not-input-parse catalog-item-product justify-content-between">
 	<h1 class="head-title"><?= $name ?></h1>
 	<?php if ($isGift) { ?>
 		<div>
@@ -272,6 +272,8 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											<a class="btn-minus  minus_icon no-select add2basket offers"
 											   href="javascript:void(0)"
 											   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+											   data-max_quantity="<?= $prod_off_quantity ?>"
+											   data-max-quantity="<?= $prod_off_quantity ?>"
 											   data-product_id="<?= $prod_off_id; ?>">
 											</a>
 											<div class="product-item-amount-field-block">

@@ -529,7 +529,7 @@ $(document).ready(function () {
             let offer = $(this).hasClass('offers');
             let boxUpdateAfterAppend = $(this).closest('.catalog-item-product');
             let parseUpdate, boxUpdate;
-            let productDef = $(this).closest('.catalog-item-product').hasClass('product_right');
+            let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
 
             if (!boxUpdateAfterAppend.hasClass('open-modal-product')) {
                 if (!productDef) {
