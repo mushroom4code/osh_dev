@@ -234,7 +234,8 @@ if ($useDefaultMessages || !isset($arParams['MESS_PAY_SYSTEM_PAYABLE_ERROR'])) {
     $arParams['MESS_PAY_SYSTEM_PAYABLE_ERROR'] = Loc::getMessage('PAY_SYSTEM_PAYABLE_ERROR_DEFAULT');
 }
 
-$scheme = $request->isHttps() ? 'https' : 'http';
+//$scheme = $request->isHttps() ? 'https' : 'http';
+$scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
 
 switch (LANGUAGE_ID) {
     case 'ru':
