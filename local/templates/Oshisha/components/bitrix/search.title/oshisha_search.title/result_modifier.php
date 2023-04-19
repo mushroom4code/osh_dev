@@ -107,7 +107,6 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 	$arFilter = $arFilterOffer = array(
 		"IBLOCK_LID" => SITE_ID,
 		"IBLOCK_ACTIVE" => "Y",
-		"ACTIVE_DATE" => "Y",
 		"ACTIVE" => "Y",
 		"CHECK_PERMISSIONS" => "Y",
 		"MIN_PERMISSION" => "R",
@@ -120,34 +119,8 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 		$arFilterOffer["CATALOG_SHOP_QUANTITY_" . $value["ID"]] = 1;
 	}
 
-//	OFFERS
-	if (!empty($arResult["ELEMENTS"]['OFFERS'])) {
-		$arFilterOffer['IBLOCK_ID'] = IBLOCK_CATALOG_OFFERS;
-		$arFilterOffer["=ID"] = (array)array_keys($arResult["ELEMENTS"]['OFFERS']);
-		$rsElementsOffers = CIBlockElement::GetList(array(), $arFilterOffer, false, false, $arSelectOffers);
 
-		while ($arElement = $rsElementsOffers->Fetch()) {
-			if ($arElement["ACTIVE"] === "Y") {
-				$arElement["PRICES"] = CIBlockPriceTools::GetItemPrices(
-					$arElement["IBLOCK_ID"],
-					$arResult["PRICES"],
-					$arElement,
-					$arParams['PRICE_VAT_INCLUDE'],
-					$arConvertParams);
-
-				$arElement["PICTURE"] = CFile::ResizeImageGet(
-					$arElement["PREVIEW_PICTURE"],
-					array("width" => $PREVIEW_WIDTH, "height" => $PREVIEW_HEIGHT),
-					BX_RESIZE_IMAGE_PROPORTIONAL,
-					true)['src'];
-
-
-				$arResult["ELEMENTS"]['PRODUCT'][$arElement['PROPERTY_CML2_LINK_VALUE']]['OFFERS'][$arElement["ID"]] = $arElement;
-				unset($arResult["ELEMENTS"]['OFFERS'][$arElement["ID"]]);
-			}
-		}
-	}
-//  PRODUCT PARENT OFFERS && PRODUCT
+	//  PRODUCT PARENT OFFERS && PRODUCT
 	$arFilter["=ID"] = (array)array_keys($arResult["ELEMENTS"]['PRODUCT']);
 	$arFilter["IBLOCK_ID"] = IBLOCK_CATALOG;
 	$rsElements = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
@@ -172,6 +145,79 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 			$arProduct['USE_DISCOUNT'] = $discount['VALUE_ENUM'];
 
 			$arResult["ELEMENTS"]['PRODUCT'][$arProduct["ID"]]['INFO'] = $arProduct;
+
+//			get offers all
+			$offersIds = CCatalogSKU::getOffersList(
+				$arProduct["ID"],
+				0,
+				["ACTIVE"=>"Y"],
+				['ID'],
+				[]
+			);
+
+			foreach ($offersIds[$arProduct["ID"]] as $key => $item){
+				if(!isset($arResult["ELEMENTS"]['OFFERS'][$key])){
+					$arResult["ELEMENTS"]['OFFERS'][$key] = $item;
+				}
+			}
+		}
+	}
+//	OFFERS
+	if (!empty($arResult["ELEMENTS"]['OFFERS'])) {
+		$propTaste = [];
+		$arFilterOffer['IBLOCK_ID'] = IBLOCK_CATALOG_OFFERS;
+		$arFilterOffer["=ID"] = (array)array_keys($arResult["ELEMENTS"]['OFFERS']);
+		$rsElementsOffers = CIBlockElement::GetList(array(), $arFilterOffer, false, false, $arSelectOffers);
+		$properties = CIBlockProperty::GetPropertyEnum('VKUS',[], [
+			"IBLOCK_ID" => $arFilterOffer['IBLOCK_ID'],]);
+		while ($prop_fields = $properties->Fetch()) {
+			$propTaste[$prop_fields['ID']]['name'] = $prop_fields["VALUE"];
+			$propTaste[$prop_fields['ID']]['color'] = '#' . explode('#', $prop_fields["XML_ID"])[1];
+		}
+		while ($arElement = $rsElementsOffers->Fetch()) {
+			if ($arElement["ACTIVE"] === "Y") {
+
+				$arElement["PRICES"] = CIBlockPriceTools::GetItemPrices(
+					$arElement["IBLOCK_ID"],
+					$arResult["PRICES"],
+					$arElement,
+					$arParams['PRICE_VAT_INCLUDE'],
+					$arConvertParams);
+
+				// Get image
+				$arElement["PICTURE"] = CFile::ResizeImageGet(
+					$arElement["PREVIEW_PICTURE"],
+					array("width" => $PREVIEW_WIDTH, "height" => $PREVIEW_HEIGHT),
+					BX_RESIZE_IMAGE_PROPORTIONAL,
+					true)['src'];
+
+				// Get prop active for offer TODO offer props static
+				if (!empty($arElement['PROPERTY_GRAMMOVKA_G_VALUE'])) {
+					$arElement['PROPERTIES']['CODE'] = 'GRAMMOVKA_G';
+					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_GRAMMOVKA_G_VALUE'].' гр.';
+				} else if(!empty($arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'])) {
+					$arElement['PROPERTIES']['CODE'] = 'SHTUK_V_UPAKOVKE';
+					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'].'шт.';
+				} else if(!empty($arElement['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'])) {
+					$arElement['PROPERTIES']['CODE'] = 'KOLICHESTVO_ZATYAZHEK';
+					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'];
+				} else if(!empty($arElement['PROPERTY_TSVET_VALUE'])) {
+					$arElement['PROPERTIES']['CODE'] = 'TSVET';
+					$arElement['PROPERTIES']['VALUE'] = $arElement["PICTURE"];
+				} else if(!empty($arElement['PROPERTY_VKUS_VALUE'])) {
+					$arElement['PROPERTIES']['CODE'] = 'VKUS';
+					foreach ((array)$arElement['PROPERTY_VKUS_VALUE'] as $id => $tasteName) {
+						$arElement['PROPERTIES']['VALUE'][$id] = [
+							'color' => $propTaste[$id]['color'],
+							'name' => $propTaste[$id]['name']
+						];
+					}
+				}
+
+
+				$arResult["ELEMENTS"]['PRODUCT'][$arElement['PROPERTY_CML2_LINK_VALUE']]['OFFERS'][$arElement["ID"]] = $arElement;
+				unset($arResult["ELEMENTS"]['OFFERS'][$arElement["ID"]]);
+			}
 		}
 	}
 
@@ -186,14 +232,9 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 	);
 
 	while ($arItems = $dbBasketItems->Fetch()) {
-		$arBasketItems[$arItems["PRODUCT_ID"]] = $arItems["QUANTITY"];
+		$arResult['BASKET_ITEMS'][$arItems["PRODUCT_ID"]] = $arItems["QUANTITY"];
 	}
 
-	foreach ($arBasketItems as $key => $val) {
-		if ($key == $arResult['ELEMENTS']['PRODUCT'][$key]['ID']) {
-			$arResult['ELEMENTS']['PRODUCT'][$key]['INFO']['BASKET_QUANTITY'] = $val;
-		}
-	}
 
 	foreach ($arResult["ELEMENTS"]['PRODUCT'] as $searchItem) {
 		$uniqueId = $this->GetEditAreaId($searchItem["ID"]);

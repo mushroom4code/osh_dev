@@ -15,14 +15,7 @@
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	<?php
-	$textButton = 'Забронировать';
-	$classButton = 'btn_basket';
-	if ($arElement['BASKET_QUANTITY'] > 0) {
-		$textButton = 'Забронировано';
-		$classButton = 'addProductDetailButton';
-	}
-	?>
+	<?php $basketQuantity = $arResult['BASKET_ITEMS'][$arElement['ID']] ?? 0; ?>
 	<div id="search_item_<? echo $arElement['ID'] ?>" class="bx_item_block_detail" style="display: none"
 	     tabindex="0">
 		<div class="d-flex flex-column prices-block">
@@ -74,7 +67,7 @@
 					<div class="product-item-amount-field-block">
 						<input class="product-item-amount card_element cat-det"
 						       id="<?= $arElement['QUANTITY_ID'] ?>"
-						       type="number" value="<?= $arElement['BASKET_QUANTITY'] ?>"
+						       type="number" value="<?= $basketQuantity ?>"
 						       data-url="<?= $arItem['URL'] ?>"
 						       data-product_id="<?= $arElement['ID']; ?>"
 						       data-max-quantity="<?= $arElement['QUANTITY'] ?>"/>

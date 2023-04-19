@@ -1,5 +1,13 @@
-<?php if (!empty($arItem) && !empty($itemOffers)) ?>
-<div class="catalog-item-product">
+<?php if (!empty($arItem) && !empty($itemOffers)) {
+	$active = null;
+	foreach ($itemOffers as $offer){
+		if($active === null){
+			$active = $offer['ID'];
+		}
+	}
+	$offerActive = $itemOffers[$active];
+ ?>
+<div class="catalog-item-product not-input-parse">
 	<div class="bx_item_block" onclick="window.location='<?= $arItem["URL"] ?>';">
 		<? if (!empty($arElement["PICTURE"])): ?>
 			<div class="bx_img_element">
@@ -15,179 +23,170 @@
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	<?php
-	$textButton = 'Забронировать';
-	$classButton = 'btn_basket';
-	if ($arElement['BASKET_QUANTITY'] > 0) {
-		$textButton = 'Забронировано';
-		$classButton = 'addProductDetailButton';
-	}
-	?>
-	<div id="search_item_<? echo $arElement['ID'] ?>" class="bx_item_block_detail " style="display: none"
+	<?php $backerDef = $arResult['BASKET_ITEMS'][$offerActive['ID']] ?? 0; ?>
+	<div id="search_item_<? echo $arElement['ID'] ?>" class="bx_item_block_detail prices-all" style="display: none"
 	     tabindex="0">
-		<div class="d-flex flex-column prices-block">
-			<p>
-				<span class="font-14 mr-2">Розничная (до 10к)</span> -
-				<span
-					class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
-                                <?= $arElement['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?></span>
-			</p>
-			<p>
-				<span class="font-14 mr-2">Основная (до 30к)</span> -
-				<span
-					class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
-                                <?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?></span>
-			</p>
-			<p>
-				<span class="font-14 mr-2">b2b (от 30к)</span> -
-				<span
-					class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
-                                <?= $arElement['PRICES']['b2b']['PRINT_VALUE_VAT'] ?></span>
-			</p>
-		</div>
-		<div class="old_and_current_prices_block">
-			<div style="<?= ($arElement['USE_DISCOUNT'] == 'Нет') ? 'display: none' : '' ?>"
-			     class="product-item-detail-price-current"
-			     id="<?= $arElement['PRICE_ID'] ?>">
-				<?= ($arElement['USE_DISCOUNT'] == 'Да') ?
-					$arElement['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] :
-					$arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>
-			</div>
-			<? if ($arElement['USE_DISCOUNT'] == 'Да'): ?>
-				<span
-					class="span">Старая цена <?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?></span>
-			<? endif; ?>
-		</div>
-		<? if ($arElement['CATALOG_QUANTITY'] > 0): ?>
-			<div
-				class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
-				<?= (!$arElement['PRICES']['Основная']['CAN_BUY'] ? ' style="display: none;"' : '') ?>
-				data-entity="quantity-block">
-				<div class="product-item-amount-field-contain">
-                    <span class="btn-minus no-select minus_icon add2basket basket_prod_detail offers"
-                          data-url="<?= $arItem['URL'] ?>"
-                          data-product_id="<?= $arElement['ID']; ?>"
-                          id="<?= $arElement['QUANTITY_DOWN_ID'] ?>"
-                          data-max_quantity="<?= $prod_off_quantity ?>"
-                          data-max-quantity="<?= $prod_off_quantity ?>"
-                          tabindex="0">
-                    </span>
-					<div class="product-item-amount-field-block">
-						<input class="product-item-amount card_element cat-det offers"
-						       id="<?= $arElement['QUANTITY_ID'] ?>"
-						       type="number" value="<?= $arElement['BASKET_QUANTITY'] ?>"
-						       data-url="<?= $arItem['URL'] ?>"
-						       data-product_id="<?= $arElement['ID']; ?>"
-						       data-max-quantity="<?= $arElement['CATAlOG_QUANTITY'] ?>"/>
-					</div>
-					<span class="btn-plus no-select plus_icon add2basket basket_prod_detail offers"
-					      data-url="<?= $arItem['URL'] ?>"
-					      data-max_quantity="<?= $prod_off_quantity ?>"
-					      data-max-quantity="<?= $prod_off_quantity ?>"
-					      data-product_id="<?= $arElement['ID']; ?>"
-					      id="<?= $arElement['QUANTITY_UP_ID'] ?>" tabindex="0">
-					</span>
-				</div>
-				<div id="result_box"></div>
-				<div id="popup_mess"></div>
-			</div>
-		<? else: ?>
-			<div class="mb-4 d-flex justify-content-between align-items-center">
-				<div class="not_product detail_popup">Нет в наличии</div>
-			</div>
-		<? endif; ?>
-		<div class="d-flex flex-wrap flex-row mb-2 justify-content-end box-offers-auto">
-			<?php foreach ($itemOffers as $offer) {
+			<div class="d-flex flex-wrap flex-row mb-2 justify-content-end box-offers-auto">
+			<?php foreach ($itemOffers as $keyItem => $offer) {
 				if ((int)$offer['CATALOG_QUANTITY'] > 0) {
-
+					$basketQuantity = $arResult['BASKET_ITEMS'][$offer['ID']] ?? 0;
 					$taste = [];
 					$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
-					if (!empty($offer['PROPERTY_GRAMMOVKA_G_VALUE'])
-						|| !empty($offer['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'])
-						|| !empty($offer['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'])) {
-						if (!empty($offer['PROPERTY_GRAMMOVKA_G_VALUE'])) {
-							$prop_value = $offer['PROPERTY_GRAMMOVKA_G_VALUE'];
-						} else {
-							if (!empty($offer['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'])) {
-								$prop_value = $offer['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'];
-							} else {
-								if (!empty($offer['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'])) {
-									$prop_value = $offer['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'];
-								}
-							}
-						} ?>
-						<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
-						     title="<?= $offer['NAME'] ?>"
-						     data-active="<?= $active_box ?>"
-						     data-product_id="<?= $offer['ID'] ?>"
-						     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-						     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-						     data-basket-quantity="<?= 0 ?>"
-						     data-basket_quantity="<?= 0 ?>"
-						     data-price_base="<?= $offer['PRICE'][1]['PRICE'] ?>"
-						     data-sale_price="<?= 0 ?>"
-						     data-sale_base="<?= $offer['PRICE'][3]['PRICE'] ?>"
-						     data-sale="<?= 0 ?>"
-						     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-						     data-onevalue="<?= $offer['ID'] ?>">
-							<?= $prop_value ?? '0' ?>
-						</div>
-					<?php } elseif (!empty($offer['PROPERTY_TSVET_VALUE'])) { ?>
-						<div title="<?= $offer['NAME'] ?>"
-						     data-active="<?= $active_box ?>"
-						     data-product_id="<?= $offer['ID'] ?>"
-						     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-						     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-						     data-basket-quantity="<?= $basketItem ?>"
-						     data-basket_quantity="<?= $basketItem ?>"
-						     data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
-						     data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
-						     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
-						     data-sale="<?= $sale ?>"
-						     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-						     data-onevalue="<?= $offer['ID'] ?>"
-						     class="mr-1 offer-box color-hookah br-10 mb-1">
-							<img src="<?= $offer['PICTURE'] ?>"
-							     class="br-10"
-							     width="50"
-							     height="50"
-							     alt="<?= $offer['NAME'] ?>"
-							     loading="lazy"/>
-						</div>
-					<?php } elseif (!empty($offer['PROPERTY_VKUS_VALUE'])) { ?>
-						<div
-							class="red_button_cart display-flex flex-row p-1 variation_taste
+					if (!empty($offer['PROPERTIES']) && !empty($offer['PROPERTIES']['VALUE'])) {
+						$typeProp = '';
+						$prop = $offer['PROPERTIES'];
+						$prop_value = $prop['VALUE'];
+						$typeProp = $prop['CODE'];
+						$active_box = 'false';
+
+						if ($keyItem == $active) {
+							$active_box = 'true';
+						}
+
+						if ($typeProp === 'GRAMMOVKA_G' || $typeProp === 'SHTUK_V_UPAKOVKE'
+							|| $typeProp === 'KOLICHESTVO_ZATYAZHEK') { ?>
+							<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
+							     title="<?= $offer['NAME'] ?>"
+							     data-active="<?= $active_box ?>"
+							     data-product_id="<?= $offer['ID'] ?>"
+							     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+							     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+							     data-basket-quantity="<?= $basketQuantity ?>"
+							     data-basket_quantity="<?= $basketQuantity ?>"
+							     data-price_base="<?= $offer['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>"
+							     data-sale_price="<?= $offer['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] ?>"
+							     data-sale_base="<?= $offer['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?>"
+							     data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
+							     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+							     data-onevalue="<?= $offer['ID'] ?>">
+								<?= $prop_value ?? '0' ?>
+							</div>
+						<?php } elseif ($typeProp === 'TSVET') { ?>
+							<div title="<?= $offer['NAME'] ?>"
+							     data-active="<?= $active_box ?>"
+							     data-product_id="<?= $offer['ID'] ?>"
+							     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+							     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+							     data-basket-quantity="<?= $basketQuantity ?>"
+							     data-basket_quantity="<?= $basketQuantity ?>"
+							     data-price_base="<?= $offer['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>"
+							     data-sale_price="<?= $offer['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] ?>"
+							     data-sale_base="<?= $offer['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?>"
+							     data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
+							     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+							     data-onevalue="<?= $offer['ID'] ?>"
+							     class="mr-1 offer-box color-hookah br-10 mb-1">
+								<img src="<?= $prop_value ?>"
+								     class="br-10"
+								     width="50"
+								     height="50"
+								     alt="<?= $offer['NAME'] ?>"
+								     loading="lazy"/>
+							</div>
+						<?php } elseif ($typeProp === 'VKUS') { ?>
+							<div
+								class="red_button_cart display-flex flex-row p-1 variation_taste
 										 taste font-14 width-fit-content mb-1 mr-1 offer-box cursor-pointer"
-							title="<?= $offer['NAME'] ?>"
-							data-active="<?= $active_box ?>"
-							data-product_id="<?= $offer['ID'] ?>"
-							data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-							data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-							data-basket-quantity="<?= $basketItem ?>"
-							data-basket_quantity="<?= $basketItem ?>"
-							data-price_base=data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
-							data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
-							data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
-							data-sale="<?= $sale ?>"
-							data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-							data-onevalue="<?= $offer['ID'] ?>">
+								title="<?= $offer['NAME'] ?>"
+								data-active="<?= $active_box ?>"
+								data-product_id="<?= $offer['ID'] ?>"
+								data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+								data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+								data-basket-quantity="<?= $basketQuantity ?>"
+								data-basket_quantity="<?= $basketQuantity ?>"
+								data-price_base="<?= $offer['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>"
+								data-sale_price="<?= $offer['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] ?>"
+								data-sale_base="<?= $offer['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?>"
+								data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
+								data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+								data-onevalue="<?= $offer['ID'] ?>">
+								<?php foreach ($prop_value as $elem_taste) { ?>
+									<span class="taste mb-0"
+									      data-background="<?= $elem_taste['color'] ?>"
+									      style="background-color: <?= $elem_taste['color'] ?>;
+										      border-color: <?= $elem_taste['color'] ?>;
+										      font-size: 13px;">
+									<?= $elem_taste['name'] ?>
+									</span>
+								<?php } ?>
+							</div>
 							<?php
-							foreach ($offer['PROPERTY_VKUS_VALUE'] as $elem_taste) { ?>
-								<span class="taste mb-0"
-								      data-background="<?= $elem_taste['color'] ?>"
-								      style="background-color: <?= $elem_taste['color'] ?>;
-									      border-color:<?= $elem_taste['color'] ?>;
-									      padding: 4px 8px;
-									      color:black;
-									      line-height: 1.5;
-									      display: block"><?= $elem_taste ?></span>
-							<?php } ?>
-						</div>
-						<?php
+						}
 					}
 				}
 			} ?>
 		</div>
+				<div class="d-flex flex-column prices-block box-prices" data-offer_id="<?= $offerActive['ID'] ?>">
+					<p>
+						<span class="font-14 mr-2">Розничная (до 10к)</span> -
+						<span
+							class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
+                                <?= $offerActive['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?></span>
+					</p>
+					<p>
+						<span class="font-14 mr-2">Основная (до 30к)</span> -
+						<span
+							class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
+                                <?= $offerActive['PRICES']['Основная']['PRINT_VALUE_VAT'] ?></span>
+					</p>
+					<p>
+						<span class="font-14 mr-2">b2b (от 30к)</span> -
+						<span
+							class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
+                                <?= $offerActive['PRICES']['b2b']['PRINT_VALUE_VAT'] ?></span>
+					</p>
+				</div>
+				<div class="old_and_current_prices_block">
+					<div style="<?= ($arElement['USE_DISCOUNT'] == 'Нет') ? 'display: none' : '' ?>"
+					     class="product-item-detail-price-current"
+					     id="<?= $arElement['PRICE_ID'] ?>">
+						<?= ($arElement['USE_DISCOUNT'] == 'Да') ?
+							$offerActive['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] :
+							$offerActive['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>
+					</div>
+					<? if ($arElement['USE_DISCOUNT'] == 'Да'): ?>
+						<span
+							class="span">Старая цена <?= $offerActive['PRICES']['Основная']['PRINT_VALUE_VAT'] ?></span>
+					<? endif; ?>
+				</div>
+				<? if ($arElement['ACTIVE'] === 'Y') : ?>
+					<div
+						class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
+						<?= (!$offerActive['PRICES']['Основная']['CAN_BUY'] ? ' style="display: none;"' : '') ?>
+						data-entity="quantity-block">
+						<div class="product-item-amount-field-contain">
+                    <span class="btn-minus no-select minus_icon add2basket basket_prod_detail offers"
+                          data-url="<?= $arItem['URL'] ?>"
+                          data-product_id="<?= $offerActive['ID']; ?>"
+                          id="<?= $arElement['QUANTITY_DOWN_ID'] ?>"
+                          data-max_quantity="<?= $offerActive['CATAlOG_QUANTITY'] ?>"
+                          data-max-quantity="<?= $offerActive['CATAlOG_QUANTITY'] ?>"
+                          tabindex="0">
+                    </span>
+							<div class="product-item-amount-field-block">
+								<input class="product-item-amount card_element cat-det offers"
+								       id="<?= $arElement['QUANTITY_ID'] ?>"
+								       type="number" value="<?= $backerDef ?>"
+								       data-url="<?= $arItem['URL'] ?>"
+								       data-product_id="<?= $offerActive['ID']; ?>"
+								       data-max-quantity="<?= $offerActive['CATAlOG_QUANTITY'] ?>"/>
+							</div>
+							<span class="btn-plus no-select plus_icon add2basket basket_prod_detail offers"
+							      data-url="<?= $arItem['URL'] ?>"
+							      data-max_quantity="<?= $offerActive['CATAlOG_QUANTITY'] ?>"
+							      data-max-quantity="<?= $offerActive['CATAlOG_QUANTITY'] ?>"
+							      data-product_id="<?= $offerActive['ID']; ?>"
+							      id="<?= $arElement['QUANTITY_UP_ID'] ?>" tabindex="0">
+					</span>
+						</div>
+						<div id="result_box"></div>
+						<div id="popup_mess"></div>
+					</div>
+				<? else: ?>
+					<div class="mb-4 d-flex justify-content-between align-items-center">
+						<div class="not_product detail_popup">Нет в наличии</div>
+					</div>
+				<? endif; ?>
 	</div>
 	<script>
         $('#search_result<?echo $arElement['ID']?>_detail_opener').click(function (event) {
@@ -213,3 +212,4 @@
 	</script>
 	<div class="alert_quantity" data-id="<?= $arElement['ID'] ?>"></div>
 </div>
+<?php }
