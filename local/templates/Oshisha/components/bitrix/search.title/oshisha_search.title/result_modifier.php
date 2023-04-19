@@ -125,7 +125,7 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 	$arFilter["IBLOCK_ID"] = IBLOCK_CATALOG;
 	$rsElements = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
 
-	while ($arProduct = $rsElements->GetNext()) {
+	while ($arProduct = $rsElements->Fetch()) {
 		if ($arProduct["ACTIVE"] === "Y") {
 			$arProduct["PRICES"] = CIBlockPriceTools::GetItemPrices(
 				$arProduct["IBLOCK_ID"],

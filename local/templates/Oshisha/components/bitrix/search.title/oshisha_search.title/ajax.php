@@ -23,9 +23,9 @@ if (empty($arResult["CATEGORIES"])) {
 				$arElement = $arResult["ELEMENTS"]['PRODUCT'][$arItem["ITEM_ID"]]['INFO'];
 				$itemOffers = $arResult["ELEMENTS"]['PRODUCT'][$arItem["ITEM_ID"]]['OFFERS'];
 				if (!empty($itemOffers)) {
-					require_once(__DIR__ . '/product/product_offers.php');
+					require(__DIR__ . '/product/product_offers.php');
 				} else {
-					require_once(__DIR__ . '/product/product.php');
+					require(__DIR__ . '/product/product.php');
 				}
 			}
 		}
