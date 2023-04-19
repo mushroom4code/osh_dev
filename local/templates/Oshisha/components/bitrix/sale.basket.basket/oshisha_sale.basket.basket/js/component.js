@@ -107,6 +107,7 @@
                 var template = BX(templateName);
                 this.templates[templateName] = BX.type.isDomNode(template) ? template.innerHTML : '';
             }
+            tasteInit();
             this.tasteInit();
             return this.templates[templateName];
         },
@@ -1538,24 +1539,6 @@
             }
         },
         tasteInit: function () {
-            let box = $(document).find('.variation_taste');
-
-            $(box).find('span').each(
-                function () {
-                    let classes = $(this).attr('class');
-                    if (classes === 'taste') {
-                        let color = $(this).data('background');
-                        $(this).css('background-color', color);
-                        let str = '#';
-                        if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
-                            && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
-                            $(this).css('color', 'black');
-                        } else {
-                            $(this).css('color', 'white');
-                        }
-                    }
-                }
-            );
             $('body').find('.variation_taste').each(
                 function (index, item) {
                     if ($(item).find('.taste').length > 2) {

@@ -9,7 +9,7 @@ if (empty($arResult["CATEGORIES"])) {
 <div tabindex="0" id="search_results_container" class="bx_searche">
 	<?php foreach ($arResult["CATEGORIES"] as $category_id => $arCategory) {
 		foreach ($arCategory["ITEMS"] as $i => $arItem) {
-			/**@var $arItem  */
+			/**@var $arItem */
 			if ($category_id === "all") { ?>
 				<div class="bx_item_block all_result" onclick="window.location='<? echo $arItem["URL"] ?>';">
 					<div class="bx_item_element">
@@ -44,4 +44,6 @@ if (empty($arResult["CATEGORIES"])) {
             }, 250);
         }
     })
+
+    tasteInit();
 </script>

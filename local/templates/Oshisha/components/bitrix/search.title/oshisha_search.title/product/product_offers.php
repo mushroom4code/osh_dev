@@ -104,7 +104,7 @@
 										<span class="taste mb-0"
 										      data-background="<?= $elem_taste['color'] ?>"
 										      style="background-color: <?= $elem_taste['color'] ?>;
-											      border-color: <?= $elem_taste['color'] ?>;font-size: 13px;">
+											      border-color: <?= $elem_taste['color'] ?>;font-size: 11px;">
 											<?= $elem_taste['name'] ?>
 										</span>
 									<?php } ?>
