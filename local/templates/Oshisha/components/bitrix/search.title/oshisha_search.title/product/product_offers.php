@@ -1,4 +1,6 @@
-<?php if (!empty($arItem) && !empty($itemOffers)) {
+<?php
+
+if (!empty($arItem) && !empty($itemOffers) && !empty($propsForOffers)) {
 	$active = null;
 	foreach ($itemOffers as $offer) {
 		if ($active === null) {
@@ -27,24 +29,24 @@
 		<div id="search_item_<? echo $arElement['ID'] ?>" class="bx_item_block_detail" style="display: none"
 		     tabindex="0">
 			<div class="d-flex flex-wrap flex-row mb-2 justify-content-end box-offers-auto">
-				<?php foreach ($itemOffers as $keyItem => $offer) {
+				<?php
+				foreach ($itemOffers as $keyItem => $offer) {
 					if ((int)$offer['CATALOG_QUANTITY'] > 0) {
 						$basketQuantity = $arResult['BASKET_ITEMS'][$offer['ID']] ?? 0;
 						$taste = [];
 						$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
-						if (!empty($offer['PROPERTIES']) && !empty($offer['PROPERTIES']['VALUE'])) {
-							$typeProp = '';
-							$prop = $offer['PROPERTIES'];
-							$prop_value = $prop['VALUE'];
-							$typeProp = $prop['CODE'];
+						$prop = $offer['PROPERTIES'];
+						if (!empty($offer['PROPERTIES']) && !empty($offer['PROPERTIES']['VALUE'])
+							&& in_array($arElement['SECTION_NAME'], $propsForOffers[$prop['CODE']]['CATEGORY'])) {
+							$prop_value = !is_array($prop['VALUE']) ?
+								$prop['VALUE'] . $propsForOffers[$prop['CODE']]['PREF'] : $prop['VALUE'];
 							$active_box = 'false';
 
 							if ($keyItem == $active) {
 								$active_box = 'true';
 							}
 
-							if ($typeProp === 'GRAMMOVKA_G' || $typeProp === 'SHTUK_V_UPAKOVKE'
-								|| $typeProp === 'KOLICHESTVO_ZATYAZHEK') { ?>
+							if ($propsForOffers[$prop['CODE']]['TYPE'] === 'text') { ?>
 								<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
 								     title="<?= $offer['NAME'] ?>"
 								     data-active="<?= $active_box ?>"
@@ -59,9 +61,9 @@
 								     data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
 								     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 								     data-onevalue="<?= $offer['ID'] ?>">
-									<?= $prop_value ?? '0' ?>
+									<?= $prop_value ?>
 								</div>
-							<?php } elseif ($typeProp === 'TSVET') { ?>
+							<?php } elseif ($propsForOffers[$prop['CODE']]['TYPE'] === 'color') { ?>
 								<div title="<?= $offer['NAME'] ?>"
 								     data-active="<?= $active_box ?>"
 								     data-product_id="<?= $offer['ID'] ?>"
@@ -83,7 +85,7 @@
 									     alt="<?= $offer['NAME'] ?>"
 									     loading="lazy"/>
 								</div>
-							<?php } elseif ($typeProp === 'VKUS') { ?>
+							<?php } elseif ($propsForOffers[$prop['CODE']]['TYPE'] === 'colorWithText') { ?>
 								<div
 									class="red_button_cart display-flex flex-row p-1 variation_taste
 										 taste font-14 width-fit-content mb-1 mr-1 offer-box cursor-pointer"

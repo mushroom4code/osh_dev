@@ -1,11 +1,13 @@
-<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
+<?php
+use Enterego\EnteregoSettings;
+
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 	die();
 }
 
 if (empty($arResult["CATEGORIES"])) {
 	return;
-}
-?>
+}?>
 <div tabindex="0" id="search_results_container" class="bx_searche">
 	<?php foreach ($arResult["CATEGORIES"] as $category_id => $arCategory) {
 		foreach ($arCategory["ITEMS"] as $i => $arItem) {
@@ -22,6 +24,7 @@ if (empty($arResult["CATEGORIES"])) {
 			<?php } elseif (isset($arResult["ELEMENTS"]['PRODUCT'][$arItem["ITEM_ID"]])) {
 				$arElement = $arResult["ELEMENTS"]['PRODUCT'][$arItem["ITEM_ID"]]['INFO'];
 				$itemOffers = $arResult["ELEMENTS"]['PRODUCT'][$arItem["ITEM_ID"]]['OFFERS'];
+				$propsForOffers = EnteregoSettings::getDataPropOffers();
 				if (!empty($itemOffers)) {
 					require(__DIR__ . '/product/product_offers.php');
 				} else {

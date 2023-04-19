@@ -1,4 +1,7 @@
 <?php
+
+use Enterego\EnteregoSettings;
+
 $show = false;
 $active = null;
 $priceDef = 0;
@@ -296,7 +299,8 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 						</div>
 						<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto">
 							<?php
-
+							$propsForOffers = EnteregoSettings::getDataPropOffers();
+							$categoryName = $arResult['SECTION']['PATH'][0]['NAME'];
 							foreach ($arResult['OFFERS'] as $key => $offer) {
 								if ((int)$offer['CATALOG_QUANTITY'] > 0) {
 									$active_box = 'false';
@@ -309,21 +313,17 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 									}
 
 									$base_price = $offer['PRICES_CUSTOM']['SALE_PRICE']['PRICE'] ?? $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'];
-									$typeProp = '';
 									$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
 									$taste = [];
+									$prop_code = '';
 									foreach ($offer['PROPERTIES'] as $prop) {
-										if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2_') === false
-											&& strripos($prop['CODE'], 'MORE_PHOTO') === false) {
-											$prop_value = $prop['VALUE'];
-											$typeProp = $prop['CODE'];
-											if ($prop['CODE'] === 'GRAMMOVKA_G') {
-												$prop_value .= ' гр.';
-											}
-											if ($prop['CODE'] === 'SHTUK_V_UPAKOVKE') {
-												$prop_value .= ' шт.';
-											}
-											if ($prop['CODE'] === 'VKUS') {
+										$code = $prop['CODE'];
+										if (!empty($prop['VALUE']) &&
+											in_array($categoryName, $propsForOffers[$code]['CATEGORY'])) {
+
+											$prop_value = $prop['VALUE'] . $propsForOffers[$code]['PREF'];
+											$prop_code = $code;
+											if ($propsForOffers[$prop_code]['TYPE'] === 'colorWithText') {
 												foreach ($prop['VALUE_XML_ID'] as $key => $listProp) {
 													$taste[$key] = [
 														'color' => '#' . explode('#', $listProp)[1],
@@ -333,8 +333,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											}
 										}
 									}
-									if ($typeProp === 'GRAMMOVKA_G' || $typeProp === 'SHTUK_V_UPAKOVKE'
-										|| $typeProp === 'KOLICHESTVO_ZATYAZHEK') { ?>
+									if ($propsForOffers[$prop_code]['TYPE'] === 'text') { ?>
 										<div
 											class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
 											title="<?= $offer['NAME'] ?>"
@@ -346,13 +345,13 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											data-basket_quantity="<?= $basketItem ?>"
 											data-price_base="<?= $base_price ?>"
 											data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
-											data-sale_base="<?=$offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE']?>"
+											data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 											data-sale="<?= $sale ?>"
 											data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 											data-onevalue="<?= $offer['ID'] ?>">
 											<?= $prop_value ?? '0' ?>
 										</div>
-									<?php } elseif ($typeProp === 'TSVET') { ?>
+									<?php } elseif ($propsForOffers[$prop_code]['TYPE'] === 'color') { ?>
 										<div title="<?= $offer['NAME'] ?>"
 										     data-active="<?= $active_box ?>"
 										     data-product_id="<?= $offer['ID'] ?>"
@@ -361,7 +360,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 										     data-basket-quantity="<?= $basketItem ?>"
 										     data-basket_quantity="<?= $basketItem ?>"
 										     data-price_base="<?= $base_price ?>"
-										     data-sale_base="<?=$offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE']?>"
+										     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 										     data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
 										     data-sale="<?= $sale ?>"
 										     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
@@ -374,7 +373,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											     alt="<?= $offer['NAME'] ?>"
 											     loading="lazy"/>
 										</div>
-									<?php } elseif ($typeProp === 'VKUS') {
+									<?php } elseif ($propsForOffers[$prop_code]['TYPE'] === 'colorWithText' ) {
 										if (!empty($taste)) { ?>
 											<div
 												class="red_button_cart p-1 taste variation_taste font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
@@ -386,7 +385,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 												data-basket-quantity="<?= $basketItem ?>"
 												data-basket_quantity="<?= $basketItem ?>"
 												data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
-												data-sale_base="<?=$offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE']?>"
+												data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 												data-sale="<?= $sale ?>"
 												data-price_base="<?= $base_price ?>"
 												data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
@@ -401,8 +400,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 													</span>
 												<?php } ?>
 											</div>
-											<?php
-										}
+										<?php }
 									}
 								}
 							} ?>

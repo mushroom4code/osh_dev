@@ -21,6 +21,7 @@ $this->setFrameMode(true);
 if (isset($arResult['ITEM'])) {
     $item = $arResult['ITEM'];
     $item['ACTUAL_BASKET'] = $arResult['AR_BASKET'];
+    $item['SECTION_NAME'] = $arResult['SECTION_NAME'];
     $item['F_USER_ID'] = $arResult['F_USER_ID'];
     $item['ID_PROD'] = $arResult['ID_PROD'];
     $item['COUNT_LIKE'] = $arResult['COUNT_LIKE'];

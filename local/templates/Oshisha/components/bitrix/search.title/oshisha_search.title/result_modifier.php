@@ -75,6 +75,7 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 		"ID",
 		"IBLOCK_ID",
 		"NAME",
+		"IBLOCK_SECTION_ID",
 		"ACTIVE",
 		"PREVIEW_PICTURE",
 		"DETAIL_PICTURE",
@@ -88,6 +89,7 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 		"IBLOCK_ID",
 		"NAME",
 		"ACTIVE",
+		"IBLOCK_SECTION_ID",
 		"PREVIEW_PICTURE",
 		"CATALOG_QUANTITY",
 		"PRODUCT_ID",
@@ -138,6 +140,10 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 			$discount = CIBlockElement::GetProperty($arProduct['IBLOCK_ID'], $arProduct['ID'], array("sort" => "asc"),
 				array("CODE" => "USE_DISCOUNT"))->Fetch();
 			$arProduct['USE_DISCOUNT'] = $discount['VALUE_ENUM'];
+			$arProduct['SECTION_NAME'] = CIBlockSection::GetNavChain(
+				false,
+				$arProduct["IBLOCK_SECTION_ID"],
+				['NAME'])->Fetch()['NAME'];
 
 			$arResult["ELEMENTS"]['PRODUCT'][$arProduct["ID"]]['INFO'] = $arProduct;
 
@@ -191,11 +197,11 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 				// Get prop active for offer TODO offer props static
 				if (!empty($arElement['PROPERTY_GRAMMOVKA_G_VALUE'])) {
 					$arElement['PROPERTIES']['CODE'] = 'GRAMMOVKA_G';
-					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_GRAMMOVKA_G_VALUE'] . ' гр.';
+					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_GRAMMOVKA_G_VALUE'];
 				} else {
 					if (!empty($arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'])) {
 						$arElement['PROPERTIES']['CODE'] = 'SHTUK_V_UPAKOVKE';
-						$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'] . 'шт.';
+						$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'];
 					} else {
 						if (!empty($arElement['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'])) {
 							$arElement['PROPERTIES']['CODE'] = 'KOLICHESTVO_ZATYAZHEK';

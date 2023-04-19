@@ -3,6 +3,7 @@
 }
 
 use Enterego\EnteregoHelper;
+use Enterego\EnteregoSettings;
 
 /**
  * @global CMain $APPLICATION
@@ -212,9 +213,13 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 								} elseif (mb_strlen($name) > 13) {
 									$tasteSize = 'taste-xxl';
 								}
+								$propId = $taste['ID'];
+								$valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
 								?>
-								<span class="taste <?= $tasteSize ?>" data-background="<?= '#' . $color[1] ?>"
-								      id="<?= $color[0] ?>"><?= $name ?> </span>
+								<span class="taste  js__taste <?= $tasteSize ?>"
+								      data-background="<?= '#' . $color[1] ?>"
+								      id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
+								      data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?> </span>
 							<?php }
 						}
 					} ?>
@@ -532,6 +537,7 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 					<div class="d-flex flex-wrap flex-row mb-2 justify-content-end box-offers-auto">
 						<?php
 						$quantity_basket_default = 0;
+						$propsForOffers = EnteregoSettings::getDataPropOffers();
 						foreach ($item['OFFERS'] as $key => $offer) {
 							if ((int)$offer['CATALOG_QUANTITY'] > 0) {
 
@@ -544,21 +550,17 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 									$active_box = 'true';
 									$quantity_basket_default = $basketItem;
 								}
-								$typeProp = '';
+
 								$taste = [];
 								$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
+								$typeProp = '';
 								foreach ($offer['PROPERTIES'] as $prop) {
-									if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2_') === false
-										&& strripos($prop['CODE'], 'MORE_PHOTO') === false) {
-										$prop_value = $prop['VALUE'];
-										$typeProp = $prop['CODE'];
-										if ($prop['CODE'] === 'GRAMMOVKA_G') {
-											$prop_value .= ' гр.';
-										}
-										if ($prop['CODE'] === 'SHTUK_V_UPAKOVKE') {
-											$prop_value .= ' шт.';
-										}
-										if ($prop['CODE'] === 'VKUS') {
+									$code = $prop['CODE'];
+									if (!empty($prop['VALUE']) && in_array($item['SECTION_NAME'], $propsForOffers[$code]['CATEGORY'])) {
+										$prop_value = $prop['VALUE'] . $propsForOffers[$code]['PREF'];
+										$typeProp = $code;
+
+										if ($propsForOffers[$code]['TYPE'] === 'colorWithText') {
 											foreach ($prop['VALUE_XML_ID'] as $key => $listProp) {
 												$taste[$key] = [
 													'color' => '#' . explode('#', $listProp)[1],
@@ -568,8 +570,7 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 										}
 									}
 								}
-								if ($typeProp === 'GRAMMOVKA_G' || $typeProp === 'SHTUK_V_UPAKOVKE'
-									|| $typeProp === 'KOLICHESTVO_ZATYAZHEK') { ?>
+								if ($propsForOffers[$typeProp]['TYPE'] === 'text') { ?>
 									<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
 									     title="<?= $offer['NAME'] ?>"
 									     data-active="<?= $active_box ?>"
@@ -586,7 +587,7 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 									     data-onevalue="<?= $offer['ID'] ?>">
 										<?= $prop_value ?? '0' ?>
 									</div>
-								<?php } elseif ($typeProp === 'TSVET') { ?>
+								<?php } elseif ($propsForOffers[$typeProp]['TYPE'] === 'color') { ?>
 									<div title="<?= $offer['NAME'] ?>"
 									     data-active="<?= $active_box ?>"
 									     data-product_id="<?= $offer['ID'] ?>"
@@ -608,7 +609,7 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 										     alt="<?= $offer['NAME'] ?>"
 										     loading="lazy"/>
 									</div>
-								<?php } elseif ($typeProp === 'VKUS') {
+								<?php } elseif ($propsForOffers[$typeProp]['TYPE'] === 'colorWithText') {
 									if (!empty($taste)) { ?>
 										<div
 											class="red_button_cart display-flex flex-row p-1 variation_taste taste font-14 width-fit-content mb-1 mr-1 offer-box cursor-pointer"
