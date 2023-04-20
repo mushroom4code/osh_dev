@@ -248,7 +248,7 @@ class DeliveryHelper
         $cAsset->addJs('/bitrix/js/enterego.pvz/jquery.suggestions.min.js', true);
         $cAsset->addJs('/bitrix/js/enterego.pvz/async.js', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
-        $cAsset->addCss('/bitrix/modules/osh.shipping/install/css/suggestions.css', true);
+        $cAsset->addCss('/bitrix/modules/enterego.pvz/install/css/suggestions.css', true);
         \CJSCore::Init(array("osh_pickup"));
         $cAsset->addString(
             "<script id='' data-params=''>

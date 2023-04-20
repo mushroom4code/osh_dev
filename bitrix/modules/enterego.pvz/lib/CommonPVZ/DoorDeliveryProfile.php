@@ -90,6 +90,9 @@ class DoorDeliveryProfile extends Base
             if ($prop['CODE'] === 'STREET_KLADR') {
                 $deliveryParams['street_kladr_to'] = $propertyItem->getValue();
             }
+            if ($prop['CODE'] === 'FIAS') {
+                $deliveryParams['fias'] = $propertyItem->getValue();
+            }
         }
         $deliveryParams['shipment_weight'] = $shipment->getWeight();
         $deliveryParams['shipment_cost'] = $shipment->getOrder()->getBasePrice();

@@ -73,57 +73,62 @@ class RussianPostDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         try {
-            $objectId = false;
-            switch ($this->delivery_type) {
-                case 'RussianPostEms':
-                    $objectId = 7020;
-                    break;
-                case 'RussianPostFirstClass':
-                    $objectId = 47020;
-                    break;
-                case 'RussianPostRegular':
-                    $objectId = 4020;
-                    break;
-            }
+            if(!empty($params['fias'])){
+                $objectId = false;
+                switch ($this->delivery_type) {
+                    case 'RussianPostEms':
+                        $objectId = 7020;
+                        break;
+                    case 'RussianPostFirstClass':
+                        $objectId = 47020;
+                        break;
+                    case 'RussianPostRegular':
+                        $objectId = 4020;
+                        break;
+                }
 
-            $params = [
-                'weight' => $params['shipment_weight'],
-                'sumoc' => intval($params['shipment_cost']),
-                'from' => $this->configs['fromzip'],
-                'to' => $params['zip_to']
-            ];
+                $params = [
+                    'weight' => $params['shipment_weight'],
+                    'sumoc' => intval($params['shipment_cost']),
+                    'from' => $this->configs['fromzip'],
+                    'to' => $params['zip_to']
+                ];
 
-            $hashed_values = array($params['weight'], $params['sumoc'], $params['from'], $params['to']);
-            $hash_string = md5(implode('', $hashed_values));
+                $hashed_values = array($params['weight'], $params['sumoc'], $params['from'], $params['to']);
+                $hash_string = md5(implode('', $hashed_values));
 
-            $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-            if ($cache->initCache(3600, $this->delivery_type.$this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
-                $cached_vars = $cache->getVars();
-                if (!empty($cached_vars)) {
-                    foreach ($cached_vars as $varKey => $var) {
-                        if($varKey === $hash_string) {
-                            return $var;
+                $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
+                if ($cache->initCache(3600, $this->delivery_type.$this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
+                    $cached_vars = $cache->getVars();
+                    if (!empty($cached_vars)) {
+                        foreach ($cached_vars as $varKey => $var) {
+                            if($varKey === $hash_string) {
+                                return $var;
+                            }
                         }
                     }
                 }
+
+                if ($this->delivery_type === 'RussianPostEms') {
+                    $params['group'] = 0;
+                }
+
+                $TariffCalculation = new \LapayGroup\RussianPost\TariffCalculation();
+                $calcInfo = $TariffCalculation->calculate($objectId, $params);
+                $finalPrice = $calcInfo->getGroundNds();
+
+                $cache->forceRewriting(true);
+                if ($cache->startDataCache()) {
+                    $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                        ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                        : array($hash_string => $finalPrice));
+                }
+
+                return $finalPrice;
+            } else {
+                $this->errors[] = 'empty fias';
+                return array('errors' => $this->errors);
             }
-
-            if ($this->delivery_type === 'RussianPostEms') {
-                $params['group'] = 0;
-            }
-
-            $TariffCalculation = new \LapayGroup\RussianPost\TariffCalculation();
-            $calcInfo = $TariffCalculation->calculate($objectId, $params);
-            $finalPrice = $calcInfo->getGroundNds();
-
-            $cache->forceRewriting(true);
-            if ($cache->startDataCache()) {
-                $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                    ? array_merge($cached_vars, array($hash_string => $finalPrice))
-                    : array($hash_string => $finalPrice));
-            }
-
-            return $finalPrice;
         } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();
             return array('errors' => $this->errors);

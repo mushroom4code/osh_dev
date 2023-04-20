@@ -318,7 +318,7 @@ class DellinDelivery extends CommonPVZ
             if (!empty($result->errors)) {
                 $this->errors[] = $result->errors;
                 return array('errors' => $this->errors);
-            } else {
+            } else if(!empty($result)) {
                 $finalPrice = $result->data->price - $result->data->derival->price;
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {
@@ -327,6 +327,9 @@ class DellinDelivery extends CommonPVZ
                         : array($hash_string => $finalPrice));
                 }
                 return $finalPrice;
+            } else {
+                $this->errors[] = 'Empty result was returned';
+                return array('errors' => $this->errors);
             }
         } catch (\Throwable $e) {
             $this->errors[] = $e->getMessage();

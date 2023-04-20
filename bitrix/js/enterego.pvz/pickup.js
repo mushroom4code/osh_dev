@@ -31,6 +31,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     selfObj.date_delivery = '';
     selfObj.address_property_id = '';
     selfObj.date_property_id = '';
+    selfObj.last_select_geo = null;
 
     var mkad_poly = null,
         wednesday_saturday_poly = null,
@@ -340,6 +341,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
         delivery_address = selfObj.getAddress(selectGeo);
         selfObj.address_property_id = addressPropertyId ? addressPropertyId : selfObj.address_property_id;
         selfObj.date_property_id = datePropertyId ? datePropertyId : selfObj.date_property_id;
+        selfObj.last_select_geo = selectGeo;
 
         selfObj.setDisabled();
         var deliveryDateArray = (deliveryDate)
@@ -417,22 +419,47 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
      * Отправляет результаты расчета доставки
      */
     selfObj.saveDelivery = function () {
-        selfObj.address_property_id ? document.querySelector('input[name="ORDER_PROP_' + selfObj.address_property_id + '"]').value = delivery_address : '';
+        var addressNode = selfObj.address_property_id ? $('input[name="ORDER_PROP_' + selfObj.address_property_id + '"]') : '';
         selfObj.date_property_id ? document.querySelector('input[name="ORDER_PROP_' + selfObj.date_property_id + '"]').value = selfObj.date_delivery : '';
         selfObj.date_delivery = '';
-        var sessid = BX.bitrix_sessid();
-        BX.ajax.post(selfObj.oUrls.setPriceDelivery, {
-            address: delivery_address,
-            price: delivery_price,
-            no_markup: no_markup,
-            distance: distKm,
-            sessid: sessid
-        }, function () {
-            if (selfObj.afterSave!=null) {
-                selfObj.afterSave(delivery_address);
-            }
-            BX.onCustomEvent('onDeliveryExtraServiceValueChange');
-        });
+        if (addressNode) {
+            addressNode.val(delivery_address);
+            addressNode.suggestions().updateSuggestions(delivery_address);
+            addressNode.suggestions().setOptions({
+                onSuggestionsFetch: function(suggestions) {
+                    if (suggestions[0]) {
+                        $(this).suggestions().setSuggestion(suggestions[0]);
+                        (BX.SaleCommonPVZ.propZipId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propZipId + '"]').value = suggestions[0].data.postal_code) : '';
+                        (BX.SaleCommonPVZ.propCityId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propCityId + '"]').value = suggestions[0].data.city) : '';
+                        (BX.SaleCommonPVZ.propFiasId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propFiasId + '"]').value = suggestions[0].data.fias_id) : '';
+                        (BX.SaleCommonPVZ.propKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propKladrId + '"]').value = suggestions[0].data.kladr_id) : '';
+                        (BX.SaleCommonPVZ.propStreetKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propStreetKladrId + '"]').value = suggestions[0].data.street_kladr_id) : '';
+                    } else {
+                        (BX.SaleCommonPVZ.propZipId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propZipId + '"]').value = '') : '';
+                        (BX.SaleCommonPVZ.propCityId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propCityId + '"]').value = '') : '';
+                        (BX.SaleCommonPVZ.propFiasId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propFiasId + '"]').value = '') : '';
+                        (BX.SaleCommonPVZ.propKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propKladrId + '"]').value = '') : '';
+                        (BX.SaleCommonPVZ.propStreetKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propStreetKladrId + '"]').value = '') : '';
+                    }
+                    (BX.SaleCommonPVZ.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propLatitudeId + '"]').value = selfObj.last_select_geo[0]) : '';
+                    (BX.SaleCommonPVZ.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propLongitudeId + '"]').value = selfObj.last_select_geo[1]) : '';
+                    var sessid = BX.bitrix_sessid();
+                    BX.ajax.post(selfObj.oUrls.setPriceDelivery, {
+                        address: delivery_address,
+                        price: delivery_price,
+                        no_markup: no_markup,
+                        distance: distKm,
+                        sessid: sessid
+                    }, function () {
+                        if (selfObj.afterSave!=null) {
+                            selfObj.afterSave(delivery_address);
+                        }
+                        BX.onCustomEvent('onDeliveryExtraServiceValueChange');
+                    });
+
+                }
+            });
+        }
     };
 
     selfObj.getAddress = function (geocode) {
@@ -453,7 +480,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                 res = html;
                 var geores = res.response.GeoObjectCollection.featureMember;
                 if (geores.length > 0) {
-                    address = geores[0].GeoObject.description + ', ' + geores[0].GeoObject.name;
+                    address = geores[0].GeoObject.metaDataProperty.GeocoderMetaData.Address.formatted;
                 } else {
                     alert('Ошибка при расчетах доставки.');
                 }

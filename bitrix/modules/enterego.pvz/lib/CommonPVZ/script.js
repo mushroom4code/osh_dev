@@ -13,6 +13,7 @@ BX.SaleCommonPVZ = {
     pvzFullAddress: null,
     pvzPrice: null,
     isInit: false,
+    justInited: false,
     dataPVZ: null,
     objectManager: null,
     propAddressId: null,
@@ -57,6 +58,7 @@ BX.SaleCommonPVZ = {
 
         this.refresh();
         this.isInit = true;
+        this.justInited = true;
     },
 
     update: function (ajaxAns) {
@@ -95,6 +97,8 @@ BX.SaleCommonPVZ = {
                     type: "ADDRESS",
                     hint: false,
                     floating: true,
+                    triggerSelectOnEnter: true,
+                    autoSelectFirst: true,
                     onSelect: function (suggestion) {
                         (this.propZipId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propZipId + '"]').value = suggestion.data.postal_code) : '';
                         (this.propCityId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propCityId + '"]').value = suggestion.data.city) : '';
@@ -269,7 +273,7 @@ BX.SaleCommonPVZ = {
                             var propContainer = BX.create('DIV', {props: {id: 'oshMapButton', className: 'soa-property-container'}});
                             var nodeOpenMap = BX.create('a',
                                 {
-                                    props: {className: 'btn btn-primary'},
+                                    props: {className: 'btn btn_red sbtn-primary '},
                                     text: 'Выбрать адрес на карте (Oshisha)',
                                     events: {
                                         click: BX.proxy(function () {
@@ -295,23 +299,14 @@ BX.SaleCommonPVZ = {
                         }
                     }
                     if (__this.propAddressId) {
-                    $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                        $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
                             onSelect: function (suggestion) {
-                                (__this.propZipId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propZipId + '"]').value = suggestion.data.postal_code) : '';
-                                (__this.propCityId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propCityId + '"]').value = suggestion.data.city) : '';
-                                (__this.propFiasId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propFiasId + '"]').value = suggestion.data.fias_id) : '';
-                                (__this.propKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propKladrId + '"]').value = suggestion.data.kladr_id) : '';
-                                (__this.propStreetKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propStreetKladrId + '"]').value = suggestion.data.street_kladr_id) : '';
-                                (__this.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLatitudeId + '"]').value = suggestion.data.geo_lat) : '';
-                                (__this.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLongitudeId + '"]').value = suggestion.data.geo_lon) : '';
                                 if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
                                     if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
                                         __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
                                         oshMkad.afterSave = null;
                                         oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
-                                            (__this.propAddressId)
-                                                ? __this.propAddressId
-                                                : '',
+                                            __this.propAddressId,
                                             (__this.propDateDelivery)
                                                 ? __this.propDateDelivery
                                                 : '',
@@ -321,9 +316,36 @@ BX.SaleCommonPVZ = {
                                             true);
                                     }
                                 }
-                                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
                             }
+
                         });
+                        if(__this.justInited) {
+                            var latitude_value = (__this.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLatitudeId + '"]').value) : '';
+                            var longitude_value = (__this.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLongitudeId + '"]').value) : '';
+                            if (latitude_value && longitude_value) {
+                                var params = {
+                                    oshMkad: oshMkad,
+                                    latitude: latitude_value,
+                                    longitude: longitude_value,
+                                    propAddressId: __this.propAddressId,
+                                    propDateDelivery: (__this.propDateDelivery)
+                                        ? __this.propDateDelivery
+                                        : '',
+                                    propDateDelivery: (__this.propDateDelivery)
+                                        ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
+                                        : ''
+                                }
+                                setTimeout(function (params) {
+                                    params.oshMkad.afterSave = null;
+                                    params.oshMkad.getDistance([params.latitude, params.longitude],
+                                        params.propAddressId,
+                                        params.propDateDelivery,
+                                        params.propDateDelivery,
+                                        true);
+                                }, 500, params);
+                            }
+                            __this.justInited = false;
+                        }
                     }
                 } else {
                     if (__this.propDateDelivery) {
