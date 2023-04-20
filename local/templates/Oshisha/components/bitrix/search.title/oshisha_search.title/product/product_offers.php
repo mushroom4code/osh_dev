@@ -37,81 +37,82 @@ if (!empty($arItem) && !empty($itemOffers) && !empty($propsForOffers)) {
 						$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
 						$prop = $offer['PROPERTIES'];
 						if (!empty($offer['PROPERTIES']) && !empty($offer['PROPERTIES']['VALUE'])
-							&& in_array($arElement['SECTION_NAME'], $propsForOffers[$prop['CODE']]['CATEGORY'])) {
+							&& strripos($offer['PROPERTIES']['CODE'],'CML2') === false) {
 							$prop_value = !is_array($prop['VALUE']) ?
 								$prop['VALUE'] . $propsForOffers[$prop['CODE']]['PREF'] : $prop['VALUE'];
 							$active_box = 'false';
-
+							$type = $propsForOffers[$prop['CODE']]['TYPE'] ?? 'text';
 							if ($keyItem == $active) {
 								$active_box = 'true';
 							}
-
-							if ($propsForOffers[$prop['CODE']]['TYPE'] === 'text') { ?>
-								<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
-								     title="<?= $offer['NAME'] ?>"
-								     data-active="<?= $active_box ?>"
-								     data-product_id="<?= $offer['ID'] ?>"
-								     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-								     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-								     data-basket-quantity="<?= $basketQuantity ?>"
-								     data-basket_quantity="<?= $basketQuantity ?>"
-								     data-price_base="<?= $offer['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>"
-								     data-sale_price="<?= $offer['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] ?>"
-								     data-sale_base="<?= $offer['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?>"
-								     data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
-								     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-								     data-onevalue="<?= $offer['ID'] ?>">
-									<?= $prop_value ?>
-								</div>
-							<?php } elseif ($propsForOffers[$prop['CODE']]['TYPE'] === 'color') { ?>
-								<div title="<?= $offer['NAME'] ?>"
-								     data-active="<?= $active_box ?>"
-								     data-product_id="<?= $offer['ID'] ?>"
-								     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-								     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-								     data-basket-quantity="<?= $basketQuantity ?>"
-								     data-basket_quantity="<?= $basketQuantity ?>"
-								     data-price_base="<?= $offer['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>"
-								     data-sale_price="<?= $offer['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] ?>"
-								     data-sale_base="<?= $offer['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?>"
-								     data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
-								     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-								     data-onevalue="<?= $offer['ID'] ?>"
-								     class="mr-1 offer-box color-hookah br-10 mb-1">
-									<img src="<?= $prop_value ?>"
-									     class="br-10"
-									     width="50"
-									     height="50"
-									     alt="<?= $offer['NAME'] ?>"
-									     loading="lazy"/>
-								</div>
-							<?php } elseif ($propsForOffers[$prop['CODE']]['TYPE'] === 'colorWithText') { ?>
-								<div
-									class="red_button_cart display-flex flex-row p-1 variation_taste
+							if (!empty($prop_value)) {
+								if ($type === 'text') { ?>
+									<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
+									     title="<?= $offer['NAME'] ?>"
+									     data-active="<?= $active_box ?>"
+									     data-product_id="<?= $offer['ID'] ?>"
+									     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-basket-quantity="<?= $basketQuantity ?>"
+									     data-basket_quantity="<?= $basketQuantity ?>"
+									     data-price_base="<?= $offer['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>"
+									     data-sale_price="<?= $offer['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] ?>"
+									     data-sale_base="<?= $offer['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?>"
+									     data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
+									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+									     data-onevalue="<?= $offer['ID'] ?>">
+										<?= $prop_value ?>
+									</div>
+								<?php } elseif ($type === 'color') { ?>
+									<div title="<?= $offer['NAME'] ?>"
+									     data-active="<?= $active_box ?>"
+									     data-product_id="<?= $offer['ID'] ?>"
+									     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+									     data-basket-quantity="<?= $basketQuantity ?>"
+									     data-basket_quantity="<?= $basketQuantity ?>"
+									     data-price_base="<?= $offer['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>"
+									     data-sale_price="<?= $offer['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] ?>"
+									     data-sale_base="<?= $offer['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?>"
+									     data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
+									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+									     data-onevalue="<?= $offer['ID'] ?>"
+									     class="mr-1 offer-box color-hookah br-10 mb-1">
+										<img src="<?= $prop_value ?>"
+										     class="br-10"
+										     width="50"
+										     height="50"
+										     alt="<?= $offer['NAME'] ?>"
+										     loading="lazy"/>
+									</div>
+								<?php } elseif ($type === 'colorWithText') { ?>
+									<div
+										class="red_button_cart display-flex flex-row p-1 variation_taste
 										 taste font-14 width-fit-content mb-1 mr-1 offer-box cursor-pointer"
-									title="<?= $offer['NAME'] ?>"
-									data-active="<?= $active_box ?>"
-									data-product_id="<?= $offer['ID'] ?>"
-									data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-									data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-									data-basket-quantity="<?= $basketQuantity ?>"
-									data-basket_quantity="<?= $basketQuantity ?>"
-									data-price_base="<?= $offer['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>"
-									data-sale_price="<?= $offer['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] ?>"
-									data-sale_base="<?= $offer['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?>"
-									data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
-									data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-									data-onevalue="<?= $offer['ID'] ?>">
-									<?php foreach ($prop_value as $elem_taste) { ?>
-										<span class="taste mb-0"
-										      data-background="<?= $elem_taste['color'] ?>"
-										      style="background-color: <?= $elem_taste['color'] ?>;
-											      border-color: <?= $elem_taste['color'] ?>;font-size: 11px;">
+										title="<?= $offer['NAME'] ?>"
+										data-active="<?= $active_box ?>"
+										data-product_id="<?= $offer['ID'] ?>"
+										data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+										data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+										data-basket-quantity="<?= $basketQuantity ?>"
+										data-basket_quantity="<?= $basketQuantity ?>"
+										data-price_base="<?= $offer['PRICES']['Основная']['PRINT_VALUE_VAT'] ?>"
+										data-sale_price="<?= $offer['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] ?>"
+										data-sale_base="<?= $offer['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?>"
+										data-sale="<?= ($arElement['USE_DISCOUNT'] == 'Да') ? 1 : 0 ?>"
+										data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+										data-onevalue="<?= $offer['ID'] ?>">
+										<?php foreach ($prop_value as $elem_taste) { ?>
+											<span class="taste mb-0"
+											      data-background="<?= $elem_taste['color'] ?>"
+											      style="background-color: <?= $elem_taste['color'] ?>;
+												      border-color: <?= $elem_taste['color'] ?>;font-size: 11px;">
 											<?= $elem_taste['name'] ?>
 										</span>
-									<?php } ?>
-								</div>
-								<?php
+										<?php } ?>
+									</div>
+									<?php
+								}
 							}
 						}
 					}

@@ -114,6 +114,9 @@ $boolShow = false;
 $active = null;
 $priceDef = 0;
 $offersForModal = [];
+$boolShowTaste = (empty($item['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) ||
+	count($item['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) == 0);
+
 foreach ($item['OFFERS'] as $keys => $quantityNull) {
 	$basketItem = 0;
 	$propsList = [];
@@ -131,9 +134,9 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 	}
 
 	foreach ($quantityNull['PROPERTIES'] as $code => $prop) {
-		if (!empty($prop['VALUE']) && in_array($item['SECTION_NAME'], $propsForOffers[$code]['CATEGORY'])) {
+		if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2') === false) {
 			$propsList[$code] = $prop;
-			$propsList[$code]['TYPE_OFFERS'] = $propsForOffers[$code]['TYPE'];
+			$propsList[$code]['TYPE_OFFERS'] = $propsForOffers[$code]['TYPE'] ?? 'text';
 			$propsList[$code]['PREF'] = $propsForOffers[$code]['PREF'];
 		}
 	}
@@ -189,28 +192,30 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 
 		if ($hitProduct['VALUE'] === 'Да') { ?>
 			<span class="taste new-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
-		<?php }
-
-		$showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
-		$togglerState = 'd-none';
-		$listClass = '';
-
-		if (count($taste['VALUE']) > 0) {
-			if (count($taste['VALUE']) > 2) {
-				$showToggler = true;
-			} elseif (count($taste['VALUE']) > 1) {
-				// поместятся на одной строке 2 вкуса или нет
-				$showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18;
-			}
-			$togglerState = $showToggler ? ' many-tastes' : ' d-none many-tastes';
-			$listClass = $showToggler ? ' js__tastes-list' : '';
-		} ?>
+		<?php } ?>
 
 		<div class="item-product-info d-flex flex-column justify-content-between height-100">
 			<div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
 				<div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
 
-					<?php foreach ($taste['VALUE'] as $key => $name) {
+					<?php
+					if ($boolShowTaste) {
+					//					TASTE
+					$showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
+					$togglerState = 'd-none';
+					$listClass = '';
+
+					if (count($taste['VALUE']) > 0) {
+						if (count($taste['VALUE']) > 2) {
+							$showToggler = true;
+						} elseif (count($taste['VALUE']) > 1) {
+							// поместятся на одной строке 2 вкуса или нет
+							$showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18;
+						}
+						$togglerState = $showToggler ? ' many-tastes' : ' d-none many-tastes';
+						$listClass = $showToggler ? ' js__tastes-list' : '';
+					}
+					foreach ($taste['VALUE'] as $key => $name) {
 						foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
 							if ($key === $keys) {
 								$color = explode('#', $value);
@@ -232,7 +237,7 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 								      data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?> </span>
 							<?php }
 						}
-					} ?>
+					} }?>
 
 				</div>
 				<div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
@@ -373,7 +378,7 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 				</div>
 			<?php } ?>
 			<div class="box_with_title_like d-flex align-items-center">
-				<?php if (count($taste['VALUE']) > 0) { ?>
+				<?php if (count($taste['VALUE']) > 0 && $boolShowTaste ) { ?>
 					<div class="toggle_taste_line">
 						<div class="variation_taste">
 							<?php foreach ($taste['VALUE'] as $key => $name) {
@@ -565,11 +570,10 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 								$typeProp = '';
 								foreach ($offer['PROPERTIES'] as $prop) {
 									$code = $prop['CODE'];
-									if (!empty($prop['VALUE']) && in_array($item['SECTION_NAME'],
-											$propsForOffers[$code]['CATEGORY'])) {
+									if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2') === false) {
 										$prop_value = $prop['VALUE'] . $propsForOffers[$code]['PREF'];
 										$typeProp = $code;
-
+										$type = $propsForOffers[$code]['TYPE'] ?? 'text';
 										if ($propsForOffers[$code]['TYPE'] === 'colorWithText') {
 											foreach ($prop['VALUE_XML_ID'] as $key => $listProp) {
 												$taste[$key] = [
@@ -580,76 +584,78 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 										}
 									}
 								}
-								if ($propsForOffers[$typeProp]['TYPE'] === 'text') { ?>
-									<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
-									     title="<?= $offer['NAME'] ?>"
-									     data-active="<?= $active_box ?>"
-									     data-product_id="<?= $offer['ID'] ?>"
-									     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-									     data-basket-quantity="<?= $basketItem ?>"
-									     data-basket_quantity="<?= $basketItem ?>"
-									     data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
-									     data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
-									     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
-									     data-sale="<?= $sale ?>"
-									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-									     data-onevalue="<?= $offer['ID'] ?>">
-										<?= $prop_value ?? '0' ?>
-									</div>
-								<?php } elseif ($propsForOffers[$typeProp]['TYPE'] === 'color') { ?>
-									<div title="<?= $offer['NAME'] ?>"
-									     data-active="<?= $active_box ?>"
-									     data-product_id="<?= $offer['ID'] ?>"
-									     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-									     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-									     data-basket-quantity="<?= $basketItem ?>"
-									     data-basket_quantity="<?= $basketItem ?>"
-									     data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
-									     data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
-									     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
-									     data-sale="<?= $sale ?>"
-									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-									     data-onevalue="<?= $offer['ID'] ?>"
-									     class="mr-1 offer-box color-hookah br-10 mb-1">
-										<img src="<?= $offer['PREVIEW_PICTURE']['SRC'] ?>"
-										     class="br-10"
-										     width="50"
-										     height="50"
-										     alt="<?= $offer['NAME'] ?>"
-										     loading="lazy"/>
-									</div>
-								<?php } elseif ($propsForOffers[$typeProp]['TYPE'] === 'colorWithText') {
-									if (!empty($taste)) { ?>
-										<div
-											class="red_button_cart display-flex flex-row p-1 variation_taste
+								if (!empty($prop_value)) {
+									if ($type === 'text') { ?>
+										<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"
+										     title="<?= $offer['NAME'] ?>"
+										     data-active="<?= $active_box ?>"
+										     data-product_id="<?= $offer['ID'] ?>"
+										     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+										     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+										     data-basket-quantity="<?= $basketItem ?>"
+										     data-basket_quantity="<?= $basketItem ?>"
+										     data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
+										     data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
+										     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
+										     data-sale="<?= $sale ?>"
+										     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+										     data-onevalue="<?= $offer['ID'] ?>">
+											<?= $prop_value ?? '0' ?>
+										</div>
+									<?php } elseif ($type === 'color') { ?>
+										<div title="<?= $offer['NAME'] ?>"
+										     data-active="<?= $active_box ?>"
+										     data-product_id="<?= $offer['ID'] ?>"
+										     data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+										     data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+										     data-basket-quantity="<?= $basketItem ?>"
+										     data-basket_quantity="<?= $basketItem ?>"
+										     data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
+										     data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
+										     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
+										     data-sale="<?= $sale ?>"
+										     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+										     data-onevalue="<?= $offer['ID'] ?>"
+										     class="mr-1 offer-box color-hookah br-10 mb-1">
+											<img src="<?= $offer['PREVIEW_PICTURE']['SRC'] ?>"
+											     class="br-10"
+											     width="50"
+											     height="50"
+											     alt="<?= $offer['NAME'] ?>"
+											     loading="lazy"/>
+										</div>
+									<?php } elseif ($type === 'colorWithText') {
+										if (!empty($taste)) { ?>
+											<div
+												class="red_button_cart display-flex flex-row p-1 variation_taste
 											taste font-14 width-fit-content mb-1 mr-1 offer-box cursor-pointer"
-											title="<?= $offer['NAME'] ?>"
-											data-active="<?= $active_box ?>"
-											data-product_id="<?= $offer['ID'] ?>"
-											data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-											data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
-											data-basket-quantity="<?= $basketItem ?>"
-											data-basket_quantity="<?= $basketItem ?>"
-											data-price_base=data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
-											data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
-											data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
-											data-sale="<?= $sale ?>"
-											data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
-											data-onevalue="<?= $offer['ID'] ?>">
-											<?php foreach ($taste as $elem_taste) { ?>
-												<span class="taste mb-0"
-												      data-background="<?= $elem_taste['color'] ?>"
-												      style="background-color: <?= $elem_taste['color'] ?>;
-													      border-color:<?= $elem_taste['color'] ?>;
-													      padding: 4px 8px;
-													      line-height: 1.5;
-													      display: block">
+												title="<?= $offer['NAME'] ?>"
+												data-active="<?= $active_box ?>"
+												data-product_id="<?= $offer['ID'] ?>"
+												data-product_quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+												data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
+												data-basket-quantity="<?= $basketItem ?>"
+												data-basket_quantity="<?= $basketItem ?>"
+												data-price_base=data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
+												data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
+												data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
+												data-sale="<?= $sale ?>"
+												data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+												data-onevalue="<?= $offer['ID'] ?>">
+												<?php foreach ($taste as $elem_taste) { ?>
+													<span class="taste mb-0"
+													      data-background="<?= $elem_taste['color'] ?>"
+													      style="background-color: <?= $elem_taste['color'] ?>;
+														      border-color:<?= $elem_taste['color'] ?>;
+														      padding: 4px 8px;
+														      line-height: 1.5;
+														      display: block">
 															<?= $elem_taste['name'] ?>
 												</span>
-											<?php } ?>
-										</div>
-									<?php }
+												<?php } ?>
+											</div>
+										<?php }
+									}
 								}
 							}
 						} ?>

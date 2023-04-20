@@ -67,7 +67,6 @@ class EnteregoSettings
 					'CODE' => "VKUS",
 					'TYPE' => 'colorWithText',
 					'PREF' => '',
-					'CATEGORY' => ['Жидкости', 'Жевательные паучи','Дисконт']
 				],
 				'GRAMMOVKA_G' => [
 					'CODE' => "GRAMMOVKA_G",
@@ -81,12 +80,7 @@ class EnteregoSettings
 					'PREF' => '',
 					'CATEGORY' => ['Кальяны', 'Комплектующие','Дисконт']
 				],
-				'KOLICHESTVO_ZATYAZHEK' => [
-					'CODE' => "KOLICHESTVO_ZATYAZHEK",
-					'TYPE' => 'text',
-					'PREF' => '',
-					'CATEGORY' => ['Электронки','Дисконт']
-				],
+
 				'SHTUK_V_UPAKOVKE' => [
 					'CODE' => "SHTUK_V_UPAKOVKE",
 					'TYPE' => 'text',
