@@ -1,4 +1,6 @@
-<?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
+<?php use Enterego\EnteregoSettings;
+
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 	die();
 }
 
@@ -166,6 +168,7 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 	}
 //	OFFERS
 	if (!empty($arResult["ELEMENTS"]['OFFERS'])) {
+		$propOffer = EnteregoSettings::getDataPropOffers();
 		$propTaste = [];
 		$arFilterOffer['IBLOCK_ID'] = IBLOCK_CATALOG_OFFERS;
 		$arFilterOffer["=ID"] = (array)array_keys($arResult["ELEMENTS"]['OFFERS']);
@@ -195,34 +198,32 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 					true)['src'];
 
 				// Get prop active for offer TODO offer props static
-				if (!empty($arElement['PROPERTY_GRAMMOVKA_G_VALUE'])) {
+				$section = $arResult["ELEMENTS"]['PRODUCT'][$arElement['PROPERTY_CML2_LINK_VALUE']]['INFO']['SECTION_NAME'];
+
+				if (!empty($arElement['PROPERTY_GRAMMOVKA_G_VALUE'])
+					&& in_array($section, $propOffer['GRAMMOVKA_G']['CATEGORY'])) {
 					$arElement['PROPERTIES']['CODE'] = 'GRAMMOVKA_G';
 					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_GRAMMOVKA_G_VALUE'];
-				} else {
-					if (!empty($arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'])) {
-						$arElement['PROPERTIES']['CODE'] = 'SHTUK_V_UPAKOVKE';
-						$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'];
-					} else {
-						if (!empty($arElement['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'])) {
-							$arElement['PROPERTIES']['CODE'] = 'KOLICHESTVO_ZATYAZHEK';
-							$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'];
-						} else {
-							if (!empty($arElement['PROPERTY_TSVET_VALUE'])) {
-								$arElement['PROPERTIES']['CODE'] = 'TSVET';
-								$arElement['PROPERTIES']['VALUE'] = $arElement["PICTURE"];
-							} else {
-								if (!empty($arElement['PROPERTY_VKUS_VALUE'])) {
-									$arElement['PROPERTIES']['CODE'] = 'VKUS';
-									foreach ((array)$arElement['PROPERTY_VKUS_VALUE'] as $id => $tasteName) {
-										$arElement['PROPERTIES']['VALUE'][$id] = [
-											'color' => $propTaste[$id]['color'],
-											'name' => $propTaste[$id]['name']
-										];
-									}
-								}
+				} elseif (!empty($arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'])
+					&& in_array($section, $propOffer['SHTUK_V_UPAKOVKE']['CATEGORY'])) {
+					$arElement['PROPERTIES']['CODE'] = 'SHTUK_V_UPAKOVKE';
+					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'];
+				} elseif (!empty($arElement['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'])
+					&& in_array($section, $propOffer['KOLICHESTVO_ZATYAZHEK']['CATEGORY'])) {
+					$arElement['PROPERTIES']['CODE'] = 'KOLICHESTVO_ZATYAZHEK';
+					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'];
+				} elseif (!empty($arElement['PROPERTY_TSVET_VALUE'])
+					&& in_array($section, $propOffer['TSVET']['CATEGORY'])) {
+						$arElement['PROPERTIES']['CODE'] = 'TSVET';
+						$arElement['PROPERTIES']['VALUE'] = $arElement["PICTURE"];
+				} elseif (!empty($arElement['PROPERTY_VKUS_VALUE']) && in_array($section, $propOffer['VKUS']['CATEGORY'])) {
+							$arElement['PROPERTIES']['CODE'] = 'VKUS';
+							foreach ((array)$arElement['PROPERTY_VKUS_VALUE'] as $id => $tasteName) {
+								$arElement['PROPERTIES']['VALUE'][$id] = [
+									'color' => $propTaste[$id]['color'],
+									'name' => $propTaste[$id]['name']
+								];
 							}
-						}
-					}
 				}
 
 
