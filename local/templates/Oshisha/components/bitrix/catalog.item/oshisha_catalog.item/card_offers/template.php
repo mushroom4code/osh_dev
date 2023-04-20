@@ -195,11 +195,8 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 		<?php } ?>
 
 		<div class="item-product-info d-flex flex-column justify-content-between height-100">
-			<div class="toggle_taste card-price <?= ($taste['VALUE']  && $boolShowTaste) ? 'js__tastes' : '' ?>">
-				<div class="variation_taste <?= ($showToggler && $boolShowTaste) ? '' : 'show_padding' ?> <?= $listClass ?>">
-
-					<?php
-					if ($boolShowTaste) {
+			<div class="toggle_taste card-price <?= ($taste['VALUE'] && $boolShowTaste) ? 'js__tastes' : '' ?>">
+				<?php if ($boolShowTaste) {
 					//					TASTE
 					$showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
 					$togglerState = 'd-none';
@@ -214,33 +211,37 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 						}
 						$togglerState = $showToggler ? ' many-tastes' : ' d-none many-tastes';
 						$listClass = $showToggler ? ' js__tastes-list' : '';
-					}
-					foreach ($taste['VALUE'] as $key => $name) {
-						foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
-							if ($key === $keys) {
-								$color = explode('#', $value);
-								$tasteSize = 'taste-small';
+					} ?>
+					<div
+						class="variation_taste <?= ($showToggler && $boolShowTaste) ? '' : 'show_padding' ?> <?= $listClass ?>">
 
-								if (4 < mb_strlen($name) && mb_strlen($name) <= 8) {
-									$tasteSize = 'taste-normal';
-								} elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
-									$tasteSize = 'taste-long';
-								} elseif (mb_strlen($name) > 13) {
-									$tasteSize = 'taste-xxl';
-								}
-								$propId = $taste['ID'];
-								$valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
-								?>
-								<span class="taste  js__taste <?= $tasteSize ?>"
-								      data-background="<?= '#' . $color[1] ?>"
-								      id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
-								      data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?> </span>
-							<?php }
-						}
-					} }?>
+						<?php
+						foreach ($taste['VALUE'] as $key => $name) {
+							foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
+								if ($key === $keys) {
+									$color = explode('#', $value);
+									$tasteSize = 'taste-small';
 
-				</div>
-				<div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
+									if (4 < mb_strlen($name) && mb_strlen($name) <= 8) {
+										$tasteSize = 'taste-normal';
+									} elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
+										$tasteSize = 'taste-long';
+									} elseif (mb_strlen($name) > 13) {
+										$tasteSize = 'taste-xxl';
+									}
+									$propId = $taste['ID'];
+									$valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
+									?>
+									<span class="taste  js__taste <?= $tasteSize ?>"
+									      data-background="<?= '#' . $color[1] ?>"
+									      id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
+									      data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?> </span>
+								<?php }
+							}
+						} ?>
+					</div>
+					<div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
+				<?php } ?>
 			</div>
 			<div class="bx_catalog_item_overlay"></div>
 			<div class="image_cart position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
@@ -378,7 +379,7 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 				</div>
 			<?php } ?>
 			<div class="box_with_title_like d-flex align-items-center">
-				<?php if (count($taste['VALUE']) > 0 && $boolShowTaste ) { ?>
+				<?php if (count($taste['VALUE']) > 0 && $boolShowTaste) { ?>
 					<div class="toggle_taste_line">
 						<div class="variation_taste">
 							<?php foreach ($taste['VALUE'] as $key => $name) {
