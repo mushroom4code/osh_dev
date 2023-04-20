@@ -441,8 +441,8 @@ $(document).ready(function () {
                         'URL': product_url,
                     };
                 }
-                if ($(this).hasClass('red_button_cart')) {
-                    $('.red_button_cart[data-product_id="' + product_id + '"]').hide();
+                if ($(this).hasClass('red_button_cart') && !$(this).hasClass('offer-box')) {
+                    $(this).hide();
                     $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').css({'display': 'flex'});
                 }
             } else if (minus === true) {

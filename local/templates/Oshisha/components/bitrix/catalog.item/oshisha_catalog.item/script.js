@@ -2288,30 +2288,34 @@ $(document).on('click', '.open-fast-window', function () {
                         },
                         children: [
                             BX.create('DIV', {
-                                props: {
-                                    className: 'offers-box mb-2 d-flex flex-row flex-wrap',
-                                },
-                            }),
-                            BX.create('DIV', {
-                                props: {
-                                    className: 'prices-box ml-lg-3 ml-md-3 ml-0 mb-lg-4 mb-md-2 mb-2',
-                                },
                                 children: [
-                                    BX.create('P', {
+                                    BX.create('DIV', {
                                         props: {
-                                            className: 'base-price bx_price font-weight-bold font-27 mb-3'
+                                            className: 'offers-box mb-3 d-flex flex-row flex-wrap',
                                         },
                                     }),
                                     BX.create('DIV', {
                                         props: {
-                                            className: 'price-group prices-all mb-lg-4 mb-md-3 mb-3'
+                                            className: 'prices-box ml-lg-3 ml-md-3 ml-0 mb-lg-4 mb-md-2 mb-2',
                                         },
+                                        children: [
+                                            BX.create('P', {
+                                                props: {
+                                                    className: 'base-price bx_price font-weight-bold font-27 mb-3'
+                                                },
+                                            }),
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'price-group prices-all mb-lg-4 mb-md-3 mb-3'
+                                                },
+                                            }),
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
+                                                },
+                                            })
+                                        ]
                                     }),
-                                    BX.create('DIV', {
-                                        props: {
-                                            className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
-                                        },
-                                    })
                                 ]
                             }),
                             BX.create('DIV', {
@@ -2373,15 +2377,14 @@ $(document).on('click', '.open-fast-window', function () {
                 let box_offers = BX.findChildByClassName(box_product, 'offers-box');
                 let boolSale = (product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) ? 1 : 0;
                 $.each(offer.PROPS, function (key_prop, prop) {
-                    if (prop.CODE === 'SHTUK_V_UPAKOVKE' && prop.VALUE !== ''
-                        || prop.CODE === 'GRAMMOVKA_G' && prop.VALUE !== '') {
+                    if (prop.TYPE_OFFERS === 'text' && prop.VALUE !== '') {
                         box_offers.appendChild(BX.create('DIV', {
                             props: {
-                                className: 'red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer',
+                                className: 'red_button_cart width-fit-content font-weight-bold mb-lg-2 font-15 m-md-2 m-1 offer-box cursor-pointer',
                                 src: offer.DETAIL_PICTURE,
                                 alt: 'modal-product',
                             },
-                            html: prop.VALUE,
+                            html: prop.VALUE + ' ' + prop.PREF,
                             dataset: {
                                 active: active_box,
                                 sale_price:offer.SALE_PRICE.PRICE ?? '',
@@ -2393,7 +2396,7 @@ $(document).on('click', '.open-fast-window', function () {
                                 basket_quantity: offer.BASKET
                             }
                         }))
-                    } else if (prop.CODE === 'TSVET' && prop.VALUE !== '') {
+                    } else if (prop.TYPE_OFFERS === 'color' && prop.VALUE !== '') {
                         box_offers.appendChild(BX.create('IMG', {
                             props: {
                                 className: 'mr-2 br-10 box-offer-fast offer-box cursor-pointer',
@@ -2412,7 +2415,7 @@ $(document).on('click', '.open-fast-window', function () {
                                 basket_quantity: offer.BASKET
                             }
                         }))
-                    } else if (prop.CODE === 'VKUS' && prop.VALUE !== false) {
+                    } else if (prop.TYPE_OFFERS === 'colorWithText' && prop.VALUE !== false) {
                         let box_taste = box_offers.appendChild(BX.create('DIV', {
                             props: {
                                 className: 'red_button_cart width-fit-content mr-1 mb-1 offer-box p-1 taste variation_taste cursor-pointer',

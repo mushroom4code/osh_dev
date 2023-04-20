@@ -1017,7 +1017,7 @@ a.link_like span, .bx-pagination .bx-pagination-container ul li span, .catalog-s
 
 .bc-gray tr th, .box_msk p, .box_reg p, .news_val_data, .text_footer_weight, .li_menu_header, .li_menu_top,
 .link_message_box_product > i, #box_delivery_faq div.card-body, #for_business_faq div.card-body,
-.font_15, #placeModal form #choose-city-btn, .nameBox {
+.font_15, #placeModal form #choose-city-btn, .nameBox, .open-modal-product .offer-box .font-15 {
     font-size: 15px;
 }
 

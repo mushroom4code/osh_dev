@@ -67,7 +67,7 @@ $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES'][PROP_NEW];
 $hitProduct = $item['PROPERTIES'][PROP_HIT];
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
-
+$propsForOffers = EnteregoSettings::getDataPropOffers();
 $show_price = true;
 $priceBasket = 0;
 $styleForNo = $href = $not_auth = $styleForTaste = '';
@@ -116,6 +116,7 @@ $priceDef = 0;
 $offersForModal = [];
 foreach ($item['OFFERS'] as $keys => $quantityNull) {
 	$basketItem = 0;
+	$propsList = [];
 	if ($quantityNull['CATALOG_QUANTITY'] > 0 && $boolShow === false) {
 		$boolShow = true;
 	}
@@ -129,6 +130,15 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 		$basketItem = $item['ACTUAL_BASKET'][$quantityNull['ID']];
 	}
 
+	foreach ($quantityNull['PROPERTIES'] as $code => $prop) {
+		if (!empty($prop['VALUE']) && in_array($item['SECTION_NAME'], $propsForOffers[$code]['CATEGORY'])) {
+			$propsList[$code] = $prop;
+			$propsList[$code]['TYPE_OFFERS'] = $propsForOffers[$code]['TYPE'];
+			$propsList[$code]['PREF'] = $propsForOffers[$code]['PREF'];
+		}
+	}
+
+
 	if ((int)$quantityNull['CATALOG_QUANTITY'] > 0) {
 		$offersForModal[$quantityNull['ID']] = [
 			'ID' => $quantityNull['ID'],
@@ -136,7 +146,7 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 			'SALE_PRICE' => $quantityNull['PRICES_CUSTOM']['SALE_PRICE'] ?? [],
 			'DETAIL_PICTURE' => $quantityNull['DETAIL_PICTURE']['SRC'],
 			'QUANTITY' => $quantityNull['CATALOG_QUANTITY'],
-			'PROPS' => $quantityNull['PROPERTIES'] ?? [],
+			'PROPS' => $propsList,
 			'BASKET' => $basketItem
 		];
 	}
@@ -417,10 +427,10 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 									<?php $sale = false;
 									if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
 										$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-										echo(round($price['SALE_PRICE']['PRICE'])).'₽';
+										echo (round($price['SALE_PRICE']['PRICE'])) . '₽';
 										$sale = true;
 									} else {
-										echo '<span><span class="font-10 card-price-text">от </span> ' . (round($priceDef)).'₽</span>';
+										echo '<span><span class="font-10 card-price-text">от </span> ' . (round($priceDef)) . '₽</span>';
 									} ?>
 									<?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
 										$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
@@ -537,7 +547,6 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 					<div class="d-flex flex-wrap flex-row mb-2 justify-content-end box-offers-auto">
 						<?php
 						$quantity_basket_default = 0;
-						$propsForOffers = EnteregoSettings::getDataPropOffers();
 						foreach ($item['OFFERS'] as $key => $offer) {
 							if ((int)$offer['CATALOG_QUANTITY'] > 0) {
 
@@ -556,7 +565,8 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 								$typeProp = '';
 								foreach ($offer['PROPERTIES'] as $prop) {
 									$code = $prop['CODE'];
-									if (!empty($prop['VALUE']) && in_array($item['SECTION_NAME'], $propsForOffers[$code]['CATEGORY'])) {
+									if (!empty($prop['VALUE']) && in_array($item['SECTION_NAME'],
+											$propsForOffers[$code]['CATEGORY'])) {
 										$prop_value = $prop['VALUE'] . $propsForOffers[$code]['PREF'];
 										$typeProp = $code;
 
@@ -612,7 +622,8 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 								<?php } elseif ($propsForOffers[$typeProp]['TYPE'] === 'colorWithText') {
 									if (!empty($taste)) { ?>
 										<div
-											class="red_button_cart display-flex flex-row p-1 variation_taste taste font-14 width-fit-content mb-1 mr-1 offer-box cursor-pointer"
+											class="red_button_cart display-flex flex-row p-1 variation_taste
+											taste font-14 width-fit-content mb-1 mr-1 offer-box cursor-pointer"
 											title="<?= $offer['NAME'] ?>"
 											data-active="<?= $active_box ?>"
 											data-product_id="<?= $offer['ID'] ?>"
@@ -620,7 +631,7 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 											data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
 											data-basket-quantity="<?= $basketItem ?>"
 											data-basket_quantity="<?= $basketItem ?>"
-											data-price_base=  data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
+											data-price_base=data-price_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] ?>"
 											data-sale_price="<?= $price['SALE_PRICE']['PRICE'] ?>"
 											data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 											data-sale="<?= $sale ?>"
@@ -673,11 +684,11 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 							<?php $sale = false;
 							if (USE_CUSTOM_SALE_PRICE && !empty($item['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
 								$useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-								echo(round($price['SALE_PRICE']['PRICE'])).'₽';
+								echo (round($price['SALE_PRICE']['PRICE'])) . '₽';
 								$sale = true;
 							} else {
 								echo '<span><span class="font-10 card-price-text">от </span>
- 								' . (round($item['OFFERS'][$active]['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'])).'₽</span>';
+ 								' . (round($item['OFFERS'][$active]['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'])) . '₽</span>';
 							} ?>
 						</div>
 						<?php if ($USER->IsAuthorized()) { ?>
