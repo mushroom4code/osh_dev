@@ -195,8 +195,8 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 		<?php } ?>
 
 		<div class="item-product-info d-flex flex-column justify-content-between height-100">
-			<div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
-				<div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
+			<div class="toggle_taste card-price <?= ($taste['VALUE']  && $boolShowTaste) ? 'js__tastes' : '' ?>">
+				<div class="variation_taste <?= ($showToggler && $boolShowTaste) ? '' : 'show_padding' ?> <?= $listClass ?>">
 
 					<?php
 					if ($boolShowTaste) {
