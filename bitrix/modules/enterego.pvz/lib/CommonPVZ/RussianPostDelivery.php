@@ -34,6 +34,18 @@ class RussianPostDelivery extends CommonPVZ
             return array('RussianPostEms' => $opt, 'RussianPostFirstClass' => $opt, 'RussianPostRegular' => $opt);
     }
 
+    public static function getInstance($deliveryParams): array
+    {
+        if (Option::get(DeliveryHelper::$MODULE_ID, 'RussianPost_active') === 'Y') {
+            return [
+                new RussianPostDelivery('RussianPostEms'),
+                new RussianPostDelivery('RussianPostFirstClass'),
+                new RussianPostDelivery('RussianPostRegular'),
+            ];
+        }
+        return [];
+    }
+
     protected function connect()
     {
         return true;

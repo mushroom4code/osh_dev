@@ -19,6 +19,14 @@ class SDEKDelivery extends CommonPVZ
         return array('SDEK' => Option::get(DeliveryHelper::$MODULE_ID, 'SDEK_active'));
     }
 
+    public static function getInstance($deliveryParams): array
+    {
+        if (Option::get(DeliveryHelper::$MODULE_ID, 'SDEK_active') === 'Y') {
+            return [new SDEKDelivery()];
+        }
+        return [];
+    }
+
     static function getSdekExtraTarifs(){
         IncludeModuleLangFile('bitrix/modules/enterego.pvz/lang/ru/include.php');
         $arTarifs = self::$sdek_tarifs;

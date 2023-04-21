@@ -8,6 +8,7 @@ abstract class CommonPVZ
     protected $configs = [];
     protected $client = null;
     public string $delivery_name = '';
+    public string $delivery_code = 'common_delivery';
 
     public string $title = '';
 
@@ -46,6 +47,10 @@ abstract class CommonPVZ
         }
     }
 
+    public static function getInstance($deliveryParams): array
+    {
+        return [];
+    }
     public function __construct()
     {
         $CONFIG_DELIVERIES = DeliveryHelper::getConfigs();

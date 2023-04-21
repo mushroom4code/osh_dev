@@ -12,8 +12,6 @@ BX.SaleCommonPVZ = {
     pvzAddress: null,
     pvzFullAddress: null,
     pvzPrice: null,
-    isInit: false,
-    justInited: false,
     dataPVZ: null,
     objectManager: null,
     propAddressId: null,
@@ -33,64 +31,70 @@ BX.SaleCommonPVZ = {
     shipmentCost: null,
     orderPackages: null,
     oshishaDeliveryOptions: null,
-    oshishaDeliveryStatus: null,
-
+    oshishaDeliveryStatus: false,
 
     init: function (params) {
-        this.propAddressId = params.params?.propAddress;
-        this.propCommonPVZId = params.params?.propCommonPVZ;
-        this.propTypeDeliveryId = params.params?.propTypeDelivery;
-        this.propZipId = params.params?.propZip;
-        this.propCityId = params.params?.propCity;
-        this.propFiasId = params.params?.propFias;
-        this.propKladrId = params.params?.propKladr;
-        this.propStreetKladrId = params.params?.propStreetKladr;
-        this.propLatitudeId = params.params?.propLatitude;
-        this.propLongitudeId = params.params?.propLongitude;
-        this.propDateDelivery = params.params?.propDateDelivery;
-        this.propDeliveryTimeInterval = params.params?.propDateTimeInterval;
+        const order = BX.Sale.OrderAjaxComponent.result
+
+        this.propAddressId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
+        this.propCommonPVZId          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
+        this.propTypeDeliveryId       = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
+        this.propZipId                = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ZIP')?.ID;
+        this.propCityId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'CITY')?.ID;
+        this.propFiasId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'FIAS')?.ID;
+        this.propKladrId              = order.ORDER_PROP.properties.find(prop => prop.CODE === 'KLADR')?.ID;
+        this.propStreetKladrId        = order.ORDER_PROP.properties.find(prop => prop.CODE === 'STREET_KLADR')?.ID;
+        this.propLatitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LATITUDE')?.ID;
+        this.propLongitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
+        this.propDateDelivery          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
+        this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
+
         this.curDeliveryId = params.params?.curDeliveryId;
         this.doorDeliveryId = params.params?.doorDeliveryId;
         this.shipmentCost = params.params?.shipmentCost;
         this.orderPackages = params.params?.packages;
         this.oshishaDeliveryOptions = params.params?.deliveryOptions;
-        this.oshishaDeliveryStatus = params.params?.oshishaDeliveryStatus;
 
-        this.refresh();
-        this.isInit = true;
-        this.justInited = true;
-    },
+        this.updateDelivery(BX.Sale.OrderAjaxComponent.result)
+        this.refresh()
 
-    update: function (ajaxAns) {
-        if (Object.keys(ajaxAns).indexOf("order") !== -1) {
-            BX.SaleCommonPVZ.propAddressId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
-            BX.SaleCommonPVZ.propCommonPVZId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
-            BX.SaleCommonPVZ.propTypeDeliveryId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
-            BX.SaleCommonPVZ.propZipId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'ZIP')?.ID;
-            BX.SaleCommonPVZ.propCityId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'CITY')?.ID;
-            BX.SaleCommonPVZ.propFiasId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'FIAS')?.ID;
-            BX.SaleCommonPVZ.propKladrId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'KLADR')?.ID;
-            BX.SaleCommonPVZ.propStreetKladrId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'STREET_KLADR')?.ID;
-            BX.SaleCommonPVZ.propLatitudeId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'LATITUDE')?.ID;
-            BX.SaleCommonPVZ.propLongitudeId = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
-            BX.SaleCommonPVZ.propDateDelivery = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
-            BX.SaleCommonPVZ.propDeliveryTimeInterval = ajaxAns.order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
-            BX.SaleCommonPVZ.curDeliveryId = ajaxAns.order.DELIVERY.find(field => field.CHECKED === 'Y')?.ID;
+        if (this.propAddressId  && this.oshishaDeliveryStatus) {
+            window.Osh.bxPopup.init();
+            const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
 
-            BX.SaleCommonPVZ.refresh();
+            const latitude_value = (this.propLatitudeId)
+                ? (document.querySelector('input[name="ORDER_PROP_' + this.propLatitudeId + '"]').value) : '';
+            const longitude_value = (this.propLongitudeId)
+                ? (document.querySelector('input[name="ORDER_PROP_' + this.propLongitudeId + '"]').value) : '';
+            if (latitude_value && longitude_value) {
+                const oshParams = {
+                    oshMkad: oshMkad,
+                    latitude: latitude_value,
+                    longitude: longitude_value,
+                    propAddressId: this.propAddressId,
+                    propDateDelivery: (this.propDateDelivery)
+                        ? this.propDateDelivery
+                        : '',
+                }
+                setTimeout(function (oshParams) {
+                    oshParams.oshMkad.afterSave = null;
+                    oshParams.oshMkad.getDistance([oshParams.latitude, oshParams.longitude],
+                        oshParams.propDateDelivery,
+                        oshParams.propDateDelivery,
+                        true);
+                }, 500, oshParams);
+            }
         }
-    },
-
-    openMap: function () {
-        this.createPVZPopup();
-        this.buildPVZMap();
-        this.pvzPopup.show();
     },
 
     refresh: function () {
         const __this = this;
         if (this.propAddressId) {
-            var addressField = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
+
+            window.Osh.bxPopup.init();
+            const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
+
+            const addressField = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
             if (this.oshishaDeliveryOptions.DA_DATA_TOKEN && !addressField.hasClass('suggestions-input')) {
                 addressField.suggestions({
                     token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
@@ -100,15 +104,26 @@ BX.SaleCommonPVZ = {
                     triggerSelectOnEnter: true,
                     autoSelectFirst: true,
                     onSelect: function (suggestion) {
-                        (this.propZipId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propZipId + '"]').value = suggestion.data.postal_code) : '';
-                        (this.propCityId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propCityId + '"]').value = suggestion.data.city) : '';
-                        (this.propFiasId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propFiasId + '"]').value = suggestion.data.fias_id) : '';
-                        (this.propKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propKladrId + '"]').value = suggestion.data.kladr_id) : '';
-                        (this.propStreetKladrId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propStreetKladrId + '"]').value = suggestion.data.street_kladr_id) : '';
-                        (this.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propLatitudeId + '"]').value = suggestion.data.geo_lat) : '';
-                        (this.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + this.propLongitudeId + '"]').value = suggestion.data.geo_lon) : '';
+                        this.updatePropsFromDaData(suggestion)
+
+                        if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+                            if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
+                                __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                                oshMkad.afterSave = null;
+                                oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
+                                    __this.propAddressId,
+                                    (__this.propDateDelivery)
+                                        ? __this.propDateDelivery
+                                        : '',
+                                    (__this.propDateDelivery)
+                                        ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
+                                        : '',
+                                    true);
+                            }
+                        }
+
                         BX.onCustomEvent('onDeliveryExtraServiceValueChange');
-                    }.bind(this)
+                    }.bind(this),
                 });
                 if (this.curCityName) {
                     if (this.curCityName == 'Москва') {
@@ -144,9 +159,143 @@ BX.SaleCommonPVZ = {
                     __this.propsMap = null;
                     __this.getCityName();
                 }
-                __this.checkMoscowOrNot();
             }
         });
+    },
+
+    update: function (ajaxAns) {
+        if (Object.keys(ajaxAns).indexOf("order") !== -1) {
+            BX.SaleCommonPVZ.curDeliveryId = ajaxAns.order.DELIVERY.find(field => field.CHECKED === 'Y')?.ID;
+
+            BX.SaleCommonPVZ.refresh();
+            BX.SaleCommonPVZ.updateDelivery(ajaxAns.order)
+        }
+    },
+
+    /**
+     *
+     * @param orderData array
+     */
+    updateDelivery: function (orderData) {
+        const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
+
+        BX.cleanNode(propsNode)
+        const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
+
+        if (doorDelivery !== undefined) {
+            const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
+            deliveryInfo.forEach(delivery => {
+                const propContainer = BX.create(
+                    'DIV',
+                    {
+                        props: {
+                            className: 'bx-soa-pp-company-graf-container  box_with_delivery mb-3'
+                        },
+                        children: [
+                            BX.create('INPUT', {
+                                attrs: {checked: delivery.checked},
+                                props: {
+                                    name: `ORDER_PROP_${this.propTypeDeliveryId}`,
+                                    value: delivery.name,
+                                    type: 'radio',
+
+                                },
+                                events: {click: () => BX.Sale.OrderAjaxComponent.sendRequest()},
+                            }),
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'bx-soa-pp-company-smalltitle color_black font_weight_600',
+                                },
+                                html: `${delivery.name} - ${delivery.price}`
+                            })
+                        ]
+                    },
+                )
+
+                propsNode.append(propContainer);
+                if (delivery.code === 'oshisha') {
+                    this.updateOshishaDelivery(propsNode)
+                }
+            })
+        }
+    },
+
+    updateOshishaDelivery: function(parentBlock) {
+        var __this = this;
+
+        __this.oshishaDeliveryStatus = true
+
+        if (__this.propDateDelivery) {
+            document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').removeAttribute('disabled');
+            document.querySelector('div[data-property-id-row="' + __this.propDateDelivery + '"]').classList.remove('d-none');
+        }
+        if (__this.propDeliveryTimeInterval) {
+            document.querySelector('select[name="ORDER_PROP_' + __this.propDeliveryTimeInterval + '"]').disabled = false;
+            document.querySelector('div[data-property-id-row="' + __this.propDeliveryTimeInterval + '"]').classList.remove('d-none');
+        }
+
+        window.Osh.bxPopup.init();
+        const oshMkad = window.Osh.oshMkadDistance.init(__this.oshishaDeliveryOptions);
+        const propContainer = BX.create('DIV', {
+            props: {id: 'oshMapButton', className: 'soa-property-container'},
+            children: [
+                BX.create('a',
+                    {
+                        props: {className: 'btn btn_red sbtn-primary '},
+                        text: 'Выбрать адрес на карте (Oshisha)',
+                        events: {
+                            click: BX.proxy(function () {
+                                oshMkad.afterSave = function (address) {
+                                    __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
+                                }.bind(this);
+                                window.Osh.bxPopup.onPickerClick(
+                                    (__this.propAddressId)
+                                        ? __this.propAddressId
+                                        : '',
+                                    (__this.propDateDelivery)
+                                        ? __this.propDateDelivery
+                                        : '',
+                                    (__this.propDateDelivery)
+                                        ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
+                                        : ''
+                                );
+                            }, this)
+                        }
+                    })
+            ]
+        });
+        parentBlock.append(propContainer);
+    },
+
+    openMap: function () {
+        this.createPVZPopup();
+        this.buildPVZMap();
+        this.pvzPopup.show();
+    },
+
+    /**
+     * Fill props from DADATA suggestion
+     * @param suggestion
+     */
+    updatePropsFromDaData: function (suggestion) {
+        this.updateValueProp(this.propZipId, suggestion?.data?.postal_code ?? '')
+        this.updateValueProp(this.propCityId, suggestion?.data?.city ?? '')
+        this.updateValueProp(this.propFiasId, suggestion?.data?.fias_id ?? '')
+        this.updateValueProp(this.propKladrId, suggestion?.data?.kladr_id ?? '')
+        this.updateValueProp(this.propStreetKladrId, suggestion?.data?.street_kladr_id ?? '')
+        this.updateValueProp(this.propLatitudeId, suggestion?.data?.geo_lat ?? '')
+        this.updateValueProp(this.propLongitudeId, suggestion?.data?.geo_lon ?? '')
+    },
+
+    /**
+     *
+     * @param prop_id
+     * @param value
+     */
+    updateValueProp: function (prop_id, value) {
+        if (prop_id) {
+            document.querySelector(`input[name="ORDER_PROP_${prop_id}"]`).value = value
+        }
     },
 
     createPVZPopup: function () {
@@ -239,127 +388,6 @@ BX.SaleCommonPVZ = {
             },
             onfailure: function (res) {
                 console.log('error getCityName');
-            }
-        });
-    },
-
-    checkMoscowOrNot: function() {
-        var __this = this;
-        BX.ajax({
-            url: __this.ajaxUrlPVZ,
-            method: 'POST',
-            data: {
-                codeCity: __this.curCityCode,
-                'action': 'checkMoscowOrNot'
-            },
-            onsuccess: function (res) {
-                __this.isMoscow = res;
-                if (__this.isMoscow == '1') {
-                    if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
-                        if (__this.propDateDelivery) {
-                            document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').removeAttribute('disabled');
-                            document.querySelector('div[data-property-id-row="' + __this.propDateDelivery + '"]').classList.remove('d-none');
-                        }
-                        if (__this.propDeliveryTimeInterval) {
-                            document.querySelector('select[name="ORDER_PROP_' + __this.propDeliveryTimeInterval + '"]').disabled = false;
-                            document.querySelector('div[data-property-id-row="' + __this.propDeliveryTimeInterval + '"]').classList.remove('d-none');
-                        }
-
-                        var propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected');
-                        window.Osh.bxPopup.init();
-                        var oshMkad = window.Osh.oshMkadDistance.init(__this.oshishaDeliveryOptions);
-
-                        if (!document.querySelector('#oshMapButton')) {
-                            var propContainer = BX.create('DIV', {props: {id: 'oshMapButton', className: 'soa-property-container'}});
-                            var nodeOpenMap = BX.create('a',
-                                {
-                                    props: {className: 'btn btn_red sbtn-primary '},
-                                    text: 'Выбрать адрес на карте (Oshisha)',
-                                    events: {
-                                        click: BX.proxy(function () {
-                                            oshMkad.afterSave = function (address) {
-                                                __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
-                                            }.bind(this);
-                                            window.Osh.bxPopup.onPickerClick(
-                                                (__this.propAddressId)
-                                                    ? __this.propAddressId
-                                                    : '',
-                                                (__this.propDateDelivery)
-                                                    ? __this.propDateDelivery
-                                                    : '',
-                                                (__this.propDateDelivery)
-                                                ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
-                                                : ''
-                                            );
-                                        }, this)
-                                    }
-                                });
-                            propContainer.append(nodeOpenMap);
-                            propsNode.append(propContainer);
-                        }
-                    }
-                    if (__this.propAddressId) {
-                        $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
-                            onSelect: function (suggestion) {
-                                if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                                    if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
-                                        __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                                        oshMkad.afterSave = null;
-                                        oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
-                                            __this.propAddressId,
-                                            (__this.propDateDelivery)
-                                                ? __this.propDateDelivery
-                                                : '',
-                                            (__this.propDateDelivery)
-                                                ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
-                                                : '',
-                                            true);
-                                    }
-                                }
-                            }
-
-                        });
-                        if(__this.justInited) {
-                            var latitude_value = (__this.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLatitudeId + '"]').value) : '';
-                            var longitude_value = (__this.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + __this.propLongitudeId + '"]').value) : '';
-                            if (latitude_value && longitude_value) {
-                                var params = {
-                                    oshMkad: oshMkad,
-                                    latitude: latitude_value,
-                                    longitude: longitude_value,
-                                    propAddressId: __this.propAddressId,
-                                    propDateDelivery: (__this.propDateDelivery)
-                                        ? __this.propDateDelivery
-                                        : '',
-                                    propDateDelivery: (__this.propDateDelivery)
-                                        ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
-                                        : ''
-                                }
-                                setTimeout(function (params) {
-                                    params.oshMkad.afterSave = null;
-                                    params.oshMkad.getDistance([params.latitude, params.longitude],
-                                        params.propAddressId,
-                                        params.propDateDelivery,
-                                        params.propDateDelivery,
-                                        true);
-                                }, 500, params);
-                            }
-                            __this.justInited = false;
-                        }
-                    }
-                } else {
-                    if (__this.propDateDelivery) {
-                        document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').setAttribute('disabled', '');
-                        document.querySelector('div[data-property-id-row="' + __this.propDateDelivery + '"]').classList.add('d-none');
-                    }
-                    if (__this.propDeliveryTimeInterval) {
-                        document.querySelector('select[name="ORDER_PROP_' + __this.propDeliveryTimeInterval + '"]').disabled = true;
-                        document.querySelector('div[data-property-id-row="' + __this.propDeliveryTimeInterval + '"]').classList.add('d-none');
-                    }
-                }
-            },
-            onfailure: function (res) {
-                console.log('error checkMoscowOrNot');
             }
         });
     },

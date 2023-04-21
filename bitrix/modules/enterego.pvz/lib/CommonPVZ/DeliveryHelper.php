@@ -27,7 +27,8 @@ class DeliveryHelper
         return $CONFIG_DELIVERIES;
     }
 
-    public static function getActiveDeliveries($isPvz = false) {
+    public static function getActiveDeliveries($isPvz = false): array
+    {
         $deliveriesStatuses = [];
         $deliveriesStatuses = array_merge($deliveriesStatuses, DellinDelivery::getDeliveryStatus());
         $deliveriesStatuses = array_merge($deliveriesStatuses, FivePostDelivery::getDeliveryStatus());
@@ -41,6 +42,25 @@ class DeliveryHelper
                 unset($deliveriesStatuses[$delivery]);
         }
         return array_keys($deliveriesStatuses);
+    }
+
+    public static function getActiveDoorDeliveryInstance($deliveryParams){
+        $deliveryInstance = array_merge(
+            DellinDelivery::getInstance($deliveryParams),
+            RussianPostDelivery::getInstance($deliveryParams),
+            SDEKDelivery::getInstance($deliveryParams),
+            OshishaDelivery::getInstance($deliveryParams)
+        );
+
+//        $deliveriesStatuses = array_merge($deliveriesStatuses, OshishaDelivery::getDeliveryStatus());
+//        $deliveriesStatuses = array_merge($deliveriesStatuses, PEKDelivery::getDeliveryStatus());
+//        $deliveriesStatuses = array_merge($deliveriesStatuses, PickPointDelivery::getDeliveryStatus());
+//        $deliveriesStatuses = array_merge($deliveriesStatuses, SDEKDelivery::getDeliveryStatus());
+//        foreach ($deliveriesStatuses as $delivery => $status) {
+//            if ($status === 'N')
+//                unset($deliveriesStatuses[$delivery]);
+//        }
+        return $deliveryInstance;
     }
 
     public static function getPackagesFromOrderBasket($orderBasket) {
@@ -80,15 +100,6 @@ class DeliveryHelper
         )->fetch();
 
         return $city['LOCATION_NAME'];
-    }
-
-    public static function checkMoscowOrNot($locationCode) {
-        $result = DeliveryLocationTable::checkConnectionExists(DOOR_DELIVERY_ID, $locationCode,
-            array(
-                'LOCATION_LINK_TYPE' => 'AUTO'
-            )
-        );
-        return $result;
     }
 
     /** Обновляет ПВЗ для службы доставки PickPoint
@@ -195,7 +206,6 @@ class DeliveryHelper
         $params['deliveryOptions']['DA_DATA_TOKEN'] = \CommonPVZ\OshishaDelivery::getOshishaDaDataToken();
 
         if (\CommonPVZ\OshishaDelivery::getDeliveryStatus()['Oshisha'] === 'Y') {
-            $params['oshishaDeliveryStatus'] = true;
             $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
             $params['deliveryOptions']['YA_API_KEY'] = \CommonPVZ\OshishaDelivery::getOshishaYMapsKey();
             $params['deliveryOptions']['DELIVERY_COST'] = \CommonPVZ\OshishaDelivery::getOshishaCost();
@@ -203,43 +213,11 @@ class DeliveryHelper
             $params['deliveryOptions']['LIMIT_BASKET'] = \CommonPVZ\OshishaDelivery::getOshishaLimitBasket();
             $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
             $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
-        } else {
-            $params['oshishaDeliveryStatus'] = false;
-        }
-        $propertyCollection = $order->getPropertyCollection();
-        foreach ($propertyCollection as $orderProp)
-        {
-            $prop = $orderProp->getProperty();
-            if ($prop['CODE'] === 'COMMON_PVZ') {
-                $params['propCommonPVZ'] = $prop['ID'];
-            } elseif ($prop['CODE'] === 'ADDRESS') {
-                $params['propAddress'] = $prop['ID'];
-            } elseif ($prop['CODE'] === 'TYPE_DELIVERY') {
-                $params['propTypeDelivery'] = $prop['ID'];
-            } elseif ($prop['CODE'] === 'ZIP') {
-                $params['propZip'] = $prop['ID'];
-            } elseif ($prop['CODE'] === 'CITY') {
-                $params['propCity'] = $prop['ID'];
-            }elseif ($prop['CODE'] === 'FIAS') {
-                $params['propFias'] = $prop['ID'];
-            }elseif ($prop['CODE'] === 'KLADR') {
-                $params['propKladr'] = $prop['ID'];
-            }elseif ($prop['CODE'] === 'STREET_KLADR') {
-                $params['propStreetKladr'] = $prop['ID'];
-            }elseif ($prop['CODE'] === 'LATITUDE') {
-                $params['propLatitude'] = $prop['ID'];
-            }elseif ($prop['CODE'] === 'LONGITUDE') {
-                $params['propLongitude'] = $prop['ID'];
-            }elseif ($prop['CODE'] === 'DATE_DELIVERY') {
-                $params['propDateDelivery'] = $prop['ID'];
-            }elseif ($prop['CODE'] === 'DELIVERYTIME_INTERVAL') {
-                $params['propDeliveryTimeInterval'] = $prop['ID'];
-            }
         }
 
         $params['shipmentCost'] = $order->getBasePrice();
-        $params['packages'] = array();
         $orderBasket = $order->getBasket();
+
         $params['packages'] = self::getPackagesFromOrderBasket($orderBasket);
         ksort($params['packages']);
         $cAsset = Asset::getInstance();

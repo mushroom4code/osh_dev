@@ -24,6 +24,7 @@ class DoorDeliveryProfile extends Base
 {
     protected static $isProfile = true;
     protected static $parent = null;
+    //TODO static value
     protected static $doorDeliveryId = DOOR_DELIVERY_ID;
 
     public function __construct(array $initParams)
@@ -61,8 +62,6 @@ class DoorDeliveryProfile extends Base
     {
         $result = new CalculationResult();
 
-        $description = '';
-        $deliveries = DeliveryHelper::getActiveDeliveries();
         $currentDelivery = '';
         $propTypeDeliveryId = '';
         $deliveryParams = array();
@@ -74,12 +73,8 @@ class DoorDeliveryProfile extends Base
                 $currentDelivery = $propertyItem->getValue();
             }
             if ($prop['CODE'] === 'LOCATION') {
-                $deliveryParams['location_name'] = DeliveryHelper::getCityName($propertyItem->getValue());
-                $location_check = DeliveryLocationTable::checkConnectionExists(self::$doorDeliveryId,$propertyItem->getValue(),
-                    array(
-                        'LOCATION_LINK_TYPE' => 'AUTO'
-                    )
-                );
+                $deliveryParams['location'] = $propertyItem->getValue();
+                $deliveryParams['location_name'] = DeliveryHelper::getCityName($deliveryParams['location']);
             }
             if ($prop['CODE'] === 'ADDRESS') {
                 $deliveryParams['address'] = $propertyItem->getValue();
@@ -96,18 +91,18 @@ class DoorDeliveryProfile extends Base
         }
         $deliveryParams['shipment_weight'] = $shipment->getWeight();
         $deliveryParams['shipment_cost'] = $shipment->getOrder()->getBasePrice();
-        $deliveryParams['packages'] = array();
+
         $orderBasket = $shipment->getOrder()->getBasket();
         $deliveryParams['packages'] = DeliveryHelper::getPackagesFromOrderBasket($orderBasket);
         ksort($deliveryParams['packages']);
-        if ($location_check === false)
-            unset($deliveries[array_search('Oshisha', $deliveries)]);
+
+        $deliveries = DeliveryHelper::getActiveDoorDeliveryInstance($deliveryParams);
+        $resDescription = [];
         if ($propTypeDeliveryId) {
             foreach ($deliveries as $delivery) {
-                $deliveryInstance = CommonPVZ::getInstanceObject($delivery);
-                $price = $deliveryInstance->getPriceDoorDelivery($deliveryParams);
+                $price = $delivery->getPriceDoorDelivery($deliveryParams);
 
-                if ($currentDelivery===$deliveryInstance->delivery_name) {
+                if ($currentDelivery===$delivery->delivery_name) {
                     $result->setDeliveryPrice(
                         roundEx(
                             $price,
@@ -126,15 +121,16 @@ class DoorDeliveryProfile extends Base
                 }
 
                 if (empty($price['errors'])){
-                    $description .= "<div class=\"bx-soa-pp-company-graf-container  box_with_delivery mb-3\">
-                    <input id=\"TYPE_DELIVERY_{$delivery['name']}\"   onclick='BX.Sale.OrderAjaxComponent.sendRequest();' 
-                        name=\"ORDER_PROP_$propTypeDeliveryId\" type=\"radio\" $checked value='{$deliveryInstance->delivery_name}' >
-                    <div class=\"bx-soa-pp-company-smalltitle color_black font_weight_600\">{$deliveryInstance->delivery_name} - $price</div>
-                    </div>";
+                    $resDescription[] = [
+                        'code' => $delivery->delivery_code,
+                        'checked' => !empty($checked),
+                        'name' => $delivery->delivery_name,
+                        'price' => $price
+                    ];
                 }
             }
 
-            $result->setDescription($description);
+            $result->setDescription(json_encode($resDescription));
         }
 
         return $result;

@@ -8,6 +8,7 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Entity;
+use Bitrix\Sale\Delivery\DeliveryLocationTable;
 use Bitrix\Sale\Internals\PersonTypeTable;
 
 
@@ -16,6 +17,7 @@ class OshishaDelivery extends CommonPVZ
 {
     static $MODULE_ID = 'enterego.pvz';
     public string $delivery_name = 'Oshisha';
+    public string $delivery_code = 'oshisha';
     const OSHISHA_ADDRESS_SIMPLE = "simple";
     const OSHISHA_ADDRESS_COMPLEX = "complex";
     static $oshisha_fields = array(
@@ -36,6 +38,26 @@ class OshishaDelivery extends CommonPVZ
 
     public static function getDeliveryStatus() {
         return array('Oshisha' => Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_active'));
+    }
+
+
+    public static function checkMoscowOrNot($locationCode) {
+        $result = DeliveryLocationTable::checkConnectionExists(DOOR_DELIVERY_ID, $locationCode,
+            array(
+                'LOCATION_LINK_TYPE' => 'AUTO'
+            )
+        );
+        return $result;
+    }
+    public static function getInstance($deliveryParams): array
+    {
+        //TODO validate moscow and region!!!!
+        $res = self::checkMoscowOrNot($deliveryParams['location'] ?? '');
+
+       if (Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_active')) {
+           return [new OshishaDelivery()];
+       }
+       return [];
     }
 
     public static function getOshishaDataValue($name)
