@@ -307,7 +307,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 							$propState = $arResult['PROPERTIES']['OSNOVNOE_SVOYSTVO_TP']['VALUE'];
 
 							if (!empty($propState)) {
-								$propAllOff = CIBlockProperty::GetByID($propState)->Fetch();
+								$propAllOff = CIBlockProperty::GetList([],['XML_ID'=>$propState])->Fetch();
 
 								foreach ($arResult['OFFERS'] as $key => $offer) {
 
