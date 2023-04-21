@@ -177,12 +177,12 @@ BX.SaleCommonPVZ = {
      * @param orderData array
      */
     updateDelivery: function (orderData) {
-        const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
 
-        BX.cleanNode(propsNode)
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
 
         if (doorDelivery !== undefined) {
+            const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
+            BX.cleanNode(propsNode)
             const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
             deliveryInfo.forEach(delivery => {
                 const propContainer = BX.create(
