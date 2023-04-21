@@ -17,18 +17,21 @@ class DellinDelivery extends CommonPVZ
         $this->delivery_name = "Деловые Линии";
     }
 
-    public static function getDeliveryStatus() {
-        return array( 'Dellin' => Option::get(DeliveryHelper::$MODULE_ID, 'Dellin_active'));
-    }
-
-    public static function getInstance($deliveryParams): array
+    public static function getInstanceForDoor($deliveryParams): array
     {
-        if (Option::get(DeliveryHelper::$MODULE_ID, 'Dellin_active') === 'Y') {
+        if (Option::get(DeliveryHelper::$MODULE_ID, 'Dellin_door_active') === 'Y') {
             return  [new DellinDelivery()];
         }
         return [];
     }
 
+    public static function getInstanceForPvz(): array
+    {
+        if (Option::get(DeliveryHelper::$MODULE_ID, 'Dellin_pvz_active') === 'Y') {
+            return  [new DellinDelivery()];
+        }
+        return [];
+    }
 
     protected function connect()
     {

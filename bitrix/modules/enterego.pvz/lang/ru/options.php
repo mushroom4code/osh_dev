@@ -1,7 +1,8 @@
 <?php
 $MESS['ACTIVE_DELIVERY_Y'] = 'Вкл';
 $MESS['ACTIVE_DELIVERY_N'] = 'Выкл';
-$MESS['DELIVERY_SETTINGS_ACTIVITY'] = 'Активность доставки';
+$MESS['DELIVERY_SETTINGS_PVZ_ACTIVITY'] = 'Активность доставки для расчета до ПВЗ';
+$MESS['DELIVERY_SETTINGS_DOOR_ACTIVITY'] = 'Активность доставки для расчета до двери';
 
 $MESS["EE_PVZ_OPTIONS_PP"] = "PickPoint";
 $MESS["PickPoint_host"] = "Хост";

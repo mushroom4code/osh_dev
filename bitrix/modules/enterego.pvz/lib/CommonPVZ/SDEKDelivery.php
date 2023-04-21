@@ -15,13 +15,17 @@ class SDEKDelivery extends CommonPVZ
     static $sdek_tarifs = array(136,137,138,139,233,234,1,3,5,10,11,12,15,16,17,18,57,58,59,60,61,62,63,483,482,481,480,83,378,376,368,366,363,361,486,485);
     private $cdek_client;
 
-    public static function getDeliveryStatus() {
-        return array('SDEK' => Option::get(DeliveryHelper::$MODULE_ID, 'SDEK_active'));
+    public static function getInstanceForDoor($deliveryParams): array
+    {
+        if (Option::get(DeliveryHelper::$MODULE_ID, 'SDEK_door_active') === 'Y') {
+            return [new SDEKDelivery()];
+        }
+        return [];
     }
 
-    public static function getInstance($deliveryParams): array
+    public static function getInstanceForPvz(): array
     {
-        if (Option::get(DeliveryHelper::$MODULE_ID, 'SDEK_active') === 'Y') {
+        if (Option::get(DeliveryHelper::$MODULE_ID, 'SDEK_pvz_active') === 'Y') {
             return [new SDEKDelivery()];
         }
         return [];

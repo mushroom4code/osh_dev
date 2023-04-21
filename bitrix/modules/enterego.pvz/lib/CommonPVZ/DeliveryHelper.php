@@ -27,39 +27,24 @@ class DeliveryHelper
         return $CONFIG_DELIVERIES;
     }
 
-    public static function getActiveDeliveries($isPvz = false): array
+    public static function getActivePvzDeliveryInstance($deliveryParams)
     {
-        $deliveriesStatuses = [];
-        $deliveriesStatuses = array_merge($deliveriesStatuses, DellinDelivery::getDeliveryStatus());
-        $deliveriesStatuses = array_merge($deliveriesStatuses, FivePostDelivery::getDeliveryStatus());
-        $deliveriesStatuses = array_merge($deliveriesStatuses, OshishaDelivery::getDeliveryStatus());
-        $deliveriesStatuses = array_merge($deliveriesStatuses, PEKDelivery::getDeliveryStatus());
-        $deliveriesStatuses = array_merge($deliveriesStatuses, PickPointDelivery::getDeliveryStatus());
-        $deliveriesStatuses = array_merge($deliveriesStatuses, RussianPostDelivery::getDeliveryStatus($isPvz));
-        $deliveriesStatuses = array_merge($deliveriesStatuses, SDEKDelivery::getDeliveryStatus());
-        foreach ($deliveriesStatuses as $delivery => $status) {
-            if ($status === 'N')
-                unset($deliveriesStatuses[$delivery]);
-        }
-        return array_keys($deliveriesStatuses);
+        $deliveryInstance = array_merge(
+            DellinDelivery::getInstanceForPvz(),
+            RussianPostDelivery::getInstanceForPvz(),
+            SDEKDelivery::getInstanceForPvz(),
+            OshishaDelivery::getInstanceForPvz($deliveryParams)
+        );
+        return $deliveryInstance;
     }
 
     public static function getActiveDoorDeliveryInstance($deliveryParams){
         $deliveryInstance = array_merge(
-            DellinDelivery::getInstance($deliveryParams),
-            RussianPostDelivery::getInstance($deliveryParams),
-            SDEKDelivery::getInstance($deliveryParams),
-            OshishaDelivery::getInstance($deliveryParams)
+            DellinDelivery::getInstanceForDoor($deliveryParams),
+            RussianPostDelivery::getInstanceForDoor($deliveryParams),
+            SDEKDelivery::getInstanceForDoor($deliveryParams),
+            OshishaDelivery::getInstanceForDoor($deliveryParams)
         );
-
-//        $deliveriesStatuses = array_merge($deliveriesStatuses, OshishaDelivery::getDeliveryStatus());
-//        $deliveriesStatuses = array_merge($deliveriesStatuses, PEKDelivery::getDeliveryStatus());
-//        $deliveriesStatuses = array_merge($deliveriesStatuses, PickPointDelivery::getDeliveryStatus());
-//        $deliveriesStatuses = array_merge($deliveriesStatuses, SDEKDelivery::getDeliveryStatus());
-//        foreach ($deliveriesStatuses as $delivery => $status) {
-//            if ($status === 'N')
-//                unset($deliveriesStatuses[$delivery]);
-//        }
         return $deliveryInstance;
     }
 
@@ -122,8 +107,22 @@ class DeliveryHelper
     public static function updateDellinPVZ(): array
     {
         try {
-            $pickPoint = new DellinDelivery();
-            $pickPoint->updatePointsForDellin();
+            $dellin = new DellinDelivery();
+            $dellin->updatePointsForDellin();
+        } catch (\Exception $e) {
+            return ['status'=>'failed'];
+        }
+        return ['status'=>'success'];
+    }
+
+    /** Обновляет ПВЗ для службы доставки Почты России
+     * @return string[]
+     */
+    public static function updateRussianPostPVZ(): array
+    {
+        try {
+            $russianPost = new RussianPostDelivery();
+            $russianPost->updatePointsForRussianPost();
         } catch (\Exception $e) {
             return ['status'=>'failed'];
         }
@@ -142,13 +141,12 @@ class DeliveryHelper
         try {
             $uniqueCacheString = 'pvz_'.$city_name;
             foreach ($deliveries as $delivery) {
-                $uniqueCacheString .= $uniqueCacheString.'_'.$delivery;
+                $uniqueCacheString .= $uniqueCacheString.'_'.$delivery->delivery_name;
             }
             if ($cache->initCache(7200, $uniqueCacheString, $cachePath)) {
                 $points_Array = $cache->getVars();
             } elseif ($cache->startDataCache()) {
-                foreach ($deliveries as $delName) {
-                    $delivery = CommonPVZ::getInstanceObject($delName);
+                foreach ($deliveries as $delivery) {
                     if ($delivery!=null) {
                         $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity);
                         $result_array['errors'][$delName] = $delivery->errors;

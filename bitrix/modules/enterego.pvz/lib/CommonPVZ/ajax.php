@@ -12,11 +12,11 @@ $request = Bitrix\Main\Context::getCurrent()->getRequest();
 
 $CONFIG_DELIVERIES = DeliveryHelper::getConfigs();
 
-$deliveries = DeliveryHelper::getActiveDeliveries(true);
-
 $action = $request->get('action');
 $codeCity = $request->get('codeCity');
 $cityName = $request->get('cityName');
+
+$deliveries = DeliveryHelper::getActivePvzDeliveryInstance(array('codeCity' => $codeCity));
 
 switch ($action) {
     case 'getCityName':

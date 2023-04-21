@@ -30,9 +30,15 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_PP'),
         'OPTIONS' => array(
             array(
-                'PickPoint_active',
-                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
-                Option::get($module_id,'PickPoint_active'),
+                'PickPoint_pvz_active',
+                GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
+                Option::get($module_id,'PickPoint_pvz_active'),
+                array("selectbox", $activeDelivery)
+            ),
+            array(
+                'PickPoint_door_active',
+                GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
+                Option::get($module_id,'PickPoint_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -68,9 +74,15 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_FP'),
         'OPTIONS' => array(
             array(
-                'FivePost_active',
-                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
-                Option::get($module_id,'FivePost_active'),
+                'FivePost_pvz_active',
+                GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
+                Option::get($module_id,'FivePost_pvz_active'),
+                array("selectbox", $activeDelivery)
+            ),
+            array(
+                'FivePost_door_active',
+                GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
+                Option::get($module_id,'FivePost_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -94,9 +106,15 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_SDEK'),
         'OPTIONS' => array(
             array(
-                'SDEK_active',
-                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
-                Option::get($module_id,'SDEK_active'),
+                'SDEK_pvz_active',
+                GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
+                Option::get($module_id,'SDEK_pvz_active'),
+                array("selectbox", $activeDelivery)
+            ),
+            array(
+                'SDEK_door_active',
+                GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
+                Option::get($module_id,'SDEK_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -132,9 +150,15 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
         'OPTIONS' => array(
             array(
-                'PEK_active',
-                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
-                Option::get($module_id,'PEK_active'),
+                'PEK_pvz_active',
+                GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
+                Option::get($module_id,'PEK_pvz_active'),
+                array("selectbox", $activeDelivery)
+            ),
+            array(
+                'PEK_door_active',
+                GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
+                Option::get($module_id,'PEK_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             Loc::getMessage('PickPoint_ikn'),
@@ -177,9 +201,15 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
         'OPTIONS' => array(
             array(
-                'RussianPost_active',
-                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
-                Option::get($module_id,'RussianPost_active'),
+                'RussianPost_pvz_active',
+                GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
+                Option::get($module_id,'RussianPost_pvz_active'),
+                array("selectbox", $activeDelivery)
+            ),
+            array(
+                'RussianPost_door_active',
+                GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
+                Option::get($module_id,'RussianPost_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -209,9 +239,15 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_DELLIN'),
         'OPTIONS' => array(
             array(
-                'Dellin_active',
-                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
-                Option::get($module_id,'Dellin_active'),
+                'Dellin_pvz_active',
+                GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
+                Option::get($module_id,'Dellin_pvz_active'),
+                array("selectbox", $activeDelivery)
+            ),
+            array(
+                'Dellin_door_active',
+                GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
+                Option::get($module_id,'Dellin_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -283,9 +319,15 @@ $aTabs = array(
         'TITLE'   => Loc::getMessage('PVZ_OPTIONS_OSHISHA'),
         'OPTIONS' => array(
             array(
-                    'Oshisha_active',
-                GetMessage('DELIVERY_SETTINGS_ACTIVITY'),
-                Option::get($module_id,'Oshisha_active'),
+                    'Oshisha_pvz_active',
+                GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
+                Option::get($module_id,'Oshisha_pvz_active'),
+                array("selectbox", $activeDelivery)
+            ),
+            array(
+                'Oshisha_door_active',
+                GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
+                Option::get($module_id,'Oshisha_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
