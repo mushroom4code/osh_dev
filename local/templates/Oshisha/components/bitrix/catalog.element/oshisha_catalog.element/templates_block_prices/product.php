@@ -131,7 +131,7 @@ $showOffersBlock = $haveOffers && !empty($arResult['OFFERS_PROP']);
 $mainBlockProperties = array_intersect_key($arResult['DISPLAY_PROPERTIES'], $arParams['MAIN_BLOCK_PROPERTY_CODE']);
 $showPropsBlock = !empty($mainBlockProperties) || $arResult['SHOW_OFFERS_PROPS'];
 $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock;?>
-<div class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column product_right justify-content-between">
+<div class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product not-input-parse product_right justify-content-between">
     <h1 class="head-title"><?= $name ?></h1>
     <?php if ($isGift) { ?>
         <div>

@@ -337,4 +337,3 @@ AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToke
 
 // bitrix24 feedback and callback integrations
 AddEventHandler('iblock', 'OnAfterIBlockElementAdd',['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
-//deleteProductOnNewOffers();
