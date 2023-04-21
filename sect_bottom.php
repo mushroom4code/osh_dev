@@ -177,7 +177,7 @@
 <!--</div>-->
 
 <div class="row box_for_banner_footer">
-    <div class="banners_footer desktop">
+    <div class="banners_footer mb-2">
         <? $APPLICATION->IncludeComponent(
             "bitrix:advertising.banner",
             "oshisha_banners",
@@ -220,7 +220,7 @@
             )
         ); ?>
     </div>
-    <div class="banners_footer">
+    <div class="banners_footer mb-2">
         <?php $APPLICATION->IncludeComponent(
             "bitrix:advertising.banner",
             "oshisha_banners",
