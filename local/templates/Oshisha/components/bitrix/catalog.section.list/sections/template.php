@@ -80,9 +80,11 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                     <a class="catalog-section-list-tile-img-container p-4 br-10 bg-gray-white" style="<?= $style ?> "
                        href="<?= $section['SECTION_PAGE_URL'] ?>">
                         <span class="catalog-section-list-item-inner">
-                                <h3 class="catalog-section-list-item-title"><?= $section['NAME'] ?></h3>
+                                <h3 class="catalog-section-list-item-title"
+                                    style="color:<?=$section['UF_COLOR_TEXT'] ?? '#393939'?>"><?= $section['NAME'] ?></h3>
                             <?php if ($arParams['COUNT_ELEMENTS'] && $section['ELEMENT_CNT'] !== null) { ?>
-                                <span class="catalog-section-list-item-counter font-14">
+                                <span class="catalog-section-list-item-counter font-14"
+                                      style="color:<?=$section['UF_COLOR_TEXT'] ?? '#393939'?>">
 										<?= $section['ELEMENT_CNT_TITLE'] ?>
                             </span>
                             <?php } ?>

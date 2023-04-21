@@ -162,6 +162,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             if (($('input[name="USER_RULES"]').prop('checked') === false ||
                 $('input[name="USER_POLITICS"]').prop('checked') === false) && action === 'saveOrderAjax') {
+                $('input[name="registered"]').attr('style','opacity: 0.65');
                 this.endLoader();
                 $('#bx-soa-properties').find('.alert.alert-danger').removeAttr('style')
                     .text('Примите условия соглашений в конце страницы');
@@ -2059,9 +2060,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             this.checkPickUpShow();
             //enterego always redraw props block
             this.editActivePropsBlock(true);
-            //this.editActiveRegionBlock(true);
+            this.editActiveRegionBlock(true);
             this.editActiveDeliveryBlock(true);
-            this.editActivePaySystemBlock(true),
+            this.editActivePaySystemBlock(true);
 
                 // if (this.activeSection !== null) {
                 //     this.editSection(this.activeSection);
@@ -3501,7 +3502,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 if (this.result.ORDER_PROP.properties.hasOwnProperty(i)) {
                     if (this.result.ORDER_PROP.properties[i].IS_LOCATION == 'Y'
                         && this.result.ORDER_PROP.properties[i].ID == this.deliveryLocationInfo.loc) {
-                        locationProperty = this.result.ORDER_PROP.properties[i];
+                        // locationProperty = this.result.ORDER_PROP.properties[i];
                     } else if (this.result.ORDER_PROP.properties[i].IS_ZIP == 'Y'
                         && this.result.ORDER_PROP.properties[i].ID == this.deliveryLocationInfo.zip) {
                         zipProperty = this.result.ORDER_PROP.properties[i];
@@ -3597,20 +3598,19 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             location = this.locations[locationId];
             if (location && location[0] && location[0].output) {
                 this.regionBlockNotEmpty = true;
-
                 labelHtml = '<label class="bx-soa-custom-label" for="soa-property-' + parseInt(locationId) + '">'
                     + BX.util.htmlspecialchars(currentProperty.NAME)
                     + (currentProperty.DESCRIPTION.length ? ' <small>(' + BX.util.htmlspecialchars(currentProperty.DESCRIPTION) + ')</small>' : '')
                     + '</label>';
 
                 currentLocation = location[0].output;
-                insertedLoc = BX.create('DIV', {
-                    attrs: {'data-property-id-row': locationId},
-                    props: {className: 'form-group bx-soa-location-input-container'},
-                    style: {visibility: 'hidden'},
-                    html: labelHtml + currentLocation.HTML
-                });
-                node.appendChild(insertedLoc);
+                // insertedLoc = BX.create('DIV', {
+                //     attrs: {'data-property-id-row': locationId},
+                //     props: {className: 'form-group bx-soa-location-input-container'},
+                //     style: {visibility: 'hidden'},
+                //     html: labelHtml + currentLocation.HTML
+                // });
+                // node.appendChild(insertedLoc);
                 node.appendChild(BX.create('INPUT', {
                     props: {
                         type: 'hidden',
@@ -3627,7 +3627,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (location && location[0] && location[0].showAlt && altId > 0) {
                 for (k in this.result.ORDER_PROP.properties) {
                     if (parseInt(this.result.ORDER_PROP.properties[k].ID) == altId) {
-                        altProperty = this.result.ORDER_PROP.properties[k];
+                        // altProperty = this.result.ORDER_PROP.properties[k];
                         break;
                     }
                 }
@@ -5636,7 +5636,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
                 || property.getSettings().CODE === 'ADDRESS') {
                 className += " col-12";
-            } else if (property.getSettings().CODE === 'LOCATION' || property.getSettings().CODE === 'CITY'
+            } else if (property.getSettings().CODE === 'CITY'
                 || property.getSettings().CODE === 'FIAS' || property.getSettings().CODE === 'KLADR'
                 || property.getSettings().CODE === 'ZIP' || property.getSettings().CODE === 'LATITUDE'
                 || property.getSettings().CODE === 'LONGITUDE' || property.getSettings().CODE === 'STREET_KLADR'

@@ -32,13 +32,17 @@ $userData = EnteregoUser::getInstance();
                     <div class="box_text_business mb-3">
                         <h5 class="mb-3">Телефоны</h5>
                         <div class="d-flex flex-column justify-content-between align-content-between">
-                            <span class="mb-3">
-                                Общий: <br>
-                                <span class="red_text mb-3"><a href="tel:+74993506201">+7 (499) 350-62-01</a></span>
+                            <span class="mb-2">
+                                Общий :
+                                <span class="red_text mb-2"> <a href="tel:88006004424"> +7 (800) 600-44-24</a></span>
                             </span>
-                            <span class="mb-3">
-                                Для связи с менеджером: <br>
-                                 <span class="red_text"><a href="tel:+79268895090">+7 (926) 889-50-90</a></span>
+                            <span class="mb-2">
+                               Для розничных покупателей : <br>
+                                 <span class="red_text"> <a href="https://api.whatsapp.com/send?phone=79031184521"> +7 (903) 118-45-21</a></span>
+                            </span>
+                            <span>
+                                Для оптовых партнеров : <br>
+                                 <span class="red_text"><a href="https://api.whatsapp.com/send?phone=79031184957"> +7 (903) 118-49-57</a></span>
                             </span>
                         </div>
                     </div>
@@ -104,7 +108,7 @@ $userData = EnteregoUser::getInstance();
                                    class="form-control input_lk"
                                    id="Name"
                                    name="NAME"
-                                   placeholder="Пожалуйста, представьтесь*"
+                                   placeholder="Пожалуйста, представьтесь *"
                                    value="<?= implode(' ', $userData->getName()) ?>"
                             >
                             <div class="er_FORM_NAME error_field"></div>
@@ -115,7 +119,7 @@ $userData = EnteregoUser::getInstance();
                                    name="PHONE"
                                    class="form-control input_lk"
                                    id="phoneNumber"
-                                   placeholder="Мобильный телефон, чтобы связаться с вами*"
+                                   placeholder="Мобильный телефон, чтобы связаться с вами *"
                                    value="<?= $userData->getPhone() ?>"
                             >
                             <div class="er_FORM_PHONE error_field"></div>
@@ -127,13 +131,14 @@ $userData = EnteregoUser::getInstance();
                                        name="EMAIL"
                                        class="form-control input_lk"
                                        id="userEmail"
-                                       placeholder="E-mail если хотите получить ответ на почту"
+                                       placeholder="E-mail для ответа на почту *"
                                        value="<?= $userData->getMail() ?>"
                                 >
+                                <div class="er_FORM_EMAIL error_field"></div>
                             </div>
                             <div class="form-group mb-3">
                                     <textarea class="form-control input_lk" name="MESSAGE" id="text"
-                                              placeholder="Сообщение*"></textarea>
+                                              placeholder="Ваше сообщение *"></textarea>
                                 <div class="er_FORM_MESSAGE error_field"></div>
                             </div>
 
@@ -203,4 +208,4 @@ $userData = EnteregoUser::getInstance();
     </div>
     </div>
     <br></div>
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>

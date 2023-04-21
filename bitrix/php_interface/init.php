@@ -26,7 +26,12 @@ CModule::AddAutoloadClasses("", array(
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
     '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
+    '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
+    '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
 ));
+
+//redefine sale  basket condition
+require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
@@ -99,13 +104,6 @@ function getCurrentPriceId()
 {
     $currentPrice = $GLOBALS['PRICE_TYPE_ID'] ?? BASIC_PRICE;
     return $currentPrice;
-}
-
-
-function initProperty(&$arUserResult)
-{
-    // TODO - id типа свойства задан статично - исправить!
-    $arUserResult['ORDER_PROP'][LOCATION_ID] = $_SESSION["code_region"];
 }
 
 // custom admin menu
@@ -242,7 +240,7 @@ class CUserEx
         /*else $arFields["LOGIN"] = "";*/
     }
 
-    function OnBeforeUserRegister($arFields)
+    function OnBeforeUserRegister(&$arFields)
     {
         $arFields["LOGIN"] = $arFields["EMAIL"];
     }
@@ -329,3 +327,11 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
 }
 
 EnteregoSettings::getSalePriceOnCheckAndPeriod();
+
+// JWT-token authorization
+addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);
+AddEventHandler('main', 'OnAfterUserAuthorize', ['\Enterego\AuthTokenTable', 'getNewToken']);
+AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToken']);
+
+// bitrix24 feedback and callback integrations
+AddEventHandler('iblock', 'OnAfterIBlockElementAdd',['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);

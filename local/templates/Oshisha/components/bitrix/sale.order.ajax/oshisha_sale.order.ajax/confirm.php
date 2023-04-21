@@ -69,9 +69,10 @@ if ($arParams["SET_TITLE"] == "Y") {
     <h3 class="mb-lg-5 mb-md-5 mb-0 mt-5 font-sm-18">
         <b>Рекомендуемые товары </b>
     </h3>
+    <div class="by-card">
     <?php $APPLICATION->IncludeComponent(
         "bitrix:catalog.top",
-        "oshisha_catalog.top_new",
+        "oshisha_catalog.top",
         array(
             "ACTION_VARIABLE" => "action",
             "ADD_PICT_PROP" => "-",
@@ -84,7 +85,7 @@ if ($arParams["SET_TITLE"] == "Y") {
             "CACHE_TYPE" => "A",
             "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
             "COMPATIBLE_MODE" => "Y",
-            "COMPONENT_TEMPLATE" => "oshisha_catalog.top_new",
+            "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
             "CONVERT_CURRENCY" => "N",
             "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
             "DETAIL_URL" => "",
@@ -151,7 +152,9 @@ if ($arParams["SET_TITLE"] == "Y") {
             "VIEW_MODE" => "SLIDER"
         ),
         false
-    );
+    );?>
+    </div>
+    <?php
     if ($arResult["ORDER"]["IS_ALLOW_PAY"] === 'N') { ?>
         <div class="alert alert-danger" role="alert"><?= $arParams['MESS_PAY_SYSTEM_PAYABLE_ERROR'] ?></div>
     <?php }

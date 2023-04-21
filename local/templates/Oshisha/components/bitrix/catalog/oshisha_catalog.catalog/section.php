@@ -69,6 +69,7 @@ if ($isFilter)
 	if (!isset($arCurSection))
 		$arCurSection = array();
     $GLOBAL_SECTION = $arCurSection;
+    $_SESSION['GLOBAL_CURRENT_SECTION'] = $arCurSection;
 }
 if ($isVerticalFilter)
 	include($_SERVER["DOCUMENT_ROOT"]."/".$this->GetFolder()."/section_vertical.php");

@@ -42,6 +42,8 @@ if($this->StartResultCache(false, array('v10', $preFilter, ($arParams["CACHE_GRO
         //enterego add to filter "hide if note available
         if ($_REQUEST['hide_not_available'] == "Y") {
             $this->arParams['HIDE_NOT_AVAILABLE'] = $_REQUEST['hide_not_available'];
+        } elseif ($arParams["SAVE_IN_SESSION"] && ($_SESSION[$FILTER_NAME][$this->SECTION_ID]['hide_not_available'] == "Y")) {
+            $this->arParams['HIDE_NOT_AVAILABLE'] = $_SESSION[$FILTER_NAME][$this->SECTION_ID]['hide_not_available'];
         }
         //
 
@@ -330,7 +332,7 @@ if(isset($_REQUEST["ajax"]) && $_REQUEST["ajax"] === "y")
 	$_CHECK = &$_REQUEST;
 elseif(isset($_REQUEST["del_filter"]))
 	$_CHECK = array();
-elseif(isset($_GET["set_filter"]))
+elseif(!empty($_GET))
 	$_CHECK = &$_GET;
 elseif($arParams["SMART_FILTER_PATH"])
 	$_CHECK = $this->convertUrlToCheck($arParams["~SMART_FILTER_PATH"]);
@@ -951,7 +953,8 @@ $arResult["HIDDEN"] = array();
 foreach(array_merge($_GET, $_POST) as $key => $value)
 {
 	if(
-		!isset($arInputNames[$key])
+        $key != 'hide_not_available'
+		&& !isset($arInputNames[$key])
 		&& !isset($arSkip[$key])
 		&& !is_array($value)
 	)

@@ -1,7 +1,7 @@
 <? if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Main\Loader;
-
+use \Bitrix\Catalog\CatalogViewedProductTable as CatalogViewedProductTable;
 /**
  * @var array $templateData
  * @var array $arParams
@@ -10,6 +10,9 @@ use Bitrix\Main\Loader;
  */
 
 global $APPLICATION;
+
+
+CatalogViewedProductTable::refresh($arResult["ID"], CSaleBasket::GetBasketUserID());
 
 if (!empty($templateData['TEMPLATE_LIBRARY']))
 {

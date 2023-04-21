@@ -158,17 +158,19 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                     </span>
                                 <? endif; ?>
                             </div>
-                            <? if ($arSection['CHILDS']):
+                            <?php if ($arSection['CHILDS']):
                                 usort($arSection['CHILDS'], 'sort_by_name');
-                                foreach ($arSection['CHILDS'] as $arSectionSub): ?>
+                                foreach ($arSection['CHILDS'] as $arSectionSub):
+                                    if(CIBlockSection::GetSectionElementsCount($arSectionSub['ID'],['CNT_ACTIVE'=>'Y']) > 0 ){?>
                                     <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
                                          data-code="<?= $arSection['ID'] ?>">
                                         <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
                                     </div>
-                                <? endforeach; ?>
-                            <? endif; ?>
+                                <?php }
+                                    endforeach; ?>
+                            <?php endif; ?>
                         </div>
-                    <? endforeach; ?>
+                    <?php endforeach; ?>
 
                 </div>
             </div>
@@ -305,8 +307,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                     </div>
                     <div class="button_panel_wrap">
                         <div class="sort_mobile"></div>
-                        <div class="icon_sort_bar" id="card_catalog"></div>
-                        <div class="icon_sort_line" id="line_catalog"></div>
+                        <div class="icon_sort_bar xs-d-none" id="card_catalog"></div>
+                        <div class="icon_sort_line xs-d-none" id="line_catalog"></div>
                     </div>
                 </div>
             </div>
@@ -374,6 +376,13 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             );
         }
         //endregion
+
+        if ($_SESSION[$arParams["FILTER_NAME"]][$GLOBAL_SECTION['ID']]['hide_not_available'] == "Y")
+        {
+            $arParams["HIDE_NOT_AVAILABLE"] = "Y";
+        }
+
+
         global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
@@ -456,7 +465,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             "USE_MAIN_ELEMENT_SECTION" => $arParams["USE_MAIN_ELEMENT_SECTION"],
             'CONVERT_CURRENCY' => $arParams['CONVERT_CURRENCY'],
             'CURRENCY_ID' => $arParams['CURRENCY_ID'],
-            'HIDE_NOT_AVAILABLE' => $arParams["HIDE_NOT_AVAILABLE"],
+            'HIDE_NOT_AVAILABLE' => $_GET['hide_not_available'] == 'Y' ? 'Y' : $arParams["HIDE_NOT_AVAILABLE"],
             'HIDE_NOT_AVAILABLE_OFFERS' => $arParams["HIDE_NOT_AVAILABLE_OFFERS"],
 
             'LABEL_PROP' => $arParams['LABEL_PROP'],

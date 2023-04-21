@@ -39,6 +39,50 @@ $(document).ready(function () {
         bool_select_contragent_user = $(select).is('#contragent_user'),
         bool_select_company_user_order = $(select).is('#company_user_order');
 
+    var storageType = localStorage, consentPropertyName = 'cookie_consent';
+    var saveToStorage = () => storageType.setItem(consentPropertyName, true);
+    var consentPopup = document.getElementById('consent-cookie-popup');
+    var consentAcceptBtn = document.getElementById('cookie-popup-accept');
+
+    if (consentPopup !== null) {
+        var shouldShow = true;
+        if (consentPopup.classList.contains('js-noauth')) {
+            shouldShow = !storageType.getItem(consentPropertyName) ? true : false;
+        }
+
+        var acceptFn = event => {
+            event.preventDefault();
+            saveToStorage(storageType);
+            consentPopup.classList.add('hidden');
+            setTimeout(() => {
+                consentPopup.remove();
+            }, 700);
+            if (consentPopup.classList.contains('js-auth')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/local/templates/Oshisha/include/addCookieConsent.php',
+                    data: 'action=setConsent',
+                    success: function (result) {
+                        if (result == 'success') {
+                        } else if (result == 'error') {
+                            console.log(result);
+                        } else if (result == 'noauth') {
+                            console.log(result);
+                        }
+                    }
+                });
+            }
+        }
+
+        consentAcceptBtn.addEventListener('click', acceptFn);
+
+        if (shouldShow) {
+            setTimeout(() => {
+                consentPopup.classList.remove('hidden');
+            }, 2000);
+        }
+    }
+
     //MAIN
     function getCookie(name) {
         let matches = document.cookie.match(new RegExp(
@@ -223,7 +267,6 @@ $(document).ready(function () {
         }
         if (screenWidth <= 746) {
             count = 2;
-            variableWidth = true;
         }
         $('.bx_catalog_tile_section').slick({
             slidesToShow: count,
@@ -566,7 +609,7 @@ $(document).ready(function () {
         if ($(this).hasClass('subscribed')) {
             $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
                 '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                'К сожалению, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
+                'К сожалениюf, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
                 '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 '<i class="fa fa-bell-o" aria-hidden="true"></i>Отменить подписку</a>' +
@@ -2427,16 +2470,35 @@ $(document).ready(function () {
 
     $('.smart-filter-tog').on('click', function () {
         var code_vis = $(this).data('code-vis');
-        console.log(code_vis);
         $('.catalog-section-list-item-sub[data-code="' + code_vis + '"]').toggleClass('active');
         $(this).toggleClass('smart-filter-angle-up');
     });
 
+
+    $('.js__collapse-list').on('click', function() {
+        if (!$(this).parents('.socials').length) {
+            let elem = $(this),
+                lists = $('.js__collapse-list.active');
+
+            lists.next('.col-menu').stop().slideToggle();
+
+            if (!elem.hasClass('active')) {
+                lists.toggleClass('active');
+                elem.addClass('active').next('.col-menu').stop().slideDown();
+            } else {
+                lists.toggleClass('active');
+            }
+        }
+    });
 });
 
 window.onresize = function (event) {
     if ($('div').is('.basket_category') && window.screen.width <= 746) {
         $('.basket_category').css('width', window.screen.width - 20);
+    }
+
+    if (window.screen.width >= 768) {
+        $('footer.footer .col-menu').css({display: 'block'});
     }
 };
 
@@ -2572,12 +2634,18 @@ $(document).on('click', '.file-list .file-remove', function (e) {
     delete uploadFiles[fileToRemoveId];
 });
 
+// маска ввода для формы обратной связи
+$(document).ready(function() {
+    $('.form-form [data-name="EMAIL"]').inputmask('email');
+});
+
 $(document).on('submit', '.form-form', function (e) {
     e.preventDefault();
 
     let postData = new FormData(this),
         errors = {
             emptyField: 'Поле не заполнено',
+            wrongFieldData: 'Поле заполнено не до конца',
             wrongFilesSize: 'Некоторые из файлов больше 5 Мб',
             wrongFilesType: 'Некоторые из файлов недопустимого типа',
             wrongFilesCombo: 'Некоторые файлы не отвечают требованиям',
@@ -2585,6 +2653,7 @@ $(document).on('submit', '.form-form', function (e) {
         },
         fieldName = $(this).find('input[name="NAME"]'),
         fieldPhone = $(this).find('input[name="PHONE"]'),
+        fieldMail = $(this).find('input[name="EMAIL"]'),
         fieldMessage = $(this).find('textarea[name="MESSAGE"]'),
         fileTrueTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'],
         fieldConfirm = $(this).find('input[name="confirm"]'),
@@ -2596,17 +2665,27 @@ $(document).on('submit', '.form-form', function (e) {
     $('.form-form .error_field').hide();
 
     if (fieldName.val().length <= 0) {
-        $('.er_FORM_NAME').html(errors.emptyField).show();
+        $('.form-form .er_FORM_NAME').html(errors.emptyField).show();
         err++;
     }
 
     if (fieldPhone.val().length <= 0) {
-        $('.er_FORM_PHONE').html(errors.emptyField).show();
+        $('.form-form .er_FORM_PHONE').html(errors.emptyField).show();
+        err++;
+    }
+
+    if (fieldMail.val().length <= 0) {
+        $('.form-form .er_FORM_EMAIL').html(errors.emptyField).show();
+        err++;
+    }
+
+    if(!fieldMail.inputmask("isComplete")) {
+        $('.form-form .er_FORM_EMAIL').html(errors.wrongFieldData).show();
         err++;
     }
 
     if (fieldMessage.val().length <= 0) {
-        $('.er_FORM_MESSAGE').html(errors.emptyField).show();
+        $('.form-form .er_FORM_MESSAGE').html(errors.emptyField).show();
         err++;
     }
 
@@ -2832,7 +2911,7 @@ if ($(window).width() > 1024) {
         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         if (scrollTop > 0) {
             if (!appended) {
-                $(document).find('header').addClass('header-scroll');
+                $(document).find('header').addClass('header-scroll').show(500);
                 appended = true;
             }
         } else {
@@ -2840,3 +2919,61 @@ if ($(window).width() > 1024) {
         }
     });
 }
+
+$(window).on('resize', function() {
+    const catalog = $('.catalog-section.by-line'),
+          cardViewBtn = $('#card_catalog'),
+          lineViewBtn = $('#line_catalog');
+
+    if (catalog.length > 0) {
+        if ($(window).width() < 500) {
+            catalog.removeClass('by-line').addClass('by-card');
+
+            if (lineViewBtn.hasClass('icon_sort_line_active')) {
+                lineViewBtn.addClass('icon_sort_line').removeClass('icon_sort_line_active');
+                cardViewBtn.addClass('icon_sort_bar_active').removeClass('icon_sort_line');
+            }
+        }
+    }
+});
+
+
+
+jQuery(function() {
+    let input = jQuery('.js__show-pass');
+    input.wrap('<div class="show-pass-wrap"></div>');
+    input.after('<span class="show-pass-btn js__show-pass-btn"></span>');
+
+    jQuery('.js__show-pass-btn').on('click', function (e) {
+        e.preventDefault();
+
+        const btn = jQuery(this),
+            input = jQuery(this).parents('.show-pass-wrap').find('input');
+
+        if (input.attr('type') === 'password') {
+            btn.addClass('active');
+            input.attr('type', 'text');
+        } else {
+            btn.removeClass('active');
+            input.attr('type', 'password');
+        }
+    })
+});
+
+
+$(document).ready(function () {
+    $(document).on('click', '.close_header_box', function () {
+        $('.overlay').hide();
+    });
+
+    $(document).on('click', '.js__taste ', function() {
+        let tasteCheckId = $(this).attr('data-filter-get');
+        $('#VKUS').find('.check_input').prop('checked', false);
+        $('#'+tasteCheckId).prop('checked', true);
+
+        window.smartFilter.addHorizontalFilter(BX(tasteCheckId))
+        window.smartFilter.timer = setTimeout(BX.delegate(function(){
+            this.reload(BX(tasteCheckId));
+        }, window.smartFilter), 500);
+    })
+});

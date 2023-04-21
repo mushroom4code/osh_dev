@@ -179,9 +179,14 @@ if ($show_price) {
                                 } elseif (mb_strlen($name) > 13) {
                                     $tasteSize = 'taste-xxl';
                                 }
+
+                                $propId = $taste['ID'];
+                                $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
                                 ?>
-                                <span class="taste <?= $tasteSize ?>" data-background="<?= '#' . $color[1] ?>"
-                                      id="<?= $color[0] ?>"><?= $name ?> </span>
+                                <span class="taste js__taste <?= $tasteSize ?>"
+                                      data-background="<?= '#' . $color[1] ?>"
+                                      id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
+                                      data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?></span>
                             <?php }
                         }
                     } ?>
@@ -205,6 +210,43 @@ if ($show_price) {
 
             <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
                 <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
+                    <div class="all-prices-by-line">
+                        <div class="d-flex flex-column prices-block">
+                            <?php foreach ($price['PRICE_DATA'] as $items) { ?>
+                                <p class="price-row mb-1">
+                                    <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
+                                    <span class="dash"> - </span><br>
+                                    <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                </p>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+                    <div class="box_with_price line-price font_weight_600 d-flex flex-column min-height-auto">
+                        <div class="d-flex flex-column">
+                            <div class="bx_price <?= $styleForNo ?> position-relative">
+                                <?php $sale = false;
+                                if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                    $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
+                                    echo(round($price['SALE_PRICE']['PRICE']));
+                                    $sale = true;
+                                } else {
+                                    echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
+                                } ?>₽
+                            </div>
+
+                            <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+                                $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
+                                <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
+                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
+                                    <b class="sale-percent">
+                                        - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>₽
+                                    </b>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+
                     <div class="box_with_titles">
                         <?php
                         $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
@@ -241,6 +283,18 @@ if ($show_price) {
                     </div>
                 </div>
             <?php } else { ?>
+                <div class="all-prices-by-line">
+                    <div class="d-flex flex-column prices-block">
+                        <?php foreach ($price['PRICE_DATA'] as $items) { ?>
+                            <p class="price-row mb-1">
+                                <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
+                                <span class="dash"> - </span><br>
+                                <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                            </p>
+                        <?php } ?>
+                    </div>
+                </div>
+
                 <div class="box_with_titles">
                     <div class="not_product">
                         Товара нет в наличии
@@ -402,32 +456,6 @@ if ($show_price) {
                                         <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
                                     </div>
                                 <?php } ?>
-                                <div class="box_with_price line-price font_weight_600 mb-2">
-                                    <div class="d-flex flex-row align-items-center">
-                                        <div class="bx_price <?= $styleForNo . ' ' . $not_auth ?>"
-                                             data-href="<?= $href ?>">
-                                            <?php
-                                            $sale = false;
-                                            if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                                $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) {
-                                                $sale = true;
-                                                echo(round($price['SALE_PRICE']['PRICE']));
-                                            } else {
-                                                echo(round($price['PRICE_DATA'][1]['PRICE']));
-                                            } ?>₽
-                                        </div>
-
-                                        <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                            $useDiscount['VALUE_XML_ID'] == 'true' && !empty($price['SALE_PRICE']['PRICE'])) { ?>
-                                            <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
-                                                <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
-                                                <b class="sale-percent">
-                                                    - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($price['SALE_PRICE']['PRICE'])) ?>₽
-                                                </b>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
-                                </div>
                             </div>
                             <?endif;?>
                         <?php }
@@ -442,7 +470,7 @@ if ($show_price) {
                     </div>
                     <div style="clear: both;"></div>
                 <?php } else { ?>
-                    <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>">
+                    <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail">
                         <div class="box_with_fav_bask">
                             <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                 <?= $is_key_found ? 'subscribed' : '' ?>">
@@ -461,6 +489,42 @@ if ($show_price) {
                         </div>
                     </div>
                 <?php } ?>
+
+                <div class="box_with_titles line-view">
+                    <?php
+                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                        'templates',
+                        [
+                            'ID_PROD' => $item['ID_PROD'],
+                            'F_USER_ID' => $item['F_USER_ID'],
+                            'LOOK_LIKE' => false,
+                            'LOOK_FAVORITE' => true,
+                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                            'COUNT_FAV' => $item['COUNT_FAV'],
+                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                        ],
+                        $component,
+                        [
+                            'HIDE_ICONS' => 'Y'
+                        ]
+                    );
+                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                        'templates',
+                        array(
+                            'ID_PROD' => $item['ID_PROD'],
+                            'F_USER_ID' => $item['F_USER_ID'],
+                            'LOOK_LIKE' => true,
+                            'LOOK_FAVORITE' => false,
+                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                            'COUNT_FAV' => $item['COUNT_FAV'],
+                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                        ),
+                        $component,
+                        array('HIDE_ICONS' => 'Y'),
+                    );
+                    ?>
+                </div>
+
             </div>
         </div>
         <div class="info-prices-box-hover info-prices-box-bottom cursor-pointer ml-2">
@@ -473,7 +537,8 @@ if ($show_price) {
                     <div class="prices-block-close js__prices-block-close"></div>
                     <?php foreach ($price['PRICE_DATA'] as $items) { ?>
                         <p class="mb-1">
-                            <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span><br>
+                            <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
+                            <span class="dash"> - </span><br>
                             <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
                         </p>
                     <?php } ?>

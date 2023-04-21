@@ -2,6 +2,8 @@
 
 namespace Ctweb\SMSAuth;
 
+use Bitrix\Main\ArgumentNullException;
+use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\Event;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Security\Random;
@@ -193,7 +195,7 @@ class Manager
     {
         $digits = str_split(preg_replace("/[^\d]/", "", (string)$phone));
 
-        if (!empty($codePhone) && !strripos($phone, '+' . $codePhone)) {
+        if (!empty($codePhone) && !strripos($phone, '+' . $codePhone) && !strripos($phone, '+')) {
             array_unshift($digits, $codePhone);
         }
 
@@ -387,10 +389,10 @@ class Manager
      * @param $code
      * @param $phone
      * @return bool
-     * @throws \Bitrix\Main\ArgumentNullException
-     * @throws \Bitrix\Main\ArgumentOutOfRangeException
+     * @throws ArgumentNullException
+     * @throws ArgumentOutOfRangeException
      */
-    public function RegisterByCode($code, $phone): bool
+    public function RegisterByCode($code, $phone, $arFieldRegisterForm = []): bool
     {
         global $USER;
 
@@ -402,37 +404,43 @@ class Manager
             $timestamp = time();
             $arFields = [];
             $phoneField = $this->options['PHONE_FIELD'];
+            if(!empty($arFieldRegisterForm)){
+                $arFields = $arFieldRegisterForm;
+            }
             $arFields[$phoneField] = $this->NormalizePhone($phone);
 
             //duplicate registration phone to personal phone (for lk and orders)
             $arFields["PERSONAL_PHONE"] = $arFields[$phoneField];
-            if (!trim($arFields['EMAIL'])) {
-                switch ($this->options['NEW_EMAIL_AS']) {
-                    case "PHONE":
-                        $arFields['EMAIL'] = "{$arFields[$phoneField]}@noemail.sms";
-                        break;
-                    default:
-                        $arFields['EMAIL'] = "{$timestamp}@noemail.sms";
+            if (empty($arFieldRegisterForm)) {
+                if (!trim($arFields['EMAIL'])) {
+                    switch ($this->options['NEW_EMAIL_AS']) {
+                        case "PHONE":
+                            $arFields['EMAIL'] = "{$arFields[$phoneField]}@noemail.sms";
+                            break;
+                        default:
+                            $arFields['EMAIL'] = "{$timestamp}@noemail.sms";
+                    }
                 }
-            }
 
-            if (!trim($arFields['LOGIN'])) {
-                switch ($this->options['NEW_LOGIN_AS']) {
-                    case "EMAIL":
-                        $arFields['LOGIN'] = $arFields['EMAIL'];
-                        break;
-                    case "PHONE":
-                        $arFields['LOGIN'] = $arFields[$phoneField];
-                        break;
-                    default:
-                        $arFields['LOGIN'] = "user_{$timestamp}";
+                if (!trim($arFields['LOGIN'])) {
+                    switch ($this->options['NEW_LOGIN_AS']) {
+                        case "EMAIL":
+                            $arFields['LOGIN'] = $arFields['EMAIL'];
+                            break;
+                        case "PHONE":
+                            $arFields['LOGIN'] = $arFields[$phoneField];
+                            break;
+                        default:
+                            $arFields['LOGIN'] = "user_{$timestamp}";
+                    }
                 }
+
+
+                if ($this->options['NEW_LOGIN_AS'])
+                    $arFields['PASSWORD'] = Random::getString(self::GEN_PASSWORD_LENGTH);
+
+                $arFields['CONFIRM_PASSWORD'] = $arFields['PASSWORD'];
             }
-
-            if ($this->options['NEW_LOGIN_AS'])
-                $arFields['PASSWORD'] = Random::getString(self::GEN_PASSWORD_LENGTH);
-
-            $arFields['CONFIRM_PASSWORD'] = $arFields['PASSWORD'];
 
             $arFields['ACTIVE'] = 'N';
 

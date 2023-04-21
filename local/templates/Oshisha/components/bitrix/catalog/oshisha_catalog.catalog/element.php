@@ -15,6 +15,8 @@
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\ModuleManager;
+use Bitrix\Catalog;
+
 
 $this->setFrameMode(true);
 
@@ -26,6 +28,47 @@ if (isset($arParams['USE_COMMON_SETTINGS_BASKET_POPUP']) && $arParams['USE_COMMO
 
 $isSidebar = ($arParams['SIDEBAR_DETAIL_SHOW'] == 'Y' && !empty($arParams['SIDEBAR_PATH']));
 $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDEBAR_SECTION_POSITION'] === 'left';
+
+$fUser = CSaleBasket::GetBasketUserID();
+$arBasketItems = [];
+$dbBasketItems = CSaleBasket::GetList(
+    array("NAME" => "ASC", "ID" => "ASC"),
+    array("FUSER_ID" => $fUser, "LID" => SITE_ID, "ORDER_ID" => "NULL"),
+    false,
+    false,
+    array("ID", "PRODUCT_ID", "QUANTITY",)
+);
+while ($arItems = $dbBasketItems->Fetch()) {
+    if (strlen($arItems["CALLBACK_FUNC"]) > 0) {
+        CSaleBasket::UpdatePrice($arItems["ID"],
+            $arItems["CALLBACK_FUNC"],
+            $arItems["MODULE"],
+            $arItems["PRODUCT_ID"],
+            $arItems["QUANTITY"]);
+        $arItems = CSaleBasket::GetByID($arItems["ID"]);
+    }
+
+    $arBasketItems[$arItems["PRODUCT_ID"]] = $arItems["QUANTITY"];
+}
+
+GLOBAL $arrFilterTop;
+$arrFilterTop = array();
+
+$basketUserId = (int)$fUser;
+if ($basketUserId <= 0)
+{
+    $ids = array();
+}
+$ids = array_values(Catalog\CatalogViewedProductTable::getProductSkuMap(
+    IBLOCK_CATALOG,
+    $arResult['VARIABLES']['SECTION_ID'],
+    $basketUserId,
+    $arParams['SECTION_ELEMENT_ID'],
+    $arParams['PAGE_ELEMENT_COUNT'],
+    $arParams['DEPTH']
+));
+
+$arrFilterTop['ID'] = $ids;
 ?>
 <div class="row bx-<?= $arParams['TEMPLATE_THEME'] ?>">
     <div>
@@ -191,6 +234,7 @@ $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDE
             'GIFTS_MAIN_PRODUCT_DETAIL_PAGE_ELEMENT_COUNT' => $arParams['GIFTS_MAIN_PRODUCT_DETAIL_PAGE_ELEMENT_COUNT'],
             'GIFTS_MAIN_PRODUCT_DETAIL_BLOCK_TITLE' => $arParams['GIFTS_MAIN_PRODUCT_DETAIL_BLOCK_TITLE'],
             'GIFTS_MAIN_PRODUCT_DETAIL_HIDE_BLOCK_TITLE' => $arParams['GIFTS_MAIN_PRODUCT_DETAIL_HIDE_BLOCK_TITLE'],
+            'BASKET_ITEMS' => $arBasketItems
         );
 
         if (isset($arParams['USER_CONSENT'])) {
@@ -269,18 +313,17 @@ $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDE
 
                 $obCache->EndDataCache($recommendedData);
             }
-            if ($USER->IsAdmin()) {
-                if (!empty($recommendedData) && $USER->IsAuthorized()) {
+            if ($USER->IsAuthorized()) {
                     if (!isset($arParams['DETAIL_SHOW_POPULAR']) || $arParams['DETAIL_SHOW_POPULAR'] != 'N') { ?>
                         <div class="mb-5 mt-5">
                             <div data-entity="parent-container">
                                 <div data-entity="header" data-showed="false">
                                     <h4 class="font-19"><b>С этим товаром покупают</b></h4>
                                 </div>
-                                <div class="">
+                                <div class="by-card">
                                     <?php $APPLICATION->IncludeComponent(
                                         "bitrix:catalog.top",
-                                        "oshisha_catalog.top_new",
+                                        "oshisha_catalog.top",
                                         array(
                                             "ACTION_VARIABLE" => "action",
                                             "ADD_PICT_PROP" => "-",
@@ -293,7 +336,7 @@ $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDE
                                             "CACHE_TYPE" => "A",
                                             "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
                                             "COMPATIBLE_MODE" => "Y",
-                                            "COMPONENT_TEMPLATE" => "oshisha_catalog.top_new",
+                                            "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
                                             "CONVERT_CURRENCY" => "N",
                                             "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
                                             "DETAIL_URL" => "",
@@ -357,7 +400,8 @@ $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDE
                                             "USE_ENHANCED_ECOMMERCE" => "N",
                                             "USE_PRICE_COUNT" => "N",
                                             "USE_PRODUCT_QUANTITY" => "N",
-                                            "VIEW_MODE" => "SLIDER"
+                                            "VIEW_MODE" => "SLIDER",
+                                            "BASKET_ITEMS" => $arBasketItems
                                         ),
                                         false
                                     ); ?>
@@ -366,6 +410,104 @@ $isSidebarLeft = isset($arParams['SIDEBAR_SECTION_POSITION']) && $arParams['SIDE
                         </div>
                         <?
                     }
+            }
+            if ($USER->IsAuthorized()) {
+                if (!empty($arrFilterTop['ID'])) { ?>
+                    <div class="mb-5 mt-5">
+                        <div data-entity="parent-container">
+                            <div data-entity="header" data-showed="false">
+                                <h4 class="font-19"><b>Вы смотрели</b></h4>
+                            </div>
+                            <div class="by-card">
+                                <?php $APPLICATION->IncludeComponent(
+                                    "bitrix:catalog.top",
+                                    "oshisha_catalog.top",
+                                    array(
+                                        "ACTION_VARIABLE" => "action",
+                                        "PRODUCTS_VIEWED" => "Y",
+                                        "ADD_PICT_PROP" => "-",
+                                        "ADD_PROPERTIES_TO_BASKET" => "Y",
+                                        "ADD_TO_BASKET_ACTION" => "ADD",
+                                        "BASKET_URL" => "/personal/basket.php",
+                                        "CACHE_FILTER" => "N",
+                                        "CACHE_GROUPS" => "Y",
+                                        "CACHE_TIME" => "36000000",
+                                        "CACHE_TYPE" => "A",
+                                        "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
+                                        "COMPATIBLE_MODE" => "Y",
+                                        "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
+                                        "CONVERT_CURRENCY" => "N",
+                                        "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
+                                        "DETAIL_URL" => "",
+                                        "DISPLAY_COMPARE" => "N",
+                                        "ELEMENT_COUNT" => "16",
+                                        "ELEMENT_SORT_FIELD" => "timestamp_x",
+                                        "ELEMENT_SORT_FIELD2" => "id",
+                                        "ELEMENT_SORT_ORDER" => "asc",
+                                        "ELEMENT_SORT_ORDER2" => "desc",
+                                        "ENLARGE_PRODUCT" => "PROP",
+                                        "ENLARGE_PROP" => "-",
+                                        "FILTER_NAME" => "arrFilterTop",
+                                        "HIDE_NOT_AVAILABLE" => "Y",
+                                        "HIDE_NOT_AVAILABLE_OFFERS" => "N",
+                                        "IBLOCK_ID" => IBLOCK_CATALOG,
+                                        "IBLOCK_TYPE" => "1c_catalog",
+                                        "LABEL_PROP" => array(),
+                                        "LABEL_PROP_MOBILE" => "",
+                                        "LABEL_PROP_POSITION" => "top-left",
+                                        "LINE_ELEMENT_COUNT" => "4",
+                                        "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
+                                        "MESS_BTN_BUY" => "Купить",
+                                        "MESS_BTN_COMPARE" => "Сравнить",
+                                        "MESS_BTN_DETAIL" => "Подробнее",
+                                        "MESS_NOT_AVAILABLE" => "Нет в наличии",
+                                        "OFFERS_FIELD_CODE" => array(
+                                            0 => "",
+                                            1 => "",
+                                        ),
+                                        "OFFERS_LIMIT" => "4",
+                                        "OFFERS_SORT_FIELD" => "sort",
+                                        "OFFERS_SORT_FIELD2" => "id",
+                                        "OFFERS_SORT_ORDER" => "asc",
+                                        "OFFERS_SORT_ORDER2" => "desc",
+                                        "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
+                                        "PARTIAL_PRODUCT_PROPERTIES" => "N",
+                                        "PRICE_CODE" => BXConstants::PriceCode(),
+                                        "FILL_ITEM_ALL_PRICES" => "Y",
+                                        "PRICE_VAT_INCLUDE" => "Y",
+                                        "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
+                                        "PRODUCT_DISPLAY_MODE" => "Y",
+                                        "PRODUCT_ID_VARIABLE" => "id",
+                                        "PRODUCT_PROPS_VARIABLE" => "prop",
+                                        "PRODUCT_QUANTITY_VARIABLE" => "quantity",
+                                        "PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false}]",
+                                        "PRODUCT_SUBSCRIPTION" => "Y",
+                                        "PROPERTY_CODE_MOBILE" => "",
+                                        "ROTATE_TIMER" => "30",
+                                        "SECTION_URL" => "",
+                                        "SEF_MODE" => "N",
+                                        "SHOW_CLOSE_POPUP" => "N",
+                                        "SHOW_DISCOUNT_PERCENT" => "N",
+                                        "SHOW_MAX_QUANTITY" => "N",
+                                        "SHOW_OLD_PRICE" => "N",
+                                        "SHOW_PAGINATION" => "Y",
+                                        "SHOW_PRICE_COUNT" => "1",
+                                        "SHOW_SLIDER" => "Y",
+                                        "SLIDER_INTERVAL" => "3000",
+                                        "SLIDER_PROGRESS" => "N",
+                                        "TEMPLATE_THEME" => "blue",
+                                        "USE_ENHANCED_ECOMMERCE" => "N",
+                                        "USE_PRICE_COUNT" => "N",
+                                        "USE_PRODUCT_QUANTITY" => "N",
+                                        "VIEW_MODE" => "SLIDER",
+                                        "BASKET_ITEMS" => $arBasketItems
+                                    ),
+                                    false
+                                ); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?
                 }
             }
         }

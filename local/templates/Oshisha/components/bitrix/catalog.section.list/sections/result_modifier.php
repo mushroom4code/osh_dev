@@ -54,7 +54,7 @@ if (0 < $arResult['SECTIONS_COUNT'])
 {
 	$boolPicture = false;
 	$boolDescr = false;
-	$arSelect = array('ID');
+	$arSelect = array('ID','UF_COLOR_TEXT');
 	$arMap = array();
 	if ('LINE' == $arParams['VIEW_MODE'] || 'TILE' == $arParams['VIEW_MODE'])
 	{
