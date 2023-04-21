@@ -304,10 +304,10 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 						<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto">
 							<?php
 							$propsForOffers = EnteregoSettings::getDataPropOffers();
-							$propState = $arResult['PROPERTIES']['OSNOVNOE_SVOYSTVO_TP']['VALUE'];
+							$propState = $arResult['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ??'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
 
 							if (!empty($propState)) {
-								$propAllOff = CIBlockProperty::GetList([],['XML_ID'=>$propState])->Fetch();
+								$propAllOff = CIBlockProperty::GetList([], ['XML_ID' => $propState])->Fetch();
 
 								foreach ($arResult['OFFERS'] as $key => $offer) {
 

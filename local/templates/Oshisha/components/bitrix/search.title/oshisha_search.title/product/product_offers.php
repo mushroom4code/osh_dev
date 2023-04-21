@@ -36,10 +36,8 @@ if (!empty($arItem) && !empty($itemOffers) && !empty($propsForOffers)) {
 						$taste = [];
 						$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
 						$prop = $offer['PROPERTIES'];
-						if (!empty($offer['PROPERTIES']) && !empty($offer['PROPERTIES']['VALUE'])
-							&& strripos($offer['PROPERTIES']['CODE'],'CML2') === false) {
-							$prop_value = !is_array($prop['VALUE']) ?
-								$prop['VALUE'] . $propsForOffers[$prop['CODE']]['PREF'] : $prop['VALUE'];
+						if (!empty($prop) && !empty($prop['VALUE'])) {
+							$prop_value = !is_array($prop['VALUE']) ? $prop['VALUE'] . $propsForOffers[$prop['CODE']]['PREF'] : $prop['VALUE'];
 							$active_box = 'false';
 							$type = $propsForOffers[$prop['CODE']]['TYPE'] ?? 'text';
 							if ($keyItem == $active) {
@@ -78,7 +76,7 @@ if (!empty($arItem) && !empty($itemOffers) && !empty($propsForOffers)) {
 									     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
 									     data-onevalue="<?= $offer['ID'] ?>"
 									     class="mr-1 offer-box color-hookah br-10 mb-1">
-										<img src="<?= $prop_value ?>"
+										<img src="<?= $offer['PICTURE'] ?>"
 										     class="br-10"
 										     width="50"
 										     height="50"

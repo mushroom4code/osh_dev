@@ -117,6 +117,9 @@ $offersForModal = [];
 $boolShowTaste = (empty($item['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) ||
 	count($item['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) == 0);
 
+$propId = $item['PROPERTIES'][ OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
+$propAllOff = CIBlockProperty::GetList([], ['XML_ID' => $propId])->Fetch();
+
 foreach ($item['OFFERS'] as $keys => $quantityNull) {
 	$basketItem = 0;
 	$propsList = [];
@@ -133,12 +136,11 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 		$basketItem = $item['ACTUAL_BASKET'][$quantityNull['ID']];
 	}
 
-	foreach ($quantityNull['PROPERTIES'] as $code => $prop) {
-		if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2') === false) {
-			$propsList[$code] = $prop;
-			$propsList[$code]['TYPE_OFFERS'] = $propsForOffers[$code]['TYPE'] ?? 'text';
-			$propsList[$code]['PREF'] = $propsForOffers[$code]['PREF'];
-		}
+	$prop = $quantityNull['PROPERTIES'][$propAllOff['CODE']];
+	if (!empty($prop['VALUE'])) {
+		$propsList[$propAllOff['CODE']] = $prop;
+		$propsList[$propAllOff['CODE']]['TYPE_OFFERS'] = $propsForOffers[$propAllOff['CODE']]['TYPE'] ?? 'text';
+		$propsList[$propAllOff['CODE']]['PREF'] = $propsForOffers[$propAllOff['CODE']]['PREF'];
 	}
 
 
@@ -569,22 +571,23 @@ $price = $item['OFFERS'][$active]['PRICES_CUSTOM'];
 								$taste = [];
 								$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
 								$typeProp = '';
-								foreach ($offer['PROPERTIES'] as $prop) {
-									$code = $prop['CODE'];
-									if (!empty($prop['VALUE']) && strripos($prop['CODE'], 'CML2') === false) {
-										$prop_value = $prop['VALUE'] . $propsForOffers[$code]['PREF'];
-										$typeProp = $code;
-										$type = $propsForOffers[$code]['TYPE'] ?? 'text';
-										if ($propsForOffers[$code]['TYPE'] === 'colorWithText') {
-											foreach ($prop['VALUE_XML_ID'] as $key => $listProp) {
-												$taste[$key] = [
-													'color' => '#' . explode('#', $listProp)[1],
-													'name' => $prop['VALUE'][$key]
-												];
-											}
+								$prop = $offer['PROPERTIES'][$propAllOff['CODE']];
+
+								$code = $prop['CODE'];
+								if (!empty($prop['VALUE'])) {
+									$prop_value = $prop['VALUE'] . $propsForOffers[$code]['PREF'];
+									$typeProp = $code;
+									$type = $propsForOffers[$code]['TYPE'] ?? 'text';
+									if ($propsForOffers[$code]['TYPE'] === 'colorWithText') {
+										foreach ($prop['VALUE_XML_ID'] as $key => $listProp) {
+											$taste[$key] = [
+												'color' => '#' . explode('#', $listProp)[1],
+												'name' => $prop['VALUE'][$key]
+											];
 										}
 									}
 								}
+
 								if (!empty($prop_value)) {
 									if ($type === 'text') { ?>
 										<div class="red_button_cart width-fit-content mb-lg-2 m-md-2 m-1 offer-box"

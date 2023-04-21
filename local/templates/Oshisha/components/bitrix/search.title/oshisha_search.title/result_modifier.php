@@ -83,7 +83,8 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 		"DETAIL_PICTURE",
 		"CATALOG_QUANTITY",
 		"PRODUCT_ID",
-		"PROPERTY_USE_DISCOUNT"
+		"PROPERTY_USE_DISCOUNT",
+		"PROPERTY_" . OSNOVNOE_SVOYSTVO_TP ?? "PROPERTY_OSNOVNOE_SVOYSTVO_TP"
 	);
 
 	$arSelectOffers = array(
@@ -96,11 +97,6 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 		"CATALOG_QUANTITY",
 		"PRODUCT_ID",
 		"PROPERTY_CML2_LINK",
-		"PROPERTY_GRAMMOVKA_G",
-		"PROPERTY_VKUS",
-		"PROPERTY_SHTUK_V_UPAKOVKE",
-		"PROPERTY_KOLICHESTVO_ZATYAZHEK",
-		"PROPERTY_TSVET",
 	);
 
 	$arFilter = $arFilterOffer = array(
@@ -123,7 +119,7 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 	$arFilter["=ID"] = (array)array_keys($arResult["ELEMENTS"]['PRODUCT']);
 	$arFilter["IBLOCK_ID"] = IBLOCK_CATALOG;
 	$rsElements = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
-
+	$arPropsForOffers = [];
 	while ($arProduct = $rsElements->Fetch()) {
 		if ($arProduct["ACTIVE"] === "Y") {
 			$arProduct["PRICES"] = CIBlockPriceTools::GetItemPrices(
@@ -143,6 +139,13 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 				array("CODE" => "USE_DISCOUNT"))->Fetch();
 
 			$arProduct['USE_DISCOUNT'] = $discount['VALUE_ENUM'];
+
+			if (!empty($arProduct["PROPERTY_" . OSNOVNOE_SVOYSTVO_TP . "_VALUE"])) {
+				$propAllOff = CIBlockProperty::GetList([], ['XML_ID' => $arProduct["PROPERTY_" . OSNOVNOE_SVOYSTVO_TP . "_VALUE"]])->Fetch();
+				$arPropsForOffers['PROPERTY_' . $propAllOff['CODE']] = 'PROPERTY_' . $propAllOff['CODE'];
+				$arProduct['CODE_OFFERS'] = $propAllOff['CODE'];
+			}
+
 			$arResult["ELEMENTS"]['PRODUCT'][$arProduct["ID"]]['INFO'] = $arProduct;
 
 //			get offers all
@@ -167,6 +170,7 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 		$propOffer = EnteregoSettings::getDataPropOffers();
 		$propTaste = [];
 		$arFilterOffer['IBLOCK_ID'] = IBLOCK_CATALOG_OFFERS;
+		$arSelectOffers[] = array_keys($arPropsForOffers)[0];
 		$arFilterOffer["=ID"] = (array)array_keys($arResult["ELEMENTS"]['OFFERS']);
 		$rsElementsOffers = CIBlockElement::GetList(array(), $arFilterOffer, false, false, $arSelectOffers);
 		$properties = CIBlockProperty::GetPropertyEnum('VKUS', [], [
@@ -177,6 +181,7 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 			$propTaste[$prop_fields['ID']]['color'] = '#' . explode('#', $prop_fields["XML_ID"])[1];
 		}
 		while ($arElement = $rsElementsOffers->Fetch()) {
+			$parent = $arElement['PROPERTY_CML2_LINK_VALUE'];
 			if ($arElement["ACTIVE"] === "Y") {
 
 				$arElement["PRICES"] = CIBlockPriceTools::GetItemPrices(
@@ -193,33 +198,25 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 					BX_RESIZE_IMAGE_PROPORTIONAL,
 					true)['src'];
 
-				// Get prop active for offer TODO offer props static
-				$section = $arResult["ELEMENTS"]['PRODUCT'][$arElement['PROPERTY_CML2_LINK_VALUE']]['INFO']['SECTION_NAME'];
-				$prop=CIBlockElement::GetByID($arElement["ID"])->GetNextElement()->GetProperties();
-				if (!empty($arElement['PROPERTY_GRAMMOVKA_G_VALUE'])) {
-					$arElement['PROPERTIES']['CODE'] = 'GRAMMOVKA_G';
-					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_GRAMMOVKA_G_VALUE'];
-				} elseif (!empty($arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'])) {
-					$arElement['PROPERTIES']['CODE'] = 'SHTUK_V_UPAKOVKE';
-					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_SHTUK_V_UPAKOVKE_VALUE'];
-				} elseif (!empty($arElement['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'])) {
-					$arElement['PROPERTIES']['CODE'] = 'KOLICHESTVO_ZATYAZHEK';
-					$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_KOLICHESTVO_ZATYAZHEK_VALUE'];
-				} elseif (!empty($arElement['PROPERTY_TSVET_VALUE'])) {
-						$arElement['PROPERTIES']['CODE'] = 'TSVET';
-						$arElement['PROPERTIES']['VALUE'] = $arElement["PICTURE"];
-				} elseif (!empty($arElement['PROPERTY_VKUS_VALUE'])) {
-					$arElement['PROPERTIES']['CODE'] = 'VKUS';
-					foreach ((array)$arElement['PROPERTY_VKUS_VALUE'] as $id => $tasteName) {
-						$arElement['PROPERTIES']['VALUE'][$id] = [
-							'color' => $propTaste[$id]['color'],
-							'name' => $propTaste[$id]['name']
-						];
+				$propCode = $arResult["ELEMENTS"]['PRODUCT'][$parent]['INFO']['CODE_OFFERS'];
+				if (!empty($arElement['PROPERTY_' . $propCode . '_VALUE'])) {
+					if ($propCode === 'VKUS') {
+						$arElement['PROPERTIES']['CODE'] = 'VKUS';
+						foreach ((array)$arElement['PROPERTY_VKUS_VALUE'] as $id => $tasteName) {
+							$arElement['PROPERTIES']['VALUE'][$id] = [
+								'color' => $propTaste[$id]['color'],
+								'name' => $propTaste[$id]['name']
+							];
+						}
+					} else {
+						$arElement['PROPERTIES']['CODE'] = $propCode;
+						$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_' . $propCode . '_VALUE'];
 					}
+
 				}
 
 
-				$arResult["ELEMENTS"]['PRODUCT'][$arElement['PROPERTY_CML2_LINK_VALUE']]['OFFERS'][$arElement["ID"]] = $arElement;
+				$arResult["ELEMENTS"]['PRODUCT'][$parent]['OFFERS'][$arElement["ID"]] = $arElement;
 				unset($arResult["ELEMENTS"]['OFFERS'][$arElement["ID"]]);
 			}
 		}
