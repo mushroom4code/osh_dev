@@ -62,7 +62,10 @@ function getWithUpdateProductsInDB($productData, $offersData): bool
 		$id = $offersData[$xmlId]['ID'];
 		$oldID = $product['ID'];
 		$connection->query("UPDATE b_sale_basket SET PRODUCT_ID =$id WHERE PRODUCT_ID=$oldID");
-		CIBlockElement::Delete($oldID);
+		$xml = explode('#', $offersData[$xmlId]['XML_ID']);
+		if($xml[0] !== $xml[1]){
+			CIBlockElement::Delete($oldID);
+		}
 	}
 	return true;
 }
