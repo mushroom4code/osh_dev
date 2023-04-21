@@ -33,6 +33,7 @@ CModule::AddAutoloadClasses("", array(
 //redefine sale  basket condition
 require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
+
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
     array('CatalogAPIService', 'OnRestServiceBuildDescription'));
@@ -327,7 +328,8 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
 }
 
 EnteregoSettings::getSalePriceOnCheckAndPeriod();
-
+// update products after exchange
+require_once(__DIR__ . '/enterego_class/modules/deleteProductOnNewOffers.php');
 // JWT-token authorization
 addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);
 AddEventHandler('main', 'OnAfterUserAuthorize', ['\Enterego\AuthTokenTable', 'getNewToken']);
@@ -335,3 +337,4 @@ AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToke
 
 // bitrix24 feedback and callback integrations
 AddEventHandler('iblock', 'OnAfterIBlockElementAdd',['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
+//deleteProductOnNewOffers();
