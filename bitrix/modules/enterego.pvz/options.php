@@ -459,7 +459,20 @@ $tabControl->begin();
                             </div>
                         </td>
                     </tr>
+
                     <?
+                } else if ($aTab['DIV'] === 'russian_post'){?>
+                    <tr>
+                        <td>
+                            <div style="display: none" id="russian_post_load_points_label"
+                                class="adm-info-message-wrap">
+                        </td>
+                        <td>
+                            <input type="button" id="russian_post_load_points"
+                                value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                            </div>
+                        </td>
+                    </tr><?
                 } else if ($aTab['DIV'] === 'oshisha') {
                     \CommonPVZ\OshishaDelivery::generate($oshishaOptions["delivery_time_period"], \CommonPVZ\OshishaDelivery::getOshishaOptionsData());
                 }
@@ -559,6 +572,43 @@ if ($request->isPost() && check_bitrix_sessid()) {
             BX.ajax({
                 url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
                 data: {action: 'updateDellinPoints'},
+                method: 'POST',
+                dataType: 'json',
+                onsuccess: (data) => {
+                    if (data.status === 'success') {
+                        BX.cleanNode(label)
+                        BX.addClass(label, 'adm-info-message-green')
+                        BX.append(BX.create('div', {
+                            attrs: {className: 'adm-info-message'},
+                            text: 'Успешно загружено'
+                        }), label)
+                    } else {
+                        BX.cleanNode(label)
+                        BX.addClass(label, 'adm-info-message-red')
+                        BX.append(BX.create('div', {
+                            attrs: {className: 'adm-info-message'},
+                            text: 'Ошибка'
+                        }), label)
+                    }
+                },
+            })
+        }));
+        BX.bind(BX('russian_post_load_points'), 'click', BX.proxy((event)=>{
+            event.preventDefault()
+            const label = BX('russian_post_load_points_label');
+            BX.cleanNode(label)
+            BX.removeClass(label, 'adm-info-message-green')
+            BX.removeClass(label, 'adm-info-message-red')
+
+            BX.append(BX.create('div', {
+                attrs: {className: 'adm-info-message'},
+                text: 'Загружается...'
+            }), label)
+            BX.show(label);
+
+            BX.ajax({
+                url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
+                data: {action: 'updateRussianPostPoints'},
                 method: 'POST',
                 dataType: 'json',
                 onsuccess: (data) => {

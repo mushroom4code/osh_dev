@@ -25,3 +25,20 @@ CREATE TABLE IF NOT EXISTS `ent_dellin_points`
     PRIMARY KEY (`ID`),
     INDEX BITRIX_CODE (`BITRIX_CODE`)
     );
+
+CREATE TABLE IF NOT EXISTS `ent_russianpost_points`
+(
+    `ID`                        INT(11) NOT NULL,
+    `CODE`                      VARCHAR(100) NOT NULL,
+    `INDEX`                     VARCHAR(100) NOT NULL,
+    `BITRIX_CODE`               VARCHAR(100) NOT NULL,
+    `PHONE_NUMBER`              VARCHAR(100),
+    `WORK_TIME`                 VARCHAR(255) NOT NULL,
+    `COMMENT`                   VARCHAR(255),
+    `FULL_ADDRESS`              VARCHAR(255) NOT NULL,
+    `ADDRESS_LAT`               DOUBLE NOT NULL DEFAULT '0',
+    `ADDRESS_LNG`               DOUBLE NOT NULL DEFAULT '0',
+    `IS_PVZ`                    VARCHAR(100) NOT NULL,
+    PRIMARY KEY (`ID`),
+    INDEX BITRIX_CODE (`BITRIX_CODE`)
+    );

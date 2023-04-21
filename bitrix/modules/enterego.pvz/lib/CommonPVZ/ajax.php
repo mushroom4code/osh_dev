@@ -27,6 +27,8 @@ switch ($action) {
         exit(json_encode(DeliveryHelper::updatePickPointPVZ()));
     case 'updateDellinPoints':
         exit(json_encode(DeliveryHelper::updateDellinPVZ()));
+    case 'updateRussianPostPoints':
+        exit(json_encode(DeliveryHelper::updateRussianPostPVZ()));
     case 'getPVZList':
         $response  = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity));
         exit($response);
