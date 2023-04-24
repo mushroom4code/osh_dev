@@ -28,6 +28,8 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
     '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
+    '\Enterego\EnteregoActionDiscountPriceType' =>
+        '/bitrix/php_interface/enterego_class/EnteregoActionDiscountPriceType.php',
 ));
 
 //redefine sale  basket condition
@@ -72,6 +74,8 @@ AddEventHandler("main", "OnBuildGlobalMenu", "DoBuildGlobalMenu");
 AddEventHandler("main", "OnBeforeProlog", "PriceTypeANDStatusUser", 50);
 AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
 
+AddEventHandler('sale', 'OnCondSaleActionsControlBuildList',
+    ['\Enterego\EnteregoActionDiscountPriceType', 'GetControlDescr']);
 
 function PriceTypeANDStatusUser()
 {
