@@ -203,15 +203,13 @@ class DeliveryHelper
 
         $params['deliveryOptions']['DA_DATA_TOKEN'] = \CommonPVZ\OshishaDelivery::getOshishaDaDataToken();
 
-        if (\CommonPVZ\OshishaDelivery::getDeliveryStatus()['Oshisha'] === 'Y') {
-            $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
-            $params['deliveryOptions']['YA_API_KEY'] = \CommonPVZ\OshishaDelivery::getOshishaYMapsKey();
-            $params['deliveryOptions']['DELIVERY_COST'] = \CommonPVZ\OshishaDelivery::getOshishaCost();
-            $params['deliveryOptions']['START_COST'] = \CommonPVZ\OshishaDelivery::getOshishaStartCost();
-            $params['deliveryOptions']['LIMIT_BASKET'] = \CommonPVZ\OshishaDelivery::getOshishaLimitBasket();
-            $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
-            $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
-        }
+        $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
+        $params['deliveryOptions']['YA_API_KEY'] = \CommonPVZ\OshishaDelivery::getOshishaYMapsKey();
+        $params['deliveryOptions']['DELIVERY_COST'] = \CommonPVZ\OshishaDelivery::getOshishaCost();
+        $params['deliveryOptions']['START_COST'] = \CommonPVZ\OshishaDelivery::getOshishaStartCost();
+        $params['deliveryOptions']['LIMIT_BASKET'] = \CommonPVZ\OshishaDelivery::getOshishaLimitBasket();
+        $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
+        $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
         $params['shipmentCost'] = $order->getBasePrice();
         $orderBasket = $order->getBasket();
