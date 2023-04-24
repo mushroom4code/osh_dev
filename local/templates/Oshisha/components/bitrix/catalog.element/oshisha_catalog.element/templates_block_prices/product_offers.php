@@ -372,10 +372,10 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											$prop_code = $code;
 											$type = $propsForOffers[$code]['TYPE'] ?? 'text';
 											if ($type === 'colorWithText') {
-												foreach ($prop['VALUE_XML_ID'] as $key => $listProp) {
-													$taste[$key] = [
+												foreach ($prop['VALUE_XML_ID'] as $keys => $listProp) {
+													$taste[$keys] = [
 														'color' => '#' . explode('#', $listProp)[1],
-														'name' => $prop['VALUE'][$key]
+														'name' => $prop['VALUE'][$keys]
 													];
 												}
 											}
