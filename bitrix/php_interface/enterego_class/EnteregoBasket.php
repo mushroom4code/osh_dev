@@ -212,4 +212,69 @@ class EnteregoBasket
         return $price;
     }
 
+    /**
+     * Basket action
+     *
+     * Callback method for recalculate product for basket rules
+     * @param array $order
+     * @param array $action
+     * @return void
+     * @throws Main\ArgumentException
+     * @throws Main\LoaderException
+     * @throws Main\ObjectPropertyException
+     * @throws Main\SystemException
+     * @param callable $filter Filter for basket items.
+     */
+    public static function SetSpecialPriceType(array &$order, array $action, $filter)
+    {
+        if (empty($action['VALUE'])){
+            return;
+        }
+
+        if (empty($order['BASKET_ITEMS']) || !is_array($order['BASKET_ITEMS']))
+            return;
+
+        if (!Main\Loader::includeModule('catalog')){
+            return;
+        }
+
+        $filterBasket = (is_callable($filter) ? array_filter($order['BASKET_ITEMS'], $filter) : $order['BASKET_ITEMS']);
+
+        if (empty($filterBasket)) {
+            return;
+        }
+
+        $arProductId = array_column($filterBasket, 'PRODUCT_ID' );
+        $rsPrice = \Bitrix\Catalog\PriceTable::getList([
+            'select' => ['PRODUCT_ID','PRICE'],
+            'filter' => [
+                'PRODUCT_ID'=>$arProductId,
+                'CATALOG_GROUP.NAME' => $action['VALUE'],
+            ]
+        ])->fetchAll();
+        if (empty($rsPrice)) {
+            return;
+        }
+
+        $basketPrice = [];
+        foreach ($rsPrice as $item) {
+            $basketPrice[$item['PRODUCT_ID']] = (float) $item['PRICE'];
+        }
+
+        foreach ($order['BASKET_ITEMS'] as $basketCode => $basketRow) {
+            if (empty($basketPrice[$basketRow['PRODUCT_ID']])){
+                continue;
+            }
+            $discountPrice = $basketPrice[$basketRow['PRODUCT_ID']];
+            if ($basketRow['PRICE'] > $discountPrice){
+
+                $oldPrice = $basketRow['PRICE'];
+                $basketRow['PRICE'] = $discountPrice;
+                $basketRow['DISCOUNT_PRICE'] = $oldPrice - $discountPrice;
+
+                $order['BASKET_ITEMS'][$basketCode] = $basketRow;
+            }
+        }
+    }
+
 }
