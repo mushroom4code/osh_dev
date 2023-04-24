@@ -213,6 +213,7 @@
 				case 0: // no catalog
 				case 1: // product
 				case 2: // set
+				case 7: // service
 					this.initProductData();
 					break;
 				case 3: // sku
@@ -523,6 +524,7 @@
 					case 0: // no catalog
 					case 1: // product
 					case 2: // set
+					case 7: // service
 						if (this.product.useSlider)
 						{
 							this.product.slider = {
@@ -552,10 +554,13 @@
 						this.setAnalyticsDataLayer('showDetail');
 						break;
 					case 3: // sku
-						treeItems = this.obTree.querySelectorAll('li');
-						for (i = 0; i < treeItems.length; i++)
+						if (this.obTree)
 						{
-							BX.bind(treeItems[i], 'click', BX.delegate(this.selectOfferProp, this));
+							treeItems = this.obTree.querySelectorAll('li');
+							for (i = 0; i < treeItems.length; i++)
+							{
+								BX.bind(treeItems[i], 'click', BX.delegate(this.selectOfferProp, this));
+							}
 						}
 
 						for (i = 0; i < this.offers.length; i++)
@@ -637,6 +642,8 @@
 			this.config.showMaxQuantity = this.params.CONFIG.SHOW_MAX_QUANTITY;
 			this.config.relativeQuantityFactor = parseInt(this.params.CONFIG.RELATIVE_QUANTITY_FACTOR);
 			this.config.usePriceRanges = this.params.CONFIG.USE_PRICE_COUNT;
+			this.config.showSkuDescription = this.params.CONFIG.SHOW_SKU_DESCRIPTION;
+			this.config.displayPreviewTextMode = this.params.CONFIG.DISPLAY_PREVIEW_TEXT_MODE;
 
 			if (this.params.CONFIG.MAIN_PICTURE_MODE)
 			{
@@ -794,6 +801,10 @@
 					this.product.id = parseInt(this.params.PRODUCT.ID, 10);
 					this.product.name = this.params.PRODUCT.NAME;
 					this.product.category = this.params.PRODUCT.CATEGORY;
+					this.product.detailText = this.params.PRODUCT.DETAIL_TEXT;
+					this.product.detailTextType = this.params.PRODUCT.DETAIL_TEXT_TYPE;
+					this.product.previewText = this.params.PRODUCT.PREVIEW_TEXT;
+					this.product.previewTextType = this.params.PRODUCT.PREVIEW_TEXT_TYPE;
 				}
 			}
 			else
@@ -806,7 +817,11 @@
 		{
 			if (this.params.BASKET && typeof this.params.BASKET === 'object')
 			{
-				if (this.productType === 1 || this.productType === 2)
+				if (
+					this.productType === 1
+					|| this.productType === 2
+					|| this.productType === 7
+				)
 				{
 					this.basketData.useProps = this.params.BASKET.ADD_PROPS;
 					this.basketData.emptyProps = this.params.BASKET.EMPTY_PROPS;
@@ -925,6 +940,7 @@
 				case 0: //no catalog
 				case 1: //product
 				case 2: //set
+				case 7: // service
 					item = {
 						'id': this.product.id,
 						'name': this.product.name,
@@ -2662,7 +2678,7 @@
 			}
 
 			quantity = parseFloat(quantity);
-			console.log(quantity);
+
 			var nearestQuantity = quantity;
 			var range, diffFrom, absDiffFrom, diffTo, absDiffTo, shortestDiff;
 
@@ -2719,7 +2735,7 @@
 					}
 				}
 			}
-			console.log(nearestQuantity)
+
 			return nearestQuantity;
 		},
 
@@ -2956,6 +2972,7 @@
 					case 0: // no catalog
 					case 1: // product
 					case 2: // set
+					case 7: // service
 						compareLink = url.replace('#ID#', this.product.id.toString());
 						break;
 					case 3: // sku
@@ -3107,6 +3124,7 @@
 				case 0: // no catalog
 				case 1: // product
 				case 2: // set
+				case 7: // service
 					if (this.product.id == id)
 					{
 						this.setCompared(false);
@@ -3140,6 +3158,7 @@
 			{
 				case 1: // product
 				case 2: // set
+				case 7: // service
 					this.basketUrl = this.basketUrl.replace('#ID#', this.product.id.toString());
 					break;
 				case 3: // sku
@@ -3281,6 +3300,7 @@
 			{
 				case 1: // product
 				case 2: // set
+				case 7: // service
 					if (this.basketData.useProps && !this.basketData.emptyProps)
 					{
 						this.initPopupWindow();
@@ -3345,6 +3365,7 @@
 					{
 						case 1: // product
 						case 2: // set
+						case 7: // service
 							productPict = this.product.pict.SRC;
 							break;
 						case 3: // sku
@@ -3441,6 +3462,7 @@
 				{
 					case 1:
 					case 2:
+					case 7: // service
 						this.viewedCounter.params.PRODUCT_ID = this.product.id;
 						this.viewedCounter.params.PARENT_ID = this.product.id;
 						break;
@@ -3495,9 +3517,9 @@
 })(window);
 
 // OFFERS
-$(document).on('click', '.box_with_photo_product .offer-box', function () {
-	let parent = $(this).closest('.box_with_photo_product');
-	let new_active_image = $(parent).find('.product-item-detail-slider-image[data-id="' + $(this).attr('data-product_id') + '"]');
-	$(document).find('.product-item-detail-slider-image.active').removeClass('active').addClass('d-none');
-	$(new_active_image).removeClass('d-none').addClass('active').find('img').attr('src', $(new_active_image).find('img').attr('data-src'));
-})
+// $(document).on('click', '.box_with_photo_product .offer-box', function () {
+// 	let parent = $(this).closest('.box_with_photo_product');
+// 	let new_active_image = $(parent).find('.product-item-detail-slider-image[data-id="' + $(this).attr('data-product_id') + '"]');
+// 	$(document).find('.product-item-detail-slider-image.active').removeClass('active').addClass('d-none');
+// 	$(new_active_image).removeClass('d-none').addClass('active').find('img').attr('src', $(new_active_image).find('img').attr('data-src'));
+// })

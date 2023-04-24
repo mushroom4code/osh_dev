@@ -50,19 +50,33 @@ $boolShowTaste = (empty($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS][
 				<div class="product-item-detail-slider-images-container" data-entity="images-container">
 					<?php if (!empty($arResult['OFFERS'])) {
 						foreach ($arResult['OFFERS'] as $key => $photo) {
-							$dNone = 'd-none';
+							$dNone = '';
 							$boolShowImage = false;
 							if ($key === $active) {
 								$dNone = 'active';
 								$boolShowImage = true;
+							}
+							$morePhoto = $photo['PROPERTIES']['MORE_PHOTO']['VALUE'];
+							if (!empty($morePhoto)) {
+								foreach ($morePhoto as $elem) {
+									$file = CFile::GetByID($elem)->Fetch(); ?>
+									<picture class="product-item-detail-slider-image"
+									         data-entity="image" data-id="<?= $file['ID'] ?>">
+										<img
+											data-src="<?= $file['SRC'] ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
+											alt="<?= $photo['NAME'] ?>"
+											src="<?= $boolShowImage ? $file['SRC'] : '' ?>"
+											title="<?= $photo['NAME'] ?>"<?= ($key == $active ? ' itemprop="image"' : '') ?>>
+									</picture>
+								<?php }
 							} ?>
 							<picture class="product-item-detail-slider-image <?= $dNone ?>"
-							         data-entity="image" data-id="<?= $photo['ID'] ?>">
+							         data-entity="image" data-id="<?= $photo['DETAIL_PICTURE']['ID'] ?>">
 								<img
 									data-src="<?= $photo['DETAIL_PICTURE']['SRC'] ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
 									alt="<?= $photo['NAME'] ?>"
 									src="<?= $boolShowImage ? $photo['DETAIL_PICTURE']['SRC'] : '' ?>"
-									title="<?= $photo['NAME'] ?>"<?= ($key == 0 ? ' itemprop="image"' : '') ?>>
+									title="<?= $photo['NAME'] ?>"<?= ($key == $active ? ' itemprop="image"' : '') ?>>
 							</picture>
 						<?php }
 					} else { ?>
@@ -118,7 +132,28 @@ $boolShowTaste = (empty($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS][
 				</a>
 			</div>
 		</div>
+		<?php if ($showSliderControls) {
+			foreach ($arResult['OFFERS'] as $keyOffer => $offer) {
+				if (!isset($offer['MORE_PHOTO_COUNT']) || $offer['MORE_PHOTO_COUNT'] <= 0) {
+					continue;
+				}
 
+				$strVisible = $keyOffer == $active ? '' : 'none'; ?>
+				<div class="product-item-detail-slider-controls-block mt-2"
+				     id="<?= $itemIds['SLIDER_CONT_OF_ID'] . $offer['ID'] ?>"
+				     style="display: <?= $strVisible ?>;">
+					<?php foreach ($offer['MORE_PHOTO'] as $keyPhoto => $photo) { ?>
+						<div
+							class="product-item-detail-slider-controls-image<?= ($keyOffer == $active ? ' active' : '') ?>"
+							data-entity="slider-control"
+							data-value="<?= $offer['ID'] . '_' . $photo['ID'] ?>">
+							<img src="<?= $photo['SRC'] ?>">
+						</div>
+					<?php } ?>
+				</div>
+				<?php
+			}
+		} ?>
 	</div>
 </div>
 <?php
@@ -219,8 +254,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 					break;
 				case 'quantity':
 					?>
-					<div>
-						<div class="bx_price position-relative font-weight-bolder font-22 mb-3">
+					<div id="<?= $itemIds['TREE_ID'] ?>">
+						<div class="bx_price position-relative font-weight-bolder font-22 mb-3"
+						     id="<?= $itemIds['PRICE_ID'] ?>">
 							<?php $sale = false;
 							$price_sale = $arResult['OFFERS'][$active]['PRICES_CUSTOM'];
 							if (USE_CUSTOM_SALE_PRICE && !empty($arResult['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
@@ -301,10 +337,10 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 								<?php } ?>
 							</div>
 						</div>
-						<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto">
+						<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto" data-entity="sku-line-block">
 							<?php
 							$propsForOffers = EnteregoSettings::getDataPropOffers();
-							$propState = $arResult['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ??'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
+							$propState = $arResult['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
 
 							if (!empty($propState)) {
 								$propAllOff = CIBlockProperty::GetList([], ['XML_ID' => $propState])->Fetch();
@@ -314,11 +350,13 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 									if ((int)$offer['CATALOG_QUANTITY'] > 0) {
 										$active_box = 'false';
 										$basketItem = 0;
+										$selected = '';
 										if (!empty($arParams['BASKET_ITEMS'][$offer["ID"]])) {
 											$basketItem = $arParams['BASKET_ITEMS'][$offer['ID']];
 										}
 										if ($active === $key && (int)$offer['CATALOG_QUANTITY'] > 0) {
 											$active_box = 'true';
+											$selected = 'selected';
 										}
 
 										$base_price = $offer['PRICES_CUSTOM']['SALE_PRICE']['PRICE']
@@ -346,7 +384,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 										if (!empty($prop_value)) {
 											if ($type === 'text') { ?>
 												<div
-													class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
+													class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer <?= $selected ?>"
 													title="<?= $offer['NAME'] ?>"
 													data-active="<?= $active_box ?>"
 													data-product_id="<?= $offer['ID'] ?>"
@@ -358,7 +396,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 													data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
 													data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 													data-sale="<?= $sale ?>"
-													data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+													data-treevalue="<?= $offer['ID'] ?>_<?= $prop['ID'] ?>"
 													data-onevalue="<?= $offer['ID'] ?>">
 													<?= $prop_value ?? '0' ?>
 												</div>
@@ -374,9 +412,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 												     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 												     data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
 												     data-sale="<?= $sale ?>"
-												     data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+												     data-treevalue="<?= $offer['ID'] ?>_<?= $prop['ID'] ?>"
 												     data-onevalue="<?= $offer['ID'] ?>"
-												     class="mr-1 offer-box color-hookah br-10 mb-1">
+												     class="mr-1 offer-box color-hookah br-10 mb-1  <?= $selected ?>">
 													<img src="<?= $offer['PREVIEW_PICTURE']['SRC'] ?>"
 													     class="br-10"
 													     width="50"
@@ -387,7 +425,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											<?php } elseif ($type === 'colorWithText') {
 												if (!empty($taste)) { ?>
 													<div
-														class="red_button_cart p-1 taste variation_taste font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
+														class="red_button_cart p-1 taste variation_taste font-14
+														 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
+                                                         <?= $selected ?>"
 														title="<?= $offer['NAME'] ?>"
 														data-active="<?= $active_box ?>"
 														data-product_id="<?= $offer['ID'] ?>"
@@ -399,7 +439,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 														data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 														data-sale="<?= $sale ?>"
 														data-price_base="<?= $base_price ?>"
-														data-treevalue="<?= $offer['ID'] ?>_<?= $offer['ID'] ?>"
+														data-treevalue="<?= $offer['ID'] ?>_<?= $prop['ID'] ?>"
 														data-onevalue="<?= $offer['ID'] ?>">
 														<?php foreach ($taste as $elem_taste) { ?>
 															<span class="taste mb-0"
