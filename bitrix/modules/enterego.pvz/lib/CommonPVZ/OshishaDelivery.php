@@ -36,11 +36,6 @@ class OshishaDelivery extends CommonPVZ
 //        'quantity_override'
     );
 
-    public static function getDeliveryStatus() {
-        return array('Oshisha' => Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_active'));
-    }
-
-
     public static function checkMoscowOrNot($locationCode) {
         $result = DeliveryLocationTable::checkConnectionExists(DOOR_DELIVERY_ID, $locationCode,
             array(
@@ -49,15 +44,26 @@ class OshishaDelivery extends CommonPVZ
         );
         return $result;
     }
-    public static function getInstance($deliveryParams): array
+    public static function getInstanceForDoor($deliveryParams): array
     {
         //TODO validate moscow and region!!!!
         $res = self::checkMoscowOrNot($deliveryParams['location'] ?? '');
 
-       if (Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_active')) {
+       if ($res && Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_door_active')) {
            return [new OshishaDelivery()];
        }
        return [];
+    }
+
+    public static function getInstanceForPvz($deliveryParams): array
+    {
+        //TODO validate moscow and region!!!!
+        $res = self::checkMoscowOrNot($deliveryParams['codeCity'] ?? '');
+
+        if (Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_pvz_active')) {
+            return [new OshishaDelivery()];
+        }
+        return [];
     }
 
     public static function getOshishaDataValue($name)
@@ -357,8 +363,8 @@ class OshishaDelivery extends CommonPVZ
                 'hintContent' => $arStore['ADDRESS'],
                 'openEmptyBalloon' => true,
                 'clusterCaption' => 'OSHISHA',
-
             ];
+
             $features_obj['options'] = [
                 'iconImageSize' => [64, 64],
                 'iconImageOffset' => [-30, -60],
@@ -386,6 +392,8 @@ class OshishaDelivery extends CommonPVZ
             $limitBasket = self::getOshishaLimitBasket();
             if (intval($params['shipment_cost']) >= $limitBasket && $noMarkup === 'false') {
                 $delivery_price = max($distance - 5, 0) * $cost;
+            } elseif (intval($params['shipment_cost']) >= $limitBasket && $noMarkup === 'true') {
+                $delivery_price = 0;
             } else {
                 if ($noMarkup === 'true') {
                     $delivery_price = $startCost;

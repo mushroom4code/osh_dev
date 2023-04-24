@@ -558,7 +558,6 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             distKm = i.getLength() / 1000;
             delivery_price = this.calculateCost(distKm);
             no_markup = false;
-
             let g, b;
             i.getPaths().options.set({
                 strokeColor: "F55F5C"
@@ -571,12 +570,11 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                     c.properties.set("balloonContent", "");
                 } else {
                     c.options.set("preset", "islands#redStretchyIcon");
-
                     switch (true) {
                         case (result.inMondayThursdayZone && (delivery_date_week_day == 1 || delivery_date_week_day == 4)) :
                             no_markup = true;
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + cost + ' руб. Без наценки в понедельник и четверг в этом регионе');
+                                + (currentBasket>=limitBasket ? 0 : cost) + ' руб. Без наценки в понедельник и четверг в этом регионе');
                             break;
                         case (result.inMondayThursdayZone && !(delivery_date_week_day == 1 || delivery_date_week_day == 4)) :
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
@@ -585,7 +583,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                         case (result.inTuesdayFridayZone && (delivery_date_week_day == 2 || delivery_date_week_day == 5)) :
                             no_markup = true;
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + cost + ' руб. Без наценки во вторник и пятницу в этом регионе');
+                                + (currentBasket>=limitBasket ? 0 : cost) + ' руб. Без наценки во вторник и пятницу в этом регионе');
                             break;
                         case (result.inTuesdayFridayZone && !(delivery_date_week_day == 2 || delivery_date_week_day == 5)) :
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
@@ -594,7 +592,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                         case (result.inWednesdaySaturdayZone && (delivery_date_week_day == 3 || delivery_date_week_day == 6)) :
                             no_markup = true;
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + cost + 'руб. Без наценки в среду и субботу в этом регионе');
+                                + (currentBasket>=limitBasket ? 0 : cost) + 'руб. Без наценки в среду и субботу в этом регионе');
                             break;
                         case (result.inWednesdaySaturdayZone && !(delivery_date_week_day == 3 || delivery_date_week_day == 6)) :
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '

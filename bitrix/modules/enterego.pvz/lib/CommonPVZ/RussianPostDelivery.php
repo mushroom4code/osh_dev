@@ -32,17 +32,21 @@ class RussianPostDelivery extends CommonPVZ
         }
     }
 
-    public static function getDeliveryStatus($isPvz = false) {
-        $opt = Option::get(DeliveryHelper::$MODULE_ID, 'RussianPost_active');
-        if ($isPvz)
-            return array('RussianPost' => $opt);
-        else
-            return array('RussianPostEms' => $opt, 'RussianPostFirstClass' => $opt, 'RussianPostRegular' => $opt);
+    public static function getInstanceForDoor($deliveryParams): array
+    {
+        if (Option::get(DeliveryHelper::$MODULE_ID, 'RussianPost_door_active') === 'Y') {
+            return [
+                new RussianPostDelivery('RussianPostEms'),
+                new RussianPostDelivery('RussianPostFirstClass'),
+                new RussianPostDelivery('RussianPostRegular'),
+            ];
+        }
+        return [];
     }
 
-    public static function getInstance($deliveryParams): array
+    public static function getInstanceForPVZ(): array
     {
-        if (Option::get(DeliveryHelper::$MODULE_ID, 'RussianPost_active') === 'Y') {
+        if (Option::get(DeliveryHelper::$MODULE_ID, 'RussianPost_pvz_active') === 'Y') {
             return [
                 new RussianPostDelivery('RussianPostEms'),
                 new RussianPostDelivery('RussianPostFirstClass'),

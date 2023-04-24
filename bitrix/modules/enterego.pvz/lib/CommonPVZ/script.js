@@ -26,6 +26,7 @@ BX.SaleCommonPVZ = {
     propDeliveryTimeInterval: null,
     curDeliveryId: null,
     doorDeliveryId: null,
+    pvzDeliveryId: null,
     shipmentCost: null,
     orderPackages: null,
     oshishaDeliveryOptions: null,
@@ -77,8 +78,9 @@ BX.SaleCommonPVZ = {
                 setTimeout(function (oshParams) {
                     oshParams.oshMkad.afterSave = null;
                     oshParams.oshMkad.getDistance([oshParams.latitude, oshParams.longitude],
+                        oshParams.propAddressId,
                         oshParams.propDateDelivery,
-                        oshParams.propDateDelivery,
+                        '',
                         true);
                 }, 500, oshParams);
             }
@@ -164,7 +166,6 @@ BX.SaleCommonPVZ = {
     update: function (ajaxAns) {
         if (Object.keys(ajaxAns).indexOf("order") !== -1) {
             BX.SaleCommonPVZ.curDeliveryId = ajaxAns.order.DELIVERY.find(field => field.CHECKED === 'Y')?.ID;
-
             BX.SaleCommonPVZ.refresh();
             BX.SaleCommonPVZ.updateDelivery(ajaxAns.order)
         }
@@ -175,12 +176,11 @@ BX.SaleCommonPVZ = {
      * @param orderData array
      */
     updateDelivery: function (orderData) {
-
+        const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
+        BX.cleanNode(propsNode)
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
-
+        const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
         if (doorDelivery !== undefined) {
-            const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
-            BX.cleanNode(propsNode)
             const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
             deliveryInfo.forEach(delivery => {
                 const propContainer = BX.create(
@@ -215,6 +215,20 @@ BX.SaleCommonPVZ = {
                     this.updateOshishaDelivery(propsNode)
                 }
             })
+        } else {
+            const propContainer = BX.create('DIV', {
+                props: {className: 'bx-soa-pp-company-block'},
+                children: [
+                    BX.create('DIV', {props: {className: 'bx-soa-pp-company-desc'}, html: checkedDelivery.DESCRIPTION}),
+                    checkedDelivery.CALCULATE_DESCRIPTION
+                        ? BX.create('DIV', {
+                            props: {className: 'bx-soa-pp-company-desc'},
+                            html: checkedDelivery.CALCULATE_DESCRIPTION
+                        })
+                        : null
+                ]
+            });
+            propsNode.append(propContainer);
         }
     },
 
@@ -437,6 +451,7 @@ BX.SaleCommonPVZ = {
             fivepost_zone: point.properties.fivepostZone,
             hubregion: point.properties.hubregion,
             name_city: this.curCityName,
+            postindex:  point.properties.postindex,
             code_pvz: point.properties.code_pvz,
             type_pvz: point.properties.type ?? ''
         };
