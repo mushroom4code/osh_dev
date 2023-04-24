@@ -236,7 +236,7 @@ global $option_site;
 		<div class="box_with_photo_product row">
 			<?php
 			if (!empty($arResult['OFFERS'])) {
-				$count = 0;
+				$count = 1;
 				foreach ($arResult['OFFERS'] as $offer) {
 					$count = $count + count($offer['PROPERTIES']['MORE_PHOTO']['VALUE']);
                     foreach( $offer['PROPERTIES']['MORE_PHOTO']['VALUE'] as $items){
