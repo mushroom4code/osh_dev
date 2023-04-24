@@ -9,8 +9,6 @@ BX.SaleCommonPVZ = {
     ajaxUrlPVZ: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
     propsMap: null,
     pvzObj: null,
-    pvzAddress: null,
-    pvzFullAddress: null,
     pvzPrice: null,
     dataPVZ: null,
     objectManager: null,
@@ -451,23 +449,16 @@ BX.SaleCommonPVZ = {
 
         __this.pvzPopup.close();
         const point = this.objectManager.objects.getById(objectId);
-        __this.pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
-        this.pvzFullAddress = typeof point.properties.code_pvz !== 'undefined'
-            ? point.properties.deliveryName + ': ' + point.properties.fullAddress + ' #' + point.properties.code_pvz
-            : point.properties.deliveryName + ': ' + point.properties.fullAddress;
 
-        if (this.propCommonPVZId) {
-            const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.propCommonPVZId + '"]');
-            if (commonPVZ) {
-                commonPVZ.value = this.pvzFullAddress;
-                BX('pvz_address').innerHTML = 'Вы выбрали: <span>' + this.pvzAddress + '</span>';
-            }
-        }
+        const pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
+        const pvzFullAddress = pvzAddress +
+            (typeof point.properties.code_pvz !== 'undefined' ? ' #' + point.properties.code_pvz : '');
 
+        this.updateValueProp(this.propCommonPVZId, point.properties.code_pvz)
         if (this.propAddressId ) {
             const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
             if (address) {
-                address.value = this.pvzFullAddress;
+                address.value = pvzFullAddress;
             }
         }
 
@@ -478,6 +469,7 @@ BX.SaleCommonPVZ = {
             }
         }
 
+        BX('pvz_address').innerHTML = 'Вы выбрали: <span>' + pvzAddress + '</span>';
         const dataToHandler = this.getPointData(point);
         __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
     },
