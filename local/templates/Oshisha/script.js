@@ -3052,8 +3052,10 @@ function showHideBlock(box_offers, that, className = 'd-block', allHide = false,
     }
     $(that).closest('div.d-flex').find('.offer-box').each(function () {
         $(this).attr('data-active', 'false');
+        $(this).removeClass('selected');
     });
     $(that).attr('data-active', 'true');
+    $(that).addClass('selected');
 }
 
 /**

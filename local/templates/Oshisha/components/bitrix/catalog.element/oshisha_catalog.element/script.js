@@ -556,7 +556,8 @@
 					case 3: // sku
 						if (this.obTree)
 						{
-							treeItems = this.obTree.querySelectorAll('li');
+							treeItems = this.obTree.querySelectorAll('.offer-box');
+							console.log(treeItems.length)
 							for (i = 0; i < treeItems.length; i++)
 							{
 								BX.bind(treeItems[i], 'click', BX.delegate(this.selectOfferProp, this));
@@ -2124,9 +2125,10 @@
 				}
 
 				strTreeValue = target.getAttribute('data-treevalue');
+				console.log(strTreeValue)
 				arTreeItem = strTreeValue.split('_');
 				this.searchOfferPropIndex(arTreeItem[0], arTreeItem[1]);
-				rowItems = BX.findChildren(target.parentNode, {tagName: 'li'}, false);
+				rowItems = BX.findChildren(target.parentNode, false);
 
 				if (rowItems && rowItems.length)
 				{
@@ -2157,6 +2159,9 @@
 
 		searchOfferPropIndex: function(strPropID, strPropValue)
 		{
+			console.log(strPropID)
+			console.log(strPropValue)
+			console.log(this.treeProps)
 			var strName = '',
 				arShowValues = false,
 				arCanBuyValues = [],
@@ -2174,9 +2179,10 @@
 					break;
 				}
 			}
-
+			console.log(index)
 			if (index > -1)
 			{
+
 				for (i = 0; i < index; i++)
 				{
 					strName = 'PROP_' + this.treeProps[i].ID;
@@ -2185,7 +2191,8 @@
 
 				strName = 'PROP_' + this.treeProps[index].ID;
 				arFilter[strName] = strPropValue;
-
+				console.log(strName)
+				console.log(arFilter)
 				for (i = index + 1; i < this.treeProps.length; i++)
 				{
 					strName = 'PROP_' + this.treeProps[i].ID;

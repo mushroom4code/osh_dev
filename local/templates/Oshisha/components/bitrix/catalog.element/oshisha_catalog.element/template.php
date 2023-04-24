@@ -664,7 +664,19 @@ global $option_site;
 	$offerIds = array();
 	$offerCodes = array();
 	$useRatio = $arParams['USE_RATIO_IN_RANGES'] === 'Y';
+	foreach ($arResult['SKU_PROPS'] as $skuProperty)
+	{
+		if (!isset($arResult['OFFERS_PROP'][$skuProperty['CODE']]))
+			continue;
 
+		$propertyId = $skuProperty['ID'];
+		$skuProps[] = array(
+			'ID' => $propertyId,
+			'SHOW_MODE' => $skuProperty['SHOW_MODE'],
+			'VALUES' => $skuProperty['VALUES'],
+			'VALUES_COUNT' => $skuProperty['VALUES_COUNT']
+		);
+	}
 	foreach ($arResult['JS_OFFERS'] as $ind => &$jsOffer) {
 		$currentOffersList = array();
 
@@ -731,6 +743,8 @@ global $option_site;
 	$templateData['OFFER_IDS'] = $offerIds;
 	$templateData['OFFER_CODES'] = $offerCodes;
 	unset($jsOffer, $strAllProps, $strMainProps, $strPriceRanges, $strPriceRangesRatio, $useRatio);
+
+
 
 	$jsParams = array(
 		'CONFIG' => array(

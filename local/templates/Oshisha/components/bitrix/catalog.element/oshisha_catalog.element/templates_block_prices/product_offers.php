@@ -18,6 +18,15 @@ foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
 }
 $boolShowTaste = (empty($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) ||
 	count($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) == 0);
+
+$propsForOffers = EnteregoSettings::getDataPropOffers();
+$propState = $arResult['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
+$propAllOff = '';
+if (!empty($propState)) {
+$propAllOff = CIBlockProperty::GetList([],
+	['XML_ID' => $propState, 'IBLOCK_ID' => IBLOCK_CATALOG_OFFERS])->Fetch();
+}
+
 ?>
 <div class="col-md-6 col-sm-6 col-lg-6 product_left col-12">
 	<div class="product-item-detail-slider-container p-4
@@ -38,10 +47,9 @@ $boolShowTaste = (empty($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS][
 				} ?>
 			</div>
 		<?php } ?>
-		<div class="product-item-detail-slider-block
+		<div class="product-item-detail-slider-block mb-3
                     <?= ($arParams['IMAGE_RESOLUTION'] === '1by1' ? 'product-item-detail-slider-block-square' : '') ?>"
 		     data-entity="images-slider-block">
-			<div>
 				<span class="product-item-detail-slider-left carousel_elem_custom" data-entity="slider-control-left"
 				      style="display: none;"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
 				<span class="product-item-detail-slider-right carousel_elem_custom"
@@ -92,7 +100,6 @@ $boolShowTaste = (empty($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS][
 						     style="width: 0;"></div>
 					<?php } ?>
 				</div>
-			</div>
 			<div class="box_with_net" <?php if (empty($taste['VALUE'])){ ?>style="padding: 20px;"<?php } ?>>
 				<?php $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
 					'templates',
@@ -137,16 +144,20 @@ $boolShowTaste = (empty($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS][
 				if (!isset($offer['MORE_PHOTO_COUNT']) || $offer['MORE_PHOTO_COUNT'] <= 0) {
 					continue;
 				}
-
+				$propDef = $offer['PROPERTIES'][$propAllOff['CODE']];
+				$id = '';
+				if($propDef['PROPERTY_TYPE'] == 'L'){
+					$id = $propDef['VALUE_ENUM_ID'];
+				}
 				$strVisible = $keyOffer == $active ? '' : 'none'; ?>
-				<div class="product-item-detail-slider-controls-block mt-2"
-				     id="<?= $itemIds['SLIDER_CONT_OF_ID'] . $offer['ID'] ?>"
+				<div class="product-item-detail-slider-controls-block mt-5"
+				     id="<?= $itemIds['SLIDER_CONT_OF_ID'] . $id ?>"
 				     style="display: <?= $strVisible ?>;">
 					<?php foreach ($offer['MORE_PHOTO'] as $keyPhoto => $photo) { ?>
 						<div
-							class="product-item-detail-slider-controls-image<?= ($keyOffer == $active ? ' active' : '') ?>"
+							class="product-item-detail-slider-controls-image <?= ($keyOffer == $active ? ' active' : '') ?>"
 							data-entity="slider-control"
-							data-value="<?= $offer['ID'] . '_' . $photo['ID'] ?>">
+							data-value="<?= $id . '_' . $photo['ID'] ?>">
 							<img src="<?= $photo['SRC'] ?>">
 						</div>
 					<?php } ?>
@@ -342,10 +353,6 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 							$propsForOffers = EnteregoSettings::getDataPropOffers();
 							$propState = $arResult['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
 
-							if (!empty($propState)) {
-								$propAllOff = CIBlockProperty::GetList([],
-									['XML_ID' => $propState, 'IBLOCK_ID' => IBLOCK_CATALOG_OFFERS])->Fetch();
-
 								foreach ($arResult['OFFERS'] as $key => $offer) {
 
 									if ((int)$offer['CATALOG_QUANTITY'] > 0) {
@@ -397,8 +404,8 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 													data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
 													data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 													data-sale="<?= $sale ?>"
-													data-treevalue="<?= $offer['ID'] ?>_<?= $prop['ID'] ?>"
-													data-onevalue="<?= $offer['ID'] ?>">
+													data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'] ?>"
+													data-onevalue="<?= $prop['VALUE_ENUM_ID']  ?>">
 													<?= $prop_value ?? '0' ?>
 												</div>
 											<?php } elseif ($type === 'color') { ?>
@@ -413,8 +420,8 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 												     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 												     data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
 												     data-sale="<?= $sale ?>"
-												     data-treevalue="<?= $offer['ID'] ?>_<?= $prop['ID'] ?>"
-												     data-onevalue="<?= $offer['ID'] ?>"
+												     data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'] ?>"
+												     data-onevalue="<?= $prop['VALUE_ENUM_ID']  ?>"
 												     class="mr-1 offer-box color-hookah br-10 mb-1  <?= $selected ?>">
 													<img src="<?= $offer['PREVIEW_PICTURE']['SRC'] ?>"
 													     class="br-10"
@@ -440,8 +447,8 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 														data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 														data-sale="<?= $sale ?>"
 														data-price_base="<?= $base_price ?>"
-														data-treevalue="<?= $offer['ID'] ?>_<?= $prop['ID'] ?>"
-														data-onevalue="<?= $offer['ID'] ?>">
+														data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'][0] ?>"
+														data-onevalue="<?= $prop['VALUE_ENUM_ID']  ?>">
 														<?php foreach ($taste as $elem_taste) { ?>
 															<span class="taste mb-0"
 															      data-background="<?= $elem_taste['color'] ?>"
@@ -457,7 +464,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 										}
 									}
 								}
-							} ?>
+							 ?>
 						</div>
 					</div>
 					<?php
