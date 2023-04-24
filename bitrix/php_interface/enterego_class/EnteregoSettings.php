@@ -72,20 +72,21 @@ class EnteregoSettings
 					'CODE' => "GRAMMOVKA_G",
 					'TYPE' => 'text',
 					'PREF' => 'гр.',
-					'CATEGORY' => ['Кальянные смеси','Дисконт']
 				],
 				'TSVET' => [
 					'CODE' => "TSVET",
 					'TYPE' => 'color',
 					'PREF' => '',
-					'CATEGORY' => ['Кальяны', 'Комплектующие','Дисконт']
 				],
-
 				'SHTUK_V_UPAKOVKE' => [
 					'CODE' => "SHTUK_V_UPAKOVKE",
 					'TYPE' => 'text',
 					'PREF' => 'шт.',
-					'CATEGORY' => ['Уголь','Дисконт']
+				],
+				'KOLICHESTVO_SHTUK_V_UPAKOVKE' => [
+					'CODE' => "KOLICHESTVO_SHTUK_V_UPAKOVKE",
+					'TYPE' => 'text',
+					'PREF' => 'шт.',
 				],
 			];
 		}
