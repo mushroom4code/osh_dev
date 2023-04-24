@@ -105,7 +105,7 @@ if ($haveOffers)
 
 	foreach ($arResult['OFFERS'] as $offer)
 	{
-		if ($offer['MORE_PHOTO_COUNT'] > 1)
+		if ($offer['MORE_PHOTO_COUNT'] > 0)
 		{
 			$showSliderControls = true;
 			break;
@@ -115,7 +115,7 @@ if ($haveOffers)
 else
 {
 	$actualItem = $arResult;
-	$showSliderControls = $arResult['MORE_PHOTO_COUNT'] > 1;
+	$showSliderControls = $arResult['MORE_PHOTO_COUNT'] > 0;
 }
 
 $measureRatio = $actualItem['ITEM_MEASURE_RATIOS'][$actualItem['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
