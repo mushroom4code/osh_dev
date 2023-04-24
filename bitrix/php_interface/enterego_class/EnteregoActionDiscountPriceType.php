@@ -50,7 +50,9 @@ class EnteregoActionDiscountPriceType extends \CSaleActionCtrlAction
             'visual' => static::GetVisual(),
             'control' => array(
                 'Установить продажный вид цены',
-                $arAtoms['Value']
+                $arAtoms['Value'],
+                $arAtoms['All'],
+                $arAtoms['True']
             ),
             'mess' => array(
                 'ADD_CONTROL' => Loc::getMessage('BT_SALE_SUBACT_ADD_CONTROL'),
@@ -84,6 +86,48 @@ class EnteregoActionDiscountPriceType extends \CSaleActionCtrlAction
                     'VALIDATE' => ''
                 )
             ),
+            'All' => array(
+                'JS' => array(
+                    'id' => 'All',
+                    'name' => 'aggregator',
+                    'type' => 'select',
+                    'values' => array(
+                        'AND' => Loc::getMessage('BT_SALE_ACT_GROUP_BASKET_SELECT_ALL_EXT'),
+                        'OR' => Loc::getMessage('BT_SALE_ACT_GROUP_BASKET_SELECT_ANY_EXT')
+                    ),
+                    'defaultText' => Loc::getMessage('BT_SALE_ACT_GROUP_BASKET_SELECT_DEF'),
+                    'defaultValue' => 'AND',
+                    'first_option' => '...'
+                ),
+                'ATOM' => array(
+                    'ID' => 'All',
+                    'FIELD_TYPE' => 'string',
+                    'FIELD_LENGTH' => 255,
+                    'MULTIPLE' => 'N',
+                    'VALIDATE' => 'list'
+                )
+            ),
+            'True' => array(
+                'JS' => array(
+                    'id' => 'True',
+                    'name' => 'value',
+                    'type' => 'select',
+                    'values' => array(
+                        'True' => Loc::getMessage('BT_SALE_ACT_GROUP_BASKET_SELECT_TRUE'),
+                        'False' => Loc::getMessage('BT_SALE_ACT_GROUP_BASKET_SELECT_FALSE')
+                    ),
+                    'defaultText' => Loc::getMessage('BT_CLOBAL_COND_GROUP_SELECT_DEF'),
+                    'defaultValue' => 'True',
+                    'first_option' => '...'
+                ),
+                'ATOM' => array(
+                    'ID' => 'True',
+                    'FIELD_TYPE' => 'string',
+                    'FIELD_LENGTH' => 255,
+                    'MULTIPLE' => 'N',
+                    'VALIDATE' => 'list'
+                )
+            )
         );
 
         if (!$boolEx) {
@@ -149,10 +193,30 @@ class EnteregoActionDiscountPriceType extends \CSaleActionCtrlAction
 
     public static function GetConditionShow($arParams)
     {
-        if (!isset($arParams['DATA']['True']))
-            $arParams['DATA']['True'] = 'True';
+        if (!isset($arParams['ID']))
+            return false;
+        if ($arParams['ID'] != static::GetControlID())
+            return false;
+        $arControl = array(
+            'ID' => $arParams['ID'],
+            'ATOMS' => static::GetAtomsEx(false, true)
+        );
 
-        return parent::GetConditionShow($arParams);
+        return static::CheckAtoms($arParams['DATA'], $arParams, $arControl, true);
+    }
+
+    public static function Parse($arOneCondition)
+    {
+        if (!isset($arOneCondition['controlId']))
+            return false;
+        if ($arOneCondition['controlId'] != static::GetControlID())
+            return false;
+        $arControl = array(
+            'ID' => $arOneCondition['controlId'],
+            'ATOMS' => static::GetAtomsEx(false, true),
+        );
+
+        return static::CheckAtoms($arOneCondition, $arOneCondition, $arControl, false);
     }
 
     /**
@@ -208,8 +272,8 @@ class EnteregoActionDiscountPriceType extends \CSaleActionCtrlAction
                 }
 
                 $commandLine = $itemPrefix.implode($logic.$itemPrefix, $arSubs);
-//                if ($prefix != '')
-//                    $commandLine = $prefix.'('.$commandLine.')';
+                if ($prefix != '')
+                    $commandLine = $prefix.'('.$commandLine.')';
 
                 $mxResult = $filter.'=function($row){';
                 $mxResult .= 'return ('.$commandLine.');';
