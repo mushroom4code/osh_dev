@@ -141,7 +141,10 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 			$arProduct['USE_DISCOUNT'] = $discount['VALUE_ENUM'];
 
 			if (!empty($arProduct["PROPERTY_" . OSNOVNOE_SVOYSTVO_TP . "_VALUE"])) {
-				$propAllOff = CIBlockProperty::GetList([], ['XML_ID' => $arProduct["PROPERTY_" . OSNOVNOE_SVOYSTVO_TP . "_VALUE"]])->Fetch();
+				$propAllOff = CIBlockProperty::GetList([], [
+					'XML_ID' => $arProduct["PROPERTY_" . OSNOVNOE_SVOYSTVO_TP . "_VALUE"],
+					'IBLOCK_ID' => IBLOCK_CATALOG_OFFERS
+				])->Fetch();
 				$arPropsForOffers['PROPERTY_' . $propAllOff['CODE']] = 'PROPERTY_' . $propAllOff['CODE'];
 				$arProduct['CODE_OFFERS'] = $propAllOff['CODE'];
 			}
