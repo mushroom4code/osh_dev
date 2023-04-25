@@ -3,14 +3,15 @@
 use Enterego\EnteregoSettings;
 
 $show = false;
-$active = null;
+$active = -1;
 $priceDef = 0;
 foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
-	if ($quantityNull['CATALOG_QUANTITY'] > 0 && $show === false) {
+	if ((int)$quantityNull['CATALOG_QUANTITY'] > 0 && $show === false) {
 		$show = true;
 	}
-	if ($active == null && (int)$quantityNull['CATALOG_QUANTITY'] > 0) {
+	if ($active == -1 && (int)$quantityNull['CATALOG_QUANTITY'] > 0 && $show === true) {
 		$active = $keys;
+		$arResult['OFFERS_SELECTED'] = $keys;
 		$priceDef = !empty($quantityNull['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ?
 			$quantityNull['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] :
 			$quantityNull['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'];
@@ -55,7 +56,9 @@ if (!empty($propState)) {
 			<span class="product-item-detail-slider-right carousel_elem_custom"
 			      data-entity="slider-control-right"
 			      style="display: none;"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
-			<div class="product-item-detail-slider-images-container" data-entity="images-container">
+			<div class="product-item-detail-slider-images-container" <? if ($showSliderControls) {
+				echo 'data-entity="images-container"';
+			} ?>>
 				<?php if (!empty($arResult['OFFERS'])) {
 					foreach ($arResult['OFFERS'] as $key => $photo) {
 						$dNone = '';
@@ -66,9 +69,12 @@ if (!empty($propState)) {
 						}
 						$morePhoto = $photo['PROPERTIES']['MORE_PHOTO']['VALUE'];
 						if (!empty($morePhoto)) {
+							if (!$showSliderControls) {
+								continue;
+							}
 							foreach ($morePhoto as $elem) {
 								$file = CFile::GetByID($elem)->Fetch(); ?>
-								<picture class="product-item-detail-slider-image"
+								<picture class="product-item-detail-slider-image <?= $dNone ?>"
 								         data-entity="image" data-id="<?= $file['ID'] ?>">
 									<img
 										data-src="<?= $file['SRC'] ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
@@ -79,7 +85,8 @@ if (!empty($propState)) {
 							<?php }
 						} ?>
 						<picture class="product-item-detail-slider-image <?= $dNone ?>"
-						         data-entity="image" data-id="<?= $photo['DETAIL_PICTURE']['ID'] ?>">
+						         data-entity="image" data-id="<?= $photo['DETAIL_PICTURE']['ID'] ?>"
+						         data-product_id="<?= $photo['ID'] ?>">
 							<img
 								data-src="<?= $photo['DETAIL_PICTURE']['SRC'] ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
 								alt="<?= $photo['NAME'] ?>"
@@ -93,12 +100,7 @@ if (!empty($propState)) {
 						<img src="/local/templates/Oshisha/images/no-photo.gif" itemprop="image">
 					</div>
 					<?php
-				}
-				if ($arParams['SLIDER_PROGRESS'] === 'Y') { ?>
-					<div class="product-item-detail-slider-progress-bar"
-					     data-entity="slider-progress-bar"
-					     style="width: 0;"></div>
-				<?php } ?>
+				} ?>
 			</div>
 			<div class="box_with_net" <?php if (empty($taste['VALUE'])){ ?>style="padding: 20px;"<?php } ?>>
 				<?php $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
@@ -145,26 +147,23 @@ if (!empty($propState)) {
 					continue;
 				}
 				$propDef = $offer['PROPERTIES'][$propAllOff['CODE']];
-				$id = '';
-				if ($propDef['PROPERTY_TYPE'] == 'L') {
-					$id = $propDef['VALUE_ENUM_ID'];
-				}
 				$strVisible = $keyOffer == $active ? '' : 'none'; ?>
 				<div class="product-item-detail-slider-controls-block mt-5"
-				     id="<?= $itemIds['SLIDER_CONT_OF_ID'] . $id ?>"
+				     id="<?= $itemIds['SLIDER_CONT_OF_ID'] . $offer['ID'] ?>"
 				     style="display: <?= $strVisible ?>;">
 					<?php foreach ($offer['MORE_PHOTO'] as $keyPhoto => $photo) { ?>
 						<div
 							class="product-item-detail-slider-controls-image <?= ($keyOffer == $active ? ' active' : '') ?>"
 							data-entity="slider-control"
-							data-value="<?= $id . '_' . $photo['ID'] ?>">
+							data-value="<?= $offer['ID'] . '_' . $photo['ID'] ?>">
 							<img src="<?= $photo['SRC'] ?>">
 						</div>
-					<?php } ?>
+					<?php }
+					?>
 					<div
 						class="product-item-detail-slider-controls-image <?= ($keyOffer == $active ? ' active' : '') ?>"
 						data-entity="slider-control"
-						data-value="<?= $id . '_' . $offer['DETAIL_PICTURE']['ID'] ?>">
+						data-value="<?= $offer['ID'] . '_' . $offer['DETAIL_PICTURE']['ID'] ?>">
 						<img src="<?= $offer['DETAIL_PICTURE']['SRC'] ?>">
 					</div>
 				</div>
@@ -276,10 +275,11 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 						     id="<?= $itemIds['PRICE_ID'] ?>">
 							<?php $sale = false;
 							$price_sale = $arResult['OFFERS'][$active]['PRICES_CUSTOM'];
+							$base = round($arResult['OFFERS'][$active]['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE']);
 							if (USE_CUSTOM_SALE_PRICE && !empty($arResult['OFFERS'][$active]['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ||
 								$arResult['PROPERTIES']['USE_DISCOUNT']['VALUE_XML_ID'] == 'true' && !empty($price_sale['SALE_PRICE']['PRICE'])) {
-
-								echo(round($price_sale['SALE_PRICE']['PRICE']));
+								$base = round($price_sale['SALE_PRICE']['PRICE']);
+								echo($base);
 								$old_sum = (int)$price_sale['PRICE_DATA'][0]['PRICE'] - (int)$price_sale['SALE_PRICE']['PRICE'] ?? 0;
 								$sale = true;
 								?>
@@ -339,6 +339,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											<div class="product-item-amount-field-block">
 												<input class="product-item-amount card_element offers"
 												       type="text"
+												       id="<?= $itemIds['QUANTITY_ID'] ?>"
 												       value="<?= $quantity_basket_default ?>">
 											</div>
 											<a class="btn-plus plus_icon no-select add2basket offers"
@@ -407,8 +408,8 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 												data-basket-quantity="<?= $basketItem ?>"
 												data-basket_quantity="<?= $basketItem ?>"
 												data-price_base="<?= $base_price ?>"
-												data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
 												data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
+												data-sale_price="<?=  $offer['PRICES_CUSTOM']['SALE_PRICE']['PRICE'] ?>"
 												data-sale="<?= $sale ?>"
 												data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'] ?>"
 												data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
@@ -424,7 +425,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 											     data-basket_quantity="<?= $basketItem ?>"
 											     data-price_base="<?= $base_price ?>"
 											     data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
-											     data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
+											     data-sale_price="<?=  $offer['PRICES_CUSTOM']['SALE_PRICE']['PRICE'] ?>"
 											     data-sale="<?= $sale ?>"
 											     data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'] ?>"
 											     data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
@@ -449,12 +450,10 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 													data-product-quantity="<?= $offer['CATALOG_QUANTITY'] ?>"
 													data-basket-quantity="<?= $basketItem ?>"
 													data-basket_quantity="<?= $basketItem ?>"
-													data-sale_price="<?= $price_sale['SALE_PRICE']['PRICE'] ?>"
+													data-sale_price="<?= $offer['PRICES_CUSTOM']['SALE_PRICE']['PRICE'] ?>"
 													data-sale_base="<?= $offer['PRICES_CUSTOM']['PRICE_DATA'][0]['PRICE'] ?>"
 													data-sale="<?= $sale ?>"
-													data-price_base="<?= $base_price ?>"
-													data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'][0] ?>"
-													data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
+													data-price_base="<?= $base_price ?>">
 													<?php foreach ($taste as $elem_taste) { ?>
 														<span class="taste mb-0"
 														      data-background="<?= $elem_taste['color'] ?>"

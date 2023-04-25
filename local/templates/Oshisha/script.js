@@ -3101,4 +3101,11 @@ $(document).on('click', '.offer-box', function () {
     if ($(elem_modal).length !== 0 && ((($(elem).attr('src') !== '' && $(elem).attr('src') !== null)) || $(elem).attr('data-src') !== '')) {
         $(elem_modal).find('.box-with-image-one img').attr('src', ($(elem).attr('src') || $(elem).attr('data-src')))
     }
+
+    if($(document).find('div[data-entity="images-container"]').length == 0 ){
+        let parent = $(elem).closest('.box_with_photo_product');
+        let new_active_image = $(parent).find('.product-item-detail-slider-image[data-product_id="' + $(elem).attr('data-product_id') + '"]');
+        $(document).find('.product-item-detail-slider-image.active').removeClass('active').addClass('d-none');
+        $(new_active_image).removeClass('d-none').addClass('active').find('img').attr('src', $(new_active_image).find('img').attr('data-src'));
+    }
 });

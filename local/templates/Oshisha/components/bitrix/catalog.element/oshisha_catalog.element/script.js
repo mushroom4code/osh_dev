@@ -557,7 +557,6 @@
 						if (this.obTree)
 						{
 							treeItems = this.obTree.querySelectorAll('.offer-box');
-							console.log(treeItems.length)
 							for (i = 0; i < treeItems.length; i++)
 							{
 								BX.bind(treeItems[i], 'click', BX.delegate(this.selectOfferProp, this));
@@ -566,12 +565,10 @@
 
 						for (i = 0; i < this.offers.length; i++)
 						{
-							this.offers[i].SLIDER_COUNT = parseInt(this.offers[i].SLIDER_COUNT, 10) || 0;
-
 							if (this.offers[i].SLIDER_COUNT === 0)
 							{
 								this.slider.controls[i] = {
-									ID: '',
+									ID: this.visual.SLIDER_CONT_OF_ID + this.offers[i].ID,
 									COUNT: this.offers[i].SLIDER_COUNT,
 									ITEMS: []
 								};
@@ -2125,7 +2122,6 @@
 				}
 
 				strTreeValue = target.getAttribute('data-treevalue');
-				console.log(strTreeValue)
 				arTreeItem = strTreeValue.split('_');
 				this.searchOfferPropIndex(arTreeItem[0], arTreeItem[1]);
 				rowItems = BX.findChildren(target.parentNode, false);
@@ -2159,9 +2155,6 @@
 
 		searchOfferPropIndex: function(strPropID, strPropValue)
 		{
-			console.log(strPropID)
-			console.log(strPropValue)
-			console.log(this.treeProps)
 			var strName = '',
 				arShowValues = false,
 				arCanBuyValues = [],
@@ -2179,7 +2172,7 @@
 					break;
 				}
 			}
-			console.log(index)
+
 			if (index > -1)
 			{
 
@@ -2191,8 +2184,6 @@
 
 				strName = 'PROP_' + this.treeProps[index].ID;
 				arFilter[strName] = strPropValue;
-				console.log(strName)
-				console.log(arFilter)
 				for (i = index + 1; i < this.treeProps.length; i++)
 				{
 					strName = 'PROP_' + this.treeProps[i].ID;
@@ -3522,11 +3513,3 @@
 		}
 	}
 })(window);
-
-// OFFERS
-// $(document).on('click', '.box_with_photo_product .offer-box', function () {
-// 	let parent = $(this).closest('.box_with_photo_product');
-// 	let new_active_image = $(parent).find('.product-item-detail-slider-image[data-id="' + $(this).attr('data-product_id') + '"]');
-// 	$(document).find('.product-item-detail-slider-image.active').removeClass('active').addClass('d-none');
-// 	$(new_active_image).removeClass('d-none').addClass('active').find('img').attr('src', $(new_active_image).find('img').attr('data-src'));
-// })

@@ -76,7 +76,7 @@ $itemIds = array(
 	'BASKET_ACTIONS_ID' => $mainId . '_basket_actions',
 	'NOT_AVAILABLE_MESS' => $mainId . '_not_avail',
 	'COMPARE_LINK' => $mainId . '_compare_link',
-	'TREE_ID' => $haveOffers && !empty($arResult['OFFERS_PROP']) ? $mainId.'_skudiv' : null,
+	'TREE_ID' => $haveOffers && !empty($arResult['OFFERS_PROP']) ? $mainId . '_skudiv' : null,
 	'DISPLAY_PROP_DIV' => $mainId . '_sku_prop',
 	'DISPLAY_MAIN_PROP_DIV' => $mainId . '_main_sku_prop',
 	'OFFER_GROUP' => $mainId . '_set_group_',
@@ -98,24 +98,19 @@ $alt = !empty($arResult['IPROPERTY_VALUES']['ELEMENT_DETAIL_PICTURE_FILE_ALT'])
 	? $arResult['IPROPERTY_VALUES']['ELEMENT_DETAIL_PICTURE_FILE_ALT']
 	: $arResult['NAME'];
 
-if ($haveOffers)
-{
+if ($haveOffers) {
 	$actualItem = $arResult['OFFERS'][$arResult['OFFERS_SELECTED']] ?? reset($arResult['OFFERS']);
 	$showSliderControls = false;
 
-	foreach ($arResult['OFFERS'] as $offer)
-	{
-		if ($offer['MORE_PHOTO_COUNT'] > 0)
-		{
+	foreach ($arResult['OFFERS'] as $offer) {
+		if ($offer['MORE_PHOTO_COUNT'] > 1) {
 			$showSliderControls = true;
 			break;
 		}
 	}
-}
-else
-{
+} else {
 	$actualItem = $arResult;
-	$showSliderControls = $arResult['MORE_PHOTO_COUNT'] > 0;
+	$showSliderControls = $arResult['MORE_PHOTO_COUNT'] > 1;
 }
 
 $measureRatio = $actualItem['ITEM_MEASURE_RATIOS'][$actualItem['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
@@ -235,12 +230,16 @@ global $option_site;
 		<div class="box_with_photo_product row">
 			<?php
 			if (!empty($arResult['OFFERS'])) {
-				$count = 1;
 				foreach ($arResult['OFFERS'] as $offer) {
-					$count = $count + count($offer['PROPERTIES']['MORE_PHOTO']['VALUE']);
-                    foreach( $offer['PROPERTIES']['MORE_PHOTO']['VALUE'] as $items){
-                        $arraySlider[] = CFile::GetByID($items)->Fetch();
-                    }
+					foreach ($arResult['JS_OFFERS'] as &$jsOffers) {
+
+						if ($showSliderControls) {
+							if ($jsOffers['ID'] === $offer['ID']) {
+								$jsOffers['SLIDER'][] = $offer['DETAIL_PICTURE'];
+							}
+							$jsOffers['SLIDER_COUNT'] = $jsOffers['SLIDER_COUNT'] + 1;
+						}
+					}
 				}
 				require_once(__DIR__ . '/templates_block_prices/product_offers.php');
 			} else {
@@ -657,10 +656,10 @@ global $option_site;
 	$offerIds = array();
 	$offerCodes = array();
 	$useRatio = $arParams['USE_RATIO_IN_RANGES'] === 'Y';
-	foreach ($arResult['SKU_PROPS'] as $skuProperty)
-	{
-		if (!isset($arResult['OFFERS_PROP'][$skuProperty['CODE']]))
+	foreach ($arResult['SKU_PROPS'] as $skuProperty) {
+		if (!isset($arResult['OFFERS_PROP'][$skuProperty['CODE']])) {
 			continue;
+		}
 
 		$propertyId = $skuProperty['ID'];
 		$skuProps[] = array(
@@ -673,20 +672,14 @@ global $option_site;
 	foreach ($arResult['JS_OFFERS'] as $ind => &$jsOffer) {
 		$currentOffersList = array();
 
-		if (!empty($jsOffer['TREE']) && is_array($jsOffer['TREE']))
-		{
-			foreach ($jsOffer['TREE'] as $propName => $skuId)
-			{
+		if (!empty($jsOffer['TREE']) && is_array($jsOffer['TREE'])) {
+			foreach ($jsOffer['TREE'] as $propName => $skuId) {
 				$propId = (int)substr($propName, 5);
 
-				foreach ($skuProps as $prop)
-				{
-					if ($prop['ID'] == $propId)
-					{
-						foreach ($prop['VALUES'] as $propId => $propValue)
-						{
-							if ($propId == $skuId)
-							{
+				foreach ($skuProps as $prop) {
+					if ($prop['ID'] == $propId) {
+						foreach ($prop['VALUES'] as $propId => $propValue) {
+							if ($propId == $skuId) {
 								$currentOffersList[] = $propValue['NAME'];
 								break;
 							}
@@ -738,7 +731,6 @@ global $option_site;
 	unset($jsOffer, $strAllProps, $strMainProps, $strPriceRanges, $strPriceRangesRatio, $useRatio);
 
 
-
 	$jsParams = array(
 		'CONFIG' => array(
 			'USE_CATALOG' => $arResult['CATALOG'],
@@ -780,8 +772,6 @@ global $option_site;
 			'ACTIVE' => $arResult['ACTIVE'],
 			'NAME' => $arResult['~NAME'],
 			'CATEGORY' => $arResult['CATEGORY_PATH'],
-			'SLIDER_COUNT' => $count,
-			'SLIDER' => $arraySlider,
 			'CAN_BUY' => $arResult['CAN_BUY'],
 			'CHECK_QUANTITY' => $arResult['CHECK_QUANTITY'],
 			'QUANTITY_FLOAT' => is_float($arResult['ITEM_MEASURE_RATIOS'][$arResult['ITEM_MEASURE_RATIO_SELECTED']]['RATIO']),
@@ -921,8 +911,8 @@ if ($arParams['DISPLAY_COMPARE']) {
 		'COMPARE_PATH' => $arParams['COMPARE_PATH']
 	);
 } ?>
-    </div>
-    <script>
+	</div>
+	<script>
         BX.message({
             ECONOMY_INFO_MESSAGE: '<?=GetMessageJS('CT_BCE_CATALOG_ECONOMY_INFO2')?>',
             TITLE_ERROR: '<?=GetMessageJS('CT_BCE_CATALOG_TITLE_ERROR')?>',
