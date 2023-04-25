@@ -3379,7 +3379,12 @@ class CIBlockCMLImportEe
                         && $value[$this->mess["IBLOCK_XML2_NAME"]] == $this->mess["IBLOCK_XML2_FULL_TITLE2"]
                     )
                     {
-                        $arElement["PREVIEW_TEXT"] = $value[$this->mess["IBLOCK_XML2_VALUE"]];
+	                    /**
+	                     * Enterego
+	                     * убрано автоматическое заполнение анонса описания наименованием товара,
+	                     * если оно летит пустое
+	                     */
+                        $arElement["PREVIEW_TEXT"] = '';
                         if(strpos($arElement["PREVIEW_TEXT"], "<") !== false)
                             $arElement["PREVIEW_TEXT_TYPE"] = "html";
                         else
