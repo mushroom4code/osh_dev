@@ -130,7 +130,6 @@ if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $actual
 }
 
 $showDescription = !empty($arResult['PREVIEW_TEXT']) || !empty($arResult['DETAIL_TEXT']);
-$showDescription = false;
 $showBuyBtn = in_array('BUY', $arParams['ADD_TO_BASKET_ACTION']);
 $buyButtonClassName = in_array('BUY', $arParams['ADD_TO_BASKET_ACTION_PRIMARY']) ? 'btn-primary' : 'btn-link';
 $showAddBtn = in_array('ADD', $arParams['ADD_TO_BASKET_ACTION']);
@@ -344,7 +343,6 @@ global $option_site;
 		<div class="tab-content mt-5">
 			<?php if ($showDescription) { ?>
 				<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-					<h6 class="mb-3"><b><?= $name ?></b></h6>
 					<?php if ($arResult['PREVIEW_TEXT'] != '' && ($arParams['DISPLAY_PREVIEW_TEXT_MODE'] === 'S'
 							|| ($arParams['DISPLAY_PREVIEW_TEXT_MODE'] === 'E' && $arResult['DETAIL_TEXT'] == ''))) {
 						echo $arResult['PREVIEW_TEXT_TYPE'] === 'html' ? $arResult['PREVIEW_TEXT'] : '<p>' . $arResult['PREVIEW_TEXT'] . '</p>';
