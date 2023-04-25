@@ -33,6 +33,9 @@ abstract class CommonPVZ
                 return new PEKDelivery();
             case 'PickPoint':
                 return new PickPointDelivery();
+            case 'Почта России':
+            case 'RussianPost':
+                return new RussianPostDelivery();
             case 'RussianPostEms':
                 return new RussianPostDelivery('RussianPostEms');
             case 'RussianPostFirstClass':

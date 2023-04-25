@@ -16,22 +16,13 @@ class RussianPostPointsTable extends \Bitrix\Main\Entity\DataManager
                 'data_type' => 'integer',
                 'primary' => true
             ),
-            'CODE' => array(
-                'data_type' => 'string',
-            ),
             'INDEX' => array(
                 'data_type' => 'string',
             ),
             'BITRIX_CODE' => array(
                 'data_type' => 'string',
             ),
-            'PHONE_NUMBER' => array(
-                'data_type' => 'string',
-            ),
             'WORK_TIME' => array(
-                'data_type' => 'string',
-            ),
-            'COMMENT' => array(
                 'data_type' => 'string',
             ),
             'FULL_ADDRESS' => array(
@@ -44,6 +35,9 @@ class RussianPostPointsTable extends \Bitrix\Main\Entity\DataManager
                 'data_type' => 'float',
             ),
             'IS_PVZ' => array(
+                'data_type' => 'string',
+            ),
+            'IS_ECOM' => array(
                 'data_type' => 'string',
             )
         );
