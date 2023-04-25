@@ -129,7 +129,7 @@ if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $actual
 	$actualItem['PRODUCT']['QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
 }
 
-$showDescription = !empty($arResult['PREVIEW_TEXT']) || !empty($arResult['DETAIL_TEXT']);
+$showDescription = !empty($arResult['DETAIL_TEXT']);
 $showBuyBtn = in_array('BUY', $arParams['ADD_TO_BASKET_ACTION']);
 $buyButtonClassName = in_array('BUY', $arParams['ADD_TO_BASKET_ACTION_PRIMARY']) ? 'btn-primary' : 'btn-link';
 $showAddBtn = in_array('ADD', $arParams['ADD_TO_BASKET_ACTION']);
@@ -926,8 +926,8 @@ if ($arParams['DISPLAY_COMPARE']) {
 		'COMPARE_PATH' => $arParams['COMPARE_PATH']
 	);
 } ?>
-	</div>
-	<script>
+    </div>
+    <script>
         BX.message({
             ECONOMY_INFO_MESSAGE: '<?=GetMessageJS('CT_BCE_CATALOG_ECONOMY_INFO2')?>',
             TITLE_ERROR: '<?=GetMessageJS('CT_BCE_CATALOG_TITLE_ERROR')?>',
