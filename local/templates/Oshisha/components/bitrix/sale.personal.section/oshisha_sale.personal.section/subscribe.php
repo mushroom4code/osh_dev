@@ -57,6 +57,7 @@ if( count($arIsd_product) > 0)
             array(
                 "ACTION_VARIABLE" => "action",
                 "ADD_PICT_PROP" => "-",
+                "ACTIVE_BLOCK_YOU_SEE" => "N",
                 "ADD_PROPERTIES_TO_BASKET" => "Y",
                 "ADD_SECTIONS_CHAIN" => "N",
                 "ADD_TO_BASKET_ACTION" => "ADD",
