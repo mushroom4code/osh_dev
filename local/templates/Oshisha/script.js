@@ -3102,7 +3102,6 @@ $(document).on('click', '.offer-box', function () {
                     if ($(this).hasClass('d-none')) {
                         $(this).removeClass('d-none');
                         $(this).find('.product-item-detail-slider-right').click();
-                        // $(this).find('.slick-track').removeAttr('style');
                     }
                 } else if (!$(this).hasClass('d-none')) {
                     $(this).addClass('d-none');
