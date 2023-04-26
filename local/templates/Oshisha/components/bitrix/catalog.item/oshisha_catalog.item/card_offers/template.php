@@ -152,7 +152,9 @@ foreach ($item['OFFERS'] as $keys => $quantityNull) {
 			'DETAIL_PICTURE' => $quantityNull['DETAIL_PICTURE']['SRC'],
 			'QUANTITY' => $quantityNull['CATALOG_QUANTITY'],
 			'PROPS' => $propsList,
-			'BASKET' => $basketItem
+			'BASKET' => $basketItem,
+			'MORE_PHOTO' => $quantityNull['MORE_PHOTO'],
+			'MORE_PHOTO_COUNT' => $quantityNull['MORE_PHOTO_COUNT']
 		];
 	}
 }

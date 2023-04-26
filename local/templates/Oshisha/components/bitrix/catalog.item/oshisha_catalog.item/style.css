@@ -1055,6 +1055,10 @@ input::-webkit-inner-spin-button {
     object-fit: contain;
 }
 
+.box-with-image-prod img.w-h-350.offer-image {
+    max-height: fit-content;
+}
+
 .flex-class {
     display: flex;
     justify-content: center;
@@ -1145,6 +1149,7 @@ div.slick-track {
     cursor: pointer;
     margin-right: 7px;
     width: 60px !important;
+    height: 60px;
     border-radius: 10px;
 }
 
@@ -1276,6 +1281,7 @@ div.slick-track {
     .product-slider-controls-image {
         margin-right: 3px;
         width: 50px !important;
+        height: 50px;
     }
 
     .product-slider-controls-image img {

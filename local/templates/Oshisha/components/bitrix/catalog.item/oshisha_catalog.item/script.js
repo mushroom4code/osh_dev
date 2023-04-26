@@ -2598,6 +2598,93 @@ $(document).on('click', '.open-fast-window', function () {
             }
             match = product.OFFERS[active].QUANTITY;
             attr_val = 'data-max_quantity'
+
+            if (product.OFFERS[active].MORE_PHOTO.length > 1) {
+
+                let product_box = BX.findChildByClassName(box_product, 'box-with-image-one');
+                let image_box = BX.findChildByClassName(box_product, 'box-with-image-prod');
+
+                BX.cleanNode(product_box);
+                BX.removeClass(product_box, 'flex-class');
+                $.each(product.OFFERS, function (key, offer) {
+                    let classActive = ' d-none';
+                    if (product.OFFERS[active].ID === offer.ID) {
+                        classActive = '';
+                    }
+                    product_box.appendChild(BX.create('DIV', {
+                        props: {
+                            className: 'slick-images-box height_100 ' + classActive,
+                        },
+                        dataset: {
+                            offers_id: offer.ID,
+                        }
+                    }));
+                    image_box.appendChild(BX.create('DIV', {
+                        props: {
+                            className: 'position-absolute slider-controls max-width-400 ' + classActive,
+                        },
+                        children: [
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'slick-images-controls max-height-100',
+                                },
+                                dataset: {
+                                    offers_id: offer.ID
+                                },
+                            })
+                        ]
+                    }));
+
+
+                    $.each(offer.MORE_PHOTO, function (key, offerPhoto) {
+                        product_box.querySelector('.slick-images-box[data-offers_id="' + offer.ID + '"]').appendChild(BX.create('IMG', {
+                            props: {
+                                className: 'w-h-350 offer-image',
+                                src: offerPhoto.SRC,
+                                alt: 'modal-product'
+                            },
+                        }));
+                        image_box.querySelector('.slick-images-controls[data-offers_id="' + offer.ID + '"]').appendChild(
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'product-slider-controls-image',
+                                },
+                                children: [
+                                    BX.create('IMG', {
+                                        props: {
+                                            src: offerPhoto.SRC,
+                                            alt: 'modal-product'
+                                        },
+                                    })
+                                ]
+                            }));
+                    });
+                });
+
+                let childSlider = BX.findChildrenByClassName(product_box, 'slick-images-box');
+                $.each(childSlider, function (i, item) {
+                    let slick_controls = image_box.querySelector('.slick-images-controls[data-offers_id="' + $(item).attr('data-offers_id') + '"]');
+                    let slick = $(item).slick({
+                        arrows: true,
+                        prevArrow: '<span class="product-item-detail-slider-left carousel_elem_custom" ' +
+                            'data-entity="slider-control-left" style="">' +
+                            '<i class="fa fa-angle-left" aria-hidden="true"></i></span>',
+                        nextArrow: '<span class="product-item-detail-slider-right carousel_elem_custom" ' +
+                            'data-entity="slider-control-right" style=""' +
+                            '><i class="fa fa-angle-right" aria-hidden="true"></i></span>',
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        asNavFor: $(slick_controls)
+                    });
+                    $(slick_controls).slick({
+                        slidesToScroll: 1,
+                        slidesToShow: $(slick_controls).find('.product-slider-controls-image').length,
+                        asNavFor: $(slick),
+                        arrows: false,
+                        focusOnSelect: true
+                    });
+                })
+            }
         } else {
             box_product.appendChild(BX.create('DIV', {
                 props: {

@@ -3098,8 +3098,35 @@ $(document).on('click', '.offer-box', function () {
         .attr('data-max_quantity', $(elem).attr('data-product_quantity'));
 
     let elem_modal = $(elem).closest('.open-modal-product');
-    if ($(elem_modal).length !== 0 && ((($(elem).attr('src') !== '' && $(elem).attr('src') !== null)) || $(elem).attr('data-src') !== '')) {
-        $(elem_modal).find('.box-with-image-one img').attr('src', ($(elem).attr('src') || $(elem).attr('data-src')))
+    if ($(elem_modal).length !== 0) {
+        if ($(elem).find('.slick-slider').length > 0) {
+            $(elem_modal).find('.slick-images-box').each(function () {
+                if ($(elem).attr('data-product_id') === $(this).attr('data-offers_id')) {
+                    if ($(this).hasClass('d-none')) {
+                        $(this).removeClass('d-none');
+                        $(this).find('.product-item-detail-slider-right').click();
+                        // $(this).find('.slick-track').removeAttr('style');
+                    }
+                } else if (!$(this).hasClass('d-none')) {
+                    $(this).addClass('d-none');
+                }
+            });
+            $(elem_modal).find('.slick-images-controls').each(function () {
+                let parent = $(this).closest('.slider-controls');
+                if ($(elem).attr('data-product_id') === $(this).attr('data-offers_id')) {
+                    if (parent.hasClass('d-none')) {
+                        parent.removeClass('d-none');
+                        $(this).find('.slick-track').removeAttr('style');
+                    }
+                } else if (!parent.hasClass('d-none')) {
+                    parent.addClass('d-none');
+                }
+            });
+        } else {
+            if (($(elem).attr('src') !== '' && $(elem).attr('src') !== null) || $(elem).attr('data-src') !== '') {
+                $(elem_modal).find('.box-with-image-one img').attr('src', ($(elem).attr('src') || $(elem).attr('data-src')))
+            }
+        }
     }
 
     if($(document).find('div[data-entity="images-container"]').length == 0 ){
