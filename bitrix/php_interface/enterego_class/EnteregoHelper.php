@@ -174,7 +174,6 @@ class EnteregoHelper
                 $temp_ar = [];
                 foreach ($data_item as $product_item) {
                     if ($main_brand_name == 'presents') $product_item['DETAIL_PAGE_URL'] = 'javascript:void()';
-//                    $product_item['NOT_AVAILABLE'] = 'N';
                     $rsData = CIBlockElement::GetList(
                         array(),
                         array('ID' => $product_item['PRODUCT_ID']),
