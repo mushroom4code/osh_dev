@@ -255,25 +255,25 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             <!-- items-container -->
             <?php if (!empty($arResult['ITEMS']) && !empty($arResult['ITEM_ROWS'])) {
 
-                $areaIds = array();
-                global $option_site;
-            foreach ($arResult['ITEMS'] as &$item) {
+                    $areaIds = array();
+                    global $option_site;
+                    foreach ($arResult['ITEMS'] as &$elem) {
 
-            if ($item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'] == 'Нет') {
-            if ($GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] !== 'Нет'){
-                $GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] = 'Нет'; ?>
-                <script type="application/javascript">
-                    $(document).find('.message_for_user_minzdrav').text('<?=$option_site->text_rospetrebnadzor_catalog?>');
-                </script>
-            <?php
-            }
-            }
+                        if ($elem['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'] == 'Нет') {
+                            if ($GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] !== 'Нет'){
+                                $GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] = 'Нет'; ?>
+                                <script type="application/javascript">
+                                    $(document).find('.message_for_user_minzdrav').text('<?=$option_site->text_rospetrebnadzor_catalog?>');
+                                </script>
+                            <?php
+                            }
+                        }
 
-            $uniqueId = $item['ID'] . '_' . md5($this->randString() . $component->getAction());
-            $areaIds[$item['ID']] = $this->GetEditAreaId($uniqueId);
-            $this->AddEditAction($uniqueId, $item['EDIT_LINK'], $elementEdit);
-            $this->AddDeleteAction($uniqueId, $item['DELETE_LINK'], $elementDelete, $elementDeleteParams);
-            }
+                        $uniqueId = $elem['ID'] . '_' . md5($this->randString() . $component->getAction());
+                        $areaIds[$elem['ID']] = $this->GetEditAreaId($uniqueId);
+                        $this->AddEditAction($uniqueId, $elem['EDIT_LINK'], $elementEdit);
+                        $this->AddDeleteAction($uniqueId, $elem['DELETE_LINK'], $elementDelete, $elementDeleteParams);
+                    }
             foreach ($arResult['ITEM_ROWS'] as $rowData) {
             $rowItems = array_splice($arResult['ITEMS'], 0, $rowData['COUNT']);
 
