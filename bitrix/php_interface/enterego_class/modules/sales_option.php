@@ -9,20 +9,33 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.
 global $USER;
 
 if (!$USER->IsAuthorized()) {
-    exit("not auth");
+	exit("not auth");
 } else {
-    $act = $_POST['action'];
-    if ($act === 'SetParamSale') {
-        COption::SetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE', $_POST['param']);
-        if (!empty($_POST['date_start']) && !empty($_POST['date_end'])) {
-            COption::SetOptionString('activation_price_admin', 'PERIOD',
-                json_encode(['start' => $_POST['date_start'], 'end' => $_POST['date_end']]));
-        }
-        exit($_POST['param']);//управление использования специального вида цен для скидок
-    } elseif ($act === 'SetParamPriceList') {
-        COption::SetOptionString('priceList_xlsx', 'priceListArrayCustom', $_POST['param']);
-    } else {
-        exit('not correct request');
-    }
+	$act = $_POST['action'];
+	if ($act === 'SetParamSale') {
+		COption::SetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE', $_POST['param']);
+		if (!empty($_POST['date_start']) && !empty($_POST['date_end'])) {
+			COption::SetOptionString('activation_price_admin', 'PERIOD',
+				json_encode(['start' => $_POST['date_start'], 'end' => $_POST['date_end']]));
+		}
+		exit($_POST['param']);//управление использования специального вида цен для скидок
+	} elseif ($act === 'SetParamPriceList') {
+		COption::SetOptionString('priceList_xlsx', 'priceListArrayCustom', $_POST['param']);
+	}
+	if ($act === 'SetParamInfo') {
+		COption::SetOptionString('activation_info_admin', 'CHECKED_INFO', $_POST['param']);
+		if (!empty($_POST['text_info'])) {
+			COption::SetOptionString('activation_info_admin', 'PERIOD',
+				json_encode([
+					'start' => $_POST['date_start'],
+					'end' => $_POST['date_end'],
+					'text_info' => $_POST['text_info'],
+					'link_info' => $_POST['link_info']
+				]));
+		}
+		exit($_POST['param']);//управление использования специального вида цен для скидок
+	} else {
+		exit('not correct request');
+	}
 
 }

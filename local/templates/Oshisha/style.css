@@ -7190,3 +7190,13 @@ footer.footer .container .copyrights > span {
 .banner-vacancy {
     max-height: 500px;
 }
+
+.alert-info-setting {
+    width: 100%;
+    background-color: #ffc107;
+    padding: 14px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: normal;
+}

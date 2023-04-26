@@ -181,7 +181,21 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                         "priceList.php",
                     ),
                     "items" => array(),
-                )
+                ),
+	              array(
+		              "parent_menu" => "global_menu_enterego",
+		              "icon" => "default_menu_icon",
+		              "page_icon" => "default_page_icon",
+		              "sort" => "200",
+		              "text" => "Строка Информатор",
+		              "title" => "Строка Информатор",
+		              "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
+		              "parent_page" => "global_menu_enterego",
+		              "more_url" => array(
+			              "informator.php",
+		              ),
+		              "items" => array(),
+	              )
             )
         ),
     );
@@ -330,7 +344,8 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
     $APPLICATION->AddHeadString($jsCode);
 }
 
-EnteregoSettings::getSalePriceOnCheckAndPeriod();
+EnteregoSettings::getParamOnCheckAndPeriod();
+EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO','activation_info_admin');
 
 // JWT-token authorization
 addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);

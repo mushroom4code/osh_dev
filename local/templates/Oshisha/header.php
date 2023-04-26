@@ -101,6 +101,14 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 </div>
 <div id="bx_eshop_wrap">
     <header>
+        <?php if (CHECKED_INFO) {
+            $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
+            <div class="alert-info-setting">
+                <p class="mb-0 container"><?= !empty($Option->text_info) ?  $Option->text_info : '' ?>
+                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                       class="text-decoration-underline font-14 font-weight-bold">перейти по ссылке</a>.</p>
+            </div>
+        <?php } ?>
         <div class="header_top_panel">
             <div class="header_logo_mobile">
                 <a href="<?= SITE_DIR ?>">
