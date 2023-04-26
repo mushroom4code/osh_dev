@@ -4,6 +4,14 @@ use Bitrix\Catalog\ProductTable;
 use Bitrix\Iblock\ElementTable;
 use Bitrix\Main\Application;
 
+/**
+ * @return array|void
+ * @throws \Bitrix\Main\ArgumentException
+ * @throws \Bitrix\Main\DB\SqlQueryException
+ * @throws \Bitrix\Main\ObjectPropertyException
+ * @throws \Bitrix\Main\SystemException
+ *  - 4 param  in ProductTable::getList - it's offer type - product type with offer - 3
+ */
 function deleteProductOnNewOffers()
 {
 	$offers = [];
@@ -63,6 +71,7 @@ function getWithUpdateProductsInDB($productData, $offersData): bool
 		$oldID = $product['ID'];
 		$connection->query("UPDATE b_sale_basket SET PRODUCT_ID =$id WHERE PRODUCT_ID=$oldID");
 		$xml = explode('#', $offersData[$xmlId]['XML_ID']);
+//		if product not main - xml_id offer !== xml_id product this offer
 		if($xml[0] !== $xml[1]){
 			CIBlockElement::Delete($oldID);
 		}
