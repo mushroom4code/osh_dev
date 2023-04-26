@@ -105,7 +105,7 @@ $generalParams = array(
     'FILL_ITEM_ALL_PRICES' => 'Y'
 );
 
-$resQuery = Enterego\EnteregoSettings::getPropSetting(IBLOCK_CATALO, 'SEE_POPUP_WINDOW');
+$resQuery = Enterego\EnteregoSettings::getPropSetting(IBLOCK_CATALOG, 'SEE_POPUP_WINDOW');
 if (!empty($resQuery)) {
     while ($collectionPropChecked = $resQuery->Fetch()) {
         $prop_see_in_window[$collectionPropChecked['CODE']] = $collectionPropChecked;
