@@ -3096,7 +3096,7 @@ $(document).on('click', '.offer-box', function () {
 
     let elem_modal = $(elem).closest('.open-modal-product');
     if ($(elem_modal).length !== 0) {
-        if ($(elem).find('.slick-slider').length > 0) {
+        if ($(elem_modal).find('.slick-slider').length > 0) {
             $(elem_modal).find('.slick-images-box').each(function () {
                 if ($(elem).attr('data-product_id') === $(this).attr('data-offers_id')) {
                     if ($(this).hasClass('d-none')) {
