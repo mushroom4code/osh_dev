@@ -30,7 +30,7 @@ if (!empty($propState)) {
 
 ?>
 <div class="col-md-6 col-sm-6 col-lg-6 product_left col-12">
-	<div class="product-item-detail-slider-container p-4
+	<div class="product-item-detail-slider-container
 		<?php if (!empty($taste['VALUE']) && $boolShowTaste) { ?> p-lg-md-25 <?php } ?>"
 	     id="<?= $itemIds['BIG_SLIDER_ID'] ?>">
 		<?php if ($boolShowTaste) { ?>
@@ -56,7 +56,7 @@ if (!empty($propState)) {
 			<span class="product-item-detail-slider-right carousel_elem_custom"
 			      data-entity="slider-control-right"
 			      style="display: none;"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
-			<div class="product-item-detail-slider-images-container" <? if ($showSliderControls) {
+			<div class="product-item-detail-slider-images-container p-4" <? if ($showSliderControls) {
 				echo 'data-entity="images-container"';
 			} ?>>
 				<?php if (!empty($arResult['OFFERS'])) {
@@ -148,7 +148,7 @@ if (!empty($propState)) {
 				}
 				$propDef = $offer['PROPERTIES'][$propAllOff['CODE']];
 				$strVisible = $keyOffer == $active ? '' : 'none'; ?>
-				<div class="product-item-detail-slider-controls-block mt-5"
+				<div class="product-item-detail-slider-controls-block mt-5 margin_block_element"
 				     id="<?= $itemIds['SLIDER_CONT_OF_ID'] . $offer['ID'] ?>"
 				     style="display: <?= $strVisible ?>;">
 					<?php foreach ($offer['MORE_PHOTO'] as $keyPhoto => $photo) { ?>
