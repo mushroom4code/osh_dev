@@ -2177,7 +2177,7 @@ $(document).on('click', '.open-fast-window', function () {
         let wrapper = $('.section_wrapper');
         let product = JSON.parse(json_product);
         $(wrapper).find('div.box-popup-product').remove();
-        $(this).closest('.catalog-item-product').attr('data-product',product.ID);
+        $(this).closest('.catalog-item-product').attr('data-product', product.ID);
 
         let box_popup = BX.create('DIV', {
             props: {
@@ -2387,9 +2387,9 @@ $(document).on('click', '.open-fast-window', function () {
                             html: prop.VALUE + ' ' + prop.PREF,
                             dataset: {
                                 active: active_box,
-                                sale_price:offer.SALE_PRICE.PRICE ?? '',
+                                sale_price: offer.SALE_PRICE.PRICE ?? '',
                                 sale: boolSale,
-                                sale_base:offer.PRICE[0].PRICE ?? '',
+                                sale_base: offer.PRICE[0].PRICE ?? '',
                                 product_id: offer.ID,
                                 product_quantity: offer.QUANTITY,
                                 price_base: offer.PRICE[1].PRICE,
@@ -2407,9 +2407,9 @@ $(document).on('click', '.open-fast-window', function () {
                             dataset: {
                                 active: active_box,
                                 product_id: offer.ID,
-                                sale_price:offer.SALE_PRICE.PRICE ?? '',
+                                sale_price: offer.SALE_PRICE.PRICE ?? '',
                                 sale: boolSale,
-                                sale_base:offer.PRICE[0].PRICE ?? '',
+                                sale_base: offer.PRICE[0].PRICE ?? '',
                                 product_quantity: offer.QUANTITY,
                                 price_base: offer.PRICE[1].PRICE,
                                 basket_quantity: offer.BASKET
@@ -2422,9 +2422,9 @@ $(document).on('click', '.open-fast-window', function () {
                             }, dataset: {
                                 active: active_box,
                                 src: offer.DETAIL_PICTURE,
-                                sale_price:offer.SALE_PRICE.PRICE ?? '',
+                                sale_price: offer.SALE_PRICE.PRICE ?? '',
                                 sale: boolSale,
-                                sale_base:offer.PRICE[0].PRICE ?? '',
+                                sale_base: offer.PRICE[0].PRICE ?? '',
                                 product_id: offer.ID,
                                 product_quantity: offer.QUANTITY,
                                 price_base: offer.PRICE[1].PRICE,

@@ -117,7 +117,7 @@ $offersForModal = [];
 $boolShowTaste = (empty($item['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) ||
 	count($item['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) == 0);
 
-$propId = $item['PROPERTIES'][ OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
+$propId = $item['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
 $propAllOff = CIBlockProperty::GetList([], ['XML_ID' => $propId, 'IBLOCK_ID' => IBLOCK_CATALOG_OFFERS])->Fetch();
 
 foreach ($item['OFFERS'] as $keys => $quantityNull) {
