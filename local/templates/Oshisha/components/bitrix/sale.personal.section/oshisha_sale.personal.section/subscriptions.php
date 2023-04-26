@@ -53,6 +53,7 @@ $SUBSCRIPTIONS_FILTER = array(
                 "oshisha_catalog.section",
                 array(
                     "ACTION_VARIABLE" => "action",
+                    "ACTIVE_BLOCK_YOU_SEE" => "N",
                     "ADD_PICT_PROP" => "-",
                     "ADD_PROPERTIES_TO_BASKET" => "Y",
                     "ADD_SECTIONS_CHAIN" => "N",
