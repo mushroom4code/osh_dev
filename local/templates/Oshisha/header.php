@@ -107,11 +107,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 <p class="mb-0 text-center d-lg-block d-md-block d-none">
                     <?= !empty($Option->text_info) ?  $Option->text_info : '' ?>
                     <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
-                       class="text-decoration-underline font-14 font-weight-bold color-white"> перейти по ссылке</a>.</p>
+                       class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
                 <p class="mb-0 text-center d-lg-none d-md-none d-block">
                     <?= !empty($Option->text_info_mobile) ?  $Option->text_info_mobile : '' ?>
                     <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
-                       class="text-decoration-underline font-14 font-weight-bold color-white"> перейти по ссылке</a>.</p>
+                       class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
             </div>
         <?php } ?>
         <div class="header_top_panel">
