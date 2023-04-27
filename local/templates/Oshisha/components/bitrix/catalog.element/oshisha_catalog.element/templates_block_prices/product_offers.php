@@ -4,7 +4,6 @@ use Enterego\EnteregoSettings;
 
 $show = false;
 $active = -1;
-$priceDef = 0;
 foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
 	if ((int)$quantityNull['CATALOG_QUANTITY'] > 0 && $show === false) {
 		$show = true;
@@ -12,15 +11,11 @@ foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
 	if ($active == -1 && (int)$quantityNull['CATALOG_QUANTITY'] > 0 && $show === true) {
 		$active = $keys;
 		$arResult['OFFERS_SELECTED'] = $keys;
-		$priceDef = !empty($quantityNull['PRICES_CUSTOM']['SALE_PRICE']['PRICE']) ?
-			$quantityNull['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'] :
-			$quantityNull['PRICES_CUSTOM']['PRICE_DATA'][1]['PRICE'];
 	}
 }
 $boolShowTaste = (empty($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) ||
 	count($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) == 0);
 
-$propsForOffers = EnteregoSettings::getDataPropOffers();
 $propState = $arResult['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
 $propAllOff = '';
 if (!empty($propState)) {
