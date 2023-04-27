@@ -287,35 +287,29 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                             <?php if ($mobile->isMobile() || $mobile->isTablet()) { ?>
                                 <div class="mobile_price mr-md-4">
                                     <div class="basket-items-list-item-price d-flex flex-row <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
-                                        <div class="basket-item-block-price">
+                                        <div class="basket-item-block-price d-flex flex-column align-items-end">
                                             {{#GIFT}}
-                                            {{#SHOW_DISCOUNT_PRICE}}
-                                            <div class="basket-item-price-old">
-                                        <span class="basket-item-price-old-text" id="basket-item-sum-price-old-{{ID}}">
-                                            {{{SUM_FULL_PRICE_FORMATED}}}
-                                        </span>
-                                            </div>
-                                            {{/SHOW_DISCOUNT_PRICE}}
                                             {{/GIFT}}
-
-                                            <div class="basket-item-price-current d-flex justify-content-end">
-                                    <span class="basket-item-price-current-text" id="basket-item-sum-price-{{ID}}">
-                                        {{{SUM_PRICE_FORMATED}}}
-                                    </span>
-                                            </div>
-
+                                                <div class="basket-item-price-current d-flex justify-content-end">
+                                                    <span class="basket-item-price-current-text" id="basket-item-sum-price-{{ID}}">
+                                                        {{{SUM_PRICE_FORMATED}}}
+                                                    </span>
+                                                </div>
                                             {{^GIFT}}
-                                            {{#SHOW_DISCOUNT_PRICE}}
-                                            <div class="basket-item-price-difference">
-                                                <?= Loc::getMessage('SBB_BASKET_ITEM_ECONOMY') ?>
-                                                <span id="basket-item-sum-price-difference-{{ID}}"
-                                                      style="white-space: nowrap;">
-                                            {{{SUM_DISCOUNT_PRICE_FORMATED}}}
-                                        </span>
-                                            </div>
-                                            {{/SHOW_DISCOUNT_PRICE}}
+                                                {{#SHOW_DISCOUNT_PRICE}}
+                                                    <div class="basket-item-price-old color-darkOsh">
+                                                        <span class="basket-item-price-old-text" id="basket-item-sum-price-old-{{ID}}">
+                                                            {{{SUM_FULL_PRICE_FORMATED}}}
+                                                        </span>
+                                                    </div>
+                                                    <div class="basket-item-price-difference">
+                                                        <span id="basket-item-sum-price-difference-{{ID}}"
+                                                              style="white-space: nowrap;">
+                                                            <b class="sale-percent"> - {{{SUM_DISCOUNT_PRICE_FORMATED}}}</b>
+                                                        </span>
+                                                    </div>
+                                                {{/SHOW_DISCOUNT_PRICE}}
                                             {{/GIFT}}
-
                                             {{#SHOW_LOADING}}
                                             <div class="basket-items-list-item-overlay"></div>
                                             {{/SHOW_LOADING}}
@@ -323,23 +317,24 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                         <i class="fa fa-caret-down font-20 ml-2 js--open-price-list"
                                            aria-hidden="true"></i>
                                     </div>
-                                    {{#SHOW_SALE_PRICE}}
+
                                     <div class="position-relative d-flex flex-row">
-                                        <div class="text-right font-11">
-                                            <b>{{QUANTITY}} * {{{SALE_PRICE}}}</b> =
-                                            <b class="decoration-color-red mr-2 font-14">{{{SUM_OLD}}}₽</b>
-                                            <br>
-                                            <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
-                                        </div>
+                                        {{#SHOW_SALE_PRICE}}
+                                            <div class="text-right font-11">
+                                                <b>{{QUANTITY}} * {{{SALE_PRICE}}}</b> =
+                                                <b class="decoration-color-red mr-2 font-14">{{{SUM_OLD}}}₽</b>
+                                                <br>
+                                                <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
+                                            </div>
+                                        {{/SHOW_SALE_PRICE}}
                                         <div class="box-with-prices-net d-none position-absolute p-2">
                                             {{#PRICES_NET}}
-                                            {{#PRICE_DATA}}
-                                            <p class="font-12 mb-2"><b>{{{NAME}}}</b> - <b>{{{VAL}}} ₽</b></p>
-                                            {{/PRICE_DATA}}
+                                                {{#PRICE_DATA}}
+                                                    <p class="font-12 mb-2"><b>{{{NAME}}}</b> - <b>{{{VAL}}} ₽</b></p>
+                                                {{/PRICE_DATA}}
                                             {{/PRICES_NET}}
                                         </div>
                                     </div>
-                                    {{/SHOW_SALE_PRICE}}
                                 </div>
                             <?php } ?>
                             <div class="basket-item-block-amount{{#NOT_AVAILABLE}} disabled{{/NOT_AVAILABLE}}"
@@ -412,30 +407,27 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     </div>
                     <div class="d-flex flex-column price-column ml-2">
                         <div class="basket-items-list-item-price mb-1 <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
-                            <div class="basket-item-block-price">
+                            <div class="basket-item-block-price d-flex flex-column align-items-end">
                                 {{^GIFT}}
-                                {{#SHOW_DISCOUNT_PRICE}}
-                                <div class="basket-item-price-old">
-								<span class="basket-item-price-old-text" id="basket-item-sum-price-old-{{ID}}">
-									{{{SUM_FULL_PRICE_FORMATED}}}
-								</span>
-                                </div>
-                                {{/SHOW_DISCOUNT_PRICE}}
                                 {{/GIFT}}
-
-                                <div class="basket-item-price-current d-flex justify-content-end">
+                                    <div class="basket-item-price-current d-flex justify-content-end">
                                         <span class="basket-item-price-current-text" id="basket-item-sum-price-{{ID}}">
                                             {{{SUM_PRICE_FORMATED}}}
                                         </span>
-                                </div>
+                                    </div>
                                 {{^GIFT}}
                                 {{#SHOW_DISCOUNT_PRICE}}
-                                <div class="basket-item-price-difference">
-                                    <?= Loc::getMessage('SBB_BASKET_ITEM_ECONOMY') ?>
-                                    <span id="basket-item-sum-price-difference-{{ID}}" style="white-space: nowrap;">
-									{{{SUM_DISCOUNT_PRICE_FORMATED}}}
-								</span>
-                                </div>
+                                    <div class="basket-item-price-old color-darkOsh">
+                                            <span class="basket-item-price-old-text" id="basket-item-sum-price-old-{{ID}}">
+                                                {{{SUM_FULL_PRICE_FORMATED}}}
+                                            </span>
+                                    </div>
+                                    <div class="basket-item-price-difference">
+                                        <span id="basket-item-sum-price-difference-{{ID}}"
+                                              style="white-space: nowrap;">
+                                            <b class="sale-percent"> - {{{SUM_DISCOUNT_PRICE_FORMATED}}}</b>
+                                        </span>
+                                    </div>
                                 {{/SHOW_DISCOUNT_PRICE}}
                                 {{/GIFT}}
                                 {{#SHOW_LOADING}}
@@ -724,34 +716,28 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             <?php if ($useSumColumn) { ?>
                 <div class="d-flex flex-column">
                     <div class="basket-items-list-item-price<?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
-                        <div class="basket-item-block-price">
+                        <div class="basket-item-block-price d-flex flex-column align-items-end">
                             {{^GIFT}}
-                            {{#SHOW_DISCOUNT_PRICE}}
-                            <div class="basket-item-price-old">
-								<span class="basket-item-price-old-text" id="basket-item-sum-price-old-{{ID}}">
-									{{{SUM_FULL_PRICE_FORMATED}}}
-								</span>
-                            </div>
-                            {{/SHOW_DISCOUNT_PRICE}}
                             {{/GIFT}}
-
                             <div class="basket-item-price-current d-flex">
-							<span class="basket-item-price-current-text font_18" id="basket-item-sum-price-{{ID}}">
-								{{{SUM_PRICE_FORMATED}}}
-							</span>
+                                <span class="basket-item-price-current-text font_18" id="basket-item-sum-price-{{ID}}">
+                                    {{{SUM_PRICE_FORMATED}}}
+                                </span>
                             </div>
-
                             {{^GIFT}}
-                            {{#SHOW_DISCOUNT_PRICE}}
-                            <div class="basket-item-price-difference">
-                                <?= Loc::getMessage('SBB_BASKET_ITEM_ECONOMY') ?>
-                                <span id="basket-item-sum-price-difference-{{ID}}" style="white-space: nowrap;">
-									{{{SUM_DISCOUNT_PRICE_FORMATED}}}
-								</span>
-                            </div>
-                            {{/SHOW_DISCOUNT_PRICE}}
+                                {{#SHOW_DISCOUNT_PRICE}}
+                                <div class="basket-item-price-old">
+                                        <span class="basket-item-price-old-text" id="basket-item-sum-price-old-{{ID}}">
+                                            {{{SUM_FULL_PRICE_FORMATED}}}
+                                        </span>
+                                </div>
+                                <div class="basket-item-price-difference">
+                                    <span id="basket-item-sum-price-difference-{{ID}}" style="white-space: nowrap;">
+                                        <b class="sale-percent"> - {{{SUM_DISCOUNT_PRICE_FORMATED}}}</b>
+                                    </span>
+                                </div>
+                                {{/SHOW_DISCOUNT_PRICE}}
                             {{/GIFT}}
-
                             {{#SHOW_LOADING}}
                             <div class="basket-items-list-item-overlay"></div>
                             {{/SHOW_LOADING}}
