@@ -578,29 +578,6 @@ if ($request->get('ORDER_ID') <> '') {
                     <div class="bx-soa-cart-total-ghost"></div>
                     <div class="bx-soa-cart-total"></div>
                 </div>
-                <div class="basket-checkout-container" data-entity="basket-checkout-aligner">
-                    <div class="basket-checkout-section-inner">
-                        <div class="basket-coupon-section">
-                            <div class="basket-coupon-block-field">
-                                <div class="basket-coupon-block-field-description mb-4">
-                                    <span class="text_filter_basket">  <b>  Введите промокод или сертификат</b></span>
-                                </div>
-                                <div class="form">
-                                    <div class="form-group" style="position: relative;">
-                                        <input type="text" class="form-control mb-4 input_code" id=""
-                                               placeholder="Введите код" data-entity="basket-coupon-input">
-                                        <div class="basket-checkout-block  mb-4">
-                                            <button class="btn_basket  basket-coupon-block-coupon-btn">
-                                                Применить
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </form>
