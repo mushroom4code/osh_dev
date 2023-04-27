@@ -24,13 +24,14 @@ if (!$USER->IsAuthorized()) {
 	}
 	if ($act === 'SetParamInfo') {
 		COption::SetOptionString('activation_info_admin', 'CHECKED_INFO', $_POST['param']);
-		if (!empty($_POST['text_info'])) {
+		if (!empty($_POST['text_info']) && !empty($_POST['text_info_mobile'])) {
 			COption::SetOptionString('activation_info_admin', 'PERIOD',
 				json_encode([
 					'start' => $_POST['date_start'],
 					'end' => $_POST['date_end'],
 					'text_info' => $_POST['text_info'],
-					'link_info' => $_POST['link_info']
+					'link_info' => $_POST['link_info'],
+					'text_info_mobile' => $_POST['text_info_mobile'],
 				]));
 		}
 		exit($_POST['param']);//управление использования специального вида цен для скидок
