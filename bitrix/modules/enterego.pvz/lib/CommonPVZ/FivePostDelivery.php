@@ -152,14 +152,6 @@ class FivePostDelivery extends CommonPVZ
         $arParams = ['filter' => ['BITRIX_CODE' => $code_city]];
         $res = FivePostPointsTable::getList($arParams);
 
-        try {
-            if (!empty(\COption::GetOptionString('ipol.fivepost', 'apiKey'))) {
-                $resultPVZ = \Enterego\EnteregoDBDelivery::getPoints5postForALLMap($code_city);
-            }
-        } catch (\Exception $e) {
-            $this->errors[] = $e->getMessage();
-
-        }
         while ($point = $res->fetch()) {
             if ($point['MAX_CELL_DIMENSIONS_HASH'] >= $dimensionsHash
                 && !empty(unserialize($point['RATE'])[0]['rateValue'])
