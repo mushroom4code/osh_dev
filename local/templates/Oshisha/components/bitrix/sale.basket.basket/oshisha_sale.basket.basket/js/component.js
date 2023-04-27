@@ -107,7 +107,6 @@
                 var template = BX(templateName);
                 this.templates[templateName] = BX.type.isDomNode(template) ? template.innerHTML : '';
             }
-            tasteInit();
             this.tasteInit();
             return this.templates[templateName];
         },
@@ -1539,6 +1538,7 @@
             }
         },
         tasteInit: function () {
+            tasteInit();
             $('body').find('.variation_taste').each(
                 function (index, item) {
                     if ($(item).find('.taste').length > 2) {
