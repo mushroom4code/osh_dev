@@ -494,10 +494,6 @@ $(document).ready(function () {
                 }
             }
 
-            $(document).on('click', '.js__close-count-alert', function() {
-                $(this).parents('.alert_quantity').html('').removeClass('show_block');
-            })
-
             let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="' + product_id + '"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
                 if (product_data.QUANTITY !== '' && parseInt(product_data.QUANTITY) !== 0 && parseInt(product_data.QUANTITY) > 0) {
@@ -2977,3 +2973,7 @@ $(document).ready(function () {
         }, window.smartFilter), 500);
     })
 });
+
+$(document).on('click', '.js__close-count-alert', function() {
+    $(this).parents('.alert_quantity').html('').removeClass('show_block');
+})
