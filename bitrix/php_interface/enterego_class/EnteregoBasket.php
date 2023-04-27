@@ -12,7 +12,7 @@ use CModule;
 Main\EventManager::getInstance()->addEventHandler('sale', 'OnSaleBasketBeforeSaved',
     array('Enterego\EnteregoBasket', 'OnSaleBasketBeforeSaved'));
 
-
+const IBLOCK_OFFERS = 19;
 class EnteregoBasket
 {
     /** Формирование корзины идет после формирования свойств заказа
@@ -89,12 +89,12 @@ class EnteregoBasket
             foreach ($product_prices as $product_id => $price_data) {
 				// OFFERS OR PRODUCT
 	            $offer = CIBlockElement::GetProperty(
-		            IBLOCK_CATALOG_OFFERS ?? 19,
+		            IBLOCK_CATALOG_OFFERS ?? IBLOCK_OFFERS,
 		            $product_id,
 		            array(),
 		            array('CODE' => 'CML2_LINK'));
 	            $productIdOnOffer = $offer->Fetch();
-	            $productId = !empty($productIdOnOffer['VALUE']) ? $productIdOnOffer['VALUE'] : $product_id;
+	            $productId = isset($productIdOnOffer['VALUE']) && !empty($productIdOnOffer['VALUE']) ? $productIdOnOffer['VALUE'] : $product_id;
 	            // OFFERS OR PRODUCT
                 $propsUseSale = CIBlockElement::GetProperty(
                     IBLOCK_CATALOG,

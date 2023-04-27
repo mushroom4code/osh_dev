@@ -3125,7 +3125,7 @@ $(document).on('click', '.offer-box', function () {
         }
     }
 
-    if ($(document).find('div[data-entity="images-container"]').length == 0) {
+    if ($(document).find('div[data-entity="images-container"]').length === 0) {
         let parent = $(elem).closest('.box_with_photo_product');
         let new_active_image = $(parent).find('.product-item-detail-slider-image[data-product_id="' + $(elem).attr('data-product_id') + '"]');
         $(document).find('.product-item-detail-slider-image.active').removeClass('active').addClass('d-none');
