@@ -329,7 +329,7 @@ class OshishaDelivery extends CommonPVZ
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city)
+    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash)
     {
         $value = [];
 

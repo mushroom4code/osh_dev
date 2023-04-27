@@ -15,6 +15,7 @@ $CONFIG_DELIVERIES = DeliveryHelper::getConfigs();
 $action = $request->get('action');
 $codeCity = $request->get('codeCity');
 $cityName = $request->get('cityName');
+$packages = $request->get('orderPackages');
 
 switch ($action) {
     case 'getCityName':
@@ -25,9 +26,11 @@ switch ($action) {
         exit(json_encode(DeliveryHelper::updateDellinPVZ()));
     case 'updateRussianPostPoints':
         exit(json_encode(DeliveryHelper::updateRussianPostPVZ()));
+    case 'updateFivePostPoints':
+        exit(json_encode(DeliveryHelper::updateFivePostPVZ()));
     case 'getPVZList':
         $deliveries = DeliveryHelper::getActivePvzDeliveryInstance(array('codeCity' => $codeCity));
-        $response  = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity));
+        $response  = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity, $packages));
         exit($response);
     case 'getPVZPrice':
         $dataToHandler = $request->get('dataToHandler');
