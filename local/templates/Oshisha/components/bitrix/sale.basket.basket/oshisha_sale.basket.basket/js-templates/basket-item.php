@@ -326,8 +326,10 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                     {{#SHOW_SALE_PRICE}}
                                     <div class="position-relative d-flex flex-row">
                                         <div class="text-right font-11">
-                                            <b class="decoration-color-red mr-2">{{{SALE_PRICE}}}</b>
-                                            <b class="sale-percent"> - {{{SALE_PRICE_VAL}}} ₽</b>
+                                            <b>{{QUANTITY}} * {{{SALE_PRICE}}}</b> =
+                                            <b class="decoration-color-red mr-2 font-14">{{{SUM_OLD}}}₽</b>
+                                            <br>
+                                            <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
                                         </div>
                                         <div class="box-with-prices-net d-none position-absolute p-2">
                                             {{#PRICES_NET}}
@@ -408,7 +410,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         {{/PRICE_DATA}}
                         {{/PRICES_NET}}
                     </div>
-                    <div class="d-flex flex-column price-column ml-3">
+                    <div class="d-flex flex-column price-column ml-2">
                         <div class="basket-items-list-item-price mb-1 <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
                             <div class="basket-item-block-price">
                                 {{^GIFT}}
@@ -442,10 +444,12 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                             </div>
                         </div>
                         {{#SHOW_SALE_PRICE}}
-                        <div class="text-right font-11">
-                            <b class="decoration-color-red mr-2">{{{SALE_PRICE}}}</b>
-                            <b class="sale-percent"> - {{{SALE_PRICE_VAL}}} ₽</b>
-                        </div>
+                            <div class="text-right font-11">
+                                <b>{{QUANTITY}} * {{{SALE_PRICE}}}</b> =
+                                <b class="decoration-color-red mr-2 font-14">{{{SUM_OLD}}}₽</b>
+                                <br>
+                                <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
+                            </div>
                         {{/SHOW_SALE_PRICE}}
                     </div>
                 </div>
@@ -754,10 +758,12 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         </div>
                     </div>
                     {{#SHOW_SALE_PRICE}}
-                    <div class="text-right font-11">
-                        <b class="decoration-color-red mr-2">{{{SALE_PRICE}}}</b>
-                        <b class="sale-percent"> - {{{SALE_PRICE_VAL}}} ₽</b>
-                    </div>
+                        <div class="text-right font-11">
+                            <b>{{QUANTITY}} * {{{SALE_PRICE}}}</b> =
+                            <b class="decoration-color-red mr-2 font-14">{{{SUM_OLD}}}₽</b>
+                            <br>
+                            <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
+                        </div>
                     {{/SHOW_SALE_PRICE}}
                 </div>
             <?php }

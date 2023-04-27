@@ -107,9 +107,10 @@ foreach ($item as $row) {
                 $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
             }
 
-            $product_prices = $str_product_prices[0] . ' ₽';
+            $product_prices = $str_product_prices[0] . '₽';
             $sale_price_val = (int)$str_product_prices[0];
             $sum_sale = ((round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']) - round($row['SUM_VALUE']));
+			$sum_old = (round($row['QUANTITY']) * $str_product_prices[0]);
         }
     }
 
@@ -145,6 +146,7 @@ foreach ($item as $row) {
         'SALE_PRICE' => $product_prices,
         'SALE_PRICE_VAL' => $sum_sale ?? 0,
         'SHOW_SALE_PRICE' => $show_product_prices,
+		"SUM_OLD" => $sum_old ?? 0,
         //
         'MEASURE_RATIO' => isset($row['MEASURE_RATIO']) ? $row['MEASURE_RATIO'] : 1,
         'MEASURE_TEXT' => $row['MEASURE_TEXT'],
