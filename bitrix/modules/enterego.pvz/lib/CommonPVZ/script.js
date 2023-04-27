@@ -31,6 +31,7 @@ BX.SaleCommonPVZ = {
     orderPackages: null,
     oshishaDeliveryOptions: null,
     oshishaDeliveryStatus: false,
+    // deliveriesPopup: {},
 
     init: function (params) {
         const order = BX.Sale.OrderAjaxComponent.result
@@ -280,9 +281,12 @@ BX.SaleCommonPVZ = {
     },
 
     openMap: function () {
-        this.createPVZPopup();
-        this.buildPVZMap();
-        this.pvzPopup.show();
+        // this.createPVZPopup();
+        this.createPVZPopup1();
+        // this.buildPVZMap();
+        this.buildPVZMap1();
+        // this.pvzPopup.show();
+        BX.show(this.pvzOverlay);
     },
 
     /**
@@ -342,11 +346,85 @@ BX.SaleCommonPVZ = {
                 closeByEsc: true
             });
     },
+    createPVZPopup1: function() {
+        // if (BX.PopupWindowManager.isPopupExists('wrap_pvz_map')) return;
+        this.pvzPopup = BX.create({
+            tag: 'div',
+            props: {
+                id: 'wrap_pvz_map',
+                className: "wrap_pvz_map"
+            },
+            children: [
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_pvz_close',
+                        className: "wrap_pvz_close js__wrap_pvz_close"
+                    },
+                    events: {
+                        click: BX.proxy(function() {
+                            BX.hide(this.pvzOverlay);
+                        }, this)
+                    }
+                }),
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'pvz_user_data',
+                        className: 'pvz_user_data'
+                    }
+                }),
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'map_for_pvz',
+                        className: 'map_for_pvz'
+                    }
+                })
+            ],
+        })
 
+        this.pvzOverlay = BX.create({
+            tag: 'div',
+            props: {
+                id: 'wrap_pvz_overlay',
+                className: "wrap_pvz_overlay"
+            },
+            children: [this.pvzPopup]
+        })
+
+        BX.insertAfter(this.pvzOverlay, BX('bx-soa-order'))
+        this.buildDeliveryType()
+            .buildCustomerType()
+            .buildDataView()
+            .buildSortService()
+    },
     /**
      *   Построение карты с PVZ
      */
     buildPVZMap: function () {
+        var __this = this;
+
+        ymaps.ready(function () {
+            var myGeocoder = ymaps.geocode(__this.curCityName, {results: 1});
+            myGeocoder.then(function (res) { // получаем координаты
+                var firstGeoObject = res.geoObjects.get(0),
+                    coords = firstGeoObject.geometry.getCoordinates();
+
+                __this.propsMap = new ymaps.Map('map_for_pvz', {
+                    center: [coords[0], coords[1]],
+                    zoom: 12,
+                    controls: ['fullscreenControl']
+                });
+                __this.getPVZList();
+
+            }).catch(function (e) {
+                __this.showError(__this.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
+                console.warn(e);
+            });
+        });
+    },
+    buildPVZMap1: function () {
         var __this = this;
 
         ymaps.ready(function () {
@@ -431,7 +509,7 @@ BX.SaleCommonPVZ = {
     },
 
     /**
-     *
+     *44444
      * @param point
      * @returns {{delivery: *, fivepost_zone: *, code_city: null, hubregion, action: string, weight: *, code_pvz, id, to: *, name_city: null}}
      */
@@ -649,7 +727,572 @@ BX.SaleCommonPVZ = {
         data[BX.Sale.OrderAjaxComponent.params.ACTION_VARIABLE] = action;
 
         return data;
-    }
+    },
+    // drawPopup: function () {
+    //     this.deliveriesPopup = BX.create('div', {
+    //         attr: {
+    //             class: delivery-map,
+    //             id: delivery-map,
+    //         }
+    //     })
+    // },
+    buildDeliveryType: function ()
+    {
+        BX.append(
+            BX.create({
+                tag: 'div',
+                props: {
+                    id: 'wrap_delivery_types',
+                    className: "wrap_delivery_types"
+                },
+                children: [
+                    BX.create({
+                        tag: 'p',
+                        props: {className: "title"},
+                        text: 'Способ получения'
+                    }),
+
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: "options-row"
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'label',
+                                props: {
+                                    className: "option-label",
+                                    for: 'delivery-self',
+                                },
+                                text: 'Самовывоз',
+
+                                children: [
+                                    BX.create({
+                                        tag: 'input',
+                                        props: {
+                                            id: 'delivery-self',
+                                            className: 'radio-field',
+                                            type: 'radio',
+                                            value: 'Самовывоз',
+                                            name: 'delivery_type',
+                                            checked: 'checked',
+                                        }
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'radio-caption',
+                                        },
+                                        text: 'Самовывоз'
+                                    })
+                                ],
+                            }),
+
+                            BX.create({
+                                tag: 'label',
+                                props: {
+                                    className: "option-label",
+                                    for: 'delivery-in-hands',
+                                },
+                                text: 'Доставка в руки',
+                                children: [
+                                    BX.create({
+                                        tag: 'input',
+                                        props: {
+                                            id: 'delivery-in-hands',
+                                            className: 'radio-field',
+                                            type: 'radio',
+                                            value: 'Доставка в руки',
+                                            name: 'delivery_type',
+                                        },
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'radio-caption',
+                                        },
+                                        text: 'Доставка в руки'
+                                    })
+                                ],
+                            })
+                        ]
+                    })
+                ]
+            }),
+            BX('pvz_user_data')
+        )
+
+        return this
+    },
+    buildCustomerType: function ()
+    {
+        BX.insertAfter(
+            BX.create({
+                tag: 'div',
+                props: {
+                    id: 'wrap_payer_types',
+                    className: "wrap_payer_types"
+                },
+                children: [
+                    BX.create({
+                        tag: 'div',
+                        props: {className: "title"},
+                        text: 'Тип плательщика'
+                    }),
+
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: "options-row"
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'label',
+                                props: {
+                                    className: "option-label",
+                                    for: 'payer-individual',
+                                },
+                                text: 'Самовывоз',
+
+                                children: [
+                                    BX.create({
+                                        tag: 'input',
+                                        props: {
+                                            id: 'payer-individual',
+                                            className: 'radio-field',
+                                            type: 'radio',
+                                            value: 'Физическое лицо',
+                                            name: 'payer_type',
+                                            checked: 'checked',
+                                        }
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'radio-caption',
+                                        },
+                                        text: 'Физическое лицо'
+                                    })
+                                ],
+                            }),
+
+                            BX.create({
+                                tag: 'label',
+                                props: {
+                                    className: "option-label",
+                                    for: 'payer-company',
+                                },
+                                text: 'Доставка в руки',
+                                children: [
+                                    BX.create({
+                                        tag: 'input',
+                                        props: {
+                                            id: 'payer-company',
+                                            className: 'radio-field',
+                                            type: 'radio',
+                                            value: 'Юридическое лицо',
+                                            name: 'payer_type',
+                                        },
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'radio-caption',
+                                        },
+                                        text: 'Юридическое лицо'
+                                    })
+                                ],
+                            })
+                        ]
+                    })
+                ]
+            }),
+            BX('wrap_delivery_types')
+        )
+
+        return this
+    },
+    buildDataView: function ()
+    {
+        BX.insertAfter(
+            BX.create({
+                tag: 'div',
+                props: {
+                    id: 'wrap_data_view',
+                    className: "wrap_data_view"
+                },
+                children: [
+                    BX.create({
+                        tag: 'div',
+                        props: {className: "title"},
+                        text: 'Показать'
+                    }),
+
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: "options-row"
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'label',
+                                props: {
+                                    className: "option-label",
+                                    for: 'payer-individual',
+                                },
+                                text: 'Списком',
+
+                                children: [
+                                    BX.create({
+                                        tag: 'input',
+                                        props: {
+                                            id: 'data_view_list',
+                                            className: 'radio-field',
+                                            type: 'radio',
+                                            value: 'Списком',
+                                            name: 'data_view',
+                                            checked: 'checked',
+                                        }
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'radio-caption',
+                                        },
+                                        text: 'Списком'
+                                    })
+                                ],
+                            }),
+
+                            BX.create({
+                                tag: 'label',
+                                props: {
+                                    className: "option-label",
+                                    for: 'data_view_map',
+                                },
+                                text: 'На карте',
+                                children: [
+                                    BX.create({
+                                        tag: 'input',
+                                        props: {
+                                            id: 'data_view_map',
+                                            className: 'radio-field',
+                                            type: 'radio',
+                                            value: 'На карте',
+                                            name: 'data_view',
+                                        },
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'radio-caption',
+                                        },
+                                        text: 'На карте'
+                                    })
+                                ],
+                            })
+                        ]
+                    })
+                ]
+            }),
+            BX('wrap_payer_types')
+        )
+
+        return this
+    },
+    buildSortService: function ()
+    {
+        BX.insertAfter(
+            BX.create({
+                tag: 'div',
+                props: {
+                    id: 'wrap_sort_service',
+                    className: "wrap_sort_service"
+                },
+                children: [
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            id: 'sort_service_select',
+                            className: 'sort_service_select',
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'div',
+                                props: {
+                                    id: 'active_sort_service',
+                                    className: 'active_sort_service',
+                                },
+                                text: '5Post',
+                                events: {
+                                    click: BX.proxy(function () {
+                                        BX.toggleClass(BX('sort_service_select'), 'active')
+                                    }, this)
+                                }
+                            }),
+                            BX.create({
+                                tag: 'ul',
+                                props: {
+                                    id: 'sort_services_list',
+                                    className: 'sort_services_list',
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'li',
+                                        props: {className: 'sort_service'},
+                                        text: '5Post',
+                                        events: {
+                                            click: BX.proxy(function (e) {
+                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                console.log(e.target.innerHTML)
+                                                BX.removeClass(BX('sort_service_select'), 'active')
+                                            }, this)
+                                        }
+                                    }),
+                                    BX.create({
+                                        tag: 'li',
+                                        props: {className: 'sort_service'},
+                                        text: 'Oshisha',
+                                        events: {
+                                            click: BX.proxy(function (e) {
+                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                console.log(e.target.innerHTML)
+                                                BX.removeClass(BX('sort_service_select'), 'active')
+                                            }, this)
+                                        }
+                                    }),
+                                    BX.create({
+                                        tag: 'li',
+                                        props: {className: 'sort_service'},
+                                        text: 'SDEK',
+                                        events: {
+                                            click: BX.proxy(function (e) {
+                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                console.log(e.target.innerHTML)
+                                                BX.removeClass(BX('sort_service_select'), 'active')
+                                            }, this)
+                                        }
+                                    }),
+                                ]
+                            })
+                        ]
+
+                    })
+                ]
+            }),
+            BX('wrap_data_view')
+        )
+
+        return this
+    },
+    // initCheckoutDom: function() {
+    //     return {
+    //         rootEl: BX('bx-soa-order'),
+    //         user: { rootEl: BX('bx-soa-properties') },
+    //         auth: {rootEl: BX('bx-soa-auth')},
+    //         order: {rootEl: BX('bx-soa-order')},
+    //         region: {rootEl: document.querySelectorAll('#bx-soa-region')},
+    //         delivery: {rootEl: BX('bx-soa-delivery')},
+    //         paysystem: {rootEl: BX('bx-soa-paysystem')},
+    //         pickup: {rootEl: BX('bx-soa-pickup')},
+    //         notice: {rootEl: BX('new_block_with_sms')},
+    //         save: {rootEl: BX('bx-soa-orderSave')},
+    //         total:{rootEl: BX('bx-soa-total')}
+    //     }
+    // },
+    //
+    //
+    // drawInterface: function ()
+    // {
+    //     this.checkout = {
+    //         rootEl: BX('bx-soa-order'),
+    //         user: { rootEl: BX('bx-soa-properties') },
+    //         auth: {rootEl: BX('bx-soa-auth')},
+    //         order: {rootEl: BX('bx-soa-order')},
+    //         region: {rootEl: document.querySelectorAll('#bx-soa-region')},
+    //         delivery: {rootEl: BX('bx-soa-delivery')},
+    //         paysystem: {rootEl: BX('bx-soa-paysystem')},
+    //         pickup: {rootEl: BX('bx-soa-pickup')},
+    //         notice: {rootEl: BX('new_block_with_sms')},
+    //         save: {rootEl: BX('bx-soa-orderSave')},
+    //         total:{rootEl: BX('bx-soa-total')}
+    //     }
+    //
+    //     this.drawProps()
+    //         .drawDelivery()
+    //         .drawPayment()
+    //         .drawNotice()
+    //     return this
+    // },
+    //
+    // drawNotice: function()
+    // {
+    //     this.checkout.notice.title = BX.findChild(this.checkout.notice.rootEl, {'class': 'bx-soa-section-title'}, true)
+    //
+    //
+    //     this.checkout.notice.variants = {}
+    //     this.checkout.notice.variants.rootEl = BX.findChild(this.checkout.notice.rootEl, {'class': 'form-check'}, true)
+    //
+    //     this.checkout.notice.variants.sms = {}
+    //     this.checkout.notice.variants.sms.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
+    //     this.checkout.notice.variants.sms.input = BX('sms')
+    //     this.checkout.notice.variants.sms.title = BX.findChild(this.checkout.notice.variants.sms.rootEl, {'tag': 'label'}, true)
+    //
+    //     this.checkout.notice.variants.telegram = {}
+    //     this.checkout.notice.variants.telegram.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
+    //     this.checkout.notice.variants.telegram.input = BX('telegram')
+    //     this.checkout.notice.variants.telegram.title = BX.findChild(this.checkout.notice.variants.telegram.rootEl, {'tag': 'label'}, true)
+    //
+    //     this.checkout.notice.variants.call = {}
+    //     this.checkout.notice.variants.call.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
+    //     this.checkout.notice.variants.call.input = BX('telephone')
+    //     this.checkout.notice.variants.call.title = BX.findChild(this.checkout.notice.variants.call.rootEl, {'tag': 'label'}, true)
+    //
+    //     console.log(this.checkout.notice)
+    //
+    //     // .notice-title-icon
+    //     return this
+    // },
+    // drawPayment: function()
+    // {
+    //     // блок выбора оплаты
+    //     this.checkout.paysystem.titleBox = BX.findChild(this.checkout.paysystem.rootEl, {
+    //         'class':'bx-soa-section-title-container'}, true)
+    //     this.checkout.paysystem.title = BX.findChild(this.checkout.paysystem.titleBox, {
+    //         'class':'bx-soa-section-title'}, true)
+    //     this.checkout.paysystem.titleIcon = BX.create('span', {attrs: {className: 'payment-title-icon'}});
+    //
+    //     BX.removeClass(this.checkout.paysystem.titleBox, 'justify-content-between')
+    //     BX.insertAfter(this.checkout.paysystem.titleIcon, this.checkout.paysystem.title)
+    //
+    //     return this
+    // },
+    //
+    //
+    // drawDelivery: function()
+    // {
+    //     // блок выбора доставки
+    //     this.checkout.delivery.titleBox = BX.findChild(this.checkout.delivery.rootEl,
+    //         {'class':'bx-soa-section-title-container'}, true)
+    //     this.checkout.delivery.title = BX.findChild(this.checkout.delivery.titleBox,
+    //         {'class':'bx-soa-section-title'}, true)
+    //     this.checkout.delivery.content = BX.findChild(this.checkout.delivery.rootEl,
+    //         {'class':'box_with_delivery_type'})
+    //     this.checkout.delivery.titleIcon = BX.create('span', {attrs: {className: 'delivery-title-icon'}})
+    //
+    //     this.checkout.delivery.variants = {}
+    //     this.checkout.delivery.variants.rootEl = BX.create('div', {
+    //             attrs: {className: 'delivery-variants'}})
+    //     this.checkout.delivery.variants.title = BX.create('div', {
+    //             attrs: {className: 'delivery-variants-title'},
+    //             html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
+    //         })
+    //     this.checkout.delivery.variants.description = BX.create('div', {
+    //             attrs: {className: 'delivery-description'},
+    //             text: 'Выберите один из подходящих Вам вариантов: самовывоз, пункт выдачи заказов или доставка курьером до двери'
+    //         })
+    //     this.checkout.delivery.variants.choose = BX.create('div', {
+    //         attrs: {className: 'delivery-choose js__delivery-choose'},
+    //         text: 'Выбрать адрес и способ доставки' })
+    //     BX.adjust(this.checkout.delivery.variants.rootEl, {
+    //         children: [
+    //             this.checkout.delivery.variants.title,
+    //             this.checkout.delivery.variants.description,
+    //             this.checkout.delivery.variants.choose
+    //         ]})
+    //
+    //     // Прошлые доставки
+    //     this.checkout.recentWrap
+    //
+    //
+    //     // предыдущие доставки
+    //     this.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
+    //     this.checkout.delivery.recentWrap = {}
+    //     this.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'last-deliveries-wrap'}})
+    //     this.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'last-deliveries-title'},
+    //         html: '<span class="title-accent">Выберите настройки</span> достаки из прошлых заказов'})
+    //
+    //     BX.removeClass(this.checkout.delivery.titleBox, 'justify-content-between')
+    //     BX.addClass(this.checkout.delivery.content, 'd-none')
+    //     BX.insertAfter(this.checkout.delivery.titleIcon, this.checkout.delivery.title)
+    //
+    //     BX.insertAfter(this.checkout.delivery.variants.rootEl, this.checkout.delivery.titleBox)
+    //     BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
+    //
+    //     BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
+    //     BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
+    //
+    //
+    //
+    //     // this.checkout.delivery.recentWrap.
+    //
+    //     // wrap
+    //     // {
+    //     //     title
+    //     //     {
+    //     //     }
+    //     //     info
+    //     //     {
+    //     //         price
+    //     //         {
+    //     //         }
+    //     //         date
+    //     //         {
+    //     //         }
+    //     //     }
+    //     //     address
+    //     //     {
+    //     //     }
+    //     // }
+    //
+    //
+    //
+    //     return this;
+    // },
+    //
+    // drawProps: function()
+    // {
+    //     this.checkout.user.title = BX.findChild(this.checkout.order.rootEl, {'tag':'h5'}, true);
+    //     BX.addClass(this.checkout.user.title, 'checkout-block-title');
+    //     BX.addClass(this.checkout.user.title, 'fw-normal');
+    //     BX.addClass(BX.findChild(this.checkout.user.title, {'tag':'b'}, true), 'fw-normal');
+    //
+    //     // физ/юр лицо
+    //     this.checkout.user.type = BX.findChild(this.checkout.user.rootEl, {'class': 'bx-soa-section-title-container'});
+    //     BX.addClass(this.checkout.user.type, 'd-none');
+    //
+    //     // ФИО
+    //     this.checkout.user.name = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 1}}, true);
+    //     console.log(this.checkout)
+    //     BX.removeClass(this.checkout.user.name, 'col-12');
+    //     BX.addClass(this.checkout.user.name, 'col-md-6 col-lg-6 col-12  checkout-name-group');
+    //     BX.adjust(this.checkout.user.name, {attrs: {'id': 'checkout-name-group'}});
+    //
+    //     // телефон
+    //     this.checkout.user.phone = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 3}}, true);
+    //     BX.removeClass(this.checkout.user.phone, 'col-12');
+    //     BX.addClass(this.checkout.user.phone, 'col-md-6 col-lg-6 col-12 checkout-phone-group');
+    //     BX.adjust(this.checkout.user.phone, {attrs: {'id': 'checkout-phone-group'}});
+    //
+    //     // email
+    //     this.checkout.user.email = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 2}}, true);
+    //     BX.removeClass(this.checkout.user.email, 'col-12');
+    //     BX.addClass(this.checkout.user.email, 'col-md-6 col-lg-6 col-12 checkout-email-group');
+    //     BX.adjust(this.checkout.user.email, {attrs: {'id':'checkout-email-group'}});
+    //
+    //     // Город
+    //     this.checkout.user.city = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 6}}, true);
+    //     BX.removeClass(this.checkout.user.city, 'd-none');
+    //     BX.addClass(this.checkout.user.city, 'col-md-6 col-lg-6 col-12 checkout-city-group');
+    //     BX.adjust(this.checkout.user.city, {attrs: {'id':'checkout-city-group'}});
+    //
+    //     // блок региона
+    //     BX.addClass(this.checkout.region.rootEl[0], 'd-none');
+    //     BX.remove(this.checkout.region.rootEl[1]);
+    //     this.checkout.region.rootEl = this.checkout.region.rootEl[0];
+    //
+    //     return this
+    // },
 };
 
 
