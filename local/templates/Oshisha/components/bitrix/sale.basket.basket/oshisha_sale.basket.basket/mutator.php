@@ -73,22 +73,22 @@ foreach ($item as $row) {
             'CATALOG_PRICE_' . BASIC_PRICE,
             "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID)
     );
-
+	$showDiscountPrice = (float)$row['DISCOUNT_PRICE'] > 0;
     if ($ar_res = $res->fetch()) {
         if (!empty($ar_res)) {
             $str_product_prices = '';
             $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
             if (($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) && (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
-                    && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID]))) {
+                    && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) && !$showDiscountPrice) {
                 $str_product_prices = explode('.', $product_prices_sql);
                 $price['SALE_PRICE'] = $str_product_prices[0] . ' ₽';
                 $show_product_prices = true;
 
             } else {
-                if ((int)$row['PRICE_TYPE_ID'] == BASIC_PRICE) {
+                if ((int)$row['PRICE_TYPE_ID'] == BASIC_PRICE && !$showDiscountPrice) {
                     $show_product_prices = true;
                     $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE]);
-                } else if ((int)$row['PRICE_TYPE_ID'] == B2B_PRICE) {
+                } else if ((int)$row['PRICE_TYPE_ID'] == B2B_PRICE && !$showDiscountPrice) {
                     $show_product_prices = true;
                     $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE]);
                 }
@@ -128,7 +128,7 @@ foreach ($item as $row) {
         'CURRENCY' => $row['CURRENCY'],
         'DISCOUNT_PRICE_PERCENT' => $row['DISCOUNT_PRICE_PERCENT'],
         'DISCOUNT_PRICE_PERCENT_FORMATED' => $row['DISCOUNT_PRICE_PERCENT_FORMATED'],
-        'SHOW_DISCOUNT_PRICE' => (float)$row['DISCOUNT_PRICE'] > 0,
+        'SHOW_DISCOUNT_PRICE' => $showDiscountPrice,
         'PRICE' => $row['PRICE'],
         'PRICE_FORMATED' => $row['PRICE_FORMATED'],
         'FULL_PRICE' => $row['FULL_PRICE'],
