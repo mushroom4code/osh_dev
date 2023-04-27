@@ -414,6 +414,7 @@ BX.SaleCommonPVZ = {
             data: {
                 'cityName': __this.curCityName,
                 'codeCity': __this.curCityCode,
+                'orderPackages': __this.orderPackages,
                 'action': 'getPVZList'
             },
             onsuccess: function (res) {
@@ -448,7 +449,9 @@ BX.SaleCommonPVZ = {
             street_kladr: point.properties.street_kladr ?? '',
             latitude: point.geometry.coordinates[0],
             longitude: point.geometry.coordinates[1],
-            fivepost_zone: point.properties.fivepostZone,
+            fivepost_rate: point.properties.fivepostRate,
+            fivepost_deliverysl: point.properties.fivepostDeliverySl,
+            fivepost_max_weight: point.properties.fivepostMaxWeight,
             hubregion: point.properties.hubregion,
             name_city: this.curCityName,
             postindex:  point.properties.postindex,
