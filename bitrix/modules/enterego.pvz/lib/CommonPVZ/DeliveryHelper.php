@@ -47,9 +47,10 @@ class DeliveryHelper
             return array('L'=>0,'W'=>0,'H'=>0);
 
         $arWork = array();
-        foreach($arGoods as $good)
+        foreach($arGoods as $good) {
             $good = array_values($good);
             $arWork []= self::sumSizeOneGoods($good[0], $good[1], $good[2], $good[3]);
+        }
 
         return self::sumSize($arWork);
     }
@@ -284,13 +285,13 @@ class DeliveryHelper
             } elseif ($cache->startDataCache()) {
                 foreach ($deliveries as $delivery) {
                     if ($delivery!=null) {
-                        $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity, $packages, $dimensionsHash);
+                        $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity, $packages, $dimensionsHash, $sumDimensions);
                         $result_array['errors'][$delName] = $delivery->errors;
                     }
                 }
                 $cache->endDataCache($points_Array);
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $result_array['errors'][$delName] = $e->getMessage();
         }
 

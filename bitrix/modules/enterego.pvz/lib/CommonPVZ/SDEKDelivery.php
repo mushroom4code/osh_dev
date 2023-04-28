@@ -165,7 +165,7 @@ class SDEKDelivery extends CommonPVZ
 
     }
 
-    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash)
+    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
     {
         $sdek_city_code = $this->getSDEKCityCode($city_name);
         $requestPvz = (new \AntistressStore\CdekSDK2\Entity\Requests\DeliveryPoints())

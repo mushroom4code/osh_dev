@@ -147,7 +147,7 @@ class FivePostDelivery extends CommonPVZ
         }
     }
 
-    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash)
+    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
     {
         $arParams = ['filter' => ['BITRIX_CODE' => $code_city]];
         $res = FivePostPointsTable::getList($arParams);
