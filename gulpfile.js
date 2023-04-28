@@ -6,7 +6,7 @@ const uglify = require('gulp-uglify');
 
 
 const cssSourse = ['local/templates/Oshisha/**/*.css', '!local/templates/Oshisha/**/*.min.css']
-const jsSourse = ['local/templates/Oshisha/**/*.js', '!local/templates/Oshisha/**/*.min.js', '!bitrix/templates/Oshisha/**/*.map.js']
+const jsSourse = ['local/templates/Oshisha/**/*.js', '!local/templates/Oshisha/**/*.min.js', '!local/templates/Oshisha/**/*.map.js']
 
 task('minCSS', function () {
     return src(cssSourse)
