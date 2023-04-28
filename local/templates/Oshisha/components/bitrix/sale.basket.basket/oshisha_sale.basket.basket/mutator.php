@@ -110,7 +110,7 @@ foreach ($item as $row) {
             $product_prices = $str_product_prices[0] . '₽';
             $sale_price_val = (int)$str_product_prices[0];
             $sum_sale = ((round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']) - round($row['SUM_VALUE']));
-			$sum_old = (round($row['QUANTITY']) * $str_product_prices[0]);
+			$sum_old = (round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']);
         }
     }
 
