@@ -411,6 +411,7 @@ global $option_site;
                             </div>
                         </div>
                     <?php }
+                    $priceCalculate = 0;
                     foreach ($arParams['PRODUCT_PAY_BLOCK_ORDER'] as $blockName) {
                     switch ($blockName) {
                     case 'price':
@@ -418,8 +419,10 @@ global $option_site;
                     if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
                         $useDiscount['VALUE_XML_ID'] === 'true' && !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
                         $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
+                        $priceCalculate = $price['SALE_PRICE']['PRICE'];
                         $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
                     } else {
+                        $priceCalculate = $price['PRICE_DATA'][1]['PRICE'];
                         $price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
                         $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
                     }
@@ -591,9 +594,7 @@ global $option_site;
                      <? if ($priceBasket > 0): ?><? else: ?>style="display:none;"<? endif; ?>>
                     Итого:
                     <div class="inline-block float-right ganerate_price">
-                        <?=
-                        ((int)substr(preg_replace('/[\D]/', '', $price_new), 0, -4)) * $priceBasket . ' ₽';
-                        ?>
+                        <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
                     </div>
                 </div>
             </div>
