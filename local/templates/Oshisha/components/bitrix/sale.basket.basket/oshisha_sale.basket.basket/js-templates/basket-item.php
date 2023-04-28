@@ -321,7 +321,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                     <div class="position-relative d-flex flex-row">
                                         {{#SHOW_SALE_PRICE}}
                                             <div class="text-right font-11">
-                                                <b class="decoration-color-red mr-2 font-14">{{{SUM_OLD}}}₽</b>
+                                                <b class="decoration-color-red mr-2 font-16">{{{SUM_OLD}}}₽</b>
                                                 <br>
                                                 <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
                                             </div>
@@ -436,7 +436,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         </div>
                         {{#SHOW_SALE_PRICE}}
                             <div class="text-right font-11">
-                                <b class="decoration-color-red mr-2 font-14">{{{SUM_OLD}}}₽</b>
+                                <b class="decoration-color-red mr-2 font-16">{{{SUM_OLD}}}₽</b>
                                 <br>
                                 <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
                             </div>
@@ -743,7 +743,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     </div>
                     {{#SHOW_SALE_PRICE}}
                         <div class="text-right font-11">
-                            <b class="decoration-color-red mr-2 font-14">{{{SUM_OLD}}}₽</b>
+                            <b class="decoration-color-red mr-2 font-16">{{{SUM_OLD}}}₽</b>
                             <br>
                             <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
                         </div>
