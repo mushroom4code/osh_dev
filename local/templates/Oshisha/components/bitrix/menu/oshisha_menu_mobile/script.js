@@ -1,16 +1,16 @@
 $(document).ready(function () {
 
-	$('.fa_icon').on('click', function () {
-		if( $(this).hasClass('fa-angle-right') )
+	$('.openMenuMobile').on('click', function () {
+		if( $(this).hasClass('closed') )
 		{
-			$(this).removeClass('fa-angle-right');
-			$(this).addClass('fa-angle-down');
+			$(this).removeClass('closed').addClass('opened');
+			$(this).find('i.fa-angle-right').removeClass('fa-angle-right').addClass('fa-angle-down');
 			$(this).closest('.li_menu_top').find('.bx-nav-list-2-lvl').show();
 		}
 		else
 		{
-			$(this).removeClass('fa-angle-down');
-			$(this).addClass('fa-angle-right');
+			$(this).removeClass('opened').addClass('closed');
+			$(this).find('i.fa-angle-down').removeClass('fa-angle-down').addClass('fa-angle-right');
 			$(this).closest('.li_menu_top').find('.bx-nav-list-2-lvl').hide();	
 		}
 		
