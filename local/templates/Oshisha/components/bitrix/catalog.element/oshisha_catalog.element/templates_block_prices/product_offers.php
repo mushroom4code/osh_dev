@@ -292,6 +292,7 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 							<div class="prices-all mb-3">
 								<?php $prod_off_id = $actualItem['ID'];
 								$prod_off_quantity = $quantity_basket_default = 0;
+
 								foreach ($arResult['OFFERS'] as $key_offer => $offer_price) { ?>
 									<?php $dNone = 'd-none';
 									$basketItem = 0;
