@@ -58,7 +58,7 @@ class EnteregoSettings
                 $bool_option_checked = true;
             }
         }
-        define("USE_CUSTOM_SALE_PRICE", $bool_option_checked);
+        define($constName, $bool_option_checked);
     }
 
 	public static function getDataPropOffers($paramForCategory = false, $idSection = false): array
