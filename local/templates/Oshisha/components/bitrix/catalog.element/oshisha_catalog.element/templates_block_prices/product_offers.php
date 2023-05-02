@@ -4,7 +4,7 @@ use Enterego\EnteregoSettings;
 
 $show = false;
 $active = -1;
-foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
+foreach ($arResult['GROUPED_PRODUCTS'] as $keys => $quantityNull) {
 	if ((int)$quantityNull['CATALOG_QUANTITY'] > 0 && $show === false) {
 		$show = true;
 	}
@@ -13,15 +13,9 @@ foreach ($arResult['OFFERS'] as $keys => $quantityNull) {
 		$arResult['OFFERS_SELECTED'] = $keys;
 	}
 }
-$boolShowTaste = (empty($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) ||
+$boolShowTaste = (empty($arResult['GROUPED_PRODUCTS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) ||
 	count($arResult['OFFERS'][0]['PROPERTIES'][PROPERTY_KEY_VKUS]['VALUE']) == 0);
 
-$propState = $arResult['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
-$propAllOff = '';
-if (!empty($propState)) {
-	$propAllOff = CIBlockProperty::GetList([],
-		['XML_ID' => $propState, 'IBLOCK_ID' => IBLOCK_CATALOG_OFFERS])->Fetch();
-}
 
 ?>
 <div class="col-md-6 col-sm-6 col-lg-6 product_left col-12">
@@ -54,8 +48,8 @@ if (!empty($propState)) {
 			<div class="product-item-detail-slider-images-container p-4" <? if ($showSliderControls) {
 				echo 'data-entity="images-container"';
 			} ?>>
-				<?php if (!empty($arResult['OFFERS'])) {
-					foreach ($arResult['OFFERS'] as $key => $photo) {
+				<?php if (!empty($arResult['GROUPED_PRODUCTS'])) {
+					foreach ($arResult['GROUPED_PRODUCTS'] as $key => $photo) {
 						$dNone = '';
 						$boolShowImage = false;
 						if ($key === $active) {
@@ -167,11 +161,6 @@ if (!empty($propState)) {
 		} ?>
 	</div>
 </div>
-<?php
-$showOffersBlock = $haveOffers && !empty($arResult['OFFERS_PROP']);
-$mainBlockProperties = array_intersect_key($arResult['DISPLAY_PROPERTIES'], $arParams['MAIN_BLOCK_PROPERTY_CODE']);
-$showPropsBlock = !empty($mainBlockProperties) || $arResult['SHOW_OFFERS_PROPS'];
-$showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 <div
 	class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column product_right not-input-parse catalog-item-product justify-content-between">
 	<h1 class="head-title"><?= $name ?></h1>
@@ -354,10 +343,9 @@ $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
 						<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto" data-entity="sku-line-block">
 							<?php
 							$propsForOffers = EnteregoSettings::getDataPropOffers();
-							$propState = $arResult['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
 
-							foreach ($arResult['OFFERS'] as $key => $offer) {
-
+							foreach ($arResult['GROUPED_PRODUCTS'] as $key => $offer) {
+								$propState = $offer['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
 								if ((int)$offer['CATALOG_QUANTITY'] > 0) {
 									$active_box = 'false';
 									$basketItem = 0;

@@ -229,8 +229,8 @@ global $option_site;
 		<?php } ?>
 		<div class="box_with_photo_product row">
 			<?php
-			if (!empty($arResult['OFFERS'])) {
-				foreach ($arResult['OFFERS'] as $offer) {
+			if (!empty($arResult['GROUPED_PRODUCTS'])) {
+				foreach ($arResult['GROUPED_PRODUCTS'] as $offer) {
 					foreach ($arResult['JS_OFFERS'] as &$jsOffers) {
 
 						if ($showSliderControls) {
