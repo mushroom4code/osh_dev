@@ -226,14 +226,14 @@ class EnteregoBasket
      * Callback method for recalculate product for basket rules
      * @param array $order
      * @param array $action
-     * @return void
-     * @throws Main\ArgumentException
+     * @param callable|null $filter Filter for basket items.
+     *@return void
      * @throws Main\LoaderException
      * @throws Main\ObjectPropertyException
      * @throws Main\SystemException
-     * @param callable $filter Filter for basket items.
+          * @throws Main\ArgumentException
      */
-    public static function SetSpecialPriceType(array &$order, array $action, $filter)
+    public static function SetSpecialPriceType(array &$order, array $action, callable $filter=null)
     {
         if (empty($action['VALUE'])){
             return;

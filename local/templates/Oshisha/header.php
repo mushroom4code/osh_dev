@@ -70,9 +70,9 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addCss("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
     Asset::getInstance()->addCss("https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css");
     Asset::getInstance()->addJs("https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js");
-    Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/script.js");
-    Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/style.css");
-    Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/assets/js/list.js");
+    Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/script.min.js");
+    Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/style.min.css");
+    Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/assets/js/list.min.js");
     Asset::getInstance()->addJs('https://use.fontawesome.com/d071b13f63.js');
     Asset::getInstance()->addJs('https://code.jquery.com/jquery-3.6.0.min.js');
     Asset::getInstance()->addJs("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.js");
@@ -101,6 +101,19 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 </div>
 <div id="bx_eshop_wrap">
     <header>
+        <?php if (CHECKED_INFO) {
+            $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
+            <div class="alert-info-setting">
+                <p class="mb-0 text-center d-lg-block d-md-block d-none">
+                    <?= !empty($Option->text_info) ?  $Option->text_info : '' ?>
+                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                       class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
+                <p class="mb-0 text-center d-lg-none d-md-none d-block">
+                    <?= !empty($Option->text_info_mobile) ?  $Option->text_info_mobile : '' ?>
+                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                       class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
+            </div>
+        <?php } ?>
         <div class="header_top_panel">
             <div class="header_logo_mobile">
                 <a href="<?= SITE_DIR ?>">

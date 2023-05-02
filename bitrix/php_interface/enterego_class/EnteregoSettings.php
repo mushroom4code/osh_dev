@@ -37,26 +37,29 @@ class EnteregoSettings
 
 	}
 
-	/** This method set sale type id for product && basket on date with checked
+	/**
+	 * @param string $constName
+	 * @param string $moduleId
 	 * @return void
 	 */
-	public static function getSalePriceOnCheckAndPeriod()
-	{
-		$check = COption::GetOptionString('activation_price_admin', 'USE_CUSTOM_SALE_PRICE');
-		$dateOption = json_decode(COption::GetOptionString('activation_price_admin', 'PERIOD'));
+	public static function getParamOnCheckAndPeriod(
+		string $constName = 'USE_CUSTOM_SALE_PRICE',
+		string $moduleId = 'activation_price_admin'
+	) {
+		$check = COption::GetOptionString($moduleId, $constName);
+		$dateOption = json_decode(COption::GetOptionString($moduleId, 'PERIOD'));
 		$bool_option_checked = false;
 
-		if (!empty($dateOption->end) && !empty($dateOption->start)) {
-			$start = strtotime(date($dateOption->start));
-			$now = strtotime(date_format(date_create('now'), 'Y-m-dTH:s'));
-			$end = strtotime(date($dateOption->end));
-			if ($check === 'true' && ($start <= $now && $end > $now)) {
-				$bool_option_checked = true;
-			}
-		}
-		define("USE_CUSTOM_SALE_PRICE", $bool_option_checked);
-	}
-
+        if (!empty($dateOption->end) && !empty($dateOption->start)) {
+            $start = strtotime(date($dateOption->start));
+            $now = strtotime(date_format(date_create('now'), 'Y-m-dTH:s'));
+            $end = strtotime(date($dateOption->end));
+            if ($check === 'true' && ($start <= $now && $end > $now)) {
+                $bool_option_checked = true;
+            }
+        }
+        define("USE_CUSTOM_SALE_PRICE", $bool_option_checked);
+    }
 
 	public static function getDataPropOffers($paramForCategory = false, $idSection = false): array
 	{

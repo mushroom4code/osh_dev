@@ -1581,20 +1581,21 @@
                 quantity = measureRatio;
             }
 
-            if( quantity > parseInt(itemData.AVAILABLE_QUANTITY) )
-            {
-                let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
-                //alert('К покупке доступно максимум '+AVAILABLE_QUANTITY+'шт.');
-                $('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('К покупке доступно максимум: '+AVAILABLE_QUANTITY+'шт.').addClass('show_block');
-
-            }
-            else
-            {
-                $('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('').removeClass('show_block');
-            }
-
-
-            if (itemData.CHECK_MAX_QUANTITY === 'Y') {
+			if( quantity > parseInt(itemData.AVAILABLE_QUANTITY) )
+			{
+				let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
+				//alert('К покупке доступно максимум '+AVAILABLE_QUANTITY+'шт.');
+					$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('К покупке доступно максимум: '+AVAILABLE_QUANTITY+'шт.' +
+                        ' <div class="close-count-alert js__close-count-alert"></div>').addClass('show_block');
+				
+			} 
+			else
+			{
+				$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('').removeClass('show_block');
+			}
+				 
+            
+			if (itemData.CHECK_MAX_QUANTITY === 'Y') {
                 availableQuantity = isQuantityFloat ? parseFloat(itemData.AVAILABLE_QUANTITY) : parseInt(itemData.AVAILABLE_QUANTITY);
                 if (availableQuantity > 0 && quantity > availableQuantity) {
                     quantity = availableQuantity;
