@@ -15,6 +15,7 @@ CModule::AddAutoloadClasses("", array(
     '\CommonPVZ\DellinPointsTable' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/DellinPointsTable.php',
     '\CommonPVZ\PEKDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/PEKDelivery.php',
     '\CommonPVZ\FivePostDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/FivePostDelivery.php',
+    '\CommonPVZ\FivePostPointsTable' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/FivePostPointsTable.php',
     '\CommonPVZ\PickPointDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/PickPointDelivery.php',
     '\CommonPVZ\PickPointPointsTable' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/PickPointPointsTable.php',
     '\Enterego\EnteregoDBDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/EnteregoDBDelivery.php',

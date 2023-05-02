@@ -4,6 +4,12 @@ $MESS['ACTIVE_DELIVERY_N'] = 'Выкл';
 $MESS['DELIVERY_SETTINGS_PVZ_ACTIVITY'] = 'Активность доставки для расчета до ПВЗ';
 $MESS['DELIVERY_SETTINGS_DOOR_ACTIVITY'] = 'Активность доставки для расчета до двери';
 
+$MESS["EE_PVZ_OPTIONS_COMMON"] = "Общие параметры";
+$MESS['Common_defaultwidth'] = "Ширина товара по умолчанию (мм)";
+$MESS['Common_defaultlength'] = "Длина товара по умолчанию (мм)";
+$MESS['Common_defaultheight'] = "Высота товара по умолчанию (мм)";
+$MESS['Common_defaultweight'] = "Вес товара по умолчанию (гр)";
+
 $MESS["EE_PVZ_OPTIONS_PP"] = "PickPoint";
 $MESS["PickPoint_host"] = "Хост";
 $MESS["PickPoint_login"] = "Логин";
@@ -12,8 +18,10 @@ $MESS["PickPoint_ikn"] = "ЛКН";
 $MESS["PickPoint_ikn"] = "ЛКН";
 
 $MESS["EE_PVZ_OPTIONS_FP"] = "FivePost";
+$MESS["FivePost_apikey"] = "Ключ api";
 $MESS["FivePost_login"] = "Логин";
 $MESS["FivePost_password"] = "Пароль";
+
 
 $MESS["EE_PVZ_OPTIONS_SDEK"] = "СДЭК";
 $MESS["SDEK_setaccount"] = "Аккаунт";

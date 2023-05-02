@@ -7,6 +7,7 @@ use Bitrix\Sale\Location\LocationTable;
 use \LapayGroup\RussianPost\Providers\OtpravkaApi;
 use \LapayGroup\RussianPost\Enum\OpsObjectType;
 use OSRM\Exception;
+use Sale\Handlers\DiscountPreset\Delivery;
 
 class RussianPostDelivery extends CommonPVZ
 {
@@ -130,41 +131,56 @@ class RussianPostDelivery extends CommonPVZ
             }
     }
 
-    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city)
+    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
     {
+        $sumDimensionsSingle = 0;
+        foreach ($sumDimensions as $dimension)
+            $sumDimensionsSingle += $dimension;
+        $pvzDimensionsHash = DeliveryHelper::makeDimensionsHash(1500, 1500, 1500);
+        $postamatDimensionsHash = DeliveryHelper::makeDimensionsHash(530, 240, 430);
+        $weightSum = 0;
+
+        foreach ($packages as $package)
+            $weightSum += ($package['weight'] ? $package['weight'] : Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultweight')) * $package['quantity'];
+
+        if ($weightSum <= 20000) {
             $arParams = ['filter' => ['BITRIX_CODE' => $code_city]];
             $res = RussianPostPointsTable::getList($arParams);
             while ($point = $res->fetch()) {
-                $features_obj['type'] = 'Feature';
-                $features_obj['id'] = $id_feature;
-                $id_feature += 1;
-                $features_obj['geometry'] = [
-                    'type' => 'Point',
-                    'coordinates' => [
-                        $point['ADDRESS_LAT'],
-                        $point['ADDRESS_LNG'],
-                    ]
-                ];
-                $features_obj['properties'] = [
-                    'code_pvz' => $point['CODE'],
-                    'type' => $point['IS_PVZ'] === 'true' ? 'PVZ' : 'POSTAMAT',
-                    'fullAddress' => $point['FULL_ADDRESS'],
-                    'phone' => $point['PHONE_NUMBER'],
-                    'workTime' => $point['WORK_TIME'],
-                    'comment' => $point['COMMENT'],
-                    'postindex' => $point['INDEX'],
-                    'deliveryName' => 'Почта России',
-                    'iconCaption' => 'Почта России',
-                    'hintContent' => $point['FULL_ADDRESS'],
-                    "openEmptyBalloon" => true,
-                    "clusterCaption" => 'Почта России',
-                ];
-                $features_obj['options'] = [
-                    'preset' => 'islands#darkBlueIcon'
-                ];
+                if (($point['IS_PVZ'] === 'true' && $sumDimensionsSingle <= 2200 && $pvzDimensionsHash >= $dimensionsHash)
+                    || ($point['IS_PVZ'] === 'false' && $postamatDimensionsHash >= $dimensionsHash)) {
+                    $features_obj['type'] = 'Feature';
+                    $features_obj['id'] = $id_feature;
+                    $id_feature += 1;
+                    $features_obj['geometry'] = [
+                        'type' => 'Point',
+                        'coordinates' => [
+                            $point['ADDRESS_LAT'],
+                            $point['ADDRESS_LNG'],
+                        ]
+                    ];
+                    $features_obj['properties'] = [
+                        'code_pvz' => $point['CODE'],
+                        'type' => $point['IS_PVZ'] === 'true' ? 'PVZ' : 'POSTAMAT',
+                        'fullAddress' => $point['FULL_ADDRESS'],
+                        'phone' => $point['PHONE_NUMBER'],
+                        'workTime' => $point['WORK_TIME'],
+                        'comment' => $point['COMMENT'],
+                        'postindex' => $point['INDEX'],
+                        'deliveryName' => 'Почта России',
+                        'iconCaption' => 'Почта России',
+                        'hintContent' => $point['FULL_ADDRESS'],
+                        "openEmptyBalloon" => true,
+                        "clusterCaption" => 'Почта России',
+                    ];
+                    $features_obj['options'] = [
+                        'preset' => 'islands#darkBlueIcon'
+                    ];
 
-                $result_array[] = $features_obj;
+                    $result_array[] = $features_obj;
+                }
             }
+        }
     }
 
         /** Return calculate price delivery
@@ -178,8 +194,8 @@ class RussianPostDelivery extends CommonPVZ
                     'weight' => intval($array['weight']),
                     'sumoc' => intval($array['cost'] . '00'),
                     'from' => $this->configs['fromzip'],
-                    'to' => $array['postindex']
-
+                    'to' => $array['postindex'],
+                    'group' => 0
                 ];
 
                 $hashed_values = array($params['weight'], $params['sumoc'], $params['from'], $params['to'], 'pickup');
@@ -200,17 +216,14 @@ class RussianPostDelivery extends CommonPVZ
                 $TariffCalculation = new \LapayGroup\RussianPost\TariffCalculation();
 
                 if ($array['type_pvz'] === 'POSTAMAT') {
-//                    $objectId = 54020;
                     $objectId = 23090;
-                    $params['group'] = 0;
                     $calcInfo = $TariffCalculation->calculate($objectId, $params);
                     $finalPrice = $calcInfo->getGroundNds();
                 } else {
-                    $objectId = 4020;
+                    $objectId = 23020;
                     $calcInfo = $TariffCalculation->calculate($objectId, $params);
                     $finalPrice = $calcInfo->getGroundNds();
                 }
-
 
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {
