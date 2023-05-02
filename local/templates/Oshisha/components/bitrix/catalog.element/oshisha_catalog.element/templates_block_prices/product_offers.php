@@ -345,7 +345,10 @@ $boolShowTaste = (empty($arResult['GROUPED_PRODUCTS'][0]['PROPERTIES'][PROPERTY_
 							$propsForOffers = EnteregoSettings::getDataPropOffers();
 
 							foreach ($arResult['GROUPED_PRODUCTS'] as $key => $offer) {
-								$propState = $offer['PROPERTIES'][OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
+								$propAllOff = $offer[OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP']['VALUE'];
+								if(empty($propAllOff)){
+									continue;
+								}
 								if ((int)$offer['CATALOG_QUANTITY'] > 0) {
 									$active_box = 'false';
 									$basketItem = 0;

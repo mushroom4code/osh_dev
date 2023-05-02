@@ -57,7 +57,7 @@ if (!empty($listGroupedProduct)) {
 
 		$propList = CIBlockElement::GetProperty(IBLOCK_CATALOG, $elemProp, [], ['EMPTY' => 'N', 'ACTIVE' => "Y"]);
 		while ($props = $propList->Fetch()) {
-			$elem = $arResult['GROUPED_PRODUCTS'][$elemProp];
+			$elem = &$arResult['GROUPED_PRODUCTS'][$elemProp];
 			$propOsnId = $elem['PROPERTY_OSNOVNOE_SVOYSTVO_TP_VALUE'];
 			$elem['PROPERTIES'][$props['CODE']] = $props;
 			if (!empty($propOsnId) && $props['XML_ID'] === $propOsnId) {
