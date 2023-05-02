@@ -67,7 +67,7 @@ if (!empty($productId)){
     }
 }
 
-print_r(empty($result) ? '' : json_encode($result));
+print_r(empty($result) ? json_encode(['id'=>0, 'name'=>'', 'price'=>0]) : json_encode($result));
 exit();
 
 /**
