@@ -248,6 +248,7 @@ h4.checkout-block-title > i.fa {
     border: 0.05em solid #c9c9c9;
     padding: 0.5em;
     cursor: pointer;
+    width: 10em;
 }
 .wrap_sort_service .sort_service_select .active_sort_service::after {
     display: block;
@@ -314,4 +315,19 @@ h4.checkout-block-title > i.fa {
 .wrap_filter_block .options-row .option-label input[type="checkbox"],
 .wrap_filter_block .options-row .option-label input[type="radio"] {
     margin-right: 1em;
+}
+
+
+
+.show-map-btn {
+    margin: 3em 0;
+    padding: 1em 2em;
+    color: #fff;
+    background-color: #F55F5C;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.23s linear;
+}
+.show-map-btn:hover {
+    background-color: #DD0602;
 }

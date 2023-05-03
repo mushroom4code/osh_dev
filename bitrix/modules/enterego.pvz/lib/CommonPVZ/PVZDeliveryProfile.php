@@ -129,7 +129,7 @@ class PVZDeliveryProfile extends Base
             }
         }
 
-        $result->setDescription(DeliveryHelper::getButton());
+//        $result->setDescription(DeliveryHelper::getButton());
         $result->setDeliveryPrice(
             roundEx(
                 $price,
