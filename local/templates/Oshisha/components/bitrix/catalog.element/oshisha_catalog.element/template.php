@@ -2,16 +2,14 @@
 	die();
 }
 
-use Bitrix\Catalog\PriceTable;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
+use Enterego\EnteregoSettings;
 use Bitrix\Main\Web\Json;
 use Bitrix\Sale\Fuser;
-use DataBase_like;
 
 CModule::IncludeModule("highloadblock");
 
-use Bitrix\Highloadblock as HL;
 use Enterego\EnteregoHelper;
 
 /**
@@ -28,6 +26,7 @@ use Enterego\EnteregoHelper;
 $this->setFrameMode(true);
 
 global $SETTINGS;
+global $option_site;
 $arIskCode = explode(",", $SETTINGS['arIskCode']);
 $templateLibrary = array('popup', 'fx');
 $currencyList = '';
@@ -143,29 +142,6 @@ $arParams['MESS_SHOW_MAX_QUANTITY'] = $arParams['MESS_SHOW_MAX_QUANTITY'] ?: Loc
 $arParams['MESS_RELATIVE_QUANTITY_MANY'] = $arParams['MESS_RELATIVE_QUANTITY_MANY'] ?: Loc::getMessage('CT_BCE_CATALOG_RELATIVE_QUANTITY_MANY');
 $arParams['MESS_RELATIVE_QUANTITY_FEW'] = $arParams['MESS_RELATIVE_QUANTITY_FEW'] ?: Loc::getMessage('CT_BCE_CATALOG_RELATIVE_QUANTITY_FEW');
 
-$positionClassMap = array(
-	'left' => 'product-item-label-left',
-	'center' => 'product-item-label-center',
-	'right' => 'product-item-label-right',
-	'bottom' => 'product-item-label-bottom',
-	'middle' => 'product-item-label-middle',
-	'top' => 'product-item-label-top'
-);
-
-$discountPositionClass = 'product-item-label-big';
-if ($arParams['SHOW_DISCOUNT_PERCENT'] === 'Y' && !empty($arParams['DISCOUNT_PERCENT_POSITION'])) {
-	foreach (explode('-', $arParams['DISCOUNT_PERCENT_POSITION']) as $pos) {
-		$discountPositionClass .= isset($positionClassMap[$pos]) ? ' ' . $positionClassMap[$pos] : '';
-	}
-}
-
-$labelPositionClass = 'product-item-label-big';
-if (!empty($arParams['LABEL_PROP_POSITION'])) {
-	foreach (explode('-', $arParams['LABEL_PROP_POSITION']) as $pos) {
-		$labelPositionClass .= isset($positionClassMap[$pos]) ? ' ' . $positionClassMap[$pos] : '';
-	}
-}
-
 $item_id = [];
 $FUser_id = '';
 $id_USER = $USER->GetID();
@@ -183,7 +159,7 @@ $arResult['COUNT_FAV'] = $count_likes['USER'][$arResult['ID']]['Fav'][0];
 $taste = $arResult['PROPERTIES'][PROPERTY_KEY_VKUS];
 $themeClass = isset($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_THEME'] : '';
 
-$priceBasket = 0;
+$priceBasket = $priceCalculate = 0;
 
 if (!empty($arParams['BASKET_ITEMS'][$arResult["ID"]])) {
 	$priceBasket = $arParams['BASKET_ITEMS'][$arResult["ID"]];
@@ -201,11 +177,12 @@ if (!empty($actualItem['MORE_PHOTO'])) {
 		}
 	}
 }
+
 $show_price = true;
 if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
 	$show_price = false;
 }
-global $option_site;
+
 ?>
 	<div class="bx-catalog-element  cat-det <?php if (!$show_price) { ?>blur_photo<?php } ?>"
 	     id="<?= $itemIds['ID'] ?>">
@@ -228,26 +205,361 @@ global $option_site;
 			<p class="font-14  mb-lg-4  mb-md-4 mb-2"><?= $option_site->text_rospetrebnadzor_product; ?></p>
 		<?php } ?>
 		<div class="box_with_photo_product row">
-			<?php
-			if (!empty($arResult['GROUPED_PRODUCTS'])) {
-				foreach ($arResult['GROUPED_PRODUCTS'] as $offer) {
-					foreach ($arResult['JS_OFFERS'] as &$jsOffers) {
-
-						if ($showSliderControls) {
-							if ($jsOffers['ID'] === $offer['ID']) {
-								$jsOffers['SLIDER'][] = $offer['DETAIL_PICTURE'];
-							}
-							$jsOffers['SLIDER_COUNT'] = $jsOffers['SLIDER_COUNT'] + 1;
+			<?php $count = count($actualItem['PICTURE']);
+			$arraySlider = $actualItem['PICTURE'];
+			require_once(__DIR__ . '/slider/template.php'); ?>
+			<div
+				class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product
+				not-input-parse product_right justify-content-between">
+				<h1 class="head-title"><?= $name ?></h1>
+				<?php if ($isGift) { ?>
+					<div>
+						<h4 class="bx-title">Данная продукция не продается отдельно</h4>
+					</div>
+					<?php
+				} else { ?>
+					<div class="d-flex flex-lg-column flex-md-column flex-column-reverse">
+					<?php
+					$height = 10;
+					$strong = 0;
+					if (isset($arResult['PROPERTIES'][PROP_STRONG_CODE]) && !empty($arResult['PROPERTIES'][PROP_STRONG_CODE]['VALUE'])) {
+						switch ($arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE_SORT']) {
+							case "1":
+								$strong = 0.5;
+								$color = "#07AB66";
+								break;
+							case "2":
+								$strong = 1.5;
+								$color = "#FFC700";
+								break;
+							case "3":
+								$strong = 2.5;
+								$color = "#FF7A00";
+								break;
+						} ?>
+						<div style="color: <?= $color ?>" class="column mt-1 mb-4">
+							<p class="condensation_text">
+								Крепость: <?= $arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE'] ?> </p>
+							<div class="d-flex flex-row">
+								<?php for ($i = 0; $i < 3; $i++) { ?>
+									<div
+										style="border-color: <?= $color ?>; <?= ($strong - $i) >= 1 ? "background-color: $color" : ''; ?>"
+										class="condensation">
+										<?php if ($strong - $i == 0.5) { ?>
+										<svg style="position: absolute; left: -5px; top: -1px" width="42"
+										     height="<?= $height ?>" xmlns="http://www.w3.org/2000/svg">
+											<path d="
+                                                        M 20 <?= $height ?>
+                                                        L 10 <?= $height ?>
+                                                        Q 0 <?= $height / 2 ?> 10 0
+                                                        L 30 0" stroke="<?= $color ?>" fill="<?= $color ?>"
+											/>
+											<?php } ?>
+									</div>
+									<?php
+								}
+								?>
+							</div>
+						</div>
+					<?php }
+					foreach ($arParams['PRODUCT_PAY_BLOCK_ORDER'] as $blockName) {
+						switch ($blockName) {
+							case 'price':
+								if ($show_price) {
+									if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
+										$useDiscount['VALUE_XML_ID'] === 'true' && !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
+										$price_new = $price['SALE_PRICE']['PRINT_PRICE'];
+										$priceCalculate = $price['SALE_PRICE']['PRICE'];
+										$price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
+									} else {
+										$price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
+										$price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
+										$priceCalculate = $price['PRICE_DATA'][1]['PRICE'];
+									}
+									$styles = ''; ?>
+									<div class="mb-4 d-flex flex-column">
+										<div class="mb-3 d-flex flex-row align-items-center">
+											<div class="product-item-detail-price-current"
+											     id="<?= $itemIds['PRICE_ID'] ?>"><?= $price_new ?>
+											</div>
+											<?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRINT_PRICE']) ||
+												$useDiscount['VALUE_XML_ID'] === 'true' &&
+												!empty($price['SALE_PRICE']['PRINT_PRICE'])) {
+												$styles = 'price-discount';
+												$old_sum = (int)$price['PRICE_DATA'][0]['PRICE'] - (int)$price['SALE_PRICE']['PRICE'] ?? 0; ?>
+												<span class="font-14 ml-3">
+                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
+                                            <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
+                                        </span>
+											<?php } ?>
+										</div>
+										<div class="d-flex flex-column prices-block">
+											<?php foreach ($price['PRICE_DATA'] as $items) { ?>
+												<p>
+													<span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
+													<span
+														class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
+												</p>
+											<?php } ?>
+										</div>
+									</div>
+									</div>
+									<?php
+								}
+								break;
+							case 'quantityLimit':
+								if ($show_price) {
+									$arParams['SHOW_MAX_QUANTITY'] = 'N';
+									if ($arParams['SHOW_MAX_QUANTITY'] !== 'N') {
+										if ($haveOffers) { ?>
+											<div class="mb-3" id="<?= $itemIds['QUANTITY_LIMIT'] ?>"
+											     style="display: none;">
+												<span class="product-item-quantity" data-entity="quantity-limit-value">
+												</span>
+											</div>
+										<?php } else {
+											if ($measureRatio && (float)$actualItem['PRODUCT']['QUANTITY'] > 0
+												&& $actualItem['CHECK_QUANTITY']) { ?>
+												<div class="mb-3 text-center"
+												     id="<?= $itemIds['QUANTITY_LIMIT'] ?>">
+													<span class="product-item-detail-info-container-title">
+														<?= $arParams['MESS_SHOW_MAX_QUANTITY'] ?>:
+													</span>
+													<span class="product-item-quantity"
+													      data-entity="quantity-limit-value">
+	                                                        <?php if ($arParams['SHOW_MAX_QUANTITY'] === 'M') {
+		                                                        if ((float)$actualItem['PRODUCT']['QUANTITY'] / $measureRatio >= $arParams['RELATIVE_QUANTITY_FACTOR']) {
+			                                                        echo $arParams['MESS_RELATIVE_QUANTITY_MANY'];
+		                                                        } else {
+			                                                        echo $arParams['MESS_RELATIVE_QUANTITY_FEW'];
+		                                                        }
+	                                                        } else {
+		                                                        echo $actualItem['PRODUCT']['QUANTITY'] . ' ' . $actualItem['ITEM_MEASURE']['TITLE'];
+	                                                        } ?>
+													</span>
+												</div>
+												<?php
+											}
+										}
+									}
+								}
+								break;
+							case 'quantity':
+								if ($show_price) {
+									if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?>
+										<div
+											class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
+											<?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
+											data-entity="quantity-block">
+											<div class="product-item-amount-field-contain mr-3">
+                                                <span
+	                                                class="btn-minus no-select minus_icon add2basket basket_prod_detail"
+	                                                data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+	                                                data-product_id="<?= $arResult['ID']; ?>"
+	                                                id="<?= $itemIds['QUANTITY_DOWN_ID'] ?>"
+	                                                data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>">
+                                                </span>
+												<div class="product-item-amount-field-block">
+													<input class="product-item-amount card_element cat-det"
+													       id="<?= $itemIds['QUANTITY_ID'] ?>"
+													       type="number" value="<?= $priceBasket ?>"
+													       data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+													       data-product_id="<?= $arResult['ID']; ?>"
+													       data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
+												</div>
+												<span class="btn-plus no-select plus_icon add2basket basket_prod_detail"
+												      data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+												      data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
+												      data-product_id="<?= $arResult['ID']; ?>"
+												      id="<?= $itemIds['QUANTITY_UP_ID'] ?>"></span>
+											</div>
+											<a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
+											   rel="nofollow"
+											   class="add2basket basket_prod_detail btn red_button_cart"
+											   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+											   data-product_id="<?= $arResult['ID']; ?>"
+											   title="Добавить в корзину">
+												<img class="image-cart"
+												     src="/local/templates/Oshisha/images/cart-white.png"/>
+											</a>
+											<div id="result_box"></div>
+											<div id="popup_mess"></div>
+										</div>
+										<div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
+										<div class="d-flex flex-lg-column flex-md-column flex-column-reverse">
+									<?php } else { ?>
+										<div
+											class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center bx_catalog_item"
+											<?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
+											data-entity="quantity-block">
+											<div class="d-flex flex-row align-items-center mr-3">
+												<div class="product-item-amount-field-contain">
+                                                    <span
+	                                                    class=" no-select minus_icon add2basket basket_prod_detail mr-3"
+	                                                    style="pointer-events: none;">
+                                                    </span>
+													<div class="product-item-amount-field-block">
+														<input class="product-item-amount"
+														       id="<?= $itemIds['QUANTITY_ID'] ?>"
+														       disabled="disabled" type="number" value="0">
+													</div>
+													<span class="no-select plus_icon add2basket basket_prod_detail ml-3"
+													      style="pointer-events: none;"></span>
+												</div>
+												<a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
+												   rel="nofollow"
+												   class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                                   <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>
+                                                   detail_disabled"
+												   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+												   data-product_id="<?= $arResult['ID']; ?>"
+												   title="Добавить в корзину">Забронировать</a>
+											</div>
+											<div id="result_box" style="width: 100%;position: absolute;"></div>
+											<div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                        <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
+												<i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : '' ?>"
+												   aria-hidden="true"></i>
+											</div>
+											<div id="popup_mess"
+											     class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
+											     data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
+											     data-product_id="<?= $arResult['ID']; ?>"></div>
+										</div>
+										<div class="mb-4 d-flex justify-content-between align-items-center">
+											<div
+												class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
+												Нет в наличии
+											</div>
+										</div>
+										<?php
+									}
+								}
+								break;
 						}
-					}
-				}
-				require_once(__DIR__ . '/templates_block_prices/product_offers.php');
-			} else {
-				$count = count($actualItem['PICTURE']);
-				$arraySlider = $actualItem['PICTURE'];
-				require_once(__DIR__ . '/templates_block_prices/product.php');
-			}
-			?>
+					} ?>
+					<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto" data-entity="sku-line-block">
+						<?php
+						if (!empty($arResult['GROUPED_PRODUCTS'])) {
+							$propsForOffers = EnteregoSettings::getDataPropOffers();
+
+							foreach ($arResult['GROUPED_PRODUCTS'] as $key => $offer) {
+								$propAllOff = $offer[OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP'] ?? [];
+								if (empty($propAllOff)) {
+									continue;
+								}
+
+								if ((int)$offer['CATALOG_QUANTITY'] > 0) {
+									$active_box = 'false';
+									$selected = '';
+									$prop_value = 'Пустое значение';
+									$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
+									$taste = [];
+//									TODO - залочка на множ свой-во для показа
+
+									foreach ($propAllOff as $prop) {
+										if (isset($prop)) {
+											$code = $prop['CODE'];
+										}
+
+										if ($arResult['ID'] === $key) {
+											$active_box = 'true';
+											$selected = 'selected';
+										}
+
+										if (!empty($prop['VALUE'])) {
+											$prop_value = $prop['VALUE'] . $propsForOffers[$code]['PREF'];
+											if ($prop['PROPERTY_TYPE'] == 'L') {
+												$prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$code]['PREF'];
+											}
+
+											$type = $propsForOffers[$code]['TYPE'] ?? 'text';
+
+											if ($type === 'colorWithText') {
+												foreach ($prop['VALUES'] as $keys => $listProp) {
+													$taste[$keys] = [
+														'color' => '#' . explode('#', $listProp['VALUE_XML_ID'])[1],
+														'name' => $prop['VALUES'][$keys]['VALUE_ENUM']
+													];
+												}
+											}
+										}
+
+										if (!empty($prop_value)) {
+											if ($type === 'text') { ?>
+												<a href="/catalog/product/<?= $offer['CODE'] ?>/">
+													<div
+														class="red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer <?= $selected ?>"
+														title="<?= $offer['NAME'] ?>"
+														data-active="<?= $active_box ?>"
+														data-product_id="<?= $offer['ID'] ?>"
+														data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'] ?>"
+														data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
+														<?= $prop_value ?? '0' ?>
+													</div>
+												</a>
+											<?php } elseif ($type === 'color') {
+												$file = CFile::GetPath($offer['PREVIEW_PICTURE']);
+												?>
+												<a href="/catalog/product/<?= $offer['CODE'] ?>/">
+													<div title="<?= $offer['NAME'] ?>"
+													     data-active="<?= $active_box ?>"
+													     data-product_id="<?= $offer['ID'] ?>"
+													     data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'] ?>"
+													     data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
+													     class="mr-1 offer-box color-hookah br-10 mb-1  <?= $selected ?>">
+														<img src="<?= $file ?>"
+														     class="br-10"
+														     width="50"
+														     height="50"
+														     alt="<?= $offer['NAME'] ?>"
+														     loading="lazy"/>
+													</div>
+												</a>
+											<?php } elseif ($type === 'colorWithText') {
+												if (!empty($taste)) { ?>
+													<a href="/catalog/product/<?= $offer['CODE'] ?>/">
+														<div
+															class="red_button_cart p-1 taste variation_taste font-14
+														 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
+                                                         <?= $selected ?>"
+															title="<?= $offer['NAME'] ?>"
+															data-active="<?= $active_box ?>"
+															data-product_id="<?= $offer['ID'] ?>">
+															<?php foreach ($taste as $elem_taste) { ?>
+																<span class="taste mb-0"
+																      data-background="<?= $elem_taste['color'] ?>"
+																      style="background-color: <?= $elem_taste['color'] ?>;
+																	      border-color: <?= $elem_taste['color'] ?>;
+																	      font-size: 13px;">
+																	<?= $elem_taste['name'] ?>
+															</span>
+															<?php } ?>
+														</div>
+													</a>
+												<?php }
+											}
+										}
+									}
+								}
+							}
+						} ?>
+					</div>
+					<div class="new_box d-flex flex-row align-items-center mb-lg-0 mb-md-0 mb-5">
+						<span></span>
+						<p>Наличие товара, варианты и стоимость доставки будут указаны далее при оформлении заказа. </p>
+					</div>
+					<?php if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?></div><?php } ?>
+					<div class="ganerate_price_wrap ml-auto mt-3 mb-0 w-75 font-weight-bold h5"
+					     <? if ($priceBasket > 0): ?><? else: ?>style="display:none;"<? endif; ?>>
+						Итого:
+						<div class="inline-block float-right ganerate_price">
+							<?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
+						</div>
+					</div>
+				<?php } ?>
+			</div>
 		</div>
 		<?php if ($haveOffers) {
 			if ($arResult['OFFER_GROUP']) { ?>
@@ -484,14 +796,14 @@ global $option_site;
 						),
 						'DEFERRED_PAGE_ELEMENT_COUNT' => $arParams['GIFTS_DETAIL_PAGE_ELEMENT_COUNT'],
 
-                        'SHOW_DISCOUNT_PERCENT' => $arParams['GIFTS_SHOW_DISCOUNT_PERCENT'],
-                        'DISCOUNT_PERCENT_POSITION' => $arParams['DISCOUNT_PERCENT_POSITION'],
-                        'SHOW_OLD_PRICE' => $arParams['GIFTS_SHOW_OLD_PRICE'],
-                        'PRODUCT_DISPLAY_MODE' => 'Y',
-                        'PRODUCT_BLOCKS_ORDER' => $arParams['GIFTS_PRODUCT_BLOCKS_ORDER'],
-                        'SHOW_SLIDER' => $arParams['GIFTS_SHOW_SLIDER'],
-                        'SLIDER_INTERVAL' => isset($arParams['GIFTS_SLIDER_INTERVAL']) ? $arParams['GIFTS_SLIDER_INTERVAL'] : '',
-                        'SLIDER_PROGRESS' => isset($arParams['GIFTS_SLIDER_PROGRESS']) ? $arParams['GIFTS_SLIDER_PROGRESS'] : '',
+						'SHOW_DISCOUNT_PERCENT' => $arParams['GIFTS_SHOW_DISCOUNT_PERCENT'],
+						'DISCOUNT_PERCENT_POSITION' => $arParams['DISCOUNT_PERCENT_POSITION'],
+						'SHOW_OLD_PRICE' => $arParams['GIFTS_SHOW_OLD_PRICE'],
+						'PRODUCT_DISPLAY_MODE' => 'Y',
+						'PRODUCT_BLOCKS_ORDER' => $arParams['GIFTS_PRODUCT_BLOCKS_ORDER'],
+						'SHOW_SLIDER' => $arParams['GIFTS_SHOW_SLIDER'],
+						'SLIDER_INTERVAL' => isset($arParams['GIFTS_SLIDER_INTERVAL']) ? $arParams['GIFTS_SLIDER_INTERVAL'] : '',
+						'SLIDER_PROGRESS' => isset($arParams['GIFTS_SLIDER_PROGRESS']) ? $arParams['GIFTS_SLIDER_PROGRESS'] : '',
 
 						'TEXT_LABEL_GIFT' => $arParams['GIFTS_DETAIL_TEXT_LABEL_GIFT'],
 
@@ -914,26 +1226,31 @@ if ($arParams['DISPLAY_COMPARE']) {
 	</div>
 	<script>
         BX.message({
-            ECONOMY_INFO_MESSAGE: '<?=GetMessageJS('CT_BCE_CATALOG_ECONOMY_INFO2')?>',
-            TITLE_ERROR: '<?=GetMessageJS('CT_BCE_CATALOG_TITLE_ERROR')?>',
-            TITLE_BASKET_PROPS: '<?=GetMessageJS('CT_BCE_CATALOG_TITLE_BASKET_PROPS')?>',
-            BASKET_UNKNOWN_ERROR: '<?=GetMessageJS('CT_BCE_CATALOG_BASKET_UNKNOWN_ERROR')?>',
-            BTN_SEND_PROPS: '<?=GetMessageJS('CT_BCE_CATALOG_BTN_SEND_PROPS')?>',
-            BTN_MESSAGE_BASKET_REDIRECT: '<?=GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_BASKET_REDIRECT')?>',
-            BTN_MESSAGE_CLOSE: '<?=GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_CLOSE')?>',
-            BTN_MESSAGE_CLOSE_POPUP: '<?=GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_CLOSE_POPUP')?>',
-            TITLE_SUCCESSFUL: '<?=GetMessageJS('CT_BCE_CATALOG_ADD_TO_BASKET_OK')?>',
-            COMPARE_MESSAGE_OK: '<?=GetMessageJS('CT_BCE_CATALOG_MESS_COMPARE_OK')?>',
-            COMPARE_UNKNOWN_ERROR: '<?=GetMessageJS('CT_BCE_CATALOG_MESS_COMPARE_UNKNOWN_ERROR')?>',
-            COMPARE_TITLE: '<?=GetMessageJS('CT_BCE_CATALOG_MESS_COMPARE_TITLE')?>',
-            BTN_MESSAGE_COMPARE_REDIRECT: '<?=GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_COMPARE_REDIRECT')?>',
-            PRODUCT_GIFT_LABEL: '<?=GetMessageJS('CT_BCE_CATALOG_PRODUCT_GIFT_LABEL')?>',
-            PRICE_TOTAL_PREFIX: '<?=GetMessageJS('CT_BCE_CATALOG_MESS_PRICE_TOTAL_PREFIX')?>',
-            RELATIVE_QUANTITY_MANY: '<?=CUtil::JSEscape($arParams['MESS_RELATIVE_QUANTITY_MANY'])?>',
-            RELATIVE_QUANTITY_FEW: '<?=CUtil::JSEscape($arParams['MESS_RELATIVE_QUANTITY_FEW'])?>',
-            SITE_ID: '<?=CUtil::JSEscape($component->getSiteId())?>'
+            ECONOMY_INFO_MESSAGE: '<?= GetMessageJS('CT_BCE_CATALOG_ECONOMY_INFO2') ?>',
+            TITLE_ERROR: '<?= GetMessageJS('CT_BCE_CATALOG_TITLE_ERROR') ?>',
+            TITLE_BASKET_PROPS: '<?= GetMessageJS('CT_BCE_CATALOG_TITLE_BASKET_PROPS') ?>',
+            BASKET_UNKNOWN_ERROR: '<?= GetMessageJS('CT_BCE_CATALOG_BASKET_UNKNOWN_ERROR') ?>',
+            BTN_SEND_PROPS: '<?= GetMessageJS('CT_BCE_CATALOG_BTN_SEND_PROPS') ?>',
+            BTN_MESSAGE_BASKET_REDIRECT: '<?= GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_BASKET_REDIRECT') ?>',
+            BTN_MESSAGE_CLOSE: '<?= GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_CLOSE') ?>',
+            BTN_MESSAGE_CLOSE_POPUP: '<?= GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_CLOSE_POPUP') ?>',
+            TITLE_SUCCESSFUL: '<?= GetMessageJS('CT_BCE_CATALOG_ADD_TO_BASKET_OK') ?>',
+            COMPARE_MESSAGE_OK: '<?= GetMessageJS('CT_BCE_CATALOG_MESS_COMPARE_OK') ?>',
+            COMPARE_UNKNOWN_ERROR: '<?= GetMessageJS('CT_BCE_CATALOG_MESS_COMPARE_UNKNOWN_ERROR') ?>',
+            COMPARE_TITLE: '<?= GetMessageJS('CT_BCE_CATALOG_MESS_COMPARE_TITLE') ?>',
+            BTN_MESSAGE_COMPARE_REDIRECT: '<?= GetMessageJS('CT_BCE_CATALOG_BTN_MESSAGE_COMPARE_REDIRECT') ?>',
+            PRODUCT_GIFT_LABEL: '<?= GetMessageJS('CT_BCE_CATALOG_PRODUCT_GIFT_LABEL') ?>',
+            PRICE_TOTAL_PREFIX: '<?= GetMessageJS('CT_BCE_CATALOG_MESS_PRICE_TOTAL_PREFIX') ?>',
+            RELATIVE_QUANTITY_MANY: '<?= CUtil::JSEscape($arParams['MESS_RELATIVE_QUANTITY_MANY']) ?>',
+            RELATIVE_QUANTITY_FEW: '<?= CUtil::JSEscape($arParams['MESS_RELATIVE_QUANTITY_FEW']) ?>',
+            SITE_ID: '<?= CUtil::JSEscape($component->getSiteId()) ?>'
         });
 
-        let <?=$obName?> = new JCCatalogElement(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
+        let <?= $obName ?> = new JCCatalogElement(<?= CUtil::PhpToJSObject($jsParams, false, true) ?>);
+
+
+
+
+
 	</script>
 <?php unset($actualItem, $itemIds, $jsParams);

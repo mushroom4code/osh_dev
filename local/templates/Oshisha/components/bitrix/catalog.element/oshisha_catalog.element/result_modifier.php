@@ -22,7 +22,6 @@ while ($subscribe = $queryObject->fetch()) {
 }
 
 $is_key_found = (isset($arResult['ITEM_SUBSCRIPTION']) && ($arResult['ITEM_SUBSCRIPTION'] !== false)) ? true : false;
-
 $arResult["IS_SUBSCRIPTION_KEY_FOUND"] = $is_key_found;
 
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP start */
@@ -36,48 +35,54 @@ if (!empty($listGroupedProduct)) {
 				"ID",
 				"ACTIVE",
 				"NAME",
-				"IBLOCK_SECTION_ID",
-				"XML_ID",
 				"PREVIEW_PICTURE",
-				"DETAIL_PICTURE",
-				"IBLOCK_ID",
-				"SECTION_ID",
-				"SECTION_CODE",
 				"CATALOG_QUANTITY",
-				"CATALOG_AVAILABLE",
-				"PROPERTY_" . OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP',
-				"PROPERTY_USE_DISCOUNT",
 				"DETAIL_PAGE_URL",
-				"CATALOG_PRICE_" . RETAIL_PRICE,
-				"CATALOG_PRICE_" . BASIC_PRICE,
-				"CATALOG_PRICE_" . B2B_PRICE,
-				"CATALOG_PRICE_" . SALE_PRICE_TYPE_ID
 
 			])->Fetch();
 
 		$propList = CIBlockElement::GetProperty(IBLOCK_CATALOG, $elemProp, [], ['EMPTY' => 'N', 'ACTIVE' => "Y"]);
-		while ($props = $propList->Fetch()) {
+		while ($props = $propList->GetNext()) {
 			$elem = &$arResult['GROUPED_PRODUCTS'][$elemProp];
-			$propOsnId = $elem['PROPERTY_OSNOVNOE_SVOYSTVO_TP_VALUE'];
-			$elem['PROPERTIES'][$props['CODE']] = $props;
-			if (!empty($propOsnId) && $props['XML_ID'] === $propOsnId) {
-				$elem['OSNOVNOE_SVOYSTVO_TP'] = $props;
+
+			if ($props['PROPERTY_TYPE'] === 'L') {
+				if (empty($elem['PROPERTIES'][$props['CODE']])) {
+					$elem['PROPERTIES'][$props['CODE']] = $props;
+				}
+				$elem['PROPERTIES'][$props['CODE']]['VALUES'][$props['PROPERTY_VALUE_ID']]['VALUE_ENUM'] = $props['VALUE_ENUM'] ?? $props['VALUE'];
+				$elem['PROPERTIES'][$props['CODE']]['VALUES'][$props['PROPERTY_VALUE_ID']]['VALUE_XML_ID'] = $props['VALUE_XML_ID'];
+			} else {
+				$elem['PROPERTIES'][$props['CODE']] = $props;
 			}
 		}
 
+		foreach ($arResult['GROUPED_PRODUCTS'][$elemProp]['PROPERTIES'] as $prop) {
+			$propOsnId = $arResult['GROUPED_PRODUCTS'][$elemProp]['PROPERTIES']['OSNOVNOE_SVOYSTVO_TP']['VALUES'];
+			foreach($propOsnId as $prop_val){
+				if ($prop['XML_ID'] === $prop_val['VALUE_ENUM']) {
+
+					if ($prop['PROPERTY_TYPE'] === 'L') {
+						if (empty($elem['OSNOVNOE_SVOYSTVO_TP'][$prop['ID']])) {
+							$elem['OSNOVNOE_SVOYSTVO_TP'][$prop['ID']] = $prop;
+						}
+						$elem['OSNOVNOE_SVOYSTVO_TP'][$prop['ID']]['VALUES'][$prop['PROPERTY_VALUE_ID']]['VALUE_ENUM'] = $prop['VALUE_ENUM'];
+						$elem['OSNOVNOE_SVOYSTVO_TP'][$prop['ID']]['VALUES'][$prop['PROPERTY_VALUE_ID']]['VALUE_XML_ID'] = $prop['VALUE_XML_ID'];
+					} else {
+						$elem['OSNOVNOE_SVOYSTVO_TP'][$prop['ID']] = $prop;
+					}
+
+				}
+			}
+
+		}
 	}
 }
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP end */
-$useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
-$arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($arResult['ITEM_ALL_PRICES'][0],
-	$useDiscount);
-if (!empty($arResult['OFFERS'])) {
-	foreach ($arResult['OFFERS'] as &$offer) {
-		$useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
-		$offer['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($offer['ITEM_ALL_PRICES'][0],
-			$useDiscount);
-	}
-}
+
+$arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate(
+	$arResult['ITEM_ALL_PRICES'][0],
+	$arResult['PROPERTIES']['USE_DISCOUNT']
+);
 
 $component = $this->getComponent();
 $arParams = $component->applyTemplateModifications();

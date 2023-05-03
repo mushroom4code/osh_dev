@@ -1090,7 +1090,11 @@ div.slick-track {
 }
 
 .offer-box.red_button_cart {
-    padding: 3px 8px;
+    text-align: center;
+    min-width: 80px;
+    font-weight: 600!important;
+    border-radius: 10px;
+    padding: 5px 7px;
 }
 
 .box-offers-auto {
