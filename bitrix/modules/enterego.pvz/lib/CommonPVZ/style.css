@@ -21,14 +21,19 @@
     width: 100%;
 }
 
-#map_for_delivery {
+.map_for_delivery {
     width: 100%;
     /*height: 600px;*/
     height: 100%;
-    padding-top: 7em;
+    padding-top: 8em;
     margin-top: -7em;
+    padding-bottom: 1em;
 }
-
+.map_for_delivery .pickpoints-list {
+    height: 100%;
+    overflow-y: scroll;
+    padding: 0 2em;
+}
 .btn_pvz {
     display: block;
     margin-top: 8px;
@@ -162,7 +167,7 @@ h4.checkout-block-title > i.fa {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 100500;
+    z-index: 1015;
     transition: all 0.3s linear;
 }
 .wrap_pvz_overlay .wrap_pvz_map {

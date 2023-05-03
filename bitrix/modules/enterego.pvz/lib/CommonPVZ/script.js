@@ -507,22 +507,9 @@ BX.SaleCommonPVZ = {
             onsuccess: function (res) {
                 __this.pvzObj = JSON.parse(res) || [];
 
-                console.log(pvzView)
-
                 if (pvzView == 'list') {
-                    __this.clearPvzMap()
-
-                    for (let i = 0; i < 25; i++) {
-                        BX.append(
-                            BX.create({
-                                tag: 'div',
-                                text: __this.pvzObj.features[i].properties.deliveryName
-                                    + ' / адрес: '
-                                    + __this.pvzObj.features[i].properties.fullAddress
-                            }),
-                            BX('map_for_delivery')
-                        )
-                    }
+                    __this.buildPvzList(__this.pvzObj);
+                    BX.Sale.OrderAjaxComponent.endLoader();
                 } else {
                     __this.setPVZOnMap();
                 }
@@ -572,9 +559,10 @@ BX.SaleCommonPVZ = {
             return;
 
         __this.closePvzPopup();
+        this.selectedPvzObjId = objectId
         const point = this.objectManager.objects.getById(objectId);
 
-        console.log(point.properties)
+        console.log(point)
         const pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
         const pvzFullAddress = pvzAddress +
             (typeof point.properties.code_pvz !== 'undefined' ? ' #' + point.properties.code_pvz : '');
@@ -595,9 +583,16 @@ BX.SaleCommonPVZ = {
         }
 
         BX('selected-delivery-type').innerHTML = (point.properties.type == 'PVZ' ? 'ПВЗ ' : 'Постамат ') + point.properties.deliveryName
-        BX('pvz_address').innerHTML = pvzAddress
+
+        if (pvzAddress) {
+            BX('pvz_address').innerHTML = pvzAddress
+        }
         // BX('selected-delivery-date').innerHTML = 1
         BX('delivery-choose').innerHTML = 'Выбрать другой адрес и способ доставки'
+
+        // Подстановка значений в поля
+        // BX('soa-property-26').value =
+        BX('soa-property-76').value = point.properties.code_pvz;
 
         const dataToHandler = this.getPointData(point);
         __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
@@ -649,7 +644,8 @@ BX.SaleCommonPVZ = {
                             `<a class="btn btn_basket mt-2" href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${item.id})" >Выбрать</a>`
                         )
 
-                        BX('selected-delivery-price').innerHTML = item.price + ' руб.'
+
+                        BX('selected-delivery-price').innerHTML = item.price ? item.price + ' руб.' : 'nan'
 
                         point.properties = {
                             ...point.properties,
@@ -1361,10 +1357,10 @@ BX.SaleCommonPVZ = {
         BX.insertAfter(this.checkout.delivery.titleIcon, this.checkout.delivery.title)
 
         BX.insertAfter(this.checkout.delivery.variants.rootEl, this.checkout.delivery.titleBox)
-        BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
-
-        BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
-        BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
+        // BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
+        //
+        // BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
+        // BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
 
 
 
@@ -1458,6 +1454,39 @@ BX.SaleCommonPVZ = {
     //     //     __this.showMapBtn
     //     // )
     // }
+
+    buildPvzList: function ()
+    {
+        BX.append(
+            BX.create({
+                tag: 'div',
+                props: {
+                    id: 'pickpoints-list',
+                    className: 'pickpoints-list',
+                }
+            }),
+            BX('map_for_delivery')
+        )
+
+        this.pvzObj.features.forEach(el => {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: el.id,
+                        className: 'pickpoint-item js__' + el.properties.deliveryName
+                    },
+                    events: {
+                      click: BX.proxy(function() {
+                          BX.SaleCommonPVZ.selectPvz(el.id)
+                      }, this)
+                    },
+                    text: el.properties.deliveryName + ' / адрес: ' + el.properties.fullAddress
+                }),
+                BX('pickpoints-list')
+            )
+        })
+    }
 };
 
 
