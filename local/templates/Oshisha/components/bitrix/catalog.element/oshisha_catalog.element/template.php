@@ -441,12 +441,13 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
 					} ?>
 					<div class="d-flex flex-wrap flex-row mb-2 box-offers-auto" data-entity="sku-line-block">
 						<?php
-						if (!empty($arResult['GROUPED_PRODUCTS'])) {
+						if (!empty($arResult['GROUPED_PROPS'])) {
 							$propsForOffers = EnteregoSettings::getDataPropOffers();
 
-							foreach ($arResult['GROUPED_PRODUCTS'] as $key => $offer) {
-								$propAllOff = $offer[OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP'] ?? [];
-								if (empty($propAllOff)) {
+							foreach ($arResult['GROUPED_PROPS'] as $key => $offerOld) {
+//								$propAllOff = $offer[OSNOVNOE_SVOYSTVO_TP ?? 'OSNOVNOE_SVOYSTVO_TP'] ?? [];
+								$offer = $offerOld['PRODUCT'];
+								if (empty($offerOld['PROPS'])) {
 									continue;
 								}
 
@@ -454,13 +455,13 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
 									$active_box = 'false';
 									$selected = '';
 									$prop_value = 'Пустое значение';
-									$offer['NAME'] = htmlspecialcharsbx($offer['NAME']);
+									$offer['NAME'] = htmlspecialcharsbx(['NAME']);
 									$taste = [];
 //									TODO - залочка на множ свой-во для показа
 
-									foreach ($propAllOff as $prop) {
+									foreach ($offerOld['PROPS'] as $keyProp => $propOld) {
 										if (isset($prop)) {
-											$code = $prop['CODE'];
+											$code = $keyProp;
 										}
 
 										if ($arResult['ID'] === $key) {
@@ -468,24 +469,25 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
 											$selected = 'selected';
 										}
 
-										if (!empty($prop['VALUE'])) {
-											$prop_value = $prop['VALUE'] . $propsForOffers[$code]['PREF'];
-											if ($prop['PROPERTY_TYPE'] == 'L') {
-												$prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$code]['PREF'];
-											}
+										foreach($propOld as $prop) {
+											if (!empty($prop)) {
+//												$prop_value = $prop['VALUE'] . $propsForOffers[$code]['PREF'];
+//												if ($prop['PROPERTY_TYPE'] == 'L') {
+													$prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$code]['PREF'];
+//												}
 
-											$type = $propsForOffers[$code]['TYPE'] ?? 'text';
+												$type = $propsForOffers[$code]['TYPE'] ?? 'text';
 
-											if ($type === 'colorWithText') {
-												foreach ($prop['VALUES'] as $keys => $listProp) {
-													$taste[$keys] = [
-														'color' => '#' . explode('#', $listProp['VALUE_XML_ID'])[1],
-														'name' => $prop['VALUES'][$keys]['VALUE_ENUM']
-													];
+												if ($type === 'colorWithText') {
+													foreach ($prop['VALUES'] as $keys => $listProp) {
+														$taste[$keys] = [
+															'color' => '#' . explode('#', $listProp['VALUE_XML_ID'])[1],
+															'name' => $prop['VALUES'][$keys]['VALUE_ENUM']
+														];
+													}
 												}
 											}
 										}
-
 										if (!empty($prop_value)) {
 											if ($type === 'text') { ?>
 												<a href="/catalog/product/<?= $offer['CODE'] ?>/">

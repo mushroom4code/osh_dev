@@ -3515,3 +3515,27 @@
 		}
 	}
 })(window);
+
+
+const arrProductGrouped = [];
+
+
+const item = {
+	color: 'red',
+	w: 1,
+};
+
+const result = arr.map((elem, i) => {
+	let pr = 0;
+
+	if (elem.color === item.color) {
+		pr = pr + 1;
+	}
+
+	if (elem.w === item.w) {
+		pr = pr + 1;
+	}
+
+	elem.pr = pr;
+	return elem;
+});
