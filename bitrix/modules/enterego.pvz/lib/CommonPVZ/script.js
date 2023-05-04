@@ -1119,10 +1119,15 @@ BX.SaleCommonPVZ = {
                                         props: {className: 'sort_service'},
                                         text: 'Все',
                                         events: {
-                                            click: BX.proxy(function (e) {
+                                            pickpoints: BX.proxy(function (e) {
                                                 BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
                                                 BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                this.sortPvzList(e.target.getAttribute('data-target'))
                                             }, this)
+                                        },
+                                        dataset: {
+                                            target: 'js-showall'
                                         }
                                     }),
                                     BX.create({
@@ -1133,7 +1138,12 @@ BX.SaleCommonPVZ = {
                                             click: BX.proxy(function (e) {
                                                 BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
                                                 BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                this.sortPvzList(e.target.getAttribute('data-target'))
                                             }, this)
+                                        },
+                                        dataset: {
+                                            target: 'js-5post'
                                         }
                                     }),
                                     BX.create({
@@ -1144,7 +1154,12 @@ BX.SaleCommonPVZ = {
                                             click: BX.proxy(function (e) {
                                                 BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
                                                 BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                this.sortPvzList(e.target.getAttribute('data-target'))
                                             }, this)
+                                        },
+                                        dataset: {
+                                            target: 'js-oshisha'
                                         }
                                     }),
                                     BX.create({
@@ -1155,7 +1170,12 @@ BX.SaleCommonPVZ = {
                                             click: BX.proxy(function (e) {
                                                 BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
                                                 BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                this.sortPvzList(e.target.getAttribute('data-target'))
                                             }, this)
+                                        },
+                                        dataset: {
+                                            target: 'js-sdek'
                                         }
                                     }),
                                     BX.create({
@@ -1166,7 +1186,12 @@ BX.SaleCommonPVZ = {
                                             click: BX.proxy(function (e) {
                                                 BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
                                                 BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                this.sortPvzList(e.target.getAttribute('data-target'))
                                             }, this)
+                                        },
+                                        dataset: {
+                                            target: 'js-pek'
                                         }
                                     }),
                                     BX.create({
@@ -1177,7 +1202,12 @@ BX.SaleCommonPVZ = {
                                             click: BX.proxy(function (e) {
                                                 BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
                                                 BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                this.sortPvzList(e.target.getAttribute('data-target'))
                                             }, this)
+                                        },
+                                        dataset: {
+                                            target: 'js-rupost'
                                         }
                                     }),
                                     BX.create({
@@ -1188,7 +1218,12 @@ BX.SaleCommonPVZ = {
                                             click: BX.proxy(function (e) {
                                                 BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
                                                 BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                this.sortPvzList(e.target.getAttribute('data-target'))
                                             }, this)
+                                        },
+                                        dataset: {
+                                            target: 'js-dl'
                                         }
                                     }),
                                 ]
@@ -1203,6 +1238,25 @@ BX.SaleCommonPVZ = {
 
         return this
     },
+
+    sortPvzList: function(jsClass)
+    {
+        if(BX('pickpoints-list')) {
+            if (jsClass == 'js-showall') {
+                BX('pickpoints-list').querySelectorAll('.pickpoint-item').forEach((el) => {
+                    el.style.display = 'block'
+                })
+            } else {
+                BX('pickpoints-list').querySelectorAll('.pickpoint-item').forEach((el) => {
+                    el.style.display = 'none'
+                })
+                BX('pickpoints-list').querySelectorAll('.' + jsClass).forEach(el => {
+                    el.style.display = 'block'
+                })
+            }
+        }
+    },
+
     // initCheckoutDom: function() {
     //     return {
     //         rootEl: BX('bx-soa-order'),
@@ -1468,13 +1522,23 @@ BX.SaleCommonPVZ = {
             BX('map_for_delivery')
         )
 
+
         this.pvzObj.features.forEach(el => {
+            console.log(el.properties);
+
+            let jsClass = ''
+            switch (el.properties.deliveryName) {
+                case 'СДЭК': jsClass = 'js-sdek'; break;
+                case 'Почта России': jsClass = 'js-rupost'; break;
+                case 'OSHISHA': jsClass = 'js-oshisha'; break;
+            }
+
             BX.append(
                 BX.create({
                     tag: 'div',
                     props: {
                         id: el.id,
-                        className: 'pickpoint-item js__' + el.properties.deliveryName
+                        className: 'pickpoint-item ' + jsClass
                     },
                     events: {
                       click: BX.proxy(function() {
