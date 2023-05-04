@@ -41,15 +41,12 @@ foreach ($arResult["CATEGORIES"] as $category_id => $arCategory) {
 				if (array_key_exists($arItem["PARAM2"], $arCatalogs)) {
 					$arResult["ELEMENTS"]['PRODUCT'][$arItem["ITEM_ID"]] = ['ID' => $arItem["ITEM_ID"]];
 				}
-				if ((int)$arItem["PARAM2"] == IBLOCK_CATALOG_OFFERS) {
-					$arResult["ELEMENTS"]['OFFERS'][$arItem["ITEM_ID"]] = ['ID' => $arItem["ITEM_ID"]];
-				}
 			}
 		}
 	}
 }
 
-if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['OFFERS']))
+if ((!empty($arResult["ELEMENTS"]['PRODUCT']))
 	&& CModule::IncludeModule("iblock")) {
 	$arConvertParams = $arResult["PRICES"] = [];
 	if ('Y' == $arParams['CONVERT_CURRENCY']) {
@@ -84,22 +81,9 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 		"CATALOG_QUANTITY",
 		"PRODUCT_ID",
 		"PROPERTY_USE_DISCOUNT",
-		"PROPERTY_" . OSNOVNOE_SVOYSTVO_TP ?? "PROPERTY_OSNOVNOE_SVOYSTVO_TP"
 	);
 
-	$arSelectOffers = array(
-		"ID",
-		"IBLOCK_ID",
-		"NAME",
-		"ACTIVE",
-		"IBLOCK_SECTION_ID",
-		"PREVIEW_PICTURE",
-		"CATALOG_QUANTITY",
-		"PRODUCT_ID",
-		"PROPERTY_CML2_LINK",
-	);
-
-	$arFilter = $arFilterOffer = array(
+	$arFilter =  array(
 		"IBLOCK_LID" => SITE_ID,
 		"IBLOCK_ACTIVE" => "Y",
 		"ACTIVE" => "Y",
@@ -109,9 +93,7 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 
 	foreach ($arResult["PRICES"] as $value) {
 		$arSelect[] = $value["SELECT"];
-		$arSelectOffers[] = $value["SELECT"];
 		$arFilter["CATALOG_SHOP_QUANTITY_" . $value["ID"]] = 1;
-		$arFilterOffer["CATALOG_SHOP_QUANTITY_" . $value["ID"]] = 1;
 	}
 
 
@@ -119,7 +101,6 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 	$arFilter["=ID"] = (array)array_keys($arResult["ELEMENTS"]['PRODUCT']);
 	$arFilter["IBLOCK_ID"] = IBLOCK_CATALOG;
 	$rsElements = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
-	$arPropsForOffers = [];
 	while ($arProduct = $rsElements->Fetch()) {
 		if ($arProduct["ACTIVE"] === "Y") {
 			$arProduct["PRICES"] = CIBlockPriceTools::GetItemPrices(
@@ -140,88 +121,7 @@ if ((!empty($arResult["ELEMENTS"]['PRODUCT']) || !empty($arResult["ELEMENTS"]['O
 
 			$arProduct['USE_DISCOUNT'] = $discount['VALUE_ENUM'];
 
-			if (!empty($arProduct["PROPERTY_" . OSNOVNOE_SVOYSTVO_TP . "_VALUE"])) {
-				$propAllOff = CIBlockProperty::GetList([], [
-					'XML_ID' => $arProduct["PROPERTY_" . OSNOVNOE_SVOYSTVO_TP . "_VALUE"],
-					'IBLOCK_ID' => IBLOCK_CATALOG_OFFERS
-				])->Fetch();
-				$arPropsForOffers['PROPERTY_' . $propAllOff['CODE']] = 'PROPERTY_' . $propAllOff['CODE'];
-				$arProduct['CODE_OFFERS'] = $propAllOff['CODE'];
-			}
-
 			$arResult["ELEMENTS"]['PRODUCT'][$arProduct["ID"]]['INFO'] = $arProduct;
-
-//			get offers all
-			$offersIds = CCatalogSKU::getOffersList(
-				$arProduct["ID"],
-				0,
-				["ACTIVE" => "Y"],
-				['ID'],
-				[]
-			);
-			if (!empty($offersIds[$arProduct["ID"]])) {
-				foreach ($offersIds[$arProduct["ID"]] as $key => $item) {
-					if (!isset($arResult["ELEMENTS"]['OFFERS'][$key])) {
-						$arResult["ELEMENTS"]['OFFERS'][$key] = $item;
-					}
-				}
-			}
-		}
-	}
-//	OFFERS
-	if (!empty($arResult["ELEMENTS"]['OFFERS'])) {
-		$propOffer = EnteregoSettings::getDataPropOffers();
-		$propTaste = [];
-		$arFilterOffer['IBLOCK_ID'] = IBLOCK_CATALOG_OFFERS;
-		$arSelectOffers[] = array_keys($arPropsForOffers)[0];
-		$arFilterOffer["=ID"] = (array)array_keys($arResult["ELEMENTS"]['OFFERS']);
-		$rsElementsOffers = CIBlockElement::GetList(array(), $arFilterOffer, false, false, $arSelectOffers);
-		$properties = CIBlockProperty::GetPropertyEnum('VKUS', [], [
-			"IBLOCK_ID" => $arFilterOffer['IBLOCK_ID'],
-		]);
-		while ($prop_fields = $properties->Fetch()) {
-			$propTaste[$prop_fields['ID']]['name'] = $prop_fields["VALUE"];
-			$propTaste[$prop_fields['ID']]['color'] = '#' . explode('#', $prop_fields["XML_ID"])[1];
-		}
-		while ($arElement = $rsElementsOffers->Fetch()) {
-			$parent = $arElement['PROPERTY_CML2_LINK_VALUE'];
-			if ($arElement["ACTIVE"] === "Y") {
-
-				$arElement["PRICES"] = CIBlockPriceTools::GetItemPrices(
-					$arElement["IBLOCK_ID"],
-					$arResult["PRICES"],
-					$arElement,
-					$arParams['PRICE_VAT_INCLUDE'],
-					$arConvertParams);
-
-				// Get image
-				$arElement["PICTURE"] = CFile::ResizeImageGet(
-					$arElement["PREVIEW_PICTURE"],
-					array("width" => $PREVIEW_WIDTH, "height" => $PREVIEW_HEIGHT),
-					BX_RESIZE_IMAGE_PROPORTIONAL,
-					true)['src'];
-
-				$propCode = $arResult["ELEMENTS"]['PRODUCT'][$parent]['INFO']['CODE_OFFERS'];
-				if (!empty($arElement['PROPERTY_' . $propCode . '_VALUE'])) {
-					if ($propCode === 'VKUS') {
-						$arElement['PROPERTIES']['CODE'] = 'VKUS';
-						foreach ((array)$arElement['PROPERTY_VKUS_VALUE'] as $id => $tasteName) {
-							$arElement['PROPERTIES']['VALUE'][$id] = [
-								'color' => $propTaste[$id]['color'],
-								'name' => $propTaste[$id]['name']
-							];
-						}
-					} else {
-						$arElement['PROPERTIES']['CODE'] = $propCode;
-						$arElement['PROPERTIES']['VALUE'] = $arElement['PROPERTY_' . $propCode . '_VALUE'];
-					}
-
-				}
-
-
-				$arResult["ELEMENTS"]['PRODUCT'][$parent]['OFFERS'][$arElement["ID"]] = $arElement;
-				unset($arResult["ELEMENTS"]['OFFERS'][$arElement["ID"]]);
-			}
 		}
 	}
 
