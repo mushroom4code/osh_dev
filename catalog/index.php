@@ -55,9 +55,6 @@ $APPLICATION->IncludeComponent(
 		"CONVERT_CURRENCY" => "N",
 		"QUANTITY_FLOAT" => "N",
 		"OFFERS_CART_PROPERTIES" => array(
-			0 => "GRAMMOVKA_G",
-			1 => "SHTUK_V_UPAKOVKE",
-			2 => "TSVET",
 		),
 		"SHOW_TOP_ELEMENTS" => "N",
 		"SECTION_COUNT_ELEMENTS" => "Y",

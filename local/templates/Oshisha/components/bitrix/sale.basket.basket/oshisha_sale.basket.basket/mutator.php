@@ -28,7 +28,6 @@ global $USER, $SETTINGS;
 $id_USER = $USER->GetID();
 $FUser_id = Fuser::getId($id_USER);
 $item_id = [];
-const IBLOCK_OFFERS = 19;
 
 foreach ($item as $row) {
     if ($row['CAN_BUY'] == 'N') {
@@ -61,16 +60,7 @@ foreach ($item as $row) {
     $product_prices = '';
     $price = [];
     $show_product_prices = false;
-	// OFFERS OR PRODUCT
-	$offer = CIBlockElement::GetProperty(
-		IBLOCK_CATALOG_OFFERS ?? IBLOCK_OFFERS,
-		$row['PRODUCT_ID'],
-		array(),
-		array('CODE' => 'CML2_LINK'));
-	$productIdOnOffer = $offer->Fetch();
-	$productId = !empty($productIdOnOffer['VALUE']) ? $productIdOnOffer['VALUE'] : $row['PRODUCT_ID'];
-	// OFFERS OR PRODUCT
-    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG,$productId, array(), array('CODE' => 'USE_DISCOUNT'));
+    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG,$row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
     $res = CIBlockElement::GetList(
         array(),
