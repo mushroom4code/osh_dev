@@ -537,7 +537,7 @@ BX.SaleCommonPVZ = {
             delivery: point.properties.deliveryName,
             to: point.properties.fullAddress,
             weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
-            cost: this.shipmentCost,
+            cost: this.shipmentCost, // !!!
             packages: this.orderPackages,
             street_kladr: point.properties.street_kladr ?? '',
             latitude: point.geometry.coordinates[0],
@@ -562,7 +562,7 @@ BX.SaleCommonPVZ = {
         this.selectedPvzObjId = objectId
         const point = this.objectManager.objects.getById(objectId);
 
-        console.log(point)
+        //console.log(point)
         const pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
         const pvzFullAddress = pvzAddress +
             (typeof point.properties.code_pvz !== 'undefined' ? ' #' + point.properties.code_pvz : '');
@@ -581,6 +581,33 @@ BX.SaleCommonPVZ = {
                 typeDelivery.value = point.properties.deliveryName
             }
         }
+        if (this.propLatitudeId ) { //55.7461 55.781347
+            const deliveryLatitude = document.querySelector('[name="ORDER_PROP_' + this.propLatitudeId + '"]');
+            if (deliveryLatitude) {
+                deliveryLatitude.value = point.properties.latitude
+            }
+        }
+        if (this.propLongitudeId ) { //37.5000 38.431949
+            const deliveryLongitude = document.querySelector('[name="ORDER_PROP_' + this.propLongitudeId + '"]');
+            if (deliveryLongitude) {
+                deliveryLongitude.value = point.properties.longitude
+            }
+        }
+        if (this.propZipId ) { //143000
+            const deliveryPostIndex = document.querySelector('[name="ORDER_PROP_' + this.propZipId + '"]');
+            if (deliveryPostIndex) {
+                deliveryPostIndex.value = point.properties.postindex
+            }
+        }
+
+        if (this.propKladrId) {
+            const deliveryKladr = document.querySelector('[name="ORDER_PROP_' + this.propKladrId + '"]');
+            if (deliveryKladr) {
+                deliveryKladr.value = point.properties.street_kladr
+            }
+        }
+
+
 
         BX('selected-delivery-type').innerHTML = (point.properties.type == 'PVZ' ? 'ПВЗ ' : 'Постамат ') + point.properties.deliveryName
 
@@ -593,6 +620,7 @@ BX.SaleCommonPVZ = {
         // Подстановка значений в поля
         // BX('soa-property-26').value =
         BX('soa-property-76').value = point.properties.code_pvz;
+
 
         const dataToHandler = this.getPointData(point);
         __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
@@ -641,6 +669,7 @@ BX.SaleCommonPVZ = {
                             point.properties.phone  ? `<div>${point.properties.phone}</div>` : '',
                             point.properties.workTime  ? `<div>${point.properties.workTime}</div>` : '',
                             point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
+                            point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
                             `<a class="btn btn_basket mt-2" href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${item.id})" >Выбрать</a>`
                         )
 
@@ -840,25 +869,29 @@ BX.SaleCommonPVZ = {
                                             events: {
                                                 change: BX.proxy(function () {
                                                     __this.clearPvzMap();
-                                                    __this.closePvzPopup();
 
-                                                    window.Osh.bxPopup.init();
-                                                    const oshMkad = window.Osh.oshMkadDistance.init(__this.oshishaDeliveryOptions);
+                                                    BX.append(
+                                                        BX.create({
+                                                            tag: 'input',
+                                                            props: {
+                                                                className: 'form-control bx-soa-customer-input bx-ios-fix suggestions-input',
+                                                                name: 'ORDER_PROP_' + this.propAddressId + ']',
+                                                                id: 'soa-property-' + this.propAddressId,
+                                                            },
+                                                            dataset: {
+                                                                name: "ADDRESS"
+                                                            }
+                                                        }),
+                                                        BX('map_for_delivery')
+                                                    )
 
-                                                    oshMkad.afterSave = function (address) {
-                                                        __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
-                                                    }.bind(this);
-                                                    window.Osh.bxPopup.onPickerClick(
-                                                        (__this.propAddressId)
-                                                            ? __this.propAddressId
-                                                            : '',
-                                                        (__this.propDateDelivery)
-                                                            ? __this.propDateDelivery
-                                                            : '',
-                                                        (__this.propDateDelivery)
-                                                            ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
-                                                            : ''
-                                                    );
+                                                    __this.refresh()
+
+
+                                                    const addressField = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
+
+
+
                                                 }, this)
                                             },
                                         }),
@@ -1012,8 +1045,12 @@ BX.SaleCommonPVZ = {
                                         },
                                         events: {
                                             change: BX.proxy(function() {
-                                                __this.clearPvzMap();
-                                                __this.buildPVZMap1();
+                                                if(BX('delivery-self').checked) {
+                                                    __this.clearPvzMap();
+                                                    __this.buildPVZMap1();
+                                                } else {
+                                                    __this.clearPvzMap();
+                                                }
                                             })
                                         }
                                     }),
@@ -1046,8 +1083,12 @@ BX.SaleCommonPVZ = {
                                         },
                                         events: {
                                             change: BX.proxy(function () {
-                                                __this.clearPvzMap();
-                                                __this.getPVZList('list');
+                                                if(BX('delivery-self').checked) {
+                                                    __this.clearPvzMap();
+                                                    __this.getPVZList('list');
+                                                } else {
+                                                    __this.clearPvzMap();
+                                                }
                                             })
                                         }
                                     }),
@@ -1524,7 +1565,7 @@ BX.SaleCommonPVZ = {
 
 
         this.pvzObj.features.forEach(el => {
-            console.log(el.properties);
+            //console.log(el.properties);
 
             let jsClass = ''
             switch (el.properties.deliveryName) {
