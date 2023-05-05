@@ -257,6 +257,7 @@ class SDEKDelivery extends CommonPVZ
 
             foreach ($array['packages'] as $package) {
                 $packageObj = new \AntistressStore\CdekSDK2\Entity\Requests\Package();
+                //TODO не рабочая конструкция, вес обязательное поле, надо добавить вес по умолчанию
                 !empty($package['weight']) ? $packageObj->setWeight($package['weight']) : '';
                 $tariff->setPackages($packageObj);
             }
