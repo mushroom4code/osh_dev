@@ -66,14 +66,29 @@ class FivePostDelivery extends CommonPVZ
 
     public function updatePointsForFivePost() {
         try {
-            $res = LocationTable::getList(array(
+            $memory_limit = ini_get('memory_limit');
+            $time_limit = ini_get('max_execution_time');
+            ini_set('memory_limit', '-1');
+            set_time_limit(0);
+
+            $resCity = LocationTable::getList(array(
                 'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=TYPE.ID' => '5'),
                 'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
             ));
+            $resVillage = LocationTable::getList(array(
+                'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID,
+                    '=PARENT.PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID, '=TYPE.ID' => '6'),
+                'select' => array('*', 'NAME_RU' => 'NAME.NAME',
+                    'PARENT_PARENT_NAME_RU' => 'PARENT.PARENT.NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
+            ));
 
-            $listLocation = [];
-            while ($arLocation = $res->fetch()) {
-                $listLocation[] = $arLocation;
+            $listCityLocation = [];
+            $listVillageLocation = [];
+            while ($arLocation = $resCity->fetch()) {
+                $listCityLocation[] = $arLocation;
+            }
+            while ($arLocation = $resVillage->fetch()) {
+                $listVillageLocation[] = $arLocation;
             }
 
             FivePostPointsTable::deleteAll();
@@ -83,10 +98,30 @@ class FivePostDelivery extends CommonPVZ
                 $result = $this->fivepost_client->getPvzList($i, 2000);
                 foreach ($result['content'] as $point) {
                     $curLocation = null;
-                    foreach ($listLocation as $location) {
-                        if ($location['NAME_RU'] === explode(' ', $point['address']['city'])[0]) {
-                            $curLocation = $location;
-                            break;
+                    $nameLocationPointWithoutPostfix = substr($point['address']['city'], 0, strrpos($point['address']['city'], " "));
+                    $nameRegionPointWithoutPostfix = substr($point['address']['region'], 0, strrpos($point['address']['region'], " "));
+                    if ($point['address']['cityType'] == 'г') {
+                        foreach ($listCityLocation as $location) {
+                            if ($location['NAME_RU'] === $nameLocationPointWithoutPostfix) {
+                                $curLocation = $location;
+                                break;
+                            }
+                        }
+                    } else {
+                        foreach ($listVillageLocation as $location) {
+                            $nameLocationWithoutPostfix = substr($location['NAME_RU'], 0, strrpos($location['NAME_RU'], " "));
+                            $nameRegionWithoutPrefixPostfix = explode(' ', $location['PARENT_PARENT_NAME_RU']);
+                            if ($nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'область'
+                                || $nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'край')
+                                array_pop($nameRegionWithoutPrefixPostfix);
+                            else
+                                array_shift($nameRegionWithoutPrefixPostfix);
+                            $nameRegionWithoutPrefixPostfix = implode($nameRegionWithoutPrefixPostfix);
+                            if ($nameLocationWithoutPostfix == $nameLocationPointWithoutPostfix
+                                && $nameRegionWithoutPrefixPostfix == $nameRegionPointWithoutPostfix) {
+                                $curLocation = $location;
+                                break;
+                            }
                         }
                     }
 
@@ -142,53 +177,62 @@ class FivePostDelivery extends CommonPVZ
                     $totalPages = $result['totalPages'];// Заносим количество страниц из ответа
 
             }
+            ini_set('memory_limit', $memory_limit);
+            set_time_limit(intval($time_limit));
         } catch (\Throwable $e) {
+            ini_set('memory_limit', $memory_limit);
+            set_time_limit(intval($time_limit));
             return $e->getMessage();
         }
     }
 
     public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
     {
-        $arParams = ['filter' => ['BITRIX_CODE' => $code_city]];
-        $res = FivePostPointsTable::getList($arParams);
+        try {
+            $arParams = ['filter' => ['BITRIX_CODE' => $code_city]];
+            $res = FivePostPointsTable::getList($arParams);
 
-        while ($point = $res->fetch()) {
-            if ($point['MAX_CELL_DIMENSIONS_HASH'] >= $dimensionsHash
-                && !empty(unserialize($point['RATE'])[0]['rateValue'])
-                && !empty(unserialize($point['RATE'])[0]['zone'])){
-                $features_obj['type'] = 'Feature';
-                $features_obj['id'] = $id_feature;
-                $id_feature += 1;
-                $features_obj['geometry'] = [
-                    'type' => 'Point',
-                    'coordinates' => [
-                        $point['ADDRESS_LAT'],
-                        $point['ADDRESS_LNG']
-                    ]
-                ];
-                if (!strripos($point['ADDRESS_REGION'], ' город')) {
-                    $region = ', ' . $point['ADDRESS_REGION'];
+            while ($point = $res->fetch()) {
+                if ($point['MAX_CELL_DIMENSIONS_HASH'] >= $dimensionsHash
+                    && !empty(unserialize($point['RATE'])[0]['rateValue'])
+                    && !empty(unserialize($point['RATE'])[0]['zone'])){
+                    $features_obj['type'] = 'Feature';
+                    $features_obj['id'] = $id_feature;
+                    $id_feature += 1;
+                    $features_obj['geometry'] = [
+                        'type' => 'Point',
+                        'coordinates' => [
+                            $point['ADDRESS_LAT'],
+                            $point['ADDRESS_LNG']
+                        ]
+                    ];
+                    if (!strripos($point['ADDRESS_REGION'], ' город')) {
+                        $region = ', ' . $point['ADDRESS_REGION'];
+                    }
+                    $features_obj['properties'] = [
+                        'code_pvz' => $point['POINT_GUID'],
+                        'type' => $point['TYPE'] === 'POSTAMAT' ? 'POSTAMAT' : 'PVZ',
+                        'fullAddress' => $point['FULL_ADDRESS'],
+                        'comment' => $point['ADDITIONAL'],
+                        'deliveryName' => '5Post',
+                        'fivepostRate' => $point['RATE'],
+                        'fivepostDeliverySl' => $point['DELIVERY_SL'],
+                        'fivepostMaxWeight' => $point['MAX_CELL_WEIGHT'],
+                        'iconCaption' => '5Post',
+                        'hintContent' => $point['FULL_ADDRESS'],
+                        'openEmptyBalloon' => true,
+                        'clusterCaption' => '5Post',
+                    ];
+                    $features_obj['options'] = [
+                        'preset' => 'islands#grayIcon'
+                    ];
+
+                    $result_array[] = $features_obj;
                 }
-                $features_obj['properties'] = [
-                    'code_pvz' => $point['POINT_GUID'],
-                    'type' => $point['TYPE'] === 'POSTAMAT' ? 'POSTAMAT' : 'PVZ',
-                    'fullAddress' => $point['FULL_ADDRESS'],
-                    'comment' => $point['ADDITIONAL'],
-                    'deliveryName' => '5Post',
-                    'fivepostRate' => $point['RATE'],
-                    'fivepostDeliverySl' => $point['DELIVERY_SL'],
-                    'fivepostMaxWeight' => $point['MAX_CELL_WEIGHT'],
-                    'iconCaption' => '5Post',
-                    'hintContent' => $point['FULL_ADDRESS'],
-                    'openEmptyBalloon' => true,
-                    'clusterCaption' => '5Post',
-                ];
-                $features_obj['options'] = [
-                    'preset' => 'islands#grayIcon'
-                ];
-
-                $result_array[] = $features_obj;
             }
+        } catch (\Throwable $e) {
+            $this->errors[] = $e->getMessage();
+            return array('errors' => $this->errors);
         }
     }
 

@@ -83,22 +83,57 @@ class RussianPostDelivery extends CommonPVZ
                     unlink(dirname(__DIR__).'/russian_post_ops_passport.zip');
                     RussianPostPointsTable::deleteAll();
 
-                    $res = LocationTable::getList(array(
+                    $resCity = LocationTable::getList(array(
                         'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=TYPE.ID' => '5'),
                         'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
                     ));
+                    $resVillage = LocationTable::getList(array(
+                        'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID,
+                            '=PARENT.PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID, '=TYPE.ID' => '6'),
+                        'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'PARENT_NAME_RU' => 'PARENT.NAME.NAME',
+                            'PARENT_PARENT_NAME_RU' => 'PARENT.PARENT.NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
+                    ));
 
-                    $listLocation = [];
-                    while ($arLocation = $res->fetch()) {
-                        $listLocation[] = $arLocation;
+                    $listCityLocation = [];
+                    $listVillageLocation = [];
+                    while ($arLocation = $resCity->fetch()) {
+                        $listCityLocation[] = $arLocation;
+                    }
+                    while ($arLocation = $resVillage->fetch()) {
+                        $listVillageLocation[] = $arLocation;
                     }
 
                     foreach ($pvz_list['passportElements'] as $ops_id => $ops) {
                         $curLocation = null;
-                        foreach ($listLocation as $location) {
-                            if ($location['NAME_RU'] === explode(' ', $ops['address']['place'])[1]) {
-                                $curLocation = $location;
-                                break;
+                        $nameLocationOpsWithoutPrefix = substr(strstr($ops['address']['place']," "), 1);
+                        $nameAreaOpsWithoutPrefix = substr(strstr($ops['address']['area']," "), 1);
+                        $nameRegionOpsWithoutPrefix = substr(strstr($ops['address']['region']," "), 1);
+                        $locationOpsPrefix = explode(' ', $ops['address']['place'])[0];
+
+                        if ($locationOpsPrefix == 'г') {
+                            foreach ($listCityLocation as $location) {
+                                if ($location['NAME_RU'] === $nameLocationOpsWithoutPrefix) {
+                                    $curLocation = $location;
+                                    break;
+                                }
+                            }
+                        } else {
+                            foreach ($listVillageLocation as $location) {
+                                $nameLocationWithoutPostfix = substr($location['NAME_RU'], 0, strrpos($location['NAME_RU'], " "));
+                                $nameAreaWithoutPostfix = substr($location['PARENT.NAME_RU'], 0, strrpos($location['PARENT.NAME_RU'], " "));
+                                $nameRegionWithoutPrefixPostfix = explode(' ', $location['PARENT_PARENT_NAME_RU']);
+                                if ($nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'область'
+                                    || $nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'край')
+                                    array_pop($nameRegionWithoutPrefixPostfix);
+                                else
+                                    array_shift($nameRegionWithoutPrefixPostfix);
+                                $nameRegionWithoutPrefixPostfix = implode($nameRegionWithoutPrefixPostfix);
+                                if ($nameLocationWithoutPostfix == $nameLocationOpsWithoutPrefix
+                                    && $nameAreaWithoutPostfix == $nameAreaOpsWithoutPrefix
+                                    && $nameRegionWithoutPrefixPostfix == $nameRegionOpsWithoutPrefix) {
+                                    $curLocation = $location;
+                                    break;
+                                }
                             }
                         }
 
@@ -127,59 +162,66 @@ class RussianPostDelivery extends CommonPVZ
                 ini_set('memory_limit', $memory_limit);
                 set_time_limit(intval($time_limit));
             } catch (\Throwable $e) {
-
+                ini_set('memory_limit', $memory_limit);
+                set_time_limit(intval($time_limit));
+                return $e->getMessage();
             }
     }
 
     public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
     {
-        $sumDimensionsSingle = 0;
-        foreach ($sumDimensions as $dimension)
-            $sumDimensionsSingle += $dimension;
-        $pvzDimensionsHash = DeliveryHelper::makeDimensionsHash(1500, 1500, 1500);
-        $postamatDimensionsHash = DeliveryHelper::makeDimensionsHash(530, 240, 430);
-        $weightSum = 0;
+        try {
+            $sumDimensionsSingle = 0;
+            foreach ($sumDimensions as $dimension)
+                $sumDimensionsSingle += $dimension;
+            $pvzDimensionsHash = DeliveryHelper::makeDimensionsHash(1500, 1500, 1500);
+            $postamatDimensionsHash = DeliveryHelper::makeDimensionsHash(530, 240, 430);
+            $weightSum = 0;
 
-        foreach ($packages as $package)
-            $weightSum += ($package['weight'] ? $package['weight'] : Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultweight')) * $package['quantity'];
+            foreach ($packages as $package)
+                $weightSum += $package['weight'] * $package['quantity'];
 
-        if ($weightSum <= 20000) {
-            $arParams = ['filter' => ['BITRIX_CODE' => $code_city]];
-            $res = RussianPostPointsTable::getList($arParams);
-            while ($point = $res->fetch()) {
-                if (($point['IS_PVZ'] === 'true' && $sumDimensionsSingle <= 2200 && $pvzDimensionsHash >= $dimensionsHash)
-                    || ($point['IS_PVZ'] === 'false' && $postamatDimensionsHash >= $dimensionsHash)) {
-                    $features_obj['type'] = 'Feature';
-                    $features_obj['id'] = $id_feature;
-                    $id_feature += 1;
-                    $features_obj['geometry'] = [
-                        'type' => 'Point',
-                        'coordinates' => [
-                            $point['ADDRESS_LAT'],
-                            $point['ADDRESS_LNG'],
-                        ]
-                    ];
-                    $features_obj['properties'] = [
-                        'code_pvz' => $point['CODE'],
-                        'type' => $point['IS_PVZ'] === 'true' ? 'PVZ' : 'POSTAMAT',
-                        'fullAddress' => $point['FULL_ADDRESS'],
-                        'phone' => $point['PHONE_NUMBER'],
-                        'workTime' => $point['WORK_TIME'],
-                        'comment' => $point['COMMENT'],
-                        'postindex' => $point['INDEX'],
-                        'deliveryName' => 'Почта России',
-                        'iconCaption' => 'Почта России',
-                        'hintContent' => $point['FULL_ADDRESS'],
-                        "openEmptyBalloon" => true,
-                        "clusterCaption" => 'Почта России',
-                    ];
-                    $features_obj['options'] = [
-                        'preset' => 'islands#darkBlueIcon'
-                    ];
+            if ($weightSum <= 20000) {
+                $arParams = ['filter' => ['BITRIX_CODE' => $code_city]];
+                $res = RussianPostPointsTable::getList($arParams);
+                while ($point = $res->fetch()) {
+                    if (($point['IS_PVZ'] === 'true' && $sumDimensionsSingle <= 2200 && $pvzDimensionsHash >= $dimensionsHash)
+                        || ($point['IS_PVZ'] === 'false' && $postamatDimensionsHash >= $dimensionsHash)) {
+                        $features_obj['type'] = 'Feature';
+                        $features_obj['id'] = $id_feature;
+                        $id_feature += 1;
+                        $features_obj['geometry'] = [
+                            'type' => 'Point',
+                            'coordinates' => [
+                                $point['ADDRESS_LAT'],
+                                $point['ADDRESS_LNG'],
+                            ]
+                        ];
+                        $features_obj['properties'] = [
+                            'code_pvz' => $point['CODE'],
+                            'type' => $point['IS_PVZ'] === 'true' ? 'PVZ' : 'POSTAMAT',
+                            'fullAddress' => $point['FULL_ADDRESS'],
+                            'phone' => $point['PHONE_NUMBER'],
+                            'workTime' => $point['WORK_TIME'],
+                            'comment' => $point['COMMENT'],
+                            'postindex' => $point['INDEX'],
+                            'deliveryName' => 'Почта России',
+                            'iconCaption' => 'Почта России',
+                            'hintContent' => $point['FULL_ADDRESS'],
+                            "openEmptyBalloon" => true,
+                            "clusterCaption" => 'Почта России',
+                        ];
+                        $features_obj['options'] = [
+                            'preset' => 'islands#darkBlueIcon'
+                        ];
 
-                    $result_array[] = $features_obj;
+                        $result_array[] = $features_obj;
+                    }
                 }
             }
+        } catch (\Throwable $e) {
+            $this->errors[] = $e->getMessage();
+            return array('errors' => $this->errors);
         }
     }
 

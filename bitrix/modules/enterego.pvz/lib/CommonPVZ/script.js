@@ -5,6 +5,9 @@ BX.SaleCommonPVZ = {
     pvzPopup: null,
     curCityCode: null,
     curCityName: null,
+    curCityType: null,
+    curCityArea: null,
+    curParentCityName: null,
     isGetPVZ: false,
     ajaxUrlPVZ: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
     propsMap: null,
@@ -130,6 +133,12 @@ BX.SaleCommonPVZ = {
                         $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
                             constraints: {
                                 locations: [{region: "Московская"}, {region: "Москва"}]
+                            }
+                        });
+                    } else if (this.curCityType == 6) {
+                        addressField.suggestions().setOptions({
+                            constraints: {
+                                locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
                             }
                         });
                     } else {
@@ -350,7 +359,12 @@ BX.SaleCommonPVZ = {
         var __this = this;
 
         ymaps.ready(function () {
-            var myGeocoder = ymaps.geocode(__this.curCityName, {results: 1});
+            var myGeocoder = ymaps.geocode(__this.curParentCityName+', '+ __this.curCityName);
+            myGeocoder.then(
+                function (res) {
+                    console.log(res);
+                    console.log(res.geoObjects.getIterator().getNext());
+                });
             myGeocoder.then(function (res) { // получаем координаты
                 var firstGeoObject = res.geoObjects.get(0),
                     coords = firstGeoObject.geometry.getCoordinates();
@@ -381,7 +395,11 @@ BX.SaleCommonPVZ = {
                 'action': 'getCityName'
             },
             onsuccess: function (res) {
-                __this.curCityName = res;
+                res = JSON.parse(res);
+                __this.curCityName = res.LOCATION_NAME;
+                __this.curParentCityName = res.PARENT_LOCATION_NAME;
+                __this.curCityArea = res.AREA_NAME;
+                __this.curCityType = res.TYPE;
                 if (__this.propAddressId) {
                     if (__this.curCityName == 'Москва') {
                         $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
@@ -390,11 +408,20 @@ BX.SaleCommonPVZ = {
                             }
                         });
                     } else {
-                        $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
-                            constraints: {
-                                locations: [{city: __this.curCityName}]
-                            }
-                        });
+                        if (Number(__this.curCityType) === 6) {
+                            console.log(__this.curCityArea);
+                            $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                                constraints: {
+                                    locations: [{region: __this.curCityArea}, {area: __this.curParentCityName}]
+                                }
+                            });
+                        } else {
+                            $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                                constraints: {
+                                    locations: [{city: __this.curCityName}]
+                                }
+                            });
+                        }
                     }
                 }
             },
@@ -426,7 +453,6 @@ BX.SaleCommonPVZ = {
                 BX.Sale.OrderAjaxComponent.endLoader();
                 BX.Sale.OrderAjaxComponent.showError(BX('bx-soa-delivery'), 'Ошибка запроса ПВЗ. Попробуйте позже.');
                 __this.pvzPopup.close();
-
             }
         });
     },
