@@ -3517,25 +3517,32 @@
 })(window);
 
 
-const arrProductGrouped = [];
-
-
-const item = {
-	color: 'red',
-	w: 1,
-};
-
-const result = arr.map((elem, i) => {
-	let pr = 0;
-
-	if (elem.color === item.color) {
-		pr = pr + 1;
+$('.offer-box').on('click', function () {
+	const arrProductGrouped = JSON.parse($(document).find('#product_prop_data').val() ?? [{}]);
+	const item = {
+		'CODE': $(this).attr('data-prop_code'),
+		'VALUE_ENUM': $(this).attr('data-prop_code'),
 	}
+	// 	= {
+	// 	color: 'red',
+	// 	w: 1,
+	// };
+	if (arrProductGrouped.length > 0) {
+		const result = arrProductGrouped.map((elem, i) => {
+			let pr = 0;
 
-	if (elem.w === item.w) {
-		pr = pr + 1;
+			if (elem.color === item.color) {
+				pr = pr + 1;
+			}
+
+			if (elem.w === item.w) {
+				pr = pr + 1;
+			}
+
+			elem.pr = pr;
+			return elem;
+		});
 	}
-
-	elem.pr = pr;
-	return elem;
 });
+
+
