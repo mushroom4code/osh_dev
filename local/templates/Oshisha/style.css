@@ -7251,6 +7251,10 @@ footer.footer .container .copyrights > span {
     font-style: normal;
 }
 
+.width-inherit {
+    width: inherit;
+}
+
 @media screen and (max-width: 768px) {
     footer.footer .container .row .footer-col .company-info .about .text_footer {
         font-size: 16px;

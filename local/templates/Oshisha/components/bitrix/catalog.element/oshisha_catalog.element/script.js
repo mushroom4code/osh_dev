@@ -3516,9 +3516,10 @@
 	}
 })(window);
 
-
-$('.offer-box').on('click', function () {
+$(document).on('click', '.offer-link',function () {
+	console.log('test')
 	const arrProductGrouped = JSON.parse($(document).find('#product_prop_data').val() ?? [{}]);
+	console.log(arrProductGrouped)
 	const item = {
 		'CODE': $(this).attr('data-prop_code'),
 		'VALUE_ENUM': $(this).attr('data-prop_code'),
