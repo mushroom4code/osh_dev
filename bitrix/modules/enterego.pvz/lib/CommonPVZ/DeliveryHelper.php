@@ -7,6 +7,7 @@ use Bitrix\Main\Data\Cache,
     Bitrix\Main\Page\Asset;
 use Bitrix\Sale\Delivery\DeliveryLocationTable;
 use Bitrix\Sale\Location\LocationTable;
+use \Bitrix\Sale\Location\TypeTable;
 use \Bitrix\Main\Localization\Loc;
 use CUtil;
 
@@ -163,17 +164,17 @@ class DeliveryHelper
             $basketItemFields = $orderBasketItem->getFields();
             $productDimensions =  unserialize($basketItemFields['DIMENSIONS']);
             $packageParams['length'] = (int)$productDimensions['LENGTH']
-                ? (int)$productDimensions['HEIGHT']
+                ? (int)$productDimensions['LENGTH']
                 : (int)Option::get(self::$MODULE_ID, 'Common_defaultlength');
             $packageParams['width'] = (int)$productDimensions['WIDTH']
-                ? (int)$productDimensions['HEIGHT']
+                ? (int)$productDimensions['WIDTH']
                 : (int)Option::get(self::$MODULE_ID, 'Common_defaultwidth');
             $packageParams['height'] = (int)$productDimensions['HEIGHT']
                 ? (int)$productDimensions['HEIGHT']
                 : (int)Option::get(self::$MODULE_ID, 'Common_defaultheight');
             $packageParams['quantity'] = (int)$basketItemFields['QUANTITY'];
             $packageParams['weight'] = (int)$basketItemFields['WEIGHT']
-                ? (int)$productDimensions['HEIGHT']
+                ? (int)$basketItemFields['WEIGHT']
                 : (int)Option::get(self::$MODULE_ID, 'Common_defaultweight');
 
             $packages[$basketItemFields['PRODUCT_ID']] = $packageParams;
@@ -194,15 +195,50 @@ class DeliveryHelper
 
     public static function getCityName($locationCode)
     {
+        $res = \Bitrix\Sale\Location\TypeTable::getList(array(
+            'select' => array('*', 'NAME_RU' => 'NAME.NAME'),
+            'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID)
+        ));
+        $types = [];
+        while ($item = $res->fetch()){
+            $types[] = $item;
+        }
         $city = LocationTable::getByCode(
             $locationCode,
             [
-                'filter' => array('=TYPE.ID' => '5', '=NAME.LANGUAGE_ID' => LANGUAGE_ID),
-                'select' => ['ID', 'LOCATION_NAME' => 'NAME.NAME']
+                'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID),
+                'select' => ['ID', 'TYPE_ID', 'LOCATION_NAME' => 'NAME.NAME',
+                    'PARENT_LOCATION_NAME' => 'PARENT.NAME.NAME']
             ]
         )->fetch();
 
-        return $city['LOCATION_NAME'];
+        if ((int)$city['TYPE_ID'] === 6) {
+            $areaNameArray = LocationTable::getByCode(
+                $locationCode,
+                [
+                    'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=PARENT.PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID),
+                    'select' => ['ID','AREA_NAME' => 'PARENT.PARENT.NAME.NAME']
+                ]
+            )->fetch();
+            $city["AREA_NAME"] = $areaNameArray['AREA_NAME'];
+
+            $locationName = explode(' ', $city['LOCATION_NAME']);
+            array_pop($locationName);
+            $city['LOCATION_NAME'] = implode(' ', $locationName);
+
+            $parentLocationName = explode(' ', $city['PARENT_LOCATION_NAME']);
+            if (count($parentLocationName) > 1)
+                array_pop($parentLocationName);
+            $city['PARENT_LOCATION_NAME'] = implode(' ', $parentLocationName);
+        } else {
+            $city['AREA_NAME'] = '';
+        }
+
+
+        return json_encode(array('LOCATION_NAME' => $city['LOCATION_NAME'],
+            'PARENT_LOCATION_NAME' => $city['PARENT_LOCATION_NAME'],
+            'AREA_NAME' => $city['AREA_NAME'],
+            'TYPE' => $city['TYPE_ID']));
     }
 
     /** Обновляет ПВЗ для службы доставки PickPoint

@@ -4,6 +4,7 @@ namespace CommonPVZ;
 
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Sale\Location\LocationTable;
 
 Loc::loadMessages(__FILE__);
 
@@ -167,42 +168,47 @@ class SDEKDelivery extends CommonPVZ
 
     public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
     {
-        $sdek_city_code = $this->getSDEKCityCode($city_name);
-        $requestPvz = (new \AntistressStore\CdekSDK2\Entity\Requests\DeliveryPoints())
-            ->setCityCode($sdek_city_code);
-        $sdek_result = $this->cdek_client->getDeliveryPoints($requestPvz);
+        try {
+            $sdek_city_code = $this->getSDEKCityCode($city_name, $code_city);
+            $requestPvz = (new \AntistressStore\CdekSDK2\Entity\Requests\DeliveryPoints())
+                ->setCityCode($sdek_city_code);
+            $sdek_result = $this->cdek_client->getDeliveryPoints($requestPvz);
 
-        foreach ($sdek_result as $value) {
-            $features_obj['type'] = 'Feature';
-            $features_obj['id'] = $id_feature;
-            $id_feature += 1;
-            $features_obj['geometry'] = [
-                'type' => 'Point',
-                'coordinates' => [
-                    $value->getLocation()->getLatitude(),
-                    $value->getLocation()->getLongitude()
-                ]
-            ];
-            $features_obj['properties'] = [
-                'code_pvz' => $value->getCode(),
-                'type' => $value->getType() === 'PVZ' ? "PVZ" : 'POSTAMAT',
-                'workTime'=> $value->getWorkTime(),
-                'comment' => $value->getAddressComment(),
-                'fullAddress' => $value->getLocation()->getAddressFull(),
-                'deliveryName' => 'СДЭК',
-                'iconCaption' => 'СДЭК',
-                'hintContent' => $value->getLocation()->getAddress(),
-                "openEmptyBalloon" => true,
-                "clusterCaption" => 'СДЭК',
-            ];
-            if (!empty($value->phones)) {
-                $features_obj['properties']['phone'] = $value->getPhones()[0]->getNumber();
+            foreach ($sdek_result as $value) {
+                $features_obj['type'] = 'Feature';
+                $features_obj['id'] = $id_feature;
+                $id_feature += 1;
+                $features_obj['geometry'] = [
+                    'type' => 'Point',
+                    'coordinates' => [
+                        $value->getLocation()->getLatitude(),
+                        $value->getLocation()->getLongitude()
+                    ]
+                ];
+                $features_obj['properties'] = [
+                    'code_pvz' => $value->getCode(),
+                    'type' => $value->getType() === 'PVZ' ? "PVZ" : 'POSTAMAT',
+                    'workTime'=> $value->getWorkTime(),
+                    'comment' => $value->getAddressComment(),
+                    'fullAddress' => $value->getLocation()->getAddressFull(),
+                    'deliveryName' => 'СДЭК',
+                    'iconCaption' => 'СДЭК',
+                    'hintContent' => $value->getLocation()->getAddress(),
+                    "openEmptyBalloon" => true,
+                    "clusterCaption" => 'СДЭК',
+                ];
+                if (!empty($value->phones)) {
+                    $features_obj['properties']['phone'] = $value->getPhones()[0]->getNumber();
+                }
+                $features_obj['options'] = [
+                    'preset' => 'islands#darkGreenIcon'
+                ];
+
+                $result_array[] = $features_obj;
             }
-            $features_obj['options'] = [
-                'preset' => 'islands#darkGreenIcon'
-            ];
-
-            $result_array[] = $features_obj;
+        } catch (\Throwable $e) {
+            $this->errors[] = $e->getMessage();
+            return array('errors' => $this->errors);
         }
     }
 
@@ -210,13 +216,50 @@ class SDEKDelivery extends CommonPVZ
      * @param $cityName
      * @return false|string
      */
-    private function getSDEKCityCode($cityName)
+    private function getSDEKCityCode($cityName, $cityCode)
     {
-        $location = (new \AntistressStore\CdekSDK2\Entity\Requests\Location())
-            ->setCountryCodes('RU')
-            ->setCity($cityName);
-        $locationList = $this->cdek_client->getCities($location);
-        return $locationList[0]->getCode();
+        try {
+            $location = (new \AntistressStore\CdekSDK2\Entity\Requests\Location())
+                ->setCountryCodes('RU')
+                ->setCity($cityName);
+            $locationList = $this->cdek_client->getCities($location);
+            $res = LocationTable::getList(array(
+                'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID,
+                    '=PARENT.PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID, '=TYPE.ID' => 6, '=CODE' => $cityCode),
+                'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'PARENT_NAME_RU' => 'PARENT.NAME.NAME',
+                    'PARENT_PARENT_NAME_RU' => 'PARENT.PARENT.NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
+            ));
+            $location = $res->fetch();
+            $nameLocationWithoutPostfix = substr($location['NAME_RU'], 0, strrpos($location['NAME_RU'], " "));
+            $nameRegionWithoutPrefixPostfix = explode(' ', $location['PARENT_PARENT_NAME_RU']);
+            if ($nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'область'
+                || $nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'край')
+                array_pop($nameRegionWithoutPrefixPostfix);
+            else
+                array_shift($nameRegionWithoutPrefixPostfix);
+            $nameRegionWithoutPrefixPostfix = implode($nameRegionWithoutPrefixPostfix);
+
+            if ($location) {
+                foreach($locationList as $sdekLocation) {
+                    $nameRegionSdekWithoutPrefixPostfix = explode(' ', $sdekLocation->getRegion());
+                    if ($nameRegionSdekWithoutPrefixPostfix[array_key_last($nameRegionSdekWithoutPrefixPostfix)] === 'область'
+                        || $nameRegionSdekWithoutPrefixPostfix[array_key_last($nameRegionSdekWithoutPrefixPostfix)] === 'край')
+                        array_pop($nameRegionSdekWithoutPrefixPostfix);
+                    else
+                        array_shift($nameRegionSdekWithoutPrefixPostfix);
+                    $nameRegionSdekWithoutPrefixPostfix = implode($nameRegionSdekWithoutPrefixPostfix);
+                    if($nameLocationWithoutPostfix == $sdekLocation->getCity()
+                        && $nameRegionWithoutPrefixPostfix == $nameRegionSdekWithoutPrefixPostfix) {
+                        return $sdekLocation->getCode();
+                    }
+                }
+            } else {
+                return $locationList[0]->getCode();
+            }
+        } catch (\Throwable $e) {
+            $this->errors[] = $e->getMessage();
+            return array('errors' => $this->errors);
+        }
     }
 
     /** Return calculate price delivery
@@ -247,7 +290,7 @@ class SDEKDelivery extends CommonPVZ
 
             $tariffPriority = self::getSdekTarifList(array(
                 'type' => $array['type_pvz'] === "POSTAMAT" ? 'postamat' : 'pickup', 'answer' => 'array'));
-            $location_to = $this->getSDEKCityCode($array['name_city']);
+            $location_to = $this->getSDEKCityCode($array['name_city'], $array['code_city']);
             $location_to = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($location_to);
             $location_to->setAddress($array['to']);
             $location_from = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($this->configs['from']);
@@ -257,8 +300,8 @@ class SDEKDelivery extends CommonPVZ
 
             foreach ($array['packages'] as $package) {
                 $packageObj = new \AntistressStore\CdekSDK2\Entity\Requests\Package();
-                //TODO не рабочая конструкция, вес обязательное поле, надо добавить вес по умолчанию
-                !empty($package['weight']) ? $packageObj->setWeight($package['weight']) : '';
+                !empty($package['weight']) ? $packageObj->setWeight($package['weight'])
+                    : $params['weight'] = $packageObj->setWeight((int)Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultweight'));
                 $tariff->setPackages($packageObj);
             }
 
@@ -297,7 +340,8 @@ class SDEKDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         try {
-            $hashed_values = array($params['location_name']);
+            $location_name = json_decode($params['location_name'], true)['LOCATION_NAME'];
+            $hashed_values = array($location_name);
             foreach ($params['packages'] as $package) {
                 $hashed_values[] = $package['weight'];
             }
@@ -316,7 +360,7 @@ class SDEKDelivery extends CommonPVZ
                 }
             }
 
-            $location_to = $this->getSDEKCityCode($params['location_name']);
+            $location_to = $this->getSDEKCityCode($location_name, $params['location']);
             $location_to = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($location_to);
             $location_to->setAddress($params['address']);
             $location_from = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($this->configs['from']);
@@ -329,7 +373,8 @@ class SDEKDelivery extends CommonPVZ
 
             foreach ($params['packages'] as $package) {
                 $packageObj = new \AntistressStore\CdekSDK2\Entity\Requests\Package();
-                !empty($package['weight']) ? $packageObj->setWeight($package['weight']) : '';
+                !empty($package['weight']) ? $packageObj->setWeight($package['weight'])
+                    : '';
                 $tariff->setPackages($packageObj);
             }
 

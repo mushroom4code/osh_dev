@@ -50,7 +50,8 @@ class DellinDelivery extends CommonPVZ
 
         $res = LocationTable::getList(array(
             'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=TYPE.ID' => '5'),
-            'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
+            'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'PARENT_NAME_RU' => 'PARENT.NAME.NAME',
+                'PARENT_PARENT_NAME_RU' => 'PARENT.PARENT.NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
         ));
         $listLocation = [];
         while ($arLocation = $res->fetch()) {
@@ -137,13 +138,16 @@ class DellinDelivery extends CommonPVZ
             while (strlen($this->configs['derivalkladr']) < 25) {
                 $this->configs['derivalkladr'] = $this->configs['derivalkladr'] . '0';
             }
-            $params['shipment_weight'] = $params['weight'];
-            $params['width'] = $this->configs['defaultwidth'];
-            $params['length'] = $this->configs['defaultlength'];
-            $params['height'] = $this->configs['defaultheight'];
-            $params['weight'] = $this->configs['defaultweight'];
+            $params['width'] = 0;
+            $params['length'] = 0;
+            $params['height'] = 0;
+            $params['weight'] = 0;
+            $params['default_width'] = (int)Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultwidth');
+            $params['default_length'] = (int)Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultlength');
+            $params['default_height'] = (int)Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultheight');
+            $params['default_weight'] = (int)Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultweight');
             $params['totalVolume'] = 0;
-            $defaultPackageVolume = ($params['width'] / 1000) * ($params['length'] / 1000) * ($params['height'] / 1000);
+            $defaultPackageVolume = ($params['default_width'] / 1000) * ($params['default_length'] / 1000) * ($params['default_height'] / 1000);
             foreach ($params['packages'] as $package) {
                 if (!empty($package['width']) && ($package['width'] > $params['width'])) {
                     $params['width'] = $package['width'];
@@ -157,13 +161,20 @@ class DellinDelivery extends CommonPVZ
                 if (!empty($package['weight']) && ($package['weight'] > $params['weight'])) {
                     $params['weight'] = $package['weight'];
                 }
-                if(!empty($package['width']) && !empty($package['']) && !empty($package['height'])) {
+                if(!empty($package['width']) && !empty($package['length']) && !empty($package['height'])) {
                     $params['totalVolume'] += ($package['width'] / 1000) * ($package['length'] / 1000) * ($package['height'] / 1000);
                 } else {
                     $params['totalVolume'] += $defaultPackageVolume;
                 }
             }
-
+            if (empty($params['width']))
+                $params['width'] = $params['default_width'];
+            if (empty($params['length']))
+                $params['length'] = $params['default_length'];
+            if (empty($params['height']))
+                $params['height'] = $params['default_height'];
+            if (empty($params['weight']))
+                $params['weight'] = $params['default_weight'];
             $hashed_values = array($params['width'], $params['length'], $params['height'],
                 $params['weight'], $params['totalVolume'], $params['shipment_weight'],
                 $params['code_pvz'], count($params['packages']), 'terminal');
@@ -244,10 +255,14 @@ class DellinDelivery extends CommonPVZ
                 $this->configs['derivalkladr'] = $this->configs['derivalkladr'] . '0';
             }
 
-            $params['width'] = $this->configs['defaultwidth'];
-            $params['length'] = $this->configs['defaultlength'];
-            $params['height'] = $this->configs['defaultheight'];
-            $params['weight'] = $this->configs['defaultweight'];
+            $params['width'] = 0;
+            $params['length'] = 0;
+            $params['height'] = 0;
+            $params['weight'] = 0;
+            $params['default_width'] = (int)Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultwidth');
+            $params['default_length'] = (int)Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultlength');
+            $params['default_height'] = (int)Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultheight');
+            $params['default_weight'] = (int)Option::get(DeliveryHelper::$MODULE_ID, 'Common_defaultweight');
             $params['totalVolume'] = 0;
             $defaultPackageVolume = ($params['width'] / 1000) * ($params['length'] / 1000) * ($params['height'] / 1000);
             foreach ($params['packages'] as $package) {
@@ -263,13 +278,20 @@ class DellinDelivery extends CommonPVZ
                 if (!empty($package['weight']) && ($package['weight'] > $params['weight'])) {
                     $params['weight'] = $package['weight'];
                 }
-                if(!empty($package['width']) && !empty($package['']) && !empty($package['height'])) {
+                if(!empty($package['width']) && !empty($package['length']) && !empty($package['height'])) {
                     $params['totalVolume'] += ($package['width'] / 1000) * ($package['length'] / 1000) * ($package['height'] / 1000);
                 } else {
                     $params['totalVolume'] += $defaultPackageVolume;
                 }
             }
-
+            if (empty($params['width']))
+                $params['width'] = $params['default_width'];
+            if (empty($params['length']))
+                $params['length'] = $params['default_length'];
+            if (empty($params['height']))
+                $params['height'] = $params['default_height'];
+            if (empty($params['weight']))
+                $params['weight'] = $params['default_weight'];
             $hashed_values = array($params['width'], $params['length'], $params['height'],
                 $params['weight'], $params['totalVolume'], $params['shipment_weight'],
                 $params['street_kladr_to'], count($params['packages']), 'address');

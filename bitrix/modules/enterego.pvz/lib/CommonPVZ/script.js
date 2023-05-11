@@ -5,6 +5,9 @@ BX.SaleCommonPVZ = {
     pvzPopup: null,
     curCityCode: null,
     curCityName: null,
+    curCityType: null,
+    curCityArea: null,
+    curParentCityName: null,
     isGetPVZ: false,
     ajaxUrlPVZ: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
     propsMap: null,
@@ -133,6 +136,12 @@ BX.SaleCommonPVZ = {
                         $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
                             constraints: {
                                 locations: [{region: "Московская"}, {region: "Москва"}]
+                            }
+                        });
+                    } else if (this.curCityType == 6) {
+                        addressField.suggestions().setOptions({
+                            constraints: {
+                                locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
                             }
                         });
                     } else {
@@ -414,7 +423,12 @@ BX.SaleCommonPVZ = {
         var __this = this;
 
         ymaps.ready(function () {
-            var myGeocoder = ymaps.geocode(__this.curCityName, {results: 1});
+            var myGeocoder = ymaps.geocode(__this.curParentCityName+', '+ __this.curCityName);
+            myGeocoder.then(
+                function (res) {
+                    console.log(res);
+                    console.log(res.geoObjects.getIterator().getNext());
+                });
             myGeocoder.then(function (res) { // получаем координаты
                 var firstGeoObject = res.geoObjects.get(0),
                     coords = firstGeoObject.geometry.getCoordinates();
@@ -467,7 +481,11 @@ BX.SaleCommonPVZ = {
                 'action': 'getCityName'
             },
             onsuccess: function (res) {
-                __this.curCityName = res;
+                res = JSON.parse(res);
+                __this.curCityName = res.LOCATION_NAME;
+                __this.curParentCityName = res.PARENT_LOCATION_NAME;
+                __this.curCityArea = res.AREA_NAME;
+                __this.curCityType = res.TYPE;
                 if (__this.propAddressId) {
                     if (__this.curCityName == 'Москва') {
                         $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
@@ -476,11 +494,20 @@ BX.SaleCommonPVZ = {
                             }
                         });
                     } else {
-                        $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
-                            constraints: {
-                                locations: [{city: __this.curCityName}]
-                            }
-                        });
+                        if (Number(__this.curCityType) === 6) {
+                            console.log(__this.curCityArea);
+                            $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                                constraints: {
+                                    locations: [{region: __this.curCityArea}, {area: __this.curParentCityName}]
+                                }
+                            });
+                        } else {
+                            $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                                constraints: {
+                                    locations: [{city: __this.curCityName}]
+                                }
+                            });
+                        }
                     }
                 }
             },
@@ -537,7 +564,7 @@ BX.SaleCommonPVZ = {
             delivery: point.properties.deliveryName,
             to: point.properties.fullAddress,
             weight: BX.Sale.OrderAjaxComponent.result.TOTAL.ORDER_WEIGHT,
-            cost: this.shipmentCost, // !!!
+            cost: this.shipmentCost,
             packages: this.orderPackages,
             street_kladr: point.properties.street_kladr ?? '',
             latitude: point.geometry.coordinates[0],
@@ -562,7 +589,6 @@ BX.SaleCommonPVZ = {
         this.selectedPvzObjId = objectId
         const point = this.objectManager.objects.getById(objectId);
 
-        //console.log(point)
         const pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
         const pvzFullAddress = pvzAddress +
             (typeof point.properties.code_pvz !== 'undefined' ? ' #' + point.properties.code_pvz : '');
