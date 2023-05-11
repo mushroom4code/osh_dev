@@ -76,6 +76,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             this.deliveryOptions = parameters.deliveryOptions;
             this.result = parameters.result || {};
             this.prepareLocations(parameters.locations);
+            this.savedDeliveryProfiles = parameters.savedDeliveryProfiles || {};
             this.params = parameters.params || {};
             this.signedParamsString = parameters.signedParamsString || '';
             this.siteId = parameters.siteID || '';
