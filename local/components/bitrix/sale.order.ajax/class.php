@@ -5550,7 +5550,7 @@ class SaleOrderAjax extends \CBitrixComponent
                 );
             }
 
-            \CommonPVZ\ProfilesAddresses::save($this->order);
+            \CommonPVZ\SavedDeliveryProfiles::save($this->order);
 
             $fUserId = Sale\Fuser::getId();
             $siteId = $this->getSiteId();
