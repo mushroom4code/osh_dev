@@ -138,6 +138,11 @@ class DellinDelivery extends CommonPVZ
             while (strlen($this->configs['derivalkladr']) < 25) {
                 $this->configs['derivalkladr'] = $this->configs['derivalkladr'] . '0';
             }
+            $params['shipment_weight'] = $params['weight'];
+            if (empty($params['shipment_weight']))
+                $noGeneralWeight = true;
+            else
+                $noGeneralWeight = false;
             $params['width'] = 0;
             $params['length'] = 0;
             $params['height'] = 0;
@@ -160,6 +165,11 @@ class DellinDelivery extends CommonPVZ
                 }
                 if (!empty($package['weight']) && ($package['weight'] > $params['weight'])) {
                     $params['weight'] = $package['weight'];
+                }
+                if ($noGeneralWeight && !empty($package['weight'])) {
+                    $params['shipment_weight'] += $package['weight'];
+                } elseif ($noGeneralWeight) {
+                    $params['shipment_weight'] += $params['default_weight'];
                 }
                 if(!empty($package['width']) && !empty($package['length']) && !empty($package['height'])) {
                     $params['totalVolume'] += ($package['width'] / 1000) * ($package['length'] / 1000) * ($package['height'] / 1000);
@@ -221,7 +231,7 @@ class DellinDelivery extends CommonPVZ
                     'height' => ($params['height'] / 1000),
                     'weight' => ($params['weight'] / 1000),
                     'totalVolume' => $params['totalVolume'],
-                    'totalWeight' => round(($params['shipment_weight'] / 1000), 2),
+                    'totalWeight' => ($params['shipment_weight'] / 1000),
                 ]
             ];
             $result = DellindeliveryApicore::SendApiRequest('calculator', $data);
@@ -255,6 +265,11 @@ class DellinDelivery extends CommonPVZ
                 $this->configs['derivalkladr'] = $this->configs['derivalkladr'] . '0';
             }
 
+            if (empty($params['shipment_weight']))
+                $noGeneralWeight = true;
+            else
+                $noGeneralWeight = false;
+
             $params['width'] = 0;
             $params['length'] = 0;
             $params['height'] = 0;
@@ -277,6 +292,11 @@ class DellinDelivery extends CommonPVZ
                 }
                 if (!empty($package['weight']) && ($package['weight'] > $params['weight'])) {
                     $params['weight'] = $package['weight'];
+                }
+                if ($noGeneralWeight && !empty($package['weight'])) {
+                    $params['shipment_weight'] += $package['weight'];
+                } elseif ($noGeneralWeight) {
+                    $params['shipment_weight'] += $params['default_weight'];
                 }
                 if(!empty($package['width']) && !empty($package['length']) && !empty($package['height'])) {
                     $params['totalVolume'] += ($package['width'] / 1000) * ($package['length'] / 1000) * ($package['height'] / 1000);

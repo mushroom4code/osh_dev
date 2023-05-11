@@ -5550,6 +5550,8 @@ class SaleOrderAjax extends \CBitrixComponent
                 );
             }
 
+            \CommonPVZ\ProfilesAddresses::save($this->order);
+
             $fUserId = Sale\Fuser::getId();
             $siteId = $this->getSiteId();
             Sale\BasketComponentHelper::clearFUserBasketPrice($fUserId, $siteId);

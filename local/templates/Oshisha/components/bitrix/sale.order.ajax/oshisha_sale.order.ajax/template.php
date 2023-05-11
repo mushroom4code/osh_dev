@@ -283,6 +283,9 @@ if ($request->get('ORDER_ID') <> '') {
         $user_object->USER_ID = $USER->GetID();
         $user_object->GetCompanyForUser();
         $user_object->GetActiveContrAgentForUserForOrder();
+        $savedDeliveryProfiles = \CommonPVZ\ProfilesAddresses::getAll($user_object->USER_ID);
+    } else {
+        $savedDeliveryProfiles = false;
     }
     ?>
 
@@ -724,6 +727,7 @@ if ($request->get('ORDER_ID') <> '') {
             result: <?=CUtil::PhpToJSObject($arResult['JS_DATA'])?>,
             deliveryOptions: <?=CUtil::PhpToJSObject($arResult['DELIVERY_OPTIONS'])?>,
             locations: <?=CUtil::PhpToJSObject($arResult['LOCATIONS'])?>,
+            savedDeliveryProfiles: <?=CUtil::PhpToJSObject($savedDeliveryProfiles)?>,
             params: <?=CUtil::PhpToJSObject($arParams)?>,
             signedParamsString: '<?=CUtil::JSEscape($signedParams)?>',
             siteID: '<?=CUtil::JSEscape($component->getSiteId())?>',
