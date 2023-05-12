@@ -392,7 +392,7 @@ h4.checkout-block-title > i.fa {
 .map_for_delivery .pickpoint-item .bottom-row .pvz-worktime {
     width: 55%;
 }
-.map_for_delivery.list .btn.btn_basket {
+.map_for_delivery.list > .btn.btn_basket {
     width: 22em;
     margin: 0 auto;
     bottom: -1.5em;
