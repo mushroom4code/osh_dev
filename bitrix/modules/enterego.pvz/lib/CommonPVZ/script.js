@@ -34,6 +34,8 @@ BX.SaleCommonPVZ = {
     orderPackages: null,
     oshishaDeliveryOptions: null,
     oshishaDeliveryStatus: false,
+    propDefaultPvzAddressId: null,
+    propTypePvzId: null,
     // deliveryBlock: BX('bx-soa-delivery'),
 
     init: function (params) {
@@ -51,6 +53,8 @@ BX.SaleCommonPVZ = {
         this.propLongitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
         this.propDateDelivery          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
         this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
+        this.propDefaultPvzAddressId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.ID;
+        this.propTypePvzId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
 
         this.curDeliveryId = params.params?.curDeliveryId;
         this.doorDeliveryId = params.params?.doorDeliveryId;
@@ -495,7 +499,6 @@ BX.SaleCommonPVZ = {
                         });
                     } else {
                         if (Number(__this.curCityType) === 6) {
-                            console.log(__this.curCityArea);
                             $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
                                 constraints: {
                                     locations: [{region: __this.curCityArea}, {area: __this.curParentCityName}]
@@ -569,9 +572,6 @@ BX.SaleCommonPVZ = {
             street_kladr: point.properties.street_kladr ?? '',
             latitude: point.geometry.coordinates[0],
             longitude: point.geometry.coordinates[1],
-            fivepost_rate: point.properties.fivepostRate,
-            fivepost_deliverysl: point.properties.fivepostDeliverySl,
-            fivepost_max_weight: point.properties.fivepostMaxWeight,
             hubregion: point.properties.hubregion,
             name_city: this.curCityName,
             postindex:  point.properties.postindex,
@@ -593,7 +593,21 @@ BX.SaleCommonPVZ = {
         const pvzFullAddress = pvzAddress +
             (typeof point.properties.code_pvz !== 'undefined' ? ' #' + point.properties.code_pvz : '');
 
-        this.updateValueProp(this.propCommonPVZId, point.properties.code_pvz)
+        this.updateValueProp(this.propCommonPVZId, point.properties.code_pvz);
+
+        if (this.propTypePvzId) {
+            const type_pvz = document.querySelector('[name="ORDER_PROP_' + this.propTypePvzId + '"]');
+            if (type_pvz) {
+                type_pvz.value = point.properties.type
+            }
+        }
+
+        if (this.propDefaultPvzAddressId) {
+            const default_address = document.querySelector('[name="ORDER_PROP_' + this.propDefaultPvzAddressId + '"]');
+            if (default_address) {
+                default_address.value = point.properties.fullAddress;
+            }
+        }
 
         // FullAddress
         if (this.propAddressId ) {
@@ -635,20 +649,6 @@ BX.SaleCommonPVZ = {
             const deliveryPostIndex = document.querySelector('[name="ORDER_PROP_' + this.propZipId + '"]');
             if (deliveryPostIndex) {
                 deliveryPostIndex.value = point.properties.postindex
-            }
-        }
-
-        if (this.propKladrId) {
-            const deliveryKladr = document.querySelector('[name="ORDER_PROP_' + this.propKladrId + '"]');
-            if (deliveryKladr) {
-                deliveryKladr.value = point.properties.street_kladr
-            }
-        }
-
-        if (this.propKladrId) {
-            const deliveryKladr = document.querySelector('[name="ORDER_PROP_' + this.propKladrId + '"]');
-            if (deliveryKladr) {
-                deliveryKladr.value = point.properties.street_kladr
             }
         }
 

@@ -42,15 +42,30 @@ class SavedDeliveryProfiles
                     if ($profilesAddressesResult->isSuccess()) {
                         $profilesProperties = new ProfilesPropertiesTable();
                         foreach ($propertiesArr as $property) {
-                            $profilesPropertiesParams = [
-                                'SAVED_PROFILE_ID' => $profilesAddressesResult->getPrimary()['ID'],
-                                'CODE' => $property['CODE'],
-                                'VALUE' => $property['VALUE']
-                            ];
-                           $result = $profilesProperties->add($profilesPropertiesParams);
+                            if ($isPvz) {
+                                if ($property['CODE'] == 'ZIP' || $property['CODE'] == 'LATITUDE' || $property['CODE'] == 'LONGITUDE'
+                                    || $property['CODE'] == 'TYPE_PVZ' || $property['CODE'] == 'DEFAULT_ADDRESS_PVZ'
+                                    || $property['CODE'] == 'COMMON_PVZ' || $property['CODE'] == 'TYPE_DELIVERY'
+                                    || $property['CODE'] == 'LOCATION') {
+                                    $profilesPropertiesParams = [
+                                        'SAVED_PROFILE_ID' => $profilesAddressesResult->getPrimary()['ID'],
+                                        'CODE' => $property['CODE'],
+                                        'VALUE' => $property['VALUE']
+                                    ];
+                                }
+                            } else {
+                                if ($property['CODE'] == 'TYPE_DELIVERY' || $property['CODE'] == 'LOCATION' || $property['CODE'] == 'ZIP'
+                                    || $property['CODE'] == 'STREET_KLADR' || $property['CODE'] == 'FIAS') {
+                                    $profilesPropertiesParams = [
+                                        'SAVED_PROFILE_ID' => $profilesAddressesResult->getPrimary()['ID'],
+                                        'CODE' => $property['CODE'],
+                                        'VALUE' => $property['VALUE']
+                                    ];
+                                }
+                            }
+
+                            $result = $profilesProperties->add($profilesPropertiesParams);
                         }
-//                    if ($isPvz)
-//                        $profilesAddressesParams['IS_PVZ'] = 'Y';
 
                         return true;
                     } else {
