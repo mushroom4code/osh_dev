@@ -333,38 +333,38 @@ BX.SaleCommonPVZ = {
         BX.cleanNode(BX('map_for_delivery'))
     },
 
-    createPVZPopup: function () {
-        var __this = this;
-        if (BX.PopupWindowManager.isPopupExists('wrap_pvz_map')) return;
-        this.pvzPopup = BX.PopupWindowManager.create(
-            'wrap_pvz_map',
-            null,
-            {
-                content: '<div id="map_for_pvz" style=""></div>',
-                closeIcon: {
-                    left: '13px',
-                    top: '10px'
-                },
-                resizable: true,
-                overlay: {
-                    backgroundColor: 'black',
-                    opacity: 500
-                },
-                draggable: {restrict: false},
-                width: '80',
-                autoHide: true,
-                lightShadow: true,
-                events: {
-                    onPopupShow: function () {
-                    },
-                    onPopupClose: function () {
-                        if (__this.propsMap)
-                            __this.propsMap.destroy();
-                    }
-                },
-                closeByEsc: true
-            });
-    },
+    // createPVZPopup: function () {
+    //     var __this = this;
+    //     if (BX.PopupWindowManager.isPopupExists('wrap_pvz_map')) return;
+    //     this.pvzPopup = BX.PopupWindowManager.create(
+    //         'wrap_pvz_map',
+    //         null,
+    //         {
+    //             content: '<div id="map_for_pvz" style=""></div>',
+    //             closeIcon: {
+    //                 left: '13px',
+    //                 top: '10px'
+    //             },
+    //             resizable: true,
+    //             overlay: {
+    //                 backgroundColor: 'black',
+    //                 opacity: 500
+    //             },
+    //             draggable: {restrict: false},
+    //             width: '80',
+    //             autoHide: true,
+    //             lightShadow: true,
+    //             events: {
+    //                 onPopupShow: function () {
+    //                 },
+    //                 onPopupClose: function () {
+    //                     if (__this.propsMap)
+    //                         __this.propsMap.destroy();
+    //                 }
+    //             },
+    //             closeByEsc: true
+    //         });
+    // },
     createPVZPopup1: function() {
         this.pvzPopup = BX.create({
             tag: 'div',
@@ -419,33 +419,33 @@ BX.SaleCommonPVZ = {
     /**
      *   Построение карты с PVZ
      */
-    buildPVZMap: function () {
-        var __this = this;
-
-        ymaps.ready(function () {
-            var myGeocoder = ymaps.geocode(__this.curParentCityName+', '+ __this.curCityName);
-            myGeocoder.then(
-                function (res) {
-                    console.log(res);
-                    console.log(res.geoObjects.getIterator().getNext());
-                });
-            myGeocoder.then(function (res) { // получаем координаты
-                var firstGeoObject = res.geoObjects.get(0),
-                    coords = firstGeoObject.geometry.getCoordinates();
-
-                __this.propsMap = new ymaps.Map('map_for_pvz', {
-                    center: [coords[0], coords[1]],
-                    zoom: 12,
-                    controls: ['fullscreenControl']
-                });
-                __this.getPVZList();
-
-            }).catch(function (e) {
-                __this.showError(__this.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
-                console.warn(e);
-            });
-        });
-    },
+    // buildPVZMap: function () {
+    //     var __this = this;
+    //
+    //     ymaps.ready(function () {
+    //         var myGeocoder = ymaps.geocode(__this.curParentCityName+', '+ __this.curCityName);
+    //         myGeocoder.then(
+    //             function (res) {
+    //                 // console.log(res);
+    //                 // console.log(res.geoObjects.getIterator().getNext());
+    //             });
+    //         myGeocoder.then(function (res) { // получаем координаты
+    //             var firstGeoObject = res.geoObjects.get(0),
+    //                 coords = firstGeoObject.geometry.getCoordinates();
+    //
+    //             __this.propsMap = new ymaps.Map('map_for_pvz', {
+    //                 center: [coords[0], coords[1]],
+    //                 zoom: 12,
+    //                 controls: ['fullscreenControl']
+    //             });
+    //             __this.getPVZList();
+    //
+    //         }).catch(function (e) {
+    //             __this.showError(__this.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
+    //             console.warn(e);
+    //         });
+    //     });
+    // },
     buildPVZMap1: function () {
         var __this = this;
 
@@ -594,29 +594,41 @@ BX.SaleCommonPVZ = {
             (typeof point.properties.code_pvz !== 'undefined' ? ' #' + point.properties.code_pvz : '');
 
         this.updateValueProp(this.propCommonPVZId, point.properties.code_pvz)
+
+        // FullAddress
         if (this.propAddressId ) {
             const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
             if (address) {
                 address.value = pvzFullAddress;
             }
         }
+        // City
+        if (this.propCityId ) {
+            const city = document.querySelector('[name="ORDER_PROP_' + this.propCityId + '"]');
+            if (city) {
+                city.value = point.properties.cityName;
+            }
+        }
 
+        // Delivery Name
         if (this.propTypeDeliveryId ) {
             const typeDelivery = document.querySelector('[name="ORDER_PROP_' + this.propTypeDeliveryId + '"]');
             if (typeDelivery) {
                 typeDelivery.value = point.properties.deliveryName
             }
         }
+        // Delivery Latitude
         if (this.propLatitudeId ) { //55.7461 55.781347
             const deliveryLatitude = document.querySelector('[name="ORDER_PROP_' + this.propLatitudeId + '"]');
             if (deliveryLatitude) {
-                deliveryLatitude.value = point.properties.latitude
+                deliveryLatitude.value = point.geometry.coordinates[0]
             }
         }
+        // Delivery Longitude
         if (this.propLongitudeId ) { //37.5000 38.431949
             const deliveryLongitude = document.querySelector('[name="ORDER_PROP_' + this.propLongitudeId + '"]');
             if (deliveryLongitude) {
-                deliveryLongitude.value = point.properties.longitude
+                deliveryLongitude.value = point.geometry.coordinates[1]
             }
         }
         if (this.propZipId ) { //143000
@@ -633,7 +645,12 @@ BX.SaleCommonPVZ = {
             }
         }
 
-
+        if (this.propKladrId) {
+            const deliveryKladr = document.querySelector('[name="ORDER_PROP_' + this.propKladrId + '"]');
+            if (deliveryKladr) {
+                deliveryKladr.value = point.properties.street_kladr
+            }
+        }
 
         BX('selected-delivery-type').innerHTML = (point.properties.type == 'PVZ' ? 'ПВЗ ' : 'Постамат ') + point.properties.deliveryName
 
@@ -860,6 +877,9 @@ BX.SaleCommonPVZ = {
                                         },
                                         events: {
                                             change: BX.proxy(function () {
+                                                BX('ID_DELIVERY_ID_95').checked = true
+                                                BX('data_view_map').disabled = false
+                                                BX('data_view_map').checked = true
                                                 __this.clearPvzMap();
                                                 __this.buildPVZMap1();
                                             }),
@@ -894,29 +914,52 @@ BX.SaleCommonPVZ = {
                                             },
                                             events: {
                                                 change: BX.proxy(function () {
+                                                    BX('ID_DELIVERY_ID_94').checked = true
                                                     __this.clearPvzMap();
 
                                                     BX.append(
-                                                        BX.create({
-                                                            tag: 'input',
-                                                            props: {
-                                                                className: 'form-control bx-soa-customer-input bx-ios-fix suggestions-input',
-                                                                name: 'ORDER_PROP_' + this.propAddressId + ']',
-                                                                id: 'soa-property-' + this.propAddressId,
-                                                            },
-                                                            dataset: {
-                                                                name: "ADDRESS"
-                                                            }
-                                                        }),
+                                                        window.Osh.bxPopup.nodeYaMapContainer,
                                                         BX('map_for_delivery')
                                                     )
 
+                                                    window.Osh.bxPopup.init()
+
+                                                    // __this.refresh()
+                                                    // __this.getCityName();
+
+                                                    const addressFieldPopup = $(document).find('#popup-address-field');
+
+                                                    addressFieldPopup.suggestions({
+                                                        token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
+                                                        type: "ADDRESS",
+                                                        hint: false,
+                                                        floating: true,
+                                                        triggerSelectOnEnter: true,
+                                                        autoSelectFirst: true,
+                                                        onSelect: function (suggestion) {
+                                                            this.updatePropsFromDaData(suggestion)
+
+                                                            if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+                                                                if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
+                                                                    __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                                                                    oshMkad.afterSave = null;
+                                                                    oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
+                                                                        __this.propAddressId,
+                                                                        (__this.propDateDelivery)
+                                                                            ? __this.propDateDelivery
+                                                                            : '',
+                                                                        (__this.propDateDelivery)
+                                                                            ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
+                                                                            : '',
+                                                                        true);
+                                                                }
+                                                            }
+
+                                                            BX.onCustomEvent('onDeliveryExtraServiceValueChange');
+                                                        }.bind(this),
+                                                    });
+
                                                     __this.refresh()
-
-
-                                                    const addressField = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
-
-
 
                                                 }, this)
                                             },
@@ -1073,6 +1116,7 @@ BX.SaleCommonPVZ = {
                                             change: BX.proxy(function() {
                                                 if(BX('delivery-self').checked) {
                                                     __this.clearPvzMap();
+                                                    BX('map_for_delivery').classList.remove('list')
                                                     __this.buildPVZMap1();
                                                 } else {
                                                     __this.clearPvzMap();
@@ -1111,7 +1155,26 @@ BX.SaleCommonPVZ = {
                                             change: BX.proxy(function () {
                                                 if(BX('delivery-self').checked) {
                                                     __this.clearPvzMap();
+                                                    BX('map_for_delivery').classList.add('list')
                                                     __this.getPVZList('list');
+
+                                                    BX.append(
+                                                        BX.create({
+                                                            tag: 'a',
+                                                            props: {
+                                                                id: 'select-pvz-item',
+                                                                href:"javascript:void(0)",
+                                                                className: "btn btn_basket mt-2",
+                                                            },
+                                                            text: 'Выбрать',
+                                                            events: {
+                                                                click: BX.proxy(function() {
+                                                                    BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
+                                                                })
+                                                            }
+                                                        }),
+                                                        BX('map_for_delivery')
+                                                    )
                                                 } else {
                                                     __this.clearPvzMap();
                                                 }
@@ -1186,7 +1249,7 @@ BX.SaleCommonPVZ = {
                                         props: {className: 'sort_service'},
                                         text: 'Все',
                                         events: {
-                                            pickpoints: BX.proxy(function (e) {
+                                            click: BX.proxy(function (e) {
                                                 BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
                                                 BX.removeClass(BX('sort_service_select'), 'active')
 
@@ -1305,42 +1368,146 @@ BX.SaleCommonPVZ = {
 
         return this
     },
+    buildPvzList: function ()
+    {
+        BX.append(
+            BX.create({
+                tag: 'div',
+                props: {
+                    id: 'pickpoints-list',
+                    className: 'pickpoints-list',
+                }
+            }),
+            BX('map_for_delivery')
+        )
 
+        this.pvzObj.features.forEach(el => {
+            let jsClass = ''
+            switch (el.properties.deliveryName) {
+                case 'СДЭК': jsClass = 'js-sdek'; break;
+                case 'Почта России': jsClass = 'js-rupost'; break;
+                case 'OSHISHA': jsClass = 'js-oshisha'; break;
+            }
+
+            BX.append(
+                BX.create({
+                    tag: 'label',
+                    props: {
+                        for: el.id,
+                        className: 'pickpoint-item ' + jsClass
+                    },
+                    children: [
+
+                        BX.create({
+                            tag:'div',
+                            props: {
+                                className: 'top-row'
+                            },
+                            children: [
+                                BX.create({
+                                    tag: 'input',
+                                    props: {
+                                        type: 'radio',
+                                        id: el.id,
+                                        name: 'pvz',
+                                        className: 'pvz-radio-btn'
+                                    },
+                                    events: {
+                                        change: BX.proxy(function (e) {
+                                            BX.adjust(
+                                                BX('select-pvz-item'),
+                                                {
+                                                    dataset: {
+                                                        pvzid: el.id
+                                                    }
+                                                }
+                                            )
+                                        })
+                                    }
+                                }),
+                                BX.create({
+                                    tag: 'span',
+                                    props: {
+                                        className: 'pvz-name'
+                                    },
+                                    text: el.properties.deliveryName
+                                }),
+                                BX.create({
+                                    tag: 'span',
+                                    props: {
+                                        className: 'pvz-cost'
+                                    },
+                                    text: el.properties.cost + ' руб.'
+                                })
+                            ]
+                        }),
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'bottom-row'
+                            },
+                            children: [
+                                BX.create({
+                                    tag: 'span',
+                                    props: {
+                                        className: 'pvz-address'
+                                    },
+                                    text: el.properties.fullAddress
+                                }),
+                                BX.create({
+                                    tag: 'span',
+                                    props: {
+                                        className: 'pvz-deliverytime'
+                                    },
+                                    text: 'от 2 дней'
+                                }),
+                                BX.create({
+                                    tag: 'span',
+                                    props: {
+                                        className: 'pvz-worktime'
+                                    },
+                                    text: el.properties.workTime
+                                })
+                            ]
+                        })
+                    ]
+                }),
+                BX('pickpoints-list')
+            )
+
+            /*
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: el.id,
+                        className: 'pickpoint-item ' + jsClass
+                    },
+                    events: {
+                        click: BX.proxy(function() {
+                            BX.SaleCommonPVZ.selectPvz(el.id)
+                        }, this)
+                    },
+                    text: el.properties.deliveryName + ' / адрес: ' + el.properties.fullAddress
+                }),
+                BX('pickpoints-list')
+            )
+            */
+        })
+    },
     sortPvzList: function(jsClass)
     {
         if(BX('pickpoints-list')) {
-            if (jsClass == 'js-showall') {
-                BX('pickpoints-list').querySelectorAll('.pickpoint-item').forEach((el) => {
-                    el.style.display = 'block'
-                })
-            } else {
-                BX('pickpoints-list').querySelectorAll('.pickpoint-item').forEach((el) => {
-                    el.style.display = 'none'
-                })
-                BX('pickpoints-list').querySelectorAll('.' + jsClass).forEach(el => {
-                    el.style.display = 'block'
-                })
-            }
+            BX('pickpoints-list').querySelectorAll('.pickpoint-item').forEach((el) => {
+                el.style.display = 'block'
+
+                if (jsClass != 'js-showall' && !el.classList.contains(jsClass)) {
+                    el.style.display = 'none';
+                }
+            })
         }
     },
 
-    // initCheckoutDom: function() {
-    //     return {
-    //         rootEl: BX('bx-soa-order'),
-    //         user: { rootEl: BX('bx-soa-properties') },
-    //         auth: {rootEl: BX('bx-soa-auth')},
-    //         order: {rootEl: BX('bx-soa-order')},
-    //         region: {rootEl: document.querySelectorAll('#bx-soa-region')},
-    //         delivery: {rootEl: BX('bx-soa-delivery')},
-    //         paysystem: {rootEl: BX('bx-soa-paysystem')},
-    //         pickup: {rootEl: BX('bx-soa-pickup')},
-    //         notice: {rootEl: BX('new_block_with_sms')},
-    //         save: {rootEl: BX('bx-soa-orderSave')},
-    //         total:{rootEl: BX('bx-soa-total')}
-    //     }
-    // },
-    //
-    //
     drawInterface: function ()
     {
         this.checkout = {
@@ -1358,58 +1525,48 @@ BX.SaleCommonPVZ = {
         }
 
         this.drawDelivery()
-            // .drawPayment()
-            // .drawNotice()
-            // .drawProps()
+            .drawPayment()
+            .drawNotice()
+            .drawProps()
         return this
     },
-    //
-    // drawNotice: function()
-    // {
-    //     this.checkout.notice.title = BX.findChild(this.checkout.notice.rootEl, {'class': 'bx-soa-section-title'}, true)
-    //
-    //
-    //     this.checkout.notice.variants = {}
-    //     this.checkout.notice.variants.rootEl = BX.findChild(this.checkout.notice.rootEl, {'class': 'form-check'}, true)
-    //
-    //     this.checkout.notice.variants.sms = {}
-    //     this.checkout.notice.variants.sms.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
-    //     this.checkout.notice.variants.sms.input = BX('sms')
-    //     this.checkout.notice.variants.sms.title = BX.findChild(this.checkout.notice.variants.sms.rootEl, {'tag': 'label'}, true)
-    //
-    //     this.checkout.notice.variants.telegram = {}
-    //     this.checkout.notice.variants.telegram.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
-    //     this.checkout.notice.variants.telegram.input = BX('telegram')
-    //     this.checkout.notice.variants.telegram.title = BX.findChild(this.checkout.notice.variants.telegram.rootEl, {'tag': 'label'}, true)
-    //
-    //     this.checkout.notice.variants.call = {}
-    //     this.checkout.notice.variants.call.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
-    //     this.checkout.notice.variants.call.input = BX('telephone')
-    //     this.checkout.notice.variants.call.title = BX.findChild(this.checkout.notice.variants.call.rootEl, {'tag': 'label'}, true)
-    //
-    //     console.log(this.checkout.notice)
-    //
-    //     // .notice-title-icon
-    //     return this
-    // },
-    // drawPayment: function()
-    // {
-    //     // блок выбора оплаты
-    //     this.checkout.paysystem.titleBox = BX.findChild(this.checkout.paysystem.rootEl, {
-    //         'class':'bx-soa-section-title-container'}, true)
-    //     this.checkout.paysystem.title = BX.findChild(this.checkout.paysystem.titleBox, {
-    //         'class':'bx-soa-section-title'}, true)
-    //     this.checkout.paysystem.titleIcon = BX.create('span', {attrs: {className: 'payment-title-icon'}});
-    //
-    //     BX.removeClass(this.checkout.paysystem.titleBox, 'justify-content-between')
-    //     BX.insertAfter(this.checkout.paysystem.titleIcon, this.checkout.paysystem.title)
-    //
-    //     return this
-    // },
-    //
-    //
+    drawNotice: function()
+    {
+        this.checkout.notice.title = BX.findChild(this.checkout.notice.rootEl, {'class': 'bx-soa-section-title'}, true)
+        this.checkout.notice.variants = {}
+        this.checkout.notice.variants.rootEl = BX.findChild(this.checkout.notice.rootEl, {'class': 'form-check'}, true)
+        this.checkout.notice.variants.sms = {}
+        this.checkout.notice.variants.sms.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
+        this.checkout.notice.variants.sms.input = BX('sms')
+        this.checkout.notice.variants.sms.title = BX.findChild(this.checkout.notice.variants.sms.rootEl, {'tag': 'label'}, true)
+        this.checkout.notice.variants.telegram = {}
+        this.checkout.notice.variants.telegram.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
+        this.checkout.notice.variants.telegram.input = BX('telegram')
+        this.checkout.notice.variants.telegram.title = BX.findChild(this.checkout.notice.variants.telegram.rootEl, {'tag': 'label'}, true)
+        this.checkout.notice.variants.call = {}
+        this.checkout.notice.variants.call.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
+        this.checkout.notice.variants.call.input = BX('telephone')
+        this.checkout.notice.variants.call.title = BX.findChild(this.checkout.notice.variants.call.rootEl, {'tag': 'label'}, true)
+        return this
+    },
+    drawPayment: function()
+    {
+        // блок выбора оплаты
+        this.checkout.paysystem.titleBox = BX.findChild(this.checkout.paysystem.rootEl, {
+            'class':'bx-soa-section-title-container'}, true)
+        this.checkout.paysystem.title = BX.findChild(this.checkout.paysystem.titleBox, {
+            'class':'bx-soa-section-title'}, true)
+        this.checkout.paysystem.titleIcon = BX.create('span', {attrs: {className: 'payment-title-icon'}});
+
+        BX.removeClass(this.checkout.paysystem.titleBox, 'justify-content-between')
+        BX.insertAfter(this.checkout.paysystem.titleIcon, this.checkout.paysystem.title)
+
+        return this
+    },
     drawDelivery: function()
     {
+        // this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
+
         // блок выбора доставки
         this.checkout.delivery.titleBox = BX.findChild(this.checkout.delivery.rootEl,
             {'class':'bx-soa-section-title-container'}, true)
@@ -1510,114 +1667,80 @@ BX.SaleCommonPVZ = {
 
         return this;
     },
-    //
-    // drawProps: function()
-    // {
-    //     this.checkout.user.title = BX.findChild(this.checkout.order.rootEl, {'tag':'h5'}, true);
-    //     BX.addClass(this.checkout.user.title, 'checkout-block-title');
-    //     BX.addClass(this.checkout.user.title, 'fw-normal');
-    //     BX.addClass(BX.findChild(this.checkout.user.title, {'tag':'b'}, true), 'fw-normal');
-    //
-    //     // физ/юр лицо
-    //     this.checkout.user.type = BX.findChild(this.checkout.user.rootEl, {'class': 'bx-soa-section-title-container'});
-    //     BX.addClass(this.checkout.user.type, 'd-none');
-    //
-    //     // ФИО
-    //     this.checkout.user.name = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 1}}, true);
-    //     console.log(this.checkout)
-    //     BX.removeClass(this.checkout.user.name, 'col-12');
-    //     BX.addClass(this.checkout.user.name, 'col-md-6 col-lg-6 col-12  checkout-name-group');
-    //     BX.adjust(this.checkout.user.name, {attrs: {'id': 'checkout-name-group'}});
-    //
-    //     // телефон
-    //     this.checkout.user.phone = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 3}}, true);
-    //     BX.removeClass(this.checkout.user.phone, 'col-12');
-    //     BX.addClass(this.checkout.user.phone, 'col-md-6 col-lg-6 col-12 checkout-phone-group');
-    //     BX.adjust(this.checkout.user.phone, {attrs: {'id': 'checkout-phone-group'}});
-    //
-    //     // email
-    //     this.checkout.user.email = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 2}}, true);
-    //     BX.removeClass(this.checkout.user.email, 'col-12');
-    //     BX.addClass(this.checkout.user.email, 'col-md-6 col-lg-6 col-12 checkout-email-group');
-    //     BX.adjust(this.checkout.user.email, {attrs: {'id':'checkout-email-group'}});
-    //
-    //     // Город
-    //     this.checkout.user.city = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 6}}, true);
-    //     BX.removeClass(this.checkout.user.city, 'd-none');
-    //     BX.addClass(this.checkout.user.city, 'col-md-6 col-lg-6 col-12 checkout-city-group');
-    //     BX.adjust(this.checkout.user.city, {attrs: {'id':'checkout-city-group'}});
-    //
-    //     // блок региона
-    //     BX.addClass(this.checkout.region.rootEl[0], 'd-none');
-    //     BX.remove(this.checkout.region.rootEl[1]);
-    //     this.checkout.region.rootEl = this.checkout.region.rootEl[0];
-    //
-    //     return this
-    // },
+
+
+
+
+
+
+
+
+
+    drawProps: function()
+    {
+        this.checkout.user.title = BX.findChild(this.checkout.order.rootEl, {'tag':'h5'}, true);
+        BX.addClass(this.checkout.user.title, 'checkout-block-title');
+        BX.addClass(this.checkout.user.title, 'fw-normal');
+        BX.addClass(BX.findChild(this.checkout.user.title, {'tag':'b'}, true), 'fw-normal');
+
+        // физ/юр лицо
+        this.checkout.user.type = BX.findChild(this.checkout.user.rootEl, {'class': 'bx-soa-section-title-container'});
+        BX.addClass(this.checkout.user.type, 'd-none');
+
+        // ФИО
+        this.checkout.user.name = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 1}}, true);
+        BX.removeClass(this.checkout.user.name, 'col-12');
+        BX.addClass(this.checkout.user.name, 'col-md-6 col-lg-6 col-12  checkout-name-group');
+        BX.adjust(this.checkout.user.name, {attrs: {'id': 'checkout-name-group'}});
+
+        // телефон
+        this.checkout.user.phone = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 3}}, true);
+        BX.removeClass(this.checkout.user.phone, 'col-12');
+        BX.addClass(this.checkout.user.phone, 'col-md-6 col-lg-6 col-12 checkout-phone-group');
+        BX.adjust(this.checkout.user.phone, {attrs: {'id': 'checkout-phone-group'}});
+
+        // email
+        this.checkout.user.email = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 2}}, true);
+        BX.removeClass(this.checkout.user.email, 'col-12');
+        BX.addClass(this.checkout.user.email, 'col-md-6 col-lg-6 col-12 checkout-email-group');
+        BX.adjust(this.checkout.user.email, {attrs: {'id':'checkout-email-group'}});
+
+        // Город
+        this.checkout.user.city = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 6}}, true);
+        BX.removeClass(this.checkout.user.city, 'd-none');
+        BX.addClass(this.checkout.user.city, 'col-md-6 col-lg-6 col-12 checkout-city-group');
+        BX.adjust(this.checkout.user.city, {attrs: {'id':'checkout-city-group'}});
+
+        // блок региона
+        BX.addClass(this.checkout.region.rootEl[0], 'd-none');
+        BX.remove(this.checkout.region.rootEl[1]);
+        this.checkout.region.rootEl = this.checkout.region.rootEl[0];
+
+        return this
+    },
 
     // buildDeliveryChooseButton: function()
     // {
-    //     // const __this = this
-    //     // __this.showMapBtn = BX.create({
-    //     //     'tag': 'div',
-    //     //     'props': {'className': 'show-map-btn'},
-    //     //     'text': 'Выбрать адрес и способ доставки',
-    //     //     events: {click: BX.proxy(function () {__this.openMap()}, __this)}
-    //     // })
-    //     // BX.insertAfter(__this.showMapBtn,
-    //     //     BX.findChild(BX('bx-soa-delivery'), {'class': 'bx-soa-section-title-container'})
-    //     // )
-    //     // BX.insertAfter(
-    //     //     BX.create({
-    //     //         'tag': 'span',
-    //     //         'props': {'id':'pvz_address'}
-    //     //     }),
-    //     //     __this.showMapBtn
-    //     // )
+    //     const __this = this
+    //     __this.showMapBtn = BX.create({
+    //         'tag': 'div',
+    //         'props': {'className': 'show-map-btn'},
+    //         'text': 'Выбрать адрес и способ доставки',
+    //         events: {click: BX.proxy(function () {__this.openMap()}, __this)}
+    //     })
+    //     BX.insertAfter(__this.showMapBtn,
+    //         BX.findChild(BX('bx-soa-delivery'), {'class': 'bx-soa-section-title-container'})
+    //     )
+    //     BX.insertAfter(
+    //         BX.create({
+    //             'tag': 'span',
+    //             'props': {'id':'pvz_address'}
+    //         }),
+    //         __this.showMapBtn
+    //     )
     // }
 
-    buildPvzList: function ()
-    {
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {
-                    id: 'pickpoints-list',
-                    className: 'pickpoints-list',
-                }
-            }),
-            BX('map_for_delivery')
-        )
 
-
-        this.pvzObj.features.forEach(el => {
-            //console.log(el.properties);
-
-            let jsClass = ''
-            switch (el.properties.deliveryName) {
-                case 'СДЭК': jsClass = 'js-sdek'; break;
-                case 'Почта России': jsClass = 'js-rupost'; break;
-                case 'OSHISHA': jsClass = 'js-oshisha'; break;
-            }
-
-            BX.append(
-                BX.create({
-                    tag: 'div',
-                    props: {
-                        id: el.id,
-                        className: 'pickpoint-item ' + jsClass
-                    },
-                    events: {
-                      click: BX.proxy(function() {
-                          BX.SaleCommonPVZ.selectPvz(el.id)
-                      }, this)
-                    },
-                    text: el.properties.deliveryName + ' / адрес: ' + el.properties.fullAddress
-                }),
-                BX('pickpoints-list')
-            )
-        })
-    }
 };
 
 

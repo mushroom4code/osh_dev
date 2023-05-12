@@ -316,7 +316,8 @@ class DeliveryHelper
             $dimensionsHash =  self::makeDimensionsHash($sumDimensions['W'], $sumDimensions['H'], $sumDimensions['L']);
 
             $uniqueCacheString .= $dimensionsHash;
-            if ($cache->initCache(7200, $uniqueCacheString, $cachePath)) {
+            //TODO DEBUG
+            if (false && $cache->initCache(7200, $uniqueCacheString, $cachePath)) {
                 $points_Array = $cache->getVars();
             } elseif ($cache->startDataCache()) {
                 foreach ($deliveries as $delivery) {
