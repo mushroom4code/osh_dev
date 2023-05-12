@@ -1311,22 +1311,6 @@ BX.SaleCommonPVZ = {
                                     BX.create({
                                         tag: 'li',
                                         props: {className: 'sort_service'},
-                                        text: 'ПЭК',
-                                        events: {
-                                            click: BX.proxy(function (e) {
-                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                this.sortPvzList(e.target.getAttribute('data-target'))
-                                            }, this)
-                                        },
-                                        dataset: {
-                                            target: 'js-pek'
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'li',
-                                        props: {className: 'sort_service'},
                                         text: 'Почта РФ',
                                         events: {
                                             click: BX.proxy(function (e) {
@@ -1382,8 +1366,11 @@ BX.SaleCommonPVZ = {
         )
 
         this.pvzObj.features.forEach(el => {
+            // console.log(el)
             let jsClass = ''
             switch (el.properties.deliveryName) {
+                case 'Деловые линии': jsClass = 'js-dl'; break;
+                case '5Post': jsClass = 'js-5post'; break;
                 case 'СДЭК': jsClass = 'js-sdek'; break;
                 case 'Почта России': jsClass = 'js-rupost'; break;
                 case 'OSHISHA': jsClass = 'js-oshisha'; break;
