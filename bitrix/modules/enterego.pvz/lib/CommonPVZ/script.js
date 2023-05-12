@@ -1565,7 +1565,7 @@ BX.SaleCommonPVZ = {
     },
     drawDelivery: function()
     {
-        // this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
+        this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
 
         // блок выбора доставки
         this.checkout.delivery.titleBox = BX.findChild(this.checkout.delivery.rootEl,
