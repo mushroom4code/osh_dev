@@ -283,7 +283,7 @@ if ($request->get('ORDER_ID') <> '') {
         $user_object->USER_ID = $USER->GetID();
         $user_object->GetCompanyForUser();
         $user_object->GetActiveContrAgentForUserForOrder();
-        $savedDeliveryProfiles = \CommonPVZ\ProfilesAddresses::getAll($user_object->USER_ID);
+        $savedDeliveryProfiles = \CommonPVZ\SavedDeliveryProfiles::getAll($user_object->USER_ID);
     } else {
         $savedDeliveryProfiles = false;
     }
