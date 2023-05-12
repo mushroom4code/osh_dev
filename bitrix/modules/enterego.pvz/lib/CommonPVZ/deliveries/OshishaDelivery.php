@@ -44,6 +44,11 @@ class OshishaDelivery extends CommonPVZ
         );
         return $result;
     }
+
+    public static function getDeliveryStatus() {
+        return array('Oshisha' => 'Y');
+    }
+
     public static function getInstanceForDoor($deliveryParams): array
     {
         //TODO validate moscow and region!!!!

@@ -169,7 +169,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     .text('Примите условия соглашений в конце страницы');
                 this.animateScrollTo($("#bx-soa-properties .alert.alert-danger"));
 
-                return;
+                // return;Постомат - 228.00 руб.
+                // 915493 Респ Башкортостан Уфа г Сарапульская ул, д. 37
+                // пн, открыто: 08:00 - 22:00; вт, открыто: 08:00 - 22:00; ср, открыто: 08:00 - 22:00; чт, открыто: 08:00 - 22:00; пт, открыто: 08:00 - 22:00; сб, открыто: 08:00 - 22:00; вс, открыто: 08:00 - 22:00
+                // 915493
             }
 
             if (!this.startLoader())
@@ -5642,7 +5645,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 || property.getSettings().CODE === 'LONGITUDE' || property.getSettings().CODE === 'STREET_KLADR'
                 || property.getSettings().CODE === 'DATE_DELIVERY' || property.getSettings().CODE === 'DELIVERYTIME_INTERVAL'
                 || property.getSettings().CODE === 'COMMON_PVZ' || property.getSettings().CODE === 'TYPE_DELIVERY') {
-                className += " d-none";
+                // className += " d-none";
                 if (property.getSettings().CODE === 'DELIVERYTIME_INTERVAL' || property.getSettings().CODE === 'DATE_DELIVERY')
                     className += " col-12";
             } else {

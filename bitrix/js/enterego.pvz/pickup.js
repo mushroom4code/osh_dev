@@ -939,6 +939,7 @@ window.Osh.bxPopup = {
     instance: null,
     containerId: "ModalPVZ",
     oshMkadDelivery: null,
+    nodeYaMapContainer: null,
 
     oContainers: {
         PVZ_ID: "shd_pvz_pick",
@@ -1100,6 +1101,7 @@ window.Osh.bxPopup = {
         })
 
         nodeYaMapContainer.append(nodeYaAction)
+        this.nodeYaMapContainer = nodeYaMapContainer
 
         document.body.append(nodeOshOverlay)
 
