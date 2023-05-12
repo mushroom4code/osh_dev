@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `ent_pickpoint_points`
 (
     `ID`                        INT(11) NOT NULL,
-    `CODE`               VARCHAR(100) NOT NULL,
+    `CODE`                      VARCHAR(100) NOT NULL,
 	`BITRIX_CODE`               VARCHAR(100) NOT NULL,
 	`FULL_ADDRESS`              VARCHAR(255) NOT NULL,
     `ADDRESS_REGION`            VARCHAR(255) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `ent_pickpoint_points`
 CREATE TABLE IF NOT EXISTS `ent_dellin_points`
 (
     `ID`                        INT(11) NOT NULL,
-    `CODE`               VARCHAR(100) NOT NULL,
+    `CODE`                      VARCHAR(100) NOT NULL,
     `BITRIX_CODE`               VARCHAR(100) NOT NULL,
     `PHONE_NUMBER`              VARCHAR(100) NOT NULL,
     `WORK_TIME`                 VARCHAR(255) NOT NULL,
