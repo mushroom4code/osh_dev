@@ -5,8 +5,12 @@ namespace Enterego;
 use Bitrix\Currency\CurrencyManager;
 use Bitrix\Main;
 use Bitrix\Main\Context;
+use Bitrix\Main\DB\SqlQueryException;
+use Bitrix\Main\Loader;
+use Bitrix\Main\LoaderException;
 use CIBlockElement;
 use CModule;
+use Enterego\UserPrice\UserPriceHelperOsh;
 
 
 Main\EventManager::getInstance()->addEventHandler('sale', 'OnSaleBasketBeforeSaved',
@@ -181,9 +185,12 @@ class EnteregoBasket
     /**
      * @param $arPrices
      * @param $useDiscount
+     * @param $productId
      * @return array
+     * @throws SqlQueryException
+     * @throws LoaderException
      */
-    public static function getPricesArForProductTemplate($arPrices, $useDiscount): array
+    public static function getPricesArForProductTemplate($arPrices, $useDiscount, $productId=''): array
     {
         $price = [];
         $sale = $arPrices['PRICES'][SALE_PRICE_TYPE_ID];
@@ -195,6 +202,9 @@ class EnteregoBasket
             if (!empty($sale) && ((int)$sale['PRICE'] < (int)$retail['PRICE'])) {
                 $price['SALE_PRICE'] = $sale;
             }
+        }
+        if (Loader::includeModule('osh.userprice')) {
+            $price['USER_PRICE'] = UserPriceHelperOsh::getForProduct($productId);
         }
         if (!empty($retail)) {
             $price['PRICE_DATA'][0] = $retail;
