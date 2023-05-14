@@ -2,7 +2,12 @@
 
 namespace Enterego\UserPrice;
 
+use Bitrix\Catalog\PriceTable;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Db\SqlQueryException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
+use CIBlockElement;
 use CModule;
 use CPrice;
 use EntUserPriceGlobal;
@@ -147,58 +152,41 @@ class UserPriceHelperOsh
      * из всех продуктов, сохраненных в контексте,
      * для пользователя с указанным user() ID (или пользователем по умолчанию)
      *
-     * @param string|int $PRODUCT_ID
-     * @return null|special
+     * @param $productId
+     * @return float|null
+     * @throws SqlQueryException
      */
-    public function getForProduct($PRODUCT_ID): ?Special
+    public static function getForProduct($productId): ?float
     {
-        $PRODUCT_ID = intval($PRODUCT_ID);
-        $IBLOCK_SECTION_ID = $this->productIdToSectionId[$PRODUCT_ID];
-        $USER_ID = intval($this->user());
-        $price_id = PluginStatic::GetPriceIdFromRule($PRODUCT_ID, $IBLOCK_SECTION_ID, $USER_ID);
-
-        if(!$price_id) {
+        global $USER;
+        $userId = $USER->GetID();
+        if (empty($userId)) {
             return null;
         }
 
-        $result = new Special();
+        $productId = intval($productId);
+        $productSectionIds = [];
+        $rsSection = CIBlockElement::GetElementGroups($productId, false, ['ID']);
+        while ($arSection = $rsSection->Fetch()) {
+            $productSectionIds[] = $arSection['ID'];
+        }
+        $price_id = PluginStatic::GetPriceIdFromRule($productId, $productSectionIds, $userId);
 
-        $result->PRODUCT_ID = $PRODUCT_ID;
-        $result->IBLOCK_SECTION_ID = $IBLOCK_SECTION_ID;
-        $result->priceId = $price_id;
-
-        if(isset($this->priceIdToPrice[$PRODUCT_ID]))
-        {
-            if (!isset($this->priceIdToPrice[$PRODUCT_ID][$price_id]))
-            {
-                // Индивидуальная цена задана,
-                // Но она не была получена ранее в массив priceIdToPrice
-                // тогда получим её из базы.
-                // TODO FIXME WIP
-
-                return null;    // у нас есть подходящее правило,
-                // но нет такой заданной цены в этом контексте (у товара)
-            }
-
-            $result->priceName = $this->priceIdToName[$PRODUCT_ID][$price_id];
-            $result->price = $this->priceIdToPrice[$PRODUCT_ID][$price_id];
+        if (empty($price_id)) {
+            return null;
         }
 
-        if($result->priceId)
-        {
-            if(!$result->price)
-            {
-                global $DB;
-
-                $res = $DB->Query("SELECT `PRICE` FROM b_catalog_price WHERE
-                                PRODUCT_ID = {$PRODUCT_ID} AND CATALOG_GROUP_ID = {$price_id} LIMIT 1");
-
-                if ($arPrice = $res->GetNext()) {
-                    $result->price = $arPrice['PRICE'];
-                }
-            }
+        try {
+            $rsPriceList = PriceTable::getList([
+                'filter' => ['PRODUCT_ID' => $productId, 'CATALOG_GROUP_ID' => $price_id]
+            ]);
+        } catch (ObjectPropertyException|ArgumentException|SystemException $e) {
+            return null;
+        }
+        if ($arPriceItem = $rsPriceList->fetch()) {
+            return (float) $arPriceItem['PRICE'];
         }
 
-        return $result;
+        return null;
     }
 }
