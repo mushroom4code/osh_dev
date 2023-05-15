@@ -10,6 +10,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 use CIBlockElement;
 use CModule;
+use Enterego\UserPrice\PluginStatic;
 use Enterego\UserPrice\UserPriceHelperOsh;
 
 
@@ -48,6 +49,8 @@ class EnteregoBasket
         //TODO на форме заказа вызывается на почти на любое действие
         CModule::IncludeModule('iblock') || die();
         CModule::IncludeModule('sale') || die();
+
+        $useUserPrice = CModule::IncludeModule('osh.userprice');
 
         $product_prices = array();
         $new_basket_data = array();
@@ -89,8 +92,15 @@ class EnteregoBasket
                 $price_id = B2B_PRICE;
             }
 
-
             foreach ($product_prices as $product_id => $price_data) {
+
+                $typePriceIds = ["CATALOG_PRICE_$price_id"];
+                if ($useUserPrice) {
+                    $userPriceType = pluginStatic::GetPriceIdFromRule($product_id);
+                    if ($userPriceType) {
+                        $typePriceIds[] = "CATALOG_PRICE_$userPriceType";
+                    }
+                }
 
                 $propsUseSale = CIBlockElement::GetProperty(
                     IBLOCK_CATALOG,
@@ -101,49 +111,25 @@ class EnteregoBasket
 
                 if (USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') {
 
-                    $price_type = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
-                    $result = CIBlockElement::GetList(
-                        array(),
-                        array("ID" => $product_id),
-                        false,
-                        false,
-                        array("$price_type"));
-
-                    if ($ar_res = $result->fetch()) {
-                        if (((int)$price_data['PRICE'] > (int)$ar_res["$price_type"]) && !empty($ar_res["$price_type"])) {
-                            $product_prices[$product_id]['PRICE'] = $ar_res["$price_type"];
-                            $product_prices[$product_id]['PRICE_ID'] = SALE_PRICE_TYPE_ID;
-                        } else {
-                            $ids = USE_CUSTOM_SALE_PRICE ? $currentPriceTypeId : $price_id;
-                            $price_ids = "CATALOG_PRICE_" . $ids;
-                            $res = CIBlockElement::GetList(
-                                array(),
-                                array("ID" => $product_id),
-                                false,
-                                false,
-                                array("$price_ids"));
-
-                            if ($arData = $res->fetch()) {
-                                $product_prices[$product_id]['PRICE'] = $arData["$price_ids"];
-                                $product_prices[$product_id]['PRICE_ID'] = $ids;
-                            }
-                        }
-                    }
-                } else {
-
-                    $res = CIBlockElement::GetList(
-                        array(),
-                        array("ID" => $product_id),
-                        false,
-                        false,
-                        array("CATALOG_PRICE_$price_id"));
-
-                    if ($ar_res = $res->fetch()) {
-                        $product_prices[$product_id]['PRICE'] = $ar_res["CATALOG_PRICE_$price_id"];
-                        $product_prices[$product_id]['PRICE_ID'] = $price_id;
-                    }
+                    $typePriceIds[] = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
                 }
 
+                $result = CIBlockElement::GetList(
+                    array(),
+                    array("ID" => $product_id),
+                    false,
+                    false,
+                    $typePriceIds);
+
+                if ($ar_res = $result->fetch()) {
+                    $minPrice = null;
+                    foreach ($typePriceIds as $typePriceId) {
+                        if (!empty($ar_res["$typePriceId"]) && (is_null($minPrice) || $minPrice > $ar_res["$typePriceId"])) {
+                            $minPrice = $product_prices[$product_id]['PRICE'] = $ar_res[$typePriceId];
+                            $product_prices[$product_id]['PRICE_ID'] = str_replace('CATALOG_PRICE_', '', $typePriceId);
+                        }
+                    }
+                }
 
                 $item = $price_data['ITEM'];
 
