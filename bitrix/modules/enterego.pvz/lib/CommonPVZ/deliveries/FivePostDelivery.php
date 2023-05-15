@@ -215,9 +215,6 @@ class FivePostDelivery extends CommonPVZ
                         'fullAddress' => $point['FULL_ADDRESS'],
                         'comment' => $point['ADDITIONAL'],
                         'deliveryName' => '5Post',
-                        'fivepostRate' => $point['RATE'],
-                        'fivepostDeliverySl' => $point['DELIVERY_SL'],
-                        'fivepostMaxWeight' => $point['MAX_CELL_WEIGHT'],
                         'iconCaption' => '5Post',
                         'hintContent' => $point['FULL_ADDRESS'],
                         'openEmptyBalloon' => true,
@@ -239,9 +236,11 @@ class FivePostDelivery extends CommonPVZ
     public function getPrice($array)
     {
         try {
-            $rate = unserialize($array['fivepost_rate'])[0];
-            if ($array['weight'] > $array['fivepost_max_weight']) {
-                $price = $rate['rateValue']  + ((($array['weight'] - $array['fivepost_max_weight']) / 1000) * $rate['rateExtraValue']);
+            $arParams = ['filter' => ['POINT_GUID' => $array['code_pvz']]];
+            $pvz = FivePostPointsTable::getList($arParams)->fetch();
+            $rate = unserialize($pvz['RATE'])[0];
+            if ($array['weight'] > $pvz['MAX_CELL_WEIGHT']) {
+                $price = $rate['rateValue']  + ((($array['weight'] - $pvz['MAX_CELL_WEIGHT']) / 1000) * $rate['rateExtraValue']);
                 if ($rate['vat']) {
                     $finalPrice = $price / 100 * $rate['vat'] + $price;
                 } else {
