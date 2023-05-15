@@ -127,19 +127,27 @@ class PVZDeliveryProfile extends Base
             if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
                 $price = $cache->getVars();
             } elseif ($cache->startDataCache()) {
-                $delivery = CommonPVZ::getInstanceObject($deliveryParams['delivery']);
-                $price = $delivery->getPrice($deliveryParams);
-                if ($price === false) {
+                if (!empty($deliveryParams['delivery'])){
+                    $delivery = CommonPVZ::getInstanceObject($deliveryParams['delivery']);
+                    $price = $delivery->getPrice($deliveryParams);
+                    if ($price === false) {
+                        return $result->addError(
+                            new Error(
+                                Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
+                                'DELIVERY_CALCULATION'
+                            ));
+                    }
+                    if ($price !== false && is_numeric($price) && $price !== '0' && (int)$price > 0)
+                        $cache->endDataCache($price);
+                    else
+                        $price = 0;
+                } else {
                     return $result->addError(
                         new Error(
                             Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
                             'DELIVERY_CALCULATION'
                         ));
                 }
-                if ($price !== false && is_numeric($price) && $price !== '0' && (int)$price > 0)
-                    $cache->endDataCache($price);
-                else
-                    $price = 0;
             }
 
 
