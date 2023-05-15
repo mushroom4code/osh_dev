@@ -4,6 +4,7 @@ namespace Enterego\UserPrice;
 
 use Bitrix\Main\Application;
 use Bitrix\Main\Db\SqlQueryException;
+use CIBlockElement;
 use Exception;
 
 class PluginStatic
@@ -40,21 +41,22 @@ class PluginStatic
      * в контексте ID продукта и его группы товаров.
      *
      * @param int|string|null $productId ID товара правила
-     * @param array $sectionIds ID категории правила
-     * @param int|string $USER_ID ID пользователя правила
      * @return false|int            Возвращает CATALOG_PRICE_ID (если найден)
      * @throws SqlQueryException
      */
-    public static function GetPriceIdFromRule($productId, $sectionIds = null, $USER_ID = null)
+    public static function GetPriceIdFromRule($productId)
     {
-        if(!$USER_ID)
-        {
-            global $USER;
-            $USER_ID = $USER->GetID();
+        global $USER;
+        $userId = $USER->GetID();
+        if (empty($userId)) {
+            return null;
         }
-        $USER_ID = intval($USER_ID);
-        if(!$USER_ID) {
-            return false;
+
+        $productId = intval($productId);
+        $productSectionIds = [];
+        $rsSection = CIBlockElement::GetElementGroups($productId, false, ['ID']);
+        while ($arSection = $rsSection->Fetch()) {
+            $productSectionIds[] = $arSection['ID'];
         }
 
         $db = Application::getConnection();
@@ -62,7 +64,7 @@ class PluginStatic
             $sql = "SELECT rule.catalog_price_id               
                     FROM `ent_user_price_rule` rule
                     WHERE
-                        rule.`user_id` = {$USER_ID}
+                        rule.`user_id` = {$userId}
                         AND rule.`product_id` = $productId   
                     LIMIT 1";
 
@@ -76,13 +78,13 @@ class PluginStatic
             }
         }
 
-        if($sectionIds) {
-            $strSectionIds = implode(',', $sectionIds);
+        if($productSectionIds) {
+            $strSectionIds = implode(',', $productSectionIds);
 
             $sql = "SELECT rule.catalog_price_id              
                 FROM `ent_user_price_rule` rule
                 WHERE
-                    rule.`user_id` = {$USER_ID}
+                    rule.`user_id` = {$userId}
                     AND rule.`iblock_section_id` IN ($strSectionIds)
                 LIMIT 1";
 

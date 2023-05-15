@@ -158,19 +158,7 @@ class UserPriceHelperOsh
      */
     public static function getForProduct($productId): ?float
     {
-        global $USER;
-        $userId = $USER->GetID();
-        if (empty($userId)) {
-            return null;
-        }
-
-        $productId = intval($productId);
-        $productSectionIds = [];
-        $rsSection = CIBlockElement::GetElementGroups($productId, false, ['ID']);
-        while ($arSection = $rsSection->Fetch()) {
-            $productSectionIds[] = $arSection['ID'];
-        }
-        $price_id = PluginStatic::GetPriceIdFromRule($productId, $productSectionIds, $userId);
+        $price_id = PluginStatic::GetPriceIdFromRule($productId);
 
         if (empty($price_id)) {
             return null;
