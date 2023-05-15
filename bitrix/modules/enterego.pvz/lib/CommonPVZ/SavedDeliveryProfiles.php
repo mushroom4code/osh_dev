@@ -35,8 +35,6 @@ class SavedDeliveryProfiles
                         'USER_ID' => $orderFields['USER_ID'],
                         'ADDRESS' => $address,
                     ];
-//                    if ($isPvz)
-//                        $profilesAddressesParams['IS_PVZ'] = 'Y';
 
                     $profilesAddressesResult = $profilesAddresses->add($profilesAddressesParams);
                     if ($profilesAddressesResult->isSuccess()) {
@@ -52,6 +50,7 @@ class SavedDeliveryProfiles
                                         'CODE' => $property['CODE'],
                                         'VALUE' => $property['VALUE']
                                     ];
+                                    $result = $profilesProperties->add($profilesPropertiesParams);
                                 }
                             } else {
                                 if ($property['CODE'] == 'TYPE_DELIVERY' || $property['CODE'] == 'LOCATION' || $property['CODE'] == 'ZIP'
@@ -61,10 +60,9 @@ class SavedDeliveryProfiles
                                         'CODE' => $property['CODE'],
                                         'VALUE' => $property['VALUE']
                                     ];
+                                    $result = $profilesProperties->add($profilesPropertiesParams);
                                 }
                             }
-
-                            $result = $profilesProperties->add($profilesPropertiesParams);
                         }
 
                         return true;

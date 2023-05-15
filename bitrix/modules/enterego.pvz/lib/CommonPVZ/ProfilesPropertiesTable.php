@@ -20,9 +20,6 @@ class ProfilesPropertiesTable extends \Bitrix\Main\Entity\DataManager
                 'data_type' => 'integer',
                 'reference'
             ),
-            'USER_ID' => array(
-                'data_type' => 'integer',
-            ),
             'CODE' => array(
                 'data_type' => 'string',
             ),
