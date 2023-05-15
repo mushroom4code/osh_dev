@@ -385,7 +385,6 @@ h4.checkout-block-title > i.fa {
 }
 .map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime {
     width: 100%;
-    max-width: 14em;
     padding: 0 2em;
     display: inline-block;
 }

@@ -1990,3 +1990,25 @@ hr.bxe-light {
         width: 6%;
     }
 }
+
+
+.delivery-popup {
+    display: none;
+    position: fixed;
+    background: #d0d0d0;
+    min-height: 4em;
+    width: 90%;
+    height: 90%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+.delivery-popup .pvz-map {
+    display: block;
+}
+.delivery-popup .pvz-list,
+.delivery-popup .courier-map,
+.delivery-popup .courier-list {
+    display: none;
+}

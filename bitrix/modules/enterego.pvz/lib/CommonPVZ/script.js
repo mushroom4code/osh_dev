@@ -303,6 +303,34 @@ BX.SaleCommonPVZ = {
         this.buildPVZMap1();
         // this.pvzPopup.show();
         BX.show(this.pvzOverlay);
+
+        const addressField = $(document).find('#user-address')
+        $("#fullname").suggestions({
+            token: "ВАШ API-КЛЮЧ",
+            type: "NAME",
+        });
+        if (this.curCityName) {
+            if (this.curCityName == 'Москва') {
+                // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                addressField.suggestions().setOptions({
+                    constraints: {
+                        locations: [{region: "Московская"}, {region: "Москва"}]
+                    }
+                });
+            } else if (this.curCityType == 6) {
+                addressField.suggestions().setOptions({
+                    constraints: {
+                        locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
+                    }
+                });
+            } else {
+                addressField.suggestions().setOptions({
+                    constraints: {
+                        locations: [{city: this.curCityName}]
+                    }
+                });
+            }
+        }
     },
 
     /**
@@ -847,7 +875,6 @@ BX.SaleCommonPVZ = {
                     id: 'user-address',
                     className: 'user-address',
                     name: 'ORDER_PROP_' + this.propAddressId
-                    placeholder: ''
                 }
             }),
             BX('pvz_user_data')
@@ -1575,6 +1602,7 @@ BX.SaleCommonPVZ = {
             events: {
                 click: BX.proxy(function () {
                     this.openMap()
+                   // BX.show(BX('delivery-popup'))
                 }, this)
             }
         })
