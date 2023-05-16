@@ -298,12 +298,41 @@ BX.SaleCommonPVZ = {
     },
 
     openMap: function () {
+        BX('ID_DELIVERY_ID_95').checked = true
         // this.createPVZPopup();
         this.createPVZPopup1();
         // this.bufildPVZMap();
         this.buildPVZMap1();
         // this.pvzPopup.show();
         BX.show(this.pvzOverlay);
+
+        // const addressField = $(document).find('#user-address')
+        // $("#fullname").suggestions({
+        //     token: "ВАШ API-КЛЮЧ",
+        //     type: "NAME",
+        // });
+        // if (this.curCityName) {
+        //     if (this.curCityName == 'Москва') {
+        //         // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+        //         addressField.suggestions().setOptions({
+        //             constraints: {
+        //                 locations: [{region: "Московская"}, {region: "Москва"}]
+        //             }
+        //         });
+        //     } else if (this.curCityType == 6) {
+        //         addressField.suggestions().setOptions({
+        //             constraints: {
+        //                 locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
+        //             }
+        //         });
+        //     } else {
+        //         addressField.suggestions().setOptions({
+        //             constraints: {
+        //                 locations: [{city: this.curCityName}]
+        //             }
+        //         });
+        //     }
+        // }
     },
 
     /**
@@ -418,6 +447,7 @@ BX.SaleCommonPVZ = {
         })
 
         BX.insertAfter(this.pvzOverlay, BX('bx-soa-order'))
+
         this.buildDeliveryType()
             .buildDataView()
             .buildSortService()
@@ -837,6 +867,31 @@ BX.SaleCommonPVZ = {
         return data;
     },
 
+    buildAddresField: function() {
+        const __this = this
+        BX.append(
+            BX.create({
+                tag: 'input',
+                props: {
+                    id: 'user-address',
+                    className: 'user-address',
+                    name: 'ORDER_PROP_' + this.propAddressId
+                }
+            }),
+            BX('pvz_user_data')
+        )
+
+        // document.getElementById('user-address').suggestions({
+        //     token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
+        //     type: "ADDRESS",
+        //     /* Вызывается, когда пользователь выбирает одну из подсказок */
+        //     onSelect: function(suggestion) {
+        //         console.log(suggestion);
+        //     }
+        // })
+
+        return this
+    },
     buildDeliveryType: function ()
     {
         const __this = this;
@@ -877,11 +932,22 @@ BX.SaleCommonPVZ = {
                                             name: 'delivery_type',
                                             checked: 'checked',
                                         },
+
                                         events: {
                                             change: BX.proxy(function () {
                                                 BX('ID_DELIVERY_ID_95').checked = true
-                                                BX('data_view_map').disabled = false
+
+                                                BX.show('wrap_data_view')
                                                 BX('data_view_map').checked = true
+
+                                                if (BX('data_view_map').checked) {
+                                                    BX.hide('wrap_sort_service')
+                                                } else {
+                                                    BX.show('wrap_sort_service')
+                                                }
+
+
+
                                                 __this.clearPvzMap();
                                                 __this.buildPVZMap1();
                                             }),
@@ -897,84 +963,42 @@ BX.SaleCommonPVZ = {
                                 ],
                             }),
 
-                            BX.create({
-                                    tag: 'label',
-                                    props: {
-                                        className: "option-label",
-                                        for: 'delivery-in-hands',
-                                    },
-                                    text: 'Доставка в руки',
-                                    children: [
-                                        BX.create({
-                                            tag: 'input',
-                                            props: {
-                                                id: 'delivery-in-hands',
-                                                className: 'radio-field',
-                                                type: 'radio',
-                                                value: 'Доставка в руки',
-                                                name: 'delivery_type',
-                                            },
-                                            events: {
-                                                change: BX.proxy(function () {
-                                                    BX('ID_DELIVERY_ID_94').checked = true
-                                                    __this.clearPvzMap();
-
-                                                    BX.append(
-                                                        window.Osh.bxPopup.nodeYaMapContainer,
-                                                        BX('map_for_delivery')
-                                                    )
-
-                                                    window.Osh.bxPopup.init()
-
-                                                    // __this.refresh()
-                                                    // __this.getCityName();
-
-                                                    const addressFieldPopup = $(document).find('#popup-address-field');
-
-                                                    addressFieldPopup.suggestions({
-                                                        token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
-                                                        type: "ADDRESS",
-                                                        hint: false,
-                                                        floating: true,
-                                                        triggerSelectOnEnter: true,
-                                                        autoSelectFirst: true,
-                                                        onSelect: function (suggestion) {
-                                                            this.updatePropsFromDaData(suggestion)
-
-                                                            if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                                                                if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
-                                                                    __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                                                                    oshMkad.afterSave = null;
-                                                                    oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
-                                                                        __this.propAddressId,
-                                                                        (__this.propDateDelivery)
-                                                                            ? __this.propDateDelivery
-                                                                            : '',
-                                                                        (__this.propDateDelivery)
-                                                                            ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
-                                                                            : '',
-                                                                        true);
-                                                                }
-                                                            }
-
-                                                            BX.onCustomEvent('onDeliveryExtraServiceValueChange');
-                                                        }.bind(this),
-                                                    });
-
-                                                    __this.refresh()
-
-                                                }, this)
-                                            },
-                                        }),
-                                        BX.create({
-                                            tag: 'span',
-                                            props: {className: 'radio-caption'},
-                                            text: 'Доставка в руки',
-                                        })
-                                    ],
-
-                                }
-                            )
+                            // BX.create({
+                            //         tag: 'label',
+                            //         props: {
+                            //             className: "option-label",
+                            //             for: 'delivery-in-hands',
+                            //         },
+                            //         text: 'Доставка в руки',
+                            //         children: [
+                            //             // BX.create({
+                            //             //     tag: 'input',
+                            //             //     props: {
+                            //             //         id: 'delivery-in-hands',
+                            //             //         className: 'radio-field',
+                            //             //         type: 'radio',
+                            //             //         value: 'Доставка в руки',
+                            //             //         name: 'delivery_type',
+                            //             //     },
+                            //             //     events: {
+                            //             //         change: BX.proxy(function () {
+                            //             //             BX('ID_DELIVERY_ID_94').checked = true
+                            //             //             BX('data_view_list').checked = true
+                            //             //             BX('data_view_map').disabled = true
+                            //             //
+                            //             //             __this.clearPvzMap()
+                            //             //         }),
+                            //             //     },
+                            //             // }),
+                            //             BX.create({
+                            //                 tag: 'span',
+                            //                 props: {className: 'radio-caption'},
+                            //                 text: 'Доставка в руки',
+                            //             })
+                            //         ],
+                            //
+                            //     }
+                            // )
                         ]
                     })
                 ]
@@ -1313,22 +1337,6 @@ BX.SaleCommonPVZ = {
                                     BX.create({
                                         tag: 'li',
                                         props: {className: 'sort_service'},
-                                        text: 'ПЭК',
-                                        events: {
-                                            click: BX.proxy(function (e) {
-                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                this.sortPvzList(e.target.getAttribute('data-target'))
-                                            }, this)
-                                        },
-                                        dataset: {
-                                            target: 'js-pek'
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'li',
-                                        props: {className: 'sort_service'},
                                         text: 'Почта РФ',
                                         events: {
                                             click: BX.proxy(function (e) {
@@ -1384,8 +1392,11 @@ BX.SaleCommonPVZ = {
         )
 
         this.pvzObj.features.forEach(el => {
+            // console.log(el)
             let jsClass = ''
             switch (el.properties.deliveryName) {
+                case 'Деловые линии': jsClass = 'js-dl'; break;
+                case '5Post': jsClass = 'js-5post'; break;
                 case 'СДЭК': jsClass = 'js-sdek'; break;
                 case 'Почта России': jsClass = 'js-rupost'; break;
                 case 'OSHISHA': jsClass = 'js-oshisha'; break;
@@ -1526,10 +1537,10 @@ BX.SaleCommonPVZ = {
             total:{rootEl: BX('bx-soa-total')}
         }
 
-        this.drawDelivery()
+        this.drawProps()
+            .drawDelivery()
             .drawPayment()
             .drawNotice()
-            .drawProps()
         return this
     },
     drawNotice: function()
@@ -1567,6 +1578,7 @@ BX.SaleCommonPVZ = {
     },
     drawDelivery: function()
     {
+        // скрытие адресных полей заказа
         this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
 
         // блок выбора доставки
@@ -1580,17 +1592,18 @@ BX.SaleCommonPVZ = {
 
         this.checkout.delivery.variants = {}
         this.checkout.delivery.variants.rootEl = BX.create('div', {
-                attrs: {className: 'delivery-variants'}})
+            attrs: {className: 'delivery-variants'}})
         this.checkout.delivery.variants.title = BX.create('div', {
-                attrs: {className: 'delivery-variants-title'},
-                html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
-            })
+            attrs: {className: 'delivery-variants-title'},
+            html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
+        })
         this.checkout.delivery.variants.choose = BX.create('div', {
             attrs: {className: 'delivery-choose js__delivery-choose', id: 'delivery-choose'},
             text: 'Выбрать адрес и способ доставки',
             events: {
                 click: BX.proxy(function () {
                     this.openMap()
+                    // BX.show(BX('delivery-popup'))
                 }, this)
             }
         })
@@ -1622,62 +1635,27 @@ BX.SaleCommonPVZ = {
             ]})
 
         // Прошлые доставки
-        this.checkout.recentWrap
+        // this.checkout.recentWrap
 
 
         // предыдущие доставки
-        this.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
-        this.checkout.delivery.recentWrap = {}
-        this.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'last-deliveries-wrap'}})
-        this.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'last-deliveries-title'},
-            html: '<span class="title-accent">Выберите настройки</span> достаки из прошлых заказов'})
+        // this.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
+        // this.checkout.delivery.recentWrap = {}
+        // this.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'last-deliveries-wrap'}})
+        // this.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'last-deliveries-title'},
+        //     html: '<span class="title-accent">Выберите настройки</span> доставки из прошлых заказов'})
 
         BX.removeClass(this.checkout.delivery.titleBox, 'justify-content-between')
-        // BX.addClass(this.checkout.delivery.content, 'd-none')
         BX.insertAfter(this.checkout.delivery.titleIcon, this.checkout.delivery.title)
 
         BX.insertAfter(this.checkout.delivery.variants.rootEl, this.checkout.delivery.titleBox)
-        // BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
-        //
+        //BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
+
         // BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
         // BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
 
-
-
-        // this.checkout.delivery.recentWrap.
-
-        // wrap
-        // {
-        //     title
-        //     {
-        //     }
-        //     info
-        //     {
-        //         price
-        //         {
-        //         }
-        //         date
-        //         {
-        //         }
-        //     }
-        //     address
-        //     {
-        //     }
-        // }
-
-
-
         return this;
     },
-
-
-
-
-
-
-
-
-
     drawProps: function()
     {
         this.checkout.user.title = BX.findChild(this.checkout.order.rootEl, {'tag':'h5'}, true);
@@ -1720,29 +1698,6 @@ BX.SaleCommonPVZ = {
 
         return this
     },
-
-    // buildDeliveryChooseButton: function()
-    // {
-    //     const __this = this
-    //     __this.showMapBtn = BX.create({
-    //         'tag': 'div',
-    //         'props': {'className': 'show-map-btn'},
-    //         'text': 'Выбрать адрес и способ доставки',
-    //         events: {click: BX.proxy(function () {__this.openMap()}, __this)}
-    //     })
-    //     BX.insertAfter(__this.showMapBtn,
-    //         BX.findChild(BX('bx-soa-delivery'), {'class': 'bx-soa-section-title-container'})
-    //     )
-    //     BX.insertAfter(
-    //         BX.create({
-    //             'tag': 'span',
-    //             'props': {'id':'pvz_address'}
-    //         }),
-    //         __this.showMapBtn
-    //     )
-    // }
-
-
 };
 
 
