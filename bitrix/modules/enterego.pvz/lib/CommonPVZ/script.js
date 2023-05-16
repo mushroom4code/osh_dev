@@ -1638,11 +1638,11 @@ BX.SaleCommonPVZ = {
 
 
         // предыдущие доставки
-        this.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
-        this.checkout.delivery.recentWrap = {}
-        this.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'last-deliveries-wrap'}})
-        this.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'last-deliveries-title'},
-            html: '<span class="title-accent">Выберите настройки</span> доставки из прошлых заказов'})
+        // this.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
+        // this.checkout.delivery.recentWrap = {}
+        // this.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'last-deliveries-wrap'}})
+        // this.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'last-deliveries-title'},
+        //     html: '<span class="title-accent">Выберите настройки</span> доставки из прошлых заказов'})
 
         BX.removeClass(this.checkout.delivery.titleBox, 'justify-content-between')
         BX.insertAfter(this.checkout.delivery.titleIcon, this.checkout.delivery.title)
