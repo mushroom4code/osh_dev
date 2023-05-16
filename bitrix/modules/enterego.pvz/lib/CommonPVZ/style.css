@@ -398,3 +398,23 @@ h4.checkout-block-title > i.fa {
     position: relative;
     order: 2;
 }
+
+
+
+
+.map_for_delivery .box_with_delivery {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border: none;
+}
+.map_for_delivery .box_with_delivery > input[type="radio"] {
+    width: 1.6em;
+    height: 1.6em;
+    margin: 0 2em 0 0;
+}
+.map_for_delivery .box_with_delivery > .bx-soa-pp-company-smalltitle {
+    font-size: 1.14286em;
+    font-weight: 600;
+    color: #333;
+}
