@@ -866,7 +866,7 @@ BX.SaleCommonPVZ = {
     },
 
     buildAddresField: function() {
-      const __this = this
+        const __this = this
         BX.append(
             BX.create({
                 tag: 'input',
@@ -1590,18 +1590,18 @@ BX.SaleCommonPVZ = {
 
         this.checkout.delivery.variants = {}
         this.checkout.delivery.variants.rootEl = BX.create('div', {
-                attrs: {className: 'delivery-variants'}})
+            attrs: {className: 'delivery-variants'}})
         this.checkout.delivery.variants.title = BX.create('div', {
-                attrs: {className: 'delivery-variants-title'},
-                html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
-            })
+            attrs: {className: 'delivery-variants-title'},
+            html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
+        })
         this.checkout.delivery.variants.choose = BX.create('div', {
             attrs: {className: 'delivery-choose js__delivery-choose', id: 'delivery-choose'},
             text: 'Выбрать адрес и способ доставки',
             events: {
                 click: BX.proxy(function () {
                     this.openMap()
-                   // BX.show(BX('delivery-popup'))
+                    // BX.show(BX('delivery-popup'))
                 }, this)
             }
         })
