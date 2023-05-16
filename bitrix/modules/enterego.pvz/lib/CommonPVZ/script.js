@@ -19,6 +19,7 @@ BX.SaleCommonPVZ = {
     propCommonPVZId: null,
     propTypeDeliveryId: null,
     propZipId: null,
+    propLocationId: null,
     propCityId: null,
     propFiasId: null,
     propKladrId: null,
@@ -40,11 +41,11 @@ BX.SaleCommonPVZ = {
 
     init: function (params) {
         const order = BX.Sale.OrderAjaxComponent.result
-
         this.propAddressId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         this.propCommonPVZId          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
         this.propTypeDeliveryId       = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
         this.propZipId                = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ZIP')?.ID;
+        this.propLocationId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.ID;
         this.propCityId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'CITY')?.ID;
         this.propFiasId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'FIAS')?.ID;
         this.propKladrId              = order.ORDER_PROP.properties.find(prop => prop.CODE === 'KLADR')?.ID;
@@ -167,16 +168,17 @@ BX.SaleCommonPVZ = {
                 commonPVZ.readOnly = true;
             }
         }
-
-        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach(function (item, index, array) {
-            if (item.IS_LOCATION === 'Y') {
-                if (__this.curCityCode !== item.VALUE[0]) {
-                    __this.curCityCode = item.VALUE[0];
-                    __this.propsMap = null;
-                    __this.getCityName();
-                }
+        try {
+            if (BX.Sale.OrderAjaxComponent.locations[this.propLocationId][0].lastValue){
+                this.curCityCode = BX.Sale.OrderAjaxComponent.locations[this.propLocationId][0].lastValue;
+            } else {
+                this.curCityCode = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.ID
             }
-        });
+        } catch (e) {
+            this.curCityCode = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.ID
+        }
+        this.propsMap = null;
+        this.getCityName();
     },
 
     update: function (ajaxAns) {
