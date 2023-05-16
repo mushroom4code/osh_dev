@@ -97,6 +97,7 @@ class DoorDeliveryProfile extends Base
         ksort($deliveryParams['packages']);
 
         $deliveries = DeliveryHelper::getActiveDoorDeliveryInstance($deliveryParams);
+        $order_price = false;
         $resDescription = [];
         if ($propTypeDeliveryId) {
             foreach ($deliveries as $delivery) {
@@ -115,6 +116,8 @@ class DoorDeliveryProfile extends Base
                             Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
                             'DELIVERY_CALCULATION'
                         ));
+                    } else {
+                        $order_price = $price;
                     }
                 } else {
                     $checked = '';
@@ -132,7 +135,12 @@ class DoorDeliveryProfile extends Base
 
             $result->setDescription(json_encode($resDescription));
         }
-
+        if (!$order_price) {
+            $result->addError(new Error(
+                'Не выбрана служба доставки',
+                'DELIVERY_CALCULATION'
+            ));
+        }
         return $result;
     }
 }

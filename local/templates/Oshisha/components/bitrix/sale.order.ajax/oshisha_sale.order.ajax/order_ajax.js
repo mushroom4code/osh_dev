@@ -6786,26 +6786,40 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (parseFloat(total.PAY_SYSTEM_PRICE) >= 0 && this.result.DELIVERY.length) {
                 this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_PAYSYSTEM_PRICE'), '~' + total.PAY_SYSTEM_PRICE_FORMATTED));
             }
-
             if (this.result.IS_AUTHORIZED) {
-                this.totalInfoBlockNode.appendChild(
-                    BX.create('DIV', {
-                        props: {className: 'bx-soa-cart-total-button-container' + ('d-block')},
-                        children: [
-                            BX.create('A', {
-                                props: {
-                                    href: 'javascript:void(0)',
-                                    className: 'btn btn_basket btn-order-save'
-                                },
-                                html: 'Зарезервировать',
-                                events: {
-                                    click: BX.proxy(this.clickOrderSaveAction, this)
-                                }
-                            })
+                for (i = 0; i < this.result.DELIVERY.length; i++) {
+                    if (this.result.DELIVERY[i].CHECKED == 'Y') {
+                        var checkedDelivery = this.result.DELIVERY[i];
+                        break;
+                    }
+                }
+                if (!checkedDelivery.CALCULATE_ERRORS) {
+                    this.totalInfoBlockNode.appendChild(
+                        BX.create('DIV', {
+                            props: {className: 'bx-soa-cart-total-button-container' + ('d-block')},
+                            children: [
+                                BX.create('A', {
+                                    props: {
+                                        href: 'javascript:void(0)',
+                                        className: 'btn btn_basket btn-order-save'
+                                    },
+                                    html: 'Зарезервировать',
+                                    events: {
+                                        click: BX.proxy(this.clickOrderSaveAction, this)
+                                    }
+                                })
 
-                        ]
-                    })
-                );
+                            ]
+                        })
+                    );
+                } else {
+                    this.totalInfoBlockNode.appendChild(
+                        BX.create('span', {
+                            props: {className: 'btn-primary-color'},
+                            html: checkedDelivery.CALCULATE_ERRORS
+                        })
+                    )
+                }
             } else {
                 this.totalInfoBlockNode.appendChild(
                     BX.create('span', {

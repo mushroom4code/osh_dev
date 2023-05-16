@@ -86,15 +86,6 @@ class PVZDeliveryProfile extends Base
         $order = $shipment->getOrder();
         $propertyCollection = $order->getPropertyCollection();
 
-        $cache = Cache::createInstance();
-        $cachePath = '/getAllPVZpr';
-
-            if ($_POST['dataToHandler']['code_pvz'] === 'undefined') {
-                $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
-            } else {
-                $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'] . ' #' . $_POST['dataToHandler']['code_pvz'];
-            }
-            $f = serialize($adr);
             foreach ($propertyCollection as $propertyItem) {
                 $prop = $propertyItem->getProperty();
                 if ($prop['CODE'] === 'TYPE_DELIVERY') {
@@ -124,46 +115,35 @@ class PVZDeliveryProfile extends Base
             $orderBasket = $shipment->getOrder()->getBasket();
             $deliveryParams['packages'] = DeliveryHelper::getPackagesFromOrderBasket($orderBasket);
             ksort($deliveryParams['packages']);
-            if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
-                $price = $cache->getVars();
-            } elseif ($cache->startDataCache()) {
-                if (!empty($deliveryParams['delivery'])){
-                    $delivery = CommonPVZ::getInstanceObject($deliveryParams['delivery']);
-                    $price = $delivery->getPrice($deliveryParams);
-                    if ($price === false) {
-                        return $result->addError(
-                            new Error(
-                                Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
-                                'DELIVERY_CALCULATION'
-                            ));
-                    }
-                    if ($price !== false && is_numeric($price) && $price !== '0' && (int)$price > 0)
-                        $cache->endDataCache($price);
-                    else
-                        $price = 0;
-                } else {
+            if (!empty($deliveryParams['delivery'])){
+                $delivery = CommonPVZ::getInstanceObject($deliveryParams['delivery']);
+                $price = $delivery->getPrice($deliveryParams);
+                if ($price === false) {
                     return $result->addError(
                         new Error(
                             Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
                             'DELIVERY_CALCULATION'
                         ));
                 }
+                $result->setDeliveryPrice(
+                    roundEx(
+                        $price,
+                        SALE_VALUE_PRECISION
+                    )
+                );
+                if (!empty($price['errors'])) {
+                    $result->addError(new Error(
+                        Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
+                        'DELIVERY_CALCULATION'
+                    ));
+                }
+            } else {
+                return $result->addError(
+                    new Error(
+                        'Не выбрана служба доставки',
+                        'DELIVERY_CALCULATION'
+                    ));
             }
-
-
-        if ($price === 0) {
-            $f = serialize($adr);
-            if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
-                $price = $cache->getVars();
-            }
-        }
-
-        $result->setDeliveryPrice(
-            roundEx(
-                $price,
-                SALE_VALUE_PRECISION
-            )
-        );
 
         return $result;
     }
