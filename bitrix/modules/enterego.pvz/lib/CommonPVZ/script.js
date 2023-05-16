@@ -304,33 +304,33 @@ BX.SaleCommonPVZ = {
         // this.pvzPopup.show();
         BX.show(this.pvzOverlay);
 
-        const addressField = $(document).find('#user-address')
-        $("#fullname").suggestions({
-            token: "ВАШ API-КЛЮЧ",
-            type: "NAME",
-        });
-        if (this.curCityName) {
-            if (this.curCityName == 'Москва') {
-                // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
-                addressField.suggestions().setOptions({
-                    constraints: {
-                        locations: [{region: "Московская"}, {region: "Москва"}]
-                    }
-                });
-            } else if (this.curCityType == 6) {
-                addressField.suggestions().setOptions({
-                    constraints: {
-                        locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
-                    }
-                });
-            } else {
-                addressField.suggestions().setOptions({
-                    constraints: {
-                        locations: [{city: this.curCityName}]
-                    }
-                });
-            }
-        }
+        // const addressField = $(document).find('#user-address')
+        // $("#fullname").suggestions({
+        //     token: "ВАШ API-КЛЮЧ",
+        //     type: "NAME",
+        // });
+        // if (this.curCityName) {
+        //     if (this.curCityName == 'Москва') {
+        //         // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+        //         addressField.suggestions().setOptions({
+        //             constraints: {
+        //                 locations: [{region: "Московская"}, {region: "Москва"}]
+        //             }
+        //         });
+        //     } else if (this.curCityType == 6) {
+        //         addressField.suggestions().setOptions({
+        //             constraints: {
+        //                 locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
+        //             }
+        //         });
+        //     } else {
+        //         addressField.suggestions().setOptions({
+        //             constraints: {
+        //                 locations: [{city: this.curCityName}]
+        //             }
+        //         });
+        //     }
+        // }
     },
 
     /**
@@ -446,8 +446,7 @@ BX.SaleCommonPVZ = {
 
         BX.insertAfter(this.pvzOverlay, BX('bx-soa-order'))
 
-        this.buildAddresField()
-            .buildDeliveryType()
+        this.buildDeliveryType()
             .buildDataView()
             .buildSortService()
     },
@@ -867,7 +866,7 @@ BX.SaleCommonPVZ = {
     },
 
     buildAddresField: function() {
-      const __this = this
+        const __this = this
         BX.append(
             BX.create({
                 tag: 'input',
@@ -962,42 +961,42 @@ BX.SaleCommonPVZ = {
                                 ],
                             }),
 
-                            BX.create({
-                                    tag: 'label',
-                                    props: {
-                                        className: "option-label",
-                                        for: 'delivery-in-hands',
-                                    },
-                                    text: 'Доставка в руки',
-                                    children: [
-                                        BX.create({
-                                            tag: 'input',
-                                            props: {
-                                                id: 'delivery-in-hands',
-                                                className: 'radio-field',
-                                                type: 'radio',
-                                                value: 'Доставка в руки',
-                                                name: 'delivery_type',
-                                            },
-                                            events: {
-                                                change: BX.proxy(function () {
-                                                    BX('ID_DELIVERY_ID_94').checked = true
-                                                    BX('data_view_list').checked = true
-                                                    BX('data_view_map').disabled = true
-
-                                                    __this.clearPvzMap()
-                                                }),
-                                            },
-                                        }),
-                                        BX.create({
-                                            tag: 'span',
-                                            props: {className: 'radio-caption'},
-                                            text: 'Доставка в руки',
-                                        })
-                                    ],
-
-                                }
-                            )
+                            // BX.create({
+                            //         tag: 'label',
+                            //         props: {
+                            //             className: "option-label",
+                            //             for: 'delivery-in-hands',
+                            //         },
+                            //         text: 'Доставка в руки',
+                            //         children: [
+                            //             // BX.create({
+                            //             //     tag: 'input',
+                            //             //     props: {
+                            //             //         id: 'delivery-in-hands',
+                            //             //         className: 'radio-field',
+                            //             //         type: 'radio',
+                            //             //         value: 'Доставка в руки',
+                            //             //         name: 'delivery_type',
+                            //             //     },
+                            //             //     events: {
+                            //             //         change: BX.proxy(function () {
+                            //             //             BX('ID_DELIVERY_ID_94').checked = true
+                            //             //             BX('data_view_list').checked = true
+                            //             //             BX('data_view_map').disabled = true
+                            //             //
+                            //             //             __this.clearPvzMap()
+                            //             //         }),
+                            //             //     },
+                            //             // }),
+                            //             BX.create({
+                            //                 tag: 'span',
+                            //                 props: {className: 'radio-caption'},
+                            //                 text: 'Доставка в руки',
+                            //             })
+                            //         ],
+                            //
+                            //     }
+                            // )
                         ]
                     })
                 ]
@@ -1591,18 +1590,18 @@ BX.SaleCommonPVZ = {
 
         this.checkout.delivery.variants = {}
         this.checkout.delivery.variants.rootEl = BX.create('div', {
-                attrs: {className: 'delivery-variants'}})
+            attrs: {className: 'delivery-variants'}})
         this.checkout.delivery.variants.title = BX.create('div', {
-                attrs: {className: 'delivery-variants-title'},
-                html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
-            })
+            attrs: {className: 'delivery-variants-title'},
+            html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
+        })
         this.checkout.delivery.variants.choose = BX.create('div', {
             attrs: {className: 'delivery-choose js__delivery-choose', id: 'delivery-choose'},
             text: 'Выбрать адрес и способ доставки',
             events: {
                 click: BX.proxy(function () {
                     this.openMap()
-                   // BX.show(BX('delivery-popup'))
+                    // BX.show(BX('delivery-popup'))
                 }, this)
             }
         })
@@ -1634,7 +1633,7 @@ BX.SaleCommonPVZ = {
             ]})
 
         // Прошлые доставки
-        this.checkout.recentWrap
+        // this.checkout.recentWrap
 
 
         // предыдущие доставки
@@ -1648,10 +1647,10 @@ BX.SaleCommonPVZ = {
         BX.insertAfter(this.checkout.delivery.titleIcon, this.checkout.delivery.title)
 
         BX.insertAfter(this.checkout.delivery.variants.rootEl, this.checkout.delivery.titleBox)
-        BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
+        //BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
 
-        BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
-        BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
+        // BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
+        // BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
 
         return this;
     },
