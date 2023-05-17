@@ -424,6 +424,8 @@ h4.checkout-block-title > i.fa {
     align-items: stretch;
     width: 100%;
     margin: 2em 0 0 0;
+    overflow-x: scroll;
+    padding: 0 0 1em 0;
 }
 .recent-deliveries-wrap .recent-profiles .recent-profile {
     display: inline-flex;
