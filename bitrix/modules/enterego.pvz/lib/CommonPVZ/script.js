@@ -1625,7 +1625,6 @@ BX.SaleCommonPVZ = {
             events: {
                 click: BX.proxy(function () {
                     this.openMap()
-                    // BX.show(BX('delivery-popup'))
                 }, this)
             }
         })
@@ -1656,25 +1655,210 @@ BX.SaleCommonPVZ = {
                 this.checkout.delivery.variants.choose,
             ]})
 
-        // Прошлые доставки
-        // this.checkout.recentWrap
-
-
         // предыдущие доставки
-        // this.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
-        // this.checkout.delivery.recentWrap = {}
-        // this.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'last-deliveries-wrap'}})
-        // this.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'last-deliveries-title'},
-        //     html: '<span class="title-accent">Выберите настройки</span> доставки из прошлых заказов'})
+        // this.checkout.recentWrap
+        this.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
+        this.checkout.delivery.recentWrap = {}
+        this.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'recent-deliveries-wrap'}})
+        this.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'recent-deliveries-title'},
+            html: '<span class="recent-title-accent">Выберите настройки</span> доставки из прошлых заказов'})
 
         BX.removeClass(this.checkout.delivery.titleBox, 'justify-content-between')
         BX.insertAfter(this.checkout.delivery.titleIcon, this.checkout.delivery.title)
 
         BX.insertAfter(this.checkout.delivery.variants.rootEl, this.checkout.delivery.titleBox)
-        //BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
+        BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
 
-        // BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
-        // BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
+        BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
+        BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
+
+        BX.append(
+            BX.create({
+                tag: 'div',
+                props: {
+                    className: 'recent-profiles'
+                },
+                children: [
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'recent-profile'
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-title'
+                                },
+                                text: '5post'
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-info'
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-cost'
+                                        },
+                                        text: '590 руб.'
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-date'
+                                        },
+                                        text: '21.05.2023'
+                                    })
+                                ]
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-address'
+                                },
+                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
+                            }),
+                        ]
+                    }),
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'recent-profile'
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-title'
+                                },
+                                text: '5post'
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-info'
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-cost'
+                                        },
+                                        text: '590 руб.'
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-date'
+                                        },
+                                        text: '21.05.2023'
+                                    })
+                                ]
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-address'
+                                },
+                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
+                            }),
+                        ]
+                    }),
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'recent-profile'
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-title'
+                                },
+                                text: '5post'
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-info'
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-cost'
+                                        },
+                                        text: '590 руб.'
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-date'
+                                        },
+                                        text: '21.05.2023'
+                                    })
+                                ]
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-address'
+                                },
+                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
+                            }),
+                        ]
+                    }),
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'recent-profile'
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-title'
+                                },
+                                text: '5post'
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-info'
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-cost'
+                                        },
+                                        text: '590 руб.'
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-date'
+                                        },
+                                        text: '21.05.2023'
+                                    })
+                                ]
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-address'
+                                },
+                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
+                            }),
+                        ]
+                    }),
+                ]
+            }),
+            this.checkout.delivery.recentWrap.rootEl
+        )
 
         return this;
     },
