@@ -96,7 +96,7 @@ class EnteregoBasket
 
                 $typePriceIds = ["CATALOG_PRICE_$price_id"];
                 if ($useUserPrice) {
-                    $userPriceType = pluginStatic::GetPriceIdFromRule($product_id);
+                    $userPriceType = UserPriceHelperOsh::GetPriceIdFromRule($product_id);
                     if ($userPriceType) {
                         $typePriceIds[] = "CATALOG_PRICE_$userPriceType";
                     }
@@ -170,13 +170,13 @@ class EnteregoBasket
 
     /**
      * @param $arPrices
-     * @param $useDiscount
+     * @param boolean $useDiscount
      * @param $productId
      * @return array
      * @throws SqlQueryException
      * @throws LoaderException
      */
-    public static function getPricesArForProductTemplate($arPrices, $useDiscount, $productId=''): array
+    public static function getPricesArForProductTemplate($arPrices, bool $useDiscount, $productId=''): array
     {
         $price = [];
         $sale = $arPrices['PRICES'][SALE_PRICE_TYPE_ID];
@@ -184,13 +184,16 @@ class EnteregoBasket
         $base = $arPrices['PRICES'][BASIC_PRICE];
         $b2b = $arPrices['PRICES'][B2B_PRICE];
 
-        if (USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] == 'true') {
+        if (USE_CUSTOM_SALE_PRICE || $useDiscount) {
             if (!empty($sale) && ((int)$sale['PRICE'] < (int)$retail['PRICE'])) {
                 $price['SALE_PRICE'] = $sale;
             }
         }
         if (Loader::includeModule('osh.userprice')) {
-            $price['USER_PRICE'] = UserPriceHelperOsh::getForProduct($productId);
+            $userPriceTypeId = UserPriceHelperOsh::GetPriceIdFromRule($productId);
+            if (!empty($userPriceTypeId)) {
+                $price['USER_PRICE'] = $arPrices['PRICES'][$userPriceTypeId] ?? null;
+            }
         }
         if (!empty($retail)) {
             $price['PRICE_DATA'][0] = $retail;
