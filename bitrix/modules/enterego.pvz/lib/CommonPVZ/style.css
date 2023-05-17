@@ -433,7 +433,7 @@ h4.checkout-block-title > i.fa {
     border: 0.05em solid #e3e3e3;
     padding: 0.75em 1em;
     border-radius: 0.5em;
-    flex: unset;
+    flex: none;
 }
 .recent-deliveries-wrap .recent-profiles .recent-profile .recent-profile-title {
     font-weight: bold;
