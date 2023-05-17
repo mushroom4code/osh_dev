@@ -229,7 +229,9 @@ BX.SaleCommonPVZ = {
                     },
                 )
 
-                propsNode.append(propContainer);
+                BX.append(propContainer, BX('map_for_delivery'))
+                // propsNode.append(propContainer);
+
                 if (delivery.code === 'oshisha') {
                     this.updateOshishaDelivery(propsNode)
                 }
@@ -247,7 +249,8 @@ BX.SaleCommonPVZ = {
                         : null
                 ]
             });
-            propsNode.append(propContainer);
+            BX.append(propContainer, BX('map_for_delivery'))
+            // propsNode.append(propContainer);
         }
     },
 
@@ -306,34 +309,6 @@ BX.SaleCommonPVZ = {
         this.buildPVZMap1();
         // this.pvzPopup.show();
         BX.show(this.pvzOverlay);
-
-        // const addressField = $(document).find('#user-address')
-        // $("#fullname").suggestions({
-        //     token: "ВАШ API-КЛЮЧ",
-        //     type: "NAME",
-        // });
-        // if (this.curCityName) {
-        //     if (this.curCityName == 'Москва') {
-        //         // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
-        //         addressField.suggestions().setOptions({
-        //             constraints: {
-        //                 locations: [{region: "Московская"}, {region: "Москва"}]
-        //             }
-        //         });
-        //     } else if (this.curCityType == 6) {
-        //         addressField.suggestions().setOptions({
-        //             constraints: {
-        //                 locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
-        //             }
-        //         });
-        //     } else {
-        //         addressField.suggestions().setOptions({
-        //             constraints: {
-        //                 locations: [{city: this.curCityName}]
-        //             }
-        //         });
-        //     }
-        // }
     },
 
     /**
@@ -449,7 +424,8 @@ BX.SaleCommonPVZ = {
 
         BX.insertAfter(this.pvzOverlay, BX('bx-soa-order'))
 
-        this.buildDeliveryType()
+        this.buildAddresField()
+            .buildDeliveryType()
             .buildDataView()
             .buildSortService()
     },
@@ -882,14 +858,59 @@ BX.SaleCommonPVZ = {
             BX('pvz_user_data')
         )
 
-        // document.getElementById('user-address').suggestions({
-        //     token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
-        //     type: "ADDRESS",
-        //     /* Вызывается, когда пользователь выбирает одну из подсказок */
-        //     onSelect: function(suggestion) {
-        //         console.log(suggestion);
-        //     }
-        // })
+        const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
+        const address = $(document).find('#user-address')
+        address.suggestions({
+            token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
+            type: "ADDRESS",
+            hint: false,
+            floating: true,
+            triggerSelectOnEnter: true,
+            autoSelectFirst: true,
+            onSelect: function (suggestion) {
+                this.updatePropsFromDaData(suggestion)
+
+                if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+                    if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
+                        __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                        oshMkad.afterSave = null;
+                        oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
+                            __this.propAddressId,
+                            (__this.propDateDelivery)
+                                ? __this.propDateDelivery
+                                : '',
+                            (__this.propDateDelivery)
+                                ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
+                                : '',
+                            true);
+                    }
+                }
+
+                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
+            }.bind(this),
+        })
+
+        if (this.curCityName) {
+            if (this.curCityName == 'Москва') {
+                address.suggestions().setOptions({
+                    constraints: {
+                        locations: [{region: "Московская"}, {region: "Москва"}]
+                    }
+                });
+            } else if (this.curCityType == 6) {
+                address.suggestions().setOptions({
+                    constraints: {
+                        locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
+                    }
+                });
+            } else {
+                address.suggestions().setOptions({
+                    constraints: {
+                        locations: [{city: this.curCityName}]
+                    }
+                });
+            }
+        }
 
         return this
     },
@@ -938,7 +959,7 @@ BX.SaleCommonPVZ = {
                                             change: BX.proxy(function () {
                                                 BX('ID_DELIVERY_ID_95').checked = true
 
-                                                BX.show('wrap_data_view')
+                                                BX.show(BX('wrap_data_view'))
                                                 BX('data_view_map').checked = true
 
                                                 if (BX('data_view_map').checked) {
@@ -964,42 +985,42 @@ BX.SaleCommonPVZ = {
                                 ],
                             }),
 
-                            // BX.create({
-                            //         tag: 'label',
-                            //         props: {
-                            //             className: "option-label",
-                            //             for: 'delivery-in-hands',
-                            //         },
-                            //         text: 'Доставка в руки',
-                            //         children: [
-                            //             // BX.create({
-                            //             //     tag: 'input',
-                            //             //     props: {
-                            //             //         id: 'delivery-in-hands',
-                            //             //         className: 'radio-field',
-                            //             //         type: 'radio',
-                            //             //         value: 'Доставка в руки',
-                            //             //         name: 'delivery_type',
-                            //             //     },
-                            //             //     events: {
-                            //             //         change: BX.proxy(function () {
-                            //             //             BX('ID_DELIVERY_ID_94').checked = true
-                            //             //             BX('data_view_list').checked = true
-                            //             //             BX('data_view_map').disabled = true
-                            //             //
-                            //             //             __this.clearPvzMap()
-                            //             //         }),
-                            //             //     },
-                            //             // }),
-                            //             BX.create({
-                            //                 tag: 'span',
-                            //                 props: {className: 'radio-caption'},
-                            //                 text: 'Доставка в руки',
-                            //             })
-                            //         ],
-                            //
-                            //     }
-                            // )
+                            BX.create({
+                                    tag: 'label',
+                                    props: {
+                                        className: "option-label",
+                                        for: 'delivery-in-hands',
+                                    },
+                                    text: 'Доставка в руки',
+                                    children: [
+                                        BX.create({
+                                            tag: 'input',
+                                            props: {
+                                                id: 'delivery-in-hands',
+                                                className: 'radio-field',
+                                                type: 'radio',
+                                                value: 'Доставка в руки',
+                                                name: 'delivery_type',
+                                            },
+                                            events: {
+                                                change: BX.proxy(function () {
+                                                    BX('ID_DELIVERY_ID_94').checked = true
+                                                    BX('data_view_list').checked = true
+                                                    BX('data_view_map').disabled = true
+
+                                                    __this.clearPvzMap()
+                                                }),
+                                            },
+                                        }),
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {className: 'radio-caption'},
+                                            text: 'Доставка в руки',
+                                        })
+                                    ],
+
+                                }
+                            )
                         ]
                     })
                 ]
@@ -1202,6 +1223,7 @@ BX.SaleCommonPVZ = {
                                                         }),
                                                         BX('map_for_delivery')
                                                     )
+                                                    BX.onCustomEvent('onDeliveryExtraServiceValueChange')
                                                 } else {
                                                     __this.clearPvzMap();
                                                 }
@@ -1604,7 +1626,6 @@ BX.SaleCommonPVZ = {
             events: {
                 click: BX.proxy(function () {
                     this.openMap()
-                    // BX.show(BX('delivery-popup'))
                 }, this)
             }
         })
@@ -1635,25 +1656,210 @@ BX.SaleCommonPVZ = {
                 this.checkout.delivery.variants.choose,
             ]})
 
-        // Прошлые доставки
-        // this.checkout.recentWrap
-
-
         // предыдущие доставки
-        // this.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
-        // this.checkout.delivery.recentWrap = {}
-        // this.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'last-deliveries-wrap'}})
-        // this.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'last-deliveries-title'},
-        //     html: '<span class="title-accent">Выберите настройки</span> доставки из прошлых заказов'})
+        // this.checkout.recentWrap
+        this.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
+        this.checkout.delivery.recentWrap = {}
+        this.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'recent-deliveries-wrap'}})
+        this.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'recent-deliveries-title'},
+            html: '<span class="recent-title-accent">Выберите настройки</span> доставки из прошлых заказов'})
 
         BX.removeClass(this.checkout.delivery.titleBox, 'justify-content-between')
         BX.insertAfter(this.checkout.delivery.titleIcon, this.checkout.delivery.title)
 
         BX.insertAfter(this.checkout.delivery.variants.rootEl, this.checkout.delivery.titleBox)
-        //BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
+        BX.insertAfter(this.checkout.delivery.separator, this.checkout.delivery.variants.rootEl)
 
-        // BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
-        // BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
+        BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
+        BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
+
+        BX.append(
+            BX.create({
+                tag: 'div',
+                props: {
+                    className: 'recent-profiles'
+                },
+                children: [
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'recent-profile'
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-title'
+                                },
+                                text: '5post'
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-info'
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-cost'
+                                        },
+                                        text: '590 руб.'
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-date'
+                                        },
+                                        text: '21.05.2023'
+                                    })
+                                ]
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-address'
+                                },
+                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
+                            }),
+                        ]
+                    }),
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'recent-profile'
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-title'
+                                },
+                                text: '5post'
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-info'
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-cost'
+                                        },
+                                        text: '590 руб.'
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-date'
+                                        },
+                                        text: '21.05.2023'
+                                    })
+                                ]
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-address'
+                                },
+                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
+                            }),
+                        ]
+                    }),
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'recent-profile'
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-title'
+                                },
+                                text: '5post'
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-info'
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-cost'
+                                        },
+                                        text: '590 руб.'
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-date'
+                                        },
+                                        text: '21.05.2023'
+                                    })
+                                ]
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-address'
+                                },
+                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
+                            }),
+                        ]
+                    }),
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'recent-profile'
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-title'
+                                },
+                                text: '5post'
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-info'
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-cost'
+                                        },
+                                        text: '590 руб.'
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {
+                                            className: 'recent-profile-date'
+                                        },
+                                        text: '21.05.2023'
+                                    })
+                                ]
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-address'
+                                },
+                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
+                            }),
+                        ]
+                    }),
+                ]
+            }),
+            this.checkout.delivery.recentWrap.rootEl
+        )
 
         return this;
     },

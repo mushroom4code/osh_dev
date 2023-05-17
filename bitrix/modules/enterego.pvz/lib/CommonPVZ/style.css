@@ -115,7 +115,7 @@ h4.checkout-block-title > i.fa {
     background-image: url(images/icons/checkout-notice-icon.svg);
 }
 .delivery-variants,
-.last-deliveries-wrap {
+.recent-deliveries-wrap {
     border: 1px solid #e5e5e5;
     padding: 0.6em 1em;
     font-size: 1rem;
@@ -132,13 +132,13 @@ h4.checkout-block-title > i.fa {
     margin: 1em 0;
 }
 .delivery-variants-title,
-.last-deliveries-title {
+.recent-deliveries-title {
     color: #777;
     font-size: 22px;
     margin-bottom: 0.5rem;
 }
-.delivery-variants-title .title-accent,
-.last-deliveries-title .title-accent {
+.delivery-variants-title .recent-title-accent,
+.recent-deliveries-title .recent-title-accent {
     display: inline-block;
     color: #000;
 }
@@ -397,4 +397,64 @@ h4.checkout-block-title > i.fa {
     bottom: -1.5em;
     position: relative;
     order: 2;
+}
+
+
+
+
+.map_for_delivery .box_with_delivery {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border: none;
+}
+.map_for_delivery .box_with_delivery > input[type="radio"] {
+    width: 1.6em;
+    height: 1.6em;
+    margin: 0 2em 0 0;
+}
+.map_for_delivery .box_with_delivery > .bx-soa-pp-company-smalltitle {
+    font-size: 1.14286em;
+    font-weight: 600;
+    color: #333;
+}
+
+.recent-deliveries-wrap .recent-profiles {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    margin: 2em 0 0 0;
+    overflow-x: scroll;
+    padding: 0 0 1em 0;
+}
+.recent-deliveries-wrap .recent-profiles .recent-profile {
+    display: inline-flex;
+    width: 12em;
+    flex-direction: column;
+    margin: 0 1em 0 0;
+    border: 0.05em solid #e3e3e3;
+    padding: 0.75em 1em;
+    border-radius: 0.5em;
+    flex: none;
+}
+.recent-deliveries-wrap .recent-profiles .recent-profile .recent-profile-title {
+    font-weight: bold;
+    display: block;
+    width: 100%;
+}
+.recent-deliveries-wrap .recent-profiles .recent-profile .recent-profile-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.recent-deliveries-wrap .recent-profiles .recent-profile .recent-profile-info .recent-profile-cost {
+    font-size: 0.875em;
+    font-weight: bold;
+}
+.recent-deliveries-wrap .recent-profiles .recent-profile .recent-profile-info .recent-profile-date {
+    font-size: 0.875em;
+}
+.recent-deliveries-wrap .recent-profiles .recent-profile .recent-profile-address {
+    font-size: 0.75em;
+    margin: 0.6em 0 0 0;
 }
