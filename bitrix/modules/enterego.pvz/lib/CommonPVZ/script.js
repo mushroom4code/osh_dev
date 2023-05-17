@@ -106,8 +106,9 @@ BX.SaleCommonPVZ = {
             window.Osh.bxPopup.init();
             const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
 
-            const addressField = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
-            if (this.oshishaDeliveryOptions.DA_DATA_TOKEN && !addressField.hasClass('suggestions-input')) {
+            const addressField = $(document).find('#user-address')
+            // const addressField = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
+            if (addressField.length && this.oshishaDeliveryOptions.DA_DATA_TOKEN && !addressField.hasClass('suggestions-input')) {
                 addressField.suggestions({
                     token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
                     type: "ADDRESS",
@@ -196,17 +197,21 @@ BX.SaleCommonPVZ = {
      */
     updateDelivery: function (orderData) {
         const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
+        // const propsNode = document.querySelector('#map_for_delivery');
+
         BX.cleanNode(propsNode)
+        BX.cleanNode('map_for_delivery')
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
         const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
         if (doorDelivery !== undefined) {
             const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
+            let i = 1;
             deliveryInfo.forEach(delivery => {
                 const propContainer = BX.create(
                     'DIV',
                     {
                         props: {
-                            className: 'bx-soa-pp-company-graf-container  box_with_delivery mb-3'
+                            className: 'bx-soa-pp-company-graf-container  box_with_delivery mb-3',
                         },
                         children: [
                             BX.create('INPUT', {
@@ -215,7 +220,7 @@ BX.SaleCommonPVZ = {
                                     name: `ORDER_PROP_${this.propTypeDeliveryId}`,
                                     value: delivery.name,
                                     type: 'radio',
-
+                                    className: 'js-delivery-prop-' + i,
                                 },
                                 events: {click: () => BX.Sale.OrderAjaxComponent.sendRequest()},
                             }),
@@ -229,8 +234,49 @@ BX.SaleCommonPVZ = {
                     },
                 )
 
-                BX.append(propContainer, BX('map_for_delivery'))
-                // propsNode.append(propContainer);
+                const propPopupContainer = BX.create(
+                    'DIV',
+                    {
+                        props: {
+                            className: 'courier-delivery'
+                        },
+                        children: [
+                            BX.create('INPUT', {
+                                attrs: {checked: delivery.checked},
+                                props: {
+                                    type: 'radio',
+                                    name: 'delivery',
+                                },
+                                dataset: {target: 'js-delivery-prop-' + i},
+                                events: {
+                                    click: BX.proxy(function() {
+                                        const target = $(this).data('target')
+                                        $(document).find('.' + target).prop('checked', true)
+
+                                        BX.Sale.OrderAjaxComponent.sendRequest()
+                                    })
+                                }
+                            }),
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'courier-delivery-name',
+                                },
+                                html: `${delivery.name}`
+                            }),
+                            BX.create('DIV', {
+                                props: {
+                                    className: 'courier-delivery-price',
+                                },
+                                html: `${delivery.price}`
+                            })
+                        ]
+                    },
+                )
+
+                propsNode.append(propContainer);
+                BX.append(propPopupContainer, BX('map_for_delivery'))
+
+                i++;
 
                 if (delivery.code === 'oshisha') {
                     this.updateOshishaDelivery(propsNode)
@@ -249,8 +295,20 @@ BX.SaleCommonPVZ = {
                         : null
                 ]
             });
-            BX.append(propContainer, BX('map_for_delivery'))
-            // propsNode.append(propContainer);
+            const propPopupContainer = BX.create('DIV', {
+                props: {className: 'bx-soa-pp-company-block'},
+                children: [
+                    BX.create('DIV', {props: {className: 'bx-soa-pp-company-desc'}, html: checkedDelivery.DESCRIPTION}),
+                    checkedDelivery.CALCULATE_DESCRIPTION
+                        ? BX.create('DIV', {
+                            props: {className: 'bx-soa-pp-company-desc'},
+                            html: checkedDelivery.CALCULATE_DESCRIPTION
+                        })
+                        : null
+                ]
+            });
+            propsNode.append(propContainer);
+            BX.append(propPopupContainer, BX('map_for_delivery'))
         }
     },
 
@@ -500,25 +558,31 @@ BX.SaleCommonPVZ = {
                 __this.curCityArea = res.AREA_NAME;
                 __this.curCityType = res.TYPE;
                 if (__this.propAddressId) {
-                    if (__this.curCityName == 'Москва') {
-                        $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
-                            constraints: {
-                                locations: [{region: "Московская"}, {region: "Москва"}]
-                            }
-                        });
-                    } else {
-                        if (Number(__this.curCityType) === 6) {
-                            $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                    const userAddress = $(document).find('#user-address');
+                    if (userAddress.length) {
+                        if (__this.curCityName == 'Москва') {
+                            // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                            userAddress.suggestions().setOptions({
                                 constraints: {
-                                    locations: [{region: __this.curCityArea}, {area: __this.curParentCityName}]
+                                    locations: [{region: "Московская"}, {region: "Москва"}]
                                 }
                             });
                         } else {
-                            $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
-                                constraints: {
-                                    locations: [{city: __this.curCityName}]
-                                }
-                            });
+                            if (Number(__this.curCityType) === 6) {
+                                // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                                userAddress.suggestions().setOptions({
+                                    constraints: {
+                                        locations: [{region: __this.curCityArea}, {area: __this.curParentCityName}]
+                                    }
+                                });
+                            } else {
+                                // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                                userAddress.suggestions().setOptions({
+                                    constraints: {
+                                        locations: [{city: __this.curCityName}]
+                                    }
+                                });
+                            }
                         }
                     }
                 }
@@ -620,18 +684,16 @@ BX.SaleCommonPVZ = {
 
         // FullAddress
         if (this.propAddressId ) {
-            // const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
-            const address = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
+            const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
             if (address) {
-                address.val(pvzFullAddress);
+                address.value = pvzFullAddress;
             }
         }
         // City
         if (this.propCityId ) {
-            // const city = document.querySelector('[name="ORDER_PROP_' + this.propCityId + '"]');
-            const city = $(document).find('[name="ORDER_PROP_' + this.propCityId + '"]');
+            const city = document.querySelector('[name="ORDER_PROP_' + this.propCityId + '"]');
             if (city) {
-                city.val(point.properties.cityName);
+                city.value = point.properties.cityName;
             }
         }
 
@@ -726,10 +788,7 @@ BX.SaleCommonPVZ = {
                             point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
                             `<a class="btn btn_basket mt-2" href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${item.id})" >Выбрать</a>`
                         )
-
-
-                        BX('selected-delivery-price').innerHTML = item.price ? item.price + ' руб.' : 'nan'
-
+                        BX('selected-delivery-price').innerHTML = item.price ? item.price + ' руб.' : ''
                         point.properties = {
                             ...point.properties,
                             balloonContent: balloonContent,
@@ -854,7 +913,6 @@ BX.SaleCommonPVZ = {
                 props: {
                     id: 'user-address',
                     className: 'user-address',
-                    // name: 'ORDER_PROP_' + this.propAddressId
                 }
             }),
             BX('pvz_user_data')
