@@ -100,6 +100,7 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         const __this = this;
+        this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
 
             window.Osh.bxPopup.init();
@@ -172,10 +173,10 @@ BX.SaleCommonPVZ = {
             if (BX.Sale.OrderAjaxComponent.locations[this.propLocationId][0].lastValue){
                 this.curCityCode = BX.Sale.OrderAjaxComponent.locations[this.propLocationId][0].lastValue;
             } else {
-                this.curCityCode = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.ID
+                this.curCityCode = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.VALUE[0]
             }
         } catch (e) {
-            this.curCityCode = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.ID
+            this.curCityCode = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.VALUE[0]
         }
         this.propsMap = null;
         this.getCityName();
@@ -1579,7 +1580,7 @@ BX.SaleCommonPVZ = {
     drawDelivery: function()
     {
         // скрытие адресных полей заказа
-        this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
+        // this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
 
         // блок выбора доставки
         this.checkout.delivery.titleBox = BX.findChild(this.checkout.delivery.rootEl,
