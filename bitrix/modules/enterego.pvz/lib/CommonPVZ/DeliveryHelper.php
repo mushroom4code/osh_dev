@@ -138,11 +138,11 @@ class DeliveryHelper
     public static function getActivePvzDeliveryInstance($deliveryParams)
     {
         $deliveryInstance = array_merge(
+            OshishaDelivery::getInstanceForPvz($deliveryParams),
             DellinDelivery::getInstanceForPvz(),
             RussianPostDelivery::getInstanceForPvz(),
             SDEKDelivery::getInstanceForPvz(),
-            FivePostDelivery::getInstanceForPvz(),
-            OshishaDelivery::getInstanceForPvz($deliveryParams)
+            FivePostDelivery::getInstanceForPvz()
         );
         return $deliveryInstance;
     }
@@ -317,17 +317,17 @@ class DeliveryHelper
 
             $uniqueCacheString .= $dimensionsHash;
             //TODO DEBUG
-            if (false && $cache->initCache(7200, $uniqueCacheString, $cachePath)) {
-                $points_Array = $cache->getVars();
-            } elseif ($cache->startDataCache()) {
+//            if (false && $cache->initCache(7200, $uniqueCacheString, $cachePath)) {
+//                $points_Array = $cache->getVars();
+//            } elseif ($cache->startDataCache()) {
                 foreach ($deliveries as $delivery) {
                     if ($delivery!=null) {
                         $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity, $packages, $dimensionsHash, $sumDimensions);
                         $result_array['errors'][$delName] = $delivery->errors;
                     }
                 }
-                $cache->endDataCache($points_Array);
-            }
+//                $cache->endDataCache($points_Array);
+//            }
         } catch (\Throwable $e) {
             $result_array['errors'][$delName] = $e->getMessage();
         }
