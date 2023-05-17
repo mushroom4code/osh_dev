@@ -1872,7 +1872,7 @@ BX.SaleCommonPVZ = {
 
         // физ/юр лицо
         this.checkout.user.type = BX.findChild(this.checkout.user.rootEl, {'class': 'bx-soa-section-title-container'});
-        BX.addClass(this.checkout.user.type, 'd-none');
+        // BX.addClass(this.checkout.user.type, 'd-none');
 
         // ФИО
         this.checkout.user.name = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 1}}, true);
