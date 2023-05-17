@@ -620,16 +620,18 @@ BX.SaleCommonPVZ = {
 
         // FullAddress
         if (this.propAddressId ) {
-            const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
+            // const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
+            const address = $(document).find('[name="ORDER_PROP_' + this.propAddressId + '"]');
             if (address) {
-                address.value = pvzFullAddress;
+                address.val(pvzFullAddress);
             }
         }
         // City
         if (this.propCityId ) {
-            const city = document.querySelector('[name="ORDER_PROP_' + this.propCityId + '"]');
+            // const city = document.querySelector('[name="ORDER_PROP_' + this.propCityId + '"]');
+            const city = $(document).find('[name="ORDER_PROP_' + this.propCityId + '"]');
             if (city) {
-                city.value = point.properties.cityName;
+                city.val(point.properties.cityName);
             }
         }
 
@@ -671,7 +673,7 @@ BX.SaleCommonPVZ = {
 
         // Подстановка значений в поля
         // BX('soa-property-26').value =
-        BX('soa-property-76').value = point.properties.code_pvz;
+        // BX('soa-property-76').value = point.properties.code_pvz;
 
 
         const dataToHandler = this.getPointData(point);
@@ -852,7 +854,7 @@ BX.SaleCommonPVZ = {
                 props: {
                     id: 'user-address',
                     className: 'user-address',
-                    name: 'ORDER_PROP_' + this.propAddressId
+                    // name: 'ORDER_PROP_' + this.propAddressId
                 }
             }),
             BX('pvz_user_data')
