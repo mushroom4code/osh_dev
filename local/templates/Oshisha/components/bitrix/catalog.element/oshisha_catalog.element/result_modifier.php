@@ -5,8 +5,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 /**
  * @var CBitrixComponentTemplate $this
  * @var CatalogElementComponent $component
+ * @var array $arResult
  */
-
 
 global $USER;
 $filter = ['USER_ID' => $USER->GetID(), 'ITEM_ID' => $arResult['ID']];
@@ -21,8 +21,9 @@ $is_key_found = (isset($arResult['ITEM_SUBSCRIPTION']) && ($arResult['ITEM_SUBSC
 
 $arResult["IS_SUBSCRIPTION_KEY_FOUND"] =$is_key_found;
 
-$useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
-$arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($arResult['ITEM_ALL_PRICES'][0], $useDiscount);
+$useDiscount = ($arResult['PROPERTIES']['USE_DISCOUNT']['VALUE'] ?? 'Нет') === 'Да' ;
+$arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($arResult['ITEM_ALL_PRICES'][0],
+    $useDiscount, $arResult['ID']);
 
 $component = $this->getComponent();
 $arParams = $component->applyTemplateModifications();

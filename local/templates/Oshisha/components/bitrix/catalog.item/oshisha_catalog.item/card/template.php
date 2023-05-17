@@ -73,7 +73,7 @@ $jsonForModal = [];
 
 $specialPrice = 0;
 if (!empty($price['USER_PRICE'])) {
-    $specialPrice = $price['USER_PRICE'];
+    $specialPrice = $price['USER_PRICE']['PRICE'];
 }
 
 if ( !empty($price['SALE_PRICE']['PRICE']) &&

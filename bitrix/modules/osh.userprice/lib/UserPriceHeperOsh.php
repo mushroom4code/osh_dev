@@ -2,7 +2,9 @@
 
 namespace Enterego\UserPrice;
 
+use Bitrix\Catalog\GroupTable;
 use Bitrix\Catalog\PriceTable;
+use Bitrix\Main\Application;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Db\SqlQueryException;
 use Bitrix\Main\ObjectPropertyException;
@@ -158,7 +160,7 @@ class UserPriceHelperOsh
      */
     public static function getForProduct($productId): ?float
     {
-        $price_id = PluginStatic::GetPriceIdFromRule($productId);
+        $price_id = self::GetPriceIdFromRule($productId);
 
         if (empty($price_id)) {
             return null;
@@ -176,5 +178,108 @@ class UserPriceHelperOsh
         }
 
         return null;
+    }
+
+    /**
+     * Поиск специально установленной (индивидуальной цены) для пользователя
+     * в контексте ID продукта и его группы товаров.
+     *
+     * @param int|string|null $productId ID товара правила
+     * @return false|int            Возвращает CATALOG_PRICE_ID (если найден)
+     * @throws SqlQueryException
+     */
+    public static function GetPriceIdFromRule($productId)
+    {
+        global $USER;
+        $userId = $USER->GetID();
+        if (empty($userId)) {
+            return null;
+        }
+
+        $productId = intval($productId);
+        $productSectionIds = [];
+        $rsSection = CIBlockElement::GetElementGroups($productId, false, ['ID']);
+        while ($arSection = $rsSection->Fetch()) {
+            $productSectionIds[] = $arSection['ID'];
+        }
+
+        $db = Application::getConnection();
+        if (!empty($productId)) {
+            $sql = "SELECT rule.catalog_price_id               
+                    FROM `ent_user_price_rule` rule
+                    WHERE
+                        rule.`user_id` = {$userId}
+                        AND rule.`product_id` = $productId   
+                    LIMIT 1";
+
+            $res = $db->query($sql);
+
+            if($arRes = $res->fetch())
+            {
+                if($price_id = intval($arRes['catalog_price_id'])) {
+                    return $price_id;
+                }
+            }
+        }
+
+        if($productSectionIds) {
+            $strSectionIds = implode(',', $productSectionIds);
+
+            $sql = "SELECT rule.catalog_price_id              
+                FROM `ent_user_price_rule` rule
+                WHERE
+                    rule.`user_id` = {$userId}
+                    AND rule.`iblock_section_id` IN ($strSectionIds)
+                LIMIT 1";
+
+            $res = $db->query($sql);
+
+            if($arRes = $res->fetch())
+            {
+                if($price_id = intval($arRes['catalog_price_id'])) {
+                    return $price_id;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     * @throws SqlQueryException
+     */
+    public static function getUserPricesForCurrentUser(): array
+    {
+        global $USER;
+        $userId = $USER->GetID();
+        if (empty($userId)) {
+            return [];
+        }
+
+        $userTypePriceList = [];
+        $db = Application::getConnection();
+
+        $sql = "SELECT rule.catalog_price_id               
+                    FROM `ent_user_price_rule` rule
+                    WHERE
+                        rule.`user_id` = {$userId} GROUP BY rule.catalog_price_id ";
+
+        $res = $db->query($sql);
+
+        while ($arRes = $res->fetch()) {
+            if ($price_id = intval($arRes['catalog_price_id'])) {
+                $userTypePriceList[] = $price_id;
+            }
+        }
+
+        $priceTypesResult = [];
+        $rsGroup = GroupTable::getList(['select'=>['ID', 'NAME'], 'filter'=>['ID'=>$userTypePriceList]]);
+        while($arGroup=$rsGroup->fetch())
+        {
+            $priceTypesResult[$arGroup['ID']] =  $arGroup['NAME'];
+        }
+
+        return $priceTypesResult;
     }
 }
