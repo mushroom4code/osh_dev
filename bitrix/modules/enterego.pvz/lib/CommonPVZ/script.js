@@ -1741,7 +1741,7 @@ BX.SaleCommonPVZ = {
 
         console.log(BX.Sale.OrderAjaxComponent.savedDeliveryProfiles);
         var childrenArray = [];
-        if (BX.Sale.OrderAjaxComponent.savedDeliveryProfiles) {
+        if (false && BX.Sale.OrderAjaxComponent.savedDeliveryProfiles) {
             BX.Sale.OrderAjaxComponent.savedDeliveryProfiles.forEach((element) => {
 
                 childrenArray.push(
