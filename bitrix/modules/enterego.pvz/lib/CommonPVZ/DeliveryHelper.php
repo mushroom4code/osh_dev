@@ -351,6 +351,7 @@ class DeliveryHelper
 
         $params['curDeliveryId'] = $order->getField('DELIVERY_ID');
         $params['doorDeliveryId'] = DOOR_DELIVERY_ID;
+        $params['pvzDeliveryId'] = PVZ_DELVIERY_ID;
 
 
         $PeriodDelivery = [];

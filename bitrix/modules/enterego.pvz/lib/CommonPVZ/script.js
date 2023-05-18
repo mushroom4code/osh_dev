@@ -42,6 +42,7 @@ BX.SaleCommonPVZ = {
     init: function (params) {
         this.curDeliveryId = params.params?.curDeliveryId;
         this.doorDeliveryId = params.params?.doorDeliveryId;
+        this.pvzDeliveryId = params.params?.pvzDeliveryId;
         this.shipmentCost = params.params?.shipmentCost;
         this.orderPackages = params.params?.packages;
         this.oshishaDeliveryOptions = params.params?.deliveryOptions;
@@ -362,7 +363,7 @@ BX.SaleCommonPVZ = {
     },
 
     openMap: function () {
-        BX('ID_DELIVERY_ID_95').checked = true
+        BX('ID_DELIVERY_ID_' + this.pvzDeliveryId).checked = true
         // this.createPVZPopup();
         this.createPVZPopup1();
         // this.bufildPVZMap();
@@ -1023,7 +1024,7 @@ BX.SaleCommonPVZ = {
 
                                         events: {
                                             change: BX.proxy(function () {
-                                                BX('ID_DELIVERY_ID_95').checked = true
+                                                BX('ID_DELIVERY_ID_' + this.pvzDeliveryId).checked = true
 
                                                 BX.show(BX('wrap_data_view'))
                                                 BX('data_view_map').checked = true
@@ -1068,7 +1069,7 @@ BX.SaleCommonPVZ = {
                                             },
                                             events: {
                                                 change: BX.proxy(function () {
-                                                    BX('ID_DELIVERY_ID_94').checked = true
+                                                    BX('ID_DELIVERY_ID_' + this.doorDeliveryId).checked = true
                                                     BX('data_view_list').checked = true
                                                     BX('data_view_map').disabled = true
 
