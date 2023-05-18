@@ -250,6 +250,7 @@ h4.checkout-block-title > i.fa {
     display: inline-block;
     width: auto;
     padding: 1em 2em;
+    flex: none;
 }
 .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data .wrap_sort_service {
     display: inline-block;

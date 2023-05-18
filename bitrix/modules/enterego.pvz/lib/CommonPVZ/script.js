@@ -363,7 +363,8 @@ BX.SaleCommonPVZ = {
     },
 
     openMap: function () {
-        BX('ID_DELIVERY_ID_' + this.pvzDeliveryId).checked = true
+        const __this = this
+        BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
         // this.createPVZPopup();
         this.createPVZPopup1();
         // this.bufildPVZMap();
@@ -485,8 +486,7 @@ BX.SaleCommonPVZ = {
 
         BX.insertAfter(this.pvzOverlay, BX('bx-soa-order'))
 
-        this.buildAddresField()
-            .buildDeliveryType()
+        this.buildDeliveryType()
             .buildDataView()
             .buildSortService()
     },
@@ -1024,16 +1024,20 @@ BX.SaleCommonPVZ = {
 
                                         events: {
                                             change: BX.proxy(function () {
-                                                BX('ID_DELIVERY_ID_' + this.pvzDeliveryId).checked = true
+                                                BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
 
+                                                BX.remove(BX('user-address'))
                                                 BX.show(BX('wrap_data_view'))
                                                 BX('data_view_map').checked = true
 
-                                                if (BX('data_view_map').checked) {
-                                                    BX.hide('wrap_sort_service')
-                                                } else {
-                                                    BX.show('wrap_sort_service')
-                                                }
+                                                BX.show(BX('wrap_sort_service'))
+                                                BX('data_view_map').checked = true
+
+                                                // if () {
+                                                //     BX.hide('wrap_sort_service')
+                                                // } else {
+                                                //     BX.show('wrap_sort_service')
+                                                // }
 
                                                 __this.clearPvzMap();
                                                 __this.buildPVZMap1();
@@ -1069,11 +1073,11 @@ BX.SaleCommonPVZ = {
                                             },
                                             events: {
                                                 change: BX.proxy(function () {
-                                                    BX('ID_DELIVERY_ID_' + this.doorDeliveryId).checked = true
-                                                    BX('data_view_list').checked = true
-                                                    BX('data_view_map').disabled = true
-
+                                                    BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
+                                                    BX.hide(BX('wrap_data_view'))
+                                                    BX.hide(BX('wrap_sort_service'))
                                                     __this.clearPvzMap()
+                                                    __this.buildAddresField()
                                                 }),
                                             },
                                         }),
@@ -1135,6 +1139,13 @@ BX.SaleCommonPVZ = {
                                             value: 'Физическое лицо',
                                             name: 'payer_type',
                                             checked: 'checked',
+                                            events: {
+                                                click: BX.proxy(function() {
+                                                    BX.hide(BX('user-address'))
+                                                    BX.show(BX('wrap_data_view'))
+                                                    BX.show(BX('wrap_sort_service'))
+                                                })
+                                            }
                                         }
                                     }),
                                     BX.create({
