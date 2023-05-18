@@ -40,6 +40,21 @@ BX.SaleCommonPVZ = {
     // deliveryBlock: BX('bx-soa-delivery'),
 
     init: function (params) {
+        this.curDeliveryId = params.params?.curDeliveryId;
+        this.doorDeliveryId = params.params?.doorDeliveryId;
+        this.shipmentCost = params.params?.shipmentCost;
+        this.orderPackages = params.params?.packages;
+        this.oshishaDeliveryOptions = params.params?.deliveryOptions;
+
+        this.updateDelivery(BX.Sale.OrderAjaxComponent.result)
+        this.refresh()
+
+        this.drawInterface()
+
+
+    },
+
+    refresh: function () {
         const order = BX.Sale.OrderAjaxComponent.result
         this.propAddressId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         this.propCommonPVZId          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
@@ -56,18 +71,6 @@ BX.SaleCommonPVZ = {
         this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
         this.propDefaultPvzAddressId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.ID;
         this.propTypePvzId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
-
-        this.curDeliveryId = params.params?.curDeliveryId;
-        this.doorDeliveryId = params.params?.doorDeliveryId;
-        this.shipmentCost = params.params?.shipmentCost;
-        this.orderPackages = params.params?.packages;
-        this.oshishaDeliveryOptions = params.params?.deliveryOptions;
-
-        this.updateDelivery(BX.Sale.OrderAjaxComponent.result)
-        this.refresh()
-
-        this.drawInterface()
-
         if (this.propAddressId  && this.oshishaDeliveryStatus) {
             window.Osh.bxPopup.init();
             const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
@@ -96,9 +99,6 @@ BX.SaleCommonPVZ = {
                 }, 500, oshParams);
             }
         }
-    },
-
-    refresh: function () {
         const __this = this;
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
@@ -198,44 +198,47 @@ BX.SaleCommonPVZ = {
         const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
         BX.cleanNode(propsNode)
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
+        console.log(doorDelivery);
         const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
         if (doorDelivery !== undefined) {
-            const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
-            deliveryInfo.forEach(delivery => {
-                const propContainer = BX.create(
-                    'DIV',
-                    {
-                        props: {
-                            className: 'bx-soa-pp-company-graf-container  box_with_delivery mb-3'
+            if (doorDelivery.CALCULATE_DESCRIPTION) {
+                const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
+                deliveryInfo.forEach(delivery => {
+                    const propContainer = BX.create(
+                        'DIV',
+                        {
+                            props: {
+                                className: 'bx-soa-pp-company-graf-container  box_with_delivery mb-3'
+                            },
+                            children: [
+                                BX.create('INPUT', {
+                                    attrs: {checked: delivery.checked},
+                                    props: {
+                                        name: `ORDER_PROP_${this.propTypeDeliveryId}`,
+                                        value: delivery.name,
+                                        type: 'radio',
+
+                                    },
+                                    events: {click: () => BX.Sale.OrderAjaxComponent.sendRequest()},
+                                }),
+                                BX.create('DIV', {
+                                    props: {
+                                        className: 'bx-soa-pp-company-smalltitle color_black font_weight_600',
+                                    },
+                                    html: `${delivery.name} - ${delivery.price}`
+                                })
+                            ]
                         },
-                        children: [
-                            BX.create('INPUT', {
-                                attrs: {checked: delivery.checked},
-                                props: {
-                                    name: `ORDER_PROP_${this.propTypeDeliveryId}`,
-                                    value: delivery.name,
-                                    type: 'radio',
+                    )
 
-                                },
-                                events: {click: () => BX.Sale.OrderAjaxComponent.sendRequest()},
-                            }),
-                            BX.create('DIV', {
-                                props: {
-                                    className: 'bx-soa-pp-company-smalltitle color_black font_weight_600',
-                                },
-                                html: `${delivery.name} - ${delivery.price}`
-                            })
-                        ]
-                    },
-                )
+                    BX.append(propContainer, BX('map_for_delivery'))
+                    // propsNode.append(propContainer);
 
-                BX.append(propContainer, BX('map_for_delivery'))
-                // propsNode.append(propContainer);
-
-                if (delivery.code === 'oshisha') {
-                    this.updateOshishaDelivery(propsNode)
-                }
-            })
+                    if (delivery.code === 'oshisha') {
+                        this.updateOshishaDelivery(propsNode)
+                    }
+                })
+            }
         } else {
             const propContainer = BX.create('DIV', {
                 props: {className: 'bx-soa-pp-company-block'},
@@ -810,6 +813,9 @@ BX.SaleCommonPVZ = {
     },
 
     sendRequestToComponent: function (action, actionData) {
+        console.log(action);
+        console.log(actionData);
+        console.log(BX.Sale.OrderAjaxComponent.ajaxUrl);
         BX.ajax({
             method: 'POST',
             dataType: 'json',
@@ -820,6 +826,7 @@ BX.SaleCommonPVZ = {
                     if (actionData.error) {
                         result.error = actionData.error;
                     }
+                    console.log(result);
                     BX.Sale.OrderAjaxComponent.refreshOrder(result);
                 }
                 BX.Sale.OrderAjaxComponent.endLoader();
@@ -969,8 +976,6 @@ BX.SaleCommonPVZ = {
                                                 } else {
                                                     BX.show('wrap_sort_service')
                                                 }
-
-
 
                                                 __this.clearPvzMap();
                                                 __this.buildPVZMap1();
@@ -1631,6 +1636,7 @@ BX.SaleCommonPVZ = {
                 }, this)
             }
         })
+
         BX.adjust(this.checkout.delivery.variants.rootEl, {
             children: [
                 this.checkout.delivery.variants.title,
@@ -1675,190 +1681,49 @@ BX.SaleCommonPVZ = {
         BX.insertAfter(this.checkout.delivery.recentWrap.rootEl, this.checkout.delivery.separator)
         BX.append(this.checkout.delivery.recentWrap.title, this.checkout.delivery.recentWrap.rootEl)
 
+        console.log(BX.Sale.OrderAjaxComponent.savedDeliveryProfiles);
+        var childrenArray = [];
+        if (BX.Sale.OrderAjaxComponent.savedDeliveryProfiles) {
+            BX.Sale.OrderAjaxComponent.savedDeliveryProfiles.forEach((element) => {
+
+                childrenArray.push(
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            id: element['ID'],
+                            className: 'recent-profile'
+                        },
+
+                        children: [
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-title'
+                                },
+                                text: (element['PROPERTIES'].find(prop => prop.CODE === 'COMMON_PVZ') ? 'ПВЗ' : 'Курьер')
+                                    + ' ' + element['PROPERTIES'].find(prop => prop.CODE === 'TYPE_DELIVERY')?.VALUE
+                            }),
+                            BX.create({
+                                tag: 'span',
+                                props: {
+                                    className: 'recent-profile-address'
+                                },
+                                text: element['PROPERTIES'].find(prop => prop.CODE === 'COMMON_PVZ')
+                                        ? element['PROPERTIES'].find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.VALUE
+                                        : element['ADDRESS']
+                            }),
+                        ]
+                    })
+                )
+            })
+        }
         BX.append(
             BX.create({
                 tag: 'div',
                 props: {
                     className: 'recent-profiles'
                 },
-                children: [
-                    BX.create({
-                        tag: 'div',
-                        props: {
-                            className: 'recent-profile'
-                        },
-                        children: [
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-title'
-                                },
-                                text: '5post'
-                            }),
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-info'
-                                },
-                                children: [
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'recent-profile-cost'
-                                        },
-                                        text: '590 руб.'
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'recent-profile-date'
-                                        },
-                                        text: '21.05.2023'
-                                    })
-                                ]
-                            }),
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-address'
-                                },
-                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
-                            }),
-                        ]
-                    }),
-                    BX.create({
-                        tag: 'div',
-                        props: {
-                            className: 'recent-profile'
-                        },
-                        children: [
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-title'
-                                },
-                                text: '5post'
-                            }),
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-info'
-                                },
-                                children: [
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'recent-profile-cost'
-                                        },
-                                        text: '590 руб.'
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'recent-profile-date'
-                                        },
-                                        text: '21.05.2023'
-                                    })
-                                ]
-                            }),
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-address'
-                                },
-                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
-                            }),
-                        ]
-                    }),
-                    BX.create({
-                        tag: 'div',
-                        props: {
-                            className: 'recent-profile'
-                        },
-                        children: [
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-title'
-                                },
-                                text: '5post'
-                            }),
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-info'
-                                },
-                                children: [
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'recent-profile-cost'
-                                        },
-                                        text: '590 руб.'
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'recent-profile-date'
-                                        },
-                                        text: '21.05.2023'
-                                    })
-                                ]
-                            }),
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-address'
-                                },
-                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
-                            }),
-                        ]
-                    }),
-                    BX.create({
-                        tag: 'div',
-                        props: {
-                            className: 'recent-profile'
-                        },
-                        children: [
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-title'
-                                },
-                                text: '5post'
-                            }),
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-info'
-                                },
-                                children: [
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'recent-profile-cost'
-                                        },
-                                        text: '590 руб.'
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'recent-profile-date'
-                                        },
-                                        text: '21.05.2023'
-                                    })
-                                ]
-                            }),
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'recent-profile-address'
-                                },
-                                text: 'г. Москва, Кутузовский пр, д.12 к.1'
-                            }),
-                        ]
-                    }),
-                ]
+                children: childrenArray
             }),
             this.checkout.delivery.recentWrap.rootEl
         )
@@ -1907,6 +1772,77 @@ BX.SaleCommonPVZ = {
 
         return this
     },
+    applySavedProfile: function (element) {
+        console.log('sesesesesse');
+        if (element['PROPERTIES'].find(prop => prop.CODE === 'COMMON_PVZ')) {
+            this.updateValueProp(this.propCommonPVZId, element['PROPERTIES'].find(prop => prop.CODE === 'TYPE_PVZ').VALUE);
+
+            if (this.propTypePvzId) {
+                const type_pvz = document.querySelector('[name="ORDER_PROP_' + this.propTypePvzId + '"]');
+                if (type_pvz) {
+                    type_pvz.value = element['PROPERTIES'].find(prop => prop.CODE === 'TYPE_PVZ').VALUE
+                }
+            }
+
+            if (this.propDefaultPvzAddressId) {
+                const default_address = document.querySelector('[name="ORDER_PROP_' + this.propDefaultPvzAddressId + '"]');
+                if (default_address) {
+                    default_address.value = element['PROPERTIES'].find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ').VALUE;
+                }
+            }
+
+            if (this.propLatitudeId ) {
+                const deliveryLatitude = document.querySelector('[name="ORDER_PROP_' + this.propLatitudeId + '"]');
+                if (deliveryLatitude) {
+                    deliveryLatitude.value = element['PROPERTIES'].find(prop => prop.CODE === 'LATITUDE').VALUE
+                }
+            }
+
+            if (this.propLongitudeId ) {
+                const deliveryLongitude = document.querySelector('[name="ORDER_PROP_' + this.propLongitudeId + '"]');
+                if (deliveryLongitude) {
+                    deliveryLongitude.value = element['PROPERTIES'].find(prop => prop.CODE === 'LONGITUDE').VALUE
+                }
+            }
+        } else {
+            if (this.propStreetKladrId ) {
+                const deliveryStreetKladr = document.querySelector('[name="ORDER_PROP_' + this.propStreetKladrId + '"]');
+                if (deliveryStreetKladr) {
+                    deliveryStreetKladr.value = element['PROPERTIES'].find(prop => prop.CODE === 'STREET_KLADR').VALUE
+                }
+            }
+
+            if (this.propFiasId ) {
+                const deliveryFias = document.querySelector('[name="ORDER_PROP_' + this.propLongitudeId + '"]');
+                if (deliveryFias) {
+                    deliveryFias.value = element['PROPERTIES'].find(prop => prop.CODE === 'FIAS').VALUE
+                }
+            }
+
+        }
+
+        if (this.propTypeDeliveryId ) {
+            const typeDelivery = document.querySelector('[name="ORDER_PROP_' + this.propTypeDeliveryId + '"]');
+            if (typeDelivery) {
+                typeDelivery.value = element['PROPERTIES'].find(prop => prop.CODE === 'TYPE_DELIVERY').VALUE
+            }
+        }
+
+        if (this.propAddressId ) {
+            const address = document.querySelector('[name="ORDER_PROP_' + this.propAddressId + '"]');
+            if (address) {
+                address.value = element['ADDRESS'];
+            }
+        }
+
+        if (this.propZipId ) {
+            const deliveryPostIndex = document.querySelector('[name="ORDER_PROP_' + this.propZipId + '"]');
+            if (deliveryPostIndex) {
+                deliveryPostIndex.value = element['PROPERTIES'].find(prop => prop.CODE === 'ZIP').VALUE
+            }
+        }
+        this.sendRequestToComponent('refreshOrderAjax', this);
+    }
 };
 
 
