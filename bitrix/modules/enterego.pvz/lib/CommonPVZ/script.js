@@ -198,7 +198,6 @@ BX.SaleCommonPVZ = {
         const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
         BX.cleanNode(propsNode)
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
-        console.log(doorDelivery);
         const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
         if (doorDelivery !== undefined) {
             if (doorDelivery.CALCULATE_DESCRIPTION) {
@@ -1683,7 +1682,7 @@ BX.SaleCommonPVZ = {
 
         console.log(BX.Sale.OrderAjaxComponent.savedDeliveryProfiles);
         var childrenArray = [];
-        if (BX.Sale.OrderAjaxComponent.savedDeliveryProfiles) {
+        if (false) {
             BX.Sale.OrderAjaxComponent.savedDeliveryProfiles.forEach((element) => {
 
                 childrenArray.push(
