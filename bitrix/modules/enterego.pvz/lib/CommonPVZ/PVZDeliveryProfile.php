@@ -118,13 +118,6 @@ class PVZDeliveryProfile extends Base
             if (!empty($deliveryParams['delivery'])){
                 $delivery = CommonPVZ::getInstanceObject($deliveryParams['delivery']);
                 $price = $delivery->getPrice($deliveryParams);
-                if ($price === false) {
-                    return $result->addError(
-                        new Error(
-                            Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
-                            'DELIVERY_CALCULATION'
-                        ));
-                }
                 $result->setDeliveryPrice(
                     roundEx(
                         $price,
@@ -132,6 +125,7 @@ class PVZDeliveryProfile extends Base
                     )
                 );
                 if (!empty($price['errors'])) {
+                    $result->setDescription(json_encode($price['errors']));
                     $result->addError(new Error(
                         Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
                         'DELIVERY_CALCULATION'

@@ -85,7 +85,6 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         const order = BX.Sale.OrderAjaxComponent.result
-
         this.propAddressId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         this.propCommonPVZId          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
         this.propTypeDeliveryId       = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
@@ -210,44 +209,37 @@ BX.SaleCommonPVZ = {
                 const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
                 let i = 1;
                 deliveryInfo.forEach(delivery => {
-
-                    console.log(delivery.checked)
-                    console.log('delivery.code: ', delivery.code)
-
-                    let oshClass = delivery.code === 'oshisha' ? 'oshisha' : ''
-
-                    console.log('oshClass: ', oshClass)
-
-                    const propContainer = BX.create(
-                        'DIV',
-                        {
-                            props: {
-                                className: 'bx-soa-pp-company-graf-container  box_with_delivery mb-3'
+                    if (delivery.error) {
+                        console.log('Delivery calculation error');
+                        console.log(delivery.error);
+                    } else {
+                        let oshClass = delivery.code === 'oshisha' ? 'oshisha' : ''
+                        const propContainer = BX.create(
+                            'DIV',
+                            {
+                                props: {
+                                    className: 'bx-soa-pp-company-graf-container  box_with_delivery mb-3'
+                                },
+                                children: [
+                                    BX.create('INPUT', {
+                                        attrs: {checked: delivery.checked},
+                                        props: {
+                                            name: `ORDER_PROP_${this.propTypeDeliveryId}`,
+                                            value: delivery.name,
+                                            type: 'radio',
+                                            className: 'js-delivery-prop-' + i,
+                                        },
+                                        events: {click: () =>{ BX.Sale.OrderAjaxComponent.sendRequest()}},
+                                    }),
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'bx-soa-pp-company-smalltitle color_black font_weight_600',
+                                        },
+                                        html: `${delivery.name} - ${delivery.price}`
+                                    })
+                                ]
                             },
-                            children: [
-                                BX.create('INPUT', {
-                                    attrs: {checked: delivery.checked},
-                                    props: {
-                                        name: `ORDER_PROP_${this.propTypeDeliveryId}`,
-                                        value: delivery.name,
-                                        type: 'radio',
-                                        className: 'js-delivery-prop-' + i,
-                                        events: {
-                                            click: BX.proxy(function() {
-
-                                            })
-                                        }
-                                    },
-                                }),
-                                BX.create('DIV', {
-                                    props: {
-                                        className: 'bx-soa-pp-company-smalltitle color_black font_weight_600',
-                                    },
-                                    html: `${delivery.name} - ${delivery.price}`
-                                })
-                            ]
-                        },
-                    )
+                        )
 
                 const propPopupContainer = BX.create(
                     'DIV',
@@ -273,6 +265,7 @@ BX.SaleCommonPVZ = {
                                                 let address = $(document).find('#user-address').val()
                                                 $(document).find('.' + target).prop('checked', true)
                                                 $(document).find('input[name="ORDER_PROP_' + this.propAddressId + '"]').val(address)
+                                                BX.Sale.OrderAjaxComponent.sendRequest()
                                             })
                                         }
                                     }),
@@ -313,25 +306,18 @@ BX.SaleCommonPVZ = {
                 propsNode.append(propContainer);
                 BX.append(propPopupContainer, BX('deliveries-list'))
 
-                i++;
+                        i++;
 
-                    if (delivery.code === 'oshisha') {
-                        this.updateOshishaDelivery(propsNode)
+                        if (delivery.code === 'oshisha') {
+                            this.updateOshishaDelivery(propsNode)
+                        }
                     }
                 })
         } else {
-            const propContainer = BX.create('DIV', {
-                props: {className: 'bx-soa-pp-company-block'},
-                children: [
-                    BX.create('DIV', {props: {className: 'bx-soa-pp-company-desc'}, html: checkedDelivery.DESCRIPTION}),
-                    checkedDelivery.CALCULATE_DESCRIPTION
-                        ? BX.create('DIV', {
-                            props: {className: 'bx-soa-pp-company-desc'},
-                            html: checkedDelivery.CALCULATE_DESCRIPTION
-                        })
-                        : null
-                ]
-            });
+            if (checkedDelivery['CALCULATE_ERRORS']) {
+                console.log('Delivery calculation error');
+                console.log(checkedDelivery.CALCULATE_DESCRIPTION);
+            }
             const propPopupContainer = BX.create('DIV', {
                 props: {className: 'bx-soa-pp-company-block'},
                 children: [
@@ -401,11 +387,11 @@ BX.SaleCommonPVZ = {
 
         BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
         // this.createPVZPopup();
-        __this.createPVZPopup1();
+        this.createPVZPopup1();
         // this.bufildPVZMap();
-        __this.buildPVZMap1();
+        this.buildPVZMap1();
         // this.pvzPopup.show();
-        BX.show(__this.pvzOverlay);
+        BX.show(this.pvzOverlay);
     },
 
     /**
@@ -691,7 +677,6 @@ BX.SaleCommonPVZ = {
     },
 
     selectPvz: function (objectId) {
-        console.log(objectId)
         const __this = this
         if (!BX.Sale.OrderAjaxComponent.startLoader())
             return;
@@ -800,12 +785,13 @@ BX.SaleCommonPVZ = {
                     res.data.forEach(item => {
                         const point = __this.objectManager.objects.getById(item.id)
                         const balloonContent = "".concat(
-                            `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ' } - ${item.price} руб.</b></div>`,
+                            `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ' }${item.price ? ' - ' + item.price: ''} руб.</b></div>`,
                             `<div>${point.properties.fullAddress}</div>`,
                             point.properties.phone  ? `<div>${point.properties.phone}</div>` : '',
                             point.properties.workTime  ? `<div>${point.properties.workTime}</div>` : '',
                             point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
                             point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
+                            item['error'] ? `<div>При расчете стоимости произошла ошибка, пожалуйста выберите другой ПВЗ или вид доставки</div>` :
                             `<a class="btn btn_basket mt-2" href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${item.id})" >Выбрать</a>`
                         )
                         BX('selected-delivery-price').innerHTML = item.price ? item.price + ' руб.' : ''
@@ -976,7 +962,6 @@ BX.SaleCommonPVZ = {
                     })
                 ]
             }),
-
             BX('pvz_user_data')
         )
 
@@ -1799,7 +1784,7 @@ BX.SaleCommonPVZ = {
     {
         const __this = this
         // скрытие адресных полей заказа
-        // this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
+        this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
 
         // блок выбора доставки
         this.checkout.delivery.titleBox = BX.findChild(this.checkout.delivery.rootEl,

@@ -42,8 +42,14 @@ switch ($action) {
                 $adr = $pointData['delivery'] . ': ' . $pointData['to'] . ' #' . $pointData['code_pvz'];
             }
             $delivery = CommonPVZ::getInstanceObject($pointData['delivery']);
-            $price = $delivery->getPrice($pointData);
-            $data[] = ['id'=>$pointData['id'], 'price'=>$price];
+
+                $price = $delivery->getPrice($pointData);
+
+            if (empty($price['errors'])){
+                $data[] = ['id'=>$pointData['id'], 'price'=>$price];
+            } else{
+                $data[] = ['id'=>$pointData['id'], 'error'=>$price['errors']];
+            }
         }
         exit(json_encode(['status'=>'success', 'data'=>$data]));
     default:
