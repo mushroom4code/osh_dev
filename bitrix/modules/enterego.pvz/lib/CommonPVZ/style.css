@@ -409,16 +409,44 @@ h4.checkout-block-title > i.fa {
 .map_for_delivery .pickpoint-item .bottom-row .pvz-address {
     width: 100%;
     display: inline-block;
-    max-width: 30em;
+    max-width: 40em;
+    min-width: 23em;
+    flex: none;
 }
 .map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime {
-    width: 100%;
     padding: 0 2em;
     display: inline-block;
+    flex: none;
+    width: 20em;
+    text-align: center;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 }
+
 .map_for_delivery .pickpoint-item .bottom-row .pvz-worktime {
-    width: 55%;
+    width: 100%;
+    max-width: 55em;
+    min-width: 23em;
+    flex: none;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 }
+.map_for_delivery .pickpoint-item .bottom-row .pvz-worktime .worktime-title,
+.map_for_delivery .pickpoint-item .bottom-row .pvz-worktime .worktime-shedule,
+.map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime .deliverytime-title,
+.map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime .deliverytime-value {
+    display:block;
+    width: 100%;
+}
+.map_for_delivery .pickpoint-item .bottom-row .pvz-worktime .worktime-title,
+.map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime .deliverytime-title {
+    font-weight: 500;
+}
+
 .map_for_delivery.list > .btn.btn_basket {
     width: 22em;
     margin: 0 auto;
@@ -485,4 +513,49 @@ h4.checkout-block-title > i.fa {
 .recent-deliveries-wrap .recent-profiles .recent-profile .recent-profile-address {
     font-size: 0.75em;
     margin: 0.6em 0 0 0;
+}
+
+
+.courier-delivery {
+    padding: 0.5em 2em;
+    margin: 0 0 1em 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+
+.courier-delivery .top-row,
+.courier-delivery .bottom-row {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.courier-delivery .top-row > input {
+    width: 1.1667em;
+    height: 1.1667em;
+    margin: 0 1em 0 0;
+}
+.courier-delivery .top-row .courier-delivery-name {
+    font-size: 1.1425em;
+    margin: 0 3em 0 0;
+}
+.courier-delivery .top-row .courier-delivery-price {
+    font-size: 1.1425em;
+    color: #F55F5C;
+}
+.courier-delivery .bottom-row .delivery-address {
+    max-width: 40em;
+    min-width: 23em;
+    width: 100%;
+    flex: none;
+}
+.courier-delivery .bottom-row .delivery-time {
+    padding: 0 2em;
+    flex: none;
+    width: 20em;
+    text-align: center;
 }

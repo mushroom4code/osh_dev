@@ -141,7 +141,7 @@ BX.SaleCommonPVZ = {
                 });
                 if (this.curCityName) {
                     if (this.curCityName == 'Москва') {
-                        $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
+                        addressField.suggestions().setOptions({
                             constraints: {
                                 locations: [{region: "Московская"}, {region: "Москва"}]
                             }
@@ -201,7 +201,7 @@ BX.SaleCommonPVZ = {
         // const propsNode = document.querySelector('#map_for_delivery');
 
         BX.cleanNode(propsNode)
-        BX.cleanNode('map_for_delivery')
+        BX.cleanNode('deliveries-list')
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
         const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
         if (doorDelivery !== undefined) {
@@ -224,7 +224,6 @@ BX.SaleCommonPVZ = {
                                         type: 'radio',
                                         className: 'js-delivery-prop-' + i,
                                     },
-                                    events: {click: () => BX.Sale.OrderAjaxComponent.sendRequest()},
                                 }),
                                 BX.create('DIV', {
                                     props: {
@@ -243,40 +242,60 @@ BX.SaleCommonPVZ = {
                             className: 'courier-delivery'
                         },
                         children: [
-                            BX.create('INPUT', {
-                                attrs: {checked: delivery.checked},
-                                props: {
-                                    type: 'radio',
-                                    name: 'delivery',
-                                },
-                                dataset: {target: 'js-delivery-prop-' + i},
-                                events: {
-                                    click: BX.proxy(function() {
-                                        const target = $(this).data('target')
-                                        $(document).find('.' + target).prop('checked', true)
-
-                                        BX.Sale.OrderAjaxComponent.sendRequest()
+                            BX.create({
+                                tag: 'div',
+                                props: {className: 'top-row'},
+                                children: [
+                                    BX.create('INPUT', {
+                                        attrs: {checked: delivery.checked},
+                                        props: {
+                                            type: 'radio',
+                                            name: 'delivery',
+                                        },
+                                        dataset: {target: 'js-delivery-prop-' + i},
+                                        events: {
+                                            click: BX.proxy(function () {
+                                                const target = $(this).data('target')
+                                                $(document).find('.' + target).prop('checked', true)
+                                            })
+                                        }
+                                    }),
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'courier-delivery-name',
+                                        },
+                                        html: `${delivery.name}`
+                                    }),
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'courier-delivery-price',
+                                        },
+                                        html: delivery.price !=0 ? delivery.price +' руб.' : 'Бесплатно'
                                     })
-                                }
+                                ]
                             }),
-                            BX.create('DIV', {
-                                props: {
-                                    className: 'courier-delivery-name',
-                                },
-                                html: `${delivery.name}`
-                            }),
-                            BX.create('DIV', {
-                                props: {
-                                    className: 'courier-delivery-price',
-                                },
-                                html: `${delivery.price}`
+                            BX.create({
+                                tag: 'div',
+                                props: {className: 'bottom-row'},
+                                children: [
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {className: 'delivery-address'},
+                                        text: $(document).find('#user-address').val()
+                                    }),
+                                    BX.create({
+                                        tag: 'span',
+                                        props: {className: 'delivery-time'},
+                                        text: 'Срок доставки: от 2 дней'
+                                    })
+                                ]
                             })
                         ]
-                    },
-                )
+                    })
+
 
                 propsNode.append(propContainer);
-                BX.append(propPopupContainer, BX('map_for_delivery'))
+                BX.append(propPopupContainer, BX('deliveries-list'))
 
                 i++;
 
@@ -311,7 +330,7 @@ BX.SaleCommonPVZ = {
                 ]
             });
             propsNode.append(propContainer);
-            BX.append(propPopupContainer, BX('map_for_delivery'))
+            BX.append(propPopupContainer, BX('deliveries-list'))
         }
     },
 
@@ -366,11 +385,11 @@ BX.SaleCommonPVZ = {
         const __this = this
         BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
         // this.createPVZPopup();
-        this.createPVZPopup1();
+        __this.createPVZPopup1();
         // this.bufildPVZMap();
-        this.buildPVZMap1();
+        __this.buildPVZMap1();
         // this.pvzPopup.show();
-        BX.show(this.pvzOverlay);
+        BX.show(__this.pvzOverlay);
     },
 
     /**
@@ -916,12 +935,26 @@ BX.SaleCommonPVZ = {
         const __this = this
         BX.append(
             BX.create({
-                tag: 'input',
-                props: {
-                    id: 'user-address',
-                    className: 'user-address',
-                }
+                tag: 'div',
+                props: {className: 'user-address-wrap', id: 'user-address-wrap'},
+                children: [
+                    BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'user-address-title',
+                        },
+                        text: 'Выберите адрес'
+                    }),
+                    BX.create({
+                        tag: 'input',
+                        props: {
+                            id: 'user-address',
+                            className: 'user-address',
+                        }
+                    })
+                ]
             }),
+
             BX('pvz_user_data')
         )
 
@@ -1028,16 +1061,8 @@ BX.SaleCommonPVZ = {
 
                                                 BX.remove(BX('user-address'))
                                                 BX.show(BX('wrap_data_view'))
-                                                BX('data_view_map').checked = true
-
                                                 BX.show(BX('wrap_sort_service'))
                                                 BX('data_view_map').checked = true
-
-                                                // if () {
-                                                //     BX.hide('wrap_sort_service')
-                                                // } else {
-                                                //     BX.show('wrap_sort_service')
-                                                // }
 
                                                 __this.clearPvzMap();
                                                 __this.buildPVZMap1();
@@ -1077,6 +1102,32 @@ BX.SaleCommonPVZ = {
                                                     BX.hide(BX('wrap_data_view'))
                                                     BX.hide(BX('wrap_sort_service'))
                                                     __this.clearPvzMap()
+
+                                                    BX.append(
+                                                        BX.create({
+                                                            tag: 'div',
+                                                            props: {className: 'deliveries-list', id: 'deliveries-list'},
+                                                        }),
+                                                        BX('map_for_delivery')
+                                                    )
+                                                    BX.append(
+                                                        BX.create({
+                                                            tag: 'a',
+                                                            props: {
+                                                                id: 'select-pvz-item',
+                                                                href:"javascript:void(0)",
+                                                                className: "btn btn_basket mt-2",
+                                                            },
+                                                            text: 'Выбрать',
+                                                            events: {
+                                                                click: BX.proxy(function() {
+                                                                    BX.Sale.OrderAjaxComponent.sendRequest()
+                                                                    __this.closePvzPopup()
+                                                                })
+                                                            }
+                                                        }),
+                                                        BX('map_for_delivery')
+                                                    )
                                                     __this.buildAddresField()
                                                 }),
                                             },
@@ -1141,9 +1192,9 @@ BX.SaleCommonPVZ = {
                                             checked: 'checked',
                                             events: {
                                                 click: BX.proxy(function() {
-                                                    BX.hide(BX('user-address'))
                                                     BX.show(BX('wrap_data_view'))
                                                     BX.show(BX('wrap_sort_service'))
+                                                    BX.remove(BX('user-address-wrap'))
                                                 })
                                             }
                                         }
@@ -1479,6 +1530,7 @@ BX.SaleCommonPVZ = {
     },
     buildPvzList: function ()
     {
+        const __this = this
         BX.append(
             BX.create({
                 tag: 'div',
@@ -1503,9 +1555,10 @@ BX.SaleCommonPVZ = {
 
             BX.append(
                 BX.create({
-                    tag: 'label',
+                    // tag: 'label',
+                    tag: 'div',
                     props: {
-                        for: el.id,
+                        // for: el.id,
                         className: 'pickpoint-item ' + jsClass
                     },
                     children: [
@@ -1571,14 +1624,57 @@ BX.SaleCommonPVZ = {
                                     props: {
                                         className: 'pvz-deliverytime'
                                     },
-                                    text: 'от 2 дней'
+                                    children: [
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {
+                                                className: 'deliverytime-title'
+                                            },
+                                            text: 'Срок доставки:'
+                                        }),
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {
+                                                className: 'deliverytime-value'
+                                            },
+                                            text: 'от 1 дня'
+                                        }),
+                                    ]
+
                                 }),
                                 BX.create({
                                     tag: 'span',
                                     props: {
                                         className: 'pvz-worktime'
                                     },
-                                    text: el.properties.workTime
+                                    children: [
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {
+                                                className: 'worktime-title'
+                                            },
+                                            text: 'Время работы:'
+                                        }),
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {
+                                                className: 'worktime-shedule'
+                                            },
+                                            text: el.properties.workTime
+                                        })
+                                    ],
+                                }),
+                                BX.create({
+                                    tag: 'span',
+                                    props: {
+                                        className: 'calculate-this'
+                                    },
+                                    text: 'Узнать цену',
+                                    events: {
+                                        click: BX.proxy(function() {
+                                            __this.getSelectPvzPrice(el.id)
+                                        })
+                                    }
                                 })
                             ]
                         })
@@ -1637,10 +1733,9 @@ BX.SaleCommonPVZ = {
         }
 
         this.drawProps()
-            .drawDelivery()
-            .drawPayment()
-            .drawNotice()
-        return this
+        this.drawDelivery()
+        this.drawPayment()
+        this.drawNotice()
     },
     drawNotice: function()
     {
@@ -1659,7 +1754,6 @@ BX.SaleCommonPVZ = {
         this.checkout.notice.variants.call.rootEl = BX.findChild(this.checkout.notice.variants.rootEl, {'class': 'mr-5'}, true)
         this.checkout.notice.variants.call.input = BX('telephone')
         this.checkout.notice.variants.call.title = BX.findChild(this.checkout.notice.variants.call.rootEl, {'tag': 'label'}, true)
-        return this
     },
     drawPayment: function()
     {
@@ -1672,11 +1766,10 @@ BX.SaleCommonPVZ = {
 
         BX.removeClass(this.checkout.paysystem.titleBox, 'justify-content-between')
         BX.insertAfter(this.checkout.paysystem.titleIcon, this.checkout.paysystem.title)
-
-        return this
     },
     drawDelivery: function()
     {
+        const __this = this
         // скрытие адресных полей заказа
         // this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
 
@@ -1701,8 +1794,8 @@ BX.SaleCommonPVZ = {
             text: 'Выбрать адрес и способ доставки',
             events: {
                 click: BX.proxy(function () {
-                    this.openMap()
-                }, this)
+                    __this.openMap()
+                })
             }
         })
 
@@ -1796,8 +1889,6 @@ BX.SaleCommonPVZ = {
             }),
             this.checkout.delivery.recentWrap.rootEl
         )
-
-        return this;
     },
     drawProps: function()
     {
@@ -1838,8 +1929,6 @@ BX.SaleCommonPVZ = {
         BX.addClass(this.checkout.region.rootEl[0], 'd-none');
         BX.remove(this.checkout.region.rootEl[1]);
         this.checkout.region.rootEl = this.checkout.region.rootEl[0];
-
-        return this
     },
     applySavedProfile: function (element) {
         console.log('sesesesesse');
