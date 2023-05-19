@@ -210,6 +210,14 @@ BX.SaleCommonPVZ = {
                 const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
                 let i = 1;
                 deliveryInfo.forEach(delivery => {
+
+                    console.log(delivery.checked)
+                    console.log('delivery.code: ', delivery.code)
+
+                    let oshClass = delivery.code === 'oshisha' ? 'oshisha' : ''
+
+                    console.log('oshClass: ', oshClass)
+
                     const propContainer = BX.create(
                         'DIV',
                         {
@@ -224,6 +232,11 @@ BX.SaleCommonPVZ = {
                                         value: delivery.name,
                                         type: 'radio',
                                         className: 'js-delivery-prop-' + i,
+                                        events: {
+                                            click: BX.proxy(function() {
+
+                                            })
+                                        }
                                     },
                                 }),
                                 BX.create('DIV', {
@@ -240,7 +253,7 @@ BX.SaleCommonPVZ = {
                     'DIV',
                     {
                         props: {
-                            className: 'courier-delivery'
+                            className: 'courier-delivery ' + oshClass
                         },
                         children: [
                             BX.create({
@@ -306,7 +319,6 @@ BX.SaleCommonPVZ = {
                         this.updateOshishaDelivery(propsNode)
                     }
                 })
-            }
         } else {
             const propContainer = BX.create('DIV', {
                 props: {className: 'bx-soa-pp-company-block'},
@@ -679,6 +691,7 @@ BX.SaleCommonPVZ = {
     },
 
     selectPvz: function (objectId) {
+        console.log(objectId)
         const __this = this
         if (!BX.Sale.OrderAjaxComponent.startLoader())
             return;
@@ -922,16 +935,44 @@ BX.SaleCommonPVZ = {
                     BX.create({
                         tag: 'div',
                         props: {
-                            className: 'user-address-title',
+                            className: 'address-box',
                         },
-                        text: 'Выберите адрес'
+                        children: [
+                            BX.create({
+                                tag: 'div',
+                                props: {
+                                    className: 'user-address-title',
+                                },
+                                text: 'Введите адрес'
+                            }),
+                            BX.create({
+                                tag: 'input',
+                                props: {
+                                    id: 'user-address',
+                                    className: 'user-address',
+                                }
+                            }),
+                        ]
                     }),
                     BX.create({
-                        tag: 'input',
+                        tag: 'div',
                         props: {
-                            id: 'user-address',
-                            className: 'user-address',
-                        }
+                            className: 'flat-box',
+                        },
+                        children: [
+                            BX.create({
+                                tag: 'div',
+                                props: {className: 'user-flat-title'},
+                                text: 'Номер квартиры'
+                            }),
+                            BX.create({
+                                tag: 'input',
+                                props: {
+                                    id: 'user-flat',
+                                    className: 'user-flat',
+                                }
+                            }),
+                        ]
                     })
                 ]
             }),

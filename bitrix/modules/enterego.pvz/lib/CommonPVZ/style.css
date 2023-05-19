@@ -25,15 +25,24 @@
     width: 100%;
     /*height: 600px;*/
     height: 100%;
-    padding-top: 8em;
+    padding: 7em 0 1em;
     margin-top: -7em;
-    padding-bottom: 1em;
 }
-.map_for_delivery .pickpoints-list {
-    height: 90%;
+.map_for_delivery .pickpoints-list,
+.map_for_delivery .deliveries-list {
+    height: 82%;
+    height: 100%;
     overflow-y: scroll;
     padding: 0 2em;
     order: 1;
+    margin: 2em 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.map_for_delivery .deliveries-list {
+    margin: 4em 0;
 }
 .btn_pvz {
     display: block;
@@ -451,8 +460,6 @@ h4.checkout-block-title > i.fa {
 .map_for_delivery.list > .btn.btn_basket {
     width: 22em;
     margin: 0 auto;
-    bottom: -1.5em;
-    position: relative;
     order: 2;
 }
 
@@ -525,8 +532,11 @@ h4.checkout-block-title > i.fa {
     justify-content: flex-start;
     flex-direction: column;
     width: 100%;
+    order: 5;
 }
-
+.courier-delivery.oshisha {
+    order: 1;
+}
 .courier-delivery .top-row,
 .courier-delivery .bottom-row {
     display: flex;
@@ -542,10 +552,13 @@ h4.checkout-block-title > i.fa {
 }
 .courier-delivery .top-row .courier-delivery-name {
     font-size: 1.1425em;
+    font-weight: 500;
     margin: 0 3em 0 0;
+    width: 20em;
 }
 .courier-delivery .top-row .courier-delivery-price {
     font-size: 1.1425em;
+    font-weight: 500;
     color: #F55F5C;
 }
 .courier-delivery .bottom-row .delivery-address {
@@ -568,3 +581,56 @@ h4.checkout-block-title > i.fa {
     overflow-y: scroll;
     order: 1;
 }
+.user-address-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1em 0;
+}
+
+.user-address-wrap .address-box,
+.user-address-wrap .flat-box {
+    margin: 0 1em;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+}
+.user-address-wrap .address-box {
+    width: 40em;
+}
+.user-address-wrap .flat-box {
+    width: 10em;
+}
+.user-address-wrap .address-box .user-address-title,
+.user-address-wrap .flat-box .user-flat-title {
+    width: 100%;
+    text-align: left;
+    margin: 0 0 1em 0;
+}
+.user-address-wrap .address-box input.user-address,
+.user-address-wrap .flat-box .user-flat {
+    outline: none;
+    border-color: #d3d3d3;
+    border-radius: 0.2em;
+    border: 0.05em solid #d3d3d3;
+    text-align: left;
+}
+.user-address-wrap .address-box .suggestions-wrapper {
+    position: relative;
+    margin: -0.1em 0 0 -0.4em;
+    padding: 0;
+    vertical-align: middle;
+    -webkit-text-size-adjust: 100%;
+    border: none;
+}
+/*.user-address-wrap .address-box .suggestions-wrapper .suggestions-constraints li {*/
+/*    background: #f8f8f8;*/
+/*    border: 1px solid #ccc;*/
+/*    -webkit-border-radius: 3px;*/
+/*    -moz-border-radius: 3px;*/
+/*    border-radius: 3px;*/
+/*    cursor: default;*/
+/*    display: inline-block;*/
+/*    margin: 0 4px 0 0;*/
+/*    padding: 0 0.5em;*/
+/*}*/
