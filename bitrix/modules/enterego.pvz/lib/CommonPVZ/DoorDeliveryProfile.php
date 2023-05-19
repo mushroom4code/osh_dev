@@ -130,6 +130,12 @@ class DoorDeliveryProfile extends Base
                         'name' => $delivery->delivery_name,
                         'price' => $price
                     ];
+                } else {
+                    $resDescription[] = [
+                        'code' => $delivery->delivery_code,
+                        'name' => $delivery->delivery_name,
+                        'error' => $price['errors']
+                    ];
                 }
             }
 
