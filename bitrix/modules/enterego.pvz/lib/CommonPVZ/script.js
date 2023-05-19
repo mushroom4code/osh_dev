@@ -37,7 +37,6 @@ BX.SaleCommonPVZ = {
     oshishaDeliveryStatus: false,
     propDefaultPvzAddressId: null,
     propTypePvzId: null,
-    // deliveryBlock: BX('bx-soa-delivery'),
 
     init: function (params) {
         this.curDeliveryId = params.params?.curDeliveryId;
@@ -256,7 +255,9 @@ BX.SaleCommonPVZ = {
                                         events: {
                                             click: BX.proxy(function () {
                                                 const target = $(this).data('target')
+                                                let address = $(document).find('#user-address').val()
                                                 $(document).find('.' + target).prop('checked', true)
+                                                $(document).find('input[name="ORDER_PROP_' + this.propAddressId + '"]').val(address)
                                             })
                                         }
                                     }),
@@ -1059,7 +1060,7 @@ BX.SaleCommonPVZ = {
                                             change: BX.proxy(function () {
                                                 BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
 
-                                                BX.remove(BX('user-address'))
+                                                BX.remove(BX('user-address-wrap'))
                                                 BX.show(BX('wrap_data_view'))
                                                 BX.show(BX('wrap_sort_service'))
                                                 BX('data_view_map').checked = true
@@ -1101,6 +1102,7 @@ BX.SaleCommonPVZ = {
                                                     BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
                                                     BX.hide(BX('wrap_data_view'))
                                                     BX.hide(BX('wrap_sort_service'))
+                                                    BX('map_for_delivery').classList.add('list')
                                                     __this.clearPvzMap()
 
                                                     BX.append(
@@ -1121,8 +1123,9 @@ BX.SaleCommonPVZ = {
                                                             text: 'Выбрать',
                                                             events: {
                                                                 click: BX.proxy(function() {
-                                                                    BX.Sale.OrderAjaxComponent.sendRequest()
+
                                                                     __this.closePvzPopup()
+                                                                    BX.Sale.OrderAjaxComponent.sendRequest()
                                                                 })
                                                             }
                                                         }),
@@ -1845,7 +1848,8 @@ BX.SaleCommonPVZ = {
 
         console.log(BX.Sale.OrderAjaxComponent.savedDeliveryProfiles);
         var childrenArray = [];
-        if (false && BX.Sale.OrderAjaxComponent.savedDeliveryProfiles) {
+        // false - пока нет таблицы профилей
+        if (false && BX.Sale.OrderAjaxComponent.savedDeliveryProfiles.lengh) {
             BX.Sale.OrderAjaxComponent.savedDeliveryProfiles.forEach((element) => {
 
                 childrenArray.push(
