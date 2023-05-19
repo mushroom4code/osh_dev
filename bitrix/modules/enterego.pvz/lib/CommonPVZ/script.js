@@ -50,28 +50,6 @@ BX.SaleCommonPVZ = {
         this.updateDelivery(BX.Sale.OrderAjaxComponent.result)
         this.refresh()
 
-        this.drawInterface()
-
-
-    },
-
-    refresh: function () {
-        const order = BX.Sale.OrderAjaxComponent.result
-        this.propAddressId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
-        this.propCommonPVZId          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
-        this.propTypeDeliveryId       = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
-        this.propZipId                = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ZIP')?.ID;
-        this.propLocationId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.ID;
-        this.propCityId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'CITY')?.ID;
-        this.propFiasId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'FIAS')?.ID;
-        this.propKladrId              = order.ORDER_PROP.properties.find(prop => prop.CODE === 'KLADR')?.ID;
-        this.propStreetKladrId        = order.ORDER_PROP.properties.find(prop => prop.CODE === 'STREET_KLADR')?.ID;
-        this.propLatitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LATITUDE')?.ID;
-        this.propLongitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
-        this.propDateDelivery          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
-        this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
-        this.propDefaultPvzAddressId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.ID;
-        this.propTypePvzId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
         if (this.propAddressId  && this.oshishaDeliveryStatus) {
             window.Osh.bxPopup.init();
             const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
@@ -100,6 +78,31 @@ BX.SaleCommonPVZ = {
                 }, 500, oshParams);
             }
         }
+
+        this.drawInterface()
+
+
+    },
+
+    refresh: function () {
+        const order = BX.Sale.OrderAjaxComponent.result
+
+        this.propAddressId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
+        this.propCommonPVZId          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
+        this.propTypeDeliveryId       = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
+        this.propZipId                = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ZIP')?.ID;
+        this.propLocationId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.ID;
+        this.propCityId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'CITY')?.ID;
+        this.propFiasId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'FIAS')?.ID;
+        this.propKladrId              = order.ORDER_PROP.properties.find(prop => prop.CODE === 'KLADR')?.ID;
+        this.propStreetKladrId        = order.ORDER_PROP.properties.find(prop => prop.CODE === 'STREET_KLADR')?.ID;
+        this.propLatitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LATITUDE')?.ID;
+        this.propLongitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
+        this.propDateDelivery          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
+        this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
+        this.propDefaultPvzAddressId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.ID;
+        this.propTypePvzId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
+
         const __this = this;
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
@@ -205,7 +208,6 @@ BX.SaleCommonPVZ = {
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
         const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
         if (doorDelivery !== undefined) {
-            try {
                 const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
                 let i = 1;
                 deliveryInfo.forEach(delivery => {
@@ -224,7 +226,7 @@ BX.SaleCommonPVZ = {
                                         type: 'radio',
                                         className: 'js-delivery-prop-' + i,
                                     },
-                                    events: {click: () => BX.Sale.OrderAjaxComponent.sendRequest()},
+                                    events: {click: () =>{ BX.Sale.OrderAjaxComponent.sendRequest()}},
                                 }),
                                 BX.create('DIV', {
                                     props: {
@@ -284,9 +286,9 @@ BX.SaleCommonPVZ = {
                         this.updateOshishaDelivery(propsNode)
                     }
                 })
-            } catch (e) {
-                console.log(e);
-            }
+            // } catch (e) {
+            //     console.log(e);
+            // }
         } else {
             const propContainer = BX.create('DIV', {
                 props: {className: 'bx-soa-pp-company-block'},
