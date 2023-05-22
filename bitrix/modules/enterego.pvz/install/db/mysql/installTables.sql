@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `ent_profiles_properties`
 (
     `ID`                        INT(11) NOT NULL AUTO_INCREMENT,
     `SAVED_PROFILE_ID`          INT(11) NOT NULL,
+    `PROPERTY_ID`               INT(11) NOT NULL,
     `CODE`                      VARCHAR(255) NOT NULL,
     `VALUE`                     VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (`ID`),

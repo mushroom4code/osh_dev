@@ -226,6 +226,7 @@ class DellinDelivery extends CommonPVZ
                 ],
                 'cargo' => [
                     'quantity' => count($params['packages']),
+                    "freightUID" => "0x98086eae8b603ea911e5e1f0bdbfff24",
                     'width' => ($params['width'] / 1000),
                     'length' => ($params['length'] / 1000),
                     'height' => ($params['height'] / 1000),
@@ -240,7 +241,7 @@ class DellinDelivery extends CommonPVZ
                 $this->errors[] = $result->errors;
                 return array('errors' => $this->errors);
             } else {
-                $finalPrice = $result->data->price - $result->data->derival->price;
+                $finalPrice = $result->data->price - $result->data->derival->price - $result->data->insurance;
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {
                     $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
@@ -359,6 +360,7 @@ class DellinDelivery extends CommonPVZ
                 ],
                 'cargo' => [
                     'quantity' => count($params['packages']),
+                    "freightUID" => "0x98086eae8b603ea911e5e1f0bdbfff24",
                     'width' => ($params['width'] / 1000),
                     'length' => ($params['length'] / 1000),
                     'height' => ($params['height'] / 1000),
@@ -373,7 +375,7 @@ class DellinDelivery extends CommonPVZ
                 $this->errors[] = $result->errors;
                 return array('errors' => $this->errors);
             } else if(!empty($result)) {
-                $finalPrice = $result->data->price - $result->data->derival->price;
+                $finalPrice = $result->data->price - $result->data->derival->price - $result->data->insurance;
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {
                     $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))

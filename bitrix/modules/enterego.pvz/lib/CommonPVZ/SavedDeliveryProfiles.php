@@ -17,7 +17,8 @@ class SavedDeliveryProfiles
                     $address = $propertyItem->getValue();
                 } else {
                     $propertyValues = $propertyItem->getFieldValues();
-                    $propertiesArr[] = ['CODE'=>$propertyValues['CODE'], 'VALUE'=>$propertyValues['VALUE']];
+                    $propertiesArr[] = ['ORDER_PROPS_ID' => $propertyValues['ORDER_PROPS_ID'],
+                        'CODE'=>$propertyValues['CODE'], 'VALUE'=>$propertyValues['VALUE']];
                 }
             }
             if (!empty($address)) {
@@ -47,6 +48,7 @@ class SavedDeliveryProfiles
                                     || $property['CODE'] == 'LOCATION') {
                                     $profilesPropertiesParams = [
                                         'SAVED_PROFILE_ID' => $profilesAddressesResult->getPrimary()['ID'],
+                                        'PROPERTY_ID' => $property['ORDER_PROPS_ID'],
                                         'CODE' => $property['CODE'],
                                         'VALUE' => $property['VALUE']
                                     ];
@@ -57,6 +59,7 @@ class SavedDeliveryProfiles
                                     || $property['CODE'] == 'STREET_KLADR' || $property['CODE'] == 'FIAS') {
                                     $profilesPropertiesParams = [
                                         'SAVED_PROFILE_ID' => $profilesAddressesResult->getPrimary()['ID'],
+                                        'PROPERTY_ID' => $property['ORDER_PROPS_ID'],
                                         'CODE' => $property['CODE'],
                                         'VALUE' => $property['VALUE']
                                     ];

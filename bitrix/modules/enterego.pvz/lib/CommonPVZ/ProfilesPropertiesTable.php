@@ -18,7 +18,9 @@ class ProfilesPropertiesTable extends \Bitrix\Main\Entity\DataManager
             ),
             'SAVED_PROFILE_ID' => array(
                 'data_type' => 'integer',
-                'reference'
+            ),
+            'PROPERTY_ID' => array(
+                'data_type' => 'integer'
             ),
             'CODE' => array(
                 'data_type' => 'string',
