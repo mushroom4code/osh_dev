@@ -341,18 +341,16 @@ class DeliveryHelper
     public static function addAssets($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
     {
         $params = [];
-        $params['delID'] = 96;
-
-        foreach ($arDeliveryServiceAll as $k => $v) {
-            if ($v->getHandlerCode() === self::$MODULE_ID) {
-                $params['delID'] = $k;
+        foreach ($arDeliveryServiceAll as $deliveryService) {
+            if ($deliveryService instanceof  PVZDeliveryProfile) {
+                $params['pvzDeliveryId'] = $deliveryService->getId();
+            }
+            if ($deliveryService instanceof  DoorDeliveryProfile) {
+                $params['doorDeliveryId'] = $deliveryService->getId();
             }
         }
 
         $params['curDeliveryId'] = $order->getField('DELIVERY_ID');
-        $params['doorDeliveryId'] = DOOR_DELIVERY_ID;
-        $params['pvzDeliveryId'] = PVZ_DELVIERY_ID;
-
 
         $PeriodDelivery = [];
         $start_json_day = Option::get(self::$MODULE_ID, 'Oshisha_timeDeliveryStartDay');

@@ -51,8 +51,6 @@ BX.SaleCommonPVZ = {
         this.refresh()
 
         this.drawInterface()
-
-
     },
 
     refresh: function () {
@@ -363,8 +361,7 @@ BX.SaleCommonPVZ = {
     },
 
     openMap: function () {
-        const __this = this
-        BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
+        // BX('ID_DELIVERY_ID_' + this.pvzDeliveryId).checked = true
         // this.createPVZPopup();
         this.createPVZPopup1();
         // this.bufildPVZMap();
@@ -981,6 +978,7 @@ BX.SaleCommonPVZ = {
 
         return this
     },
+
     buildDeliveryType: function ()
     {
         const __this = this;
@@ -1020,6 +1018,7 @@ BX.SaleCommonPVZ = {
                                             value: 'Самовывоз',
                                             name: 'delivery_type',
                                             checked: 'checked',
+                                            disabled:  this.pvzDeliveryId === undefined
                                         },
 
                                         events: {
@@ -1028,16 +1027,8 @@ BX.SaleCommonPVZ = {
 
                                                 BX.remove(BX('user-address'))
                                                 BX.show(BX('wrap_data_view'))
-                                                BX('data_view_map').checked = true
-
                                                 BX.show(BX('wrap_sort_service'))
                                                 BX('data_view_map').checked = true
-
-                                                // if () {
-                                                //     BX.hide('wrap_sort_service')
-                                                // } else {
-                                                //     BX.show('wrap_sort_service')
-                                                // }
 
                                                 __this.clearPvzMap();
                                                 __this.buildPVZMap1();
@@ -1070,6 +1061,7 @@ BX.SaleCommonPVZ = {
                                                 type: 'radio',
                                                 value: 'Доставка в руки',
                                                 name: 'delivery_type',
+                                                disabled:  this.doorDeliveryId === undefined
                                             },
                                             events: {
                                                 change: BX.proxy(function () {
