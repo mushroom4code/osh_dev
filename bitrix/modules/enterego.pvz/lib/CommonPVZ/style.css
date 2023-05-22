@@ -28,6 +28,12 @@
     padding: 7em 0 1em;
     margin-top: -7em;
 }
+@media screen and (max-width: 768px) {
+    .map_for_delivery {
+        padding: 3.5em 0 1em;
+        margin-top: 0;
+    }
+}
 .map_for_delivery .pickpoints-list,
 .map_for_delivery .deliveries-list {
     height: 82%;
@@ -43,6 +49,11 @@
 }
 .map_for_delivery .deliveries-list {
     margin: 4em 0;
+}
+@media screen and (max-width: 768px) {
+    .map_for_delivery .deliveries-list {
+        margin: 1em 0;
+    }
 }
 .btn_pvz {
     display: block;
@@ -216,6 +227,11 @@ h4.checkout-block-title > i.fa {
     top: 50%;
     transform: translate(-50%, -50%);
 }
+@media screen and (max-width: 768px) {
+    .wrap_pvz_overlay .wrap_pvz_map {
+        /*top:60%;*/
+    }
+}
 .wrap_pvz_overlay .wrap_pvz_map .wrap_pvz_close {
     width: 1.5em;
     height: 1.5em;
@@ -249,18 +265,51 @@ h4.checkout-block-title > i.fa {
 .wrap_pvz_overlay .wrap_pvz_map .wrap_pvz_close:hover::after {
     background-color: #F55F5C;
 }
+@media screen and (max-width: 768px) {
+    .wrap_pvz_overlay .wrap_pvz_map .wrap_pvz_close {
+        z-index: 100;
+    }
+}
 .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data {
+    position: static;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     border-bottom: 0.05em solid #d3d3d3;
     order: 2;
 }
+@media screen and (max-width: 768px) {
+    .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data {
+        flex-direction: column;
+        height: 3.5em;
+        /*padding-bottom: 2em;*/
+        transition: all 0.3s linear;
+        overflow: hidden;
+        background: #fff;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        z-index: 90;
+    }
+    .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data.active {
+        height: auto;
+        padding-bottom: 1em;
+    }
+}
 .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data .wrap_filter_block {
     display: inline-block;
     width: auto;
     padding: 1em 2em;
     flex: none;
+}
+@media screen and (max-width: 768px) {
+    .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data .wrap_filter_block {
+        padding: 0.4em 2em;
+        width: 100%;
+        order: 5;
+    }
 }
 .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data .wrap_sort_service {
     display: inline-block;
@@ -347,6 +396,11 @@ h4.checkout-block-title > i.fa {
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+}
+@media screen and (max-width: 768px) {
+    .wrap_filter_block .options-row {
+        flex-direction: row;
+    }
 }
 .wrap_filter_block .options-row .option-label {
     width: 100%;
@@ -556,6 +610,12 @@ h4.checkout-block-title > i.fa {
     margin: 0 3em 0 0;
     width: 20em;
 }
+@media screen and (max-width: 768px) {
+    .courier-delivery .top-row .courier-delivery-name {
+        width: 9em;
+        justify-content: space-between;
+    }
+}
 .courier-delivery .top-row .courier-delivery-price {
     font-size: 1.1425em;
     font-weight: 500;
@@ -587,7 +647,14 @@ h4.checkout-block-title > i.fa {
     justify-content: flex-start;
     padding: 1em 0;
 }
-
+@media screen and (max-width: 768px) {
+    .user-address-wrap {
+        width: 100%;
+        flex-direction: column;
+        padding: 1em 1.5em;
+        order: 5;
+    }
+}
 .user-address-wrap .address-box,
 .user-address-wrap .flat-box {
     margin: 0 1em;
@@ -598,6 +665,12 @@ h4.checkout-block-title > i.fa {
 .user-address-wrap .address-box {
     width: 40em;
 }
+@media screen and (max-width: 768px) {
+    .user-address-wrap .address-box {
+        width: 100%;
+        margin: 0;
+    }
+}
 .user-address-wrap .flat-box {
     width: 10em;
 }
@@ -606,6 +679,14 @@ h4.checkout-block-title > i.fa {
     width: 100%;
     text-align: left;
     margin: 0 0 1em 0;
+}
+@media screen and (max-width: 768px) {
+    .user-address-wrap .address-box .user-address-title {
+        margin: 0 0 0.3em 0;
+    }
+    .user-address-wrap .flat-box .user-flat-title {
+        margin: 1em 0 0.5em 0;
+    }
 }
 .user-address-wrap .address-box input.user-address,
 .user-address-wrap .flat-box .user-flat {
@@ -634,3 +715,27 @@ h4.checkout-block-title > i.fa {
 /*    margin: 0 4px 0 0;*/
 /*    padding: 0 0.5em;*/
 /*}*/
+
+.pvz_user_data .sort-service-select {
+}
+@media screen and (max-width: 768px) {
+    .sort-service-select {
+    }
+}
+
+.scroll-down-panel {
+    width: 100%;
+    display: none;
+}
+@media screen and (max-width: 768px) {
+    .scroll-down-panel {
+        width: 100%;
+        display: block;
+        position: relative;
+        font-size: 14px;
+        text-align: center;
+        top: 0;
+        order: 0;
+        margin: 1em 0;
+    }
+}

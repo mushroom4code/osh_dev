@@ -49,7 +49,7 @@ BX.SaleCommonPVZ = {
         this.updateDelivery(BX.Sale.OrderAjaxComponent.result)
         this.refresh()
 
-        if (this.propAddressId  && this.oshishaDeliveryStatus) {
+        if (this.propAddressId && this.oshishaDeliveryStatus) {
             window.Osh.bxPopup.init();
             const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
 
@@ -85,18 +85,18 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         const order = BX.Sale.OrderAjaxComponent.result
-        this.propAddressId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
-        this.propCommonPVZId          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
-        this.propTypeDeliveryId       = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
-        this.propZipId                = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ZIP')?.ID;
-        this.propLocationId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.ID;
-        this.propCityId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'CITY')?.ID;
-        this.propFiasId               = order.ORDER_PROP.properties.find(prop => prop.CODE === 'FIAS')?.ID;
-        this.propKladrId              = order.ORDER_PROP.properties.find(prop => prop.CODE === 'KLADR')?.ID;
-        this.propStreetKladrId        = order.ORDER_PROP.properties.find(prop => prop.CODE === 'STREET_KLADR')?.ID;
-        this.propLatitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LATITUDE')?.ID;
-        this.propLongitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
-        this.propDateDelivery          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
+        this.propAddressId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
+        this.propCommonPVZId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
+        this.propTypeDeliveryId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
+        this.propZipId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ZIP')?.ID;
+        this.propLocationId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.ID;
+        this.propCityId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'CITY')?.ID;
+        this.propFiasId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'FIAS')?.ID;
+        this.propKladrId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'KLADR')?.ID;
+        this.propStreetKladrId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'STREET_KLADR')?.ID;
+        this.propLatitudeId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LATITUDE')?.ID;
+        this.propLongitudeId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
+        this.propDateDelivery = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
         this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
         this.propDefaultPvzAddressId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.ID;
         this.propTypePvzId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
@@ -166,14 +166,14 @@ BX.SaleCommonPVZ = {
             alert('Свойство адреса не найдено');
         }
 
-        if (this.propCommonPVZId ) {
+        if (this.propCommonPVZId) {
             const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.propCommonPVZId + '"]');
             if (commonPVZ) {
                 commonPVZ.readOnly = true;
             }
         }
         try {
-            if (BX.Sale.OrderAjaxComponent.locations[this.propLocationId][0].lastValue){
+            if (BX.Sale.OrderAjaxComponent.locations[this.propLocationId][0].lastValue) {
                 this.curCityCode = BX.Sale.OrderAjaxComponent.locations[this.propLocationId][0].lastValue;
             } else {
                 this.curCityCode = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')?.VALUE[0]
@@ -206,113 +206,117 @@ BX.SaleCommonPVZ = {
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
         const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
         if (doorDelivery !== undefined) {
-                const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
-                let i = 1;
-                deliveryInfo.forEach(delivery => {
-                    if (delivery.error) {
-                        console.log('Delivery calculation error');
-                        console.log(delivery.error);
-                    } else {
-                        let oshClass = delivery.code === 'oshisha' ? 'oshisha' : ''
-                        const propContainer = BX.create(
-                            'DIV',
-                            {
-                                props: {
-                                    className: 'bx-soa-pp-company-graf-container  box_with_delivery mb-3'
-                                },
-                                children: [
-                                    BX.create('INPUT', {
-                                        attrs: {checked: delivery.checked},
-                                        props: {
-                                            name: `ORDER_PROP_${this.propTypeDeliveryId}`,
-                                            value: delivery.name,
-                                            type: 'radio',
-                                            className: 'js-delivery-prop-' + i,
-                                        },
-                                        events: {click: () =>{ BX.Sale.OrderAjaxComponent.sendRequest()}},
-                                    }),
-                                    BX.create('DIV', {
-                                        props: {
-                                            className: 'bx-soa-pp-company-smalltitle color_black font_weight_600',
-                                        },
-                                        html: `${delivery.name} - ${delivery.price}`
-                                    })
-                                ]
+            const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
+            let i = 1;
+            deliveryInfo.forEach(delivery => {
+                if (delivery.error) {
+                    console.log('Delivery calculation error');
+                    console.log(delivery.error);
+                } else {
+                    let oshClass = delivery.code === 'oshisha' ? 'oshisha' : ''
+                    const propContainer = BX.create(
+                        'DIV',
+                        {
+                            props: {
+                                className: 'bx-soa-pp-company-graf-container  box_with_delivery mb-3'
                             },
-                        )
-
-                const propPopupContainer = BX.create(
-                    'DIV',
-                    {
-                        props: {
-                            className: 'courier-delivery ' + oshClass
-                        },
-                        children: [
-                            BX.create({
-                                tag: 'div',
-                                props: {className: 'top-row'},
-                                children: [
-                                    BX.create('INPUT', {
-                                        attrs: {checked: delivery.checked},
-                                        props: {
-                                            type: 'radio',
-                                            name: 'delivery',
-                                        },
-                                        dataset: {target: 'js-delivery-prop-' + i},
-                                        events: {
-                                            click: BX.proxy(function () {
-                                                const target = $(this).data('target')
-                                                let address = $(document).find('#user-address').val()
-                                                $(document).find('.' + target).prop('checked', true)
-                                                $(document).find('input[name="ORDER_PROP_' + this.propAddressId + '"]').val(address)
-                                                BX.Sale.OrderAjaxComponent.sendRequest()
-                                            })
+                            children: [
+                                BX.create('INPUT', {
+                                    attrs: {checked: delivery.checked},
+                                    props: {
+                                        name: `ORDER_PROP_${this.propTypeDeliveryId}`,
+                                        value: delivery.name,
+                                        type: 'radio',
+                                        className: 'js-delivery-prop-' + i,
+                                    },
+                                    events: {
+                                        click: () => {
+                                            BX.Sale.OrderAjaxComponent.sendRequest()
                                         }
-                                    }),
-                                    BX.create('DIV', {
-                                        props: {
-                                            className: 'courier-delivery-name',
-                                        },
-                                        html: `${delivery.name}`
-                                    }),
-                                    BX.create('DIV', {
-                                        props: {
-                                            className: 'courier-delivery-price',
-                                        },
-                                        html: delivery.price !=0 ? delivery.price +' руб.' : 'Бесплатно'
-                                    })
-                                ]
-                            }),
-                            BX.create({
-                                tag: 'div',
-                                props: {className: 'bottom-row'},
-                                children: [
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {className: 'delivery-address'},
-                                        text: $(document).find('#user-address').val()
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {className: 'delivery-time'},
-                                        text: 'Срок доставки: от 2 дней'
-                                    })
-                                ]
-                            })
-                        ]
-                    })
+                                    },
+                                }),
+                                BX.create('DIV', {
+                                    props: {
+                                        className: 'bx-soa-pp-company-smalltitle color_black font_weight_600',
+                                    },
+                                    html: `${delivery.name} - ${delivery.price}`
+                                })
+                            ]
+                        },
+                    )
+
+                    const propPopupContainer = BX.create(
+                        'DIV',
+                        {
+                            props: {
+                                className: 'courier-delivery ' + oshClass
+                            },
+                            children: [
+                                BX.create({
+                                    tag: 'div',
+                                    props: {className: 'top-row'},
+                                    children: [
+                                        BX.create('INPUT', {
+                                            attrs: {checked: delivery.checked},
+                                            props: {
+                                                type: 'radio',
+                                                name: 'delivery',
+                                            },
+                                            dataset: {target: 'js-delivery-prop-' + i},
+                                            events: {
+                                                click: BX.proxy(function () {
+                                                    const target = $(this).data('target')
+                                                    let address = $(document).find('#user-address').val()
+                                                    $(document).find('.' + target).prop('checked', true)
+                                                    $(document).find('input[name="ORDER_PROP_' + this.propAddressId + '"]').val(address)
+                                                    BX.Sale.OrderAjaxComponent.sendRequest()
+                                                })
+                                            }
+                                        }),
+                                        BX.create('DIV', {
+                                            props: {
+                                                className: 'courier-delivery-name',
+                                            },
+                                            html: `${delivery.name}`
+                                        }),
+                                        BX.create('DIV', {
+                                            props: {
+                                                className: 'courier-delivery-price',
+                                            },
+                                            html: delivery.price != 0 ? delivery.price + ' руб.' : 'Бесплатно'
+                                        })
+                                    ]
+                                }),
+                                BX.create({
+                                    tag: 'div',
+                                    props: {className: 'bottom-row'},
+                                    children: [
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {className: 'delivery-address'},
+                                            text: $(document).find('#user-address').val()
+                                        }),
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {className: 'delivery-time'},
+                                            text: 'Срок доставки: от 2 дней'
+                                        })
+                                    ]
+                                })
+                            ]
+                        })
 
 
-                propsNode.append(propContainer);
-                BX.append(propPopupContainer, BX('deliveries-list'))
+                    propsNode.append(propContainer);
+                    BX.append(propPopupContainer, BX('deliveries-list'))
 
-                        i++;
+                    i++;
 
-                        if (delivery.code === 'oshisha') {
-                            this.updateOshishaDelivery(propsNode)
-                        }
+                    if (delivery.code === 'oshisha') {
+                        this.updateOshishaDelivery(propsNode)
                     }
-                })
+                }
+            })
         } else {
             if (checkedDelivery['CALCULATE_ERRORS']) {
                 console.log('Delivery calculation error');
@@ -330,12 +334,12 @@ BX.SaleCommonPVZ = {
                         : null
                 ]
             });
-            propsNode.append(propContainer);
+            // propsNode.append(propContainer);
             BX.append(propPopupContainer, BX('deliveries-list'))
         }
     },
 
-    updateOshishaDelivery: function(parentBlock) {
+    updateOshishaDelivery: function (parentBlock) {
         var __this = this;
 
         __this.oshishaDeliveryStatus = true
@@ -421,6 +425,7 @@ BX.SaleCommonPVZ = {
 
     closePvzPopup: function () {
         BX.hide(this.pvzOverlay);
+        this.clearPvzMap()
     },
 
     clearPvzMap: function () {
@@ -459,7 +464,7 @@ BX.SaleCommonPVZ = {
     //             closeByEsc: true
     //         });
     // },
-    createPVZPopup1: function() {
+    createPVZPopup1: function () {
         this.pvzPopup = BX.create({
             tag: 'div',
             props: {
@@ -474,7 +479,7 @@ BX.SaleCommonPVZ = {
                         className: "wrap_pvz_close js__wrap_pvz_close"
                     },
                     events: {
-                        click: BX.proxy(function() {
+                        click: BX.proxy(function () {
                             this.closePvzPopup()
                         }, this)
                     }
@@ -496,20 +501,25 @@ BX.SaleCommonPVZ = {
             ],
         })
 
-        this.pvzOverlay = BX.create({
-            tag: 'div',
-            props: {
-                id: 'wrap_pvz_overlay',
-                className: "wrap_pvz_overlay"
-            },
-            children: [this.pvzPopup]
-        })
+        if (BX('wrap_pvz_overlay')) {
+            this.pvzOverlay = BX('wrap_pvz_overlay')
+        } else {
+            this.pvzOverlay = BX.create({
+                tag: 'div',
+                props: {
+                    id: 'wrap_pvz_overlay',
+                    className: "wrap_pvz_overlay"
+                },
+                children: [this.pvzPopup]
+            })
 
-        BX.insertAfter(this.pvzOverlay, BX('bx-soa-order'))
+            BX.insertAfter(this.pvzOverlay, BX('bx-soa-order'))
+        }
 
         this.buildDeliveryType()
             .buildDataView()
             .buildSortService()
+            .buildMobileControls()
     },
     /**
      *   Построение карты с PVZ
@@ -670,7 +680,7 @@ BX.SaleCommonPVZ = {
             longitude: point.geometry.coordinates[1],
             hubregion: point.properties.hubregion,
             name_city: this.curCityName,
-            postindex:  point.properties.postindex,
+            postindex: point.properties.postindex,
             code_pvz: point.properties.code_pvz,
             type_pvz: point.properties.type ?? ''
         };
@@ -691,13 +701,13 @@ BX.SaleCommonPVZ = {
         BX.Sale.OrderAjaxComponent.result.DELIVERY.forEach((delivery) => {
             if (delivery['CHECKED'])
                 delete delivery['CHECKED']
-            if(delivery['ID'] == this.pvzDeliveryId)
+            if (delivery['ID'] == this.pvzDeliveryId)
                 delivery['CHECKED'] = 'Y'
         })
         BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.forEach((property) => {
-           if (property['CODE'] == 'COMMON_PVZ' && point.properties.code_pvz) {
-               property['VALUE'][0] = point.properties.code_pvz;
-           }
+            if (property['CODE'] == 'COMMON_PVZ' && point.properties.code_pvz) {
+                property['VALUE'][0] = point.properties.code_pvz;
+            }
             if (property['CODE'] == 'TYPE_DELIVERY') {
                 property['VALUE'][0] = point.properties.deliveryName;
             }
@@ -742,7 +752,7 @@ BX.SaleCommonPVZ = {
         Object.keys(tempLocations).forEach((locationKey) => {
             tempLocations[locationKey] = tempLocations[locationKey][0];
         });
-        var payload = {error:false, locations: tempLocations, order:BX.Sale.OrderAjaxComponent.result};
+        var payload = {error: false, locations: tempLocations, order: BX.Sale.OrderAjaxComponent.result};
         BX.Sale.OrderAjaxComponent.refreshOrder(payload);
         __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
     },
@@ -752,15 +762,15 @@ BX.SaleCommonPVZ = {
      * @param points
      * @param clusterId
      */
-    getSelectPvzPrice: function (points, clusterId=undefined) {
+    getSelectPvzPrice: function (points, clusterId = undefined) {
         const __this = this;
         const data = points.reduce((result, point) => {
             if (!point.properties.balloonContent) {
                 point.properties.balloonContent = "Идет загрузка данных...";
-                if (clusterId===undefined) {
+                if (clusterId === undefined) {
                     __this.objectManager.objects.balloon.setData(point);
                 }
-                return result.concat (this.getPointData(point))
+                return result.concat(this.getPointData(point))
             }
             return result;
         }, [])
@@ -785,21 +795,21 @@ BX.SaleCommonPVZ = {
                     res.data.forEach(item => {
                         const point = __this.objectManager.objects.getById(item.id)
                         const balloonContent = "".concat(
-                            `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ' }${item.price ? ' - ' + item.price: ''} руб.</b></div>`,
+                            `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ'}${item.price ? ' - ' + item.price : ''} руб.</b></div>`,
                             `<div>${point.properties.fullAddress}</div>`,
-                            point.properties.phone  ? `<div>${point.properties.phone}</div>` : '',
-                            point.properties.workTime  ? `<div>${point.properties.workTime}</div>` : '',
+                            point.properties.phone ? `<div>${point.properties.phone}</div>` : '',
+                            point.properties.workTime ? `<div>${point.properties.workTime}</div>` : '',
                             point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
                             point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
                             item['error'] ? `<div>При расчете стоимости произошла ошибка, пожалуйста выберите другой ПВЗ или вид доставки</div>` :
-                            `<a class="btn btn_basket mt-2" href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${item.id})" >Выбрать</a>`
+                                `<a class="btn btn_basket mt-2" href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${item.id})" >Выбрать</a>`
                         )
                         BX('selected-delivery-price').innerHTML = item.price ? item.price + ' руб.' : ''
                         point.properties = {
                             ...point.properties,
                             balloonContent: balloonContent,
                         };
-                        if (clusterId===undefined) {
+                        if (clusterId === undefined) {
                             __this.objectManager.objects.balloon.setData(point);
                         }
                     })
@@ -831,7 +841,7 @@ BX.SaleCommonPVZ = {
 
         __this.propsMap.geoObjects.add(objectManager);
         const osh_pvz = objectManager.objects.getAll()
-            .find((item) => item?.properties?.deliveryName==='OSHISHA');
+            .find((item) => item?.properties?.deliveryName === 'OSHISHA');
 
         if (osh_pvz) {
             const button = new ymaps.control.Button({
@@ -849,11 +859,11 @@ BX.SaleCommonPVZ = {
                 __this.propsMap.setZoom(15)
                 objectManager.objects.balloon.open(osh_pvz.id);
             })
-            __this.propsMap.controls.add(button, { float: 'right', floatIndex: 100 });
+            __this.propsMap.controls.add(button, {float: 'right', floatIndex: 100});
         }
         BX.Sale.OrderAjaxComponent.endLoader();
 
-        objectManager.clusters.events.add(['balloonopen'], function (e){
+        objectManager.clusters.events.add(['balloonopen'], function (e) {
             const clusterId = e.get('objectId');
             const cluster = objectManager.clusters.getById(clusterId);
             if (objectManager.clusters.balloon.isOpen(clusterId)) {
@@ -911,7 +921,7 @@ BX.SaleCommonPVZ = {
         return data;
     },
 
-    buildAddresField: function() {
+    buildAddresField: function () {
         const __this = this
         BX.append(
             BX.create({
@@ -1021,535 +1031,571 @@ BX.SaleCommonPVZ = {
 
         return this
     },
-    buildDeliveryType: function ()
-    {
+    buildDeliveryType: function () {
         const __this = this;
 
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {
-                    id: 'wrap_delivery_types',
-                    className: "wrap_filter_block"
-                },
-                children: [
-                    BX.create({
-                        tag: 'div',
-                        props: {className: "title"},
-                        text: 'Способ получения'
-                    }),
+        if (!BX('wrap_delivery_types')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_delivery_types',
+                        className: "wrap_filter_block"
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {className: "title"},
+                            text: 'Способ получения'
+                        }),
 
-                    BX.create({
-                        tag: 'div',
-                        props: {className: "options-row"},
-                        children: [
-                            BX.create({
-                                tag: 'label',
-                                props: {
-                                    className: "option-label",
-                                    for: 'delivery-self',
-                                },
-                                text: 'Самовывоз',
-                                children: [
-                                    BX.create({
-                                        tag: 'input',
-                                        props: {
-                                            id: 'delivery-self',
-                                            className: 'radio-field',
-                                            type: 'radio',
-                                            value: 'Самовывоз',
-                                            name: 'delivery_type',
-                                            checked: 'checked',
-                                        },
-
-                                        events: {
-                                            change: BX.proxy(function () {
-                                                BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
-
-                                                BX.remove(BX('user-address-wrap'))
-                                                BX.show(BX('wrap_data_view'))
-                                                BX.show(BX('wrap_sort_service'))
-                                                BX('data_view_map').checked = true
-
-                                                __this.clearPvzMap();
-                                                __this.buildPVZMap1();
-                                            }),
-                                        },
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'radio-caption',
-                                        },
-                                        text: 'Самовывоз'
-                                    })
-                                ],
-                            }),
-
-                            BX.create({
+                        BX.create({
+                            tag: 'div',
+                            props: {className: "options-row"},
+                            children: [
+                                BX.create({
                                     tag: 'label',
                                     props: {
                                         className: "option-label",
-                                        for: 'delivery-in-hands',
+                                        for: 'delivery-self',
+                                    },
+                                    text: 'Самовывоз',
+                                    children: [
+                                        BX.create({
+                                            tag: 'input',
+                                            props: {
+                                                id: 'delivery-self',
+                                                className: 'radio-field',
+                                                type: 'radio',
+                                                value: 'Самовывоз',
+                                                name: 'delivery_type',
+                                                checked: 'checked',
+                                            },
+
+                                            events: {
+                                                change: BX.proxy(function () {
+                                                    BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
+
+                                                    BX.remove(BX('user-address-wrap'))
+                                                    BX.show(BX('wrap_data_view'))
+                                                    BX.show(BX('wrap_sort_service'))
+                                                    BX('data_view_map').checked = true
+
+                                                    __this.clearPvzMap();
+                                                    __this.buildPVZMap1();
+                                                }),
+                                            },
+                                        }),
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {
+                                                className: 'radio-caption',
+                                            },
+                                            text: 'Самовывоз'
+                                        })
+                                    ],
+                                }),
+
+                                BX.create({
+                                        tag: 'label',
+                                        props: {
+                                            className: "option-label",
+                                            for: 'delivery-in-hands',
+                                        },
+                                        text: 'Доставка в руки',
+                                        children: [
+                                            BX.create({
+                                                tag: 'input',
+                                                props: {
+                                                    id: 'delivery-in-hands',
+                                                    className: 'radio-field',
+                                                    type: 'radio',
+                                                    value: 'Доставка в руки',
+                                                    name: 'delivery_type',
+                                                },
+                                                events: {
+                                                    change: BX.proxy(function () {
+                                                        BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
+                                                        BX.hide(BX('wrap_data_view'))
+                                                        BX.hide(BX('wrap_sort_service'))
+                                                        BX('map_for_delivery').classList.add('list')
+                                                        __this.clearPvzMap()
+
+                                                        BX.append(
+                                                            BX.create({
+                                                                tag: 'div',
+                                                                props: {className: 'deliveries-list', id: 'deliveries-list'},
+                                                            }),
+                                                            BX('map_for_delivery')
+                                                        )
+                                                        BX.append(
+                                                            BX.create({
+                                                                tag: 'a',
+                                                                props: {
+                                                                    id: 'select-pvz-item',
+                                                                    href: "javascript:void(0)",
+                                                                    className: "btn btn_basket mt-2",
+                                                                },
+                                                                text: 'Выбрать',
+                                                                events: {
+                                                                    click: BX.proxy(function () {
+
+                                                                        __this.closePvzPopup()
+                                                                        BX.Sale.OrderAjaxComponent.sendRequest()
+                                                                    })
+                                                                }
+                                                            }),
+                                                            BX('map_for_delivery')
+                                                        )
+                                                        __this.buildAddresField()
+                                                    }),
+                                                },
+                                            }),
+                                            BX.create({
+                                                tag: 'span',
+                                                props: {className: 'radio-caption'},
+                                                text: 'Доставка в руки',
+                                            })
+                                        ],
+
+                                    }
+                                )
+                            ]
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            )
+        }
+
+        return this
+    },
+    buildCustomerType: function () {
+        if (!BX('wrap_payer_types')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_payer_types',
+                        className: "wrap_filter_block"
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {className: "title"},
+                            text: 'Тип плательщика'
+                        }),
+
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: "options-row"
+                            },
+                            children: [
+                                BX.create({
+                                    tag: 'label',
+                                    props: {
+                                        className: "option-label",
+                                        for: 'payer-individual',
+                                    },
+                                    text: 'Самовывоз',
+
+                                    children: [
+                                        BX.create({
+                                            tag: 'input',
+                                            props: {
+                                                id: 'payer-individual',
+                                                className: 'radio-field',
+                                                type: 'radio',
+                                                value: 'Физическое лицо',
+                                                name: 'payer_type',
+                                                checked: 'checked',
+                                                events: {
+                                                    click: BX.proxy(function () {
+                                                        BX.show(BX('wrap_data_view'))
+                                                        BX.show(BX('wrap_sort_service'))
+                                                        BX.remove(BX('user-address-wrap'))
+                                                    })
+                                                }
+                                            }
+                                        }),
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {
+                                                className: 'radio-caption',
+                                            },
+                                            text: 'Физическое лицо'
+                                        })
+                                    ],
+                                }),
+
+                                BX.create({
+                                    tag: 'label',
+                                    props: {
+                                        className: "option-label",
+                                        for: 'payer-company',
                                     },
                                     text: 'Доставка в руки',
                                     children: [
                                         BX.create({
                                             tag: 'input',
                                             props: {
-                                                id: 'delivery-in-hands',
+                                                id: 'payer-company',
                                                 className: 'radio-field',
                                                 type: 'radio',
-                                                value: 'Доставка в руки',
-                                                name: 'delivery_type',
-                                            },
-                                            events: {
-                                                change: BX.proxy(function () {
-                                                    BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
-                                                    BX.hide(BX('wrap_data_view'))
-                                                    BX.hide(BX('wrap_sort_service'))
-                                                    BX('map_for_delivery').classList.add('list')
-                                                    __this.clearPvzMap()
-
-                                                    BX.append(
-                                                        BX.create({
-                                                            tag: 'div',
-                                                            props: {className: 'deliveries-list', id: 'deliveries-list'},
-                                                        }),
-                                                        BX('map_for_delivery')
-                                                    )
-                                                    BX.append(
-                                                        BX.create({
-                                                            tag: 'a',
-                                                            props: {
-                                                                id: 'select-pvz-item',
-                                                                href:"javascript:void(0)",
-                                                                className: "btn btn_basket mt-2",
-                                                            },
-                                                            text: 'Выбрать',
-                                                            events: {
-                                                                click: BX.proxy(function() {
-
-                                                                    __this.closePvzPopup()
-                                                                    BX.Sale.OrderAjaxComponent.sendRequest()
-                                                                })
-                                                            }
-                                                        }),
-                                                        BX('map_for_delivery')
-                                                    )
-                                                    __this.buildAddresField()
-                                                }),
+                                                value: 'Юридическое лицо',
+                                                name: 'payer_type',
                                             },
                                         }),
                                         BX.create({
                                             tag: 'span',
-                                            props: {className: 'radio-caption'},
-                                            text: 'Доставка в руки',
+                                            props: {
+                                                className: 'radio-caption',
+                                            },
+                                            text: 'Юридическое лицо'
                                         })
                                     ],
-
-                                }
-                            )
-                        ]
-                    })
-                ]
-            }),
-            BX('pvz_user_data')
-        )
-
+                                })
+                            ]
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            )
+        }
         return this
     },
-    buildCustomerType: function ()
-    {
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {
-                    id: 'wrap_payer_types',
-                    className: "wrap_filter_block"
-                },
-                children: [
-                    BX.create({
-                        tag: 'div',
-                        props: {className: "title"},
-                        text: 'Тип плательщика'
-                    }),
-
-                    BX.create({
-                        tag: 'div',
-                        props: {
-                            className: "options-row"
-                        },
-                        children: [
-                            BX.create({
-                                tag: 'label',
-                                props: {
-                                    className: "option-label",
-                                    for: 'payer-individual',
-                                },
-                                text: 'Самовывоз',
-
-                                children: [
-                                    BX.create({
-                                        tag: 'input',
-                                        props: {
-                                            id: 'payer-individual',
-                                            className: 'radio-field',
-                                            type: 'radio',
-                                            value: 'Физическое лицо',
-                                            name: 'payer_type',
-                                            checked: 'checked',
-                                            events: {
-                                                click: BX.proxy(function() {
-                                                    BX.show(BX('wrap_data_view'))
-                                                    BX.show(BX('wrap_sort_service'))
-                                                    BX.remove(BX('user-address-wrap'))
-                                                })
-                                            }
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'radio-caption',
-                                        },
-                                        text: 'Физическое лицо'
-                                    })
-                                ],
-                            }),
-
-                            BX.create({
-                                tag: 'label',
-                                props: {
-                                    className: "option-label",
-                                    for: 'payer-company',
-                                },
-                                text: 'Доставка в руки',
-                                children: [
-                                    BX.create({
-                                        tag: 'input',
-                                        props: {
-                                            id: 'payer-company',
-                                            className: 'radio-field',
-                                            type: 'radio',
-                                            value: 'Юридическое лицо',
-                                            name: 'payer_type',
-                                        },
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'radio-caption',
-                                        },
-                                        text: 'Юридическое лицо'
-                                    })
-                                ],
-                            })
-                        ]
-                    })
-                ]
-            }),
-            BX('pvz_user_data')
-        )
-
-        return this
-    },
-    buildDataView: function ()
-    {
+    buildDataView: function () {
         const __this = this;
 
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {
-                    id: 'wrap_data_view',
-                    className: "wrap_filter_block"
-                },
-                children: [
-                    BX.create({
-                        tag: 'div',
-                        props: {className: "title"},
-                        text: 'Показать'
-                    }),
+        if (!BX('wrap_data_view')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_data_view',
+                        className: "wrap_filter_block"
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {className: "title"},
+                            text: 'Показать'
+                        }),
 
-                    BX.create({
-                        tag: 'div',
-                        props: {
-                            className: "options-row"
-                        },
-                        children: [
-                            BX.create({
-                                tag: 'label',
-                                props: {
-                                    className: "option-label",
-                                    for: 'data_view_map'
-                                },
-                                text: 'На карте',
-                                children: [
-                                    BX.create({
-                                        tag: 'input',
-                                        props: {
-                                            id: 'data_view_map',
-                                            className: 'radio-field',
-                                            type: 'radio',
-                                            value: 'На карте',
-                                            name: 'data_view',
-                                            checked: 'checked'
-                                        },
-                                        events: {
-                                            change: BX.proxy(function() {
-                                                if(BX('delivery-self').checked) {
-                                                    __this.clearPvzMap();
-                                                    BX('map_for_delivery').classList.remove('list')
-                                                    __this.buildPVZMap1();
-                                                } else {
-                                                    __this.clearPvzMap();
-                                                }
-                                            })
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'radio-caption',
-                                        },
-                                        text: 'На карте'
-                                    })
-                                ],
-                            }),
-                            BX.create({
-                                tag: 'label',
-                                props: {
-                                    className: "option-label",
-                                    for: 'payer-individual',
-                                },
-                                text: 'Списком',
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: "options-row"
+                            },
+                            children: [
+                                BX.create({
+                                    tag: 'label',
+                                    props: {
+                                        className: "option-label",
+                                        for: 'data_view_map'
+                                    },
+                                    text: 'На карте',
+                                    children: [
+                                        BX.create({
+                                            tag: 'input',
+                                            props: {
+                                                id: 'data_view_map',
+                                                className: 'radio-field',
+                                                type: 'radio',
+                                                value: 'На карте',
+                                                name: 'data_view',
+                                                checked: 'checked'
+                                            },
+                                            events: {
+                                                change: BX.proxy(function () {
+                                                    if (BX('delivery-self').checked) {
+                                                        __this.clearPvzMap();
+                                                        BX('map_for_delivery').classList.remove('list')
+                                                        __this.buildPVZMap1();
+                                                    } else {
+                                                        __this.clearPvzMap();
+                                                    }
+                                                })
+                                            }
+                                        }),
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {
+                                                className: 'radio-caption',
+                                            },
+                                            text: 'На карте'
+                                        })
+                                    ],
+                                }),
+                                BX.create({
+                                    tag: 'label',
+                                    props: {
+                                        className: "option-label",
+                                        for: 'payer-individual',
+                                    },
+                                    text: 'Списком',
 
-                                children: [
-                                    BX.create({
-                                        tag: 'input',
-                                        props: {
-                                            id: 'data_view_list',
-                                            className: 'radio-field',
-                                            type: 'radio',
-                                            value: 'Списком',
-                                            name: 'data_view'
-                                        },
-                                        events: {
-                                            change: BX.proxy(function () {
-                                                if(BX('delivery-self').checked) {
-                                                    __this.clearPvzMap();
-                                                    BX('map_for_delivery').classList.add('list')
-                                                    __this.getPVZList('list');
+                                    children: [
+                                        BX.create({
+                                            tag: 'input',
+                                            props: {
+                                                id: 'data_view_list',
+                                                className: 'radio-field',
+                                                type: 'radio',
+                                                value: 'Списком',
+                                                name: 'data_view'
+                                            },
+                                            events: {
+                                                change: BX.proxy(function () {
+                                                    if (BX('delivery-self').checked) {
+                                                        __this.clearPvzMap();
+                                                        BX('map_for_delivery').classList.add('list')
+                                                        __this.getPVZList('list');
 
-                                                    BX.append(
-                                                        BX.create({
-                                                            tag: 'a',
-                                                            props: {
-                                                                id: 'select-pvz-item',
-                                                                href:"javascript:void(0)",
-                                                                className: "btn btn_basket mt-2",
-                                                            },
-                                                            text: 'Выбрать',
-                                                            events: {
-                                                                click: BX.proxy(function() {
-                                                                    BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
-                                                                })
-                                                            }
-                                                        }),
-                                                        BX('map_for_delivery')
-                                                    )
-                                                    BX.onCustomEvent('onDeliveryExtraServiceValueChange')
-                                                } else {
-                                                    __this.clearPvzMap();
-                                                }
-                                            })
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'span',
-                                        props: {
-                                            className: 'radio-caption',
-                                        },
-                                        text: 'Списком'
-                                    })
-                                ],
-                            }),
-                        ]
-                    })
-                ]
-            }),
-            BX('pvz_user_data')
-        )
-
+                                                        BX.append(
+                                                            BX.create({
+                                                                tag: 'a',
+                                                                props: {
+                                                                    id: 'select-pvz-item',
+                                                                    href: "javascript:void(0)",
+                                                                    className: "btn btn_basket mt-2",
+                                                                },
+                                                                text: 'Выбрать',
+                                                                events: {
+                                                                    click: BX.proxy(function () {
+                                                                        BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
+                                                                    })
+                                                                }
+                                                            }),
+                                                            BX('map_for_delivery')
+                                                        )
+                                                        BX.onCustomEvent('onDeliveryExtraServiceValueChange')
+                                                    } else {
+                                                        __this.clearPvzMap();
+                                                    }
+                                                })
+                                            }
+                                        }),
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {
+                                                className: 'radio-caption',
+                                            },
+                                            text: 'Списком'
+                                        })
+                                    ],
+                                }),
+                            ]
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            )
+        }
         return this
     },
-    buildSortService: function ()
+    buildSortService: function () {
+        if (!BX('wrap_sort_service')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_sort_service',
+                        className: "wrap_filter_block wrap_sort_service"
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                id: 'sort_service_select',
+                                className: 'sort_service_select',
+                            },
+                            children: [
+                                BX.create({
+                                    tag: 'div',
+                                    props: {
+                                        id: 'sort-title',
+                                        className: 'title'
+                                    },
+                                    text: 'Фильтрация'
+                                }),
+                                BX.create({
+                                    tag: 'div',
+                                    props: {
+                                        id: 'active_sort_service',
+                                        className: 'active_sort_service',
+                                    },
+                                    text: 'Все',
+                                    events: {
+                                        click: BX.proxy(function () {
+                                            BX.toggleClass(BX('sort_service_select'), 'active')
+                                        }, this)
+                                    }
+                                }),
+                                BX.create({
+                                    tag: 'ul',
+                                    props: {
+                                        id: 'sort_services_list',
+                                        className: 'sort_services_list',
+                                    },
+                                    children: [
+                                        BX.create({
+                                            tag: 'li',
+                                            props: {className: 'sort_service'},
+                                            text: 'Все',
+                                            events: {
+                                                click: BX.proxy(function (e) {
+                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                    BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                    this.sortPvzList(e.target.getAttribute('data-target'))
+                                                }, this)
+                                            },
+                                            dataset: {
+                                                target: 'js-showall'
+                                            }
+                                        }),
+                                        BX.create({
+                                            tag: 'li',
+                                            props: {className: 'sort_service'},
+                                            text: '5Post',
+                                            events: {
+                                                click: BX.proxy(function (e) {
+                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                    BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                    this.sortPvzList(e.target.getAttribute('data-target'))
+                                                }, this)
+                                            },
+                                            dataset: {
+                                                target: 'js-5post'
+                                            }
+                                        }),
+                                        BX.create({
+                                            tag: 'li',
+                                            props: {className: 'sort_service'},
+                                            text: 'Oshisha',
+                                            events: {
+                                                click: BX.proxy(function (e) {
+                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                    BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                    this.sortPvzList(e.target.getAttribute('data-target'))
+                                                }, this)
+                                            },
+                                            dataset: {
+                                                target: 'js-oshisha'
+                                            }
+                                        }),
+                                        BX.create({
+                                            tag: 'li',
+                                            props: {className: 'sort_service'},
+                                            text: 'СДЭК',
+                                            events: {
+                                                click: BX.proxy(function (e) {
+                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                    BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                    this.sortPvzList(e.target.getAttribute('data-target'))
+                                                }, this)
+                                            },
+                                            dataset: {
+                                                target: 'js-sdek'
+                                            }
+                                        }),
+                                        BX.create({
+                                            tag: 'li',
+                                            props: {className: 'sort_service'},
+                                            text: 'Почта РФ',
+                                            events: {
+                                                click: BX.proxy(function (e) {
+                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                    BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                    this.sortPvzList(e.target.getAttribute('data-target'))
+                                                }, this)
+                                            },
+                                            dataset: {
+                                                target: 'js-rupost'
+                                            }
+                                        }),
+                                        BX.create({
+                                            tag: 'li',
+                                            props: {className: 'sort_service'},
+                                            text: 'Деловые линии',
+                                            events: {
+                                                click: BX.proxy(function (e) {
+                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                    BX.removeClass(BX('sort_service_select'), 'active')
+
+                                                    this.sortPvzList(e.target.getAttribute('data-target'))
+                                                }, this)
+                                            },
+                                            dataset: {
+                                                target: 'js-dl'
+                                            }
+                                        }),
+                                    ]
+                                })
+                            ]
+
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            )
+        }
+        return this
+    },
+    buildMobileControls: function ()
     {
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {
-                    id: 'wrap_sort_service',
-                    className: "wrap_filter_block wrap_sort_service"
-                },
-                children: [
-                    BX.create({
-                        tag: 'div',
-                        props: {
-                            id: 'sort_service_select',
-                            className: 'sort_service_select',
-                        },
-                        children: [
-                            BX.create({
-                                tag: 'div',
-                                props: {
-                                    id: 'sort-title',
-                                    className: 'title'
-                                },
-                                text: 'Фильтрация'
-                            }),
-                            BX.create({
-                                tag: 'div',
-                                props: {
-                                    id: 'active_sort_service',
-                                    className: 'active_sort_service',
-                                },
-                                text: 'Все',
-                                events: {
-                                    click: BX.proxy(function () {
-                                        BX.toggleClass(BX('sort_service_select'), 'active')
-                                    }, this)
-                                }
-                            }),
-                            BX.create({
-                                tag: 'ul',
-                                props: {
-                                    id: 'sort_services_list',
-                                    className: 'sort_services_list',
-                                },
-                                children: [
-                                    BX.create({
-                                        tag: 'li',
-                                        props: {className: 'sort_service'},
-                                        text: 'Все',
-                                        events: {
-                                            click: BX.proxy(function (e) {
-                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                this.sortPvzList(e.target.getAttribute('data-target'))
-                                            }, this)
-                                        },
-                                        dataset: {
-                                            target: 'js-showall'
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'li',
-                                        props: {className: 'sort_service'},
-                                        text: '5Post',
-                                        events: {
-                                            click: BX.proxy(function (e) {
-                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                this.sortPvzList(e.target.getAttribute('data-target'))
-                                            }, this)
-                                        },
-                                        dataset: {
-                                            target: 'js-5post'
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'li',
-                                        props: {className: 'sort_service'},
-                                        text: 'Oshisha',
-                                        events: {
-                                            click: BX.proxy(function (e) {
-                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                this.sortPvzList(e.target.getAttribute('data-target'))
-                                            }, this)
-                                        },
-                                        dataset: {
-                                            target: 'js-oshisha'
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'li',
-                                        props: {className: 'sort_service'},
-                                        text: 'СДЭК',
-                                        events: {
-                                            click: BX.proxy(function (e) {
-                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                this.sortPvzList(e.target.getAttribute('data-target'))
-                                            }, this)
-                                        },
-                                        dataset: {
-                                            target: 'js-sdek'
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'li',
-                                        props: {className: 'sort_service'},
-                                        text: 'Почта РФ',
-                                        events: {
-                                            click: BX.proxy(function (e) {
-                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                this.sortPvzList(e.target.getAttribute('data-target'))
-                                            }, this)
-                                        },
-                                        dataset: {
-                                            target: 'js-rupost'
-                                        }
-                                    }),
-                                    BX.create({
-                                        tag: 'li',
-                                        props: {className: 'sort_service'},
-                                        text: 'Деловые линии',
-                                        events: {
-                                            click: BX.proxy(function (e) {
-                                                BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                this.sortPvzList(e.target.getAttribute('data-target'))
-                                            }, this)
-                                        },
-                                        dataset: {
-                                            target: 'js-dl'
-                                        }
-                                    }),
-                                ]
-                            })
-                        ]
-
-                    })
-                ]
-            }),
-            BX('pvz_user_data')
-        )
+        if (!BX('scroll-down-panel')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'scroll-down-panel',
+                        className: 'scroll-down-panel'
+                    },
+                    events: {
+                        click: BX.proxy(function () {
+                            $('#pvz_user_data').toggleClass('active')
+                        })
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'span',
+                            props: {
+                                id: 'scroll_down_btn',
+                                className: 'scroll-down-btn',
+                            },
+                            text: 'Настройки поиска'
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            )
+        }
 
         return this
     },
     buildPvzList: function ()
     {
         const __this = this
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {
-                    id: 'pickpoints-list',
-                    className: 'pickpoints-list',
-                }
-            }),
-            BX('map_for_delivery')
-        )
+
+        if (!BX('pickpoints-list')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'pickpoints-list',
+                        className: 'pickpoints-list',
+                    }
+                }),
+                BX('map_for_delivery')
+            )
+        }
 
         this.pvzObj.features.forEach(el => {
             // console.log(el)
