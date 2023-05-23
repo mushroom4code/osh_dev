@@ -134,6 +134,12 @@ $aTabs = array(
                 Option::get($module_id, 'FivePost_password'),
                 array('text')
             ),
+            array(
+                'FivePost_maxweght',
+                Loc::getMessage('FivePost_maxweight'),
+                Option::get($module_id, 'FivePost_maxweight'),
+                array('text')
+            ),
         )
     ),
     // СДЭК
@@ -311,30 +317,7 @@ $aTabs = array(
                 Option::get($module_id, 'Dellin_derivalkladr'),
                 array('text')
             ),
-            array(
-                'Dellin_defaultwidth',
-                Loc::getMessage('Dellin_defaultwidth'),
-                Option::get($module_id, 'Dellin_defaultwidth'),
-                array('text')
-            ),
-            array(
-                'Dellin_defaultlength',
-                Loc::getMessage('Dellin_defaultlength'),
-                Option::get($module_id, 'Dellin_defaultlength'),
-                array('text')
-            ),
-            array(
-                'Dellin_defaultheight',
-                Loc::getMessage('Dellin_defaultheight'),
-                Option::get($module_id, 'Dellin_defaultheight'),
-                array('text')
-            ),
-            array(
-                'Dellin_defaultweight',
-                Loc::getMessage('Dellin_defaultweight'),
-                Option::get($module_id, 'Dellin_defaultweight'),
-                array('text')
-            ),
+
             array(
                 'Dellin_derivalstarttime',
                 Loc::getMessage('Dellin_derivalstarttime'),

@@ -21,6 +21,7 @@ $MESS["EE_PVZ_OPTIONS_FP"] = "FivePost";
 $MESS["FivePost_apikey"] = "Ключ api";
 $MESS["FivePost_login"] = "Логин";
 $MESS["FivePost_password"] = "Пароль";
+$MESS['FivePost_maxweight'] = "Максимальный вес заказа (кг)";
 
 
 $MESS["EE_PVZ_OPTIONS_SDEK"] = "СДЭК";
@@ -39,10 +40,6 @@ $MESS['Dellin_apikey'] = "Ключ api для Деловых Линий";
 $MESS['Dellin_login'] = "Логин пользователя Деловых Линий";
 $MESS['Dellin_password'] = "Пароль пользователя Деловых Линий";
 $MESS['Dellin_derivalkladr'] = "КЛАДР улицы отправки";
-$MESS['Dellin_defaultwidth'] = "Ширина товара по умолчанию (мм)";
-$MESS['Dellin_defaultlength'] = "Длина товара по умолчанию (мм)";
-$MESS['Dellin_defaultheight'] = "Высота товара по умолчанию (мм)";
-$MESS['Dellin_defaultweight'] = "Вес товара по умолчанию (гр)";
 $MESS['Dellin_derivalstarttime'] = "Часы передачи груза к отправлению (от)";
 $MESS['Dellin_derivalendtime'] = "Часы передачи груза к отправлению (до)";
 

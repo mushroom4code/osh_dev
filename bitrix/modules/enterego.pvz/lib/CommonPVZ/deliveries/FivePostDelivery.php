@@ -239,8 +239,9 @@ class FivePostDelivery extends CommonPVZ
             $arParams = ['filter' => ['POINT_GUID' => $array['code_pvz']]];
             $pvz = FivePostPointsTable::getList($arParams)->fetch();
             $rate = unserialize($pvz['RATE'])[0];
-            if ($array['weight'] > $pvz['MAX_CELL_WEIGHT']) {
-                $price = $rate['rateValue']  + ((($array['weight'] - $pvz['MAX_CELL_WEIGHT']) / 1000) * $rate['rateExtraValue']);
+            $max_cell_weight = $this->configs['maxweight'];
+            if ($array['weight'] > $max_cell_weight) {
+                $price = $rate['rateValue']  + ((($array['weight'] - $max_cell_weight) / 1000) * $rate['rateExtraValue']);
                 if ($rate['vat']) {
                     $finalPrice = $price / 100 * $rate['vat'] + $price;
                 } else {
