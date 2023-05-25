@@ -47,6 +47,9 @@
 *.pem
 *.svg
 *.csv
+*.min.css
+*.min.js
+*.min.map
 .DS_Store
 *.DS_Store
 Thumbs.db
@@ -71,3 +74,4 @@ Thumbs.db
 /bitrix/php_interface/conf.php
 bitrix/tmp/
 /node_modules/
+/!package.json
