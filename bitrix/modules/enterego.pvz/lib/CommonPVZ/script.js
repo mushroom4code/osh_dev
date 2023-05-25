@@ -85,6 +85,8 @@ BX.SaleCommonPVZ = {
 
     refresh: function () {
         const order = BX.Sale.OrderAjaxComponent.result
+        console.log(order);
+        console.log(BX.Sale.OrderAjaxComponent.locations);
         this.propAddressId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         this.propCommonPVZId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'COMMON_PVZ')?.ID;
         this.propTypeDeliveryId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_DELIVERY')?.ID;
@@ -619,7 +621,7 @@ BX.SaleCommonPVZ = {
                         }
                     }
                 }
-            },
+             },
             onfailure: function (res) {
                 console.log('error getCityName');
             }
@@ -749,12 +751,18 @@ BX.SaleCommonPVZ = {
 
         const dataToHandler = this.getPointData(point);
         var tempLocations = BX.Sale.OrderAjaxComponent.locations;
+        var curLocationValues = [];
         Object.keys(tempLocations).forEach((locationKey) => {
             tempLocations[locationKey] = tempLocations[locationKey][0];
         });
-        var payload = {error: false, locations: tempLocations, order: BX.Sale.OrderAjaxComponent.result};
+        curLocationValues['PROPERTY_ID'] = this.propLocationId;
+        curLocationValues['VALUE'] = tempLocations[curLocationValues['PROPERTY_ID']].lastValue;
+        var payload = {error: false, locations: tempLocations, order:BX.Sale.OrderAjaxComponent.result};
+
+        BX.Sale.OrderAjaxComponent.startLoader();
         BX.Sale.OrderAjaxComponent.refreshOrder(payload);
-        __this.sendRequestToComponent('refreshOrderAjax', dataToHandler);
+        payload['savedProfileLocation'] = curLocationValues;
+        this.sendRequestToComponent('refreshOrderAjax', dataToHandler, payload);
     },
 
     /**
@@ -884,18 +892,18 @@ BX.SaleCommonPVZ = {
         });
     },
 
-    sendRequestToComponent: function (action, actionData) {
+    sendRequestToComponent: function (action, actionData, savedProfileData = false) {
         BX.ajax({
             method: 'POST',
             dataType: 'json',
             url: BX.Sale.OrderAjaxComponent.ajaxUrl,
-            data: this.getDataForPVZ(action, actionData),
+            data: this.getDataForPVZ(action, actionData, savedProfileData),
             onsuccess: BX.delegate(function (result) {
                 if (action === 'refreshOrderAjax') {
                     if (actionData.error) {
                         result.error = actionData.error;
                     }
-                    BX.Sale.OrderAjaxComponent.refreshOrder(result);
+                        BX.Sale.OrderAjaxComponent.refreshOrder(result);
                 }
                 BX.Sale.OrderAjaxComponent.endLoader();
             }, this),
@@ -906,7 +914,7 @@ BX.SaleCommonPVZ = {
         });
     },
 
-    getDataForPVZ: function (action, actionData) {
+    getDataForPVZ: function (action, actionData, savedProfileData = false) {
         var data = {
             order: BX.Sale.OrderAjaxComponent.getAllFormData(),
             sessid: BX.bitrix_sessid(),
@@ -915,9 +923,13 @@ BX.SaleCommonPVZ = {
             signedParamsString: BX.Sale.OrderAjaxComponent.signedParamsString,
             dataToHandler: actionData
         };
-
+        if (savedProfileData) {
+            Object.keys(data.order).forEach((prop, index) => {
+                if (prop == 'ORDER_PROP_' + savedProfileData['savedProfileLocation']['PROPERTY_ID'])
+                    data.order[prop] = savedProfileData['savedProfileLocation']['VALUE'];
+            });
+        }
         data[BX.Sale.OrderAjaxComponent.params.ACTION_VARIABLE] = action;
-
         return data;
     },
 
@@ -1830,7 +1842,7 @@ BX.SaleCommonPVZ = {
     {
         const __this = this
         // скрытие адресных полей заказа
-        this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
+        // this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
 
         // блок выбора доставки
         this.checkout.delivery.titleBox = BX.findChild(this.checkout.delivery.rootEl,
@@ -2003,13 +2015,16 @@ BX.SaleCommonPVZ = {
         });
         BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE == 'ADDRESS').VALUE[0] = element['ADDRESS'];
         var tempLocations = BX.Sale.OrderAjaxComponent.locations;
+        var elementLocation = element['PROPERTIES'].find(prop => prop['CODE'] == 'LOCATION');
         Object.keys(tempLocations).forEach((locationKey) => {
            tempLocations[locationKey] = tempLocations[locationKey][0];
         });
-        var payload = {error:false, locations: tempLocations, order:BX.Sale.OrderAjaxComponent.result};
+        var payload = {error: false, locations: tempLocations, order:BX.Sale.OrderAjaxComponent.result};
+
         BX.Sale.OrderAjaxComponent.startLoader();
         BX.Sale.OrderAjaxComponent.refreshOrder(payload);
-        this.sendRequestToComponent('refreshOrderAjax', []);
+        payload['savedProfileLocation'] = elementLocation;
+        this.sendRequestToComponent('refreshOrderAjax', [], payload);
     }
 };
 
