@@ -209,7 +209,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             $arraySlider = $actualItem['PICTURE'];
             require_once(__DIR__ . '/slider/template.php'); ?>
             <div
-                class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product
+                    class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product
 				not-input-parse product_right justify-content-between">
                 <h1 class="head-title"><?= $name ?></h1>
                 <?php if ($isGift) { ?>
@@ -243,8 +243,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                             <div class="d-flex flex-row">
                                 <?php for ($i = 0; $i < 3; $i++) { ?>
                                     <div
-                                        style="border-color: <?= $color ?>; <?= ($strong - $i) >= 1 ? "background-color: $color" : ''; ?>"
-                                        class="condensation">
+                                            style="border-color: <?= $color ?>; <?= ($strong - $i) >= 1 ? "background-color: $color" : ''; ?>"
+                                            class="condensation">
                                         <?php if ($strong - $i == 0.5) { ?>
                                         <svg style="position: absolute; left: -5px; top: -1px" width="42"
                                              height="<?= $height ?>" xmlns="http://www.w3.org/2000/svg">
@@ -298,7 +298,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 <p>
                                                     <span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
                                                     <span
-                                                        class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                                            class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
                                                 </p>
                                             <?php } ?>
                                         </div>
@@ -348,16 +348,16 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 if ($show_price) {
                                     if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?>
                                         <div
-                                            class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
+                                                class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
                                             <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
-                                            data-entity="quantity-block">
+                                                data-entity="quantity-block">
                                             <div class="product-item-amount-field-contain mr-3">
                                                 <span
-                                                    class="btn-minus no-select minus_icon add2basket basket_prod_detail"
-                                                    data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                    data-product_id="<?= $arResult['ID']; ?>"
-                                                    id="<?= $itemIds['QUANTITY_DOWN_ID'] ?>"
-                                                    data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>">
+                                                        class="btn-minus no-select minus_icon add2basket basket_prod_detail"
+                                                        data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                        data-product_id="<?= $arResult['ID']; ?>"
+                                                        id="<?= $itemIds['QUANTITY_DOWN_ID'] ?>"
+                                                        data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>">
                                                 </span>
                                                 <div class="product-item-amount-field-block">
                                                     <input class="product-item-amount card_element cat-det"
@@ -389,14 +389,14 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         <div class="d-flex flex-lg-column flex-md-column flex-column-reverse">
                                     <?php } else { ?>
                                         <div
-                                            class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center bx_catalog_item"
+                                                class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center bx_catalog_item"
                                             <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
-                                            data-entity="quantity-block">
+                                                data-entity="quantity-block">
                                             <div class="d-flex flex-row align-items-center mr-3">
                                                 <div class="product-item-amount-field-contain">
                                                     <span
-                                                        class=" no-select minus_icon add2basket basket_prod_detail mr-3"
-                                                        style="pointer-events: none;">
+                                                            class=" no-select minus_icon add2basket basket_prod_detail mr-3"
+                                                            style="pointer-events: none;">
                                                     </span>
                                                     <div class="product-item-amount-field-block">
                                                         <input class="product-item-amount"
@@ -428,7 +428,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         </div>
                                         <div class="mb-4 d-flex justify-content-between align-items-center">
                                             <div
-                                                class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                                    class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                                 <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
                                                 Нет в наличии
                                             </div>
@@ -441,75 +441,53 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     } ?>
                     <div class="d-flex flex-wrap flex-column mb-2 box-offers-auto" data-entity="sku-line-block">
                         <?php
-                        if (!empty($arResult['GROUPED_PROD_PROP'])) {
+                        if (!empty($arResult['GROUPED_PROPS_DATA'])) {
                             $propsForOffers = EnteregoSettings::getDataPropOffers();
 
-                            foreach ($arResult['GROUPED_PROD_PROP'] as $key => $offerOld) { ?>
+                            foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) { ?>
                                 <div class="d-flex flex-row overflow-auto width-inherit">
-                                    <?php
-                                    $offer = $offerOld['PRODUCT'];
-                                    if (empty($offerOld['PROPS_DATA'])) {
-                                        continue;
-                                    }
+                                    <?php foreach ($productGrouped as $group) {
 
-                                    foreach ($offerOld['PROPS_DATA'] as $keys => $prop) {
                                         $link = 'javascript:void(0)';
                                         $prop_value = 'Пустое значение';
                                         $taste = $grouped = [];
-                                        $type = $propsForOffers[$offerOld['PROPS']]['TYPE'] ?? 'text';
+                                        $type = $propsForOffers[$keyCODE]['TYPE'] ?? 'text';
                                         $select = $prop['SELECT'];
-
-                                        $productId = $offerOld['PRODUCT_IDS'][$prop['PROPERTY_VALUE_ID']]['PROD_ID'];
-                                        $propId = $offerOld['PRODUCT_IDS'][$prop['PROPERTY_VALUE_ID']]['PROP_ID'];
-                                        $picture = $prop['PREVIEW_PICTURE'];
-                                        if (!isset($prop['VALUE_ENUM'])) {
-                                            foreach ($prop as $keysPropValue => $propValue) {
-                                                if ($arResult['LINK_GROUPED_PRODUCT'] == 'Y') {
-                                                    $link = $propValue['CODE'];
-                                                }
-
-                                                $productId = $offerOld['PRODUCT_IDS'][$propValue['PROPERTY_VALUE_ID']]['PROD_ID'];
-                                                $propId = $offerOld['PRODUCT_IDS'][$propValue['PROPERTY_VALUE_ID']]['PROP_ID'];
-                                                $picture = $propValue['PREVIEW_PICTURE'];
-                                                $select = $propValue['SELECT'];
-                                                if ($type === 'colorWithText') {
-                                                    $taste[$keysPropValue] = [
-                                                        'color' => '#' . explode('#',
-                                                                $propValue['VALUE_XML_ID'])[1],
-                                                        'name' => $propValue['VALUE_ENUM'],
-                                                    ];
-                                                } else {
-                                                    $grouped[$keysPropValue] = [
-                                                        'xml_id' => $propValue['VALUE_XML_ID'],
-                                                        'name' => $propValue['VALUE_ENUM']
-                                                    ];
-                                                }
+                                        foreach ($group as $name => $prop) {
+                                            if (empty($prop['VALUE_ENUM'])) {
+                                                continue;
                                             }
-                                        } else {
-                                            $prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$offerOld['PROPS']]['PREF'];
-                                            if ($arResult['LINK_GROUPED_PRODUCT'] == 'Y') {
+                                            $picture = $prop['PREVIEW_PICTURE'];
+
+                                            $prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$keyCODE]['PREF'];
+                                            if (count($arResult['GROUPED_PROPS_DATA']) === 1) {
                                                 $link = $prop['CODE'];
                                             }
                                             if ($type === 'colorWithText') {
-                                                $taste[$keys] = [
-                                                    'color' => '#' . explode('#', $prop['VALUE_XML_ID'])[1],
+                                                $taste[$name] = [
+                                                    'color' => '#' . explode('#',
+                                                            $prop['VALUE_XML_ID'])[1],
+                                                    'name' => $prop['VALUE_ENUM'],
+                                                ];
+                                            } else {
+                                                $grouped[$name] = [
+                                                    'xml_id' => $prop['VALUE_XML_ID'],
                                                     'name' => $prop['VALUE_ENUM']
                                                 ];
                                             }
                                         }
-
                                         if (!empty($prop_value)) {
                                             if ($type === 'text') {
                                                 if (count($grouped) > 1) { ?>
                                                     <a href="<?= $link ?>" class="offer-link">
                                                         <div class="red_button_cart p-1 font-14
-														 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
-                                                         <?= $select ?>"
+                                                             width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
+                                                             <?= $select ?>"
                                                              title="<?= $offer['NAME'] ?>"
                                                              data-active="<?= !empty($select) ? 'true' : 'false' ?>"
-                                                             data-prop_code="<?=$offerOld['PROPS']?>"
-                                                             data-prop_id="<?=$propId?>"
-                                                             data-product_id="<?=$productId?>">
+                                                             data-prop_code="<?= $keyCODE ?>"
+                                                             data-prop_id="<?= '' ?>"
+                                                             data-product_id="<?= '' ?>">
                                                             <?php foreach ($grouped as $elemProp) { ?>
                                                                 <span class="taste mb-0"<?= $elemProp['name'] ?></span>
                                                             <?php } ?>
@@ -518,15 +496,15 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 <?php } else { ?>
                                                     <a href="<?= $link ?>" class="offer-link">
                                                         <div
-                                                            class="red_button_cart font-14 width-fit-content mb-lg-2
-                                                            m-md-2 m-1 offer-box cursor-pointer <?= $select ?>"
-                                                            title="<?= $offer['NAME'] ?>"
-                                                            data-active="<?= !empty($select) ? 'true' : 'false' ?>"
-                                                            data-prop_id="<?=$propId?>"
-                                                            data-product_id="<?=$productId?>"
-                                                            data-prop_code="<?=$offerOld['PROPS']?>"
-                                                            data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'] ?>"
-                                                            data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
+                                                                class="red_button_cart font-14 width-fit-content mb-lg-2
+                                                                m-md-2 m-1 offer-box cursor-pointer <?= $select ?>"
+                                                                title="<?= $offer['NAME'] ?>"
+                                                                data-active="<?= !empty($select) ? 'true' : 'false' ?>"
+                                                                data-prop_id="<?= '' ?>"
+                                                                data-product_id="<?= '' ?>"
+                                                                data-prop_code="<?= $keyCODE ?>"
+                                                                data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'] ?>"
+                                                                data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
                                                             <?= $prop_value ?>
                                                         </div>
                                                     </a>
@@ -536,10 +514,10 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 <a href="<?= $link ?>" class="offer-link">
                                                     <div title="<?= $offer['NAME'] ?>"
                                                          data-active="<?= !empty($select) ? 'true' : 'false' ?>"
-                                                         data-prop_id="<?=$propId?>"
-                                                         data-product_id="<?=$productId?>"
+                                                         data-prop_id="<?= '' ?>"
+                                                         data-product_id="<?= '' ?>"
                                                          data-treevalue="<?= $prop['ID'] ?>_<?= $prop['VALUE_ENUM_ID'] ?>"
-                                                         data-prop_code="<?=$offerOld['PROPS']?>"
+                                                         data-prop_code="<?= $keyCODE ?>"
                                                          data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
                                                          class="mr-1 offer-box color-hookah br-10 mb-1 <?= $select ?>">
                                                         <img src="<?= $file ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
@@ -554,21 +532,21 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 if (!empty($taste)) { ?>
                                                     <a href="<?= $link ?>" class="offer-link">
                                                         <div class="red_button_cart p-1 taste variation_taste font-14
-														 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
-                                                           <?= $select ?>"
+                                                             width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
+                                                               <?= $select ?>"
                                                              title="<?= $offer['NAME'] ?>"
                                                              data-active="<?= !empty($select) ? 'true' : 'false' ?>"
-                                                             data-prop_code="<?=$offerOld['PROPS']?>"
-                                                             data-prop_id="<?=$propId?>"
-                                                             data-product_id="<?=$productId?>">
+                                                             data-prop_code="<?= $keyCODE ?>"
+                                                             data-prop_id="<?= '' ?>"
+                                                             data-product_id="<?= '' ?>">
                                                             <?php foreach ($taste as $elem_taste) { ?>
                                                                 <span class="taste mb-0"
                                                                       data-background="<?= $elem_taste['color'] ?>"
                                                                       style="background-color: <?= $elem_taste['color'] ?>;
-                                                                          border-color: <?= $elem_taste['color'] ?>;
-                                                                          font-size: 13px;">
-																	<?= $elem_taste['name'] ?>
-															</span>
+                                                                              border-color: <?= $elem_taste['color'] ?>;
+                                                                              font-size: 13px;">
+                                                                        <?= $elem_taste['name'] ?>
+                                                                </span>
                                                             <?php } ?>
                                                         </div>
                                                     </a>
@@ -580,7 +558,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                             <?php }
                         } ?>
                     </div>
-                    <input type="hidden" value="<?= htmlspecialchars(json_encode($arResult['JS_PROP']))?>" id="product_prop_data"/>
+                    <input type="hidden" value="<?= htmlspecialchars(json_encode($arResult['JS_PROP'])) ?>"
+                           id="product_prop_data"/>
                     <div class="new_box d-flex flex-row align-items-center mb-lg-0 mb-md-0 mb-5">
                         <span></span>
                         <p>Наличие товара, варианты и стоимость доставки будут указаны далее при оформлении заказа. </p>
@@ -1171,7 +1150,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                     <select name="<?= $arParams['PRODUCT_PROPS_VARIABLE'] ?>[<?= $propId ?>]">
                                         <?php foreach ($propInfo['VALUES'] as $valueId => $value) { ?>
                                             <option
-                                                value="<?= $valueId ?>" <?= ($valueId == $propInfo['SELECTED'] ? '"selected"' : '') ?>>
+                                                    value="<?= $valueId ?>" <?= ($valueId == $propInfo['SELECTED'] ? '"selected"' : '') ?>>
                                                 <?= $value ?>
                                             </option>
                                         <?php } ?>

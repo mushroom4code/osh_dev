@@ -27,15 +27,15 @@ $arResult["IS_SUBSCRIPTION_KEY_FOUND"] = $is_key_found;
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP start */
 $arResult['GROUPED_PRODUCTS'] = [];
 $listGroupedProduct = $arResult['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
-
+$arResult['GROUPED_PROPS_DATA'] = [];
 if (!empty($listGroupedProduct)) {
     $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $arResult['ID'],
         [], ['CODE' => 'OSNOVNOE_SVOYSTVO_TP']);
 
     $refPropsCode = [];
-    while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()){
+    while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
         $xmlId = $arMainPropertyValue['VALUE_XML_ID'];
-        $rsRefProperty = CIBlockProperty::GetList([], ['XML_ID'=>$xmlId]);
+        $rsRefProperty = CIBlockProperty::GetList([], ['XML_ID' => $xmlId]);
         if ($arRefProperty = $rsRefProperty->Fetch()) {
             $refPropsCode[] = $arRefProperty['CODE'];
         }
@@ -56,117 +56,68 @@ if (!empty($listGroupedProduct)) {
 
             ])->Fetch();
 
-        $propList = CIBlockElement::GetProperty(IBLOCK_CATALOG, $elemProp,
-            [], ['EMPTY' => 'N', 'ACTIVE' => "Y", 'CODE'=>$refPropsCode[0]]);
+        $elem = &$arResult['GROUPED_PRODUCTS'][$elemProp];
+        foreach ($refPropsCode as $propCode) {
+            $groupProperty = [];
+            $propList = CIBlockElement::GetProperty(IBLOCK_CATALOG, $elemProp,
+                [], ['EMPTY' => 'N', 'ACTIVE' => "Y", 'CODE' => $propCode]);
 
-        $groupProperty = [];
-        while ($props = $propList->GetNext()) {
-            $elem = &$arResult['GROUPED_PRODUCTS'][$elemProp];
+            while ($props = $propList->GetNext()) {
 
-            if (empty($elem['PROPERTIES'][$props['CODE']])) {
-                $elem['PROPERTIES'][$props['CODE']] = $props;
+                if (empty($elem['PROPERTIES'][$props['CODE']])) {
+                    $elem['PROPERTIES'][$props['CODE']] = $props;
+                }
+
+                if ($props['PROPERTY_TYPE'] === 'L') {
+
+                    /** Первый массив для группировки и вывода списка знач свой-в по значения,
+                     * второй для js обработки при клике, разница в кол-ве элеметов
+                     * (во втором все значения, даже те что дублируются, но принадлеэат разным товарам)
+                     */
+                    $groupProperty[$props['VALUE_ENUM']] = $elem['PROPERTIES'][$props['CODE']]['JS_PROP'][$props['VALUE_ENUM']] = [
+                        'VALUE_ENUM' => $props['VALUE_ENUM'] ?? $props['VALUE'],
+                        'VALUE_XML_ID' => $props['VALUE_XML_ID'],
+                        'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],
+                        'CODE' => '/catalog/product/' . $elem['CODE'] . '/',
+                        'SELECT' => (int)$arResult['ID'] === (int)$elem['ID'] ? 'selected' : '',
+                        'PRODUCT_IDS' => $props['PROPERTY_VALUE_ID'],
+                        'PREVIEW_PICTURE' => $elem['PREVIEW_PICTURE'] ?? $elem['DETAIL_PICTURE'],
+                        'TYPE' => $props['CODE']
+                    ];
+                } else {
+                    $elem['PROPERTIES'][$props['CODE']]['VALUES'] = [
+                        'VALUE_ENUM' => $props['VALUE'],
+                        'VALUE_XML_ID' => $props['VALUE_XML_ID'],
+                        'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],
+                        'CODE' => '/catalog/product/' . $elem['CODE'] . '/',
+                        'SELECT' => (int)$arResult['ID'] === (int)$elem['ID'] ? 'selected' : '',
+                        'PRODUCT_IDS' => $props['PROPERTY_VALUE_ID'],
+                        'PREVIEW_PICTURE' => $elem['PREVIEW_PICTURE'] ?? $elem['DETAIL_PICTURE']
+                    ];
+                }
             }
 
-            if ($props['PROPERTY_TYPE'] === 'L') {
+            $needAdd = true;
+            foreach ($arResult['GROUPED_PROPS_DATA'][$propCode] as $currentGroupProperty) {
 
-                /** Первый массив для группировки и вывода списка знач свой-в по значения,
-                 * второй для js обработки при клике, разница в кол-ве элеметов
-                 * (во втором все значения, даже те что дублируются, но принадлеэат разным товарам)
-                 */
-                $groupProperty[$props['VALUE']] = [
-                    'VALUE_ENUM' => $props['VALUE_ENUM'] ?? $props['VALUE'],
-                    'VALUE_XML_ID' => $props['VALUE_XML_ID'],
-                    'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],
-                    'CODE' => '/catalog/product/' . $elem['CODE'] . '/',
-                    'SELECT' => (int)$arResult['ID'] === (int)$elem['ID'] ? 'selected' : '',
-                    'PRODUCT_IDS' => $props['PROPERTY_VALUE_ID'],
-                    'PREVIEW_PICTURE' => $elem['PREVIEW_PICTURE'] ??  $elem['DETAIL_PICTURE']
-                ];
-
-
-                $elem['PROPERTIES'][$props['CODE']]['PRODUCT_IDS'][$props['PROPERTY_VALUE_ID']] = [
-                    'PROP_ID' => $props['PROPERTY_VALUE_ID'],
-                    'PROD_ID' => $elem['ID']
-                ];
-                $elem['PROPERTIES'][$props['CODE']]['JS_PROP'][$props['PROPERTY_VALUE_ID']]['PRODUCT_ID'] = $elem['ID'];
-
-            } else {
-                $elem['PROPERTIES'][$props['CODE']]['VALUES'] = [
-                    'VALUE_ENUM' => $props['VALUE'],
-                    'VALUE_XML_ID' => $props['VALUE_XML_ID'],
-                    'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],
-                    'CODE' => '/catalog/product/' . $elem['CODE'] . '/',
-                    'SELECT' => (int)$arResult['ID'] === (int)$elem['ID'] ? 'selected' : '',
-                    'PRODUCT_IDS' => $props['PROPERTY_VALUE_ID'],
-                    'PREVIEW_PICTURE' => $elem['PREVIEW_PICTURE'] ??  $elem['DETAIL_PICTURE']
-                ];
-            }
-        }
-
-        $needAdd = true;
-        foreach ($elem['PROPERTIES'][$props['CODE']]['JS_PROP'] as $currentGroupProperty) {
-            if (count($currentGroupProperty) !==  count($groupProperty) ) {
-                continue;
-            }
-
-            foreach ($groupProperty as $key=>$currentValue) {
-                if (!isset($currentGroupProperty[$key])) {
+                if (count($currentGroupProperty) !== count($groupProperty)) {
                     continue;
                 }
-            }
 
-            $needAdd = false;
-            break;
-        }
-        if ($needAdd) {
-            $elem['PROPERTIES'][$props['CODE']]['JS_PROP'][] = $groupProperty;
-        }
-
-
-
-        foreach ($arResult['GROUPED_PRODUCTS'][$elemProp]['PROPERTIES'] as $propGreat) {
-            $propOsnovnoeId = $arResult['GROUPED_PRODUCTS'][$elemProp]['PROPERTIES']['OSNOVNOE_SVOYSTVO_TP']['VALUES'];
-
-            foreach ($propOsnovnoeId as $prop_val) {
-                if ($propGreat['XML_ID'] === $prop_val['VALUE_XML_ID']) {
-                    $propParent = &$arResult['GROUPED_PROD_PROP'][$propGreat['ID']];
-                    if ($propGreat['PROPERTY_TYPE'] === 'L') {
-                        if (empty($elem['OSNOVNOE_SVOYSTVO_TP'][$propGreat['ID']])) {
-                            $elem['OSNOVNOE_SVOYSTVO_TP'][$propGreat['ID']] = $propGreat;
-                        }
-                        $elem['OSNOVNOE_SVOYSTVO_TP'][$propGreat['ID']]['VALUES'][$propGreat['VALUE_XML_ID']]['VALUE_ENUM'] = $propGreat['VALUE_ENUM'];
-
-                        if (count($propGreat['VALUES']) > 1) {
-                            $str = implode('_', array_keys($propGreat['VALUES']));
-                            $propParent['PROPS_DATA'][$str] = $propGreat['VALUES'];
-                        } else {
-                            if (empty($propParent['PROPS_DATA'])) {
-                                $propParent['PROPS_DATA'] = $propGreat['VALUES'];
-                            } else {
-                                foreach ($propGreat['VALUES'] as $keyPropValue => $valueProp) {
-                                    $propParent['PROPS_DATA'][$keyPropValue] = $propGreat['VALUES'][$keyPropValue];
-                                    $propParent['PRODUCT_IDS'][$propGreat['PROPERTY_VALUE_ID']] = $propGreat['PRODUCT_IDS'][$propGreat['PROPERTY_VALUE_ID']];
-                                }
-                            }
-                        }
-                        $propParent['PROPS'] = $propGreat['CODE'];
-                        $propParent['PRODUCT_IDS'][$propGreat['PROPERTY_VALUE_ID']] = $propGreat['PRODUCT_IDS'][$propGreat['PROPERTY_VALUE_ID']];
-                    } else {
-                        $elem['OSNOVNOE_SVOYSTVO_TP'][$propGreat['ID']] = $propGreat;
-                        $propParent['PROPS_DATA'][] = $propGreat['VALUES'];
-                        $propParent['PROPS'] = $propGreat['CODE'];
-                        $propParent['PRODUCT_IDS'][$propGreat['PROPERTY_VALUE_ID']] = $propGreat['PRODUCT_IDS'][$propGreat['PROPERTY_VALUE_ID']];
+                $isDifferences = false;
+                foreach ($groupProperty as $key => $currentValue) {
+                    if (isset($currentGroupProperty[$key])) {
+                        continue;
                     }
-                    $arResult['JS_PROP'][$propGreat['PROPERTY_VALUE_ID']]['PROP'] = $propGreat['CODE'];
-                    $arResult['JS_PROP'][$propGreat['PROPERTY_VALUE_ID']]['VALUES'] = $propGreat['VALUES'];
+                    $isDifferences = true;
+                }
+                if (!$isDifferences) {
+                    $needAdd = false;
+                    break;
                 }
             }
-        }
-//        Показ скрытие ссылки на товар, если свой-во в ед числе - то должно вести сразу на товар.
-        if (isset($elem['ID']) && (int)$arResult['ID'] === (int)$elem['ID']) {
-            $arResult['LINK_GROUPED_PRODUCT'] = 'N';
-            if (count($elem['OSNOVNOE_SVOYSTVO_TP']) === 1) {
-                $arResult['LINK_GROUPED_PRODUCT'] = 'Y';
+            if ($needAdd) {
+                $arResult['GROUPED_PROPS_DATA'][$propCode][] = $groupProperty;
             }
         }
     }
