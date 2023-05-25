@@ -3517,7 +3517,7 @@
 })(window);
 
 $(document).on('click', '.offer-link',function () {
-	console.log('test')
+
 	const arrProductGrouped = JSON.parse($(document).find('#product_prop_data').val() ?? [{}]);
 	console.log(arrProductGrouped)
 	const item = {

@@ -461,7 +461,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
 
                                         $productId = $offerOld['PRODUCT_IDS'][$prop['PROPERTY_VALUE_ID']]['PROD_ID'];
                                         $propId = $offerOld['PRODUCT_IDS'][$prop['PROPERTY_VALUE_ID']]['PROP_ID'];
-
+                                        $picture = $prop['PREVIEW_PICTURE'];
                                         if (!isset($prop['VALUE_ENUM'])) {
                                             foreach ($prop as $keysPropValue => $propValue) {
                                                 if ($arResult['LINK_GROUPED_PRODUCT'] == 'Y') {
@@ -470,7 +470,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
 
                                                 $productId = $offerOld['PRODUCT_IDS'][$propValue['PROPERTY_VALUE_ID']]['PROD_ID'];
                                                 $propId = $offerOld['PRODUCT_IDS'][$propValue['PROPERTY_VALUE_ID']]['PROP_ID'];
-
+                                                $picture = $propValue['PREVIEW_PICTURE'];
                                                 $select = $propValue['SELECT'];
                                                 if ($type === 'colorWithText') {
                                                     $taste[$keysPropValue] = [
@@ -532,8 +532,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                     </a>
                                                 <?php }
                                             } elseif ($type === 'color') {
-                                                $file = CFile::GetPath($offer['PREVIEW_PICTURE']);
-                                                ?>
+                                                $file = CFile::GetPath($picture); ?>
                                                 <a href="<?= $link ?>" class="offer-link">
                                                     <div title="<?= $offer['NAME'] ?>"
                                                          data-active="<?= !empty($select) ? 'true' : 'false' ?>"
@@ -543,7 +542,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                          data-prop_code="<?=$offerOld['PROPS']?>"
                                                          data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
                                                          class="mr-1 offer-box color-hookah br-10 mb-1 <?= $select ?>">
-                                                        <img src="<?= $file ?>"
+                                                        <img src="<?= $file ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
                                                              class="br-10"
                                                              width="50"
                                                              height="50"
