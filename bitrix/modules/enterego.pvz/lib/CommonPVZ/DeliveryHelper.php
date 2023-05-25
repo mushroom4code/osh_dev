@@ -384,9 +384,11 @@ class DeliveryHelper
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
-        $params['shipmentCost'] = $order->getBasePrice();
-        $orderBasket = $order->getBasket();
+        if ($order->getField('PRICE_DELIVERY')) {
+            $params['shipmentCost'] = $order->getDeliveryPrice();
+        }
 
+        $orderBasket = $order->getBasket();
         $params['packages'] = self::getPackagesFromOrderBasket($orderBasket);
         ksort($params['packages']);
         $cAsset = Asset::getInstance();
