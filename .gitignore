@@ -74,4 +74,4 @@ Thumbs.db
 /bitrix/php_interface/conf.php
 bitrix/tmp/
 /node_modules/
-!package.json
+/!package.json
