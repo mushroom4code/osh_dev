@@ -25,8 +25,6 @@ class DoorDeliveryProfile extends Base
     protected static $isProfile = true;
     protected static $parent = null;
 
-    public static $doorDeliveryId = DOOR_DELIVERY_ID;
-
     public function __construct(array $initParams)
     {
         parent::__construct($initParams);

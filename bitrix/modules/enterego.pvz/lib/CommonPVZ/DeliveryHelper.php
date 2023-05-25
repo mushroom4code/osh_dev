@@ -341,18 +341,16 @@ class DeliveryHelper
     public static function addAssets($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
     {
         $params = [];
-        $params['delID'] = 96;
-
-        foreach ($arDeliveryServiceAll as $k => $v) {
-            if ($v->getHandlerCode() === self::$MODULE_ID) {
-                $params['delID'] = $k;
+        foreach ($arDeliveryServiceAll as $deliveryService) {
+            if ($deliveryService instanceof  PVZDeliveryProfile) {
+                $params['pvzDeliveryId'] = $deliveryService->getId();
+            }
+            if ($deliveryService instanceof  DoorDeliveryProfile) {
+                $params['doorDeliveryId'] = $deliveryService->getId();
             }
         }
 
         $params['curDeliveryId'] = $order->getField('DELIVERY_ID');
-        $params['doorDeliveryId'] = DOOR_DELIVERY_ID;
-        $params['pvzDeliveryId'] = PVZ_DELIVERY_ID;
-
 
         $PeriodDelivery = [];
         $start_json_day = Option::get(self::$MODULE_ID, 'Oshisha_timeDeliveryStartDay');
@@ -386,9 +384,11 @@ class DeliveryHelper
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
-        $params['shipmentCost'] = $order->getBasePrice();
-        $orderBasket = $order->getBasket();
+        if ($order->getField('PRICE_DELIVERY')) {
+            $params['shipmentCost'] = $order->getDeliveryPrice();
+        }
 
+        $orderBasket = $order->getBasket();
         $params['packages'] = self::getPackagesFromOrderBasket($orderBasket);
         ksort($params['packages']);
         $cAsset = Asset::getInstance();
