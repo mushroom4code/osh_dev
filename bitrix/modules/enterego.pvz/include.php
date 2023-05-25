@@ -43,3 +43,25 @@ if(!\CJSCore::IsExtRegistered('osh_pickup')){
         )
     );
 }
+
+if(!\CJSCore::IsExtRegistered('osh_pickup')){
+    \CJSCore::RegisterExt(
+        "osh_pickup",
+        array(
+            "js" => "/bitrix/js/".\CommonPVZ\DeliveryHelper::$MODULE_ID."/pickup.js",
+            "css" => "/bitrix/css/".\CommonPVZ\DeliveryHelper::$MODULE_ID."/styles.css",
+            "lang" => "/bitrix/modules/".\CommonPVZ\DeliveryHelper::$MODULE_ID."/lang/".LANGUAGE_ID."/js/pickup.php",
+            "rel" => Array("ajax","popup"),
+            "skip_core" => false,
+        )
+    );
+}
+if(!\CJSCore::IsExtRegistered('saved_delivery_profiles')){
+    \CJSCore::RegisterExt(
+        "saved_delivery_profiles",
+        array(
+            "js" => "/bitrix/modules/".\CommonPVZ\DeliveryHelper::$MODULE_ID."/lib/CommonPVZ/saved_delivery_profiles.js",
+            "rel" => Array(),
+        )
+    );
+}

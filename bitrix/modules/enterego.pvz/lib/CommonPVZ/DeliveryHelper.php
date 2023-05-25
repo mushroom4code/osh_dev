@@ -398,6 +398,7 @@ class DeliveryHelper
         $cAsset->addJs('/bitrix/js/enterego.pvz/async.js', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/install/css/suggestions.css', true);
+        \CJSCore::Init(array("saved_delivery_profiles"));
         \CJSCore::Init(array("osh_pickup"));
         $cAsset->addString(
             "<script id='' data-params=''>
@@ -406,7 +407,7 @@ class DeliveryHelper
                             params: " . CUtil::PhpToJSObject($params) . "
                         });
                         
-                         if (typeof BX !== 'undefined' && BX.addCustomEvent)
+                        if (typeof BX !== 'undefined' && BX.addCustomEvent)
                             BX.addCustomEvent('onAjaxSuccess', BX.SaleCommonPVZ.update);
                         });
                 </script>",
