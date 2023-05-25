@@ -135,13 +135,17 @@ $(document).ready(function () {
             altField: inputPicker,
         });
     }
+    function setPriceGenerate(elem,value){
+        if($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0){
+            $('.ganerate_price').text(getPriceForProduct(elem) * value + ' ₽');
+        }
+    }
 
     function getPriceForProduct(that) {
         if (that.closest('.bx_catalog_item_container') === null) {
             return parseInt($('.product-item-detail-price-current').text().match(/[\d]/gi).join(''));
         }
     }
-
     // COLOR TASTE
     function tasteInit() {
         let box = $('.variation_taste');
@@ -328,9 +332,7 @@ $(document).ready(function () {
         if (value > 0) {
             $('.ganerate_price_wrap').show();
         }
-        if($('.ganerate_price').length >0){
-            $('.ganerate_price').text(getPriceForProduct(this) * value + ' ₽');
-        }
+        setPriceGenerate(this,value)
     }
 
     $(document).on('keypress', '.card_element', function (e) {
@@ -411,9 +413,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    if ($('.ganerate_price').length > 0) {
-                        $('.ganerate_price').text(getPriceForProduct(this) * beforeVal + ' ₽');
-                    }
+                    setPriceGenerate(this,beforeVal);
 
                     product_data = {
                         'ID': product_id,
@@ -429,9 +429,9 @@ $(document).ready(function () {
                         $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                     } else
                         $('.ganerate_price_wrap').hide();
-                    if ($('.ganerate_price').length > 0) {
-                        $('.ganerate_price').text(getPriceForProduct(this) * max_QUANTITY + ' ₽');
-                    }
+
+                    setPriceGenerate(this,max_QUANTITY);
+
                     product_data = {
                         'ID': product_id,
                         'QUANTITY': max_QUANTITY,
@@ -453,9 +453,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    if ($('.ganerate_price').length > 0) {
-                        $('.ganerate_price').text(getPriceForProduct(this) * beforeVal + ' ₽');
-                    }
+                    setPriceGenerate(this,beforeVal)
 
                     product_data = {
                         'ID': product_id,
@@ -493,10 +491,6 @@ $(document).ready(function () {
                     $(boxInput).val(1);
                 }
             }
-
-            $(document).on('click', '.js__close-count-alert', function() {
-                $(this).parents('.alert_quantity').html('').removeClass('show_block');
-            })
 
             let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="' + product_id + '"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
@@ -3006,3 +3000,7 @@ $(document).ready(function () {
         }, window.smartFilter), 500);
     })
 });
+
+$(document).on('click', '.js__close-count-alert', function() {
+    $(this).parents('.alert_quantity').html('').removeClass('show_block');
+})

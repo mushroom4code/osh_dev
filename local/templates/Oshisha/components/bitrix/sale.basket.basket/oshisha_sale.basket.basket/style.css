@@ -2363,3 +2363,7 @@ tr.basket-items-list-item-container {
     color: #aaa;
     text-decoration: line-through;
 }
+
+.alert_quantity.show_block {
+    z-index: 1;
+}

@@ -148,15 +148,20 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 <div class="catalog-section-list-tile-list">
                     <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                         <div class="catalog-section-list-item-l">
-                            <div class="catalog-section-list-item-wrap">
-                                <a href="<?= $arSection['SECTION_PAGE_URL'] ?>"><?= $arSection['NAME'] ?></a>
+                            <div class="catalog-section-list-item-wrap smart-filter-tog" data-role="prop_angle"
+                                 data-code-vis="<?= $arSection['ID'] ?>">
+                                <a href="javascript:void(0)"><?= $arSection['NAME'] ?></a>
                                 <? if ($arSection['CHILDS']): ?>
                                     <span data-role="prop_angle"
-                                          class="smart-filter-tog smart-filter-angle"
-                                          data-code-vis="<?= $arSection['ID'] ?>">
+                                          class="smart-filter-tog smart-filter-angle">
 					                    <i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
                                     </span>
                                 <? endif; ?>
+                            </div>
+                            <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
+                                 data-code="<?= $arSection['ID'] ?>">
+                                <a class="mt-2 color-redLight"
+                                   href="<?= $arSection['SECTION_PAGE_URL'] ?>">Все</a>
                             </div>
                             <?php if ($arSection['CHILDS']):
                                 usort($arSection['CHILDS'], 'sort_by_name');
