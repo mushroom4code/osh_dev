@@ -53,12 +53,11 @@ $menuBlockId = "catalog_menu_" . $this->randString(); ?>
                 if ($arResult["ALL_ITEMS"][$itemID]["LINK"] == '/catalog/diskont/') {
                     continue;
                 } ?>
-                <div class="wrap_block_menu <?= $class ?>">
-                    <a class="link_menu_top <?= $active ?>" href="<?= $arResult["ALL_ITEMS"][$itemID]["LINK"] ?>">
-					<span class="text_catalog_link">
-						<?= htmlspecialcharsbx($arResult["ALL_ITEMS"][$itemID]["TEXT"], ENT_COMPAT, false) ?>
-					</span>
-
+                <div class="wrap_block_menu <?= $class ?> openMenuMobile closed" >
+                    <a class="link_menu_top <?= $active ?>" href="javascript:void(0)">
+                        <span class="text_catalog_link">
+                            <?= htmlspecialcharsbx($arResult["ALL_ITEMS"][$itemID]["TEXT"], ENT_COMPAT, false) ?>
+                        </span>
                     </a>
                     <?php if (is_array($arColumns) && count($arColumns) > 0): ?>
                         <i class="fa_icon fa fa-angle-right" aria-hidden="true"></i>
@@ -79,6 +78,18 @@ $menuBlockId = "catalog_menu_" . $this->randString(); ?>
                             return ($a["TEXT"] < $b["TEXT"]) ? -1 : 1;
                         }); ?>
                         <ul class="bx-nav-list-2-lvl">
+                            <li class="bx-nav-2-lvl">
+                                <a class="bx-nav-2-lvl-link"
+                                   href=" <?= $arResult["ALL_ITEMS"][$itemID]["LINK"] ?>"
+                                    <?php if ($existPictureDescColomn): ?>
+                                        onmouseover="window.obj_<?= $menuBlockId ?> && obj_<?= $menuBlockId ?>.changeSectionPicure(this, '<?= $id ?>');"
+                                    <?php endif ?>
+                                   data-picture="<?= $item["PARAMS"]["picture_src"] ?>"
+                                   <?php if ($item["SELECTED"]): ?>class="bx-active"<?php endif ?>
+                                >
+                                    <span class="bx-nav-2-lvl-link-text">Все</span>
+                                </a>
+                            </li>
                             <?php foreach ($newSort as $id => $item): ?>
                                 <li class="bx-nav-2-lvl">
                                     <a class="bx-nav-2-lvl-link"

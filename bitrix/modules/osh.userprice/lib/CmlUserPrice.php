@@ -10,11 +10,18 @@ class CmlUserPrice
      * Во время обмена - загрузить из XML-дерева информацию по индивидуальным ценам
      * (ent_userprice)
      *
-     * @param SimpleXMLElement|false $xml
+     * @param string $xml_path
      * @throws Main\NotImplementedException
      */
-    public static function LoadUserPriceRules($xml)
+    public static function LoadUserPriceRules($xml_path, $loader)
     {
+        if (!$xml_path) {
+            return;
+        }
+
+        $xml_file = file_get_contents($xml_path);
+        $xml = simplexml_load_string($xml_file);
+
         if (!isset($xml->Контрагенты)) {
             return;
         }
@@ -31,11 +38,13 @@ class CmlUserPrice
 
             $userId = PluginStatic::UserXMLIDToID($userXML_ID);
             if (!$userId) {
-                PluginStatic::_FailImport("Пользователь не найден в базе битрикса по XML_ID: {$userXML_ID}");
+                PluginStatic::_FailImport("Пользователь не найден в базе битрикса по XML_ID: {$userXML_ID}", $loader);
+                continue;
             }
 
             if (!PluginStatic::ClearPrices($userId)) {
-                PluginStatic::_FailImport("Не удалось очистить правила перед записью актуальных правил пользователя {$userId}");
+                PluginStatic::_FailImport("Не удалось очистить правила перед записью актуальных правил пользователя {$userId}", $loader);
+                continue;
             }
 
             PluginStatic::_DebugPrint("Стерты индивидуальные правила цен для этого пользователя");

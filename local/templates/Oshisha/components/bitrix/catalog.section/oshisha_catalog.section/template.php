@@ -865,7 +865,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         //endregion
         ?>
         <? if ($USER->IsAuthorized()) {
-            if (!empty($arrFilterTop['ID'])) { ?>
+            if (!empty($arrFilterTop['ID']) && $arParams['ACTIVE_BLOCK_YOU_SEE'] == 'Y') { ?>
             <div class="mb-5 mt-5">
                 <div data-entity="parent-container">
                     <div data-entity="header" data-showed="false">

@@ -1,4 +1,6 @@
-<?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
+<? use Enterego\EnteregoBasket;
+
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 $PREVIEW_WIDTH = intval($arParams["PREVIEW_WIDTH"]);
 if ($PREVIEW_WIDTH <= 0)
@@ -118,6 +120,7 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
     }
 }
 
+$priceTypes = BXConstants::PriceCode();
 foreach($arResult["SEARCH"] as $i=>$arItem)
 {
     switch($arItem["MODULE_ID"])
@@ -126,6 +129,24 @@ foreach($arResult["SEARCH"] as $i=>$arItem)
             if(array_key_exists($arItem["ITEM_ID"], $arResult["ELEMENTS"]))
             {
                 $arElement = &$arResult["ELEMENTS"][$arItem["ITEM_ID"]];
+
+                $db_props = CIBlockElement::GetProperty($arElement['IBLOCK_ID'], $arElement['ID'],
+                    array("sort" => "asc"), Array("CODE"=>"USE_DISCOUNT"));
+
+                if($ar_props = $db_props->Fetch()) {
+                    $arElement['USE_DISCOUNT'] = $ar_props['VALUE_XML_ID'] === 'true';
+                }
+
+                $customPrice['PRICES'] = [];
+                foreach ($priceTypes as $priceID => $priceType) {
+                    if (isset($arElement['PRICES'][$priceType])) {
+                        $customPrice['PRICES'][$priceID] = $arElement['PRICES'][$priceType];
+                        //adaptive structure for method prices for template
+                        $customPrice['PRICES'][$priceID]['PRICE'] = $customPrice['PRICES'][$priceID]['VALUE'];
+                    }
+                }
+                $arElement['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($customPrice,
+                    $arElement['USE_DISCOUNT'], $arElement['ID']);
 
                 if ($arParams["SHOW_PREVIEW"] == "Y")
                 {

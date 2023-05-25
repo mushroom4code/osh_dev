@@ -31,5 +31,6 @@ if ($item["PREVIEW_PICTURE"]["ID"]) {
     );
 }
 
-$useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
-$item['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($item['ITEM_ALL_PRICES'][0], $useDiscount);
+$useDiscount = ($item['PROPERTIES']['USE_DISCOUNT']['VALUE'] ?? 'Нет') === 'Да' ;
+$item['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($item['ITEM_ALL_PRICES'][0],
+    $useDiscount, $item['ID']);

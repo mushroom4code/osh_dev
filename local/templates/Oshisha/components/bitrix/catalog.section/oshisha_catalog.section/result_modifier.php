@@ -19,3 +19,7 @@ while ($subscribe = $queryObject->fetch())
 
 $component = $this->getComponent();
 $arParams = $component->applyTemplateModifications();
+// Блокировка показа Вы смотрели если параметр установлен, если его не существует, присваиваем.
+if (!isset($arParams['ACTIVE_BLOCK_YOU_SEE'])) {
+	$arParams['ACTIVE_BLOCK_YOU_SEE'] = 'Y';
+}
