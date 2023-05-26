@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             $dbError = false;
                         }
                     } catch (\Throwable $e) {
-                        $dbError = true;
+                        $dbError = $e;
                     }
 					echo Bitrix\Main\Web\Json::encode(
 						array('success' => true, 'message' => 'subscribed', 'clickDbError' => $dbError, 'subscribeId' => $subscribeId));
