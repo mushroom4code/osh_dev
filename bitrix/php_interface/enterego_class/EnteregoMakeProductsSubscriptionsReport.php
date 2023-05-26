@@ -15,9 +15,10 @@ function makeProductsSubscriptionsReport(): string
         }
 
         $xlsx = SimpleXLSXGen::fromArray($resultArr);
-        $xlsx->saveAs(dirname(__FILE__).'/productsSubscriptions.xlsx');
+        $xlsx->saveAs(dirname(__FILE__).'/подписки_на_товар_за_месяц.xlsx');
         $sendId = CEvent::Send('PRODUCTS_SUBSCRIPTIONS_REPORT', array('s1', 'N2'), array('MESSAGE' => 'test'),
-            'N', '', array(dirname(__FILE__).'/productsSubscriptions.xlsx'));
+            'N', '', array(dirname(__FILE__).'/подписки_на_товар_за_месяц.xlsx'));
+        unlink(dirname(__FILE__).'/подписки_на_товар_за_месяц.xlsx');
     }
 
     return "makeProductsSubscriptionsReport;";
