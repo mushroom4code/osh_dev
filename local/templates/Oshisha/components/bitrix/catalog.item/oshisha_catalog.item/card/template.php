@@ -207,7 +207,11 @@ if ($show_price) {
                     <?php } ?>
                 </a>
                 <i class="open-fast-window mb-2" data-item-id="<?= $item['ID'] ?>"></i>
-                <i class="fa fa-pencil js__open-grouped-product-window" aria-hidden="true" data-item-id="<?= $item['ID'] ?>"></i>
+                <?php if (!empty($item['GROUPED_PROPS_DATA'])) { ?>
+                    <i class="fa fa-pencil js__open-grouped-product-window"
+                       aria-hidden="true"
+                       data-item-id="<?= $item['ID'] ?>"></i>
+                <?php } ?>
             </div>
 
             <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>

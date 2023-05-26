@@ -1,4 +1,5 @@
 <? use Enterego\EnteregoBasket;
+use Enterego\EnteregoHelper;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
@@ -25,93 +26,9 @@ $is_key_found = (isset($arResult['ITEM_SUBSCRIPTION']) && ($arResult['ITEM_SUBSC
 $arResult["IS_SUBSCRIPTION_KEY_FOUND"] = $is_key_found;
 
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP start */
-$arResult['GROUPED_PRODUCTS'] = [];
+$arResult['GROUPED_PRODUCTS'] = $arResult['GROUPED_PROPS_DATA'] = [];
 $listGroupedProduct = $arResult['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
-$arResult['GROUPED_PROPS_DATA'] = [];
-if (!empty($listGroupedProduct)) {
-    $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $arResult['ID'],
-        [], ['CODE' => 'OSNOVNOE_SVOYSTVO_TP']);
-
-    $refPropsCode = [];
-    while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
-        $xmlId = $arMainPropertyValue['VALUE_XML_ID'];
-        $rsRefProperty = CIBlockProperty::GetList([], ['XML_ID' => $xmlId]);
-        if ($arRefProperty = $rsRefProperty->Fetch()) {
-            $refPropsCode[] = $arRefProperty['CODE'];
-        }
-    }
-
-    $elem = [];
-    foreach ($listGroupedProduct as $elemProp) {
-        $arResult['GROUPED_PRODUCTS'][$elemProp] = CIBlockElement::GetList([],
-            ['ID' => $elemProp, 'IBLOCK_CATALOG_ID' => IBLOCK_CATALOG, 'ACTIVE' => 'Y'], false, false,
-            [
-                "ID",
-                "ACTIVE",
-                "NAME",
-                "PREVIEW_PICTURE",
-                "CATALOG_QUANTITY",
-                "DETAIL_PICTURE",
-                "DETAIL_PAGE_URL",
-
-            ])->Fetch();
-
-        $elem = &$arResult['GROUPED_PRODUCTS'][$elemProp];
-        if (!empty($elem)) {
-            foreach ($refPropsCode as $propCode) {
-                $groupProperty = [];
-                $propList = CIBlockElement::GetProperty(IBLOCK_CATALOG, $elemProp,
-                    [], ['EMPTY' => 'N', 'ACTIVE' => "Y", 'CODE' => $propCode]);
-
-                while ($props = $propList->GetNext()) {
-
-                    if (empty($elem['PROPERTIES'][$props['CODE']])) {
-                        $elem['PROPERTIES'][$props['CODE']] = $props;
-                    }
-
-                    /** Первый массив для группировки и вывода списка знач свой-в по значения,
-                     * второй для js обработки при клике, разница в кол-ве элеметов
-                     * (во втором все значения, даже те что дублируются, но принадлеэат разным товарам)
-                     */
-                    $groupProperty[$props['VALUE_ENUM']] = $elem['PROPERTIES'][$props['CODE']]['JS_PROP'][$props['VALUE_ENUM']] = [
-                        'VALUE_ENUM' => $props['VALUE_ENUM'] ?? $props['VALUE'],
-                        'VALUE_XML_ID' => $props['VALUE_XML_ID'],
-                        'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],
-                        'CODE' => '/catalog/product/' . $elem['CODE'] . '/',
-                        'PRODUCT_IDS' => $elem['ID'],
-                        'PREVIEW_PICTURE' => $elem['PREVIEW_PICTURE'] ?? $elem['DETAIL_PICTURE'],
-                        'TYPE' => $props['CODE'],
-                        'NAME' => $elem['NAME']
-                    ];
-                }
-
-                $needAdd = true;
-                foreach ($arResult['GROUPED_PROPS_DATA'][$propCode] as $currentGroupProperty) {
-
-                    if (count($currentGroupProperty) !== count($groupProperty)) {
-                        continue;
-                    }
-
-                    $isDifferences = false;
-                    foreach ($groupProperty as $key => $currentValue) {
-                        if (isset($currentGroupProperty[$key])) {
-                            continue;
-                        }
-                        $isDifferences = true;
-                    }
-                    if (!$isDifferences) {
-                        $needAdd = false;
-                        break;
-                    }
-                }
-                if ($needAdd) {
-                    $arResult['GROUPED_PROPS_DATA'][$propCode][] = $groupProperty;
-                }
-            }
-        }
-    }
-
-}
+$arResult = EnteregoHelper::getListGroupedProduct($arResult['ID'], $listGroupedProduct, $arResult);
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP end */
 
 $arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate(
