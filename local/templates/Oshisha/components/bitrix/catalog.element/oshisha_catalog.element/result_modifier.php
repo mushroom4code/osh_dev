@@ -57,18 +57,17 @@ if (!empty($listGroupedProduct)) {
             ])->Fetch();
 
         $elem = &$arResult['GROUPED_PRODUCTS'][$elemProp];
-        foreach ($refPropsCode as $propCode) {
-            $groupProperty = [];
-            $propList = CIBlockElement::GetProperty(IBLOCK_CATALOG, $elemProp,
-                [], ['EMPTY' => 'N', 'ACTIVE' => "Y", 'CODE' => $propCode]);
+        if (!empty($elem)) {
+            foreach ($refPropsCode as $propCode) {
+                $groupProperty = [];
+                $propList = CIBlockElement::GetProperty(IBLOCK_CATALOG, $elemProp,
+                    [], ['EMPTY' => 'N', 'ACTIVE' => "Y", 'CODE' => $propCode]);
 
-            while ($props = $propList->GetNext()) {
+                while ($props = $propList->GetNext()) {
 
-                if (empty($elem['PROPERTIES'][$props['CODE']])) {
-                    $elem['PROPERTIES'][$props['CODE']] = $props;
-                }
-
-                if ($props['PROPERTY_TYPE'] === 'L') {
+                    if (empty($elem['PROPERTIES'][$props['CODE']])) {
+                        $elem['PROPERTIES'][$props['CODE']] = $props;
+                    }
 
                     /** Первый массив для группировки и вывода списка знач свой-в по значения,
                      * второй для js обработки при клике, разница в кол-ве элеметов
@@ -79,45 +78,35 @@ if (!empty($listGroupedProduct)) {
                         'VALUE_XML_ID' => $props['VALUE_XML_ID'],
                         'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],
                         'CODE' => '/catalog/product/' . $elem['CODE'] . '/',
-                        'SELECT' => (int)$arResult['ID'] === (int)$elem['ID'] ? 'selected' : '',
-                        'PRODUCT_IDS' => $props['PROPERTY_VALUE_ID'],
+                        'PRODUCT_IDS' => $elem['ID'],
                         'PREVIEW_PICTURE' => $elem['PREVIEW_PICTURE'] ?? $elem['DETAIL_PICTURE'],
-                        'TYPE' => $props['CODE']
-                    ];
-                } else {
-                    $elem['PROPERTIES'][$props['CODE']]['VALUES'] = [
-                        'VALUE_ENUM' => $props['VALUE'],
-                        'VALUE_XML_ID' => $props['VALUE_XML_ID'],
-                        'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],
-                        'CODE' => '/catalog/product/' . $elem['CODE'] . '/',
-                        'SELECT' => (int)$arResult['ID'] === (int)$elem['ID'] ? 'selected' : '',
-                        'PRODUCT_IDS' => $props['PROPERTY_VALUE_ID'],
-                        'PREVIEW_PICTURE' => $elem['PREVIEW_PICTURE'] ?? $elem['DETAIL_PICTURE']
+                        'TYPE' => $props['CODE'],
+                        'NAME' => $elem['NAME']
                     ];
                 }
-            }
 
-            $needAdd = true;
-            foreach ($arResult['GROUPED_PROPS_DATA'][$propCode] as $currentGroupProperty) {
+                $needAdd = true;
+                foreach ($arResult['GROUPED_PROPS_DATA'][$propCode] as $currentGroupProperty) {
 
-                if (count($currentGroupProperty) !== count($groupProperty)) {
-                    continue;
-                }
-
-                $isDifferences = false;
-                foreach ($groupProperty as $key => $currentValue) {
-                    if (isset($currentGroupProperty[$key])) {
+                    if (count($currentGroupProperty) !== count($groupProperty)) {
                         continue;
                     }
-                    $isDifferences = true;
+
+                    $isDifferences = false;
+                    foreach ($groupProperty as $key => $currentValue) {
+                        if (isset($currentGroupProperty[$key])) {
+                            continue;
+                        }
+                        $isDifferences = true;
+                    }
+                    if (!$isDifferences) {
+                        $needAdd = false;
+                        break;
+                    }
                 }
-                if (!$isDifferences) {
-                    $needAdd = false;
-                    break;
+                if ($needAdd) {
+                    $arResult['GROUPED_PROPS_DATA'][$propCode][] = $groupProperty;
                 }
-            }
-            if ($needAdd) {
-                $arResult['GROUPED_PROPS_DATA'][$propCode][] = $groupProperty;
             }
         }
     }

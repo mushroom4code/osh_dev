@@ -7264,3 +7264,11 @@ footer.footer .container .copyrights > span {
         padding: 7px;
     }
 }
+
+.br-100 {
+    border-radius: 100px;
+}
+
+.red_button_cart .taste,.variation_taste .taste {
+    min-width: 80px;
+}
