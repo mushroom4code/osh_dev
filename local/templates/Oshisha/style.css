@@ -1013,7 +1013,7 @@ div.left-menu a.btn_popup, .card_element, optgroup, textarea, .block_with_action
 .text_catalog_link, .text_header, .product_item_title > a, .btn_action, .btn_action:hover,
 .btn_action:focus, .certificate_variations, .sidebar_inform a.link_delivery, .input_lk,
 .main-profile-form-label_notification, .btn_brand, .btn_brand:hover, .text_font_13, .box_text_business,
-#box_contacts .header_icon, .date_input, label.radio_input, .box_contact, .btn_black {
+#box_contacts .header_icon, .date_input, label.radio_input, .box_contact, .btn_black, .font-13 {
     font-size: 13px;
 }
 
@@ -7265,10 +7265,23 @@ footer.footer .container .copyrights > span {
     }
 }
 
-.br-100 {
+.br-100, .red_button_cart.br-100 {
     border-radius: 100px;
 }
 
-.red_button_cart .taste,.variation_taste .taste {
+.red_button_cart .taste {
     min-width: 80px;
+}
+
+.p-10, .offer-box.red_button_cart.p-10 {
+    padding: 10px;
+}
+
+.overflow-custom::-webkit-scrollbar-thumb {
+    background-color: #e3e3e3;
+    border-radius: 10px;
+}
+
+.overflow-custom::-webkit-scrollbar{
+    height: 5px;
 }

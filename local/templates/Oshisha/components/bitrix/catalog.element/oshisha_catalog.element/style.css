@@ -1394,6 +1394,10 @@ input::-webkit-inner-spin-button {
     font-size: 14px;
 }
 
+.red_button_cart:not(i).font-13{
+    font-size: 13px;
+}
+
 .bx_price.font-22 {
     font-size: 22px;
 }

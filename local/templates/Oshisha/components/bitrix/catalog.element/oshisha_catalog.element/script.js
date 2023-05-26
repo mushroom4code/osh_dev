@@ -3516,34 +3516,49 @@
 	}
 })(window);
 
-$(document).on('click', '.offer-link',function () {
+$(document).on('click', '.offer-link .offer-box', function () {
 
 	const arrProductGrouped = JSON.parse($(document).find('#product_prop_data').val() ?? [{}]);
-	console.log(arrProductGrouped)
-	const item = {
-		'CODE': $(this).attr('data-prop_code'),
-		'VALUE_ENUM': $(this).attr('data-prop_code'),
-	}
-	// 	= {
-	// 	color: 'red',
-	// 	w: 1,
-	// };
-	if (arrProductGrouped.length > 0) {
-		const result = arrProductGrouped.map((elem, i) => {
-			let pr = 0;
+	const arDataThisBox = JSON.parse($(this).attr('data-prop_group') ?? [{}]);
+	const propCode = $(this).attr('data-prop_code');
+	const product_data_href = [];
 
-			if (elem.color === item.color) {
-				pr = pr + 1;
-			}
-
-			if (elem.w === item.w) {
-				pr = pr + 1;
-			}
-
-			elem.pr = pr;
-			return elem;
+	$.each(arrProductGrouped, function (prod_id, item) {
+		$.each(item.PROPERTIES, function (k, props) {
+			let count = 0;
+			// if (k === propCode && product_data_href.length === 0) {
+				$.each(props.JS_PROP, function (d, prop) {
+					console.log(arDataThisBox[prop.VALUE_ENUM]);
+					if (arDataThisBox[prop.VALUE_ENUM] !== undefined) {
+						count++;
+						if (count === Object.keys(arDataThisBox).length) {
+							console.log('кликнули по свой-ву');
+							return product_data_href.push({id: prod_id, code: prop.CODE,prop: prop.VALUE_ENUM });
+						}
+					}
+				});
+			// } else {
+				// $.each(props.JS_PROP, function (d, prop) {
+				// 	console.log(arDataThisBox[prop.VALUE_ENUM]);
+				// 	if (arDataThisBox[prop.VALUE_ENUM] !== undefined) {
+				// 		count++;
+				// 		if (count === Object.keys(arDataThisBox).length) {
+				// 			console.log('кликнули по свой-ву');
+				// 			return product_data_href.push({id: prod_id, code: prop.CODE, prop: prop.VALUE_ENUM});
+				// 		}
+				// 	}
+				// });
+			// }
 		});
+
+	});
+	if(product_data_href.length > 1){
+		// window.location.href = 'http://'+ window.location.hostname + product_data_href[0].code;
+		console.log(product_data_href)
+	} else {
+		console.log(product_data_href)
 	}
+
 });
 
 

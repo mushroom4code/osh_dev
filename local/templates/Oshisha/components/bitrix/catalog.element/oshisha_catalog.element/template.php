@@ -210,7 +210,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             require_once(__DIR__ . '/slider/template.php'); ?>
             <div
                     class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product
-				not-input-parse product_right justify-content-between">
+				not-input-parse justify-content-between">
                 <h1 class="head-title"><?= $name ?></h1>
                 <?php if ($isGift) { ?>
                     <div>
@@ -439,13 +439,13 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 break;
                         }
                     } ?>
-                    <div class="d-flex flex-wrap flex-column mb-2 box-offers-auto" data-entity="sku-line-block">
+                    <div class="d-flex flex-column mb-2 box-offers-auto" data-entity="sku-line-block">
                         <?php
                         if (!empty($arResult['GROUPED_PROPS_DATA'])) {
                             $propsForOffers = EnteregoSettings::getDataPropOffers();
 
                             foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) { ?>
-                                <div class="d-flex flex-row overflow-auto width-inherit">
+                                <div class="d-flex flex-row overflow-auto mb-2 width-100 overflow-custom">
                                     <?php foreach ($productGrouped as $group) {
 
                                         $link = 'javascript:void(0)';
@@ -487,7 +487,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                             if ($type === 'text') {
                                                 if (count($grouped) > 1) { ?>
                                                     <a href="<?= $link ?>" class="offer-link">
-                                                        <div class="red_button_cart font-14
+                                                        <div class="red_button_cart font-14 p-10
                                                              width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
                                                              title="<?= $offer['NAME'] ?>"
                                                              data-active="false"
@@ -501,7 +501,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                     </a>
                                                 <?php } else { ?>
                                                     <a href="<?= $link ?>" class="offer-link">
-                                                        <div class="red_button_cart font-14 width-fit-content br-100 mb-lg-2
+                                                        <div class="red_button_cart font-13 width-fit-content br-100 mb-lg-2
                                                                 m-md-2 m-1 offer-box cursor-pointer"
                                                              title="<?= $offer['NAME'] ?>"
                                                              data-active="false"
@@ -532,7 +532,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 if (!empty($taste)) { ?>
                                                     <a href="<?= $link ?>" class="offer-link">
                                                         <div class="red_button_cart taste variation_taste font-14
-                                                             width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
+                                                             width-fit-content mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer"
                                                              title="<?= $offer['NAME'] ?>"
                                                              data-active="false"
                                                              data-prop_code="<?= $keyCODE ?>"
