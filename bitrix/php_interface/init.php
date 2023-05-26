@@ -27,7 +27,7 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
     '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
-    '\Enterego\ProductsSubscriptionsTable' => '/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
+    '\Enterego\ProductsSubscriptionsTable'=>'/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
     '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
@@ -37,6 +37,7 @@ CModule::AddAutoloadClasses("", array(
 
 //redefine sale  basket condition
 require_once(__DIR__ . '/enterego_class/sale_cond.php');
+
 
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
