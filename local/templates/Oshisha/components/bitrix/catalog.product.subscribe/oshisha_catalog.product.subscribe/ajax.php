@@ -1,8 +1,9 @@
 <?
 /** @global CMain $APPLICATION */
 
-use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Loader;
+use Bitrix\Main\Localization\Loc;
+use Enterego\ProductsSubscriptionsTable;
 
 define('STOP_STATISTICS', true);
 define('PUBLIC_AJAX_MODE', true);
@@ -128,8 +129,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				$subscribeId = $subscribeManager->addSubscribe($subscribeData);
 				if($subscribeId)
 				{
+                    try {
+                        $existingProduct = ProductsSubscriptionsTable::getRow(array('filter' => array('PRODUCT_NAME' => $_POST['product_name'])));
+                        if(!empty($existingProduct)) {
+                            $dbResult = ProductsSubscriptionsTable::update($existingProduct['ID'], array('fields' =>
+                                array('SUBSCRIPTION_CLICKS' => $existingProduct['SUBSCRIPTION_CLICKS'] + 1)));
+                        } else {
+                            $dbResult = ProductsSubscriptionsTable::add(array('fields' =>
+                                array('PRODUCT_NAME' => $_POST['product_name'], 'SUBSCRIPTION_CLICKS' => 1
+                            )));
+                        }
+                        if (!$dbResult->isSuccess()) {
+                            $dbError = true;
+                        } else {
+                            $dbError = false;
+                        }
+                    } catch (\Throwable $e) {
+                        $dbError = true;
+                    }
 					echo Bitrix\Main\Web\Json::encode(
-						array('success' => true, 'message' => 'subscribed', 'subscribeId' => $subscribeId));
+						array('success' => true, 'message' => 'subscribed', 'clickDbError' => $dbError, 'subscribeId' => $subscribeId));
 					require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
 					die();
 				}
