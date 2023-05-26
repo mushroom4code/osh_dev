@@ -21,5 +21,5 @@ function makeProductsSubscriptionsReport(): string
         unlink(dirname(__FILE__).'/подписки_на_товар_за_месяц.xlsx');
     }
 
-    return "makeProductsSubscriptionsReport;";
+    return "makeProductsSubscriptionsReport();";
 }
