@@ -27,6 +27,7 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
     '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
+    '\Enterego\ProductsSubscriptionsTable' => '/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
     '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
@@ -310,6 +311,7 @@ function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
 }
 
 require_once(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
+require_once(__DIR__ . '/enterego_class/EnteregoMakeProductsSubscriptionsReport.php');
 /**
  * @return string
  */
