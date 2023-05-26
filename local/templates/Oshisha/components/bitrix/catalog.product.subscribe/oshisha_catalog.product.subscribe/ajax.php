@@ -139,6 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 array('PRODUCT_NAME' => $_POST['product_name'], 'SUBSCRIPTION_CLICKS' => 1
                             )));
                         }
+
                         if (!$dbResult->isSuccess()) {
                             $dbError = true;
                         } else {
@@ -148,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         $dbError = $e;
                     }
 					echo Bitrix\Main\Web\Json::encode(
-						array('success' => true, 'message' => 'subscribed', 'clickDbError' => $dbError, 'subscribeId' => $subscribeId));
+						array('success' => true, 'message' => 'subscribed', 'clickDbError' => CUtil::PhpToJSObject($dbError), 'subscribeId' => $subscribeId));
 					require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
 					die();
 				}

@@ -644,6 +644,10 @@ $(document).ready(function () {
                     var result = JSON.parse(result_jsn);
                     if(result.success === true){
                         var item_controls = popup_mess.parent();
+                        if(result.clickDbError != 'false') {
+                            console.log('error while updating productsSubscriptionsTable');
+                            console.log(result.clickDbError);
+                        }
                         if(result.message === "subscribed") {
                             popup_mess.addClass('subscribed');
                             popup_mess.attr('data-subscription_id', result.subscribeId);
