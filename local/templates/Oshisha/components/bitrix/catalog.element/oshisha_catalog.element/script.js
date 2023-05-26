@@ -3526,10 +3526,9 @@ $(document).on('click', '.offer-link .offer-box', function () {
 	$.each(arrProductGrouped, function (prod_id, item) {
 		$.each(item.PROPERTIES, function (k, props) {
 			let count = 0;
-			// if (k === propCode && product_data_href.length === 0) {
+			console.log(arDataThisBox)
 				$.each(props.JS_PROP, function (d, prop) {
-					console.log(arDataThisBox[prop.VALUE_ENUM]);
-					if (arDataThisBox[prop.VALUE_ENUM] !== undefined) {
+					if (Object.keys(arDataThisBox).indexOf(prop.VALUE_ENUM) !== -1) {
 						count++;
 						if (count === Object.keys(arDataThisBox).length) {
 							console.log('кликнули по свой-ву');
@@ -3537,18 +3536,6 @@ $(document).on('click', '.offer-link .offer-box', function () {
 						}
 					}
 				});
-			// } else {
-				// $.each(props.JS_PROP, function (d, prop) {
-				// 	console.log(arDataThisBox[prop.VALUE_ENUM]);
-				// 	if (arDataThisBox[prop.VALUE_ENUM] !== undefined) {
-				// 		count++;
-				// 		if (count === Object.keys(arDataThisBox).length) {
-				// 			console.log('кликнули по свой-ву');
-				// 			return product_data_href.push({id: prod_id, code: prop.CODE, prop: prop.VALUE_ENUM});
-				// 		}
-				// 	}
-				// });
-			// }
 		});
 
 	});
@@ -3556,7 +3543,7 @@ $(document).on('click', '.offer-link .offer-box', function () {
 		// window.location.href = 'http://'+ window.location.hostname + product_data_href[0].code;
 		console.log(product_data_href)
 	} else {
-		console.log(product_data_href)
+		// console.log(product_data_href)
 	}
 
 });
