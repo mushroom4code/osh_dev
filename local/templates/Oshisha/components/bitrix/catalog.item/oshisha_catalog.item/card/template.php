@@ -206,7 +206,8 @@ if ($show_price) {
                         <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                     <?php } ?>
                 </a>
-                <i class="open-fast-window" data-item-id="<?= $item['ID'] ?>"></i>
+                <i class="open-fast-window mb-2" data-item-id="<?= $item['ID'] ?>"></i>
+                <i class="fa fa-pencil js__open-grouped-product-window" aria-hidden="true" data-item-id="<?= $item['ID'] ?>"></i>
             </div>
 
             <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>

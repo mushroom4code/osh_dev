@@ -73,7 +73,6 @@ if (isset($arResult['ITEM'])) {
 
     $haveOffers = !empty($item['OFFERS']);
     if ($haveOffers) {
-        $arResult['TYPE'] = 'card_offers';
         $actualItem = isset($item['OFFERS'][$item['OFFERS_SELECTED']])
             ? $item['OFFERS'][$item['OFFERS_SELECTED']]
             : reset($item['OFFERS']);
