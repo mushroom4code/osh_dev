@@ -234,33 +234,12 @@ if ($useDefaultMessages || !isset($arParams['MESS_PAY_SYSTEM_PAYABLE_ERROR'])) {
     $arParams['MESS_PAY_SYSTEM_PAYABLE_ERROR'] = Loc::getMessage('PAY_SYSTEM_PAYABLE_ERROR_DEFAULT');
 }
 
-//$scheme = $request->isHttps() ? 'https' : 'http';
 $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
-
-switch (LANGUAGE_ID) {
-    case 'ru':
-        $locale = 'ru-RU';
-        break;
-    case 'ua':
-        $locale = 'ru-UA';
-        break;
-    case 'tk':
-        $locale = 'tr-TR';
-        break;
-    default:
-        $locale = 'en-US';
-        break;
-}
 
 $this->addExternalJs($templateFolder . '/order_ajax.js');
 PropertyValueCollection::initJs();
 $this->addExternalJs($templateFolder . '/script.js');
 
-// #000018618 PVZ
-if ($arParams['SHOW_PICKUP_MAP'] === 'Y' || $arParams['SHOW_MAP_IN_PROPS'] === 'Y') {
-    $apiKey = htmlspecialcharsbx(Option::get('fileman', 'yandex_map_api_key', ''));
-    $this->addExternalJs($scheme . '://api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey . '&lang=' . $locale);
-}
 ?>
     <NOSCRIPT>
         <div style="color:red"><?= Loc::getMessage('SOA_NO_JS') ?></div>
