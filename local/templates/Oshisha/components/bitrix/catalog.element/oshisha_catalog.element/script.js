@@ -3519,33 +3519,59 @@
 $(document).on('click', '.offer-link .offer-box', function () {
 
 	const arrProductGrouped = JSON.parse($(document).find('#product_prop_data').val() ?? [{}]);
-	const arDataThisBox = JSON.parse($(this).attr('data-prop_group') ?? [{}]);
-	const propCode = $(this).attr('data-prop_code');
-	const product_data_href = [];
-
+	const productsSuccess = [];
+	const propCodePriority = $(this).attr('data-prop_code');
+	const selectedPropData = {};
+	let box_parent = $(this).closest('.catalog-item-product');
+	let box_offers = $(box_parent).find('div[data-offer_id="' + $(this).attr('data-product_id') + '"]');
+	showHideBlock(box_offers, $(this), 'd-block', true, $(box_parent).find('.prices-all'));
+	/** Перебор выбранных свой-в с получением группы значений для общего поиска */
+	const selectedProp = $(document).find('.offer-link.selected');
+	$.each(selectedProp, function (i_prop, selectProp){
+		let code = $(selectProp).find('.offer-box').attr('data-prop_code');
+		selectedPropData[code] = JSON.parse($(selectProp).find('.offer-box').attr('data-prop_group'));
+	});
+	;
 	$.each(arrProductGrouped, function (prod_id, item) {
 		$.each(item.PROPERTIES, function (k, props) {
-			let count = 0;
-			console.log(arDataThisBox)
-				$.each(props.JS_PROP, function (d, prop) {
-					if (Object.keys(arDataThisBox).indexOf(prop.VALUE_ENUM) !== -1) {
-						count++;
-						if (count === Object.keys(arDataThisBox).length) {
-							console.log('кликнули по свой-ву');
-							return product_data_href.push({id: prod_id, code: prop.CODE,prop: prop.VALUE_ENUM });
+				if(Object.keys(props.JS_PROP).length === Object.keys(selectedPropData[k]).length){
+					$.each(props.JS_PROP, function (key, jsProp) {
+						let propList = selectedPropData[k][key];
+						let priority = -1;
+						if (propList !== undefined && jsProp.VALUE_ENUM === propList.VALUE_ENUM) {
+							if(propCodePriority === k){
+								priority = 1;
+							}
+							if (productsSuccess.length <= 0) {
+								productsSuccess.push({
+									id: prod_id,
+									code: propList.CODE,
+									prop: propList.VALUE_ENUM,
+									pr: 1 + priority
+								});
+							} else {
+								$.each(productsSuccess, function (iProd, product) {
+									if (product.id === propList.PRODUCT_IDS) {
+										product.pr = product.pr + 1 + priority;
+									} else {
+										productsSuccess.push({
+											id: prod_id,
+											code: propList.CODE,
+											prop: propList.VALUE_ENUM,
+											pr: 1 + priority
+										});
+									}
+								});
+							}
 						}
-					}
-				});
+					});
+				}
 		});
-
 	});
-	if(product_data_href.length > 1){
-		// window.location.href = 'http://'+ window.location.hostname + product_data_href[0].code;
-		console.log(product_data_href)
-	} else {
-		// console.log(product_data_href)
+	if (productsSuccess.length > 1) {
+		productsSuccess.sort((a, b) => a.pr < b.pr ? 1 : -1)
+		window.location.href = window.location.protocol + '//' + window.location.hostname + productsSuccess[0].code;
 	}
-
 });
 
 

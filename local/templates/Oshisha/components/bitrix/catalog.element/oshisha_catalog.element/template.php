@@ -451,7 +451,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         $title = 'Товар';
                                         $select = 'selected';
 
-                                        if (count(array_diff_assoc($productSelect[$keyCODE]['JS_PROP'], $group)) > 0) {
+                                        if (count(array_diff_assoc($productSelect[$keyCODE]['JS_PROP'], $group)) > 0 ||
+                                            count($productSelect[$keyCODE]['JS_PROP'])!== count($group)) {
                                             $select = '';
                                         }
 
@@ -500,9 +501,9 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                         </div>
                                                     </a>
                                                 <?php } else { ?>
-                                                    <a href="<?= $link ?>" class="offer-link">
+                                                    <a href="<?= $link ?>" class="offer-link <?=$select?>">
                                                         <div class="red_button_cart font-13 width-fit-content br-100 mb-lg-2
-                                                                    m-md-2 m-1 offer-box cursor-pointer <?=$select?>"
+                                                                    m-md-2 m-1 offer-box cursor-pointer"
                                                              title="<?= $offer['NAME'] ?>"
                                                              data-active="<?= !empty($select) ? 'true' :'false'?>"
                                                              data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"

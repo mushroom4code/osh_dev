@@ -3049,9 +3049,10 @@ function showHideBlock(box_offers, that, className = 'd-block', allHide = false,
     $(that).closest('div.d-flex').find('.offer-box').each(function () {
         $(this).attr('data-active', 'false');
         $(this).removeClass('selected');
+        $(this).closest('.offer-link').removeClass('selected');
     });
     $(that).attr('data-active', 'true');
-    $(that).addClass('selected');
+    $(that).closest('.offer-link').addClass('selected');
 }
 
 /**
@@ -3061,73 +3062,73 @@ $(document).on('click', '.js__show-block', function () {
     showHideBlock($(this).closest('.catalog-item-product').find('.info-prices-box-hover'), $(this), 'd-flex');
 });
 
-$(document).on('click', '.offer-box', function () {
-    let elem = $(this);
-    let box_parent = $(elem).closest('.catalog-item-product');
-    let box_offers = $(box_parent).find('div[data-offer_id="' + $(elem).attr('data-product_id') + '"]');
-
-    showHideBlock(box_offers, $(elem), 'd-block', true, $(box_parent).find('.prices-all'));
-
-    $(box_parent).find('.product-item-amount-field-contain-wrap').attr('data-product_id', $(elem).attr('data-product_id'));
-    $(box_parent).find('.add2basket').each(function () {
-        $(this).attr('data-product_id', $(elem).attr('data-product_id'));
-        $(this).attr('data-max_quantity', $(elem).attr('data-product_quantity'));
-        $(this).attr('data-max-quantity', $(elem).attr('data-product_quantity'));
-    });
-
-    if ($(elem).attr('data-sale') === '1' && $(elem).attr('data-sale_price') !== '') {
-        let classType = 'font-14 ml-3'
-        if ($(box_parent).hasClass('bx_catalog_item')) {
-            classType = 'font-10'
-        }
-        let old_sum = parseInt($(elem).attr('data-sale_base')) - parseInt($(elem).attr('data-sale_price'));
-        $(box_parent).find('.bx_price').html('<span>' + $(elem).attr('data-sale_price') + ' ₽ </span>' +
-            '<span class="' + classType + '">' +
-            '<b class="decoration-color-red mr-2">' + $(elem).attr('data-sale_base') + ' ₽</b>' +
-            '<b class="sale-percent"> - ' + old_sum + ' ₽</b></span>');
-    } else {
-        $(box_parent).find('.bx_price').html('<span><span class="font-10">от</span> ' + $(elem).attr('data-price_base') + '₽</span>');
-    }
-
-    $(box_parent).find('input.card_element').val($(elem).attr('data-basket_quantity'))
-        .attr('data-max-quantity', $(elem).attr('data-product_quantity'))
-        .attr('data-max_quantity', $(elem).attr('data-product_quantity'));
-
-    let elem_modal = $(elem).closest('.open-modal-product');
-    if ($(elem_modal).length !== 0) {
-        if ($(elem_modal).find('.slick-slider').length > 0) {
-            $(elem_modal).find('.slick-images-box').each(function () {
-                if ($(elem).attr('data-product_id') === $(this).attr('data-offers_id')) {
-                    if ($(this).hasClass('d-none')) {
-                        $(this).removeClass('d-none');
-                        $(this).find('.product-item-detail-slider-right').click();
-                    }
-                } else if (!$(this).hasClass('d-none')) {
-                    $(this).addClass('d-none');
-                }
-            });
-            $(elem_modal).find('.slick-images-controls').each(function () {
-                let parent = $(this).closest('.slider-controls');
-                if ($(elem).attr('data-product_id') === $(this).attr('data-offers_id')) {
-                    if (parent.hasClass('d-none')) {
-                        parent.removeClass('d-none');
-                        $(this).find('.slick-track').removeAttr('style');
-                    }
-                } else if (!parent.hasClass('d-none')) {
-                    parent.addClass('d-none');
-                }
-            });
-        } else {
-            if (($(elem).attr('src') !== '' && $(elem).attr('src') !== null) || $(elem).attr('data-src') !== '') {
-                $(elem_modal).find('.box-with-image-one img').attr('src', ($(elem).attr('src') || $(elem).attr('data-src')))
-            }
-        }
-    }
-
-    if ($(document).find('div[data-entity="images-container"]').length === 0) {
-        let parent = $(elem).closest('.box_with_photo_product');
-        let new_active_image = $(parent).find('.product-item-detail-slider-image[data-product_id="' + $(elem).attr('data-product_id') + '"]');
-        $(document).find('.product-item-detail-slider-image.active').removeClass('active').addClass('d-none');
-        $(new_active_image).removeClass('d-none').addClass('active').find('img').attr('src', $(new_active_image).find('img').attr('data-src'));
-    }
-});
+// $(document).on('click', '.offer-link .offer-box', function () {
+//     let elem = $(this);
+//     let box_parent = $(elem).closest('.catalog-item-product');
+//     let box_offers = $(box_parent).find('div[data-offer_id="' + $(elem).attr('data-product_id') + '"]');
+//
+//     showHideBlock(box_offers, $(elem), 'd-block', true, $(box_parent).find('.prices-all'));
+//
+//     $(box_parent).find('.product-item-amount-field-contain-wrap').attr('data-product_id', $(elem).attr('data-product_id'));
+//     $(box_parent).find('.add2basket').each(function () {
+//         $(this).attr('data-product_id', $(elem).attr('data-product_id'));
+//         $(this).attr('data-max_quantity', $(elem).attr('data-product_quantity'));
+//         $(this).attr('data-max-quantity', $(elem).attr('data-product_quantity'));
+//     });
+//
+//     if ($(elem).attr('data-sale') === '1' && $(elem).attr('data-sale_price') !== '') {
+//         let classType = 'font-14 ml-3'
+//         if ($(box_parent).hasClass('bx_catalog_item')) {
+//             classType = 'font-10'
+//         }
+//         let old_sum = parseInt($(elem).attr('data-sale_base')) - parseInt($(elem).attr('data-sale_price'));
+//         $(box_parent).find('.bx_price').html('<span>' + $(elem).attr('data-sale_price') + ' ₽ </span>' +
+//             '<span class="' + classType + '">' +
+//             '<b class="decoration-color-red mr-2">' + $(elem).attr('data-sale_base') + ' ₽</b>' +
+//             '<b class="sale-percent"> - ' + old_sum + ' ₽</b></span>');
+//     } else {
+//         $(box_parent).find('.bx_price').html('<span><span class="font-10">от</span> ' + $(elem).attr('data-price_base') + '₽</span>');
+//     }
+//
+//     $(box_parent).find('input.card_element').val($(elem).attr('data-basket_quantity'))
+//         .attr('data-max-quantity', $(elem).attr('data-product_quantity'))
+//         .attr('data-max_quantity', $(elem).attr('data-product_quantity'));
+//
+//     let elem_modal = $(elem).closest('.open-modal-product');
+//     if ($(elem_modal).length !== 0) {
+//         if ($(elem_modal).find('.slick-slider').length > 0) {
+//             $(elem_modal).find('.slick-images-box').each(function () {
+//                 if ($(elem).attr('data-product_id') === $(this).attr('data-offers_id')) {
+//                     if ($(this).hasClass('d-none')) {
+//                         $(this).removeClass('d-none');
+//                         $(this).find('.product-item-detail-slider-right').click();
+//                     }
+//                 } else if (!$(this).hasClass('d-none')) {
+//                     $(this).addClass('d-none');
+//                 }
+//             });
+//             $(elem_modal).find('.slick-images-controls').each(function () {
+//                 let parent = $(this).closest('.slider-controls');
+//                 if ($(elem).attr('data-product_id') === $(this).attr('data-offers_id')) {
+//                     if (parent.hasClass('d-none')) {
+//                         parent.removeClass('d-none');
+//                         $(this).find('.slick-track').removeAttr('style');
+//                     }
+//                 } else if (!parent.hasClass('d-none')) {
+//                     parent.addClass('d-none');
+//                 }
+//             });
+//         } else {
+//             if (($(elem).attr('src') !== '' && $(elem).attr('src') !== null) || $(elem).attr('data-src') !== '') {
+//                 $(elem_modal).find('.box-with-image-one img').attr('src', ($(elem).attr('src') || $(elem).attr('data-src')))
+//             }
+//         }
+//     }
+//
+//     if ($(document).find('div[data-entity="images-container"]').length === 0) {
+//         let parent = $(elem).closest('.box_with_photo_product');
+//         let new_active_image = $(parent).find('.product-item-detail-slider-image[data-product_id="' + $(elem).attr('data-product_id') + '"]');
+//         $(document).find('.product-item-detail-slider-image.active').removeClass('active').addClass('d-none');
+//         $(new_active_image).removeClass('d-none').addClass('active').find('img').attr('src', $(new_active_image).find('img').attr('data-src'));
+//     }
+// });
