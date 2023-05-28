@@ -1,5 +1,7 @@
 BX.namespace('BX.SaleCommonPVZ');
 
+const typeDisplayPVZ = {map: 'map', list: 'list'}
+
 BX.SaleCommonPVZ = {
     curCityCode: null,
     curCityName: null,
@@ -35,6 +37,10 @@ BX.SaleCommonPVZ = {
     oshishaDeliveryStatus: false,
     propDefaultPvzAddressId: null,
     propTypePvzId: null,
+    componentParams: {
+        'displayPVZ': typeDisplayPVZ,
+        'filterDelivery': null,
+    },
 
     init: function (params) {
         this.curDeliveryId = params.params?.curDeliveryId;
@@ -136,7 +142,6 @@ BX.SaleCommonPVZ = {
      */
     updateDelivery: function (orderData) {
         const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
-        // const propsNode = document.querySelector('#map_for_delivery');
 
         BX.cleanNode(propsNode)
         BX.cleanNode('deliveries-list')
@@ -417,10 +422,10 @@ BX.SaleCommonPVZ = {
 
     closePvzPopup: function () {
         BX.hide(this.pvzOverlay);
-        this.clearPvzMap()
+        this.clearDeliveryBlock()
     },
 
-    clearPvzMap: function () {
+    clearDeliveryBlock: function () {
         BX.cleanNode(BX('map_for_delivery'))
     },
 
@@ -488,30 +493,10 @@ BX.SaleCommonPVZ = {
      *   Построение карты с PVZ
      */
     buildPVZMap: function () {
-        var __this = this;
-
         BX.remove(BX('user-address-wrap'))
         BX.show(BX('wrap_data_view'))
         BX.show(BX('wrap_sort_service'))
-        ymaps.ready(function () {
-            var myGeocoder = ymaps.geocode(__this.curCityName, {results: 1});
-            myGeocoder.then(function (res) { // получаем координаты
-                var firstGeoObject = res.geoObjects.get(0),
-                    coords = firstGeoObject.geometry.getCoordinates();
-
-                __this.propsMap = new ymaps.Map('map_for_delivery', {
-                    center: [coords[0], coords[1]],
-                    zoom: 12,
-                    controls: ['fullscreenControl']
-                });
-                __this.getPVZList();
-
-            }).catch(function (e) {
-                __this.showError(__this.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
-                console.warn(e);
-            });
-        });
-
+        this.getPVZList();
     },
 
     getCityName: function () {
@@ -564,9 +549,8 @@ BX.SaleCommonPVZ = {
         });
     },
 
-    getPVZList: function (form = 'map') {
+    getPVZList: function () {
         const __this = this;
-        let pvzView = form;
         if (!BX.Sale.OrderAjaxComponent.startLoader())
             return;
         BX.ajax({
@@ -580,13 +564,7 @@ BX.SaleCommonPVZ = {
             },
             onsuccess: function (res) {
                 __this.pvzObj = JSON.parse(res) || [];
-
-                if (pvzView == 'list') {
-                    __this.buildPvzList(__this.pvzObj);
-                    BX.Sale.OrderAjaxComponent.endLoader();
-                } else {
-                    __this.setPVZOnMap();
-                }
+                __this.showPVZ();
             },
             onfailure: function (res) {
                 console.log('error getPVZList');
@@ -596,6 +574,22 @@ BX.SaleCommonPVZ = {
 
             }
         });
+    },
+
+    /**
+     * Отображает ПВЗ с учетом фильтра
+     */
+    showPVZ: function () {
+        const pvzList = this.componentParams.filterDelivery === null
+            ? this.pvzObj.features
+            : this.pvzObj.features.filter( item => this.componentParams.filterDelivery === item.properties.deliveryName )
+
+        this.clearDeliveryBlock()
+        if (this.componentParams.displayPVZ === typeDisplayPVZ.list) {
+            this.buildPvzList(pvzList);
+        } else {
+            this.setPVZOnMap(pvzList);
+        }
     },
 
     /**
@@ -630,7 +624,6 @@ BX.SaleCommonPVZ = {
             return;
 
         __this.closePvzPopup();
-        this.selectedPvzObjId = objectId
         const point = this.objectManager.objects.getById(objectId);
 
         const pvzAddress = point.properties.deliveryName + ': ' + point.properties.fullAddress;
@@ -762,57 +755,75 @@ BX.SaleCommonPVZ = {
     /**
      *  Установка маркеров на карту PVZ
      */
-    setPVZOnMap: function () {
-        var objectManager = new ymaps.ObjectManager({
-            clusterize: true,
-            clusterHasBalloon: true
-        });
-        objectManager.add(this.pvzObj);
-        this.objectManager = objectManager;
-        var __this = this;
+    setPVZOnMap: function (pvzList) {
+        const oshDelivery = this
 
-        __this.propsMap.geoObjects.add(objectManager);
-        const osh_pvz = objectManager.objects.getAll()
-            .find((item) => item?.properties?.deliveryName === 'OSHISHA');
+        ymaps.ready(function () {
+            const myGeocoder = ymaps.geocode(oshDelivery.curCityName, {results: 1});
+            myGeocoder.then(function (res) { // получаем координаты
+                const firstGeoObject = res.geoObjects.get(0),
+                    coords = firstGeoObject.geometry.getCoordinates();
 
-        if (osh_pvz) {
-            const button = new ymaps.control.Button({
-                data: {
-                    image: 'images/button.jpg',
-                    content: 'Пункт выдачи OSHISHA',
-                    title: 'Показать на карте пункт выдачи'
-                },
-                options: {
-                    selectOnClick: false,
-                    maxWidth: [230, 230, 230]
+                oshDelivery.propsMap = new ymaps.Map('map_for_delivery', {
+                    center: [coords[0], coords[1]],
+                    zoom: 12,
+                    controls: ['fullscreenControl']
+                });
+
+                const objectManager = new ymaps.ObjectManager({
+                    clusterize: true,
+                    clusterHasBalloon: true
+                });
+                objectManager.add({type: 'FeatureCollection', features: pvzList});
+                oshDelivery.objectManager = objectManager;
+
+                oshDelivery.propsMap.geoObjects.add(objectManager);
+                const osh_pvz = objectManager.objects.getAll()
+                    .find((item) => item?.properties?.deliveryName === 'OSHISHA');
+
+                if (osh_pvz) {
+                    const button = new ymaps.control.Button({
+                        data: {
+                            image: 'images/button.jpg',
+                            content: 'Пункт выдачи OSHISHA',
+                            title: 'Показать на карте пункт выдачи'
+                        },
+                        options: {
+                            selectOnClick: false,
+                            maxWidth: [230, 230, 230]
+                        }
+                    });
+                    button.events.add('click', () => {
+                        oshDelivery.propsMap.setZoom(15)
+                        objectManager.objects.balloon.open(osh_pvz.id);
+                    })
+                    oshDelivery.propsMap.controls.add(button, {float: 'right', floatIndex: 100});
                 }
+                BX.Sale.OrderAjaxComponent.endLoader();
+
+                objectManager.clusters.events.add(['balloonopen'], function (e) {
+                    const clusterId = e.get('objectId');
+                    const cluster = objectManager.clusters.getById(clusterId);
+                    if (objectManager.clusters.balloon.isOpen(clusterId)) {
+                        oshDelivery.getSelectPvzPrice(cluster.properties.geoObjects, clusterId);
+                    }
+                });
+
+                objectManager.objects.events.add('click', function (e) {
+                    const objectId = e.get('objectId')
+                    objectManager.objects.balloon.open(objectId);
+                });
+
+                objectManager.objects.events.add('balloonopen', function (e) {
+                    const objectId = e.get('objectId'),
+                        obj = objectManager.objects.getById(objectId);
+
+                    oshDelivery.getSelectPvzPrice([obj]);
+                });
             });
-            button.events.add('click', () => {
-                __this.propsMap.setZoom(15)
-                objectManager.objects.balloon.open(osh_pvz.id);
-            })
-            __this.propsMap.controls.add(button, {float: 'right', floatIndex: 100});
-        }
-        BX.Sale.OrderAjaxComponent.endLoader();
-
-        objectManager.clusters.events.add(['balloonopen'], function (e) {
-            const clusterId = e.get('objectId');
-            const cluster = objectManager.clusters.getById(clusterId);
-            if (objectManager.clusters.balloon.isOpen(clusterId)) {
-                __this.getSelectPvzPrice(cluster.properties.geoObjects, clusterId);
-            }
-        });
-
-        objectManager.objects.events.add('click', function (e) {
-            var objectId = e.get('objectId')
-            objectManager.objects.balloon.open(objectId);
-        });
-
-        objectManager.objects.events.add('balloonopen', function (e) {
-            var objectId = e.get('objectId'),
-                obj = objectManager.objects.getById(objectId);
-
-            __this.getSelectPvzPrice([obj]);
+        }).catch(function (e) {
+            oshDelivery.showError(oshDelivery.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
+            console.warn(e);
         });
     },
 
@@ -955,7 +966,6 @@ BX.SaleCommonPVZ = {
     buildDoorDeliveryContent: function () {
         const __this = this
 
-        BX('map_for_delivery').classList.add('list')
         BX.append(
             BX.create({
                 tag: 'div',
@@ -1031,7 +1041,7 @@ BX.SaleCommonPVZ = {
                                                     BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
                                                     BX('data_view_map').checked = true
 
-                                                    __this.clearPvzMap();
+                                                    __this.clearDeliveryBlock();
                                                     __this.buildPVZMap();
                                                 }),
                                             },
@@ -1068,7 +1078,7 @@ BX.SaleCommonPVZ = {
                                                     change: BX.proxy(function () {
                                                         BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
 
-                                                        __this.clearPvzMap()
+                                                        __this.clearDeliveryBlock()
                                                         __this.buildAddressField()
                                                         __this.buildDoorDeliveryContent();
                                                     }),
@@ -1134,16 +1144,16 @@ BX.SaleCommonPVZ = {
                                                 type: 'radio',
                                                 value: 'На карте',
                                                 name: 'data_view',
-                                                checked: 'checked'
+                                                checked: this.componentParams.displayPVZ === typeDisplayPVZ.map
                                             },
                                             events: {
                                                 change: BX.proxy(function () {
                                                     if (BX('delivery-self').checked) {
-                                                        __this.clearPvzMap();
-                                                        BX('map_for_delivery').classList.remove('list')
-                                                        __this.buildPVZMap();
+                                                        __this.clearDeliveryBlock();
+                                                        __this.componentParams.displayPVZ = typeDisplayPVZ.map
+                                                        __this.showPVZ();
                                                     } else {
-                                                        __this.clearPvzMap();
+                                                        __this.clearDeliveryBlock();
                                                     }
                                                 })
                                             }
@@ -1173,14 +1183,15 @@ BX.SaleCommonPVZ = {
                                                 className: 'radio-field',
                                                 type: 'radio',
                                                 value: 'Списком',
-                                                name: 'data_view'
+                                                name: 'data_view',
+                                                checked: this.componentParams.displayPVZ === typeDisplayPVZ.list
                                             },
                                             events: {
                                                 change: BX.proxy(function () {
                                                     if (BX('delivery-self').checked) {
-                                                        __this.clearPvzMap();
-                                                        BX('map_for_delivery').classList.add('list')
-                                                        __this.getPVZList('list');
+                                                        __this.clearDeliveryBlock();
+                                                        __this.componentParams.displayPVZ = typeDisplayPVZ.list
+                                                        __this.showPVZ();
 
                                                         BX.append(
                                                             BX.create({
@@ -1201,7 +1212,7 @@ BX.SaleCommonPVZ = {
                                                         )
                                                         BX.onCustomEvent('onDeliveryExtraServiceValueChange')
                                                     } else {
-                                                        __this.clearPvzMap();
+                                                        __this.clearDeliveryBlock();
                                                     }
                                                 })
                                             }
@@ -1269,104 +1280,24 @@ BX.SaleCommonPVZ = {
                                         id: 'sort_services_list',
                                         className: 'sort_services_list',
                                     },
-                                    children: [
-                                        BX.create({
-                                            tag: 'li',
-                                            props: {className: 'sort_service'},
-                                            text: 'Все',
-                                            events: {
-                                                click: BX.proxy(function (e) {
-                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                    BX.removeClass(BX('sort_service_select'), 'active')
+                                    children: ['Все', '5Post', 'Oshisha', 'СДЭК', 'Почта РФ','Деловые линии'].map(item => {
+                                            return BX.create({
+                                                tag: 'li',
+                                                props: {className: 'sort_service'},
+                                                text: item,
+                                                events: {
+                                                    click: BX.proxy(function (e) {
+                                                        BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                        BX.removeClass(BX('sort_service_select'), 'active')
 
-                                                    this.sortPvzList(e.target.getAttribute('data-target'))
-                                                }, this)
-                                            },
-                                            dataset: {
-                                                target: 'js-showall'
-                                            }
+                                                        this.filterPvzList(e.target.getAttribute('data-target'))
+                                                    }, this)
+                                                },
+                                                dataset: {
+                                                    target: item
+                                                }
+                                            })
                                         }),
-                                        BX.create({
-                                            tag: 'li',
-                                            props: {className: 'sort_service'},
-                                            text: '5Post',
-                                            events: {
-                                                click: BX.proxy(function (e) {
-                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                    BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                    this.sortPvzList(e.target.getAttribute('data-target'))
-                                                }, this)
-                                            },
-                                            dataset: {
-                                                target: 'js-5post'
-                                            }
-                                        }),
-                                        BX.create({
-                                            tag: 'li',
-                                            props: {className: 'sort_service'},
-                                            text: 'Oshisha',
-                                            events: {
-                                                click: BX.proxy(function (e) {
-                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                    BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                    this.sortPvzList(e.target.getAttribute('data-target'))
-                                                }, this)
-                                            },
-                                            dataset: {
-                                                target: 'js-oshisha'
-                                            }
-                                        }),
-                                        BX.create({
-                                            tag: 'li',
-                                            props: {className: 'sort_service'},
-                                            text: 'СДЭК',
-                                            events: {
-                                                click: BX.proxy(function (e) {
-                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                    BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                    this.sortPvzList(e.target.getAttribute('data-target'))
-                                                }, this)
-                                            },
-                                            dataset: {
-                                                target: 'js-sdek'
-                                            }
-                                        }),
-                                        BX.create({
-                                            tag: 'li',
-                                            props: {className: 'sort_service'},
-                                            text: 'Почта РФ',
-                                            events: {
-                                                click: BX.proxy(function (e) {
-                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                    BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                    this.sortPvzList(e.target.getAttribute('data-target'))
-                                                }, this)
-                                            },
-                                            dataset: {
-                                                target: 'js-rupost'
-                                            }
-                                        }),
-                                        BX.create({
-                                            tag: 'li',
-                                            props: {className: 'sort_service'},
-                                            text: 'Деловые линии',
-                                            events: {
-                                                click: BX.proxy(function (e) {
-                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                    BX.removeClass(BX('sort_service_select'), 'active')
-
-                                                    this.sortPvzList(e.target.getAttribute('data-target'))
-                                                }, this)
-                                            },
-                                            dataset: {
-                                                target: 'js-dl'
-                                            }
-                                        }),
-                                    ]
                                 })
                             ]
 
@@ -1412,25 +1343,18 @@ BX.SaleCommonPVZ = {
         return this
     },
 
-    buildPvzList: function ()
+    buildPvzList: function (pvzList)
     {
         const __this = this
+        const pvzListNode = BX.create({
+            tag: 'div',
+            props: {
+                className: 'deliveries-list'
+            }
+        })
+        BX.append(pvzListNode, BX('map_for_delivery'))
 
-        if (!BX('pickpoints-list')) {
-            BX.append(
-                BX.create({
-                    tag: 'div',
-                    props: {
-                        id: 'pickpoints-list',
-                        className: 'pickpoints-list',
-                    }
-                }),
-                BX('map_for_delivery')
-            )
-        }
-
-        this.pvzObj.features.forEach(el => {
-            // console.log(el)
+        pvzList.forEach(el => {
             let jsClass = ''
             switch (el.properties.deliveryName) {
                 case 'Деловые линии': jsClass = 'js-dl'; break;
@@ -1567,43 +1491,20 @@ BX.SaleCommonPVZ = {
                         })
                     ]
                 }),
-                BX('pickpoints-list')
+                pvzListNode
             )
-
-            /*
-            BX.append(
-                BX.create({
-                    tag: 'div',
-                    props: {
-                        id: el.id,
-                        className: 'pickpoint-item ' + jsClass
-                    },
-                    events: {
-                        click: BX.proxy(function() {
-                            BX.SaleCommonPVZ.selectPvz(el.id)
-                        }, this)
-                    },
-                    text: el.properties.deliveryName + ' / адрес: ' + el.properties.fullAddress
-                }),
-                BX('pickpoints-list')
-            )
-            */
         })
     },
 
-    sortPvzList: function(jsClass)
+    /**
+     * Фильтрация пунктов пвз по грузоперезвочику
+     * @param deliveryName
+     */
+    filterPvzList: function(deliveryName)
     {
-        if(BX('pickpoints-list')) {
-            BX('pickpoints-list').querySelectorAll('.pickpoint-item').forEach((el) => {
-                el.style.display = 'block'
-
-                if (jsClass != 'js-showall' && !el.classList.contains(jsClass)) {
-                    el.style.display = 'none';
-                }
-            })
-        }
+        this.componentParams.filterDelivery = deliveryName === 'Все' ? null : deliveryName
+        this.showPVZ()
     },
-
 
     drawInterface: function ()
     {
