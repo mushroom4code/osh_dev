@@ -632,7 +632,7 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 
 .fa.js__open-grouped-product-window {
     top: 50%;
-    padding: 5px;
+    padding: 5px 6px;
     font-size: 20px;
 }
 
