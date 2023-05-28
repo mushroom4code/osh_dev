@@ -95,34 +95,6 @@ BX.SaleCommonPVZ = {
         this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
         this.propDefaultPvzAddressId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.ID;
         this.propTypePvzId = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
-        if (this.propAddressId  && this.oshishaDeliveryStatus) {
-            window.Osh.bxPopup.init();
-            const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
-
-            const latitude_value = (this.propLatitudeId)
-                ? (document.querySelector('input[name="ORDER_PROP_' + this.propLatitudeId + '"]').value) : '';
-            const longitude_value = (this.propLongitudeId)
-                ? (document.querySelector('input[name="ORDER_PROP_' + this.propLongitudeId + '"]').value) : '';
-            if (latitude_value && longitude_value) {
-                const oshParams = {
-                    oshMkad: oshMkad,
-                    latitude: latitude_value,
-                    longitude: longitude_value,
-                    propAddressId: this.propAddressId,
-                    propDateDelivery: (this.propDateDelivery)
-                        ? this.propDateDelivery
-                        : '',
-                }
-                setTimeout(function (oshParams) {
-                    oshParams.oshMkad.afterSave = null;
-                    oshParams.oshMkad.getDistance([oshParams.latitude, oshParams.longitude],
-                        oshParams.propAddressId,
-                        oshParams.propDateDelivery,
-                        '',
-                        true);
-                }, 500, oshParams);
-            }
-        }
 
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
@@ -845,7 +817,6 @@ BX.SaleCommonPVZ = {
     },
 
     sendRequestToComponent: function (action, actionData) {
-        console.log(BX.Sale.OrderAjaxComponent.ajaxUrl);
         BX.ajax({
             method: 'POST',
             dataType: 'json',
@@ -940,6 +911,7 @@ BX.SaleCommonPVZ = {
                 if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
                     if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
                         __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                        const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
                         oshMkad.afterSave = null;
                         oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
                             __this.propAddressId,
