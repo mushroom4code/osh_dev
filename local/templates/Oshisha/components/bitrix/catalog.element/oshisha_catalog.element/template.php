@@ -438,6 +438,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     <div class="d-flex flex-column mb-2 box-offers-auto" data-entity="sku-line-block">
                         <?php if (!empty($arResult['GROUPED_PROPS_DATA'])) {
                             $propsForOffers = EnteregoSettings::getDataPropOffers();
+                            $productSelect = $arResult['GROUPED_PRODUCTS'][$arResult['ID']]['PROPERTIES'];
                             foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) { ?>
                                 <div class="d-flex flex-row overflow-auto mb-2 width-100 overflow-custom">
                                     <?php foreach ($productGrouped as $group) {
@@ -445,9 +446,14 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         $link = 'javascript:void(0)';
                                         $prop_value = 'Пустое значение';
                                         $taste = $grouped = [];
-                                        $select = $picture = '';
+                                        $picture = '';
                                         $type = $propsForOffers[$keyCODE]['TYPE'] ?? 'text';
                                         $title = 'Товар';
+                                        $select = 'selected';
+
+                                        if (count(array_diff_assoc($productSelect[$keyCODE]['JS_PROP'], $group)) > 0) {
+                                            $select = '';
+                                        }
 
                                         foreach ($group as $name => $prop) {
                                             if (empty($prop['VALUE_ENUM'])) {
@@ -474,7 +480,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 ];
                                             }
                                             $title = $prop['NAME'];
-                                            $select = $arResult['ID'] === (int)$prop['PRODUCT_IDS'] ? 'selected' : '';
                                         }
 
                                         if (!empty($prop_value)) {
@@ -482,9 +487,10 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 if (count($grouped) > 1) { ?>
                                                     <a href="<?= $link ?>" class="offer-link">
                                                         <div class="red_button_cart font-14 p-10
-                                                                 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer"
+                                                                 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
+                                                             <?=$select?>"
                                                              title="<?= $offer['NAME'] ?>"
-                                                             data-active="false"
+                                                             data-active="<?= !empty($select) ? 'true' :'false'?>"
                                                              data-prop_code="<?= $keyCODE ?>"
                                                              data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
                                                              data-product_id="<?= '' ?>">
@@ -496,9 +502,9 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 <?php } else { ?>
                                                     <a href="<?= $link ?>" class="offer-link">
                                                         <div class="red_button_cart font-13 width-fit-content br-100 mb-lg-2
-                                                                    m-md-2 m-1 offer-box cursor-pointer"
+                                                                    m-md-2 m-1 offer-box cursor-pointer <?=$select?>"
                                                              title="<?= $offer['NAME'] ?>"
-                                                             data-active="false"
+                                                             data-active="<?= !empty($select) ? 'true' :'false'?>"
                                                              data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
                                                              data-prop_code="<?= $keyCODE ?>"
                                                              data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
@@ -507,9 +513,9 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                     </a>
                                                 <?php }
                                             } elseif ($type === 'color') { ?>
-                                                <a href="<?= $link ?>" class="offer-link">
+                                                <a href="<?= $link ?>" class="offer-link <?=$select?>">
                                                     <div title="<?= $offer['NAME'] ?>"
-                                                         data-active="false"
+                                                         data-active="<?= !empty($select) ? 'true' :'false'?>"
                                                          data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
                                                          data-prop_code="<?= $keyCODE ?>"
                                                          data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
@@ -524,11 +530,11 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 </a>
                                             <?php } elseif ($type === 'colorWithText') {
                                                 if (!empty($taste)) { ?>
-                                                    <a href="<?= $link ?>" class="offer-link">
+                                                    <a href="<?= $link ?>" class="offer-link <?=$select?>">
                                                         <div class="red_button_cart taste variation_taste font-14
                                                                  width-fit-content mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer"
                                                              title="<?= $offer['NAME'] ?>"
-                                                             data-active="false"
+                                                             data-active="<?= !empty($select) ? 'true' :'false'?>"
                                                              data-prop_code="<?= $keyCODE ?>"
                                                              data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>">
                                                             <?php foreach ($taste as $elem_taste) { ?>

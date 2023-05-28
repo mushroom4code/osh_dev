@@ -276,10 +276,6 @@ class EnteregoHelper
                                 $elem['PROPERTIES'][$props['CODE']] = $props;
                             }
 
-                            /** Первый массив для группировки и вывода списка знач свой-в по значения,
-                             * второй для js обработки при клике, разница в кол-ве элеметов
-                             * (во втором все значения, даже те что дублируются, но принадлеэат разным товарам)
-                             */
                             $groupProperty[$props['VALUE_ENUM']] = $elem['PROPERTIES'][$props['CODE']]['JS_PROP'][$props['VALUE_ENUM']] = [
                                 'VALUE_ENUM' => $props['VALUE_ENUM'] ?? $props['VALUE'],
                                 'VALUE_XML_ID' => $props['VALUE_XML_ID'],
