@@ -170,12 +170,12 @@ class EnteregoBasket
     /**
      * @param $arPrices
      * @param boolean $useDiscount
-     * @param $productId
+     * @param string $productId
      * @return array
      * @throws SqlQueryException
      * @throws LoaderException
      */
-    public static function getPricesArForProductTemplate($arPrices, bool $useDiscount, $productId=''): array
+    public static function getPricesArForProductTemplate($arPrices, bool $useDiscount, string $productId = ''): array
     {
         $price = [];
         $sale = $arPrices['PRICES'][SALE_PRICE_TYPE_ID];
