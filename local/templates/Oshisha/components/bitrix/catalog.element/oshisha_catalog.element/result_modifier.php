@@ -8,8 +8,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 /**
  * @var CBitrixComponentTemplate $this
  * @var CatalogElementComponent $component
+ * @var array $arResult
  */
-
 
 global $USER;
 $filter = ['USER_ID' => $USER->GetID(), 'ITEM_ID' => $arResult['ID']];
@@ -31,10 +31,10 @@ $listGroupedProduct = $arResult['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 $arResult = EnteregoHelper::getListGroupedProduct($arResult['ID'], $listGroupedProduct, $arResult);
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP end */
 
-$arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate(
-    $arResult['ITEM_ALL_PRICES'][0],
-    $arResult['PROPERTIES']['USE_DISCOUNT']
-);
+
+$useDiscount = ($arResult['PROPERTIES']['USE_DISCOUNT']['VALUE'] ?? 'Нет') === 'Да' ;
+$arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($arResult['ITEM_ALL_PRICES'][0],
+    $useDiscount, $arResult['ID']);
 
 $component = $this->getComponent();
 $arParams = $component->applyTemplateModifications();

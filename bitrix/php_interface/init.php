@@ -1,7 +1,9 @@
 <?php
 
+use Bitrix\Main\Loader;
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Enterego\EnteregoSettings;
+use Enterego\UserPrice\UserPriceHelperOsh;
 
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
@@ -208,15 +210,31 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 class BXConstants
 {
 
-    static function PriceCode()
+    private static $_listPriceType;
+    /**
+     * @return array|string[]
+     * @throws \Bitrix\Main\Db\SqlQueryException
+     * @throws \Bitrix\Main\LoaderException
+     */
+    static function PriceCode(): array
     {
-        return array(
+        if (self::$_listPriceType !== null) {
+            return self::$_listPriceType;
+        }
+
+        $priceTypes =  array(
             SALE_PRICE_TYPE_ID => "Сайт скидка",
             BASIC_PRICE => "Основная",
             B2B_PRICE => "b2b",
             RETAIL_PRICE => 'Розничная',
         );
 
+        if (Loader::includeModule('osh.userprice')) {
+            $priceTypes += UserPriceHelperOsh::getUserPricesForCurrentUser();
+        }
+
+        self::$_listPriceType = $priceTypes;
+        return self::$_listPriceType;
     }
 
     static function Shared()

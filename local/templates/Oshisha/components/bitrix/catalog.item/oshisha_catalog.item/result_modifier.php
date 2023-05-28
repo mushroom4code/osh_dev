@@ -32,17 +32,13 @@ if ($item["PREVIEW_PICTURE"]["ID"]) {
     );
 }
 
-
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP start */
 $item['GROUPED_PRODUCTS'] = $item['GROUPED_PROPS_DATA'] = [];
 $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 $item = EnteregoHelper::getListGroupedProduct($item['ID'], $listGroupedProduct, $item);
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP end */
 
-$useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
-$item['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($item['ITEM_ALL_PRICES'][0], $useDiscount);
 
-foreach($item['OFFERS']  as &$offer){
-    $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
-    $offer['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($offer['ITEM_ALL_PRICES'][0], $useDiscount);
-}
+$useDiscount = ($item['PROPERTIES']['USE_DISCOUNT']['VALUE'] ?? 'Нет') === 'Да' ;
+$item['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($item['ITEM_ALL_PRICES'][0],
+    $useDiscount, $item['ID']);

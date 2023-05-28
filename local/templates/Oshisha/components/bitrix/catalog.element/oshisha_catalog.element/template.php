@@ -4,7 +4,6 @@
 
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
-use Enterego\EnteregoSettings;
 use Bitrix\Main\Web\Json;
 use Bitrix\Sale\Fuser;
 
@@ -75,7 +74,7 @@ $itemIds = array(
     'BASKET_ACTIONS_ID' => $mainId . '_basket_actions',
     'NOT_AVAILABLE_MESS' => $mainId . '_not_avail',
     'COMPARE_LINK' => $mainId . '_compare_link',
-    'TREE_ID' => $haveOffers && !empty($arResult['OFFERS_PROP']) ? $mainId . '_skudiv' : null,
+    'TREE_ID' => $mainId . '_skudiv',
     'DISPLAY_PROP_DIV' => $mainId . '_sku_prop',
     'DISPLAY_MAIN_PROP_DIV' => $mainId . '_main_sku_prop',
     'OFFER_GROUP' => $mainId . '_set_group_',
@@ -113,13 +112,29 @@ if ($haveOffers) {
 }
 
 $measureRatio = $actualItem['ITEM_MEASURE_RATIOS'][$actualItem['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
-$price = $skuProps = [];
+$skuProps = [];
 $isGift = EnteregoHelper::productIsGift($arResult['ID']);
 $useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
 $rowResHidePrice = $arResult['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $price = $actualItem['PRICES_CUSTOM'];
 
-if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $actualItem['PRODUCT']['QUANTITY']) {
+$priceCalculate = $price['PRICE_DATA'][1]['PRICE'];
+$price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
+
+if (!empty($price['USER_PRICE']['PRICE'])) {
+    $specialPrice = $price['USER_PRICE'];
+}
+
+if ((USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] === 'true') && !empty($price['SALE_PRICE']['PRINT_PRICE'])
+    && ( !isset($specialPrice) || $price['SALE_PRICE']['PRICE'] < $specialPrice['PRICE'])) {
+
+    $specialPrice = $price['SALE_PRICE'];
+}
+if (isset($specialPrice)) {
+    $priceCalculate = $specialPrice['PRICE'];
+}
+
+if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $actualItem['PRODUCT']['QUANTITY'])
     $actualItem['PRODUCT']['QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
 }
 
@@ -263,181 +278,166 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                         </div>
                     <?php }
                     foreach ($arParams['PRODUCT_PAY_BLOCK_ORDER'] as $blockName) {
-                        switch ($blockName) {
-                            case 'price':
-                                if ($show_price) {
-                                    if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRICE']) ||
-                                        $useDiscount['VALUE_XML_ID'] === 'true' && !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
-                                        $price_new = $price['SALE_PRICE']['PRINT_PRICE'];
-                                        $priceCalculate = $price['SALE_PRICE']['PRICE'];
-                                        $price_id = $price['SALE_PRICE']['PRICE_TYPE_ID'];
-                                    } else {
-                                        $price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
-                                        $price_id = $price['PRICE_DATA'][1]['PRICE_TYPE_ID'];
-                                        $priceCalculate = $price['PRICE_DATA'][1]['PRICE'];
-                                    }
-                                    $styles = ''; ?>
-                                    <div class="mb-4 d-flex flex-column">
-                                        <div class="mb-3 d-flex flex-row align-items-center">
-                                            <div class="product-item-detail-price-current"
-                                                 id="<?= $itemIds['PRICE_ID'] ?>"><?= $price_new ?>
-                                            </div>
-                                            <?php if (USE_CUSTOM_SALE_PRICE && !empty($price['SALE_PRICE']['PRINT_PRICE']) ||
-                                                $useDiscount['VALUE_XML_ID'] === 'true' &&
-                                                !empty($price['SALE_PRICE']['PRINT_PRICE'])) {
-                                                $styles = 'price-discount';
-                                                $old_sum = (int)$price['PRICE_DATA'][0]['PRICE'] - (int)$price['SALE_PRICE']['PRICE'] ?? 0; ?>
-                                                <span class="font-14 ml-3">
-                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
-                                            <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
-                                        </span>
-                                            <?php } ?>
-                                        </div>
-                                        <div class="d-flex flex-column prices-block">
-                                            <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                                                <p>
-                                                    <span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
-                                                    <span
-                                                            class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                                                </p>
-                                            <?php } ?>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <?php
-                                }
-                                break;
-                            case 'quantityLimit':
-                                if ($show_price) {
-                                    $arParams['SHOW_MAX_QUANTITY'] = 'N';
-                                    if ($arParams['SHOW_MAX_QUANTITY'] !== 'N') {
-                                        if ($haveOffers) { ?>
-                                            <div class="mb-3" id="<?= $itemIds['QUANTITY_LIMIT'] ?>"
-                                                 style="display: none;">
-												<span class="product-item-quantity" data-entity="quantity-limit-value">
-												</span>
-                                            </div>
-                                        <?php } else {
-                                            if ($measureRatio && (float)$actualItem['PRODUCT']['QUANTITY'] > 0
-                                                && $actualItem['CHECK_QUANTITY']) { ?>
-                                                <div class="mb-3 text-center"
-                                                     id="<?= $itemIds['QUANTITY_LIMIT'] ?>">
-													<span class="product-item-detail-info-container-title">
-														<?= $arParams['MESS_SHOW_MAX_QUANTITY'] ?>:
-													</span>
-                                                    <span class="product-item-quantity"
-                                                          data-entity="quantity-limit-value">
-	                                                        <?php if ($arParams['SHOW_MAX_QUANTITY'] === 'M') {
-                                                                if ((float)$actualItem['PRODUCT']['QUANTITY'] / $measureRatio >= $arParams['RELATIVE_QUANTITY_FACTOR']) {
-                                                                    echo $arParams['MESS_RELATIVE_QUANTITY_MANY'];
-                                                                } else {
-                                                                    echo $arParams['MESS_RELATIVE_QUANTITY_FEW'];
-                                                                }
-                                                            } else {
-                                                                echo $actualItem['PRODUCT']['QUANTITY'] . ' ' . $actualItem['ITEM_MEASURE']['TITLE'];
-                                                            } ?>
-													</span>
-                                                </div>
-                                                <?php
-                                            }
-                                        }
-                                    }
-                                }
-                                break;
-                            case 'quantity':
-                                if ($show_price) {
-                                    if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?>
-                                        <div
-                                                class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
-                                            <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
-                                                data-entity="quantity-block">
-                                            <div class="product-item-amount-field-contain mr-3">
-                                                <span
-                                                        class="btn-minus no-select minus_icon add2basket basket_prod_detail"
-                                                        data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                        data-product_id="<?= $arResult['ID']; ?>"
-                                                        id="<?= $itemIds['QUANTITY_DOWN_ID'] ?>"
-                                                        data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>">
-                                                </span>
-                                                <div class="product-item-amount-field-block">
-                                                    <input class="product-item-amount card_element cat-det"
-                                                           id="<?= $itemIds['QUANTITY_ID'] ?>"
-                                                           type="number" value="<?= $priceBasket ?>"
-                                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                           data-product_id="<?= $arResult['ID']; ?>"
-                                                           data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
-                                                </div>
-                                                <span class="btn-plus no-select plus_icon add2basket basket_prod_detail"
-                                                      data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                      data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
-                                                      data-product_id="<?= $arResult['ID']; ?>"
-                                                      id="<?= $itemIds['QUANTITY_UP_ID'] ?>"></span>
-                                            </div>
-                                            <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
-                                               rel="nofollow"
-                                               class="add2basket basket_prod_detail btn red_button_cart"
-                                               data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                               data-product_id="<?= $arResult['ID']; ?>"
-                                               title="Добавить в корзину">
-                                                <img class="image-cart"
-                                                     src="/local/templates/Oshisha/images/cart-white.png"/>
-                                            </a>
-                                            <div id="result_box"></div>
-                                            <div id="popup_mess"></div>
-                                        </div>
-                                        <div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
-                                        <div class="d-flex flex-lg-column flex-md-column flex-column-reverse">
-                                    <?php } else { ?>
-                                        <div
-                                                class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center bx_catalog_item"
-                                            <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
-                                                data-entity="quantity-block">
-                                            <div class="d-flex flex-row align-items-center mr-3">
-                                                <div class="product-item-amount-field-contain">
-                                                    <span
-                                                            class=" no-select minus_icon add2basket basket_prod_detail mr-3"
-                                                            style="pointer-events: none;">
-                                                    </span>
-                                                    <div class="product-item-amount-field-block">
-                                                        <input class="product-item-amount"
-                                                               id="<?= $itemIds['QUANTITY_ID'] ?>"
-                                                               disabled="disabled" type="number" value="0">
-                                                    </div>
-                                                    <span class="no-select plus_icon add2basket basket_prod_detail ml-3"
-                                                          style="pointer-events: none;"></span>
-                                                </div>
-                                                <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
-                                                   rel="nofollow"
-                                                   class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
-                                                   <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>
-                                                   detail_disabled"
-                                                   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                   data-product_id="<?= $arResult['ID']; ?>"
-                                                   title="Добавить в корзину">Забронировать</a>
-                                            </div>
-                                            <div id="result_box" style="width: 100%;position: absolute;"></div>
-                                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
-                                        <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
-                                                <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : '' ?>"
-                                                   aria-hidden="true"></i>
-                                            </div>
-                                            <div id="popup_mess"
-                                                 class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
-                                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
-                                                 data-product_id="<?= $arResult['ID']; ?>"></div>
-                                        </div>
-                                        <div class="mb-4 d-flex justify-content-between align-items-center">
-                                            <div
-                                                    class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
-                                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
-                                                Нет в наличии
-                                            </div>
-                                        </div>
-                                        <?php
-                                    }
-                                }
-                                break;
+                    switch ($blockName) {
+                    case 'price':
+                    $styles = ''; ?>
+                    <div class="mb-4 d-flex flex-column">
+                        <div class="mb-3 d-flex flex-row align-items-center">
+                            <div class="product-item-detail-price-current"
+                                 id="<?= $itemIds['PRICE_ID'] ?>">
+                                <?=
+                                    $specialPrice['PRINT_PRICE'] ?? '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                                ?>
+                            </div>
+                            <?php if (isset($specialPrice)) {
+                                $styles = 'price-discount';
+                                $old_sum = (int)$price['PRICE_DATA'][0]['PRICE'] - (int)$specialPrice['PRICE'] ?? 0; ?>
+                                <span class="font-14 ml-3">
+                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
+                                    <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
+                                </span>
+                            <?php } ?>
+                        </div>
+                        <div class="d-flex flex-column prices-block">
+                            <?php foreach ($price['PRICE_DATA'] as $items) { ?>
+                                <p>
+                                    <span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
+                                    <span class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                </p>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <!--Бонусная система -->
+                    <!--                            <div class="mb-5">-->
+                    <!--                                <a href="#" class="link_bonus">Начислится бонусов за покупку: 11</a>-->
+                    <!--                            </div>-->
+                </div>
+            <?php
+            break;
+            case 'quantityLimit':
+                if ($show_price) {
+                    $arParams['SHOW_MAX_QUANTITY'] = 'N';
+                    if ($arParams['SHOW_MAX_QUANTITY'] !== 'N') {
+                        if ($haveOffers) { ?>
+                            <div class="mb-3" id="<?= $itemIds['QUANTITY_LIMIT'] ?>"
+                                 style="display: none;">
+                                                        <span class="product-item-quantity"
+                                                              data-entity="quantity-limit-value"></span>
+                            </div>
+                        <?php } else {
+                            if ($measureRatio && (float)$actualItem['PRODUCT']['QUANTITY'] > 0
+                                && $actualItem['CHECK_QUANTITY']) { ?>
+                                <div class="mb-3 text-center"
+                                     id="<?= $itemIds['QUANTITY_LIMIT'] ?>">
+                                    <span class="product-item-detail-info-container-title"><?= $arParams['MESS_SHOW_MAX_QUANTITY'] ?>:</span>
+                                    <span class="product-item-quantity"
+                                          data-entity="quantity-limit-value">
+                                                                    <?php if ($arParams['SHOW_MAX_QUANTITY'] === 'M') {
+                                                                        if ((float)$actualItem['PRODUCT']['QUANTITY'] / $measureRatio >= $arParams['RELATIVE_QUANTITY_FACTOR']) {
+                                                                            echo $arParams['MESS_RELATIVE_QUANTITY_MANY'];
+                                                                        } else {
+                                                                            echo $arParams['MESS_RELATIVE_QUANTITY_FEW'];
+                                                                        }
+                                                                    } else {
+                                                                        echo $actualItem['PRODUCT']['QUANTITY'] . ' ' . $actualItem['ITEM_MEASURE']['TITLE'];
+                                                                    } ?>
+                                                                </span>
+                                </div>
+                                <?php
+                            }
                         }
+                    }
+                }
+                break;
+            case 'quantity':
+            if ($show_price) {
+            if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?>
+                <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
+                    <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
+                     data-entity="quantity-block">
+                    <div class="product-item-amount-field-contain mr-3">
+                                                    <span class="btn-minus no-select minus_icon add2basket basket_prod_detail"
+                                                          data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                          data-product_id="<?= $arResult['ID']; ?>"
+                                                          id="<?= $itemIds['QUANTITY_DOWN_ID'] ?>"
+                                                          data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>">
+                                                    </span>
+                        <div class="product-item-amount-field-block">
+                            <input class="product-item-amount card_element cat-det" id="<?= $itemIds['QUANTITY_ID'] ?>"
+                                   type="number" value="<?= $priceBasket ?>"
+                                   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                   data-product_id="<?= $arResult['ID']; ?>"
+                                   data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
+                        </div>
+                        <span class="btn-plus no-select plus_icon add2basket basket_prod_detail"
+                              data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                              data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
+                              data-product_id="<?= $arResult['ID']; ?>"
+                              id="<?= $itemIds['QUANTITY_UP_ID'] ?>"></span>
+                    </div>
+                    <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)" rel="nofollow"
+                       class="add2basket basket_prod_detail btn red_button_cart"
+                       data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>" data-product_id="<?= $arResult['ID']; ?>"
+                       title="Добавить в корзину">
+                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
+                    </a>
+                    <div id="result_box"></div>
+                    <div id="popup_mess"></div>
+                </div>
+                <div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
+                <div class="d-flex flex-lg-column flex-md-column flex-column-reverse">
+                    <div class="mb-4 d-flex align-items-center">
+                        <a href="#" class="link_prod_quant"><span>В наличии </span></a>
+                        <a href="#" class="ml-lg-5 ml-md-5 ml-3 link_prod"><span>Посмотреть наличие в магазинах</span>
+                        </a>
+                    </div>
+                    <?php }
+                    else { ?>
+                        <div class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center
+                                                     bx_catalog_item"
+                            <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
+                             data-entity="quantity-block">
+                            <div class="d-flex flex-row align-items-center mr-3">
+                                <div class="product-item-amount-field-contain">
+                                                                <span class=" no-select minus_icon add2basket basket_prod_detail mr-3"
+                                                                      style="pointer-events: none;">
+                                                                </span>
+                                    <div class="product-item-amount-field-block">
+                                        <input class="product-item-amount" id="<?= $itemIds['QUANTITY_ID'] ?>"
+                                               disabled="disabled" type="number" value="0">
+                                    </div>
+                                    <span class="no-select plus_icon add2basket basket_prod_detail ml-3"
+                                          style="pointer-events: none;">
+                                                                </span>
+                                </div>
+                                <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
+                                   rel="nofollow"
+                                   class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                                   <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?> detail_disabled"
+                                   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                   data-product_id="<?= $arResult['ID']; ?>"
+                                   title="Добавить в корзину">Забронировать</a>
+                            </div>
+                            <div id="result_box" style="width: 100%;position: absolute;"></div>
+                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>">
+                                <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : ''?>" aria-hidden="true"></i>
+                            </div>
+                            <div id="popup_mess" class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>"
+                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : ''?>"
+                                 data-product_id="<?= $arResult['ID']; ?>"></div>
+                        </div>
+                        <div class="mb-4 d-flex justify-content-between align-items-center">
+                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
+                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>">
+                            Нет в наличии
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    }
+                    break;
+                    }
                     } ?>
                     <div class="d-flex flex-column mb-2 box-offers-auto" data-entity="sku-line-block">
                         <?php
@@ -980,38 +980,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
     $offerIds = array();
     $offerCodes = array();
     $useRatio = $arParams['USE_RATIO_IN_RANGES'] === 'Y';
-    foreach ($arResult['SKU_PROPS'] as $skuProperty) {
-        if (!isset($arResult['OFFERS_PROP'][$skuProperty['CODE']])) {
-            continue;
-        }
 
-        $propertyId = $skuProperty['ID'];
-        $skuProps[] = array(
-            'ID' => $propertyId,
-            'SHOW_MODE' => $skuProperty['SHOW_MODE'],
-            'VALUES' => $skuProperty['VALUES'],
-            'VALUES_COUNT' => $skuProperty['VALUES_COUNT']
-        );
-    }
     foreach ($arResult['JS_OFFERS'] as $ind => &$jsOffer) {
-        $currentOffersList = array();
-
-        if (!empty($jsOffer['TREE']) && is_array($jsOffer['TREE'])) {
-            foreach ($jsOffer['TREE'] as $propName => $skuId) {
-                $propId = (int)substr($propName, 5);
-
-                foreach ($skuProps as $prop) {
-                    if ($prop['ID'] == $propId) {
-                        foreach ($prop['VALUES'] as $propId => $propValue) {
-                            if ($propId == $skuId) {
-                                $currentOffersList[] = $propValue['NAME'];
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
         $offerIds[] = (int)$jsOffer['ID'];
         $offerCodes[] = $jsOffer['CODE'];
 
@@ -1054,7 +1024,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
     $templateData['OFFER_CODES'] = $offerCodes;
     unset($jsOffer, $strAllProps, $strMainProps, $strPriceRanges, $strPriceRangesRatio, $useRatio);
 
-
     $jsParams = array(
         'CONFIG' => array(
             'USE_CATALOG' => $arResult['CATALOG'],
@@ -1095,12 +1064,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             'ID' => $arResult['ID'],
             'ACTIVE' => $arResult['ACTIVE'],
             'NAME' => $arResult['~NAME'],
-            'CATEGORY' => $arResult['CATEGORY_PATH'],
-            'CAN_BUY' => $arResult['CAN_BUY'],
-            'CHECK_QUANTITY' => $arResult['CHECK_QUANTITY'],
-            'QUANTITY_FLOAT' => is_float($arResult['ITEM_MEASURE_RATIOS'][$arResult['ITEM_MEASURE_RATIO_SELECTED']]['RATIO']),
-            'MAX_QUANTITY' => $arResult['PRODUCT']['QUANTITY'],
-            'STEP_QUANTITY' => $arResult['ITEM_MEASURE_RATIOS'][$arResult['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'],
+            'CATEGORY' => $arResult['CATEGORY_PATH']
         ),
         'BASKET' => array(
             'QUANTITY' => $arParams['PRODUCT_QUANTITY_VARIABLE'],

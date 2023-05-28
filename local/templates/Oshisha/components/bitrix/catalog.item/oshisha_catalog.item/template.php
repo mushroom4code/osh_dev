@@ -91,26 +91,6 @@ if (isset($arResult['ITEM'])) {
     }
 
     $price = $item['PRICES_CUSTOM'];
-//print_r($item['PROPERTIES']['DISKONT']);
-//    if ($USER->IsAuthorized()) {
-//        $userId = $USER->GetID();
-//
-//        $productSectionId = Enterego\UserPrice\UserPriceHelperOsh::GetSectionID($arResult['ITEM']['ID']);
-//        $priceId = Enterego\UserPrice\PluginStatic::GetPriceIdFromRule($item['ID'], $productSectionId, $userId);
-//
-//        if ($priceId) {
-//            $rsCustomPrice = PriceTable::getList(
-//                ['select' => ['*'],
-//                    'filter' => [
-//                        '=PRODUCT_ID' => $item['ID'],
-//                        '=CATALOG_GROUP_ID' => $priceId
-//                    ],
-//                ]);
-//            if ($arCustomPrice = $rsCustomPrice->Fetch()) {
-//                $price['PRICE_DATA']['PRICE'] = $arCustomPrice['PRICE'];
-//            }
-//        }
-//    }
 
     $showSlider = is_array($morePhoto) && count($morePhoto) > 1;
     $showSubscribe = $arParams['PRODUCT_SUBSCRIPTION'] === 'Y' && ($item['CATALOG_SUBSCRIBE'] === 'Y' || $haveOffers);
