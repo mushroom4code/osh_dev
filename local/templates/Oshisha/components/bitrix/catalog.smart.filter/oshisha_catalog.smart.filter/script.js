@@ -242,7 +242,7 @@ JCSmartFilter.prototype.addHorizontalFilter = function(checkbox)
 		BX(checkbox).checked = false;
 		this.countCheckboxFilter--
 		this.updateHorizontalFilter()
-		this.proxy();
+		this.proxy(false,idFilter );
 		return BX.PreventDefault(e);
 	});
 };
@@ -389,7 +389,7 @@ JCSmartFilter.prototype.postHandler = function (result, fromCache)
 	this.cacheKey = '';
 };
 
-JCSmartFilter.prototype.proxy = function(clearFilterAll = false)
+JCSmartFilter.prototype.proxy = function(clearFilterAll = false,urlFilter = '')
 {
 	BX.cleanNode(window.JCCatalogSectionComponentThis.container);
 
@@ -417,6 +417,17 @@ JCSmartFilter.prototype.proxy = function(clearFilterAll = false)
 			}
 		});
 		window.history.replaceState(null, null, url);
+	} else {
+		// // TODO
+		// console.log(url)
+		// let newUrl = url.search;
+		// console.log(url.search.indexOf(urlFilter+'=Y'))
+		// if(url.search.indexOf(urlFilter+'=Y')!== -1){
+		// 	url.search = url.search.replace( urlFilter+'=Y&', '');
+		// }
+		// console.log(newUrl)
+		// window.history.replaceState(null, null, newUrl);
+		// // TODO
 	}
 	for (var i = 0; i < values.length; i++)
 		data[values[i].name] = values[i].value;
@@ -424,6 +435,7 @@ JCSmartFilter.prototype.proxy = function(clearFilterAll = false)
 	if (this.sectionCode) {
 		data['subcat'] = this.sectionCode;
 	}
+	window.history.replaceState(null, null, url);
 	window.JCCatalogSectionComponent.prototype.sendRequestRefreshCatalog.call(window.JCCatalogSectionComponentThis, data);
 	return false;
 };
