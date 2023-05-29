@@ -2961,35 +2961,45 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.js__taste ', function() {
-        let taste = this,
-            tasteCheckId = $(this).attr('data-filter-get'),
+        let tasteCheckId = $(this).attr('data-filter-get'),
             otherTastesFilters = $(this).attr('data-prop-id');
         // Сбрасываем повторную фильтрацию по уже выбранному вкусу
         if (BX(tasteCheckId).checked) {
-            BX.insertAfter(
-                BX.create({
-                    tag: 'span',
-                    props: {
-                        className: "taste-errors"
-                    },
-                    text: 'Вкус уже выбран'
-                }),
-                taste
-            );
-
-            setTimeout(BX.delegate(
-                function() {
-                    $(taste).next('.taste-errors').fadeOut(
-                        'slow',
-                        function () {
-                            this.remove()
-                        })
-                }),
-                2000
-            );
             return;
         }
         // кроме чекбоксов в форме, надо сбросить метки горизонтального фильтра
+
+        //
+        // let taste = this,
+        //     tasteCheckId = $(this).attr('data-filter-get'),
+        //     otherTastesFilters = $(this).attr('data-prop-id');
+        // // Сбрасываем повторную фильтрацию по уже выбранному вкусу
+        // if (BX(tasteCheckId).checked) {
+        //     BX.insertAfter(
+        //         BX.create({
+        //             tag: 'span',
+        //             props: {
+        //                 className: "taste-errors"
+        //             },
+        //             text: 'Вкус уже выбран'
+        //         }),
+        //         taste
+        //     );
+        //
+        //     setTimeout(BX.delegate(
+        //             function() {
+        //                 $(taste).next('.taste-errors').fadeOut(
+        //                     'slow',
+        //                     function () {
+        //                         this.remove()
+        //                     })
+        //             }),
+        //         2000
+        //     );
+        //     return;
+        // }
+        // // кроме чекбоксов в форме, надо сбросить метки горизонтального фильтра
+
         $('#VKUS').find('.check_input').prop('checked', false);
         $('#'+tasteCheckId).prop('checked', true);
         document.querySelectorAll('.' + otherTastesFilters).forEach(el => el.remove());
