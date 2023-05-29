@@ -22,34 +22,24 @@
 }
 
 .map_for_delivery {
-    width: 100%;
-    /*height: 600px;*/
-    height: 100%;
-    padding: 7em 0 1em;
-    margin-top: -7em;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
+
 @media screen and (max-width: 768px) {
     .map_for_delivery {
         padding: 3.5em 0 1em;
         margin-top: 0;
     }
 }
-.map_for_delivery .pickpoints-list,
+
 .map_for_delivery .deliveries-list {
-    height: 82%;
-    height: 100%;
-    overflow-y: scroll;
-    padding: 0 2em;
-    order: 1;
-    margin: 2em 0;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
 }
-.map_for_delivery .deliveries-list {
-    margin: 4em 0;
-}
+
 @media screen and (max-width: 768px) {
     .map_for_delivery .deliveries-list {
         margin: 1em 0;
@@ -226,12 +216,12 @@ h4.checkout-block-title > i.fa {
 }
 .wrap_pvz_overlay .wrap_pvz_map {
     position: relative;
+    display: flex;
+    flex-direction: column;
     background: #fff;
     width: 95%;
     height: 85%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    margin: auto;
 }
 @media screen and (max-width: 768px) {
     .wrap_pvz_overlay .wrap_pvz_map {
@@ -276,14 +266,12 @@ h4.checkout-block-title > i.fa {
         z-index: 100;
     }
 }
+
 .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data {
-    position: static;
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
     border-bottom: 0.05em solid #d3d3d3;
-    order: 2;
 }
+
 @media screen and (max-width: 768px) {
     .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data {
         flex-direction: column;
@@ -436,16 +424,13 @@ h4.checkout-block-title > i.fa {
 .show-map-btn:hover {
     background-color: #DD0602;
 }
-.map_for_delivery.list {
-    display: flex;
-    flex-direction: column;
-}
+
 .map_for_delivery .pickpoint-item {
     display: block;
-    width: 100%;
-    margin: 0 0 2em 0;
+    margin: 0 0 18px 0;
     cursor: pointer;
 }
+
 .map_for_delivery .pickpoint-item .top-row {
     display: flex;
     align-items: center;
@@ -462,27 +447,7 @@ h4.checkout-block-title > i.fa {
         flex-wrap: wrap;
     }
 }
-.map_for_delivery .pickpoint-item .top-row .pvz-radio-btn {
-    font-size: 1.5em;
-    margin: 0 0.5em 0 0;
-}
-.map_for_delivery .pickpoint-item .top-row .pvz-name,
-.map_for_delivery .pickpoint-item .top-row .pvz-cost {
-    display: inline-block;
-    font-size: 1.143em;
-    font-weight: bold;
-    margin: 0 2em 0 0;
-}
-.map_for_delivery .pickpoint-item .top-row .pvz-cost {
-    color: #F55F5C;
-}
-.map_for_delivery .pickpoint-item .bottom-row .pvz-address {
-    width: 100%;
-    display: inline-block;
-    max-width: 40em;
-    min-width: 23em;
-    flex: none;
-}
+
 .map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime {
     padding: 0 2em;
     display: inline-block;
@@ -493,28 +458,6 @@ h4.checkout-block-title > i.fa {
     align-items: flex-start;
     justify-content: flex-start;
     flex-wrap: wrap;
-}
-
-.map_for_delivery .pickpoint-item .bottom-row .pvz-worktime {
-    width: 100%;
-    max-width: 55em;
-    min-width: 23em;
-    flex: none;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-}
-.map_for_delivery .pickpoint-item .bottom-row .pvz-worktime .worktime-title,
-.map_for_delivery .pickpoint-item .bottom-row .pvz-worktime .worktime-shedule,
-.map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime .deliverytime-title,
-.map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime .deliverytime-value {
-    display:block;
-    width: 100%;
-}
-.map_for_delivery .pickpoint-item .bottom-row .pvz-worktime .worktime-title,
-.map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime .deliverytime-title {
-    font-weight: 500;
 }
 
 .map_for_delivery.list > .btn.btn_basket {
@@ -637,13 +580,6 @@ h4.checkout-block-title > i.fa {
     text-align: center;
 }
 
-.deliveries-list {
-    display: block;
-    width: 100%;
-    height: 90%;
-    overflow-y: scroll;
-    order: 1;
-}
 .user-address-wrap {
     display: flex;
     align-items: center;
