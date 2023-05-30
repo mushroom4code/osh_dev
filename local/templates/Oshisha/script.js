@@ -2962,24 +2962,14 @@ $(document).ready(function () {
 
     $(document).on('click', '.js__taste ', function() {
         let tasteCheckId = $(this).attr('data-filter-get'),
-            taste = this;
+            taste =  $(this).closest('.js__tastes');
         // Сбрасываем повторную фильтрацию по уже выбранному вкусу
 
         if (BX(tasteCheckId).checked) {
-            BX.insertAfter(
-                BX.create({
-                    tag: 'span',
-                    props: {
-                        className: "taste-errors"
-                    },
-                    text: 'Вкус уже выбран'
-                }),
-                taste
-            );
-
+            $(taste).append('<span class="taste-errors">Вкус уже выбран</span>');
             setTimeout(BX.delegate(
                     function() {
-                        $(taste).next('.taste-errors').fadeOut(
+                        $(taste).find('.taste-errors').fadeOut(
                             'slow',
                             function () {
                                 this.remove()
