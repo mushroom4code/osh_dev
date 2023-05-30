@@ -297,6 +297,19 @@ class DeliveryHelper
         return ['status'=>'success'];
     }
 
+    /** Обновляет региональные ограничения для курьерской доставки oshisha
+     * @return string[]
+     */
+    public static function updateOshishaRegionRestrictions(): array
+    {
+        try {
+            OshishaDelivery::updateOshishaRegionRestrictions();
+        } catch (\Exception $e) {
+            return ['status'=>'failed', 'error' => $e->getMessage()];
+        }
+        return ['status'=>'success'];
+    }
+
     public static function getAllPVZ($deliveries, $city_name, $codeCity, $packages)
     {
         $id_feature = 0;

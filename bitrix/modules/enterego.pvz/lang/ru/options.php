@@ -62,6 +62,7 @@ $MESS['OSH_SETTINGS_DA_DATA_HINT'] = 'Ключ сервиса геокодиро
 $MESS['OSH_SETTINGS_COST'] = 'Стоимость 1км за пределами МКАД';
 $MESS['OSH_SETTINGS_TIME_DELIVERY_DAY'] = 'Дневная доставка';
 $MESS['OSH_SETTINGS_TIME_DELIVERY_NIGHT'] = 'Ночная доставка';
+$MESS['OSH_REGION_RESTRICTIONS'] = 'Установить/обновить региональные ограничения для курьерской доставки';
 
 
 $MESS["EE_PVZ_OPTIONS_INPUT_APPLY"] = "Сохранить";
