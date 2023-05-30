@@ -139,7 +139,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </a>
             </div>
             <div class="container_header flex_header">
-                <div class="box_with_city flex_header col-5 pl-0">
+                <div class="box_with_city flex_header col-4 pl-0">
                     <span class="d-flex flex-row align-items-center">
                         <img src="/local/assets/images/icon_location.svg" class="icon_location">
                         <a href="#" class="text_header">
@@ -185,9 +185,13 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
                         отзыв</a>
                 </div>
-                <div class="box_with_menu_header flex_header flex_header_right col-7 pr-0">
+                <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
-                    <?php if ($USER->IsAuthorized()) { ?>
+
+                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentaion.pdf')) { ?>
+                        <a href="/local/templates/Oshisha/images/presentaion.pdf" download class="text_header ">Презентация</a>
+                    <?php }
+                    if ($USER->IsAuthorized()) { ?>
                         <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
                     <?php } else { ?>
                         <a href="/login/" class="text_header ">Прайс-лист</a>
@@ -234,6 +238,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 <a href="/about/o-nas/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">О нас</span>
                                 </a>
+                                <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentaion.pdf')) { ?>
+                                    <a href="/local/templates/Oshisha/images/presentaion.pdf" download
+                                       class="text_header ">Презентация</a>
+                                <?php } ?>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
                                 </a>
