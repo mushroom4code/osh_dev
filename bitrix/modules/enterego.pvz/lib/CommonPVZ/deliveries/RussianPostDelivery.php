@@ -259,11 +259,11 @@ class RussianPostDelivery extends CommonPVZ
                 $TariffCalculation = new \LapayGroup\RussianPost\TariffCalculation();
 
                 if ($array['type_pvz'] === 'POSTAMAT') {
-                    $objectId = 23090;
+                    $objectId = 23080;
                     $calcInfo = $TariffCalculation->calculate($objectId, $params);
                     $finalPrice = $calcInfo->getGroundNds();
                 } else {
-                    $objectId = 23020;
+                    $objectId = 23030;
                     $calcInfo = $TariffCalculation->calculate($objectId, $params);
                     $finalPrice = $calcInfo->getGroundNds();
                 }
