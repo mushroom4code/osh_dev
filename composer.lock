@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9172ad3908eba9319b3c7af0a509b7e",
+    "content-hash": "1989fba9bf59add3c37f843951b9e89a",
     "packages": [
         {
             "name": "cdek-it/sdk2.0",
@@ -1093,6 +1093,7 @@
                 "issues": "https://github.com/php-http/message-factory/issues",
                 "source": "https://github.com/php-http/message-factory/tree/master"
             },
+            "abandoned": "psr/http-factory",
             "time": "2015-12-19T14:08:53+00:00"
         },
         {
