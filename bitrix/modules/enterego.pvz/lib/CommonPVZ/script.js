@@ -739,24 +739,6 @@ BX.SaleCommonPVZ = {
     },
 
     /**
-     * Получение и перезаполнение цены для определенного ПВЗ
-     * @param point
-     * @param currentItemNode
-     */
-    getPvzItemPrice: function (point, currentItemNode) {
-        const __this = this;
-        const data = [this.getPointData(point)]
-
-        const afterSuccess = function (res) {
-            const curPoint = BX.SaleCommonPVZ.pvzObj.features.find(feature => feature.id == res[0].id)
-            BX.cleanNode(currentItemNode)
-            __this.buildPvzItemSelectRow(curPoint, currentItemNode)
-            BX.Sale.OrderAjaxComponent.endLoader()
-        }
-        this.getRequestGetPvzPrice(data, afterSuccess)
-    },
-
-    /**
      * Отправка запроса на получение и вызов соответствующего обработчика
      * @param data
      * @param afterSuccess
@@ -1362,7 +1344,42 @@ BX.SaleCommonPVZ = {
             },
         })
 
-        this.buildPvzItemSelectRow(el, deliveryTopRowNode)
+        //checkbox
+        BX.append(
+            BX.create({
+                tag: 'input',
+                props: {
+                    type: 'radio',
+                    id: el.id,
+                    name: 'pvz',
+                },
+                events: {
+                    change: BX.proxy(function (e) {
+                        BX.adjust(
+                            BX('select-pvz-item'),
+                            {
+                                dataset: {
+                                    pvzid: el.id
+                                }
+                            }
+                        )
+                    })
+                }
+            }), deliveryTopRowNode
+        )
+
+        //delivery name
+        BX.append(
+            BX.create({
+                tag: 'span',
+                props: {
+                    className: 'font-weight-bold ml-2'
+                },
+                text: el.properties.deliveryName
+            }), deliveryTopRowNode
+        )
+
+        this.buildPvzItemPrice(el, deliveryTopRowNode)
 
         BX.append(
             BX.create({
@@ -1438,42 +1455,7 @@ BX.SaleCommonPVZ = {
         )
     },
 
-    buildPvzItemSelectRow: function (el, deliveryTopRowNode) {
-        //checkbox
-        BX.append(
-            BX.create({
-                tag: 'input',
-                props: {
-                    type: 'radio',
-                    id: el.id,
-                    name: 'pvz',
-                },
-                events: {
-                    change: BX.proxy(function (e) {
-                        BX.adjust(
-                            BX('select-pvz-item'),
-                            {
-                                dataset: {
-                                    pvzid: el.id
-                                }
-                            }
-                        )
-                    })
-                }
-            }), deliveryTopRowNode
-        )
-
-        //delivery name
-        BX.append(
-            BX.create({
-                tag: 'span',
-                props: {
-                    className: 'font-weight-bold ml-2'
-                },
-                text: el.properties.deliveryName
-            }), deliveryTopRowNode
-        )
-
+    buildPvzItemPrice: function (el, deliveryTopRowNode) {
         if (el.properties?.price  === undefined) {
             //delivery name
             BX.append(
@@ -1487,8 +1469,15 @@ BX.SaleCommonPVZ = {
                     events: {
                         click: BX.proxy(function (e) {
                             BX.Sale.OrderAjaxComponent.startLoader()
-                            const parentNode = BX.findParent(e.target, {tag: 'div'})
-                            this.getPvzItemPrice(el, parentNode)
+                            const data = [this.getPointData(el)]
+                            const afterSuccess = function (res) {
+                                const curPoint = BX.SaleCommonPVZ.pvzObj.features.find(feature => feature.id == res[0].id)
+                                const parentNode = BX.findParent(e.target, {tag: 'div'})
+                                BX.remove(e.target)
+                                this.buildPvzItemPrice(curPoint, parentNode)
+                                BX.Sale.OrderAjaxComponent.endLoader()
+                            }.bind(this)
+                            this.getRequestGetPvzPrice(data, afterSuccess)
                         }.bind(this))
 
                     }
