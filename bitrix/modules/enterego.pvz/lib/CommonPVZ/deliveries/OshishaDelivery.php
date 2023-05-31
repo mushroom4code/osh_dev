@@ -36,13 +36,19 @@ class OshishaDelivery extends CommonPVZ
 //        'quantity_override'
     );
 
-    public static function checkMoscowOrNot($locationCode) {
+    public static function checkMoscowOrNot($locationCode)
+    {
         $result = DeliveryLocationTable::checkConnectionExists(DOOR_DELIVERY_ID, $locationCode,
             array(
                 'LOCATION_LINK_TYPE' => 'AUTO'
             )
         );
         return $result;
+    }
+
+    public static function updateOshishaRegionRestrictions() {
+        $arLocation = ["L" => ["0000028025","0000073738"]];
+        DeliveryLocationTable::resetMultipleForOwner(DOOR_DELIVERY_ID, $arLocation);
     }
 
     public static function getDeliveryStatus() {

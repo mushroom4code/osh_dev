@@ -28,6 +28,8 @@ switch ($action) {
         exit(json_encode(DeliveryHelper::updateRussianPostPVZ()));
     case 'updateFivePostPoints':
         exit(json_encode(DeliveryHelper::updateFivePostPVZ()));
+    case 'updateOshishaRegionRestrictions':
+        exit(json_encode(DeliveryHelper::updateOshishaRegionRestrictions()));
     case 'getPVZList':
         $deliveries = DeliveryHelper::getActivePvzDeliveryInstance(array('codeCity' => $codeCity));
         $response  = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity, $packages));
