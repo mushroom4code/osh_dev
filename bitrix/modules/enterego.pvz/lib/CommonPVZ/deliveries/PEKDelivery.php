@@ -7,6 +7,8 @@ use Bitrix\Main\Config\Option;
 
 class PEKDelivery extends CommonPVZ
 {
+    public string $delivery_code = 'PEK';
+
     public string $delivery_name = 'PEK';
 
     public static function getDeliveryStatus() {

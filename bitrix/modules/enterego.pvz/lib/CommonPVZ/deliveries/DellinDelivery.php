@@ -7,6 +7,8 @@ use Bitrix\Main\Config\Option;
 
 class DellinDelivery extends CommonPVZ
 {
+    public string $delivery_code = 'Dellin';
+
     public string $delivery_name = 'Dellin';
     private $dellin_cache_id = 'dellin_delivery_prices';
     private string $api_key;

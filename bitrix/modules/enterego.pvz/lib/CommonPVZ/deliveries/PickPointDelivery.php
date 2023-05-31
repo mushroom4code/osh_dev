@@ -13,6 +13,8 @@ use PickPointSdk\Components\ReceiverDestination;
 
 class PickPointDelivery extends CommonPVZ
 {
+    public string $delivery_code = 'PickPoint';
+
     public string $delivery_name = 'PickPoint';
 
     public static function getDeliveryStatus() {

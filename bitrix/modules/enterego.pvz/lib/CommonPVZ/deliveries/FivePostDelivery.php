@@ -9,6 +9,7 @@ use function Sodium\add;
 
 class FivePostDelivery extends CommonPVZ
 {
+    public string $delivery_code = 'FivePost';
 
     public string $delivery_name = 'FivePost';
     private $fivepost_cache_id = 'fivepost_delivery_prices';

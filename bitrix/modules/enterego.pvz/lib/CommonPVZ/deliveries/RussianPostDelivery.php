@@ -12,13 +12,14 @@ use Sale\Handlers\DiscountPreset\Delivery;
 class RussianPostDelivery extends CommonPVZ
 {
     public string $delivery_name = 'RussianPost';
-    public string $delivery_type = '';
+    public string $delivery_code = 'RussianPost';
     private string $russian_post_id_postfix = '_delivery_price';
 
     public function __construct(string $delivery_type = 'RussianPost')
     {
         parent::__construct();
-        $this->delivery_type = $delivery_type;
+        $this->delivery_code = $delivery_type;
+
         switch ($delivery_type) {
                 case 'RussianPost':
                     $this->delivery_name = 'Почта России';
@@ -244,7 +245,7 @@ class RussianPostDelivery extends CommonPVZ
                 $hash_string = md5(implode('', $hashed_values));
 
                 $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-                if ($cache->initCache(3600, $this->delivery_type.$this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
+                if ($cache->initCache(3600, $this->delivery_code.$this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
                     $cached_vars = $cache->getVars();
                     if (!empty($cached_vars)) {
                         foreach ($cached_vars as $varKey => $var) {
@@ -287,7 +288,7 @@ class RussianPostDelivery extends CommonPVZ
             try {
                 if (!empty($params['fias'])) {
                     $objectId = false;
-                    switch ($this->delivery_type) {
+                    switch ($this->delivery_code) {
                         case 'RussianPostEms':
                             $objectId = 7020;
                             break;
@@ -310,7 +311,7 @@ class RussianPostDelivery extends CommonPVZ
                     $hash_string = md5(implode('', $hashed_values));
 
                     $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-                    if ($cache->initCache(3600, $this->delivery_type . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
+                    if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
                         $cached_vars = $cache->getVars();
                         if (!empty($cached_vars)) {
                             foreach ($cached_vars as $varKey => $var) {
@@ -321,7 +322,7 @@ class RussianPostDelivery extends CommonPVZ
                         }
                     }
 
-                    if ($this->delivery_type === 'RussianPostEms') {
+                    if ($this->delivery_code === 'RussianPostEms') {
                         $params['group'] = 0;
                     }
 

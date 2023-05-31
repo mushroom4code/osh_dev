@@ -437,28 +437,6 @@ h4.checkout-block-title > i.fa {
     justify-content: flex-start;
     margin: 0 0 0.6em 0;
 }
-.map_for_delivery .pickpoint-item .bottom-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-@media screen and (max-width: 768px) {
-    .map_for_delivery .pickpoint-item .bottom-row {
-        flex-wrap: wrap;
-    }
-}
-
-.map_for_delivery .pickpoint-item .bottom-row .pvz-deliverytime {
-    padding: 0 2em;
-    display: inline-block;
-    flex: none;
-    width: 20em;
-    text-align: center;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-}
 
 .map_for_delivery.list > .btn.btn_basket {
     width: 22em;
@@ -521,63 +499,6 @@ h4.checkout-block-title > i.fa {
 .recent-deliveries-wrap .recent-profiles .recent-profile .recent-profile-address {
     font-size: 0.75em;
     margin: 0.6em 0 0 0;
-}
-
-
-.courier-delivery {
-    padding: 0.5em 2em;
-    margin: 0 0 1em 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-direction: column;
-    width: 100%;
-    order: 5;
-}
-.courier-delivery.oshisha {
-    order: 1;
-}
-.courier-delivery .top-row,
-.courier-delivery .bottom-row {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.courier-delivery .top-row > input {
-    width: 1.1667em;
-    height: 1.1667em;
-    margin: 0 1em 0 0;
-}
-.courier-delivery .top-row .courier-delivery-name {
-    font-size: 1.1425em;
-    font-weight: 500;
-    margin: 0 3em 0 0;
-    width: 20em;
-}
-@media screen and (max-width: 768px) {
-    .courier-delivery .top-row .courier-delivery-name {
-        width: 9em;
-        justify-content: space-between;
-    }
-}
-.courier-delivery .top-row .courier-delivery-price {
-    font-size: 1.1425em;
-    font-weight: 500;
-    color: #F55F5C;
-}
-.courier-delivery .bottom-row .delivery-address {
-    max-width: 40em;
-    min-width: 23em;
-    width: 100%;
-    flex: none;
-}
-.courier-delivery .bottom-row .delivery-time {
-    padding: 0 2em;
-    flex: none;
-    width: 20em;
-    text-align: center;
 }
 
 .user-address-wrap {

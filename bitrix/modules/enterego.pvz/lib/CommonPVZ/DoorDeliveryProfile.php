@@ -101,7 +101,7 @@ class DoorDeliveryProfile extends Base
             foreach ($deliveries as $delivery) {
                 $price = $delivery->getPriceDoorDelivery($deliveryParams);
 
-                if ($currentDelivery===$delivery->delivery_name) {
+                if ($currentDelivery===$delivery->delivery_code) {
                     $result->setDeliveryPrice(
                         roundEx(
                             $price,
