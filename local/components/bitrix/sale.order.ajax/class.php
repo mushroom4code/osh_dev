@@ -738,6 +738,8 @@ class SaleOrderAjax extends \CBitrixComponent
                 if (!empty($zip)) {
                     $curVal = $zip;
                 }
+            } elseif ($property['IS_ZIP'] === 'Y' && !empty($curVal)) {
+                $this->arUserResult['ZIP_PROPERTY_CHANGED'] = 'Y';
             } elseif ($property['IS_PHONE'] === 'Y' && !empty($curVal)) {
                 $curVal = $this->getNormalizedPhone($curVal);
             }
@@ -5547,6 +5549,8 @@ class SaleOrderAjax extends \CBitrixComponent
                     $this->arParams['USER_CONSENT_ID'], 'sale/order', $arResult['ORDER_ID']
                 );
             }
+
+            \CommonPVZ\SavedDeliveryProfiles::save($this->order);
 
             $fUserId = Sale\Fuser::getId();
             $siteId = $this->getSiteId();

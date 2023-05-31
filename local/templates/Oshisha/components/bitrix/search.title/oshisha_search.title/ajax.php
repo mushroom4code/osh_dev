@@ -1,15 +1,12 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php
+
+if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 if (empty($arResult["CATEGORIES"]))
     return;
+
 ?>
 <div tabindex="0" id="search_results_container" class="bx_searche">
-    <?
-    foreach ($arResult['ELEMENTS'] as $product_id => $product) {
-        $db_props = CIBlockElement::GetProperty($product['IBLOCK_ID'], $product['ID'], array("sort" => "asc"), Array("CODE"=>"USE_DISCOUNT"));
-        if($ar_props = $db_props->Fetch()) {
-            $arResult['ELEMENTS'][$product_id]['USE_DISCOUNT'] = $ar_props['VALUE_ENUM'];
-        }
-    }
+    <?php
     $dbStatistic = CSearchStatistic::GetList(
             array("TIMESTAMP_X"=>'DESC'),
             array("STAT_SESS_ID" => $_SESSION['SESS_SESSION_ID']),
@@ -66,8 +63,20 @@ if (empty($arResult["CATEGORIES"]))
                     </div>
                     <div style="clear:both;"></div>
                 </div>
-            <?elseif(isset($arResult["ELEMENTS"][$arItem["ITEM_ID"]])):
-                $arElement = $arResult["ELEMENTS"][$arItem["ITEM_ID"]];?>
+            <?php elseif(isset($arResult["ELEMENTS"][$arItem["ITEM_ID"]])):
+
+                $arElement = $arResult["ELEMENTS"][$arItem["ITEM_ID"]];
+                if (!empty($arElement['PRICES_CUSTOM']['USER_PRICE']['VALUE'])) {
+                    $specialPrice = $arElement['PRICES_CUSTOM']['USER_PRICE'];
+                }
+
+                if (!empty($arElement['PRICES_CUSTOM']['SALE_PRICE']['VALUE'])
+                    && ( !isset($specialPrice) || $arElement['PRICES_CUSTOM']['SALE_PRICE']['VALUE'] < $specialPrice['VALUE'])) {
+
+                    $specialPrice = $arElement['PRICES_CUSTOM']['SALE_PRICE'];
+                }
+
+            ?>
                 <div class="bx_item_block" onclick="window.location='<?= $arItem["URL"]?>';">
                     <?if (is_array($arElement["PICTURE"])):?>
                         <div class="bx_img_element">
@@ -94,31 +103,28 @@ if (empty($arResult["CATEGORIES"]))
                     <div class="d-flex flex-column prices-block">
                         <p>
                             <span class="font-14 mr-2">Розничная (до 10к)</span> -
-                            <span class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
-                                <?= $arElement['PRICES']['Розничная']['PRINT_VALUE_VAT'] ?></span>
+                            <span class="font-14 ml-2">
+                                <?= $arElement['PRICES']['Розничная']['PRINT_VALUE'] ?></span>
                         </p>
                         <p>
                             <span class="font-14 mr-2">Основная (до 30к)</span> -
-                            <span class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
-                                <?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?></span>
+                            <span class="font-14 ml-2">
+                                <?= $arElement['PRICES']['Основная']['PRINT_VALUE'] ?></span>
                         </p>
                         <p>
                             <span class="font-14 mr-2">b2b (от 30к)</span> -
-                            <span class="font-14 ml-2 <?= ($arElement['USE_DISCOUNT'] == 'Да') ? 'price-discount' : '' ?>">
-                                <?= $arElement['PRICES']['b2b']['PRINT_VALUE_VAT'] ?></span>
+                            <span class="font-14 ml-2">
+                                <?= $arElement['PRICES']['b2b']['PRINT_VALUE'] ?></span>
                         </p>
                     </div>
                     <div class="old_and_current_prices_block">
-                        <div style="<?= ($arElement['USE_DISCOUNT'] == 'Нет') ? 'display: none' : '' ?>"
-                             class="product-item-detail-price-current"
-                             id="<?= $arElement['PRICE_ID'] ?>">
-                            <?= ($arElement['USE_DISCOUNT'] == 'Да') ?
-                                $arElement['PRICES']['Сайт скидка']['PRINT_VALUE_VAT'] :
-                                $arElement['PRICES']['Основная']['PRINT_VALUE_VAT']?>
-                        </div>
-                        <?if ($arElement['USE_DISCOUNT'] == 'Да'):?>
-                            <span class="span">Старая цена <?= $arElement['PRICES']['Основная']['PRINT_VALUE_VAT'] ?></span>
-                        <?endif;?>
+                        <?php if(!empty($specialPrice)) { ?>
+                            <div class="product-item-detail-price-current"
+                                 id="<?= $arElement['PRICE_ID'] ?>">
+                                <?= $specialPrice['PRINT_VALUE'] ?>
+                            </div>
+                            <span class="span">Старая цена <?= $arElement['PRICES_CUSTOM']['PRICE_DATA'][0]['PRINT_VALUE_VAT'] ?></span>
+                        <?php } ?>
                     </div>
                     <?if ($arElement['CATALOG_QUANTITY'] > 0):?>
                         <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"

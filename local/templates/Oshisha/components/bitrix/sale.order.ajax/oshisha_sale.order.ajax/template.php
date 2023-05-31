@@ -22,10 +22,6 @@ use Bitrix\Sale\PropertyValueCollection;
 $context = Application::getInstance()->getContext();
 $request = $context->getRequest();
 
-$this->addExternalJs('/bitrix/js/osh.shipping/jquery.suggestions.min.js');
-$this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css');
-CJSCore::Init(array("osh_pickup"));
-
 if (!isset($arParams['SHOW_ORDER_BUTTON'])) {
     $arParams['SHOW_ORDER_BUTTON'] = 'final_step';
 }
@@ -238,7 +234,8 @@ if ($useDefaultMessages || !isset($arParams['MESS_PAY_SYSTEM_PAYABLE_ERROR'])) {
     $arParams['MESS_PAY_SYSTEM_PAYABLE_ERROR'] = Loc::getMessage('PAY_SYSTEM_PAYABLE_ERROR_DEFAULT');
 }
 
-$scheme = $request->isHttps() ? 'https' : 'http';
+//$scheme = $request->isHttps() ? 'https' : 'http';
+$scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
 
 switch (LANGUAGE_ID) {
     case 'ru':
@@ -286,6 +283,9 @@ if ($request->get('ORDER_ID') <> '') {
         $user_object->USER_ID = $USER->GetID();
         $user_object->GetCompanyForUser();
         $user_object->GetActiveContrAgentForUserForOrder();
+        $savedDeliveryProfiles = \CommonPVZ\SavedDeliveryProfiles::getAll($user_object->USER_ID);
+    } else {
+        $savedDeliveryProfiles = false;
     }
     ?>
 
@@ -660,18 +660,6 @@ if ($request->get('ORDER_ID') <> '') {
         }
     }
 
-    //OSH DELIVERY OPT
-    $arResult['DELIVERY_OPTIONS']['PERIOD_DELIVERY'] = $PeriodDelivery;
-    $arResult['DELIVERY_OPTIONS']['DA_DATA_TOKEN'] = Osh\Delivery\Options\Config::getDaDataToken();
-    $arResult['DELIVERY_OPTIONS']['YA_API_KEY'] = Osh\Delivery\Options\Config::getYMapsKey();
-    $arResult['DELIVERY_OPTIONS']['DELIVERY_COST'] = Osh\Delivery\Options\Config::getCost();
-    $arResult['DELIVERY_OPTIONS']['START_COST'] = Osh\Delivery\Options\Config::getStartCost();
-    $arResult['DELIVERY_OPTIONS']['LIMIT_BASKET'] = Osh\Delivery\Options\Config::getLimitBasket();
-    $arResult['DELIVERY_OPTIONS']['CURRENT_BASKET'] = $arResult['ORDER_PRICE'];
-    $arResult['DELIVERY_OPTIONS']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
-
-    $arResult['DELIVERY_OPTIONS']['OSH_COURIER_ID'] = 93;
-    $arResult['DELIVERY_OPTIONS']['OSH_PICKUP_ID'] = 40;
     $arParams['AR_DELIVERY_PICKUP'] = AR_DELIVERY_PICKUP;
     ?>
     <script>
@@ -716,6 +704,7 @@ if ($request->get('ORDER_ID') <> '') {
             result: <?=CUtil::PhpToJSObject($arResult['JS_DATA'])?>,
             deliveryOptions: <?=CUtil::PhpToJSObject($arResult['DELIVERY_OPTIONS'])?>,
             locations: <?=CUtil::PhpToJSObject($arResult['LOCATIONS'])?>,
+            savedDeliveryProfiles: <?=CUtil::PhpToJSObject($savedDeliveryProfiles)?>,
             params: <?=CUtil::PhpToJSObject($arParams)?>,
             signedParamsString: '<?=CUtil::JSEscape($signedParams)?>',
             siteID: '<?=CUtil::JSEscape($component->getSiteId())?>',

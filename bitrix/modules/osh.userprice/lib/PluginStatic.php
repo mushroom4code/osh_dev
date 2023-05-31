@@ -4,6 +4,7 @@ namespace Enterego\UserPrice;
 
 use Bitrix\Main\Application;
 use Bitrix\Main\Db\SqlQueryException;
+use CIBlockElement;
 use Exception;
 
 class PluginStatic
@@ -30,74 +31,6 @@ class PluginStatic
             $db->query($sql);
             return true;
         } catch (\Exception $ex) {
-        }
-
-        return false;
-    }
-
-    /**
-     * Поиск специально установленной (индивидуальной цены) для пользователя
-     * в контексте ID продукта и его группы товаров.
-     *
-     * @param int|string|null $productId ID товара правила
-     * @param int|string|null $IBLOCK_SECTION_ID ID категории правила
-     * @param int|string $USER_ID ID пользователя правила
-     * @return false|int            Возвращает CATALOG_PRICE_ID (если найден)
-     * @throws SqlQueryException
-     */
-    public static function GetPriceIdFromRule($productId, $IBLOCK_SECTION_ID = null, $USER_ID = null)
-    {
-        if(!$USER_ID)
-        {
-            global $USER;
-            $USER_ID = $USER->GetID();
-        }
-        $USER_ID = intval($USER_ID);
-        if(!$USER_ID) {
-            return false;
-        }
-
-        $db = Application::getConnection();
-        if (!empty($productId)) {
-            $sql = "SELECT rule.catalog_price_id               
-                    FROM `ent_user_price_rule` rule
-                    WHERE
-                        rule.`user_id` = {$USER_ID}
-                        AND rule.`product_id` = $productId   
-                    LIMIT 1";
-
-            $res = $db->query($sql);
-
-            if($arRes = $res->fetch())
-            {
-                if($price_id = intval($arRes['catalog_price_id'])) {
-                    return $price_id;
-                }
-            }
-        }
-
-        if (!$IBLOCK_SECTION_ID)
-        {
-            $IBLOCK_SECTION_ID = UserPriceHelperOsh::GetSectionID($productId);
-        }
-
-        if($IBLOCK_SECTION_ID) {
-
-            $sql = "SELECT rule.catalog_price_id              
-                FROM `ent_user_price_rule` rule
-                WHERE
-                    rule.`user_id` = {$USER_ID}
-                    AND rule.`iblock_section_id` = {$IBLOCK_SECTION_ID}
-                LIMIT 1";
-
-            $res = $db->query($sql);
-
-            if($arRes = $res->fetch())
-            {
-                if($price_id = intval($arRes['catalog_price_id'])) {
-                    return $price_id;
-                }
-            }
         }
 
         return false;
@@ -297,10 +230,12 @@ class PluginStatic
      * Выбросить исключение или иным образом завалить импорт.
      *
      * @param string $message
-     * @throws Exception
+     * @param \CSaleOrderLoader|null $loader
      */
-    public static function _FailImport(string $message)
+    public static function _FailImport(string $message, \CSaleOrderLoader $loader = null)
     {
-        throw new \Exception($message);
+        if ($loader) {
+            $loader->strError .= "\n" . $message;
+        }
     }
 }

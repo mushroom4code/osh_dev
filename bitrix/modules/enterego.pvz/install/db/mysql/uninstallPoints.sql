@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS `ent_pickpoint_points`;

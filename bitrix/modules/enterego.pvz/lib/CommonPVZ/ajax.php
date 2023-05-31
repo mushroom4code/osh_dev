@@ -12,22 +12,25 @@ $request = Bitrix\Main\Context::getCurrent()->getRequest();
 
 $CONFIG_DELIVERIES = DeliveryHelper::getConfigs();
 
-$deliveries = [];
-foreach ($CONFIG_DELIVERIES as $k => $v) {
-    $deliveries[] = $k;
-}
-
 $action = $request->get('action');
 $codeCity = $request->get('codeCity');
 $cityName = $request->get('cityName');
+$packages = $request->get('orderPackages');
 
 switch ($action) {
     case 'getCityName':
         exit(DeliveryHelper::getCityName($codeCity));
     case 'updatePickPointPoints':
         exit(json_encode(DeliveryHelper::updatePickPointPVZ()));
+    case 'updateDellinPoints':
+        exit(json_encode(DeliveryHelper::updateDellinPVZ()));
+    case 'updateRussianPostPoints':
+        exit(json_encode(DeliveryHelper::updateRussianPostPVZ()));
+    case 'updateFivePostPoints':
+        exit(json_encode(DeliveryHelper::updateFivePostPVZ()));
     case 'getPVZList':
-        $response  = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity));
+        $deliveries = DeliveryHelper::getActivePvzDeliveryInstance(array('codeCity' => $codeCity));
+        $response  = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity, $packages));
         exit($response);
     case 'getPVZPrice':
         $dataToHandler = $request->get('dataToHandler');
@@ -39,8 +42,14 @@ switch ($action) {
                 $adr = $pointData['delivery'] . ': ' . $pointData['to'] . ' #' . $pointData['code_pvz'];
             }
             $delivery = CommonPVZ::getInstanceObject($pointData['delivery']);
-            $price = $delivery->getPrice($pointData);
-            $data[] = ['id'=>$pointData['id'], 'price'=>$price];
+
+                $price = $delivery->getPrice($pointData);
+
+            if (empty($price['errors'])){
+                $data[] = ['id'=>$pointData['id'], 'price'=>$price];
+            } else{
+                $data[] = ['id'=>$pointData['id'], 'error'=>$price['errors']];
+            }
         }
         exit(json_encode(['status'=>'success', 'data'=>$data]));
     default:
