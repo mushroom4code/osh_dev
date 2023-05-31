@@ -154,8 +154,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
             }
         }
 
-        //Проверяем дату рождения
-//PERSONAL_BIRTHDAY
+        //enterego - modifications when changing birthday
+
         $rowUser = $obUser->GetByID($USER->GetId())->Fetch();
         if (!empty($arFields['PERSONAL_BIRTHDAY'])) {
             $arFields['PERSONAL_BIRTHDAY'] = date(
@@ -179,7 +179,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
             }
             $USER_FIELD_MANAGER->EditFormAddFields("USER", $arFields);
         }
-
+        //enterego
 
         if($obUser->Update($arResult["ID"], $arFields))
         {
