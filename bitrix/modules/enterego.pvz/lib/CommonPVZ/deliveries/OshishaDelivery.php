@@ -395,12 +395,32 @@ class OshishaDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         try {
+            $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => $params['latitude'],
+                'LONGITUDE' => $params['longitude'])));
             $cost = self::getOshishaCost();
             $startCost = self::getOshishaStartCost();
-            $distance = ceil(($_SESSION['Osh']['delivery_address_info']['distance'] ?? 0) - 0.8);
+            $distance = ceil(($point['DISTANCE'] ?? 0) - 0.8);
             $noMarkup = $_SESSION['Osh']['delivery_address_info']['no_markup'];
 
             $limitBasket = self::getOshishaLimitBasket();
+
+
+
+//            if (intval($params['shipment_cost']) >= $limitBasket && $noMarkup === 'false') {
+//                $delivery_price = max($distance - 5, 0) * $cost;
+//            } elseif (intval($params['shipment_cost']) >= $limitBasket && $noMarkup === 'true') {
+//                $delivery_price = 0;
+//            } else {
+//                if ($noMarkup === 'true') {
+//                    $delivery_price = $startCost;
+//                } else {
+//                    $delivery_price = $startCost + $distance * $cost;
+//                }
+//            }
+
+
+
+
             if (intval($params['shipment_cost']) >= $limitBasket && $noMarkup === 'false') {
                 $delivery_price = max($distance - 5, 0) * $cost;
             } elseif (intval($params['shipment_cost']) >= $limitBasket && $noMarkup === 'true') {

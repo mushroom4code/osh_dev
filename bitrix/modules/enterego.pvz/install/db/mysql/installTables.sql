@@ -107,3 +107,13 @@ CREATE TABLE IF NOT EXISTS `ent_profiles_properties`
     PRIMARY KEY (`ID`),
     FOREIGN KEY (`SAVED_PROFILE_ID`) REFERENCES ent_profiles_addresses (`ID`) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS `ent_oshisha_saved_deliveries`
+(
+    `ID`                        INT(11) NOT NULL AUTO_INCREMENT,
+    `ZONE`                      VARCHAR(100) NOT NULL,
+    `LATITUDE`                  VARCHAR(100) NOT NULL,
+    `LONGITUDE`                 VARCHAR(100) NOT NULL,
+    `DISTANCE`                  VARCHAR(100) NOT NULL,
+    PRIMARY KEY (`ID`)
+);
