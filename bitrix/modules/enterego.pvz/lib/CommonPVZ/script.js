@@ -27,7 +27,7 @@ BX.SaleCommonPVZ = {
     propStreetKladrId: null,
     propLatitudeId: null,
     propLongitudeId: null,
-    propDateDelivery: null,
+    propDateDeliveryId: null,
     propDeliveryTimeInterval: null,
     curDeliveryId: null,
     doorDeliveryId: null,
@@ -55,35 +55,6 @@ BX.SaleCommonPVZ = {
         this.drawInterface()
         this.updateFromDaData()
         this.updateDeliveryWidget(BX.Sale.OrderAjaxComponent.result)
-
-        if (this.propAddressId && this.oshishaDeliveryStatus) {
-            window.Osh.bxPopup.init();
-            const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
-
-            const latitude_value = (this.propLatitudeId)
-                ? (document.querySelector('input[name="ORDER_PROP_' + this.propLatitudeId + '"]').value) : '';
-            const longitude_value = (this.propLongitudeId)
-                ? (document.querySelector('input[name="ORDER_PROP_' + this.propLongitudeId + '"]').value) : '';
-            if (latitude_value && longitude_value) {
-                const oshParams = {
-                    oshMkad: oshMkad,
-                    latitude: latitude_value,
-                    longitude: longitude_value,
-                    propAddressId: this.propAddressId,
-                    propDateDelivery: (this.propDateDelivery)
-                        ? this.propDateDelivery
-                        : '',
-                }
-                setTimeout(function (oshParams) {
-                    oshParams.oshMkad.afterSave = null;
-                    oshParams.oshMkad.getDistance([oshParams.latitude, oshParams.longitude],
-                        oshParams.propAddressId,
-                        oshParams.propDateDelivery,
-                        '',
-                        true);
-                }, 500, oshParams);
-            }
-        }
     },
 
     refresh: function () {
@@ -101,7 +72,7 @@ BX.SaleCommonPVZ = {
         this.propStreetKladrId        = order.ORDER_PROP.properties.find(prop => prop.CODE === 'STREET_KLADR')?.ID;
         this.propLatitudeId           = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LATITUDE')?.ID;
         this.propLongitudeId          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
-        this.propDateDelivery         = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
+        this.propDateDeliveryId       = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
         this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
         this.propDefaultPvzAddressId  = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.ID;
         this.propTypePvzId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
@@ -203,9 +174,8 @@ BX.SaleCommonPVZ = {
         const __this = this
 
         const propsNode = document.querySelector('div.delivery.bx-soa-pp-company.bx-selected .bx-soa-pp-company');
-
         BX.cleanNode(propsNode)
-        BX.cleanNode('map_for_delivery')
+        this.clearDeliveryBlock()
 
         BX.append(
             BX.create({
@@ -228,6 +198,33 @@ BX.SaleCommonPVZ = {
                     if (currentTypeDelivery === delivery.code) {
                         propsRadio.checked = "checked"
                     }
+
+                    const deliveryRowNode = [
+                        BX.create('INPUT', {
+                            attrs: {checked: delivery.checked},
+                            props: {
+                                type: 'radio',
+                                name: 'delivery',
+                            },
+                            dataset: {code: delivery.code},
+                        }),
+                        BX.create('DIV', {
+                            props: {
+                                className: 'ml-2 font-weight-bold',
+                            },
+                            html: `${delivery.name}`
+                        }),
+                        BX.create('DIV', {
+                            props: {
+                                className: 'ml-4 red_text font-weight-bold',
+                            },
+                            html: delivery.price != 0 ? delivery.price + ' руб.' : 'Бесплатно'
+                        })
+                    ]
+                    if (delivery.code === 'oshisha') {
+                        deliveryRowNode.push(this.updateOshishaDelivery())
+                    }
+
                     const propPopupContainer = BX.create(
                         'DIV',
                         {
@@ -238,28 +235,7 @@ BX.SaleCommonPVZ = {
                                 BX.create({
                                     tag: 'div',
                                     props: {className: 'col-6 d-flex flex-row'},
-                                    children: [
-                                        BX.create('INPUT', {
-                                            attrs: {checked: delivery.checked},
-                                            props: {
-                                                type: 'radio',
-                                                name: 'delivery',
-                                            },
-                                            dataset: {code: delivery.code},
-                                        }),
-                                        BX.create('DIV', {
-                                            props: {
-                                                className: 'ml-2 font-weight-bold',
-                                            },
-                                            html: `${delivery.name}`
-                                        }),
-                                        BX.create('DIV', {
-                                            props: {
-                                                className: 'ml-4 red_text font-weight-bold',
-                                            },
-                                            html: delivery.price != 0 ? delivery.price + ' руб.' : 'Бесплатно'
-                                        })
-                                    ]
+                                    children: deliveryRowNode
                                 }),
                                 BX.create({
                                     tag: 'div',
@@ -284,10 +260,6 @@ BX.SaleCommonPVZ = {
                             ]
                         })
                     BX.append(propPopupContainer, BX('deliveries-list'))
-
-                    if (delivery.code === 'oshisha') {
-                        this.updateOshishaDelivery(propsNode)
-                    }
                 }
             })
         } else {
@@ -358,12 +330,8 @@ BX.SaleCommonPVZ = {
                         oshMkad.afterSave = null;
                         oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
                             __this.propAddressId,
-                            (__this.propDateDelivery)
-                                ? __this.propDateDelivery
-                                : '',
-                            (__this.propDateDelivery)
-                                ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
-                                : '',
+                            __this.propDateDeliveryId,
+                            __this.getValueProp(__this.propDateDeliveryId),
                             true);
                     }
                 }
@@ -400,46 +368,30 @@ BX.SaleCommonPVZ = {
 
         __this.oshishaDeliveryStatus = true
 
-        if (__this.propDateDelivery) {
-            document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').removeAttribute('disabled');
-            document.querySelector('div[data-property-id-row="' + __this.propDateDelivery + '"]').classList.remove('d-none');
-        }
-        if (__this.propDeliveryTimeInterval) {
-            document.querySelector('select[name="ORDER_PROP_' + __this.propDeliveryTimeInterval + '"]').disabled = false;
-            document.querySelector('div[data-property-id-row="' + __this.propDeliveryTimeInterval + '"]').classList.remove('d-none');
-        }
-
         window.Osh.bxPopup.init();
         const oshMkad = window.Osh.oshMkadDistance.init(__this.oshishaDeliveryOptions);
-        const propContainer = BX.create('DIV', {
-            props: {id: 'oshMapButton', className: 'soa-property-container'},
-            children: [
-                BX.create('a',
-                    {
-                        props: {className: 'btn btn_red sbtn-primary '},
-                        text: 'Выбрать адрес на карте (Oshisha)',
-                        events: {
-                            click: BX.proxy(function () {
-                                oshMkad.afterSave = function (address) {
-                                    __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
-                                }.bind(this);
-                                window.Osh.bxPopup.onPickerClick(
-                                    (__this.propAddressId)
-                                        ? __this.propAddressId
-                                        : '',
-                                    (__this.propDateDelivery)
-                                        ? __this.propDateDelivery
-                                        : '',
-                                    (__this.propDateDelivery)
-                                        ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
-                                        : ''
-                                );
-                            }, this)
-                        }
-                    })
-            ]
-        });
-        parentBlock.append(propContainer);
+        return BX.create('a',
+            {
+                props: {
+                    className: 'red_text font-weight-bold ml-3',
+                    href: "javascript:void(0)",
+                },
+                text: 'Выбрать адрес на карте',
+                events: {
+                    click: BX.proxy(function () {
+                        oshMkad.afterSave = function (address) {
+                            __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
+                        }.bind(this);
+                        window.Osh.bxPopup.onPickerClick(
+                            (__this.propAddressId)
+                                ? __this.propAddressId
+                                : '',
+                            __this.propDateDeliveryId,
+                            __this.getValueProp(__this.propDateDeliveryId)
+                        );
+                    }, this)
+                }
+            })
     },
 
     updateFromDaData: function () {
@@ -934,6 +886,15 @@ BX.SaleCommonPVZ = {
     },
 
     buildAddressField: function () {
+        const dateDeliveryNode = BX.create({
+            tag: 'input',
+            props: {
+                type: 'text',
+                className: 'datepicker_order form-control bx-soa-customer-input bx-ios-fix',
+            },
+            dataset: {name: 'DATE_DELIVERY'},
+        })
+
         BX.remove(BX('user-address-wrap'))
         BX.hide(BX('wrap_data_view'))
         BX.hide(BX('wrap_sort_service'))
@@ -941,28 +902,64 @@ BX.SaleCommonPVZ = {
         BX.append(
             BX.create({
                 tag: 'div',
-                props: {className: 'user-address-wrap', id: 'user-address-wrap'},
+                props: {className: 'container-fluid', id: 'user-address-wrap'},
                 children: [
                     BX.create({
                         tag: 'div',
                         props: {
-                            className: 'address-box',
+                            className: 'row mt-2',
                         },
                         children: [
                             BX.create({
                                 tag: 'div',
                                 props: {
-                                    className: 'user-address-title',
+                                    className: 'col-8 flex flex-column',
                                 },
-                                text: 'Введите адрес'
+                                children: [
+                                    BX.create({
+                                        tag: 'label',
+                                        props: {className: 'font-weight-bold'},
+                                        text: 'Введите адрес:'
+                                    }),
+                                    BX.create({
+                                        tag: 'input',
+                                        props: {
+                                            id: 'user-address',
+                                            className: 'form-control bx-soa-customer-input bx-ios-fix',
+                                        }
+                                    })
+                                ]
                             }),
                             BX.create({
-                                tag: 'input',
+                                tag: 'div',
                                 props: {
-                                    id: 'user-address',
-                                    className: 'form-control bx-soa-customer-input bx-ios-fix',
-                                }
-                            }),
+                                    className: 'col-4',
+                                },
+                                children: [
+                                    BX.create(
+                                        'DIV',
+                                        {
+                                            props: {
+                                                className: 'row'
+                                            },
+                                            children: [
+                                                BX.create({
+                                                    tag: 'label',
+                                                    props: {className: 'font-weight-bold'},
+                                                    text: 'Плановая дата доставки:'
+                                                }),
+                                                BX.create({
+                                                        tag: 'div',
+                                                        props: {className: 'col-12'},
+                                                        children: [
+                                                            dateDeliveryNode
+                                                        ]
+                                                    }
+                                                )
+                                            ]
+                                        })
+                                ]
+                            })
                         ]
                     }),
                 ]
@@ -970,6 +967,21 @@ BX.SaleCommonPVZ = {
             BX('pvz_user_data')
         )
         this.buildDaDataField()
+
+        const tomorrow    = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        let curDate = new Date(this.getValueProp(this.propDateDeliveryId))
+        if (isNaN(curDate)) {
+            curDate = tomorrow
+        }
+
+        $(dateDeliveryNode).datepicker({
+            minDate: tomorrow,
+            onSelect: function (date, formattedDate, datepicker) {
+                this.updateValueProp(this.propDateDeliveryId, date)
+                BX.Sale.OrderAjaxComponent.sendRequest()
+            }.bind(this)
+        }).data('datepicker').selectDate(curDate);
 
         return this
     },
@@ -1033,8 +1045,6 @@ BX.SaleCommonPVZ = {
                                                 change: BX.proxy(function () {
                                                     BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
                                                     BX('data_view_map').checked = true
-
-                                                    __this.clearDeliveryBlock();
                                                     __this.buildPVZMap();
                                                 }),
                                             },
@@ -1064,8 +1074,6 @@ BX.SaleCommonPVZ = {
                                                     change: BX.proxy(function () {
                                                         BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
                                                         //TODO default delivery type if not send
-
-                                                        __this.clearDeliveryBlock()
                                                         __this.buildAddressField()
                                                         BX.Sale.OrderAjaxComponent.sendRequest()
 
@@ -1152,11 +1160,8 @@ BX.SaleCommonPVZ = {
                                             events: {
                                                 change: BX.proxy(function () {
                                                     if (BX('delivery-self').checked) {
-                                                        __this.clearDeliveryBlock();
                                                         __this.componentParams.displayPVZ = typeDisplayPVZ.map
                                                         __this.showPVZ();
-                                                    } else {
-                                                        __this.clearDeliveryBlock();
                                                     }
                                                 })
                                             }
@@ -1185,13 +1190,10 @@ BX.SaleCommonPVZ = {
                                             events: {
                                                 change: BX.proxy(function () {
                                                     if (BX('delivery-self').checked) {
-                                                        __this.clearDeliveryBlock();
                                                         __this.componentParams.displayPVZ = typeDisplayPVZ.list
                                                         __this.showPVZ();
 
                                                         BX.onCustomEvent('onDeliveryExtraServiceValueChange')
-                                                    } else {
-                                                        __this.clearDeliveryBlock();
                                                     }
                                                 })
                                             }
