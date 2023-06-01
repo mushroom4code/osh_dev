@@ -7191,3 +7191,7 @@ footer.footer .container .copyrights > span {
 .banner-vacancy {
     max-height: 500px;
 }
+
+.datepickers-container {
+    z-index: 10000;
+}
