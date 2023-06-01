@@ -445,7 +445,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
 
                                         $link = 'javascript:void(0)';
                                         $prop_value = 'Пустое значение';
-                                        $taste = $grouped = [];
+                                        $tasted = $grouped = [];
                                         $picture = '';
                                         $type = $propsForOffers[$keyCODE]['TYPE'] ?? 'text';
                                         $title = 'Товар';
@@ -469,7 +469,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                             }
 
                                             if ($type === 'colorWithText') {
-                                                $taste[$name] = [
+                                                $tasted[$name] = [
                                                     'color' => '#' . explode('#',
                                                             $prop['VALUE_XML_ID'])[1],
                                                     'name' => $prop['VALUE_ENUM'],
@@ -530,7 +530,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                     </div>
                                                 </a>
                                             <?php } elseif ($type === 'colorWithText') {
-                                                if (!empty($taste)) { ?>
+                                                if (!empty($tasted)) { ?>
                                                     <a href="<?= $link ?>" class="offer-link <?=$select?>">
                                                         <div class="red_button_cart taste variation_taste font-14
                                                                  width-fit-content mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer"
@@ -538,7 +538,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                              data-active="<?= !empty($select) ? 'true' :'false'?>"
                                                              data-prop_code="<?= $keyCODE ?>"
                                                              data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>">
-                                                            <?php foreach ($taste as $elem_taste) { ?>
+                                                            <?php foreach ($tasted as $elem_taste) { ?>
                                                                 <span class="taste mb-0 br-100"
                                                                       data-background="<?= $elem_taste['color'] ?>"
                                                                       style="background-color: <?= $elem_taste['color'] ?>;

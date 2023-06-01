@@ -17,7 +17,6 @@ use \Bitrix\Main;
  */
 $this->setFrameMode(true);
 
-
 if (isset($arResult['ITEM'])) {
     $item = $arResult['ITEM'];
     $item['ACTUAL_BASKET'] = $arResult['AR_BASKET'];

@@ -147,7 +147,7 @@ if ($show_price) {
         'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE'] ?? []
     ];
 }
-
+$listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 ?>
 <div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>">
@@ -221,10 +221,11 @@ if ($show_price) {
                     <?php } ?>
                 </a>
                 <i class="open-fast-window mb-2" data-item-id="<?= $item['ID'] ?>"></i>
-                <?php if (!empty($item['GROUPED_PROPS_DATA'])) { ?>
+                <?php if (!empty($listGroupedProduct)) { ?>
                     <i class="fa fa-pencil js__open-grouped-product-window"
                        aria-hidden="true"
-                       data-item-id="<?= $item['ID'] ?>"></i>
+                       data-item-id="<?= $item['ID'] ?>"
+                       data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct))?>"></i>
                 <?php } ?>
             </div>
 
