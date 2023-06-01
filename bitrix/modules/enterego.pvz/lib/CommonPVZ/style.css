@@ -23,7 +23,9 @@
 
 .map_for_delivery {
     flex: 1;
+    margin-top: 10px;
     display: flex;
+    justify-content: space-between;
     flex-direction: column;
     overflow: hidden;
 }

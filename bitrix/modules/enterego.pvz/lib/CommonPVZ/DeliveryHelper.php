@@ -10,6 +10,7 @@ use Bitrix\Sale\Location\LocationTable;
 use \Bitrix\Sale\Location\TypeTable;
 use \Bitrix\Main\Localization\Loc;
 use CUtil;
+use Dadata\DadataClient;
 
 Loc::loadMessages(__FILE__);
 
@@ -387,13 +388,13 @@ class DeliveryHelper
             }
         }
 
-        $params['deliveryOptions']['DA_DATA_TOKEN'] = \CommonPVZ\OshishaDelivery::getOshishaDaDataToken();
+        $params['deliveryOptions']['DA_DATA_TOKEN'] = OshishaDelivery::getOshishaDaDataToken();
 
         $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
-        $params['deliveryOptions']['YA_API_KEY'] = \CommonPVZ\OshishaDelivery::getOshishaYMapsKey();
-        $params['deliveryOptions']['DELIVERY_COST'] = \CommonPVZ\OshishaDelivery::getOshishaCost();
-        $params['deliveryOptions']['START_COST'] = \CommonPVZ\OshishaDelivery::getOshishaStartCost();
-        $params['deliveryOptions']['LIMIT_BASKET'] = \CommonPVZ\OshishaDelivery::getOshishaLimitBasket();
+        $params['deliveryOptions']['YA_API_KEY'] = OshishaDelivery::getOshishaYMapsKey();
+        $params['deliveryOptions']['DELIVERY_COST'] = OshishaDelivery::getOshishaCost();
+        $params['deliveryOptions']['START_COST'] = OshishaDelivery::getOshishaStartCost();
+        $params['deliveryOptions']['LIMIT_BASKET'] = OshishaDelivery::getOshishaLimitBasket();
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
@@ -442,5 +443,20 @@ class DeliveryHelper
                 </script>",
             true
         );
+    }
+
+    /**
+     * @param string $address
+     * @return mixed
+     */
+    public static function getDaDataAddressInfo(string $address)
+    {
+        $token = OshishaDelivery::getOshishaDaDataToken();
+        $secret = OshishaDelivery::getOshishaDaDataSecret();
+
+        $daData = new DadataClient($token, $secret);
+
+        $res = $daData->clean('address', $address);
+        return $res;
     }
 }

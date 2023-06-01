@@ -363,6 +363,12 @@ $aTabs = array(
                 array("text")
             ),
             array(
+                'Oshisha_dadata_secret',
+                GetMessage('OSH_SETTINGS_DA_DATA_SECRET'),
+                Option::get($module_id,'Oshisha_dadata_secret'),
+                array("text")
+            ),
+            array(
                 'Oshisha_cost',
                 GetMessage('OSH_SETTINGS_COST'),
                 Option::get($module_id,'Oshisha_cost'),

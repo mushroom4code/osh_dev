@@ -92,6 +92,11 @@ class OshishaDelivery extends CommonPVZ
         return self::getOshishaDataValue('dadatatoken');
     }
 
+    public static function getOshishaDaDataSecret()
+    {
+        return self::getOshishaDataValue('dadata_secret');
+    }
+
     public static function getOshishaCost()
     {
         return self::getOshishaDataValue('cost');

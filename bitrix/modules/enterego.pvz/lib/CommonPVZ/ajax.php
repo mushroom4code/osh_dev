@@ -20,6 +20,14 @@ $packages = $request->get('orderPackages');
 switch ($action) {
     case 'getCityName':
         exit(DeliveryHelper::getCityName($codeCity));
+    case 'getDaData':
+        $address = $request->get('address');
+        $daData = DeliveryHelper::getDaDataAddressInfo($address);
+        if (!empty($daData['result'])) {
+            exit(json_encode(['status'=>'success', 'value'=>$daData['result'], 'data'=>$daData]));
+        } else {
+            exit(json_encode(['status'=>'not find address']));
+        }
     case 'updatePickPointPoints':
         exit(json_encode(DeliveryHelper::updatePickPointPVZ()));
     case 'updateDellinPoints':

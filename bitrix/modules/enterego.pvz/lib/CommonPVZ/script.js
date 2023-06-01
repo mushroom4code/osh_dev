@@ -53,6 +53,7 @@ BX.SaleCommonPVZ = {
 
         this.refresh()
         this.drawInterface()
+        this.updateFromDaData()
         this.updateDeliveryWidget(BX.Sale.OrderAjaxComponent.result)
 
         if (this.propAddressId && this.oshishaDeliveryStatus) {
@@ -217,13 +218,12 @@ BX.SaleCommonPVZ = {
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
         const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
         const currentTypeDelivery = this.getValueProp(this.propTypeDeliveryId)
+        const address = this.getValueProp(this.propAddressId)
 
-        if (doorDelivery !== undefined) {
+        if (doorDelivery !== undefined && address !== '') {
             const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
             deliveryInfo.forEach(delivery => {
                 if (!delivery.error) {
-                    let oshClass = delivery.code === 'oshisha' ? 'oshisha' : ''
-
                     const propsRadio = {type: 'radio', name: 'delivery'}
                     if (currentTypeDelivery === delivery.code) {
                         propsRadio.checked = "checked"
@@ -232,7 +232,7 @@ BX.SaleCommonPVZ = {
                         'DIV',
                         {
                             props: {
-                                className: 'row mb-2'
+                                className: 'row mb-3'
                             },
                             children: [
                                 BX.create({
@@ -267,8 +267,17 @@ BX.SaleCommonPVZ = {
                                     children: [
                                         BX.create({
                                             tag: 'span',
-                                            props: {className: 'delivery-time'},
-                                            text: 'Срок доставки: от 2 дней'
+                                            props: {
+                                                className: 'font-weight-bold'
+                                            },
+                                            text: 'Срок доставки:'
+                                        }),
+                                        BX.create({
+                                            tag: 'span',
+                                            props: {
+                                                className: 'ml-2'
+                                            },
+                                            text: 'от 2 дней'
                                         })
                                     ]
                                 }),
@@ -282,20 +291,15 @@ BX.SaleCommonPVZ = {
                 }
             })
         } else {
-            if (checkedDelivery['CALCULATE_ERRORS']) {
-                console.log('Delivery calculation error');
-                console.log(checkedDelivery.CALCULATE_DESCRIPTION);
-            }
             const propPopupContainer = BX.create('DIV', {
-                props: {className: 'bx-soa-pp-company-block'},
+                props: {className: 'container-fluid'},
                 children: [
-                    BX.create('DIV', {props: {className: 'bx-soa-pp-company-desc'}, html: checkedDelivery.DESCRIPTION}),
-                    checkedDelivery.CALCULATE_DESCRIPTION
-                        ? BX.create('DIV', {
-                            props: {className: 'bx-soa-pp-company-desc'},
-                            html: checkedDelivery.CALCULATE_DESCRIPTION
-                        })
-                        : null
+                    BX.create(
+                        'h5', {
+                            props: {className: 'font-weight-bold'},
+                            html: "Укажите адрес доставки для расчета стоимости."
+                        }
+                    ),
                 ]
             });
 
@@ -305,7 +309,7 @@ BX.SaleCommonPVZ = {
         BX.append(
             BX.create({
                 tag: 'div',
-                props: {className: 'container text-center my-3'},
+                props: {className: 'container text-center mt-3 mb-5'},
                 children: [
                     BX.create({
                         tag: 'a',
@@ -436,6 +440,29 @@ BX.SaleCommonPVZ = {
             ]
         });
         parentBlock.append(propContainer);
+    },
+
+    updateFromDaData: function () {
+        const address = this.getValueProp(this.propAddressId)
+        if (address !== '') {
+            BX.ajax({
+                url: this.ajaxUrlPVZ,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    address,
+                    'action': 'getDaData'
+                },
+                onsuccess: function (response) {
+                    if (response.status === 'success') {
+                        this.updatePropsFromDaData(response)
+                    } else {
+                        this.updatePropsFromDaData({})
+                    }
+
+                }.bind(this)
+            })
+        }
     },
 
     openMap: function () {
