@@ -198,6 +198,7 @@ if ($show_price) {
                                 $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
                                 ?>
                                 <span class="taste js__taste <?= $tasteSize ?>"
+                                      data-prop-id="<?= "ArFilter_{$propId}" ?>"
                                       data-background="<?= '#' . $color[1] ?>"
                                       id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
                                       data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?></span>

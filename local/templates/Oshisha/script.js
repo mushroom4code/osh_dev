@@ -3009,13 +3009,29 @@ $(document).ready(function () {
         $('.overlay').hide();
     });
 
-    $(document).on('click', '.js__taste ', function () {
-        let tasteCheckId = $(this).attr('data-filter-get');
-        $('#VKUS').find('.check_input').prop('checked', false);
-        $('#' + tasteCheckId).prop('checked', true);
+    $(document).on('click', '.js__taste ', function() {
+        let tasteCheckId = $(this).attr('data-filter-get'),
+            taste =  $(this).closest('.js__tastes');
+        // Сбрасываем повторную фильтрацию по уже выбранному вкусу
 
-        window.smartFilter.addHorizontalFilter(BX(tasteCheckId))
-        window.smartFilter.timer = setTimeout(BX.delegate(function () {
+        if (BX(tasteCheckId).checked) {
+            $(taste).append('<span class="taste-errors">Вкус уже выбран</span>');
+            setTimeout(BX.delegate(
+                    function() {
+                        $(taste).find('.taste-errors').fadeOut(
+                            'slow',
+                            function () {
+                                this.remove()
+                            })
+                    }),
+                2000
+            );
+            return;
+        }
+
+        $('#'+tasteCheckId).prop('checked', true);
+        window.smartFilter.addHorizontalFilter(BX(tasteCheckId));
+        window.smartFilter.timer = setTimeout(BX.delegate(function(){
             this.reload(BX(tasteCheckId));
         }, window.smartFilter), 500);
     })
