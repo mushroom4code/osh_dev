@@ -20,16 +20,6 @@ $oRequest = Context::getCurrent()->getRequest();
 Loc::loadMessages(__FILE__);
 
 if($_SERVER["REQUEST_METHOD"] == 'POST' && check_bitrix_sessid() && !empty($oRequest->getPost('address')) && (!empty($oRequest->getPost('price')) || $oRequest->getPost('price') == 0)){
-
-    $_SESSION['Osh']['delivery_address_info']['address'] = $oRequest->getPost('address');
-    $_SESSION['Osh']['delivery_address_info']['price'] = $oRequest->getPost('price');
-    $_SESSION['Osh']['delivery_address_info']['delivery_id'] = $oRequest->getPost('delivery_id');
-    $_SESSION['Osh']['delivery_address_info']['distance'] = $oRequest->getPost('distance');
-    $_SESSION['Osh']['delivery_address_info']['no_markup'] = $oRequest->getPost('no_markup');
-    $_SESSION['Osh']['delivery_address_info']['latitude'] = $oRequest->getPost('latitude');
-    $_SESSION['Osh']['delivery_address_info']['longitude'] = $oRequest->getPost('longitude');
-    $_SESSION['Osh']['delivery_address_info']['zone'] = $oRequest->getPost('zone');
-
     $dbResultError = false;
     if (!OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => $oRequest->getPost('latitude'),
         'LONGITUDE' => $oRequest->getPost('longitude'))))) {

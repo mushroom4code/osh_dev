@@ -334,11 +334,8 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
      */
     selfObj.getDistance = function (selectGeo, addressPropertyId = '', datePropertyId = '', deliveryDate = '', saveDelivery=false) {
         collection.removeAll();
-        console.log('uuuuuuuu');
-        console.log(selectGeo);
         selectGeo[0] = Number('' + selectGeo[0]).toPrecision(6);
         selectGeo[1] = Number('' + selectGeo[1]).toPrecision(6);
-
         // Местоположение
         delivery_address = selfObj.getAddress(selectGeo);
         selfObj.address_property_id = addressPropertyId ? addressPropertyId : selfObj.address_property_id;
@@ -373,9 +370,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             selfObj.getDistanceCache[selectGeo] = {inMkad: 0, inNorthZone: 0, inSouthEastZone: 0, inSouthWestZone: 0, geometry: undefined}
         }
 
-        console.log(selectGeo);
         var checkInResult = selfObj.checkIn(selectGeo);
-        console.log(checkInResult);
         selfObj.getDistanceCache[selectGeo].inMkad = checkInResult['inMkad'];
         selfObj.getDistanceCache[selectGeo].inNorthZone = checkInResult['inNorthZone'];
         selfObj.getDistanceCache[selectGeo].inSouthEastZone = checkInResult['inSouthEastZone'];
@@ -459,7 +454,6 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
      * Отправляет результаты расчета доставки
      */
     selfObj.saveDelivery = function () {
-        console.log('uwu');
         const addressNode = selfObj.address_property_id ? $('input[name="ORDER_PROP_' + selfObj.address_property_id + '"]') : '';
         selfObj.date_property_id ? document.querySelector('input[name="ORDER_PROP_' + selfObj.date_property_id + '"]').value = selfObj.date_delivery : '';
         selfObj.date_delivery = '';
@@ -493,12 +487,8 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
 
     selfObj.checkIn = function (d) {
         d = new ymaps.Placemark(d);
-        console.log('checkin');
-        console.log(north_zone_poly);
-        console.log(north_zone_points);
         var b = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(mkad_poly).getLength();
         var m = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(north_zone_poly).getLength();
-        console.log(ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(north_zone_poly));
         var t = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(south_east_zone_poly).getLength();
         var w = ymaps.geoQuery(d).setOptions("visible", 0).addToMap(myMap).searchInside(south_west_zone_poly).getLength();
 
@@ -564,8 +554,6 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     };
 
     selfObj.showResults = function (result, d, delivery_address = '', saveDelivery=false) {
-        console.log('bababoy');
-        console.log(result);
         if (result.inMkad) {
             distKm = 0
             delivery_price = this.calculateCost(0);

@@ -92,6 +92,9 @@ class DoorDeliveryProfile extends Base
             if ($prop['CODE'] === 'LONGITUDE') {
                 $deliveryParams['longitude'] = $propertyItem->getValue();
             }
+            if ($prop['CODE'] === 'DATE_DELIVERY') {
+                $deliveryParams['date_delivery'] = $propertyItem->getValue();
+            }
         }
         $deliveryParams['shipment_weight'] = $shipment->getWeight();
         $deliveryParams['shipment_cost'] = $shipment->getOrder()->getBasePrice();
