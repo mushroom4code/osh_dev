@@ -20,6 +20,8 @@ $packages = $request->get('orderPackages');
 switch ($action) {
     case 'getCityName':
         exit(DeliveryHelper::getCityName($codeCity));
+    case 'getSavedOshishaDelivery':
+        exit(json_encode(DeliveryHelper::getSavedOshishaDelivery($request->get('latitude'), $request->get('longitude'))));
     case 'getDaData':
         $address = $request->get('address');
         $daData = DeliveryHelper::getDaDataAddressInfo($address);

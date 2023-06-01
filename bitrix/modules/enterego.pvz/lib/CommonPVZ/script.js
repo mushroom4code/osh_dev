@@ -74,13 +74,9 @@ BX.SaleCommonPVZ = {
                         ? this.propDateDelivery
                         : '',
                 }
+                var __this = this;
                 setTimeout(function (oshParams) {
-                    oshParams.oshMkad.afterSave = null;
-                    oshParams.oshMkad.getDistance([oshParams.latitude, oshParams.longitude],
-                        oshParams.propAddressId,
-                        oshParams.propDateDelivery,
-                        '',
-                        true);
+                    __this.getSavedOshishaDelivery(oshParams.latitude, oshParams.longitude)
                 }, 500, oshParams);
             }
         }
@@ -492,8 +488,8 @@ BX.SaleCommonPVZ = {
         this.updateValueProp(this.propFiasId, suggestion?.data?.fias_id ?? '')
         this.updateValueProp(this.propKladrId, suggestion?.data?.kladr_id ?? '')
         this.updateValueProp(this.propStreetKladrId, suggestion?.data?.street_kladr_id ?? '')
-        this.updateValueProp(this.propLatitudeId, suggestion?.data?.geo_lat ?? '')
-        this.updateValueProp(this.propLongitudeId, suggestion?.data?.geo_lon ?? '')
+        this.updateValueProp(this.propLatitudeId, suggestion?.data?.geo_lat ? Number('' + suggestion.data.geo_lat).toPrecision(6) : '')
+        this.updateValueProp(this.propLongitudeId, suggestion?.data?.geo_lon ? Number('' + suggestion.data.geo_lon).toPrecision(6) : '')
     },
 
     /**
@@ -636,6 +632,41 @@ BX.SaleCommonPVZ = {
             },
             onfailure: function (res) {
                 console.log('error getCityName');
+            }
+        });
+    },
+
+    getSavedOshishaDelivery: function (latitude, longitude) {
+        var __this = this;
+        BX.ajax({
+            url: __this.ajaxUrlPVZ,
+            method: 'POST',
+            data: {
+                latitude: latitude,
+                longitude: longitude,
+                'action': 'getSavedOshishaDelivery'
+            },
+            onsuccess: function (res) {
+                res = JSON.parse(res);
+                if (res) {
+                    BX.onCustomEvent('onDeliveryExtraServiceValueChange');
+                } else {
+                    const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
+                    oshMkad.afterSave = null;
+
+                    oshMkad.getDistance([latitude, longitude],
+                        __this.propAddressId,
+                        (__this.propDateDelivery)
+                            ? __this.propDateDelivery
+                            : '',
+                        (__this.propDateDelivery)
+                            ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
+                            : '',
+                        true);
+                }
+            },
+            onfailure: function (res) {
+                console.log('error getSavedOshishaDelivery');
             }
         });
     },

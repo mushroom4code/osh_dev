@@ -400,24 +400,53 @@ class OshishaDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         try {
-            $cost = self::getOshishaCost();
-            $startCost = self::getOshishaStartCost();
-            $distance = ceil(($_SESSION['Osh']['delivery_address_info']['distance'] ?? 0) - 0.8);
-            $noMarkup = $_SESSION['Osh']['delivery_address_info']['no_markup'];
-
-            $limitBasket = self::getOshishaLimitBasket();
-            if (intval($params['shipment_cost']) >= $limitBasket && $noMarkup === 'false') {
-                $delivery_price = max($distance - 5, 0) * $cost;
-            } elseif (intval($params['shipment_cost']) >= $limitBasket && $noMarkup === 'true') {
-                $delivery_price = 0;
-            } else {
-                if ($noMarkup === 'true') {
-                    $delivery_price = $startCost;
-                } else {
-                    $delivery_price = $startCost + $distance * $cost;
+            $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => $params['latitude'],
+                'LONGITUDE' => $params['longitude'])));
+            if ($point) {
+                $cost = self::getOshishaCost();
+                $startCost = self::getOshishaStartCost();
+                $distance = ceil(($point['DISTANCE'] ?? 0) - 0.8);
+                $noMarkup = false;
+                $dayDateDelivery = $params['date_delivery'] ? date('w' ,strtotime($params['date_delivery']))
+                    : date('w', strtotime('+1 day'));
+                if ($point['ZONE'] == 'NORTH') {
+                    foreach (explode(',', $this->configs['northdays']) as $noMarkupDay) {
+                        if ($noMarkupDay == $dayDateDelivery) {
+                            $noMarkup = true;
+                        }
+                    }
+                } else if ($point['ZONE'] == 'SOUTHEAST') {
+                    foreach (explode(',', $this->configs['southeastdays']) as $noMarkupDay) {
+                        if ($noMarkupDay == $dayDateDelivery) {
+                            $noMarkup = true;
+                        }
+                    }
+                } else if ($point['ZONE'] == 'SOUTHWEST') {
+                    foreach (explode(',', $this->configs['southwestdays']) as $noMarkupDay) {
+                        if ($noMarkupDay == $dayDateDelivery) {
+                            $noMarkup = true;
+                        }
+                    }
                 }
+                $limitBasket = self::getOshishaLimitBasket();
+
+                if (intval($params['shipment_cost']) >= $limitBasket && !$noMarkup) {
+                    $delivery_price = max($distance - 5, 0) * $cost;
+                }
+                else {
+                    if ($noMarkup) {
+                        $delivery_price = $startCost;
+                    } else {
+                        $delivery_price = $startCost + $distance * $cost;
+                    }
+                }
+
+                return $delivery_price;
+            } else {
+//                return 'доставка не может быть расчитана';
+                $this->errors[] = 'no data found on point';
+                return array('errors' => $this->errors);
             }
-            return $delivery_price;
         } catch(\Throwable $e) {
             $this->errors[] = $e->getMessage();
             return array('errors' => $this->errors);

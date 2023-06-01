@@ -21,6 +21,15 @@ $activeDelivery = array(
     'N' => GetMessage('ACTIVE_DELIVERY_N'),
     'Y' => GetMessage('ACTIVE_DELIVERY_Y')
 );
+$daysOfTheWeek = array(
+        '1' => 'понедельник',
+        '2' => 'вторник',
+        '3' => 'среда',
+        '4' => 'четверг',
+        '5' => 'пятница',
+        '6' => 'суббота',
+        '0' => 'воскресенье'
+);
 
 $aTabs = array(
     array(
@@ -379,6 +388,24 @@ $aTabs = array(
                 GetMessage('OSH_SETTINGS_STRICT_PVZ'),
                 Option::get($module_id,'Oshisha_pvzstrict'),
                 array("selectbox", $oshishaArPvzStrictOptions)
+            ),
+            array(
+                'Oshisha_northdays',
+                GetMessage('OSH_SETTINGS_NORTH_DAYS'),
+                Option::get($module_id,'Oshisha_northdays'),
+                array("multiselectbox", $daysOfTheWeek)
+            ),
+            array(
+                'Oshisha_southeastdays',
+                GetMessage('OSH_SETTINGS_SOUTHEAST_DAYS'),
+                Option::get($module_id,'Oshisha_southeastdays'),
+                array("multiselectbox", $daysOfTheWeek)
+            ),
+            array(
+                'Oshisha_southwestdays',
+                GetMessage('OSH_SETTINGS_SOUTHWEST_DAYS'),
+                Option::get($module_id,'Oshisha_southwestdays'),
+                array("multiselectbox", $daysOfTheWeek)
             ),
         )
     )

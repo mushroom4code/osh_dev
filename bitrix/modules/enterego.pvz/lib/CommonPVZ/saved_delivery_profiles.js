@@ -2,7 +2,6 @@ BX.namespace('BX.SavedDeliveryProfiles');
 
 BX.SavedDeliveryProfiles = {
     drawSavedProfiles: function(commonPvzObject) {
-        console.log('sus');
         commonPvzObject.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
         commonPvzObject.checkout.delivery.recentWrap = {}
         commonPvzObject.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'recent-deliveries-wrap'}})

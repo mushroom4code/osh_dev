@@ -21,6 +21,7 @@ CModule::AddAutoloadClasses("", array(
     '\CommonPVZ\SavedDeliveryProfiles' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/SavedDeliveryProfiles.php',
     '\CommonPVZ\ProfilesAddressesTable' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ProfilesAddressesTable.php',
     '\CommonPVZ\ProfilesPropertiesTable' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ProfilesPropertiesTable.php',
+    '\CommonPVZ\OshishaSavedDeliveriesTable' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/tables/OshishaSavedDeliveriesTable.php',
     '\Enterego\EnteregoDBDelivery' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/EnteregoDBDelivery.php',
     '\Enterego\EnteregoDeliveries' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/EnteregoDeliveries.php',
     '\PecomKabinet' => '/bitrix/modules/enterego.pvz/lib/CommonPVZ/pecom_kabinet.php',

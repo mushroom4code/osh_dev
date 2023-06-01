@@ -183,6 +183,14 @@ class DeliveryHelper
         return $packages;
     }
 
+    public static function getSavedOshishaDelivery($latitude, $longitude) {
+        $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => $latitude, 'LONGITUDE' => $longitude)));
+        if ($point)
+            return true;
+        else
+            return false;
+    }
+
     public static function getButton($address = '')
     {
         $content = "<a class='btn btn_basket btn_pvz btn-default'
