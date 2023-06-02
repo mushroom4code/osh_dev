@@ -5,8 +5,8 @@ use CommonPVZ\DeliveryHelper;
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
-if (!Bitrix\Main\Loader::includeModule('enterego.pvz')
-    && !Bitrix\Main\Loader::includeModule('sale')) {
+if (!CModule::IncludeModule('enterego.pvz')
+    || !CModule::IncludeModule('sale')) {
 
     return;
 }
