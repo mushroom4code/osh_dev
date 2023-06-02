@@ -434,9 +434,9 @@ BX.SaleCommonPVZ = {
         this.updateValueProp(this.propFiasId, suggestion?.data?.fias_id ?? '')
         this.updateValueProp(this.propKladrId, suggestion?.data?.kladr_id ?? '')
         this.updateValueProp(this.propStreetKladrId, suggestion?.data?.street_kladr_id ?? '')
-        this.updateValueProp(this.propLatitudeId, suggestion?.data?.geo_lat ? Number('' + suggestion.data.geo_lat).toPrecision(6) : '')
-        this.updateValueProp(this.propLongitudeId, suggestion?.data?.geo_lon ? Number('' + suggestion.data.geo_lon).toPrecision(6) : '')
-    },
+        this.updateValueProp(this.propLatitudeId, suggestion?.data?.geo_lat ? Number('' + suggestion.data.geo_lat).toPrecision(6) : '');
+        this.updateValueProp(this.propLongitudeId, suggestion?.data?.geo_lon ? Number('' + suggestion.data.geo_lon).toPrecision(6) : '');
+        },
 
     /**
      *
@@ -615,6 +615,49 @@ BX.SaleCommonPVZ = {
                 console.log('error getSavedOshishaDelivery');
             }
         });
+    },
+
+    saveOshishaDelivery: function(params) {
+        var address_field = $(document).find('#user-address').val(this.getValueProp(this.propAddressId))
+        if (address_field) {
+            this.updateValueProp(this.propDateDeliveryId, params.date_delivery);
+
+            BX.ajax({
+                url: this.ajaxUrlPVZ,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    latitude: params.latitude,
+                    longitude: params.longitude,
+                    'action': 'reverseGeocodeAddress'
+                },
+                onsuccess: function (response) {
+                    if (response.status === 'success') {
+                        this.updatePropsFromDaData(response)
+                        params.latitude = Number('' + response.data.geo_lat).toPrecision(6);
+                        params.longitude = Number('' + response.data.geo_lon).toPrecision(6);
+                        BX.ajax({
+                            url: this.ajaxUrlPVZ,
+                            method: 'POST',
+                            dataType: 'json',
+                            data: {
+                                params: params,
+                                'action': 'saveOshishaDelivery'
+                            },
+                            onsuccess: function (res) {
+                                if (!res) {
+                                    console.log('error while saving oshisha delivery to db');
+                                }
+                                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
+                            }.bind(this)
+                        });
+                    } else {
+                        this.updatePropsFromDaData({})
+                    }
+
+                }.bind(this)
+            });
+        }
     },
 
     getPVZList: function () {

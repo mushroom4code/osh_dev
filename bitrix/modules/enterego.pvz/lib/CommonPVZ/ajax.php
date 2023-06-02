@@ -27,9 +27,19 @@ switch ($action) {
         exit(json_encode(DeliveryHelper::getSavedOshishaDelivery($request->get('latitude'), $request->get('longitude'))));
     case 'getNoMarkupDaysOshisha':
         exit(json_encode((new \CommonPVZ\OshishaDelivery())->getNoMarkupDays()));
+    case 'saveOshishaDelivery':
+        exit(json_encode(DeliveryHelper::SaveOshishaDelivery($request->get('params'))));
     case 'getDaData':
         $address = $request->get('address');
         $daData = DeliveryHelper::getDaDataAddressInfo($address);
+        if (!empty($daData['value'])) {
+            $daData['status'] = 'success';
+            exit(json_encode($daData));
+        } else {
+            exit(json_encode(['status'=>'not find address']));
+        }
+    case 'reverseGeocodeAddress':
+        $daData = DeliveryHelper::getDaDataAddressByGeolocation($request->get('latitude'), $request->get('longitude'));
         if (!empty($daData['value'])) {
             $daData['status'] = 'success';
             exit(json_encode($daData));

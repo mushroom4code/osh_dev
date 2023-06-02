@@ -452,35 +452,14 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
      * Отправляет результаты расчета доставки
      */
     selfObj.saveDelivery = function () {
-        const addressNode = selfObj.address_property_id ? $('input[name="ORDER_PROP_' + selfObj.address_property_id + '"]') : '';
-        selfObj.date_property_id ? document.querySelector('input[name="ORDER_PROP_' + selfObj.date_property_id + '"]').value = selfObj.date_delivery : '';
-        selfObj.date_delivery = '';
-        if (addressNode) {
-            (BX.SaleCommonPVZ.propLatitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propLatitudeId + '"]').value = selfObj.last_select_geo[0]) : '';
-            (BX.SaleCommonPVZ.propLongitudeId) ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propLongitudeId + '"]').value = selfObj.last_select_geo[1]) : '';
-            BX.ajax.post(selfObj.oUrls.setPriceDelivery, {
-                address: delivery_address,
-                price: delivery_price,
-                no_markup: no_markup,
-                latitude: selfObj.last_select_geo[0],
-                longitude: selfObj.last_select_geo[1],
-                zone: selfObj.last_select_geo_zone,
-                distance: distKm,
-                sessid: BX.bitrix_sessid()
-            }, function () {
-                if (selfObj.afterSave!=null) {
-                    addressNode.suggestions().setOptions({
-                        onSuggestionsFetch: function(suggestions) {
-                            BX.SaleCommonPVZ.updatePropsFromDaData(suggestions[0])
-                        }
-                    })
-                    addressNode.val(delivery_address);
-                    addressNode.suggestions().updateSuggestions(delivery_address);
-                    selfObj.afterSave(delivery_address);
-                }
-                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
-            });
-        }
+        BX.SaleCommonPVZ.saveOshishaDelivery({
+            date_delivery: selfObj.date_delivery,
+            latitude: selfObj.last_select_geo[0],
+            longitude: selfObj.last_select_geo[1],
+            address: delivery_address,
+            zone: selfObj.last_select_geo_zone,
+            distance: distKm
+        });
     };
 
     selfObj.checkIn = function (d) {

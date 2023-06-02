@@ -191,6 +191,27 @@ class DeliveryHelper
             return false;
     }
 
+    public static function saveOshishaDelivery($params) {
+        $dbResultError = false;
+        if (!OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => $params['latitude'],
+            'LONGITUDE' => $params['longitude'])))) {
+            $result = OshishaSavedDeliveriesTable::add(array('fields' => array(
+                'LATITUDE' => $params['latitude'],
+                'LONGITUDE' => $params['longitude'],
+                'ZONE' => $params['zone'],
+                'DISTANCE' => $params['distance']
+            )));
+            if (!$result->isSuccess()) {
+                $dbResultError = true;
+            }
+        }
+        if ($dbResultError) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public static function getButton($address = '')
     {
         $content = "<a class='btn btn_basket btn_pvz btn-default'
@@ -470,5 +491,20 @@ class DeliveryHelper
             return [];
         }
 
+    }
+
+    public static function getDaDataAddressByGeolocation($latitude, $longitude) {
+        $token = OshishaDelivery::getOshishaDaDataToken();
+        $secret = OshishaDelivery::getOshishaDaDataSecret();
+
+        $daData = new DadataClient($token, $secret);
+        $res = $daData->geolocate('address', $latitude, $longitude);
+        if ($res) {
+            if (count($res) !== 0 ) {
+                return $res[0];
+            } else {
+                return [];
+            }
+        }
     }
 }

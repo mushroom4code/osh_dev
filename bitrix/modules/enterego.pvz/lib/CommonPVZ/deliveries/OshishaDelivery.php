@@ -18,6 +18,7 @@ class OshishaDelivery extends CommonPVZ
     static $MODULE_ID = 'enterego.pvz';
     public string $delivery_name = 'Oshisha';
     public string $delivery_code = 'oshisha';
+    private $oshisha_cache_id = 'oshisha_delivery_prices';
     const OSHISHA_ADDRESS_SIMPLE = "simple";
     const OSHISHA_ADDRESS_COMPLEX = "complex";
     static $oshisha_fields = array(
@@ -408,6 +409,26 @@ class OshishaDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         try {
+            $limitBasket = self::getOshishaLimitBasket();
+            $moreThanLimit = intval($params['shipment_cost']) >= $limitBasket;
+            $hashed_values = array($params['latitude'], $params['longitude'], $params['date_delivery'],
+                $this->configs['northdays'], $this->configs['southeastdays'], $this->configs['southwestdays'],
+                $moreThanLimit);
+            $hash_string = md5(implode('', $hashed_values));
+
+            $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
+            if ($cache->initCache(3600, $this->oshisha_cache_id)) { // проверяем кеш и задаём настройки
+                $cached_vars = $cache->getVars();
+                if (!empty($cached_vars)) {
+                    foreach ($cached_vars as $varKey => $var) {
+                        if($varKey === $hash_string) {
+                            return $var;
+                        }
+                    }
+                }
+            }
+
+
             $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => $params['latitude'],
                 'LONGITUDE' => $params['longitude'])));
             if ($point) {
@@ -436,7 +457,6 @@ class OshishaDelivery extends CommonPVZ
                         }
                     }
                 }
-                $limitBasket = self::getOshishaLimitBasket();
 
                 if (intval($params['shipment_cost']) >= $limitBasket && !$noMarkup) {
                     $delivery_price = max($distance - 5, 0) * $cost;
@@ -449,9 +469,14 @@ class OshishaDelivery extends CommonPVZ
                     }
                 }
 
+                $cache->forceRewriting(true);
+                if ($cache->startDataCache()) {
+                    $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                        ? array_merge($cached_vars, array($hash_string => $delivery_price))
+                        : array($hash_string => $delivery_price));
+                }
                 return $delivery_price;
             } else {
-//                return 'доставка не может быть расчитана';
                 $this->errors[] = 'no data found on point';
                 return array('errors' => $this->errors);
             }
