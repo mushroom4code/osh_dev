@@ -33,6 +33,23 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     selfObj.date_property_id = '';
     selfObj.last_select_geo = null;
     selfObj.last_select_geo_zone = null;
+    $.ajax({
+        type: "GET",
+        url: "/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php",
+        data: 'action=getNoMarkupDaysOshisha',
+        dataType: "JSON", timeout: 30000, async: false,
+        error: function (xhr) {
+            console.log('error while getting no markup days for oshisha delivery');
+        },
+        success: function (res) {
+            // res = JSON.parse(res);
+            selfObj.north_days = res['northdays'];
+            selfObj.south_east_days = res['southeastdays'];
+            selfObj.south_west_days = res['southwestdays'];
+            console.log('UUUUUUUUUUUUUU');
+            console.log(res);
+        }
+    });
 
     var mkad_poly = null,
         south_west_zone_poly = null,
@@ -547,6 +564,10 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
         $('#osh_delivery_ya_map_address').val(str)
     };
 
+    selfObj.dayOfWeekAsString = function (dayIndex) {
+        return ["воскресенье", "понедельник","вторник","среда","четверг","пятница","суббота"][dayIndex] || '';
+    };
+
     selfObj.calculateCost = function (dist) {
         //TODO validate round
         const dist_m = Math.ceil(dist-0.8);
@@ -577,38 +598,63 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                     b = c.geometry.getCoordinates();
                     c.properties.set("balloonContent", "");
                 } else {
-                    c.options.set("preset", "islands#redStretchyIcon");
-                    switch (true) {
-                        case (result.inNorthZone && (delivery_date_week_day == 1 || delivery_date_week_day == 4)) :
+                    if (result.inNorthZone) {
+                        var noMarkupMessage = ' руб. Без наценки в этом регионе в следующие дни: ';
+                        selfObj.north_days.forEach((dayNumeric, id, array) => {
+                            if (id === array.length - 1)
+                                noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
+                            else
+                                noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
+                        });
+                        if (selfObj.north_days.includes(delivery_date_week_day.toString())) {
                             no_markup = true;
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + (currentBasket>=limitBasket ? 0 : cost) + ' руб. Без наценки в понедельник и четверг в этом регионе');
-                            break;
-                        case (result.inNorthZone && !(delivery_date_week_day == 1 || delivery_date_week_day == 4)) :
+                                + (currentBasket >= limitBasket ? 0 : cost) + noMarkupMessage);
+                        } else {
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + delivery_price.toFixed() + ' руб. Без наценки в понедельник и четверг в этом регионе');
-                            break;
-                        case (result.inSouthEastZone && (delivery_date_week_day == 2 || delivery_date_week_day == 5)) :
+                                + delivery_price.toFixed() + noMarkupMessage);
+                        }
+                    } else if (result.inSouthEastZone) {
+                        var noMarkupMessage = ' руб. Без наценки в этом регионе в следующие дни: ';
+                        selfObj.south_east_days.forEach((dayNumeric, id, array) => {
+                            if (id === array.length - 1)
+                                noMarkupMessage += selfObj.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
+                            else
+                                noMarkupMessage += selfObj.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
+                        });
+                        if (selfObj.south_east_days.includes(delivery_date_week_day.toString())) {
                             no_markup = true;
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + (currentBasket>=limitBasket ? 0 : cost) + ' руб. Без наценки во вторник и пятницу в этом регионе');
-                            break;
-                        case (result.inSouthEastZone && !(delivery_date_week_day == 2 || delivery_date_week_day == 5)) :
+                                + (currentBasket >= limitBasket ? 0 : cost) + noMarkupMessage);
+                        } else {
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + delivery_price.toFixed() + ' руб. Без наценки во вторник и пятницу в этом регионе');
-                            break;
-                        case (result.inSouthWestZone && (delivery_date_week_day == 3 || delivery_date_week_day == 6)) :
+                                + delivery_price.toFixed() + noMarkupMessage);
+                        }
+                    } else if (result.inSouthWestZone) {
+                        console.log('oooooooooo');
+                        console.log(selfObj.south_west_days);
+                        console.log(delivery_date_week_day);
+                        console.log(selfObj.south_west_days.includes(delivery_date_week_day));
+                        console.log(typeof delivery_date_week_day);
+                        var noMarkupMessage = ' руб. Без наценки в этом регионе в следующие дни: ';
+                        selfObj.south_west_days.forEach((dayNumeric, id, array) => {
+                            if (id === array.length - 1)
+                                noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
+                            else
+                                noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
+                        });
+                        if (selfObj.south_west_days.includes(delivery_date_week_day.toString())) {
                             no_markup = true;
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + (currentBasket>=limitBasket ? 0 : cost) + 'руб. Без наценки в среду и субботу в этом регионе');
-                            break;
-                        case (result.inSouthWestZone && !(delivery_date_week_day == 3 || delivery_date_week_day == 6)) :
+                                + (currentBasket>=limitBasket ? 0 : cost) + noMarkupMessage);
+                        } else {
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + delivery_price.toFixed() + ' руб. Без наценки в среду и субботу в этом регионе');
-                            break;
-                        default :
-                            c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                                + delivery_price.toFixed() + ' руб');
+                                + delivery_price.toFixed() + noMarkupMessage);
+                        }
+                    } else {
+                        console.log(result);
+                        c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
+                            + delivery_price.toFixed() + ' руб');
                     }
 
                     g = c.geometry.getCoordinates();
@@ -988,8 +1034,45 @@ window.Osh.bxPopup = {
                 id: 'map',
             },
         })
+        var __this = this;
         nodeYaMapContainer.append(nodeYaMap);
+        $.ajax({
+            type: "GET",
+            url: "/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php",
+            data: 'action=getNoMarkupDaysOshisha',
+            dataType: "JSON", timeout: 30000, async: false,
+            error: function (xhr) {
+                console.log('error while getting no markup days for oshisha delivery');
+            },
+            success: function (res) {
+                __this.north_days = res['northdays'];
+                __this.south_east_days = res['southeastdays'];
+                __this.south_west_days = res['southwestdays'];
 
+            }
+        });
+
+        var noMarkupNorthText = '- Без наценки в следующие дни: ';
+        this.north_days.forEach((dayNumeric, id, array) => {
+            if (id === array.length - 1)
+                noMarkupNorthText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
+            else
+                noMarkupNorthText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
+        });
+        var noMarkupSouthEastText = '- Без наценки в следующие дни: ';
+        this.south_east_days.forEach((dayNumeric, id, array) => {
+            if (id === array.length - 1)
+                noMarkupSouthEastText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
+            else
+                noMarkupSouthEastText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
+        });
+        var noMarkupSouthWestText = '- Без наценки в следующие дни: ';
+        this.south_west_days.forEach((dayNumeric, id, array) => {
+            if (id === array.length - 1)
+                noMarkupSouthWestText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
+            else
+                noMarkupSouthWestText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
+        });
         const nodeYaAction = BX.create("DIV", {
             props: {
                 id: 'osh-map-action',
@@ -1002,7 +1085,7 @@ window.Osh.bxPopup = {
                     children: [
                         BX.create('DIV', {
                             props: {
-                                id: 'monday-thursday-block'
+                                id: 'north-block'
                             },
                             style: {
                                 display: 'flex',
@@ -1012,7 +1095,7 @@ window.Osh.bxPopup = {
                             children: [
                                 BX.create('DIV', {
                                     props: {
-                                        id: 'monday-thursday-color'
+                                        id: 'north-color'
                                     },
                                     style: {
                                         width: '30px',
@@ -1023,15 +1106,15 @@ window.Osh.bxPopup = {
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        id: 'monday-thursday-text'
+                                        id: 'north-text'
                                     },
-                                    text: '- Без наценки в понедельник и четверг'
+                                    text: noMarkupNorthText
                                 })
                             ]
                         }),
                         BX.create('DIV', {
                             props: {
-                                id: 'tuesday-friday-block'
+                                id: 'south-east-block'
                             },
                             style: {
                                 display: 'flex',
@@ -1041,7 +1124,7 @@ window.Osh.bxPopup = {
                             children: [
                                 BX.create('DIV', {
                                     props: {
-                                        id: 'tuesday-friday-color'
+                                        id: 'south-west-color'
                                     },
                                     style: {
                                         width: '30px',
@@ -1052,15 +1135,15 @@ window.Osh.bxPopup = {
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        id: 'tuesday-friday-text'
+                                        id: 'south-west-text'
                                     },
-                                    text: '- Без наценки во вторник и пятницу'
+                                    text: noMarkupSouthEastText
                                 })
                             ]
                         }),
                         BX.create('DIV', {
                             props: {
-                                id: 'wednesday-saturday-block'
+                                id: 'south-west-block'
                             },
                             style: {
                                 display: 'flex',
@@ -1070,7 +1153,7 @@ window.Osh.bxPopup = {
                             children: [
                                 BX.create('DIV', {
                                     props: {
-                                        id: 'wednesday-saturday-color'
+                                        id: 'south-west-color'
                                     },
                                     style: {
                                         width: '30px',
@@ -1081,9 +1164,9 @@ window.Osh.bxPopup = {
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        id: 'wednesday-saturday-text'
+                                        id: 'south-west-text'
                                     },
-                                    text: '- Без наценки в среду и субботу'
+                                    text: noMarkupSouthWestText
                                 })
                             ]
                         })
@@ -1114,6 +1197,10 @@ window.Osh.bxPopup = {
         document.body.append(nodeOshOverlay)
 
         this.instance = nodeOshOverlay;
+    },
+
+    dayOfWeekAsString: function (dayIndex) {
+        return ["воскресенье", "понедельник","вторник","среда","четверг","пятница","суббота"][dayIndex] || '';
     },
 
     onPickerClick: function (address_property_id = '', date_property_id = '', date_delivery = '') {

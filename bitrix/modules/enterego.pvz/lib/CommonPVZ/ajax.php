@@ -22,6 +22,17 @@ switch ($action) {
         exit(DeliveryHelper::getCityName($codeCity));
     case 'getSavedOshishaDelivery':
         exit(json_encode(DeliveryHelper::getSavedOshishaDelivery($request->get('latitude'), $request->get('longitude'))));
+    case 'getNoMarkupDaysOshisha':
+        exit(json_encode((new \CommonPVZ\OshishaDelivery())->getNoMarkupDays()));
+    case 'getDaData':
+        $address = $request->get('address');
+        $daData = DeliveryHelper::getDaDataAddressInfo($address);
+        if (!empty($daData['value'])) {
+            $daData['status'] = 'success';
+            exit(json_encode($daData));
+        } else {
+            exit(json_encode(['status'=>'not find address']));
+        }
     case 'updatePickPointPoints':
         exit(json_encode(DeliveryHelper::updatePickPointPVZ()));
     case 'updateDellinPoints':
