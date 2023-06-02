@@ -25,6 +25,8 @@ switch ($action) {
         exit(DeliveryHelper::getCityName($codeCity));
     case 'getSavedOshishaDelivery':
         exit(json_encode(DeliveryHelper::getSavedOshishaDelivery($request->get('latitude'), $request->get('longitude'))));
+    case 'getNoMarkupDaysOshisha':
+        exit(json_encode((new \CommonPVZ\OshishaDelivery())->getNoMarkupDays()));
     case 'getDaData':
         $address = $request->get('address');
         $daData = DeliveryHelper::getDaDataAddressInfo($address);

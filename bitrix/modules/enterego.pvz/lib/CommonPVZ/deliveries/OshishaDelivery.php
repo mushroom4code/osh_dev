@@ -111,6 +111,14 @@ class OshishaDelivery extends CommonPVZ
         return 4000;
     }
 
+    public function getNoMarkupDays() {
+        $result = [];
+        $result['northdays'] = explode(',', $this->configs['northdays']);
+        $result['southeastdays'] = explode(',', $this->configs['southeastdays']);
+        $result['southwestdays'] = explode(',', $this->configs['southwestdays']);
+        return $result;
+    }
+
     public static function getOshishaPersonTypes(){
         $arSelectPt = array("ID","NAME_WS");
         $arOrderPt = array("SORT" => "ASC");
