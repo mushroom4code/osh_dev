@@ -161,7 +161,9 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 $user_id = $USER->GetID();
 
                                 if (!empty($user_id)) {
-
+                                    if (!CModule::IncludeModule('sale')) {
+                                        return;
+                                    }
                                     $UserPropsTable = Bitrix\Sale\Internals\UserPropsTable::getList(array('filter' => [
                                         'USER_ID' => $user_id,
                                     ]));
