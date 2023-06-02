@@ -326,17 +326,10 @@ BX.SaleCommonPVZ = {
                 if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
                     if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
                         __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                        const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
-                        oshMkad.afterSave = null;
-                        oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon],
-                            __this.propAddressId,
-                            __this.propDateDeliveryId,
-                            __this.getValueProp(__this.propDateDeliveryId),
-                            true);
+                        __this.getSavedOshishaDelivery(Number('' + suggestion.data.geo_lat).toPrecision(6),
+                            Number('' + suggestion.data.geo_lon).toPrecision(6));
                     }
                 }
-
-                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
             }.bind(this),
         })
 
