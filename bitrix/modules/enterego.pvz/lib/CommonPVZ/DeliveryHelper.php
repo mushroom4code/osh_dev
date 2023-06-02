@@ -455,8 +455,12 @@ class DeliveryHelper
         $secret = OshishaDelivery::getOshishaDaDataSecret();
 
         $daData = new DadataClient($token, $secret);
+        $res = $daData->suggest('address', $address);
+        if (count($res) !== 0 ) {
+            return $res[0];
+        } else {
+            return [];
+        }
 
-        $res = $daData->clean('address', $address);
-        return $res;
     }
 }

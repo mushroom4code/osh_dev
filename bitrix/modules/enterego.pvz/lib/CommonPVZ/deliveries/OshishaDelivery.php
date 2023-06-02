@@ -128,37 +128,37 @@ class OshishaDelivery extends CommonPVZ
     public static function getOshishaOptionsData()
     {
         $data = array();
-        foreach (self::$oshisha_fields as $field) {
-            $data[$field] = self::getOshishaDataValue($field);
-        }
-//        $this->data['debug'] = boolval($this->data['debug']);
-//        $this->data['direct'] = boolval($this->data['direct']);
-        $arPersonTypes = self::getOshishaPersonTypes();
-        $isAddressSimple = boolval($data["address_type"] != self::OSHISHA_ADDRESS_COMPLEX);
-//        if($isAddressSimple) {
-//            $this->data["mirror_pvz_address"] = boolval($this->getDataValue('mirror_pvz_address'));
+//        foreach (self::$oshisha_fields as $field) {
+//            $data[$field] = self::getOshishaDataValue($field);
 //        }
-        foreach ($arPersonTypes as $id => $name) {
-//            $this->fields[] = 'pvz_prop_'.$id;
-//            $this->data['pvz_prop_'.$id] = $this->getDataValue('pvz_prop_'.$id);
-            if ($isAddressSimple) {
-                self::$oshisha_fields[] = 'address_prop_id_' . $id;
-                self::$oshisha_fields[] = 'time_period_' . $id;
-                $data['address_prop_id_' . $id] = self::getOshishaDataValue('address_prop_id_' . $id);
-                $data['time_period_' . $id] = self::getOshishaDataValue('time_period_' . $id);
-
-            } else {
-                self::$oshisha_fields[] = 'street_prop_id_' . $id;
-                $data['street_prop_id_' . $id] = self::getOshishaDataValue('street_prop_id_' . $id);
-                self::$oshisha_fields[] = 'corp_prop_id_' . $id;
-                $data['corp_prop_id_' . $id] = self::getOshishaDataValue('corp_prop_id_' . $id);
-                self::$oshisha_fields[] = 'bld_prop_id_' . $id;
-                $data['bld_prop_id_' . $id] = self::getOshishaDataValue('bld_prop_id_' . $id);
-                self::$oshisha_fields[] = 'flat_prop_id_' . $id;
-                $data['flat_prop_id_' . $id] = self::getOshishaDataValue('flat_prop_id_' . $id);
-            }
-            return $data;
-        }
+////        $this->data['debug'] = boolval($this->data['debug']);
+////        $this->data['direct'] = boolval($this->data['direct']);
+//        $arPersonTypes = self::getOshishaPersonTypes();
+//        $isAddressSimple = boolval($data["address_type"] != self::OSHISHA_ADDRESS_COMPLEX);
+////        if($isAddressSimple) {
+////            $this->data["mirror_pvz_address"] = boolval($this->getDataValue('mirror_pvz_address'));
+////        }
+//        foreach ($arPersonTypes as $id => $name) {
+////            $this->fields[] = 'pvz_prop_'.$id;
+////            $this->data['pvz_prop_'.$id] = $this->getDataValue('pvz_prop_'.$id);
+//            if ($isAddressSimple) {
+//                self::$oshisha_fields[] = 'address_prop_id_' . $id;
+//                self::$oshisha_fields[] = 'time_period_' . $id;
+//                $data['address_prop_id_' . $id] = self::getOshishaDataValue('address_prop_id_' . $id);
+//                $data['time_period_' . $id] = self::getOshishaDataValue('time_period_' . $id);
+//
+//            } else {
+//                self::$oshisha_fields[] = 'street_prop_id_' . $id;
+//                $data['street_prop_id_' . $id] = self::getOshishaDataValue('street_prop_id_' . $id);
+//                self::$oshisha_fields[] = 'corp_prop_id_' . $id;
+//                $data['corp_prop_id_' . $id] = self::getOshishaDataValue('corp_prop_id_' . $id);
+//                self::$oshisha_fields[] = 'bld_prop_id_' . $id;
+//                $data['bld_prop_id_' . $id] = self::getOshishaDataValue('bld_prop_id_' . $id);
+//                self::$oshisha_fields[] = 'flat_prop_id_' . $id;
+//                $data['flat_prop_id_' . $id] = self::getOshishaDataValue('flat_prop_id_' . $id);
+//            }
+//            return $data;
+//        }
     }
 
     public static function generate($arOptions, $arConfigData)

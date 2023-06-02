@@ -5,8 +5,11 @@ use CommonPVZ\DeliveryHelper;
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
-if (!Bitrix\Main\Loader::includeModule('enterego.pvz'))
+if (!Bitrix\Main\Loader::includeModule('enterego.pvz')
+    && !Bitrix\Main\Loader::includeModule('sale')) {
+
     return;
+}
 
 $request = Bitrix\Main\Context::getCurrent()->getRequest();
 
@@ -23,8 +26,9 @@ switch ($action) {
     case 'getDaData':
         $address = $request->get('address');
         $daData = DeliveryHelper::getDaDataAddressInfo($address);
-        if (!empty($daData['result'])) {
-            exit(json_encode(['status'=>'success', 'value'=>$daData['result'], 'data'=>$daData]));
+        if (!empty($daData['value'])) {
+            $daData['status'] = 'success';
+            exit(json_encode($daData));
         } else {
             exit(json_encode(['status'=>'not find address']));
         }
