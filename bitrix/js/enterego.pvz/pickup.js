@@ -33,23 +33,6 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     selfObj.date_property_id = '';
     selfObj.last_select_geo = null;
     selfObj.last_select_geo_zone = null;
-    $.ajax({
-        type: "GET",
-        url: "/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php",
-        data: 'action=getNoMarkupDaysOshisha',
-        dataType: "JSON", timeout: 30000, async: false,
-        error: function (xhr) {
-            console.log('error while getting no markup days for oshisha delivery');
-        },
-        success: function (res) {
-            // res = JSON.parse(res);
-            selfObj.north_days = res['northdays'];
-            selfObj.south_east_days = res['southeastdays'];
-            selfObj.south_west_days = res['southwestdays'];
-            console.log('UUUUUUUUUUUUUU');
-            console.log(res);
-        }
-    });
 
     var mkad_poly = null,
         south_west_zone_poly = null,
@@ -598,15 +581,16 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                     b = c.geometry.getCoordinates();
                     c.properties.set("balloonContent", "");
                 } else {
+                    c.options.set("preset", "islands#redStretchyIcon");
                     if (result.inNorthZone) {
                         var noMarkupMessage = ' руб. Без наценки в этом регионе в следующие дни: ';
-                        selfObj.north_days.forEach((dayNumeric, id, array) => {
+                        window.Osh.bxPopup.north_days.forEach((dayNumeric, id, array) => {
                             if (id === array.length - 1)
                                 noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
                             else
                                 noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
                         });
-                        if (selfObj.north_days.includes(delivery_date_week_day.toString())) {
+                        if (window.Osh.bxPopup.north_days.includes(delivery_date_week_day.toString())) {
                             no_markup = true;
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + (currentBasket >= limitBasket ? 0 : cost) + noMarkupMessage);
@@ -616,13 +600,13 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                         }
                     } else if (result.inSouthEastZone) {
                         var noMarkupMessage = ' руб. Без наценки в этом регионе в следующие дни: ';
-                        selfObj.south_east_days.forEach((dayNumeric, id, array) => {
+                        window.Osh.bxPopup.south_east_days.forEach((dayNumeric, id, array) => {
                             if (id === array.length - 1)
-                                noMarkupMessage += selfObj.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
+                                noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
                             else
-                                noMarkupMessage += selfObj.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
+                                noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
                         });
-                        if (selfObj.south_east_days.includes(delivery_date_week_day.toString())) {
+                        if (window.Osh.bxPopup.south_east_days.includes(delivery_date_week_day.toString())) {
                             no_markup = true;
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + (currentBasket >= limitBasket ? 0 : cost) + noMarkupMessage);
@@ -631,19 +615,14 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                                 + delivery_price.toFixed() + noMarkupMessage);
                         }
                     } else if (result.inSouthWestZone) {
-                        console.log('oooooooooo');
-                        console.log(selfObj.south_west_days);
-                        console.log(delivery_date_week_day);
-                        console.log(selfObj.south_west_days.includes(delivery_date_week_day));
-                        console.log(typeof delivery_date_week_day);
                         var noMarkupMessage = ' руб. Без наценки в этом регионе в следующие дни: ';
-                        selfObj.south_west_days.forEach((dayNumeric, id, array) => {
+                        window.Osh.bxPopup.south_west_days.forEach((dayNumeric, id, array) => {
                             if (id === array.length - 1)
                                 noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
                             else
                                 noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
                         });
-                        if (selfObj.south_west_days.includes(delivery_date_week_day.toString())) {
+                        if (window.Osh.bxPopup.south_west_days.includes(delivery_date_week_day.toString())) {
                             no_markup = true;
                             c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                                 + (currentBasket>=limitBasket ? 0 : cost) + noMarkupMessage);
@@ -652,7 +631,6 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                                 + delivery_price.toFixed() + noMarkupMessage);
                         }
                     } else {
-                        console.log(result);
                         c.properties.set("iconContent", '' + selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
                             + delivery_price.toFixed() + ' руб');
                     }
