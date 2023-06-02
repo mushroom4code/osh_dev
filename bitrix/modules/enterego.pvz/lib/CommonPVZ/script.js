@@ -35,7 +35,6 @@ BX.SaleCommonPVZ = {
     shipmentCost: undefined,
     orderPackages: null,
     oshishaDeliveryOptions: null,
-    oshishaDeliveryStatus: false,
     propDefaultPvzAddressId: null,
     propTypePvzId: null,
     componentParams: {
@@ -324,7 +323,7 @@ BX.SaleCommonPVZ = {
                 this.updatePropsFromDaData(suggestion)
 
                 if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                    if (__this.curDeliveryId == __this.doorDeliveryId && __this.oshishaDeliveryStatus) {
+                    if (__this.curDeliveryId == __this.doorDeliveryId) {
                         __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
                         __this.getSavedOshishaDelivery(Number('' + suggestion.data.geo_lat).toPrecision(6),
                             Number('' + suggestion.data.geo_lon).toPrecision(6));
@@ -358,8 +357,6 @@ BX.SaleCommonPVZ = {
 
     updateOshishaDelivery: function (parentBlock) {
         var __this = this;
-
-        __this.oshishaDeliveryStatus = true
 
         window.Osh.bxPopup.init();
         const oshMkad = window.Osh.oshMkadDistance.init(__this.oshishaDeliveryOptions);
@@ -586,9 +583,8 @@ BX.SaleCommonPVZ = {
     },
 
     getSavedOshishaDelivery: function (latitude, longitude) {
-        var __this = this;
         BX.ajax({
-            url: __this.ajaxUrlPVZ,
+            url: this.ajaxUrlPVZ,
             method: 'POST',
             data: {
                 latitude: latitude,
@@ -600,20 +596,21 @@ BX.SaleCommonPVZ = {
                 if (res) {
                     BX.onCustomEvent('onDeliveryExtraServiceValueChange');
                 } else {
-                    const oshMkad = window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions);
-                    oshMkad.afterSave = null;
+                    window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                        oshMkad.afterSave = null;
 
-                    oshMkad.getDistance([latitude, longitude],
-                        __this.propAddressId,
-                        (__this.propDateDelivery)
-                            ? __this.propDateDelivery
-                            : '',
-                        (__this.propDateDelivery)
-                            ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
-                            : '',
-                        true);
+                        oshMkad.getDistance([latitude, longitude],
+                            this.propAddressId,
+                            (this.propDateDelivery)
+                                ? this.propDateDelivery
+                                : '',
+                            (this.propDateDelivery)
+                                ? (document.querySelector('input[name="ORDER_PROP_' + this.propDateDelivery + '"]').value)
+                                : '',
+                            true);
+                    })
                 }
-            },
+            }.bind(this),
             onfailure: function (res) {
                 console.log('error getSavedOshishaDelivery');
             }

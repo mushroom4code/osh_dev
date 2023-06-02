@@ -7,7 +7,7 @@ window.Osh.oshMkadDistance = (function () {
         getInstance: function () {
             return instance;
         },
-        init: function (param) {
+        init: async function (param) {
             BX.addClass(BX('saveBTN'), 'popup-window-button-disable');
             if (instance === undefined) {
                 instance = new window.Osh.oshMkadDistanceObject(param);
@@ -214,36 +214,34 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             return
         }
 
-        ymaps.ready(function(){
-            myMap = new ymaps.Map(html_map_id, {
-                center: msk_center_point,
-                zoom: 9,
-                controls: ["zoomControl", "typeSelector"]
+        myMap = new ymaps.Map(html_map_id, {
+            center: msk_center_point,
+            zoom: 9,
+            controls: ["zoomControl", "typeSelector"]
+        });
+
+        selfObj.initCircleControl();
+        selfObj.initGeoLocationControl();
+        selfObj.initSearchControls();
+        selfObj.prepareData();
+
+        if (is_mobile_api) {
+            $('#adr').on('change', function () {
+                $('#rez').val('{"loading:true"}');
+                var mkad_address = ($(this).val()).replace(/\s+/g, ' ');
+                if (typeof (selfObj.mobile_api_cache[mkad_address]) == 'undefined') {
+                    selfObj.update_order_form(mkad_address, function (calculatedObj) {
+                        selfObj.mobile_api_cache[mkad_address] = calculatedObj;
+                        $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
+                    });
+                } else {
+                    $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
+                }
             });
 
-            selfObj.initCircleControl();
-            selfObj.initGeoLocationControl();
-            selfObj.initSearchControls();
-            selfObj.prepareData();
+        }
 
-            if (is_mobile_api) {
-                $('#adr').on('change', function () {
-                    $('#rez').val('{"loading:true"}');
-                    var mkad_address = ($(this).val()).replace(/\s+/g, ' ');
-                    if (typeof (selfObj.mobile_api_cache[mkad_address]) == 'undefined') {
-                        selfObj.update_order_form(mkad_address, function (calculatedObj) {
-                            selfObj.mobile_api_cache[mkad_address] = calculatedObj;
-                            $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
-                        });
-                    } else {
-                        $('#rez').val(JSON.stringify(selfObj.mobile_api_cache[mkad_address]));
-                    }
-                });
-
-            }
-
-            selfObj.configuredPromise.resolve('config end');
-        });
+        selfObj.configuredPromise.resolve('config end');
     };
 
     selfObj.initCircleControl = function (){
@@ -754,7 +752,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
 
     };
 
-    selfObj.initWObj = function () {
+    selfObj.initWObj = async function () {
 
         if (!selfObj.configuredPromise) {
             selfObj.configuredPromise = $.Deferred();
@@ -763,10 +761,9 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             if (typeof ymaps === "undefined" )
                 return null;
 
-            ymaps.ready(selfObj.init);
+            await ymaps.ready
+            selfObj.init();
             selfObj.isInited = true;
-
-
         }
         return selfObj;
     };
@@ -1120,13 +1117,13 @@ window.Osh.bxPopup = {
         this.init();
         document.body.style.overflow = "hidden";
         BX('osh_map_overlay').style.display = "flex";
-        this.oshMkadDelivery = window.Osh.oshMkadDistance.getInstance();
-        this.oshMkadDelivery.address_property_id = address_property_id;
-        this.oshMkadDelivery.date_property_id = date_property_id;
-        this.oshMkadDelivery.date_delivery = date_delivery;
-        this.oshMkadDelivery.show();
-
-        return false;
+        window.Osh.oshMkadDistance.getInstance().then(oshMkadDelivery => {
+            this.oshMkadDelivery = oshMkadDelivery
+            this.oshMkadDelivery.address_property_id = address_property_id;
+            this.oshMkadDelivery.date_property_id = date_property_id;
+            this.oshMkadDelivery.date_delivery = date_delivery;
+            this.oshMkadDelivery.show();
+        })
     },
 
     onPopupWindowClose: function () {
