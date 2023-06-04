@@ -290,7 +290,8 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             a = a.get("index");
 
             d.getResult(a).then(function (e) {
-                selfObj.getDistance(e.geometry.getCoordinates());
+                const coordinates = e.geometry.getCoordinates()
+                BX.SaleCommonPVZ.reverseGeocodeAddress(coordinates)
                 b.add(e);
             });
         }).add("submit", function () {
