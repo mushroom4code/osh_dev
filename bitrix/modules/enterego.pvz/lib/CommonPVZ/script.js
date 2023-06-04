@@ -619,46 +619,65 @@ BX.SaleCommonPVZ = {
     },
 
     saveOshishaDelivery: function(params) {
-        var address_field = $(document).find('#user-address').val(this.getValueProp(this.propAddressId))
-        if (address_field) {
-            this.updateValueProp(this.propDateDeliveryId, params.date_delivery);
+        BX.ajax({
+            url: this.ajaxUrlPVZ,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                params: params,
+                'action': 'saveOshishaDelivery'
+            },
+            onsuccess: function (res) {
+                if (!res) {
+                    console.log('error while saving oshisha delivery to db');
+                }
+                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
+            }.bind(this)
+        });
+    },
 
-            BX.ajax({
-                url: this.ajaxUrlPVZ,
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    latitude: params.latitude,
-                    longitude: params.longitude,
-                    'action': 'reverseGeocodeAddress'
-                },
-                onsuccess: function (response) {
-                    if (response.status === 'success') {
-                        this.updatePropsFromDaData(response)
-                        params.latitude = Number('' + response.data.geo_lat).toPrecision(6);
-                        params.longitude = Number('' + response.data.geo_lon).toPrecision(6);
-                        BX.ajax({
-                            url: this.ajaxUrlPVZ,
-                            method: 'POST',
-                            dataType: 'json',
-                            data: {
-                                params: params,
-                                'action': 'saveOshishaDelivery'
-                            },
-                            onsuccess: function (res) {
-                                if (!res) {
-                                    console.log('error while saving oshisha delivery to db');
-                                }
-                                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
-                            }.bind(this)
-                        });
-                    } else {
-                        this.updatePropsFromDaData({})
-                    }
+    reverseGeocodeAddress: async function (coordinates) {
+        BX.ajax({
+            url: this.ajaxUrlPVZ,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                latitude: coordinates[0],
+                longitude: coordinates[1],
+                'action': 'reverseGeocodeAddress'
+            },
+            onsuccess: function (response) {
+                if (response.status === 'success') {
+                    window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                        oshMkad.afterSave = null;
 
-                }.bind(this)
-            });
-        }
+                        oshMkad.getDistance([response.data.geo_lat, response.data.geo_lon],
+                            this.propAddressId,
+                            (this.propDateDelivery)
+                                ? this.propDateDelivery
+                                : '',
+                            (this.propDateDelivery)
+                                ? (document.querySelector('input[name="ORDER_PROP_' + this.propDateDelivery + '"]').value)
+                                : '',
+                            true);
+                    })
+                } else {
+                    window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                        oshMkad.afterSave = null;
+
+                        oshMkad.getDistance(coordinates,
+                            this.propAddressId,
+                            (this.propDateDelivery)
+                                ? this.propDateDelivery
+                                : '',
+                            (this.propDateDelivery)
+                                ? (document.querySelector('input[name="ORDER_PROP_' + this.propDateDelivery + '"]').value)
+                                : '',
+                            true);
+                    })
+                }
+            }.bind(this)
+        });
     },
 
     getPVZList: function () {

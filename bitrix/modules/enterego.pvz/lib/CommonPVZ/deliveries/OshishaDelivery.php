@@ -428,9 +428,16 @@ class OshishaDelivery extends CommonPVZ
                 }
             }
 
-
-            $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => $params['latitude'],
-                'LONGITUDE' => $params['longitude'])));
+            $lat = (float)$params['latitude'];
+            $lon = (float)$params['longitude'];
+            if (!empty($lat) && !empty($lon)) {
+                $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array(
+                    'LATITUDE'  =>  round($lat, 4),
+                    'LONGITUDE' => round($lon,4)
+                )));
+            } else {
+                $point = null;
+            }
             if ($point) {
                 $cost = self::getOshishaCost();
                 $startCost = self::getOshishaStartCost();
