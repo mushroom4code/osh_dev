@@ -177,13 +177,52 @@ BX.SaleCommonPVZ = {
         BX.cleanNode(propsNode)
         this.clearDeliveryBlock()
 
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {className: 'container-fluid mt-3', id: 'deliveries-list'},
-            }),
-            BX('map_for_delivery')
-        )
+       let pvzBox = BX.create({
+            tag: 'div',
+            props: {
+                className: 'container-fluid d-flex flex-column overflow-auto my-2'
+            },
+            children: [
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray'
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-6'
+                            },
+                            text: 'Доставка + цена'
+                        }),
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-3'
+                            },
+                            text: 'Срок доставки'
+                        }),
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-3'
+                            },
+                            text: 'Период доставки'
+                        })
+                    ]
+                }),
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'container-fluid overflow-auto my-2 table-body border-1-gray',
+                        id: 'deliveries-list'
+                    },
+                }),
+            ]
+        })
+        BX.append(pvzBox, BX('map_for_delivery'))
+
 
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
         const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
@@ -246,7 +285,6 @@ BX.SaleCommonPVZ = {
                                             props: {
                                                 className: 'font-weight-bold'
                                             },
-                                            text: 'Срок доставки:'
                                         }),
                                         BX.create({
                                             tag: 'span',
@@ -1396,16 +1434,55 @@ BX.SaleCommonPVZ = {
     buildPvzList: function (pvzList)
     {
         const __this = this
-        const pvzListNode = BX.create({
+        let pvzBox;
+        pvzBox = BX.create({
             tag: 'div',
             props: {
                 className: 'container-fluid d-flex flex-column overflow-auto my-2'
-            }
+            },
+            children: [
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray'
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-6'
+                            },
+                            text: 'Доставка + цена'
+                        }),
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-3'
+                            },
+                            text: 'Срок доставки'
+                        }),
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-3'
+                            },
+                            text: 'Режим работы'
+                        })
+                    ]
+                }),
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'container-fluid d-flex flex-column overflow-auto my-2 table-body border-1-gray'
+                    },
+                }),
+            ]
         })
-        BX.append(pvzListNode, BX('map_for_delivery'))
+        BX.append(pvzBox, BX('map_for_delivery'))
 
+        let pvzTableContain = BX.findChildByClassName(pvzBox, 'table-body');
         pvzList.forEach(el => {
-            this.buildPvzItem(el, pvzListNode)
+            this.buildPvzItem(el, pvzTableContain)
         })
 
         BX.append(
@@ -1511,7 +1588,7 @@ BX.SaleCommonPVZ = {
                                         props: {
                                             className: 'font-weight-bold'
                                         },
-                                        text: 'Срок доставки:'
+                                        // text: 'Срок доставки:'
                                     }),
                                     BX.create({
                                         tag: 'span',
@@ -1534,7 +1611,6 @@ BX.SaleCommonPVZ = {
                                         props: {
                                             className: 'worktime-title'
                                         },
-                                        text: 'Время работы:'
                                     }),
                                     BX.create({
                                         tag: 'span',

@@ -30,6 +30,14 @@
     overflow: hidden;
 }
 
+.table-header {
+    padding: 0.5rem 0;
+}
+
+.border-1-gray {
+    border-bottom: 1px solid #e5e5e5;
+}
+
 @media screen and (max-width: 768px) {
     .map_for_delivery {
         padding: 3.5em 0 1em;
