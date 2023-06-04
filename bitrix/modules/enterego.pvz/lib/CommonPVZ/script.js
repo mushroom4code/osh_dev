@@ -158,7 +158,8 @@ BX.SaleCommonPVZ = {
             BX.append(
                 BX.create({
                     tag: 'p',
-                    html: 'Выберите один из подходящих Вам вариантов: самовывоз, пункт выдачи заказов или доставка курьером до двери'
+                    html: 'Выберите один из подходящих Вам вариантов: <br>' +
+                        ' самовывоз, пункт выдачи заказов или доставка курьером до двери'
                 }),
                 BX('delivery-description')
             )
@@ -1059,7 +1060,7 @@ BX.SaleCommonPVZ = {
 
         const propPvzDelivery =  {
             id: 'delivery-self',
-                className: 'radio-field',
+                className: 'radio-field form-check-input',
             type: 'radio',
             value: 'Самовывоз',
             name: 'delivery_type',
@@ -1070,7 +1071,7 @@ BX.SaleCommonPVZ = {
 
         const propDoorDelivery = {
             id: 'delivery-in-hands',
-            className: 'radio-field',
+            className: 'radio-field form-check-input',
             type: 'radio',
             value: 'Доставка в руки',
             name: 'delivery_type',
@@ -1173,7 +1174,7 @@ BX.SaleCommonPVZ = {
 
         const propsOnMap = {
             id: 'data_view_map',
-            className: 'radio-field',
+            className: 'radio-field form-check-input',
             type: 'radio',
             value: 'На карте',
             name: 'data_view',
@@ -1184,7 +1185,7 @@ BX.SaleCommonPVZ = {
 
         const propsList = {
             id: 'data_view_list',
-            className: 'radio-field',
+            className: 'radio-field form-check-input',
             type: 'radio',
             value: 'Списком',
             name: 'data_view',
