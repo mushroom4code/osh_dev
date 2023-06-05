@@ -1464,7 +1464,7 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray'
+                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray pr-5'
                     },
                     children: [
                         BX.create({
@@ -1493,7 +1493,7 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'container-fluid d-flex flex-column overflow-auto my-2 table-body border-1-gray p-0'
+                        className: 'container-fluid d-flex flex-column overflow-auto my-2 table-body border-1-gray p-0 pr-4'
                     },
                 }),
             ]
@@ -1505,12 +1505,12 @@ BX.SaleCommonPVZ = {
             this.buildPvzItem(el, pvzTableContain)
         })
 
-        let appendBool = $(document).find('#pvz_user_data #select-pvz-item');
-        if(appendBool.length === 0 ){
+        // let appendBool = $(document).find('#pvz_user_data #select-pvz-item');
+        // if(appendBool.length === 0 ){
             BX.append(
                 BX.create({
                     tag: 'div',
-                    props: {className: 'text-center mb-3 wrap_filter_block d-flex align-items-end'},
+                    props: {className: 'text-center mb-3 wrap_filter_block d-flex align-items-end justify-content-center'},
                     children:
                         [
                             BX.create({
@@ -1519,8 +1519,9 @@ BX.SaleCommonPVZ = {
                                     id: 'select-pvz-item',
                                     href: "javascript:void(0)",
                                     className: "link_red_button text-white",
+                                    style: 'pointer-events: none;opacity: 0.5;'
                                 },
-                                text: 'Выбрать',
+                                text: 'Подтвердить',
                                 events: {
                                     click: BX.proxy(function () {
                                         BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
@@ -1529,17 +1530,17 @@ BX.SaleCommonPVZ = {
                             }),
                         ]
                 }),
-                BX('pvz_user_data')
+                BX('map_for_delivery')
             )
-        }
+        // }
     },
 
     buildPvzItem: function (el, pvzListNode) {
-
-        let checked = '';
-        if (el.id === 0) {
-            checked = 'checked';
-        }
+        //
+        // let checked = '';
+        // if (el.id === 0) {
+        //     checked = 'checked';
+        // }
 
         const boxWithDeliveryInfo = BX.create({
             tag: 'div',
@@ -1555,7 +1556,7 @@ BX.SaleCommonPVZ = {
                         id: el.id,
                         name: 'pvz',
                         className: 'form-check-input',
-                        checked
+                        // checked
                     },
                     events: {
                         change: BX.proxy(function (e) {
@@ -1564,6 +1565,9 @@ BX.SaleCommonPVZ = {
                                 {
                                     dataset: {
                                         pvzid: el.id
+                                    },
+                                    props:{
+                                        style: '',
                                     }
                                 }
                             )
