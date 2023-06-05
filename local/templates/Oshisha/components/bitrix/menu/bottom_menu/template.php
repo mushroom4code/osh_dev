@@ -21,11 +21,16 @@ if (empty($arResult)) {
 foreach ($arResult as $itemIdex => $arItem):
     if (in_array($arItem["TEXT"], ['Новинки', 'Дисконт', 'Акции'])):
         continue;
-    endif; ?>
+    endif;
+
+    $download = '';
+    if (strripos($arItem['LINK'], '.pdf') !== false || strripos($arItem['LINK'], '.xls') !== false) {
+        $download = 'download';
+    } ?>
 
     <?php if ($arItem["DEPTH_LEVEL"] == "1" && !empty(htmlspecialcharsbx($arItem["LINK"]))): ?>
     <li class="col-menu-item">
-        <a class="col-menu-link"
+        <a class="col-menu-link" <?=$download?>
            href="<?= htmlspecialcharsbx($arItem["LINK"]) ?>"><?= htmlspecialcharsbx($arItem["TEXT"]) ?>
         </a>
     </li>

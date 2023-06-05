@@ -101,6 +101,19 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 </div>
 <div id="bx_eshop_wrap">
     <header>
+        <?php if (CHECKED_INFO) {
+            $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
+            <div class="alert-info-setting">
+                <p class="mb-0 text-center d-lg-block d-md-block d-none">
+                    <?= !empty($Option->text_info) ?  $Option->text_info : '' ?>
+                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                       class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
+                <p class="mb-0 text-center d-lg-none d-md-none d-block">
+                    <?= !empty($Option->text_info_mobile) ?  $Option->text_info_mobile : '' ?>
+                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                       class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
+            </div>
+        <?php } ?>
         <div class="header_top_panel">
             <div class="header_logo_mobile">
                 <a href="<?= SITE_DIR ?>">
@@ -126,7 +139,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </a>
             </div>
             <div class="container_header flex_header">
-                <div class="box_with_city flex_header col-5 pl-0">
+                <div class="box_with_city flex_header col-4 pl-0">
                     <span class="d-flex flex-row align-items-center">
                         <img src="/local/assets/images/icon_location.svg" class="icon_location">
                         <a href="#" class="text_header">
@@ -174,9 +187,13 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
                         отзыв</a>
                 </div>
-                <div class="box_with_menu_header flex_header flex_header_right col-7 pr-0">
+                <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
-                    <?php if ($USER->IsAuthorized()) { ?>
+
+                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentaion.pdf')) { ?>
+                        <a href="/local/templates/Oshisha/images/presentaion.pdf" download class="text_header ">Презентация</a>
+                    <?php }
+                    if ($USER->IsAuthorized()) { ?>
                         <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
                     <?php } else { ?>
                         <a href="/login/" class="text_header ">Прайс-лист</a>
@@ -223,6 +240,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 <a href="/about/o-nas/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">О нас</span>
                                 </a>
+                                <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentaion.pdf')) { ?>
+                                    <a href="/local/templates/Oshisha/images/presentaion.pdf" download
+                                       class="text_header ">Презентация</a>
+                                <?php } ?>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
                                 </a>

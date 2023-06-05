@@ -1,7 +1,9 @@
 <?php
 
+use Bitrix\Main\Loader;
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Enterego\EnteregoSettings;
+use Enterego\UserPrice\UserPriceHelperOsh;
 
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
@@ -25,13 +27,17 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
     '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
+    '\Enterego\ProductsSubscriptionsTable'=>'/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
     '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
+    '\Enterego\EnteregoActionDiscountPriceType' =>
+        '/bitrix/php_interface/enterego_class/EnteregoActionDiscountPriceType.php',
 ));
 
 //redefine sale  basket condition
 require_once(__DIR__ . '/enterego_class/sale_cond.php');
+
 
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
@@ -72,6 +78,8 @@ AddEventHandler("main", "OnBuildGlobalMenu", "DoBuildGlobalMenu");
 AddEventHandler("main", "OnBeforeProlog", "PriceTypeANDStatusUser", 50);
 AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
 
+AddEventHandler('sale', 'OnCondSaleActionsControlBuildList',
+    ['\Enterego\EnteregoActionDiscountPriceType', 'GetControlDescr']);
 
 function PriceTypeANDStatusUser()
 {
@@ -177,7 +185,21 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                         "priceList.php",
                     ),
                     "items" => array(),
-                )
+                ),
+	              array(
+		              "parent_menu" => "global_menu_enterego",
+		              "icon" => "default_menu_icon",
+		              "page_icon" => "default_page_icon",
+		              "sort" => "200",
+		              "text" => "Строка Информатор",
+		              "title" => "Строка Информатор",
+		              "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
+		              "parent_page" => "global_menu_enterego",
+		              "more_url" => array(
+			              "informator.php",
+		              ),
+		              "items" => array(),
+	              )
             )
         ),
     );
@@ -189,15 +211,31 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 class BXConstants
 {
 
-    static function PriceCode()
+    private static $_listPriceType;
+    /**
+     * @return array|string[]
+     * @throws \Bitrix\Main\Db\SqlQueryException
+     * @throws \Bitrix\Main\LoaderException
+     */
+    static function PriceCode(): array
     {
-        return array(
+        if (self::$_listPriceType !== null) {
+            return self::$_listPriceType;
+        }
+
+        $priceTypes =  array(
             SALE_PRICE_TYPE_ID => "Сайт скидка",
             BASIC_PRICE => "Основная",
             B2B_PRICE => "b2b",
             RETAIL_PRICE => 'Розничная',
         );
 
+        if (Loader::includeModule('osh.userprice')) {
+            $priceTypes += UserPriceHelperOsh::getUserPricesForCurrentUser();
+        }
+
+        self::$_listPriceType = $priceTypes;
+        return self::$_listPriceType;
     }
 
     static function Shared()
@@ -274,6 +312,7 @@ function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
 }
 
 require_once(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
+require_once(__DIR__ . '/enterego_class/EnteregoMakeProductsSubscriptionsReport.php');
 /**
  * @return string
  */
@@ -326,7 +365,8 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
     $APPLICATION->AddHeadString($jsCode);
 }
 
-EnteregoSettings::getSalePriceOnCheckAndPeriod();
+EnteregoSettings::getParamOnCheckAndPeriod();
+EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO','activation_info_admin');
 
 // JWT-token authorization
 addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);

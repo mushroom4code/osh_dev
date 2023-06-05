@@ -209,6 +209,7 @@ JCSmartFilter.prototype.addHorizontalFilter = function(checkbox)
 {
 	const mainBlock = BX('osh-filter-horizontal-item'),
 		idFilter = BX(checkbox).getAttribute('id'),
+		labelsPropClass = idFilter.match(/[a-zA-Z]+_(\d)+/),
 		idFilterItem = `item-${idFilter}`,
 		nameFilter = BX.findChild(BX.findParent(checkbox, {'tag':'form'}), {
 			attribute: {
@@ -217,12 +218,16 @@ JCSmartFilter.prototype.addHorizontalFilter = function(checkbox)
 		}, true).innerHTML;
 
 	this.countCheckboxFilter++
+	let currPropLabel = document.querySelectorAll('#' + idFilterItem);
+	if (currPropLabel.length) {
+		return;
+	}
 
 	BX.append(
 		BX.create('div', {
 			props: {
 				id: idFilterItem,
-				className: `osh-filter-item osh-filter-horizontal-border`
+				className: `osh-filter-item osh-filter-horizontal-border ${labelsPropClass[0]}`
 			},
 			html: nameFilter + `<span class='d-inline-block osh-filter-horizontal-remove'></span>`
 		}),
@@ -237,6 +242,7 @@ JCSmartFilter.prototype.addHorizontalFilter = function(checkbox)
 		BX(checkbox).checked = false;
 		this.countCheckboxFilter--
 		this.updateHorizontalFilter()
+		this.reload(BX(checkbox));
 		this.proxy();
 		return BX.PreventDefault(e);
 	});

@@ -2,7 +2,14 @@
 
 namespace Enterego\UserPrice;
 
+use Bitrix\Catalog\GroupTable;
+use Bitrix\Catalog\PriceTable;
+use Bitrix\Main\Application;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Db\SqlQueryException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
+use CIBlockElement;
 use CModule;
 use CPrice;
 use EntUserPriceGlobal;
@@ -147,58 +154,132 @@ class UserPriceHelperOsh
      * из всех продуктов, сохраненных в контексте,
      * для пользователя с указанным user() ID (или пользователем по умолчанию)
      *
-     * @param string|int $PRODUCT_ID
-     * @return null|special
+     * @param $productId
+     * @return float|null
+     * @throws SqlQueryException
      */
-    public function getForProduct($PRODUCT_ID): ?Special
+    public static function getForProduct($productId): ?float
     {
-        $PRODUCT_ID = intval($PRODUCT_ID);
-        $IBLOCK_SECTION_ID = $this->productIdToSectionId[$PRODUCT_ID];
-        $USER_ID = intval($this->user());
-        $price_id = PluginStatic::GetPriceIdFromRule($PRODUCT_ID, $IBLOCK_SECTION_ID, $USER_ID);
+        $price_id = self::GetPriceIdFromRule($productId);
 
-        if(!$price_id) {
+        if (empty($price_id)) {
             return null;
         }
 
-        $result = new Special();
-
-        $result->PRODUCT_ID = $PRODUCT_ID;
-        $result->IBLOCK_SECTION_ID = $IBLOCK_SECTION_ID;
-        $result->priceId = $price_id;
-
-        if(isset($this->priceIdToPrice[$PRODUCT_ID]))
-        {
-            if (!isset($this->priceIdToPrice[$PRODUCT_ID][$price_id]))
-            {
-                // Индивидуальная цена задана,
-                // Но она не была получена ранее в массив priceIdToPrice
-                // тогда получим её из базы.
-                // TODO FIXME WIP
-
-                return null;    // у нас есть подходящее правило,
-                // но нет такой заданной цены в этом контексте (у товара)
-            }
-
-            $result->priceName = $this->priceIdToName[$PRODUCT_ID][$price_id];
-            $result->price = $this->priceIdToPrice[$PRODUCT_ID][$price_id];
+        try {
+            $rsPriceList = PriceTable::getList([
+                'filter' => ['PRODUCT_ID' => $productId, 'CATALOG_GROUP_ID' => $price_id]
+            ]);
+        } catch (ObjectPropertyException|ArgumentException|SystemException $e) {
+            return null;
+        }
+        if ($arPriceItem = $rsPriceList->fetch()) {
+            return (float) $arPriceItem['PRICE'];
         }
 
-        if($result->priceId)
-        {
-            if(!$result->price)
+        return null;
+    }
+
+    /**
+     * Поиск специально установленной (индивидуальной цены) для пользователя
+     * в контексте ID продукта и его группы товаров.
+     *
+     * @param int|string|null $productId ID товара правила
+     * @return false|int            Возвращает CATALOG_PRICE_ID (если найден)
+     * @throws SqlQueryException
+     */
+    public static function GetPriceIdFromRule($productId)
+    {
+        global $USER;
+        $userId = $USER->GetID();
+        if (empty($userId)) {
+            return null;
+        }
+
+        $productId = intval($productId);
+        $productSectionIds = [];
+        $rsSection = CIBlockElement::GetElementGroups($productId, false, ['ID']);
+        while ($arSection = $rsSection->Fetch()) {
+            $productSectionIds[] = $arSection['ID'];
+        }
+
+        $db = Application::getConnection();
+        if (!empty($productId)) {
+            $sql = "SELECT rule.catalog_price_id               
+                    FROM `ent_user_price_rule` rule
+                    WHERE
+                        rule.`user_id` = {$userId}
+                        AND rule.`product_id` = $productId   
+                    LIMIT 1";
+
+            $res = $db->query($sql);
+
+            if($arRes = $res->fetch())
             {
-                global $DB;
-
-                $res = $DB->Query("SELECT `PRICE` FROM b_catalog_price WHERE
-                                PRODUCT_ID = {$PRODUCT_ID} AND CATALOG_GROUP_ID = {$price_id} LIMIT 1");
-
-                if ($arPrice = $res->GetNext()) {
-                    $result->price = $arPrice['PRICE'];
+                if($price_id = intval($arRes['catalog_price_id'])) {
+                    return $price_id;
                 }
             }
         }
 
-        return $result;
+        if($productSectionIds) {
+            $strSectionIds = implode(',', $productSectionIds);
+
+            $sql = "SELECT rule.catalog_price_id              
+                FROM `ent_user_price_rule` rule
+                WHERE
+                    rule.`user_id` = {$userId}
+                    AND rule.`iblock_section_id` IN ($strSectionIds)
+                LIMIT 1";
+
+            $res = $db->query($sql);
+
+            if($arRes = $res->fetch())
+            {
+                if($price_id = intval($arRes['catalog_price_id'])) {
+                    return $price_id;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     * @throws SqlQueryException
+     */
+    public static function getUserPricesForCurrentUser(): array
+    {
+        global $USER;
+        $userId = $USER->GetID();
+        if (empty($userId)) {
+            return [];
+        }
+
+        $userTypePriceList = [];
+        $db = Application::getConnection();
+
+        $sql = "SELECT rule.catalog_price_id               
+                    FROM `ent_user_price_rule` rule
+                    WHERE
+                        rule.`user_id` = {$userId} GROUP BY rule.catalog_price_id ";
+
+        $res = $db->query($sql);
+
+        while ($arRes = $res->fetch()) {
+            if ($price_id = intval($arRes['catalog_price_id'])) {
+                $userTypePriceList[] = $price_id;
+            }
+        }
+
+        $priceTypesResult = [];
+        $rsGroup = GroupTable::getList(['select'=>['ID', 'NAME'], 'filter'=>['ID'=>$userTypePriceList]]);
+        while($arGroup=$rsGroup->fetch())
+        {
+            $priceTypesResult[$arGroup['ID']] =  $arGroup['NAME'];
+        }
+
+        return $priceTypesResult;
     }
 }

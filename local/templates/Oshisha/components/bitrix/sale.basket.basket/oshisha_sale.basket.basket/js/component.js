@@ -1602,7 +1602,8 @@
 			{
 				let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
 				//alert('К покупке доступно максимум '+AVAILABLE_QUANTITY+'шт.');
-					$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('К покупке доступно максимум: '+AVAILABLE_QUANTITY+'шт.').addClass('show_block');
+					$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('К покупке доступно максимум: '+AVAILABLE_QUANTITY+'шт.' +
+                        ' <div class="close-count-alert js__close-count-alert"></div>').addClass('show_block');
 				
 			} 
 			else

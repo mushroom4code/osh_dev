@@ -55,6 +55,7 @@ if ($arParams['SHOW_ACCOUNT_PAY_COMPONENT'] !== 'N' && $USER->IsAuthorized()) {
                     array(
                         "ACTION_VARIABLE" => "action",
                         "ADD_PICT_PROP" => "-",
+                        "ACTIVE_BLOCK_YOU_SEE" => "N",
                         "ADD_PROPERTIES_TO_BASKET" => "Y",
                         "ADD_SECTIONS_CHAIN" => "N",
                         "ADD_TO_BASKET_ACTION" => "ADD",

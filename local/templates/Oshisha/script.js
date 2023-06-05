@@ -135,13 +135,17 @@ $(document).ready(function () {
             altField: inputPicker,
         });
     }
+    function setPriceGenerate(elem,value){
+        if($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0){
+            $('.ganerate_price').text(getPriceForProduct(elem) * value + ' ₽');
+        }
+    }
 
     function getPriceForProduct(that) {
         if (that.closest('.bx_catalog_item_container') === null) {
             return parseInt($('.product-item-detail-price-current').text().match(/[\d]/gi).join(''));
         }
     }
-
     // COLOR TASTE
     function tasteInit() {
         let box = $('.variation_taste');
@@ -328,9 +332,7 @@ $(document).ready(function () {
         if (value > 0) {
             $('.ganerate_price_wrap').show();
         }
-        if($('.ganerate_price').length >0){
-            $('.ganerate_price').text(getPriceForProduct(this) * value + ' ₽');
-        }
+        setPriceGenerate(this,value)
     }
 
     $(document).on('keypress', '.card_element', function (e) {
@@ -411,9 +413,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    if ($('.ganerate_price').length > 0) {
-                        $('.ganerate_price').text(getPriceForProduct(this) * beforeVal + ' ₽');
-                    }
+                    setPriceGenerate(this,beforeVal);
 
                     product_data = {
                         'ID': product_id,
@@ -429,9 +429,9 @@ $(document).ready(function () {
                         $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                     } else
                         $('.ganerate_price_wrap').hide();
-                    if ($('.ganerate_price').length > 0) {
-                        $('.ganerate_price').text(getPriceForProduct(this) * max_QUANTITY + ' ₽');
-                    }
+
+                    setPriceGenerate(this,max_QUANTITY);
+
                     product_data = {
                         'ID': product_id,
                         'QUANTITY': max_QUANTITY,
@@ -453,9 +453,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    if ($('.ganerate_price').length > 0) {
-                        $('.ganerate_price').text(getPriceForProduct(this) * beforeVal + ' ₽');
-                    }
+                    setPriceGenerate(this,beforeVal)
 
                     product_data = {
                         'ID': product_id,
@@ -493,10 +491,6 @@ $(document).ready(function () {
                     $(boxInput).val(1);
                 }
             }
-
-            $(document).on('click', '.js__close-count-alert', function() {
-                $(this).parents('.alert_quantity').html('').removeClass('show_block');
-            })
 
             let detailCardBasketAddButton = $('a.add2basket:not(.btn-plus):not(.btn-minus)[data-product_id="' + product_id + '"]');
             if ($(detailCardBasketAddButton).is('.basket_prod_detail')) {
@@ -634,6 +628,7 @@ $(document).ready(function () {
         $('a#yes_mess').on('click', function () {
             var popup_mess = $(this).closest('div#popup_mess');
             var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
+            var product_name = $(this).closest('div.item-product-info').find('a.bx_catalog_item_title').text().trim();
             if ($(this).closest('div#popup_mess').hasClass('subscribed')){
                 var subscribe = "N";
                 var subscription_id = popup_mess.attr('data-subscription_id');
@@ -644,11 +639,15 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/local/templates/Oshisha/components/bitrix/catalog.product.subscribe/oshisha_catalog.product.subscribe/ajax.php',
-                data: {subscribe: subscribe, item_id: product_id, subscription_id: subscription_id},
+                data: {subscribe: subscribe, item_id: product_id, product_name: product_name, subscription_id: subscription_id},
                 success: function (result_jsn) {
                     var result = JSON.parse(result_jsn);
                     if(result.success === true){
                         var item_controls = popup_mess.parent();
+                        if(result.clickDbError != 'false') {
+                            console.log('error while updating productsSubscriptionsTable');
+                            console.log(result.clickDbError);
+                        }
                         if(result.message === "subscribed") {
                             popup_mess.addClass('subscribed');
                             popup_mess.attr('data-subscription_id', result.subscribeId);
@@ -2967,13 +2966,33 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.js__taste ', function() {
-        let tasteCheckId = $(this).attr('data-filter-get');
-        $('#VKUS').find('.check_input').prop('checked', false);
-        $('#'+tasteCheckId).prop('checked', true);
+        let tasteCheckId = $(this).attr('data-filter-get'),
+            taste =  $(this).closest('.js__tastes');
+        // Сбрасываем повторную фильтрацию по уже выбранному вкусу
 
-        window.smartFilter.addHorizontalFilter(BX(tasteCheckId))
+        if (BX(tasteCheckId).checked) {
+            $(taste).append('<span class="taste-errors">Вкус уже выбран</span>');
+            setTimeout(BX.delegate(
+                    function() {
+                        $(taste).find('.taste-errors').fadeOut(
+                            'slow',
+                            function () {
+                                this.remove()
+                            })
+                    }),
+                2000
+            );
+            return;
+        }
+
+        $('#'+tasteCheckId).prop('checked', true);
+        window.smartFilter.addHorizontalFilter(BX(tasteCheckId));
         window.smartFilter.timer = setTimeout(BX.delegate(function(){
             this.reload(BX(tasteCheckId));
         }, window.smartFilter), 500);
     })
 });
+
+$(document).on('click', '.js__close-count-alert', function() {
+    $(this).parents('.alert_quantity').html('').removeClass('show_block');
+})

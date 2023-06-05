@@ -1,5 +1,6 @@
 <?php
 
+use Bitrix\Main\Application;
 use Bitrix\Main\EventManager;
 use Enterego\Osh\Loyalty\PluginStatic;
 
@@ -67,10 +68,8 @@ Class osh_userprice extends CModule
      */
     function InstallDB()
     {
-        global $DB;
-
-        $arSQL = [];
-        $arSQL[] = "CREATE TABLE IF NOT EXISTS `ent_user_price_rule`
+        $con = Application::getConnection();
+        $sql = "CREATE TABLE IF NOT EXISTS `ent_user_price_rule`
             (
                 id                  INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 user_id            INT UNSIGNED NOT NULL,
@@ -81,13 +80,41 @@ Class osh_userprice extends CModule
                 
                 KEY user_id (user_id)
             )";
+        $con->query($sql);
 
-        $arSQL[] = "CREATE INDEX `idx_ent_user_price_rule_product_id` ON `ent_user_price_rule` (`product_id`)";
-        $arSQL[] = "CREATE INDEX `idx_ent_user_price_rule_iblock_section_id` ON `ent_user_price_rule` (`iblock_section_id`)";
-        $arSQL[] = "CREATE INDEX `idx_ent_user_price_rule_is_primary` ON `ent_user_price_rule` (`is_primary`)";
+        $tableName = 'ent_user_price_rule';
 
-        foreach($arSQL as $sql) {
-            $DB->Query($sql);
+        $indexName = 'idx_ent_user_price_rule_product_id';
+        $refName = 'product_id';
+        $this->AddIndexDB($con, $tableName, $indexName, $refName);
+
+        $indexName = 'idx_ent_user_price_rule_iblock_section_id';
+        $refName = 'iblock_section_id';
+        $this->AddIndexDB($con, $tableName, $indexName, $refName);
+
+        $indexName = 'idx_ent_user_price_rule_is_primary';
+        $refName = 'is_primary';
+        $this->AddIndexDB($con, $tableName, $indexName, $refName);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param \Data\Connection|DB\Connection $con
+     * @param string $tableName
+     * @param string $indexName
+     * @param string $refName
+     * @return void
+     */
+    private function AddIndexDB($con, $tableName, $indexName, $refName) {
+        $sql = "SELECT COUNT(1) IndexIsThere FROM INFORMATION_SCHEMA.STATISTICS
+            WHERE table_schema=DATABASE() AND table_name='$tableName' AND index_name='$indexName'";
+        $res = $con->query($sql);
+        if ($record = $res->fetch()) {
+            if ($record['IndexIsThere'] === "0") {
+                $sql = "CREATE INDEX `$indexName` ON `$tableName` (`$refName`)";
+                $con->query($sql);
+            }
         }
     }
 
@@ -104,19 +131,6 @@ Class osh_userprice extends CModule
         foreach($arSQL as $sql) {
             $DB->Query($sql);
         }
-    }
-
-    function InstallEvents()
-    {
-        Cmodule::IncludeModule('sale');
-
-        \Bitrix\Main\EventManager::getInstance()->unRegisterEventHandler(
-            'sale',
-            \Bitrix\Sale\Cashbox\Check::EVENT_ON_CHECK_PREPARE_DATA,
-            $this->MODULE_ID,
-            PluginStatic::class,
-            'OnSampleEvent'
-        );
     }
 
     /**
