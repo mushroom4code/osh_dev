@@ -403,7 +403,7 @@ if ($request->get('ORDER_ID') <> '') {
                                     <?= $arParams['MESS_DELIVERY_BLOCK_NAME'] ?>
                                 </div>
                             </div>
-                            <div class="box_with_delivery_type">
+                            <div class="box_with_delivery_type d-none">
                                 <div class="bx-soa-section-content"></div>
                                 <div id="bx-soa-region" data-visited="false"
                                      class="bx-soa-section mb-4 d-none">

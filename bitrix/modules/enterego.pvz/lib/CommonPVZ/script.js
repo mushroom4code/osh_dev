@@ -195,22 +195,17 @@ BX.SaleCommonPVZ = {
                             props: {
                                 className: 'col-6'
                             },
-                            text: 'Доставка + цена'
+                            html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" aria-hidden="true"></i> ' +
+                                '<span class="font-weight-500">Доставка + цена </span>'
                         }),
                         BX.create({
                             tag: 'div',
                             props: {
-                                className: 'col-3'
+                                className: 'col-6'
                             },
-                            text: 'Срок доставки'
+                            html: '<i class="fa fa-truck color-redLight font-20 mr-2" aria-hidden="true"></i> ' +
+                                '<span class="font-weight-500">Срок доставки </span>'
                         }),
-                        BX.create({
-                            tag: 'div',
-                            props: {
-                                className: 'col-3'
-                            },
-                            text: 'Период доставки'
-                        })
                     ]
                 }),
                 BX.create({
@@ -224,9 +219,8 @@ BX.SaleCommonPVZ = {
         })
         BX.append(pvzBox, BX('map_for_delivery'))
 
-
+        console.log(orderData)
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
-        const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
         const currentTypeDelivery = this.getValueProp(this.propTypeDeliveryId)
         const address = this.getValueProp(this.propAddressId)
 
@@ -239,66 +233,104 @@ BX.SaleCommonPVZ = {
                         propsRadio.checked = "checked"
                     }
 
-                    const deliveryRowNode = [
-                        BX.create('INPUT', {
-                            attrs: {checked: delivery.checked},
-                            props: {
-                                type: 'radio',
-                                name: 'delivery',
-                            },
-                            dataset: {code: delivery.code},
-                        }),
-                        BX.create('DIV', {
-                            props: {
-                                className: 'ml-2 font-weight-bold',
-                            },
-                            html: `${delivery.name}`
-                        }),
-                        BX.create('DIV', {
-                            props: {
-                                className: 'ml-4 red_text font-weight-bold',
-                            },
-                            html: delivery.price != 0 ? delivery.price + ' руб.' : 'Бесплатно'
-                        })
-                    ]
-                    if (delivery.code === 'oshisha') {
-                        deliveryRowNode.push(this.updateOshishaDelivery())
-                    }
+                    const boxWithDeliveryInfo = BX.create({
+                        tag: 'div',
+                        props: {
+                            className: 'd-flex flex-lg-row flex-md-row flex-column col-lg-6 col-md-6 col-12 p-0'
+                        },
+                        children: [
+                            //checkbox
+                            BX.create({
+                                tag: 'input',
+                                attrs: {checked: delivery.checked},
+                                dataset: {code: delivery.code},
+                                props: {
+                                    type: 'radio',
+                                    name: 'delivery',
+                                    className: 'form-check-input',
+                                },
+                            }),
+                            BX.create({
+                                tag: 'div',
+                                props: {
+                                    className: 'd-flex flex-column box-with-props-delivery'
+                                },
+                                children: [
+                                    BX.create({
+                                        tag: 'div',
+                                        props: {
+                                            className: 'd-flex align-items-center mb-1 box-with-price-delivery pl-3'
+                                        },
+                                        children: [
+                                            // deliveryName
+                                            BX.create({
+                                                tag: 'span',
+                                                props: {
+                                                    className: 'font-weight-bold'
+                                                },
+                                                text: `${delivery.name}`
+                                            }),
+                                            BX.create({
+                                                tag: 'span',
+                                                props: {
+                                                    className: 'pl-3 red_text font-weight-bold'
+                                                },
+                                                text: delivery.price != 0 ? delivery.price + ' руб.' : 'Бесплатно'
+                                            }),
+                                        ]
+                                    }),
+                                ]
+                            }),
+                        ]
+                    })
 
-                    const propPopupContainer = BX.create(
-                        'DIV',
-                        {
+                    if (delivery.code === 'oshisha') {
+                        BX.findChildByClassName(boxWithDeliveryInfo, 'box-with-props-delivery').appendChild(this.updateOshishaDelivery());
+                    }
+                    BX.append(
+                        BX.create({
+                            tag: 'div',
                             props: {
-                                className: 'row mb-3'
+                                className: 'column mb-3 bx-selected-delivery ',
                             },
                             children: [
                                 BX.create({
                                     tag: 'div',
-                                    props: {className: 'col-6 d-flex flex-row'},
-                                    children: deliveryRowNode
-                                }),
-                                BX.create({
-                                    tag: 'div',
-                                    props: {className: 'col-6 d-flex flex-row'},
+                                    props: {
+                                        className: 'd-flex flex-lg-row flex-md-row flex-column flex-wrap'
+                                    },
                                     children: [
+                                        boxWithDeliveryInfo,
                                         BX.create({
                                             tag: 'span',
                                             props: {
-                                                className: 'font-weight-bold'
+                                                className: 'col-lg-3 col-md-3 col-12 mb-2'
                                             },
-                                        }),
-                                        BX.create({
-                                            tag: 'span',
-                                            props: {
-                                                className: 'ml-2'
-                                            },
-                                            text: 'от 2 дней'
+                                            children: [
+                                                BX.create({
+                                                    tag: 'span',
+                                                    props: {
+                                                        className: 'font-weight-bold d-lg-none d-md-none d-block'
+                                                    },
+                                                    text: 'Срок доставки: '
+                                                }),
+                                                BX.create({
+                                                    tag: 'span',
+                                                    props: {
+                                                        className: 'ml-lg-2 ml-md-2 ml-0 font-13'
+                                                    },
+                                                    text: 'от 2 дней'
+                                                }),
+                                            ]
+
                                         })
                                     ]
-                                }),
+                                })
                             ]
-                        })
-                    BX.append(propPopupContainer, BX('deliveries-list'))
+                        }),
+                        BX('deliveries-list')
+                    );
+
                 }
             })
         } else {
@@ -329,7 +361,7 @@ BX.SaleCommonPVZ = {
                             href: "javascript:void(0)",
                             className: "link_red_button text-white",
                         },
-                        text: 'Выбрать',
+                        text: 'Подтвердить ',
                         events: {
                             click: BX.proxy(function () {
 
@@ -1462,21 +1494,24 @@ BX.SaleCommonPVZ = {
                             props: {
                                 className: 'col-6'
                             },
-                            text: 'Доставка + цена'
+                            html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" aria-hidden="true"></i> ' +
+                                '<span class="font-weight-500">Доставка + цена </span>'
                         }),
                         BX.create({
                             tag: 'div',
                             props: {
                                 className: 'col-3'
                             },
-                            text: 'Срок доставки'
+                            html: '<i class="fa fa-truck color-redLight font-20 mr-2" aria-hidden="true"></i> ' +
+                                '<span class="font-weight-500">Срок доставки </span>'
                         }),
                         BX.create({
                             tag: 'div',
                             props: {
                                 className: 'col-3'
                             },
-                            text: 'Режим работы'
+                            html: '<i class="fa fa-clock-o color-redLight font-20 mr-2" aria-hidden="true"></i> ' +
+                                '<span class="font-weight-500">Режим работы </span>'
                         })
                     ]
                 }),
@@ -1592,7 +1627,7 @@ BX.SaleCommonPVZ = {
                             props: {
                                 className: 'pl-3 mb-2 font-13'
                             },
-                            text: el.properties.fullAddress
+                            html: '<i class="fa fa-map-pin color-redLight font-15 mr-2" aria-hidden="true"></i>' + el.properties.fullAddress
                         })
                     ]
                 }),
@@ -1627,7 +1662,8 @@ BX.SaleCommonPVZ = {
                                         props: {
                                             className: 'font-weight-bold d-lg-none d-md-none d-block'
                                         },
-                                        text: 'Срок доставки: '
+                                        html: '<i class="fa fa-truck color-redLight font-18 mr-2" aria-hidden="true"></i> ' +
+                                            '<span class="font-weight-500">Срок доставки: </span>'
                                     }),
                                     BX.create({
                                         tag: 'span',
@@ -1650,7 +1686,8 @@ BX.SaleCommonPVZ = {
                                         props: {
                                             className: 'worktime-title d-lg-none d-md-none d-block font-weight-bold'
                                         },
-                                        text: 'Режим работы: '
+                                        html: '<i class="fa fa-clock-o color-redLight font-18 mr-2" aria-hidden="true"></i> ' +
+                                            '<span class="font-weight-500">Режим работы: </span>'
                                     }),
                                     BX.create({
                                         tag: 'span',

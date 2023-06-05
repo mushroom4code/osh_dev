@@ -3839,7 +3839,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                             children: [
                                 BX.create('INPUT', {
                                     attrs: {checked: currentType.CHECKED == 'Y'},
-                                    props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID}
+                                    props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID,classname:'form-check-input'}
                                 }),
                                 BX.util.htmlspecialchars(currentType.NAME)
                             ],
@@ -3901,7 +3901,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         options.push(BX.create('OPTION', {
                             props: {
                                 value: currentType.ID,
-                                selected: currentType.CHECKED === 'Y'
+                                selected: currentType.CHECKED === 'Y',
+                                className: 'form-check-input'
                             },
                             text: currentType.NAME
                         }));
@@ -3912,7 +3913,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
                 }
                 node.appendChild(BX.create('SELECT', {
-                    props: {name: 'PERSON_TYPE', className: 'form-control'},
+                    props: {name: 'PERSON_TYPE', className: 'form-control form-check-input'},
                     children: options,
                     events: {change: BX.proxy(this.sendRequest, this)}
                 }));
