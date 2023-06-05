@@ -1614,7 +1614,7 @@ BX.SaleCommonPVZ = {
                             tag: 'div',
                             props: {
                                 className: 'd-flex flex-lg-row flex-md-row flex-column' +
-                                    ' align-items-center mb-1 box-with-price-delivery pl-3'
+                                    ' mb-1 box-with-price-delivery pl-3'
                             },
                             children: [
                                 // deliveryName
@@ -1630,7 +1630,7 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'span',
                             props: {
-                                className: 'pl-3 mb-2 font-13'
+                                className: 'pl-lg-3 pl-md-3 pl-0 mb-2 font-13'
                             },
                             html: '<i class="fa fa-map-pin color-redLight font-15 mr-2" aria-hidden="true"></i>' + el.properties.fullAddress
                         })
