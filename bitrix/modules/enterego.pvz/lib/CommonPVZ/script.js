@@ -259,7 +259,8 @@ BX.SaleCommonPVZ = {
                                     BX.create({
                                         tag: 'div',
                                         props: {
-                                            className: 'd-flex align-items-center mb-1 box-with-price-delivery pl-3'
+                                            className: 'd-flex flex-lg-row flex-md-row flex-column' +
+                                                ' align-items-center mb-1 box-with-price-delivery pl-3'
                                         },
                                         children: [
                                             // deliveryName
@@ -1609,7 +1610,8 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'div',
                             props: {
-                                className: 'd-flex align-items-center mb-1 box-with-price-delivery pl-3'
+                                className: 'd-flex flex-lg-row flex-md-row flex-column' +
+                                    ' align-items-center mb-1 box-with-price-delivery pl-3'
                             },
                             children: [
                                 // deliveryName
