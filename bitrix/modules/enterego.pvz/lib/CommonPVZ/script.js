@@ -187,7 +187,7 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray'
+                        className: 'container-fluid d-lg-flex d-md-flex d-none flex-row flex-wrap table-header'
                     },
                     children: [
                         BX.create({
@@ -529,7 +529,7 @@ BX.SaleCommonPVZ = {
                         tag: 'div',
                         props: {
                             id: 'pvz_user_data',
-                            className: 'pvz_user_data'
+                            className: 'pvz_user_data flex-lg-row flex-md-row flex-wrap'
                         }
                     }),
                     BX.create({
@@ -557,7 +557,7 @@ BX.SaleCommonPVZ = {
         this.buildDeliveryType()
             .buildDataView()
             .buildSortService()
-            .buildMobileControls()
+            // .buildMobileControls()
 
         BX.adjust(this.pvzOverlay, {style: {display: 'flex'}})
     },
@@ -1029,23 +1029,23 @@ BX.SaleCommonPVZ = {
         BX.append(
             BX.create({
                 tag: 'div',
-                props: {className: 'container-fluid', id: 'user-address-wrap'},
+                props: {className: '', id: 'user-address-wrap'},
                 children: [
                     BX.create({
                         tag: 'div',
                         props: {
-                            className: 'row mt-2',
+                            className: 'd-flex flex-lg-row flex-md-row flex-column',
                         },
                         children: [
                             BX.create({
                                 tag: 'div',
                                 props: {
-                                    className: 'col-8 flex flex-column',
+                                    className: 'flex flex-column mb-2 col-md-7 col-lg-7 col-12 wrap_filter_block mr-3',
                                 },
                                 children: [
                                     BX.create({
                                         tag: 'label',
-                                        props: {className: 'font-weight-bold'},
+                                        props: {className: 'title'},
                                         text: 'Введите адрес:'
                                     }),
                                     BX.create({
@@ -1057,36 +1057,26 @@ BX.SaleCommonPVZ = {
                                     })
                                 ]
                             }),
-                            BX.create({
-                                tag: 'div',
-                                props: {
-                                    className: 'col-4',
-                                },
-                                children: [
-                                    BX.create(
-                                        'DIV',
-                                        {
-                                            props: {
-                                                className: 'row'
-                                            },
-                                            children: [
-                                                BX.create({
-                                                    tag: 'label',
-                                                    props: {className: 'font-weight-bold'},
-                                                    text: 'Плановая дата доставки:'
-                                                }),
-                                                BX.create({
-                                                        tag: 'div',
-                                                        props: {className: 'col-12'},
-                                                        children: [
-                                                            dateDeliveryNode
-                                                        ]
-                                                    }
-                                                )
-                                            ]
-                                        })
-                                ]
-                            })
+                            BX.create('DIV',{
+                                    props: {
+                                        className: 'row wrap_filter_block'
+                                    },
+                                    children: [
+                                        BX.create({
+                                            tag: 'label',
+                                            props: {className: 'title'},
+                                            text: 'Плановая дата доставки:'
+                                        }),
+                                        BX.create({
+                                                tag: 'div',
+                                                props: {className: 'col-md-5 col-lg-5 col-12'},
+                                                children: [
+                                                    dateDeliveryNode
+                                                ]
+                                            }
+                                        )
+                                    ]
+                                })
                         ]
                     }),
                 ]
@@ -1144,7 +1134,7 @@ BX.SaleCommonPVZ = {
                     tag: 'div',
                     props: {
                         id: 'wrap_delivery_types',
-                        className: "wrap_filter_block"
+                        className: "wrap_filter_block mr-2"
                     },
                     children: [
                         BX.create({
@@ -1258,7 +1248,7 @@ BX.SaleCommonPVZ = {
                     tag: 'div',
                     props: {
                         id: 'wrap_data_view',
-                        className: "wrap_filter_block"
+                        className: "wrap_filter_block mr-2"
                     },
                     children: [
                         BX.create({
@@ -1464,7 +1454,7 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray pr-5'
+                        className: 'container-fluid d-lg-flex d-md-flex d-none flex-row flex-wrap table-header pr-5'
                     },
                     children: [
                         BX.create({
@@ -1493,7 +1483,8 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'container-fluid d-flex flex-column overflow-auto my-2 table-body border-1-gray p-0 pr-4'
+                        className: 'container-fluid d-flex flex-column overflow-auto my-2 table-body border-1-gray p-0 ' +
+                            'pr-lg-4 pr-md-4 pt-3'
                     },
                 }),
             ]
@@ -1545,7 +1536,7 @@ BX.SaleCommonPVZ = {
         const boxWithDeliveryInfo = BX.create({
             tag: 'div',
             props: {
-                className: 'd-flex flex-lg-row flex-md-row flex-column col-lg-6 col-md-6 col-12'
+                className: 'd-flex flex-lg-row flex-md-row flex-column col-lg-6 col-md-6 col-12 p-0'
             },
             children: [
                 //checkbox
@@ -1599,7 +1590,7 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'span',
                             props: {
-                                className: 'pl-3 mb-2'
+                                className: 'pl-3 mb-2 font-13'
                             },
                             text: el.properties.fullAddress
                         })
@@ -1628,7 +1619,7 @@ BX.SaleCommonPVZ = {
                             BX.create({
                                 tag: 'span',
                                 props: {
-                                    className: 'col-lg-3 col-md-3 col-12'
+                                    className: 'col-lg-3 col-md-3 col-12 mb-2'
                                 },
                                 children: [
                                     BX.create({
@@ -1641,7 +1632,7 @@ BX.SaleCommonPVZ = {
                                     BX.create({
                                         tag: 'span',
                                         props: {
-                                            className: 'ml-2'
+                                            className: 'ml-lg-2 ml-md-2 ml-0 font-13'
                                         },
                                         text: 'от 1 дня'
                                     }),
@@ -1651,20 +1642,20 @@ BX.SaleCommonPVZ = {
                             BX.create({
                                 tag: 'span',
                                 props: {
-                                    className: 'col-lg-3 col-md-3 col-12 d-flex flex-column'
+                                    className: 'col-lg-3 col-md-3 col-12 d-flex flex-column mb-2'
                                 },
                                 children: [
                                     BX.create({
                                         tag: 'span',
                                         props: {
-                                            className: 'worktime-title d-lg-none d-md-none d-block'
+                                            className: 'worktime-title d-lg-none d-md-none d-block font-weight-bold'
                                         },
                                         text: 'Режим работы: '
                                     }),
                                     BX.create({
                                         tag: 'span',
                                         props: {
-                                            className: 'worktime-shedule'
+                                            className: 'worktime-shedule font-13'
                                         },
                                         text: el.properties.workTime
                                     })
