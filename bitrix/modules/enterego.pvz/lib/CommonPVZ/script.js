@@ -222,7 +222,6 @@ BX.SaleCommonPVZ = {
         })
         BX.append(pvzBox, BX('map_for_delivery'))
 
-        console.log(orderData)
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
         const currentTypeDelivery = this.getValueProp(this.propTypeDeliveryId)
         const address = this.getValueProp(this.propAddressId)
@@ -268,18 +267,25 @@ BX.SaleCommonPVZ = {
                                         children: [
                                             // deliveryName
                                             BX.create({
-                                                tag: 'span',
+                                                tag: 'div',
                                                 props: {
-                                                    className: 'font-weight-bold'
+                                                    className: 'font-weight-bold mb-1'
                                                 },
                                                 text: `${delivery.name}`
                                             }),
                                             BX.create({
-                                                tag: 'span',
+                                                tag: 'div',
                                                 props: {
                                                     className: 'pl-lg-3 pl-md-3 pl-0 red_text font-weight-bold'
                                                 },
-                                                text: delivery.price != 0 ? delivery.price + ' руб.' : 'Бесплатно'
+                                                html: delivery.price !== 0 ?
+                                                    '<div class="d-flex flex-row">' +
+                                                    '<i class="fa fa-rub color-redLight font-15 mr-2 d-lg-none d-md-none d-block"' +
+                                                    ' aria-hidden="true"></i> ' +
+                                                    delivery.price + ' руб.</div>' :
+                                                    '<div class="d-flex flex-row">' +
+                                                    '<i class="fa fa-rub color-redLight font-15 mr-2 d-lg-none d-md-none d-block"' +
+                                                    ' aria-hidden="true"></i> Бесплатно</div> ',
                                             }),
                                         ]
                                     }),
@@ -314,9 +320,10 @@ BX.SaleCommonPVZ = {
                                                 BX.create({
                                                     tag: 'span',
                                                     props: {
-                                                        className: 'font-weight-bold d-lg-none d-md-none d-block'
+                                                        className: 'd-lg-none d-md-none d-block'
                                                     },
-                                                    text: 'Срок доставки: '
+                                                    html: '<i class="fa fa-truck color-redLight font-18 mr-2" aria-hidden="true"></i> ' +
+                                                        '<span class="font-weight-500">Срок доставки: </span>'
                                                 }),
                                                 BX.create({
                                                     tag: 'span',
@@ -1619,9 +1626,9 @@ BX.SaleCommonPVZ = {
                             children: [
                                 // deliveryName
                                 BX.create({
-                                    tag: 'span',
+                                    tag: 'div',
                                     props: {
-                                        className: 'font-weight-bold'
+                                        className: 'font-weight-bold mb-1'
                                     },
                                     text: el.properties.deliveryName
                                 }),
@@ -1630,7 +1637,7 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'span',
                             props: {
-                                className: 'pl-lg-3 pl-md-3 pl-0 mb-2 font-13'
+                                className: 'pl-3 mb-2 font-13'
                             },
                             html: '<i class="fa fa-map-pin color-redLight font-15 mr-2" aria-hidden="true"></i>' + el.properties.fullAddress
                         })
@@ -1718,7 +1725,7 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'span',
                     props: {
-                        className: 'red_text font-weight-bold ml-3',
+                        className: 'red_text font-weight-bold ml-lg-3 ml-md-3 ml-0',
                         role: 'button'
                     },
                     text: 'Узнать цену',
@@ -1745,9 +1752,10 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'span',
                     props: {
-                        className: 'red_text font-weight-bold ml-3'
+                        className: 'red_text font-weight-bold ml-lg-3 ml-md-3 mb-2 d-flex flex-row'
                     },
-                    text: el.properties?.price + ' руб.'
+                    html: '<i class="fa fa-rub color-redLight font-15 mr-2 d-lg-none' +
+                        ' d-md-none d-block" aria-hidden="true"></i>' +el.properties?.price + ' руб.'
                 }), deliveryTopRowNode
             )
         }
