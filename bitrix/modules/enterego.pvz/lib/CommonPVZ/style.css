@@ -31,7 +31,7 @@
 }
 
 .table-header {
-    padding: 0.5rem 0;
+    padding: 1rem;
 }
 
 .border-1-gray {
@@ -332,6 +332,16 @@ h4.checkout-block-title > i.fa {
         height: auto;
         padding-bottom: 1em;
     }
+}
+
+.bx-selected-delivery {
+    border: 2px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 19px;
+}
+
+.bx-selected-delivery.selected{
+    border: 2px solid #ff918e;
 }
 
 .wrap_pvz_overlay .wrap_pvz_map .pvz_user_data .wrap_filter_block {

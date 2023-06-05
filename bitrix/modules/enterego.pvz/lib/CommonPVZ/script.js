@@ -131,22 +131,23 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: `<b class="mr-1">Способ доставки:</b>${this.getValueProp(this.propTypeDeliveryId)}`
+                            html: `Способ доставки: <span class="ml-2 font-weight-600">
+                            ${this.getValueProp(this.propTypeDeliveryId)}</b>`
                         }),
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: `<b class="mr-1">Стоимость:</b>${curDelivery?.PRICE_FORMATED}`
+                            html: `Стоимость: <span class="ml-2 font-weight-600">${curDelivery?.PRICE_FORMATED}</span>`
                         }),
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: `<b class="mr-1">Адрес:</b>${address}`
+                            html: `Адрес: <span class="ml-2 font-weight-600">${address}</span>`
                         }),
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: `<b class="mr-1">Дата получения:</b> - `
+                            html: `Дата получения: <span class="ml-2 font-weight-600">-</span> `
                         })
                     ]
                 }
@@ -1457,13 +1458,13 @@ BX.SaleCommonPVZ = {
         pvzBox = BX.create({
             tag: 'div',
             props: {
-                className: 'container-fluid d-flex flex-column overflow-auto my-2'
+                className: 'container-fluid d-flex flex-column overflow-auto box-with-pvz'
             },
             children: [
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray'
+                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray pr-5'
                     },
                     children: [
                         BX.create({
@@ -1492,7 +1493,7 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'container-fluid d-flex flex-column overflow-auto my-2 table-body border-1-gray'
+                        className: 'container-fluid d-flex flex-column overflow-auto my-2 table-body border-1-gray p-0 pr-4'
                     },
                 }),
             ]
@@ -1504,110 +1505,138 @@ BX.SaleCommonPVZ = {
             this.buildPvzItem(el, pvzTableContain)
         })
 
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {className: 'text-center mb-3'},
-                children:
-                    [
-                        BX.create({
-                            tag: 'a',
-                            props: {
-                                id: 'select-pvz-item',
-                                href: "javascript:void(0)",
-                                className: "link_red_button text-white",
-                            },
-                            text: 'Выбрать',
-                            events: {
-                                click: BX.proxy(function () {
-                                    BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
-                                })
-                            }
-                        }),
-                    ]
-            }),
-            BX('map_for_delivery')
-        )
+        // let appendBool = $(document).find('#pvz_user_data #select-pvz-item');
+        // if(appendBool.length === 0 ){
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {className: 'text-center mb-3 wrap_filter_block d-flex align-items-end justify-content-center'},
+                    children:
+                        [
+                            BX.create({
+                                tag: 'a',
+                                props: {
+                                    id: 'select-pvz-item',
+                                    href: "javascript:void(0)",
+                                    className: "link_red_button text-white",
+                                    style: 'pointer-events: none;opacity: 0.5;'
+                                },
+                                text: 'Подтвердить',
+                                events: {
+                                    click: BX.proxy(function () {
+                                        BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
+                                    })
+                                }
+                            }),
+                        ]
+                }),
+                BX('map_for_delivery')
+            )
+        // }
     },
 
     buildPvzItem: function (el, pvzListNode) {
-        const deliveryTopRowNode = BX.create({
+        //
+        // let checked = '';
+        // if (el.id === 0) {
+        //     checked = 'checked';
+        // }
+
+        const boxWithDeliveryInfo = BX.create({
             tag: 'div',
             props: {
-                className: 'd-flex align-items-center col-12 mb-1'
+                className: 'd-flex flex-lg-row flex-md-row flex-column col-lg-6 col-md-6 col-12'
             },
+            children: [
+                //checkbox
+                BX.create({
+                    tag: 'input',
+                    props: {
+                        type: 'radio',
+                        id: el.id,
+                        name: 'pvz',
+                        className: 'form-check-input',
+                        // checked
+                    },
+                    events: {
+                        change: BX.proxy(function (e) {
+                            BX.adjust(
+                                BX('select-pvz-item'),
+                                {
+                                    dataset: {
+                                        pvzid: el.id
+                                    },
+                                    props:{
+                                        style: '',
+                                    }
+                                }
+                            )
+                        })
+                    }
+                }),
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'd-flex flex-column'
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'd-flex align-items-center mb-1 box-with-price-delivery pl-3'
+                            },
+                            children: [
+                                // deliveryName
+                                BX.create({
+                                    tag: 'span',
+                                    props: {
+                                        className: 'font-weight-bold'
+                                    },
+                                    text: el.properties.deliveryName
+                                }),
+                            ]
+                        }),
+                        BX.create({
+                            tag: 'span',
+                            props: {
+                                className: 'pl-3 mb-2'
+                            },
+                            text: el.properties.fullAddress
+                        })
+                    ]
+                }),
+            ]
         })
 
-        //checkbox
-        BX.append(
-            BX.create({
-                tag: 'input',
-                props: {
-                    type: 'radio',
-                    id: el.id,
-                    name: 'pvz',
-                },
-                events: {
-                    change: BX.proxy(function (e) {
-                        BX.adjust(
-                            BX('select-pvz-item'),
-                            {
-                                dataset: {
-                                    pvzid: el.id
-                                }
-                            }
-                        )
-                    })
-                }
-            }), deliveryTopRowNode
-        )
+        this.buildPvzItemPrice(el, BX.findChildByClassName(boxWithDeliveryInfo, 'box-with-price-delivery'))
 
-        //delivery name
-        BX.append(
-            BX.create({
-                tag: 'span',
-                props: {
-                    className: 'font-weight-bold ml-2'
-                },
-                text: el.properties.deliveryName
-            }), deliveryTopRowNode
-        )
-
-        this.buildPvzItemPrice(el, deliveryTopRowNode)
 
         BX.append(
             BX.create({
                 tag: 'div',
                 props: {
-                    className: 'column mb-2'
+                    className: 'column mb-3 bx-selected-delivery ',
                 },
                 children: [
                     BX.create({
                         tag: 'div',
                         props: {
-                            className: 'row'
+                            className: 'd-flex flex-lg-row flex-md-row flex-column flex-wrap'
                         },
                         children: [
-                            deliveryTopRowNode,
+                            boxWithDeliveryInfo,
                             BX.create({
                                 tag: 'span',
                                 props: {
-                                    className: 'col-6 pl-4 mb-2'
-                                },
-                                text: el.properties.fullAddress
-                            }),
-                            BX.create({
-                                tag: 'span',
-                                props: {
-                                    className: 'col-3'
+                                    className: 'col-lg-3 col-md-3 col-12'
                                 },
                                 children: [
                                     BX.create({
                                         tag: 'span',
                                         props: {
-                                            className: 'font-weight-bold'
+                                            className: 'font-weight-bold d-lg-none d-md-none d-block'
                                         },
-                                        // text: 'Срок доставки:'
+                                        text: 'Срок доставки: '
                                     }),
                                     BX.create({
                                         tag: 'span',
@@ -1622,14 +1651,15 @@ BX.SaleCommonPVZ = {
                             BX.create({
                                 tag: 'span',
                                 props: {
-                                    className: 'col-3'
+                                    className: 'col-lg-3 col-md-3 col-12 d-flex flex-column'
                                 },
                                 children: [
                                     BX.create({
                                         tag: 'span',
                                         props: {
-                                            className: 'worktime-title'
+                                            className: 'worktime-title d-lg-none d-md-none d-block'
                                         },
+                                        text: 'Режим работы: '
                                     }),
                                     BX.create({
                                         tag: 'span',
