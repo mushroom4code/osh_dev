@@ -8,7 +8,18 @@
 
 #pvz_address > span {
     font-weight: bold;
+}
 
+.delivery-description > p {
+    font-size: 13px;
+}
+
+.font-20 {
+    font-size: 20px;
+}
+
+.fa.font-15 {
+    font-size: 15px;
 }
 
 #wrap_pvz_map .popup-window-close-icon {
@@ -190,7 +201,7 @@ h4.checkout-block-title > i.fa {
 
 #bx-soa-properties,
 #bx-soa-delivery {
-    margin-bottom: 6em !important;
+    margin-bottom: 2em !important;
 }
 
 #bx-soa-properties .form-group {
@@ -499,6 +510,7 @@ h4.checkout-block-title > i.fa {
     width: 100%;
     margin: 1.5em 0 0 0;
     overflow-x: auto;
+    padding-bottom: 8px;
 }
 
 .recent-deliveries-wrap .recent-profiles .recent-profile {
@@ -580,9 +592,17 @@ h4.checkout-block-title > i.fa {
     }
 }
 
+.fa.font-18 {
+    font-size: 18px;
+}
+
 .scroll-down-panel {
     width: 100%;
     display: none;
+}
+
+.bx-selected-delivery:has(input.form-check-input:checked) {
+    border: 2px solid #ff918e
 }
 
 @media screen and (max-width: 768px) {

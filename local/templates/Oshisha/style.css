@@ -2198,6 +2198,7 @@ input.check_input {
 /* SCROLL */
 ::-webkit-scrollbar {
     width: 4px;
+    height: 4px;
     background-color: transparent;
 }
 
