@@ -131,23 +131,26 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: `Способ доставки: <span class="ml-2 font-weight-600">
-                            ${this.getValueProp(this.propTypeDeliveryId)}</b>`
+                            html: `<span class="font-weight-500 font-lg-13"> Способ доставки:
+                                   <span class="ml-2 font-lg-13">${this.getValueProp(this.propTypeDeliveryId)}</span></span>`
                         }),
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: `Стоимость: <span class="ml-2 font-weight-600">${curDelivery?.PRICE_FORMATED}</span>`
+                            html: ` <span class="font-weight-500 font-lg-13">Стоимость:  
+                                    <span class="ml-2 font-lg-13"> ${curDelivery?.PRICE_FORMATED}</span></span>`
                         }),
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: `Адрес: <span class="ml-2 font-weight-600">${address}</span>`
+                            html: `<span class="font-weight-500 font-lg-13">Адрес: 
+                                   <span class="ml-2 font-lg-13">${address}</span></span>`
                         }),
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: `Дата получения: <span class="ml-2 font-weight-600">-</span> `
+                            html: `<span class="font-weight-500 font-lg-13">Дата получения:
+                                   <span class="ml-2 font-lg-13">-</span></span>`
                         })
                     ]
                 }
