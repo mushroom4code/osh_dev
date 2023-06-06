@@ -54,6 +54,7 @@ BX.SaleCommonPVZ = {
         this.drawInterface()
         this.updateFromDaData()
         this.updateDeliveryWidget(BX.Sale.OrderAjaxComponent.result)
+        console.log(BX.Sale.OrderAjaxComponent.result)
     },
 
     refresh: function () {
@@ -117,6 +118,14 @@ BX.SaleCommonPVZ = {
     updateDeliveryWidget: function (orderData) {
         const curDelivery = orderData.DELIVERY.find(delivery =>
             delivery.ID === this.doorDeliveryId || delivery.ID === this.pvzDeliveryId && delivery.CHECKED === 'Y')
+        let deliveryName = this.getValueProp(this.propTypeDeliveryId);
+        let deliveryBox;
+        if (curDelivery.CALCULATE_DESCRIPTION !== '') {
+            deliveryBox = JSON.parse(curDelivery.CALCULATE_DESCRIPTION ?? []).find(name => name.checked === true ||
+                name.code === deliveryName )
+            deliveryName = deliveryBox?.name;
+        }
+
         let date = BX.Sale.OrderAjaxComponent.result.ORDER_PROP
             .properties.find(prop => prop.CODE === 'DATE_DELIVERY').VALUE[0] ?? '-';
 
@@ -125,7 +134,7 @@ BX.SaleCommonPVZ = {
             : this.getValueProp(this.propAddressId)
         BX.cleanNode('delivery-description')
 
-        if (curDelivery !== undefined && curDelivery?.PRICE !== undefined) {
+        if (curDelivery !== undefined) {
             BX.adjust(
                 BX('delivery-description'),
                 {
@@ -133,26 +142,26 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-type'},
-                            html: `<span class="font-weight-500 font-lg-13"> Способ доставки:
-                                   <span class="ml-2 font-lg-13">${this.getValueProp(this.propTypeDeliveryId)}</span></span>`
+                            html: `<span class="font-weight-600 font-lg-13"> Способ доставки: </span>
+                                   <span class="ml-2 font-lg-13">${deliveryName}</span>`
                         }),
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: ` <span class="font-weight-500 font-lg-13">Стоимость:  
-                                    <span class="ml-2 font-lg-13"> ${curDelivery?.PRICE_FORMATED}</span></span>`
+                            html: ` <span class="font-weight-600 font-lg-13">Стоимость:</span>
+                                    <span class="ml-2 font-lg-13"> ${curDelivery?.PRICE_FORMATED ?? 'необходимо выбрать другую доставку'}</span>`
                         }),
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-address'},
-                            html: `<span class="font-weight-500 font-lg-13">Адрес: 
-                                   <span class="ml-2 font-lg-13">${address}</span></span>`
+                            html: `<span class="font-weight-600 font-lg-13">Адрес</span>: 
+                                   <span class="ml-2 font-lg-13">${address}</span>`
                         }),
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-date'},
-                            html: `<span class="font-weight-500 font-lg-13">Предпочтительная дата получения: 
-                                   <span class="ml-2 font-lg-13">${date}</span></span>`
+                            html: `<span class="font-weight-600 font-lg-13">Предпочтительная дата получения: </span>
+                                   <span class="ml-2 font-lg-13">${date}</span>`
                         })
                     ]
                 }
@@ -228,14 +237,15 @@ BX.SaleCommonPVZ = {
         const address = this.getValueProp(this.propAddressId)
 
         if (doorDelivery !== undefined && address !== '') {
+
             const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
+
             deliveryInfo.forEach(delivery => {
                 if (!delivery.error) {
                     const propsRadio = {type: 'radio', name: 'delivery'}
                     if (currentTypeDelivery === delivery.code) {
                         propsRadio.checked = "checked"
                     }
-
                     const boxWithDeliveryInfo = BX.create({
                         tag: 'div',
                         props: {
@@ -245,13 +255,35 @@ BX.SaleCommonPVZ = {
                             //checkbox
                             BX.create({
                                 tag: 'input',
-                                attrs: {checked: delivery.checked},
-                                dataset: {code: delivery.code},
+                                dataset: {
+                                    code: delivery.code,
+                                    name_for_view: delivery.name
+                                },
                                 props: {
                                     type: 'radio',
                                     name: 'delivery',
                                     className: 'form-check-input',
                                 },
+                                events: {
+                                    change: BX.proxy(function (e) {
+                                        BX.adjust(
+                                            BX('DELIVERY_SELECT_FOR_ORDER'),
+                                            {
+                                                html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" ' +
+                                                    'aria-hidden="true"></i> ' +
+                                                    '<span class="font-weight-600 font-15">' + delivery.name + '</span>'
+                                            }
+                                        )
+                                        BX.adjust(
+                                            BX('select-door-delivery-item'),
+                                            {
+                                                props:{
+                                                    style: '',
+                                                }
+                                            }
+                                        )
+                                    })
+                                }
                             }),
                             BX.create({
                                 tag: 'div',
@@ -360,36 +392,7 @@ BX.SaleCommonPVZ = {
 
             BX.append(propPopupContainer, BX('deliveries-list'))
         }
-
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {className: 'container text-center mt-3 mb-5'},
-                children: [
-                    BX.create({
-                        tag: 'a',
-                        props: {
-                            id: 'select-door-delivery-item',
-                            href: "javascript:void(0)",
-                            className: "link_red_button text-white",
-                        },
-                        text: 'Подтвердить ',
-                        events: {
-                            click: BX.proxy(function () {
-
-                                const selectDeliveryNode = BX('map_for_delivery').querySelector('input[type="radio"]:checked');
-
-                                this.updateValueProp(this.propTypeDeliveryId, selectDeliveryNode.dataset?.code)
-                                __this.closePvzPopup()
-                                BX.Sale.OrderAjaxComponent.sendRequest()
-
-                            }.bind(this))
-                        }
-                    })
-                ]
-            }),
-            BX('map_for_delivery')
-        )
+        this.buildSuccessButtonDelivery()
     },
 
     buildDaDataField: function () {
@@ -602,6 +605,8 @@ BX.SaleCommonPVZ = {
             .buildDataView()
             .buildSortService()
             .buildDeliveryDate()
+            .buildDeliverySelect()
+
             // .buildMobileControls()
 
         BX.adjust(this.pvzOverlay, {style: {display: 'flex'}})
@@ -612,9 +617,11 @@ BX.SaleCommonPVZ = {
      */
     buildPVZMap: function () {
         BX.remove(BX('user-address-wrap'))
+        BX.remove(BX('button-success-delivery'))
         BX.show(BX('wrap_data_view'))
         BX.show(BX('wrap_sort_service'))
         BX.show(BX('wrap_delivery_date'))
+        this.buildSuccessButtonPVZ()
         this.getPVZList();
     },
 
@@ -852,6 +859,11 @@ BX.SaleCommonPVZ = {
         __this.updateValueProp(__this.propAddressPvzId, point.properties.fullAddress)
         __this.updateValueProp(__this.propTypePvzId, point.properties.type)
         __this.updateValueProp(__this.propZipId, point.properties.postindex)
+        BX.adjust(BX('DELIVERY_SELECT_FOR_ORDER'), {
+                html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" aria-hidden="true"></i>' +
+                    '<b class="font-15">' + point.properties?.deliveryName + '</b> ' +
+                    '<br> <span class="font-13">' + point.properties?.fullAddress+'</span>'
+        })
         BX.Sale.OrderAjaxComponent.sendRequest()
 
     },
@@ -926,6 +938,7 @@ BX.SaleCommonPVZ = {
     afterGetPvzItemPrice: (clusterId=undefined) => function (item) {
         const point = BX.SaleCommonPVZ.pvzObj.features.find(feature => feature.id == item.id)
         // const point = BX.SaleCommonPVZ.objectManager.objects.getById(item.id)
+
         const balloonContent = "".concat(
             `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ'}${item.price ? ' - ' + item.price : ''} руб.</b></div>`,
             `<div>${point.properties.fullAddress}</div>`,
@@ -934,8 +947,8 @@ BX.SaleCommonPVZ = {
             point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
             point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
             item['error'] ? `<div>При расчете стоимости произошла ошибка, пожалуйста выберите другой ПВЗ или вид доставки</div>` :
-                `<a class="btn btn_basket mt-2" href="javascript:void(0)" onclick="BX.SaleCommonPVZ.selectPvz(${item.id})" >Выбрать</a>`
-        )
+                `<a class="btn btn_basket mt-2" href="javascript:void(0)" 
+                    onclick="BX.SaleCommonPVZ.selectPvz(${item.id});" >Выбрать</a>`)
 
         point.properties = {
             ...point.properties,
@@ -1060,6 +1073,8 @@ BX.SaleCommonPVZ = {
 
     buildAddressField: function () {
         BX.remove(BX('user-address-wrap'))
+        BX.remove(BX('button-success-delivery'))
+        BX.remove(BX('button-success-pvz'))
         BX.hide(BX('wrap_data_view'))
         BX.hide(BX('wrap_sort_service'))
 
@@ -1101,7 +1116,7 @@ BX.SaleCommonPVZ = {
             BX('pvz_user_data')
         )
         this.buildDaDataField()
-
+        this.buildSuccessButtonDelivery()
         return this
     },
 
@@ -1165,6 +1180,7 @@ BX.SaleCommonPVZ = {
                                                     BX('ID_DELIVERY_ID_' + __this.pvzDeliveryId).checked = true
                                                     BX('data_view_map').checked = true
                                                     __this.buildPVZMap();
+                                                    BX.hide(BX('button-success-pvz'))
                                                 }),
                                             },
                                         }),
@@ -1277,6 +1293,125 @@ BX.SaleCommonPVZ = {
 
         return this
     },
+
+    buildSuccessButtonPVZ: function () {
+        if (!BX('button-success-pvz')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'wrap_filter_block order-5',
+                        id: 'button-success-pvz'
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'd-flex align-items-end justify-content-center height-100',
+                            },
+                            children: [
+                                BX.create({
+                                    tag: 'a',
+                                    props: {
+                                        id: 'select-pvz-item',
+                                        href: "javascript:void(0)",
+                                        className: "link_red_button text-white mb-2 d-flex align-items-center justify-content-center",
+                                        style: 'pointer-events: none;opacity: 0.5;'
+                                    },
+                                    text: 'Подтвердить',
+                                    events: {
+                                        click: BX.proxy(function () {
+                                            BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
+                                        })
+                                    }
+                                }),
+                            ]
+                        })
+                    ]
+                }), BX('pvz_user_data'))
+        }
+        return this
+    },
+
+    buildSuccessButtonDelivery: function () {
+        if (!BX('button-success-delivery')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {className: 'wrap_filter_block order-5 mt-2', id: 'button-success-delivery'},
+                    children: [
+                        BX.create({
+                            tag: 'a',
+                            props: {
+                                id: 'select-door-delivery-item',
+                                href: "javascript:void(0)",
+                                className: "link_red_button text-white text-center mt-lg-4 mt-md-4 mt-1" +
+                                    " d-flex align-items-center justify-content-center",
+                                style: 'pointer-events: none;opacity: 0.5;'
+                            },
+                            text: 'Подтвердить ',
+                            events: {
+                                click: BX.proxy(function () {
+
+                                    const selectDeliveryNode = BX('map_for_delivery').querySelector('input[type="radio"]:checked');
+
+                                    this.updateValueProp(this.propTypeDeliveryId, selectDeliveryNode.dataset?.code)
+                                    this.closePvzPopup()
+                                    BX.Sale.OrderAjaxComponent.sendRequest()
+
+                                }.bind(this))
+                            }
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            )
+        }
+        return this
+    },
+
+    buildDeliverySelect: function () {
+
+        if (!BX('wrap_delivery_select')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_delivery_select',
+                        className: "wrap_filter_block mr-2 col-7 order-6"
+                    },
+                    children: [
+                        BX.create('DIV',{
+                            children: [
+                                BX.create({
+                                        tag: 'div',
+                                        children: [
+                                            BX.create({
+                                                tag: 'div',
+                                                props: {
+                                                    className: 'mb-2 mt-2',
+                                                    id: 'DELIVERY_SELECT_FOR_ORDER'
+                                                },
+                                                dataset: {name: 'DELIVERY_SELECT_FOR_ORDER'},
+                                                html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" ' +
+                                                    'aria-hidden="true"></i>' +
+                                                    ' <span class="font-15">' +
+                                                    'Здесь отображается выбранная вами доставка...</span>',
+                                            })
+                                        ]
+                                    }
+                                )
+                            ]
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            );
+        }
+
+        return this
+    },
+
     buildDataView: function () {
         const __this = this;
 
@@ -1337,6 +1472,7 @@ BX.SaleCommonPVZ = {
                                             events: {
                                                 change: BX.proxy(function () {
                                                     if (BX('delivery-self').checked) {
+                                                        BX.hide(BX('button-success-pvz'))
                                                         __this.componentParams.displayPVZ = typeDisplayPVZ.map
                                                         __this.showPVZ();
                                                     }
@@ -1369,7 +1505,7 @@ BX.SaleCommonPVZ = {
                                                     if (BX('delivery-self').checked) {
                                                         __this.componentParams.displayPVZ = typeDisplayPVZ.list
                                                         __this.showPVZ();
-
+                                                        BX.show(BX('button-success-pvz'))
                                                         BX.onCustomEvent('onDeliveryExtraServiceValueChange')
                                                     }
                                                 })
@@ -1503,7 +1639,6 @@ BX.SaleCommonPVZ = {
 
     buildPvzList: function (pvzList)
     {
-        const __this = this
         let pvzBox;
         pvzBox = BX.create({
             tag: 'div',
@@ -1559,43 +1694,9 @@ BX.SaleCommonPVZ = {
             this.buildPvzItem(el, pvzTableContain)
         })
 
-        // let appendBool = $(document).find('#pvz_user_data #select-pvz-item');
-        // if(appendBool.length === 0 ){
-            BX.append(
-                BX.create({
-                    tag: 'div',
-                    props: {className: 'text-center mb-3 wrap_filter_block d-flex align-items-end justify-content-center'},
-                    children:
-                        [
-                            BX.create({
-                                tag: 'a',
-                                props: {
-                                    id: 'select-pvz-item',
-                                    href: "javascript:void(0)",
-                                    className: "link_red_button text-white",
-                                    style: 'pointer-events: none;opacity: 0.5;'
-                                },
-                                text: 'Подтвердить',
-                                events: {
-                                    click: BX.proxy(function () {
-                                        BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
-                                    })
-                                }
-                            }),
-                        ]
-                }),
-                BX('map_for_delivery')
-            )
-        // }
     },
 
     buildPvzItem: function (el, pvzListNode) {
-        //
-        // let checked = '';
-        // if (el.id === 0) {
-        //     checked = 'checked';
-        // }
-
         const boxWithDeliveryInfo = BX.create({
             tag: 'div',
             props: {
@@ -1610,7 +1711,10 @@ BX.SaleCommonPVZ = {
                         id: el.id,
                         name: 'pvz',
                         className: 'form-check-input',
-                        // checked
+                    },
+                    dataset: {
+                        code: el.properties.code_pvz,
+                        name_for_view: el.properties.deliveryName + ':  ' + el.properties.fullAddress
                     },
                     events: {
                         change: BX.proxy(function (e) {
@@ -1623,6 +1727,15 @@ BX.SaleCommonPVZ = {
                                     props:{
                                         style: '',
                                     }
+                                }
+                            )
+                            BX.adjust(
+                                BX('DELIVERY_SELECT_FOR_ORDER'),
+                                {
+                                    html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" ' +
+                                        'aria-hidden="true"></i><span class="font-weight-600 font-15">'
+                                        + el.properties.deliveryName + '</span><br>' +
+                                        ' <span class="font-13">' + el.properties.fullAddress + '</span>'
                                 }
                             )
                         })
