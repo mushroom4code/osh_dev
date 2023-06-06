@@ -117,15 +117,14 @@ BX.SaleCommonPVZ = {
     updateDeliveryWidget: function (orderData) {
         const curDelivery = orderData.DELIVERY.find(delivery =>
             delivery.ID === this.doorDeliveryId || delivery.ID === this.pvzDeliveryId && delivery.CHECKED === 'Y')
-        let date = '-';
+        let date = BX.Sale.OrderAjaxComponent.result.ORDER_PROP
+            .properties.find(prop => prop.CODE === 'DATE_DELIVERY').VALUE[0] ?? '-';
 
         const address = this.curDeliveryId === this.pvzDeliveryId
             ? this.getValueProp(this.propAddressPvzId)
             : this.getValueProp(this.propAddressId)
         BX.cleanNode('delivery-description')
-        if (this.propDateDeliveryId) {
-            date =  BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.VALUE[0];
-        }
+
         if (curDelivery !== undefined && curDelivery?.PRICE !== undefined) {
             BX.adjust(
                 BX('delivery-description'),
