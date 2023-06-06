@@ -141,25 +141,25 @@ BX.SaleCommonPVZ = {
                     children: [
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-6', id: 'selected-delivery-type'},
+                            props: {className: 'col-md-6 col-lg-6 col-12', id: 'selected-delivery-type'},
                             html: `<span class="font-weight-600 font-lg-13"> Способ доставки: </span>
                                    <span class="ml-2 font-lg-13">${deliveryName}</span>`
                         }),
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-6', id: 'selected-delivery-price'},
+                            props: {className: 'col-md-6 col-lg-6 col-12', id: 'selected-delivery-price'},
                             html: ` <span class="font-weight-600 font-lg-13">Стоимость:</span>
                                     <span class="ml-2 font-lg-13"> ${curDelivery?.PRICE_FORMATED ?? 'необходимо выбрать другую доставку'}</span>`
                         }),
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-6', id: 'selected-delivery-address'},
+                            props: {className: 'col-md-6 col-lg-6 col-12', id: 'selected-delivery-address'},
                             html: `<span class="font-weight-600 font-lg-13">Адрес</span>: 
                                    <span class="ml-2 font-lg-13">${address}</span>`
                         }),
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-6', id: 'selected-delivery-date'},
+                            props: {className: 'col-md-6 col-lg-6 col-12', id: 'selected-delivery-date'},
                             html: `<span class="font-weight-600 font-lg-13">Предпочтительная дата получения: </span>
                                    <span class="ml-2 font-lg-13">${date}</span>`
                         })
@@ -1378,7 +1378,7 @@ BX.SaleCommonPVZ = {
                     tag: 'div',
                     props: {
                         id: 'wrap_delivery_select',
-                        className: "wrap_filter_block mr-2 col-7 order-6"
+                        className: "wrap_filter_block mr-2 col-12 order-6"
                     },
                     children: [
                         BX.create('DIV',{
