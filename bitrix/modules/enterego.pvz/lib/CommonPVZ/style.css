@@ -500,9 +500,14 @@ h4.checkout-block-title > i.fa {
     color: #333;
 }
 
+.min-width-700 {
+    min-width: 700px;
+}
+
 .recent-deliveries-wrap {
     background-color: #f0f0f0;
 }
+
 .font-lg-13 {
     font-size:13px;
 }
@@ -618,5 +623,9 @@ h4.checkout-block-title > i.fa {
         top: 0;
         order: 0;
         margin: 1em 0;
+    }
+
+    .min-width-700 {
+        min-width: 200px;
     }
 }

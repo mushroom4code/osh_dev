@@ -117,12 +117,14 @@ BX.SaleCommonPVZ = {
     updateDeliveryWidget: function (orderData) {
         const curDelivery = orderData.DELIVERY.find(delivery =>
             delivery.ID === this.doorDeliveryId || delivery.ID === this.pvzDeliveryId && delivery.CHECKED === 'Y')
-
+        let date = BX.Sale.OrderAjaxComponent.result.ORDER_PROP
+            .properties.find(prop => prop.CODE === 'DATE_DELIVERY').VALUE[0] ?? '-';
 
         const address = this.curDeliveryId === this.pvzDeliveryId
             ? this.getValueProp(this.propAddressPvzId)
             : this.getValueProp(this.propAddressId)
         BX.cleanNode('delivery-description')
+
         if (curDelivery !== undefined && curDelivery?.PRICE !== undefined) {
             BX.adjust(
                 BX('delivery-description'),
@@ -130,7 +132,7 @@ BX.SaleCommonPVZ = {
                     children: [
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-6', id: 'selected-delivery-price'},
+                            props: {className: 'col-6', id: 'selected-delivery-type'},
                             html: `<span class="font-weight-500 font-lg-13"> Способ доставки:
                                    <span class="ml-2 font-lg-13">${this.getValueProp(this.propTypeDeliveryId)}</span></span>`
                         }),
@@ -142,20 +144,19 @@ BX.SaleCommonPVZ = {
                         }),
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-6', id: 'selected-delivery-price'},
+                            props: {className: 'col-6', id: 'selected-delivery-address'},
                             html: `<span class="font-weight-500 font-lg-13">Адрес: 
                                    <span class="ml-2 font-lg-13">${address}</span></span>`
                         }),
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-6', id: 'selected-delivery-price'},
-                            html: `<span class="font-weight-500 font-lg-13">Дата получения:
-                                   <span class="ml-2 font-lg-13">-</span></span>`
+                            props: {className: 'col-6', id: 'selected-delivery-date'},
+                            html: `<span class="font-weight-500 font-lg-13">Предпочтительная дата получения: 
+                                   <span class="ml-2 font-lg-13">${date}</span></span>`
                         })
                     ]
                 }
             )
-
             BX.addClass(BX('delivery-variants'), 'active')
         } else {
             BX.cleanNode(BX('delivery-description'))
@@ -446,10 +447,10 @@ BX.SaleCommonPVZ = {
         return BX.create('a',
             {
                 props: {
-                    className: 'red_text font-weight-bold ml-3',
+                    className: 'red_text text-decoration-underline font-weight-bold ml-3',
                     href: "javascript:void(0)",
                 },
-                text: 'Выбрать адрес на карте',
+                html: '<span><i class="fa fa-map-marker color-redLight font-18 mr-2" aria-hidden="true"></i> Выбрать адрес на карте</span>',
                 events: {
                     click: BX.proxy(function () {
                         oshMkad.afterSave = function (address) {
@@ -600,6 +601,7 @@ BX.SaleCommonPVZ = {
         this.buildDeliveryType()
             .buildDataView()
             .buildSortService()
+            .buildDeliveryDate()
             // .buildMobileControls()
 
         BX.adjust(this.pvzOverlay, {style: {display: 'flex'}})
@@ -612,6 +614,7 @@ BX.SaleCommonPVZ = {
         BX.remove(BX('user-address-wrap'))
         BX.show(BX('wrap_data_view'))
         BX.show(BX('wrap_sort_service'))
+        BX.show(BX('wrap_delivery_date'))
         this.getPVZList();
     },
 
@@ -1056,15 +1059,6 @@ BX.SaleCommonPVZ = {
     },
 
     buildAddressField: function () {
-        const dateDeliveryNode = BX.create({
-            tag: 'input',
-            props: {
-                type: 'text',
-                className: 'datepicker_order form-control bx-soa-customer-input bx-ios-fix',
-            },
-            dataset: {name: 'DATE_DELIVERY'},
-        })
-
         BX.remove(BX('user-address-wrap'))
         BX.hide(BX('wrap_data_view'))
         BX.hide(BX('wrap_sort_service'))
@@ -1095,31 +1089,11 @@ BX.SaleCommonPVZ = {
                                         tag: 'input',
                                         props: {
                                             id: 'user-address',
-                                            className: 'form-control bx-soa-customer-input bx-ios-fix',
+                                            className: 'form-control bx-soa-customer-input bx-ios-fix min-width-700',
                                         }
                                     })
                                 ]
                             }),
-                            BX.create('DIV',{
-                                    props: {
-                                        className: 'row wrap_filter_block'
-                                    },
-                                    children: [
-                                        BX.create({
-                                            tag: 'label',
-                                            props: {className: 'title'},
-                                            text: 'Плановая дата доставки:'
-                                        }),
-                                        BX.create({
-                                                tag: 'div',
-                                                props: {className: 'col-md-5 col-lg-5 col-12'},
-                                                children: [
-                                                    dateDeliveryNode
-                                                ]
-                                            }
-                                        )
-                                    ]
-                                })
                         ]
                     }),
                 ]
@@ -1127,21 +1101,6 @@ BX.SaleCommonPVZ = {
             BX('pvz_user_data')
         )
         this.buildDaDataField()
-
-        const tomorrow    = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        let curDate = new Date(this.getValueProp(this.propDateDeliveryId))
-        if (isNaN(curDate)) {
-            curDate = tomorrow
-        }
-
-        $(dateDeliveryNode).datepicker({
-            minDate: tomorrow,
-            onSelect: function (date, formattedDate, datepicker) {
-                this.updateValueProp(this.propDateDeliveryId, date)
-                BX.Sale.OrderAjaxComponent.sendRequest()
-            }.bind(this)
-        }).data('datepicker').selectDate(curDate);
 
         return this
     },
@@ -1260,6 +1219,64 @@ BX.SaleCommonPVZ = {
         return this
     },
 
+    buildDeliveryDate: function () {
+        const dateDeliveryNode = BX.create({
+            tag: 'input',
+            props: {
+                type: 'text',
+                className: 'datepicker_order form-control bx-soa-customer-input bx-ios-fix',
+            },
+            dataset: {name: 'DATE_DELIVERY'},
+        })
+
+        if (!BX('wrap_delivery_date')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_delivery_date',
+                        className: "wrap_filter_block mr-2 order-5"
+                    },
+                    children: [
+                        BX.create('DIV',{
+                            children: [
+                                BX.create({
+                                    tag: 'label',
+                                    props: {className: 'title'},
+                                    text: 'Плановая дата доставки:'
+                                }),
+                                BX.create({
+                                        tag: 'div',
+                                        children: [
+                                            dateDeliveryNode
+                                        ]
+                                    }
+                                )
+                            ]
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            );
+
+            const tomorrow    = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            let curDate = new Date(this.getValueProp(this.propDateDeliveryId))
+            if (isNaN(curDate)) {
+                curDate = tomorrow
+            }
+
+            $(dateDeliveryNode).datepicker({
+                minDate: tomorrow,
+                onSelect: function (date, formattedDate, datepicker) {
+                    this.updateValueProp(this.propDateDeliveryId, date)
+                    BX.Sale.OrderAjaxComponent.sendRequest()
+                }.bind(this)
+            }).data('datepicker').selectDate(curDate);
+        }
+
+        return this
+    },
     buildDataView: function () {
         const __this = this;
 
@@ -1851,7 +1868,7 @@ BX.SaleCommonPVZ = {
             html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
         })
         this.checkout.delivery.variants.choose = BX.create('div', {
-            attrs: {className: 'delivery-choose js__delivery-choose', id: 'delivery-choose'},
+            attrs: {className: 'delivery-choose js__delivery-choose text-decoration-underline', id: 'delivery-choose'},
             text: 'Выбрать адрес и способ доставки',
             events: {
                 click: BX.proxy(function () {
