@@ -2811,8 +2811,6 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
 
                             let elemBox = BX.findChildByClassName(groupItems, 'offer-box');
                             $.each(itemsGroup, function (itemKey, item) {
-
-
                                 if (type === 'colorWithText') {
                                     elemBox.appendChild(BX.create('DIV', {
                                         props: {
@@ -2821,12 +2819,13 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
                                         text: item.VALUE_ENUM
                                     }))
                                 } else if (type === 'color') {
-                                    elemBox.appendChild(BX.create('DIV', {
-                                        props: {
-                                            className: 'font-13 '
-                                        },
-                                        text: item.VALUE_ENUM
-                                    }))
+                                    elemBox.appendChild(
+                                        BX.create('IMG', {
+                                            props: {
+                                                className: 'br-10',
+                                                src: item.PREVIEW_PICTURE
+                                            },
+                                        }))
                                 } else if (type === 'text') {
                                     elemBox.appendChild(BX.create('DIV', {
                                         props: {

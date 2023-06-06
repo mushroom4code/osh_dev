@@ -282,7 +282,8 @@ class EnteregoHelper
                                 'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],
                                 'CODE' => '/catalog/product/' . $elem['CODE'] . '/',
                                 'PRODUCT_IDS' => $elem['ID'],
-                                'PREVIEW_PICTURE' => $elem['PREVIEW_PICTURE'] ?? $elem['DETAIL_PICTURE'],
+                                'PREVIEW_PICTURE' => CFile::GetPath(($elem['PREVIEW_PICTURE'] ??$elem['DETAIL_PICTURE']))
+                                    ?? '/local/templates/Oshisha/images/no-photo.gif',
                                 'TYPE' => $props['CODE'],
                                 'NAME' => $elem['NAME']
                             ];

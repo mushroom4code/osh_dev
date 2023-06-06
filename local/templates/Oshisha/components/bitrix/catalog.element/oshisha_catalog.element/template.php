@@ -446,7 +446,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         $link = 'javascript:void(0)';
                                         $prop_value = 'Пустое значение';
                                         $tasted = $grouped = [];
-                                        $picture = '';
                                         $type = $propsForOffers[$keyCODE]['TYPE'] ?? 'text';
                                         $title = 'Товар';
                                         $select = 'selected';
@@ -461,7 +460,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 continue;
                                             }
 
-                                            $picture = $prop['PREVIEW_PICTURE'];
                                             $prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$keyCODE]['PREF'];
 
                                             if (count($arResult['GROUPED_PROPS_DATA']) === 1) {
@@ -521,7 +519,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                          data-prop_code="<?= $keyCODE ?>"
                                                          data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
                                                          class="mr-1 offer-box color-hookah br-10 mb-1 <?= $select ?>">
-                                                        <img src="<?= CFile::GetPath($picture) ?? '/local/templates/Oshisha/images/no-photo.gif' ?>"
+                                                        <img src="<?= $prop['PREVIEW_PICTURE'] ?>"
                                                              class="br-10"
                                                              width="50"
                                                              height="50"
