@@ -152,7 +152,7 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'div',
                             props: {className: 'col-6', id: 'selected-delivery-date'},
-                            html: `<span class="font-weight-500 font-lg-13">Дата получения:
+                            html: `<span class="font-weight-500 font-lg-13">Предпочтительная дата получения: 
                                    <span class="ml-2 font-lg-13">${date}</span></span>`
                         })
                     ]
