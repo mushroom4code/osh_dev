@@ -2758,52 +2758,79 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
                         }));
                         // перебор групп элементов
                         $.each(group, function (key, itemsGroup) {
+                            let type = 'text';
+                            let itemWithPropValues;
+                            if (arData.SETTING[groupName] !== undefined) {
+                                type = arData.SETTING[groupName].TYPE;
+                            }
+
+                            if (type === 'color') {
+                                itemWithPropValues = BX.create('DIV', {
+                                    props: {
+                                        className: 'mr-1 offer-box color-hookah br-10 mb-1'
+                                    },
+                                    dataset: {
+                                        active: 'false',
+                                        prop_code: groupName,
+                                        prop_group: JSON.stringify(group)
+                                    }
+                                })
+                            } else if (type === 'colorWithText') {
+                                itemWithPropValues = BX.create('DIV', {
+                                    props: {
+                                        className: 'red_button_cart taste variation_taste font-14 width-fit-content ' +
+                                            'mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer'
+                                    },
+                                    dataset: {
+                                        active: 'false',
+                                        prop_code: groupName,
+                                        prop_group: JSON.stringify(group)
+                                    }
+                                })
+                            } else if (type === 'text') {
+                                itemWithPropValues = BX.create('DIV', {
+                                    props: {
+                                        className: 'red_button_cart font-13 width-fit-content br-100 mb-lg-2 m-md-2 m-1 offer-box cursor-pointer'
+                                    },
+                                    dataset: {
+                                        active: 'false',
+                                        prop_code: groupName,
+                                        prop_group: JSON.stringify(group)
+                                    }
+                                })
+                            }
+
                             let groupItems = groupBox.appendChild(BX.create('A', {
                                 props: {
                                     className: 'offer-link'
                                 },
                                 children: [
-                                    BX.create('DIV', {
-                                        props: {
-                                            className: 'red_button_cart font-14 width-fit-content mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer'
-                                        },
-                                        dataset: {
-                                            active: 'false',
-                                            prop_code: groupName,
-                                            prop_group: JSON.stringify(group)
-                                        }
-                                    })
+                                    itemWithPropValues
                                 ]
                             }));
 
                             let elemBox = BX.findChildByClassName(groupItems, 'offer-box');
                             $.each(itemsGroup, function (itemKey, item) {
-                                let type = 'text';
-                                if (arData.SETTING[groupName] !== undefined) {
-                                    type = arData.SETTING[groupName].TYPE;
-                                }
+
 
                                 if (type === 'colorWithText') {
                                     elemBox.appendChild(BX.create('DIV', {
                                         props: {
-                                            className: 'red_button_cart font-13 width-fit-content br-100 mb-lg-2 ' +
-                                                'm-md-2 m-1 offer-box cursor-pointer'
+                                            className: ' font-13'
                                         },
                                         text: item.VALUE_ENUM
                                     }))
                                 } else if (type === 'color') {
                                     elemBox.appendChild(BX.create('DIV', {
                                         props: {
-                                            className: 'red_button_cart font-13 width-fit-content br-100 mb-lg-2 ' +
-                                                'm-md-2 m-1 offer-box cursor-pointer'
+                                            className: 'font-13 '
                                         },
                                         text: item.VALUE_ENUM
                                     }))
                                 } else if (type === 'text') {
                                     elemBox.appendChild(BX.create('DIV', {
                                         props: {
-                                            className: 'red_button_cart font-13 width-fit-content br-100 mb-lg-2 ' +
-                                                'm-md-2 m-1 offer-box cursor-pointer'
+                                            className: ''
                                         },
                                         text: item.VALUE_ENUM
                                     }))
