@@ -1861,9 +1861,24 @@ hr.bxe-light {
 }
 
 #osh-map-action {
-    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 30px 0px 30px;
+}
+
+#osh_delivery_ya_map_address {
+    width: 85% !important;
+}
+
+#saveBTN {
+    margin-top: 0 !important;
+    margin-right: 25px;
+}
+
+#osh-map-description {
+    flex: 00 auto;
     text-align: center;
-    margin: 0px 20px 25px 20px;
+    margin: 0px 30px 35px 30px;
 }
 
 #osh-close-icon {

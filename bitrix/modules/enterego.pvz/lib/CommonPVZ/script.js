@@ -158,7 +158,8 @@ BX.SaleCommonPVZ = {
             BX.append(
                 BX.create({
                     tag: 'p',
-                    html: 'Выберите один из подходящих Вам вариантов: самовывоз, пункт выдачи заказов или доставка курьером до двери'
+                    html: 'Выберите один из подходящих Вам вариантов: <br>' +
+                        ' самовывоз, пункт выдачи заказов или доставка курьером до двери'
                 }),
                 BX('delivery-description')
             )
@@ -176,13 +177,52 @@ BX.SaleCommonPVZ = {
         BX.cleanNode(propsNode)
         this.clearDeliveryBlock()
 
-        BX.append(
-            BX.create({
-                tag: 'div',
-                props: {className: 'container-fluid mt-3', id: 'deliveries-list'},
-            }),
-            BX('map_for_delivery')
-        )
+       let pvzBox = BX.create({
+            tag: 'div',
+            props: {
+                className: 'container-fluid d-flex flex-column overflow-auto my-2'
+            },
+            children: [
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray'
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-6'
+                            },
+                            text: 'Доставка + цена'
+                        }),
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-3'
+                            },
+                            text: 'Срок доставки'
+                        }),
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-3'
+                            },
+                            text: 'Период доставки'
+                        })
+                    ]
+                }),
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'container-fluid overflow-auto my-2 table-body border-1-gray',
+                        id: 'deliveries-list'
+                    },
+                }),
+            ]
+        })
+        BX.append(pvzBox, BX('map_for_delivery'))
+
 
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
         const checkedDelivery = orderData.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
@@ -245,7 +285,6 @@ BX.SaleCommonPVZ = {
                                             props: {
                                                 className: 'font-weight-bold'
                                             },
-                                            text: 'Срок доставки:'
                                         }),
                                         BX.create({
                                             tag: 'span',
@@ -372,12 +411,10 @@ BX.SaleCommonPVZ = {
                         oshMkad.afterSave = function (address) {
                             __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
                         }.bind(this);
-                        window.Osh.bxPopup.onPickerClick(
-                            (__this.propAddressId)
-                                ? __this.propAddressId
-                                : '',
-                            __this.propDateDeliveryId,
-                            __this.getValueProp(__this.propDateDeliveryId)
+                        window.Osh.bxPopup.onPickerClick(__this.getValueProp(__this.propLatitudeId) ?? '',
+                            __this.getValueProp(__this.propLongitudeId) ?? '',
+                            __this.getValueProp(__this.propDateDeliveryId) ?? '',
+                            __this.getValueProp(__this.propAddressId) ?? ''
                         );
                     }, this)
                 }
@@ -392,7 +429,8 @@ BX.SaleCommonPVZ = {
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    address,
+                    sessid: BX.bitrix_sessid(),
+                    address: address,
                     'action': 'getDaData'
                 },
                 onsuccess: function (response) {
@@ -539,6 +577,7 @@ BX.SaleCommonPVZ = {
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
+                sessid: BX.bitrix_sessid(),
                 codeCity: __this.curCityCode,
                 'action': 'getCityName'
             },
@@ -587,6 +626,7 @@ BX.SaleCommonPVZ = {
             url: this.ajaxUrlPVZ,
             method: 'POST',
             data: {
+                sessid: BX.bitrix_sessid(),
                 latitude: latitude,
                 longitude: longitude,
                 'action': 'getSavedOshishaDelivery'
@@ -598,16 +638,8 @@ BX.SaleCommonPVZ = {
                 } else {
                     window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                         oshMkad.afterSave = null;
-
-                        oshMkad.getDistance([latitude, longitude],
-                            this.propAddressId,
-                            (this.propDateDelivery)
-                                ? this.propDateDelivery
-                                : '',
-                            (this.propDateDelivery)
-                                ? (document.querySelector('input[name="ORDER_PROP_' + this.propDateDelivery + '"]').value)
-                                : '',
-                            true);
+                        oshMkad.getDistance([latitude, longitude], this.getValueProp(this.propDateDeliveryId),
+                            this.getValueProp(this.propAddressId), true);
                     })
                 }
             }.bind(this),
@@ -618,46 +650,52 @@ BX.SaleCommonPVZ = {
     },
 
     saveOshishaDelivery: function(params) {
-        var address_field = $(document).find('#user-address').val(this.getValueProp(this.propAddressId))
-        if (address_field) {
-            this.updateValueProp(this.propDateDeliveryId, params.date_delivery);
+        BX.ajax({
+            url: this.ajaxUrlPVZ,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                sessid: BX.bitrix_sessid(),
+                params: params,
+                'action': 'saveOshishaDelivery'
+            },
+            onsuccess: function (res) {
+                if (!res) {
+                    console.log('error while saving oshisha delivery to db');
+                }
+                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
+            }.bind(this)
+        });
+    },
 
-            BX.ajax({
-                url: this.ajaxUrlPVZ,
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    latitude: params.latitude,
-                    longitude: params.longitude,
-                    'action': 'reverseGeocodeAddress'
-                },
-                onsuccess: function (response) {
-                    if (response.status === 'success') {
-                        this.updatePropsFromDaData(response)
-                        params.latitude = Number('' + response.data.geo_lat).toPrecision(6);
-                        params.longitude = Number('' + response.data.geo_lon).toPrecision(6);
-                        BX.ajax({
-                            url: this.ajaxUrlPVZ,
-                            method: 'POST',
-                            dataType: 'json',
-                            data: {
-                                params: params,
-                                'action': 'saveOshishaDelivery'
-                            },
-                            onsuccess: function (res) {
-                                if (!res) {
-                                    console.log('error while saving oshisha delivery to db');
-                                }
-                                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
-                            }.bind(this)
-                        });
-                    } else {
-                        this.updatePropsFromDaData({})
-                    }
-
-                }.bind(this)
-            });
-        }
+    reverseGeocodeAddress: async function (coordinates) {
+        BX.ajax({
+            url: this.ajaxUrlPVZ,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                sessid: BX.bitrix_sessid(),
+                latitude: coordinates[0],
+                longitude: coordinates[1],
+                'action': 'reverseGeocodeAddress'
+            },
+            onsuccess: function (response) {
+                if (response.status === 'success') {
+                    this.updatePropsFromDaData(response);
+                    window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                        oshMkad.afterSave = null;
+                        oshMkad.getDistance([response.data.geo_lat, response.data.geo_lon],
+                            this.getValueProp(this.propDateDeliveryId), this.getValueProp(this.propAddressId), true);
+                    })
+                } else {
+                    window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                        oshMkad.afterSave = null;
+                        oshMkad.getDistance(coordinates, this.getValueProp(this.propDateDeliveryId),
+                            this.getValueProp(this.propAddressId), true);
+                    })
+                }
+            }.bind(this)
+        });
     },
 
     getPVZList: function () {
@@ -668,6 +706,7 @@ BX.SaleCommonPVZ = {
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
+                sessid: BX.bitrix_sessid(),
                 'cityName': __this.curCityName,
                 'codeCity': __this.curCityCode,
                 'orderPackages': __this.orderPackages,
@@ -797,6 +836,7 @@ BX.SaleCommonPVZ = {
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
+                sessid: BX.bitrix_sessid(),
                 'dataToHandler': data,
                 'action': 'getPVZPrice'
             },
@@ -1059,7 +1099,7 @@ BX.SaleCommonPVZ = {
 
         const propPvzDelivery =  {
             id: 'delivery-self',
-                className: 'radio-field',
+                className: 'radio-field form-check-input',
             type: 'radio',
             value: 'Самовывоз',
             name: 'delivery_type',
@@ -1070,7 +1110,7 @@ BX.SaleCommonPVZ = {
 
         const propDoorDelivery = {
             id: 'delivery-in-hands',
-            className: 'radio-field',
+            className: 'radio-field form-check-input',
             type: 'radio',
             value: 'Доставка в руки',
             name: 'delivery_type',
@@ -1173,7 +1213,7 @@ BX.SaleCommonPVZ = {
 
         const propsOnMap = {
             id: 'data_view_map',
-            className: 'radio-field',
+            className: 'radio-field form-check-input',
             type: 'radio',
             value: 'На карте',
             name: 'data_view',
@@ -1184,7 +1224,7 @@ BX.SaleCommonPVZ = {
 
         const propsList = {
             id: 'data_view_list',
-            className: 'radio-field',
+            className: 'radio-field form-check-input',
             type: 'radio',
             value: 'Списком',
             name: 'data_view',
@@ -1395,16 +1435,55 @@ BX.SaleCommonPVZ = {
     buildPvzList: function (pvzList)
     {
         const __this = this
-        const pvzListNode = BX.create({
+        let pvzBox;
+        pvzBox = BX.create({
             tag: 'div',
             props: {
                 className: 'container-fluid d-flex flex-column overflow-auto my-2'
-            }
+            },
+            children: [
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'container-fluid d-flex flex-row flex-wrap table-header border-1-gray'
+                    },
+                    children: [
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-6'
+                            },
+                            text: 'Доставка + цена'
+                        }),
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-3'
+                            },
+                            text: 'Срок доставки'
+                        }),
+                        BX.create({
+                            tag: 'div',
+                            props: {
+                                className: 'col-3'
+                            },
+                            text: 'Режим работы'
+                        })
+                    ]
+                }),
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        className: 'container-fluid d-flex flex-column overflow-auto my-2 table-body border-1-gray'
+                    },
+                }),
+            ]
         })
-        BX.append(pvzListNode, BX('map_for_delivery'))
+        BX.append(pvzBox, BX('map_for_delivery'))
 
+        let pvzTableContain = BX.findChildByClassName(pvzBox, 'table-body');
         pvzList.forEach(el => {
-            this.buildPvzItem(el, pvzListNode)
+            this.buildPvzItem(el, pvzTableContain)
         })
 
         BX.append(
@@ -1510,7 +1589,7 @@ BX.SaleCommonPVZ = {
                                         props: {
                                             className: 'font-weight-bold'
                                         },
-                                        text: 'Срок доставки:'
+                                        // text: 'Срок доставки:'
                                     }),
                                     BX.create({
                                         tag: 'span',
@@ -1533,7 +1612,6 @@ BX.SaleCommonPVZ = {
                                         props: {
                                             className: 'worktime-title'
                                         },
-                                        text: 'Время работы:'
                                     }),
                                     BX.create({
                                         tag: 'span',
