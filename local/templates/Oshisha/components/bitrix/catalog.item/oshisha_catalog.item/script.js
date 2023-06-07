@@ -2855,13 +2855,15 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
                                         text: item.VALUE_ENUM
                                     }))
                                 } else if (type === 'color') {
-                                    elemBox.appendChild(
-                                        BX.create('IMG', {
-                                            props: {
-                                                className: 'br-10',
-                                                src: item.PREVIEW_PICTURE
-                                            },
-                                        }))
+                                    if ($(elemBox).find('img[src="' + item.PREVIEW_PICTURE + '"]').length <= 0) {
+                                        elemBox.appendChild(
+                                            BX.create('IMG', {
+                                                props: {
+                                                    className: 'br-10',
+                                                    src: item.PREVIEW_PICTURE,
+                                                },
+                                            }))
+                                    }
                                 } else if (type === 'text') {
                                     elemBox.appendChild(BX.create('DIV', {
                                         props: {
