@@ -2806,8 +2806,9 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
                             } else if (type === 'colorWithText') {
                                 itemWithPropValues = BX.create('DIV', {
                                     props: {
-                                        className: 'red_button_cart taste variation_taste font-14 width-fit-content ' +
-                                            'mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer'
+                                        className: 'red_button_cart taste variation_taste font-14 ' +
+                                            'width-fit-content mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer',
+                                        style: "padding: 15px;"
                                     },
                                     dataset: {
                                         active: 'false',
@@ -2818,7 +2819,8 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
                             } else if (type === 'text') {
                                 itemWithPropValues = BX.create('DIV', {
                                     props: {
-                                        className: 'red_button_cart font-13 width-fit-content br-100 mb-lg-2 m-md-2 m-1 offer-box cursor-pointer'
+                                        className: 'red_button_cart font-11 width-fit-content br-100 mb-lg-2 m-md-2' +
+                                            ' m-1 offer-box cursor-pointer'
                                     },
                                     dataset: {
                                         active: 'false',
@@ -2840,9 +2842,15 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
                             let elemBox = BX.findChildByClassName(groupItems, 'offer-box');
                             $.each(itemsGroup, function (itemKey, item) {
                                 if (type === 'colorWithText') {
-                                    elemBox.appendChild(BX.create('DIV', {
+                                    let colorNew = item.VALUE_XML_ID?.split('#');
+                                    elemBox.appendChild(BX.create('SPAN', {
                                         props: {
-                                            className: ' font-13'
+                                            className: 'taste mb-0 br-100 font-11',
+                                            style: "background-color:#" + colorNew[1] + "; border-color:#" + colorNew[1] + ";" +
+                                                "padding: 6px 11px;"
+                                        },
+                                        dataset: {
+                                            background: colorNew[1],
                                         },
                                         text: item.VALUE_ENUM
                                     }))
@@ -2869,7 +2877,7 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
 
                     });
                     $(wrapper).append(box_popup);
-                    console.log(arData)
+                    tasteInit();
                 }
             }
         });
