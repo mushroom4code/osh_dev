@@ -2873,11 +2873,11 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
                                     }))
                                 }
                             });
-                            // }
 
                         });
 
                     });
+                    console.log(arData.GROUPED_PRODUCTS)
                     $(wrapper).append(box_popup);
                     tasteInit();
                 }
