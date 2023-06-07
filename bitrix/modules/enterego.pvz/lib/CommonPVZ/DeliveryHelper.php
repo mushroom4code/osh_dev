@@ -184,7 +184,9 @@ class DeliveryHelper
     }
 
     public static function getSavedOshishaDelivery($latitude, $longitude) {
-        $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => $latitude, 'LONGITUDE' => $longitude)));
+        $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array(
+            'LATITUDE' => number_format($latitude, 4, '.', ''),
+            'LONGITUDE' => number_format($longitude, 4, '.', ''))));
         if ($point)
             return true;
         else
@@ -193,11 +195,11 @@ class DeliveryHelper
 
     public static function saveOshishaDelivery($params) {
         $dbResultError = false;
-        if (!OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => $params['latitude'],
-            'LONGITUDE' => $params['longitude'])))) {
+        if (!OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => number_format($params['latitude'], 4, '.', ''),
+            'LONGITUDE' => number_format($params['longitude'], 4, '.', ''))))) {
             $result = OshishaSavedDeliveriesTable::add(array('fields' => array(
-                'LATITUDE' => $params['latitude'],
-                'LONGITUDE' => $params['longitude'],
+                'LATITUDE' => number_format($params['latitude'], 4, '.', ''),
+                'LONGITUDE' => number_format($params['longitude'], 4, '.', ''),
                 'ZONE' => $params['zone'],
                 'DISTANCE' => $params['distance']
             )));

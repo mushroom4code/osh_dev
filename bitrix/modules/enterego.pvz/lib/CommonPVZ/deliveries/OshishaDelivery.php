@@ -428,12 +428,10 @@ class OshishaDelivery extends CommonPVZ
                 }
             }
 
-            $lat = (float)$params['latitude'];
-            $lon = (float)$params['longitude'];
-            if (!empty($lat) && !empty($lon)) {
+            if (!empty($params['latitude']) && !empty($params['longitude'])) {
                 $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array(
-                    'LATITUDE'  =>  round($lat, 4),
-                    'LONGITUDE' => round($lon,4)
+                    'LATITUDE'  =>  number_format($params['latitude'], 4, '.', ''),
+                    'LONGITUDE' => number_format($params['longitude'], 4, '.', '')
                 )));
             } else {
                 $point = null;
