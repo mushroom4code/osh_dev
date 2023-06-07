@@ -438,7 +438,6 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                         selfObj.showResults(selfObj.getDistanceCache[selectGeo], selectGeo, delivery_address,
                             noMarkupMessage);
                         if (saveDelivery){
-                            console.log(distKm);
                             selfObj.saveDelivery();
                         }
                     });

@@ -482,7 +482,9 @@ BX.SaleCommonPVZ = {
                 },
                 onsuccess: function (response) {
                     if (response.status === 'success') {
-                        this.updatePropsFromDaData(response)
+                        this.updatePropsFromDaData(response);
+                        this.getSavedOshishaDelivery(Number('' + response.data.geo_lat).toPrecision(6),
+                            Number('' + response.data.geo_lon).toPrecision(6));
                     } else {
                         this.updatePropsFromDaData({})
                     }
