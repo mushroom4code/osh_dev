@@ -2181,12 +2181,13 @@ $(document).on('click', '.open-fast-window', function () {
 
         const box_popup = BX.create('DIV', {
             props: {
-                className: 'position-fixed width-100 top-32 d-flex justify-content-center z-index-1400 box-popup-product'
+                className: 'position-fixed width-100 top-0 bg-black-light d-flex justify-content-center height-100 z-index-1400 box-popup-product'
             },
             children: [
                 BX.create('DIV', {
                     props: {
-                        className: 'open-modal-product catalog-item-product bg-gray-white p-lg-4 p-md-4 p-3 max-width-1024 width-100 br-10'
+                        className: 'open-modal-product m-auto height-fit-content catalog-item-product bg-gray-white' +
+                            ' p-lg-4 p-md-4 p-3 max-width-1024 width-100 br-10'
                     },
                     dataset: {
                         product: product.ID
@@ -2641,12 +2642,13 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
 
     const box_popup = BX.create('DIV', {
         props: {
-            className: 'position-fixed width-100 top-32 d-flex justify-content-center z-index-1400 box-popup-product'
+            className: 'position-fixed width-100 top-0 bg-black-light d-flex height-100 justify-content-center z-index-1400 box-popup-product'
         },
         children: [
             BX.create('DIV', {
                 props: {
-                    className: 'open-modal-product catalog-item-product bg-gray-white p-lg-4 p-md-4 p-3 max-width-1024 width-100 br-10'
+                    className: 'open-modal-product catalog-item-product m-auto height-fit-content bg-white p-lg-4' +
+                        ' p-md-4 p-3 max-width-1024 width-100 br-10'
                 },
             })
         ]
@@ -2654,83 +2656,109 @@ $(document).on('click', '.js__open-grouped-product-window', function () {
     const box_product = BX.findChildByClassName(box_popup, 'open-modal-product');
     box_product.appendChild(BX.create('DIV', {
         props: {
-            className: 'd-flex flex-lg-row flex-md-row flex-column'
+            className: 'd-flex flex-column'
         },
         children: [
             BX.create('DIV', {
                 props: {
-                    className: 'box-with-prop-list col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
+                    className: 'box-with-prop-list col-12 mb-lg-0 mb-md-0 mb-4 position-relative d-flex justify-content-end'
                 },
                 children: [
-                    BX.create('div', {
+                    BX.create('SPAN', {
                         props: {
-                            className: 'd-flex flex-column mb-2 box-offers-auto-window',
+                            className: 'col-1 text-right p-0 close-box cursor-pointer',
+                            title: 'Закрыть'
                         },
+                        events: {
+                            click: $(this).closest('.box-popup-product').remove()
+                        },
+                        html: '<svg width="25" height="25" viewBox="0 0 9 8" fill="none"' +
+                            ' xmlns="http://www.w3.org/2000/svg"><path d="M1 7.5L8 0.5M1 0.5L8 7.5"' +
+                            ' stroke="#565656" stroke-linecap="round" stroke-linejoin="round"/></svg>',
                     }),
                 ]
             }),
             BX.create('DIV', {
                 props: {
-                    className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between'
+                    className: 'd-flex flex-lg-row flex-md-row flex-column'
                 },
                 children: [
                     BX.create('DIV', {
                         props: {
-                            className: 'prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2',
+                            className: 'box-with-prop-list col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
                         },
                         children: [
-                            BX.create('P', {
+                            BX.create('div', {
                                 props: {
-                                    className: 'base-price font-weight-bold font-27 mb-3'
+                                    className: 'd-flex flex-column mb-2 box-offers-auto-window',
                                 },
                             }),
-                            BX.create('DIV', {
-                                props: {
-                                    className: 'price-group mb-lg-4 mb-md-3 mb-3'
-                                },
-                            }),
-                            BX.create('DIV', {
-                                props: {
-                                    className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
-                                },
-                            })
                         ]
                     }),
                     BX.create('DIV', {
                         props: {
-                            className: 'props-box ml-lg-4 ml-md-4 ml-0 d-flex flex-lg-row flex-md-row flex-column ' +
-                                'justify-content-between align-items-end',
+                            className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between'
                         },
                         children: [
                             BX.create('DIV', {
                                 props: {
-                                    className: 'props-box-child col-lg-8 col-md-8 col-12 pl-0 d-flex flex-column justify-content-between'
+                                    className: 'prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2',
                                 },
                                 children: [
-                                    BX.create('DIV', {
+                                    BX.create('P', {
                                         props: {
-                                            className: 'props-box-child-advanse'
+                                            className: 'base-price font-weight-bold font-27 mb-3'
                                         },
                                     }),
                                     BX.create('DIV', {
                                         props: {
-                                            className: 'props-box-child-popup mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3'
+                                            className: 'price-group mb-lg-4 mb-md-3 mb-3'
+                                        },
+                                    }),
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
                                         },
                                     })
                                 ]
                             }),
-                            BX.create('A', {
+                            BX.create('DIV', {
                                 props: {
-                                    className: 'color-redLight font-weight-bold col-lg-4 col-md-4 col-12 ' +
-                                        'text-decoration-underline font-14 p-0 text-lg-right text-md-right',
-                                    // href: product.DETAIL_PAGE_URL
+                                    className: 'props-box ml-lg-4 ml-md-4 ml-0 d-flex flex-lg-row flex-md-row flex-column ' +
+                                        'justify-content-between align-items-end',
                                 },
-                                text: 'Подробнее'
+                                children: [
+                                    BX.create('DIV', {
+                                        props: {
+                                            className: 'props-box-child col-lg-8 col-md-8 col-12 pl-0 d-flex flex-column justify-content-between'
+                                        },
+                                        children: [
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'props-box-child-advanse'
+                                                },
+                                            }),
+                                            BX.create('DIV', {
+                                                props: {
+                                                    className: 'props-box-child-popup mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3'
+                                                },
+                                            })
+                                        ]
+                                    }),
+                                    BX.create('A', {
+                                        props: {
+                                            className: 'color-redLight font-weight-bold col-lg-4 col-md-4 col-12 ' +
+                                                'text-decoration-underline font-14 p-0 text-lg-right text-md-right',
+                                            // href: product.DETAIL_PAGE_URL
+                                        },
+                                        text: 'Подробнее'
+                                    })
+                                ]
                             })
                         ]
                     })
                 ]
-            })
+            }),
         ]
     }));
     console.log(prodIDS);

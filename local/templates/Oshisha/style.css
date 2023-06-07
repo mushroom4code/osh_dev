@@ -311,6 +311,10 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     width: 30%;
 }
 
+.height-fit-content {
+    height: fit-content;
+}
+
 .max-height-100 {
     max-height: 100px;
 }
@@ -5428,6 +5432,10 @@ li, ul {
 
 .bg-gray-blue {
     background-color: #E0E0E0;
+}
+
+.bg-black-light {
+    background-color: rgb(0 0 0 / 40%);
 }
 
 .search_adress {
