@@ -54,7 +54,6 @@ BX.SaleCommonPVZ = {
         this.drawInterface()
         this.updateFromDaData()
         this.updateDeliveryWidget(BX.Sale.OrderAjaxComponent.result)
-        console.log(BX.Sale.OrderAjaxComponent.result)
     },
 
     refresh: function () {
@@ -459,12 +458,10 @@ BX.SaleCommonPVZ = {
                         oshMkad.afterSave = function (address) {
                             __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
                         }.bind(this);
-                        window.Osh.bxPopup.onPickerClick(
-                            (__this.propAddressId)
-                                ? __this.propAddressId
-                                : '',
-                            __this.propDateDeliveryId,
-                            __this.getValueProp(__this.propDateDeliveryId)
+                        window.Osh.bxPopup.onPickerClick(__this.getValueProp(__this.propLatitudeId) ?? '',
+                            __this.getValueProp(__this.propLongitudeId) ?? '',
+                            __this.getValueProp(__this.propDateDeliveryId) ?? '',
+                            __this.getValueProp(__this.propAddressId) ?? ''
                         );
                     }, this)
                 }
@@ -479,7 +476,8 @@ BX.SaleCommonPVZ = {
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    address,
+                    sessid: BX.bitrix_sessid(),
+                    address: address,
                     'action': 'getDaData'
                 },
                 onsuccess: function (response) {
@@ -632,6 +630,7 @@ BX.SaleCommonPVZ = {
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
+                sessid: BX.bitrix_sessid(),
                 codeCity: __this.curCityCode,
                 'action': 'getCityName'
             },
@@ -680,6 +679,7 @@ BX.SaleCommonPVZ = {
             url: this.ajaxUrlPVZ,
             method: 'POST',
             data: {
+                sessid: BX.bitrix_sessid(),
                 latitude: latitude,
                 longitude: longitude,
                 'action': 'getSavedOshishaDelivery'
@@ -691,16 +691,8 @@ BX.SaleCommonPVZ = {
                 } else {
                     window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                         oshMkad.afterSave = null;
-
-                        oshMkad.getDistance([latitude, longitude],
-                            this.propAddressId,
-                            (this.propDateDelivery)
-                                ? this.propDateDelivery
-                                : '',
-                            (this.propDateDelivery)
-                                ? (document.querySelector('input[name="ORDER_PROP_' + this.propDateDelivery + '"]').value)
-                                : '',
-                            true);
+                        oshMkad.getDistance([latitude, longitude], this.getValueProp(this.propDateDeliveryId),
+                            this.getValueProp(this.propAddressId), true);
                     })
                 }
             }.bind(this),
@@ -716,6 +708,7 @@ BX.SaleCommonPVZ = {
             method: 'POST',
             dataType: 'json',
             data: {
+                sessid: BX.bitrix_sessid(),
                 params: params,
                 'action': 'saveOshishaDelivery'
             },
@@ -734,38 +727,24 @@ BX.SaleCommonPVZ = {
             method: 'POST',
             dataType: 'json',
             data: {
+                sessid: BX.bitrix_sessid(),
                 latitude: coordinates[0],
                 longitude: coordinates[1],
                 'action': 'reverseGeocodeAddress'
             },
             onsuccess: function (response) {
                 if (response.status === 'success') {
+                    this.updatePropsFromDaData(response);
                     window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                         oshMkad.afterSave = null;
-
                         oshMkad.getDistance([response.data.geo_lat, response.data.geo_lon],
-                            this.propAddressId,
-                            (this.propDateDelivery)
-                                ? this.propDateDelivery
-                                : '',
-                            (this.propDateDelivery)
-                                ? (document.querySelector('input[name="ORDER_PROP_' + this.propDateDelivery + '"]').value)
-                                : '',
-                            true);
+                            this.getValueProp(this.propDateDeliveryId), this.getValueProp(this.propAddressId), true);
                     })
                 } else {
                     window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                         oshMkad.afterSave = null;
-
-                        oshMkad.getDistance(coordinates,
-                            this.propAddressId,
-                            (this.propDateDelivery)
-                                ? this.propDateDelivery
-                                : '',
-                            (this.propDateDelivery)
-                                ? (document.querySelector('input[name="ORDER_PROP_' + this.propDateDelivery + '"]').value)
-                                : '',
-                            true);
+                        oshMkad.getDistance(coordinates, this.getValueProp(this.propDateDeliveryId),
+                            this.getValueProp(this.propAddressId), true);
                     })
                 }
             }.bind(this)
@@ -780,6 +759,7 @@ BX.SaleCommonPVZ = {
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
+                sessid: BX.bitrix_sessid(),
                 'cityName': __this.curCityName,
                 'codeCity': __this.curCityCode,
                 'orderPackages': __this.orderPackages,
@@ -914,6 +894,7 @@ BX.SaleCommonPVZ = {
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
+                sessid: BX.bitrix_sessid(),
                 'dataToHandler': data,
                 'action': 'getPVZPrice'
             },
