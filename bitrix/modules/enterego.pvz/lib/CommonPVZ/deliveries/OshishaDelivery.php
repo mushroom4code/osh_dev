@@ -467,8 +467,9 @@ class OshishaDelivery extends CommonPVZ
 
                 if (intval($params['shipment_cost']) >= $limitBasket && !$noMarkup) {
                     $delivery_price = max($distance - 5, 0) * $cost;
-                }
-                else {
+                } else if (intval($params['shipment_cost']) >= $limitBasket && $noMarkup) {
+                    $delivery_price = 0;
+                } else {
                     if ($noMarkup) {
                         $delivery_price = $startCost;
                     } else {
