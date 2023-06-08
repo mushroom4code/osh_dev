@@ -325,7 +325,21 @@ BX.SaleCommonPVZ = {
                     })
 
                     if (delivery.code === 'oshisha') {
-                        BX.findChildByClassName(boxWithDeliveryInfo, 'box-with-props-delivery').appendChild(this.updateOshishaDelivery());
+                        var osh_block = BX.findChildByClassName(boxWithDeliveryInfo, 'box-with-props-delivery')
+                        if (delivery.noMarkup != false) {
+                            osh_block.appendChild(
+                                BX.create({
+                                    tag: 'div',
+                                    props: {
+                                        className: 'pl-lg-3 pl-md-3 pl-3 mb-1 red_text font-weight-bold'
+                                    },
+                                    html: '<div class="d-flex flex-row">' +
+                                        'В выбранном регионе следующая доставка без наценки будет ' + delivery.noMarkup +
+                                        '</div>'
+                                }),
+                            );
+                        }
+                        osh_block.appendChild(this.updateOshishaDelivery());
                     }
                     BX.append(
                         BX.create({

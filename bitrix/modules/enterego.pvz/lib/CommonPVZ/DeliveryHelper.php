@@ -225,6 +225,10 @@ class DeliveryHelper
         return $content;
     }
 
+    public static function getDayOfTheWeekString($dayIndex) {
+        return ["sunday", "monday","tuesday","wednesday","thursday","friday","saturday"][$dayIndex];
+    }
+
     public static function getCityName($locationCode)
     {
         $res = \Bitrix\Sale\Location\TypeTable::getList(array(
