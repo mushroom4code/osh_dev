@@ -787,7 +787,7 @@
 }
 
 .order_text {
-    margin-bottom: 4rem;
+    margin-bottom: 1rem;
 }
 
 .bx-soa-cart-total.bx-soa-cart-total-bottom {
@@ -1927,6 +1927,23 @@ hr.bxe-light {
 /* ORDER DELIVERY */
 .box-none {
     display: none;
+}
+
+.font-13 {
+    font-size: 13px;
+}
+
+.font-15 {
+    font-size: 15px;
+}
+
+.confidintial {
+    background-color: #F55F5C;
+    padding: 7px 8px;
+    white-space: nowrap;
+    color: white;
+    font-weight: 600;
+    border-radius: 100px;
 }
 
 .bx-soa-pp-company:has(.delivery.bx-selected) .bx-soa-pp-company-smalltitle.box_with_delivery {

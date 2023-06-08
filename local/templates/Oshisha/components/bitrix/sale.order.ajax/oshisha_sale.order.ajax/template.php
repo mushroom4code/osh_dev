@@ -553,6 +553,12 @@ if ($request->get('ORDER_ID') <> '') {
             <!--	SIDEBAR BLOCK	-->
             <div class="col-lg-4 col-md-5 ">
                 <h5 class="order_text"><b>Оформление заказа</b></h5>
+                <div class="d-flex flex-lg-row flex-md-row flex-column align-items-center mb-3">
+                    <p class="font-13 m-0 mr-1">
+                        При получении заказа, возможно, потребуется предъявить документ, подтверждающий ваш возраст.
+                    </p>
+                    <span class="confidintial font-15">18+</span>
+                </div>
                 <div id="bx-soa-total" class="mb-5 bx-soa-sidebar">
                     <div class="bx-soa-cart-total-ghost"></div>
                     <div class="bx-soa-cart-total"></div>
