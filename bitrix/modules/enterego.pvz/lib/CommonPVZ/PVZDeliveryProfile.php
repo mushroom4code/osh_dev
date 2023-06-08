@@ -98,7 +98,7 @@ class PVZDeliveryProfile extends Base
                     $deliveryParams['code_city'] = $propertyItem->getValue();
                     $deliveryParams['name_city'] = json_decode(DeliveryHelper::getCityName($deliveryParams['code_city']), true)['LOCATION_NAME'];
                 }
-                if($prop['CODE'] === 'DEFAULT_ADDRESS_PVZ') {
+                if($prop['CODE'] === 'ADDRESS_PVZ') {
                     $deliveryParams['to'] = $propertyItem->getValue();
                 }
                 if ($prop['CODE'] === 'ZIP') {

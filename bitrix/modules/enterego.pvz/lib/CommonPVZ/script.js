@@ -35,7 +35,6 @@ BX.SaleCommonPVZ = {
     shipmentCost: undefined,
     orderPackages: null,
     oshishaDeliveryOptions: null,
-    propDefaultPvzAddressId: null,
     propTypePvzId: null,
     componentParams: {
         'displayPVZ': typeDisplayPVZ.map,
@@ -73,7 +72,6 @@ BX.SaleCommonPVZ = {
         this.propLongitudeId          = order.ORDER_PROP.properties.find(prop => prop.CODE === 'LONGITUDE')?.ID;
         this.propDateDeliveryId       = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.ID;
         this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
-        this.propDefaultPvzAddressId  = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.ID;
         this.propTypePvzId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
 
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;

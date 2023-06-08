@@ -37,8 +37,8 @@ BX.SavedDeliveryProfiles = {
                                 className: 'recent-profile-address'
                             },
                             text: element['PROPERTIES'].find(prop => prop.CODE === 'COMMON_PVZ')
-                                ? element['PROPERTIES'].find(prop => prop.CODE === 'DEFAULT_ADDRESS_PVZ')?.VALUE
-                                : element['ADDRESS']
+                                ? element['PROPERTIES'].find(prop => prop.CODE === 'ADDRESS_PVZ')?.VALUE
+                                : element['ADDRESS'].split(';')[0]
                         }),
                     ]
                 })
@@ -66,7 +66,7 @@ BX.SavedDeliveryProfiles = {
         element['PROPERTIES'].forEach((property) => {
             BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.ID == property['PROPERTY_ID']).VALUE[0] = property['VALUE'];
         });
-        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE == 'ADDRESS').VALUE[0] = element['ADDRESS'];
+        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE == 'ADDRESS').VALUE[0] = element['ADDRESS'].split(';')[0];
         var tempLocations = BX.Sale.OrderAjaxComponent.locations;
         var elementLocation = element['PROPERTIES'].find(prop => prop['CODE'] == 'LOCATION');
         Object.keys(tempLocations).forEach((locationKey) => {

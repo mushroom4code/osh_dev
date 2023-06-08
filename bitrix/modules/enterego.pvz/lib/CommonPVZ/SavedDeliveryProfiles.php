@@ -8,7 +8,12 @@ class SavedDeliveryProfiles
         try {
             $orderFields = $order->getFields()->getValues();
             $propertyCollection = $order->getPropertyCollection();
-            $isPvz = !($orderFields['DELIVERY_ID'] == DoorDeliveryProfile::$doorDeliveryId);
+            $deliveriesList = \Bitrix\Sale\Delivery\Services\Manager::getActiveList();
+            if ($deliveriesList[$orderFields['DELIVERY_ID']]['CLASS_NAME'] == '\CommonPVZ\PVZDeliveryProfile')
+                $isPvz = true;
+            else
+                $isPvz = false;
+
             $address = false;
             $propertiesArr = [];
             foreach ($propertyCollection as $propertyItem) {
@@ -21,6 +26,17 @@ class SavedDeliveryProfiles
                         'CODE'=>$propertyValues['CODE'], 'VALUE'=>$propertyValues['VALUE']];
                 }
             }
+            $type_delivery = $propertyCollection->getItemByOrderPropertyCode('TYPE_DELIVERY')->getValue();
+            $common_pvz = $propertyCollection->getItemByOrderPropertyCode('COMMON_PVZ')->getValue();
+            $zip = $propertyCollection->getItemByOrderPropertyCode('ZIP')->getValue();
+
+            if ($isPvz){
+                if (!$common_pvz)
+                    $address .= '; '.$zip;
+                else
+                    $address .= '; '.$common_pvz;
+            }
+
             if (!empty($address)) {
                 $arParams = ['filter'=>[
                     'PROFILE_ID'=>$orderFields['DELIVERY_ID'],
@@ -43,9 +59,9 @@ class SavedDeliveryProfiles
                         foreach ($propertiesArr as $property) {
                             if ($isPvz) {
                                 if ($property['CODE'] == 'ZIP' || $property['CODE'] == 'LATITUDE' || $property['CODE'] == 'LONGITUDE'
-                                    || $property['CODE'] == 'TYPE_PVZ' || $property['CODE'] == 'DEFAULT_ADDRESS_PVZ'
-                                    || $property['CODE'] == 'COMMON_PVZ' || $property['CODE'] == 'TYPE_DELIVERY'
-                                    || $property['CODE'] == 'LOCATION') {
+                                    || $property['CODE'] == 'TYPE_PVZ' || $property['CODE'] == 'COMMON_PVZ'
+                                    || $property['CODE'] == 'TYPE_DELIVERY'|| $property['CODE'] == 'LOCATION'
+                                    || $property['CODE'] == 'ADDRESS_PVZ') {
                                     $profilesPropertiesParams = [
                                         'SAVED_PROFILE_ID' => $profilesAddressesResult->getPrimary()['ID'],
                                         'PROPERTY_ID' => $property['ORDER_PROPS_ID'],
