@@ -177,10 +177,10 @@ $(document).ready(function () {
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
                 tasteOverlay.css({height:'100%'});
-                priceBox.css({zIndex:'1000'});
+                priceBox.css({zIndex:'791'});
             } else {
                 tasteOverlay.css({height:'0'});
-                priceBox.css({zIndex:'1300'});
+                priceBox.css({zIndex:'791'});
             }
         })
         tasteInit();

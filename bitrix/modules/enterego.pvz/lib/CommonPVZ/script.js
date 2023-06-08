@@ -131,7 +131,7 @@ BX.SaleCommonPVZ = {
             : this.getValueProp(this.propAddressId)
         BX.cleanNode('delivery-description')
 
-        if (curDelivery !== undefined) {
+        if ((curDelivery  && curDelivery.PRICE_FORMATED) !== undefined ) {
             BX.adjust(
                 BX('delivery-description'),
                 {
@@ -504,6 +504,7 @@ BX.SaleCommonPVZ = {
             this.buildAddressField()
             this.buildDoorDelivery(BX.Sale.OrderAjaxComponent.result)
         } else  {
+            BX.Sale.OrderAjaxComponent.startLoader()
             this.buildPVZMap();
         }
     },
@@ -620,7 +621,9 @@ BX.SaleCommonPVZ = {
         BX.show(BX('wrap_sort_service'))
         BX.show(BX('wrap_delivery_date'))
         this.buildSuccessButtonPVZ()
+        BX('data_view_map').checked = true
         this.getPVZList();
+
     },
 
     getCityName: function () {
@@ -766,6 +769,7 @@ BX.SaleCommonPVZ = {
                 'action': 'getPVZList'
             },
             onsuccess: function (res) {
+                console.log('test')
                 __this.pvzObj = JSON.parse(res) || [];
                 __this.showPVZ();
                 BX.Sale.OrderAjaxComponent.endLoader();
@@ -778,6 +782,7 @@ BX.SaleCommonPVZ = {
                 BX.Sale.OrderAjaxComponent.endLoader();
             }
         });
+        console.log('tes2t')
     },
 
     /**
