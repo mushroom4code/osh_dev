@@ -503,13 +503,15 @@ class OshishaDelivery extends CommonPVZ
                     }
                 }
 
+                $priceArr = array('price' => $delivery_price, 'noMarkup' => (!$noMarkup && $point['ZONE'] != 'MKAD') ? ($nextNoMarkup ?? false) : false);
+
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {
                     $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                        ? array_merge($cached_vars, array($hash_string => $delivery_price))
-                        : array($hash_string => $delivery_price));
+                        ? array_merge($cached_vars, array($hash_string => $priceArr))
+                        : array($hash_string => $priceArr));
                 }
-                return array('price' => $delivery_price, 'noMarkup' => (!$noMarkup && $point['ZONE'] != 'MKAD') ? ($nextNoMarkup ?? false) : false);
+                return $priceArr;
             } else {
                 $this->errors[] = 'no data found on point';
                 return array('errors' => $this->errors);
