@@ -1062,18 +1062,18 @@ BX.SaleCommonPVZ = {
         BX.append(
             BX.create({
                 tag: 'div',
-                props: {className: '', id: 'user-address-wrap'},
+                props: {className: 'order-6 col-12 wrap_filter_block mr-2', id: 'user-address-wrap'},
                 children: [
                     BX.create({
                         tag: 'div',
                         props: {
-                            className: 'd-flex flex-lg-row flex-md-row flex-column',
+                            className: 'd-flex flex-lg-row flex-md-row flex-column ',
                         },
                         children: [
                             BX.create({
                                 tag: 'div',
                                 props: {
-                                    className: 'flex flex-column mb-2 col-md-7 col-lg-7 col-12 wrap_filter_block mr-3',
+                                    className: 'width-100',
                                 },
                                 children: [
                                     BX.create({
@@ -1363,7 +1363,7 @@ BX.SaleCommonPVZ = {
                     tag: 'div',
                     props: {
                         id: 'wrap_delivery_select',
-                        className: "wrap_filter_block mr-2 col-12 order-6"
+                        className: "wrap_filter_block mr-2 col-12 order-7"
                     },
                     children: [
                         BX.create('DIV',{
@@ -1374,7 +1374,7 @@ BX.SaleCommonPVZ = {
                                             BX.create({
                                                 tag: 'div',
                                                 props: {
-                                                    className: 'mb-2 mt-2',
+                                                    className: 'mb-2 mt-2 pb-2 border-bottom-1-red',
                                                     id: 'DELIVERY_SELECT_FOR_ORDER'
                                                 },
                                                 dataset: {name: 'DELIVERY_SELECT_FOR_ORDER'},
