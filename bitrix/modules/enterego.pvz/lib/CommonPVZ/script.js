@@ -1276,14 +1276,18 @@ BX.SaleCommonPVZ = {
             if (isNaN(curDate)) {
                 curDate = tomorrow
             }
-
-            $(dateDeliveryNode).datepicker({
+            var datepicker =  $(dateDeliveryNode).datepicker({
                 minDate: tomorrow,
-                onSelect: function (date, formattedDate, datepicker) {
+                selectedDates: curDate,
+                onSelect: function (date, opts, datepicker) {
                     this.updateValueProp(this.propDateDeliveryId, date)
-                    BX.Sale.OrderAjaxComponent.sendRequest()
+                    if (datepicker.opts.silentBool !== true) {
+                        BX.Sale.OrderAjaxComponent.sendRequest()
+                    }
                 }.bind(this)
-            }).data('datepicker').selectDate(curDate);
+            }).data('datepicker');
+            datepicker.selectDate(curDate,(datepicker.opts.silentBool = true));
+            datepicker.opts.silentBool = false;
         }
 
         return this
