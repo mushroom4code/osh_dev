@@ -199,13 +199,12 @@ class RussianPostDelivery extends CommonPVZ
                             ]
                         ];
                         $features_obj['properties'] = [
-                            'code_pvz' => $point['CODE'],
+                            'code_pvz' => $point['INDEX'],
                             'type' => $point['IS_PVZ'] === 'true' ? 'PVZ' : 'POSTAMAT',
                             'fullAddress' => $point['FULL_ADDRESS'],
                             'phone' => $point['PHONE_NUMBER'],
                             'workTime' => $point['WORK_TIME'],
                             'comment' => $point['COMMENT'],
-                            'postindex' => $point['INDEX'],
                             'deliveryName' => 'Почта России',
                             'iconCaption' => 'Почта России',
                             'hintContent' => $point['FULL_ADDRESS'],
@@ -237,7 +236,7 @@ class RussianPostDelivery extends CommonPVZ
                     'weight' => intval($array['weight']),
                     'sumoc' => intval($array['cost'] . '00'),
                     'from' => $this->configs['fromzip'],
-                    'to' => $array['postindex'],
+                    'to' => $array['code_pvz'],
                     'group' => 0
                 ];
 

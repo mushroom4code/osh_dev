@@ -107,7 +107,6 @@ class PVZDeliveryProfile extends Base
                 if ($prop['CODE'] === 'COMMON_PVZ') {
                     $deliveryParams['code_pvz'] = $propertyItem->getValue();
                 }
-
             }
             $deliveryParams['weight'] = $shipment->getWeight();
             $deliveryParams['cost'] = $shipment->getOrder()->getBasePrice();

@@ -852,7 +852,6 @@ BX.SaleCommonPVZ = {
         __this.updateValueProp(__this.propTypeDeliveryId, point.properties.deliveryName)
         __this.updateValueProp(__this.propAddressPvzId, point.properties.fullAddress)
         __this.updateValueProp(__this.propTypePvzId, point.properties.type)
-        __this.updateValueProp(__this.propZipId, point.properties.postindex)
         BX.adjust(BX('DELIVERY_SELECT_FOR_ORDER'), {
                 html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" aria-hidden="true"></i>' +
                     '<b class="font-15">' + point.properties?.deliveryName + '</b> ' +
