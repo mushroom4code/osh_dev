@@ -406,6 +406,20 @@ class OshishaDelivery extends CommonPVZ
         return 0;
     }
 
+    public function getNextNoMarkupDate($zone) {
+        $tempDate = '';
+        foreach (explode(',', $this->configs[$zone]) as $noMarkupDay) {
+            if ($tempDate) {
+                if ((new \DateTime('now'))->modify('next '.DeliveryHelper::getDayOfTheWeekString($noMarkupDay)) < $tempDate) {
+                    $tempDate = (new \DateTime('now'))->modify('next '.DeliveryHelper::getDayOfTheWeekString($noMarkupDay));
+                }
+            } else {
+                $tempDate = (new \DateTime('now'))->modify('next '.DeliveryHelper::getDayOfTheWeekString($noMarkupDay));
+            }
+        }
+        return $tempDate->format('d.m.Y');
+    }
+
     public function getPriceDoorDelivery($params)
     {
         try {
@@ -447,22 +461,36 @@ class OshishaDelivery extends CommonPVZ
                     foreach (explode(',', $this->configs['northdays']) as $noMarkupDay) {
                         if ($noMarkupDay == $dayDateDelivery) {
                             $noMarkup = true;
+                            $noMarkupNorth = true;
+                        } else {
+                            $noMarkupNorth = false;
                         }
                     }
+                    if (!$noMarkupNorth)
+                        $nextNoMarkup = $this->getNextNoMarkupDate('northdays');
                 } else if ($point['ZONE'] == 'SOUTHEAST') {
                     foreach (explode(',', $this->configs['southeastdays']) as $noMarkupDay) {
                         if ($noMarkupDay == $dayDateDelivery) {
                             $noMarkup = true;
+                            $noMarkupSouthEast = true;
+                        } else {
+                            $noMarkupSouthEast = false;
                         }
                     }
+                    if (!$noMarkupSouthEast)
+                        $nextNoMarkup = $this->getNextNoMarkupDate('southeastdays');
                 } else if ($point['ZONE'] == 'SOUTHWEST') {
                     foreach (explode(',', $this->configs['southwestdays']) as $noMarkupDay) {
                         if ($noMarkupDay == $dayDateDelivery) {
                             $noMarkup = true;
+                            $noMarkupSouthWest = true;
+                        } else {
+                            $noMarkupSouthWest = false;
                         }
                     }
+                    if (!$noMarkupSouthWest)
+                        $nextNoMarkup = $this->getNextNoMarkupDate('southwestdays');
                 }
-
                 if (intval($params['shipment_cost']) >= $limitBasket && !$noMarkup) {
                     $delivery_price = max($distance - 5, 0) * $cost;
                 } else if (intval($params['shipment_cost']) >= $limitBasket && $noMarkup) {
@@ -475,13 +503,15 @@ class OshishaDelivery extends CommonPVZ
                     }
                 }
 
+                $priceArr = array('price' => $delivery_price, 'noMarkup' => (!$noMarkup && $point['ZONE'] != 'MKAD') ? ($nextNoMarkup ?? false) : false);
+
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {
                     $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                        ? array_merge($cached_vars, array($hash_string => $delivery_price))
-                        : array($hash_string => $delivery_price));
+                        ? array_merge($cached_vars, array($hash_string => $priceArr))
+                        : array($hash_string => $priceArr));
                 }
-                return $delivery_price;
+                return $priceArr;
             } else {
                 $this->errors[] = 'no data found on point';
                 return array('errors' => $this->errors);
