@@ -357,14 +357,8 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             });
             delivery_date_week_day = tomorrow.getDay();
         }
-        if (selfObj.getDistanceCache[selectGeo] !== undefined) {
-            balloon .close();
-            selfObj.showResults(selfObj.getDistanceCache[selectGeo], selectGeo, delivery_address, saveDelivery);
-            selfObj.removeDisabled();
-            return;
-        } else {
-            selfObj.getDistanceCache[selectGeo] = {inMkad: 0, inNorthZone: 0, inSouthEastZone: 0, inSouthWestZone: 0, geometry: undefined}
-        }
+
+        selfObj.getDistanceCache[selectGeo] = {inMkad: 0, inNorthZone: 0, inSouthEastZone: 0, inSouthWestZone: 0, geometry: undefined}
 
         var checkInResult = selfObj.checkIn(selectGeo);
         selfObj.getDistanceCache[selectGeo].inMkad = checkInResult['inMkad'];
@@ -1145,6 +1139,7 @@ window.Osh.bxPopup = {
             },
             onSelect: function (suggestion) {
                 if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+                    document.querySelector(`input#user-address`).value = suggestion?.value ?? '';
                     BX.SaleCommonPVZ.updatePropsFromDaData(suggestion);
                     var latitude = Number('' + suggestion.data.geo_lat).toPrecision(6),
                         longitude = Number('' + suggestion.data.geo_lon).toPrecision(6)

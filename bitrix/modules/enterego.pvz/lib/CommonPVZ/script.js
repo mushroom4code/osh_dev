@@ -131,7 +131,7 @@ BX.SaleCommonPVZ = {
             : this.getValueProp(this.propAddressId)
         BX.cleanNode('delivery-description')
 
-        if (curDelivery !== undefined) {
+        if ((curDelivery  && curDelivery.PRICE_FORMATED) !== undefined ) {
             BX.adjust(
                 BX('delivery-description'),
                 {
@@ -748,6 +748,7 @@ BX.SaleCommonPVZ = {
             },
             onsuccess: function (response) {
                 if (response.status === 'success') {
+                    document.querySelector(`input#user-address`).value = response?.value ?? '';
                     this.updatePropsFromDaData(response);
                     window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                         oshMkad.afterSave = null;
@@ -852,7 +853,6 @@ BX.SaleCommonPVZ = {
         __this.updateValueProp(__this.propTypeDeliveryId, point.properties.deliveryName)
         __this.updateValueProp(__this.propAddressPvzId, point.properties.fullAddress)
         __this.updateValueProp(__this.propTypePvzId, point.properties.type)
-        __this.updateValueProp(__this.propZipId, point.properties.postindex)
         BX.adjust(BX('DELIVERY_SELECT_FOR_ORDER'), {
                 html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" aria-hidden="true"></i>' +
                     '<b class="font-15">' + point.properties?.deliveryName + '</b> ' +
@@ -1076,18 +1076,18 @@ BX.SaleCommonPVZ = {
         BX.append(
             BX.create({
                 tag: 'div',
-                props: {className: '', id: 'user-address-wrap'},
+                props: {className: 'order-6 col-12 wrap_filter_block mr-2', id: 'user-address-wrap'},
                 children: [
                     BX.create({
                         tag: 'div',
                         props: {
-                            className: 'd-flex flex-lg-row flex-md-row flex-column',
+                            className: 'd-flex flex-lg-row flex-md-row flex-column ',
                         },
                         children: [
                             BX.create({
                                 tag: 'div',
                                 props: {
-                                    className: 'flex flex-column mb-2 col-md-7 col-lg-7 col-12 wrap_filter_block mr-3',
+                                    className: 'width-100',
                                 },
                                 children: [
                                     BX.create({
@@ -1235,7 +1235,9 @@ BX.SaleCommonPVZ = {
             tag: 'input',
             props: {
                 type: 'text',
-                className: 'datepicker_order form-control bx-soa-customer-input bx-ios-fix',
+                readOnly: 'readonly',
+                className: 'datepicker_order readonly form-control bx-soa-customer-input bx-ios-fix',
+                style: 'background-color: unset',
             },
             dataset: {name: 'DATE_DELIVERY'},
         })
@@ -1276,14 +1278,23 @@ BX.SaleCommonPVZ = {
             if (isNaN(curDate)) {
                 curDate = tomorrow
             }
-
-            $(dateDeliveryNode).datepicker({
+            var datepicker =  $(dateDeliveryNode).datepicker({
                 minDate: tomorrow,
-                onSelect: function (date, formattedDate, datepicker) {
+                selectedDates: curDate,
+                onSelect: function (date, opts, datepicker) {
                     this.updateValueProp(this.propDateDeliveryId, date)
-                    BX.Sale.OrderAjaxComponent.sendRequest()
+                    if (datepicker.opts.silentBool !== true) {
+                        window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                            oshMkad.afterSave = null;
+                            oshMkad.getDistance([this.getValueProp(this.propLatitudeId), this.getValueProp(this.propLongitudeId)], this.getValueProp(this.propDateDeliveryId),
+                                this.getValueProp(this.propAddressId), true);
+                        })
+                        BX.Sale.OrderAjaxComponent.sendRequest()
+                    }
                 }.bind(this)
-            }).data('datepicker').selectDate(curDate);
+            }).data('datepicker');
+            datepicker.selectDate(curDate,(datepicker.opts.silentBool = true));
+            datepicker.opts.silentBool = false;
         }
 
         return this
@@ -1373,7 +1384,7 @@ BX.SaleCommonPVZ = {
                     tag: 'div',
                     props: {
                         id: 'wrap_delivery_select',
-                        className: "wrap_filter_block mr-2 col-12 order-6"
+                        className: "wrap_filter_block mr-2 col-12 order-7"
                     },
                     children: [
                         BX.create('DIV',{
@@ -1384,7 +1395,7 @@ BX.SaleCommonPVZ = {
                                             BX.create({
                                                 tag: 'div',
                                                 props: {
-                                                    className: 'mb-2 mt-2',
+                                                    className: 'mb-2 mt-2 pb-2 border-bottom-1-red',
                                                     id: 'DELIVERY_SELECT_FOR_ORDER'
                                                 },
                                                 dataset: {name: 'DELIVERY_SELECT_FOR_ORDER'},
