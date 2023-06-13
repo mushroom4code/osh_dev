@@ -748,6 +748,7 @@ BX.SaleCommonPVZ = {
             },
             onsuccess: function (response) {
                 if (response.status === 'success') {
+                    document.querySelector(`input#user-address`).value = response?.value ?? '';
                     this.updatePropsFromDaData(response);
                     window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                         oshMkad.afterSave = null;
@@ -1234,7 +1235,9 @@ BX.SaleCommonPVZ = {
             tag: 'input',
             props: {
                 type: 'text',
-                className: 'datepicker_order form-control bx-soa-customer-input bx-ios-fix',
+                readOnly: 'readonly',
+                className: 'datepicker_order readonly form-control bx-soa-customer-input bx-ios-fix',
+                style: 'background-color: unset',
             },
             dataset: {name: 'DATE_DELIVERY'},
         })
@@ -1281,6 +1284,11 @@ BX.SaleCommonPVZ = {
                 onSelect: function (date, opts, datepicker) {
                     this.updateValueProp(this.propDateDeliveryId, date)
                     if (datepicker.opts.silentBool !== true) {
+                        window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                            oshMkad.afterSave = null;
+                            oshMkad.getDistance([this.getValueProp(this.propLatitudeId), this.getValueProp(this.propLongitudeId)], this.getValueProp(this.propDateDeliveryId),
+                                this.getValueProp(this.propAddressId), true);
+                        })
                         BX.Sale.OrderAjaxComponent.sendRequest()
                     }
                 }.bind(this)
