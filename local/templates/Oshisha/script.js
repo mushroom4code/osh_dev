@@ -677,7 +677,8 @@ $(document).ready(function () {
         $('a#yes_mess').on('click', function () {
             var popup_mess = $(this).closest('div#popup_mess');
             var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
-            if ($(this).closest('div#popup_mess').hasClass('subscribed')) {
+            var product_name = $(this).closest('div.item-product-info').find('a.bx_catalog_item_title').text().trim();
+            if ($(this).closest('div#popup_mess').hasClass('subscribed')){
                 var subscribe = "N";
                 var subscription_id = popup_mess.attr('data-subscription_id');
             } else {
@@ -687,12 +688,16 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/local/templates/Oshisha/components/bitrix/catalog.product.subscribe/oshisha_catalog.product.subscribe/ajax.php',
-                data: {subscribe: subscribe, item_id: product_id, subscription_id: subscription_id},
+                data: {subscribe: subscribe, item_id: product_id, product_name: product_name, subscription_id: subscription_id},
                 success: function (result_jsn) {
                     var result = JSON.parse(result_jsn);
                     if (result.success === true) {
                         var item_controls = popup_mess.parent();
-                        if (result.message === "subscribed") {
+                        if(result.clickDbError != 'false') {
+                            console.log('error while updating productsSubscriptionsTable');
+                            console.log(result.clickDbError);
+                        }
+                        if(result.message === "subscribed") {
                             popup_mess.addClass('subscribed');
                             popup_mess.attr('data-subscription_id', result.subscribeId);
                             item_controls.find('.detail_popup').addClass('subscribed');

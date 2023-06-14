@@ -10,6 +10,7 @@ IncludeModuleLangFile(__FILE__);
 
 $GLOBALS["SALE_EXPORT"] = Array();
 
+require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/sale/general/export.php");
 //Enterego
 //override class and stack function execute
 //
