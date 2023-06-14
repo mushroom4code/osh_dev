@@ -272,14 +272,7 @@ BX.SaleCommonPVZ = {
                                                     '<span class="font-weight-600 font-15">' + delivery.name + '</span>'
                                             }
                                         )
-                                        BX.adjust(
-                                            BX('select-door-delivery-item'),
-                                            {
-                                                props:{
-                                                    style: '',
-                                                }
-                                            }
-                                        )
+                                        __this.unlockSubmitButton();
                                     })
                                 }
                             }),
@@ -389,6 +382,8 @@ BX.SaleCommonPVZ = {
 
                 }
             })
+            if (deliveryInfo.find(delivery => delivery.code === 'oshisha'))
+                this.unlockSubmitButton()
         } else {
             const propPopupContainer = BX.create('DIV', {
                 props: {className: 'container-fluid'},
@@ -516,6 +511,7 @@ BX.SaleCommonPVZ = {
         }
 
         if (this.curDeliveryId === this.doorDeliveryId) {
+            this.buildDeliveryDate()
             this.buildAddressField()
             this.buildDoorDelivery(BX.Sale.OrderAjaxComponent.result)
         } else  {
@@ -560,6 +556,17 @@ BX.SaleCommonPVZ = {
 
     clearDeliveryBlock: function () {
         BX.cleanNode(BX('map_for_delivery'))
+    },
+
+    unlockSubmitButton: function () {
+        BX.adjust(
+            BX('select-door-delivery-item'),
+            {
+                props:{
+                    style: '',
+                }
+            }
+        )
     },
 
     createPVZPopup: function () {
@@ -617,9 +624,7 @@ BX.SaleCommonPVZ = {
         this.buildDeliveryType()
             .buildDataView()
             .buildSortService()
-            .buildDeliveryDate()
             .buildDeliverySelect()
-
             // .buildMobileControls()
 
         BX.adjust(this.pvzOverlay, {style: {display: 'flex'}})
@@ -629,11 +634,12 @@ BX.SaleCommonPVZ = {
      *   Построение карты с PVZ
      */
     buildPVZMap: function () {
+        this.removeDeliveryDate()
         BX.remove(BX('user-address-wrap'))
         BX.remove(BX('button-success-delivery'))
         BX.show(BX('wrap_data_view'))
         BX.show(BX('wrap_sort_service'))
-        BX.show(BX('wrap_delivery_date'))
+        // BX.show(BX('wrap_delivery_date'))
         this.buildSuccessButtonPVZ()
         this.getPVZList();
     },
@@ -718,6 +724,7 @@ BX.SaleCommonPVZ = {
     },
 
     saveOshishaDelivery: function(params) {
+        var __this = this;
         BX.ajax({
             url: this.ajaxUrlPVZ,
             method: 'POST',
@@ -731,14 +738,7 @@ BX.SaleCommonPVZ = {
                 if (!res) {
                     console.log('error while saving oshisha delivery to db');
                 }
-                BX.adjust(
-                    BX('select-door-delivery-item'),
-                    {
-                        props:{
-                            style: '',
-                        }
-                    }
-                );
+                __this.unlockSubmitButton();
                 BX.onCustomEvent('onDeliveryExtraServiceValueChange');
             }.bind(this)
         });
@@ -1213,6 +1213,7 @@ BX.SaleCommonPVZ = {
                                                     change: BX.proxy(function () {
                                                         BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
                                                         //TODO default delivery type if not send
+                                                        __this.buildDeliveryDate()
                                                         __this.buildAddressField()
                                                         BX.Sale.OrderAjaxComponent.sendRequest()
 
@@ -1237,6 +1238,12 @@ BX.SaleCommonPVZ = {
         }
 
         return this
+    },
+
+    removeDeliveryDate: function () {
+      if (BX('wrap_delivery_date')){
+          BX.remove(BX('wrap_delivery_date'));
+      }
     },
 
     buildDeliveryDate: function () {
