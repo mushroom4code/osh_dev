@@ -264,6 +264,8 @@ class EnteregoHelper
                     ])->Fetch();
 
                 $elem = &$item['GROUPED_PRODUCTS'][$elemProp];
+                $elemProp === $prodId ? $elem['SELECTED'] = 'selected' : $elem['SELECTED'] = '';
+
                 if (!empty($elem)) {
                     foreach ($refPropsCode as $propCode) {
                         $groupProperty = [];

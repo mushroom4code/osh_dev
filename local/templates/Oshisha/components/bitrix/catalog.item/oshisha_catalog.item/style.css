@@ -1308,3 +1308,7 @@ div.slick-track {
         left: 83%;
     }
 }
+
+.max-width-820 {
+    max-width: 820px;
+}

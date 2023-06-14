@@ -76,6 +76,16 @@ class EnteregoSettings
 					'TYPE' => 'text',
 					'PREF' => 'гр.',
 				],
+                'GRAMMOVKA_GR' => [
+                    'CODE' => "GRAMMOVKA_GR",
+                    'TYPE' => 'text',
+                    'PREF' => 'гр.',
+                ],
+                'GRAMMOVKA_G_1' => [
+                    'CODE' => "GRAMMOVKA_G_1",
+                    'TYPE' => 'text',
+                    'PREF' => 'гр.',
+                ],
 				'TSVET' => [
 					'CODE' => "TSVET",
 					'TYPE' => 'color',

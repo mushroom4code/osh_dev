@@ -3522,16 +3522,13 @@ $(document).on('click', '.offer-link .offer-box', function () {
 	const productsSuccess = [];
 	const propCodePriority = $(this).attr('data-prop_code');
 	const selectedPropData = {};
-	let box_parent = $(this).closest('.catalog-item-product');
-	let box_offers = $(box_parent).find('div[data-offer_id="' + $(this).attr('data-product_id') + '"]');
-	showHideBlock(box_offers, $(this), 'd-block', true, $(box_parent).find('.prices-all'));
 	/** Перебор выбранных свой-в с получением группы значений для общего поиска */
 	const selectedProp = $(document).find('.offer-link.selected');
 	$.each(selectedProp, function (i_prop, selectProp){
 		let code = $(selectProp).find('.offer-box').attr('data-prop_code');
 		selectedPropData[code] = JSON.parse($(selectProp).find('.offer-box').attr('data-prop_group'));
 	});
-	;
+
 	$.each(arrProductGrouped, function (prod_id, item) {
 		$.each(item.PROPERTIES, function (k, props) {
 				if(Object.keys(props.JS_PROP).length === Object.keys(selectedPropData[k]).length){
