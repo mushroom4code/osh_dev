@@ -106,50 +106,57 @@ class DoorDeliveryProfile extends Base
         $deliveries = DeliveryHelper::getActiveDoorDeliveryInstance($deliveryParams);
         $order_price = false;
         $resDescription = [];
+        $oshishaDelivery = false;
+        foreach($deliveries as $delivery) {
+            if ($delivery->delivery_code === 'oshisha')
+                $oshishaDelivery = true;
+        }
         if ($propTypeDeliveryId) {
             foreach ($deliveries as $delivery) {
-                $price = $delivery->getPriceDoorDelivery($deliveryParams);
+                if (!$oshishaDelivery || $delivery->delivery_code === 'oshisha') {
+                    $price = $delivery->getPriceDoorDelivery($deliveryParams);
 
-                if ($currentDelivery===$delivery->delivery_code) {
-                    $result->setDeliveryPrice(
-                        roundEx(
-                            $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
-                            SALE_VALUE_PRECISION
-                        )
-                    );
-                    $checked = 'checked';
-                    if (!empty($price['errors'])) {
-                        $result->addError(new Error(
-                            Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
-                            'DELIVERY_CALCULATION'
-                        ));
+                    if ($currentDelivery===$delivery->delivery_code) {
+                        $result->setDeliveryPrice(
+                            roundEx(
+                                $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
+                                SALE_VALUE_PRECISION
+                            )
+                        );
+                        $checked = 'checked';
+                        if (!empty($price['errors'])) {
+                            $result->addError(new Error(
+                                Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
+                                'DELIVERY_CALCULATION'
+                            ));
+                        } else {
+                            $order_price = $delivery->delivery_code == 'oshisha' ? $price['price'] : $price;
+                        }
                     } else {
-                        $order_price = $delivery->delivery_code == 'oshisha' ? $price['price'] : $price;
+                        $checked = '';
                     }
-                } else {
-                    $checked = '';
-                }
 
-                if (empty($price['errors'])){
-                    $resDescription[] = [
-                        'code' => $delivery->delivery_code,
-                        'checked' => !empty($checked),
-                        'name' => $delivery->delivery_name,
-                        'price' => $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
-                        'noMarkup' => $delivery->delivery_code == 'oshisha' ? $price['noMarkup'] : false
-                    ];
-                } else {
-                    $resDescription[] = [
-                        'code' => $delivery->delivery_code,
-                        'name' => $delivery->delivery_name,
-                        'error' => $price['errors']
-                    ];
+                    if (empty($price['errors'])){
+                        $resDescription[] = [
+                            'code' => $delivery->delivery_code,
+                            'checked' => !empty($checked),
+                            'name' => $delivery->delivery_name,
+                            'price' => $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
+                            'noMarkup' => $delivery->delivery_code == 'oshisha' ? $price['noMarkup'] : false
+                        ];
+                    } else {
+                        $resDescription[] = [
+                            'code' => $delivery->delivery_code,
+                            'name' => $delivery->delivery_name,
+                            'error' => $price['errors']
+                        ];
+                    }
                 }
             }
 
             $result->setDescription(json_encode($resDescription));
         }
-        if (!$order_price) {
+        if (!$order_price && $order_price !== 0) {
             $result->addError(new Error(
                 'Не выбрана служба доставки',
                 'DELIVERY_CALCULATION'

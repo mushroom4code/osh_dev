@@ -259,6 +259,7 @@ BX.SaleCommonPVZ = {
                                 props: {
                                     type: 'radio',
                                     name: 'delivery',
+                                    checked: delivery.code === 'oshisha' ? 'checked' : '',
                                     className: 'form-check-input',
                                 },
                                 events: {
@@ -730,6 +731,14 @@ BX.SaleCommonPVZ = {
                 if (!res) {
                     console.log('error while saving oshisha delivery to db');
                 }
+                BX.adjust(
+                    BX('select-door-delivery-item'),
+                    {
+                        props:{
+                            style: '',
+                        }
+                    }
+                );
                 BX.onCustomEvent('onDeliveryExtraServiceValueChange');
             }.bind(this)
         });
