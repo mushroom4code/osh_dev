@@ -656,7 +656,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
 
             BX.ajax({
                 url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
-                data: {action: 'updatePickPointPoints'},
+                data: {sessid: BX.bitrix_sessid(), action: 'updatePickPointPoints'},
                 method: 'POST',
                 dataType: 'json',
                 onsuccess: (data) => {
@@ -694,7 +694,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
 
             BX.ajax({
                 url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
-                data: {action: 'updateFivePostPoints'},
+                data: {sessid: BX.bitrix_sessid(), action: 'updateFivePostPoints'},
                 method: 'POST',
                 dataType: 'json',
                 onsuccess: (data) => {
@@ -731,7 +731,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
 
             BX.ajax({
                 url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
-                data: {action: 'updateDellinPoints'},
+                data: {sessid: BX.bitrix_sessid(), action: 'updateDellinPoints'},
                 method: 'POST',
                 dataType: 'json',
                 onsuccess: (data) => {
@@ -768,7 +768,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
 
             BX.ajax({
                 url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
-                data: {action: 'updateRussianPostPoints'},
+                data: {sessid: BX.bitrix_sessid(), action: 'updateRussianPostPoints'},
                 method: 'POST',
                 dataType: 'json',
                 onsuccess: (data) => {
@@ -805,7 +805,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
 
             BX.ajax({
                 url: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
-                data: {action: 'updateOshishaRegionRestrictions'},
+                data: {sessid: BX.bitrix_sessid(), action: 'updateOshishaRegionRestrictions'},
                 method: 'POST',
                 dataType: 'json',
                 onsuccess: (data) => {
