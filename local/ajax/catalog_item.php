@@ -34,8 +34,11 @@ if ($action === 'groupedProduct') {
         }
 
         foreach ($prices as $productId => $product) {
-            $arResult['GROUPED_PRODUCTS'][$productId]['PRICES'] = EnteregoBasket::getPricesArForProductTemplate($product,
-                false, $productId);
+            if (isset($arResult['GROUPED_PRODUCTS'][$productId])) {
+                $arResult['GROUPED_PRODUCTS'][$productId]['PRICES'] = EnteregoBasket::getPricesArForProductTemplate($product,
+                    false, $productId);
+            }
+
         }
 
     }

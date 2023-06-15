@@ -3054,7 +3054,6 @@ $(document).on('click', '.js__close-count-alert', function() {
  * @param boxHide
  */
 function showHideBlock( that,  boxHide = null) {
-    console.log(that)
     $(that).closest('div.d-flex').find('.offer-box').each(function () {
         $(this).attr('data-active', 'false');
         $(this).removeClass('selected');

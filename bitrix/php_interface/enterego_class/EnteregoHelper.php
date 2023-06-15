@@ -314,6 +314,8 @@ class EnteregoHelper
                             $item['GROUPED_PROPS_DATA'][$propCode][] = $groupProperty;
                         }
                     }
+                }else {
+                    unset($item['GROUPED_PRODUCTS'][$elemProp]);
                 }
             }
         }
