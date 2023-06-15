@@ -3050,23 +3050,11 @@ $(document).on('click', '.js__close-count-alert', function() {
 
 /**
  * Enterego - switch block offer for add to basket
- * @param box_offers
  * @param that
- * @param className
- * @param allHide
  * @param boxHide
  */
-function showHideBlock(box_offers, that, className = 'd-block', allHide = false, boxHide = null) {
-    if (allHide) {
-        boxHide.find('.box-prices').each(function () {
-            $(this).removeClass(className).addClass('d-none');
-        });
-    }
-    if ($(box_offers).hasClass(className)) {
-        $(box_offers).removeClass(className).addClass('d-none')
-    } else {
-        $(box_offers).removeClass('d-none').addClass(className)
-    }
+function showHideBlock( that,  boxHide = null) {
+    console.log(that)
     $(that).closest('div.d-flex').find('.offer-box').each(function () {
         $(this).attr('data-active', 'false');
         $(this).removeClass('selected');

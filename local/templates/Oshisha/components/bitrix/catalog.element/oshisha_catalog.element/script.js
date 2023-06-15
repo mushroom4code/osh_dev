@@ -3522,6 +3522,8 @@ $(document).on('click', '.offer-link .offer-box', function () {
 	const productsSuccess = [];
 	const propCodePriority = $(this).attr('data-prop_code');
 	const selectedPropData = {};
+	let box_parent = $(this).closest('.catalog-item-product');
+	showHideBlock( $(this), $(box_parent).find('.prices-all'));
 	/** Перебор выбранных свой-в с получением группы значений для общего поиска */
 	const selectedProp = $(document).find('.offer-link.selected');
 	$.each(selectedProp, function (i_prop, selectProp){

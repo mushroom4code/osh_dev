@@ -266,7 +266,7 @@ class EnteregoHelper
                 $elem = &$item['GROUPED_PRODUCTS'][$elemProp];
                 $elemProp === $prodId ? $elem['SELECTED'] = 'selected' : $elem['SELECTED'] = '';
 
-                if (!empty($elem)) {
+                if (!empty($elem) && (int)$elem['CATALOG_QUANTITY'] > 0 && $elem['ACTIVE'] === 'Y') {
                     foreach ($refPropsCode as $propCode) {
                         $groupProperty = [];
                         $propList = CIBlockElement::GetProperty(IBLOCK_CATALOG, $elemProp,
