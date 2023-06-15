@@ -106,14 +106,10 @@ class DoorDeliveryProfile extends Base
         $deliveries = DeliveryHelper::getActiveDoorDeliveryInstance($deliveryParams);
         $order_price = false;
         $resDescription = [];
-        $oshishaDelivery = false;
-        foreach($deliveries as $delivery) {
-            if ($delivery->delivery_code === 'oshisha')
-                $oshishaDelivery = true;
-        }
+
         if ($propTypeDeliveryId) {
             foreach ($deliveries as $delivery) {
-                if (!$oshishaDelivery || $delivery->delivery_code === 'oshisha') {
+                if ($deliveryParams['location'] != '0000073738' || $delivery->delivery_code === 'oshisha') {
                     $price = $delivery->getPriceDoorDelivery($deliveryParams);
 
                     if ($currentDelivery===$delivery->delivery_code) {

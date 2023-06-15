@@ -150,10 +150,10 @@ class DeliveryHelper
 
     public static function getActiveDoorDeliveryInstance($deliveryParams){
         $deliveryInstance = array_merge(
+            OshishaDelivery::getInstanceForDoor($deliveryParams),
             DellinDelivery::getInstanceForDoor($deliveryParams),
             RussianPostDelivery::getInstanceForDoor($deliveryParams),
             SDEKDelivery::getInstanceForDoor($deliveryParams),
-            OshishaDelivery::getInstanceForDoor($deliveryParams)
         );
         return $deliveryInstance;
     }
