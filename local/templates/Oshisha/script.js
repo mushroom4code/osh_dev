@@ -3051,8 +3051,10 @@ $(document).on('click', '.js__close-count-alert', function() {
 /**
  * Enterego - switch block offer for add to basket
  * @param that
+ * @param id
+ * @param pricesBox
  */
-function showHideBlock(that) {
+function showHideBlock(that, id = 0, pricesBox = false) {
     $(that).closest('div.d-flex').find('.offer-box').each(function () {
         $(this).attr('data-active', 'false');
         $(this).removeClass('selected');
@@ -3060,6 +3062,14 @@ function showHideBlock(that) {
     });
     $(that).attr('data-active', 'true');
     $(that).closest('.offer-link').addClass('selected');
+    if (pricesBox) {
+        $(pricesBox).find('.prices-box').each(function () {
+            if (!$(this).hasClass('d-none')) {
+                $(this).addClass('d-none');
+            }
+        });
+        $(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('d-none');
+    }
 }
 
 /**
