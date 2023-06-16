@@ -3519,58 +3519,12 @@
 $(document).on('click', '.offer-link .offer-box', function () {
 
 	const arrProductGrouped = JSON.parse($(document).find('#product_prop_data').val() ?? [{}]);
-	const productsSuccess = [];
 	const propCodePriority = $(this).attr('data-prop_code');
-	const selectedPropData = {};
 	let box_parent = $(this).closest('.catalog-item-product');
-	showHideBlock( $(this), $(box_parent).find('.prices-all'));
-	/** Перебор выбранных свой-в с получением группы значений для общего поиска */
-	const selectedProp = $(document).find('.offer-link.selected');
-	$.each(selectedProp, function (i_prop, selectProp){
-		let code = $(selectProp).find('.offer-box').attr('data-prop_code');
-		selectedPropData[code] = JSON.parse($(selectProp).find('.offer-box').attr('data-prop_group'));
-	});
+	showHideBlock($(this), $(box_parent).find('.prices-all'));
+	const productsSuccess = sortOnPriorityArDataProducts(arrProductGrouped, propCodePriority)
+	window.location.href = window.location.protocol + '//' + window.location.hostname + productsSuccess[0].code;
 
-	$.each(arrProductGrouped, function (prod_id, item) {
-		$.each(item.PROPERTIES, function (k, props) {
-				if(Object.keys(props.JS_PROP).length === Object.keys(selectedPropData[k]).length){
-					$.each(props.JS_PROP, function (key, jsProp) {
-						let propList = selectedPropData[k][key];
-						let priority = -1;
-						if (propList !== undefined && jsProp.VALUE_ENUM === propList.VALUE_ENUM) {
-							if(propCodePriority === k){
-								priority = 1;
-							}
-							if (productsSuccess.length <= 0) {
-								productsSuccess.push({
-									id: prod_id,
-									code: propList.CODE,
-									prop: propList.VALUE_ENUM,
-									pr: 1 + priority
-								});
-							} else {
-								$.each(productsSuccess, function (iProd, product) {
-									if (product.id === propList.PRODUCT_IDS) {
-										product.pr = product.pr + 1 + priority;
-									} else {
-										productsSuccess.push({
-											id: prod_id,
-											code: propList.CODE,
-											prop: propList.VALUE_ENUM,
-											pr: 1 + priority
-										});
-									}
-								});
-							}
-						}
-					});
-				}
-		});
-	});
-	if (productsSuccess.length > 1) {
-		productsSuccess.sort((a, b) => a.pr < b.pr ? 1 : -1)
-		window.location.href = window.location.protocol + '//' + window.location.hostname + productsSuccess[0].code;
-	}
 });
 
 
