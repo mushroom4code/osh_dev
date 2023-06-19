@@ -168,6 +168,7 @@ if (isset($arResult['ITEM'])) {
                 ),
                 'VISUAL' => array(
                     'ID' => $itemIds['ID'],
+                    'GROUPED_CLICK' => 'grouped_' . $item['ID'],
                     'PICT_ID' => $item['SECOND_PICT'] ? $itemIds['SECOND_PICT'] : $itemIds['PICT'],
                     'PICT_SLIDER_ID' => $itemIds['PICT_SLIDER'],
                     'QUANTITY_ID' => $itemIds['QUANTITY'],
@@ -211,6 +212,7 @@ if (isset($arResult['ITEM'])) {
                 ),
                 'VISUAL' => array(
                     'ID' => $itemIds['ID'],
+                    'GROUPED_CLICK' => 'grouped_' . $item['ID'],
                     'PICT_ID' => $itemIds['PICT'],
                     'SECOND_PICT_ID' => $itemIds['SECOND_PICT'],
                     'PICT_SLIDER_ID' => $itemIds['PICT_SLIDER'],
@@ -297,9 +299,7 @@ if (isset($arResult['ITEM'])) {
         ?>
         <!--        todo minimize js -->
         <script>
-            if (typeof <?= $obName ?> === undefined) {
-                let <?=$obName?> = new JCCatalogItem(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
-            }
+                var <?=$obName?> = new JCCatalogItem(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
         </script>
     </div>
     <?

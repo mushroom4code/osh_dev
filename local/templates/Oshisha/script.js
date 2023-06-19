@@ -521,7 +521,7 @@ $(document).ready(function () {
             let parseUpdate, boxUpdate;
             let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
 
-            if (!boxUpdateAfterAppend.hasClass('open-modal-product')) {
+            if (!boxUpdateAfterAppend.hasClass('catalog-fast-window')) {
                 if (!productDef) {
                     parseUpdate = JSON.parse($(boxUpdateAfterAppend).find('.product-values').val());
                 }
@@ -3066,9 +3066,10 @@ function showHideBlock(that, id = 0, pricesBox = false) {
         $(pricesBox).find('.prices-box').each(function () {
             if (!$(this).hasClass('d-none')) {
                 $(this).addClass('d-none');
+                $(this).removeClass('active')
             }
         });
-        $(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('d-none');
+        $(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('d-none').addClass('active');
     }
 }
 

@@ -2,7 +2,9 @@
 
 use Bitrix\Catalog\PriceTable;
 use Bitrix\Main\Context;
+use Bitrix\Main\DB\SqlQueryException;
 use Bitrix\Main\Loader;
+use Bitrix\Main\LoaderException;
 use Enterego\EnteregoBasket;
 use Enterego\EnteregoHelper;
 use Enterego\EnteregoSettings;
@@ -14,13 +16,14 @@ $request = Context::getCurrent()->getRequest();
 $action = $request->get('action');
 if ($action === 'groupedProduct') {
     $prodId = $request->get('prodId');
-    $prices = [];
+    $prices = $rsPrice = [];
     $listGroupedProduct = $request->get('prodIDS');
     $arItems['GROUPED_PRODUCTS'] = $arItems['GROUPED_PROPS_DATA'] = $arResult = [];
     if (!empty($prodId)) {
         $arResult = EnteregoHelper::getListGroupedProduct($prodId, $listGroupedProduct, $arItems);
         $arResult['SETTING'] = EnteregoSettings::getDataPropOffers();
         $arResult['PRICE_GREAT'] = BASIC_PRICE;
+
         $rsPrice = PriceTable::getList([
             'select' => ['PRODUCT_ID', 'PRICE', 'CATALOG_GROUP_ID', 'CATALOG_GROUP'],
             'filter' => [
@@ -35,12 +38,14 @@ if ($action === 'groupedProduct') {
 
         foreach ($prices as $productId => $product) {
             if (isset($arResult['GROUPED_PRODUCTS'][$productId])) {
-                $arResult['GROUPED_PRODUCTS'][$productId]['PRICES'] = EnteregoBasket::getPricesArForProductTemplate($product,
-                    false, $productId);
+                try {
+                    $arResult['GROUPED_PRODUCTS'][$productId]['PRICES'] =
+                        EnteregoBasket::getPricesArForProductTemplate($product, false, $productId);
+                } catch (SqlQueryException|LoaderException $e) {
+                    $arResult['GROUPED_PRODUCTS'][$productId]['PRICES'] = [];
+                }
             }
-
         }
-
     }
     echo json_encode($arResult);
 } else {

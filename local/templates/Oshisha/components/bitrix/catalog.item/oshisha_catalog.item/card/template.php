@@ -1,11 +1,9 @@
 <?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
-use Enterego\EnteregoHelper;
-
 /**
  * @global CMain $APPLICATION
  * @var array $arParams
- * @var array $item
+ * @var array $itemы
  * @var array $actualItem
  * @var array $minOffer
  * @var array $itemIds
@@ -224,7 +222,9 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                 <?php if (!empty($listGroupedProduct)) { ?>
                     <i class="fa fa-pencil js__open-grouped-product-window"
                        aria-hidden="true"
+                       id="<?='grouped_'.$item['ID']?>"
                        data-item-id="<?= $item['ID'] ?>"
+                       data-quantity-id="<?=$arItemIDs['QUANTITY_ID']?>"
                        data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct))?>"></i>
                 <?php } ?>
             </div>
