@@ -516,7 +516,6 @@ $(document).ready(function () {
 
             // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
             let basketItem = $(boxInput).val();
-            let offer = $(this).hasClass('offers');
             let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="'+product_id+'"]');
             let parseUpdate, boxUpdate;
             let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
@@ -3081,7 +3080,7 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
 
     $.each(arrProductGrouped, function (prod_id, item) {
         $.each(item.PROPERTIES, function (k, props) {
-            if (props?.JS_PROP !== undefined &&
+            if (props?.JS_PROP !== undefined && k !== 'USE_DISCOUNT' &&
                 Object.keys(props?.JS_PROP).length === Object.keys(selectedPropData[k]).length) {
                 $.each(props.JS_PROP, function (key, jsProp) {
                     let propList = selectedPropData[k][key];
@@ -3130,5 +3129,3 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
 $(document).on('click', '.js__show-block', function () {
     showHideBlock($(this).closest('.catalog-item-product').find('.info-prices-box-hover'), $(this), 'd-flex');
 });
-
-

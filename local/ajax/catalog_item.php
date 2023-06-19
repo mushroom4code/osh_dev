@@ -23,6 +23,7 @@ if ($action === 'groupedProduct') {
         $arResult = EnteregoHelper::getListGroupedProduct($prodId, $listGroupedProduct, $arItems);
         $arResult['SETTING'] = EnteregoSettings::getDataPropOffers();
         $arResult['PRICE_GREAT'] = BASIC_PRICE;
+        $arResult['SALE'] = USE_CUSTOM_SALE_PRICE;
 
         $rsPrice = PriceTable::getList([
             'select' => ['PRODUCT_ID', 'PRICE', 'CATALOG_GROUP_ID', 'CATALOG_GROUP'],
@@ -39,8 +40,9 @@ if ($action === 'groupedProduct') {
         foreach ($prices as $productId => $product) {
             if (isset($arResult['GROUPED_PRODUCTS'][$productId])) {
                 try {
+                    $useDiscount = $arResult['GROUPED_PRODUCTS'][$productId]['PROPERTIES']['USE_DISCOUNT']['VALUE_XML_ID'];
                     $arResult['GROUPED_PRODUCTS'][$productId]['PRICES'] =
-                        EnteregoBasket::getPricesArForProductTemplate($product, false, $productId);
+                        EnteregoBasket::getPricesArForProductTemplate($product, $useDiscount, $productId);
                 } catch (SqlQueryException|LoaderException $e) {
                     $arResult['GROUPED_PRODUCTS'][$productId]['PRICES'] = [];
                 }
