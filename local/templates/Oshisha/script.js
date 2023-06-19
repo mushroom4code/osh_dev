@@ -405,11 +405,7 @@ $(document).ready(function () {
                 if (parseInt($(boxInput).val()) < max_QUANTITY) {
                     let beforeVal = parseInt($(boxInput).val()) + 1;
                     $(boxInput).val(beforeVal);
-                    // OFFERS
-                    if ($(this).hasClass('offers')) {
-                        $('.catalog-item-product').find('.offer-box[data-active="true"]')
-                            .attr('data-basket-quantity', beforeVal).attr('data-basket_quantity', beforeVal)
-                    }
+
                     if (beforeVal > 0)
                         $('.ganerate_price_wrap').show();
                     else
@@ -449,11 +445,7 @@ $(document).ready(function () {
                 if (parseInt($(boxInput).val()) > 0) {
                     let beforeVal = parseInt($(boxInput).val()) - 1;
                     $(boxInput).val(beforeVal);
-                    // OFFERS
-                    if ($(this).hasClass('offers')) {
-                        $('.catalog-item-product').find('.offer-box[data-active="true"]')
-                            .attr('data-basket-quantity', beforeVal).attr('data-basket_quantity', beforeVal)
-                    }
+
                     if (beforeVal > 0)
                         $('.ganerate_price_wrap').show();
                     else
