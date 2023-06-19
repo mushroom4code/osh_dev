@@ -265,7 +265,7 @@ class EnteregoHelper
 
                 $elem = &$item['GROUPED_PRODUCTS'][$elemProp];
                 $elemProp === $prodId ? $elem['SELECTED'] = 'selected' : $elem['SELECTED'] = '';
-
+                $elem['ACTUAL_BASKET'] = 0;
                 if (!empty($elem) && (int)$elem['CATALOG_QUANTITY'] > 0 && $elem['ACTIVE'] === 'Y') {
                     foreach ($refPropsCode as $propCode) {
                         $groupProperty = [];

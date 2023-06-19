@@ -46,6 +46,19 @@ if ($action === 'groupedProduct') {
                 }
             }
         }
+
+        $dbBasketItems = CSaleBasket::GetList(
+            array("NAME" => "ASC", "ID" => "ASC"),
+            array("FUSER_ID" => CSaleBasket::GetBasketUserID(), "LID" => SITE_ID, "ORDER_ID" => "NULL"),
+            false,
+            false,
+            array("ID", "PRODUCT_ID", "QUANTITY",)
+        );
+        while ($arItems = $dbBasketItems->Fetch()) {
+            if(isset($arResult['GROUPED_PRODUCTS'][$arItems["PRODUCT_ID"]])){
+                $arResult['GROUPED_PRODUCTS'][$arItems["PRODUCT_ID"]]['ACTUAL_BASKET'] = $arItems["QUANTITY"];
+            }
+        }
     }
     echo json_encode($arResult);
 } else {

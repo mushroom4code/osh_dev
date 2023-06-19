@@ -148,7 +148,7 @@ if ($show_price) {
 $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 ?>
 <div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
-<?php if (!$show_price) { ?> blur_photo <?php } ?>">
+<?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?=$item['ID']?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
         <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>

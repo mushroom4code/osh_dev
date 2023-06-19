@@ -514,10 +514,10 @@ $(document).ready(function () {
                 }
             }
 
-            //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
+            // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
             let basketItem = $(boxInput).val();
             let offer = $(this).hasClass('offers');
-            let boxUpdateAfterAppend = $(this).closest('.catalog-item-product');
+            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="'+product_id+'"]');
             let parseUpdate, boxUpdate;
             let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
 
@@ -553,7 +553,7 @@ $(document).ready(function () {
             }
 
             $(boxUpdate).find('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"] .card_element').val(basketItem);
-            //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
+            // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
 
             $(box_with_product).empty();
             $(box_with_products_order).empty();
@@ -3139,9 +3139,6 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
     return productsSuccess;
 }
 
-/**
- * Enterego switch block with offers
- */
 $(document).on('click', '.js__show-block', function () {
     showHideBlock($(this).closest('.catalog-item-product').find('.info-prices-box-hover'), $(this), 'd-flex');
 });
