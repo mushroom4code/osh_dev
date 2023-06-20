@@ -1,0 +1,33 @@
+div.blog-comment-form {width: 100% !important;}
+
+div.blog-comment {
+  width: 90%;
+}
+.blog-comment-content {
+  font-size: 13px;
+  overflow: hidden!important;
+  padding-top: 0 !important;
+}
+
+div.blog-comment-buttons input {
+  font-size: 13px !important;
+  outline: none;
+  border: none;
+  padding: 10px 30px;
+}
+div.blog-comment-buttons{
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem;
+}
+.blog-post-rating {
+  padding: 10px 0 0 0;
+}
+
+.workarea_wrap {
+  padding: 0 !important;
+}
+
+div.blog-textinfo {
+  margin: 1.117em 0em;
+}

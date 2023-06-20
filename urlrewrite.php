@@ -78,6 +78,14 @@ $arUrlRewrite=array (
     'PATH' => '/personal/workers/index.php',
     'SORT' => 100,
   ),
+  21 => 
+  array (
+    'CONDITION' => '#^/about/delivery/#',
+    'RULE' => '',
+    'ID' => '',
+    'PATH' => '/about/delivery/index.php',
+    'SORT' => 100,
+  ),
   9 => 
   array (
     'CONDITION' => '#^/personal/order/#',
@@ -92,14 +100,6 @@ $arUrlRewrite=array (
     'RULE' => '',
     'ID' => '',
     'PATH' => '/about/contacts/index.php',
-    'SORT' => 100,
-  ),
-  21 => 
-  array (
-    'CONDITION' => '#^/about/delivery/#',
-    'RULE' => '',
-    'ID' => '',
-    'PATH' => '/about/delivery/index.php',
     'SORT' => 100,
   ),
   29 => 

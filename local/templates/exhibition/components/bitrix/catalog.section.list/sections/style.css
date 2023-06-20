@@ -1,0 +1,29 @@
+
+.catalog-section-list-item-title {
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+.title-heading {
+    margin-bottom: 20px;
+}
+
+.catalog-section-list-tile-img-container {
+    min-height: 300px;
+    display: block;
+    min-width: 350px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center bottom;
+}
+
+.width-33 {
+    width: 30%;
+}
+
+@media (min-width: 320px) and (max-width: 1024px) {
+    .catalog-section-list-tile-img-container {
+        min-height: 230px;
+        min-width: 280px;
+    }
+}
