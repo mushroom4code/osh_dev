@@ -199,7 +199,21 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 			              "informator.php",
 		              ),
 		              "items" => array(),
-	              )
+	              ),
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "200",
+                    "text" => "Выставка",
+                    "title" => "Выставка",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/exhibition.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "exhibition.php",
+                    ),
+                    "items" => array(),
+                )
             )
         ),
     );

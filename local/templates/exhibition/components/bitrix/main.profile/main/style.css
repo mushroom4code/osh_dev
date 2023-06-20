@@ -1,0 +1,9 @@
+.info-date{
+	margin-left:15px;
+	font-size:12px;
+	font-style:italic;
+}
+
+input.form-control.input_lk[readonly]{
+	background-color: inherit;
+}

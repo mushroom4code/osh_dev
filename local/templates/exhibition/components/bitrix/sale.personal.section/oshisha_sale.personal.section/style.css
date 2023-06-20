@@ -1,0 +1,493 @@
+.sale-personal-section-index-block {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: 15px 0;
+    padding: 0;
+    height: 87%;
+    border-radius: 3px;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    opacity: .8;
+    transition: all 0.3s;
+    justify-content: space-around;
+    background-color: var(--theme-color-primary, #51cbce);
+}
+
+@media (max-width: 992px) {
+    .sale-personal-section-index-block {
+        margin: 8px 0;
+        height: auto;
+    }
+}
+
+.lds-dual-ring {
+    margin: 16.5% 45%;
+}
+
+#loading_screen {
+    z-index: 10000;
+    background-color: black;
+    opacity: 33%;
+    position: absolute;
+    width: 100%;
+    top: 52px;
+    padding: 0;
+    height: 38%;
+    border-radius: 13px;
+}
+
+.sale-personal-section-index-block:hover {
+    opacity: 1;
+}
+
+.bx_catalog_item {
+    display: flex;
+    justify-content: center;
+}
+
+.sale-personal-section-index-block-link,
+.sale-personal-section-index-block-link:hover,
+.sale-personal-section-index-block-link:active,
+.sale-personal-section-index-block-link:focus,
+.sale-personal-section-index-block-link:visited {
+    display: block;
+    padding: 25px 5px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.sale-personal-section-index-block-link {
+    color: #fff;
+}
+
+.sale-personal-section-index-block-ico {
+    font-size: 64px;
+}
+
+.sale-personal-section-index-block-name {
+    color: #fff;
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+.box_photos_cart {
+    background-image: url('/local/templates/Oshisha/images/logoPeopleBig.png');
+    background-repeat: no-repeat;
+    background-size: auto;
+    width: 120px;
+    height: 100px;
+}
+
+.cart_box {
+    justify-content: flex-start;
+}
+
+.cart_box_bonus {
+    justify-content: space-between;
+}
+
+.cart_box {
+    background-image: url('/local/templates/Oshisha/images/cart_white.png');
+    background-color: #F0F0F0;
+}
+
+
+.cart_box_bonus, .cart_box {
+    border-radius: 15px;
+    width: 48%;
+    padding: 40px;
+    display: flex;
+    max-width: 550px;
+}
+
+
+.cart_box_black {
+    width: 43%;
+}
+
+.h5, h5 {
+    font-size: 1.5rem;
+}
+
+.cart_text_link {
+    color: black;
+}
+
+.cart_text {
+    font-size: 13px;
+    margin-bottom: 0.3rem;
+}
+
+.box_user {
+    margin-left: 20px;
+}
+
+.cart_text_name, .card-body {
+    font-size: 14px;
+}
+
+.center-circle {
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    border-radius: 50%;
+    background: #393939;
+    transform: translate3d(15px, 15px, 0);
+    z-index: 3;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.sector {
+    width: 103px;
+    height: 103px;
+    position: absolute;
+    border-radius: 82%;
+    transform: translate3d(1px, 1px, 1px);
+    z-index: 2;
+    display: block;
+    background-color: #FA322E;
+    background-image: linear-gradient(228deg, transparent 53%, white 54%),
+    linear-gradient(85deg, white 51%, transparent 52%);
+}
+
+.lk_light_cart {
+    font-size: 13px;
+}
+
+.lk_light_cart_small, .cart_text_link {
+    font-size: 10px;
+}
+
+.lk_light_cart_small, .lk_light_cart, .text_in_black_block {
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid #dfdfdf;
+}
+
+.box {
+    border-bottom: 1px solid #dfdfdf;
+}
+
+label.radio_input {
+    margin-right: 5rem;
+    font-weight: 300;
+    font-size: 13px;
+    margin-bottom: 0;
+}
+
+.btn_company, .btn_company:hover, .sale-personal-section-index-block-link, .sale-personal-section-index-block-link:hover,
+.sale-personal-section-index-block-link:active, .sale-personal-section-index-block-link:focus,
+.sale-personal-section-index-block-link:visited {
+    width: 100%;
+}
+
+.block_with_subscriptions, div.notification_box, .box_sms {
+    display: flex;
+}
+
+.block_with_subscriptions {
+    flex-direction: column;
+    padding: 30px;
+}
+
+.block_with_subscriptions > .action {
+    margin-bottom: 20px;
+}
+
+.box_sms, div.notification_box {
+    flex-direction: row;
+}
+
+.box_sms {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+div.notification_box {
+    align-items: center;
+    padding: 0 15px;
+    margin-bottom: 2rem !important;
+}
+
+div > input.input_lk_notification {
+    border-radius: 5px !important;
+    width: 22px !important;
+    margin-right: 10px;
+    height: 22px !important;
+    margin-left: 0;
+}
+
+.bx_profile .main-profile-block-date-info {
+    margin-bottom: 15px;
+}
+
+.bx_profile .main-profile-form-password-annotation {
+    margin-top: 15px;
+    color: grey;
+    font-weight: lighter;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.bx_profile .main-profile-form-password-annotation, .link_input_address {
+    font-size: 12px;
+}
+
+.bx_profile .main-profile-social-block {
+    margin-top: 40px;
+}
+
+.main-profile-form-label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.main-profile-form-label-large {
+    font-size: 13px;
+}
+
+.text_small, .main-profile-form-label, .main-profile-form-label-large {
+    color: #212529;
+}
+
+.text_small, .block_with_subscriptions > .action > span {
+    font-size: 10px;
+}
+
+.main-profile-form-label_notification, .bx_profile .main-profile-form-password-annotation {
+    margin-bottom: 0;
+}
+
+.link_input_address {
+    color: #F55F5C;
+}
+
+p.lk, .main-profile-submit, .main-profile-submit:hover {
+    color: white;
+}
+
+.main-profile-submit, .main-profile-submit:hover {
+    font-size: 14px;
+    font-weight: 300 !important;
+    transition: 0.3s;
+}
+
+.main-profile-submit:hover {
+    background-color: #f17775;
+}
+
+
+.switch-btn {
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+    border-radius: 10px;
+    background: #F55F5C;
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition-duration: 300ms;
+}
+
+.switch-btn::after {
+    content: "";
+    height: 18px;
+    width: 18px;
+    border-radius: 10px;
+    background: #F0F0F0;
+    top: 1px;
+    left: 1px;
+    transition-duration: 300ms;
+    position: absolute;
+    z-index: 1;
+}
+
+.switch-on {
+    background: #F0F0F0;
+}
+
+.switch-on::after {
+    left: 16px;
+    background: #F55F5C;
+}
+
+.block_with_subscriptions {
+    background: #393939;
+    border-radius: 20px;
+    width: 100%;
+    justify-content: space-between;
+    height: 390px;
+}
+
+.block_with_subscriptions > .action > span.lk {
+    color: lightgray;
+}
+
+.lk_light {
+    width: 20%;
+    font-size: 13px;
+    color: #f1f1f1;
+    margin-bottom: 0;
+}
+
+.block_with_subscriptions > .action > p {
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+
+.form-group > .col-sm-10 {
+    padding-left: 0;
+}
+
+.check_box > img {
+    width: auto;
+}
+
+.check_box {
+    margin-right: 10px;
+}
+
+.box_check_lk {
+    background-image: url("/local/templates/Oshisha/images/check_mark_black.png");
+    background-size: auto;
+}
+
+.form_company_many {
+    background-image: url("/local/templates/Oshisha/images/company.png");
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+}
+
+.photo_class_bottom, .photo_class_banner_top, .photo_class_bottom img, .photo_class_banner_top img {
+    width: 100%;
+    border-radius: 20px;
+}
+
+.photo_class_bottom {
+    min-height: 60px;
+    margin: 3rem 0;
+}
+
+.photo_class_banner_top {
+    min-height: 220px;
+}
+
+.cart_box_black_2 {
+    width: 48%;
+    background-color: #393939;
+    border-radius: 20px;
+    padding: 30px 50px;
+    line-height: 2;
+    margin: 5px;
+}
+
+.cart_box_black_2 > .lk_white {
+    color: #E5E5E5;
+}
+
+div#personal_account div.products_box {
+    display: flex;
+    justify-content: space-between;
+}
+
+div#personal_account div.products_box div.col-sm-3 {
+    max-width: 100%;
+    flex: 0 0 32%;
+}
+
+div#personal_account div.products_box div.col-sm-3 .bx_catalog_item .bx_catalog_item_container {
+    height: 390px;
+    max-width: 320px;
+}
+
+div#personal_account div.products_box div.col-sm-3 a.image_cart > img {
+    max-width: 280px;
+}
+
+div#personal_account div.products_box div.col-sm-3 .bx_catalog_item_price {
+    margin-top: 20px;
+}
+
+div#personal_account div.products_box div.col-sm-3 .bx_catalog_item_container {
+    padding: 24px;
+}
+
+@media (min-width: 320px) and (max-width: 790px) {
+    label.radio_input {
+        margin-right: 1rem;
+    }
+
+    div#personal_subscribe {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    #content_box #personal_subscribe .sort-panel > .flex-row {
+        justify-content: space-between !important;
+        width: 100%;
+    }
+
+    #personal_subscribe .icon_sort_bar, #personal_subscribe .icon_sort_line, #personal_subscribe .icon_sort_bar_active,
+    #personal_subscribe .icon_sort_line_active, .sort_order {
+        margin-right: 0;
+    }
+
+    .sort_mobile {
+        width: 30px;
+        height: 30px;
+    }
+
+    .icon_sort_bar, .icon_sort_line, .icon_sort_bar_active, .icon_sort_line_active {
+        margin-left: 10px;
+    }
+
+    .icon_sort_bar_active, .icon_sort_line {
+        width: 29px;
+        height: 29px;
+    }
+
+    #personal_subscribe h5 b, #personal_subscribe h5 {
+        font-size: 18px;
+    }
+
+    .icon_sort_bar {
+        width: 29px;
+        height: 28px;
+    }
+
+    div#personal_subscribe > .flex-row {
+        flex-direction: row !important;
+        justify-content: flex-end !important;
+        width: 100%;
+    }
+
+    div#personal_subscribe > .mb-4 {
+        align-self: start;
+    }
+
+    .sort_order {
+        margin-right: 0;
+    }
+
+    .sort_mobile {
+        background-image: url(/local/templates/Oshisha/images/Filter.png);
+    }
+}
