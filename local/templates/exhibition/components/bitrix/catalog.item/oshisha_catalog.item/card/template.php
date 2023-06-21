@@ -127,6 +127,7 @@ if ($show_price) {
         'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
         'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
         'MORE_PHOTO' => $morePhoto,
+        'DESCRIPTION' => $item['DETAIL_TEXT'] ?? '',
         'PRODUCT' => $item['PRODUCT'],
         'USE_DISCOUNT' => $useDiscount['VALUE'],
         'ACTUAL_BASKET' => $priceBasket,
