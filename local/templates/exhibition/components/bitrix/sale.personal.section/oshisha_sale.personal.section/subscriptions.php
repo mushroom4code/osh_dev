@@ -116,7 +116,7 @@ $SUBSCRIPTIONS_FILTER = array(
                     "PRODUCT_PROPERTIES" => array(
                         "USE_DISCOUNT"
                     ),
-                    "PRICE_CODE" => BXConstants::PriceCode(),
+                    "PRICE_CODE" => [0 => "b2b"],
                     "PRICE_VAT_INCLUDE" => "Y",
                     "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
                     "PRODUCT_ID_VARIABLE" => "id",

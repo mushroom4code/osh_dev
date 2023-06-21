@@ -12,7 +12,7 @@ if (CModule::IncludeModule('iblock')) {
         'ACTIVE' => 'Y'
     );
 
-    if (SITE_ID === 'V3') {
+    if (SITE_ID === SITE_EXHIBITION) {
         $arFilter['ID'] = IBLOCK_CATALOG_EX;
     }
 

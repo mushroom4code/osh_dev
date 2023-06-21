@@ -11,9 +11,9 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $iblock_id = IBLOCK_CATALOG;
 $priceCodes = BXConstants::PriceCode();
 
-if (SITE_ID === 'V3') {
+if (SITE_ID === SITE_EXHIBITION) {
     $iblock_id = IBLOCK_CATALOG_EX;
-    $priceCodes = [9 => 'b2b'];
+    $priceCodes = [0 => "b2b"];
 }
 
 $APPLICATION->IncludeComponent(

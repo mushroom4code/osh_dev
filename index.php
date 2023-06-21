@@ -84,7 +84,7 @@ if (IsModuleInstalled("advertising")):?>
         </div>
     </div>
 <?php endif;
-if (SITE_ID !== 'V3') {
+if (SITE_ID !== SITE_EXHIBITION) {
     global $trendFilter;
     $trendFilter = array('PROPERTY_TREND' => '4'); ?>
     <span class="title_home">

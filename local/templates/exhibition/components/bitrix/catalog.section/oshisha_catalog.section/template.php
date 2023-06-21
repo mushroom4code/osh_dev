@@ -925,7 +925,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                 "OFFERS_SORT_ORDER2" => "desc",
                                 "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
                                 "PARTIAL_PRODUCT_PROPERTIES" => "N",
-                                "PRICE_CODE" => BXConstants::PriceCode(),
+                                "PRICE_CODE" => [0 => "b2b"],
                                 "FILL_ITEM_ALL_PRICES" => "Y",
                                 "PRICE_VAT_INCLUDE" => "Y",
                                 "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",

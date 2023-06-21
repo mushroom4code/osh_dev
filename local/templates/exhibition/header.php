@@ -331,7 +331,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 "PREVIEW_HEIGHT" => "150",
                                 "PREVIEW_TRUNCATE_LEN" => "",
                                 "PREVIEW_WIDTH" => "150",
-                                "PRICE_CODE" => BXConstants::PriceCode(),
+                                "PRICE_CODE" => [0 => "b2b"],
                                 "PRICE_VAT_INCLUDE" => "Y",
                                 "SHOW_INPUT" => "Y",
                                 "SHOW_OTHERS" => "N",
