@@ -120,7 +120,7 @@ $useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
 $rowResHidePrice = $arResult['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $price = $actualItem['PRICES_CUSTOM'];
 
-$priceCalculate = $price['PRICE_DATA'][1]['PRICE'];
+$priceCalculate = $price['PRICE_DATA'][2]['PRICE'];
 $price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
 
 if (!empty($price['USER_PRICE']['PRICE'])) {
@@ -128,7 +128,7 @@ if (!empty($price['USER_PRICE']['PRICE'])) {
 }
 
 if ((USE_CUSTOM_SALE_PRICE || $useDiscount['VALUE_XML_ID'] === 'true') && !empty($price['SALE_PRICE']['PRINT_PRICE'])
-    && ( !isset($specialPrice) || $price['SALE_PRICE']['PRICE'] < $specialPrice['PRICE'])) {
+    && (!isset($specialPrice) || $price['SALE_PRICE']['PRICE'] < $specialPrice['PRICE'])) {
 
     $specialPrice = $price['SALE_PRICE'];
 }
@@ -157,29 +157,6 @@ $arParams['MESS_COMMENTS_TAB'] = $arParams['MESS_COMMENTS_TAB'] ?: Loc::getMessa
 $arParams['MESS_SHOW_MAX_QUANTITY'] = $arParams['MESS_SHOW_MAX_QUANTITY'] ?: Loc::getMessage('CT_BCE_CATALOG_SHOW_MAX_QUANTITY');
 $arParams['MESS_RELATIVE_QUANTITY_MANY'] = $arParams['MESS_RELATIVE_QUANTITY_MANY'] ?: Loc::getMessage('CT_BCE_CATALOG_RELATIVE_QUANTITY_MANY');
 $arParams['MESS_RELATIVE_QUANTITY_FEW'] = $arParams['MESS_RELATIVE_QUANTITY_FEW'] ?: Loc::getMessage('CT_BCE_CATALOG_RELATIVE_QUANTITY_FEW');
-
-$positionClassMap = array(
-    'left' => 'product-item-label-left',
-    'center' => 'product-item-label-center',
-    'right' => 'product-item-label-right',
-    'bottom' => 'product-item-label-bottom',
-    'middle' => 'product-item-label-middle',
-    'top' => 'product-item-label-top'
-);
-
-$discountPositionClass = 'product-item-label-big';
-if ($arParams['SHOW_DISCOUNT_PERCENT'] === 'Y' && !empty($arParams['DISCOUNT_PERCENT_POSITION'])) {
-    foreach (explode('-', $arParams['DISCOUNT_PERCENT_POSITION']) as $pos) {
-        $discountPositionClass .= isset($positionClassMap[$pos]) ? ' ' . $positionClassMap[$pos] : '';
-    }
-}
-
-$labelPositionClass = 'product-item-label-big';
-if (!empty($arParams['LABEL_PROP_POSITION'])) {
-    foreach (explode('-', $arParams['LABEL_PROP_POSITION']) as $pos) {
-        $labelPositionClass .= isset($positionClassMap[$pos]) ? ' ' . $positionClassMap[$pos] : '';
-    }
-}
 
 $item_id = [];
 $FUser_id = '';
@@ -371,11 +348,6 @@ global $option_site;
                     ?>
                 </div>
             </div>
-            <?php
-            $showOffersBlock = $haveOffers && !empty($arResult['OFFERS_PROP']);
-            $mainBlockProperties = array_intersect_key($arResult['DISPLAY_PROPERTIES'], $arParams['MAIN_BLOCK_PROPERTY_CODE']);
-            $showPropsBlock = !empty($mainBlockProperties) || $arResult['SHOW_OFFERS_PROPS'];
-            $showBlockWithOffersAndProps = $showOffersBlock || $showPropsBlock; ?>
             <div class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column product_right justify-content-between">
                 <h1 class="head-title"><?= $name ?></h1>
                 <?php if ($isGift) { ?>
@@ -390,15 +362,15 @@ global $option_site;
                     $strong = 0;
                     if (isset($arResult['PROPERTIES'][PROP_STRONG_CODE]) && !empty($arResult['PROPERTIES'][PROP_STRONG_CODE]['VALUE'])) {
                         switch ($arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE_SORT']) {
-                            case "1":
+                            case "1" || '100':
                                 $strong = 0.5;
                                 $color = "#07AB66";
                                 break;
-                            case "2":
+                            case "2" || '200':
                                 $strong = 1.5;
                                 $color = "#FFC700";
                                 break;
-                            case "3":
+                            case "3" || '300':
                                 $strong = 2.5;
                                 $color = "#FF7A00";
                                 break;
@@ -421,9 +393,7 @@ global $option_site;
                                             />
                                             <?php } ?>
                                     </div>
-                                    <?php
-                                }
-                                ?>
+                                <?php } ?>
                             </div>
                         </div>
                     <?php }
@@ -435,32 +405,10 @@ global $option_site;
                         <div class="mb-3 d-flex flex-row align-items-center">
                             <div class="product-item-detail-price-current"
                                  id="<?= $itemIds['PRICE_ID'] ?>">
-                                <?=
-                                    $specialPrice['PRINT_PRICE'] ?? '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
-                                ?>
+                                <?= $price['PRICE_DATA'][2]['PRINT_PRICE']; ?>
                             </div>
-                            <?php if (isset($specialPrice)) {
-                                $styles = 'price-discount';
-                                $old_sum = (int)$price['PRICE_DATA'][0]['PRICE'] - (int)$specialPrice['PRICE'] ?? 0; ?>
-                                <span class="font-14 ml-3">
-                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
-                                    <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
-                                </span>
-                            <?php } ?>
-                        </div>
-                        <div class="d-flex flex-column prices-block">
-                            <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                                <p>
-                                    <span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
-                                    <span class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                                </p>
-                            <?php } ?>
                         </div>
                     </div>
-                    <!--Бонусная система -->
-                    <!--                            <div class="mb-5">-->
-                    <!--                                <a href="#" class="link_bonus">Начислится бонусов за покупку: 11</a>-->
-                    <!--                            </div>-->
                 </div>
             <?php
             break;
@@ -482,16 +430,16 @@ global $option_site;
                                     <span class="product-item-detail-info-container-title"><?= $arParams['MESS_SHOW_MAX_QUANTITY'] ?>:</span>
                                     <span class="product-item-quantity"
                                           data-entity="quantity-limit-value">
-                                                                    <?php if ($arParams['SHOW_MAX_QUANTITY'] === 'M') {
-                                                                        if ((float)$actualItem['PRODUCT']['QUANTITY'] / $measureRatio >= $arParams['RELATIVE_QUANTITY_FACTOR']) {
-                                                                            echo $arParams['MESS_RELATIVE_QUANTITY_MANY'];
-                                                                        } else {
-                                                                            echo $arParams['MESS_RELATIVE_QUANTITY_FEW'];
-                                                                        }
-                                                                    } else {
-                                                                        echo $actualItem['PRODUCT']['QUANTITY'] . ' ' . $actualItem['ITEM_MEASURE']['TITLE'];
-                                                                    } ?>
-                                                                </span>
+                                        <?php if ($arParams['SHOW_MAX_QUANTITY'] === 'M') {
+                                            if ((float)$actualItem['PRODUCT']['QUANTITY'] / $measureRatio >= $arParams['RELATIVE_QUANTITY_FACTOR']) {
+                                                echo $arParams['MESS_RELATIVE_QUANTITY_MANY'];
+                                            } else {
+                                                echo $arParams['MESS_RELATIVE_QUANTITY_FEW'];
+                                            }
+                                        } else {
+                                            echo $actualItem['PRODUCT']['QUANTITY'] . ' ' . $actualItem['ITEM_MEASURE']['TITLE'];
+                                        } ?>
+                                    </span>
                                 </div>
                                 <?php
                             }
@@ -562,25 +510,27 @@ global $option_site;
                                 </div>
                                 <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
                                    rel="nofollow"
-                                   class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                                   <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?> detail_disabled"
+                                   class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                   <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?> detail_disabled"
                                    data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                    data-product_id="<?= $arResult['ID']; ?>"
                                    title="Добавить в корзину">Забронировать</a>
                             </div>
                             <div id="result_box" style="width: 100%;position: absolute;"></div>
-                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>">
-                                <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : ''?>" aria-hidden="true"></i>
+                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
+                                <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : '' ?>"
+                                   aria-hidden="true"></i>
                             </div>
-                            <div id="popup_mess" class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>"
-                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : ''?>"
+                            <div id="popup_mess"
+                                 class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
+                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
                                  data-product_id="<?= $arResult['ID']; ?>"></div>
                         </div>
                         <div class="mb-4 d-flex justify-content-between align-items-center">
-                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : ''?>">
-                            Нет в наличии
+                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
+                                Нет в наличии
                             </div>
                         </div>
                         <?php
@@ -602,7 +552,7 @@ global $option_site;
                     </div>
                 </div>
             </div>
-        <?php } ?>
+            <?php } ?>
         </div>
         <?php if ($haveOffers) {
             if ($arResult['OFFER_GROUP']) { ?>
