@@ -51,8 +51,8 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
          id="basket-item-{{ID}}" data-gift="{{GIFT}}" data-entity="basket-item" data-id="{{ID}}">
         {{^SHOW_RESTORE}}
         <div class="basket-items-list-item-descriptions d-flex row_section justify-content-between">
-            <div class="basket-items-list-item-descriptions-inner col-lg-7 col-md-12 col-12 p-0"
-            <div class="basket-items-list-item-descriptions-inner col-lg-7 col-md-12 col-12 p-0"
+            <div class="basket-items-list-item-descriptions-inner col-lg-9 col-md-12 col-12 p-0"
+            <div class="basket-items-list-item-descriptions-inner col-lg-9 col-md-12 col-12 p-0"
                  id="basket-item-height-aligner-{{ID}}">
                 <?php if (in_array('PREVIEW_PICTURE', $arParams['COLUMNS_LIST'])){ ?>
                 <div class="basket-item-block-image col-lg-3 col-md-3 p-3
@@ -394,16 +394,9 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column justify-content-between align-items-end end-column col-lg-5 col-md-12 col-12 pr-0">
+        <div class="d-flex flex-column align-items-end col-lg-3 col-md-12 col-12 pr-0">
             <?php if (!$mobile->isMobile() || $mobile->isTablet()) { ?>
-                <div class="d-flex flex-row width_100 justify-content-between">
-                    <div class="box-with-prices-net p-2">
-                        {{#PRICES_NET}}
-                        {{#PRICE_DATA}}
-                        <p class="font-12 mb-2"><b>{{{NAME}}}</b> - <b>{{{VAL}}} ₽</b></p>
-                        {{/PRICE_DATA}}
-                        {{/PRICES_NET}}
-                    </div>
+                <div class="d-flex flex-row width_100 justify-content-end">
                     <div class="d-flex flex-column price-column ml-2">
                         <div class="basket-items-list-item-price mb-1 <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
                             <div class="basket-item-block-price d-flex flex-column align-items-end">
