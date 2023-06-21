@@ -2299,14 +2299,14 @@ $(document).on('click', '.open-fast-window', function () {
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        className: 'price-group mb-lg-4 mb-md-3 mb-3'
+                                        className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
                                     },
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        className: 'add-to-basket box-basket d-flex flex-row align-items-center bx_catalog_item_controls mb-3'
+                                        className: 'description overflow-auto max-height-300'
                                     },
-                                })
+                                }),
                             ]
                         }),
                         BX.create('DIV', {
@@ -2431,60 +2431,15 @@ $(document).on('click', '.open-fast-window', function () {
 
         // PRICE
 
-        let price_group = BX.findChildByClassName(box_product, 'price-group');
         let price_base = BX.findChildByClassName(box_product, 'base-price');
+        price_base.innerHTML = product.PRICE[2].PRICE + '₽'
 
-        $.each(product.PRICE, function (i, price) {
-            let sale = '';
+        if (product.DESCRIPTION !== '') {
+            $(BX.findChildByClassName(box_product, 'description')).html(product.DESCRIPTION);
+        }
 
-            if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(product.SALE_PRICE) > 0) {
-                sale = 'text-decoration-color: #f55f5c; text-decoration-line: line-through;'
-            }
-
-            if (parseInt(price.PRICE_TYPE_ID) === product.BASE_PRICE) {
-                if ((product.USE_DISCOUNT === 'Да' || product.USE_CUSTOM_SALE_PRICE === true) && parseInt(product.SALE_PRICE) > 0) {
-                    let print_price = product.PRICE[0].PRINT_PRICE;
-                    let sale_price = product.SALE_PRICE;
-                    let print_price_sum = (parseInt(product.PRICE[0].PRICE) - parseInt(sale_price)) ?? 0;
-                    price_base.innerHTML = sale_price + ' руб. <span class="font-14 ml-3">' +
-                        ' <b class="decoration-color-red mr-2">' + print_price + '</b>' +
-                        '<b class="sale-percent"> - ' + print_price_sum + ' руб.</b></span>';
-                } else {
-                    price_base.innerHTML = '<span class="font-14 card-price-text">от </span>' + price.PRINT_PRICE;
-                }
-            }
-
-            price_group.appendChild(BX.create('P', {
-                props: {
-                    className: 'mb-2',
-                },
-                children: [
-                    BX.create('SPAN', {
-                        props: {
-                            className: 'font-16 mr-2 font-weight-bold',
-                        },
-                        html: '<b>' + price.NAME + '</b>'
-                    }),
-                    BX.create('SPAN', {
-                        props: {
-                            className: 'font-16',
-                        },
-                        html: ' - '
-                    }),
-                    BX.create('SPAN', {
-                        props: {
-                            className: 'font-16 ml-2 font-weight-bold',
-                            style: sale
-                        },
-                        html: '<b>' + price.PRINT_PRICE + '</b>'
-                    })
-                ]
-            }));
-        });
-
-        let basket_box = BX.findChildByClassName(box_product, 'add-to-basket');
         if (parseInt(product.PRODUCT.QUANTITY) > 0) {
-
+            let basket_box = BX.findChildByClassName(box_product, 'add-to-basket');
             let product_props = product.PRODUCT;
 
             basket_box.appendChild(BX.create('DIV', {
