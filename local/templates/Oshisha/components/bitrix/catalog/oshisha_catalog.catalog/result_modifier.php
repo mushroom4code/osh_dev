@@ -12,6 +12,8 @@ if ($arResult['FOLDER'] === '/diskont/') {
 }
 elseif ($arResult['FOLDER'] === '/hit/') {
     $cat = new EnteregoDiscount();
+    $arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG, 'GLOBAL_ACTIVE' => 'Y',);
+    $GLOBALS[$arParams['FILTER_NAME']] = array_merge($GLOBALS[$arParams['FILTER_NAME']]);
     $arResult['SECTION_LIST'] = $cat->getSectionProductsForFilter('hit', $arParams);
 }
 else {
