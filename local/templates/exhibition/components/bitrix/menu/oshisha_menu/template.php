@@ -25,9 +25,8 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
     $HAS_CHILD = 0;
     if (is_array($arColumns) && count($arColumns) > 0)
         $HAS_CHILD = 1;
-    if ($arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/diskont/') {
-
-
+    if ($arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/diskont/' &&
+        $arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/diskont/') {
         $menu_for_JS['MAIN'][] = [
             'LINK' => $arResult["ALL_ITEMS"][$itemID]["LINK"],
             'TEXT' => $arResult["ALL_ITEMS"][$itemID]["TEXT"],
@@ -73,30 +72,10 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 
         $result = json_encode($menu_for_JS) ?>
         <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/diskont/">
-                <span class="text_catalog_link">Дисконт</span>
-            </a>
-        </li>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/catalog_new/">
-                <span class="text_catalog_link">Новинки</span>
-            </a>
-        </li>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/catalog_hits/">
-                <span class="text_catalog_link">Хиты</span>
-            </a>
-        </li>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
             <a class="link_menu_header" href="/brands/">
                 <span class="text_catalog_link">Бренды</span>
             </a>
         </li>
-        <!--		<li class="li_menu_header  none_mobile" data-role="bx-menu-item">-->
-        <!--            <a class="link_menu_header" href="/promotions/">-->
-        <!--                <span class="text_catalog_link">Акции</span>-->
-        <!--            </a>-->
-        <!--        </li>		-->
         <div class="open_menu" style="display: none" id="main_menu">
             <div class="parent_menu"></div>
             <div class="menu_items hide"></div>
