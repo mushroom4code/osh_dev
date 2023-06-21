@@ -102,7 +102,7 @@ if (IsModuleInstalled("iblock")) {
 		"SITE_ID" => SITE_ID,
 		"ACTIVE" => "Y"
 	);
-    if (SITE_ID === 'V3') {
+    if (SITE_ID === SITE_EXHIBITION) {
         $arFilter['ID'] = IBLOCK_CATALOG_EX;
     }
 	$obCache = new CPHPCache();
