@@ -43,7 +43,6 @@ $this->setFrameMode(true);
                 $sectionListParams["COUNT_ELEMENTS_FILTER"] = "CNT_AVAILABLE";
             }
         }
-        var_dump('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
         $APPLICATION->IncludeComponent(
             "bitrix:catalog.section.list",
             "sections",
@@ -51,7 +50,6 @@ $this->setFrameMode(true);
             $component,
             ($arParams["SHOW_TOP_ELEMENTS"] !== "N" ? array("HIDE_ICONS" => "Y") : array())
         );
-        var_dump('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
         unset($sectionListParams);
 
         if ($arParams["USE_COMPARE"] === "Y") {
