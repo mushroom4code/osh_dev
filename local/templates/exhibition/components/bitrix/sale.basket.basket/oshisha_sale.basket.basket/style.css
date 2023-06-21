@@ -450,7 +450,7 @@ button.btn_basket {
         flex: auto;
     }
 
-    .font_18, .by-line:not(.opt) a.bx_catalog_item_title {
+    .font_18 {
         font-size: 15px;
     }
 

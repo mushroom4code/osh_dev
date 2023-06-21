@@ -310,11 +310,6 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             </div>
                         </div>
                     </div>
-                    <div class="button_panel_wrap">
-                        <div class="sort_mobile"></div>
-                        <div class="icon_sort_bar xs-d-none" id="card_catalog"></div>
-                        <div class="icon_sort_line xs-d-none" id="line_catalog"></div>
-                    </div>
                 </div>
             </div>
         </div>

@@ -2110,21 +2110,6 @@ $(document).ready(function () {
             $('.icon_sort_bar').addClass('icon_sort_bar_active').removeClass('icon_sort_bar');
         }
     }
-    // переключение на вид картога карточками
-    $(document).on('click', '#card_catalog', function () {
-        document.cookie = 'orientation=card';
-        $('.catalog-section').removeClass('by-line').addClass('by-card');
-        $('.icon_sort_line_active').addClass('icon_sort_line').removeClass('icon_sort_line_active');
-        $(this).addClass('icon_sort_bar_active').removeClass('icon_sort_bar');
-    });
-    // переключение на вид картога списком
-    $(document).on('click', '#line_catalog', function () {
-        document.cookie = 'orientation=line';
-        $('.catalog-section').removeClass('by-card').addClass('by-line');
-        $('.icon_sort_bar_active').addClass('icon_sort_bar').removeClass('icon_sort_bar_active');
-        $(this).addClass('icon_sort_line_active').removeClass('icon_sort_line');
-    });
-
 
     $('.sort_order').on('click', function () {
         $('.sort_orders_element').toggle();

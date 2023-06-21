@@ -241,7 +241,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         }
         //endregion
 
-        $col_orientation = $_COOKIE['orientation'] === 'line' ? 'by-line' : 'by-card';
+        $col_orientation = 'by-card';
         $classPosition = '';
         $classOpt = '';
         if ($GLOBALS['UserTypeOpt'] === true) {
