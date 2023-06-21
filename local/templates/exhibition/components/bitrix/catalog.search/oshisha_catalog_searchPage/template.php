@@ -170,7 +170,7 @@ if (Loader::includeModule('search')) {
                                     "FILTER_NAME" => "",
                                     "HIDE_NOT_AVAILABLE" => "Y",
                                     "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-                                    "IBLOCK_ID" => IBLOCK_CATALOG,
+                                    "IBLOCK_ID" => IBLOCK_CATALOG_EX,
                                     "IBLOCK_TYPE" => "1c_catalog",
                                     "LABEL_PROP" => array(),
                                     "LABEL_PROP_MOBILE" => "",

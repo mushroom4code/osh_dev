@@ -89,7 +89,7 @@ if( count($arIsd_product) > 0)
                 "FILTER_NAME" => "FAVORITES_FILTER",
                 "HIDE_NOT_AVAILABLE" => "L",
                 "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-                "IBLOCK_ID" => IBLOCK_CATALOG,
+                "IBLOCK_ID" => IBLOCK_CATALOG_EX,
                 "IBLOCK_TYPE" => "1c_catalog",
                 "INCLUDE_SUBSECTIONS" => "A",
                 "LABEL_PROP" => array(PROPERTY_KEY_VKUS,"USE_DISCOUNT"),

@@ -189,7 +189,7 @@ if ($basketUserId <= 0)
     $ids = array();
 }
 $ids = array_values(Catalog\CatalogViewedProductTable::getProductSkuMap(
-    IBLOCK_CATALOG,
+    IBLOCK_CATALOG_EX,
     $arResult['VARIABLES']['SECTION_ID'],
     $basketUserId,
     $arParams['SECTION_ELEMENT_ID'],
@@ -209,7 +209,7 @@ foreach ($arResult['ITEMS'] as $item) {
     $item_id[] = $item['ID'];
 }
 
-$iblock_id = IBLOCK_CATALOG;
+$iblock_id = IBLOCK_CATALOG_EX;
 $resQuery = Enterego\EnteregoSettings::getPropSetting($iblock_id, 'SEE_POPUP_WINDOW');
 if (!empty($resQuery)) {
     while ($collectionPropChecked = $resQuery->Fetch()) {
@@ -903,7 +903,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                 "FILTER_NAME" => "arrFilterTop",
                                 "HIDE_NOT_AVAILABLE" => "Y",
                                 "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-                                "IBLOCK_ID" => IBLOCK_CATALOG,
+                                "IBLOCK_ID" => IBLOCK_CATALOG_EX,
                                 "IBLOCK_TYPE" => "1c_catalog",
                                 "LABEL_PROP" => array(),
                                 "LABEL_PROP_MOBILE" => "",

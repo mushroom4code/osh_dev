@@ -98,11 +98,12 @@ if (!function_exists("FillAllPicturesAndDescriptions")) {
 $arSectionsInfo = array();
 if (IsModuleInstalled("iblock")) {
 	$arFilter = array(
-		"TYPE" => "1c_catalog",
 		"SITE_ID" => SITE_ID,
 		"ACTIVE" => "Y"
 	);
-
+    if (SITE_ID === 'V3') {
+        $arFilter['ID'] = IBLOCK_CATALOG_EX;
+    }
 	$obCache = new CPHPCache();
 	if ($obCache->InitCache(36000, serialize($arFilter), "/iblock/menu")) {
 		$arSectionsInfo = $obCache->GetVars();

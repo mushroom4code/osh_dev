@@ -11,7 +11,7 @@ if ($arResult['FOLDER'] === '/diskont/') {
     $arResult['SECTION_LIST'] = $cat->getSectionProductsForFilter();
 } else {
     $arOrderS = array('DEPTH_LEVEL' => 'ASC', 'SORT' => 'ASC',);
-    $arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG, 'GLOBAL_ACTIVE' => 'Y',);
+    $arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG_EX, 'GLOBAL_ACTIVE' => 'Y',);
     $arSelectS = array('*');
 
     $rsSections = CIBlockSection::GetList($arOrderS, $arFilterS, false, $arSelectS);

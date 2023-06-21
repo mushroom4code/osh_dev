@@ -84,6 +84,7 @@ $option = $option_site; ?>
                             "CACHE_SELECTED_ITEMS" => "N",
                             "MAX_LEVEL" => "1",
                             "USE_EXT" => "Y",
+                            "IBLOCK_ID" => IBLOCK_CATALOG_EX,
                             "DELAY" => "N",
                             "ALLOW_MULTI_SELECT" => "N"
                         ),
@@ -141,6 +142,7 @@ $option = $option_site; ?>
                             "MENU_CACHE_TYPE" => "A",
                             "CACHE_SELECTED_ITEMS" => "N",
                             "MENU_CACHE_TIME" => "36000000",
+                            "IBLOCK_ID" => IBLOCK_CATALOG_EX,
                             "MENU_CACHE_USE_GROUPS" => "Y",
                             "MENU_CACHE_GET_VARS" => [],
                         ],

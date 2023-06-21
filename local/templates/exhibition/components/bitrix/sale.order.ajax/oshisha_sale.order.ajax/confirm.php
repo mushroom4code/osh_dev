@@ -100,7 +100,7 @@ if ($arParams["SET_TITLE"] == "Y") {
             "FILTER_NAME" => "arrFilter",
             "HIDE_NOT_AVAILABLE" => "N",
             "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-            "IBLOCK_ID" => IBLOCK_CATALOG,
+            "IBLOCK_ID" => IBLOCK_CATALOG_EX,
             "IBLOCK_TYPE" => "1c_catalog",
             "LABEL_PROP" => array(),
             "LABEL_PROP_MOBILE" => "",

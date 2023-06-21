@@ -60,7 +60,7 @@ foreach ($item as $row) {
     $product_prices = '';
     $price = [];
     $show_product_prices = false;
-    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
+    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG_EX, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
     $res = CIBlockElement::GetList(
         array(),

@@ -7,13 +7,21 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
  * @var  CAllMain|CMain $APPLICATION
  */
 
+// сайт выставка Enterego
+$iblock_id = IBLOCK_CATALOG;
+$priceCodes = BXConstants::PriceCode();
+
+if (SITE_ID === 'V3') {
+    $iblock_id = IBLOCK_CATALOG_EX;
+    $priceCodes = [9 => 'b2b'];
+}
 
 $APPLICATION->IncludeComponent(
 	"bitrix:catalog", 
 	"oshisha_catalog.catalog", 
 	array(
 		"IBLOCK_TYPE" => "1c_catalog",
-		"IBLOCK_ID" => IBLOCK_CATALOG,
+		"IBLOCK_ID" => "$iblock_id",
 		"TEMPLATE_THEME" => "site",
 		"DETAIL_SHOW_MAX_QUANTITY" => "Y",
 		"HIDE_NOT_AVAILABLE" => "L",
@@ -43,13 +51,16 @@ $APPLICATION->IncludeComponent(
 		"FILTER_NAME" => "ArFilter",
 		"FILTER_VIEW_MODE" => "VERTICAL",
 		"USE_COMPARE" => "N",
-		"PRICE_CODE" => BXConstants::PriceCode(),
+		"PRICE_CODE" => $priceCodes,
 		"FILL_ITEM_ALL_PRICES" => "Y",
 		"USE_PRICE_COUNT" => "N",
 		"SHOW_PRICE_COUNT" => "100",
 		"PRICE_VAT_INCLUDE" => "Y",
 		"PRICE_VAT_SHOW_VALUE" => "N",
 		"PRODUCT_PROPERTIES" => array(
+			0 => "VKUS",
+			1 => "DISKONT",
+			2 => "KHIT",
 		),
 		"USE_PRODUCT_QUANTITY" => "Y",
 		"CONVERT_CURRENCY" => "N",
@@ -61,7 +72,7 @@ $APPLICATION->IncludeComponent(
 		"SECTION_TOP_DEPTH" => "1",
 		"SECTIONS_VIEW_MODE" => "TILE",
 		"SECTIONS_SHOW_PARENT_NAME" => "N",
-		"PAGE_ELEMENT_COUNT" => "36",
+		"PAGE_ELEMENT_COUNT" => "16",
 		"LINE_ELEMENT_COUNT" => "3",
 		"ELEMENT_SORT_FIELD" => "name",
 		"ELEMENT_SORT_ORDER" => "asc",
@@ -82,12 +93,16 @@ $APPLICATION->IncludeComponent(
 			0 => "NAME",
 			1 => "PREVIEW_PICTURE",
 			2 => "DETAIL_PICTURE",
-			3 => "",
+			3 => "GRAMMOVKA_G",
+			4 => "SHTUK_V_UPAKOVKE",
+			5 => "TSVET",
 		),
 		"LIST_OFFERS_PROPERTY_CODE" => array(
 			0 => "MORE_PHOTO",
 			1 => "SIZES_SHOES",
-			2 => "SIZES_CLOTHES",
+			6 => "SHTUK_V_UPAKOVKE",
+			7 => "TSVET",
+			2 => "GRAMMOVKA_G",
 			3 => "COLOR_REF",
 			4 => "ARTNUMBER",
 			5 => "",
@@ -96,13 +111,17 @@ $APPLICATION->IncludeComponent(
 		"SECTION_BACKGROUND_IMAGE" => "-",
 		"DETAIL_PROPERTY_CODE" => array(
 			0 => "BREND",
+			1 => "",
 		),
 		"DETAIL_META_KEYWORDS" => "-",
 		"DETAIL_META_DESCRIPTION" => "-",
 		"DETAIL_BROWSER_TITLE" => "-",
 		"DETAIL_OFFERS_FIELD_CODE" => array(
 			0 => "NAME",
-			1 => "",
+			1 => "GRAMMOVKA_G",
+			4 => "SHTUK_V_UPAKOVKE",
+			5 => "TSVET",
+			8 => "MORE_PHOTO",
 		),
 		"DETAIL_OFFERS_PROPERTY_CODE" => array(
 			0 => "MORE_PHOTO",
@@ -110,7 +129,9 @@ $APPLICATION->IncludeComponent(
 			2 => "SIZES_SHOES",
 			3 => "SIZES_CLOTHES",
 			4 => "COLOR_REF",
-			5 => "",
+			5 => "GRAMMOVKA_G",
+			6 => "SHTUK_V_UPAKOVKE",
+			7 => "TSVET",
 		),
 		"DETAIL_BACKGROUND_IMAGE" => "-",
 		"LINK_IBLOCK_TYPE" => "",
@@ -177,8 +198,7 @@ $APPLICATION->IncludeComponent(
 		"SIDEBAR_PATH" => "/catalog/sidebar.php",
 		"COMPONENT_TEMPLATE" => "oshisha_catalog.catalog",
 		"HIDE_NOT_AVAILABLE_OFFERS" => "N",
-		"LABEL_PROP_MOBILE" => array(
-		),
+		"LABEL_PROP_MOBILE" => "",
 		"LABEL_PROP_POSITION" => "top-left",
 		"COMMON_SHOW_CLOSE_POPUP" => "N",
 		"PRODUCT_SUBSCRIPTION" => "Y",
@@ -216,8 +236,7 @@ $APPLICATION->IncludeComponent(
 		"SEARCH_USE_LANGUAGE_GUESS" => "Y",
 		"SEARCH_CHECK_DATES" => "Y",
 		"SECTIONS_HIDE_SECTION_NAME" => "N",
-		"LIST_PROPERTY_CODE_MOBILE" => array(
-		),
+		"LIST_PROPERTY_CODE_MOBILE" => "",
 		"LIST_PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
 		"LIST_PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false}]",
 		"LIST_ENLARGE_PRODUCT" => "PROP",
@@ -227,8 +246,7 @@ $APPLICATION->IncludeComponent(
 		"DETAIL_SET_CANONICAL_URL" => "N",
 		"DETAIL_CHECK_SECTION_ID_VARIABLE" => "N",
 		"SHOW_DEACTIVATED" => "N",
-		"DETAIL_MAIN_BLOCK_PROPERTY_CODE" => array(
-		),
+		"DETAIL_MAIN_BLOCK_PROPERTY_CODE" => "",
 		"DETAIL_BLOG_URL" => "catalog_comments",
 		"DETAIL_BLOG_EMAIL_NOTIFY" => "N",
 		"DETAIL_FB_APP_ID" => "",
@@ -290,8 +308,8 @@ $APPLICATION->IncludeComponent(
 		"MESS_BTN_LAZY_LOAD" => "Показать ещё",
 		"MESS_SHOW_MAX_QUANTITY" => "Наличие",
 		"SHOW_SKU_DESCRIPTION" => "N",
-		"DETAIL_MAIN_BLOCK_OFFERS_PROPERTY_CODE" => array(
-		),
+		"DETAIL_MAIN_BLOCK_OFFERS_PROPERTY_CODE" => "",
+		"FILE_404" => "",
 		"SEF_URL_TEMPLATES" => array(
 			"sections" => "",
 			"section" => "#SECTION_CODE#/",
