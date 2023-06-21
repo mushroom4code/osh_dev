@@ -2,7 +2,10 @@
 /** @global \CMain $APPLICATION */
 define('STOP_STATISTICS', true);
 define('NOT_CHECK_PERMISSIONS', true);
-
+$memory_limit = ini_get('memory_limit');
+$time_limit = ini_get('max_execution_time');
+ini_set('memory_limit', '-1');
+set_time_limit(0);
 $siteId = isset($_REQUEST['siteId']) && is_string($_REQUEST['siteId']) ? $_REQUEST['siteId'] : '';
 $siteId = mb_substr(preg_replace('/[^a-z0-9_]/i', '', $siteId), 0, 2);
 if (!empty($siteId) && is_string($siteId)) {
@@ -10,9 +13,6 @@ if (!empty($siteId) && is_string($siteId)) {
 }
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php');
-
-use Bitrix\Main\Application,
-    Bitrix\Main\Web\Cookie;
 
 $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 $request->addFilter(new \Bitrix\Main\Web\PostDecodeFilter);
@@ -130,30 +130,7 @@ $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", $template, array(
 ob_get_contents();
 //endregion
 
-$application  = Application::getInstance();
-$session = $application->getSession();
-$context  =  $application ->getContext();
-if (!$session->has('initial_load_'.$parameters["FILTER_NAME"].'_'.$_SESSION['GLOBAL_CURRENT_SECTION']['ID'])){
-    $sessionFilter = array();
-    foreach ($_SESSION[$parameters["FILTER_NAME"]][$_SESSION['GLOBAL_CURRENT_SECTION']['ID']] as $key => $value) {
-        if (strpos($key, $parameters["FILTER_NAME"]) === 0) {
-            $sessionFilter[$key] = $value;
-        }
-    }
-    $cookie = new  Cookie($parameters["FILTER_NAME"] . '_' . $_SESSION['GLOBAL_CURRENT_SECTION']['ID'], serialize($sessionFilter), time() + 60 * 60 * 24 * 60);
-    $cookie->setDomain($context->getServer()->getHttpHost());
-    $cookie->setHttpOnly(false);
-    $context->getResponse()->addCookie($cookie);
-    $context->getResponse()->writeHeaders();
-    $session->set('initial_load_'.$parameters["FILTER_NAME"].'_'.$_SESSION['GLOBAL_CURRENT_SECTION']['ID'], true);
-}
-
-
-$hitRestriction = isset($parameters['GLOBAL_FILTER']['PROPERTY_HIT_VALUE']) ? true : false;
 $parameters['GLOBAL_FILTER'] = $GLOBALS[$parameters["FILTER_NAME"]];
-if($hitRestriction)
-    $parameters['GLOBAL_FILTER']['PROPERTY_HIT_VALUE'] = "да";
-
 
 //enterego static filter for special group
 $staticFilter = $request->get('staticFilter');
@@ -177,3 +154,5 @@ $APPLICATION->IncludeComponent(
     $parameters,
     $parent
 );
+ini_set('memory_limit', $memory_limit);
+set_time_limit(intval($time_limit));

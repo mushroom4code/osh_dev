@@ -16,7 +16,6 @@ while ($subscribe = $queryObject->fetch())
     $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][] = $subscribe;
 }
 
-
 $component = $this->getComponent();
 $arParams = $component->applyTemplateModifications();
 // Блокировка показа Вы смотрели если параметр установлен, если его не существует, присваиваем.

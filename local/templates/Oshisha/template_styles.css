@@ -618,6 +618,11 @@ h3.ctweb-title {
     max-width: none;
 }
 
+.by-card .slick-list {
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
 .place__button {
     white-space: nowrap;
 }

@@ -183,7 +183,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
             //region Filter
             if ($isFilter): ?>
-                <div class="bx-sidebar-block">
+                <div class="bx-sidebar-block <?= $APPLICATION->GetCurPage() === '/hit/' ? 'd-none' : ''?>">
                     <?php
 
                     $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
@@ -197,7 +197,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             "CACHE_TYPE" => $arParams["CACHE_TYPE"],
                             "CACHE_TIME" => $arParams["CACHE_TIME"],
                             "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                            "SAVE_IN_SESSION" => "N",
+                            "SAVE_IN_SESSION" => "Y",
                             "FILTER_VIEW_MODE" => $arParams["FILTER_VIEW_MODE"],
                             "XML_EXPORT" => "N",
                             "SECTION_TITLE" => "NAME",
@@ -250,7 +250,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         <h1 id="pagetitle"><?php $APPLICATION->ShowTitle(false); ?></h1>
         <p class="message_for_user_minzdrav font-14"></p>
         <div id="osh-filter-horizontal2"></div>
-        <div class="osh-block-panel">
+        <div class="osh-block-panel <?= $APPLICATION->GetCurPage() === '/hit/' ? 'd-none' : ''?>">
             <div id="osh-filter-horizontal">
                 <div id="osh-filter-horizontal-item" class="d-inline-block" data-osh-filter-state="hide"></div>
                 <div id="osh-filter-horizontal-item-count" class="osh-filter-item"
@@ -387,11 +387,13 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             $arParams["HIDE_NOT_AVAILABLE"] = "Y";
         }
 
-
         global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
-            "oshisha_catalog.section", array(
+            str_starts_with($APPLICATION->GetCurPage(), '/hit/')
+                ? "oshisha_catalog.hit_section"
+                : "oshisha_catalog.section",
+            array(
             "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
             "IBLOCK_ID" => $arParams["IBLOCK_ID"],
             "FILL_ITEM_ALL_PRICES" => "Y",
@@ -427,7 +429,9 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             "SHOW_404" => $arParams["SHOW_404"],
             "FILE_404" => $arParams["FILE_404"],
             "DISPLAY_COMPARE" => $arParams["USE_COMPARE"],
-            "PAGE_ELEMENT_COUNT" => $arParams["PAGE_ELEMENT_COUNT"],
+            "PAGE_ELEMENT_COUNT" => $APPLICATION->GetCurPage() === '/hit/'
+                ? "9999999"
+                : $arParams['PAGE_ELEMENT_COUNT'],
             "LINE_ELEMENT_COUNT" => $arParams["LINE_ELEMENT_COUNT"],
             "PRICE_CODE" => $arParams["~PRICE_CODE"],
             "USE_PRICE_COUNT" => $arParams["USE_PRICE_COUNT"],
@@ -533,7 +537,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                  style="display: none; opacity: 0;">
                                 <?= GetMessage('CATALOG_PERSONAL_RECOM') ?>
                             </div>
-                            <?php $APPLICATION->IncludeComponent("bitrix:catalog.section",
+                            <?php
+                                $APPLICATION->IncludeComponent("bitrix:catalog.section",
                                 "oshisha_catalog.section", array(
                                     "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
                                     "IBLOCK_ID" => $arParams["IBLOCK_ID"],

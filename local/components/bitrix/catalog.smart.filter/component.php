@@ -327,17 +327,24 @@ else
 	$this->facet->setSectionId($this->SECTION_ID);
 }
 
+$application  = Bitrix\Main\Application::getInstance();
+$session = $application->getSession();
+
 /*Handle checked for checkboxes and html control value for numbers*/
 if(isset($_REQUEST["ajax"]) && $_REQUEST["ajax"] === "y")
 	$_CHECK = &$_REQUEST;
 elseif(isset($_REQUEST["del_filter"]))
 	$_CHECK = array();
+elseif(!$session->has('initial_load_'.$FILTER_NAME.'_'.$this->SECTION_ID)) {
+    unset($_GET);
+    $_CHECK = unserialize($application->getContext()->getRequest()->getCookie($FILTER_NAME.'_'.$this->SECTION_ID));
+}
 elseif(!empty($_GET))
 	$_CHECK = &$_GET;
 elseif($arParams["SMART_FILTER_PATH"])
 	$_CHECK = $this->convertUrlToCheck($arParams["~SMART_FILTER_PATH"]);
-elseif($arParams["SAVE_IN_SESSION"] && isset($_SESSION[$FILTER_NAME][$this->SECTION_ID]))
-	$_CHECK = $_SESSION[$FILTER_NAME][$this->SECTION_ID];
+//elseif($arParams["SAVE_IN_SESSION"] && isset($_SESSION[$FILTER_NAME][$this->SECTION_ID]))
+//	$_CHECK = $_SESSION[$FILTER_NAME][$this->SECTION_ID];
 else
 	$_CHECK = array();
 

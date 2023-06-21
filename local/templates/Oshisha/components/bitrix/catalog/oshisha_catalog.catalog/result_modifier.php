@@ -8,8 +8,13 @@ const CATALOG_GIFT_ID=1873;
 
 if ($arResult['FOLDER'] === '/diskont/') {
     $cat = new EnteregoDiscount();
-    $arResult['SECTION_LIST'] = $cat->getSectionProductsForFilter();
-} else {
+    $arResult['SECTION_LIST'] = $cat->getSectionProductsForFilter('diskont', $arParams);
+}
+elseif ($arResult['FOLDER'] === '/hit/') {
+    $cat = new EnteregoDiscount();
+    $arResult['SECTION_LIST'] = $cat->getSectionProductsForFilter('hit', $arParams);
+}
+else {
     $arOrderS = array('DEPTH_LEVEL' => 'ASC', 'SORT' => 'ASC',);
     $arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG, 'GLOBAL_ACTIVE' => 'Y',);
     $arSelectS = array('*');
