@@ -62,12 +62,17 @@ foreach ($sectionsItemsArr as &$sectionItems) {
     }
 }
 
-foreach ($sectionsItemsArr as &$sectionItems) {
-    $popularity = array_column($sectionItems, 'PROPERTY_SERVICE_FIELD_POPULARITY_VALUE', 'ID');
+foreach ($sectionsItemsArr as $sectionItemsKey => &$sectionItems) {
+    $popularity = array();
+    foreach ($sectionItems as $key => $row) {
+        $popularity[$key] = $row['SERVICE_FIELD_POPULARITY'];
+    }
     array_multisort($popularity, SORT_DESC, $sectionItems);
 }
-foreach ($sectionsItemsArr as $sectionKey => $sectionItems) {
-    foreach ($sectionItems as $sectionItemKey => $sectionItem) {
+
+$tempSectionsItemsArr = $sectionsItemsArr;
+foreach ($tempSectionsItemsArr as $sectionKey => $sectItems) {
+    foreach ($sectItems as $sectionItemKey => $sectionItem) {
         unset($sectionsItemsArr[$sectionKey][$sectionItemKey]);
         $sectionsItemsArr[$sectionKey][$sectionItem['ID']] = $sectionItem;
     }
