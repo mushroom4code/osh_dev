@@ -98,6 +98,7 @@ if (!function_exists("FillAllPicturesAndDescriptions")) {
 $arSectionsInfo = array();
 if (IsModuleInstalled("iblock")) {
 	$arFilter = array(
+		"TYPE" => "1c_catalog",
 		"SITE_ID" => SITE_ID,
 		"ACTIVE" => "Y"
 	);
