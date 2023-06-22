@@ -60,7 +60,7 @@ class EnteregoSaleRestrictions extends Bitrix\Sale\Delivery\Restrictions\Base
             "DELIVERY_TYPE" => array(
                 "TYPE" => "ENUM",
                 'MULTIPLE' => 'Y',
-                "LABEL" => 'Для какой доставки выводить возможность опаты наличными',
+                "LABEL" => 'Для какой доставки выводить возможность оплаты',
                 "OPTIONS" => array('oshisha' => 'ошиша', 'sdek' => 'сдэк', 'RussianPost' => 'почта россии',
                     'FivePost' => '5post', 'Dellin' => 'деловые линии')
             )
