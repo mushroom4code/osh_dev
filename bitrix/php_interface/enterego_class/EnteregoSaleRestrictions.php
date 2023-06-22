@@ -36,14 +36,14 @@ class EnteregoSaleRestrictions extends Bitrix\Sale\Delivery\Restrictions\Base
      */
     public static function getClassTitle()
     {
-        return 'По типу доставкиыыы';
+        return 'Ограничение платежной системы в зависимости от выбранного типа доставки';
     }
     /**
      * @return mixed
      */
     public static function getClassDescription()
     {
-        return 'Ограничение по типу доставкиыыы';
+        return 'Ограничение платежной системы в зависимости от выбранного типа доставки';
     }
     /**
      * @param $deliveryId
@@ -75,9 +75,3 @@ class EnteregoSaleRestrictions extends Bitrix\Sale\Delivery\Restrictions\Base
         return \Bitrix\Sale\Delivery\Restrictions\Manager::SEVERITY_STRICT;
     }
 }
-
-
-//class EnteregoSaleRestrictions
-//{
-//
-//}

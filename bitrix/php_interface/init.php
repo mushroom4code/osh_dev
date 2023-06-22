@@ -82,17 +82,8 @@ AddEventHandler('sale', 'OnCondSaleActionsControlBuildList',
     ['\Enterego\EnteregoActionDiscountPriceType', 'GetControlDescr']);
 
 AddEventHandler("sale", "onSalePaySystemRestrictionsClassNamesBuildList", "onSalePaySystemRestrictionsClassNamesBuildListHandler");
-AddEventHandler("sale", "onSaleDeliveryRestrictionsClassNamesBuildList", "onSaleDeliveryRestrictionsClassNamesBuildListHandler");
+
 //платежные системы
-function onSaleDeliveryRestrictionsClassNamesBuildListHandler(){
-    return new \Bitrix\Main\EventResult(
-        \Bitrix\Main\EventResult::SUCCESS,
-        array(
-            'EnteregoSaleRestrictions' => '/bitrix/php_interface/enterego_class/EnteregoSaleRestrictions.php'
-        )
-    );
-}
-// службы доставки
 function onSalePaySystemRestrictionsClassNamesBuildListHandler()
 {
     return new \Bitrix\Main\EventResult(
