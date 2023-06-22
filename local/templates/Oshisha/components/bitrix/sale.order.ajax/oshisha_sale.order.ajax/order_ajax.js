@@ -6813,6 +6813,28 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                             ]
                         })
                     );
+                    if (!document.querySelector('#second-save-order-js')) {
+                        this.newBlockId.append(BX.create('DIV', {
+                            props: {
+                                id: 'second-save-order-js',
+                                style: 'margin-top: 2rem;',
+                                className: 'bx-soa-cart-total-button-container' + ('d-block')
+                            },
+                            children: [
+                                BX.create('A', {
+                                    props: {
+                                        href: 'javascript:void(0)',
+                                        className: 'btn btn_basket btn-order-save'
+                                    },
+                                    html: 'Зарезервировать',
+                                    events: {
+                                        click: BX.proxy(this.clickOrderSaveAction, this)
+                                    }
+                                })
+
+                            ]
+                        }));
+                    }
                 } else {
                     this.totalInfoBlockNode.appendChild(
                         BX.create('span', {
@@ -6820,6 +6842,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                             html: checkedDelivery.CALCULATE_ERRORS
                         })
                     )
+                    if (document.querySelector('#second-save-order-js')) {
+                        BX.remove(document.querySelector('#second-save-order-js'))
+                    }
                 }
             } else {
                 this.totalInfoBlockNode.appendChild(

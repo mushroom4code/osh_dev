@@ -1142,7 +1142,7 @@ BX.SaleCommonPVZ = {
             id: 'delivery-in-hands',
             className: 'radio-field form-check-input',
             type: 'radio',
-            value: 'Доставка в руки',
+            value: 'Доставка курьером',
             name: 'delivery_type',
         }
         if (this.curDeliveryId === this.doorDeliveryId ) {
@@ -1204,7 +1204,7 @@ BX.SaleCommonPVZ = {
                                             className: "option-label",
                                             for: 'delivery-in-hands',
                                         },
-                                        text: 'Доставка в руки',
+                                        text: 'Доставка курьером',
                                         children: [
                                             BX.create({
                                                 tag: 'input',
@@ -1223,7 +1223,7 @@ BX.SaleCommonPVZ = {
                                             BX.create({
                                                 tag: 'span',
                                                 props: {className: 'radio-caption'},
-                                                text: 'Доставка в руки',
+                                                text: 'Доставка курьером',
                                             })
                                         ],
 
