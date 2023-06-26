@@ -42,6 +42,9 @@ BX.SaleCommonPVZ = {
     },
 
     init: function (params) {
+
+        console.log('test');
+        
         this.curDeliveryId = params.params?.curDeliveryId;
         this.doorDeliveryId = params.params?.doorDeliveryId;
         this.pvzDeliveryId = params.params?.pvzDeliveryId;
