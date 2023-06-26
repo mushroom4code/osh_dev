@@ -24,7 +24,6 @@ $sort = [
         'by' => 'SERVICE_FIELD_POPULARITY', // 'PROPERTY_MINIMUM_PRICE',//'CATALOG_PRICE_'.$GLOBALS['PRICE_TYPE_ID'],
         'order' => 'DESC'
     ],
-
 ];
 
 if ($_GET['sort_by']) {
@@ -390,7 +389,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         {
             $arParams["HIDE_NOT_AVAILABLE"] = "Y";
         }
-
+        $curSection = CIBlockSection::GetByID($arCurSection['ID'])->fetch();
         global $ArFilter;
         $intSectionID = $APPLICATION->IncludeComponent(
             "bitrix:catalog.section",
@@ -403,8 +402,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             "FILL_ITEM_ALL_PRICES" => "Y",
             "ELEMENT_SORT_FIELD2" => $ELEMENT_SORT_FIELD2,
             "ELEMENT_SORT_ORDER2" => $ELEMENT_SORT_ORDER2,
-            "ELEMENT_SORT_FIELD" => $ELEMENT_SORT_FIELD,
-            "ELEMENT_SORT_ORDER" => $ELEMENT_SORT_ORDER,
+            "ELEMENT_SORT_FIELD" => (str_starts_with($APPLICATION->GetCurPage(), '/hit/') && $curSection['DEPTH_LEVEL'] == '1') ? 'PROPERTY_'.SORT_BREND : $ELEMENT_SORT_FIELD,
+            "ELEMENT_SORT_ORDER" => (str_starts_with($APPLICATION->GetCurPage(), '/hit/') && $curSection['DEPTH_LEVEL'] == '1') ? 'DESC' : $ELEMENT_SORT_ORDER,
             /*"ELEMENT_SORT_FIELD" => $arParams["ELEMENT_SORT_FIELD"],
             "ELEMENT_SORT_ORDER" => $arParams["ELEMENT_SORT_ORDER"],
             "ELEMENT_SORT_FIELD2" => $arParams["ELEMENT_SORT_FIELD2"],
