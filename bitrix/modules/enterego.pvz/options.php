@@ -61,6 +61,12 @@ $aTabs = array(
                 Option::get($module_id, 'Common_defaultweight'),
                 array('text')
             ),
+            array(
+                'Common_iscacheon',
+                Loc::getMessage('Common_iscacheon'),
+                Option::get($module_id, 'Common_iscacheon'),
+                array('checkbox')
+            ),
         )
     ),
     // PickPoint

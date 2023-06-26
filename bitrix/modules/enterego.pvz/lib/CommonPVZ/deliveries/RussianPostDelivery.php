@@ -243,13 +243,16 @@ class RussianPostDelivery extends CommonPVZ
                 $hashed_values = array($params['weight'], $params['sumoc'], $params['from'], $params['to'], 'pickup');
                 $hash_string = md5(implode('', $hashed_values));
 
-                $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-                if ($cache->initCache(3600, $this->delivery_code.$this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
-                    $cached_vars = $cache->getVars();
-                    if (!empty($cached_vars)) {
-                        foreach ($cached_vars as $varKey => $var) {
-                            if($varKey === $hash_string) {
-                                return $var;
+                $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
+                if ($is_cache_on == 'Y') {
+                    $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
+                    if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
+                        $cached_vars = $cache->getVars();
+                        if (!empty($cached_vars)) {
+                            foreach ($cached_vars as $varKey => $var) {
+                                if ($varKey === $hash_string) {
+                                    return $var;
+                                }
                             }
                         }
                     }
@@ -267,11 +270,13 @@ class RussianPostDelivery extends CommonPVZ
                     $finalPrice = $calcInfo->getGroundNds();
                 }
 
-                $cache->forceRewriting(true);
-                if ($cache->startDataCache()) {
-                    $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                        ? array_merge($cached_vars, array($hash_string => $finalPrice))
-                        : array($hash_string => $finalPrice));
+                if ($is_cache_on == 'Y') {
+                    $cache->forceRewriting(true);
+                    if ($cache->startDataCache()) {
+                        $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                            ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                            : array($hash_string => $finalPrice));
+                    }
                 }
 
                 return $finalPrice;
@@ -309,13 +314,16 @@ class RussianPostDelivery extends CommonPVZ
                     $hashed_values = array($params['weight'], $params['sumoc'], $params['from'], $params['to'], 'courier');
                     $hash_string = md5(implode('', $hashed_values));
 
-                    $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-                    if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
-                        $cached_vars = $cache->getVars();
-                        if (!empty($cached_vars)) {
-                            foreach ($cached_vars as $varKey => $var) {
-                                if ($varKey === $hash_string) {
-                                    return $var;
+                    $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
+                    if ($is_cache_on == 'Y') {
+                        $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
+                        if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
+                            $cached_vars = $cache->getVars();
+                            if (!empty($cached_vars)) {
+                                foreach ($cached_vars as $varKey => $var) {
+                                    if ($varKey === $hash_string) {
+                                        return $var;
+                                    }
                                 }
                             }
                         }
@@ -329,11 +337,13 @@ class RussianPostDelivery extends CommonPVZ
                     $calcInfo = $TariffCalculation->calculate($objectId, $params);
                     $finalPrice = $calcInfo->getGroundNds();
 
-                    $cache->forceRewriting(true);
-                    if ($cache->startDataCache()) {
-                        $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                            ? array_merge($cached_vars, array($hash_string => $finalPrice))
-                            : array($hash_string => $finalPrice));
+                    if ($is_cache_on == 'Y') {
+                        $cache->forceRewriting(true);
+                        if ($cache->startDataCache()) {
+                            $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                                ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                                : array($hash_string => $finalPrice));
+                        }
                     }
 
                     return $finalPrice;
