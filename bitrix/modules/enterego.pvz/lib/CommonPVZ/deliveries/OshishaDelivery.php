@@ -431,9 +431,10 @@ class OshishaDelivery extends CommonPVZ
             $hash_string = md5(implode('', $hashed_values));
 
             $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
-            if ($is_cache_on == 'Y') {
-                $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-                if ($cache->initCache(3600, $this->oshisha_cache_id)) { // проверяем кеш и задаём настройки
+
+            $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
+            if ($cache->initCache(3600, $this->oshisha_cache_id)) { // проверяем кеш и задаём настройки
+                if ($is_cache_on == 'Y') {
                     $cached_vars = $cache->getVars();
                     if (!empty($cached_vars)) {
                         foreach ($cached_vars as $varKey => $var) {
@@ -508,13 +509,12 @@ class OshishaDelivery extends CommonPVZ
 
                 $priceArr = array('price' => $delivery_price, 'noMarkup' => (!$noMarkup && $point['ZONE'] != 'MKAD') ? ($nextNoMarkup ?? false) : false);
 
-                if ($is_cache_on == 'Y') {
-                    $cache->forceRewriting(true);
-                    if ($cache->startDataCache()) {
-                        $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                            ? array_merge($cached_vars, array($hash_string => $priceArr))
-                            : array($hash_string => $priceArr));
-                    }
+
+                $cache->forceRewriting(true);
+                if ($cache->startDataCache()) {
+                    $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                        ? array_merge($cached_vars, array($hash_string => $priceArr))
+                        : array($hash_string => $priceArr));
                 }
                 return $priceArr;
             } else {

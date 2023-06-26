@@ -365,18 +365,18 @@ class DeliveryHelper
             $dimensionsHash =  self::makeDimensionsHash($sumDimensions['W'], $sumDimensions['H'], $sumDimensions['L']);
 
             $uniqueCacheString .= $dimensionsHash;
-            //TODO DEBUG
-//            if (false && $cache->initCache(7200, $uniqueCacheString, $cachePath)) {
-//                $points_Array = $cache->getVars();
-//            } elseif ($cache->startDataCache()) {
+            $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
+            if ($is_cache_on == 'Y' && $cache->initCache(7200, $uniqueCacheString, $cachePath)) {
+                $points_Array = $cache->getVars();
+            } elseif ($cache->startDataCache()) {
                 foreach ($deliveries as $delivery) {
                     if ($delivery!=null) {
                         $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity, $packages, $dimensionsHash, $sumDimensions);
                         $result_array['errors'][$delName] = $delivery->errors;
                     }
                 }
-//                $cache->endDataCache($points_Array);
-//            }
+                $cache->endDataCache($points_Array);
+            }
         } catch (\Throwable $e) {
             $result_array['errors'][$delName] = $e->getMessage();
         }

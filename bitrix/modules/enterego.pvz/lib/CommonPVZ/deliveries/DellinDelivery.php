@@ -193,13 +193,14 @@ class DellinDelivery extends CommonPVZ
             $hash_string = md5(implode('', $hashed_values));
 
             $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
-            if ($is_cache_on == 'Y') {
-                $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-                if ($cache->initCache(3600, $this->dellin_cache_id)) { // проверяем кеш и задаём настройки
+
+            $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
+            if ($cache->initCache(3600, $this->dellin_cache_id)) { // проверяем кеш и задаём настройки
+                if ($is_cache_on == 'Y') {
                     $cached_vars = $cache->getVars();
                     if (!empty($cached_vars)) {
                         foreach ($cached_vars as $varKey => $var) {
-                            if($varKey === $hash_string) {
+                            if ($varKey === $hash_string) {
                                 return $var;
                             }
                         }
@@ -247,14 +248,14 @@ class DellinDelivery extends CommonPVZ
                 return array('errors' => $this->errors);
             } else {
                 $finalPrice = $result->data->price - $result->data->derival->price - $result->data->insurance;
-                if ($is_cache_on == 'Y') {
-                    $cache->forceRewriting(true);
-                    if ($cache->startDataCache()) {
-                        $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                            ? array_merge($cached_vars, array($hash_string => $finalPrice))
-                            : array($hash_string => $finalPrice));
-                    }
+
+                $cache->forceRewriting(true);
+                if ($cache->startDataCache()) {
+                    $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                        ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                        : array($hash_string => $finalPrice));
                 }
+
                 return $finalPrice;
             }
         } catch (\Throwable $e) {
@@ -326,13 +327,14 @@ class DellinDelivery extends CommonPVZ
             $hash_string = md5(implode('', $hashed_values));
 
             $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
-            if ($is_cache_on == 'Y') {
+
             $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-                if ($cache->initCache(3600, $this->dellin_cache_id)) { // проверяем кеш и задаём настройки
+            if ($cache->initCache(3600, $this->dellin_cache_id)) { // проверяем кеш и задаём настройки
+                if ($is_cache_on == 'Y') {
                     $cached_vars = $cache->getVars();
                     if (!empty($cached_vars)) {
                         foreach ($cached_vars as $varKey => $var) {
-                            if($varKey === $hash_string) {
+                            if ($varKey === $hash_string) {
                                 return $var;
                             }
                         }
@@ -386,14 +388,13 @@ class DellinDelivery extends CommonPVZ
                 return array('errors' => $this->errors);
             } else if(!empty($result)) {
                 $finalPrice = $result->data->price - $result->data->derival->price - $result->data->insurance;
-                if ($is_cache_on == 'Y') {
-                    $cache->forceRewriting(true);
-                    if ($cache->startDataCache()) {
-                        $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                            ? array_merge($cached_vars, array($hash_string => $finalPrice))
-                            : array($hash_string => $finalPrice));
-                    }
+                $cache->forceRewriting(true);
+                if ($cache->startDataCache()) {
+                    $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                        ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                        : array($hash_string => $finalPrice));
                 }
+
                 return $finalPrice;
             } else {
                 $this->errors[] = 'Empty result was returned';
