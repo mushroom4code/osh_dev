@@ -4516,12 +4516,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                                                     ' mb-2 box_with_delivery bx-soa-pp-company-graf-container'
                                             },
                                             html:
-                                                '<div>' + item_edit.PARENT_NAME + '</div>' +
+                                                '<div>' + item_edit.PARENT_NAME + '<i class="fa fa-chevron-down ml-3" aria-hidden="true"></i></div>' +
                                                 '<div><img height="50" class="img_logo_delivery" src="' + item_edit.LOGOTIP_SRC_2X + '"/></div>'
                                         }),
                                         BX.create('DIV', {
                                                 props: {
-                                                    className: 'p-1 container-with-profile-delivery box_' + item_edit.GROUP_ID
+                                                    className: 'p-1 box-none container-with-profile-delivery box_' + item_edit.GROUP_ID
                                                 },
                                             }
                                         )
