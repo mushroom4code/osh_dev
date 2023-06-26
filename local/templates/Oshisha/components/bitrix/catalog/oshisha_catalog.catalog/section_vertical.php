@@ -306,6 +306,10 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                         data-sort="CREATED_DATE"
                                         data-order="DESC">По новизне
                                     </li>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-sort="<?='PROPERTY_'.SORT_BREND?>"
+                                        data-order="DESC">По бренду
+                                    </li>
                                 </ul>
                             </div>
                         </div>
