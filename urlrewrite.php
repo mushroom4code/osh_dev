@@ -22,7 +22,7 @@ $arUrlRewrite=array (
     'PATH' => '/diskont/index.php',
     'SORT' => 10,
   ),
-    107 => array (
+    199 => array (
             'CONDITION' => '#^/hit/#',
             'RULE' => '',
             'PATH' => '/hit/index.php',
