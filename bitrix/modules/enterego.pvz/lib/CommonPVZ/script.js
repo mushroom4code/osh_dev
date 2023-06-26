@@ -50,7 +50,6 @@ BX.SaleCommonPVZ = {
         this.oshishaDeliveryOptions = params.params?.deliveryOptions;
 
         this.refresh()
-        this.drawInterface()
         this.updateFromDaData()
         this.updateDeliveryWidget(BX.Sale.OrderAjaxComponent.result)
     },
@@ -114,11 +113,15 @@ BX.SaleCommonPVZ = {
 
     updateDeliveryWidget: function (orderData) {
         const curDelivery = orderData.DELIVERY.find(delivery =>
-            delivery.ID === this.doorDeliveryId || delivery.ID === this.pvzDeliveryId && delivery.CHECKED === 'Y')
+            (delivery.ID === this.doorDeliveryId || delivery.ID === this.pvzDeliveryId) && delivery.CHECKED === 'Y')
+        if (curDelivery === undefined)
+            return
+
+        this.drawInterface()
         let deliveryName = this.getValueProp(this.propTypeDeliveryId);
-        let deliveryBox;
+
         if (curDelivery.CALCULATE_DESCRIPTION !== '') {
-            deliveryBox = JSON.parse(curDelivery.CALCULATE_DESCRIPTION ?? []).find(name => name.checked === true ||
+            const deliveryBox = JSON.parse(curDelivery.CALCULATE_DESCRIPTION ?? []).find(name => name.checked === true ||
                 name.code === deliveryName )
             deliveryName = deliveryBox?.name;
         }
@@ -1985,24 +1988,27 @@ BX.SaleCommonPVZ = {
         // скрытие адресных полей заказа
         // this.checkout.delivery.rootEl.querySelector('.box_with_delivery_type').classList.add('d-none')
 
-        // блок выбора доставки
-        this.checkout.delivery.titleBox = BX.findChild(this.checkout.delivery.rootEl,
+        const deliveryTitleBox = BX.findChild(this.checkout.delivery.rootEl,
             {'class':'bx-soa-section-title-container'}, true)
-        this.checkout.delivery.title = BX.findChild(this.checkout.delivery.titleBox,
-            {'class':'bx-soa-section-title'}, true)
-        this.checkout.delivery.content = BX.findChild(this.checkout.delivery.rootEl,
-            {'class':'box_with_delivery_type'})
-        this.checkout.delivery.titleIcon = BX.create('span', {attrs: {className: 'delivery-title-icon'}})
 
+        this.checkout.delivery.title = BX.findChild(deliveryTitleBox,
+            {'class':'bx-soa-section-title'}, true)
+        BX.removeClass(deliveryTitleBox, 'justify-content-between')
+        BX.insertAfter(BX.create('span', {attrs: {className: 'delivery-title-icon'}}), this.checkout.delivery.title)
+
+        //Поиск блока с единой доставкой и замена его на виджет
+        const pvzCheckBox = BX('ID_DELIVERY_ID_' + this.pvzDeliveryId)
+        const listBox = BX.findParent(pvzCheckBox, {class: 'box_with_del_js'})
+        BX.removeClass(listBox, 'd-flex')
+        BX.addClass(listBox, 'd-none')
+        const rootDelivery = BX.create({
+            tag: 'div',
+            props: {id: 'common-delivery-section'},
+        })
+        BX.insertBefore(rootDelivery, listBox)
         this.checkout.delivery.variants = {}
-        this.checkout.delivery.variants.rootEl = BX.create('div', {
-            props: {className: 'delivery-variants', id: 'delivery-variants'}
-        })
-        this.checkout.delivery.variants.title = BX.create('div', {
-            attrs: {className: 'delivery-variants-title'},
-            html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
-        })
-        this.checkout.delivery.variants.choose = BX.create('div', {
+
+        const chooseBlock = BX.create('div', {
             attrs: {className: 'delivery-choose js__delivery-choose text-decoration-underline', id: 'delivery-choose'},
             text: 'Выбрать адрес и способ доставки',
             events: {
@@ -2012,22 +2018,23 @@ BX.SaleCommonPVZ = {
             }
         })
 
-        BX.adjust(this.checkout.delivery.variants.rootEl, {
+        this.checkout.delivery.variants.rootEl = BX.create('div', {
+            props: {className: 'delivery-variants', id: 'delivery-variants'},
             children: [
-                this.checkout.delivery.variants.title,
+                BX.create('div', {
+                    attrs: {className: 'delivery-variants-title'},
+                    html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
+                }),
 
                 BX.create('div', {
                     props: {className: 'delivery-description row mb-3', id: 'delivery-description'},
                 }), // адрес
 
-                this.checkout.delivery.variants.choose,
+                chooseBlock,
             ]
         })
 
-        BX.removeClass(this.checkout.delivery.titleBox, 'justify-content-between')
-        BX.insertAfter(this.checkout.delivery.titleIcon, this.checkout.delivery.title)
-
-        BX.insertAfter(this.checkout.delivery.variants.rootEl, this.checkout.delivery.titleBox)
+        BX.append(this.checkout.delivery.variants.rootEl, rootDelivery)
 
         // предыдущие доставки
         // this.checkout.recentWrap
