@@ -549,7 +549,7 @@ BX.SaleCommonPVZ = {
     },
 
     getValueProp: function (prop_id) {
-        return document.querySelector(`input[name="ORDER_PROP_${prop_id}"]`).value ?? ''
+        return document.querySelector(`input[name="ORDER_PROP_${prop_id}"]`)?.value ?? ''
     },
 
     closePvzPopup: function () {
