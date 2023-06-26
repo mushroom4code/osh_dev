@@ -4583,7 +4583,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             deliveryInfoContainer.appendChild(
                 BX.create('DIV', {
                     props: {className: 'bx-soa-pp-company d-flex flex-column'},
-                    children: [clear, extraServicesNode]
+                    children: [title, clear, extraServicesNode]
                 })
             );
 
