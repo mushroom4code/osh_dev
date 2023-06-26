@@ -30,7 +30,7 @@ $this->setFrameMode(true);
 
 foreach ($arResult['SECTIONS_ITEMS'] as $sectionId => $section) {?>
     <div class="h2 mb-2"><?=$arResult['SECTIONS'][$sectionId]['NAME']?></div class="h2">
-    <div class="by-card">
+    <div class="by-card mb-3">
     <?
 $intRowsCount = 1;
 $strRand = $this->randString();
@@ -210,11 +210,13 @@ if (1 < $intRowsCount) {
         );
     }
 $test = CIBlock::ReplaceDetailUrl($arResult['SECTIONS'][$sectionId]['SECTION_PAGE_URL'], $arResult['SECTIONS'][$sectionId]);
-    $ses = 'ses';
 } ?>
-</div></div>
-    <div class="text-center mt-4 mb-3" data-entity="lazy-container-1">
-        <a href="/hit/<?=$arResult['SECTIONS'][$sectionId]['CODE']?>/" class="btn text_catalog_button link_red_button btn-md" style="margin: 15px;" data-use="show-more-1">
-            Смотреть все                </a>
+</div>
+    <? if(count($section) > 4) {?>
+        <div class="text-center mt-4" data-entity="lazy-container-1">
+            <a href="/hit/<?=$arResult['SECTIONS'][$sectionId]['CODE']?>/" class="btn text_catalog_button link_red_button btn-md" style="margin: 15px;" data-use="show-more-1">
+                Смотреть все                </a>
+        </div>
+    <?}?>
     </div>
 <?}?>

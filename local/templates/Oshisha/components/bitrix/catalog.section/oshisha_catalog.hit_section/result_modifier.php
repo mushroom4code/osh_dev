@@ -39,16 +39,17 @@ foreach ($arResult['ITEMS'] as $item) {
 $brandsRes = CIBlockSection::GetList([], ['ID' => array_keys($brandsItemsArr), 'ACTIVE' => 'Y', 'GLOBAL_ACTIVE' => 'Y']);
 while ($brand = $brandsRes->fetch()) {
     $initialBrandId = $brand['ID'];
-    while ($brand['DEPTH_LEVEL'] > 2 ) {
+    while ($brand['DEPTH_LEVEL'] > 2) {
         $brandRes = CIBlockSection::GetByID($brand['IBLOCK_SECTION_ID']);
         $brand = $brandRes->fetch();
     }
+    if ($brand['IBLOCK_SECTION_ID']) {
     $brandsArr[$brand['ID']] = $brand;
     $finalBrandsItemsArr[$brand['ID']]
         = $finalBrandsItemsArr[$brand['ID']]
         ? ($finalBrandsItemsArr[$brand['ID']] + $brandsItemsArr[$initialBrandId])
         : $brandsItemsArr[$initialBrandId];
-    $sectionsItemsArr[$brand['IBLOCK_SECTION_ID']]
+    $sectionsItemsArr[$brand['IBLOCK_SECTION_ID'] ?? $brand['ID']]
         = $sectionsItemsArr[$brand['IBLOCK_SECTION_ID']]
         ? ($sectionsItemsArr[$brand['IBLOCK_SECTION_ID']] + $brandsItemsArr[$initialBrandId])
         : $brandsItemsArr[$initialBrandId];
@@ -56,6 +57,12 @@ while ($brand = $brandsRes->fetch()) {
         = $sectionsBrandsItemsArr[$brand['IBLOCK_SECTION_ID']][$brand['ID']]
         ? ($sectionsBrandsItemsArr[$brand['IBLOCK_SECTION_ID']][$brand['ID']] + $brandsItemsArr[$initialBrandId])
         : $brandsItemsArr[$initialBrandId];
+    } else {
+        $sectionsItemsArr[$brand['ID']]
+            = $sectionsItemsArr[$brand['ID']]
+            ? ($sectionsItemsArr[$brand['ID']] + $brandsItemsArr[$initialBrandId])
+            : $brandsItemsArr[$initialBrandId];
+    }
 }
 
 foreach ($sectionsItemsArr as &$sectionItems) {
@@ -74,13 +81,13 @@ foreach ($sectionsItemsArr as $sectionItemsKey => &$sectionItems) {
 
 $tempSectionsItemsArr = $sectionsItemsArr;
 foreach ($tempSectionsItemsArr as $sectionKey => $sectItems) {
-    foreach ($sectItems as $sectionItemKey => $sectionItem) {
+    foreach ($sectItems as $sectionItemKey => $sectItem) {
         unset($sectionsItemsArr[$sectionKey][$sectionItemKey]);
-        $sectionsItemsArr[$sectionKey][$sectionItem['ID']] = $sectionItem;
+        $sectionsItemsArr[$sectionKey][$sectItem['ID']] = $sectItem;
     }
 }
 
-$sectionsRes = CIBlockSection::GetList([], ['ID' => array_keys($sectionsBrandsItemsArr), 'ACTIVE' => 'Y', 'GLOBAL_ACTIVE' => 'Y']);
+$sectionsRes = CIBlockSection::GetList([], ['ID' => array_keys($sectionsItemsArr), 'ACTIVE' => 'Y', 'GLOBAL_ACTIVE' => 'Y']);
 while ($section = $sectionsRes->fetch()) {
     $sectionsArr[$section['ID']] = $section;
 }
