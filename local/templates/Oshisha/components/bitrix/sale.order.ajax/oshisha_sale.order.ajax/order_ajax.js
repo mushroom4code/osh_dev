@@ -4583,7 +4583,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             deliveryInfoContainer.appendChild(
                 BX.create('DIV', {
                     props: {className: 'bx-soa-pp-company d-flex flex-column'},
-                    children: [clear, extraServicesNode]
+                    children: [title, clear, extraServicesNode]
                 })
             );
 
@@ -5642,9 +5642,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 || property.getSettings().CODE === 'LONGITUDE' || property.getSettings().CODE === 'STREET_KLADR'
                 || property.getSettings().CODE === 'DATE_DELIVERY' || property.getSettings().CODE === 'DELIVERYTIME_INTERVAL'
                 || property.getSettings().CODE === 'COMMON_PVZ' || property.getSettings().CODE === 'TYPE_DELIVERY') {
-                // className += " d-none";
-                if (property.getSettings().CODE === 'DELIVERYTIME_INTERVAL' || property.getSettings().CODE === 'DATE_DELIVERY')
+                
+                //TODO move disable to common script.js
+                className += " d-none";
+                if (property.getSettings().CODE === 'DELIVERYTIME_INTERVAL' || property.getSettings().CODE === 'DATE_DELIVERY') {
                     className += " col-12";
+                }
             } else {
                 className += " col-md-6 col-lg-6 col-12";
             }
