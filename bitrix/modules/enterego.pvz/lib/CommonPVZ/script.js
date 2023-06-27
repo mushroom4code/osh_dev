@@ -42,9 +42,6 @@ BX.SaleCommonPVZ = {
     },
 
     init: function (params) {
-
-        console.log('test');
-        
         this.curDeliveryId = params.params?.curDeliveryId;
         this.doorDeliveryId = params.params?.doorDeliveryId;
         this.pvzDeliveryId = params.params?.pvzDeliveryId;
@@ -79,8 +76,6 @@ BX.SaleCommonPVZ = {
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
             window.Osh.bxPopup.init();
-        } else {
-            alert('Свойство адреса не найдено');
         }
 
         if (this.propCommonPVZId) {
