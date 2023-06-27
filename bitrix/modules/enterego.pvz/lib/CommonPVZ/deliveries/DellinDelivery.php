@@ -52,8 +52,7 @@ class DellinDelivery extends CommonPVZ
 
         $res = LocationTable::getList(array(
             'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=TYPE.ID' => '5'),
-            'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'PARENT_NAME_RU' => 'PARENT.NAME.NAME',
-                'PARENT_PARENT_NAME_RU' => 'PARENT.PARENT.NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
+            'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
         ));
         $listLocation = [];
         while ($arLocation = $res->fetch()) {
