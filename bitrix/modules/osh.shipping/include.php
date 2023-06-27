@@ -44,16 +44,16 @@ include_once ($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/osh.shipping/lib/includ
 include_once ($_SERVER["DOCUMENT_ROOT"].'/bitrix/modules/osh.shipping/lib/include/helper.php');
 
 if(!\CJSCore::IsExtRegistered('osh_pickup')){
-   \CJSCore::RegisterExt(
-       "osh_pickup",
-       array(
-           "js" => "/bitrix/js/{$moduleId}/pickup.js",
-           "css" => "/bitrix/css/{$moduleId}/styles.css",
-           "lang" => "/bitrix/modules/{$moduleId}/lang/".LANGUAGE_ID."/js/pickup.php",
-           "rel" => Array("ajax","popup"),
-           "skip_core" => false,
-       )
-   );
+    \CJSCore::RegisterExt(
+        "osh_pickup",
+        array(
+            "js" => "/bitrix/js/{$moduleId}/pickup.js",
+            "css" => "/bitrix/css/{$moduleId}/styles.css",
+            "lang" => "/bitrix/modules/{$moduleId}/lang/".LANGUAGE_ID."/js/pickup.php",
+            "rel" => Array("ajax","popup"),
+            "skip_core" => false,
+        )
+    );
 }
 //function wfDump($var){
 //    COshDeliveryHelper::shDump($var);
