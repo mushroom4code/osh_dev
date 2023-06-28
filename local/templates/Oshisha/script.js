@@ -2406,7 +2406,7 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="' + $(this).attr('href') + '" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="'+$(this).attr('href')+'" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
                 '<a href="#" id="no_mess" class="d-flex basket-empty link_message_box_product ' +
@@ -2418,10 +2418,10 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="' + $(this).attr('href') + '&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
-                '<a href="' + $(this).attr('href') + '" id="no_mess" class="d-flex  link_message_box_product ' +
+                '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Нет</a></div>';
         }

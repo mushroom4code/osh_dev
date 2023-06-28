@@ -3,9 +3,17 @@
 namespace CommonPVZ;
 
 
+use Bitrix\Main\Config\Option;
+
 class PEKDelivery extends CommonPVZ
 {
-    protected $delivery_name = 'PEK';
+    public string $delivery_code = 'PEK';
+
+    public string $delivery_name = 'PEK';
+
+    public static function getDeliveryStatus() {
+        return array('PEK' => Option::get(DeliveryHelper::$MODULE_ID, 'PEK_active'));
+    }
 
     protected function connect()
     {
@@ -20,7 +28,7 @@ class PEKDelivery extends CommonPVZ
         }
     }
 
-    public function getPVZ($city_name, &$result_array, &$id_feature, $code_city)
+    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
     {
 
         try {
@@ -99,4 +107,11 @@ class PEKDelivery extends CommonPVZ
         }
         return 0;
     }
+
+    public function getPriceDoorDelivery($params)
+    {
+        // TODO: Implement getPriceDoorDelivery() method.
+    }
+
+
 }
