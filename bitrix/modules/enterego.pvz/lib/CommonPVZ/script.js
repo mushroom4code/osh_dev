@@ -76,8 +76,6 @@ BX.SaleCommonPVZ = {
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
             window.Osh.bxPopup.init();
-        } else {
-            alert('Свойство адреса не найдено');
         }
 
         if (this.propCommonPVZId) {
@@ -549,7 +547,7 @@ BX.SaleCommonPVZ = {
     },
 
     getValueProp: function (prop_id) {
-        return document.querySelector(`input[name="ORDER_PROP_${prop_id}"]`).value ?? ''
+        return document.querySelector(`input[name="ORDER_PROP_${prop_id}"]`)?.value ?? ''
     },
 
     closePvzPopup: function () {

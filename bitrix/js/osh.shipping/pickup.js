@@ -814,10 +814,10 @@ window.Osh.bxPopup = {
         })
         nodeOshOverlay.append(nodeYaMapContainer)
         const nodeYaMap = BX.create("DIV", {
-            props: {
-                id: 'map',
-            },
-        })
+                props: {
+                    id: 'map',
+                },
+            })
         nodeYaMapContainer.append(nodeYaMap);
 
         const nodeYaAction = BX.create("DIV", {
