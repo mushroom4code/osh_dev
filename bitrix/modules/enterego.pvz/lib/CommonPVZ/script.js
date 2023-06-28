@@ -244,9 +244,8 @@ BX.SaleCommonPVZ = {
 
         const doorDelivery = orderData.DELIVERY.find(delivery => delivery.ID === this.doorDeliveryId && delivery.CHECKED === 'Y')
         const currentTypeDelivery = this.getValueProp(this.propTypeDeliveryId)
-        const address = this.getValueProp(this.propAddressId)
 
-        if (doorDelivery !== undefined && address !== '') {
+        if (doorDelivery !== undefined) {
 
             const deliveryInfo = JSON.parse(doorDelivery.CALCULATE_DESCRIPTION)
 
