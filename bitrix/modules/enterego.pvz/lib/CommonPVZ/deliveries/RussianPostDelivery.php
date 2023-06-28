@@ -104,7 +104,25 @@ class RussianPostDelivery extends CommonPVZ
                         $listVillageLocation[] = $arLocation;
                     }
 
+                    foreach ($listVillageLocation as &$location) {
+                        $location['nameLocationWithoutPostfix'] = substr($location['NAME_RU'], 0, strrpos($location['NAME_RU'], " "));
+                        $location['nameAreaWithoutPostfix'] = substr($location['PARENT.NAME_RU'], 0, strrpos($location['PARENT.NAME_RU'], " "));
+                        $nameRegionWithoutPrefixPostfix = explode(' ', $location['PARENT_PARENT_NAME_RU']);
+
+                        if ($nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'область'
+                            || $nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'край') {
+
+                            array_pop($nameRegionWithoutPrefixPostfix);
+                        }
+                        else {
+                            array_shift($nameRegionWithoutPrefixPostfix);
+                        }
+                        $location['nameRegionWithoutPrefixPostfix'] = implode($nameRegionWithoutPrefixPostfix);
+                    }
+
+
                     foreach ($pvz_list['passportElements'] as $ops_id => $ops) {
+
                         $curLocation = null;
                         $nameLocationOpsWithoutPrefix = substr(strstr($ops['address']['place']," "), 1);
                         $nameAreaOpsWithoutPrefix = substr(strstr($ops['address']['area']," "), 1);
@@ -120,18 +138,9 @@ class RussianPostDelivery extends CommonPVZ
                             }
                         } else {
                             foreach ($listVillageLocation as $location) {
-                                $nameLocationWithoutPostfix = substr($location['NAME_RU'], 0, strrpos($location['NAME_RU'], " "));
-                                $nameAreaWithoutPostfix = substr($location['PARENT.NAME_RU'], 0, strrpos($location['PARENT.NAME_RU'], " "));
-                                $nameRegionWithoutPrefixPostfix = explode(' ', $location['PARENT_PARENT_NAME_RU']);
-                                if ($nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'область'
-                                    || $nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'край')
-                                    array_pop($nameRegionWithoutPrefixPostfix);
-                                else
-                                    array_shift($nameRegionWithoutPrefixPostfix);
-                                $nameRegionWithoutPrefixPostfix = implode($nameRegionWithoutPrefixPostfix);
-                                if ($nameLocationWithoutPostfix == $nameLocationOpsWithoutPrefix
-                                    && $nameAreaWithoutPostfix == $nameAreaOpsWithoutPrefix
-                                    && $nameRegionWithoutPrefixPostfix == $nameRegionOpsWithoutPrefix) {
+                                if ($location['nameLocationWithoutPostfix'] == $nameLocationOpsWithoutPrefix
+                                    && $location['nameAreaWithoutPostfix']  == $nameAreaOpsWithoutPrefix
+                                    && $location['nameRegionWithoutPrefixPostfix']  == $nameRegionOpsWithoutPrefix) {
                                     $curLocation = $location;
                                     break;
                                 }

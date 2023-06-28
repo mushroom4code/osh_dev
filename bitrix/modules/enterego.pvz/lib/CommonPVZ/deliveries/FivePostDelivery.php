@@ -96,7 +96,7 @@ class FivePostDelivery extends CommonPVZ
 
             $totalPages = 1;
             for ($i = 0; $i < $totalPages; $i++) {
-                $result = $this->fivepost_client->getPvzList($i, 2000);
+                $result = $this->fivepost_client->getPvzList($i, 300);
                 foreach ($result['content'] as $point) {
                     $curLocation = null;
                     $nameLocationPointWithoutPostfix = substr($point['address']['city'], 0, strrpos($point['address']['city'], " "));
