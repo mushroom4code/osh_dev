@@ -312,6 +312,7 @@ function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
 }
 
 require_once(__DIR__ . '/enterego_class/EnteregoNewProductAssignment.php');
+require_once(__DIR__ . '/enterego_class/EnteregoBrendPriorityPropertyChange.php');
 require_once(__DIR__ . '/enterego_class/EnteregoMakeProductsSubscriptionsReport.php');
 /**
  * @return string
@@ -375,3 +376,7 @@ AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToke
 
 // bitrix24 feedback and callback integrations
 AddEventHandler('iblock', 'OnAfterIBlockElementAdd',['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
+
+// change brend priority property of product on save
+AddEventHandler('catalog', 'OnProductUpdate', 'brendPriorityPropertyChangeOnProductUpdate');
+AddEventHandler('', 'BRENDOnUpdate', 'brendPriorityPropertyChangeOnBrendsUpdate');

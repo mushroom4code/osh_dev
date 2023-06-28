@@ -335,6 +335,8 @@ if(isset($_REQUEST["ajax"]) && $_REQUEST["ajax"] === "y")
 	$_CHECK = &$_REQUEST;
 elseif(isset($_REQUEST["del_filter"]))
 	$_CHECK = array();
+elseif($APPLICATION->GetCurPage() === '/hit/')
+    $_CHECK = array();
 elseif(!$session->has('initial_load_'.$FILTER_NAME.'_'.$this->SECTION_ID)) {
     unset($_GET);
     $_CHECK = unserialize($application->getContext()->getRequest()->getCookie($FILTER_NAME.'_'.$this->SECTION_ID));

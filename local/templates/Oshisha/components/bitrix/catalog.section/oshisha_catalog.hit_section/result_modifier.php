@@ -24,17 +24,10 @@ $brandsItemsArr = [];
 $finalBrandsItemsArr = [];
 $sectionsItemsArr = [];
 $sectionsBrandsItemsArr = [];
-//unset($arResult['ITEMS']);
-//$itemsRes = CIBlockElement::GetList([], ['PROPERTY_HIT_VALUE' => 'да']);
-//while ($item = $itemsRes->fetch()) {
-//    $arResult['ITEMS'][$item['ID']] = $item;
-//}
 
 foreach ($arResult['ITEMS'] as $item) {
     $brandsItemsArr[$item['IBLOCK_SECTION_ID']][$item['ID']]  = $item;
 }
-
-
 
 $brandsRes = CIBlockSection::GetList([], ['ID' => array_keys($brandsItemsArr), 'ACTIVE' => 'Y', 'GLOBAL_ACTIVE' => 'Y']);
 while ($brand = $brandsRes->fetch()) {
