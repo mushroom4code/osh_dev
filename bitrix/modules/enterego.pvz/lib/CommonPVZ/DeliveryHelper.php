@@ -355,31 +355,32 @@ class DeliveryHelper
         $cachePath = '/getAllPVZPoints';
         $delName = '0';
 
-        try {
-            $uniqueCacheString = 'pvz_'.$city_name;
+        $uniqueCacheString = 'pvz_'.$city_name;
+        foreach ($deliveries as $delivery) {
+            $uniqueCacheString .= $uniqueCacheString.'_'.$delivery->delivery_name;
+        }
+
+        $sumDimensions = self::getSumDimensions($packages);
+        $dimensionsHash =  self::makeDimensionsHash($sumDimensions['W'], $sumDimensions['H'], $sumDimensions['L']);
+
+        $uniqueCacheString .= $dimensionsHash;
+        $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
+        if ($is_cache_on == 'Y' && $cache->initCache(7200, $uniqueCacheString, $cachePath)) {
+            $points_Array = $cache->getVars();
+        } elseif ($cache->startDataCache()) {
             foreach ($deliveries as $delivery) {
-                $uniqueCacheString .= $uniqueCacheString.'_'.$delivery->delivery_name;
-            }
-
-            $sumDimensions = self::getSumDimensions($packages);
-            $dimensionsHash =  self::makeDimensionsHash($sumDimensions['W'], $sumDimensions['H'], $sumDimensions['L']);
-
-            $uniqueCacheString .= $dimensionsHash;
-            $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
-            if ($is_cache_on == 'Y' && $cache->initCache(7200, $uniqueCacheString, $cachePath)) {
-                $points_Array = $cache->getVars();
-            } elseif ($cache->startDataCache()) {
-                foreach ($deliveries as $delivery) {
-                    if ($delivery!=null) {
+                if ($delivery!=null) {
+                    try {
                         $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity, $packages, $dimensionsHash, $sumDimensions);
                         $result_array['errors'][$delName] = $delivery->errors;
+                    } catch (\Throwable $e) {
+                        $result_array['errors'][$delName] = $e->getMessage();
                     }
                 }
-                $cache->endDataCache($points_Array);
             }
-        } catch (\Throwable $e) {
-            $result_array['errors'][$delName] = $e->getMessage();
+            $cache->endDataCache($points_Array);
         }
+
 
         $result_array['type'] = 'FeatureCollection';
         $result_array['features'] = $points_Array;

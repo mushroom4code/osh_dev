@@ -109,44 +109,43 @@ class DoorDeliveryProfile extends Base
 
         if ($propTypeDeliveryId) {
             foreach ($deliveries as $delivery) {
-                if ($deliveryParams['location'] != '0000073738' || $delivery->delivery_code === 'oshisha') {
-                    $price = $delivery->getPriceDoorDelivery($deliveryParams);
 
-                    if ($currentDelivery===$delivery->delivery_code) {
-                        $result->setDeliveryPrice(
-                            roundEx(
-                                $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
-                                SALE_VALUE_PRECISION
-                            )
-                        );
-                        $checked = 'checked';
-                        if (!empty($price['errors'])) {
-                            $result->addError(new Error(
-                                Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
-                                'DELIVERY_CALCULATION'
-                            ));
-                        } else {
-                            $order_price = $delivery->delivery_code == 'oshisha' ? $price['price'] : $price;
-                        }
-                    } else {
-                        $checked = '';
-                    }
+                $price = $delivery->getPriceDoorDelivery($deliveryParams);
 
-                    if (empty($price['errors'])){
-                        $resDescription[] = [
-                            'code' => $delivery->delivery_code,
-                            'checked' => !empty($checked),
-                            'name' => $delivery->delivery_name,
-                            'price' => $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
-                            'noMarkup' => $delivery->delivery_code == 'oshisha' ? $price['noMarkup'] : false
-                        ];
+                if ($currentDelivery===$delivery->delivery_code) {
+                    $result->setDeliveryPrice(
+                        roundEx(
+                            $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
+                            SALE_VALUE_PRECISION
+                        )
+                    );
+                    $checked = 'checked';
+                    if (!empty($price['errors'])) {
+                        $result->addError(new Error(
+                            Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
+                            'DELIVERY_CALCULATION'
+                        ));
                     } else {
-                        $resDescription[] = [
-                            'code' => $delivery->delivery_code,
-                            'name' => $delivery->delivery_name,
-                            'error' => $price['errors']
-                        ];
+                        $order_price = $delivery->delivery_code == 'oshisha' ? $price['price'] : $price;
                     }
+                } else {
+                    $checked = '';
+                }
+
+                if (empty($price['errors'])){
+                    $resDescription[] = [
+                        'code' => $delivery->delivery_code,
+                        'checked' => !empty($checked),
+                        'name' => $delivery->delivery_name,
+                        'price' => $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
+                        'noMarkup' => $delivery->delivery_code == 'oshisha' ? $price['noMarkup'] : false
+                    ];
+                } else {
+                    $resDescription[] = [
+                        'code' => $delivery->delivery_code,
+                        'name' => $delivery->delivery_name,
+                        'error' => $price['errors']
+                    ];
                 }
             }
 

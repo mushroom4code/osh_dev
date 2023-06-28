@@ -73,6 +73,18 @@ BX.SaleCommonPVZ = {
         this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
         this.propTypePvzId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
 
+        this.hidePropField(this.propTypeDeliveryId)
+        this.hidePropField(this.propAddressPvzId)
+        this.hidePropField(this.propFiasId)
+        this.hidePropField(this.propKladrId)
+        this.hidePropField(this.propTypePvzId)
+        this.hidePropField(this.propLatitudeId)
+        this.hidePropField(this.propLongitudeId)
+        this.hidePropField(this.propCommonPVZId)
+        this.hidePropField(this.propDateDeliveryId)
+        this.hidePropField(this.propDeliveryTimeInterval)
+        this.hidePropField(this.propStreetKladrId)
+
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
             window.Osh.bxPopup.init();
@@ -125,7 +137,7 @@ BX.SaleCommonPVZ = {
         }
 
         let date = BX.Sale.OrderAjaxComponent.result.ORDER_PROP
-            .properties.find(prop => prop.CODE === 'DATE_DELIVERY').VALUE[0] ?? '-';
+            .properties.find(prop => prop.CODE === 'DATE_DELIVERY')?.VALUE[0] ?? '-';
 
         const address = this.curDeliveryId === this.pvzDeliveryId
             ? this.getValueProp(this.propAddressPvzId)
@@ -548,6 +560,17 @@ BX.SaleCommonPVZ = {
 
     getValueProp: function (prop_id) {
         return document.querySelector(`input[name="ORDER_PROP_${prop_id}"]`)?.value ?? ''
+    },
+
+    hidePropField: function (prop_id) {
+        if (!prop_id) {
+            return
+        }
+        const propField = document.querySelector(`input[name="ORDER_PROP_${prop_id}"]`)
+        if (!propField) {
+            return;
+        }
+        BX.hide(BX.findParent(propField, {class: 'form-group'}))
     },
 
     closePvzPopup: function () {
