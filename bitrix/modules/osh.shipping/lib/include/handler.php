@@ -69,12 +69,13 @@ class COshDeliveryHandler
         $startCost = Config::getStartCost();
         $limitBasket = Config::getLimitBasket();
         $basketPrice = $order->getPrice();
+        \CJSCore::Init(array("osh_pickup"));
 
         if (in_array($currentUrl, $arCheckoutUrl)) {
             if (Config::isIncludeYaMaps()) {
                 $cAsset->addJs('https://api-maps.yandex.ru/2.1.71/?lang=ru_RU&apikey=' . ($ymapsApikey ? '&apikey=' . $ymapsApikey : ''), true);
             }
-            \CJSCore::Init(array("osh_pickup"));
+
 //            $cAsset->addCss(OSH_DELIVERY_FA_URL);
         }
         $propertyCollection = $order->getPropertyCollection();
