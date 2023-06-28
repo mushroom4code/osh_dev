@@ -87,7 +87,7 @@ BX.SaleCommonPVZ = {
 
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
-            window.Osh.bxPopup.init();
+            window.commonDelivery.bxPopup.init();
         }
 
         if (this.propCommonPVZId) {
@@ -465,8 +465,8 @@ BX.SaleCommonPVZ = {
     updateOshishaDelivery: function (parentBlock) {
         var __this = this;
 
-        window.Osh.bxPopup.init();
-        const oshMkad = window.Osh.oshMkadDistance.init(__this.oshishaDeliveryOptions);
+        window.commonDelivery.bxPopup.init();
+        const oshMkad = window.commonDelivery.oshMkadDistance.init(__this.oshishaDeliveryOptions);
         return BX.create('a',
             {
                 props: {
@@ -479,7 +479,7 @@ BX.SaleCommonPVZ = {
                         oshMkad.afterSave = function (address) {
                             __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = address;
                         }.bind(this);
-                        window.Osh.bxPopup.onPickerClick(__this.getValueProp(__this.propLatitudeId) ?? '',
+                        window.commonDelivery.bxPopup.onPickerClick(__this.getValueProp(__this.propLatitudeId) ?? '',
                             __this.getValueProp(__this.propLongitudeId) ?? '',
                             __this.getValueProp(__this.propDateDeliveryId) ?? '',
                             __this.getValueProp(__this.propAddressId) ?? ''
@@ -734,7 +734,7 @@ BX.SaleCommonPVZ = {
                 if (res) {
                     BX.onCustomEvent('onDeliveryExtraServiceValueChange');
                 } else {
-                    window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                    window.commonDelivery.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                         oshMkad.afterSave = null;
                         oshMkad.getDistance([latitude, longitude], this.getValueProp(this.propDateDeliveryId),
                             this.getValueProp(this.propAddressId), true);
@@ -783,13 +783,13 @@ BX.SaleCommonPVZ = {
                 if (response.status === 'success') {
                     document.querySelector(`input#user-address`).value = response?.value ?? '';
                     this.updatePropsFromDaData(response);
-                    window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                    window.commonDelivery.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                         oshMkad.afterSave = null;
                         oshMkad.getDistance([response.data.geo_lat, response.data.geo_lon],
                             this.getValueProp(this.propDateDeliveryId), this.getValueProp(this.propAddressId), true);
                     })
                 } else {
-                    window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                    window.commonDelivery.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                         oshMkad.afterSave = null;
                         oshMkad.getDistance(coordinates, this.getValueProp(this.propDateDeliveryId),
                             this.getValueProp(this.propAddressId), true);
@@ -1324,7 +1324,7 @@ BX.SaleCommonPVZ = {
                 onSelect: function (date, opts, datepicker) {
                     this.updateValueProp(this.propDateDeliveryId, date)
                     if (datepicker.opts.silentBool !== true) {
-                        window.Osh.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
+                        window.commonDelivery.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
                             oshMkad.afterSave = null;
                             oshMkad.getDistance([this.getValueProp(this.propLatitudeId), this.getValueProp(this.propLongitudeId)], this.getValueProp(this.propDateDeliveryId),
                                 this.getValueProp(this.propAddressId), true);

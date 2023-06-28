@@ -457,7 +457,7 @@ class DeliveryHelper
         $cAsset->addCss('/bitrix/modules/enterego.pvz/lib/CommonPVZ/style.css', true);
         $cAsset->addCss('/bitrix/modules/enterego.pvz/install/css/suggestions.css', true);
         \CJSCore::Init(array("saved_delivery_profiles"));
-        \CJSCore::Init(array("osh_pickup"));
+        \CJSCore::Init(array("common_delivery"));
         $cAsset->addString(
             "<script id='' data-params=''>
                     window.addEventListener('load', function () {

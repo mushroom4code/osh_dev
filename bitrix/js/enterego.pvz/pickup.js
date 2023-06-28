@@ -1,6 +1,8 @@
-window.Osh = window.Osh || {};
+console.log('init ish delivery')
 
-window.Osh.oshMkadDistance = (function () {
+window.commonDelivery = window.commonDelivery || {};
+
+window.commonDelivery.oshMkadDistance = (function () {
     let instance;
 
     return {
@@ -10,14 +12,14 @@ window.Osh.oshMkadDistance = (function () {
         init: async function (param) {
             // BX.addClass(BX('saveBTN'), 'popup-window-button-disable');
             if (instance === undefined) {
-                instance = new window.Osh.oshMkadDistanceObject(param);
+                instance = new window.commonDelivery.oshMkadDistanceObject(param);
             }
             return instance;
         }
     };
 }());
 
-window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
+window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     var $ = $ || jQuery;
     var selfObj = this;
     selfObj.isInited = false;
@@ -418,13 +420,13 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
                         no_markup = false;
                         if (cur_zone_days_key) {
                             var noMarkupMessage = '';
-                            window.Osh.bxPopup.no_markup_days[cur_zone_days_key].forEach((dayNumeric, id, array) => {
+                            window.commonDelivery.bxPopup.no_markup_days[cur_zone_days_key].forEach((dayNumeric, id, array) => {
                                 if (id === array.length - 1)
-                                    noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
+                                    noMarkupMessage += window.commonDelivery.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ' ';
                                 else
-                                    noMarkupMessage += window.Osh.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
+                                    noMarkupMessage += window.commonDelivery.bxPopup.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
                             });
-                            if (window.Osh.bxPopup.no_markup_days[cur_zone_days_key].includes(delivery_date_week_day.toString())) {
+                            if (window.commonDelivery.bxPopup.no_markup_days[cur_zone_days_key].includes(delivery_date_week_day.toString())) {
                                 no_markup = true;
                                 delivery_price = (currentBasket >= limitBasket ? 0 : cost);
                             }
@@ -741,7 +743,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
     return selfObj.initWObj();
 };
 
-window.Osh.Map = {
+window.commonDelivery.Map = {
     instance: null,
     arMarkers: null,
     isMobile: false,
@@ -761,7 +763,7 @@ window.Osh.Map = {
     },
     init: function (params) {
         var arControls = ['zoomControl'],
-            clientSizes = window.Osh.bxPopup.getClientSizes();
+            clientSizes = window.commonDelivery.bxPopup.getClientSizes();
 
         this.isMobile = Boolean(clientSizes.width < 993);
         this.arMarkers = [];
@@ -849,7 +851,7 @@ window.Osh.Map = {
                 iconColor: '#2b7788',
                 balloonCloseButton: false,
                 hideIconOnBalloonOpen: false
-            }, clientSizes = window.Osh.bxPopup.getClientSizes();
+            }, clientSizes = window.commonDelivery.bxPopup.getClientSizes();
         if (this.isMobile) {
             markerOptions.balloonMaxWidth = Math.round(clientSizes.width * 0.8);
             markerOptions.balloonMinWidth = Math.round(clientSizes.width * 0.4);
@@ -910,7 +912,7 @@ window.Osh.Map = {
     }
 };
 
-window.Osh.bxPopup = {
+window.commonDelivery.bxPopup = {
     instance: null,
     containerId: "ModalPVZ",
     oshMkadDelivery: null,
@@ -1159,7 +1161,7 @@ window.Osh.bxPopup = {
         this.init();
         document.body.style.overflow = "hidden";
         BX('osh_map_overlay').style.display = "flex";
-        window.Osh.oshMkadDistance.getInstance().then(oshMkadDelivery => {
+        window.commonDelivery.oshMkadDistance.getInstance().then(oshMkadDelivery => {
             this.oshMkadDelivery = oshMkadDelivery
             this.oshMkadDelivery.date_delivery = date_delivery;
             this.oshMkadDelivery.show();
@@ -1194,7 +1196,7 @@ window.Osh.bxPopup = {
     },
 };
 
-window.Osh.checkPvz = function (result) {
+window.commonDelivery.checkPvz = function (result) {
 
     switch (typeof result) {
         case "object":
@@ -1262,4 +1264,4 @@ window.Osh.checkPvz = function (result) {
     return true;
 };
 
-BX.addCustomEvent('onAjaxSuccess', window.Osh.checkPvz);
+BX.addCustomEvent('onAjaxSuccess', window.commonDelivery.checkPvz);
