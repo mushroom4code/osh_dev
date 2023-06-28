@@ -436,7 +436,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     }
                     /** Enterego grouped product */?>
                     <div class="d-flex flex-column mb-2 box-offers-auto" data-entity="sku-line-block">
-                        <?php if (!empty($arResult['GROUPED_PROPS_DATA'])) {
+                        <?php if (!empty($arResult['GROUPED_PROPS_DATA']) && count($arResult['GROUPED_PRODUCTS']) > 1) {
                             $propsForOffers = EnteregoSettings::getDataPropOffers();
                             $productSelect = $arResult['GROUPED_PRODUCTS'][$arResult['ID']]['PROPERTIES'];
                             foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) { ?>
