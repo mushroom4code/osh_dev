@@ -434,130 +434,131 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 break;
                         }
                     }
-                    /** Enterego grouped product */?>
-                    <div class="d-flex flex-column mb-2 box-offers-auto" data-entity="sku-line-block">
-                        <?php if (!empty($arResult['GROUPED_PROPS_DATA']) && count($arResult['GROUPED_PRODUCTS']) > 1) {
-                            $propsForOffers = EnteregoSettings::getDataPropOffers();
-                            $productSelect = $arResult['GROUPED_PRODUCTS'][$arResult['ID']]['PROPERTIES'];
-                            foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) { ?>
-                                <div class="d-flex flex-row overflow-auto mb-2 width-100 overflow-custom">
-                                    <?php foreach ($productGrouped as $group) {
+                    /** Enterego grouped product */
+                    if (!empty($arResult['GROUPED_PROPS_DATA']) && count($arResult['GROUPED_PRODUCTS']) > 1 &&
+                    (int)$actualItem['PRODUCT']['QUANTITY'] > 0) { ?>
+                        <div class="d-flex flex-column mb-2 box-offers-auto" data-entity="sku-line-block">
+                            <?php $propsForOffers = EnteregoSettings::getDataPropOffers();
+                                $productSelect = $arResult['GROUPED_PRODUCTS'][$arResult['ID']]['PROPERTIES'];
+                                foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) {
+                                    if ($keyCODE !== 'USE_DISCOUNT') { ?>
+                                        <div class="d-flex flex-row overflow-auto mb-2 width-100 overflow-custom">
+                                            <?php foreach ($productGrouped as $group) {
+                                                $link = 'javascript:void(0)';
+                                                $prop_value = 'Пустое значение';
+                                                $tasted = $grouped = [];
+                                                $type = $propsForOffers[$keyCODE]['TYPE'] ?? 'text';
+                                                $title = 'Товар';
+                                                $select = 'selected';
 
-                                        $link = 'javascript:void(0)';
-                                        $prop_value = 'Пустое значение';
-                                        $tasted = $grouped = [];
-                                        $type = $propsForOffers[$keyCODE]['TYPE'] ?? 'text';
-                                        $title = 'Товар';
-                                        $select = 'selected';
+                                                if (count(array_diff_assoc($productSelect[$keyCODE]['JS_PROP'], $group)) > 0 ||
+                                                    count($productSelect[$keyCODE]['JS_PROP']) !== count($group)) {
+                                                    $select = '';
+                                                }
 
-                                        if (count(array_diff_assoc($productSelect[$keyCODE]['JS_PROP'], $group)) > 0 ||
-                                            count($productSelect[$keyCODE]['JS_PROP'])!== count($group)) {
-                                            $select = '';
-                                        }
+                                                foreach ($group as $name => $prop) {
+                                                    if (empty($prop['VALUE_ENUM'])) {
+                                                        continue;
+                                                    }
 
-                                        foreach ($group as $name => $prop) {
-                                            if (empty($prop['VALUE_ENUM'])) {
-                                                continue;
-                                            }
+                                                    $prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$keyCODE]['PREF'];
 
-                                            $prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$keyCODE]['PREF'];
+                                                    if (count($arResult['GROUPED_PROPS_DATA']) === 1) {
+                                                        $link = $prop['CODE'];
+                                                    }
 
-                                            if (count($arResult['GROUPED_PROPS_DATA']) === 1) {
-                                                $link = $prop['CODE'];
-                                            }
+                                                    if ($type === 'colorWithText') {
+                                                        $tasted[$name] = [
+                                                            'color' => '#' . explode('#',
+                                                                    $prop['VALUE_XML_ID'])[1],
+                                                            'name' => $prop['VALUE_ENUM'],
+                                                        ];
+                                                    } else {
+                                                        $grouped[$name] = [
+                                                            'xml_id' => $prop['VALUE_XML_ID'],
+                                                            'name' => $prop['VALUE_ENUM']
+                                                        ];
+                                                    }
+                                                    $title = $prop['NAME'];
+                                                }
 
-                                            if ($type === 'colorWithText') {
-                                                $tasted[$name] = [
-                                                    'color' => '#' . explode('#',
-                                                            $prop['VALUE_XML_ID'])[1],
-                                                    'name' => $prop['VALUE_ENUM'],
-                                                ];
-                                            } else {
-                                                $grouped[$name] = [
-                                                    'xml_id' => $prop['VALUE_XML_ID'],
-                                                    'name' => $prop['VALUE_ENUM']
-                                                ];
-                                            }
-                                            $title = $prop['NAME'];
-                                        }
-
-                                        if (!empty($prop_value)) {
-                                            if ($type === 'text') {
-                                                if (count($grouped) > 1) { ?>
-                                                    <a href="<?= $link ?>" class="offer-link">
-                                                        <div class="red_button_cart font-14 p-10
-                                                                 width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
-                                                             <?=$select?>"
-                                                             title="<?= $offer['NAME'] ?>"
-                                                             data-active="<?= !empty($select) ? 'true' :'false'?>"
-                                                             data-prop_code="<?= $keyCODE ?>"
-                                                             data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
-                                                             data-product_id="<?= '' ?>">
-                                                            <?php foreach ($grouped as $elemProp) { ?>
-                                                                <span class="br-100"><?= $elemProp['name'] ?></span>
-                                                            <?php } ?>
-                                                        </div>
-                                                    </a>
-                                                <?php } else { ?>
-                                                    <a href="<?= $link ?>" class="offer-link <?=$select?>">
-                                                        <div class="red_button_cart font-13 width-fit-content br-100 mb-lg-2
-                                                                    m-md-2 m-1 offer-box cursor-pointer"
-                                                             title="<?= $offer['NAME'] ?>"
-                                                             data-active="<?= !empty($select) ? 'true' :'false'?>"
-                                                             data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
-                                                             data-prop_code="<?= $keyCODE ?>"
-                                                             data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
-                                                            <?= $prop_value ?>
-                                                        </div>
-                                                    </a>
-                                                <?php }
-                                            } elseif ($type === 'color') { ?>
-                                                <a href="<?= $link ?>" class="offer-link <?=$select?>">
-                                                    <div title="<?= $offer['NAME'] ?>"
-                                                         data-active="<?= !empty($select) ? 'true' :'false'?>"
-                                                         data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
-                                                         data-prop_code="<?= $keyCODE ?>"
-                                                         data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
-                                                         class="mr-1 offer-box color-hookah br-10 mb-1 <?= $select ?>">
-                                                        <img src="<?= $prop['PREVIEW_PICTURE'] ?>"
-                                                             class="br-10"
-                                                             width="50"
-                                                             height="50"
-                                                             alt="<?= $offer['NAME'] ?>"
-                                                             loading="lazy"/>
-                                                    </div>
-                                                </a>
-                                            <?php } elseif ($type === 'colorWithText') {
-                                                if (!empty($tasted)) { ?>
-                                                    <a href="<?= $link ?>" class="offer-link <?=$select?>">
-                                                        <div class="red_button_cart taste variation_taste font-14
-                                                                 width-fit-content mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer"
-                                                             title="<?= $offer['NAME'] ?>"
-                                                             data-active="<?= !empty($select) ? 'true' :'false'?>"
-                                                             data-prop_code="<?= $keyCODE ?>"
-                                                             data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>">
-                                                            <?php foreach ($tasted as $elem_taste) { ?>
-                                                                <span class="taste mb-0 br-100"
-                                                                      data-background="<?= $elem_taste['color'] ?>"
-                                                                      style="background-color: <?= $elem_taste['color'] ?>;
-                                                                              border-color: <?= $elem_taste['color'] ?>;
-                                                                              font-size: 13px;">
-                                                                            <?= $elem_taste['name'] ?>
-                                                                    </span>
-                                                            <?php } ?>
-                                                        </div>
-                                                    </a>
-                                                <?php }
-                                            }
-                                        }
-                                    } ?>
-                                </div>
-                            <?php }
-                        } ?>
-                    </div>
-                    <input type="hidden" value="<?= htmlspecialchars(json_encode($arResult['GROUPED_PRODUCTS'])) ?>"
-                           id="product_prop_data"/>
-                    <?php /** Enterego grouped product */ ?>
+                                                if (!empty($prop_value)) {
+                                                    if ($type === 'text') {
+                                                        if (count($grouped) > 1) { ?>
+                                                            <a href="<?= $link ?>" class="offer-link">
+                                                                <div class="red_button_cart font-14 p-10
+                                                                     width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
+                                                                 <?= $select ?>"
+                                                                     title="<?= $offer['NAME'] ?>"
+                                                                     data-active="<?= !empty($select) ? 'true' : 'false' ?>"
+                                                                     data-prop_code="<?= $keyCODE ?>"
+                                                                     data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
+                                                                     data-product_id="<?= '' ?>">
+                                                                    <?php foreach ($grouped as $elemProp) { ?>
+                                                                        <span class="br-100"><?= $elemProp['name'] ?></span>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </a>
+                                                        <?php } else { ?>
+                                                            <a href="<?= $link ?>" class="offer-link <?= $select ?>">
+                                                                <div class="red_button_cart font-13 width-fit-content br-100 mb-lg-2
+                                                                        m-md-2 m-1 offer-box cursor-pointer"
+                                                                     title="<?= $offer['NAME'] ?>"
+                                                                     data-active="<?= !empty($select) ? 'true' : 'false' ?>"
+                                                                     data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
+                                                                     data-prop_code="<?= $keyCODE ?>"
+                                                                     data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
+                                                                    <?= $prop_value ?>
+                                                                </div>
+                                                            </a>
+                                                        <?php }
+                                                    } elseif ($type === 'color') { ?>
+                                                        <a href="<?= $link ?>" class="offer-link <?= $select ?>">
+                                                            <div title="<?= $offer['NAME'] ?>"
+                                                                 data-active="<?= !empty($select) ? 'true' : 'false' ?>"
+                                                                 data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
+                                                                 data-prop_code="<?= $keyCODE ?>"
+                                                                 data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
+                                                                 class="mr-1 offer-box color-hookah br-10 mb-1 <?= $select ?>">
+                                                                <img src="<?= $prop['PREVIEW_PICTURE'] ?>"
+                                                                     class="br-10"
+                                                                     width="50"
+                                                                     height="50"
+                                                                     alt="<?= $offer['NAME'] ?>"
+                                                                     loading="lazy"/>
+                                                            </div>
+                                                        </a>
+                                                    <?php } elseif ($type === 'colorWithText') {
+                                                        if (!empty($tasted)) { ?>
+                                                            <a href="<?= $link ?>" class="offer-link <?= $select ?>">
+                                                                <div class="red_button_cart taste variation_taste font-14
+                                                                     width-fit-content mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer"
+                                                                     title="<?= $offer['NAME'] ?>"
+                                                                     data-active="<?= !empty($select) ? 'true' : 'false' ?>"
+                                                                     data-prop_code="<?= $keyCODE ?>"
+                                                                     data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>">
+                                                                    <?php foreach ($tasted as $elem_taste) { ?>
+                                                                        <span class="taste mb-0 br-100"
+                                                                              data-background="<?= $elem_taste['color'] ?>"
+                                                                              style="background-color: <?= $elem_taste['color'] ?>;
+                                                                                      border-color: <?= $elem_taste['color'] ?>;
+                                                                                      font-size: 13px;">
+                                                                                <?= $elem_taste['name'] ?>
+                                                                        </span>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </a>
+                                                        <?php }
+                                                    }
+                                                }
+                                            } ?>
+                                        </div>
+                                    <?php }
+                                } ?>
+                        </div>
+                        <input type="hidden" value="<?= htmlspecialchars(json_encode($arResult['GROUPED_PRODUCTS'])) ?>"
+                               id="product_prop_data"/>
+                    <?php /** Enterego grouped product */ } ?>
                         <div class="new_box d-flex flex-row align-items-center mb-lg-0 mb-md-0 mb-5">
                             <span></span>
                             <p>Наличие товара, варианты и стоимость доставки будут указаны далее при оформлении заказа. </p>

@@ -219,7 +219,8 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                     <?php } ?>
                 </a>
                 <i class="open-fast-window mb-2" data-item-id="<?= $item['ID'] ?>"></i>
-                <?php if (!empty($listGroupedProduct) && count($listGroupedProduct) > 1) { ?>
+                <?php if (!empty($listGroupedProduct) && count($listGroupedProduct) > 1 &&
+                    (int)$item['PRODUCT']['QUANTITY'] > 0) { ?>
                     <i class="fa fa-pencil js__open-grouped-product-window"
                        aria-hidden="true"
                        id="<?='grouped_'.$item['ID']?>"
