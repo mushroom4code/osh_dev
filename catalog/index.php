@@ -300,8 +300,8 @@ $APPLICATION->IncludeComponent(
 		"FILE_404" => "",
 		"SEF_URL_TEMPLATES" => array(
 			"sections" => "",
+            "element" => "product/#ELEMENT_CODE#/",
 			"section" => "#SECTION_CODE#/",
-			"element" => "product/#ELEMENT_CODE#/",
 			"compare" => "compare/",
 			"smart_filter" => "#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/",
 		)
