@@ -194,8 +194,7 @@ class FivePostDelivery extends CommonPVZ
             $res = FivePostPointsTable::getList($arParams);
 
             while ($point = $res->fetch()) {
-                if ($point['MAX_CELL_DIMENSIONS_HASH'] >= $dimensionsHash
-                    && !empty(unserialize($point['RATE'])[0]['rateValue'])
+                if (!empty(unserialize($point['RATE'])[0]['rateValue'])
                     && !empty(unserialize($point['RATE'])[0]['zone'])){
                     $features_obj['type'] = 'Feature';
                     $features_obj['id'] = $id_feature;
