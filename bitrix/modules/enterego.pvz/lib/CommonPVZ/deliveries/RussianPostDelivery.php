@@ -192,7 +192,7 @@ class RussianPostDelivery extends CommonPVZ
                 $weightSum += $package['weight'] * $package['quantity'];
 
             if ($weightSum <= 20000) {
-                $arParams = ['filter' => ['BITRIX_CODE' => $code_city]];
+                $arParams = ['filter' => ['BITRIX_CODE' => $code_city, 'IS_PVZ' => 'false']];
                 $res = RussianPostPointsTable::getList($arParams);
                 while ($point = $res->fetch()) {
                     $features_obj['type'] = 'Feature';
