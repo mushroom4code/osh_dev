@@ -2170,7 +2170,6 @@
 })(window);
 
 $(document).on('click', '.open-fast-window', function () {
-
     let json_product = $(this).closest('.catalog-item-product').find('input.product-values').val();
 
     if (json_product !== '') {
@@ -2353,7 +2352,6 @@ $(document).on('click', '.open-fast-window', function () {
 
             let product_box = BX.findChildByClassName(box_product, 'box-with-image-one');
             let image_box = BX.findChildByClassName(box_product, 'box-with-image-prod');
-
             BX.cleanNode(product_box);
             BX.removeClass(product_box, 'flex-class');
 
@@ -2616,6 +2614,49 @@ $(document).on('click', '.open-fast-window', function () {
         if (parseInt(product.LIKE.COUNT_LIKE) !== 0) {
             $(wrapper).find('.like-modal a[data-method="like"]').attr('data-like-controls', 'true').attr('style', 'color:red');
         }
+
+        console.log(document.querySelectorAll('.slick-images-box img'));
+        let zoom = document.querySelectorAll('.slick-images-box img');
+
+        zoom.forEach(function(el) {
+            el.style.setProperty('transition', ' background-size 0.5s ease');
+            el.addEventListener('mouseenter', function(e) {
+                const target = e.target,
+                    rect = target.getBoundingClientRect();
+                if(!target.classList.contains('-active')) {
+                    target.classList.toggle('-active');
+                }
+                target.style.setProperty('background-image',`url(${target.getAttribute('src')})`);
+                target.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQI12P4zwAAAgEBAKrChTYAAAAASUVORK5CYII=';
+                target.style.setProperty('background-size', '200%');
+                target.style.setProperty('background-position', Math.floor(((e.clientX - rect.left) / rect.width * 100) * 100) / 100+'% ' + Math.floor(((e.clientY - rect.top) / rect.height * 100) * 100) / 100+'%');
+                if(target.classList.contains('-active')) {
+                    target.classList.add('-enter');
+                }
+            });
+
+
+
+            el.addEventListener('mousemove', function(e) {
+                const target = e.target;
+                if(target.classList.contains('-active')) {
+                    const rect = target.getBoundingClientRect();
+                    target.style.setProperty('background-position', Math.floor(((e.clientX - rect.left) / rect.width * 100) * 100) / 100+'% ' + Math.floor(((e.clientY - rect.top) / rect.height * 100) * 100) / 100+'%');
+                }
+            });
+
+            el.addEventListener('mouseleave', function(e) {
+                let target = e.target;
+                target.style.setProperty('background-size', '100%');
+                console.log(getComputedStyle(target)['background-image']);
+
+                target.src = target.style.backgroundImage.replace(/(url\(|\)|")/g, '');
+                console.log(target);
+                if(target.classList.contains('-active')) {
+                    target.classList.remove('-enter');
+                }
+            });
+        });
     }
 });
 

@@ -1040,10 +1040,10 @@ input::-webkit-inner-spin-button {
     width: 450px;
 }
 
-.box-with-image-prod img.w-h-350 {
-    max-height: 300px;
-    object-fit: contain;
-}
+/*.box-with-image-prod img.w-h-350 {*/
+/*    max-height: 300px;*/
+/*    object-fit: contain;*/
+/*}*/
 
 .flex-class {
     display: flex;
@@ -1057,8 +1057,12 @@ input::-webkit-inner-spin-button {
     top: 48%;
 }
 
+/*div.slick-track {*/
+/*    height: 25.6rem;*/
+/*}*/
+
 div.slick-track {
-    height: 25.6rem;
+    height: fit-content;
 }
 
 .slick-slide {
