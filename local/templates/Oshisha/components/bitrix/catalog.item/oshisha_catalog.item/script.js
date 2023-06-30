@@ -2182,10 +2182,13 @@ $(document).on('click', '.open-fast-window', function () {
             props: {
                 className: 'position-fixed width-100 top-32 d-flex justify-content-center z-index-1400 box-popup-product'
             },
+            style: {
+                height: '900px',
+            },
             children: [
                 BX.create('DIV', {
                     props: {
-                        className: 'open-modal-product bg-gray-white p-lg-4 p-md-4 p-3 max-width-1024 width-100 br-10'
+                        className: 'open-modal-product bg-gray-white p-lg-4 p-md-4 p-3 max-width-1250 width-100 br-10'
                     },
                 })
             ]
@@ -2220,12 +2223,18 @@ $(document).on('click', '.open-fast-window', function () {
 
         box_product.appendChild(BX.create('DIV', {
             props: {
-                className: 'd-flex flex-lg-row flex-md-row flex-column'
+                className: 'd-flex flex-lg-row flex-md-row flex-column js-parent-flex'
+            },
+            style: {
+                height: '95%',
             },
             children: [
                 BX.create('DIV', {
                     props: {
-                        className: 'box-with-image-prod col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
+                        className: 'box-with-image-prod col-lg-8 col-md-8 col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
+                    },
+                    style: {
+                        height: '100%',
                     },
                     children: [
                         BX.create('div', {
@@ -2235,10 +2244,13 @@ $(document).on('click', '.open-fast-window', function () {
                             children: [
                                 BX.create('IMG', {
                                     props: {
-                                        className: 'w-h-350',
+                                        className: 'w-h-350 js-one-img',
                                         src: product.MORE_PHOTO[0].SRC,
                                         alt: 'modal-product'
                                     },
+                                    style: {
+                                        height: '100%',
+                                    }
                                 }),
                             ]
                         }),
@@ -2283,7 +2295,7 @@ $(document).on('click', '.open-fast-window', function () {
                 }),
                 BX.create('DIV', {
                     props: {
-                        className: 'col-lg-6 col-md-6 col-12 d-flex flex-column color-darkOsh justify-content-between'
+                        className: 'col-lg-4 col-md-4 col-12 d-flex flex-column color-darkOsh justify-content-between'
                     },
                     children: [
                         BX.create('DIV', {
@@ -2365,6 +2377,10 @@ $(document).on('click', '.open-fast-window', function () {
                 props: {
                     className: 'position-absolute slider-controls max-width-400',
                 },
+                style: {
+                    pointerEvents: 'none',
+                    height: '95%',
+                },
                 children: [
                     BX.create('DIV', {
                         props: {
@@ -2392,6 +2408,9 @@ $(document).on('click', '.open-fast-window', function () {
                     BX.create('DIV', {
                         props: {
                             className: 'product-slider-controls-image',
+                        },
+                        style: {
+                            pointerEvents: 'all',
                         },
                         children: [
                             BX.create('IMG', {
@@ -2615,9 +2634,13 @@ $(document).on('click', '.open-fast-window', function () {
             $(wrapper).find('.like-modal a[data-method="like"]').attr('data-like-controls', 'true').attr('style', 'color:red');
         }
 
-        console.log(document.querySelectorAll('.slick-images-box img'));
-        let zoom = document.querySelectorAll('.slick-images-box img');
-
+        let zoom = '';
+        if(product.MORE_PHOTO.length > 1){
+            zoom = document.querySelectorAll('.slick-images-box img');
+        }
+        else {
+            zoom = document.querySelectorAll('.js-one-img');
+        }
         zoom.forEach(function(el) {
             el.style.setProperty('transition', ' background-size 0.5s ease');
             el.addEventListener('mouseenter', function(e) {
@@ -2648,10 +2671,7 @@ $(document).on('click', '.open-fast-window', function () {
             el.addEventListener('mouseleave', function(e) {
                 let target = e.target;
                 target.style.setProperty('background-size', '100%');
-                console.log(getComputedStyle(target)['background-image']);
-
                 target.src = target.style.backgroundImage.replace(/(url\(|\)|")/g, '');
-                console.log(target);
                 if(target.classList.contains('-active')) {
                     target.classList.remove('-enter');
                 }
