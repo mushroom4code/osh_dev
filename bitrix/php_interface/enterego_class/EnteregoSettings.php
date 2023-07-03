@@ -40,12 +40,13 @@ class EnteregoSettings
 	/**
 	 * @param string $constName
 	 * @param string $moduleId
-	 * @return void
+	 * @return bool
 	 */
 	public static function getParamOnCheckAndPeriod(
-		string $constName = 'USE_CUSTOM_SALE_PRICE',
-		string $moduleId = 'activation_price_admin'
-	) {
+		string $constName = '',
+		string $moduleId = ''
+	): bool
+    {
 		$check = COption::GetOptionString($moduleId, $constName);
 		$dateOption = json_decode(COption::GetOptionString($moduleId, 'PERIOD'));
 		$bool_option_checked = false;
@@ -58,7 +59,7 @@ class EnteregoSettings
                 $bool_option_checked = true;
             }
         }
-        define($constName, $bool_option_checked);
+        return $bool_option_checked;
     }
 
 	public static function getDataPropOffers($paramForCategory = false, $idSection = false): array

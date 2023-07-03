@@ -38,7 +38,8 @@ CModule::AddAutoloadClasses("", array(
 //redefine sale  basket condition
 require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
-
+define("USE_CUSTOM_SALE_PRICE", EnteregoSettings::getParamOnCheckAndPeriod('USE_CUSTOM_SALE_PRICE', 'activation_price_admin'));
+define("CHECKED_INFO", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO', 'activation_info_admin'));
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
     array('CatalogAPIService', 'OnRestServiceBuildDescription'));
@@ -64,7 +65,6 @@ require_once(__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
 
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
-
 //Типы цен на сайте
 const SALE_PRICE_TYPE_ID = 3;
 const BASIC_PRICE = 2;
@@ -378,8 +378,8 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
     $APPLICATION->AddHeadString($jsCode);
 }
 
-EnteregoSettings::getParamOnCheckAndPeriod();
-EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO','activation_info_admin');
+$checkedBoolPeriodInformator = EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO','activation_info_admin');
+define(CHECKED_INFO, $checkedBoolPeriodInformator);
 // JWT-token authorization
 addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);
 AddEventHandler('main', 'OnAfterUserAuthorize', ['\Enterego\AuthTokenTable', 'getNewToken']);
