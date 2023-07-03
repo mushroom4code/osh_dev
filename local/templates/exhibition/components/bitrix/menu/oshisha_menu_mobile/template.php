@@ -50,7 +50,8 @@ $menuBlockId = "catalog_menu_" . $this->randString(); ?>
             } ?>
             <li class="li_menu_top " data-role="bx-menu-item">
                 <?php $active = '';
-                if ($arResult["ALL_ITEMS"][$itemID]["LINK"] == '/catalog/diskont/') {
+                if ($arResult["ALL_ITEMS"][$itemID]["LINK"] == '/catalog/diskont/' ||
+                    $arResult["ALL_ITEMS"][$itemID]["TEXT"]  === 'Дисконт') {
                     continue;
                 } ?>
                 <div class="wrap_block_menu <?= $class ?> openMenuMobile closed" >

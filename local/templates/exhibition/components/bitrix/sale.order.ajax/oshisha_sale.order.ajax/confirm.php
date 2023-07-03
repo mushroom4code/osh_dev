@@ -37,7 +37,7 @@ if ($arParams["SET_TITLE"] == "Y") {
                         </div>
                         <a href="/personal/orders/<?= $arResult["ORDER"]["ACCOUNT_NUMBER"] ?>/"
                            class="mb-5 font-16 color-blue-order"><b>Подробности заказа</b></a>
-                        <a href="/catalog/kalyany/" class="bx-advertisingbanner-btn btn">
+                        <a href="/catalog/" class="bx-advertisingbanner-btn btn">
                             Продолжить покупки</a>
                     </div>
                     <div class="banner_big_basket">
