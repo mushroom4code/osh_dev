@@ -314,25 +314,6 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                             <div class="basket-items-list-item-overlay"></div>
                                             {{/SHOW_LOADING}}
                                         </div>
-                                        <i class="fa fa-caret-down font-20 ml-2 js--open-price-list"
-                                           aria-hidden="true"></i>
-                                    </div>
-
-                                    <div class="position-relative d-flex flex-row">
-                                        {{#SHOW_SALE_PRICE}}
-                                            <div class="text-right font-11">
-                                                <b class="decoration-color-red mr-2 font-16">{{{SUM_OLD}}}₽</b>
-                                                <br>
-                                                <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
-                                            </div>
-                                        {{/SHOW_SALE_PRICE}}
-                                        <div class="box-with-prices-net d-none position-absolute p-2">
-                                            {{#PRICES_NET}}
-                                                {{#PRICE_DATA}}
-                                                    <p class="font-12 mb-2"><b>{{{NAME}}}</b> - <b>{{{VAL}}} ₽</b></p>
-                                                {{/PRICE_DATA}}
-                                            {{/PRICES_NET}}
-                                        </div>
                                     </div>
                                 </div>
                             <?php } ?>
