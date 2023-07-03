@@ -372,7 +372,9 @@ class DeliveryHelper
                 if ($delivery!=null) {
                     try {
                         $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity, $packages, $dimensionsHash, $sumDimensions);
-                        $result_array['errors'][$delName] = $delivery->errors;
+                        if ($deliveries->errors) {
+                            $result_array['errors'][$delName] = $delivery->errors;
+                        }
                     } catch (\Throwable $e) {
                         $result_array['errors'][$delName] = $e->getMessage();
                     }

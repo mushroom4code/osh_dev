@@ -1,5 +1,3 @@
-console.log('init ish delivery')
-
 window.commonDelivery = window.commonDelivery || {};
 
 window.commonDelivery.oshMkadDistance = (function () {

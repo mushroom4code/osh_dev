@@ -104,7 +104,25 @@ class RussianPostDelivery extends CommonPVZ
                         $listVillageLocation[] = $arLocation;
                     }
 
+                    foreach ($listVillageLocation as &$location) {
+                        $location['nameLocationWithoutPostfix'] = substr($location['NAME_RU'], 0, strrpos($location['NAME_RU'], " "));
+                        $location['nameAreaWithoutPostfix'] = substr($location['PARENT.NAME_RU'], 0, strrpos($location['PARENT.NAME_RU'], " "));
+                        $nameRegionWithoutPrefixPostfix = explode(' ', $location['PARENT_PARENT_NAME_RU']);
+
+                        if ($nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'область'
+                            || $nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'край') {
+
+                            array_pop($nameRegionWithoutPrefixPostfix);
+                        }
+                        else {
+                            array_shift($nameRegionWithoutPrefixPostfix);
+                        }
+                        $location['nameRegionWithoutPrefixPostfix'] = implode($nameRegionWithoutPrefixPostfix);
+                    }
+
+
                     foreach ($pvz_list['passportElements'] as $ops_id => $ops) {
+
                         $curLocation = null;
                         $nameLocationOpsWithoutPrefix = substr(strstr($ops['address']['place']," "), 1);
                         $nameAreaOpsWithoutPrefix = substr(strstr($ops['address']['area']," "), 1);
@@ -120,18 +138,9 @@ class RussianPostDelivery extends CommonPVZ
                             }
                         } else {
                             foreach ($listVillageLocation as $location) {
-                                $nameLocationWithoutPostfix = substr($location['NAME_RU'], 0, strrpos($location['NAME_RU'], " "));
-                                $nameAreaWithoutPostfix = substr($location['PARENT.NAME_RU'], 0, strrpos($location['PARENT.NAME_RU'], " "));
-                                $nameRegionWithoutPrefixPostfix = explode(' ', $location['PARENT_PARENT_NAME_RU']);
-                                if ($nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'область'
-                                    || $nameRegionWithoutPrefixPostfix[array_key_last($nameRegionWithoutPrefixPostfix)] === 'край')
-                                    array_pop($nameRegionWithoutPrefixPostfix);
-                                else
-                                    array_shift($nameRegionWithoutPrefixPostfix);
-                                $nameRegionWithoutPrefixPostfix = implode($nameRegionWithoutPrefixPostfix);
-                                if ($nameLocationWithoutPostfix == $nameLocationOpsWithoutPrefix
-                                    && $nameAreaWithoutPostfix == $nameAreaOpsWithoutPrefix
-                                    && $nameRegionWithoutPrefixPostfix == $nameRegionOpsWithoutPrefix) {
+                                if ($location['nameLocationWithoutPostfix'] == $nameLocationOpsWithoutPrefix
+                                    && $location['nameAreaWithoutPostfix']  == $nameAreaOpsWithoutPrefix
+                                    && $location['nameRegionWithoutPrefixPostfix']  == $nameRegionOpsWithoutPrefix) {
                                     $curLocation = $location;
                                     break;
                                 }
@@ -186,37 +195,34 @@ class RussianPostDelivery extends CommonPVZ
                 $arParams = ['filter' => ['BITRIX_CODE' => $code_city]];
                 $res = RussianPostPointsTable::getList($arParams);
                 while ($point = $res->fetch()) {
-                    if (($point['IS_PVZ'] === 'true' && $sumDimensionsSingle <= 2200 && $pvzDimensionsHash >= $dimensionsHash)
-                        || ($point['IS_PVZ'] === 'false' && $postamatDimensionsHash >= $dimensionsHash)) {
-                        $features_obj['type'] = 'Feature';
-                        $features_obj['id'] = $id_feature;
-                        $id_feature += 1;
-                        $features_obj['geometry'] = [
-                            'type' => 'Point',
-                            'coordinates' => [
-                                $point['ADDRESS_LAT'],
-                                $point['ADDRESS_LNG'],
-                            ]
-                        ];
-                        $features_obj['properties'] = [
-                            'code_pvz' => $point['INDEX'],
-                            'type' => $point['IS_PVZ'] === 'true' ? 'PVZ' : 'POSTAMAT',
-                            'fullAddress' => $point['FULL_ADDRESS'],
-                            'phone' => $point['PHONE_NUMBER'],
-                            'workTime' => $point['WORK_TIME'],
-                            'comment' => $point['COMMENT'],
-                            'deliveryName' => 'Почта России',
-                            'iconCaption' => 'Почта России',
-                            'hintContent' => $point['FULL_ADDRESS'],
-                            "openEmptyBalloon" => true,
-                            "clusterCaption" => 'Почта России',
-                        ];
-                        $features_obj['options'] = [
-                            'preset' => 'islands#darkBlueIcon'
-                        ];
+                    $features_obj['type'] = 'Feature';
+                    $features_obj['id'] = $id_feature;
+                    $id_feature += 1;
+                    $features_obj['geometry'] = [
+                        'type' => 'Point',
+                        'coordinates' => [
+                            $point['ADDRESS_LAT'],
+                            $point['ADDRESS_LNG'],
+                        ]
+                    ];
+                    $features_obj['properties'] = [
+                        'code_pvz' => $point['INDEX'],
+                        'type' => $point['IS_PVZ'] === 'true' ? 'PVZ' : 'POSTAMAT',
+                        'fullAddress' => $point['FULL_ADDRESS'],
+                        'phone' => $point['PHONE_NUMBER'],
+                        'workTime' => $point['WORK_TIME'],
+                        'comment' => $point['COMMENT'],
+                        'deliveryName' => 'Почта России',
+                        'iconCaption' => 'Почта России',
+                        'hintContent' => $point['FULL_ADDRESS'],
+                        "openEmptyBalloon" => true,
+                        "clusterCaption" => 'Почта России',
+                    ];
+                    $features_obj['options'] = [
+                        'preset' => 'islands#darkBlueIcon'
+                    ];
 
-                        $result_array[] = $features_obj;
-                    }
+                    $result_array[] = $features_obj;
                 }
             }
         } catch (\Throwable $e) {
