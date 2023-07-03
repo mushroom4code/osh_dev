@@ -1,6 +1,6 @@
 <?php
 use Enterego\EnteregoBasket;
-use Enterego\EnteregoHelper;
+use Enterego\EnteregoGroupedProducts;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
@@ -29,7 +29,7 @@ $arResult["IS_SUBSCRIPTION_KEY_FOUND"] = $is_key_found;
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP start */
 $arResult['GROUPED_PRODUCTS'] = $arResult['GROUPED_PROPS_DATA'] = [];
 $listGroupedProduct = $arResult['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
-$arResult = EnteregoHelper::getListGroupedProduct($arResult['ID'], $listGroupedProduct, $arResult);
+$arResult = EnteregoGroupedProducts::getListGroupedProduct($arResult['ID'], $listGroupedProduct, $arResult);
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP end */
 
 

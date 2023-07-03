@@ -33,6 +33,7 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
     '\Enterego\EnteregoActionDiscountPriceType' =>
         '/bitrix/php_interface/enterego_class/EnteregoActionDiscountPriceType.php',
+    '\Enterego\EnteregoGroupedProducts' => '/bitrix/php_interface/enterego_class/EnteregoGroupedProducts.php',
 ));
 
 //redefine sale  basket condition

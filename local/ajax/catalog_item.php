@@ -6,8 +6,7 @@ use Bitrix\Main\DB\SqlQueryException;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 use Enterego\EnteregoBasket;
-use Enterego\EnteregoHelper;
-use Enterego\EnteregoSettings;
+use Enterego\EnteregoGroupedProducts;
 
 CModule::IncludeModule("iblock");
 Loader::includeModule('main');
@@ -20,8 +19,8 @@ if ($action === 'groupedProduct') {
     $listGroupedProduct = $request->get('prodIDS');
     $arItems['GROUPED_PRODUCTS'] = $arItems['GROUPED_PROPS_DATA'] = $arResult = [];
     if (!empty($prodId)) {
-        $arResult = EnteregoHelper::getListGroupedProduct($prodId, $listGroupedProduct, $arItems);
-        $arResult['SETTING'] = EnteregoSettings::getDataPropOffers();
+        $arResult = EnteregoGroupedProducts::getListGroupedProduct($prodId, $listGroupedProduct, $arItems);
+        $arResult['SETTING'] = EnteregoGroupedProducts::getDataPropOffers();
         $arResult['PRICE_GREAT'] = BASIC_PRICE;
         $arResult['SALE'] = USE_CUSTOM_SALE_PRICE;
 

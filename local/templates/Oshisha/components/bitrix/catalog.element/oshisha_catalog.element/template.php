@@ -6,7 +6,7 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Web\Json;
 use Bitrix\Sale\Fuser;
-use Enterego\EnteregoSettings;
+use Enterego\EnteregoGroupedProducts;
 
 CModule::IncludeModule("highloadblock");
 
@@ -438,7 +438,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     if (!empty($arResult['GROUPED_PROPS_DATA']) && count($arResult['GROUPED_PRODUCTS']) > 1 &&
                     (int)$actualItem['PRODUCT']['QUANTITY'] > 0) { ?>
                         <div class="d-flex flex-column mb-2 box-offers-auto" data-entity="sku-line-block">
-                            <?php $propsForOffers = EnteregoSettings::getDataPropOffers();
+                            <?php $propsForOffers = EnteregoGroupedProducts::getDataPropOffers();
                                 $productSelect = $arResult['GROUPED_PRODUCTS'][$arResult['ID']]['PROPERTIES'];
                                 foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) {
                                     if ($keyCODE !== 'USE_DISCOUNT') { ?>

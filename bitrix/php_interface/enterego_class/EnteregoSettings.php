@@ -62,48 +62,4 @@ class EnteregoSettings
         return $bool_option_checked;
     }
 
-	public static function getDataPropOffers($paramForCategory = false, $idSection = false): array
-	{
-		$arData = [];
-		if (!$paramForCategory && !$idSection) {
-			$arData = [
-				'VKUS' => [
-					'CODE' => "VKUS",
-					'TYPE' => 'colorWithText',
-					'PREF' => '',
-				],
-				'GRAMMOVKA_G' => [
-					'CODE' => "GRAMMOVKA_G",
-					'TYPE' => 'text',
-					'PREF' => 'гр.',
-				],
-                'GRAMMOVKA_GR' => [
-                    'CODE' => "GRAMMOVKA_GR",
-                    'TYPE' => 'text',
-                    'PREF' => 'гр.',
-                ],
-                'GRAMMOVKA_G_1' => [
-                    'CODE' => "GRAMMOVKA_G_1",
-                    'TYPE' => 'text',
-                    'PREF' => 'гр.',
-                ],
-				'TSVET' => [
-					'CODE' => "TSVET",
-					'TYPE' => 'color',
-					'PREF' => '',
-				],
-				'SHTUK_V_UPAKOVKE' => [
-					'CODE' => "SHTUK_V_UPAKOVKE",
-					'TYPE' => 'text',
-					'PREF' => 'шт.',
-				],
-				'KOLICHESTVO_SHTUK_V_UPAKOVKE' => [
-					'CODE' => "KOLICHESTVO_SHTUK_V_UPAKOVKE",
-					'TYPE' => 'text',
-					'PREF' => 'шт.',
-				],
-			];
-		}
-		return $arData;
-	}
 }

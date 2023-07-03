@@ -527,7 +527,7 @@ $(document).ready(function () {
             }
 
             if (!productDef) {
-                parseUpdate.ACTUAL_BASKET = basketItem;
+                parseUpdate.ACTUAL_BASKET = basketItem || 1;
                 $(boxUpdate).find('.product-values').val(JSON.stringify(parseUpdate));
             }
 
