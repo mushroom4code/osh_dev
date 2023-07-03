@@ -546,6 +546,12 @@
     }
 }
 
+@media (max-width: 840px) {
+    .max-width-1250 {
+        max-width: 750px;
+    }
+}
+
 @media (max-width: 575px) {
     .product-item-big-card .product-item-title a {
         font-size: 16px;
