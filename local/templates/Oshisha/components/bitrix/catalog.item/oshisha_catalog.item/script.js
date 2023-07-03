@@ -2178,18 +2178,16 @@ $(document).on('click', '.open-fast-window', function () {
         let product = JSON.parse(json_product);
         $(wrapper).find('div.box-popup-product').remove();
 
-        let box_popup = BX.create('DIV', {
+        const box_popup = BX.create('DIV', {
             props: {
-                className: 'position-fixed width-100 top-32 d-flex justify-content-center z-index-1400 box-popup-product'
-            },
-            style: {
-                height: '900px',
+                className: 'position-fixed width-100 top-0 bg-black-light d-flex justify-content-center height-100 z-index-1400 box-popup-product'
             },
             children: [
                 BX.create('DIV', {
                     props: {
-                        className: 'open-modal-product bg-gray-white p-lg-4 p-md-4 p-3 max-width-1250 width-100 br-10'
-                    },
+                        className: 'open-modal-product m-auto height-fit-content catalog-item-product bg-gray-white' +
+                            ' p-lg-4 p-md-4 p-3 max-width-1250 width-100 br-10 catalog-fast-window'
+                    }
                 })
             ]
         });

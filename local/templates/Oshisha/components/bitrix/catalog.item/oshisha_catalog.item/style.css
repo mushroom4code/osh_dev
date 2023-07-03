@@ -488,7 +488,7 @@
         max-width: 1188px;
     }
     div.open-modal-product {
-        height: 85%;
+        height: 75%;
     }
 }
 
@@ -497,7 +497,7 @@
         max-width: 1100px;
     }
     div.open-modal-product {
-        height: 83%;
+        height: 73%;
     }
 }
 
@@ -509,7 +509,7 @@
         max-width: 1020px;
     }
     div.open-modal-product {
-        height: 81%;
+        height: 71%;
     }
 }
 
@@ -518,7 +518,7 @@
         max-width: 950px;
     }
     div.open-modal-product {
-        height: 78%;
+        height: 63%;
     }
     .top-32 {
         top: 12% !important;
@@ -533,10 +533,16 @@
         max-width: 900px;
     }
     div.open-modal-product {
-        height: 74%;
+        height: 64%;
     }
     div.slick-images-controls div.slick-slide {
         width: 70px !important;
+    }
+}
+
+@media (max-width: 938px) {
+    .max-width-1250 {
+        max-width: 800px;
     }
 }
 
@@ -1192,7 +1198,7 @@ div.slick-list, div.slick-track {
 
 @media (min-width: 768px) and (max-width: 910px) {
     div.open-modal-product {
-        height: 68%;
+        height: 63%;
     }
 }
 
