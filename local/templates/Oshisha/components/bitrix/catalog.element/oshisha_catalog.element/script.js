@@ -3516,6 +3516,24 @@
 	}
 })(window);
 
+function showHideBlock(that, id = 0, pricesBox = false) {
+	$(that).closest('div.d-flex').find('.offer-box').each(function (i,elem) {
+		$(elem).attr('data-active', 'false');
+		$(elem).removeClass('selected');
+		$(elem).closest('.offer-link').removeClass('selected');
+	});
+	$(that).attr('data-active', 'true');
+	$(that).closest('.offer-link').addClass('selected');
+	if (pricesBox) {
+		$(pricesBox).find('.prices-box').each(function (key,price) {
+			if (!$(price).hasClass('d-none')) {
+				$(price).addClass('d-none');
+				$(price).removeClass('active')
+			}
+		});
+		$(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('d-none').addClass('active');
+	}
+}
 $(document).on('click', '.offer-link .offer-box', function () {
 
 	const arrProductGrouped = JSON.parse($(document).find('#product_prop_data').val() ?? [{}]);
