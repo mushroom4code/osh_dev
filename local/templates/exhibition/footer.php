@@ -38,26 +38,16 @@ $option = $option_site; ?>
                 <div class='company-info'>
                     <span class='about'>
                         <span class="info-row info-row--about">
-                        <?php $APPLICATION->IncludeComponent(
-                            'bitrix:main.include',
-                            '',
-                            [
-                                'AREA_FILE_SHOW' => 'file',
-                                'PATH' => SITE_DIR . 'include/about_title.php'
-                            ],
-                            false
-                        ); ?>
+                            <span class="text_footer">Интернет-магазин<br> кальянной продукции<br>
+                                на выставках и фестивалях</span>
                         </span>
-
-                        <span class="info-row info-row--phone">
+                        <span class="info-row info-row--phone mb-3">
                             <a class="link" href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
+                            <br>
+                             <span class="font-11">Вопросы по заказу</span>
                         </span>
 
-                        <span class="info-row info-row--phone">
-                            <a class="link" href="tel:88006004424">8-800-600-44-24</a>
-                        </span>
-
-                        <span class="info-row info-row--worktime">Время работы <br>
+                        <span class="info-row info-row--worktime">Режим работы на мероприятии <br>
                             <span class="worktime"> 10:00 - 20:00, ежедневно.</span>
                         </span>
 
@@ -101,14 +91,6 @@ $option = $option_site; ?>
                         <a class="col-menu-link" href="/about/contacts/">Контакты</a>
                     </li>
 
-                    <li class="col-menu-item">
-                        <a class="col-menu-link" href="/about/feedback/">Обратная связь</a>
-                    </li>
-
-                    <li class="col-menu-item">
-                        <a class="col-menu-link js__callback" href="javascript:void(0)">Обратный звонок</a>
-                    </li>
-
                     <?php if ($USER->IsAuthorized()): ?>
                         <li class="col-menu-item">
                             <a class="col-menu-link" href="/about/FAQ/">FAQ</a>
@@ -137,7 +119,7 @@ $option = $option_site; ?>
                         "bitrix:menu",
                         "bottom_menu",
                         [
-                            "ROOT_MENU_TYPE" => "bottom",
+                            "ROOT_MENU_TYPE" => "bottom_exhibition",
                             "MAX_LEVEL" => "1",
                             "MENU_CACHE_TYPE" => "A",
                             "CACHE_SELECTED_ITEMS" => "N",
@@ -152,9 +134,6 @@ $option = $option_site; ?>
                     <li class="col-menu-item">
                         <?php $href = $USER->IsAuthorized() ? $option->price_list_link : '/login/' ?>
                         <a class="col-menu-link" href="<?= $href ?>">Прайс-лист</a>
-                    </li>
-                    <li class="col-menu-item">
-                        <a href="/about/vacancy/" class="col-menu-link">Вакансии</a>
                     </li>
                 </ul>
 
@@ -190,7 +169,7 @@ $option = $option_site; ?>
         <?php endif; ?>
 
         <div class="copyrights">
-            <span class="year">© 2014-<?= date('Y'); ?> <?= $option->COMPANY ?>.</span>
+            <span class="year">© 2014-<?= date('Y'); ?> ООО "СМАК-СУЛТАНА".</span>
             <span>Все права защищены</span>
         </div>
     </div>
