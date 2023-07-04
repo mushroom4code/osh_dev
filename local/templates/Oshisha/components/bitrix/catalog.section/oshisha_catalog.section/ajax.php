@@ -1,4 +1,4 @@
-<?
+<?php
 /** @global \CMain $APPLICATION */
 define('STOP_STATISTICS', true);
 define('NOT_CHECK_PERMISSIONS', true);
@@ -50,8 +50,7 @@ if (isset($parameters['PARENT_NAME'])) {
     $parent = false;
 }
 
-if ($parameters)
-{
+if ($parameters) {
     if (!empty($_REQUEST['subcat'])) {
         $parameters["SECTION_CODE"] = trim($_REQUEST['subcat']);
     }
@@ -64,29 +63,22 @@ if ($parameters)
     );
 
     $obCache = new CPHPCache();
-    if ($obCache->InitCache(36000, serialize($arFilter), "/iblock/catalog"))
-    {
+    if ($obCache->InitCache(36000, serialize($arFilter), "/iblock/catalog")) {
         $arCurSection = $obCache->GetVars();
-    }
-    elseif ($obCache->StartDataCache())
-    {
+    } elseif ($obCache->StartDataCache()) {
         $arCurSection = array();
-        if (\Bitrix\Main\Loader::includeModule("iblock"))
-        {
+        if (\Bitrix\Main\Loader::includeModule("iblock")) {
             $dbRes = CIBlockSection::GetList(array(), $arFilter, false, array("ID"));
-            if(defined("BX_COMP_MANAGED_CACHE"))
-            {
+            if (defined("BX_COMP_MANAGED_CACHE")) {
                 global $CACHE_MANAGER;
                 $CACHE_MANAGER->StartTagCache("/iblock/catalog");
 
                 if ($arCurSection = $dbRes->Fetch())
-                    $CACHE_MANAGER->RegisterTag("iblock_id_".$parameters["IBLOCK_ID"]);
+                    $CACHE_MANAGER->RegisterTag("iblock_id_" . $parameters["IBLOCK_ID"]);
 
                 $CACHE_MANAGER->EndTagCache();
-            }
-            else
-            {
-                if(!$arCurSection = $dbRes->Fetch())
+            } else {
+                if (!$arCurSection = $dbRes->Fetch())
                     $arCurSection = array();
             }
         }
@@ -124,34 +116,34 @@ $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter", $template, array(
     "PAGER_PARAMS_NAME" => $parameters["PAGER_PARAMS_NAME"],
     "INSTANT_RELOAD" => $parameters["INSTANT_RELOAD"],
 ),
-                               null,
-                               array('HIDE_ICONS' => 'Y')
+    null,
+    array('HIDE_ICONS' => 'Y')
 );
 ob_get_contents();
 //endregion
 
-$application  = Application::getInstance();
+$application = Application::getInstance();
 $session = $application->getSession();
-$context  =  $application ->getContext();
-if (!$session->has('initial_load_'.$parameters["FILTER_NAME"].'_'.$_SESSION['GLOBAL_CURRENT_SECTION']['ID'])){
-    $sessionFilter = array();
-    foreach ($_SESSION[$parameters["FILTER_NAME"]][$_SESSION['GLOBAL_CURRENT_SECTION']['ID']] as $key => $value) {
-        if (strpos($key, $parameters["FILTER_NAME"]) === 0) {
-            $sessionFilter[$key] = $value;
-        }
-    }
-    $cookie = new  Cookie($parameters["FILTER_NAME"] . '_' . $_SESSION['GLOBAL_CURRENT_SECTION']['ID'], serialize($sessionFilter), time() + 60 * 60 * 24 * 60);
-    $cookie->setDomain($context->getServer()->getHttpHost());
-    $cookie->setHttpOnly(false);
-    $context->getResponse()->addCookie($cookie);
-    $context->getResponse()->writeHeaders();
-    $session->set('initial_load_'.$parameters["FILTER_NAME"].'_'.$_SESSION['GLOBAL_CURRENT_SECTION']['ID'], true);
+$context = $application->getContext();
+if (!$session->has('initial_load_' . $parameters["FILTER_NAME"] . '_' . $_SESSION['GLOBAL_CURRENT_SECTION']['ID'])) {
+    $session->set('initial_load_' . $parameters["FILTER_NAME"] . '_' . $_SESSION['GLOBAL_CURRENT_SECTION']['ID'], true);
 }
+$sessionFilter = array();
+foreach ($_SESSION[$parameters["FILTER_NAME"]][$_SESSION['GLOBAL_CURRENT_SECTION']['ID']] as $key => $value) {
+    if (strpos($key, $parameters["FILTER_NAME"]) === 0) {
+        $sessionFilter[$key] = $value;
+    }
+}
+$cookie = new  Cookie($parameters["FILTER_NAME"] . '_' . $_SESSION['GLOBAL_CURRENT_SECTION']['ID'], serialize($sessionFilter), time() + 60 * 60 * 24 * 60);
+$cookie->setDomain($context->getServer()->getHttpHost());
+$cookie->setHttpOnly(false);
+$context->getResponse()->addCookie($cookie);
+$context->getResponse()->writeHeaders();
 
 
 $hitRestriction = isset($parameters['GLOBAL_FILTER']['PROPERTY_HIT_VALUE']) ? true : false;
 $parameters['GLOBAL_FILTER'] = $GLOBALS[$parameters["FILTER_NAME"]];
-if($hitRestriction)
+if ($hitRestriction)
     $parameters['GLOBAL_FILTER']['PROPERTY_HIT_VALUE'] = "да";
 
 
