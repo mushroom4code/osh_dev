@@ -3034,22 +3034,22 @@ $(document).on('click', '.js__close-count-alert', function() {
  * @param pricesBox
  */
 function showHideBlock(that, id = 0, pricesBox = false) {
-    $(that).closest('div.d-flex').find('.offer-box').each(function () {
-        $(this).attr('data-active', 'false');
-        $(this).removeClass('selected');
-        $(this).closest('.offer-link').removeClass('selected');
-    });
-    $(that).attr('data-active', 'true');
-    $(that).closest('.offer-link').addClass('selected');
-    if (pricesBox) {
-        $(pricesBox).find('.prices-box').each(function () {
-            if (!$(this).hasClass('d-none')) {
-                $(this).addClass('d-none');
-                $(this).removeClass('active')
-            }
-        });
-        $(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('d-none').addClass('active');
-    }
+    // $(that).closest('div.d-flex').find('.offer-box').each(function () {
+    //     $(this).attr('data-active', 'false');
+    //     $(this).removeClass('selected');
+    //     $(this).closest('.offer-link').removeClass('selected');
+    // });
+    // $(that).attr('data-active', 'true');
+    // $(that).closest('.offer-link').addClass('selected');
+    // if (pricesBox) {
+    //     $(pricesBox).find('.prices-box').each(function () {
+    //         if (!$(this).hasClass('d-none')) {
+    //             $(this).addClass('d-none');
+    //             $(this).removeClass('active')
+    //         }
+    //     });
+    //     $(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('d-none').addClass('active');
+    // }
 }
 
 /**
@@ -3117,7 +3117,3 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
     }
     return productsSuccess;
 }
-
-$(document).on('click', '.js__show-block', function () {
-    showHideBlock($(this).closest('.catalog-item-product').find('.info-prices-box-hover'), $(this), 'd-flex');
-});
