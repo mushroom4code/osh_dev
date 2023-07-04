@@ -94,7 +94,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addJs("/local/assets/js/flags-mask/counties.js");
     Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
     $APPLICATION->ShowHead(); ?>
-    <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
 <body class="bx-background-image">
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
@@ -184,15 +183,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         </button>
                     </div></a>
                     </span>
-                    <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
-                        отзыв</a>
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
 
-                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentaion.pdf')) { ?>
-                        <a href="/local/templates/Oshisha/images/presentaion.pdf" download class="text_header ">Презентация</a>
-                    <?php }
+                    <?php
                     if ($USER->IsAuthorized()) { ?>
                         <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
                     <?php } else { ?>
@@ -201,12 +196,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <a href="/about/contacts/" class="text_header">Контакты</a>
                     <?php if ($USER->IsAuthorized()) { ?>
                         <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
-                    <?php } ?>
-                    <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
-                    <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
-                    <?php } else { ?>
-                        <a href="/about/FAQ/#support" class="text_header">Поддержка</a>
                     <?php } ?>
                 </div>
             </div>
@@ -241,10 +230,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 <a href="/about/o-nas/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">О нас</span>
                                 </a>
-                                <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentaion.pdf')) { ?>
-                                    <a href="/local/templates/Oshisha/images/presentaion.pdf" download
-                                       class="text_header ">Презентация</a>
-                                <?php } ?>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
                                 </a>
@@ -308,7 +293,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             ); ?>
                         </a>
                     </div>
-                    <div class="text_header_menu"><span>Вся продукция <br>для кальяна</span></div>
+                    <div class="text_header_menu"><span>Та самая OSHISHA - теперь на выставках и фестивалях</span></div>
                 </div>
                 <div class="box_right_header">
                     <div class="box_with_search">

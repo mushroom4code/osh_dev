@@ -952,7 +952,7 @@ a.link_like, .catalog-section-list-item-link > i, .box_with_net a {
 .by-card .after_price {
     position: absolute;
     color: #999;
-    text-decoration-color: #f55f5c;
+    text-decoration-color: rgb(255 5 0);
     text-decoration-line: line-through;
     top: 0;
     right: 0;
@@ -1102,7 +1102,7 @@ div.card > div.card-body > div.box_with_properties > div > h4.card-title > a, .n
 }
 
 .product-item__favorite-star:hover {
-    color: #F55F5C;
+    color: rgb(255 5 0);
 }
 
 .color-blue-order {
@@ -1207,7 +1207,7 @@ div > div.card-body {
 
 .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable,
 .link_message_box_product {
-    background: #F55F5C;
+    background: rgb(255 5 0);
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow,
@@ -1449,7 +1449,7 @@ div.carousel-indicators > span {
 }
 
 .carousel_elem_custom {
-    background-color: #F55F5CFF;
+    background-color: rgb(255 5 0);
     padding: 6px 17px;
     border-radius: 25px;
     filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
@@ -1463,7 +1463,7 @@ span > i.header_icon {
 .link_menu_header:hover, .mini_link:hover, .not_product, .view-buttons-list:hover, .view-buttons-list:active,
 .active_filter, .box_with_message_prodNot > i, .red_text, .link_basket_after, .box_edit span:hover,
 .link_menu .text_catalog_link:hover, .addProductDetailButton, .color-redLight {
-    color: #F55F5C !important;
+    color: rgb(255 5 0) !important;
 }
 
 .main_menu .li_menu_header {
@@ -2371,13 +2371,13 @@ a.link_like, #placeModal form #choose-city-btn, #placeModal form input#city-sear
 }
 
 .swiper-pagination-bullet-active {
-    background-color: #F55F5C !important;
+    background-color: rgb(255 5 0) !important;
 }
 
 a.bx-advertisingbanner-btn {
     padding: 10px 25px;
     width: 260px;
-    background-color: rgb(245, 95, 92);
+    background-color: rgb(255 5 0);
 }
 
 .banner_big_basket .bx-slider-preset-3 .bx-advertisingbanner-text-block {
@@ -2596,7 +2596,7 @@ div#about_contacts > .row > .form_company {
     font-weight: bold;
     color: white !important;
     border-radius: 20px !important;
-    background-color: #F55F5C;
+    background-color: rgb(255 5 0);
     position: absolute;
     bottom: 92%;
     right: 87%;
@@ -2642,7 +2642,7 @@ a.dropdown-toggle, .detail_disabled, .detail_disabled:hover, .disabled_class a.l
 .btn_basket, .datepicker--cell.-in-range-, .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current-,
 .datepicker--cell.-range-from-, .datepicker--cell.-selected-.-focus-, .datepicker--cell.-range-to-,
 .bx-pagination.bx-blue .bx-pagination-container ul li.bx-active span, .bx-soa-pp-company .form-check-input:checked[type="checkbox"] {
-    background-color: #F55F5C;
+    background-color: rgb(255 5 0);
 }
 
 .btn-primary-color {
@@ -2681,7 +2681,7 @@ span > i.header_icon {
 .datepicker--cell.-range-from-, .datepicker--cell.-selected-.-focus-, .datepicker--cell.-range-to-,
 .form-check-input:active[type="checkbox"], .bx-soa-pp-company .form-check-input:checked[type="checkbox"],
 .addProductDetailButton {
-    border: 1px solid #F55F5C;
+    border: 1px solid rgb(255 5 0);
 }
 
 .datepicker--cell.-in-range-, .datepicker--cell.-selected-, .datepicker--cell.-selected-.-current-, .text_catalog_button:hover,
@@ -2712,11 +2712,11 @@ div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_
 }
 
 .datepicker--cell.-in-range-.-focus-, .datepicker--cell.-selected-.-focus- {
-    background: rgba(245, 95, 92, 0.78);
+    background: rgb(255 5 0);
 }
 
 .datepicker--nav-action path {
-    stroke: #f55f5c;
+    stroke: rgb(255 5 0);
 }
 
 .btn_black, .header_top_panel, .cart_box_bonus, .cart_box_black {
@@ -2732,7 +2732,7 @@ div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_
 }
 
 .price-discount {
-    text-decoration-color: #f55f5c;
+    text-decoration-color: rgb(255 5 0);
     text-decoration-line: line-through;
 }
 
@@ -2832,7 +2832,7 @@ label.radio_input {
 
 #box_delivery_faq button i, #for_business_faq button i {
     font-size: 30px;
-    color: #F55F5C;
+    color: rgb(255 5 0);
 }
 
 #box_delivery_faq div.card-body, #for_business_faq div.card-body {
@@ -3072,7 +3072,7 @@ b.decoration-color-red {
 
 .sale-percent {
     padding: 3px;
-    border: 1px solid #F55F5C;
+    border: 1px solid rgb(255 5 0);
     border-radius: 5px;
 }
 
@@ -3193,7 +3193,7 @@ b.decoration-color-red {
 
     .btn_footer {
         color: white;
-        background-color: #F55F5C;
+        background-color: rgb(255 5 0);
         padding: 9px;
     }
 
@@ -4419,7 +4419,7 @@ b.decoration-color-red {
 #formofcity input#choose-city-btn:hover {
     transition: 0.3s;
     color: white !important;
-    background-color: #F55F5C !important;
+    background-color: rgb(255 5 0) !important;
 }
 
 #big-cities-list, #cities-list {
@@ -4764,7 +4764,7 @@ li, ul {
     }
 
     .bx_filter_search_button {
-        background: #F55F5C;
+        background: rgb(255 5 0);
         border-radius: 5px;
         text-align: center;
         width: 290px;
@@ -5053,7 +5053,7 @@ li, ul {
 }
 
 .red_text a {
-    color: #F55F5C;
+    color: rgb(255 5 0);
 }
 
 .text_delivery_next {
@@ -5220,7 +5220,7 @@ li, ul {
         font-weight: 700;
         font-size: 14px;
         line-height: 110%;
-        color: #F55F5C;
+        color: rgb(255 5 0);
     }
 
     #content_box_delivery .box_reg {
@@ -5393,9 +5393,9 @@ li, ul {
     font-size: 14px;
     font-style: italic;
     display: inline-block;
-    border-bottom: 1px dashed #F55F5C;
+    border-bottom: 1px dashed rgb(255 5 0);
     cursor: pointer;
-    color: #F55F5C;
+    color: rgb(255 5 0);
 }
 
 .mail_footer a {
@@ -5646,7 +5646,7 @@ li, ul {
 
 .count-per-page a.active {
     color: #fff;
-    background: #F55F5C;
+    background: rgb(255 5 0);
     font-weight: 500;
 }
 
@@ -5683,7 +5683,7 @@ li, ul {
 .input_files .upload-file-label .btn {
     display: flex;
     text-align: center;
-    background-color: #F55F5C;
+    background-color: rgb(255 5 0);
     border-radius: 5px;
     text-decoration: none;
     outline: none;
@@ -5859,7 +5859,7 @@ header {
 }
 
 .js__tastes .variation_taste_toggle:hover {
-    border-top-color: #F55F5C;
+    border-top-color: rgb(255 5 0);
 }
 
 @media screen and (max-width: 1340px) {
@@ -6002,7 +6002,7 @@ body.hide-jivo > jdiv {
 
 .box_with_message_copy_order > i {
     margin-bottom: 12px;
-    color: #F55F5C !important;
+    color: rgb(255 5 0) !important;
     font-size: 23px;
 }
 
@@ -6010,7 +6010,6 @@ body.hide-jivo > jdiv {
     margin-top: 10px;
     font-size: 1rem;
 }
-
 
 .by-card .variation_taste .taste {
     font-size: 11px;
@@ -6267,14 +6266,14 @@ body.hide-jivo > jdiv {
 }
 
 #cookie-popup-about:hover {
-    border-color: #F55F5C;
+    border-color: rgb(255 5 0);
 }
 
 #cookie-popup-accept {
     border: 1px;
     border-radius: 9px;
     padding: 9px;
-    background-color: #F55F5C;
+    background-color: rgb(255 5 0);
     color: white;
     font-weight: 600;
     width: 45%;

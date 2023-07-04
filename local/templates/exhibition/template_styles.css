@@ -324,7 +324,7 @@ a,
 
 a:hover,
 .btn-link:hover {
-    color: #F55F5C;
+    color: rgb(255 5 0);
     transition: 0.3s
 }
 
@@ -528,7 +528,7 @@ h3.ctweb-title {
 }
 
 .glowing-text {
-    color: #F55F5C;
+    color: rgb(255 5 0);
 }
 
 .get_code_button, .login_button {
@@ -536,7 +536,7 @@ h3.ctweb-title {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background-color: #F55F5C;
+    background-color: rgb(255 5 0);
     border-radius: 5px;
     text-decoration: none;
     font-weight: 600;
@@ -773,7 +773,7 @@ h3.ctweb-title {
 }
 
 .red_button_cart {
-    background-color: #F55F5C;
+    background-color: rgb(255 5 0);
     border-radius: 7px;
     text-decoration: none;
     font-weight: 500 !important;
@@ -859,7 +859,7 @@ h3.ctweb-title {
     text-align: center;
     border: none;
     color: #FFFFFF;
-    background: #F55F5C;
+    background: rgb(255 5 0);
     border-radius: 10px;
 
 }
@@ -984,7 +984,7 @@ h3.ctweb-title {
 }
 
 .ctweb-button-block.profile a {
-    color: #F55F5C;
+    color: rgb(255 5 0);
 }
 
 .profile.ctweb-smsauth-menu-step div.col-sm-12.col-md-12 {
