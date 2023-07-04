@@ -76,6 +76,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             this.deliveryOptions = parameters.deliveryOptions;
             this.result = parameters.result || {};
             this.prepareLocations(parameters.locations);
+            this.savedDeliveryProfiles = parameters.savedDeliveryProfiles || {};
             this.params = parameters.params || {};
             this.signedParamsString = parameters.signedParamsString || '';
             this.siteId = parameters.siteID || '';
@@ -168,7 +169,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     .text('Примите условия соглашений в конце страницы');
                 this.animateScrollTo($("#bx-soa-properties .alert.alert-danger"));
 
-                return;
             }
 
             if (!this.startLoader())
@@ -195,7 +195,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     form.querySelector('input[type=hidden][name=sessid]').value = BX.bitrix_sessid();
 
                 BX.ajax.submit(BX('bx-soa-order-form'), BX.proxy(this.saveOrder, this));
-
             } else {
                 BX.ajax({
                     method: 'POST',
@@ -319,10 +318,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.editOrder();
                 this.mapsReady && this.initMaps();
                 BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
-
-                // #18618
-                if (typeof BX.SaleCommonPVZ != "undefined")
-                    BX.SaleCommonPVZ.isInit && BX.SaleCommonPVZ.refresh();
             }
             return true;
         },
@@ -3844,7 +3839,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                             children: [
                                 BX.create('INPUT', {
                                     attrs: {checked: currentType.CHECKED == 'Y'},
-                                    props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID}
+                                    props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID,classname:'form-check-input'}
                                 }),
                                 BX.util.htmlspecialchars(currentType.NAME)
                             ],
@@ -3906,7 +3901,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         options.push(BX.create('OPTION', {
                             props: {
                                 value: currentType.ID,
-                                selected: currentType.CHECKED === 'Y'
+                                selected: currentType.CHECKED === 'Y',
+                                className: 'form-check-input'
                             },
                             text: currentType.NAME
                         }));
@@ -3917,7 +3913,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
                 }
                 node.appendChild(BX.create('SELECT', {
-                    props: {name: 'PERSON_TYPE', className: 'form-control'},
+                    props: {name: 'PERSON_TYPE', className: 'form-control form-check-input'},
                     children: options,
                     events: {change: BX.proxy(this.sendRequest, this)}
                 }));
@@ -5559,7 +5555,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.UserCheckType.innerHTML = '';
                 this.getPersonTypeControl(this.UserCheckType);
                 this.getProfilesControl(this.UserCheckType);
-
                 this.editPropsItems(propsNode);
 
                 showPropMap && this.editPropsMap(propsNode);
@@ -5618,15 +5613,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 }
             }
             propsNode.appendChild(propsItemsContainer);
-
-            if (propsNode.classList.contains('delivery')) {
-                if (this.isOshPickUp()) {
-                    this.initOshPickUp(propsNode);
-                }
-                if (this.isOshCourier()) {
-                    this.initOshCourier(propsNode);
-                }
-            }
         },
 
         getPropertyRowNode: function (property, propsItemsContainer, disabled) {
@@ -5648,10 +5634,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             }
             if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
                 || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
-                || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
+                || property.getSettings().CODE === 'ADDRESS') {
                 className += " col-12";
-            } else if (property.getSettings().CODE === 'CITY') {
+            } else if (property.getSettings().CODE === 'CITY' || property.getSettings().CODE === 'ZIP') {
                 className += " d-none";
+                if (property.getSettings().CODE === 'DELIVERYTIME_INTERVAL' || property.getSettings().CODE === 'DATE_DELIVERY') {
+                    className += " col-12";
+                }
             } else {
                 className += " col-md-6 col-lg-6 col-12";
             }
@@ -5693,150 +5682,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     this.insertNumberProperty(property, propsItemNode, disabled);
             }
             propsItemsContainer.appendChild(propsItemNode);
-        },
-
-        isOshPickUp: function () {
-            return parseInt(this.deliveryOptions?.OSH_PICKUP_ID) === this.lastSelectedDelivery;
-        },
-
-        initOshPickUp: function (propsNode) {
-            let resultPickupList = this.result.STORE_LIST, address;
-
-            let oshPickupMap = BX.create('div', {
-                attrs: {'id': 'osh-pickup'},
-                html: $('#osh-pickup-template').html()
-            })
-
-            for (let item in resultPickupList) {
-                oshPickupMap.querySelector('address').innerHTML = address = resultPickupList[item].ADDRESS;
-                oshPickupMap.querySelector('.pickup-time-img').innerHTML = resultPickupList[item].SCHEDULE;
-                oshPickupMap.querySelector('.pickup-info-img').innerHTML = resultPickupList[item].DESCRIPTION;
-                // Проверяем если ли склады в запросе, если есть, скрываем карту в модальном окне
-                break;
-            }
-
-            propsNode.appendChild(oshPickupMap);
-
-            let myMap;
-
-            // Дождёмся загрузки API и готовности DOM.
-            ymaps.ready(init);
-
-            function init() {
-                // Создание экземпляра карты и его привязка к контейнеру с
-                // заданным id ("map-pick-up").
-                myMap = new ymaps.Map('map-pick-up', {
-                    // При инициализации карты обязательно нужно указать
-                    // её центр и коэффициент масштабирования.
-                    center: [55.76, 37.64], // Москва
-                    zoom: 10
-                });
-
-                let initStation = false;
-
-                for (let item in resultPickupList) {
-                    let c = ymaps.geocode('г. Москва ' + resultPickupList[item].ADDRESS, {json: true});
-                    (function (item) {
-                        c.then(function (res) {
-                            let cent = res.GeoObjectCollection.featureMember[0];
-                            let center = cent.GeoObject.Point;
-                            let point = center.pos.split(" ")
-
-                            let myPlacemark = new ymaps.Placemark([point[1], point[0]]);
-                            $('input[data-name="ADDRESS"]').val(address)
-                            $('.alert-warning, #shd_pvz_info, #shd_pvz_pick, #bx-soa-pickup').css('display', 'none')
-
-                            myMap.geoObjects.add(myPlacemark);
-
-                            ymaps.geocode([point[1], point[0]], {
-                                kind: 'metro',
-                                results: 1
-                            }).then(function (metro) {
-                                metro.geoObjects.each(function (obj) {
-
-                                    if (!initStation) {
-                                        $('#pickup-station .pickup-station-img').html(obj.properties.get('name'))
-                                    }
-
-                                    myPlacemark.events.add('click', function (e) {
-                                        $('#pickup-address address').html(resultPickupList[item].ADDRESS)
-                                        $('input[data-name="ADDRESS"]').val(resultPickupList[item].ADDRESS)
-                                        $('#pickup-time .pickup-time-img').html(resultPickupList[item].SCHEDULE)
-                                        $('#pickup-info .pickup-info-img').html(resultPickupList[item].DESCRIPTION)
-                                        $('#pickup-station .pickup-station-img').html(obj.properties.get('name'))
-                                    });
-                                });
-                            })
-
-                        });
-                    })(item);
-                }
-            }
-        },
-
-        isOshCourier: function () {
-            return parseInt(this.deliveryOptions?.OSH_COURIER_ID) === this.lastSelectedDelivery;
-        },
-
-        initOshCourier: function (propsNode) {
-
-            if (this.deliveryOptions.DA_DATA_TOKEN !== undefined) {
-                window.Osh.bxPopup.init();
-                const oshMkad = window.Osh.oshMkadDistance.init(this.deliveryOptions);
-
-                $(propsNode).find('[data-name="ADDRESS"]').val(this.deliveryOptions?.DA_DATA_ADDRESS).addClass('d-none')
-                const propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
-                const nodeDaData = BX.create('INPUT', {
-                    props: {
-                        className: 'form-control bx-soa-customer-input bx-ios-fix mb-2',
-                        name: 'dadata_input',
-                        type: 'text',
-                        size: 40,
-                        value: this.deliveryOptions?.DA_DATA_ADDRESS
-                    },
-                    events: {keypress: BX.proxy(this.checkKeyPress, this)}
-                })
-
-                propContainer.append(nodeDaData)
-                const nodeOpenMap = BX.create('a',
-                    {
-                        props: {className: 'btn btn-primary'},
-                        text: 'Выбрать адрес на карте',
-                        events: {
-                            click: BX.proxy(function () {
-                                oshMkad.afterSave = function (address) {
-                                    this.deliveryOptions.DA_DATA_ADDRESS = address;
-                                }.bind(this);
-                                window.Osh.bxPopup.onPickerClick(this)
-                            }, this)
-                        }
-                    });
-                propContainer.append(nodeOpenMap);
-                propsNode.append(propContainer);
-
-                $(nodeDaData).suggestions({
-                    token: this.deliveryOptions.DA_DATA_TOKEN,
-                    type: "ADDRESS",
-                    hint: false,
-                    floating: true,
-                    constraints: {
-                        locations: [{region: "Московская"}, {region: "Москва"}],
-                        // deletable: true
-                    },
-                    // в списке подсказок не показываем область
-                    // restrict_value: true,
-                    onSelect: function (suggestion) {
-                        let address = propsNode.querySelector('input[data-name="ADDRESS"]');
-                        address.setAttribute('data-geo-lat', suggestion.data.geo_lat);
-                        address.setAttribute('data-geo-lon', suggestion.data.geo_lon);
-                        if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                            oshMkad.afterSave = null;
-                            this.deliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                            oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon], true);
-                        }
-                    }.bind(this)
-                });
-            }
         },
 
         insertLocationProperty: function (property, propsItemNode, disabled) {
@@ -6013,7 +5858,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
         insertEnumProperty: function (property, propsItemNode, disabled) {
             var prop, inputs, values, i, propContainer;
-
             if (disabled) {
                 prop = this.propsHiddenBlockNode.querySelector('div[data-property-id-row="' + property.getId() + '"]');
                 if (prop) {
@@ -6141,7 +5985,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 if (settings.CODE === 'ADDRESS') {
                     // TODO Enterego pickup
                     if (disabled === true) {
-                        inputs[i].setAttribute('readonly', 'readonly');
+                        // inputs[i].setAttribute('readonly', 'readonly');
                     }
                     inputs[i].setAttribute('data-name', settings.CODE);
                 }
@@ -6285,31 +6129,16 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
         alterDateProperty: function (settings, inputText) {
             var parentNode = BX.findParent(inputText, {tagName: 'DIV'}),
-                appendNode;
-
-            BX.addClass(parentNode, 'input-group');
-            appendNode = BX.create('DIV', {
-                props: {className: 'input-group-append bx-no-alter-margin'},
-                html: '<span class="input-group-text"><i class="fa fa-calendar"></i></span>'
+                tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            inputText.setAttribute('class', 'datepicker_order form-control bx-soa-customer-input bx-ios-fix');
+            $(inputText).datepicker({
+                minDate: tomorrow,
             });
-            BX.insertAfter(appendNode, inputText);
-            BX.remove(parentNode.querySelector('input[type=button]'));
-
-            BX.bind(appendNode, 'click', BX.delegate(function (e) {
-                var target = e.target || e.srcElement,
-                    parentNode = BX.findParent(target, {tagName: 'DIV', className: 'input-group'});
-
-                BX.calendar({
-                    node: parentNode.querySelector('.input-group-append'),
-                    field: parentNode.querySelector('input[type=text]').name,
-                    form: '',
-                    bTime: settings.TIME === 'Y',
-                    bHideTime: false
-                });
-            }, this));
+             BX.remove(parentNode.querySelector('input[type=button]'));
         },
 
-        isValidForm: function () {
+    isValidForm: function () {
             if (!this.options.propertyValidation)
                 return true;
 
@@ -6954,26 +6783,65 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (parseFloat(total.PAY_SYSTEM_PRICE) >= 0 && this.result.DELIVERY.length) {
                 this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_PAYSYSTEM_PRICE'), '~' + total.PAY_SYSTEM_PRICE_FORMATTED));
             }
-
             if (this.result.IS_AUTHORIZED) {
-                this.totalInfoBlockNode.appendChild(
-                    BX.create('DIV', {
-                        props: {className: 'bx-soa-cart-total-button-container' + ('d-block')},
-                        children: [
-                            BX.create('A', {
-                                props: {
-                                    href: 'javascript:void(0)',
-                                    className: 'btn btn_basket btn-order-save'
-                                },
-                                html: 'Зарезервировать',
-                                events: {
-                                    click: BX.proxy(this.clickOrderSaveAction, this)
-                                }
-                            })
+                for (i = 0; i < this.result.DELIVERY.length; i++) {
+                    if (this.result.DELIVERY[i].CHECKED == 'Y') {
+                        var checkedDelivery = this.result.DELIVERY[i];
+                        break;
+                    }
+                }
+                if (!checkedDelivery.CALCULATE_ERRORS) {
+                    this.totalInfoBlockNode.appendChild(
+                        BX.create('DIV', {
+                            props: {className: 'bx-soa-cart-total-button-container' + ('d-block')},
+                            children: [
+                                BX.create('A', {
+                                    props: {
+                                        href: 'javascript:void(0)',
+                                        className: 'btn btn_basket btn-order-save'
+                                    },
+                                    html: 'Зарезервировать',
+                                    events: {
+                                        click: BX.proxy(this.clickOrderSaveAction, this)
+                                    }
+                                })
 
-                        ]
-                    })
-                );
+                            ]
+                        })
+                    );
+                    if (!document.querySelector('#second-save-order-js')) {
+                        this.newBlockId.append(BX.create('DIV', {
+                            props: {
+                                id: 'second-save-order-js',
+                                style: 'margin-top: 2rem;',
+                                className: 'bx-soa-cart-total-button-container' + ('d-block')
+                            },
+                            children: [
+                                BX.create('A', {
+                                    props: {
+                                        href: 'javascript:void(0)',
+                                        className: 'btn btn_basket btn-order-save'
+                                    },
+                                    html: 'Зарезервировать',
+                                    events: {
+                                        click: BX.proxy(this.clickOrderSaveAction, this)
+                                    }
+                                })
+
+                            ]
+                        }));
+                    }
+                } else {
+                    this.totalInfoBlockNode.appendChild(
+                        BX.create('span', {
+                            props: {className: 'btn-primary-color'},
+                            html: checkedDelivery.CALCULATE_ERRORS
+                        })
+                    )
+                    if (document.querySelector('#second-save-order-js')) {
+                        BX.remove(document.querySelector('#second-save-order-js'))
+                    }
+                }
             } else {
                 this.totalInfoBlockNode.appendChild(
                     BX.create('span', {

@@ -311,8 +311,8 @@ if ($params['BASKET_ITEMS'])
 	if ($params['DELIVERY_PRICE'] > 0)
 	{
 		$sDeliveryItem = Loc::getMessage('SALE_HPS_BILLUA_DELIVERY', null, $billLang);
-		if ($params['DELVIERY_NAME'])
-			$sDeliveryItem .= sprintf(" (%s)", $params['DELVIERY_NAME']);
+		if ($params['DELIVERY_NAME'])
+			$sDeliveryItem .= sprintf(" (%s)", $params['DELIVERY_NAME']);
 
 		$arCells[++$n] = array();
 		foreach ($arCols as $columnId => $col)

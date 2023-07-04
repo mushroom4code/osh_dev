@@ -886,72 +886,152 @@ window.Osh.bxPopup = {
     },
 };
 
-window.Osh.checkPvz = function (result) {
+window.Osh.oshOrderUpdate = {
+    deliveryOptions: {},
 
-    switch (typeof result) {
-        case "object":
-            let sJson = null,
-                ePicker = null,
-                button = null,
-                activeDelivery = null,
-                description = '',
-                oJson = null;
+    init: function (param) {
+        if (!param?.deliveryOptions) {
+            console.log("Not init oshisha delivery.")
+            return true;
+        }
+        this.deliveryOptions = param.deliveryOptions
+        BX.addCustomEvent('onAjaxSuccess', this.checkPvz);
+    },
 
-            if (!result.order) {
-                return true;
-            }
-            if (!result.order.DELIVERY) {
-                return true;
-            }
-            var arDeliveries = result.order.DELIVERY,
-                iDeliveryLength = arDeliveries.length;
-            if (iDeliveryLength <= 0) {
-                return true;
-            }
-            for (var i = 0; i < iDeliveryLength; i++) {
-                if (!arDeliveries[i].hasOwnProperty('CHECKED')) {
-                    continue;
+    checkPvz: function (result) {
+        switch (typeof result) {
+            case "object":
+                let sJson = null,
+                    ePicker = null,
+                    button = null,
+                    activeDelivery = null,
+                    description = '',
+                    oJson = null;
+
+                if (!result.order) {
+                    return true;
                 }
-                if (arDeliveries[i].CHECKED == 'Y') {
-                    activeDelivery = arDeliveries[i].ID;
-                    description = arDeliveries[i].DESCRIPTION;
+                if (!result.order.DELIVERY) {
+                    return true;
                 }
-            }
-            if (!activeDelivery) {
-                return true;
-            }
 
-            ePicker = document.querySelector('#shd_pvz_pick[data-delivery="' + activeDelivery + '"][data-force="1"]');
-            if (!ePicker) {
-                return true;
-            }
+                const deliveryOptions= window.Osh.oshOrderUpdate.deliveryOptions;
+                var arDeliveries = result.order.DELIVERY,
+                    iDeliveryLength = arDeliveries.length;
+                if (iDeliveryLength <= 0) {
+                    return true;
+                }
+                for (var i = 0; i < iDeliveryLength; i++) {
+                    if (!arDeliveries[i].hasOwnProperty('CHECKED')) {
+                        continue;
+                    }
+                    if (arDeliveries[i].CHECKED == 'Y') {
+                        activeDelivery = arDeliveries[i].ID;
+                        description = arDeliveries[i].DESCRIPTION;
+                    }
+                }
+                if (!activeDelivery) {
+                    return true;
+                }
 
-            //Вынуждаем обновить информацию о доставке, при выборе адреса
-            // (форма заказа переделана в одностраничную и обновление блока доставки не всегда срабатывает)
-            if (description) {
-                ePicker.parentElement.innerHTML = description;
+                if (activeDelivery === deliveryOptions.OSH_COURIER_ID) {
+                    if (deliveryOptions.DA_DATA_TOKEN !== undefined) {
+                        const pvzCheckBox = BX('ID_DELIVERY_ID_' + activeDelivery)
+                        const deliveryBlock = BX.findParent(pvzCheckBox, {class: 'bx-soa-pp-company'})
+                        const propsNode = BX.findChildren(deliveryBlock, {class: 'bx-soa-pp-desc-container'}, true).shift()
+                        if (!propsNode) {
+                            return
+                        }
+
+                        window.Osh.bxPopup.init();
+                        const oshMkad = window.Osh.oshMkadDistance.init(deliveryOptions);
+
+                        $(propsNode).find('[data-name="ADDRESS"]').val(deliveryOptions?.DA_DATA_ADDRESS).addClass('d-none')
+                        const propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
+                        const nodeDaData = BX.create('INPUT', {
+                            props: {
+                                className: 'form-control bx-soa-customer-input bx-ios-fix mb-2',
+                                name: 'dadata_input',
+                                type: 'text',
+                                size: 40,
+                                value: deliveryOptions?.DA_DATA_ADDRESS
+                            },
+                            events: {keypress: BX.proxy(this.checkKeyPress, this)}
+                        })
+
+                        propContainer.append(nodeDaData)
+                        const nodeOpenMap = BX.create('a',
+                            {
+                                props: {className: 'btn btn-primary'},
+                                text: 'Выбрать адрес на карте',
+                                events: {
+                                    click: BX.proxy(function () {
+                                        oshMkad.afterSave = function (address) {
+                                            deliveryOptions.DA_DATA_ADDRESS = address;
+                                        }.bind(this);
+                                        window.Osh.bxPopup.onPickerClick(this)
+                                    }, this)
+                                }
+                            }
+                        )
+                        BX.append(nodeOpenMap, propContainer)
+                        BX.append(propContainer, propsNode)
+
+                        $(nodeDaData).suggestions({
+                            token: deliveryOptions.DA_DATA_TOKEN,
+                            type: "ADDRESS",
+                            hint: false,
+                            floating: true,
+                            constraints: {
+                                locations: [{region: "Московская"}, {region: "Москва"}],
+                                // deletable: true
+                            },
+                            // в списке подсказок не показываем область
+                            // restrict_value: true,
+                            onSelect: function (suggestion) {
+                                let address = propsNode.querySelector('input[data-name="ADDRESS"]');
+                                address.setAttribute('data-geo-lat', suggestion.data.geo_lat);
+                                address.setAttribute('data-geo-lon', suggestion.data.geo_lon);
+                                if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+                                    oshMkad.afterSave = null;
+                                    deliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                                    oshMkad.getDistance([suggestion.data.geo_lat, suggestion.data.geo_lon], true);
+                                }
+                            }.bind(this)
+                        });
+                    }
+                }
 
                 ePicker = document.querySelector('#shd_pvz_pick[data-delivery="' + activeDelivery + '"][data-force="1"]');
-            }
+                if (!ePicker) {
+                    return true;
+                }
 
-            button = ePicker.querySelector("button");
-            if (!button) {
-                return true;
-            }
-            sJson = ePicker.getAttribute("data-json");
-            oJson = JSON.parse(sJson);
+                //Вынуждаем обновить информацию о доставке, при выборе адреса
+                // (форма заказа переделана в одностраничную и обновление блока доставки не всегда срабатывает)
+                if (description) {
+                    ePicker.parentElement.innerHTML = description;
 
-            let addressProp = document.querySelector('[name="ORDER_PROP_' + oJson.address_prop_id + '"]');
-            if (!!addressProp) {
-                addressProp.value = oJson.pvz_address;
-            }
-            break;
+                    ePicker = document.querySelector('#shd_pvz_pick[data-delivery="' + activeDelivery + '"][data-force="1"]');
+                }
 
-        case "string":
-        default:
-            break;
+                button = ePicker.querySelector("button");
+                if (!button) {
+                    return true;
+                }
+                sJson = ePicker.getAttribute("data-json");
+                oJson = JSON.parse(sJson);
+
+                let addressProp = document.querySelector('[name="ORDER_PROP_' + oJson.address_prop_id + '"]');
+                if (!!addressProp) {
+                    addressProp.value = oJson.pvz_address;
+                }
+                break;
+
+            case "string":
+            default:
+                break;
+        }
+        return true;
     }
-    return true;
-};
-
-BX.addCustomEvent('onAjaxSuccess', window.Osh.checkPvz);
+}

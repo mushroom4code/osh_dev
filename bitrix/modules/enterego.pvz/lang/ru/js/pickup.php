@@ -1,0 +1,40 @@
+<?
+$MESS["OSH_JS_KLADR_CHANGED"] = "Изменилось местоположение! Для синхронизации кода КЛАДР нового местоположения форма будет сохранена!";
+$MESS["POPUP_TITLE"] = "Выберите местоположение доставки";
+$MESS["SAVE"] = "Сохранить";
+$MESS["LOAD"] = "Загрузка...";
+$MESS["CHOSEN_TITLE"] = "Выбрано местоположение доставки";
+$MESS["NCHOSEN_TITLE"] = "Выберите местоположение доставки!";
+$MESS["NCHOSEN_CONFIRM"] = "Вы не выбрали местоположение доставки!\nДействительно хотите закрыть данное окно?";
+$MESS["ERROR"] = "Ошибка: ";
+$MESS["TEL_TEXT"] = "тел: ";
+$MESS["CARD_TEXT"] = "Оплата картой: ";
+$MESS["CARD_FAIL"] = "Оплата картой недоступна!";
+$MESS["COD_TEXT"] = "Оплата наличными: ";
+$MESS["COD_FAIL"] = "Оплата наличными недоступна!";
+$MESS["DA_TEXT"] = "да";
+$MESS["NET_TEXT"] = "нет";
+$MESS["NO_PVZ"] = "В данном местоположении не найдено ПВЗ!";
+$MESS["OSH_JS_CHOOSE_PVZ"] = "Выбор пункта выдачи заказа «#SHIPMENT_METHOD#»";
+$MESS["OSH_NEED_RECALC"] = "Изменилось местоположение, заказ необходимо пересчитать!";
+$MESS["OSH_CHOOSE_PVZ"] = "Выбрать ПВЗ";
+$MESS['SWITCH_MAP'] = 'Карта';
+$MESS['SWITCH_LIST'] = 'Список';
+$MESS['COURIER_osh'] = 'Osh';
+$MESS['COURIER_dpd'] = 'DPD';
+$MESS['COURIER_boxberry'] = 'Boxberry';
+$MESS['COURIER_cdek'] = 'CДЭK';
+$MESS['COURIER_ruspost'] = 'Почта России';
+$MESS['COURIER_pickpoint'] = 'Pickpoint';
+$MESS['COURIER_euroset'] = 'Евросеть';
+$MESS['COURIER_pec'] = 'ПЭК';
+$MESS['COURIER_iml'] = 'IML';
+$MESS['COURIER_sberlogistics'] = 'Сберлогистика';
+$MESS['COURIER_sberlogistics_pickpoint'] = 'Сберлогистика';
+$MESS['COURIER_hermes'] = 'Hermes';
+
+$MESS['NAME_point'] = 'Пункт выдачи';
+$MESS['NAME_terminal'] = 'Склад';
+$MESS['NAME_postamat'] = 'Постамат';
+
+$MESS["OSH_DIRECT_NO_KLADR"] = "Не указан населенный пункт!";

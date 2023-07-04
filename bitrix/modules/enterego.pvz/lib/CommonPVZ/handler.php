@@ -2,28 +2,35 @@
 
 namespace Sale\Handlers\Delivery;
 
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ArgumentTypeException;
 use Bitrix\Main\Data\Cache;
 use Bitrix\Main\Error;
+use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\SystemException;
 use Bitrix\Sale\Delivery\CalculationResult;
+use Bitrix\Sale\Delivery\Services\Base;
+use Bitrix\Sale\Shipment;
 use CommonPVZ\CommonPVZ;
 use CommonPVZ\DeliveryHelper;
+use Exception;
 
 Loc::loadMessages(__FILE__);
 
-if (!\Bitrix\Main\Loader::includeModule('enterego.pvz'))
+if (!Loader::includeModule('enterego.pvz'))
     return;
 
-class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
+class CommonPVZHandler extends Base
 {
     protected $handlerCode = 'enterego.pvz';
-    protected static $canHasProfiles = false;
+    protected static $canHasProfiles = true;
     protected static $isCalculatePriceImmediately = true;
     protected static $whetherAdminExtraServicesShow = false;
 
     /**
      * @param array $initParams
-     * @throws \Bitrix\Main\ArgumentTypeException
+     * @throws ArgumentTypeException|SystemException
      */
     public function __construct(array $initParams)
     {
@@ -31,76 +38,34 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
     }
 
     /**
-     * @param \Bitrix\Sale\Shipment|null $shipment
+     * @param Shipment|null $shipment
      * @return CalculationResult
-     * @throws \Bitrix\Main\ArgumentException
+     * @throws ArgumentException
      */
-    protected function calculateConcrete(\Bitrix\Sale\Shipment $shipment)
+    protected function calculateConcrete(Shipment $shipment)
     {
-        $result = new \Bitrix\Sale\Delivery\CalculationResult();
-        $price = 0;
-        $adr = '';
-
-        $order = $shipment->getCollection()->getOrder();
-        $propertyCollection = $order->getPropertyCollection();
-
-        $cache = Cache::createInstance();
-        $cachePath = '/getAllPVZpr';
-
-        if (isset($_POST['dataToHandler'])) {
-            if ($_POST['dataToHandler']['code_pvz'] === 'undefined') {
-                $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'];
-            } else {
-                $adr = $_POST['dataToHandler']['delivery'] . ': ' . $_POST['dataToHandler']['to'] . ' #' . $_POST['dataToHandler']['code_pvz'];
-            }
-            $f = serialize($adr);
-            if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
-                $price = $cache->getVars();
-            } elseif ($cache->startDataCache()) {
-                $delivery = CommonPVZ::getInstanceObject($_POST['dataToHandler']['delivery']);
-                $price = $delivery->getPrice($_POST['dataToHandler']);
-                if ($price === false) {
-                    return $result->addError(
-                        new Error(
-                            Loc::getMessage('SALE_DLVR_BASE_DELIVERY_PRICE_CALC_ERROR'),
-                            'DELIVERY_CALCULATION'
-                        ));
-                }
-                if ($price !== false && is_numeric($price) && $price !== '0' && (int)$price > 0)
-                    $cache->endDataCache($price);
-                else
-                    $price = 0;
-            }
-        } else {
-            foreach ($propertyCollection as $item) {
-                if ($item->getField('CODE') == "COMMON_PVZ") {
-                    $adr = $item->getValue();
-                    break;
-                }
-            }
-        }
-
-        if ($price === 0) {
-            $f = serialize($adr);
-            if ($cache->initCache(7200, 'pvz_price_' . $f, $cachePath)) {
-                $price = $cache->getVars();
-            }
-        }
-
-        $result->setDescription(DeliveryHelper::getButton());
-        $result->setDeliveryPrice(
-            roundEx(
-                $price,
-                SALE_VALUE_PRECISION
-            )
-        );
-
-        return $result;
+        throw new SystemException('Only profiles can calculate concrete');
     }
 
     public static function canHasProfiles()
     {
         return self::$canHasProfiles;
+    }
+
+    public static function getChildrenClassNames()
+    {
+        return array(
+            '\CommonPVZ\DoorDeliveryProfile',
+            '\CommonPVZ\PVZDeliveryProfile',
+        );
+    }
+
+    public function getProfilesList()
+    {
+        return array(
+            Loc::getMessage("DOOR_DELIVERY_PROFILE_TITLE"),
+            "Общая карта с ПВЗ."
+        );
     }
 
     /**
@@ -121,7 +86,7 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getConfigStructure()
     {
@@ -130,7 +95,7 @@ class CommonPVZHandler extends \Bitrix\Sale\Delivery\Services\Base
 
     /**
      * @return array
-     * @throws \Bitrix\Main\ArgumentException
+     * @throws ArgumentException
      */
     protected function getLocationGroups()
     {

@@ -107,7 +107,7 @@ $APPLICATION->IncludeComponent(
 			4 => "ARTNUMBER",
 			5 => "",
 		),
-		"LIST_OFFERS_LIMIT" => "0",
+		"LIST_OFFERS_LIMIT" => "5",
 		"SECTION_BACKGROUND_IMAGE" => "-",
 		"DETAIL_PROPERTY_CODE" => array(
 			0 => "BREND",
@@ -312,8 +312,8 @@ $APPLICATION->IncludeComponent(
 		"FILE_404" => "",
 		"SEF_URL_TEMPLATES" => array(
 			"sections" => "",
+            "element" => "product/#ELEMENT_CODE#/",
 			"section" => "#SECTION_CODE#/",
-			"element" => "product/#ELEMENT_CODE#/",
 			"compare" => "compare/",
 			"smart_filter" => "#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/",
 		)

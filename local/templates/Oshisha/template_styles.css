@@ -769,7 +769,7 @@ h3.ctweb-title {
 }
 
 .red_button_cart:not(i){
-    font-size: 12px !important;
+    font-size: 12px;
 }
 
 .red_button_cart {

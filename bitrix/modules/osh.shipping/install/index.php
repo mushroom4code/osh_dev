@@ -23,11 +23,7 @@ Class osh_shipping extends CModule {
     var $arHandlers = array("sale" => array(
             "onSaleDeliveryHandlersClassNamesBuildList" => array('COshDeliveryHandler', 'addCustomDeliveryServices'),
             "OnSaleOrderBeforeSaved" => array('COshDeliveryHandler', 'saveInNewOrderMethodPVZ'),
-//            "OnSaleDeliveryServiceCalculate" => array('COshDeliveryHandler', 'onDeliveryServiceCalculate'),
-//            "OnBeforeSaleShipmentSetField" => array('COshDeliveryHandler', 'sendOrderToOsh'),
-//            "OnSaleComponentOrderShowAjaxAnswer" => array('COshDeliveryHandler', 'showAjaxAnswer'),
             "OnSaleComponentOrderCreated" => array('COshDeliveryHandler', 'showCreateAnswer'),
-//            "OnSaleComponentOrderProperties" => array('COshDeliveryHandler', 'getPropData'),
             "onSaleDeliveryRestrictionsClassNamesBuildList" => array("COshDeliveryHandler", "addCustomRestrictions"),
             "onSaleDeliveryExtraServicesClassNamesBuildList" => array("COshDeliveryHandler", "addCustomExtraServices"),
         ),

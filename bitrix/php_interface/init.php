@@ -33,12 +33,14 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
     '\Enterego\EnteregoActionDiscountPriceType' =>
         '/bitrix/php_interface/enterego_class/EnteregoActionDiscountPriceType.php',
+    '\Enterego\EnteregoGroupedProducts' => '/bitrix/php_interface/enterego_class/EnteregoGroupedProducts.php',
 ));
 
 //redefine sale  basket condition
 require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
-
+define("USE_CUSTOM_SALE_PRICE", EnteregoSettings::getParamOnCheckAndPeriod('USE_CUSTOM_SALE_PRICE', 'activation_price_admin'));
+define("CHECKED_INFO", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO', 'activation_info_admin'));
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
     array('CatalogAPIService', 'OnRestServiceBuildDescription'));
@@ -64,7 +66,6 @@ require_once(__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
 
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
-
 //Типы цен на сайте
 const SALE_PRICE_TYPE_ID = 3;
 const BASIC_PRICE = 2;
@@ -80,6 +81,19 @@ AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
 
 AddEventHandler('sale', 'OnCondSaleActionsControlBuildList',
     ['\Enterego\EnteregoActionDiscountPriceType', 'GetControlDescr']);
+
+AddEventHandler("sale", "onSalePaySystemRestrictionsClassNamesBuildList", "onSalePaySystemRestrictionsClassNamesBuildListHandler");
+
+//платежные системы
+function onSalePaySystemRestrictionsClassNamesBuildListHandler()
+{
+    return new \Bitrix\Main\EventResult(
+        \Bitrix\Main\EventResult::SUCCESS,
+        array(
+            'EnteregoSaleRestrictions' => '/bitrix/php_interface/enterego_class/EnteregoSaleRestrictions.php'
+        )
+    );
+}
 
 function PriceTypeANDStatusUser()
 {
@@ -378,9 +392,6 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
         ";
     $APPLICATION->AddHeadString($jsCode);
 }
-
-EnteregoSettings::getParamOnCheckAndPeriod();
-EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO','activation_info_admin');
 
 // JWT-token authorization
 addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);
