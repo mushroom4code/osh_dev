@@ -87,9 +87,11 @@ $option = $option_site; ?>
                 <span class="col-title js__collapse-list">Покупателям</span>
                 <ul class="col-menu">
                     <li class="col-menu-item">
+                        <a class="col-menu-link text-decoration-underline" href="/about/how-make-order/">Как заказать?</a>
+                    </li>
+                    <li class="col-menu-item">
                         <a class="col-menu-link" href="/about/contacts/">Контакты</a>
                     </li>
-
                     <?php if ($USER->IsAuthorized()): ?>
                         <li class="col-menu-item">
                             <a class="col-menu-link" href="/about/FAQ/">FAQ</a>
