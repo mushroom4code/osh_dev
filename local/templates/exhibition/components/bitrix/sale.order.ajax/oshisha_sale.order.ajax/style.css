@@ -1915,7 +1915,7 @@ hr.bxe-light {
 }
 
 .confidintial {
-    background-color: #F55F5C;
+    background-color: rgb(255 5 0);
     padding: 7px 8px;
     white-space: nowrap;
     color: white;
