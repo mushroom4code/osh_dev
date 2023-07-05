@@ -10,7 +10,7 @@ $APPLICATION->IncludeComponent("bitrix:breadcrumb", "oshisha_breadcrumb", array(
 );
 
 $iBlockId = IBLOCK_CATALOG;
-$arFilterBrand = $filter =[];
+$arFilterBrand = $filter = [];
 if (SITE_ID === SITE_EXHIBITION) {
     $iBlockId = IBLOCK_CATALOG_EX;
     $arData = CIBlockSection::GetList([], ['IBLOCK_ID' => $iBlockId]);

@@ -146,7 +146,10 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
                 <div class="catalog-section-list-tile-list">
-                    <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
+                    <?php foreach ($arResult['SECTION_LIST'] as $arSection):
+                        if ($arSection['NAME'] === 'Дисконт') {
+                            continue;
+                        } ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap smart-filter-tog" data-role="prop_angle"
                                  data-code-vis="<?= $arSection['ID'] ?>">
