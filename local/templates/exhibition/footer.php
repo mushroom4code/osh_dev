@@ -42,11 +42,10 @@ $option = $option_site; ?>
                                 на выставках и фестивалях</span>
                         </span>
                         <span class="info-row info-row--phone mb-3">
-                            <a class="link" href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
+                            <span class="font-12">Вопросы по заказу</span>
                             <br>
-                             <span class="font-11">Вопросы по заказу</span>
+                            <a class="link" href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
                         </span>
-
                         <span class="info-row info-row--worktime">Режим работы на мероприятии <br>
                             <span class="worktime"> 10:00 - 20:00, ежедневно.</span>
                         </span>
