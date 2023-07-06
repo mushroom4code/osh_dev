@@ -992,6 +992,26 @@ window.commonDelivery.bxPopup = {
             else
                 noMarkupSouthWestText += this.dayOfWeekAsString(parseInt(dayNumeric)) + ', ';
         });
+
+        const dateDeliveryNodeOsh = BX.create({
+            tag: 'input',
+            props: {
+                type: 'text',
+                readOnly: 'readonly',
+                className: 'datepicker_order date_delivery_osh readonly form-control bx-soa-customer-input bx-ios-fix',
+                style: 'background-color: unset',
+            },
+            dataset: {name: 'DATE_DELIVERY_OSH'},
+        });
+
+        let tomorrow    = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        let curDate = new Date(BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId))
+        if (isNaN(curDate)) {
+            curDate = tomorrow
+        }
+
         const nodeYaAction = BX.create("DIV", {
             props: {
                 id: 'osh-map-action',
@@ -1003,6 +1023,38 @@ window.commonDelivery.bxPopup = {
                         id: 'osh_delivery_ya_map_address',
                         placeholder: 'Введите адрес доставки'
                     },
+                }),
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_delivery_date_osh',
+                        className: "wrap_filter_block mr-3 ml-3 "
+                    },
+                    children: [
+                        BX.create('DIV', {
+                            style: {
+                                display: 'flex',
+                                alignItems: 'center'
+                            },
+                            children: [
+                                BX.create({
+                                    tag: 'label',
+                                    style: {
+                                      marginBottom: '0px',
+                                      width: '320px'
+                                    },
+                                    text: 'Плановая дата доставки:'
+                                }),
+                                BX.create({
+                                        tag: 'div',
+                                        children: [
+                                            dateDeliveryNodeOsh
+                                        ]
+                                    }
+                                )
+                            ]
+                        })
+                    ]
                 }),
                 BX.create("button", {
                     props: {
@@ -1120,6 +1172,29 @@ window.commonDelivery.bxPopup = {
         })
 
         nodeYaMapContainer.prepend(nodeYaAction);
+        var datepicker =  $(dateDeliveryNodeOsh).datepicker({
+            minDate: tomorrow,
+            selectedDates: curDate,
+            onSelect: function (date, opts, datepicker) {
+                let datepicker_main_input = $('input.datepicker_order.date_delivery_main');
+                if (datepicker_main_input.length != 0) {
+                    datepicker_main_input.val(date);
+                }
+                BX.SaleCommonPVZ.updateValueProp(BX.SaleCommonPVZ.propDateDeliveryId, date)
+                window.commonDelivery.oshMkadDistance.init(BX.SaleCommonPVZ.oshishaDeliveryOptions).then(oshMkad => {
+                    oshMkad.afterSave = null;
+                    oshMkad.getDistance([BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propLatitudeId),
+                            BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propLongitudeId)],
+                            BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId),
+                            BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propAddressId), true);
+                })
+                BX.Sale.OrderAjaxComponent.sendRequest()
+            }.bind(this)
+        });
+        let datepickerosh = datepicker.data('datepicker');
+        datepickerosh.selectDate(curDate);
+
+
         nodeYaMapContainer.append(nodeYaDescription);
         this.nodeYaMapContainer = nodeYaMapContainer
 

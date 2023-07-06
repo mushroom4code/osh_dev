@@ -36,6 +36,7 @@ BX.SaleCommonPVZ = {
     orderPackages: null,
     oshishaDeliveryOptions: null,
     propTypePvzId: null,
+    datepickerObj: null,
     componentParams: {
         'displayPVZ': typeDisplayPVZ.map,
         'filterDelivery': null,
@@ -1275,7 +1276,7 @@ BX.SaleCommonPVZ = {
             props: {
                 type: 'text',
                 readOnly: 'readonly',
-                className: 'datepicker_order readonly form-control bx-soa-customer-input bx-ios-fix',
+                className: 'datepicker_order date_delivery_main readonly form-control bx-soa-customer-input bx-ios-fix',
                 style: 'background-color: unset',
             },
             dataset: {name: 'DATE_DELIVERY'},
@@ -1311,7 +1312,7 @@ BX.SaleCommonPVZ = {
                 BX('pvz_user_data')
             );
 
-            const tomorrow    = new Date();
+            let tomorrow    = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             let curDate = new Date(this.getValueProp(this.propDateDeliveryId))
             if (isNaN(curDate)) {
@@ -1321,6 +1322,10 @@ BX.SaleCommonPVZ = {
                 minDate: tomorrow,
                 selectedDates: curDate,
                 onSelect: function (date, opts, datepicker) {
+                    let datepicker_osh_input = $('input.datepicker_order.date_delivery_osh');
+                    if (datepicker_osh_input.length != 0) {
+                        datepicker_osh_input.val(date)
+                    }
                     this.updateValueProp(this.propDateDeliveryId, date)
                     if (datepicker.opts.silentBool !== true) {
                         window.commonDelivery.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
@@ -1334,6 +1339,7 @@ BX.SaleCommonPVZ = {
             }).data('datepicker');
             datepicker.selectDate(curDate,(datepicker.opts.silentBool = true));
             datepicker.opts.silentBool = false;
+            this.datepickerObj = datepicker;
         }
 
         return this
