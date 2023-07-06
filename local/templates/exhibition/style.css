@@ -4534,6 +4534,8 @@ li, ul {
 .icon_location {
     position: relative;
     top: 1px;
+    width: 20px;
+    margin-right: 10px;
 }
 
 .link_header, .text_catalog_link {

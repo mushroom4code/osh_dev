@@ -143,12 +143,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         <img src="/local/assets/images/icon_location.svg" class="icon_location">
                         <a href="#" class="text_header">
                             <div class="place">
-                                <?php $styleNone = '';
-                                if (strripos($_SERVER['REQUEST_URI'], '/personal/order/make') !== false) {
-                                    $styleNone = 'style="display:none;"';
-                                } ?>
-                        <button type="button" class="place__button" data-toggle="modal"
-                                data-target="#placeModal" <?= $styleNone ?>>
+                                <button type="button" class="place__button" data-toggle="modal"
+                                data-target="#placeModal" style="display:none;">
                             <?php
                             // отключение композитного кеша вне компонента
                             Bitrix\Main\Page\Frame::getInstance()->startDynamicWithID("city-title");
@@ -181,7 +177,9 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             </span>
                             <?php Bitrix\Main\Page\Frame::getInstance()->finishDynamicWithID("city-title", ""); ?>
                         </button>
-                    </div></a>
+                            </div>
+                        </a>
+                        <a href="https://jcfest.ru/" class="text_header">JohnCalliano Festival 2023</a>
                     </span>
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
