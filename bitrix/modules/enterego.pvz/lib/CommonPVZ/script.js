@@ -2066,39 +2066,6 @@ BX.SaleCommonPVZ = {
 
     drawProps: function()
     {
-        this.checkout.user.title = BX.findChild(this.checkout.order.rootEl, {'tag':'h5'}, true);
-        BX.addClass(this.checkout.user.title, 'checkout-block-title');
-        BX.addClass(this.checkout.user.title, 'fw-normal');
-        BX.addClass(BX.findChild(this.checkout.user.title, {'tag':'b'}, true), 'fw-normal');
-
-        // физ/юр лицо
-        this.checkout.user.type = BX.findChild(this.checkout.user.rootEl, {'class': 'bx-soa-section-title-container'});
-        // BX.addClass(this.checkout.user.type, 'd-none');
-
-        // ФИО
-        this.checkout.user.name = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 1}}, true);
-        BX.removeClass(this.checkout.user.name, 'col-12');
-        BX.addClass(this.checkout.user.name, 'col-md-6 col-lg-6 col-12  checkout-name-group');
-        BX.adjust(this.checkout.user.name, {attrs: {'id': 'checkout-name-group'}});
-
-        // телефон
-        this.checkout.user.phone = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 3}}, true);
-        BX.removeClass(this.checkout.user.phone, 'col-12');
-        BX.addClass(this.checkout.user.phone, 'col-md-6 col-lg-6 col-12 checkout-phone-group');
-        BX.adjust(this.checkout.user.phone, {attrs: {'id': 'checkout-phone-group'}});
-
-        // email
-        this.checkout.user.email = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 2}}, true);
-        BX.removeClass(this.checkout.user.email, 'col-12');
-        BX.addClass(this.checkout.user.email, 'col-md-6 col-lg-6 col-12 checkout-email-group');
-        BX.adjust(this.checkout.user.email, {attrs: {'id':'checkout-email-group'}});
-
-        // Город
-        this.checkout.user.city = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 6}}, true);
-        BX.removeClass(this.checkout.user.city, 'd-none');
-        BX.addClass(this.checkout.user.city, 'col-md-6 col-lg-6 col-12 checkout-city-group');
-        BX.adjust(this.checkout.user.city, {attrs: {'id':'checkout-city-group'}});
-
         // блок региона
         BX.addClass(this.checkout.region.rootEl[0], 'd-none');
         BX.remove(this.checkout.region.rootEl[1]);
