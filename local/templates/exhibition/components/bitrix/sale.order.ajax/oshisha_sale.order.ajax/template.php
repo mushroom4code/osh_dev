@@ -311,7 +311,7 @@ if ($request->get('ORDER_ID') <> '') {
                 <h5 class="mb-4"><b>Покупатель</b><i class="fa fa-pencil" aria-hidden="true"></i></h5>
                 <div class="bx-soa">
                     <div id="bx-soa-properties" data-visited="true" class="bx-soa-section mb-4 bx-active">
-                        <div class="bx-soa-section-title-container">
+                        <div class="bx-soa-section-title-container d-none">
                             <div class="width_100 mb-4 d-flex align-items-center userCheck" id="userCheck"></div>
                             <?php if ($USER->IsAuthorized() && !empty($user_object->company_user) && !empty($user_object->contragents_user)) { ?>
                                 <input value='<?= json_encode($user_object->contragents_user) ?>' type="hidden"
@@ -367,7 +367,7 @@ if ($request->get('ORDER_ID') <> '') {
                     </div>
 
                     <!--	REGION BLOCK	-->
-                    <div id="bx-soa-region" data-visited="false" class="bx-soa-section bx-active">
+                    <div id="bx-soa-region" data-visited="false" class="bx-soa-section bx-active d-none">
                         <div class="bx-soa-section-title-container">
                             <h2 class="bx-soa-section-title col-sm-9">
                                 <span class="bx-soa-section-title-count"></span><?= $arParams['MESS_REGION_BLOCK_NAME'] ?>

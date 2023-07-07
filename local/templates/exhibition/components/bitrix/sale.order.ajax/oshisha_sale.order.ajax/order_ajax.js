@@ -3658,7 +3658,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         type: 'text',
                         placeholder: altProperty.DESCRIPTION,
                         autocomplete: 'city',
-                        className: 'form-control bx-soa-customer-input bx-ios-fix',
+                        className: 'form-control bx-soa-customer-input bx-ios-fix d-none',
                         name: 'ORDER_PROP_' + altProperty.ID,
                         value: altProperty.VALUE
                     }
@@ -3676,7 +3676,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (location && location[0]) {
                 node.appendChild(
                     BX.create('DIV', {
-                        props: {className: 'bx-soa-reference'},
+                        props: {className: 'bx-soa-reference d-none'},
                         html: this.params.MESS_REGION_REFERENCE
                     })
                 );
@@ -3733,7 +3733,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (zipProperty) {
                 this.regionBlockNotEmpty = true;
 
-                propsItemNode = BX.create('DIV', {props: {className: "form-group bx-soa-location-input-container"}});
+                propsItemNode = BX.create('DIV', {props: {className: "form-group bx-soa-location-input-container d-none"}});
                 propsItemNode.setAttribute('data-property-id-row', zipProperty.ID);
 
                 labelTextHtml = BX.util.htmlspecialchars(zipProperty.NAME);
@@ -5638,6 +5638,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             //TODO Enterego pickup
             let className = "form-group bx-soa-customer-field p-2";
 
+            console.log(property);
+
             if (property.getSettings().CODE === 'EMAIL') {
                 if (this.result.IS_AUTHORIZED) {
                     if (BX('user_select')) {
@@ -5646,15 +5648,18 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 }
                 className += " col-md-6 col-lg-6 col-12";
             }
-            if (property.getSettings().CODE === 'FIO' || property.getSettings().CODE === 'CONTACT_PERSON'
-                || property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
-                || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY') {
+
+            if (property.getSettings().CODE === 'FIO') {
                 className += " col-12";
-            } else if (property.getSettings().CODE === 'CITY') {
+            } else if (property.getSettings().CODE === 'CONTACT_PERSON' || property.getSettings().CODE === 'CITY' ||
+                property.getSettings().CODE === 'COMPANY_ADR' || property.getSettings().CODE === 'COMPANY'
+                || property.getSettings().CODE === 'ADDRESS' || property.getSettings().CODE === 'DATE_DELIVERY' ||
+                property.getSettings().CODE === 'ZIP' || property.getSettings().CODE === 'LOCATION') {
                 className += " d-none";
             } else {
                 className += " col-md-6 col-lg-6 col-12";
             }
+
             BX.addClass(propsItemNode, className);
 
             textHtml += propertyDesc.length && propertyType !== 'STRING' && propertyType !== 'NUMBER' &&
