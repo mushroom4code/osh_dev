@@ -179,7 +179,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
             //region Filter
             if ($isFilter): ?>
-                <div class="bx-sidebar-block <?= $APPLICATION->GetCurPage() === '/hit/' ? 'd-none' : '' ?>">
+                <div class="bx-sidebar-block <?= \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
                     <?php
 
                     $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
@@ -246,7 +246,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         <h1 id="pagetitle"><?php $APPLICATION->ShowTitle(false); ?></h1>
         <p class="message_for_user_minzdrav font-14"></p>
         <div id="osh-filter-horizontal2"></div>
-        <div class="osh-block-panel <?= $APPLICATION->GetCurPage() === '/hit/' ? 'd-none' : '' ?>">
+        <div class="osh-block-panel <?= \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
             <div id="osh-filter-horizontal">
                 <div id="osh-filter-horizontal-item" class="d-inline-block" data-osh-filter-state="hide"></div>
                 <div id="osh-filter-horizontal-item-count" class="osh-filter-item"
@@ -426,7 +426,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 "SHOW_404" => $arParams["SHOW_404"],
                 "FILE_404" => $arParams["FILE_404"],
                 "DISPLAY_COMPARE" => $arParams["USE_COMPARE"],
-                "PAGE_ELEMENT_COUNT" => $APPLICATION->GetCurPage() === '/hit/'
+                "PAGE_ELEMENT_COUNT" => \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)
                     ? "9999999"
                     : $arParams['PAGE_ELEMENT_COUNT'],
                 "LINE_ELEMENT_COUNT" => $arParams["LINE_ELEMENT_COUNT"],

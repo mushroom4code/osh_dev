@@ -30,7 +30,7 @@ use DataBase_like;
  */
 
 $this->setFrameMode(true);
-if ($APPLICATION->GetCurPage() === '/hit/') {
+if (\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)) {
     $APPLICATION->IncludeComponent(
         "bitrix:enterego.slider",
         ".default",

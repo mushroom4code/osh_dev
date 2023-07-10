@@ -24,10 +24,11 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
-    '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
+    '\Enterego\EnteregoDiscountHitsSelector' => '/bitrix/php_interface/enterego_class/EnteregoDiscountHitsSelector.php',
+    '\Enterego\EnteregoHitsHelper' => '/bitrix/php_interface/enterego_class/EnteregoHitsHelper.php',
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
-    '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
-    '\Enterego\ProductsSubscriptionsTable'=>'/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
+    '\Enterego\EnteregoSettings' => '/bitrix/php_interface/enterego_class/EnteregoSettings.php',
+    '\Enterego\ProductsSubscriptionsTable' => '/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
     '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
@@ -186,20 +187,20 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     ),
                     "items" => array(),
                 ),
-	              array(
-		              "parent_menu" => "global_menu_enterego",
-		              "icon" => "default_menu_icon",
-		              "page_icon" => "default_page_icon",
-		              "sort" => "200",
-		              "text" => "Строка Информатор",
-		              "title" => "Строка Информатор",
-		              "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
-		              "parent_page" => "global_menu_enterego",
-		              "more_url" => array(
-			              "informator.php",
-		              ),
-		              "items" => array(),
-	              )
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "200",
+                    "text" => "Строка Информатор",
+                    "title" => "Строка Информатор",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "informator.php",
+                    ),
+                    "items" => array(),
+                )
             )
         ),
     );
@@ -212,6 +213,7 @@ class BXConstants
 {
 
     private static $_listPriceType;
+
     /**
      * @return array|string[]
      * @throws \Bitrix\Main\Db\SqlQueryException
@@ -223,7 +225,7 @@ class BXConstants
             return self::$_listPriceType;
         }
 
-        $priceTypes =  array(
+        $priceTypes = array(
             SALE_PRICE_TYPE_ID => "Сайт скидка",
             BASIC_PRICE => "Основная",
             B2B_PRICE => "b2b",
@@ -367,7 +369,7 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
 }
 
 EnteregoSettings::getParamOnCheckAndPeriod();
-EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO','activation_info_admin');
+EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO', 'activation_info_admin');
 
 // JWT-token authorization
 addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);
@@ -375,7 +377,7 @@ AddEventHandler('main', 'OnAfterUserAuthorize', ['\Enterego\AuthTokenTable', 'ge
 AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToken']);
 
 // bitrix24 feedback and callback integrations
-AddEventHandler('iblock', 'OnAfterIBlockElementAdd',['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
+AddEventHandler('iblock', 'OnAfterIBlockElementAdd', ['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
 
 // change brend priority property of product on save
 AddEventHandler('catalog', 'OnProductUpdate', 'brendPriorityPropertyChangeOnProductUpdate');

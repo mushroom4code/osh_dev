@@ -2,21 +2,19 @@
 
 /** @var $arResult array */
 
-use Enterego\EnteregoDiscount;
+use Enterego\EnteregoDiscountHitsSelector;
 
-const CATALOG_GIFT_ID=1873;
+const CATALOG_GIFT_ID = 1873;
 
 if ($arResult['FOLDER'] === '/diskont/') {
-    $cat = new EnteregoDiscount();
+    $cat = new EnteregoDiscountHitsSelector();
     $arResult['SECTION_LIST'] = $cat->getSectionProductsForFilter('diskont', $arParams);
-}
-elseif ($arResult['FOLDER'] === '/hit/') {
-    $cat = new EnteregoDiscount();
+} elseif ($arResult['FOLDER'] === '/hit/') {
+    $cat = new EnteregoDiscountHitsSelector();
     $arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG, 'GLOBAL_ACTIVE' => 'Y',);
     $GLOBALS[$arParams['FILTER_NAME']] = array_merge($GLOBALS[$arParams['FILTER_NAME']], $arFilterS);
     $arResult['SECTION_LIST'] = $cat->getSectionProductsForFilter('hit', $arParams);
-}
-else {
+} else {
     $arOrderS = array('DEPTH_LEVEL' => 'ASC', 'SORT' => 'ASC',);
     $arFilterS = array('ACTIVE' => 'Y', 'IBLOCK_ID' => IBLOCK_CATALOG, 'GLOBAL_ACTIVE' => 'Y',);
     $arSelectS = array('*');
