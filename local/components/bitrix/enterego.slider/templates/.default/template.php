@@ -27,27 +27,6 @@ Loader::includeModule('catalog');
 $this->setFrameMode(true);
 
 if (isset($arParams['SECTIONS_ITEMS'])) {
-    $id_USER = $USER->GetID();
-    $FUser_id = Fuser::getId($id_USER);
-
-    //get
-    $prop_see_in_window = [];
-    $resQuery = Enterego\EnteregoSettings::getPropSetting(IBLOCK_CATALOG, 'SEE_POPUP_WINDOW');
-    if (!empty($resQuery)) {
-        while ($collectionPropChecked = $resQuery->Fetch()) {
-            $prop_see_in_window[$collectionPropChecked['CODE']] = $collectionPropChecked;
-        }
-    }
-
-    $item_id = [];
-    foreach ($arParams['SECTIONS_ITEMS'] as $section) {
-        foreach ($section as $sectionItem) {
-            $item_id[] = $sectionItem['ID'];
-        }
-    }
-
-    $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
-
     $positionClassMap = array(
         'left' => 'product-item-label-left',
         'center' => 'product-item-label-center',
@@ -116,16 +95,16 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
 
     foreach ($arParams['SECTIONS_ITEMS'] as $sectionId => $section) { ?>
         <?php if (\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)) { ?>
-            <div class="h2 mb-2"><?= $arParams['SECTIONS'][$sectionId]['NAME'] ?></div class="h2">
+            <div class="h2"><?= $arParams['SECTIONS'][$sectionId]['NAME'] ?></div class="h2">
         <?php } ?>
-        <div class="by-card mb-3">
+        <div class="by-card">
             <?php
             $intRowsCount = 1;
             $strRand = $this->randString();
             $strContID = 'cat_top_cont_' . $strRand;
             ?>
             <div id="<?= $strContID; ?>"
-                 class="bx_catalog_tile_home_type_2 col2 <?= $templateData['TEMPLATE_CLASS']; ?>">
+                 class="bx_catalog_tile_home_type_2 col2 mt-3 mb-3 <?= $templateData['TEMPLATE_CLASS']; ?>">
                 <div class="bx_catalog_tile_section">
                     <?php
                     $boolFirst = true;
@@ -139,13 +118,13 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                         $arItem['COUNT_FAV'] = '';
                         $arItem['COUNT_LIKES'] = '';
                         $arItem['COUNT_LIKE'] = '';
-                        foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
+                        foreach ($arResult['COUNT_LIKES']['ALL_LIKE'] as $keyLike => $count) {
                             if ($keyLike == $arItem['ID']) {
                                 $arItem['COUNT_LIKES'] = $count;
                             }
                         }
 
-                        foreach ($count_likes['USER'] as $keyLike => $count) {
+                        foreach ($arResult['COUNT_LIKES']['USER'] as $keyLike => $count) {
                             if ($keyLike == $arItem['ID']) {
                                 $arItem['COUNT_LIKE'] = $count['Like'][0];
                                 $arItem['COUNT_FAV'] = $count['Fav'][0];
@@ -166,10 +145,10 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                                         'BIG_BUTTONS' => 'Y',
                                         'SCALABLE' => 'N',
                                         'AR_BASKET' => $arParams['BASKET_ITEMS'],
-                                        'F_USER_ID' => $FUser_id,
+                                        'F_USER_ID' => $arResult['F_USER_ID'],
                                         'ID_PROD' => $arItem['ID'],
                                         'COUNT_LIKE' => $arItem['COUNT_LIKE'],
-                                        'POPUP_PROPS' => $prop_see_in_window,
+                                        'POPUP_PROPS' => $arResult['PROP_SEE_IN_WINDOW'],
                                         'COUNT_FAV' => $arItem['COUNT_FAV'],
                                         'COUNT_LIKES' => $arItem['COUNT_LIKES'],
                                     ),
@@ -188,7 +167,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                 </div>
             </div>
             <?php if (count($section) > 4 && \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)) { ?>
-                <div class="text-center mt-4" data-entity="lazy-container-1">
+                <div class="text-center" data-entity="lazy-container-1">
                     <a href="/hit/<?= $arParams['SECTIONS'][$sectionId]['CODE'] ?>/"
                        class="btn text_catalog_button link_red_button btn-md" style="margin: 15px;"
                        data-use="show-more-1">
