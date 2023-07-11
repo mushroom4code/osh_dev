@@ -1,9 +1,9 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 if (SITE_EXHIBITION == SITE_ID) {
-    $APPLICATION->SetTitle("Oshisha.shop");
+    $APPLICATION->SetTitle("OSHISHA.shop");
 } else {
-    $APPLICATION->SetTitle("Oshisha - Главная");
+    $APPLICATION->SetTitle("OSHISHA - Главная");
 }
 if (IsModuleInstalled("advertising")):?>
     <div class="banners_box mt-3">
