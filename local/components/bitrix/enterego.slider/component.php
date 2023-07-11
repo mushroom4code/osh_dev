@@ -1,6 +1,12 @@
 <?php
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 
+/** @var array $arParams */
+/** @var array $arResult */
+/** @global CUser $USER */
+
+use Bitrix\Sale\Fuser;
+
 $arResult['F_USER_ID'] = Fuser::getId($USER->GetID());
 
 $arResult['PROP_SEE_IN_WINDOW'] = [];
