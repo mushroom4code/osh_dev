@@ -1,11 +1,9 @@
 <?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
-use Enterego\EnteregoHelper;
-
 /**
  * @global CMain $APPLICATION
  * @var array $arParams
- * @var array $item
+ * @var array $itemы
  * @var array $actualItem
  * @var array $minOffer
  * @var array $itemIds
@@ -125,6 +123,7 @@ if ($show_price) {
         'ID' => $item['ID'],
         'BUY_LINK' => $arItemIDs['BUY_LINK'],
         'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
+        'TYPE_PRODUCT'=> 'PRODUCT',
         'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
         'MORE_PHOTO' => $morePhoto,
         'PRODUCT' => $item['PRODUCT'],
@@ -146,10 +145,10 @@ if ($show_price) {
         'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE'] ?? []
     ];
 }
-
+$listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 ?>
 <div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
-<?php if (!$show_price) { ?> blur_photo <?php } ?>">
+<?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?=$item['ID']?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
         <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
@@ -219,7 +218,16 @@ if ($show_price) {
                         <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                     <?php } ?>
                 </a>
-                <i class="open-fast-window" data-item-id="<?= $item['ID'] ?>"></i>
+                <i class="open-fast-window mb-2" data-item-id="<?= $item['ID'] ?>"></i>
+                <?php if (!empty($listGroupedProduct) && count($listGroupedProduct) > 1 &&
+                    (int)$item['PRODUCT']['QUANTITY'] > 0) { ?>
+                    <i class="fa fa-pencil js__open-grouped-product-window"
+                       aria-hidden="true"
+                       id="<?='grouped_'.$item['ID']?>"
+                       data-item-id="<?= $item['ID'] ?>"
+                       data-quantity-id="<?=$arItemIDs['QUANTITY_ID']?>"
+                       data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct))?>"></i>
+                <?php } ?>
             </div>
 
             <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>

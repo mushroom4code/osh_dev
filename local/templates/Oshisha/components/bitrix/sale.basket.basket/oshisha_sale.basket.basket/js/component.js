@@ -577,7 +577,7 @@
 
                         // if (deletedItems)
                         // {
-                            this.deleteBasketItems(result.DELETED_BASKET_ITEMS, this.params.SHOW_RESTORE === 'Y');
+                        this.deleteBasketItems(result.DELETED_BASKET_ITEMS, this.params.SHOW_RESTORE === 'Y');
                         // }
                     }
 
@@ -1538,24 +1538,7 @@
             }
         },
         tasteInit: function () {
-            let box = $(document).find('.variation_taste');
-
-            $(box).find('span').each(
-                function () {
-                    let classes = $(this).attr('class');
-                    if (classes === 'taste') {
-                        let color = $(this).data('background');
-                        $(this).css('background-color', color);
-                        let str = '#';
-                        if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
-                            && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
-                            $(this).css('color', 'black');
-                        } else {
-                            $(this).css('color', 'white');
-                        }
-                    }
-                }
-            );
+            tasteInit();
             $('body').find('.variation_taste').each(
                 function (index, item) {
                     if ($(item).find('.taste').length > 2) {
@@ -1568,7 +1551,7 @@
         },
 
         quantityChange: function () {
-           
+
             var itemData = this.getItemDataByTarget(BX.proxy_context);
             if (itemData) {
                 var quantityField, quantity;
@@ -1619,7 +1602,7 @@
                 }
             }
 
-			
+
             var reminder = (quantity / measureRatio - ((quantity / measureRatio).toFixed(0))).toFixed(5),
                 remain;
 
@@ -1652,8 +1635,8 @@
         setQuantity: function (itemData, quantity) {
             var quantityField = BX(this.ids.quantity + itemData.ID),
                 currentQuantity;
-			 
-			 
+
+
             if (quantityField) {
                 quantity = parseFloat(quantity);
                 currentQuantity = parseFloat(quantityField.getAttribute('data-value'));
