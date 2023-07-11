@@ -87,7 +87,7 @@ $option = $option_site; ?>
                 <span class="col-title js__collapse-list">Покупателям</span>
                 <ul class="col-menu">
                     <li class="col-menu-item">
-                        <a class="col-menu-link text-decoration-underline" href="/about/how-make-order/">Как заказать?</a>
+                        <a class="col-menu-link font-w-m-600 color-redLight" href="/about/how-make-order/">Как заказать?</a>
                     </li>
                     <li class="col-menu-item">
                         <a class="col-menu-link" href="/about/contacts/">Контакты</a>

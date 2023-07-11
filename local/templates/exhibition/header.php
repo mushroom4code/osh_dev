@@ -184,7 +184,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
-                    <a class="text_header text-decoration-underline" href="/about/how-make-order/">Как заказать?</a>
+                    <a class="text_header font-w-m-600 color-redLight" href="/about/how-make-order/">Как заказать?</a>
 
                     <?php
                     if ($USER->IsAuthorized()) { ?>
@@ -230,7 +230,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                     <span class="text_catalog_link not_weight">О нас</span>
                                 </a>
                                 <a href="/about/how-make-order/" class="link_menu_top  text-decoration-underline">
-                                    <span class="text_catalog_link not_weight">Как заказать?</span>
+                                    <span class="text_catalog_link font-w-m-600 color-redLight">Как заказать?</span>
                                 </a>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
