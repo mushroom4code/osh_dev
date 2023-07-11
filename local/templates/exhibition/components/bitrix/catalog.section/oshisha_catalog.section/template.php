@@ -362,51 +362,52 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                         case 2:
                         case 3:
                             foreach ($rowItems as $item) {
-                                foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
-                                    if ($keyLike == $item['ID']) {
-                                        $item['COUNT_LIKES'] = $count;
+                                if($item['PRODUCT']['AVAILABLE'] === 'Y'){
+                                    foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
+                                        if ($keyLike == $item['ID']) {
+                                            $item['COUNT_LIKES'] = $count;
+                                        }
                                     }
-                                }
-                                foreach ($count_likes['USER'] as $keyLike => $count) {
-                                    if ($keyLike == $item['ID']) {
-                                        $item['COUNT_LIKE'] = $count['Like'][0];
-                                        $item['COUNT_FAV'] = $count['Fav'][0];
-                                    }
-                                }
-                                ?>
-                                <div class="product-item-small-card">
-                                    <?php $APPLICATION->IncludeComponent(
-                                        'bitrix:catalog.item',
-                                        'oshisha_catalog.item',
-                                        array(
-                                            'RESULT' => array(
-                                                'ITEM' => $item,
-                                                'AREA_ID' => $areaIds[$item['ID']],
-                                                'TYPE' => $rowData['TYPE'],
-                                                'BIG_LABEL' => 'N',
-                                                'BIG_DISCOUNT_PERCENT' => 'N',
-                                                'BIG_BUTTONS' => 'Y',
-                                                'SCALABLE' => 'N',
-                                                'AR_BASKET' => $arBasketItems,
-                                                'F_USER_ID' => $FUser_id,
-                                                'ID_PROD' => $item['ID'],
-                                                'COUNT_LIKE' => $item['COUNT_LIKE'],
-                                                'POPUP_PROPS' => $prop_see_in_window,
-                                                'COUNT_FAV' => $item['COUNT_FAV'],
-                                                'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                                'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
-                                                'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
+                                    foreach ($count_likes['USER'] as $keyLike => $count) {
+                                        if ($keyLike == $item['ID']) {
+                                            $item['COUNT_LIKE'] = $count['Like'][0];
+                                            $item['COUNT_FAV'] = $count['Fav'][0];
+                                        }
+                                    } ?>
+                                    <div class="product-item-small-card">
+                                        <?php $APPLICATION->IncludeComponent(
+                                            'bitrix:catalog.item',
+                                            'oshisha_catalog.item',
+                                            array(
+                                                'RESULT' => array(
+                                                    'ITEM' => $item,
+                                                    'AREA_ID' => $areaIds[$item['ID']],
+                                                    'TYPE' => $rowData['TYPE'],
+                                                    'BIG_LABEL' => 'N',
+                                                    'BIG_DISCOUNT_PERCENT' => 'N',
+                                                    'BIG_BUTTONS' => 'Y',
+                                                    'SCALABLE' => 'N',
+                                                    'AR_BASKET' => $arBasketItems,
+                                                    'F_USER_ID' => $FUser_id,
+                                                    'ID_PROD' => $item['ID'],
+                                                    'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                                    'POPUP_PROPS' => $prop_see_in_window,
+                                                    'COUNT_FAV' => $item['COUNT_FAV'],
+                                                    'COUNT_LIKES' => $item['COUNT_LIKES'],
+                                                    'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                                    'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
+                                                ),
+                                                'PARAMS' => $generalParams
+                                                    + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
                                             ),
-                                            'PARAMS' => $generalParams
-                                                + array('SKU_PROPS' => $arResult['SKU_PROPS'][$item['IBLOCK_ID']])
-                                        ),
-                                        $component,
-                                        array('HIDE_ICONS' => 'Y')
-                                    );
-                                    ?>
-                                    <div id="result_box"></div>
-                                </div>
-                                <?php
+                                            $component,
+                                            array('HIDE_ICONS' => 'Y')
+                                        );
+                                        ?>
+                                        <div id="result_box"></div>
+                                    </div>
+                                    <?php
+                                }
                             }
                             break;
 
