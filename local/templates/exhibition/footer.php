@@ -21,14 +21,14 @@ $option = $option_site; ?>
     <div class="container foot_container">
         <div class="row">
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
-                <a class="logo" href="<?= SITE_DIR ?>">
+                <a class="logo_footer" href="<?= SITE_DIR ?>">
                     <?php
                     $APPLICATION->IncludeComponent(
                         'bitrix:main.include',
                         '',
                         [
                             'AREA_FILE_SHOW' => 'file',
-                            'PATH' => SITE_DIR . 'include/logo_footer.php'
+                            'PATH' => SITE_TEMPLATE_PATH . '/include/logo_footer.php'
                         ],
                         false
                     );

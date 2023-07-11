@@ -115,13 +115,13 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         <?php } ?>
         <div class="header_top_panel">
             <div class="header_logo_mobile">
-                <a href="<?= SITE_DIR ?>">
+                <a href="<?= SITE_TEMPLATE_PATH ?>/">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:main.include",
                         "",
                         array(
                             "AREA_FILE_SHOW" => "file",
-                            "PATH" => SITE_DIR . "include/company_logo_mobile.php"),
+                            "PATH" => SITE_TEMPLATE_PATH . "/include/company_logo_mobile.php"),
                         false
                     ); ?>
                 </a>
@@ -251,7 +251,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                         "",
                                         array(
                                             "AREA_FILE_SHOW" => "file",
-                                            "PATH" => SITE_DIR . "include/telephone.php"
+                                            "PATH" => SITE_TEMPLATE_PATH . "/include/telephone.php"
                                         ),
                                         false
                                     ); ?>
@@ -290,7 +290,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 "",
                                 array(
                                     "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_DIR . "include/company_logo.php"),
+                                    "PATH" => SITE_TEMPLATE_PATH . "/include/company_logo.php"),
                                 false
                             ); ?>
                         </a>

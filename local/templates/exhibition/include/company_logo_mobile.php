@@ -1,1 +1,1 @@
-<img src="<?=SITE_DIR?>/include/logo_mobil.png"  srcset="<?=SITE_DIR?>/include/logo_mobil.png" />
+<img src="<?=SITE_TEMPLATE_PATH?>/images/logo/OSHISHA.png"  srcset="<?=SITE_TEMPLATE_PATH?>/images/logo/OSHISHA.png" />
