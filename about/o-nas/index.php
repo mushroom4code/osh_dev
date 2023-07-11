@@ -128,32 +128,32 @@ $APPLICATION->SetTitle("О нас");
         <h1 class="font-40 color-white font-weight-bold text-center mb-lg-5 mb-md-5 mb-3">Эксклюзивные продукты</h1>
         <div class="d-flex flex-lg-row flex-md-row flex-wrap flex-column align-items-center justify-content-center p-lg-5 p-md-5 p-0">
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="/catalog/burn/">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ?  ' /catalog/burn/' : 'javascript:void(0)'?>">
                     <img src="/about/o-nas/burn.png" class="burn"/>
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="/catalog/duft/">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/duft/' : 'javascript:void(0)'?>">
                     <img src="/about/o-nas/duft.png" class="duft"/>
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="/catalog/sebero/">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/sebero/' : 'javascript:void(0)'?>">
                     <img src="/about/o-nas/sebro.png" class="sebero"/>
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="/catalog/bonche/">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/bonche/' : 'javascript:void(0)'?>">
                     <img src="/about/o-nas/bonche.png" class="bonche"/>
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="/catalog/severnyy/">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/severnyy/' : 'javascript:void(0)'?>">
                     <img src="/about/o-nas/severnei.png" class="severnei"/>
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="/catalog/sarma_1/">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/sarma_1/' : 'javascript:void(0)'?>">
                     <img src="/about/o-nas/sarma.png" class="bonche"/>
                 </a>
             </div>

@@ -86,7 +86,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
     } else if ($_REQUEST['show_delivery'] === 'Y') {
         $filter = array('RESERVED' => "Y", 'USER_ID' => $USER->GetID());
     }
-    $filter['LID']= 'V3';
+    $filter['LID']= SITE_EXHIBITION;
     $listOrders = get_orders($filter);
 
     if (count($listOrders) === 0) {
