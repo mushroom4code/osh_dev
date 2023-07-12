@@ -57,7 +57,6 @@ $resOption = COption::getOptionString('priceList_xlsx', 'priceListArrayCustom');
 
         .box_with_ids {
             margin-bottom: 2rem;
-            border-bottom: 1px solid white;
         }
 
         .d-flex, .box_with_boxes, .box_with_ids {
@@ -70,12 +69,10 @@ $resOption = COption::getOptionString('priceList_xlsx', 'priceListArrayCustom');
 
         .box_with_boxes, .box_with_ids {
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
 
         .mt-6 {
-            margin-top: 6rem;
+            margin-top: 3rem;
         }
 
         .mr-2 {

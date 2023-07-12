@@ -18,7 +18,8 @@ $APPLICATION->SetTitle(GetMessage("admin_index_title"));
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_after.php");
 
-$resOption = COption::GetOptionString('exhibition_info_admin', 'CHECKED_EXHIBITION'); ?>
+$resOption = COption::GetOptionString('exhibition_info_admin', 'CHECKED_EXHIBITION');
+$dateOption = json_decode(COption::GetOptionString('exhibition_info_admin_params', 'PERIOD'));?>
     <style>
         .btn_admin_sale {
             padding: 7px 0;
@@ -48,22 +49,36 @@ $resOption = COption::GetOptionString('exhibition_info_admin', 'CHECKED_EXHIBITI
         }
 
         .box_with_buttons {
-            width: 800px;
-            border-bottom: 1px solid white;
-            padding: 2rem 0;
+            width: 500px;
+            padding: 0.5rem 0;
             align-items: center;
+        }
+
+        .border-bottom-2 {
+            border-bottom: 2px solid white;
+            margin-bottom: 1rem;
         }
 
         .box_with_box_button, .box_with_boxes {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+        }
+
+        .mr-3 {
+            margin-right: 1.5rem;
+        }
+
+        textarea,input[type="text"] {
+            width: 100%
+        }
+
+        .text_mess {
+            margin: 2rem 0 1rem 0;
             align-items: center;
         }
 
-        .box_with_box_button {
-            margin: 3rem 0;
-            align-items: center;
+        .font-16 {
+            font-size: 16px;
         }
 
         .box_with_boxes {
@@ -78,10 +93,6 @@ $resOption = COption::GetOptionString('exhibition_info_admin', 'CHECKED_EXHIBITI
             border-radius: 5px;
         }
 
-        .box_with_text {
-            font-size: 20px;
-        }
-
         input[type="datetime-local"] {
             padding: 8px;
             border: none;
@@ -90,16 +101,30 @@ $resOption = COption::GetOptionString('exhibition_info_admin', 'CHECKED_EXHIBITI
     </style>
     <div class="box_with_boxes">
         <div class="box_with_box_button">
-            <div class="box_with_buttons flex_button">
-                <label class="box_with_text" for="on_sale">
-                    Включить выставку<br>
-                    (цены на сайте с выставкой изменятся на B2B)
-                </label>
-                <input type="checkbox" class="box_with_check" <?php if ($resOption === 'true') {
-                    echo 'checked="On"';
-                } else {
-                    echo '';
-                } ?>id="on_sale"/>
+            <div class="box_with_buttons box_with_boxes border-bottom-2">
+                <div class="flex_button box_with_buttons" style="margin-bottom: 1.5rem">
+                    <label class="box_with_text font-16" for="on_sale">
+                       <b> Включить выставку</b><br><br>
+                        <span style="font-size:13px; padding-top: 10px">(цены на сайте с выставкой изменятся на B2B)</span>
+                    </label>
+                    <input type="checkbox" class="box_with_check" <?php if ($resOption === 'true') {
+                        echo 'checked="On"';
+                    } else {
+                        echo '';
+                    } ?>id="on_sale"/>
+                </div>
+                <div class="flex_button box_with_buttons">
+                    <div class="">
+                        <label class="box_with_text mr-3 font-16">C</label>
+                        <input type="datetime-local" class="sale_on_start" value="<?= $dateOption->start ?? 0 ?>"
+                               name="sale_on_start"/>
+                    </div>
+                    <div class="">
+                        <label class="box_with_text mr-3 font-16">По</label>
+                        <input type="datetime-local" class="sale_on_end" value="<?= $dateOption->end ?? 0 ?>"
+                               name="sale_on_end"/>
+                    </div>
+                </div>
             </div>
         </div>
         <button class="btn_admin_sale" onclick="BX.getParamInfo();">
@@ -116,12 +141,16 @@ $resOption = COption::GetOptionString('exhibition_info_admin', 'CHECKED_EXHIBITI
         BX.getParamInfo = function () {
             let onSale = document.getElementById('on_sale');
             let checkOn = onSale.checked;
+            let dateStart = document.getElementsByClassName('sale_on_start')[0].value;
+            let dateEnd = document.getElementsByClassName('sale_on_end')[0].value;
 
             BX.ajax({
                 url: "/bitrix/php_interface/enterego_class/modules/sales_option.php",
                 data: {
                     action: 'SetParamExhibition',
                     param: checkOn,
+                    dateStart:dateStart,
+                    dateEnd:dateEnd
                 },
                 method: "POST",
                 onsuccess: function (data) {
