@@ -525,6 +525,7 @@ BX.SaleCommonPVZ = {
 
         if (this.curDeliveryId === this.doorDeliveryId) {
             this.buildDeliveryDate()
+            this.buildDeliveryTime()
             this.buildAddressField()
             this.buildDoorDelivery(BX.Sale.OrderAjaxComponent.result)
         } else  {
@@ -1238,6 +1239,7 @@ BX.SaleCommonPVZ = {
                                                         BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
                                                         //TODO default delivery type if not send
                                                         __this.buildDeliveryDate()
+                                                        __this.buildDeliveryTime()
                                                         __this.buildAddressField()
                                                         BX.Sale.OrderAjaxComponent.sendRequest()
 
@@ -1343,6 +1345,56 @@ BX.SaleCommonPVZ = {
         }
 
         return this
+    },
+
+    buildDeliveryTime: function () {
+        let __this = this;
+        const datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
+        const TimeDeliveryNode = BX.create({
+            tag: 'div',
+            html: '<select style="background-color: unset; height: 40px; padding: 0px 23px;"' +
+                'class="form-control bx-soa-customer-input bx-ios-fix" id="datetime_interval_popup">' +
+                datetime_interval_order.html()+'</select>',
+            dataset: {name: 'DELIVERYTIME_INTERVAL'},
+        })
+
+        if (!BX('wrap_delivery_time')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_delivery_time',
+                        className: "wrap_filter_block mr-2 order-5"
+                    },
+                    children: [
+                        BX.create('DIV', {
+                            children: [
+                                BX.create({
+                                    tag: 'label',
+                                    props: {className: 'title'},
+                                    text: 'Удобное время получения:'
+                                }),
+                                BX.create({
+                                        tag: 'div',
+                                        children: [
+                                            TimeDeliveryNode
+                                        ]
+                                    }
+                                )
+                            ]
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            );
+
+            let datetime_interval_popup = $('#datetime_interval_popup');
+            datetime_interval_popup.val($('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]').val());
+            datetime_interval_popup.on("change", function () {
+                $('[name="ORDER_PROP_'+__this.propDeliveryTimeInterval+'"]').val(this.value);
+                BX.Sale.OrderAjaxComponent.sendRequest();
+            });
+        }
     },
 
     buildSuccessButtonPVZ: function () {
