@@ -426,9 +426,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 "SHOW_404" => $arParams["SHOW_404"],
                 "FILE_404" => $arParams["FILE_404"],
                 "DISPLAY_COMPARE" => $arParams["USE_COMPARE"],
-                "PAGE_ELEMENT_COUNT" => \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)
-                    ? "9999999"
-                    : $arParams['PAGE_ELEMENT_COUNT'],
+                "PAGE_ELEMENT_COUNT" => $arParams['PAGE_ELEMENT_COUNT'],
                 "LINE_ELEMENT_COUNT" => $arParams["LINE_ELEMENT_COUNT"],
                 "PRICE_CODE" => $arParams["~PRICE_CODE"],
                 "USE_PRICE_COUNT" => $arParams["USE_PRICE_COUNT"],
