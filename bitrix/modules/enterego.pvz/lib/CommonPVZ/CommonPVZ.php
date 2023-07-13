@@ -19,6 +19,8 @@ abstract class CommonPVZ
      * @return FivePostDelivery|OshishaDelivery|PEKDelivery|PickPointDelivery|SDEKDelivery|RussianPostDelivery|null
      */
     public static function getInstanceObject(string $typeDelivery) {
+//        TODO - заменить статичные строковые кейсы на вызов параметра статичного кода в классе как
+//        TODO - OshishaDelivery::$code
         switch ($typeDelivery) {
             case 'SDEK':
             case 'СДЭК':
@@ -28,6 +30,7 @@ abstract class CommonPVZ
                 return new FivePostDelivery();
             case 'OSHISHA':
             case 'Oshisha':
+            case OshishaDelivery::$code:
                 return new OshishaDelivery();
             case 'PEK':
             case 'ПЭК':

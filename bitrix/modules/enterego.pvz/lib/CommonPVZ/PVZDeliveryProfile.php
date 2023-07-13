@@ -116,7 +116,8 @@ class PVZDeliveryProfile extends Base
             ksort($deliveryParams['packages']);
             if (!empty($deliveryParams['delivery'])){
                 $delivery = CommonPVZ::getInstanceObject($deliveryParams['delivery']);
-                $price = $delivery->getPrice($deliveryParams);
+                $price = empty($delivery) ? ['errors' => 'Некорректно указан тип доставки']
+                    : $delivery->getPrice($deliveryParams);
                 $result->setDeliveryPrice(
                     roundEx(
                         $price,
