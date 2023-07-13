@@ -381,9 +381,6 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
     $APPLICATION->AddHeadString($jsCode);
 }
 
-EnteregoSettings::getParamOnCheckAndPeriod();
-EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO', 'activation_info_admin');
-
 // JWT-token authorization
 addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);
 AddEventHandler('main', 'OnAfterUserAuthorize', ['\Enterego\AuthTokenTable', 'getNewToken']);
