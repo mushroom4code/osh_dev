@@ -2,8 +2,11 @@
 
 namespace Enterego;
 
+use CCatalogSku;
 use CFile;
 use CIBlockElement;
+use CIBlockProperty;
+use CIBlockSection;
 use CModule;
 use CSaleBasket;
 use Bitrix\Sale\Order;
@@ -29,9 +32,8 @@ class EnteregoHelper
     public static function getHeadBlock($hlName, $arParams)
     {
         if (CModule::IncludeModule('highloadblock')) {
-            $result = HighloadBlockTable::getList(array('filter'=>array('=NAME'=>$hlName)));
-            if($row = $result->fetch())
-            {
+            $result = HighloadBlockTable::getList(array('filter' => array('=NAME' => $hlName)));
+            if ($row = $result->fetch()) {
                 $obEntity = HighloadBlockTable::compileEntity($row);
                 $strEntityDataClass = $obEntity->getDataClass();
             } else {
@@ -105,36 +107,18 @@ class EnteregoHelper
         return $arItems;
     }
 
-
-    public static function getParentElementName($iblock_id, $iblock_section_id)
-    {
-        $scRes = \CIBlockSection::GetNavChain(
-            $iblock_id,
-            $iblock_section_id,
-            array("NAME", "DEPTH_LEVEL")
-        );
-
-        $name = '';
-        while ($arGrp = $scRes->Fetch()) {
-            if ($arGrp['DEPTH_LEVEL'] == 1) {
-                $name = $arGrp['NAME'];
-            }
-        }
-        return $name;
-    }
-
     public static function getParentElementId($iblock_id, $iblock_section_id)
     {
         $scRes = \CIBlockSection::GetNavChain(
             $iblock_id,
             $iblock_section_id,
-            array("ID", "DEPTH_LEVEL")
+            array("ID", "DEPTH_LEVEL","NAME")
         );
 
-        $name = '';
+        $name = [];
         while ($arGrp = $scRes->Fetch()) {
             if ($arGrp['DEPTH_LEVEL'] == 1) {
-                $name = $arGrp['ID'];
+                $name = $arGrp;
             }
         }
         return $name;
@@ -151,8 +135,25 @@ class EnteregoHelper
                 \CModule::IncludeModule("iblock");
                 $rsElement = CIBlockElement::GetList(array(), array('ID' => $id), false, false);
                 if ($arElement = $rsElement->Fetch()) {
-                    $parent_name = self::getParentElementName($arElement['IBLOCK_ID'], $arElement['IBLOCK_SECTION_ID']);
-                    $parent_id = self::getParentElementId($arElement['IBLOCK_ID'], $arElement['IBLOCK_SECTION_ID']);
+                    if (!empty($arElement['IBLOCK_SECTION_ID'])) {
+                        $section_id = $arElement['IBLOCK_SECTION_ID'];
+                        $iblock_id = $arElement['IBLOCK_ID'];
+                    } else {
+                        $product = CCatalogSKU::GetProductInfo($arElement['ID']);
+                        $prod_id = $product['ID'];
+                        $section_id = CIBlockElement::GetList(
+                            array(),
+                            array('ID' => $prod_id),
+                            false,
+                            false,
+                            array('IBLOCK_SECTION_ID')
+                        )->Fetch()['IBLOCK_SECTION_ID'];
+                        $iblock_id = $product['IBLOCK_ID'];
+                    }
+
+                    $cat_info = self::getParentElementId($iblock_id, $section_id);
+                    $parent_name = $cat_info['NAME'];
+                    $parent_id = $cat_info['ID'];
                     if (trim($parent_name) == 'Кальян') $parent_name = 'Кальяны';
 
                     if ($type == 'basket') {
@@ -168,19 +169,39 @@ class EnteregoHelper
                     }
                 }
             }
-            if (!empty($data)) ksort($data);
+            if (!empty($data));
 
             foreach ($data as $main_brand_name => $data_item) {
                 $temp_ar = [];
                 foreach ($data_item as $product_item) {
                     if ($main_brand_name == 'presents') $product_item['DETAIL_PAGE_URL'] = 'javascript:void()';
-
-                    $rsData = CIBlockElement::GetList(array(), array('ID' => $product_item['PRODUCT_ID']),
-                        false, false, array('IBLOCK_SECTION_ID'));
+                    $rsData = CIBlockElement::GetList(
+                        array(),
+                        array('ID' => $product_item['PRODUCT_ID']),
+                        false,
+                        false,
+                        array('IBLOCK_SECTION_ID')
+                    );
                     if ($arData = $rsData->Fetch()) {
-                        $parentNameCategory = EnteregoHelper::getParentElementName($product_item['PRODUCT_ID'], $arData['IBLOCK_SECTION_ID']);
-                        $parent_id = self::getParentElementId($arData['IBLOCK_ID'], $arData['IBLOCK_SECTION_ID']);
-                        if (!empty($parent_id)) {
+                        if (!empty($arData['IBLOCK_SECTION_ID'])) {
+                            $section_id = $arData['IBLOCK_SECTION_ID'];
+                            $iblock_id = $arData['IBLOCK_ID'];
+                        } else {
+                            $product = CCatalogSKU::GetProductInfo($product_item['PRODUCT_ID']);
+                            $prod_id = $product['ID'];
+                            $section_id = CIBlockElement::GetList(
+                                array(),
+                                array('ID' => $prod_id),
+                                false,
+                                false,
+                                array('IBLOCK_SECTION_ID')
+                            )->Fetch()['IBLOCK_SECTION_ID'];
+                            $iblock_id = $product['IBLOCK_ID'];
+                        }
+                        $itemInfo = self::getParentElementId((string)$iblock_id, (string)$section_id);
+                        $parentNameCategory = $itemInfo['NAME'];
+                        $parent_id = $itemInfo['ID'];
+                        if (!empty($parent_id) && !empty($parentNameCategory)) {
                             $temp_ar[$parentNameCategory . '_' . $parent_id][] = $product_item['ID'];
                         } else {
                             $temp_ar["Без категории"][] = $product_item;
@@ -210,4 +231,5 @@ class EnteregoHelper
         $rsRes = CIBlockElement::GetList([], ['ID' => $productId, 'SECTION_ID' => CATALOG_GIFT_ID]);
         return $rsRes->SelectedRowsCount() > 0;
     }
+
 }

@@ -53,27 +53,29 @@ class COshDeliveryHandler
             )
         );
     }
-//    public function showAjaxAnswer(&$arResult){
-//    }
-//    public function getPropData(&$arUserResult, $request, &$arParams, &$arResult){
-//        if(!empty($arUserResult['PAY_SYSTEM_ID'])){
-//            $_SESSION['Osh']['paysystem'] = $arUserResult['PAY_SYSTEM_ID'];
-//        }
-//    }
+
     public function showCreateAnswer($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
     {
+        /* @var $order /Bitrix/Sale/Order */
+
         $checkoutUrls = Config::getCheckoutUrl();
         $arCheckoutUrl = explode(";", $checkoutUrls);
         $oRequest = Context::getCurrent()->getRequest();
         $currentUrl = $oRequest->getRequestedPageDirectory() . "/";
         $cAsset = Asset::getInstance();
         $ymapsApikey = Config::getYMapsKey();
+        $daDataToken = Config::getDaDataToken();
+        $deliveryCost = Config::getCost();
+        $startCost = Config::getStartCost();
+        $limitBasket = Config::getLimitBasket();
+        $basketPrice = $order->getPrice();
+        \CJSCore::Init(array("osh_pickup"));
 
         if (in_array($currentUrl, $arCheckoutUrl)) {
             if (Config::isIncludeYaMaps()) {
                 $cAsset->addJs('https://api-maps.yandex.ru/2.1.71/?lang=ru_RU&apikey=' . ($ymapsApikey ? '&apikey=' . $ymapsApikey : ''), true);
             }
-            \CJSCore::Init(array("osh_pickup"));
+
 //            $cAsset->addCss(OSH_DELIVERY_FA_URL);
         }
         $propertyCollection = $order->getPropertyCollection();
@@ -121,12 +123,6 @@ class COshDeliveryHandler
                 }
                 $personTypeId = $order->getPersonTypeId();
                 $orderBasket = $order->getBasket();
-                $arOrder = array(
-                    "ORDER" => array(
-                        "ITEMS" => $oDelivery->getBasket($orderBasket),
-                    ),
-                    "CONFIG" => $arParentConfig
-                );
 
                 $json = Json::encode(array(
                     "address_prop_id" => Config::getAddressPropId($personTypeId),
@@ -146,10 +142,26 @@ class COshDeliveryHandler
                 } else {
                     $buttonText = Loc::getMessage("OSH_CHANGE_PVZ");
                 }
+
+                $deliveryAddress = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
                 $jsNoPvz = <<<JS
                         <script type="text/javascript">
                             BX.ready(function(){
-                                window.Osh.checkPvz({order:{DELIVERY:[{CHECKED:"Y", ID: {$deliveryId}}]}});
+                                window.Osh.oshOrderUpdate.init({ 
+                                    deliveryOptions: {
+                                        PERIOD_DELIVERY: [],
+                                        DA_DATA_TOKEN: '$daDataToken',
+                                        YA_API_KEY: '$ymapsApikey',
+                                        DELIVERY_COST: $deliveryCost,
+                                        START_COST: $startCost,
+                                        LIMIT_BASKET: $limitBasket,
+                                        CURRENT_BASKET: $basketPrice,
+                                        DA_DATA_ADDRESS: '$deliveryAddress',
+                                        OSH_COURIER_ID: '93',
+                                        OSH_PICKUP_ID: '40',
+                                    }, 
+                                    order:{DELIVERY:[{CHECKED:"Y", ID: {$deliveryId}}]} 
+                                });
                             });
                         </script>
                     JS;
@@ -265,79 +277,4 @@ class COshDeliveryHandler
 //            }
         }
     }
-
-//    public function sendOrderToOsh(Event $event) {
-//        $name = $event->getParameter('NAME');
-//        $value = $event->getParameter('VALUE');
-//        if($name != 'STATUS_ID') return true;
-//        $shipment = $event->getParameter('ENTITY');
-//
-//        if (!$shipment ){
-//            return true;
-//        }
-//        $arOshIds = \COshDeliveryHelper::getDeliveries();
-//        $oDelivery = $shipment->getDelivery();
-//        if(!$oDelivery){
-//            return true;
-//        }
-//        $arOrderShipmentId = $shipment->getDeliveryId();
-//        $isOsh = (bool)(in_array($arOrderShipmentId,$arOshIds));
-//        if(!$isOsh){
-//            return true;
-//        }
-//        if($oDelivery->isDirect()){
-//            return true;
-//        }
-//
-//        $order = $shipment->getCollection()->getOrder();
-//        $orderId = $order->getId();
-//        $paySystemId = null;
-//        $arPaymentCollection = $order->getPaymentCollection();
-//        foreach($arPaymentCollection as $payment){
-//            if($payment->isInner()){
-//                continue;
-//            }
-//            $paySystemId = $payment->getPaymentSystemId();
-//        }
-//        $isExists = !!$orderId;
-//        $isStatusMatched = (bool)($value == Config::getTriggerStatus());
-//        $isAutomatic = Config::isAutomaticUpload();
-//        if(!$isExists || !$isStatusMatched || !$isAutomatic){
-//            return true;
-//        }
-//        $isShipped = boolval($shipment->getField('TRACKING_NUMBER'));
-//        $isAllowed = $shipment->isAllowDelivery();
-//        if (!$isShipped && $isAllowed) {
-//            try{
-//                $result = COshDeliveryHelper::sendOrder($shipment);
-//            } catch (\Exception $e) {
-//                $shipment->setField("MARKED","Y");
-//                $shipment->setField("REASON_MARKED",$e->getMessage());
-//                $res = $shipment->save();
-//                Logger::exception($e);
-//                return new \Bitrix\Main\EventResult(
-//                    \Bitrix\Main\EventResult::ERROR,
-//                    new \Bitrix\Sale\ResultError($e->getMessage(), 'code'), 'sale');
-//            }
-//            return true;
-//        }else{
-//            if($isShipped){
-//                return new \Bitrix\Main\EventResult(
-//                    \Bitrix\Main\EventResult::ERROR,
-//                    new \Bitrix\Sale\ResultError(Loc::getMessage("OSH_API_ERROR_ALREADY_SHIPPED"), 'code'), 'sale');
-//            }
-//            if(!$isAllowed){
-//                return new \Bitrix\Main\EventResult(
-//                    \Bitrix\Main\EventResult::ERROR,
-//                    new \Bitrix\Sale\ResultError(Loc::getMessage("OSH_API_ERROR_SHIP_NOT_ALLOWED"), 'code'), 'sale');
-//            }
-//        }
-//        return true;
-//    }
-//    function onDeliveryServiceCalculate(Event $event) {
-//
-//    }
-//    function onEpilog(){
-//
-//    }
 }

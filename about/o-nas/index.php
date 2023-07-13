@@ -133,8 +133,8 @@ $APPLICATION->SetTitle("О нас");
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="/catalog/duft/">
-                    <img src="/about/o-nas/duft.png" class="duft"/>
+                <a href="/catalog/trofimov/">
+                    <img src="/about/o-nas/troff.svg" class="duft"/>
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">

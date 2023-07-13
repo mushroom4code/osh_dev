@@ -1,3 +1,26 @@
+// COLOR TASTE
+function tasteInit() {
+    let box = $(document).find('.variation_taste');
+    $.each(box, function (i, item) {
+        $(item).find('span').each(
+            function () {
+                let classes = $(this).attr('class');
+                if (classes.indexOf('taste') !== -1) {
+                    let color = $(this).data('background');
+                    $(this).css('background-color', color);
+                    let str = '#';
+                    if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
+                        && color !== '#F55F5C' && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
+                        $(this).css('color', 'black');
+                    } else {
+                        $(this).css('color', 'white');
+                    }
+                }
+            }
+        );
+    });
+}
+
 $(document).ready(function () {
     let div = $('div'),
         body = $('body'),
@@ -146,27 +169,6 @@ $(document).ready(function () {
             return parseInt($('.product-item-detail-price-current').text().match(/[\d]/gi).join(''));
         }
     }
-    // COLOR TASTE
-    function tasteInit() {
-        let box = $('.variation_taste');
-
-        $(box).find('span').each(
-            function () {
-                let classes = $(this).attr('class');
-                if (classes.indexOf('taste') !== -1) {
-                    let color = $(this).data('background');
-                    $(this).css('background-color', color);
-                    let str = '#';
-                    if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
-                        && color !== '#F55F5C' && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
-                        $(this).css('color', 'black');
-                    } else {
-                        $(this).css('color', 'white');
-                    }
-                }
-            }
-        );
-    }
 
     if (bool === true) {
         $(document).on('click', '.js__taste_toggle', function (e) {
@@ -176,11 +178,11 @@ $(document).ready(function () {
                 priceBox = cardWrapper.find('.info-prices-box-hover');
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
-                tasteOverlay.css({height:'100%'});
-                priceBox.css({zIndex:'1000'});
+                tasteOverlay.css({height: '100%'});
+                priceBox.css({zIndex: '1000'});
             } else {
-                tasteOverlay.css({height:'0'});
-                priceBox.css({zIndex:'1300'});
+                tasteOverlay.css({height: '0'});
+                priceBox.css({zIndex: '1300'});
             }
         })
         tasteInit();
@@ -216,10 +218,6 @@ $(document).ready(function () {
         listHeader.toggleClass('active');
         return false;
     })
-
-
-
-
 
 
     $('.link_header_catalog').on('click', function () {
@@ -421,7 +419,6 @@ $(document).ready(function () {
                         'URL': product_url,
                     };
 
-
                 } else {
                     $(boxInput).val(max_QUANTITY);
                     if (max_QUANTITY > 0) {
@@ -438,8 +435,8 @@ $(document).ready(function () {
                         'URL': product_url,
                     };
                 }
-                if ($(this).hasClass('red_button_cart')) {
-                    $('.red_button_cart[data-product_id="' + product_id + '"]').hide();
+                if ($(this).hasClass('red_button_cart') && !$(this).hasClass('offer-box')) {
+                    $(this).hide();
                     $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').css({'display': 'flex'});
                 }
             } else if (minus === true) {
@@ -448,6 +445,7 @@ $(document).ready(function () {
                 if (parseInt($(boxInput).val()) > 0) {
                     let beforeVal = parseInt($(boxInput).val()) - 1;
                     $(boxInput).val(beforeVal);
+
                     if (beforeVal > 0)
                         $('.ganerate_price_wrap').show();
                     else
@@ -461,7 +459,8 @@ $(document).ready(function () {
                         'URL': product_url,
                     };
 
-                    if (beforeVal == 0) {
+                    if (beforeVal == 0 && $(this).closest('.info-prices-box-bottom').length === 0) {
+
                         $('.red_button_cart[data-product_id="' + product_id + '"]').show();
                         $('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"]').hide();
                     }
@@ -506,6 +505,35 @@ $(document).ready(function () {
                     }
                 }
             }
+
+            // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
+            let basketItem = $(boxInput).val();
+            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="'+product_id+'"]');
+            let parseUpdate= [], boxUpdate;
+            let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
+
+            if (!boxUpdateAfterAppend.hasClass('catalog-fast-window')) {
+                if (!productDef && $(boxUpdateAfterAppend).find('.product-values').val() !== undefined) {
+                    parseUpdate = JSON.parse($(boxUpdateAfterAppend).find('.product-values').val());
+                }
+                boxUpdate = $(boxUpdateAfterAppend).closest('.product-item-container');
+            } else {
+                if (!productDef) {
+                    parseUpdate = JSON.parse(
+                        $(document).find('.catalog-item-product[data-product="' + $(boxUpdateAfterAppend).attr('data-product') + '"]')
+                            .find('.product-values').val());
+                }
+                boxUpdate = $(document).find('div[data-product="' + $(boxUpdateAfterAppend).attr('data-product') + '"]');
+            }
+
+            if (!productDef) {
+                parseUpdate.ACTUAL_BASKET = basketItem || 1;
+                $(boxUpdate).find('.product-values').val(JSON.stringify(parseUpdate));
+            }
+
+            $(boxUpdate).find('.product-item-amount-field-contain-wrap[data-product_id="' + product_id + '"] .card_element').val(basketItem);
+            // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
+
             $(box_with_product).empty();
             $(box_with_products_order).empty();
 
@@ -642,7 +670,7 @@ $(document).ready(function () {
                 data: {subscribe: subscribe, item_id: product_id, product_name: product_name, subscription_id: subscription_id},
                 success: function (result_jsn) {
                     var result = JSON.parse(result_jsn);
-                    if(result.success === true){
+                    if (result.success === true) {
                         var item_controls = popup_mess.parent();
                         if(result.clickDbError != 'false') {
                             console.log('error while updating productsSubscriptionsTable');
@@ -661,7 +689,7 @@ $(document).ready(function () {
                             item_controls.find('.fa-bell-o').removeClass('filled');
                             popup_mess.empty();
                         }
-                    }else if (result.success == false){
+                    } else if (result.success == false) {
                         if (result.message === "noauth") {
                             popup_mess.empty();
                             popup_mess.append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
@@ -671,7 +699,7 @@ $(document).ready(function () {
                             popup_mess.find('#close_photo').on('click', function () {
                                 $(".box_with_message_prodNot").hide(500).remove()
                             });
-                        }else if (result.message === "noemail") {
+                        } else if (result.message === "noemail") {
                             popup_mess.empty();
                             popup_mess.append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
                                 '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
@@ -2406,12 +2434,13 @@ $(document).ready(function () {
             offsetTop: 0,
             className: 'flex-column align-items-center box_with_message_copy_order',
             draggable: {restrict: false},
-            overlay: {backgroundColor: 'black', opacity: '80' },  /* затемнение фона */
+            overlay: {backgroundColor: 'black', opacity: '80'},  /* затемнение фона */
         });
 
         Confirmer.show();
 
-        $('#no_mess.basket-empty').click({ Confirmer: Confirmer}, popupWindowClose);
+        $('#no_mess.basket-empty').click({Confirmer: Confirmer}, popupWindowClose);
+
         function popupWindowClose(event) {
             event.preventDefault();
             Confirmer.close();
@@ -2474,7 +2503,7 @@ $(document).ready(function () {
     });
 
 
-    $('.js__collapse-list').on('click', function() {
+    $('.js__collapse-list').on('click', function () {
         if (!$(this).parents('.socials').length) {
             let elem = $(this),
                 lists = $('.js__collapse-list.active');
@@ -2634,7 +2663,7 @@ $(document).on('click', '.file-list .file-remove', function (e) {
 });
 
 // маска ввода для формы обратной связи
-$(document).ready(function() {
+$(document).ready(function () {
     $('.form-form [data-name="EMAIL"]').inputmask('email');
 });
 
@@ -2678,7 +2707,7 @@ $(document).on('submit', '.form-form', function (e) {
         err++;
     }
 
-    if(!fieldMail.inputmask("isComplete")) {
+    if (!fieldMail.inputmask("isComplete")) {
         $('.form-form .er_FORM_EMAIL').html(errors.wrongFieldData).show();
         err++;
     }
@@ -2919,10 +2948,10 @@ if ($(window).width() > 1024) {
     });
 }
 
-$(window).on('resize', function() {
+$(window).on('resize', function () {
     const catalog = $('.catalog-section.by-line'),
-          cardViewBtn = $('#card_catalog'),
-          lineViewBtn = $('#line_catalog');
+        cardViewBtn = $('#card_catalog'),
+        lineViewBtn = $('#line_catalog');
 
     if (catalog.length > 0) {
         if ($(window).width() < 500) {
@@ -2937,8 +2966,7 @@ $(window).on('resize', function() {
 });
 
 
-
-jQuery(function() {
+jQuery(function () {
     let input = jQuery('.js__show-pass');
     input.wrap('<div class="show-pass-wrap"></div>');
     input.after('<span class="show-pass-btn js__show-pass-btn"></span>');
@@ -2996,3 +3024,71 @@ $(document).ready(function () {
 $(document).on('click', '.js__close-count-alert', function() {
     $(this).parents('.alert_quantity').html('').removeClass('show_block');
 })
+
+//OFFERS
+
+/**
+ * Enterego - sort array data grouped products on priority props
+ * @param arrProductGrouped
+ * @param propCodePriority
+ * @returns {*[]}
+ */
+function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = ''){
+    const selectedPropData = {};
+    const productsSuccess = [];
+
+    /** Перебор выбранных свой-в с получением группы значений для общего поиска */
+    const selectedProp = $(document).find('.offer-link.selected');
+    $.each(selectedProp, function (i_prop, selectProp) {
+        const elems = $(selectProp).find('.offer-box');
+        let groupKey = $(elems).attr('data-prop_code')
+        selectedPropData[groupKey] = JSON.parse($(elems).attr('data-prop_group'));
+    });
+
+    $.each(arrProductGrouped, function (prod_id, item) {
+        $.each(item.PROPERTIES, function (k, props) {
+            if (props?.JS_PROP !== undefined && k !== 'USE_DISCOUNT' &&
+                Object.keys(props?.JS_PROP).length === Object.keys(selectedPropData[k]).length) {
+                $.each(props.JS_PROP, function (key, jsProp) {
+                    let propList = selectedPropData[k][key];
+                    let priority = -1;
+                    if (propList !== undefined && jsProp.VALUE_ENUM === propList.VALUE_ENUM) {
+                        if (propCodePriority === k) {
+                            priority = 1;
+                        }
+                        if (productsSuccess.length <= 0) {
+                            let itemPush = {
+                                id: parseInt(prod_id),
+                                code: propList.CODE,
+                                pr: 1 + priority,
+                            }
+                            productsSuccess.push(itemPush)
+                        } else {
+                            $.each(productsSuccess, function (iProd, product) {
+                                if (parseInt(product.id) === parseInt(prod_id)) {
+                                    product.pr = product.pr + 1 + priority;
+                                } else {
+                                    let productSearch = productsSuccess.filter(item => parseInt(item.id) === parseInt(prod_id));
+                                    if (productSearch.length === 0) {
+                                        let itemPush = {
+                                            id: parseInt(prod_id),
+                                            code: propList.CODE,
+                                            pr: 1 + priority,
+                                        }
+                                        productsSuccess.push(itemPush)
+                                    } else {
+                                        product.pr = product.pr + 1 + priority;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+    if (productsSuccess.length > 0) {
+        productsSuccess.sort((a, b) => a.pr < b.pr ? 1 : -1)
+    }
+    return productsSuccess;
+}
