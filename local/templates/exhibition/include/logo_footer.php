@@ -1,2 +1,2 @@
-<img src="<?=SITE_TEMPLATE_PATH?>/images/logo/logo_footer.png"
-     srcset="<?=SITE_TEMPLATE_PATH?>/images/logo/logo_footer.png" />
+<img src="<?=SITE_TEMPLATE_PATH?>/images/logo/logo_footer.svg"
+     srcset="<?=SITE_TEMPLATE_PATH?>/images/logo/logo_footer.svg" />

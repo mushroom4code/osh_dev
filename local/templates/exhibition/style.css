@@ -295,7 +295,8 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
 }
 
 .header_logo_desktop a img {
-   width:auto
+    width: 160px;
+    max-width: 170px;
 }
 
 .search_header {
@@ -1596,7 +1597,7 @@ span > i.header_icon {
 
 .text_header_menu {
     line-height: normal;
-    margin-left: 10px;
+    margin-left: 25px;
 }
 
 .text_header_menu > span {
@@ -1748,8 +1749,8 @@ span > i.header_icon {
     padding: 0 18px;
 }
 
-.logo_footer img{
-    max-width: 190px;
+.logo_footer img {
+    max-width: 170px;
     margin-bottom: 1rem;
 }
 

@@ -57,7 +57,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
 
-    <link rel="shortcut icon" type="image/x-icon" href="<?php echo SITE_TEMPLATE_PATH; ?>/images/favicon.ico"/>
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo SITE_TEMPLATE_PATH; ?>/images/logo/favicon.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
 
@@ -104,18 +104,18 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
             <div class="alert-info-setting">
                 <p class="mb-0 text-center d-lg-block d-md-block d-none">
-                    <?= !empty($Option->text_info) ?  $Option->text_info : '' ?>
-                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                    <?= !empty($Option->text_info) ? $Option->text_info : '' ?>
+                    <a href="<?= !empty($Option->link_info) ? $Option->link_info : '/' ?>"
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
                 <p class="mb-0 text-center d-lg-none d-md-none d-block">
-                    <?= !empty($Option->text_info_mobile) ?  $Option->text_info_mobile : '' ?>
-                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                    <?= !empty($Option->text_info_mobile) ? $Option->text_info_mobile : '' ?>
+                    <a href="<?= !empty($Option->link_info) ? $Option->link_info : '/' ?>"
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
             </div>
         <?php } ?>
         <div class="header_top_panel">
             <div class="header_logo_mobile">
-                <a href="<?= SITE_TEMPLATE_PATH ?>/">
+                <a href="/">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:main.include",
                         "",
@@ -144,7 +144,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         <a href="#" class="text_header">
                             <div class="place">
                                 <button type="button" class="place__button" data-toggle="modal"
-                                data-target="#placeModal" style="display:none;">
+                                        data-target="#placeModal" style="display:none;">
                             <?php
                             // отключение композитного кеша вне компонента
                             Bitrix\Main\Page\Frame::getInstance()->startDynamicWithID("city-title");
@@ -184,7 +184,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
-                    <a class="text_header font-weight-bold color-redLight" href="/about/how-make-order/">Как заказать?</a>
+                    <a class="text_header font-weight-bold color-redLight" href="/about/how-make-order/">Как
+                        заказать?</a>
 
                     <?php
                     if ($USER->IsAuthorized()) { ?>
@@ -283,19 +284,22 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             <!--        header menu search/login/basket/like     -->
             <div class="header_box_logo">
                 <div class="box_left_header">
-                    <div class="header_logo_desktop">
-                        <a href="<?= SITE_DIR ?>">
-                            <?php $APPLICATION->IncludeComponent(
-                                "bitrix:main.include",
-                                "",
-                                array(
-                                    "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_TEMPLATE_PATH . "/include/company_logo.php"),
-                                false
-                            ); ?>
-                        </a>
-                    </div>
-                    <div class="text_header_menu"><span>Та самая OSHISHA - теперь на выставках и фестивалях</span></div>
+                    <?php if (!$mobile->isMobile()) { ?>
+                        <div class="header_logo_desktop">
+                            <a href="/">
+                                <?php $APPLICATION->IncludeComponent(
+                                    "bitrix:main.include",
+                                    "",
+                                    array(
+                                        "AREA_FILE_SHOW" => "file",
+                                        "PATH" => SITE_TEMPLATE_PATH . "/include/company_logo.php"),
+                                    false
+                                ); ?>
+                            </a>
+                        </div>
+                        <div class="text_header_menu"><span>Та самая OSHISHA - теперь на выставках и фестивалях</span>
+                        </div>
+                    <?php } ?>
                 </div>
                 <div class="box_right_header">
                     <div class="box_with_search">
