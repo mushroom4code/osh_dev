@@ -95,10 +95,29 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
     $APPLICATION->ShowHead(); ?>
 </head>
+<?php if (!CHECKED_EXHIBITION) { ?>
+    <body class="d-flex flex-column justify-content-between bg-gray-white">
+    <h1 class="m-auto mx-1 font-weight-bold text-uppercase"
+        style="line-height: 2;letter-spacing: 5px;color: #525252;font-family: system-ui;">
+        Увидимся здесь на следующем мероприятии,<br>
+        <span class="ml-3" style="font-size: 0.75em; color:#525252;">
+            а пока переходи и заказывай на нашем
+            <a href="https://oshisha.net/" class="color-redLight text-decoration-underline">основном сайте,</a></span>
+        <br>
+        <span class="ml-4" style="color:#525252;">будем тебе рады!</span><br>
+        <span class="ml-5" style="font-size: 0.75em; color:#525252;">Скоро увидимся 😉</span></h1>
+    <div class="d-flex justify-content-end">
+        <img style="max-width:900px;" src="/local/templates/exhibition/images/logo/osh_.png"/>
+    </div>
+    </body>
+    <?php
+    exit ();
+} ?>
 <body class="bx-background-image">
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
 </div>
 <div id="bx_eshop_wrap">
+
     <header>
         <?php if (CHECKED_INFO) {
             $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>

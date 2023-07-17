@@ -18,7 +18,7 @@ $APPLICATION->SetTitle(GetMessage("admin_index_title"));
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_after.php");
 
-$resOption = COption::GetOptionString('exhibition_info_admin', 'CHECKED_EXHIBITION');
+$resOption = COption::GetOptionString('exhibition_info_admin_params', 'CHECKED_EXHIBITION');
 $dateOption = json_decode(COption::GetOptionString('exhibition_info_admin_params', 'PERIOD'));?>
     <style>
         .btn_admin_sale {

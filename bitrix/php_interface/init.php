@@ -41,6 +41,7 @@ require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
 define("USE_CUSTOM_SALE_PRICE", EnteregoSettings::getParamOnCheckAndPeriod('USE_CUSTOM_SALE_PRICE', 'activation_price_admin'));
 define("CHECKED_INFO", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO', 'activation_info_admin'));
+define("CHECKED_EXHIBITION", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_EXHIBITION', 'exhibition_info_admin_params'));
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
     array('CatalogAPIService', 'OnRestServiceBuildDescription'));
