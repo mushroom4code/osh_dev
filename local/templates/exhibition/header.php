@@ -95,7 +95,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
     $APPLICATION->ShowHead(); ?>
 </head>
-<?php if (!CHECKED_EXHIBITION) { ?>
+<?php if (!CHECKED_EXHIBITION && !$USER->IsAdmin()) { ?>
     <body class="d-flex flex-column justify-content-between bg-gray-white">
     <h1 class="m-auto mx-1 font-weight-bold text-uppercase"
         style="line-height: 2;letter-spacing: 5px;color: #525252;font-family: system-ui;">
