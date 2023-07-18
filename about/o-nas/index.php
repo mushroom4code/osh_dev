@@ -133,8 +133,8 @@ $APPLICATION->SetTitle("О нас");
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/duft/' : 'javascript:void(0)'?>">
-                    <img src="/about/o-nas/duft.png" class="duft"/>
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/trofimov/' : 'javascript:void(0)'?>">
+                    <img src="/about/o-nas/troff.svg" class="duft"/>
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">

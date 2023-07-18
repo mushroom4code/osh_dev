@@ -368,6 +368,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                            id="<?= $itemIds['QUANTITY_ID'] ?>"
                                                            type="number" value="<?= $priceBasket ?>"
                                                            data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                           max="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
                                                            data-product_id="<?= $arResult['ID']; ?>"
                                                            data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
                                                 </div>

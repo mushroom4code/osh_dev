@@ -24,10 +24,11 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
-    '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
+    '\Enterego\EnteregoDiscountHitsSelector' => '/bitrix/php_interface/enterego_class/EnteregoDiscountHitsSelector.php',
+    '\Enterego\EnteregoHitsHelper' => '/bitrix/php_interface/enterego_class/EnteregoHitsHelper.php',
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
-    '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
-    '\Enterego\ProductsSubscriptionsTable'=>'/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
+    '\Enterego\EnteregoSettings' => '/bitrix/php_interface/enterego_class/EnteregoSettings.php',
+    '\Enterego\ProductsSubscriptionsTable' => '/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
     '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
@@ -67,6 +68,7 @@ require_once(__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
 
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
+
 //Типы цен на сайте
 const SALE_PRICE_TYPE_ID = 3;
 const BASIC_PRICE = 2;

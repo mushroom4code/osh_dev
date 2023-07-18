@@ -459,7 +459,8 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                             <div class="product-item-amount-field-block">
                                                 <input class="product-item-amount card_element"
                                                        id="<?= $arItemIDs['QUANTITY_ID'] ?>"
-                                                       type="text"
+                                                       type="number"
+                                                       max="<?= $item['PRODUCT']['QUANTITY'] ?>"
                                                        value="<?= $priceBasket ?>">
                                             </div>
                                             <a class="btn-plus plus_icon no-select add2basket"

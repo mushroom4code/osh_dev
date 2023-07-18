@@ -2,14 +2,14 @@
 
 namespace Enterego;
 
-class EnteregoDiscount
+class EnteregoDiscountHitsSelector
 {
-    public function getSectionProductsForFilter(): array
+    public function getSectionProductsForFilter(string $link, array $params, bool $useActive = true): array
     {
         global $DB;
         $productIds = [];
         $sectionsIDS = [];
-        $rsElements = \CIBlockElement::GetList(['ID', 'IBLOCK_SECTION_ID'], $GLOBALS['ArFilter']);
+        $rsElements = \CIBlockElement::GetList(['ID', 'IBLOCK_SECTION_ID'], $GLOBALS[$params['FILTER_NAME']]);
 
         while ($arElement = $rsElements->Fetch()) {
             $productIds[] = $arElement['ID'];
@@ -24,9 +24,8 @@ class EnteregoDiscount
                 $sectionsIDS[] = $arRes['IBLOCK_SECTION_ID'];
             }
         }
-        $categoryProduct = $this->getFilterDiscountCategoryProduct($sectionsIDS, [], 'discount');
+        $categoryProduct = $this->getFilterCategoryProduct($sectionsIDS, [], $link, $useActive);
 
-        $link = 'diskont';
         $arCategory = $this->recursiveForeach($categoryProduct, $link);
         return $arCategory;
     }
@@ -39,7 +38,7 @@ class EnteregoDiscount
                 if ($key !== 0) {
                     if (isset($item[0])) {
                         $item[0]['CHILDS'] = $this->recursiveForeach($item, $linkNew);
-                        $item[0]['SECTION_PAGE_URL'] =  '/' . $linkNew . '/'. $item[0]['CODE'] . '/';
+                        $item[0]['SECTION_PAGE_URL'] = '/' . $linkNew . '/' . $item[0]['CODE'] . '/';
                         $arCategory[] = $item[0];
                     }
                 }
@@ -54,16 +53,24 @@ class EnteregoDiscount
      * @param string $catFilter
      * @return array
      */
-    public function getFilterDiscountCategoryProduct(array $sectionsIDS = [], array $filter = [], string $catFilter = ''): array
+    public function getFilterCategoryProduct(array $sectionsIDS = [], array $filter = [], string $catFilter = '', bool $useActive): array
     {
         $resSection = [];
-        $arSelect = array('ID', 'CODE', 'NAME', 'IBLOCK_SECTION_ID');
+        $arSelect = array('ID', 'CODE', 'NAME', 'IBLOCK_SECTION_ID', 'ACTIVE');
+        $sectionsFilter = array('ID' => $sectionsIDS);
+        if ($useActive) {
+            $sectionsFilter['ACTIVE'] = 'Y';
+        }
         $categoryAr = \CIBlockSection::GetList(array("depth_level" => "ASC"),
-            array('ACTIVE' => 'Y', 'ID' => $sectionsIDS), false, $arSelect);
+            $sectionsFilter, false, $arSelect);
         $sectionsIDS = [];
         while ($arrayData = $categoryAr->Fetch()) {
             // узнаем количество доступных элементов в разделе
-            $res = \CIBlockElement::GetList(false, array('SECTION_ID' => $arrayData['ID'], '=AVAILABLE' => 'Y'), false, false, false);
+            $elementFilter = array('SECTION_ID' => $arrayData['ID']);
+            if ($useActive) {
+                $elementFilter['=AVAILABLE'] = 'Y';
+            }
+            $res = \CIBlockElement::GetList(false, $elementFilter, false, false, false);
             // добавляем категорию если в ней есть элементы
             if ($res->SelectedRowsCount() > 0) {
                 $resSection[$arrayData['IBLOCK_SECTION_ID'] ?? 0][$arrayData['ID']][0] = $arrayData;
@@ -74,7 +81,7 @@ class EnteregoDiscount
             }
         }
 
-        $this->recursiveGetFilterDiscountCategoryProduct($resSection, $sectionsIDS);
+        $this->recursiveGetFilterCategoryProduct($resSection, $sectionsIDS, 0, $useActive);
         if (!empty($resSection[0])) {
             if (!empty($filter) && $catFilter === 'catalog') {
                 foreach ($resSection[0] as $item) {
@@ -90,10 +97,14 @@ class EnteregoDiscount
         return $resSection[0] ?? [];
     }
 
-    private function recursiveGetFilterDiscountCategoryProduct(&$resSection, $sectionsIDS, $level = 0)
+    private function recursiveGetFilterCategoryProduct(&$resSection, $sectionsIDS, $level = 0, bool $useActive)
     {
-        $categoryAr = \CIBlockSection::GetList(array("depth_level" => "ASC"), array('ACTIVE' => 'Y', 'ID' => $sectionsIDS),
-            false, array('ID', 'CODE', 'NAME', 'IBLOCK_SECTION_ID'));
+        $arFilter = array('ID' => $sectionsIDS);
+        if ($useActive) {
+            $arFilter['ACTIVE'] = 'Y';
+        }
+        $categoryAr = \CIBlockSection::GetList(array("depth_level" => "ASC"), $arFilter,
+            false, array('ID', 'CODE', 'NAME', 'IBLOCK_SECTION_ID', 'ACTIVE'));
         $sectionsIDS = [];
         while ($arrayData = $categoryAr->Fetch()) {
             if (isset($resSection[$arrayData['ID']])) {
@@ -123,7 +134,7 @@ class EnteregoDiscount
         }
         if ($sectionsIDS) {
             $level++;
-            $this->recursiveGetFilterDiscountCategoryProduct($resSection, $sectionsIDS, $level);
+            $this->recursiveGetFilterCategoryProduct($resSection, $sectionsIDS, $level, $useActive);
         }
     }
 

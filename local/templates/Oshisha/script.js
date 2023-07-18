@@ -399,7 +399,7 @@ $(document).ready(function () {
                 boxInput = $(this).closest('.bx_catalog_item_controls').find('input.card_element'),
                 plus = $(this).hasClass('btn-plus'),
                 minus = $(this).hasClass('btn-minus'),
-                max_QUANTITY = parseInt($(this).attr('data-max-quantity'));
+                max_QUANTITY = parseInt($(this).attr('data-max-quantity')??$(this).attr('max'));
 
             if (plus === true) {
                 if (parseInt($(boxInput).val()) < max_QUANTITY) {
@@ -469,18 +469,19 @@ $(document).ready(function () {
                 let addBasketButton = $(this).closest('.bx_catalog_item_controls').find('.add2basket'),
                     product_id = addBasketButton.data('product_id'),
                     product_url = addBasketButton.data('url');
-
                 if (quantityProdDet) {
                     let quantity = parseInt(quantityProdDet);
+                    let actualQuantity = quantity;
                     if ((quantity > 1) || (quantity !== 0)) {
-                        product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
                         $(boxInput).val(quantity);
                         if (quantity > max_QUANTITY) {
                             $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
-
+                            $(boxInput).val(max_QUANTITY);
+                            actualQuantity = max_QUANTITY
                         } else {
                             $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                         }
+                        product_data = {'QUANTITY': actualQuantity, 'URL': product_url, 'ID': product_id};
                     } else {
                         product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
                         $(boxInput).val(1);
@@ -509,7 +510,7 @@ $(document).ready(function () {
             // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
             let basketItem = $(boxInput).val();
             let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="'+product_id+'"]');
-            let parseUpdate, boxUpdate;
+            let parseUpdate= [], boxUpdate;
             let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
 
             if (!boxUpdateAfterAppend.hasClass('catalog-fast-window')) {

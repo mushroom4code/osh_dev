@@ -2823,7 +2823,7 @@ div#about_contacts > .row > .form_company {
     bottom: 92%;
     right: 87%;
     padding: 9px 4px;
-    z-index: 1;
+    z-index: 1400;
 }
 
 .by-line .new-product {
@@ -5877,7 +5877,7 @@ li, ul {
 }
 
 .duft {
-    max-width: 140px;
+    max-width: 250px;
 }
 
 .o-nas-image {
@@ -5973,7 +5973,7 @@ li, ul {
     }
 
     .duft {
-        max-width: 152px;
+        max-width: 220px;
     }
 
     .burn {
