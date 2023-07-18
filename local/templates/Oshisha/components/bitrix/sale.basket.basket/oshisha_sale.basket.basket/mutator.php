@@ -30,13 +30,13 @@ $FUser_id = Fuser::getId($id_USER);
 $item_id = [];
 
 foreach ($item as $row) {
-//    if ($row['CAN_BUY'] == 'N') {
-//        if (!isset($result['DELETED_ITEMS'])) {
-//            $result['DELETED_ITEMS'][$row['ID']] = $row;
-//        }
+    if ($row['CAN_BUY'] == 'N') {
+        if (!isset($result['DELETED_ITEMS'])) {
+            $result['DELETED_ITEMS'][$row['ID']] = $row;
+        }
 //        CSaleBasket::Delete($row['ID']);
-//        continue;
-//    }
+        continue;
+    }
 
     $item_id[] = $row['ID'];
 }
