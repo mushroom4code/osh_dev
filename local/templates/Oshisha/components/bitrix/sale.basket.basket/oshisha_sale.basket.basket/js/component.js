@@ -488,6 +488,12 @@
         },
 
         checkOutAction: function () {
+            for (const [key, value] of Object.entries(this.items)) {
+                if (value['NOT_AVAILABLE']) {
+                    this.actionPool.deleteItem(key);
+                }
+            }
+
             document.location.href = this.params.PATH_TO_ORDER;
         },
 
@@ -998,6 +1004,7 @@
             }
             let basketItemHtml, sortIndex, categoryArray, i, key, categoryItem, category_item, category_id,
                 basketItemTemplate;
+            let in_category = false;
 
             basketItemTemplate = this.listTemplate === 'line'
                 ? this.getTemplate('basket-item-template')
@@ -1008,33 +1015,41 @@
 
                 sortIndex = BX.util.array_search(itemId, this.sortedItems);
 
-                categoryArray = this.result?.BASKET_ITEM_RENDER_DATA_CUSTOM;
+                if (this.items[itemId]['NOT_AVAILABLE']) {
+                    category_id = [false, 'DeletedProducts']
+                    in_category = true;
+                } else {
+                    categoryArray = this.result?.BASKET_ITEM_RENDER_DATA_CUSTOM;
 
-                for (i in categoryArray) {
+                    for (i in categoryArray) {
 
-                    category_id = i.split('_');
-                    category_item = categoryArray[i];
+                        category_id = i.split('_');
+                        category_item = categoryArray[i];
 
-                    for (key = 0; key < category_item.length; key++) {
-                        if (category_item[key] === itemId) {
-                            categoryItem = BX('basket-items-list-wrapper')
-                                .querySelector('div[data-id-block-category="' + category_id[1] + '"]');
-
-                            if (sortIndex < BX.util.array_search(this.shownItems[0], this.sortedItems)) {
-                                // insert before
-                                categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
-                                this.shownItems.unshift(itemId);
-                            } else if (sortIndex > BX.util.array_search(this.shownItems[this.shownItems.length - 1], this.sortedItems)) {
-                                // insert after
-                                categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
-                                this.shownItems.push(itemId);
-                            } else {
-                                // insert between
-                                categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
-                                this.shownItems.splice(sortIndex + 1, 0, itemId);
+                        for (key = 0; key < category_item.length; key++) {
+                            if (category_item[key] === itemId) {
+                                in_category = true;
                             }
-
                         }
+                    }
+                }
+
+                if (in_category) {
+                    categoryItem = BX('basket-items-list-wrapper')
+                        .querySelector('div[data-id-block-category="' + category_id[1] + '"]');
+
+                    if (sortIndex < BX.util.array_search(this.shownItems[0], this.sortedItems)) {
+                        // insert before
+                        categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
+                        this.shownItems.unshift(itemId);
+                    } else if (sortIndex > BX.util.array_search(this.shownItems[this.shownItems.length - 1], this.sortedItems)) {
+                        // insert after
+                        categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
+                        this.shownItems.push(itemId);
+                    } else {
+                        // insert between
+                        categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
+                        this.shownItems.splice(sortIndex + 1, 0, itemId);
                     }
                 }
 
@@ -1439,7 +1454,7 @@
                         }
                         return -1;
                     }
-                }else {
+                } else {
                     return 0;
                 }
             });
@@ -1581,21 +1596,18 @@
                 quantity = measureRatio;
             }
 
-			if( quantity > parseInt(itemData.AVAILABLE_QUANTITY) )
-			{
-				let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
-				//alert('К покупке доступно максимум '+AVAILABLE_QUANTITY+'шт.');
-					$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('К покупке доступно максимум: '+AVAILABLE_QUANTITY+'шт.' +
-                        ' <div class="close-count-alert js__close-count-alert"></div>').addClass('show_block');
-				
-			} 
-			else
-			{
-				$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('').removeClass('show_block');
-			}
-				 
-            
-			if (itemData.CHECK_MAX_QUANTITY === 'Y') {
+            if (quantity > parseInt(itemData.AVAILABLE_QUANTITY)) {
+                let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
+                //alert('К покупке доступно максимум '+AVAILABLE_QUANTITY+'шт.');
+                $('.alert_quantity[data-id="' + itemData.PRODUCT_ID + '"]').html('К покупке доступно максимум: ' + AVAILABLE_QUANTITY + 'шт.' +
+                    ' <div class="close-count-alert js__close-count-alert"></div>').addClass('show_block');
+
+            } else {
+                $('.alert_quantity[data-id="' + itemData.PRODUCT_ID + '"]').html('').removeClass('show_block');
+            }
+
+
+            if (itemData.CHECK_MAX_QUANTITY === 'Y') {
                 availableQuantity = isQuantityFloat ? parseFloat(itemData.AVAILABLE_QUANTITY) : parseInt(itemData.AVAILABLE_QUANTITY);
                 if (availableQuantity > 0 && quantity > availableQuantity) {
                     quantity = availableQuantity;

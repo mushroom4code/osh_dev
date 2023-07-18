@@ -30,10 +30,13 @@ $FUser_id = Fuser::getId($id_USER);
 $item_id = [];
 
 foreach ($item as $row) {
-    if ($row['CAN_BUY'] == 'N') {
-        CSaleBasket::Delete($row['ID']);
-        continue;
-    }
+//    if ($row['CAN_BUY'] == 'N') {
+//        if (!isset($result['DELETED_ITEMS'])) {
+//            $result['DELETED_ITEMS'][$row['ID']] = $row;
+//        }
+//        CSaleBasket::Delete($row['ID']);
+//        continue;
+//    }
 
     $item_id[] = $row['ID'];
 }
@@ -60,7 +63,7 @@ foreach ($item as $row) {
     $product_prices = '';
     $price = [];
     $show_product_prices = false;
-    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG,$row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
+    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
     $newProp = $propsUseSale->Fetch();
     $res = CIBlockElement::GetList(
         array(),
@@ -73,7 +76,7 @@ foreach ($item as $row) {
             'CATALOG_PRICE_' . BASIC_PRICE,
             "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID)
     );
-	$showDiscountPrice = (float)$row['DISCOUNT_PRICE'] > 0;
+    $showDiscountPrice = (float)$row['DISCOUNT_PRICE'] > 0;
     if ($ar_res = $res->fetch()) {
         if (!empty($ar_res)) {
             $str_product_prices = '';
@@ -110,7 +113,7 @@ foreach ($item as $row) {
             $product_prices = $str_product_prices[0] . '₽';
             $sale_price_val = (int)$str_product_prices[0];
             $sum_sale = ((round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']) - round($row['SUM_VALUE']));
-			$sum_old = (round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']);
+            $sum_old = (round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']);
         }
     }
 
@@ -146,7 +149,7 @@ foreach ($item as $row) {
         'SALE_PRICE' => $product_prices,
         'SALE_PRICE_VAL' => $sum_sale ?? 0,
         'SHOW_SALE_PRICE' => $show_product_prices,
-		"SUM_OLD" => $sum_old ?? 0,
+        "SUM_OLD" => $sum_old ?? 0,
         //
         'MEASURE_RATIO' => isset($row['MEASURE_RATIO']) ? $row['MEASURE_RATIO'] : 1,
         'MEASURE_TEXT' => $row['MEASURE_TEXT'],

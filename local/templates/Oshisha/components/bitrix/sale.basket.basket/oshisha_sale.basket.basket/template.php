@@ -207,7 +207,28 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                             </div>
                         </div>
                         <div class="accordion mt-4" id="accordionBasket">
-                            <?php $i = 0;
+                            <?php
+                            if (!empty($arResult['DELETED_ITEMS'])) {
+                                ?>
+                                <div class="box" id="deleted_products_box">
+                                    <div class="card-header basket_category" id="openDeletedProducts">
+                                        <button class="btn btn-link btn-block d-flex justify-content-between
+                                           btn_basket_collapse" type="button"
+                                                data-id-category="DeletedProducts">
+                                            <span>Удаленные товары</span>
+                                            <i class="fa fa-angle-down" aria-hidden="true"
+                                               style="transform:rotate(180deg);"></i>
+                                        </button>
+                                    </div>
+                                    <div id="openCategoryDeletedProducts" class="category"
+                                         data-id-block-category="DeletedProducts">
+                                        <div class="card-body basket-items-list-table"></div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+
+                            $i = 0;
                             foreach ($arResult['BASKET_ITEM_RENDER_DATA_CUSTOM'] as $key => $item) {
                                 $classCat = '';
                                 $styleIcon = '';
