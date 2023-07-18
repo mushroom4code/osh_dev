@@ -102,7 +102,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             ?>
             <div id="<?= $strContID; ?>"
                  class="bx_catalog_tile_home_type_2 col2 mt-3 mb-3 <?= $templateData['TEMPLATE_CLASS']; ?>">
-                <div class="bx_catalog_tile_section">
+                <div class="bx_catalog_tile_section" id="hits_slider_<?=$strRand?>">
                     <?php
                     $boolFirst = true;
                     $arRowIDs = array();
@@ -174,4 +174,30 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
         </div>
         <?php
     }
-}
+}?>
+<script>
+    if ($('#hits_slider_<?=$strRand?>').is('.bx_catalog_tile_section')) {
+        let count = 4,
+            variableWidth = false;
+            screenWidth = window.screen.width;
+        if (screenWidth <= 1380) {
+            count = 4;
+        }
+        if (screenWidth <= 1080) {
+            count = 3;
+        }
+        if (screenWidth <= 746) {
+            count = 2;
+        }
+        $('#hits_slider_<?=$strRand?>').slick({
+            slidesToShow: count,
+            arrows: true,
+            infinite: false,
+            variableWidth: variableWidth,
+            prevArrow: '<span class="new_custom_button_slick_left_cat"  aria-hidden="true"><i class="fa fa-angle-left"'
+                + ' aria-hidden="true"></i></span>',
+            nextArrow: '<span class="new_custom_button_slick_right_cat" aria-hidden="true"><i class="fa fa-angle-right"'
+                + ' aria-hidden="true"></i></span>',
+        })
+    }
+</script>
