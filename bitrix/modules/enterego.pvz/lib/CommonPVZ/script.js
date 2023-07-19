@@ -36,7 +36,6 @@ BX.SaleCommonPVZ = {
     orderPackages: null,
     oshishaDeliveryOptions: null,
     propTypePvzId: null,
-    datepickerObj: null,
     componentParams: {
         'displayPVZ': typeDisplayPVZ.map,
         'filterDelivery': null,
@@ -1323,7 +1322,7 @@ BX.SaleCommonPVZ = {
                 selectedDates: curDate,
                 onSelect: function (date, opts, datepicker) {
                     let datepicker_osh_input = $('input.datepicker_order.date_delivery_osh');
-                    if (datepicker_osh_input.length != 0) {
+                    if (datepicker_osh_input.length !== 0) {
                         datepicker_osh_input.val(date)
                     }
                     this.updateValueProp(this.propDateDeliveryId, date)
@@ -1339,7 +1338,6 @@ BX.SaleCommonPVZ = {
             }).data('datepicker');
             datepicker.selectDate(curDate,(datepicker.opts.silentBool = true));
             datepicker.opts.silentBool = false;
-            this.datepickerObj = datepicker;
         }
 
         return this
