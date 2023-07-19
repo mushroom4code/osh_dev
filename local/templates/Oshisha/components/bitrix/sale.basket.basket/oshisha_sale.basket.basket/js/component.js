@@ -1029,7 +1029,11 @@
                         for (key = 0; key < category_item.length; key++) {
                             if (category_item[key] === itemId) {
                                 in_category = true;
+                                break;
                             }
+                        }
+                        if (in_category) {
+                            break;
                         }
                     }
                 }

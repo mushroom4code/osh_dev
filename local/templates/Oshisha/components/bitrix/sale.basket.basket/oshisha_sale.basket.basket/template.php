@@ -233,7 +233,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 $classCat = '';
                                 $styleIcon = '';
                                 $styleIcon = 'style="transform:rotate(180deg);"';
-                                if ($i === 0) {
+                                if ($i === 0 && empty($arResult['DELETED_ITEMS'])) {
                                     $styleIcon = 'style="transform:rotate(180deg);"';
                                 } else {
                                     $styleIcon = 'style="transform:rotate(0deg);"';
