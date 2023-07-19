@@ -357,7 +357,9 @@
             if (totalNodes && totalNodes.length) {
                 var totalTemplate = this.getTemplate('basket-total-template');
                 if (totalTemplate) {
-                    this.result.TOTAL_RENDER_DATA['BASKET_ITEMS_COUNT'] = this.result.BASKET_ITEMS_COUNT;
+                    this.result.TOTAL_RENDER_DATA['BASKET_ITEMS_COUNT'] = this.result.DELETED_ITEMS
+                        ? (this.result.BASKET_ITEMS_COUNT - Object.keys(this.result.DELETED_ITEMS).length)
+                        : this.result.BASKET_ITEMS_COUNT;
                     var totalRender = this.render(totalTemplate, this.result.TOTAL_RENDER_DATA);
 
                     for (var i in totalNodes) {
@@ -1361,7 +1363,7 @@
                 basketItemNode.insertAdjacentHTML('beforebegin', basketItemHtml);
 
                 let parentBox = basketItemNode.closest('div .box');
-                BX.remove(basketItemNode);
+                basketItemNode.remove();
 
                 if (oldHeight) {
                     nodeAligner = BX(this.ids.itemHeightAligner + itemId);

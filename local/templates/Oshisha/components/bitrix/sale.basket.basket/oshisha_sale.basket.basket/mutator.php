@@ -41,10 +41,18 @@ foreach ($item as $row) {
     $item_id[] = $row['ID'];
 }
 
+foreach ($result['BASKET_ITEM_RENDER_DATA_CUSTOM'] as $category => $items) {
+    foreach ($result['DELETED_ITEMS'] as $deletedItemKey => $deletedItem) {
+        if (($searchKey = array_search($deletedItemKey, $items)) !== false) {
+            array_splice($result['BASKET_ITEM_RENDER_DATA_CUSTOM'][$category], $searchKey, 1);
+        }
+    }
+    if (empty($result['BASKET_ITEM_RENDER_DATA_CUSTOM'][$category])) {
+        unset($result['BASKET_ITEM_RENDER_DATA_CUSTOM'][$category]);
+    }
+}
+
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
-/*
-echo '<pre>';
-print_r($item);*/
 
 foreach ($item as $row) {
     /*if($row['CAN_BUY'] == 'N')
@@ -55,7 +63,6 @@ foreach ($item as $row) {
         unset($row);
         continue;
     }
-    //
 
     if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $row['AVAILABLE_QUANTITY'])
         $row['AVAILABLE_QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
