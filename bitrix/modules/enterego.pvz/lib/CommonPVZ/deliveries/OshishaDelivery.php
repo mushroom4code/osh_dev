@@ -18,6 +18,8 @@ class OshishaDelivery extends CommonPVZ
     static $MODULE_ID = 'enterego.pvz';
     public string $delivery_name = 'Oshisha';
     public string $delivery_code = 'oshisha';
+
+    static public string $code = 'oshisha';
     private $oshisha_cache_id = 'oshisha_delivery_prices';
     const OSHISHA_ADDRESS_SIMPLE = "simple";
     const OSHISHA_ADDRESS_COMPLEX = "complex";

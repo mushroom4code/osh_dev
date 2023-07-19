@@ -42,7 +42,12 @@ if (!empty($arResult['ITEMS']))
 			include($fullPath.'/banner/template.php');
 			break;
 		case 'SLIDER':
-			include($fullPath.'/slider/template.php');
+            $APPLICATION->IncludeComponent(
+                "bitrix:enterego.slider",
+                ".default",
+                array_merge($arParams, $arResult, array('SECTIONS_ITEMS' => array(0 => $arResult['RAW_ITEMS']))),
+                false
+            );
 			break;
 		case 'SECTION':
 			include($fullPath.'/section/template.php');

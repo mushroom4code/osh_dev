@@ -32,6 +32,8 @@ for ($index = 0; $index < $itemSize; $index++) {
         } else {
             if ($arResult[$index]["LINK"] === '/catalog/diskont/') {
                 $arResult[$index]["LINK"] = '/diskont/';
+            } else if ($arResult[$index]["LINK"] === '/catalog/hit/') {
+                $arResult[$index]["LINK"] = '/hit/';
             }
             $strReturn .= $arrow . '
 			<div class="bx-breadcrumb-item" id="bx_breadcrumb_' . $index . '" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">

@@ -289,29 +289,8 @@
                     this.processPagination(result.pagination);
                     this.processEpilogue(result.epilogue);
                     this.checkButton();
-                    this.tasteInit();
+                    tasteInit();
                 }
-            },
-
-            tasteInit: function () {
-                let box = $(document).find('.variation_taste');
-
-                $(box).find('span').each(
-                    function () {
-                        let classes = $(this).attr('class');
-                        if (classes.indexOf('taste') !== -1) {
-                            let color = $(this).data('background');
-                            $(this).css('background-color', color);
-                            let str = '#';
-                            if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
-                                && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
-                                $(this).css('color', 'black');
-                            } else {
-                                $(this).css('color', 'white');
-                            }
-                        }
-                    }
-                );
             },
 
             processDeferredLoadAction: function (result, bigData) {

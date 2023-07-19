@@ -11,10 +11,10 @@ $APPLICATION->SetTitle("Хиты");
 $nowDate = date("Y-m-d H:i:s");
 $date = new DateTime($nowDate);
 
-$GLOBALS['ArFilter'] = array(
+$GLOBALS['ArrFilter'] = array(
     'PROPERTY_HIT_VALUE' => 'да'
 );
-$GLOBALS['PREFILTER_NAME'] = array(
+$GLOBALS['ArrPreFilter'] = array(
     'PROPERTY_HIT_VALUE' => 'да'
 );
 
@@ -33,8 +33,6 @@ $APPLICATION->IncludeComponent(
         "SECTION_ID_VARIABLE" => "SECTION_ID",
         "PRODUCT_QUANTITY_VARIABLE" => "quantity",
         "PRODUCT_PROPS_VARIABLE" => "prop",
-        "SEF_MODE" => "Y",
-        "SEF_FOLDER" => "/catalog_new/",
         "AJAX_MODE" => "N",
         "AJAX_OPTION_JUMP" => "N",
         "AJAX_OPTION_STYLE" => "Y",
@@ -50,8 +48,8 @@ $APPLICATION->IncludeComponent(
         "DETAIL_DISPLAY_NAME" => "N",
         "USE_ELEMENT_COUNTER" => "Y",
         "USE_FILTER" => "Y",
-        "FILTER_NAME" => "ArFilter",
-        "PREFILTER_NAME" => "ArPreFilter",
+        "FILTER_NAME" => "ArrFilter",
+        "PREFILTER_NAME" => "ArrPreFilter",
         "FILTER_VIEW_MODE" => "VERTICAL",
         "USE_COMPARE" => "N",
         "PRICE_CODE" => BXConstants::PriceCode(),
@@ -84,7 +82,7 @@ $APPLICATION->IncludeComponent(
             0 => "NEWPRODUCT",
             1 => "SALELEADER",
             2 => "SPECIALOFFER",
-            3 => "",
+            3 => "USE_DISCOUNT",
         ),
         "INCLUDE_SUBSECTIONS" => "Y",
         "LIST_META_KEYWORDS" => "-",
@@ -306,6 +304,8 @@ $APPLICATION->IncludeComponent(
         "DETAIL_SET_VIEWED_IN_COMPONENT" => "N",
         "LIST_ENLARGE_PROP" => "-",
         "MESS_BTN_LAZY_LOAD" => "Показать ещё",
+        "SEF_MODE" => "Y",
+        "SEF_FOLDER" => "/hit/",
         "SEF_URL_TEMPLATES" => array(
             "sections" => "",
             "section" => "#SECTION_CODE#/",
@@ -316,4 +316,5 @@ $APPLICATION->IncludeComponent(
     ),
     false
 );
+
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");

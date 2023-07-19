@@ -24,21 +24,24 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
-    '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
+    '\Enterego\EnteregoDiscountHitsSelector' => '/bitrix/php_interface/enterego_class/EnteregoDiscountHitsSelector.php',
+    '\Enterego\EnteregoHitsHelper' => '/bitrix/php_interface/enterego_class/EnteregoHitsHelper.php',
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
-    '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
-    '\Enterego\ProductsSubscriptionsTable'=>'/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
+    '\Enterego\EnteregoSettings' => '/bitrix/php_interface/enterego_class/EnteregoSettings.php',
+    '\Enterego\ProductsSubscriptionsTable' => '/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
     '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
     '\Enterego\EnteregoActionDiscountPriceType' =>
         '/bitrix/php_interface/enterego_class/EnteregoActionDiscountPriceType.php',
+    '\Enterego\EnteregoGroupedProducts' => '/bitrix/php_interface/enterego_class/EnteregoGroupedProducts.php',
 ));
 
 //redefine sale  basket condition
 require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
-
+define("USE_CUSTOM_SALE_PRICE", EnteregoSettings::getParamOnCheckAndPeriod('USE_CUSTOM_SALE_PRICE', 'activation_price_admin'));
+define("CHECKED_INFO", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO', 'activation_info_admin'));
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
     array('CatalogAPIService', 'OnRestServiceBuildDescription'));
@@ -377,9 +380,6 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
         ";
     $APPLICATION->AddHeadString($jsCode);
 }
-
-EnteregoSettings::getParamOnCheckAndPeriod();
-EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO','activation_info_admin');
 
 // JWT-token authorization
 addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);

@@ -213,6 +213,7 @@
 				case 0: // no catalog
 				case 1: // product
 				case 2: // set
+				case 7: // service
 					this.initProductData();
 					break;
 				case 3: // sku
@@ -523,6 +524,7 @@
 					case 0: // no catalog
 					case 1: // product
 					case 2: // set
+					case 7: // service
 						if (this.product.useSlider)
 						{
 							this.product.slider = {
@@ -552,20 +554,21 @@
 						this.setAnalyticsDataLayer('showDetail');
 						break;
 					case 3: // sku
-						treeItems = this.obTree.querySelectorAll('li');
-						for (i = 0; i < treeItems.length; i++)
+						if (this.obTree)
 						{
-							BX.bind(treeItems[i], 'click', BX.delegate(this.selectOfferProp, this));
+							treeItems = this.obTree.querySelectorAll('.offer-box');
+							for (i = 0; i < treeItems.length; i++)
+							{
+								BX.bind(treeItems[i], 'click', BX.delegate(this.selectOfferProp, this));
+							}
 						}
 
 						for (i = 0; i < this.offers.length; i++)
 						{
-							this.offers[i].SLIDER_COUNT = parseInt(this.offers[i].SLIDER_COUNT, 10) || 0;
-
 							if (this.offers[i].SLIDER_COUNT === 0)
 							{
 								this.slider.controls[i] = {
-									ID: '',
+									ID: this.visual.SLIDER_CONT_OF_ID + this.offers[i].ID,
 									COUNT: this.offers[i].SLIDER_COUNT,
 									ITEMS: []
 								};
@@ -637,6 +640,8 @@
 			this.config.showMaxQuantity = this.params.CONFIG.SHOW_MAX_QUANTITY;
 			this.config.relativeQuantityFactor = parseInt(this.params.CONFIG.RELATIVE_QUANTITY_FACTOR);
 			this.config.usePriceRanges = this.params.CONFIG.USE_PRICE_COUNT;
+			this.config.showSkuDescription = this.params.CONFIG.SHOW_SKU_DESCRIPTION;
+			this.config.displayPreviewTextMode = this.params.CONFIG.DISPLAY_PREVIEW_TEXT_MODE;
 
 			if (this.params.CONFIG.MAIN_PICTURE_MODE)
 			{
@@ -794,6 +799,10 @@
 					this.product.id = parseInt(this.params.PRODUCT.ID, 10);
 					this.product.name = this.params.PRODUCT.NAME;
 					this.product.category = this.params.PRODUCT.CATEGORY;
+					this.product.detailText = this.params.PRODUCT.DETAIL_TEXT;
+					this.product.detailTextType = this.params.PRODUCT.DETAIL_TEXT_TYPE;
+					this.product.previewText = this.params.PRODUCT.PREVIEW_TEXT;
+					this.product.previewTextType = this.params.PRODUCT.PREVIEW_TEXT_TYPE;
 				}
 			}
 			else
@@ -806,7 +815,11 @@
 		{
 			if (this.params.BASKET && typeof this.params.BASKET === 'object')
 			{
-				if (this.productType === 1 || this.productType === 2)
+				if (
+					this.productType === 1
+					|| this.productType === 2
+					|| this.productType === 7
+				)
 				{
 					this.basketData.useProps = this.params.BASKET.ADD_PROPS;
 					this.basketData.emptyProps = this.params.BASKET.EMPTY_PROPS;
@@ -925,6 +938,7 @@
 				case 0: //no catalog
 				case 1: //product
 				case 2: //set
+				case 7: // service
 					item = {
 						'id': this.product.id,
 						'name': this.product.name,
@@ -1319,7 +1333,9 @@
 			if (this.config.usePopup)
 			{
 				this.node.imageContainer.style.cursor = 'zoom-in';
-				BX.bind(this.node.imageContainer, 'click', BX.delegate(this.toggleMainPictPopup, this));
+				if(this.node.imageContainer){
+					BX.bind(this.node.imageContainer, 'click', BX.delegate(this.toggleMainPictPopup, this));
+				}
 				BX.bind(document, 'keyup', BX.proxy(this.closeByEscape, this));
 				BX.bind(
 					this.getEntity(this.obBigSlider, 'close-popup'),
@@ -1909,7 +1925,7 @@
 		quantitySet: function(index)
 		{
 			var strLimit, resetQuantity;
-			
+
 			var newOffer = this.offers[index],
 				oldOffer = this.offers[this.offerNum];
 
@@ -2110,7 +2126,7 @@
 				strTreeValue = target.getAttribute('data-treevalue');
 				arTreeItem = strTreeValue.split('_');
 				this.searchOfferPropIndex(arTreeItem[0], arTreeItem[1]);
-				rowItems = BX.findChildren(target.parentNode, {tagName: 'li'}, false);
+				rowItems = BX.findChildren(target.parentNode, false);
 
 				if (rowItems && rowItems.length)
 				{
@@ -2161,6 +2177,7 @@
 
 			if (index > -1)
 			{
+
 				for (i = 0; i < index; i++)
 				{
 					strName = 'PROP_' + this.treeProps[i].ID;
@@ -2169,7 +2186,6 @@
 
 				strName = 'PROP_' + this.treeProps[index].ID;
 				arFilter[strName] = strPropValue;
-
 				for (i = index + 1; i < this.treeProps.length; i++)
 				{
 					strName = 'PROP_' + this.treeProps[i].ID;
@@ -2662,7 +2678,7 @@
 			}
 
 			quantity = parseFloat(quantity);
-			console.log(quantity);
+
 			var nearestQuantity = quantity;
 			var range, diffFrom, absDiffFrom, diffTo, absDiffTo, shortestDiff;
 
@@ -2719,7 +2735,7 @@
 					}
 				}
 			}
-			console.log(nearestQuantity)
+
 			return nearestQuantity;
 		},
 
@@ -2956,6 +2972,7 @@
 					case 0: // no catalog
 					case 1: // product
 					case 2: // set
+					case 7: // service
 						compareLink = url.replace('#ID#', this.product.id.toString());
 						break;
 					case 3: // sku
@@ -3107,6 +3124,7 @@
 				case 0: // no catalog
 				case 1: // product
 				case 2: // set
+				case 7: // service
 					if (this.product.id == id)
 					{
 						this.setCompared(false);
@@ -3140,6 +3158,7 @@
 			{
 				case 1: // product
 				case 2: // set
+				case 7: // service
 					this.basketUrl = this.basketUrl.replace('#ID#', this.product.id.toString());
 					break;
 				case 3: // sku
@@ -3281,6 +3300,7 @@
 			{
 				case 1: // product
 				case 2: // set
+				case 7: // service
 					if (this.basketData.useProps && !this.basketData.emptyProps)
 					{
 						this.initPopupWindow();
@@ -3345,6 +3365,7 @@
 					{
 						case 1: // product
 						case 2: // set
+						case 7: // service
 							productPict = this.product.pict.SRC;
 							break;
 						case 3: // sku
@@ -3441,6 +3462,7 @@
 				{
 					case 1:
 					case 2:
+					case 7: // service
 						this.viewedCounter.params.PRODUCT_ID = this.product.id;
 						this.viewedCounter.params.PARENT_ID = this.product.id;
 						break;
@@ -3493,3 +3515,34 @@
 		}
 	}
 })(window);
+
+function showHideBlock(that, id = 0, pricesBox = false) {
+	$(that).closest('div.d-flex').find('.offer-box').each(function (i,elem) {
+		$(elem).attr('data-active', 'false');
+		$(elem).removeClass('selected');
+		$(elem).closest('.offer-link').removeClass('selected');
+	});
+	$(that).attr('data-active', 'true');
+	$(that).closest('.offer-link').addClass('selected');
+	if (pricesBox) {
+		$(pricesBox).find('.prices-box').each(function (key,price) {
+			if (!$(price).hasClass('d-none')) {
+				$(price).addClass('d-none');
+				$(price).removeClass('active')
+			}
+		});
+		$(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('d-none').addClass('active');
+	}
+}
+$(document).on('click', '.offer-link .offer-box', function () {
+
+	const arrProductGrouped = JSON.parse($(document).find('#product_prop_data').val() ?? [{}]);
+	const propCodePriority = $(this).attr('data-prop_code');
+	let box_parent = $(this).closest('.catalog-item-product');
+	showHideBlock($(this), $(box_parent).find('.prices-all'));
+	const productsSuccess = sortOnPriorityArDataProducts(arrProductGrouped, propCodePriority)
+	window.location.href = window.location.protocol + '//' + window.location.hostname + productsSuccess[0].code;
+
+});
+
+

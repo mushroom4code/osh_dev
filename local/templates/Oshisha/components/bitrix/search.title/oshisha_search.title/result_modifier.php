@@ -3,15 +3,17 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 $PREVIEW_WIDTH = intval($arParams["PREVIEW_WIDTH"]);
-if ($PREVIEW_WIDTH <= 0)
-    $PREVIEW_WIDTH = 75;
+if ($PREVIEW_WIDTH <= 0) {
+	$PREVIEW_WIDTH = 75;
+}
 
 $PREVIEW_HEIGHT = intval($arParams["PREVIEW_HEIGHT"]);
-if ($PREVIEW_HEIGHT <= 0)
-    $PREVIEW_HEIGHT = 75;
+
+if ($PREVIEW_HEIGHT <= 0) {
+	$PREVIEW_HEIGHT = 75;
+}
 
 $arParams["PRICE_VAT_INCLUDE"] = $arParams["PRICE_VAT_INCLUDE"] !== "N";
-
 $arCatalogs = false;
 
 $arResult["ELEMENTS"] = array();
