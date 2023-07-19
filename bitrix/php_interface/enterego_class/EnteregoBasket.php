@@ -43,7 +43,7 @@ class EnteregoBasket
      * @throws \Bitrix\Main\NotImplementedException
      * @throws \Bitrix\Main\NotSupportedException
      */
-    public function OnSaleBasketBeforeSaved(Main\Event $event)
+    public static function OnSaleBasketBeforeSaved(Main\Event $event)
     {
         //TODO на форме заказа вызывается на почти на любое действие
         CModule::IncludeModule('iblock') || die();
