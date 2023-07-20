@@ -677,7 +677,7 @@ h4.checkout-block-title > i.fa {
 }
 
 #osh_delivery_ya_map_address {
-    width: 85% !important;
+    width: 85% ;
 }
 
 #saveBTN {
@@ -715,4 +715,39 @@ h4.checkout-block-title > i.fa {
 
 #osh-close-icon:before {
     transform: rotate(45deg);
+}
+
+#datepickers-container {
+    z-index: 999999;
+}
+
+@media screen and (max-width: 1110px) {
+    #osh-map-action {
+        flex-wrap: wrap;
+    }
+    #osh_delivery_ya_map_address {
+        width: 98%
+    }
+    #wrap_delivery_date_osh {
+        width: 400px;
+        margin-left: 0px !important;
+    }
+    #osh_delivery_ya_map_address {
+        margin-bottom: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 632px) {
+    #wrap_delivery_date_osh {
+        margin-bottom: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 465px) {
+    #wrap_delivery_date_osh {
+        width: unset;
+    }
+    #wrap_delivery_date_osh div {
+        display: unset !important;
+    }
 }
