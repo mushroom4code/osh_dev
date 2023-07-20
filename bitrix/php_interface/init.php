@@ -202,20 +202,34 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     ),
                     "items" => array(),
                 ),
-	              array(
-		              "parent_menu" => "global_menu_enterego",
-		              "icon" => "default_menu_icon",
-		              "page_icon" => "default_page_icon",
-		              "sort" => "200",
-		              "text" => "Строка Информатор",
-		              "title" => "Строка Информатор",
-		              "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
-		              "parent_page" => "global_menu_enterego",
-		              "more_url" => array(
-			              "informator.php",
-		              ),
-		              "items" => array(),
-	              )
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "200",
+                    "text" => "Строка Информатор",
+                    "title" => "Строка Информатор",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "informator.php",
+                    ),
+                    "items" => array(),
+                ),
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "200",
+                    "text" => "Товары для отображения в сладере на главной странице",
+                    "title" => "Товары для отображения в сладере на главной странице",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/main_page_slider_products.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "main_page_slider_products.php",
+                    ),
+                    "items" => array(),
+                )
             )
         ),
     );
@@ -228,6 +242,7 @@ class BXConstants
 {
 
     private static $_listPriceType;
+
     /**
      * @return array|string[]
      * @throws \Bitrix\Main\Db\SqlQueryException
@@ -239,7 +254,7 @@ class BXConstants
             return self::$_listPriceType;
         }
 
-        $priceTypes =  array(
+        $priceTypes = array(
             SALE_PRICE_TYPE_ID => "Сайт скидка",
             BASIC_PRICE => "Основная",
             B2B_PRICE => "b2b",
@@ -387,4 +402,6 @@ AddEventHandler('main', 'OnAfterUserAuthorize', ['\Enterego\AuthTokenTable', 'ge
 AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToken']);
 
 // bitrix24 feedback and callback integrations
-AddEventHandler('iblock', 'OnAfterIBlockElementAdd',['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
+AddEventHandler('iblock', 'OnAfterIBlockElementAdd', ['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
+
+require_once(__DIR__ . '/enterego_class/checkbox_property.php');
