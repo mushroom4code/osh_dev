@@ -5,10 +5,14 @@ use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Enterego\EnteregoSettings;
 use Enterego\UserPrice\UserPriceHelperOsh;
 
+require_once(__DIR__ . '/conf.php');
+
+if (SITE_ID === SITE_EXHIBITION) {
+    require_once(__DIR__ . '/redefinedClass/component.php');
+}
+
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
-
-require_once(__DIR__ . '/conf.php');
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
