@@ -157,6 +157,11 @@ $APPLICATION->SetTitle("О нас");
                     <img src="/about/o-nas/sarma.png" class="bonche"/>
                 </a>
             </div>
+            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
+                <a href="/catalog/chabacco/">
+                    <img src="/about/o-nas/chabacco.png" class="severnei"/>
+                </a>
+            </div>
         </div>
     </div>
     <div class="section_wrapper mb-5">
