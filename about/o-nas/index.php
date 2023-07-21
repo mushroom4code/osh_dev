@@ -158,7 +158,7 @@ $APPLICATION->SetTitle("О нас");
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="/catalog/chabacco/">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/chabacco/' : 'javascript:void(0)'?>">
                     <img src="/about/o-nas/chabacco.png" class="severnei"/>
                 </a>
             </div>
