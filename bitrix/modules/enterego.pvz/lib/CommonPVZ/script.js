@@ -1349,11 +1349,11 @@ BX.SaleCommonPVZ = {
 
     buildDeliveryTime: function () {
         let __this = this;
-        const datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
+        let datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
         const TimeDeliveryNode = BX.create({
             tag: 'div',
-            html: '<select style="background-color: unset; height: 40px; padding: 0px 23px;"' +
-                'class="form-control bx-soa-customer-input bx-ios-fix" id="datetime_interval_popup">' +
+            html: '<select style="background-color: unset; height: 40px; padding: 0 23px;"' +
+                ' class="form-control bx-soa-customer-input bx-ios-fix" id="datetime_interval_popup">' +
                 datetime_interval_order.html()+'</select>',
             dataset: {name: 'DELIVERYTIME_INTERVAL'},
         })
@@ -1389,7 +1389,7 @@ BX.SaleCommonPVZ = {
             );
 
             let datetime_interval_popup = $('#datetime_interval_popup');
-            datetime_interval_popup.val($('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]').val());
+            datetime_interval_popup.val(datetime_interval_order.val());
             datetime_interval_popup.on("change", function () {
                 $('[name="ORDER_PROP_'+__this.propDeliveryTimeInterval+'"]').val(this.value);
                 BX.Sale.OrderAjaxComponent.sendRequest();
