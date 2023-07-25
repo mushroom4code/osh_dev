@@ -313,6 +313,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.pickUpMapFocused = false;
                 this.deliveryLocationInfo = {};
                 this.initialized = {};
+                // Refresh profiles
+                this.savedDeliveryProfiles = result.savedDeliveryProfiles || [];
 
                 this.initOptions();
                 this.editOrder();
@@ -5976,7 +5978,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             inputs = propContainer.querySelectorAll('input[type=text]');
             for (i = 0; i < inputs.length; i++) {
                 inputs[i].placeholder = settings.DESCRIPTION;
-                let value_string = settings.VALUE[0];
+                let value_string = settings?.VALUE[0] || 'null';
                 if (value_string.indexOf('noemail') !== -1 || value_string.indexOf('<') !== -1) {
                     inputs[i].value = '';
                 }
@@ -6790,7 +6792,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         break;
                     }
                 }
-                if (!checkedDelivery.CALCULATE_ERRORS) {
+                if (!checkedDelivery?.CALCULATE_ERRORS) {
                     this.totalInfoBlockNode.appendChild(
                         BX.create('DIV', {
                             props: {className: 'bx-soa-cart-total-button-container' + ('d-block')},

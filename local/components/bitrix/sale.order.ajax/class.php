@@ -4084,6 +4084,8 @@ class SaleOrderAjax extends \CBitrixComponent
 
         $this->showAjaxAnswer([
             'order' => $this->arResult['JS_DATA'],
+            // Enterego profile delivery
+            'savedDeliveryProfiles' => \CommonPVZ\SavedDeliveryProfiles::getAll($USER->GetID(),$this->arUserResult['PERSON_TYPE_ID']),
             'locations' => $this->arResult['LOCATIONS'],
             'error' => $error,
         ]);

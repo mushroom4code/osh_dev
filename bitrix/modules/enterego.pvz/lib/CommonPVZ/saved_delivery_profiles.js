@@ -64,9 +64,13 @@ BX.SavedDeliveryProfiles = {
                 delivery['CHECKED'] = 'Y'
         })
         element['PROPERTIES'].forEach((property) => {
-            BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.ID == property['PROPERTY_ID']).VALUE[0] = property['VALUE'];
+            console.log(property)
+            let elem  = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.ID === property['PROPERTY_ID']);
+           if(elem?.VALUE) {
+               elem.VALUE = property['VALUE']
+           }
         });
-        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE == 'ADDRESS').VALUE[0] = element['ADDRESS'].split(';')[0];
+        BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE == 'ADDRESS').VALUE = element['ADDRESS'].split(';')[0];
         var tempLocations = BX.Sale.OrderAjaxComponent.locations;
         var elementLocation = element['PROPERTIES'].find(prop => prop['CODE'] == 'LOCATION');
         Object.keys(tempLocations).forEach((locationKey) => {
