@@ -2001,7 +2001,7 @@ BX.SaleCommonPVZ = {
         this.checkout.paysystem.titleIcon = BX.create('span', {attrs: {className: 'payment-title-icon'}});
 
         BX.removeClass(this.checkout.paysystem.titleBox, 'justify-content-between')
-        BX.insertAfter(this.checkout.paysystem.titleIcon, this.checkout.paysystem.title)
+        // BX.insertAfter(this.checkout.paysystem.titleIcon, this.checkout.paysystem.title)
 
         return this
     },
@@ -2018,7 +2018,7 @@ BX.SaleCommonPVZ = {
         this.checkout.delivery.title = BX.findChild(deliveryTitleBox,
             {'class':'bx-soa-section-title'}, true)
         BX.removeClass(deliveryTitleBox, 'justify-content-between')
-        BX.insertAfter(BX.create('span', {attrs: {className: 'delivery-title-icon'}}), this.checkout.delivery.title)
+        // BX.insertAfter(BX.create('span', {attrs: {className: 'delivery-title-icon'}}), this.checkout.delivery.title)
 
         //Поиск блока с единой доставкой и замена его на виджет
         const pvzCheckBox = BX('ID_DELIVERY_ID_' + this.pvzDeliveryId)
