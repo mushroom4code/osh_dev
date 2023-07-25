@@ -1,10 +1,12 @@
 <?php
-
+/*
+ * @var $APPLICATION
+ */
 define("HIDE_SIDEBAR", true);
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetPageProperty("title", "Хиты");
-$APPLICATION->SetTitle("Хиты");
+$APPLICATION->SetPageProperty("title", "Акции");
+$APPLICATION->SetTitle("Акции");
 /**
  * @var  CAllMain|CMain $APPLICATION
  */

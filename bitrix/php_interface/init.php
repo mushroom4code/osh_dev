@@ -388,3 +388,5 @@ AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToke
 
 // bitrix24 feedback and callback integrations
 AddEventHandler('iblock', 'OnAfterIBlockElementAdd',['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
+
+require_once(__DIR__.'/enterego_class/EnteregoDiscountsEvents.php');
