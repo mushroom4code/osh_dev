@@ -1,3 +1,24 @@
+// COLOR TASTE
+function tasteInit() {
+    let box = $('.variation_taste');
+
+    $(box).find('span').each(
+        function () {
+            let classes = $(this).attr('class');
+            if (classes.indexOf('taste') !== -1) {
+                let color = $(this).data('background');
+                $(this).css('background-color', color);
+                let str = '#';
+                if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
+                    && color !== '#F55F5C' && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
+                    $(this).css('color', 'black');
+                } else {
+                    $(this).css('color', 'white');
+                }
+            }
+        }
+    );
+}
 $(document).ready(function () {
     let div = $('div'),
         body = $('body'),
@@ -145,27 +166,6 @@ $(document).ready(function () {
         if (that.closest('.bx_catalog_item_container') === null) {
             return parseInt($('.product-item-detail-price-current').text().match(/[\d]/gi).join(''));
         }
-    }
-    // COLOR TASTE
-    function tasteInit() {
-        let box = $('.variation_taste');
-
-        $(box).find('span').each(
-            function () {
-                let classes = $(this).attr('class');
-                if (classes.indexOf('taste') !== -1) {
-                    let color = $(this).data('background');
-                    $(this).css('background-color', color);
-                    let str = '#';
-                    if (parseInt(color.replace(str, ''), 16) > 0xffffff / 1.1
-                        && color !== '#F55F5C' && color !== '#FF0E15' && color !== '#FF0F17' || color === '#9FFEB0' || color === '#CBF4FF') {
-                        $(this).css('color', 'black');
-                    } else {
-                        $(this).css('color', 'white');
-                    }
-                }
-            }
-        );
     }
 
     if (bool === true) {

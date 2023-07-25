@@ -140,15 +140,7 @@ class CBitrixComponent
 			$this->__editButtons = $component->__editButtons;
 			$this->classOfComponent = $component->classOfComponent;
 			$this->setSiteId($component->getSiteId());
-
-//          Enterego - exhibition Templates
-            $filePath = '/local/templates/'.$component->getSiteTemplateId().'/components'
-                .CComponentEngine::MakeComponentPath($this->__name);
-            $siteTemplate = $component->getSiteTemplateId();
-            if(!file_exists($_SERVER['DOCUMENT_ROOT'].$filePath)){
-                $siteTemplate = 'Oshisha';
-            }
-            $this->setSiteTemplateId($siteTemplate);
+            $this->setSiteTemplateId($component->getSiteTemplateId());
 			$this->setLanguageId($component->getLanguageId());
 		}
 		else
@@ -594,14 +586,6 @@ class CBitrixComponent
 		//these vars are used in the component file
 		$arParams = &$this->arParams;
 		$arResult = &$this->arResult;
-//        Enterego - exhibition Templates
-            $filePath = '/local/templates/'.$this->getSiteTemplateId().'/components'
-                .CComponentEngine::MakeComponentPath($this->__name);
-            $siteTemplate = $this->getSiteTemplateId();
-            if(!file_exists($_SERVER['DOCUMENT_ROOT'].$filePath)){
-                $siteTemplate = 'Oshisha';
-            }
-            $this->setSiteTemplateId($siteTemplate);
 
 		$componentPath = $this->__path;
 		$componentName = $this->__name;
@@ -636,6 +620,15 @@ class CBitrixComponent
 	{
 		if (!$this->__bInited)
 			return null;
+
+//      Enterego - exhibition Templates
+        $filePath = '/local/templates/'.$this->getSiteTemplateId().'/components'
+            .CComponentEngine::MakeComponentPath($this->__name);
+        $siteTemplate = $this->getSiteTemplateId();
+        if(!file_exists($_SERVER['DOCUMENT_ROOT'].$filePath)){
+            $siteTemplate = 'Oshisha';
+        }
+        $this->setSiteTemplateId($siteTemplate);
 
 		if ($componentTemplate !== false)
 			$this->setTemplateName($componentTemplate);
