@@ -1275,7 +1275,7 @@ BX.SaleCommonPVZ = {
             props: {
                 type: 'text',
                 readOnly: 'readonly',
-                className: 'datepicker_order readonly form-control bx-soa-customer-input bx-ios-fix',
+                className: 'datepicker_order date_delivery_main readonly form-control bx-soa-customer-input bx-ios-fix',
                 style: 'background-color: unset',
             },
             dataset: {name: 'DATE_DELIVERY'},
@@ -1311,7 +1311,7 @@ BX.SaleCommonPVZ = {
                 BX('pvz_user_data')
             );
 
-            const tomorrow    = new Date();
+            let tomorrow    = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             let curDate = new Date(this.getValueProp(this.propDateDeliveryId))
             if (isNaN(curDate)) {
@@ -1321,6 +1321,10 @@ BX.SaleCommonPVZ = {
                 minDate: tomorrow,
                 selectedDates: curDate,
                 onSelect: function (date, opts, datepicker) {
+                    let datepicker_osh_input = $('input.datepicker_order.date_delivery_osh');
+                    if (datepicker_osh_input.length !== 0) {
+                        datepicker_osh_input.val(date)
+                    }
                     this.updateValueProp(this.propDateDeliveryId, date)
                     if (datepicker.opts.silentBool !== true) {
                         window.commonDelivery.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
@@ -1994,10 +1998,8 @@ BX.SaleCommonPVZ = {
             'class':'bx-soa-section-title-container'}, true)
         this.checkout.paysystem.title = BX.findChild(this.checkout.paysystem.titleBox, {
             'class':'bx-soa-section-title'}, true)
-        this.checkout.paysystem.titleIcon = BX.create('span', {attrs: {className: 'payment-title-icon'}});
 
         BX.removeClass(this.checkout.paysystem.titleBox, 'justify-content-between')
-        BX.insertAfter(this.checkout.paysystem.titleIcon, this.checkout.paysystem.title)
 
         return this
     },
@@ -2014,7 +2016,6 @@ BX.SaleCommonPVZ = {
         this.checkout.delivery.title = BX.findChild(deliveryTitleBox,
             {'class':'bx-soa-section-title'}, true)
         BX.removeClass(deliveryTitleBox, 'justify-content-between')
-        BX.insertAfter(BX.create('span', {attrs: {className: 'delivery-title-icon'}}), this.checkout.delivery.title)
 
         //Поиск блока с единой доставкой и замена его на виджет
         const pvzCheckBox = BX('ID_DELIVERY_ID_' + this.pvzDeliveryId)

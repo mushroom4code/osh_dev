@@ -37,7 +37,7 @@ $APPLICATION->IncludeComponent(
     "oshisha_catalog.section",
     array(
         "IBLOCK_TYPE" => "1c_catalog",
-        "IBLOCK_ID" => IBLOCK_CATALOG,
+        "IBLOCK_ID" => $arParams['IBLOCK_ID'],
         "TEMPLATE_THEME" => "site",
         "DETAIL_SHOW_MAX_QUANTITY"=>"Y",
         "HIDE_NOT_AVAILABLE" => "L",

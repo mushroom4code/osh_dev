@@ -55,13 +55,6 @@ $dateOption = json_decode(COption::GetOptionString('activation_price_admin', 'PE
         .box_with_box_button, .box_with_boxes {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .box_with_box_button {
-            margin: 3rem 0;
-            align-items: center;
         }
 
         .mr-3 {

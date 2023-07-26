@@ -134,7 +134,7 @@ if (Loader::includeModule('search')) {
         if (is_array($arElements)) {
             echo '<div class="mb-5" style="color: #999999;font-weight: 600;font-size: 37px;">К сожалению, такого товара нет на сайте.</div>';
 
-            if ($USER->IsAuthorized()) {
+            if ($USER->IsAuthorized() && SITE_ID !== SITE_EXHIBITION) {
                 if (!isset($arParams['USE_BIG_DATA']) || $arParams['USE_BIG_DATA'] != 'N') {
                     ?>
                     <div class="row mb-3 mt-5 by-card">

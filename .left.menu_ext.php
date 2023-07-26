@@ -1,28 +1,29 @@
 <?
-if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 global $APPLICATION;
 $aMenuLinksExt = array();
 
-if(CModule::IncludeModule('iblock'))
-{
+if (CModule::IncludeModule('iblock')) {
     $arFilter = array(
         "TYPE" => "1c_catalog",
         "SITE_ID" => SITE_ID,
-		"ID" => IBLOCK_CATALOG,
+        "ID" => IBLOCK_CATALOG,
         'ACTIVE' => 'Y'
     );
+
+    if (SITE_ID === SITE_EXHIBITION) {
+        $arFilter['ID'] = IBLOCK_CATALOG_EX;
+    }
 
     $dbIBlock = CIBlock::GetList(array('SORT' => 'ASC', 'ID' => 'ASC'), $arFilter);
     $dbIBlock = new CIBlockResult($dbIBlock);
 
-    if ($arIBlock = $dbIBlock->GetNext())
-    {
-        if(defined("BX_COMP_MANAGED_CACHE"))
-            $GLOBALS["CACHE_MANAGER"]->RegisterTag("iblock_id_".$arIBlock["ID"]);
+    if ($arIBlock = $dbIBlock->GetNext()) {
+        if (defined("BX_COMP_MANAGED_CACHE"))
+            $GLOBALS["CACHE_MANAGER"]->RegisterTag("iblock_id_" . $arIBlock["ID"]);
 
-        if($arIBlock["ACTIVE"] == "Y")
-        {
+        if ($arIBlock["ACTIVE"] == "Y") {
             $aMenuLinksExt =
                 $APPLICATION->IncludeComponent("bitrix:oshisha_menu.sections",
                     "",
@@ -40,7 +41,7 @@ if(CModule::IncludeModule('iblock'))
         }
     }
 
-    if(defined("BX_COMP_MANAGED_CACHE"))
+    if (defined("BX_COMP_MANAGED_CACHE"))
         $GLOBALS["CACHE_MANAGER"]->RegisterTag("iblock_id_new");
 }
 

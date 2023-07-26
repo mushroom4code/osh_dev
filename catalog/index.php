@@ -7,13 +7,21 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
  * @var  CAllMain|CMain $APPLICATION
  */
 
+// сайт выставка Enterego
+$iblock_id = IBLOCK_CATALOG;
+$priceCodes = BXConstants::PriceCode();
+
+if (SITE_ID === SITE_EXHIBITION) {
+    $iblock_id = IBLOCK_CATALOG_EX;
+    $priceCodes = [0 => "b2b"];
+}
 
 $APPLICATION->IncludeComponent(
 	"bitrix:catalog", 
 	"oshisha_catalog.catalog", 
 	array(
 		"IBLOCK_TYPE" => "1c_catalog",
-		"IBLOCK_ID" => IBLOCK_CATALOG,
+		"IBLOCK_ID" => "$iblock_id",
 		"TEMPLATE_THEME" => "site",
 		"DETAIL_SHOW_MAX_QUANTITY" => "Y",
 		"HIDE_NOT_AVAILABLE" => "L",
@@ -43,13 +51,16 @@ $APPLICATION->IncludeComponent(
 		"FILTER_NAME" => "ArFilter",
 		"FILTER_VIEW_MODE" => "VERTICAL",
 		"USE_COMPARE" => "N",
-		"PRICE_CODE" => BXConstants::PriceCode(),
+		"PRICE_CODE" => $priceCodes,
 		"FILL_ITEM_ALL_PRICES" => "Y",
 		"USE_PRICE_COUNT" => "N",
 		"SHOW_PRICE_COUNT" => "100",
 		"PRICE_VAT_INCLUDE" => "Y",
 		"PRICE_VAT_SHOW_VALUE" => "N",
 		"PRODUCT_PROPERTIES" => array(
+			0 => "VKUS",
+			1 => "DISKONT",
+			2 => "KHIT",
 		),
 		"USE_PRODUCT_QUANTITY" => "Y",
 		"CONVERT_CURRENCY" => "N",
@@ -61,7 +72,7 @@ $APPLICATION->IncludeComponent(
 		"SECTION_TOP_DEPTH" => "1",
 		"SECTIONS_VIEW_MODE" => "TILE",
 		"SECTIONS_SHOW_PARENT_NAME" => "N",
-		"PAGE_ELEMENT_COUNT" => "36",
+		"PAGE_ELEMENT_COUNT" => "16",
 		"LINE_ELEMENT_COUNT" => "3",
 		"ELEMENT_SORT_FIELD" => "name",
 		"ELEMENT_SORT_ORDER" => "asc",
@@ -100,6 +111,7 @@ $APPLICATION->IncludeComponent(
 		"SECTION_BACKGROUND_IMAGE" => "-",
 		"DETAIL_PROPERTY_CODE" => array(
 			0 => "BREND",
+			1 => "",
 		),
 		"DETAIL_META_KEYWORDS" => "-",
 		"DETAIL_META_DESCRIPTION" => "-",
