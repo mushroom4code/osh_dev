@@ -1399,7 +1399,6 @@ BX.SaleCommonPVZ = {
             datetime_interval_popup.val(datetime_interval_order.val());
             datetime_interval_popup.on("change", function () {
                 $('[name="ORDER_PROP_'+__this.propDeliveryTimeInterval+'"]').val(this.value);
-                BX.Sale.OrderAjaxComponent.sendRequest();
             });
         }
     },
