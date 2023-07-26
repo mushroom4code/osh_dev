@@ -1,7 +1,5 @@
 <?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
-use Enterego\EnteregoHelper;
-
 /**
  * @global CMain $APPLICATION
  * @var array $arParams
@@ -105,7 +103,7 @@ if (!$show_price) {
     $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
 }
 
-$subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"], 'ITEM_ID');
+$subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"]??[], 'ITEM_ID');
 $found_key = array_search((string)$item['ID'], $subscription_item_ids);
 $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
 
@@ -164,8 +162,7 @@ if ($show_price) {
         $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
         $togglerState = 'd-none';
         $listClass = '';
-
-        if (count($taste['VALUE']) > 0) {
+        if ($taste['VALUE']) {
             if (count($taste['VALUE']) > 2) {
                 $showToggler = true;
             } elseif (count($taste['VALUE']) > 1) {
@@ -179,33 +176,33 @@ if ($show_price) {
         <div class="item-product-info">
             <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
                 <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
+                    <?php if ($taste['VALUE']) {
+                        foreach ($taste['VALUE'] as $key => $name) {
+                            foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
+                                if ($key === $keys) {
+                                    $color = explode('#', $value);
+                                    $tasteSize = 'taste-small';
 
-                    <?php foreach ($taste['VALUE'] as $key => $name) {
-                        foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
-                            if ($key === $keys) {
-                                $color = explode('#', $value);
-                                $tasteSize = 'taste-small';
+                                    if (4 < mb_strlen($name) && mb_strlen($name) <= 8) {
+                                        $tasteSize = 'taste-normal';
+                                    } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
+                                        $tasteSize = 'taste-long';
+                                    } elseif (mb_strlen($name) > 13) {
+                                        $tasteSize = 'taste-xxl';
+                                    }
 
-                                if (4 < mb_strlen($name) && mb_strlen($name) <= 8) {
-                                    $tasteSize = 'taste-normal';
-                                } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
-                                    $tasteSize = 'taste-long';
-                                } elseif (mb_strlen($name) > 13) {
-                                    $tasteSize = 'taste-xxl';
-                                }
-
-                                $propId = $taste['ID'];
-                                $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
-                                ?>
-                                <span class="taste js__taste <?= $tasteSize ?>"
-                                      data-prop-id="<?= "ArFilter_{$propId}" ?>"
-                                      data-background="<?= '#' . $color[1] ?>"
-                                      id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
-                                      data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?></span>
-                            <?php }
+                                    $propId = $taste['ID'];
+                                    $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
+                                    ?>
+                                    <span class="taste js__taste <?= $tasteSize ?>"
+                                          data-prop-id="<?= "ArFilter_{$propId}" ?>"
+                                          data-background="<?= '#' . $color[1] ?>"
+                                          id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
+                                          data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?></span>
+                                <?php }
+                            }
                         }
                     } ?>
-
                 </div>
                 <div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
             </div>
@@ -298,7 +295,7 @@ if ($show_price) {
                 </div>
             <?php } ?>
             <div class="box_with_title_like d-flex align-items-center">
-                <?php if (count($taste['VALUE']) > 0) { ?>
+                <?php if ($taste['VALUE']) { ?>
                     <div class="toggle_taste_line">
                         <div class="variation_taste">
                             <?php foreach ($taste['VALUE'] as $key => $name) {

@@ -89,12 +89,14 @@ if (IsModuleInstalled("advertising")):?>
         </div>
     </div>
 <?php endif;
-
-global $trendFilter;
-$trendFilter = array('PROPERTY_TREND' => '4');
-?><span class="title_home">
+if (SITE_ID !== SITE_EXHIBITION) {
+    global $trendFilter;
+    $trendFilter = array('PROPERTY_TREND' => '4');
+    ?>
+    <span class="title_home">
 <div class="h1">Актуальное</div>
- <a href=".<?php echo SITE_DIR ?>catalog/kalyany/" style="display:none;" class="link_menu_catalog link_red_button">Посмотреть все</a></span>
+ <a href=".<?php echo SITE_DIR ?>catalog/kalyany/" style="display:none;" class="link_menu_catalog link_red_button">Посмотреть все</a>
+</span>
     <?php
     $actualBlockData = array(
         'select' => array('ID', 'UF_IMG', 'UF_STR', 'UF_LINK'),

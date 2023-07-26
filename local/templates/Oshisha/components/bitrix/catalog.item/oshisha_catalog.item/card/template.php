@@ -3,7 +3,7 @@
 /**
  * @global CMain $APPLICATION
  * @var array $arParams
- * @var array $itemы
+ * @var array $item
  * @var array $actualItem
  * @var array $minOffer
  * @var array $itemIds
