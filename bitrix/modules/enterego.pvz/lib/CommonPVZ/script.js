@@ -660,6 +660,7 @@ BX.SaleCommonPVZ = {
      */
     buildPVZMap: function () {
         this.removeDeliveryDate()
+        this.removeDeliveryTime()
         BX.remove(BX('user-address-wrap'))
         BX.remove(BX('button-success-delivery'))
         BX.show(BX('wrap_data_view'))
@@ -1270,6 +1271,12 @@ BX.SaleCommonPVZ = {
       if (BX('wrap_delivery_date')){
           BX.remove(BX('wrap_delivery_date'));
       }
+    },
+
+    removeDeliveryTime: function () {
+        if (BX('wrap_delivery_time')){
+            BX.remove(BX('wrap_delivery_time'));
+        }
     },
 
     buildDeliveryDate: function () {
