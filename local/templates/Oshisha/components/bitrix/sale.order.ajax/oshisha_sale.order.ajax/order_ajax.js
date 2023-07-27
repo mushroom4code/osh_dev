@@ -313,9 +313,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.pickUpMapFocused = false;
                 this.deliveryLocationInfo = {};
                 this.initialized = {};
-                // Refresh profiles
-                this.savedDeliveryProfiles = result.savedDeliveryProfiles || [];
-
                 this.initOptions();
                 this.editOrder();
                 this.mapsReady && this.initMaps();

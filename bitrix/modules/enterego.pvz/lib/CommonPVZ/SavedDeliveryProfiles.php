@@ -2,9 +2,6 @@
 
 namespace CommonPVZ;
 
-use Bitrix\Sale\Internals\UserPropsValueTable;
-use Bitrix\Sale\Order;
-
 class SavedDeliveryProfiles
 {
     public static function save($order) {
@@ -102,54 +99,24 @@ class SavedDeliveryProfiles
         }
     }
 
-    public static function getAll($userId, $person_type_id = 1) {
+    public static function getAll($userId) {
         try {
             $savedProfilesRes = ProfilesAddressesTable::getList(['filter' => [
                 'USER_ID' => $userId,
-                ]
+            ]
             ]);
-            $savedProfiles = $savedCurData = [];
-            while ($Profile = $savedProfilesRes->fetch()) {
-//              Get person type in profile order on delivery_id with user_id
-                $dbRes = Order::getList([
-                    'filter' => [
-                        "USER_ID" => $userId,
-                        "DELIVERY_ID" => $Profile['PROFILE_ID']
-                    ],
-                    'select'=> ['PERSON_TYPE_ID','ORDER_ID'],
-                ]);
-
-
-//              select accent person_type_id for current params order profile
-                while ($order = $dbRes->fetch()) {
-                    $propValue =  UserPropsValueTable::getList([
-                        'filter' => [
-                            "ORDER_ID" => $order['ORDER_ID'],
-                            "NAME"=> ['Адрес доставки','Выбранный ПВЗ'],
-                            "DELIVERY_ID" => $Profile['PROFILE_ID']
-                        ],
-                        'select'=> ['PERSON_TYPE_ID'],
-                    ]);
-                    if ($person_type_id === (int)$order['PERSON_TYPE_ID']) {
-                        $Profile['PERSON_TYPE_ID'] = $order['PERSON_TYPE_ID'];
-                        $savedCurData[] = $Profile;
-                    }
-                }
-            }
-
-            foreach ($savedCurData as $savedProfile){
+            $savedProfiles = [];
+            while ($savedProfile = $savedProfilesRes->fetch()) {
                 $savedProfilesPropertiesRes = ProfilesPropertiesTable::getList([
-                    'filter'=> [
+                    'filter'=>[
                         'SAVED_PROFILE_ID' => $savedProfile['ID']
                     ]
                 ]);
                 while ($savedProfileProperty = $savedProfilesPropertiesRes->fetch()) {
                     $savedProfile['PROPERTIES'][] = $savedProfileProperty;
                 }
-
                 $savedProfiles[] = $savedProfile;
             }
-
             return $savedProfiles;
         } catch (\Throwable $e) {
             return false;
