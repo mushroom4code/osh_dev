@@ -1153,8 +1153,8 @@ div.slick-list, div.slick-track {
 
 .product-slider-controls-image img {
     padding: 3px;
-    /*width: 58px;*/
-    /*height: 58px;*/
+    width: 95px;
+    height:95px;
 }
 
 .slider-controls {
@@ -1178,6 +1178,12 @@ div.slick-list, div.slick-track {
     margin-right: 7px;
     /*width: 60px !important;*/
     border-radius: 10px;
+    width: 100px !important;
+    height: 100px;
+}
+
+.box-with-image-one img {
+    max-height: 64vh;
 }
 
 /*@media (min-width: 1024px) and (max-width: 1340px) {*/
@@ -1350,6 +1356,26 @@ div.slick-list, div.slick-track {
 
 @media (min-width: 450px) and (max-width: 768px) {
     div.box-with-image-one img {
-        width: fit-content !important;
+        object-fit: contain;
+        transition: none !important;
     }
+}
+
+@media (max-width: 992px) {
+    .product-slider-controls-image img {
+        width: 75px;
+        height:75px;
+    }
+    div.product-slider-controls-image {
+        width: 80px !important;
+        height: 80px;
+    }
+}
+
+div.box-with-image-one .slick-track {
+    display: flex;
+}
+
+div.box-with-image-one .slick-slide {
+    align-self: center;
 }

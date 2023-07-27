@@ -2693,23 +2693,16 @@ $(document).on('click', '.open-fast-window', function () {
 
                 el.addEventListener('mouseleave', function (e) {
                     let target = e.target;
-                    target.style.setProperty('background-size', '100%');
+                    if((window.innerWidth >= 450) && (window.innerWidth <= 768)) {
+                        target.style.setProperty('background-size', '0%');
+                    } else {
+                        target.style.setProperty('background-size', '100%');
+                    }
                     target.src = target.style.backgroundImage.replace(/(url\(|\)|")/g, '');
                     if (target.classList.contains('-active')) {
                         target.classList.remove('-enter');
                     }
                 });
-
-                el.addEventListener('click', function (e) {
-                    let target = e.target;
-                    if (target.classList.contains('-active')) {
-
-                        target.style.setProperty('background-size', '100%');
-                        target.src = target.style.backgroundImage.replace(/(url\(|\)|")/g, '');
-
-                        target.classList.remove('-enter');
-                    }
-                })
             });
         }
     }
