@@ -487,17 +487,11 @@
     .max-width-1250 {
         max-width: 1188px;
     }
-    div.open-modal-product {
-        height: 75%;
-    }
 }
 
 @media (max-width: 1240px) {
     .max-width-1250 {
         max-width: 1100px;
-    }
-    div.open-modal-product {
-        height: 73%;
     }
 }
 
@@ -505,11 +499,9 @@
     .product-item-big-card .product-item-title a {
         font-size: 18px;
     }
+
     .max-width-1250 {
         max-width: 1020px;
-    }
-    div.open-modal-product {
-        height: 71%;
     }
 }
 
@@ -517,9 +509,7 @@
     .max-width-1250 {
         max-width: 950px;
     }
-    div.open-modal-product {
-        height: 63%;
-    }
+
     .top-32 {
         top: 12% !important;
     }
@@ -529,12 +519,11 @@
     .product-item-big-card .product-item-title a {
         font-size: 16px;
     }
+
     .max-width-1250 {
         max-width: 900px;
     }
-    div.open-modal-product {
-        height: 64%;
-    }
+
     div.slick-images-controls div.slick-slide {
         width: 70px !important;
     }
@@ -1092,7 +1081,7 @@ input::-webkit-inner-spin-button {
 
 .open-modal-product {
     filter: drop-shadow(0px 2px 2px rgba(57, 57, 57, 0.13));
-    height: 88%;
+    height: fit-content;
 }
 
 .box-with-image-prod {
@@ -1133,9 +1122,8 @@ div.slick-list, div.slick-track {
 /*    height: fit-content;*/
 /*}*/
 
-.slick-slide {
-    margin-right: 10px;
-    margin-left: 10px
+.slick-slide:not(:last-of-type) {
+    margin-right: 20px;
 }
 
 .slick-slide > div {
@@ -1174,10 +1162,6 @@ div.slick-list, div.slick-track {
     left: 2%;
 }
 
-.slick-images-controls {
-    width: 400px
-}
-
 .slick-images-controls .slick-slide {
     width: 100px !important;
 }
@@ -1202,11 +1186,6 @@ div.slick-list, div.slick-track {
 /*    }*/
 /*}*/
 
-@media (min-width: 768px) and (max-width: 910px) {
-    div.open-modal-product {
-        height: 63%;
-    }
-}
 
 @media (min-width: 768px) and (max-width: 1023px) {
     .max-width-1024 {
@@ -1218,13 +1197,12 @@ div.slick-list, div.slick-track {
     }
 
     .font-27 {
-        font-size: 23px!important;
+        font-size: 23px !important;
     }
 
     /*.box-with-image-prod img.w-h-350 {*/
     /*    max-height: 347px;*/
     /*}*/
-
     /*.box-with-image-prod {*/
     /*    min-height: 350px;*/
     /*    height: 350px;*/
@@ -1233,12 +1211,30 @@ div.slick-list, div.slick-track {
 }
 
 @media (max-width: 768px) {
+    .open-modal-product .product-image-main-slider {
+        height: 335px !important;
+    }
+
+    div.open-modal-product div.js-parent-flex {
+        max-height: 35vh;
+    }
+
+    div.box-with-image-one img {
+        width: 100% !important;
+        align-self: center;
+        max-height: 100%
+    }
+
     .product-item-label-text > div {
         line-height: 0;
     }
 
     .open-modal-product h5.font-19 {
         font-size: 16px !important;
+    }
+
+    div.open-modal-product div.product-image-sliders-box {
+        height: fit-content;
     }
 
     .product-item-label-text.product-item-label-small span,
@@ -1295,7 +1291,6 @@ div.slick-list, div.slick-track {
     /*    width: 200px !important;*/
     /*    height: 200px;*/
     /*}*/
-
     .box-with-image-prod {
         min-height: 330px;
         height: 330px;
@@ -1323,20 +1318,15 @@ div.slick-list, div.slick-track {
         height: 100% !important;
     }
 
-    .slider-controls, .max-width-400, .slick-images-controls {
-        max-width: 300px !important;
-    }
-
     .product-slider-controls-image {
         margin-right: 3px;
         /*width: 50px !important;*/
     }
 
     /*.product-slider-controls-image img {*/
-        /*width: 45px;*/
-        /*height: 45px;*/
+    /*width: 45px;*/
+    /*height: 45px;*/
     /*}*/
-
     .slick-images-controls .slick-slide {
         width: 100px !important;
     }
@@ -1351,5 +1341,15 @@ div.slick-list, div.slick-track {
 
     .open-fast-window {
         left: 83%;
+    }
+}
+
+.open-modal-product .product-image-sliders-box {
+    height: 100%
+}
+
+@media (min-width: 450px) and (max-width: 768px) {
+    div.box-with-image-one img {
+        width: fit-content !important;
     }
 }

@@ -2170,6 +2170,7 @@
 })(window);
 
 $(document).on('click', '.open-fast-window', function () {
+    $(document.body).css('overflow', 'hidden');
     let json_product = $(this).closest('.catalog-item-product').find('input.product-values').val();
 
     if (json_product !== '') {
@@ -2224,66 +2225,83 @@ $(document).on('click', '.open-fast-window', function () {
                 className: 'd-flex flex-lg-row flex-md-row flex-column js-parent-flex'
             },
             style: {
-                height: '95%',
+                height: '92%',
             },
             children: [
-                BX.create('DIV', {
+                BX.create('div', {
                     props: {
-                        className: 'box-with-image-prod col-lg-8 col-md-8 col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
-                    },
-                    style: {
-                        height: '100%',
+                        className: 'product-image-sliders-box col-lg-7 col-md-7'
                     },
                     children: [
-                        BX.create('div', {
-                            props: {
-                                className: 'flex-class box-with-image-one height_100',
-                            },
-                            children: [
-                                BX.create('IMG', {
-                                    props: {
-                                        className: 'w-h-350 js-one-img',
-                                        src: product.MORE_PHOTO[0].SRC,
-                                        alt: 'modal-product'
-                                    },
-                                    style: {
-                                        height: '100%',
-                                    }
-                                }),
-                            ]
-                        }),
                         BX.create('DIV', {
                             props: {
-                                className: 'position-absolute like-with-fav',
+                                className: 'd-flex flex-lg-row flex-md-row product-image-main-slider'
+                            },
+                            style: {
+                                height: '75%'
                             },
                             children: [
                                 BX.create('DIV', {
                                     props: {
-                                        className: 'box_with_like like-modal',
+                                        className: 'box-with-image-prod col-12 mb-lg-0 mb-md-0 mb-4 position-relative'
+                                    },
+                                    style: {
+                                        height: '100%',
                                     },
                                     children: [
-                                        BX.create('A', {
+                                        BX.create('div', {
                                             props: {
-                                                className: 'icon_like method mb-3',
-                                                title: "Нравится",
-                                                href: 'javascript:void(0);'
+                                                className: 'flex-class box-with-image-one height_100',
                                             },
-                                            dataset: {
-                                                method: 'like'
-                                            },
-                                            html: '<i class="fa fa-heart-o" aria-hidden="true"></i>' +
-                                                '<article class="like_span" id="likes">' + product.LIKE.COUNT_LIKES + '</article>'
+                                            children: [
+                                                BX.create('IMG', {
+                                                    props: {
+                                                        className: 'w-h-350 js-one-img',
+                                                        src: product.MORE_PHOTO[0].SRC,
+                                                        alt: 'modal-product'
+                                                    },
+                                                    style: {
+                                                        height: '100%',
+                                                    }
+                                                }),
+                                            ]
                                         }),
-                                        BX.create('A', {
+                                        BX.create('DIV', {
                                             props: {
-                                                className: 'product-item__favorite-star method',
-                                                title: "Добавить в избранное",
-                                                href: 'javascript:void(0);'
+                                                className: 'position-absolute like-with-fav',
                                             },
-                                            dataset: {
-                                                method: 'favorite'
-                                            },
-                                            html: '<i class="fa fa-star-o" aria-hidden="true"></i>'
+                                            children: [
+                                                BX.create('DIV', {
+                                                    props: {
+                                                        className: 'box_with_like like-modal',
+                                                    },
+                                                    children: [
+                                                        BX.create('A', {
+                                                            props: {
+                                                                className: 'icon_like method mb-3',
+                                                                title: "Нравится",
+                                                                href: 'javascript:void(0);'
+                                                            },
+                                                            dataset: {
+                                                                method: 'like'
+                                                            },
+                                                            html: '<i class="fa fa-heart-o" aria-hidden="true"></i>' +
+                                                                '<article class="like_span" id="likes">' + product.LIKE.COUNT_LIKES + '</article>'
+                                                        }),
+                                                        BX.create('A', {
+                                                            props: {
+                                                                className: 'product-item__favorite-star method',
+                                                                title: "Добавить в избранное",
+                                                                href: 'javascript:void(0);'
+                                                            },
+                                                            dataset: {
+                                                                method: 'favorite'
+                                                            },
+                                                            html: '<i class="fa fa-star-o" aria-hidden="true"></i>'
+                                                        })
+                                                    ]
+                                                })
+                                            ]
                                         })
                                     ]
                                 })
@@ -2291,6 +2309,7 @@ $(document).on('click', '.open-fast-window', function () {
                         })
                     ]
                 }),
+
                 BX.create('DIV', {
                     props: {
                         className: 'col-lg-4 col-md-4 col-12 d-flex flex-column color-darkOsh justify-content-between'
@@ -2370,14 +2389,14 @@ $(document).on('click', '.open-fast-window', function () {
                     className: 'slick-images-box height_100',
                 },
             }));
-
-            image_box.appendChild(BX.create('DIV', {
+            BX.findChildByClassName(box_product, 'product-image-sliders-box').appendChild(BX.create('DIV', {
                 props: {
-                    className: 'position-absolute slider-controls max-width-400',
+                    className: 'slider-controls',
                 },
                 style: {
                     pointerEvents: 'none',
                     height: '95%',
+                    marginTop: '2%',
                 },
                 children: [
                     BX.create('DIV', {
@@ -2390,16 +2409,16 @@ $(document).on('click', '.open-fast-window', function () {
 
 
             let slick = BX.findChildByClassName(product_box, 'slick-images-box');
-            let slick_controls = BX.findChildByClassName(image_box, 'slick-images-controls');
+            let slick_controls = BX.findChildByClassName(box_product, 'slick-images-controls');
+
             let count = 0;
             $.each(product.MORE_PHOTO, function (k, image) {
                 count++;
                 slick.appendChild(BX.create('IMG', {
                     props: {
-                        className: 'w-h-350',
                         src: image.SRC,
                         alt: 'modal-product'
-                    },
+                    }
                 }));
 
                 slick_controls.appendChild(
@@ -2633,51 +2652,70 @@ $(document).on('click', '.open-fast-window', function () {
         }
 
         let zoom = '';
-        if(product.MORE_PHOTO.length > 1){
+        if (product.MORE_PHOTO.length > 1) {
             zoom = document.querySelectorAll('.slick-images-box img');
-        }
-        else {
+        } else {
             zoom = document.querySelectorAll('.js-one-img');
         }
-        zoom.forEach(function(el) {
-            el.style.setProperty('transition', ' background-size 0.5s ease');
-            el.addEventListener('mouseenter', function(e) {
-                const target = e.target,
-                    rect = target.getBoundingClientRect();
-                if(!target.classList.contains('-active')) {
-                    target.classList.toggle('-active');
-                }
-                target.style.setProperty('background-image',`url(${target.getAttribute('src')})`);
-                target.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQI12P4zwAAAgEBAKrChTYAAAAASUVORK5CYII=';
-                target.style.setProperty('background-size', '200%');
-                target.style.setProperty('background-position', Math.floor(((e.clientX - rect.left) / rect.width * 100) * 100) / 100+'% ' + Math.floor(((e.clientY - rect.top) / rect.height * 100) * 100) / 100+'%');
-                if(target.classList.contains('-active')) {
-                    target.classList.add('-enter');
-                }
+
+        if (!(navigator.userAgent.match(/Android/i)
+            || navigator.userAgent.match(/webOS/i)
+            || navigator.userAgent.match(/iPhone/i)
+            || navigator.userAgent.match(/iPad/i)
+            || navigator.userAgent.match(/iPod/i)
+            || navigator.userAgent.match(/BlackBerry/i)
+            || navigator.userAgent.match(/Windows Phone/i))) {
+            zoom.forEach(function (el) {
+                el.style.setProperty('transition', ' background-size 0.5s ease');
+                el.addEventListener('mouseenter', function (e) {
+                    const target = e.target,
+                        rect = target.getBoundingClientRect();
+                    if (!target.classList.contains('-active')) {
+                        target.classList.toggle('-active');
+                    }
+                    target.style.setProperty('background-image', `url(${target.getAttribute('src')})`);
+                    target.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQI12P4zwAAAgEBAKrChTYAAAAASUVORK5CYII=';
+                    target.style.setProperty('background-size', '200%');
+                    target.style.setProperty('background-position', Math.floor(((e.clientX - rect.left) / rect.width * 100) * 100) / 100 + '% ' + Math.floor(((e.clientY - rect.top) / rect.height * 100) * 100) / 100 + '%');
+                    if (target.classList.contains('-active')) {
+                        target.classList.add('-enter');
+                    }
+                });
+
+
+                el.addEventListener('mousemove', function (e) {
+                    const target = e.target;
+                    if (target.classList.contains('-active')) {
+                        const rect = target.getBoundingClientRect();
+                        target.style.setProperty('background-position', Math.floor(((e.clientX - rect.left) / rect.width * 100) * 100) / 100 + '% ' + Math.floor(((e.clientY - rect.top) / rect.height * 100) * 100) / 100 + '%');
+                    }
+                });
+
+                el.addEventListener('mouseleave', function (e) {
+                    let target = e.target;
+                    target.style.setProperty('background-size', '100%');
+                    target.src = target.style.backgroundImage.replace(/(url\(|\)|")/g, '');
+                    if (target.classList.contains('-active')) {
+                        target.classList.remove('-enter');
+                    }
+                });
+
+                el.addEventListener('click', function (e) {
+                    let target = e.target;
+                    if (target.classList.contains('-active')) {
+
+                        target.style.setProperty('background-size', '100%');
+                        target.src = target.style.backgroundImage.replace(/(url\(|\)|")/g, '');
+
+                        target.classList.remove('-enter');
+                    }
+                })
             });
-
-
-
-            el.addEventListener('mousemove', function(e) {
-                const target = e.target;
-                if(target.classList.contains('-active')) {
-                    const rect = target.getBoundingClientRect();
-                    target.style.setProperty('background-position', Math.floor(((e.clientX - rect.left) / rect.width * 100) * 100) / 100+'% ' + Math.floor(((e.clientY - rect.top) / rect.height * 100) * 100) / 100+'%');
-                }
-            });
-
-            el.addEventListener('mouseleave', function(e) {
-                let target = e.target;
-                target.style.setProperty('background-size', '100%');
-                target.src = target.style.backgroundImage.replace(/(url\(|\)|")/g, '');
-                if(target.classList.contains('-active')) {
-                    target.classList.remove('-enter');
-                }
-            });
-        });
+        }
     }
 });
 
 $(document).on('click', '.close-box', function () {
+    $(document.body).css('overflow', 'auto');
     $(this).closest('.box-popup-product').remove();
 });
