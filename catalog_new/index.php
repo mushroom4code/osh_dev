@@ -3,6 +3,7 @@
 define("HIDE_SIDEBAR", true);
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+global $APPLICATION;
 $APPLICATION->SetPageProperty("title", "Новинки");
 $APPLICATION->SetTitle("Новинки");
 /**
@@ -21,7 +22,7 @@ $APPLICATION->IncludeComponent(
 	"oshisha_catalog.catalog", 
 	array(
 		"IBLOCK_TYPE" => "1c_catalog",
-		"IBLOCK_ID" => "20",
+        "IBLOCK_ID" => IBLOCK_CATALOG,
 		"TEMPLATE_THEME" => "site",
 		"DETAIL_SHOW_MAX_QUANTITY" => "Y",
 		"HIDE_NOT_AVAILABLE" => "L",
@@ -52,8 +53,7 @@ $APPLICATION->IncludeComponent(
 		"PREFILTER_NAME" => "ArPreFilter",
 		"FILTER_VIEW_MODE" => "VERTICAL",
 		"USE_COMPARE" => "N",
-		"PRICE_CODE" => array(
-		),
+        "PRICE_CODE" => BXConstants::PriceCode(),
 		"FILL_ITEM_ALL_PRICES" => "Y",
 		"USE_PRICE_COUNT" => "N",
 		"SHOW_PRICE_COUNT" => "100",
@@ -146,8 +146,9 @@ $APPLICATION->IncludeComponent(
 		"PAGER_DESC_NUMBERING_CACHE_TIME" => "36000000",
 		"PAGER_SHOW_ALL" => "N",
 		"ADD_PICT_PROP" => "MORE_PHOTO",
-		"LABEL_PROP" => array(
-		),
+        "LABEL_PROP" => array(
+            0 => PROPERTY_KEY_VKUS,
+        ),
 		"PRODUCT_DISPLAY_MODE" => "Y",
 		"OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
 		"OFFER_TREE_PROPS" => array(
