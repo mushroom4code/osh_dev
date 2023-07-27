@@ -2260,9 +2260,6 @@ $(document).on('click', '.open-fast-window', function () {
                                                         src: product.MORE_PHOTO[0].SRC,
                                                         alt: 'modal-product'
                                                     },
-                                                    style: {
-                                                        height: '100%',
-                                                    }
                                                 }),
                                             ]
                                         }),
@@ -2670,6 +2667,8 @@ $(document).on('click', '.open-fast-window', function () {
                 el.addEventListener('mouseenter', function (e) {
                     const target = e.target,
                         rect = target.getBoundingClientRect();
+                    let main_height = target.offsetHeight;
+
                     if (!target.classList.contains('-active')) {
                         target.classList.toggle('-active');
                     }
@@ -2679,6 +2678,9 @@ $(document).on('click', '.open-fast-window', function () {
                     target.style.setProperty('background-position', Math.floor(((e.clientX - rect.left) / rect.width * 100) * 100) / 100 + '% ' + Math.floor(((e.clientY - rect.top) / rect.height * 100) * 100) / 100 + '%');
                     if (target.classList.contains('-active')) {
                         target.classList.add('-enter');
+                    }
+                    if (target.classList.contains('js-one-img')) {
+                        target.style.height = main_height+'px';
                     }
                 });
 
