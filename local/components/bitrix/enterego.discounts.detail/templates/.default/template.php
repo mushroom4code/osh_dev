@@ -4,45 +4,33 @@
 /** @var $APPLICATION */
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
-
 $APPLICATION->SetTitle($arResult['RAW_DISCOUNT']['NAME']);
 $APPLICATION->AddChainItem($arResult['RAW_DISCOUNT']['NAME'], '/discounts/' . $arResult['RAW_DISCOUNT']['NAME'] . '/');
-
+$curDateTime = new \Bitrix\Main\Type\DateTime();
 ?>
 
 <div class="discount_detail">
     <div class="discount_detail_first">
-        <?php if ($arResult['UF_FILE']): ?>
-            <?php $UF_FILE = CFile::ResizeImageGet($arResult['UF_FILE'], array('width' => 150, 'height' => 150), BX_RESIZE_IMAGE_PROPORTIONAL, true) ?>
-            <div class="discount_logo"><img src="<?= $UF_FILE['src'] ?>"></div>
+        <?php if ($arResult['DISCOUNT_IBLOCK']['PICTURE']): ?>
+            <?php $iblockImage = CFile::GetByID($arResult['DISCOUNT_IBLOCK']['PICTURE'])->fetch(); ?>
+            <div class="discount_logo mt-5 mb-5">
+                <img src="<?= $iblockImage['SRC'] ?>" class="detail_discount_image">
+            </div>
         <?php endif; ?>
-        <div class="discount_name">
+        <div class="discount_name mb-5">
             <h1><?= $arResult['RAW_DISCOUNT']['NAME'] ?></h1>
-            <span>Описание акции, ее условий и прочего. Далее просто текст заполнитель. Важную сфера задач. Образом позволяет постоянный кадров важные повседневная отношении порядка, количественный участниками кадров а модель реализация занимаемых развития. И выполнять порядка, деятельности нашей практика развития. Прогрессивного прогрессивного отношении постоянный направлений и кадров.
-
-И выполнять порядка, деятельности нашей практика развития. Прогрессивного прогрессивного отношении постоянный направлений и кадров.
-
-Розничная дистанционная продажа (доставка) кальянов, табачной, никотинсодержащей продукции на сайте не осуществляется.
-Сайт предназначен для потребителей старше 18 лет.</span>
+            <?php if (!empty($arResult['RAW_DISCOUNT']["ACTIVE_TO"])): ?>
+                <h5 class="mb-4">Акция <?= ($arResult['RAW_DISCOUNT']["ACTIVE_FROM"] <= $curDateTime)
+                        ? (($arResult['RAW_DISCOUNT']["ACTIVE_TO"] >= $curDateTime) ? 'проводится' : 'проводилась')
+                        : 'будет проводиться'?>
+                    с <?=$arResult['RAW_DISCOUNT']["ACTIVE_FROM"]->format('d.m.Y')?>
+                    по <?=$arResult['RAW_DISCOUNT']["ACTIVE_TO"]->format('d.m.Y')?></h5>
+            <?php endif; ?>
+            <span><?= $arResult['DISCOUNT_IBLOCK']['DESCRIPTION']?></span>
         </div>
     </div>
-    <div class="discount_detail_second">
-        Описание акции, ее условий и прочего. Далее просто текст заполнитель. Важную сфера задач. Образом позволяет
-        постоянный кадров важные повседневная отношении порядка, количественный участниками кадров а модель реализация
-        занимаемых развития. И выполнять порядка, деятельности нашей практика развития. Прогрессивного прогрессивного
-        отношении постоянный направлений и кадров.
-
-        И выполнять порядка, деятельности нашей практика развития. Прогрессивного прогрессивного отношении постоянный
-        направлений и кадров.
-
-        Розничная дистанционная продажа (доставка) кальянов, табачной, никотинсодержащей продукции на сайте не
-        осуществляется.
-        Сайт предназначен для потребителей старше 18 лет.
-
-    </div>
 </div>
-<h5>Товары акции <?= $arResult['RAW_DISCOUNT']['NAME'] ?></h5>
-<div class="discount_products ">
+<div class="discount_products">
     <?php
 
     $GLOBALS['ArFilter'] = array(

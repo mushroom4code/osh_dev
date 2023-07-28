@@ -1,0 +1,45 @@
+#box_discounts  .box_with_discounts{
+    transition: transform 300ms ease;
+    flex: 1 0 33%;
+    margin-bottom: 2rem;
+    max-height: 260px
+}
+
+#box_discounts  .box_with_discounts:hover{
+    transform: scale(1.1);
+}
+
+.box_with_discounts_parents {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#box_discounts img {
+    border-radius: 8px;
+    height: 100%
+}
+
+#box_discounts img.discount_no_image {
+    object-fit: contain;
+}
+
+#box_discounts a {
+    height: 100%;
+    width: 100%;
+}
+
+.discount_info_box {
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    top: -16%;
+    padding-left: 5%;
+    padding-right: 5%;
+    color: white;
+    font-weight: 500;
+    background-color: rgba(0,0,0,0.6);
+    height: 16%;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+}

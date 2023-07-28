@@ -16,6 +16,10 @@ $aaa = 'aaa';
 Bitrix\Main\Loader::includeModule('sale');
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/sale/handlers/discountpreset/simpleproduct.php");
 
+$arResult['DISCOUNT_IBLOCK'] = Bitrix\Iblock\IblockTable::getList([
+    'filter' => ['IBLOCK_TYPE_ID' => 'discounts', 'CODE' => $arParams['CODE']],
+])->fetch();
+
 $arDiscounts = [];
 $arProductDiscounts = \Bitrix\Sale\Internals\DiscountTable::getList([
     'filter' => [
@@ -37,28 +41,5 @@ $arDiscounts['VALUE'] = $discount['discount_value'];
 $arResult['RAW_DISCOUNT'] = $arProductDiscounts;
 $arResult['DISCOUNT'] = $arDiscounts;
 
-
-//Loader::includeModule("iblock");
-//Loader::includeModule("highloadblock");
-//
-//if (!$arParams['HLBLOCK_NAME']) {
-//    return;
-//}
-//
-//$CurPage = $APPLICATION->GetCurPage();
-//$arPage = [];
-//$arPageTemp = explode("/", $CurPage);
-//foreach ($arPageTemp as $key_p => $page) {
-//    if ($page != "")
-//        $arPage[] = $page;
-//}
-////Есть внутренние
-//if ($CurPage != $arParams['SEF_URL']) {
-//    $componentPage = 'detail';
-//    $arParams['CODE'] = end($arPage);
-//} else {
-//
-//    $componentPage = 'section';
-//}
-$this->IncludeComponentTemplate($componentPage);
+$this->IncludeComponentTemplate();
 
