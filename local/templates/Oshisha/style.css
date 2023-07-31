@@ -1466,7 +1466,7 @@ div.box_with_icons > a > i.icons_theme {
 }
 
 .carousel-indicators {
-    margin-top: 3rem;
+    margin-top: 1rem;
     top: 100%;
     width: auto !important;
 }
