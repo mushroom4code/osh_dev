@@ -2823,7 +2823,7 @@ div#about_contacts > .row > .form_company {
     bottom: 92%;
     right: 87%;
     padding: 9px 4px;
-    z-index: 870;
+    z-index: 400;
 }
 
 .by-line .new-product {
@@ -6216,7 +6216,7 @@ header {
 
 .toggle_taste.card-price.js__tastes {
     position: relative;
-    z-index: 792;
+    z-index: 300;
     min-height: 30px;
 }
 .js__taste {
@@ -6349,7 +6349,7 @@ header {
     bottom: 0;
     width: 100%;
     height: 0;
-    z-index: 791;
+    z-index: 299;
     filter: blur(3px);
     background: transparent none;
     backdrop-filter: blur(1px);
