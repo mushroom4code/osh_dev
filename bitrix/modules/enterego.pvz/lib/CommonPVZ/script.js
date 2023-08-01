@@ -36,7 +36,6 @@ BX.SaleCommonPVZ = {
     orderPackages: null,
     oshishaDeliveryOptions: null,
     propTypePvzId: null,
-    datepickerObj: null,
     componentParams: {
         'displayPVZ': typeDisplayPVZ.map,
         'filterDelivery': null,
@@ -1332,7 +1331,7 @@ BX.SaleCommonPVZ = {
                 selectedDates: curDate,
                 onSelect: function (date, opts, datepicker) {
                     let datepicker_osh_input = $('input.datepicker_order.date_delivery_osh');
-                    if (datepicker_osh_input.length != 0) {
+                    if (datepicker_osh_input.length !== 0) {
                         datepicker_osh_input.val(date)
                     }
                     this.updateValueProp(this.propDateDeliveryId, date)
@@ -1348,7 +1347,6 @@ BX.SaleCommonPVZ = {
             }).data('datepicker');
             datepicker.selectDate(curDate,(datepicker.opts.silentBool = true));
             datepicker.opts.silentBool = false;
-            this.datepickerObj = datepicker;
         }
 
         return this
@@ -2058,10 +2056,8 @@ BX.SaleCommonPVZ = {
             'class':'bx-soa-section-title-container'}, true)
         this.checkout.paysystem.title = BX.findChild(this.checkout.paysystem.titleBox, {
             'class':'bx-soa-section-title'}, true)
-        this.checkout.paysystem.titleIcon = BX.create('span', {attrs: {className: 'payment-title-icon'}});
 
         BX.removeClass(this.checkout.paysystem.titleBox, 'justify-content-between')
-        BX.insertAfter(this.checkout.paysystem.titleIcon, this.checkout.paysystem.title)
 
         return this
     },
@@ -2078,7 +2074,6 @@ BX.SaleCommonPVZ = {
         this.checkout.delivery.title = BX.findChild(deliveryTitleBox,
             {'class':'bx-soa-section-title'}, true)
         BX.removeClass(deliveryTitleBox, 'justify-content-between')
-        BX.insertAfter(BX.create('span', {attrs: {className: 'delivery-title-icon'}}), this.checkout.delivery.title)
 
         //Поиск блока с единой доставкой и замена его на виджет
         const pvzCheckBox = BX('ID_DELIVERY_ID_' + this.pvzDeliveryId)
@@ -2130,39 +2125,6 @@ BX.SaleCommonPVZ = {
 
     drawProps: function()
     {
-        this.checkout.user.title = BX.findChild(this.checkout.order.rootEl, {'tag':'h5'}, true);
-        BX.addClass(this.checkout.user.title, 'checkout-block-title');
-        BX.addClass(this.checkout.user.title, 'fw-normal');
-        BX.addClass(BX.findChild(this.checkout.user.title, {'tag':'b'}, true), 'fw-normal');
-
-        // физ/юр лицо
-        this.checkout.user.type = BX.findChild(this.checkout.user.rootEl, {'class': 'bx-soa-section-title-container'});
-        // BX.addClass(this.checkout.user.type, 'd-none');
-
-        // ФИО
-        this.checkout.user.name = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 1}}, true);
-        BX.removeClass(this.checkout.user.name, 'col-12');
-        BX.addClass(this.checkout.user.name, 'col-md-6 col-lg-6 col-12  checkout-name-group');
-        BX.adjust(this.checkout.user.name, {attrs: {'id': 'checkout-name-group'}});
-
-        // телефон
-        this.checkout.user.phone = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 3}}, true);
-        BX.removeClass(this.checkout.user.phone, 'col-12');
-        BX.addClass(this.checkout.user.phone, 'col-md-6 col-lg-6 col-12 checkout-phone-group');
-        BX.adjust(this.checkout.user.phone, {attrs: {'id': 'checkout-phone-group'}});
-
-        // email
-        this.checkout.user.email = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 2}}, true);
-        BX.removeClass(this.checkout.user.email, 'col-12');
-        BX.addClass(this.checkout.user.email, 'col-md-6 col-lg-6 col-12 checkout-email-group');
-        BX.adjust(this.checkout.user.email, {attrs: {'id':'checkout-email-group'}});
-
-        // Город
-        this.checkout.user.city = BX.findChild(this.checkout.user.rootEl, {'attribute': {'data-property-id-row': 6}}, true);
-        BX.removeClass(this.checkout.user.city, 'd-none');
-        BX.addClass(this.checkout.user.city, 'col-md-6 col-lg-6 col-12 checkout-city-group');
-        BX.adjust(this.checkout.user.city, {attrs: {'id':'checkout-city-group'}});
-
         // блок региона
         BX.addClass(this.checkout.region.rootEl[0], 'd-none');
         BX.remove(this.checkout.region.rootEl[1]);

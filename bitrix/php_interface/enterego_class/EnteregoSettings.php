@@ -40,24 +40,26 @@ class EnteregoSettings
 	/**
 	 * @param string $constName
 	 * @param string $moduleId
-	 * @return void
+	 * @return bool
 	 */
 	public static function getParamOnCheckAndPeriod(
-		string $constName = 'USE_CUSTOM_SALE_PRICE',
-		string $moduleId = 'activation_price_admin'
-	) {
+		string $constName = '',
+		string $moduleId = ''
+	): bool
+    {
 		$check = COption::GetOptionString($moduleId, $constName);
 		$dateOption = json_decode(COption::GetOptionString($moduleId, 'PERIOD'));
 		$bool_option_checked = false;
 
-		if (!empty($dateOption->end) && !empty($dateOption->start)) {
-			$start = strtotime(date($dateOption->start));
-			$now = strtotime(date_format(date_create('now'), 'Y-m-dTH:s'));
-			$end = strtotime(date($dateOption->end));
-			if ($check === 'true' && ($start <= $now && $end > $now)) {
-				$bool_option_checked = true;
-			}
-		}
-		define($constName, $bool_option_checked);
-	}
+        if (!empty($dateOption->end) && !empty($dateOption->start)) {
+            $start = strtotime(date($dateOption->start));
+            $now = strtotime(date_format(date_create('now'), 'Y-m-dTH:s'));
+            $end = strtotime(date($dateOption->end));
+            if ($check === 'true' && ($start <= $now && $end > $now)) {
+                $bool_option_checked = true;
+            }
+        }
+        return $bool_option_checked;
+    }
+
 }

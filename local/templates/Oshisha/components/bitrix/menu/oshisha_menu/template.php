@@ -25,7 +25,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
     $HAS_CHILD = 0;
     if (is_array($arColumns) && count($arColumns) > 0)
         $HAS_CHILD = 1;
-    if ($arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/diskont/') {
+    if ($arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/diskont/' && $arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/hit/') {
 
 
         $menu_for_JS['MAIN'][] = [
@@ -83,7 +83,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             </a>
         </li>
         <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/catalog_hits/">
+            <a class="link_menu_header" href="/hit/">
                 <span class="text_catalog_link">Хиты</span>
             </a>
         </li>

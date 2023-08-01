@@ -1,6 +1,6 @@
 <?
 $ar = [];
-$server = file_exists($_SERVER["DOCUMENT_ROOT"].'/local/templates/Oshisha/images/presentaion.pdf');
+$server = file_exists($_SERVER["DOCUMENT_ROOT"].'/local/templates/Oshisha/images/presentation.pdf');
 $aMenuLinks = array(
     array(
         "О нас",
@@ -11,7 +11,7 @@ $aMenuLinks = array(
     ),
     array(
         "Презентация",
-        "/local/templates/Oshisha/images/presentaion.pdf",
+        "/local/templates/Oshisha/images/presentation.pdf",
         array(),
         array(),
         "$server"

@@ -1004,14 +1004,6 @@ window.commonDelivery.bxPopup = {
             dataset: {name: 'DATE_DELIVERY_OSH'},
         });
 
-        let tomorrow    = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-
-        let curDate = new Date(BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId))
-        if (isNaN(curDate)) {
-            curDate = tomorrow
-        }
-
         const nodeYaAction = BX.create("DIV", {
             props: {
                 id: 'osh-map-action',
@@ -1171,13 +1163,19 @@ window.commonDelivery.bxPopup = {
             ]
         })
 
-        nodeYaMapContainer.prepend(nodeYaAction);
-        var datepicker =  $(dateDeliveryNodeOsh).datepicker({
+        let tomorrow    = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        let curDate = (BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propDateDeliveryId))
+        if (isNaN(curDate)) {
+            curDate = tomorrow
+        }
+        const datepicker =  $(dateDeliveryNodeOsh).datepicker({
             minDate: tomorrow,
             selectedDates: curDate,
             onSelect: function (date, opts, datepicker) {
                 let datepicker_main_input = $('input.datepicker_order.date_delivery_main');
-                if (datepicker_main_input.length != 0) {
+                if (datepicker_main_input.length !== 0) {
                     datepicker_main_input.val(date);
                 }
                 BX.SaleCommonPVZ.updateValueProp(BX.SaleCommonPVZ.propDateDeliveryId, date)
@@ -1191,10 +1189,9 @@ window.commonDelivery.bxPopup = {
                 BX.Sale.OrderAjaxComponent.sendRequest()
             }.bind(this)
         });
-        let datepickerosh = datepicker.data('datepicker');
-        datepickerosh.selectDate(curDate);
+        datepicker.data('datepicker').selectDate(curDate);
 
-
+        nodeYaMapContainer.prepend(nodeYaAction);
         nodeYaMapContainer.append(nodeYaDescription);
         this.nodeYaMapContainer = nodeYaMapContainer
 
