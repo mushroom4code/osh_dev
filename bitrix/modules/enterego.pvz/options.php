@@ -22,20 +22,20 @@ $activeDelivery = array(
     'Y' => GetMessage('ACTIVE_DELIVERY_Y')
 );
 $daysOfTheWeek = array(
-        '1' => 'понедельник',
-        '2' => 'вторник',
-        '3' => 'среда',
-        '4' => 'четверг',
-        '5' => 'пятница',
-        '6' => 'суббота',
-        '0' => 'воскресенье'
+    '1' => 'понедельник',
+    '2' => 'вторник',
+    '3' => 'среда',
+    '4' => 'четверг',
+    '5' => 'пятница',
+    '6' => 'суббота',
+    '0' => 'воскресенье'
 );
 
 $aTabs = array(
     array(
-        'DIV'     => 'common',
-        'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_COMMON'),
-        'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_COMMON'),
+        'DIV' => 'common',
+        'TAB' => Loc::getMessage('EE_PVZ_OPTIONS_COMMON'),
+        'TITLE' => Loc::getMessage('EE_PVZ_OPTIONS_COMMON'),
         'OPTIONS' => array(
             array(
                 'Common_defaultwidth',
@@ -71,20 +71,20 @@ $aTabs = array(
     ),
     // PickPoint
     array(
-        'DIV'     => 'pickpoint',
-        'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_PP'),
-        'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_PP'),
+        'DIV' => 'pickpoint',
+        'TAB' => Loc::getMessage('EE_PVZ_OPTIONS_PP'),
+        'TITLE' => Loc::getMessage('EE_PVZ_OPTIONS_PP'),
         'OPTIONS' => array(
             array(
                 'PickPoint_pvz_active',
                 GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
-                Option::get($module_id,'PickPoint_pvz_active'),
+                Option::get($module_id, 'PickPoint_pvz_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
                 'PickPoint_door_active',
                 GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
-                Option::get($module_id,'PickPoint_door_active'),
+                Option::get($module_id, 'PickPoint_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -115,20 +115,20 @@ $aTabs = array(
     ),
     // 5post
     array(
-        'DIV'     => '5post',
-        'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_FP'),
-        'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_FP'),
+        'DIV' => '5post',
+        'TAB' => Loc::getMessage('EE_PVZ_OPTIONS_FP'),
+        'TITLE' => Loc::getMessage('EE_PVZ_OPTIONS_FP'),
         'OPTIONS' => array(
             array(
                 'FivePost_pvz_active',
                 GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
-                Option::get($module_id,'FivePost_pvz_active'),
+                Option::get($module_id, 'FivePost_pvz_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
                 'FivePost_door_active',
                 GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
-                Option::get($module_id,'FivePost_door_active'),
+                Option::get($module_id, 'FivePost_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -159,20 +159,20 @@ $aTabs = array(
     ),
     // СДЭК
     array(
-        'DIV'     => 'sdek',
-        'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_SDEK'),
-        'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_SDEK'),
+        'DIV' => 'sdek',
+        'TAB' => Loc::getMessage('EE_PVZ_OPTIONS_SDEK'),
+        'TITLE' => Loc::getMessage('EE_PVZ_OPTIONS_SDEK'),
         'OPTIONS' => array(
             array(
                 'SDEK_pvz_active',
                 GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
-                Option::get($module_id,'SDEK_pvz_active'),
+                Option::get($module_id, 'SDEK_pvz_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
                 'SDEK_door_active',
                 GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
-                Option::get($module_id,'SDEK_door_active'),
+                Option::get($module_id, 'SDEK_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -203,20 +203,20 @@ $aTabs = array(
     ),
     // ПЭК
     array(
-        'DIV'     => 'pek',
-        'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
-        'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
+        'DIV' => 'pek',
+        'TAB' => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
+        'TITLE' => Loc::getMessage('EE_PVZ_OPTIONS_PEK'),
         'OPTIONS' => array(
             array(
                 'PEK_pvz_active',
                 GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
-                Option::get($module_id,'PEK_pvz_active'),
+                Option::get($module_id, 'PEK_pvz_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
                 'PEK_door_active',
                 GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
-                Option::get($module_id,'PEK_door_active'),
+                Option::get($module_id, 'PEK_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             Loc::getMessage('PickPoint_ikn'),
@@ -254,20 +254,20 @@ $aTabs = array(
     ),
     // RussianPost
     array(
-        'DIV'     => 'russian_post',
-        'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
-        'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
+        'DIV' => 'russian_post',
+        'TAB' => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
+        'TITLE' => Loc::getMessage('EE_PVZ_OPTIONS_RUSSIAN_POST'),
         'OPTIONS' => array(
             array(
                 'RussianPost_pvz_active',
                 GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
-                Option::get($module_id,'RussianPost_pvz_active'),
+                Option::get($module_id, 'RussianPost_pvz_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
                 'RussianPost_door_active',
                 GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
-                Option::get($module_id,'RussianPost_door_active'),
+                Option::get($module_id, 'RussianPost_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -292,20 +292,20 @@ $aTabs = array(
     ),
     // Dellin
     array(
-        'DIV'     => 'dellin',
-        'TAB'     => Loc::getMessage('EE_PVZ_OPTIONS_DELLIN'),
-        'TITLE'   => Loc::getMessage('EE_PVZ_OPTIONS_DELLIN'),
+        'DIV' => 'dellin',
+        'TAB' => Loc::getMessage('EE_PVZ_OPTIONS_DELLIN'),
+        'TITLE' => Loc::getMessage('EE_PVZ_OPTIONS_DELLIN'),
         'OPTIONS' => array(
             array(
                 'Dellin_pvz_active',
                 GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
-                Option::get($module_id,'Dellin_pvz_active'),
+                Option::get($module_id, 'Dellin_pvz_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
                 'Dellin_door_active',
                 GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
-                Option::get($module_id,'Dellin_door_active'),
+                Option::get($module_id, 'Dellin_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
@@ -349,68 +349,68 @@ $aTabs = array(
     ),
     // Oshisha
     array(
-        'DIV'     => 'oshisha',
-        'TAB'     => Loc::getMessage('PVZ_OPTIONS_OSHISHA'),
-        'TITLE'   => Loc::getMessage('PVZ_OPTIONS_OSHISHA'),
+        'DIV' => 'oshisha',
+        'TAB' => Loc::getMessage('PVZ_OPTIONS_OSHISHA'),
+        'TITLE' => Loc::getMessage('PVZ_OPTIONS_OSHISHA'),
         'OPTIONS' => array(
             array(
-                    'Oshisha_pvz_active',
+                'Oshisha_pvz_active',
                 GetMessage('DELIVERY_SETTINGS_PVZ_ACTIVITY'),
-                Option::get($module_id,'Oshisha_pvz_active'),
+                Option::get($module_id, 'Oshisha_pvz_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
                 'Oshisha_door_active',
                 GetMessage('DELIVERY_SETTINGS_DOOR_ACTIVITY'),
-                Option::get($module_id,'Oshisha_door_active'),
+                Option::get($module_id, 'Oshisha_door_active'),
                 array("selectbox", $activeDelivery)
             ),
             array(
                 'Oshisha_ymapskey',
                 GetMessage('OSH_SETTINGS_YMAPSKEY_NAME'),
-                Option::get($module_id,'Oshisha_ymapskey'),
+                Option::get($module_id, 'Oshisha_ymapskey'),
                 array("text")
             ),
             array(
                 'Oshisha_dadatatoken',
                 GetMessage('OSH_SETTINGS_DA_DATA_NAME'),
-                Option::get($module_id,'Oshisha_dadatatoken'),
+                Option::get($module_id, 'Oshisha_dadatatoken'),
                 array("text")
             ),
             array(
                 'Oshisha_dadata_secret',
                 GetMessage('OSH_SETTINGS_DA_DATA_SECRET'),
-                Option::get($module_id,'Oshisha_dadata_secret'),
+                Option::get($module_id, 'Oshisha_dadata_secret'),
                 array("text")
             ),
             array(
                 'Oshisha_cost',
                 GetMessage('OSH_SETTINGS_COST'),
-                Option::get($module_id,'Oshisha_cost'),
+                Option::get($module_id, 'Oshisha_cost'),
                 array("text")
             ),
             array(
                 'Oshisha_pvzstrict',
                 GetMessage('OSH_SETTINGS_STRICT_PVZ'),
-                Option::get($module_id,'Oshisha_pvzstrict'),
+                Option::get($module_id, 'Oshisha_pvzstrict'),
                 array("selectbox", $oshishaArPvzStrictOptions)
             ),
             array(
                 'Oshisha_northdays',
                 GetMessage('OSH_SETTINGS_NORTH_DAYS'),
-                Option::get($module_id,'Oshisha_northdays'),
+                Option::get($module_id, 'Oshisha_northdays'),
                 array("multiselectbox", $daysOfTheWeek)
             ),
             array(
                 'Oshisha_southeastdays',
                 GetMessage('OSH_SETTINGS_SOUTHEAST_DAYS'),
-                Option::get($module_id,'Oshisha_southeastdays'),
+                Option::get($module_id, 'Oshisha_southeastdays'),
                 array("multiselectbox", $daysOfTheWeek)
             ),
             array(
                 'Oshisha_southwestdays',
                 GetMessage('OSH_SETTINGS_SOUTHWEST_DAYS'),
-                Option::get($module_id,'Oshisha_southwestdays'),
+                Option::get($module_id, 'Oshisha_southwestdays'),
                 array("multiselectbox", $daysOfTheWeek)
             ),
         )
@@ -493,50 +493,50 @@ $tabControl->begin();
         border-radius: 4px;
     }
 
-    .button_red:hover{
+    .button_red:hover {
         text-decoration: none;
     }
 
 </style>
-    <form action="<?= $APPLICATION->getCurPage(); ?>?mid=<?=$module_id; ?>&lang=<?= LANGUAGE_ID; ?>" method="post">
-        <?= bitrix_sessid_post(); ?>
-        <?php
-        foreach ($aTabs as $aTab) { // цикл по вкладкам
-            if ($aTab['OPTIONS']) {
-                $tabControl->beginNextTab();
-                __AdmSettingsDrawList($module_id, $aTab['OPTIONS']);
+<form action="<?= $APPLICATION->getCurPage(); ?>?mid=<?= $module_id; ?>&lang=<?= LANGUAGE_ID; ?>" method="post">
+    <?= bitrix_sessid_post(); ?>
+    <?php
+    foreach ($aTabs as $aTab) { // цикл по вкладкам
+        if ($aTab['OPTIONS']) {
+            $tabControl->beginNextTab();
+            __AdmSettingsDrawList($module_id, $aTab['OPTIONS']);
 
-                if ($aTab['DIV'] === 'pickpoint') {
-                    ?>
-                    <tr>
-                        <td>
-                            <div style="display: none" id="pickpoint_load_points_label"
-                                     class="adm-info-message-wrap">
-                        </td>
-                        <td>
-                            <input type="button" id="pickpoint_load_points"
-                                   value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php
-                } elseif ($aTab['DIV'] === '5post') {
-                    ?>
-                    <tr>
-                        <td>
-                            <div style="display: none" id="fivepost_load_points_label"
-                                 class="adm-info-message-wrap">
-                        </td>
-                        <td>
-                            <input type="button" id="fivepost_load_points"
-                                   value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php
-                } elseif ($aTab['DIV'] === 'sdek') {?>
-                    <tr>
+            if ($aTab['DIV'] === 'pickpoint') {
+                ?>
+                <tr>
                     <td>
+                        <div style="display: none" id="pickpoint_load_points_label"
+                             class="adm-info-message-wrap">
+                    </td>
+                    <td>
+                        <input type="button" id="pickpoint_load_points"
+                               value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            } elseif ($aTab['DIV'] === '5post') {
+                ?>
+                <tr>
+                    <td>
+                        <div style="display: none" id="fivepost_load_points_label"
+                             class="adm-info-message-wrap">
+                    </td>
+                    <td>
+                        <input type="button" id="fivepost_load_points"
+                               value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            } elseif ($aTab['DIV'] === 'sdek') { ?>
+                <tr>
+                <td>
                     <table style="width: 200%; margin-top: 15px;">
                         <tr>
                             <td colspan="4" valign="top" align="center"><strong>Управление тарифами</strong>
@@ -549,73 +549,77 @@ $tabControl->begin();
                             <th>Отключить тариф для расчета</th>
                         </tr>
                         <?php
-	                    foreach($arTarifs as $tarifId => $tarifOption){?>
+                        foreach ($arTarifs as $tarifId => $tarifOption) {
+                            ?>
                             <tr>
-                                <td style='text-align:center'><?php if($tarifOption['DESC']) { ?><?php } ?></td>
+                                <td style='text-align:center'><?php if ($tarifOption['DESC']) { ?><?php } ?></td>
                                 <td><?= $tarifOption['NAME'] ?></td>
-                                <td align='center'><input type='checkbox' name='SDEK_tarifs[<?=$tarifId?>][BLOCK]' value='Y' <?=($tarifOption['BLOCK']=='Y')?"checked":""?>></td>
+                                <td align='center'><input type='checkbox' name='SDEK_tarifs[<?= $tarifId ?>][BLOCK]'
+                                                          value='Y' <?= ($tarifOption['BLOCK'] == 'Y') ? "checked" : "" ?>>
+                                </td>
                             </tr>
-	                    <?php } ?>
-	                    <tr>
+                        <?php } ?>
+                        <tr>
                             <td colspan='2'><br></td>
                         </tr>
                     </table>
+                </td>
+                </tr><?
+            } else if ($aTab['DIV'] === 'dellin') { ?>
+                <tr>
+                    <td>
+                        <div style="display: none" id="dellin_load_points_label"
+                             class="adm-info-message-wrap">
                     </td>
-                    </tr><?
-                } else if ($aTab['DIV'] === 'dellin'){?>
-                    <tr>
-                        <td>
-                            <div style="display: none" id="dellin_load_points_label"
-                                 class="adm-info-message-wrap">
-                        </td>
-                        <td>
-                            <input type="button" id="dellin_load_points"
-                                   value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
-                            </div>
-                        </td>
-                    </tr>
+                    <td>
+                        <input type="button" id="dellin_load_points"
+                               value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                        </div>
+                    </td>
+                </tr>
 
-                    <?
-                } else if ($aTab['DIV'] === 'russian_post'){?>
-                    <tr>
-                        <td>
-                            <div style="display: none" id="russian_post_load_points_label"
-                                class="adm-info-message-wrap">
-                        </td>
-                        <td>
-                            <input type="button" id="russian_post_load_points"
-                                value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
-                            </div>
-                        </td>
-                    </tr><?
-                } else if ($aTab['DIV'] === 'oshisha') {
-                    \CommonPVZ\OshishaDelivery::generate($oshishaOptions["delivery_time_period"], \CommonPVZ\OshishaDelivery::getOshishaOptionsData());
-                    ?>
-                    <tr>
-                        <td>
-                            <div style="display: none" id="oshisha_update_region_restrictions_label"
-                                 class="adm-info-message-wrap">
-                        </td>
-                        <td>
-                            <input type="button" id="oshisha_update_region_restrictions"
-                                   value="<?= Loc::getMessage('OSH_REGION_RESTRICTIONS') ?>"/>
-                            </div>
-                        </td>
-                    </tr>
-                    <?
-                }
+                <?
+            } else if ($aTab['DIV'] === 'russian_post') { ?>
+                <tr>
+                <td>
+                    <div style="display: none" id="russian_post_load_points_label"
+                         class="adm-info-message-wrap">
+                </td>
+                <td>
+                    <input type="button" id="russian_post_load_points"
+                           value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                    </div>
+                </td>
+                </tr><?
+            } else if ($aTab['DIV'] === 'oshisha') { ?>
+                <tr>
+                    <td>Время доставки:</td>
+                    <td>Время доставки настраивается в свойстве заказа "DELIVERYTIME_INTERVAL"</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="display: none" id="oshisha_update_region_restrictions_label"
+                             class="adm-info-message-wrap">
+                    </td>
+                    <td>
+                        <input type="button" id="oshisha_update_region_restrictions"
+                               value="<?= Loc::getMessage('OSH_REGION_RESTRICTIONS') ?>"/>
+                        </div>
+                    </td>
+                </tr>
+                <?
             }
         }
-        $tabControl->buttons();
-        ?>
-        <input type="submit" name="apply"
-               value="<?= Loc::GetMessage('EE_PVZ_OPTIONS_INPUT_APPLY'); ?>" class="adm-btn-save" />
-        <input type="submit" name="default"
-               value="<?= Loc::GetMessage('EE_PVZ_OPTIONS_INPUT_DEFAULT'); ?>" />
-    </form>
+    }
+    $tabControl->buttons();
+    ?>
+    <input type="submit" name="apply"
+           value="<?= Loc::GetMessage('EE_PVZ_OPTIONS_INPUT_APPLY'); ?>" class="adm-btn-save"/>
+    <input type="submit" name="default"
+           value="<?= Loc::GetMessage('EE_PVZ_OPTIONS_INPUT_DEFAULT'); ?>"/>
+</form>
 
 <?php
-
 
 
 $tabControl->end();
@@ -641,13 +645,13 @@ if ($request->isPost() && check_bitrix_sessid()) {
         }
     }
 
-    LocalRedirect($APPLICATION->getCurPage().'?mid='.$module_id.'&lang='.LANGUAGE_ID);
+    LocalRedirect($APPLICATION->getCurPage() . '?mid=' . $module_id . '&lang=' . LANGUAGE_ID);
 
 } ?>
 
 <script>
-    BX.ready(()=>{
-        BX.bind(BX('pickpoint_load_points'), 'click', BX.proxy((event)=>{
+    BX.ready(() => {
+        BX.bind(BX('pickpoint_load_points'), 'click', BX.proxy((event) => {
             event.preventDefault()
             const label = BX('pickpoint_load_points_label');
             BX.cleanNode(label)
@@ -685,7 +689,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
                 },
             })
         }));
-        BX.bind(BX('fivepost_load_points'), 'click', BX.proxy((event)=>{
+        BX.bind(BX('fivepost_load_points'), 'click', BX.proxy((event) => {
             event.preventDefault()
             const label = BX('fivepost_load_points_label');
             BX.cleanNode(label)
@@ -722,7 +726,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
                 },
             })
         }));
-        BX.bind(BX('dellin_load_points'), 'click', BX.proxy((event)=>{
+        BX.bind(BX('dellin_load_points'), 'click', BX.proxy((event) => {
             event.preventDefault()
             const label = BX('dellin_load_points_label');
             BX.cleanNode(label)
@@ -759,7 +763,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
                 },
             })
         }));
-        BX.bind(BX('russian_post_load_points'), 'click', BX.proxy((event)=>{
+        BX.bind(BX('russian_post_load_points'), 'click', BX.proxy((event) => {
             event.preventDefault()
             const label = BX('russian_post_load_points_label');
             BX.cleanNode(label)
@@ -796,7 +800,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
                 },
             })
         }));
-        BX.bind(BX('oshisha_update_region_restrictions'), 'click', BX.proxy((event)=>{
+        BX.bind(BX('oshisha_update_region_restrictions'), 'click', BX.proxy((event) => {
             event.preventDefault()
             const label = BX('oshisha_update_region_restrictions_label');
             BX.cleanNode(label)
