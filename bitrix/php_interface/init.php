@@ -5,10 +5,14 @@ use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Enterego\EnteregoSettings;
 use Enterego\UserPrice\UserPriceHelperOsh;
 
+require_once(__DIR__ . '/conf.php');
+
+if (SITE_ID === SITE_EXHIBITION) {
+    require_once(__DIR__ . '/redefinedClass/component.php');
+}
+
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
-
-require_once(__DIR__ . '/conf.php');
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
@@ -24,21 +28,25 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
     '\Enterego\EnteregoGiftHandlers' => '/bitrix/php_interface/enterego_class/EnteregoGiftHandlers.php',
-    '\Enterego\EnteregoDiscount' => '/bitrix/php_interface/enterego_class/EnteregoDiscount.php',
+    '\Enterego\EnteregoDiscountHitsSelector' => '/bitrix/php_interface/enterego_class/EnteregoDiscountHitsSelector.php',
+    '\Enterego\EnteregoHitsHelper' => '/bitrix/php_interface/enterego_class/EnteregoHitsHelper.php',
     '\CatalogAPIService' => '/local/osh-rest/genaral/CatalogAPIService.php',
-    '\Enterego\EnteregoSettings'=>'/bitrix/php_interface/enterego_class/EnteregoSettings.php',
-    '\Enterego\ProductsSubscriptionsTable'=>'/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
+    '\Enterego\EnteregoSettings' => '/bitrix/php_interface/enterego_class/EnteregoSettings.php',
+    '\Enterego\ProductsSubscriptionsTable' => '/bitrix/php_interface/enterego_class/ProductsSubscriptionsTable.php',
     '\Enterego\EnteregoUser' => '/bitrix/php_interface/enterego_class/EnteregoUser.php',
     '\Enterego\AuthTokenTable' => '/bitrix/php_interface/enterego_class/AuthTokenTable.php',
     '\Enterego\EnteregoBitrix24' => '/bitrix/php_interface/enterego_class/EnteregoBitrix24.php',
     '\Enterego\EnteregoActionDiscountPriceType' =>
         '/bitrix/php_interface/enterego_class/EnteregoActionDiscountPriceType.php',
+    '\Enterego\EnteregoGroupedProducts' => '/bitrix/php_interface/enterego_class/EnteregoGroupedProducts.php',
 ));
 
 //redefine sale  basket condition
 require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
-
+define("USE_CUSTOM_SALE_PRICE", EnteregoSettings::getParamOnCheckAndPeriod('USE_CUSTOM_SALE_PRICE', 'activation_price_admin'));
+define("CHECKED_INFO", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO', 'activation_info_admin'));
+define("CHECKED_EXHIBITION", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_EXHIBITION', 'exhibition_info_admin_params'));
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
     array('CatalogAPIService', 'OnRestServiceBuildDescription'));
@@ -212,7 +220,21 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 			              "informator.php",
 		              ),
 		              "items" => array(),
-	              )
+	              ),
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "200",
+                    "text" => "Выставка",
+                    "title" => "Выставка",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/exhibition.php",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "exhibition.php",
+                    ),
+                    "items" => array(),
+                )
             )
         ),
     );
@@ -377,9 +399,6 @@ function setAdditionalPPDSJS(&$arResult, &$arUserResult, $arParams)
         ";
     $APPLICATION->AddHeadString($jsCode);
 }
-
-EnteregoSettings::getParamOnCheckAndPeriod();
-EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO','activation_info_admin');
 
 // JWT-token authorization
 addEventHandler('main', 'OnPageStart', ['\Enterego\AuthTokenTable', 'getTokenAuth']);

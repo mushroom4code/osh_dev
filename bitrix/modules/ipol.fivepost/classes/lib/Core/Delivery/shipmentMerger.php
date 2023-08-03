@@ -1,27 +1,21 @@
-<?
+<?php
+
 
 namespace Ipol\Fivepost\Core\Delivery;
 
+
 /**
  * Class shipmentMerger
- * @package Ipol\Fivepost\Core\Delivery
- * "Сливает" все отгрузки в итоговую. Цена - суммарная, сроки - максимальные
+ * @package Ipol\Fivepost\Core
+ * @subpackage Delivery
+ * "Merges" all shipments into one final. Cost maximized terms - minimized
  */
-class shipmentMerger
+class ShipmentMerger
 {
     protected $price   = 0;
     protected $termMin = 0;
     protected $termMax = 0;
     protected $details = '';
-
-    public function __construct()
-    {
-        $this->price   = 0;
-        $this->termMin = 0;
-        $this->termMax = 0;
-
-        return $this;
-    }
 
     /**
      * @return string
@@ -63,7 +57,7 @@ class shipmentMerger
         return $this->termMax;
     }
 
-    public function addShipment($price,$termMin,$termMax=false,$details=false)
+    public function addShipment($price, $termMin, $termMax = false, $details = false)
     {
         $this->price += $price;
         $this->termMin = ($this->termMin > $termMin) ? $this->termMin : $termMin;

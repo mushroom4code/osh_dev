@@ -13,7 +13,7 @@ $arParamsString = array(
     <h1>Бренды</h1>
     <?php $rsSections = CIBlockSection::GetList(
         array('SORT' => 'ASC'),
-        array('IBLOCK_ID' => IBLOCK_CATALOG, 'ACTIVE' => 'Y', 'GLOBAL_ACTIVE' => 'Y', 'DEPTH_LEVEL' => 1),
+        array('IBLOCK_ID' => $arParams['IBLOCK_ID'], 'ACTIVE' => 'Y', 'GLOBAL_ACTIVE' => 'Y', 'DEPTH_LEVEL' => 1),
         false,
         array('DEPTH_LEVEL', 'ID', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'NAME'));
 

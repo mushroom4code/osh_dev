@@ -27,6 +27,7 @@ if($row = $result->fetch())
 }
 
 $QUERY = [
+    'filter' => $arParams['AR_FILTER'],
     'select' => array('*'),
     'order' => array("UF_NAME" => "ASC"),
 ];

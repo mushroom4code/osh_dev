@@ -1,9 +1,7 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Main\Loader;
-use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
-use Enterego\EnteregoDiscount;
 
 /**
  * @global CMain $APPLICATION
@@ -24,7 +22,6 @@ $sort = [
         'by' => 'SERVICE_FIELD_POPULARITY', // 'PROPERTY_MINIMUM_PRICE',//'CATALOG_PRICE_'.$GLOBALS['PRICE_TYPE_ID'],
         'order' => 'DESC'
     ],
-
 ];
 
 if ($_GET['sort_by']) {
@@ -38,7 +35,6 @@ if ($_SESSION['sort']) {
             'by' => $_SESSION['sort']['by']['by'],
             'order' => $_SESSION['sort']['by']['order']
         ],
-
     ];
 
     $defSortByVal = $_SESSION['sort']['by']['by'];
@@ -49,7 +45,6 @@ if ($_SESSION['sort']) {
     $ELEMENT_SORT_ORDER = strtoupper($sort['by']['order']);
     $ELEMENT_SORT_FIELD2 = 'SORT';
     $ELEMENT_SORT_ORDER2 = 'ASC';
-
 } else {
     $ELEMENT_SORT_FIELD2 = $sort['by']['by'];
     $ELEMENT_SORT_ORDER2 = strtoupper($sort['by']['order']);
@@ -166,13 +161,14 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             <?php if ($arSection['CHILDS']):
                                 usort($arSection['CHILDS'], 'sort_by_name');
                                 foreach ($arSection['CHILDS'] as $arSectionSub):
-                                    if(CIBlockSection::GetSectionElementsCount($arSectionSub['ID'],['CNT_ACTIVE'=>'Y']) > 0 ){?>
-                                    <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
-                                         data-code="<?= $arSection['ID'] ?>">
-                                        <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
-                                    </div>
-                                <?php }
-                                    endforeach; ?>
+                                    if (CIBlockSection::GetSectionElementsCount($arSectionSub['ID'], ['CNT_ACTIVE' => 'Y']) > 0) {
+                                        ?>
+                                        <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
+                                             data-code="<?= $arSection['ID'] ?>">
+                                            <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
+                                        </div>
+                                    <?php }
+                                endforeach; ?>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
@@ -183,7 +179,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
             //region Filter
             if ($isFilter): ?>
-                <div class="bx-sidebar-block">
+                <div class="bx-sidebar-block <?= \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
                     <?php
 
                     $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
@@ -197,7 +193,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             "CACHE_TYPE" => $arParams["CACHE_TYPE"],
                             "CACHE_TIME" => $arParams["CACHE_TIME"],
                             "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                            "SAVE_IN_SESSION" => "N",
+                            "SAVE_IN_SESSION" => "Y",
                             "FILTER_VIEW_MODE" => $arParams["FILTER_VIEW_MODE"],
                             "XML_EXPORT" => "N",
                             "SECTION_TITLE" => "NAME",
@@ -250,7 +246,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         <h1 id="pagetitle"><?php $APPLICATION->ShowTitle(false); ?></h1>
         <p class="message_for_user_minzdrav font-14"></p>
         <div id="osh-filter-horizontal2"></div>
-        <div class="osh-block-panel">
+        <div class="osh-block-panel <?= \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
             <div id="osh-filter-horizontal">
                 <div id="osh-filter-horizontal-item" class="d-inline-block" data-osh-filter-state="hide"></div>
                 <div id="osh-filter-horizontal-item-count" class="osh-filter-item"
@@ -305,6 +301,10 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-sort="CREATED_DATE"
                                         data-order="DESC">По новизне
+                                    </li>
+                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                        data-sort="<?= 'PROPERTY_' . SORT_BREND ?>"
+                                        data-order="DESC">По бренду
                                     </li>
                                 </ul>
                             </div>
@@ -382,27 +382,23 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         }
         //endregion
 
-        if ($_SESSION[$arParams["FILTER_NAME"]][$GLOBAL_SECTION['ID']]['hide_not_available'] == "Y")
-        {
+        if ($_SESSION[$arParams["FILTER_NAME"]][$GLOBAL_SECTION['ID']]['hide_not_available'] == "Y") {
             $arParams["HIDE_NOT_AVAILABLE"] = "Y";
         }
-
-
+        $curSection = CIBlockSection::GetByID($arCurSection['ID'])->fetch();
         global $ArFilter;
-        $intSectionID = $APPLICATION->IncludeComponent(
-            "bitrix:catalog.section",
-            "oshisha_catalog.section", array(
+        $sectionParams = array(
             "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
             "IBLOCK_ID" => $arParams["IBLOCK_ID"],
             "FILL_ITEM_ALL_PRICES" => "Y",
             "ELEMENT_SORT_FIELD2" => $ELEMENT_SORT_FIELD2,
             "ELEMENT_SORT_ORDER2" => $ELEMENT_SORT_ORDER2,
-            "ELEMENT_SORT_FIELD" => $ELEMENT_SORT_FIELD,
-            "ELEMENT_SORT_ORDER" => $ELEMENT_SORT_ORDER,
-            /*"ELEMENT_SORT_FIELD" => $arParams["ELEMENT_SORT_FIELD"],
-            "ELEMENT_SORT_ORDER" => $arParams["ELEMENT_SORT_ORDER"],
-            "ELEMENT_SORT_FIELD2" => $arParams["ELEMENT_SORT_FIELD2"],
-            "ELEMENT_SORT_ORDER2" => $arParams["ELEMENT_SORT_ORDER2"],*/
+            "ELEMENT_SORT_FIELD" => (\Enterego\EnteregoHitsHelper::checkIfStartsWithHit($APPLICATION)
+                && !(\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION))
+                && $curSection['DEPTH_LEVEL'] == '1') ? 'PROPERTY_' . SORT_BREND : $ELEMENT_SORT_FIELD,
+            "ELEMENT_SORT_ORDER" => (\Enterego\EnteregoHitsHelper::checkIfStartsWithHit($APPLICATION)
+                && !(\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION))
+                && $curSection['DEPTH_LEVEL'] == '1') ? 'DESC' : $ELEMENT_SORT_ORDER,
             "PROPERTY_CODE" => (isset($arParams["LIST_PROPERTY_CODE"]) ? $arParams["LIST_PROPERTY_CODE"] : []),
             "PROPERTY_CODE_MOBILE" => $arParams["LIST_PROPERTY_CODE_MOBILE"],
             "META_KEYWORDS" => $arParams["LIST_META_KEYWORDS"],
@@ -427,7 +423,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             "SHOW_404" => $arParams["SHOW_404"],
             "FILE_404" => $arParams["FILE_404"],
             "DISPLAY_COMPARE" => $arParams["USE_COMPARE"],
-            "PAGE_ELEMENT_COUNT" => $arParams["PAGE_ELEMENT_COUNT"],
+            "PAGE_ELEMENT_COUNT" => $arParams['PAGE_ELEMENT_COUNT'],
             "LINE_ELEMENT_COUNT" => $arParams["LINE_ELEMENT_COUNT"],
             "PRICE_CODE" => $arParams["~PRICE_CODE"],
             "USE_PRICE_COUNT" => $arParams["USE_PRICE_COUNT"],
@@ -518,9 +514,22 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             'BACKGROUND_IMAGE' => (isset($arParams['SECTION_BACKGROUND_IMAGE']) ? $arParams['SECTION_BACKGROUND_IMAGE'] : ''),
             'COMPATIBLE_MODE' => (isset($arParams['COMPATIBLE_MODE']) ? $arParams['COMPATIBLE_MODE'] : ''),
             'DISABLE_INIT_JS_IN_COMPONENT' => (isset($arParams['DISABLE_INIT_JS_IN_COMPONENT']) ? $arParams['DISABLE_INIT_JS_IN_COMPONENT'] : '')
-        ),
-            $component
         );
+        if (\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)) {
+            $intSectionID = $APPLICATION->IncludeComponent(
+                "bitrix:enterego.hit_section",
+                ".default",
+                $sectionParams,
+                $component
+            );
+        } else {
+            $intSectionID = $APPLICATION->IncludeComponent(
+                "bitrix:catalog.section",
+                "oshisha_catalog.section",
+                $sectionParams,
+                $component
+            );
+        }
         $GLOBALS['CATALOG_CURRENT_SECTION_ID'] = $intSectionID;
 
         if (ModuleManager::isModuleInstalled("sale")) {
@@ -533,7 +542,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                  style="display: none; opacity: 0;">
                                 <?= GetMessage('CATALOG_PERSONAL_RECOM') ?>
                             </div>
-                            <?php $APPLICATION->IncludeComponent("bitrix:catalog.section",
+                            <?php
+                            $APPLICATION->IncludeComponent("bitrix:catalog.section",
                                 "oshisha_catalog.section", array(
                                     "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
                                     "IBLOCK_ID" => $arParams["IBLOCK_ID"],
