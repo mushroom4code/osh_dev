@@ -92,12 +92,6 @@ if (IsModuleInstalled("advertising")):?>
 if (SITE_ID !== SITE_EXHIBITION) {
     global $trendFilter;
     $trendFilter = array('PROPERTY_TREND' => '4');
-    ?>
-    <span class="title_home">
-<div class="h1">Актуальное</div>
- <a href=".<?php echo SITE_DIR ?>catalog/kalyany/" style="display:none;" class="link_menu_catalog link_red_button">Посмотреть все</a>
-</span>
-    <?php
     $actualBlockData = array(
         'select' => array('ID', 'UF_IMG', 'UF_STR', 'UF_LINK'),
         'order' => array('ID' => 'ASC'),
@@ -159,6 +153,43 @@ if (SITE_ID !== SITE_EXHIBITION) {
             }
         });
     </script>
+    <div class="box_with_banner_dop">
+        <?php $APPLICATION->IncludeComponent(
+            "bitrix:advertising.banner",
+            "oshisha_banners",
+            array(
+                "BS_ARROW_NAV" => "N",
+                "BS_BULLET_NAV" => "N",
+                "BS_CYCLING" => "N",
+                "BS_EFFECT" => "fade",
+                "BS_HIDE_FOR_PHONES" => "N",
+                "BS_HIDE_FOR_TABLETS" => "N",
+                "BS_KEYBOARD" => "N",
+                "BS_WRAP" => "N",
+                "CACHE_TIME" => "36000000",
+                "CACHE_TYPE" => "N",
+                "DEFAULT_TEMPLATE" => "-",
+                "NOINDEX" => "N",
+                "QUANTITY" => "1",
+                "TYPE" => "BANNERS_HOME_1",
+                "COMPONENT_TEMPLATE" => "oshisha_banners"
+            ),
+            false
+        ); ?>
+    </div>
+    <?php $APPLICATION->IncludeComponent(
+        "bitrix:main.include",
+        "",
+        array(
+            "AREA_FILE_SHOW" => "sect",
+            "AREA_FILE_SUFFIX" => "bottom",
+            "AREA_FILE_RECURSIVE" => "N",
+            "EDIT_MODE" => "html",
+        ),
+        false,
+        array('HIDE_ICONS' => 'Y')
+    );
+    ?>
     <div class="h1">Распродажа</div>
     <div class="by-card">
         <?php
@@ -256,42 +287,7 @@ if (SITE_ID !== SITE_EXHIBITION) {
             false
         ); ?>
     </div>
-    <div class="box_with_banner_dop">
-        <?php $APPLICATION->IncludeComponent(
-            "bitrix:advertising.banner",
-            "oshisha_banners",
-            array(
-                "BS_ARROW_NAV" => "N",
-                "BS_BULLET_NAV" => "N",
-                "BS_CYCLING" => "N",
-                "BS_EFFECT" => "fade",
-                "BS_HIDE_FOR_PHONES" => "N",
-                "BS_HIDE_FOR_TABLETS" => "N",
-                "BS_KEYBOARD" => "N",
-                "BS_WRAP" => "N",
-                "CACHE_TIME" => "36000000",
-                "CACHE_TYPE" => "N",
-                "DEFAULT_TEMPLATE" => "-",
-                "NOINDEX" => "N",
-                "QUANTITY" => "1",
-                "TYPE" => "BANNERS_HOME_1",
-                "COMPONENT_TEMPLATE" => "oshisha_banners"
-            ),
-            false
-        ); ?>
-    </div>
-    <?php $APPLICATION->IncludeComponent(
-        "bitrix:main.include",
-        "",
-        array(
-            "AREA_FILE_SHOW" => "sect",
-            "AREA_FILE_SUFFIX" => "bottom",
-            "AREA_FILE_RECURSIVE" => "N",
-            "EDIT_MODE" => "html",
-        ),
-        false,
-        array('HIDE_ICONS' => 'Y')
-    );
+    <?php
 }
 // TODO - обработка лайки
 //$update = new Enterego\EnteregoProcessing();
