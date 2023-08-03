@@ -448,56 +448,6 @@ $tabControl = new CAdminTabControl(
 
 $tabControl->begin();
 ?>
-<style>
-    .flex-align-items, .flex-justify-content, .d-flex {
-        display: flex;
-    }
-
-    .flex-row {
-        flex-direction: row;
-    }
-
-    .flex-align-items {
-        align-items: center;
-    }
-
-    .flex-column {
-        flex-direction: column;
-    }
-
-    .flex-justify-content {
-        justify-content: space-between;
-    }
-
-    .margin-right-20 {
-        margin-right: 20px !important;
-    }
-
-    .margin-left-10 {
-        margin-left: 10px;
-    }
-
-    .padding-10 {
-        padding: 10px;
-    }
-
-    .button_red {
-        border-bottom: none;
-        outline: none;
-        display: inline-block;
-        background: linear-gradient(white, #d9e4e8);
-        padding: 7px 33px;
-        color: black;
-        text-decoration: none;
-        box-shadow: 0 2px 3px #b4b4b4;
-        border-radius: 4px;
-    }
-
-    .button_red:hover {
-        text-decoration: none;
-    }
-
-</style>
 <form action="<?= $APPLICATION->getCurPage(); ?>?mid=<?= $module_id; ?>&lang=<?= LANGUAGE_ID; ?>" method="post">
     <?= bitrix_sessid_post(); ?>
     <?php
@@ -512,11 +462,11 @@ $tabControl->begin();
                     <td>
                         <div style="display: none" id="pickpoint_load_points_label"
                              class="adm-info-message-wrap">
+                        </div>
                     </td>
                     <td>
                         <input type="button" id="pickpoint_load_points"
                                value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
-                        </div>
                     </td>
                 </tr>
                 <?php
@@ -526,11 +476,11 @@ $tabControl->begin();
                     <td>
                         <div style="display: none" id="fivepost_load_points_label"
                              class="adm-info-message-wrap">
+                        </div>
                     </td>
                     <td>
                         <input type="button" id="fivepost_load_points"
                                value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
-                        </div>
                     </td>
                 </tr>
                 <?php
@@ -564,76 +514,60 @@ $tabControl->begin();
                         </tr>
                     </table>
                 </td>
-                </tr><?
+                </tr><?php
             } else if ($aTab['DIV'] === 'dellin') { ?>
                 <tr>
                     <td>
                         <div style="display: none" id="dellin_load_points_label"
                              class="adm-info-message-wrap">
+                        </div>
                     </td>
                     <td>
                         <input type="button" id="dellin_load_points"
                                value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                    </td>
+                </tr> <?php
+            } else if ($aTab['DIV'] === 'russian_post'){?>
+                <tr>
+                    <td>
+                        <div style="display: none" id="russian_post_load_points_label"
+                            class="adm-info-message-wrap">
                         </div>
                     </td>
-                </tr>
+                    <td>
+                        <input type="button" id="russian_post_load_points"
+                            value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                    </td>
+                    <td>
+                        <div style="display: none" id="russian_post_load_points_label"
+                             class="adm-info-message-wrap">
+                        </div>
+                    </td>
+                    <td>
+                        <input type="button" id="russian_post_load_points"
+                               value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                    </td>
+                </tr><?php
+            } else if ($aTab['DIV'] === 'oshisha') {
+                    \CommonPVZ\OshishaDelivery::generate($oshishaOptions["delivery_time_period"],
+                        \CommonPVZ\OshishaDelivery::getOshishaOptionsData()); ?>
 
-                    <?
-                } else if ($aTab['DIV'] === 'russian_post'){?>
+                    <tr>
+                        <td>Время доставки:</td>
+                        <td>Время доставки настраивается в свойстве заказа "DELIVERYTIME_INTERVAL"</td>
+                    </tr>
                     <tr>
                         <td>
-                            <div style="display: none" id="russian_post_load_points_label"
-                                class="adm-info-message-wrap">
-                        </td>
-                        <td>
-                            <input type="button" id="russian_post_load_points"
-                                value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
+                            <div style="display: none" id="oshisha_update_region_restrictions_label"
+                                 class="adm-info-message-wrap">
                             </div>
                         </td>
-                    </tr><?
-                } else if ($aTab['DIV'] === 'oshisha') {
-                    \CommonPVZ\OshishaDelivery::generate($oshishaOptions["delivery_time_period"],
-                        \CommonPVZ\OshishaDelivery::getOshishaOptionsData());
-                }
-            }
-        }
-        $tabControl->buttons();
-        ?>
-        <input type="submit" name="apply"
-               value="<?= Loc::GetMessage('EE_PVZ_OPTIONS_INPUT_APPLY'); ?>" class="adm-btn-save" />
-        <input type="submit" name="default"
-               value="<?= Loc::GetMessage('EE_PVZ_OPTIONS_INPUT_DEFAULT'); ?>" />
-    </form>
-                <?
-            } else if ($aTab['DIV'] === 'russian_post') { ?>
-                <tr>
-                <td>
-                    <div style="display: none" id="russian_post_load_points_label"
-                         class="adm-info-message-wrap">
-                </td>
-                <td>
-                    <input type="button" id="russian_post_load_points"
-                           value="<?= Loc::getMessage('PVZ_UPDATE_POINTS') ?>"/>
-                    </div>
-                </td>
-                </tr><?
-            } else if ($aTab['DIV'] === 'oshisha') { ?>
-                <tr>
-                    <td>Время доставки:</td>
-                    <td>Время доставки настраивается в свойстве заказа "DELIVERYTIME_INTERVAL"</td>
+                        <td>
+                            <input type="button" id="oshisha_update_region_restrictions"
+                                   value="<?= Loc::getMessage('OSH_REGION_RESTRICTIONS') ?>"/>
+                        </td>
                 </tr>
-                <tr>
-                    <td>
-                        <div style="display: none" id="oshisha_update_region_restrictions_label"
-                             class="adm-info-message-wrap">
-                    </td>
-                    <td>
-                        <input type="button" id="oshisha_update_region_restrictions"
-                               value="<?= Loc::getMessage('OSH_REGION_RESTRICTIONS') ?>"/>
-                        </div>
-                    </td>
-                </tr>
-                <?
+                <?php
             }
         }
     }
@@ -646,12 +580,7 @@ $tabControl->begin();
 </form>
 
 <?php
-
-
-
 $tabControl->end();
-
-
 if ($request->isPost() && check_bitrix_sessid()) {
     $_REQUEST['SDEK_tarifs'] = ($_REQUEST['SDEK_tarifs']) ? serialize($_REQUEST['SDEK_tarifs']) : 'a:0:{}';
     Option::set($module_id, 'SDEK_tarifs', $_REQUEST['SDEK_tarifs']);
