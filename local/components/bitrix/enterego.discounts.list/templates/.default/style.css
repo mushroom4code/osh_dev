@@ -2,7 +2,8 @@
     transition: transform 300ms ease;
     flex: 1 0 33%;
     margin-bottom: 2rem;
-    max-height: 260px
+    max-height: 260px;
+    min-width: 325px;
 }
 
 #box_discounts  .box_with_discounts:hover{
@@ -42,4 +43,10 @@
     height: 16%;
     border-bottom-left-radius: 7px;
     border-bottom-right-radius: 7px;
+}
+
+@media (max-width: 726px) {
+    #box_discounts .box_with_discounts {
+        max-height: 390px;
+    }
 }

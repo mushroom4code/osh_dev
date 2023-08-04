@@ -74,7 +74,7 @@ if (!empty($price['USER_PRICE'])) {
     $specialPrice = $price['USER_PRICE']['PRICE'];
 }
 
-if ( !empty($price['SALE_PRICE']['PRICE']) &&
+if (!empty($price['SALE_PRICE']['PRICE']) &&
     ($useDiscount['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE)) {
 
     $specialPrice = ($specialPrice === 0 || $price['SALE_PRICE']['PRICE'] < $specialPrice)
@@ -123,7 +123,7 @@ if ($show_price) {
         'ID' => $item['ID'],
         'BUY_LINK' => $arItemIDs['BUY_LINK'],
         'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
-        'TYPE_PRODUCT'=> 'PRODUCT',
+        'TYPE_PRODUCT' => 'PRODUCT',
         'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
         'MORE_PHOTO' => $morePhoto,
         'PRODUCT' => $item['PRODUCT'],
@@ -148,15 +148,43 @@ if ($show_price) {
 $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 ?>
 <div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
-<?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?=$item['ID']?>">
+<?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
-        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
+        <?php if (!empty($arResult['USED_DISCOUNTS'])) {
+            $ses = 'ses';
+            if (count($arResult['USED_DISCOUNTS']) > 1) {
+                ?>
+                <span class="taste new-product discount-product detail-popup-discount"
+                      data-background="#F55F5C">%</span>
+                <div id="discount_detail_popup" class="d-none">
+                    <div class="d-flex flex-column align-items-center box_with_discounts_detail">
+                        <h4><?=$item['NAME']?></h4>
+                        <?php foreach ($arResult['USED_DISCOUNTS'] as $discount) { ?>
+                            <div>
+                                <h5><a href="/discounts/<?=$discount['IBLOCK_DISCOUNT']['CODE']?>">Акция "<?= $discount['NAME'] ?>"</a></h5>
+                                <p><?= $discount['IBLOCK_DISCOUNT']['DESCRIPTION'] ?></p>
+                            </div>
+                            <?php
+                        } ?>
+                        <span class="close_photo close_photo_discount" id="close_photo"></span>
+                    </div>
+                </div>
+                <?php
+            } else {
+                ?>
+                <span class="taste new-product discount-product" data-background="#F55F5C">
+                    <a href="/discounts/<?= reset($arResult['USED_DISCOUNTS'])['IBLOCK_DISCOUNT']['CODE'] ?>">%</a>
+                </span>
+                <?php
+            }
+        }
+        if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
             <span class="taste new-product" data-background="#F55F5C">NEW</span>
         <?php }
 
         if ($hitProduct['VALUE'] === 'Да') { ?>
-            <span class="taste new-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
+            <span class="taste new-product hit-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
         <?php }
 
         $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
@@ -223,10 +251,10 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                     (int)$item['PRODUCT']['QUANTITY'] > 0) { ?>
                     <i class="fa fa-pencil js__open-grouped-product-window"
                        aria-hidden="true"
-                       id="<?='grouped_'.$item['ID']?>"
+                       id="<?= 'grouped_' . $item['ID'] ?>"
                        data-item-id="<?= $item['ID'] ?>"
-                       data-quantity-id="<?=$arItemIDs['QUANTITY_ID']?>"
-                       data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct))?>"></i>
+                       data-quantity-id="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                       data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct)) ?>"></i>
                 <?php } ?>
             </div>
 
@@ -413,9 +441,11 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 
                                     <?php if (!empty($specialPrice)) { ?>
                                         <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
-                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
+                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>
+                                                ₽</b>
                                             <b class="sale-percent">
-                                                - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($specialPrice)) ?>₽
+                                                - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($specialPrice)) ?>
+                                                ₽
                                             </b>
                                         </div>
                                     <?php } ?>
@@ -426,55 +456,56 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                 <span class="font-12 ml-1"><?= $item['PRODUCT']['QUANTITY'] ?></span>
                                 <span class="font-12">шт.</span>
                             </div>
-                            <?if($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'):?>
-                                <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                            <?= $is_key_found ? 'subscribed' : ''?> min_card">
-                                    <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : ''?>" aria-hidden="true"></i>
+                            <? if ($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'): ?>
+                                <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                            <?= $is_key_found ? 'subscribed' : '' ?> min_card">
+                                    <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
                                 </div>
-                                <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                             <?= $is_key_found ? 'subscribed' : ''?>"
-                                     data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>"
+                                <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                             <?= $is_key_found ? 'subscribed' : '' ?>"
+                                     data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
                                      data-product_id="<?= $item['ID']; ?>">
                                 </div>
-                            <?else:?>
-                            <div class="d-flex row-line-reverse justify-content-between box-basket">
-                                <?php if ($show_price) { ?>
-                                    <div class="btn red_button_cart btn-plus add2basket"
-                                         data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                         data-product_id="<?= $item['ID']; ?>"
-                                         data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                         id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                         <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
-                                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
-                                    </div>
-                                    <div class="product-item-amount-field-contain-wrap"
-                                         <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
-                                         data-product_id="<?= $item['ID']; ?>">
-                                        <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
-                                            <a class="btn-minus  minus_icon no-select add2basket"
-                                               id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                               href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                               data-product_id="<?= $item['ID']; ?>">
-                                            </a>
-                                            <div class="product-item-amount-field-block">
-                                                <input class="product-item-amount card_element"
-                                                       id="<?= $arItemIDs['QUANTITY_ID'] ?>"
-                                                       type="number"
-                                                       max="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                                       value="<?= $priceBasket ?>">
-                                            </div>
-                                            <a class="btn-plus plus_icon no-select add2basket"
-                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                               id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
-                                               data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                               data-product_id="<?= $item['ID']; ?>"
-                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
+                            <? else: ?>
+                                <div class="d-flex row-line-reverse justify-content-between box-basket">
+                                    <?php if ($show_price) { ?>
+                                        <div class="btn red_button_cart btn-plus add2basket"
+                                             data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                             data-product_id="<?= $item['ID']; ?>"
+                                             data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                             id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                             <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
+                                            <img class="image-cart"
+                                                 src="/local/templates/Oshisha/images/cart-white.png"/>
                                         </div>
-                                        <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                            <?endif;?>
+                                        <div class="product-item-amount-field-contain-wrap"
+                                             <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
+                                             data-product_id="<?= $item['ID']; ?>">
+                                            <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
+                                                <a class="btn-minus  minus_icon no-select add2basket"
+                                                   id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                                   href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $item['ID']; ?>">
+                                                </a>
+                                                <div class="product-item-amount-field-block">
+                                                    <input class="product-item-amount card_element"
+                                                           id="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                                                           type="number"
+                                                           max="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                                           value="<?= $priceBasket ?>">
+                                                </div>
+                                                <a class="btn-plus plus_icon no-select add2basket"
+                                                   data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                                   id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
+                                                   data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $item['ID']; ?>"
+                                                   title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
+                                            </div>
+                                            <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            <? endif; ?>
                         <?php }
                         if (!$USER->IsAuthorized() && !$show_price) { ?>
                             <div class="btn-plus <?= $not_auth ?>"

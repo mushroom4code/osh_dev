@@ -5,7 +5,11 @@
 }
 
 .discount_products {
-	width: 80%;
+	width: 70%;
 	margin: auto;
+}
+
+.discount_products .by-card .products_box {
+	margin-left: 0px;
 }
 

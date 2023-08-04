@@ -2826,6 +2826,22 @@ div#about_contacts > .row > .form_company {
     z-index: 1400;
 }
 
+.new-product a {
+    color: white !important;
+}
+
+.hit-product {
+    padding: 9px 6px;
+}
+
+.discount-product {
+    padding: 9px 12.5px;
+}
+
+.discount-product:not(:only-of-type) {
+    right: 68%;
+}
+
 .by-line .new-product {
     bottom: 78%;
     right: 97%;

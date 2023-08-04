@@ -158,7 +158,9 @@ $generalParams = array(
     'MESS_BTN_ADD_TO_BASKET' => $arParams['~MESS_BTN_ADD_TO_BASKET'],
     'MESS_NOT_AVAILABLE' => $arParams['~MESS_NOT_AVAILABLE'],
     'PRICE_CODE' => $arParams['PRICE_CODE'],
-    'FILL_ITEM_ALL_PRICES' => 'Y'
+    'FILL_ITEM_ALL_PRICES' => 'Y',
+    'DISCOUNTS' => $arResult['DISCOUNTS'],
+    'IBLOCKS_DISCOUNTS' => $arResult['IBLOCKS_DISCOUNTS']
 );
 
 $obName = 'ob' . preg_replace('/[^a-zA-Z0-9_]/', 'x', $this->GetEditAreaId($navParams['NavNum']));

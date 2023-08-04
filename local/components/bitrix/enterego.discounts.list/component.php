@@ -14,18 +14,14 @@ Loader::includeModule("catalog");
 
 $nav = new \Bitrix\Main\UI\PageNavigation("nav-discounts");
 $nav->allowAllRecords(true)
-    ->setPageSize(3)
+    ->setPageSize(10)
     ->initFromUri();
 
 $res = Bitrix\Iblock\IblockTable::getList([
     'filter' => ['IBLOCK_TYPE_ID' => 'discounts'],
     'count_total' => true,
-    'order' => ['ID' => 'desc'],
-    'offset' => $nav->getOffset(),
-    'limit' => $nav->getLimit(),
+    'order' => ['ID' => 'asc'],
 ]);
-
-$nav->setRecordCount($res->getCount());
 
 $discountsIds = [];
 while ($iblock = $res->fetch()) {
@@ -37,15 +33,26 @@ $discountsRes = \Bitrix\Sale\Internals\DiscountTable::getList([
     'filter' => [
         'ID' => $discountsIds,
     ],
+    'order' => [
+        'ACTIVE_TO' => 'desc'
+    ],
     'select' => [
         "*"
-    ]
+    ],
+    'offset' => $nav->getOffset(),
+    'limit' => $nav->getLimit(),
+    'count_total' => true
 ]);
 
-while($discount = $discountsRes->fetch()) {
+$nav->setRecordCount($discountsRes->getCount());
 
+while ($discount = $discountsRes->fetch()) {
     $arResult['DISCOUNTS'][array_search($discount['ID'], $discountsIds)] = $discount;
 }
+$discountsKeys = array_keys($arResult['DISCOUNTS']);
+uksort($arResult['DISCOUNTS_IBLOCKS'], function ($key1, $key2) use ($discountsKeys) {
+    return ((array_search($key1, $discountsKeys) > array_search($key2, $discountsKeys)) ? 1 : -1);
+});
 
 $this->IncludeComponentTemplate();
 

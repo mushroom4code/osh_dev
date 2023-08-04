@@ -719,6 +719,18 @@ $(document).ready(function () {
         });
     });
 
+    $(document).on('click', '.detail-popup-discount', function () {
+        let discount_detail_popup = $(this).parent().find('div#discount_detail_popup');
+        discount_detail_popup.removeClass('d-none');
+        if(window.innerWidth <= 600) {
+            $(document.body).css('overflow', 'hidden');
+        }
+        discount_detail_popup.find('#close_photo').on('click', function () {
+            $(document.body).css('overflow', 'auto');
+            discount_detail_popup.addClass('d-none');
+        });
+    });
+
     $('.switch-btn').on('click', function () {
         $(this).toggleClass('switch-on');
     });

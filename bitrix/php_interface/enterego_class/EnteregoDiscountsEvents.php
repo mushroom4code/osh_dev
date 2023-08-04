@@ -2,11 +2,6 @@
 
 function createInfoblockOnDiscountAdd($event)
 {
-
-
-
-
-
     $discountParameters = $event->getParameters();
     $arAccess = array(
         "2" => "R",
@@ -21,7 +16,7 @@ function createInfoblockOnDiscountAdd($event)
             "SITE_ID" => array('N2', 's1'),
             "SORT" => "5",
             "GROUP_ID" => $arAccess,
-            "DESCRIPTION" => $discountParameters['fields']['UNPACK'],
+            "DESCRIPTION" => '',
 
             "LIST_PAGE_URL" => "#SITE_DIR#/discounts/catalog_for_d" . $discountParameters['id'],
             "SECTION_PAGE_URL" => "#SITE_DIR#/discounts/" . $discountParameters['id'] . "/#SECTION_CODE#/",
@@ -46,7 +41,6 @@ function createInfoblockOnDiscountAdd($event)
             "SECTION_PROPERTY" => "Y",
         )
     );
-    $ses = 'ses';
 }
 
 \Bitrix\Main\EventManager::getInstance()->addEventHandler('sale', '\Bitrix\Sale\Internals\Discount::OnAfterAdd', 'createInfoblockOnDiscountAdd');
