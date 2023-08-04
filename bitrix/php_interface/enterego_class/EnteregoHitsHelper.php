@@ -24,7 +24,7 @@ class EnteregoHitsHelper
         {
             foreach ($child as $item) {
                 $searchRootDirectory[$item['ID']] = $rootSectionId;
-                if (count($item['CHILDS']) !== 0) {
+                if (!empty($item['CHILDS']) && count($item['CHILDS']) !== 0) {
                     getChild($rootSectionId, $item['CHILDS'], $searchRootDirectory);
                 }
             }
@@ -41,7 +41,9 @@ class EnteregoHitsHelper
             if (empty($item['IBLOCK_SECTION_ID']) && !isset($searchRootDirectory[$item['IBLOCK_SECTION_ID']])) {
                 continue;
             }
-            if (count($sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]]) < 25) {
+
+            if (!empty($sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]]) &&
+                count($sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]]) < 25) {
                 $sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]][$item['ID']] = $item;
             }
         }
