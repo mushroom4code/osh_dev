@@ -42,7 +42,7 @@ class EnteregoHitsHelper
                 continue;
             }
 
-            if (!empty($sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]]) &&
+            if (empty($sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]]) ||
                 count($sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]]) < 25) {
                 $sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]][$item['ID']] = $item;
             }
