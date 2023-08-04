@@ -2,21 +2,37 @@
     transition: transform 300ms ease;
     /*flex: 1 0 33%;*/
     margin-bottom: 2rem;
-    max-height: 260px;
     min-width: 325px;
+}
+
+#box_discounts .box_with_discounts_parents.discounts_flex .box_with_discounts {
+    max-height: 300px;
+}
+
+#box_discounts .box_with_discounts_parents.discounts_grid .box_with_discounts {
+    max-height: 260px;
 }
 
 #box_discounts  .box_with_discounts:last-child:nth-child(3n - 2) {
     grid-column-end: 3;
 }
 
-#box_discounts  .box_with_discounts:hover{
+#box_discounts .box_with_discounts_parents.discounts_grid .box_with_discounts:hover{
     transform: scale(1.1);
 }
 
-.box_with_discounts_parents {
+#box_discounts .box_with_discounts_parents.discounts_flex .box_with_discounts:hover{
+    transform: scale(1.07);
+}
+
+.box_with_discounts_parents.discounts_grid {
     display: grid;
     grid-template-columns: repeat(3, auto);
+}
+
+.box_with_discounts_parents.discounts_flex {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 #box_discounts img {
@@ -49,6 +65,10 @@
     border-bottom-right-radius: 7px;
 }
 
+.logo_discount .completed_discount {
+    opacity: 0.6;
+}
+
 @media (max-width: 726px) {
     #box_discounts .box_with_discounts {
         max-height: 390px;
@@ -56,7 +76,7 @@
 }
 
 @media (max-width: 1060px) {
-    .box_with_discounts_parents {
+    .box_with_discounts_parents.g {
         grid-template-columns: repeat(2, auto);
     }
 
