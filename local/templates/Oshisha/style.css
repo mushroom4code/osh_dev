@@ -2834,7 +2834,8 @@ div#about_contacts > .row > .form_company {
     padding: 9px 6px;
 }
 
-.discount-product {
+span.discount-product {
+    cursor: pointer;
     padding: 9px 12.5px;
 }
 

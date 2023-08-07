@@ -14,10 +14,10 @@ $curDateTime = new \Bitrix\Main\Type\DateTime();
     <div class="d-flex flex-column mt-4 mb-5" id="box_discounts">
         <div class="box_with_discounts_parents justify-content-between" id="click_discount_s">
             <?php foreach ($arResult['DISCOUNTS'] as $iblock_key => $discount) {
-                $discount_iblock = $arResult['DISCOUNTS_IBLOCKS'][$iblock_key];
+                $discount_iblock = $discount['DISCOUNT_IBLOCK'];
                 ?>
                 <div class="box_with_discounts d-flex justify-content-center align-items-center col col-sm">
-                    <a href="/discounts/<?= $discount_iblock['CODE'] ?>/" class="logo_discount">
+                    <a href="/akcii/<?= $discount_iblock['CODE'] ?>/" class="logo_discount">
                         <?php if ($discount_iblock['PICTURE']) {
                             $iblockImage = CFile::GetByID($discount_iblock['PICTURE'])->fetch(); ?>
                             <img src="<?= $iblockImage['SRC'] ?>">
@@ -31,11 +31,11 @@ $curDateTime = new \Bitrix\Main\Type\DateTime();
                                 if ($discount['ACTIVE'] != 'Y') {
                                     echo 'не активна';
                                 } else {
-                                    if (!empty($disount['ACTIVE_TO'])) {
-                                        if (!empty($disount['ACTIVE_FROM'])
-                                            && $disount['ACTIVE_FROM'] <= $curDateTime) {
-                                            if ($disount['ACTIVE_TO'] >= $curDateTime) {
-                                                echo 'до ' . $disount['ACTIVE_TO']->format('d.m.Y');
+                                    if (!empty($discount['ACTIVE_TO'])) {
+                                        if (!empty($discount['ACTIVE_FROM'])
+                                            && $discount['ACTIVE_FROM'] <= $curDateTime) {
+                                            if ($discount['ACTIVE_TO'] >= $curDateTime) {
+                                                echo 'до ' . $discount['ACTIVE_TO']->format('d.m.Y');
                                             } else {
                                                 echo 'завершена';
                                             }

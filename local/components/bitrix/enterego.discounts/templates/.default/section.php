@@ -12,8 +12,6 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
-
-$ses = 'ses';
 $APPLICATION->IncludeComponent(
 	"bitrix:enterego.discounts.list",
 	"",

@@ -152,7 +152,6 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
         <?php if (!empty($arResult['USED_DISCOUNTS'])) {
-            $ses = 'ses';
             if (count($arResult['USED_DISCOUNTS']) > 1) {
                 ?>
                 <span class="taste new-product discount-product detail-popup-discount"
@@ -162,7 +161,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                         <h4><?=$item['NAME']?></h4>
                         <?php foreach ($arResult['USED_DISCOUNTS'] as $discount) { ?>
                             <div>
-                                <h5><a href="/discounts/<?=$discount['IBLOCK_DISCOUNT']['CODE']?>">Акция "<?= $discount['NAME'] ?>"</a></h5>
+                                <h5><a href="/akcii/<?=$discount['IBLOCK_DISCOUNT']['CODE']?>">Акция "<?= $discount['NAME'] ?>"</a></h5>
                                 <p><?= $discount['IBLOCK_DISCOUNT']['DESCRIPTION'] ?></p>
                             </div>
                             <?php
@@ -174,7 +173,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
             } else {
                 ?>
                 <span class="taste new-product discount-product" data-background="#F55F5C">
-                    <a href="/discounts/<?= reset($arResult['USED_DISCOUNTS'])['IBLOCK_DISCOUNT']['CODE'] ?>">%</a>
+                    <a href="/akcii/<?= reset($arResult['USED_DISCOUNTS'])['IBLOCK_DISCOUNT']['CODE'] ?>">%</a>
                 </span>
                 <?php
             }

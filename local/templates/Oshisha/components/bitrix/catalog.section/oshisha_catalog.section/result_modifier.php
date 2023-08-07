@@ -3,6 +3,7 @@
 /**
  * @var CBitrixComponentTemplate $this
  * @var CatalogSectionComponent $component
+ * @var array $arParams
  * @var CMain $APPLICATION
  */
 
