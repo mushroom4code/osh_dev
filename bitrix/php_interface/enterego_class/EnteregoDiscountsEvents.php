@@ -19,8 +19,8 @@ function createInfoblockOnDiscountAdd($event)
             "DESCRIPTION" => '',
 
             "LIST_PAGE_URL" => "#SITE_DIR#/discounts/catalog_for_d" . $discountParameters['id'],
-            "SECTION_PAGE_URL" => "#SITE_DIR#/discounts/" . $discountParameters['id'] . "/#SECTION_CODE#/",
-            "DETAIL_PAGE_URL" => "#SITE_DIR#/discounts/" . $discountParameters['id'] . "/#SECTION_CODE#/#ELEMENT_CODE#/",
+            "SECTION_PAGE_URL" => "#SITE_DIR#/akcii/" . $discountParameters['id'] . "/#SECTION_CODE#/",
+            "DETAIL_PAGE_URL" => "#SITE_DIR#/akcii/" . $discountParameters['id'] . "/#SECTION_CODE#/#ELEMENT_CODE#/",
 
             "INDEX_SECTION" => "Y",
             "INDEX_ELEMENT" => "Y",

@@ -19,7 +19,7 @@ foreach ($arPageTemp as $key_p => $page) {
     if ($page != "")
         $arPage[] = $page;
 }
-//Есть внутренние
+
 if ($CurPage != $arParams['SEF_URL']) {
     $componentPage = 'detail';
     $arParams['CODE'] = end($arPage);

@@ -18,7 +18,6 @@ $arResult['DISCOUNT_IBLOCK'] = Bitrix\Iblock\IblockTable::getList([
     'filter' => ['IBLOCK_TYPE_ID' => 'discounts', 'CODE' => $arParams['CODE']],
 ])->fetch();
 
-$arDiscounts = [];
 $arProductDiscounts = \Bitrix\Sale\Internals\DiscountTable::getList([
     'filter' => [
         'ID' => $discount_id,
@@ -32,11 +31,10 @@ $arResult['DISCOUNT'] = $arProductDiscounts;
 $arResult['DISCOUNT']['ACTIONS_LIST_MODIFIED'] = $arResult['DISCOUNT']['ACTIONS_LIST'];
 $arResult['DISCOUNT']['ACTIONS_LIST_MODIFIED']['CHILDREN'] = [];
 $EnteregoDiscountHelperObject = new \Enterego\EnteregoDiscountHelper();
-$EnteregoDiscountHelperObject->recursiveActionListModifying($arResult['RAW_DISCOUNT']['ACTIONS_LIST']['CHILDREN'], $arResult['RAW_DISCOUNT']['ACTIONS_LIST_MODIFIED']);
-$arResult['DISCOUNT'] = $arDiscounts;
+$EnteregoDiscountHelperObject->recursiveActionListModifying($arResult['DISCOUNT']['ACTIONS_LIST']['CHILDREN'], $arResult['DISCOUNT']['ACTIONS_LIST_MODIFIED']);
 
 $GLOBALS['DISCOUNT_FILTER'][] = $EnteregoDiscountHelperObject->parseCondition(
-    $arResult['RAW_DISCOUNT']['ACTIONS_LIST_MODIFIED'],
+    $arResult['DISCOUNT']['ACTIONS_LIST_MODIFIED'],
     [
         'INCLUDE_SUBSECTIONS' => "Y",
         'HIDE_NOT_AVAILABLE_OFFERS' => "N"

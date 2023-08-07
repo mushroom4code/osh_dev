@@ -18,8 +18,7 @@ $nav->allowAllRecords(true)
     ->initFromUri();
 
 $res = Bitrix\Iblock\IblockTable::getList([
-    'filter' => ['IBLOCK_TYPE_ID' => 'discounts'],
-    'count_total' => true,
+    'filter' => ['IBLOCK_TYPE_ID' => 'discounts', 'ACTIVE' => 'Y'],
     'order' => ['ID' => 'asc'],
 ]);
 
@@ -32,12 +31,13 @@ while ($iblock = $res->fetch()) {
 $discountsRes = \Bitrix\Sale\Internals\DiscountTable::getList([
     'filter' => [
         'ID' => $discountsIds,
+        'ACTIVE' => 'Y'
     ],
     'order' => [
         'ACTIVE_TO' => 'desc'
     ],
     'select' => [
-        "*"
+        '*'
     ],
     'offset' => $nav->getOffset(),
     'limit' => $nav->getLimit(),
@@ -47,12 +47,10 @@ $discountsRes = \Bitrix\Sale\Internals\DiscountTable::getList([
 $nav->setRecordCount($discountsRes->getCount());
 
 while ($discount = $discountsRes->fetch()) {
-    $arResult['DISCOUNTS'][array_search($discount['ID'], $discountsIds)] = $discount;
+    $iblock_key = array_search($discount['ID'], $discountsIds);
+    $arResult['DISCOUNTS'][$iblock_key] = $discount;
+    $arResult['DISCOUNTS'][$iblock_key]['DISCOUNT_IBLOCK'] = $arResult['DISCOUNTS_IBLOCKS'][$iblock_key];
 }
-$discountsKeys = array_keys($arResult['DISCOUNTS']);
-uksort($arResult['DISCOUNTS_IBLOCKS'], function ($key1, $key2) use ($discountsKeys) {
-    return ((array_search($key1, $discountsKeys) > array_search($key2, $discountsKeys)) ? 1 : -1);
-});
 
 $this->IncludeComponentTemplate();
 
