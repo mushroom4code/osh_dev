@@ -40,7 +40,6 @@ class PriceList
 
     private function update()
     {
-        global $PHPEXCELPATH;
 
         $this->arResult[] = ['<b style="font-size: 25px;font-weight:bold; ">ПРАЙС-ЛИСТ OSHISHA.NET - 8 (499) 350-62-01</b>'];
         $this->arResult[] = ['<b>Дата формирования</b>', '<b>' . date('d.m.y') . '</b>'];
