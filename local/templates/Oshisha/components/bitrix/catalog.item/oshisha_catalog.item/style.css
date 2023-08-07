@@ -1305,7 +1305,9 @@ div.slick-track {
     }
 
     .open-fast-window {
-        left: 83%;
+        left: 73%;
+        padding: 25px!important;
+        z-index: 10;
     }
 }
 

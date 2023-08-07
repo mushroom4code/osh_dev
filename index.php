@@ -1,7 +1,11 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetTitle("Oshisha - Главная");
-
+global $APPLICATION;
+if (SITE_EXHIBITION == SITE_ID) {
+    $APPLICATION->SetTitle("OSHISHA.shop");
+} else {
+    $APPLICATION->SetTitle("OSHISHA - Главная");
+}
 if (IsModuleInstalled("advertising")):?>
     <div class="banners_box mt-3">
         <div class="banners_container">
@@ -85,22 +89,15 @@ if (IsModuleInstalled("advertising")):?>
         </div>
     </div>
 <?php endif;
-
-global $trendFilter;
-$trendFilter = array('PROPERTY_TREND' => '4');
-?><span class="title_home">
-<div class="h1">Актуальное</div>
- <a href=".<?php echo SITE_DIR ?>catalog/kalyany/" style="display:none;" class="link_menu_catalog link_red_button">Посмотреть все</a></span>
-<?php
-
-$actualBlockData = array(
-    'select' => array('ID', 'UF_IMG', 'UF_STR', 'UF_LINK'),
-    'order' => array('ID' => 'ASC'),
-    'limit' => '50',
-);
-$resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('MainPageActual', $actualBlockData);
-
-?>
+if (SITE_ID !== SITE_EXHIBITION) {
+    global $trendFilter;
+    $trendFilter = array('PROPERTY_TREND' => '4');
+    $actualBlockData = array(
+        'select' => array('ID', 'UF_IMG', 'UF_STR', 'UF_LINK'),
+        'order' => array('ID' => 'ASC'),
+        'limit' => '50',
+    );
+    $resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('MainPageActual', $actualBlockData); ?>
     <div class="slider single-items box_slide box_with_actual_none">
         <div class="swiper-wrapper">
             <?php
@@ -155,32 +152,44 @@ $resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('MainPageActual', $actu
                 },
             }
         });
-
-        /*$(function () {
-            if ($('div').is('.single-items')) {
-                let count = 3;
-				let slidesToScroll = 1;
-                if (window.screen.width <= 746) {
-                    count = 2;
-					slidesToScroll = 1;
-                }
-				console.log(count);
-                $('.single-items').slick({
-                    arrows: true,
-                    prevArrow: '<span class="new_custom_button_slick_left" aria-hidden="true">' +
-                        '<i class="fa fa-angle-left" aria-hidden="true"></i></span>',
-                    nextArrow: '<span class="new_custom_button_slick_right" aria-hidden="true">' +
-                        '<i class="fa fa-angle-right" aria-hidden="true"></i></span>',
-                    slidesToShow: count,
-                    slidesToScroll: slidesToScroll,
-					variableWidth: true,
-                });
-
-            }
-
-        });*/
     </script>
-
+    <div class="box_with_banner_dop">
+        <?php $APPLICATION->IncludeComponent(
+            "bitrix:advertising.banner",
+            "oshisha_banners",
+            array(
+                "BS_ARROW_NAV" => "N",
+                "BS_BULLET_NAV" => "N",
+                "BS_CYCLING" => "N",
+                "BS_EFFECT" => "fade",
+                "BS_HIDE_FOR_PHONES" => "N",
+                "BS_HIDE_FOR_TABLETS" => "N",
+                "BS_KEYBOARD" => "N",
+                "BS_WRAP" => "N",
+                "CACHE_TIME" => "36000000",
+                "CACHE_TYPE" => "N",
+                "DEFAULT_TEMPLATE" => "-",
+                "NOINDEX" => "N",
+                "QUANTITY" => "1",
+                "TYPE" => "BANNERS_HOME_1",
+                "COMPONENT_TEMPLATE" => "oshisha_banners"
+            ),
+            false
+        ); ?>
+    </div>
+    <?php $APPLICATION->IncludeComponent(
+        "bitrix:main.include",
+        "",
+        array(
+            "AREA_FILE_SHOW" => "sect",
+            "AREA_FILE_SUFFIX" => "bottom",
+            "AREA_FILE_RECURSIVE" => "N",
+            "EDIT_MODE" => "html",
+        ),
+        false,
+        array('HIDE_ICONS' => 'Y')
+    );
+    ?>
     <div class="h1">Распродажа</div>
     <div class="by-card">
         <?php
@@ -278,43 +287,8 @@ $resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('MainPageActual', $actu
             false
         ); ?>
     </div>
-    <div class="box_with_banner_dop">
-        <?php $APPLICATION->IncludeComponent(
-            "bitrix:advertising.banner",
-            "oshisha_banners",
-            array(
-                "BS_ARROW_NAV" => "N",
-                "BS_BULLET_NAV" => "N",
-                "BS_CYCLING" => "N",
-                "BS_EFFECT" => "fade",
-                "BS_HIDE_FOR_PHONES" => "N",
-                "BS_HIDE_FOR_TABLETS" => "N",
-                "BS_KEYBOARD" => "N",
-                "BS_WRAP" => "N",
-                "CACHE_TIME" => "36000000",
-                "CACHE_TYPE" => "N",
-                "DEFAULT_TEMPLATE" => "-",
-                "NOINDEX" => "N",
-                "QUANTITY" => "1",
-                "TYPE" => "BANNERS_HOME_1",
-                "COMPONENT_TEMPLATE" => "oshisha_banners"
-            ),
-            false
-        ); ?>
-    </div>
-<?php $APPLICATION->IncludeComponent(
-    "bitrix:main.include",
-    "",
-    array(
-        "AREA_FILE_SHOW" => "sect",
-        "AREA_FILE_SUFFIX" => "bottom",
-        "AREA_FILE_RECURSIVE" => "N",
-        "EDIT_MODE" => "html",
-    ),
-    false,
-    array('HIDE_ICONS' => 'Y')
-);
-
+    <?php
+}
 // TODO - обработка лайки
 //$update = new Enterego\EnteregoProcessing();
 //$update->update_like_in_new_table();

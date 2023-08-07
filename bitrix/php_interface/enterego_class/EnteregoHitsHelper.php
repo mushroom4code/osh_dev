@@ -6,42 +6,48 @@ use Enterego\EnteregoDiscountHitsSelector;
 
 class EnteregoHitsHelper
 {
-    public static function getHitsSectionsItemsArr(array $items, array $params, bool $useActive = true)
+    public static function getHitsSectionsItemsArr(array $params, bool $useActive = true)
     {
         $cat = new EnteregoDiscountHitsSelector();
         $arFilterS = array('IBLOCK_ID' => IBLOCK_CATALOG);
         $GLOBALS[$params['FILTER_NAME']] = array_merge($GLOBALS[$params['FILTER_NAME']], $arFilterS);
-        $sectionTree = $cat->getSectionProductsForFilter('hit', $params, $useActive);
+        $items = [];
+        $sectionTree = $cat->getSectionProductsForFilter('hit', $params, $useActive, $items);
         foreach ($sectionTree as $sectionKey => $section) {
             if ($section['ACTIVE'] != 'Y') {
                 unset($sectionTree[$sectionKey]);
             }
         }
-        $sectionsItemsArr = [];
-        foreach ($items as $item) {
-            if (empty($item['IBLOCK_SECTION_ID'])) {
-                continue;
-            }
-            $rootSectionId = self::recursiveArraySearchRootParentSection($sectionTree, $item['IBLOCK_SECTION_ID']);
-            if ($rootSectionId) {
-                $sectionsItemsArr[$rootSectionId][$item['ID']] = $item;
-            }
-        }
-        return $sectionsItemsArr;
-    }
 
-    public static function recursiveArraySearchRootParentSection(array $array, $parentId)
-    {
-        foreach ($array as $item) {
-            if ($item['ID'] == $parentId) {
-                return $item['ID'];
-            } else if ($item['CHILDS']) {
-                $id = self::recursiveArraySearchRootParentSection($item['CHILDS'], $parentId);
-                if ($id) {
-                    return $item['ID'];
+        $searchRootDirectory = [];
+        function getChild($rootSectionId, $child, &$searchRootDirectory): void
+        {
+            foreach ($child as $item) {
+                $searchRootDirectory[$item['ID']] = $rootSectionId;
+                if (!empty($item['CHILDS']) && count($item['CHILDS']) !== 0) {
+                    getChild($rootSectionId, $item['CHILDS'], $searchRootDirectory);
                 }
             }
         }
+
+        foreach ($sectionTree as $TreeItem) {
+            $rootSectionId = $TreeItem['ID'];
+            $searchRootDirectory[$TreeItem['ID']] = $TreeItem['ID'];
+            getChild($rootSectionId, $TreeItem['CHILDS'], $searchRootDirectory);
+        }
+
+        $sectionsItemsArr = [];
+        foreach ($items as $item) {
+            if (empty($item['IBLOCK_SECTION_ID']) && !isset($searchRootDirectory[$item['IBLOCK_SECTION_ID']])) {
+                continue;
+            }
+
+            if (empty($sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]]) ||
+                count($sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]]) < 25) {
+                $sectionsItemsArr[$searchRootDirectory[$item['IBLOCK_SECTION_ID']]][$item['ID']] = $item;
+            }
+        }
+        return $sectionsItemsArr;
     }
 
     public static function getHitsSectionsItemsByPopularity(array $sectionsItemsArr)
@@ -83,5 +89,9 @@ class EnteregoHitsHelper
     public static function checkIfHits($APPLICATION)
     {
         return ($APPLICATION->GetCurPage() === '/hit/');
+    }
+
+    public static function checkIfStartsWithHit($APPLICATION) {
+        return str_starts_with($APPLICATION->GetCurPage(), '/hit/');
     }
 }

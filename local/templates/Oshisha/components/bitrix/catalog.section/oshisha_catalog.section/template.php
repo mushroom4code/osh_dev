@@ -472,36 +472,40 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                             <div class="col-sm-6 product-item-small-card bx_catalog_item double">
                                 <div class="row">
                                     <?php
-                                    for ($i = 0; $i < $rowItemsCount - 1; $i++) {
-                                        ?>
-                                        <div class="col-6">
-                                            <?php
-                                            $APPLICATION->IncludeComponent(
-                                                'bitrix:catalog.item',
-                                                'oshisha_catalog.item',
-                                                array(
-                                                    'RESULT' => array(
-                                                        'ITEM' => $rowItems[$i],
-                                                        'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
-                                                        'TYPE' => $rowData['TYPE'],
-                                                        'BIG_LABEL' => 'N',
-                                                        'BIG_DISCOUNT_PERCENT' => 'N',
-                                                        'BIG_BUTTONS' => 'N',
-                                                        'SCALABLE' => 'N',
-                                                        'AR_BASKET' => $arBasketItems,
-                                                        'F_USER_ID' => $FUser_id,
-                                                        'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
-                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
-                                                    ),
-                                                    'PARAMS' => $generalParams
-                                                        + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
-                                                ),
-                                                $component,
-                                                array('HIDE_ICONS' => 'Y')
-                                            );
+                                    if ($rowItemsCount) {
+
+
+                                        for ($i = 0; $i < $rowItemsCount - 1; $i++) {
                                             ?>
-                                        </div>
-                                        <?php
+                                            <div class="col-6">
+                                                <?php
+                                                $APPLICATION->IncludeComponent(
+                                                    'bitrix:catalog.item',
+                                                    'oshisha_catalog.item',
+                                                    array(
+                                                        'RESULT' => array(
+                                                            'ITEM' => $rowItems[$i],
+                                                            'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
+                                                            'TYPE' => $rowData['TYPE'],
+                                                            'BIG_LABEL' => 'N',
+                                                            'BIG_DISCOUNT_PERCENT' => 'N',
+                                                            'BIG_BUTTONS' => 'N',
+                                                            'SCALABLE' => 'N',
+                                                            'AR_BASKET' => $arBasketItems,
+                                                            'F_USER_ID' => $FUser_id,
+                                                            'IS_SUBSCRIPTION_PAGE' => $arParams['IS_SUBSCRIPTION_PAGE'],
+                                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
+                                                        ),
+                                                        'PARAMS' => $generalParams
+                                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
+                                                    ),
+                                                    $component,
+                                                    array('HIDE_ICONS' => 'Y')
+                                                );
+                                                ?>
+                                            </div>
+                                            <?php
+                                        }
                                     }
                                     ?>
                                 </div>

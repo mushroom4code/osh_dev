@@ -20,7 +20,6 @@ function tasteInit() {
         );
     });
 }
-
 $(document).ready(function () {
     let div = $('div'),
         body = $('body'),
@@ -170,6 +169,7 @@ $(document).ready(function () {
         }
     }
 
+
     if (bool === true) {
         $(document).on('click', '.js__taste_toggle', function (e) {
             $(this).closest('.js__tastes').toggleClass('active');
@@ -178,11 +178,11 @@ $(document).ready(function () {
                 priceBox = cardWrapper.find('.info-prices-box-hover');
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
-                tasteOverlay.css({height: '100%'});
-                priceBox.css({zIndex: '1000'});
+                tasteOverlay.css({height:'100%'});
+                priceBox.css({zIndex:'791'});
             } else {
-                tasteOverlay.css({height: '0'});
-                priceBox.css({zIndex: '1300'});
+                tasteOverlay.css({height:'0'});
+                priceBox.css({zIndex:'791'});
             }
         })
         tasteInit();
@@ -255,31 +255,6 @@ $(document).ready(function () {
             // $('#content_box').attr('style', 'margin-top: 8rem;');
         }
 
-    }
-
-
-    if ($(div).is('.bx_catalog_tile_section')) {
-        let count = 4,
-            variableWidth = false;
-        if (screenWidth <= 1380) {
-            count = 4;
-        }
-        if (screenWidth <= 1080) {
-            count = 3;
-        }
-        if (screenWidth <= 746) {
-            count = 2;
-        }
-        $('.bx_catalog_tile_section').slick({
-            slidesToShow: count,
-            arrows: true,
-            infinite: false,
-            variableWidth: variableWidth,
-            prevArrow: '<span class="new_custom_button_slick_left_cat"  aria-hidden="true"><i class="fa fa-angle-left"'
-                + ' aria-hidden="true"></i></span>',
-            nextArrow: '<span class="new_custom_button_slick_right_cat" aria-hidden="true"><i class="fa fa-angle-right"'
-                + ' aria-hidden="true"></i></span>',
-        })
     }
 
     // SORT ACTIVE
@@ -399,7 +374,7 @@ $(document).ready(function () {
                 boxInput = $(this).closest('.bx_catalog_item_controls').find('input.card_element'),
                 plus = $(this).hasClass('btn-plus'),
                 minus = $(this).hasClass('btn-minus'),
-                max_QUANTITY = parseInt($(this).attr('data-max-quantity')??$(this).attr('max'));
+                max_QUANTITY = parseInt($(this).attr('data-max-quantity'));
 
             if (plus === true) {
                 if (parseInt($(boxInput).val()) < max_QUANTITY) {
@@ -418,6 +393,7 @@ $(document).ready(function () {
                         'QUANTITY': beforeVal,
                         'URL': product_url,
                     };
+
 
                 } else {
                     $(boxInput).val(max_QUANTITY);
@@ -469,19 +445,18 @@ $(document).ready(function () {
                 let addBasketButton = $(this).closest('.bx_catalog_item_controls').find('.add2basket'),
                     product_id = addBasketButton.data('product_id'),
                     product_url = addBasketButton.data('url');
+
                 if (quantityProdDet) {
                     let quantity = parseInt(quantityProdDet);
-                    let actualQuantity = quantity;
                     if ((quantity > 1) || (quantity !== 0)) {
+                        product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
                         $(boxInput).val(quantity);
                         if (quantity > max_QUANTITY) {
                             $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
-                            $(boxInput).val(max_QUANTITY);
-                            actualQuantity = max_QUANTITY
+
                         } else {
                             $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                         }
-                        product_data = {'QUANTITY': actualQuantity, 'URL': product_url, 'ID': product_id};
                     } else {
                         product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
                         $(boxInput).val(1);
@@ -671,7 +646,7 @@ $(document).ready(function () {
                 data: {subscribe: subscribe, item_id: product_id, product_name: product_name, subscription_id: subscription_id},
                 success: function (result_jsn) {
                     var result = JSON.parse(result_jsn);
-                    if (result.success === true) {
+                    if(result.success === true){
                         var item_controls = popup_mess.parent();
                         if(result.clickDbError != 'false') {
                             console.log('error while updating productsSubscriptionsTable');

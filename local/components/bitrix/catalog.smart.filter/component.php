@@ -787,7 +787,7 @@ $arSkip = array(
 
 $arResult["FORM_ACTION"] = $clearURL;
 $arResult["HIDDEN"] = array();
-foreach (array_merge($_GET, $_POST) as $key => $value) {
+foreach (array_merge($_GET ?? [], $_POST ?? []) as $key => $value) {
     if (
         $key != 'hide_not_available'
         && !isset($arInputNames[$key])

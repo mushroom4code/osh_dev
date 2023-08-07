@@ -85,14 +85,6 @@ $arUrlRewrite=array (
     'PATH' => '/personal/workers/index.php',
     'SORT' => 100,
   ),
-  9 => 
-  array (
-    'CONDITION' => '#^/personal/order/#',
-    'RULE' => '',
-    'ID' => 'bitrix:sale.personal.order',
-    'PATH' => '/personal/order/index.php',
-    'SORT' => 100,
-  ),
   22 => 
   array (
     'CONDITION' => '#^/about/contacts/#',
@@ -107,6 +99,14 @@ $arUrlRewrite=array (
     'RULE' => '',
     'ID' => '',
     'PATH' => '/about/delivery/index.php',
+    'SORT' => 100,
+  ),
+  9 => 
+  array (
+    'CONDITION' => '#^/personal/order/#',
+    'RULE' => '',
+    'ID' => 'bitrix:sale.personal.order',
+    'PATH' => '/personal/order/index.php',
     'SORT' => 100,
   ),
   29 => 
@@ -157,7 +157,7 @@ $arUrlRewrite=array (
     'PATH' => '/loyalty/index.php',
     'SORT' => 100,
   ),
-  171 => 
+  107 => 
   array (
     'CONDITION' => '#^/catalog/#',
     'RULE' => '',
