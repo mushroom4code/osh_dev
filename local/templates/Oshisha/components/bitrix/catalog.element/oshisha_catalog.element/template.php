@@ -188,7 +188,7 @@ if (!empty($actualItem['DETAIL_PICTURE'])) {
 
 if (!empty($actualItem['MORE_PHOTO'])) {
     foreach ($actualItem['MORE_PHOTO'] as $item) {
-        if (!in_array($item['SRC'], $actualItem['PICTURE'][0])) {
+        if (!in_array($item['SRC'] ?? [], $actualItem['PICTURE'][0] ?? [])) {
             $actualItem['PICTURE'][] = $item;
         }
     }
