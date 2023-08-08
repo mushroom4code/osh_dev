@@ -91,7 +91,7 @@ class Config
         }
     }
 
-    public function getDataValue($name)
+    public static function getDataValue($name)
     {
         return Option::get(self::MODULE_ID, "osh_{$name}");
     }

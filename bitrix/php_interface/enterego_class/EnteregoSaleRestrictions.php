@@ -27,7 +27,7 @@ class EnteregoSaleRestrictions extends Bitrix\Sale\Delivery\Restrictions\Base
      * @param CollectableEntity $entity
      * @return int
      */
-    public static function extractParams(CollectableEntity $entity)
+    public static function extractParams(\Bitrix\Sale\Internals\Entity $entity)
     {
         $result = '';
         $resultNow = $entity->getOrder()->getPropertyCollection()->getItemByOrderPropertyCode('TYPE_DELIVERY');

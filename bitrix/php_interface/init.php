@@ -5,10 +5,14 @@ use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Enterego\EnteregoSettings;
 use Enterego\UserPrice\UserPriceHelperOsh;
 
+require_once(__DIR__ . '/conf.php');
+
+if (SITE_ID === SITE_EXHIBITION) {
+    require_once(__DIR__ . '/redefinedClass/component.php');
+}
+
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
-
-require_once(__DIR__ . '/conf.php');
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
@@ -42,6 +46,7 @@ require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
 define("USE_CUSTOM_SALE_PRICE", EnteregoSettings::getParamOnCheckAndPeriod('USE_CUSTOM_SALE_PRICE', 'activation_price_admin'));
 define("CHECKED_INFO", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO', 'activation_info_admin'));
+define("CHECKED_EXHIBITION", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_EXHIBITION', 'exhibition_info_admin_params'));
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
     array('CatalogAPIService', 'OnRestServiceBuildDescription'));
@@ -67,7 +72,7 @@ require_once(__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
 
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
-
+const STATIC_P = '';
 //Типы цен на сайте
 const SALE_PRICE_TYPE_ID = 3;
 const BASIC_PRICE = 2;
@@ -79,7 +84,7 @@ const PERSON_TYPE_BUYER = 1;
 AddEventHandler("main", "OnBuildGlobalMenu", "DoBuildGlobalMenu");
 #AddEventHandler("main", "OnEndBufferContent", "deleteKernelJs");
 AddEventHandler("main", "OnBeforeProlog", "PriceTypeANDStatusUser", 50);
-AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
+//AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
 
 AddEventHandler('sale', 'OnCondSaleActionsControlBuildList',
     ['\Enterego\EnteregoActionDiscountPriceType', 'GetControlDescr']);
@@ -202,17 +207,31 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     ),
                     "items" => array(),
                 ),
+	              array(
+		              "parent_menu" => "global_menu_enterego",
+		              "icon" => "default_menu_icon",
+		              "page_icon" => "default_page_icon",
+		              "sort" => "200",
+		              "text" => "Строка Информатор",
+		              "title" => "Строка Информатор",
+		              "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
+		              "parent_page" => "global_menu_enterego",
+		              "more_url" => array(
+			              "informator.php",
+		              ),
+		              "items" => array(),
+	              ),
                 array(
                     "parent_menu" => "global_menu_enterego",
                     "icon" => "default_menu_icon",
                     "page_icon" => "default_page_icon",
                     "sort" => "200",
-                    "text" => "Строка Информатор",
-                    "title" => "Строка Информатор",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
+                    "text" => "Выставка",
+                    "title" => "Выставка",
+                    "url" => "/bitrix/php_interface/enterego_class/modules/exhibition.php",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
-                        "informator.php",
+                        "exhibition.php",
                     ),
                     "items" => array(),
                 ),
@@ -300,7 +319,7 @@ AddEventHandler("main", "OnBeforeUserRegister", array("CUserEx", "OnBeforeUserUp
 
 class CUserEx
 {
-    function OnBeforeUserLogin($arFields)
+    static function OnBeforeUserLogin($arFields)
     {
         $filter = array("EMAIL" => $arFields["LOGIN"]);
         $rsUsers = CUser::GetList(($by = "LAST_NAME"), ($order = "asc"), $filter);
@@ -309,12 +328,11 @@ class CUserEx
         /*else $arFields["LOGIN"] = "";*/
     }
 
-    function OnBeforeUserRegister(&$arFields)
+    static function OnBeforeUserRegister(&$arFields)
     {
         $arFields["LOGIN"] = $arFields["EMAIL"];
     }
 }
-
 
 AddEventHandler("sale", "OnOrderSave", "OnOrderAddHandlerSave");
 function OnOrderAddHandlerSave($ID, $arFields, $arOrder)

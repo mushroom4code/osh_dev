@@ -21,8 +21,7 @@ if (!$USER->IsAuthorized()) {
 		exit($_POST['param']);//управление использования специального вида цен для скидок
 	} elseif ($act === 'SetParamPriceList') {
 		COption::SetOptionString('priceList_xlsx', 'priceListArrayCustom', $_POST['param']);
-	}
-	if ($act === 'SetParamInfo') {
+	} else if ($act === 'SetParamInfo') {
 		COption::SetOptionString('activation_info_admin', 'CHECKED_INFO', $_POST['param']);
 		if (!empty($_POST['text_info']) && !empty($_POST['text_info_mobile'])) {
 			COption::SetOptionString('activation_info_admin', 'PERIOD',
@@ -35,8 +34,12 @@ if (!$USER->IsAuthorized()) {
 				]));
 		}
 		exit($_POST['param']);//управление использования специального вида цен для скидок
-	} else {
-		exit('not correct request');
-	}
+	} else if($act === 'SetParamExhibition') {
+        COption::SetOptionString('exhibition_info_admin_params', 'CHECKED_EXHIBITION', $_POST['param']);
+        if (!empty($_POST['dateStart']) && !empty($_POST['dateEnd'])) {
+            COption::SetOptionString('exhibition_info_admin_params', 'PERIOD',
+                json_encode(['start' => $_POST['dateStart'], 'end' => $_POST['dateEnd']]));
+        }
+    }
 
 }
