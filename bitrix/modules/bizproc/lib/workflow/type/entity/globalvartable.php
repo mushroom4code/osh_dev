@@ -2,7 +2,11 @@
 
 namespace Bitrix\Bizproc\Workflow\Type\Entity;
 
+use Bitrix\Bizproc\FieldType;
 use Bitrix\Main;
+use Bitrix\Main\ORM\Event;
+
+\Bitrix\Bizproc\Workflow\Type\GlobalsManager::loadLanguageFile();
 
 /**
  * Class GlobalVarTable
@@ -33,51 +37,82 @@ class GlobalVarTable extends Main\ORM\Data\DataManager
 			'ID' => [
 				'data_type' => 'string',
 				'primary' => true,
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_ID_TITLE'),
 			],
 			'NAME' => [
 				'data_type' => 'string',
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_NAME_TITLE'),
 			],
 			'DESCRIPTION' => [
 				'data_type' => 'string',
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_DESCRIPTION_TITLE'),
 			],
 			'PROPERTY_TYPE' => [
 				'data_type' => 'string',
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_PROPERTY_TYPE_TITLE'),
 			],
 			'IS_REQUIRED' => [
 				'data_type' => 'boolean',
-				'values' => ['N', 'Y']
+				'values' => ['N', 'Y'],
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_IS_REQUIRED_TITLE'),
 			],
 			'IS_MULTIPLE' => [
 				'data_type' => 'boolean',
-				'values' => ['N', 'Y']
+				'values' => ['N', 'Y'],
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_IS_MULTIPLE_TITLE'),
 			],
 			'PROPERTY_OPTIONS' => [
 				'data_type' => 'string',
 				'serialized' => true,
+				'validation' => [__CLASS__, 'validateTextField'],
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_PROPERTY_OPTIONS_TITLE'),
 			],
 			'PROPERTY_SETTINGS' => [
 				'data_type' => 'string',
 				'serialized' => true,
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_PROPERTY_SETTINGS_TITLE'),
 			],
 			'PROPERTY_VALUE' => [
 				'data_type' => 'string',
 				'serialized' => true,
+				'validation' => [__CLASS__, 'validateTextField'],
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_PROPERTY_VALUE_TITLE'),
 			],
 			'CREATED_DATE' => [
 				'data_type' => 'datetime',
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_CREATED_DATE_TITLE'),
 			],
 			'CREATED_BY' => [
 				'data_type' => 'integer',
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_CREATED_BY_TITLE'),
 			],
 			'VISIBILITY' => [
 				'data_type' => 'string',
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_VISIBILITY_TITLE'),
 			],
 			'MODIFIED_DATE' => [
 				'data_type' => 'datetime',
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_MODIFIED_DATE_TITLE'),
 			],
 			'MODIFIED_BY' => [
 				'data_type' => 'integer',
+				'title' => Main\Localization\Loc::getMessage('BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_MODIFIED_BY_TITLE'),
 			],
+		];
+	}
+
+	public static function validateTextField()
+	{
+		return [
+			function($value, $primary, $row, \Bitrix\Main\ORM\Fields\Field $field)
+			{
+				$errorMsg = Main\Localization\Loc::getMessage(
+					'BIZPROC_WF_TYPE_GLOBALS_MANAGER_COLUMN_PROPERTIES_TEXT_FIELD_LENGTH_ERROR',
+					['#FIELD_TITLE#' => $field->getTitle()]
+				);
+
+				return strlen(serialize($value)) < 65535 ? true : $errorMsg;
+			}
 		];
 	}
 
@@ -106,26 +141,25 @@ class GlobalVarTable extends Main\ORM\Data\DataManager
 			'MODIFIED_BY' => $property['ModifiedBy'],
 		];
 
-		if ($fields['CREATED_BY'] === null)
+		if ($userId === null) // update by robot
 		{
-			unset($fields['CREATED_BY']);
-			unset($fields['CREATED_DATE']);
+			unset($fields['CREATED_BY'], $fields['CREATED_DATE'], $fields['MODIFIED_BY'], $fields['MODIFIED_DATE']);
 		}
 
-		if ($fields['MODIFIED_BY'] === null)
+		$oldProperty = static::getByPrimary($varId)->fetch();
+		if ($oldProperty)
 		{
-			unset($fields['MODIFIED_BY']);
-			unset($fields['MODIFIED_DATE']);
-		}
+			if (isset($oldProperty['CREATED_BY']))
+			{
+				unset($fields['CREATED_BY'], $fields['CREATED_DATE']);
+			}
 
-		$count = static::getCount(['=ID' => $varId]);
-		if ($count > 0)
-		{
 			$result = static::update($varId, $fields);
 		}
 		else
 		{
-			$result = static::add(['ID' => $varId] + $fields);
+			$fields['ID'] = $varId;
+			$result = static::add($fields);
 		}
 
 		return $result;
@@ -153,24 +187,22 @@ class GlobalVarTable extends Main\ORM\Data\DataManager
 	private static function normalizePropertyForUpsert($property, int $userId = null): array
 	{
 		$normalized = [];
-		$normalizedAsField = \Bitrix\Bizproc\FieldType::normalizeProperty($property);
+		$normalizedAsField = FieldType::normalizeProperty($property);
 
-		$normalized['Visibility'] = $property['Visibility'] ? (string)$property['Visibility'] : 'GLOBAL';
-		$normalized['CreatedBy'] = ((int)$property['CreatedBy'] !== 0) ? (int)$property['CreatedBy'] : $userId;
-		try
-		{
-			$normalized['CreatedDate'] = $property['CreatedDate']
-				? new Main\Type\DateTime($property['CreatedDate'])
-				: new Main\Type\DateTime()
-			;
-		}
-		catch (\Bitrix\Main\ObjectException $e)
-		{
-		}
-
+		$normalized['Visibility'] = isset($property['Visibility']) ? (string)$property['Visibility'] : 'GLOBAL';
 		$normalized['ModifiedBy'] = $userId;
+		$normalized['CreatedBy'] = $userId;
 		$normalized['ModifiedDate'] = new Main\Type\DateTime();
+		$normalized['CreatedDate'] = $normalized['ModifiedDate'];
 
 		return array_merge($normalized, $normalizedAsField);
+	}
+
+	public static function onBeforeUpdate(Event $event)
+	{
+		$result = new Main\ORM\EventResult();
+		$result->unsetFields(['PROPERTY_TYPE', 'IS_REQUIRED', 'IS_MULTIPLE', 'VISIBILITY']);
+
+		return $result;
 	}
 }

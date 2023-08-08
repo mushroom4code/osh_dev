@@ -78,7 +78,8 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	    main_core.Dom.append(_this.header, _this.layout);
 	    main_core.Dom.append(_this.input, _this.layout);
 	    main_core.Dom.attr(_this.layout, 'data-selector', _this.selector);
-	    main_core.Dom.attr(_this.input, 'data-placeholder', _this.placeholder);
+
+	    _this.input.setAttribute('data-placeholder', _this.placeholder);
 
 	    if (main_core.Type.isArrayLike(_this.className)) {
 	      main_core.Dom.addClass(_this.layout, _this.className);
@@ -90,12 +91,18 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	      _this.disable();
 	    }
 
-	    main_core.Event.bind(_this.input, 'paste', _this.onPaste);
+	    if (options.skipPasteControl !== true) {
+	      main_core.Event.bind(_this.input, 'paste', _this.onPaste);
+	    }
 
 	    _this.init();
 
 	    if (_this.data.help) {
-	      BX.Dom.append(top.BX.UI.Hint.createNode(_this.data.help), _this.header);
+	      var hintNode = document.createElement('span');
+	      hintNode.setAttribute('data-hint', _this.data.help);
+	      hintNode.setAttribute('data-hint-html', 'y');
+	      top.BX.UI.Hint.initNode(hintNode);
+	      BX.Dom.append(hintNode, _this.header);
 	      top.BX.UI.Hint.init(BX.Landing.UI.Panel.StylePanel.getInstance().layout);
 	    }
 

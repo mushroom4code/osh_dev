@@ -9,6 +9,7 @@ namespace Bitrix\Sender\Entity;
 
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Sender\TemplateTable;
+use Bitrix\Tasks\Exception;
 
 Loc::loadMessages(__FILE__);
 
@@ -45,7 +46,7 @@ class Template extends Base
 	 * @param array $data Data.
 	 * @return integer|null
 	 */
-	protected function saveData($id = null, array $data)
+	protected function saveData($id, array $data)
 	{
 		return $this->saveByEntity(TemplateTable::getEntity(), $id, $data);
 	}
@@ -59,6 +60,23 @@ class Template extends Base
 	{
 		return $this->removeByEntity(TemplateTable::getEntity(), $this->getId());
 	}
+
+	/**
+	 * Copy.
+	 *
+	 *
+	 */
+	public function copy()
+	{
+		$data = [
+			'ACTIVE' => $this->data['ACTIVE'],
+			'NAME' => $this->data['NAME'],
+			'CONTENT' => $this->data['CONTENT'],
+		];
+		$instance = static::create()->mergeData($data);
+		return $instance->save();
+	}
+
 
 	/**
 	 * Remove by letter ID.

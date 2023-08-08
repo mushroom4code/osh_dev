@@ -19,6 +19,7 @@ use Bitrix\Crm\Order\ContactCompanyEntity;
 use Bitrix\Crm\Order\Order;
 use Bitrix\Crm\Order\Payment;
 use Bitrix\Crm\PhaseSemantics;
+use Bitrix\Crm\Service\Container;
 use Bitrix\Crm\Timeline;
 use Bitrix\Main\Type\DateTime;
 use Bitrix\Sender\Internals\Queue;
@@ -77,7 +78,11 @@ class TransportBase implements Transport\iBase
 	 */
 	public function getSupportedRecipientTypes()
 	{
-		return [Recipient\Type::CRM_COMPANY_ID, Recipient\Type::CRM_CONTACT_ID];
+		return [
+			Recipient\Type::CRM_COMPANY_ID,
+			Recipient\Type::CRM_CONTACT_ID,
+			Recipient\Type::CRM_LEAD_ID,
+		];
 	}
 
 	/**
@@ -115,9 +120,9 @@ class TransportBase implements Transport\iBase
 	{
 		$config = $message->getConfiguration();
 		$authorId = $config->get('LETTER_CREATED_BY_ID');
-		$text = $message->replaceFields($config->get('COMMENT'));
-		$crmEntityId = $message->getRecipientCode();
 		$crmEntityTypeId = Service::getTypeIdByRecipientType($message->getRecipientType());
+		$crmEntityId = $message->getRecipientCode();
+		$text = $message->replaceFields($config->get('COMMENT'), '#', $crmEntityTypeId);
 
 		if (!$this->responsibleQueue || $this->responsibleQueue->getId() <> $message->getId())
 		{
@@ -141,10 +146,10 @@ class TransportBase implements Transport\iBase
 			}
 		}
 
-		$entityFields = [
-			'TITLE' => $message->replaceFields($config->get('TITLE')),
-			'ASSIGNED_BY_ID' => $this->responsibleQueue->next(),
-		];
+		$entityFields['TITLE'] = $message->replaceFields($config->get('TITLE'), '#', $crmEntityTypeId);
+		$assignedId = $this->getAssignedWithCrmData((int)$crmEntityTypeId, (int)$crmEntityId);
+		$isAssignedById = ($config->get('LINK_WITH_RESPONSIBLE') === 'Y') && $assignedId;
+		$entityFields['ASSIGNED_BY_ID'] = $isAssignedById ? $assignedId : $this->responsibleQueue->next();
 
 		$selector = (new ActualEntitySelector())
 			->setEntity($crmEntityTypeId, $crmEntityId)
@@ -476,5 +481,27 @@ class TransportBase implements Transport\iBase
 				$newOrder->save();
 			}
 		}
+	}
+
+	private function getAssignedWithCrmData(int $typeId, int $entityId): ?int
+	{
+		$factory = Container::getInstance()->getFactory($typeId);
+
+		if (!$factory)
+		{
+			return null;
+		}
+
+		$entity = $factory->getItem($entityId);
+		if ($entity)
+		{
+			$assignedId = (int)$entity->get('ASSIGNED_BY_ID');
+			if ($assignedId)
+			{
+				return $assignedId;
+			}
+		}
+
+		return null;
 	}
 }

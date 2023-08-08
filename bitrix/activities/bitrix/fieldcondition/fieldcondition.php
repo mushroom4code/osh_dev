@@ -1,6 +1,6 @@
 <?php
 
-if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 {
 	die();
 }
@@ -9,9 +9,6 @@ use Bitrix\Bizproc;
 
 class CBPFieldCondition extends CBPActivityCondition
 {
-	const CONDITION_JOINER_AND = 0;
-	const CONDITION_JOINER_OR = 1;
-
 	public $condition = null;
 
 	public function __construct($condition)
@@ -19,35 +16,28 @@ class CBPFieldCondition extends CBPActivityCondition
 		$this->condition = $condition;
 	}
 
-	public function Evaluate(CBPActivity $ownerActivity)
+	public function evaluate(CBPActivity $ownerActivity)
 	{
-		if ($this->condition == null || !is_array($this->condition) || count($this->condition) <= 0)
+		if (!$this->isConditionGroupExist())
 		{
 			return true;
 		}
 
-		if (!is_array($this->condition[0]))
-		{
-			$this->condition = [$this->condition];
-		}
+		$this->conditionGroupToArray();
 
-		$rootActivity = $ownerActivity->GetRootActivity();
+		$rootActivity = $ownerActivity->getRootActivity();
 		$documentId = $rootActivity->GetDocumentId();
-		$documentType = $rootActivity->GetDocumentType();
+		$documentType = $rootActivity->getDocumentType();
 
-		$documentService = $ownerActivity->workflow->GetService("DocumentService");
-		$document = $documentService->GetDocument($documentId, $documentType);
-		$documentFields = $documentService->GetDocumentFields($documentType);
+		$documentService = $ownerActivity->workflow->getRuntime()->getDocumentService();
+		$document = $documentService->getDocument($documentId, $documentType);
+		$documentFields = $documentService->getDocumentFields($documentType);
 		$documentFieldsAliasesMap = CBPDocument::getDocumentFieldsAliasesMap($documentFields);
 
-		$result = array(0 => true);
-		$i = 0;
+		$items = [];
 		foreach ($this->condition as $cond)
 		{
-			$r = true;
-			$joiner = empty($cond[3])? static::CONDITION_JOINER_AND : static::CONDITION_JOINER_OR;
-
-			if (!isset($document[$cond[0]]) && mb_substr($cond[0], -mb_strlen('_PRINTABLE')) == '_PRINTABLE')
+			if (!isset($document[$cond[0]]) && mb_substr($cond[0], -mb_strlen('_PRINTABLE')) === '_PRINTABLE')
 			{
 				$cond[0] = mb_substr($cond[0], 0, mb_strlen($cond[0]) - mb_strlen('_PRINTABLE'));
 			}
@@ -57,32 +47,43 @@ class CBPFieldCondition extends CBPActivityCondition
 				$cond[0] = $documentFieldsAliasesMap[$cond[0]];
 			}
 
-			$fld = $document[$cond[0] . "_XML_ID"] ?? $document[$cond[0]];
-			$baseType = $documentFields[$cond[0]]["BaseType"];
-			$type = $documentFields[$cond[0]]["Type"];
+			$fld = null;
+			if (isset($document[$cond[0] . '_XML_ID']))
+			{
+				$fld = $document[$cond[0] . '_XML_ID'];
+			}
+			elseif(isset($document[$cond[0]]))
+			{
+				$fld = $document[$cond[0]];
+			}
+
+			$baseType = isset($documentFields[$cond[0]]) ? $documentFields[$cond[0]]['BaseType'] : null;
+			$type = isset($documentFields[$cond[0]]) ? $documentFields[$cond[0]]['Type'] : null;
 			if ($type === 'UF:boolean')
 			{
 				$baseType = 'bool';
 			}
 
-			if (!$this->CheckCondition($cond[0], $fld, $cond[1], $cond[2], $baseType, $type, $rootActivity))
-			{
-				$r = false;
-			}
-
-			if ($joiner == static::CONDITION_JOINER_OR)
-			{
-				++$i;
-				$result[$i] = $r;
-			}
-			elseif (!$r)
-			{
-				$result[$i] = false;
-			}
+			$items[] = [
+				'joiner' => $this->getJoiner($cond),
+				'operator' => $cond[1],
+				'valueToCheck' => ($cond[1] === 'modified') ? $cond[0] : $fld,
+				'fieldType' => $this->getFieldTypeObject($rootActivity, ['Type' => $type ?: $baseType]),
+				'value' =>
+					($cond[1] === 'modified')
+						? $rootActivity->{CBPDocument::PARAM_MODIFIED_DOCUMENT_FIELDS}
+						: $rootActivity->parseValue($cond[2], $baseType)
+				,
+				'fieldName' => $documentFields[$cond[0]]['Name'] ?? $cond[0],
+			];
 		}
-		$result = array_filter($result);
 
-		return sizeof($result) > 0;
+		$conditionGroup = new Bizproc\Activity\ConditionGroup([
+			'items' => $items,
+			'parameterDocumentId' => $rootActivity->getDocumentId()
+		]);
+
+		return $conditionGroup->evaluate();
 	}
 
 	public function collectUsages(CBPActivity $ownerActivity)
@@ -107,48 +108,6 @@ class CBPFieldCondition extends CBPActivityCondition
 		return $usages;
 	}
 
-	/**
-	 * @param $fieldName
-	 * @param $field
-	 * @param $operation
-	 * @param $value
-	 * @param $baseType
-	 * @param $type
-	 * @param CBPActivity $rootActivity
-	 * @return bool
-	 */
-	private function CheckCondition($fieldName, $field, $operation, $value, $baseType, $type, $rootActivity)
-	{
-		if ($operation == 'modified')
-		{
-			$modified = $rootActivity->{CBPDocument::PARAM_MODIFIED_DOCUMENT_FIELDS};
-			if (!is_array($modified))
-			{
-				return true;
-			}
-
-			return in_array($fieldName, $modified);
-		}
-
-		$condition = new Bizproc\Activity\Condition([
-			'operator' => $operation,
-			'value' => $rootActivity->ParseValue($value, $baseType),
-		]);
-
-		$fieldType = $rootActivity->workflow
-			->GetService('DocumentService')
-			->getFieldTypeObject($rootActivity->GetDocumentType(), ['Type' => $type ?: $baseType]);
-
-		if (!$fieldType)
-		{
-			$fieldType = $rootActivity->workflow
-				->GetService('DocumentService')
-				->getFieldTypeObject($rootActivity->GetDocumentType(), ['Type' => 'string']);
-		}
-
-		return $condition->checkValue($field, $fieldType, $rootActivity->GetDocumentId());
-	}
-
 	public static function GetPropertiesDialog(
 		$documentType,
 		$arWorkflowTemplate,
@@ -169,7 +128,7 @@ class CBPFieldCondition extends CBPActivityCondition
 
 		if (!is_array($arCurrentValues))
 		{
-			$arCurrentValues = array();
+			$arCurrentValues = [];
 			if (is_array($defaultValue))
 			{
 				$i = 0;
@@ -180,16 +139,21 @@ class CBPFieldCondition extends CBPActivityCondition
 						$value[0] = $documentFieldsAliasesMap[$value[0]];
 					}
 
-					if ($arCurrentValues["field_condition_count"] <> '')
+					if (isset($arCurrentValues["field_condition_count"]) && $arCurrentValues["field_condition_count"] !== '')
 					{
 						$arCurrentValues["field_condition_count"] .= ",";
 					}
+					else
+					{
+						$arCurrentValues["field_condition_count"] = '';
+					}
+
 					$arCurrentValues["field_condition_count"] .= $i;
 
-					$arCurrentValues["field_condition_field_".$i] = $value[0];
-					$arCurrentValues["field_condition_condition_".$i] = $value[1];
-					$arCurrentValues["field_condition_value_".$i] = $value[2];
-					$arCurrentValues["field_condition_joiner_".$i] = $value[3];
+					$arCurrentValues["field_condition_field_" . $i] = $value[0];
+					$arCurrentValues["field_condition_condition_" . $i] = $value[1];
+					$arCurrentValues["field_condition_value_" . $i] = $value[2];
+					$arCurrentValues["field_condition_joiner_" . $i] = $value[3];
 
 					$i++;
 				}
@@ -197,49 +161,44 @@ class CBPFieldCondition extends CBPActivityCondition
 		}
 		else
 		{
-			$arFieldConditionCount = explode(",", $arCurrentValues["field_condition_count"]);
+			$arFieldConditionCount = explode(",", (string)$arCurrentValues["field_condition_count"]);
 			foreach ($arFieldConditionCount as $i)
 			{
-				if (intval($i)."!" != $i."!")
+				if (!is_numeric($i))
+				{
+					continue;
+				}
+				$i = (int)$i;
+
+				$fieldId = $arCurrentValues["field_condition_field_" . $i] ?? null;
+				if (CBPHelper::isEmptyValue($fieldId))
 				{
 					continue;
 				}
 
-				$i = intval($i);
+				$operator = $arCurrentValues['field_condition_condition_' . $i] ?? '=';
+				$property = $arDocumentFieldsTmp[$fieldId] ?? [];
 
-				if (
-					!array_key_exists("field_condition_field_" . $i, $arCurrentValues)
-					|| $arCurrentValues["field_condition_field_" . $i] == ''
-				)
-				{
-					continue;
-				}
+				$value =
+					static::getConditionFieldInputValue(
+						(string)$operator,
+						$documentType,
+						$property,
+						'field_condition_value_' . $i,
+						$arCurrentValues,
+					)
+						->getData()['value']
+				;
 
-				$arErrors = [];
-				$arCurrentValues["field_condition_value_" . $i] = $documentService->GetFieldInputValue(
-					$documentType,
-					$arDocumentFieldsTmp[$arCurrentValues["field_condition_field_" . $i]],
-					"field_condition_value_" . $i,
-					$arCurrentValues,
-					$arErrors
-				);
+				$arCurrentValues['field_condition_value_' . $i] = $value ?? '';
 			}
 		}
 
-		$arDocumentFields = array();
+		$arDocumentFields = [];
 		foreach ($arDocumentFieldsTmp as $key => $value)
 		{
-			//if (!$value["Filterable"])
-			//	continue;
 			$arDocumentFields[$key] = $value;
 		}
-
-		$javascriptFunctions = $documentService->GetJSFunctionsForFields(
-			$documentType,
-			"objFieldsFC",
-			$arDocumentFields,
-			$arFieldTypes
-		);
 
 		return $runtime->ExecuteResourceFile(
 			__FILE__,
@@ -249,7 +208,6 @@ class CBPFieldCondition extends CBPActivityCondition
 				"arCurrentValues" => $arCurrentValues,
 				"formName" => $formName,
 				"arFieldTypes" => $arFieldTypes,
-				"javascriptFunctions" => $javascriptFunctions,
 				'documentService' => $documentService,
 				'documentType' => $documentType,
 			]
@@ -266,7 +224,7 @@ class CBPFieldCondition extends CBPActivityCondition
 	)
 	{
 		$runtime = CBPRuntime::GetRuntime();
-		$arErrors = array();
+		$arErrors = [];
 
 		if (!array_key_exists("field_condition_count", $arCurrentValues) || $arCurrentValues["field_condition_count"] == '')
 		{
@@ -283,38 +241,44 @@ class CBPFieldCondition extends CBPActivityCondition
 
 		$arResult = [];
 
-		$arFieldConditionCount = explode(",", $arCurrentValues["field_condition_count"]);
+		$arFieldConditionCount = explode(",", (string)$arCurrentValues["field_condition_count"]);
 		foreach ($arFieldConditionCount as $i)
 		{
-			if (intval($i) . "!" != $i . "!")
+			if (!is_numeric($i))
 			{
 				continue;
 			}
-			$i = intval($i);
+			$i = (int)$i;
 
-			if (
-				!array_key_exists("field_condition_field_".$i, $arCurrentValues)
-				|| $arCurrentValues["field_condition_field_".$i] == ''
-			)
+			$fieldId = $arCurrentValues['field_condition_field_' . $i];
+			if (CBPHelper::isEmptyValue($fieldId))
 			{
 				continue;
 			}
 
-			$arErrors = [];
-			$arCurrentValues["field_condition_value_" . $i] = $documentService->GetFieldInputValue(
+			$operator = htmlspecialcharsback((string)$arCurrentValues['field_condition_condition_' . $i]);
+			$property = $arDocumentFieldsTmp[$fieldId] ?? [];
+			$inputResult = static::getConditionFieldInputValue(
+				$operator,
 				$documentType,
-				$arDocumentFieldsTmp[$arCurrentValues["field_condition_field_" . $i]],
+				$property,
 				"field_condition_value_" . $i,
 				$arCurrentValues,
-				$arErrors
 			);
+			if (!$inputResult->isSuccess())
+			{
+				foreach ($inputResult->getErrors() as $error)
+				{
+					$arErrors[] = [
+						'message' => $error->getMessage(),
+						'code' => $error->getCode(),
+					];
+				}
+			}
 
-			$arResult[] = [
-				$arCurrentValues["field_condition_field_" . $i],
-				htmlspecialcharsback($arCurrentValues["field_condition_condition_" . $i]),
-				$arCurrentValues["field_condition_value_" . $i],
-				(int) $arCurrentValues["field_condition_joiner_" . $i],
-			];
+			$joiner = isset($arCurrentValues['field_condition_joiner_' . $i]) ? (int)$arCurrentValues['field_condition_joiner_' . $i] : 0;
+
+			$arResult[] = [$fieldId, $operator, $inputResult->getData()['value'] ?? '', $joiner];
 		}
 
 		if (count($arResult) <= 0)

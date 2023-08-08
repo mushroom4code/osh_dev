@@ -321,6 +321,7 @@ class Topic extends \Bitrix\Forum\Internals\Entity
 				$this->data["STATE"] = self::STATE_OPENED;
 				\CForumEventLog::Log("topic", "open", $this->getId(), serialize($this->data));
 				$result->setData(["STATE" => self::STATE_OPENED]);
+				(new Main\Event("forum", "onTopicOpen", [$this->getId(), $this->data]))->send();
 			}
 			else
 			{
@@ -340,6 +341,7 @@ class Topic extends \Bitrix\Forum\Internals\Entity
 				$this->data["STATE"] = self::STATE_CLOSED;
 				\CForumEventLog::Log("topic", "close", $this->getId(), serialize($this->data));
 				$result->setData(["STATE" => self::STATE_CLOSED]);
+				(new Main\Event("forum", "onTopicClose", [$this->getId(), $this->data]))->send();
 			}
 			else
 			{
@@ -748,7 +750,6 @@ class Topic extends \Bitrix\Forum\Internals\Entity
 		/***************** /Event ******************************************/
 
 		Forum\Internals\MessageCleaner::runForTopic($id);
-		Forum\FileTable::deleteBatch(['TOPIC_ID' => $id]);
 		Main\Application::getConnection()->queryExecute("DELETE FROM b_forum_subscribe WHERE TOPIC_ID = ".$id);
 		Main\Application::getConnection()->queryExecute("DELETE FROM b_forum_message WHERE TOPIC_ID = ".$id);
 		Main\Application::getConnection()->queryExecute("DELETE FROM b_forum_user_topic WHERE TOPIC_ID = ".$id);

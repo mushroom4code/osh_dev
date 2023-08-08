@@ -48,65 +48,98 @@ class Keyboard
 
 	public function addButton($params)
 	{
-		$button = Array();
+		$button = [];
 		$button['BOT_ID'] = $this->botId;
 		$button['TYPE'] = 'BUTTON';
 
-		if (!isset($params['TEXT']) || trim($params['TEXT']) == '')
+		if (
+			empty($params['TEXT'])
+			|| !is_string($params['TEXT'])
+			|| trim($params['TEXT']) == ''
+		)
+		{
 			return false;
+		}
 
-		if (isset($params['LINK']) && preg_match('#^(?:/|https?://)#', $params['LINK']))
+		if (
+			!empty($params['LINK'])
+			&& is_string($params['LINK'])
+			&& preg_match('#^(?:/|https?://)#', $params['LINK'])
+		)
 		{
 			$button['LINK'] = htmlspecialcharsbx($params['LINK']);
 		}
-		else if (isset($params['FUNCTION']))
+		elseif (
+			!empty($params['FUNCTION'])
+			&& is_string($params['FUNCTION'])
+		)
 		{
 			$button['FUNCTION'] = htmlspecialcharsbx($params['FUNCTION']);
 		}
-		else if (isset($params['APP_ID']))
+		elseif (!empty($params['APP_ID']))
 		{
-			$button['APP_ID'] = intval($params['APP_ID']);
-			if (isset($params['APP_PARAMS']) && trim($params['APP_PARAMS']) <> '')
+			$button['APP_ID'] = (int)$params['APP_ID'];
+			if (
+				isset($params['APP_PARAMS'])
+				&& is_string($params['APP_PARAMS'])
+				&& trim($params['APP_PARAMS']) <> ''
+			)
 			{
 				$button['APP_PARAMS'] = $params['APP_PARAMS'];
 			}
 		}
-		else if (
-			isset($params['ACTION'])
-			&& in_array($params['ACTION'], ['PUT', 'SEND', 'COPY', 'CALL', 'DIALOG', 'LIVECHAT', 'HELP'])
+		elseif (
+			!empty($params['ACTION'])
+			&& is_string($params['ACTION'])
+			&& in_array($params['ACTION'], ['PUT', 'SEND', 'COPY', 'CALL', 'DIALOG', 'LIVECHAT', 'HELP'], true)
 			&& trim($params['ACTION_VALUE']) <> ''
 		)
 		{
 			$button['ACTION'] = $params['ACTION'];
 			$button['ACTION_VALUE'] = $params['ACTION_VALUE'];
 		}
-		else if ($this->botId > 0 && isset($params['COMMAND']) && trim($params['COMMAND']) <> '')
+		elseif (
+			$this->botId > 0
+			&& !empty($params['COMMAND'])
+			&& is_string($params['COMMAND'])
+			&& trim($params['COMMAND']) <> ''
+		)
 		{
-			$button['COMMAND'] = mb_substr($params['COMMAND'], 0, 1) == '/'? mb_substr($params['COMMAND'], 1) : $params['COMMAND'];
-			$button['COMMAND_PARAMS'] = isset($params['COMMAND_PARAMS']) && trim($params['COMMAND_PARAMS']) <> ''? $params['COMMAND_PARAMS']: '';
+			$button['COMMAND'] = mb_substr($params['COMMAND'], 0, 1) == '/' ? mb_substr($params['COMMAND'], 1) : $params['COMMAND'];
+			$button['COMMAND_PARAMS'] = '';
+			if (
+				!empty($params['COMMAND_PARAMS'])
+				&& is_string($params['COMMAND_PARAMS'])
+				&& trim($params['COMMAND_PARAMS']) <> ''
+			)
+			{
+				$button['COMMAND_PARAMS'] = $params['COMMAND_PARAMS'];
+			}
 		}
 		else
 		{
 			return false;
 		}
 
-		$button['TEXT'] = trim($params['TEXT']);
+		$button['TEXT'] = trim($params['TEXT'] ?? '');
 
-		$button['VOTE'] = $this->voteMode? 'Y': 'N';
+		$button['VOTE'] = $this->voteMode ? 'Y': 'N';
 
-		$button['BLOCK'] = $params['BLOCK'] == 'Y'? 'Y': 'N';
+		$blockParam = $params['BLOCK'] ?? null;
+		$button['BLOCK'] = $blockParam === 'Y'? 'Y': 'N';
 
 		$button['WAIT'] = 'N';
 
-		$button['CONTEXT'] = in_array($params['CONTEXT'], Array('MOBILE', 'DESKTOP'))? $params['CONTEXT']: 'ALL';
+		$button['CONTEXT'] = in_array(($params['CONTEXT'] ?? null), ['MOBILE', 'DESKTOP']) ? $params['CONTEXT']: 'ALL';
 
-		$button['DISABLED'] = $params['DISABLED'] == 'Y'? 'Y': 'N';
+		$disabledParam = $params['DISABLED'] ?? null;
+		$button['DISABLED'] = $disabledParam === 'Y'? 'Y': 'N';
 
-		$button['DISPLAY'] = in_array($params['DISPLAY'], Array('BLOCK', 'LINE'))? $params['DISPLAY']: 'BLOCK';
+		$button['DISPLAY'] = in_array(($params['DISPLAY'] ?? null), ['BLOCK', 'LINE'])? $params['DISPLAY']: 'BLOCK';
 
-		if (isset($params['WIDTH']) && intval($params['WIDTH']) > 0)
+		if (isset($params['WIDTH']) && (int)$params['WIDTH'] > 0)
 		{
-			$button['WIDTH'] = intval($params['WIDTH']);
+			$button['WIDTH'] = (int)$params['WIDTH'];
 		}
 
 		if (isset($params['BG_COLOR']) && preg_match('/^#([a-fA-F0-9]){3}(([a-fA-F0-9]){3})?\b$/D', $params['BG_COLOR']))
@@ -177,7 +210,7 @@ class Keyboard
 			{
 				$keyboard->addNewLine();
 			}
-			else if (isset($button['FUNCTION']) && $options['ENABLE_FUNCTIONS'] != 'Y')
+			elseif (isset($button['FUNCTION']) && $options['ENABLE_FUNCTIONS'] != 'Y')
 			{
 			}
 			else

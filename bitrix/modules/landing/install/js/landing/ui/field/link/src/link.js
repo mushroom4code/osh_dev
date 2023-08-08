@@ -234,7 +234,7 @@ export class Link extends BaseField
 			this.adjustTarget();
 		});
 		this.hrefInput.subscribe('buildCenter', (event) => {
-			const button = document.querySelector('[data-id="center_cell_button"]');
+			const button = this.hrefInput.gridCenterCell.querySelector('.landing-ui-button-grid-center-cell');
 			const gridCenter = this.center.querySelector('.landing-ui-field-link-url-grid-center');
 			if (button)
 			{
@@ -482,6 +482,11 @@ export class Link extends BaseField
 		if (this.skipContent)
 		{
 			delete value['text'];
+		}
+
+		if (value.href.startsWith('selectActions:'))
+		{
+			value.href = '#';
 		}
 
 		return value;

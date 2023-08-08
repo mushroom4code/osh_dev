@@ -1,6 +1,16 @@
 <?php
-if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)die();
-CJSCore::Init(array('popup', 'date'));
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
+{
+	die();
+}
+
+\Bitrix\Main\UI\Extension::load([
+	'ui.design-tokens',
+	'ui.fonts.opensans',
+	'popup',
+	'date',
+]);
+
 
 $presets = isset($arParams['~FILTER_PRESETS']) ? $arParams['~FILTER_PRESETS'] : array();
 $savedItems = isset($arResult['OPTIONS'])
@@ -115,7 +125,7 @@ if(!function_exists('__BizprocInterfaceFilterRenderField'))
 		);
 
 		//Setup default attributes
-		if(!is_array($field['params']))
+		if(!isset($field['params']) || !is_array($field['params']))
 		{
 			$field['params'] = array();
 		}
@@ -129,7 +139,7 @@ if(!function_exists('__BizprocInterfaceFilterRenderField'))
 		}
 		elseif($field['type'] == 'date')
 		{
-			if($field['params']['size'] == '')
+			if (empty($field['params']['size']))
 			{
 				$field['params']['size'] = '10';
 			}

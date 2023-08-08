@@ -8,6 +8,12 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 use Bitrix\Main\Component\ParameterSigner;
 use Bitrix\Socialnetwork\Update\WorkgroupDeptSync;
 use Bitrix\Main\Grid\Panel;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\UI\Extension;
+use Bitrix\Socialnetwork\Internals\Counter\CounterDictionary;
+use Bitrix\UI\Toolbar\ButtonLocation;
+use Bitrix\UI\Toolbar\Facade\Toolbar;
+use Bitrix\UI\Buttons;
 
 /** @var CBitrixComponentTemplate $this */
 /** @var array $arParams */
@@ -18,13 +24,6 @@ use Bitrix\Main\Grid\Panel;
 
 $component = $this->getComponent();
 
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\UI\Extension;
-use Bitrix\Socialnetwork\Internals\Counter\CounterDictionary;
-use Bitrix\UI\Toolbar\ButtonLocation;
-use Bitrix\UI\Toolbar\Facade\Toolbar;
-use Bitrix\UI\Buttons;
-
 \Bitrix\Main\Loader::includeModule('ui');
 
 CUtil::InitJSCore(['popup']);
@@ -34,6 +33,7 @@ Extension::load([
 	'ui.buttons.icons',
 	'ui.label',
 	'ui.notification',
+	'ui.fonts.opensans',
 ]);
 
 $toolbarId = mb_strtolower($arResult['GRID_ID']) . '_toolbar';
@@ -83,8 +83,8 @@ if ($arResult['GROUP_PERMS']['UserCanModifyGroup'])
 			'ENTITY_ID' => (int)$arParams['GROUP_ID'],
 			'GRID_ID' => $arResult['GRID_ID'],
 			'COUNTERS' => [
-				'workgroup_requests_out',
-				'workgroup_requests_in',
+				CounterDictionary::COUNTER_WORKGROUP_REQUESTS_OUT,
+				CounterDictionary::COUNTER_WORKGROUP_REQUESTS_IN,
 			],
 			'CURRENT_COUNTER' => $arResult['CURRENT_COUNTER'],
 			'ROLE' => $arResult['GROUP_PERMS']['UserRole'],
@@ -112,18 +112,6 @@ if (SITE_TEMPLATE_ID === 'bitrix24')
 	echo \Bitrix\Main\Update\Stepper::getHtml([ 'socialnetwork' => [ WorkgroupDeptSync::class ] ], Loc::getMessage('SOCIALNETWORK_GROUP_USER_LIST_TEMPLATE_STEPPER_TITLE'));
 }
 
-$buttonId = "{$toolbarId}_button";
-
-if (!empty($arResult['TOOLBAR_MENU']))
-{
-	$menuButton = new Buttons\Button([
-		'color' => Buttons\Color::LIGHT_BORDER,
-		'icon' => Buttons\Icon::SETTING,
-	]);
-	$menuButton->addAttribute('id', $buttonId);
-	Toolbar::addButton($menuButton);
-}
-
 if (!empty($arResult['TOOLBAR_BUTTONS']))
 {
 	foreach($arResult['TOOLBAR_BUTTONS'] as $button)
@@ -132,7 +120,7 @@ if (!empty($arResult['TOOLBAR_BUTTONS']))
 			'link' => $button['LINK'],
 			'color' => Buttons\Color::SUCCESS,
 			'text' => $button['TITLE'],
-			'click' => $button['CLICK']
+			'click' => $button['CLICK'] ?? '',
 		], ButtonLocation::AFTER_TITLE);
 	}
 }
@@ -213,11 +201,6 @@ $removeButton = [
 			defaultFilterPresetId: '<?= CUtil::JSEscape($arResult['CURRENT_PRESET_ID']) ?>',
 			defaultCounter: '<?= CUtil::JSEscape($arResult['CURRENT_COUNTER']) ?>',
 			gridContainerId: '<?= CUtil::JSEscape($gridContainerId) ?>',
-			toolbar: {
-				id: '<?= CUtil::JSEscape($toolbarId) ?>',
-				menuButtonId: '<?= CUtil::JSEscape($buttonId) ?>',
-				menuItems: <?= CUtil::PhpToJSObject($arResult['TOOLBAR_MENU']) ?>,
-			},
 			urls: {
 				users: '<?= CUtil::JSEscape(\CComponentEngine::makePathFromTemplate(
 					$arParams['PATH_TO_GROUP_USERS'],

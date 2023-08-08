@@ -127,7 +127,7 @@ class Manager
 					}
 					else
 					{
-						if ($field)
+						if ($field && is_string($field))
 						{
 							try
 							{
@@ -135,8 +135,12 @@ class Manager
 							}
 							catch (\Exception $exception)
 							{
-
 							}
+						}
+						else if ($field && is_array($field))
+						{
+							$fieldsTmp[$moduleId][$code][$num] = $field;
+							continue;
 						}
 						else
 						{

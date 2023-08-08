@@ -34,19 +34,19 @@ abstract class SenderInvitation implements Serializable
 	/**
 	 * @var int
 	 */
-	protected $counterInvitations = 0;
+	protected int $counterInvitations = 0;
 	/**
-	 * @var array
+	 * @var array|null
 	 */
-	protected $event;
+	protected ?array $event = null;
 	/**
-	 * @var Context
+	 * @var Context|null
 	 */
-	protected $context;
+	protected ?Context $context = null;
 	/**
 	 * @var string|null
 	 */
-	protected $uid = '';
+	protected ?string $uid = '';
 
 	abstract public function executeAfterSuccessfulInvitation();
 	abstract protected function getContent();
@@ -70,6 +70,11 @@ abstract class SenderInvitation implements Serializable
 	 */
 	public function send(): bool
 	{
+		if ($this->event === null || $this->context === null)
+		{
+			return false;
+		}
+
 		$this->checkEventOrganizer();
 		$this->checkAddresserEmail();
 		$this->prepareEventFields();
@@ -107,7 +112,7 @@ abstract class SenderInvitation implements Serializable
 	 */
 	public function getEvent(): array
 	{
-		return $this->event;
+		return $this->event ?? [];
 	}
 
 	/**
@@ -155,7 +160,7 @@ abstract class SenderInvitation implements Serializable
 	 */
 	public function getEventParentId(): int
 	{
-		return (int) $this->event['PARENT_ID'];
+		return (int) ($this->event['PARENT_ID'] ?? 0);
 	}
 
 	/**
@@ -163,7 +168,7 @@ abstract class SenderInvitation implements Serializable
 	 */
 	protected function checkAddresserEmail(): void
 	{
-		if (Loader::includeModule('mail') && empty($this->context->getAddresser()->getMailto()))
+		if ($this->context && Loader::includeModule('mail') && empty($this->context->getAddresser()->getMailto()))
 		{
 			$boxes = Mail\MailboxTable::getUserMailboxes($this->event['MEETING_HOST']);
 			if (!empty($boxes) && is_array($boxes))
@@ -303,6 +308,7 @@ abstract class SenderInvitation implements Serializable
 	protected function prepareEventFields(): void
 	{
 		$this->event['DESCRIPTION'] = Helper::getEventDescriptionById((int) $this->event['ID']);
+		$this->event['TEXT_LOCATION'] ??= null;
 		if (is_array($this->event['TEXT_LOCATION']) && isset($this->event['TEXT_LOCATION']['NEW']))
 		{
 			$this->event['TEXT_LOCATION'] = $this->event['TEXT_LOCATION']['NEW'];
@@ -320,20 +326,17 @@ abstract class SenderInvitation implements Serializable
 	 */
 	protected function checkEventOrganizer(): void
 	{
-		if (empty($this->event['ICAL_ORGANIZER']))
+		if (empty($this->event['ICAL_ORGANIZER']) && $user = Helper::getUserById($this->event['MEETING_HOST'] ?? null))
 		{
-			if ($user = Helper::getUserById($this->event['MEETING_HOST']))
-			{
-				$this->event['ICAL_ORGANIZER'] = Attendee::createInstance(
-					$user['EMAIL'],
-					$user['NAME'],
-					$user['LAST_NAME'],
-					null,
-					null,
-					null,
-					$user['EMAIL']
-				);
-			}
+			$this->event['ICAL_ORGANIZER'] = Attendee::createInstance(
+				$user['EMAIL'],
+				$user['NAME'],
+				$user['LAST_NAME'],
+				null,
+				null,
+				null,
+				$user['EMAIL']
+			);
 		}
 	}
 }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 (function (exports,ui_designTokens,ui_icons_disk,ui_vue_directives_lazyload,im_model,im_lib_utils,ui_vue) {
 	'use strict';
 
@@ -74,11 +75,9 @@
 	      },
 	      fileName: function fileName(element) {
 	        var maxLength = 70;
-
 	        if (!element.NAME || element.NAME.length < maxLength) {
 	          return element.NAME;
 	        }
-
 	        var endWordLength = 10;
 	        var extension = element.NAME.split('.').splice(-1)[0];
 	        var secondPart = element.NAME.substring(element.NAME.length - 1 - (extension.length + 1 + endWordLength));
@@ -90,19 +89,15 @@
 	      },
 	      fileSize: function fileSize(element) {
 	        var size = element.SIZE;
-
-	        if (size <= 0) {
-	          return '';
+	        if (!size || size <= 0) {
+	          size = 0;
 	        }
-
 	        var sizes = ["BYTE", "KB", "MB", "GB", "TB"];
 	        var position = 0;
-
 	        while (size >= 1024 && position < 4) {
 	          size /= 1024;
 	          position++;
 	        }
-
 	        return Math.round(size) + " " + this.$Bitrix.Loc.getMessage('IM_MESSENGER_ATTACH_FILE_SIZE_' + sizes[position]);
 	      },
 	      fileIcon: function fileIcon(element) {
@@ -118,11 +113,9 @@
 	    openLink: function openLink(event) {
 	      var element = event.element;
 	      var eventData = event.event;
-
 	      if (!im_lib_utils.Utils.platform.isBitrixMobile() && element.LINK) {
 	        return;
 	      }
-
 	      if (element.LINK && eventData.target.tagName !== 'A') {
 	        im_lib_utils.Utils.platform.openNewPage(element.LINK);
 	      } else if (!element.LINK) {
@@ -130,17 +123,14 @@
 	          id: null,
 	          type: null
 	        };
-
 	        if (element.hasOwnProperty('USER_ID') && element.USER_ID > 0) {
 	          entity.id = element.USER_ID;
 	          entity.type = 'user';
 	        }
-
 	        if (element.hasOwnProperty('CHAT_ID') && element.CHAT_ID > 0) {
 	          entity.id = element.CHAT_ID;
 	          entity.type = 'chat';
 	        }
-
 	        if (entity.id && entity.type && window.top['BXIM']) {
 	          var popupAngle = !BX.MessengerTheme.isDark();
 	          window.top['BXIM'].messenger.openPopupExternalData(eventData.target, entity.type, popupAngle, {
@@ -148,13 +138,11 @@
 	          });
 	        } else if (navigator.userAgent.toLowerCase().includes('bitrixmobile')) {
 	          var dialogId = '';
-
 	          if (entity.type === 'chat') {
 	            dialogId = "chat".concat(entity.id);
 	          } else {
 	            dialogId = entity.id;
 	          }
-
 	          if (dialogId !== '') {
 	            BXMobileApp.Events.postToComponent("onOpenDialog", [{
 	              dialogId: dialogId
@@ -203,38 +191,29 @@
 	        if (element.DISPLAY !== 'row') {
 	          return element.WIDTH ? element.WIDTH + 'px' : '';
 	        }
-
 	        if (!element.VALUE) {
 	          return false;
 	        }
-
 	        if (this.maxCellWith && element.WIDTH > this.maxCellWith) {
 	          return this.maxCellWith + 'px';
 	        }
-
 	        return element.WIDTH ? element.WIDTH + 'px' : '';
 	      },
+	      getValueColor: function getValueColor(element) {
+	        if (!element.COLOR) {
+	          return false;
+	        }
+	        return element.COLOR;
+	      },
 	      getValue: function getValue(element) {
-	        var _this = this;
-
 	        if (!element.VALUE) {
 	          return '';
 	        }
-
-	        var text = im_lib_utils.Utils.text.htmlspecialchars(element.VALUE);
-	        text = text.replace(/\[USER=([0-9]{1,})\](.*?)\[\/USER\]/ig, function (whole, userId, userName) {
-	          var user = _this.$store.getters['users/get'](userId);
-
-	          userName = user ? im_lib_utils.Utils.text.htmlspecialchars(user.name) : userName;
-	          return '<span class="bx-im-mention" data-type="USER" data-value="' + userId + '">' + userName + '</span>';
-	        });
-	        return im_model.MessagesModel.decodeBbCode({
-	          text: text
-	        });
+	        return im_lib_utils.Utils.text.decode(element.VALUE);
 	      }
 	    },
 	    //language=Vue
-	    template: "\n\t\t\t<div class=\"bx-im-element-attach-type-grid\">\n\t\t\t\t<template v-for=\"(element, index) in config.GRID\">\n\t\t\t\t\t<template v-if=\"element.DISPLAY.toLowerCase() === 'block'\">\n\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-display bx-im-element-attach-type-display-block\" :style=\"{width: getWidth(element)}\">\n\t\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-element-name\">{{element.NAME}}</div>\n\t\t\t\t\t\t\t<template v-if=\"element.LINK\">\n\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-grid-element-value bx-im-element-attach-type-grid-element-value-link\"\n\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<a :href=\"element.LINK\" target=\"_blank\" @click=\"openLink({element: element, event: $event})\" v-html=\"getValue(element)\"></a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t<template v-else>\n\t\t\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-element-value\" v-html=\"getValue(element)\"></div>\n\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</template>\n\t\t\t\t\t<template v-else-if=\"element.DISPLAY.toLowerCase() === 'line'\">\n\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-display bx-im-element-attach-type-display-card\" :style=\"{width: getWidth(element)}\">\n\t\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-element-name\">{{element.NAME}}</div>\n\t\t\t\t\t\t\t<template v-if=\"element.LINK\">\n\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-grid-element-value bx-im-element-attach-type-grid-element-value-link\"\n\t\t\t\t\t\t\t\t\t:style=\"{color: element.COLOR? element.COLOR: ''}\"\n\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<a :href=\"element.LINK\" target=\"_blank\" @click=\"openLink({element: element, event: $event})\" v-html=\"getValue(element)\"></a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t<template v-else>\n\t\t\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-element-value\" :style=\"{color: element.COLOR? element.COLOR: ''}\" v-html=\"getValue(element)\"></div>\n\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</template>\n\t\t\t\t\t<template v-else-if=\"element.DISPLAY.toLowerCase() === 'row'\">\n\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-display bx-im-element-attach-type-display-column\">\n\t\t\t\t\t\t\t<table class=\"bx-im-element-attach-type-display-column-table\">\n\t\t\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t<template v-if=\"element.NAME\">\n\t\t\t\t\t\t\t\t\t\t\t<td class=\"bx-im-element-attach-type-grid-element-name\" :colspan=\"element.VALUE? 1: 2\" :style=\"{width: getWidth(element)}\">{{element.NAME}}</td>\n\t\t\t\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t\t\t\t<template v-if=\"element.VALUE\">\n\t\t\t\t\t\t\t\t\t\t\t<template v-if=\"element.LINK\">\n\t\t\t\t\t\t\t\t\t\t\t\t<td\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-grid-element-value bx-im-element-attach-type-grid-element-value-link\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t:colspan=\"element.NAME? 1: 2\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t:style=\"{color: element.COLOR? element.COLOR: ''}\"\n\t\t\t\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<a :href=\"element.LINK\" target=\"_blank\" @click=\"openLink({element: element, event: $event})\" v-html=\"getValue(element)\"></a>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t\t\t\t\t<template v-else>\n\t\t\t\t\t\t\t\t\t\t\t\t<td class=\"bx-im-element-attach-type-grid-element-value\" :colspan=\"element.NAME? 1: 2\" :style=\"{color: element.COLOR? element.COLOR: ''}\" v-html=\"getValue(element)\"></td>\n\t\t\t\t\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t</tbody>\n\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</template>\n\t\t\t\t</template>\n\t\t\t</div>\n\t\t"
+	    template: "\n\t\t\t<div class=\"bx-im-element-attach-type-grid\">\n\t\t\t\t<template v-for=\"(element, index) in config.GRID\">\n\t\t\t\t\t<template v-if=\"element.DISPLAY.toLowerCase() === 'block'\">\n\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-display bx-im-element-attach-type-display-block\" :style=\"{width: getWidth(element)}\">\n\t\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-element-name\">{{element.NAME}}</div>\n\t\t\t\t\t\t\t<template v-if=\"element.LINK\">\n\t\t\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-element-value bx-im-element-attach-type-grid-element-value-link\">\n\t\t\t\t\t\t\t\t\t<a :href=\"element.LINK\" target=\"_blank\" @click=\"openLink({element: element, event: $event})\" :style=\"{color: getValueColor(element)}\" v-html=\"getValue(element)\"></a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t<template v-else>\n\t\t\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-element-value\" :style=\"{color: getValueColor(element)}\" v-html=\"getValue(element)\"></div>\n\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</template>\n\t\t\t\t\t<template v-else-if=\"element.DISPLAY.toLowerCase() === 'line'\">\n\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-display bx-im-element-attach-type-display-card\" :style=\"{width: getWidth(element)}\">\n\t\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-element-name\">{{element.NAME}}</div>\n\t\t\t\t\t\t\t<template v-if=\"element.LINK\">\n\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-grid-element-value bx-im-element-attach-type-grid-element-value-link\"\n\t\t\t\t\t\t\t\t\t:style=\"{color: element.COLOR? element.COLOR: ''}\"\n\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<a :href=\"element.LINK\" target=\"_blank\" @click=\"openLink({element: element, event: $event})\" v-html=\"getValue(element)\"></a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t<template v-else>\n\t\t\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-element-value\" :style=\"{color: element.COLOR? element.COLOR: ''}\" v-html=\"getValue(element)\"></div>\n\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</template>\n\t\t\t\t\t<template v-else-if=\"element.DISPLAY.toLowerCase() === 'row'\">\n\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-grid-display bx-im-element-attach-type-display-column\">\n\t\t\t\t\t\t\t<table class=\"bx-im-element-attach-type-display-column-table\">\n\t\t\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t<template v-if=\"element.NAME\">\n\t\t\t\t\t\t\t\t\t\t\t<td class=\"bx-im-element-attach-type-grid-element-name\" :colspan=\"element.VALUE? 1: 2\" :style=\"{width: getWidth(element)}\">{{element.NAME}}</td>\n\t\t\t\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t\t\t\t<template v-if=\"element.VALUE\">\n\t\t\t\t\t\t\t\t\t\t\t<template v-if=\"element.LINK\">\n\t\t\t\t\t\t\t\t\t\t\t\t<td\n\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-grid-element-value bx-im-element-attach-type-grid-element-value-link\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t:colspan=\"element.NAME? 1: 2\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t:style=\"{color: element.COLOR? element.COLOR: ''}\"\n\t\t\t\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<a :href=\"element.LINK\" target=\"_blank\" @click=\"openLink({element: element, event: $event})\" v-html=\"getValue(element)\"></a>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t\t\t\t\t<template v-else>\n\t\t\t\t\t\t\t\t\t\t\t\t<td class=\"bx-im-element-attach-type-grid-element-value\" :colspan=\"element.NAME? 1: 2\" :style=\"{color: element.COLOR? element.COLOR: ''}\" v-html=\"getValue(element)\"></td>\n\t\t\t\t\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t\t\t\t</template>\n\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t</tbody>\n\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</template>\n\t\t\t\t</template>\n\t\t\t</div>\n\t\t"
 	  }
 	};
 
@@ -262,7 +241,13 @@
 	        "default": 'transparent'
 	      }
 	    },
-	    template: "<div class=\"bx-im-element-attach-type-html\" v-html=\"config.HTML\"></div>"
+	    computed: {
+	      html: function html() {
+	        var text = this.config.HTML.replace(/&nbsp;/gi, " ");
+	        return im_lib_utils.Utils.text.decode(text);
+	      }
+	    },
+	    template: "<div class=\"bx-im-element-attach-type-html\" v-html=\"html\"></div>"
 	  }
 	};
 
@@ -295,7 +280,6 @@
 	        if (!file) {
 	          return false;
 	        }
-
 	        if (im_lib_utils.Utils.platform.isBitrixMobile()) {
 	          // TODO add multiply
 	          BXMobileApp.UI.Photo.show({
@@ -310,13 +294,11 @@
 	      },
 	      getImageSize: function getImageSize(width, height, maxWidth) {
 	        var aspectRatio;
-
 	        if (width > maxWidth) {
 	          aspectRatio = maxWidth / width;
 	        } else {
 	          aspectRatio = 1;
 	        }
-
 	        return {
 	          width: width * aspectRatio,
 	          height: height * aspectRatio
@@ -325,14 +307,10 @@
 	      getElementSource: function getElementSource(element) {
 	        return element.PREVIEW ? element.PREVIEW : element.LINK;
 	      },
-	      getElementTitle: function getElementTitle(element) {
-	        return im_lib_utils.Utils.text.htmlspecialcharsback(element.NAME);
-	      },
 	      lazyLoadCallback: function lazyLoadCallback(event) {
 	        if (!event.element.style.width) {
 	          event.element.style.width = event.element.offsetWidth + 'px';
 	        }
-
 	        if (!event.element.style.height) {
 	          event.element.style.height = event.element.offsetHeight + 'px';
 	        }
@@ -344,7 +322,6 @@
 	            backgroundSize: 'contain'
 	          };
 	        }
-
 	        var sizes = this.getImageSize(image.WIDTH, image.HEIGHT, 250);
 	        return {
 	          width: sizes.width + 'px',
@@ -358,17 +335,15 @@
 	            height: '150px'
 	          };
 	        }
-
 	        if (parseInt(this.styleFileSizes(image).height) <= 250) {
 	          return {};
 	        }
-
 	        return {
 	          height: '280px'
 	        };
 	      }
 	    },
-	    template: "\n\t\t\t<div class=\"bx-im-element-attach-type-image\">\n\t\t\t\t<template v-for=\"(image, index) in config.IMAGE\">\n\t\t\t\t\t<div class=\"bx-im-element-attach-type-image-block\" @click=\"open(image.LINK)\" :style=\"styleBoxSizes(image)\" :key=\"index\">\n\t\t\t\t\t\t<img v-bx-lazyload=\"{callback: lazyLoadCallback}\"\n\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-image-source\"\n\t\t\t\t\t\t\t:data-lazyload-src=\"getElementSource(image)\"\n\t\t\t\t\t\t\t:style=\"styleFileSizes(image)\"\n\t\t\t\t\t\t\t:title=\"getElementTitle(image)\"\n\t\t\t\t\t\t/>\n\t\t\t\t\t</div>\n\t\t\t\t</template>\n\t\t\t</div>\n\t\t"
+	    template: "\n\t\t\t<div class=\"bx-im-element-attach-type-image\">\n\t\t\t\t<template v-for=\"(image, index) in config.IMAGE\">\n\t\t\t\t\t<div class=\"bx-im-element-attach-type-image-block\" @click=\"open(image.LINK)\" :style=\"styleBoxSizes(image)\" :key=\"index\">\n\t\t\t\t\t\t<img v-bx-lazyload=\"{callback: lazyLoadCallback}\"\n\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-image-source\"\n\t\t\t\t\t\t\t:data-lazyload-src=\"getElementSource(image)\"\n\t\t\t\t\t\t\t:style=\"styleFileSizes(image)\"\n\t\t\t\t\t\t\t:title=\"image.NAME\"\n\t\t\t\t\t\t/>\n\t\t\t\t\t</div>\n\t\t\t\t</template>\n\t\t\t</div>\n\t\t"
 	  }
 	};
 
@@ -410,6 +385,10 @@
 	      },
 	      getLinkName: function getLinkName(element) {
 	        return element.NAME ? element.NAME : element.LINK;
+	      },
+	      getDescription: function getDescription(element) {
+	        var text = element.HTML ? element.HTML : element.DESC;
+	        return im_lib_utils.Utils.text.decode(text);
 	      }
 	    },
 	    computed: {
@@ -419,7 +398,7 @@
 	    },
 	    components: babelHelpers.defineProperty({}, AttachTypeImage.name, AttachTypeImage.component),
 	    //language=Vue
-	    template: "\n\t\t\t<div class=\"bx-im-element-attach-type-link\">\n\t\t\t\t<template v-for=\"(element, index) in config.LINK\">\n\t\t\t\t\t<div class=\"bx-im-element-attach-type-link-element\" :key=\"index\">\n\t\t\t\t\t\t<a \n\t\t\t\t\t\t\tv-if=\"element.LINK\"\n\t\t\t\t\t\t\t:href=\"element.LINK\"\n\t\t\t\t\t\t\ttarget=\"_blank\"\n\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-link-name\" \n\t\t\t\t\t\t\t@click=\"openLink({element: element, event: $event})\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t{{getLinkName(element)}}\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<span \n\t\t\t\t\t\t\tv-else\n\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-ajax-link\"\n\t\t\t\t\t\t\t@click=\"openLink({element: element, event: $event})\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t{{getLinkName(element)}}\n\t\t\t\t\t\t</span>\n\t\t\t\t\t\t<div v-if=\"element.DESC\" class=\"bx-im-element-attach-type-link-desc\">{{element.DESC}}</div>\n\t\t\t\t\t\t<div \n\t\t\t\t\t\t\tv-if=\"element.PREVIEW\" \n\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-link-image\"\n\t\t\t\t\t\t\t@click=\"openLink({element: element, event: $event})\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<component :is=\"imageComponentName\" :config=\"getImageConfig(element)\" :color=\"color\"/>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</template>\n\t\t\t</div>\n\t\t"
+	    template: "\n\t\t\t<div class=\"bx-im-element-attach-type-link\">\n\t\t\t\t<template v-for=\"(element, index) in config.LINK\">\n\t\t\t\t\t<div class=\"bx-im-element-attach-type-link-element\" :key=\"index\">\n\t\t\t\t\t\t<a \n\t\t\t\t\t\t\tv-if=\"element.LINK\"\n\t\t\t\t\t\t\t:href=\"element.LINK\"\n\t\t\t\t\t\t\ttarget=\"_blank\"\n\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-link-name\" \n\t\t\t\t\t\t\t@click=\"openLink({element: element, event: $event})\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t{{getLinkName(element)}}\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<span \n\t\t\t\t\t\t\tv-else\n\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-ajax-link\"\n\t\t\t\t\t\t\t@click=\"openLink({element: element, event: $event})\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t{{getLinkName(element)}}\n\t\t\t\t\t\t</span>\n\t\t\t\t\t\t<div v-if=\"element.DESC || element.HTML\" class=\"bx-im-element-attach-type-link-desc\" v-html=\"getDescription(element)\"></div>\n\t\t\t\t\t\t<div \n\t\t\t\t\t\t\tv-if=\"element.PREVIEW\" \n\t\t\t\t\t\t\tclass=\"bx-im-element-attach-type-link-image\"\n\t\t\t\t\t\t\t@click=\"openLink({element: element, event: $event})\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<component :is=\"imageComponentName\" :config=\"getImageConfig(element)\" :color=\"color\"/>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</template>\n\t\t\t</div>\n\t\t"
 	  }
 	};
 
@@ -449,18 +428,7 @@
 	    },
 	    computed: {
 	      message: function message() {
-	        var _this = this;
-
-	        var text = im_lib_utils.Utils.text.htmlspecialchars(this.config.MESSAGE);
-	        text = text.replace(/\[USER=([0-9]{1,})\](.*?)\[\/USER\]/ig, function (whole, userId, userName) {
-	          var user = _this.$store.getters['users/get'](userId);
-
-	          userName = user ? im_lib_utils.Utils.text.htmlspecialchars(user.name) : userName;
-	          return '<span class="bx-im-mention" data-type="USER" data-value="' + userId + '">' + userName + '</span>';
-	        });
-	        return im_model.MessagesModel.decodeBbCode({
-	          text: text
-	        });
+	        return im_lib_utils.Utils.text.decode(this.config.MESSAGE);
 	      }
 	    },
 	    template: "<div class=\"bx-im-element-attach-type-message\" v-html=\"message\"></div>"
@@ -511,7 +479,7 @@
 	    },
 	    components: babelHelpers.defineProperty({}, AttachTypeImage.name, AttachTypeImage.component),
 	    //language=Vue
-	    template: "\n\t\t\t<div class=\"bx-im-element-attach-type-rich\">\n\t\t\t\t<template v-for=\"(element, index) in config.RICH_LINK\">\n\t\t\t\t\t<div class=\"bx-im-element-attach-type-rich-element\" :key=\"index\">\n\t\t\t\t\t\t<div v-if=\"element.PREVIEW\" class=\"bx-im-element-attach-type-rich-image\" @click=\"openLink({element: element, event: $event})\">\n\t\t\t\t\t\t\t<component :is=\"imageComponentName\" :config=\"getImageConfig(element)\" :color=\"color\"/>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-rich-name\" @click=\"openLink({element: element, event: $event})\">{{element.NAME}}</div>\n\t\t\t\t\t\t<div v-if=\"element.DESC\" class=\"bx-im-element-attach-type-rich-desc\">{{element.DESC}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t</template>\n\t\t\t</div>\n\t\t"
+	    template: "\n\t\t\t<div class=\"bx-im-element-attach-type-rich\">\n\t\t\t\t<template v-for=\"(element, index) in config.RICH_LINK\">\n\t\t\t\t\t<div class=\"bx-im-element-attach-type-rich-element\" :key=\"index\">\n\t\t\t\t\t\t<div v-if=\"element.PREVIEW\" class=\"bx-im-element-attach-type-rich-image\" @click=\"openLink({element: element, event: $event})\">\n\t\t\t\t\t\t\t<component :is=\"imageComponentName\" :config=\"getImageConfig(element)\" :color=\"color\"/>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"bx-im-element-attach-type-rich-name\" @click=\"openLink({element: element, event: $event})\">{{element.NAME}}</div>\n\t\t\t\t\t\t<div v-if=\"element.HTML || element.DESC\" class=\"bx-im-element-attach-type-rich-desc\">{{element.HTML || element.DESC}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t</template>\n\t\t\t</div>\n\t\t"
 	  }
 	};
 
@@ -545,15 +513,12 @@
 	        if (element.AVATAR) {
 	          return '';
 	        }
-
 	        var avatarType = 'user';
-
 	        if (element.AVATAR_TYPE === 'CHAT') {
 	          avatarType = 'chat';
 	        } else if (element.AVATAR_TYPE === 'BOT') {
 	          avatarType = 'bot';
 	        }
-
 	        return 'bx-im-element-attach-type-user-avatar-type-' + avatarType;
 	      }
 	    },
@@ -562,11 +527,14 @@
 	  }
 	};
 
-	function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-	function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-	function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+	/**
+	 * Bitrix Messenger
+	 * Attach element Vue component
+	 *
+	 * @package bitrix
+	 * @subpackage im
+	 * @copyright 2001-2019 Bitrix
+	 */
 	var AttachTypes = [AttachTypeDelimiter, AttachTypeFile, AttachTypeGrid, AttachTypeHtml, AttachTypeImage, AttachTypeLink, AttachTypeMessage, AttachTypeRich, AttachTypeUser];
 	var AttachComponents = {};
 	AttachTypes.forEach(function (attachType) {
@@ -585,23 +553,12 @@
 	  },
 	  methods: {
 	    getComponentForBlock: function getComponentForBlock(block) {
-	      var _iterator = _createForOfIteratorHelper(AttachTypes),
-	          _step;
-
-	      try {
-	        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-	          var attachType = _step.value;
-
-	          if (typeof block[attachType.property] !== 'undefined') {
-	            return attachType.name;
-	          }
+	      for (var _i = 0, _AttachTypes = AttachTypes; _i < _AttachTypes.length; _i++) {
+	        var attachType = _AttachTypes[_i];
+	        if (typeof block[attachType.property] !== 'undefined') {
+	          return attachType.name;
 	        }
-	      } catch (err) {
-	        _iterator.e(err);
-	      } finally {
-	        _iterator.f();
 	      }
-
 	      return '';
 	    }
 	  },
@@ -610,11 +567,9 @@
 	      if (typeof this.config.COLOR === 'undefined' || !this.config.COLOR) {
 	        return this.baseColor;
 	      }
-
 	      if (this.config.COLOR === 'transparent') {
 	        return '';
 	      }
-
 	      return this.config.COLOR;
 	    }
 	  },

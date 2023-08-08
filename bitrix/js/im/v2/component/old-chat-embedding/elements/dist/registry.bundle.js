@@ -1,24 +1,16 @@
 this.BX = this.BX || {};
 this.BX.Messenger = this.BX.Messenger || {};
+this.BX.Messenger.v2 = this.BX.Messenger.v2 || {};
 (function (exports,im_v2_lib_utils,ui_fonts_opensans,im_v2_const,ui_vue3) {
 	'use strict';
 
-	const DialogType = {
-	  user: 'user',
-	  chat: 'chat',
-	  open: 'open',
-	  general: 'general',
-	  videoconf: 'videoconf',
-	  announcement: 'announcement',
-	  call: 'call',
-	  support24Notifier: 'support24Notifier',
-	  support24Question: 'support24Question',
-	  crm: 'crm',
-	  sonetGroup: 'sonetGroup',
-	  calendar: 'calendar',
-	  tasks: 'tasks',
-	  thread: 'thread',
-	  mail: 'mail'
+	const AvatarSize = {
+	  XS: 'XS',
+	  S: 'S',
+	  M: 'M',
+	  L: 'L',
+	  XL: 'XL',
+	  XXL: 'XXL'
 	};
 	const Avatar = {
 	  name: 'Avatar',
@@ -29,7 +21,7 @@ this.BX.Messenger = this.BX.Messenger || {};
 	    },
 	    size: {
 	      type: String,
-	      default: im_v2_const.AvatarSize.M
+	      default: AvatarSize.M
 	    },
 	    withAvatarLetters: {
 	      type: Boolean,
@@ -56,100 +48,76 @@ this.BX.Messenger = this.BX.Messenger || {};
 	    dialog() {
 	      return this.$store.getters['dialogues/get'](this.dialogId, true);
 	    },
-
 	    user() {
 	      return this.$store.getters['users/get'](this.dialogId, true);
 	    },
-
 	    isUser() {
-	      return this.dialog.type === im_v2_const.ChatTypes.user;
+	      return this.dialog.type === im_v2_const.DialogType.user;
 	    },
-
 	    isBot() {
 	      if (this.isUser) {
 	        return this.user.bot;
 	      }
-
 	      return false;
 	    },
-
 	    isActiveInvitation() {
 	      const recentItem = this.$store.getters['recent/get'](this.dialogId);
-
 	      if (!recentItem) {
 	        return false;
 	      }
-
 	      return recentItem.invitation.isActive;
 	    },
-
 	    chatAvatarStyle() {
 	      return {
 	        backgroundImage: `url('${this.dialog.avatar}')`
 	      };
 	    },
-
 	    avatarText() {
-	      if (![im_v2_const.ChatTypes.user, im_v2_const.ChatTypes.open, im_v2_const.ChatTypes.chat].includes(this.dialog.type)) {
+	      if (![im_v2_const.DialogType.user, im_v2_const.DialogType.open, im_v2_const.DialogType.chat].includes(this.dialog.type)) {
 	        return '';
 	      }
-
 	      return im_v2_lib_utils.Utils.text.getFirstLetters(this.dialog.name);
 	    },
-
 	    chatTypeIconClasses() {
 	      const classes = [];
-
-	      if (DialogType[this.dialog.type]) {
+	      if (im_v2_const.DialogType[this.dialog.type]) {
 	        classes.push(`bx-im-component-avatar-icon-${this.dialog.type}`);
 	      } else {
 	        classes.push('bx-im-component-avatar-icon-default');
 	      }
-
 	      return classes;
 	    },
-
 	    userStatusIcon() {
 	      if (!this.isUser || this.isBot || this.user.id === this.currentUserId) {
 	        return '';
 	      }
-
 	      const status = this.$store.getters['users/getStatus'](this.dialogId);
-
 	      if (status) {
 	        return status;
 	      }
-
 	      return '';
 	    },
-
 	    isSomeoneTyping() {
 	      return Object.keys(this.dialog.writingList).length > 0;
 	    },
-
 	    formattedCounter() {
 	      return this.dialog.counter > 99 ? '99+' : this.dialog.counter;
 	    },
-
 	    isChatMuted() {
 	      if (this.isUser) {
 	        return false;
 	      }
-
 	      const isMuted = this.dialog.muteList.find(element => {
 	        return element === this.currentUserId;
 	      });
 	      return !!isMuted;
 	    },
-
 	    showBirthdays() {
 	      return this.$store.getters['recent/getOption'](im_v2_const.RecentSettings.showBirthday);
 	    },
-
 	    currentUserId() {
 	      return this.$store.state.application.common.userId;
 	    }
-
 	  },
 	  template: `
 		<div :title="dialog.name" :class="'bx-im-component-avatar-size-' + size.toLowerCase()" class="bx-im-component-avatar-wrap">
@@ -195,38 +163,30 @@ this.BX.Messenger = this.BX.Messenger || {};
 	    dialog() {
 	      return this.$store.getters['dialogues/get'](this.dialogId, true);
 	    },
-
 	    user() {
 	      return this.$store.getters['users/get'](this.dialogId, true);
 	    },
-
 	    botType() {
 	      if (!this.isUser) {
 	        return '';
 	      }
-
 	      return this.$store.getters['users/getBotType'](this.dialogId);
 	    },
-
 	    isUser() {
-	      return this.dialog.type === im_v2_const.ChatTypes.user;
+	      return this.dialog.type === im_v2_const.DialogType.user;
 	    },
-
 	    isSelfChat() {
 	      return this.isUser && this.user.id === this.currentUserId;
 	    },
-
 	    dialogSpecialType() {
 	      if (!this.isUser) {
 	        if (this.isExtranet) {
 	          return DialogSpecialType.extranet;
-	        } else if ([im_v2_const.ChatTypes.support24.notifier, im_v2_const.ChatTypes.support24.question].includes(this.dialog.type)) {
+	        } else if ([im_v2_const.DialogType.support24Notifier, im_v2_const.DialogType.support24Question].includes(this.dialog.type)) {
 	          return DialogSpecialType.support24;
 	        }
-
 	        return '';
 	      }
-
 	      if (this.isBot) {
 	        return this.botType;
 	      } else if (this.isExtranet) {
@@ -234,91 +194,70 @@ this.BX.Messenger = this.BX.Messenger || {};
 	      } else if (this.isNetwork) {
 	        return DialogSpecialType.network;
 	      }
-
 	      return '';
 	    },
-
 	    leftIcon() {
 	      if (this.dialogSpecialType) {
 	        return this.dialogSpecialType;
 	      }
-
 	      if (!this.isUser) {
 	        return '';
 	      }
-
 	      if (this.showBirthdays && this.user.isBirthday) {
 	        return TitleIcons.birthday;
 	      } else if (this.user.isAbsent) {
 	        return TitleIcons.absent;
 	      }
-
 	      return '';
 	    },
-
 	    color() {
 	      return this.dialogSpecialType;
 	    },
-
 	    isBot() {
 	      if (this.isUser) {
 	        return this.user.bot;
 	      }
-
 	      return false;
 	    },
-
 	    isExtranet() {
 	      if (this.isUser) {
 	        return this.user.extranet;
 	      }
-
 	      return this.dialog.extranet;
 	    },
-
 	    isNetwork() {
 	      if (this.isUser) {
 	        return this.user.network;
 	      }
-
 	      return false;
 	    },
-
 	    isChatMuted() {
 	      if (this.isUser) {
 	        return false;
 	      }
-
 	      const isMuted = this.dialog.muteList.find(element => {
 	        return element === this.currentUserId;
 	      });
 	      return !!isMuted;
 	    },
-
 	    currentUserId() {
 	      return this.$store.state.application.common.userId;
 	    },
-
 	    tooltipText() {
 	      if (this.isSelfChat) {
 	        return `${this.dialog.name} (${this.phrases['IM_RECENT_CHAT_SELF']})`;
 	      }
-
 	      return this.dialog.name;
 	    },
-
 	    showBirthdays() {
 	      return this.$store.getters['recent/getOption'](im_v2_const.RecentSettings.showBirthday);
 	    },
-
 	    isDarkTheme() {
 	      return this.$store.state.application.options.darkTheme;
 	    },
-
 	    phrases() {
 	      return ui_vue3.BitrixVue.getFilteredPhrases(this, 'IM_RECENT_');
 	    }
-
 	  },
 	  template: `
 		<div class="bx-im-component-chat-title-wrap">
@@ -350,7 +289,6 @@ this.BX.Messenger = this.BX.Messenger || {};
 	    isThreeLineVersion() {
 	      return Math.random() < 0.5;
 	    }
-
 	  },
 	  template: `
 		<div v-if="!compactMode" class="bx-im-component-recent-loading-state">
@@ -376,8 +314,9 @@ this.BX.Messenger = this.BX.Messenger || {};
 	};
 
 	exports.Avatar = Avatar;
+	exports.AvatarSize = AvatarSize;
 	exports.ChatTitle = ChatTitle;
 	exports.RecentLoadingState = RecentLoadingState;
 
-}((this.BX.Messenger.v2 = this.BX.Messenger.v2 || {}),BX.Messenger.v2.Lib,BX,BX.Messenger.v2.Const,BX.Vue3));
+}((this.BX.Messenger.v2.ComponentLegacy = this.BX.Messenger.v2.ComponentLegacy || {}),BX.Messenger.v2.Lib,BX,BX.Messenger.v2.Const,BX.Vue3));
 //# sourceMappingURL=registry.bundle.js.map

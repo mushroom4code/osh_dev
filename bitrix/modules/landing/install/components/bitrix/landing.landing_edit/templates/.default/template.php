@@ -19,7 +19,6 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Page\Asset;
 use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Security\Random;
 use Bitrix\Main\UI\Extension;
 use Bitrix\Main\Web\Uri;
 use Bitrix\Main\ModuleManager;
@@ -37,13 +36,25 @@ $request = $context->getRequest();
 
 if ($arResult['ERRORS'])
 {
-	?><div class="landing-message-label error"><?php
-	foreach ($arResult['ERRORS'] as $error)
+	foreach ($arResult['ERRORS'] as $errorCode => $errorMessage)
 	{
-		echo $error . '<br/>';
+		$errorMessage .= $component->getSettingLinkByError(
+			$errorCode
+		);
+		if ($arResult['FATAL'])
+		{
+			?>
+			<div class="landing-error-page">
+				<div class="landing-error-page-inner">
+					<div class="landing-error-page-title"><?= $errorMessage ?></div>
+					<div class="landing-error-page-img">
+						<div class="landing-error-page-img-inner"></div>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
 	}
-	?></div>
-	<?php
 }
 
 if ($arResult['FATAL'])
@@ -518,6 +529,9 @@ if ($arParams['SUCCESS_SAVE'])
 											);
 										});
 									</script>
+									<div class="landing-ui-form-row-hidden">
+										<?php $template->showField($pageFields['B24BUTTON_HELP'], ['additional' => 'hidden']); ?>
+									</div>
 								</div>
 
 								<?php $template->showField($pageFields['B24BUTTON_COLOR_VALUE'], ['title' => true]); ?>
@@ -714,24 +728,25 @@ if ($arParams['SUCCESS_SAVE'])
 										>
 									<?php endforeach; ?>
 									<div class="landing-form-list">
-										<div class="landing-form-list-container">
-											<div class="landing-form-list-inner">
-												<?php foreach (array_values($arResult['TEMPLATES']) as $i => $tpl): ?>
-													<label class="landing-form-layout-item landing-form-layout-item-<?=$tpl['XML_ID']?>"
-														<?php
-														?>data-block="<?=$tpl['AREA_COUNT']?>"
-														<?php
-														?>data-layout="<?=$tpl['XML_ID']?>"
-														<?php
-														?>for="<?= $template->getFieldId('LAYOUT-RADIO_' . ($i + 1)) ?>">
-														<div class="landing-form-layout-item-img"></div>
-													</label>
-												<?php endforeach; ?>
-											</div>
-										</div>
 										<div class="landing-form-select-buttons">
 											<div class="landing-form-select-prev"></div>
 											<div class="landing-form-select-next"></div>
+										</div>
+										<div class="landing-form-list-container">
+											<div class="landing-form-list-inner">
+												<?php foreach (array_values($arResult['TEMPLATES']) as $i => $tpl): ?>
+													<div class="landing-form-layout-item-img-container">
+														<label class="landing-form-layout-item <?
+															?>landing-form-layout-item-<?= $tpl['XML_ID'] ?>" <?php
+															?>data-block="<?= $tpl['AREA_COUNT'] ?>" <?php
+															?>data-layout="<?= $tpl['XML_ID'] ?>" <?php
+															?>for="<?= $template->getFieldId('LAYOUT-RADIO_' . ($i + 1)) ?>"
+														>
+															<div class="landing-form-layout-item-img"></div>
+														</label>
+													</div>
+												<?php endforeach; ?>
+											</div>
 										</div>
 									</div>
 								</div>

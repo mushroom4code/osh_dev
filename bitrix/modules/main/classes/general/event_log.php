@@ -59,7 +59,7 @@ class CEventLog
 			"REMOTE_ADDR" => $_SERVER["REMOTE_ADDR"],
 			"USER_AGENT" => $_SERVER["HTTP_USER_AGENT"],
 			"REQUEST_URI" => $url,
-			"SITE_ID" => $arFields["SITE_ID"] == '' ? $SITE_ID : $arFields["SITE_ID"],
+			"SITE_ID" => empty($arFields["SITE_ID"]) ? $SITE_ID : $arFields["SITE_ID"],
 			"USER_ID" => is_object($USER) && ($USER->GetID() > 0)? $USER->GetID(): false,
 			"GUEST_ID" => ($session->isStarted() && $session->has("SESS_GUEST_ID") && $session["SESS_GUEST_ID"] > 0? $session["SESS_GUEST_ID"]: false),
 			"DESCRIPTION" => $arFields["DESCRIPTION"],
@@ -103,7 +103,7 @@ class CEventLog
 		{
 			if(is_array($val))
 			{
-				if(count($val) <= 0)
+				if(empty($val))
 					continue;
 			}
 			elseif((string)$val == '')
@@ -158,10 +158,10 @@ class CEventLog
 								if (in_array($item2, $arFields))
 									$arSqlSearchTmp[] = "L.".$item2." = '".$DB->ForSQL($value2)."'";
 							}
-							if(count($arSqlSearchTmp) > 0)
+							if(!empty($arSqlSearchTmp))
 								$arSqlSearch2[] = implode(" AND ", $arSqlSearchTmp);
 						}
-						if(count($arSqlSearch2) > 0)
+						if(!empty($arSqlSearch2))
 							$arSqlSearch[] = "(".implode(" OR ", $arSqlSearch2).")";
 					}
 					break;
@@ -189,9 +189,9 @@ class CEventLog
 			if (array_key_exists($by, $arOFields))
 			{
 				if ($order != "ASC")
+				{
 					$order = "DESC";
-				else
-					$order = "ASC";
+				}
 				$arSqlOrder[$by] = $arOFields[$by]." ".$order;
 			}
 		}
@@ -319,7 +319,7 @@ class CEventMain
 		$rsUser = CUser::GetByID($row['ITEM_ID']);
 		if($arUser = $rsUser->GetNext())
 			$userURL = SITE_DIR.CComponentEngine::MakePathFromTemplate($arParams['USER_PATH'], array("user_id" => $row['ITEM_ID'], "SITE_ID" => ""));
-		$EventName = $DESCRIPTION["user"];
+		$EventName = is_array($DESCRIPTION) ? $DESCRIPTION["user"] : null;
 		switch($row['AUDIT_TYPE_ID'])
 		{
 			case "USER_REGISTER":

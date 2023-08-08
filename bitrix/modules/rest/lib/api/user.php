@@ -502,7 +502,7 @@ class User extends \IRestService
 
 		$server->setSecurityState(array(
 			"ID" => $result['ID'],
-			"EMAIL" => $result['EMAIL'],
+			"EMAIL" => $result['EMAIL'] ?? '',
 			"NAME" => $result['NAME'],
 		));
 
@@ -1222,9 +1222,11 @@ class User extends \IRestService
 					$res[$key] = $userFields[$key] == 'Y';
 					break;
 				case 'PERSONAL_BIRTHDAY':
-				case 'LAST_LOGIN':
 				case 'DATE_REGISTER':
 					$res[$key] = \CRestUtil::convertDate($userFields[$key]);
+					break;
+				case 'LAST_LOGIN':
+					$res[$key] = \CRestUtil::convertDateTime($userFields[$key]);
 					break;
 				case 'EXTERNAL_AUTH_ID':
 					$res['IS_NETWORK'] = $userFields[$key] == 'replica';
@@ -1310,7 +1312,7 @@ class User extends \IRestService
 						}
 					}
 
-					if (!isset($res[$key]))
+					if (!isset($res[$key]) && isset($userFields[$key]))
 					{
 						$res[$key] = $userFields[$key];
 					}

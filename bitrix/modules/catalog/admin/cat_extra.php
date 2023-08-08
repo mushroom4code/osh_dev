@@ -42,9 +42,11 @@ if ($ex = $APPLICATION->GetException())
 
 $sTableID = "tbl_catalog_extra";
 
-$oSort = new CAdminUiSorting($sTableID, "ID", "asc");
-
+$oSort = new CAdminUiSorting($sTableID, "ID", "ASC");
 $lAdmin = new CAdminUiList($sTableID, $oSort);
+
+$by = mb_strtoupper($oSort->getField());
+$order = mb_strtoupper($oSort->getOrder());
 
 $arFilter = array();
 
@@ -103,7 +105,7 @@ if (($arID = $lAdmin->GroupAction()) && !$bReadOnly)
 	if ($_REQUEST['action_target']=='selected')
 	{
 		$arID = array();
-		$dbResultList = CExtra::GetList(array($by => $order), $arFilter, false, false, array('ID'));
+		$dbResultList = CExtra::GetList(array(), $arFilter, false, false, array('ID'));
 		while ($arResult = $dbResultList->Fetch())
 			$arID[] = $arResult['ID'];
 	}
@@ -216,7 +218,7 @@ while ($arExtra = $dbResultList->NavNext(false))
 	$arActions = array();
 	$arActions[] = array(
 		"ICON" => "edit",
-		"TEXT" => GetMessage("CEN_UPDATE_ALT"),
+		"TEXT" => $bReadOnly ? GetMessage('CEN_VIEW_ALT') : GetMessage('CEN_UPDATE_ALT'),
 		"LINK" => $editUrl,
 		"DEFAULT" => true
 	);

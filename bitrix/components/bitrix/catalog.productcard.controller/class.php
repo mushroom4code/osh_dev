@@ -4,6 +4,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Catalog;
 use Bitrix\Crm;
+use Bitrix\UI\Toolbar\Facade\Toolbar;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 {
@@ -21,6 +22,9 @@ class CatalogProductControllerComponent extends CBitrixComponent
 	private const URL_TEMPLATE_MODIFY_PROPERTY = 'property_modify';
 	private const URL_TEMPLATE_PRODUCT_STORE_AMOUNT = 'product_store_amount_details';
 	private const URL_TEMPLATE_PRODUCT_STORE_AMOUNT_SLIDER = 'product_store_amount_details_slider';
+	private const URL_TEMPLATE_SEO_CATALOG_SLIDER = 'seo_catalog';
+	private const URL_TEMPLATE_SEO_SECTION_SLIDER = 'seo_section';
+	private const URL_TEMPLATE_SEO_PRODUCT_SLIDER = 'seo_product';
 
 	private const REQUEST_VARIABLE_PRODUCT_TYPE = 'productTypeId';
 
@@ -39,6 +43,8 @@ class CatalogProductControllerComponent extends CBitrixComponent
 	public function onPrepareComponentParams($params): array
 	{
 		$params['IFRAME'] = (bool)($params['IFRAME'] ?? $this->request->get('IFRAME') === 'Y');
+		$params['SEF_URL_TEMPLATES'] = $params['SEF_URL_TEMPLATES'] ?? [];
+		$params['VARIABLE_ALIASES'] = $params['VARIABLE_ALIASES'] ?? [];
 		$params = $this->getPreparedParams($params);
 
 		return parent::onPrepareComponentParams($params);
@@ -54,6 +60,9 @@ class CatalogProductControllerComponent extends CBitrixComponent
 			self::URL_TEMPLATE_MODIFY_PROPERTY => '#IBLOCK_ID#/modify_property/#PROPERTY_ID#/',
 			self::URL_TEMPLATE_PRODUCT_STORE_AMOUNT => '#IBLOCK_ID#/product/#PRODUCT_ID#/store_amount/?storeId=#STORE_ID#',
 			self::URL_TEMPLATE_PRODUCT_STORE_AMOUNT_SLIDER => '#IBLOCK_ID#/product/#PRODUCT_ID#/variation/#VARIATION_ID#/store_amount_slider/',
+			self::URL_TEMPLATE_SEO_SECTION_SLIDER => '#IBLOCK_ID#/seo/section/#SECTION_ID#/',
+			self::URL_TEMPLATE_SEO_PRODUCT_SLIDER => '#IBLOCK_ID#/seo/product/#PRODUCT_ID#/',
+			self::URL_TEMPLATE_SEO_CATALOG_SLIDER => '#IBLOCK_ID#/seo/',
 		];
 	}
 
@@ -123,7 +132,7 @@ class CatalogProductControllerComponent extends CBitrixComponent
 	{
 		if (!Loader::includeModule('catalog'))
 		{
-			ShowError(Loc::getMessage('CATALOG_MODULE_IS_NOT_INSTALLED'));
+			$this->includeErrorComponent(Loc::getMessage('CATALOG_MODULE_IS_NOT_INSTALLED'));
 
 			return false;
 		}
@@ -135,12 +144,32 @@ class CatalogProductControllerComponent extends CBitrixComponent
 	{
 		if (!$this->isCardAllowed())
 		{
-			ShowError(Loc::getMessage('CATALOG_FEATURE_IS_DISABLED'));
+			$this->includeErrorComponent(Loc::getMessage('CATALOG_FEATURE_IS_DISABLED'));
 
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * @param string $errorMessage
+	 * @param string|null $description
+	 * @return void
+	 */
+	protected function includeErrorComponent(string $errorMessage, string $description = null): void
+	{
+		Toolbar::deleteFavoriteStar();
+
+		global $APPLICATION;
+		$APPLICATION->IncludeComponent(
+			"bitrix:ui.info.error",
+			"",
+			[
+				'TITLE' => $errorMessage,
+				'DESCRIPTION' => $description,
+			]
+		);
 	}
 
 	protected function isCardAllowed(): bool

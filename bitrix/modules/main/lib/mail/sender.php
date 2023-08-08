@@ -537,10 +537,10 @@ class Sender
 		{
 			$key = hash('crc32b', mb_strtolower($userNameFormated).$crmAddress->getEmail());
 
-			$mailboxes[$userId][$key] = array(
+			$mailboxes[$userId][$key] = [
 				'name'  => $crmAddress->getName() ?: $userNameFormated,
 				'email' => $crmAddress->getEmail(),
-			);
+			];
 		}
 
 		$res = SenderTable::getList(array(
@@ -564,12 +564,12 @@ class Sender
 
 			if (!isset($mailboxes[$userId][$key]))
 			{
-				$mailboxes[$userId][$key] = array(
+				$mailboxes[$userId][$key] = [
 					'id' => $item['ID'],
 					'name' => $item['NAME'],
 					'email' => $item['EMAIL'],
 					'can_delete' => $userId == $item['USER_ID'] || $item['IS_PUBLIC'] && $isAdmin,
-				);
+				];
 			}
 			else if (!isset($mailboxes[$userId][$key]['id']))
 			{
@@ -584,6 +584,8 @@ class Sender
 				$item['name'] ? '%s <%s>' : '%s%s',
 				$item['name'], $item['email']
 			);
+
+			$mailboxes[$userId][$key]['userId'] = $userId;
 		}
 
 		$mailboxes[$userId] = array_values($mailboxes[$userId]);

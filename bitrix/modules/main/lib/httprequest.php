@@ -554,12 +554,27 @@ class HttpRequest extends Request
 		return $this->getCookie(HttpResponse::STORE_COOKIE_NAME);
 	}
 
+	public function isJson(): bool
+	{
+		$contentType = $this->headers->getContentType();
+		if (!$contentType)
+		{
+			return false;
+		}
+		if ($contentType === 'application/json')
+		{
+			return true;
+		}
+
+		return strpos($contentType, '+json') !== false;
+	}
+
 	/**
 	 * Decodes JSON from application/json requests.
 	 */
-	public function decodeJson()
+	public function decodeJson(): void
 	{
-		if ($this->headers->getContentType() == 'application/json')
+		if ($this->isJson())
 		{
 			try
 			{

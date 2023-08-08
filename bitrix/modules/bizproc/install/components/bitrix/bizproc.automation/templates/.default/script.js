@@ -6,7 +6,9 @@
 	var Component = function(baseNode)
 	{
 		if (!BX.type.isDomNode(baseNode))
+		{
 			throw 'baseNode must be Dom Node Element';
+		}
 
 		this.node = baseNode;
 
@@ -56,12 +58,12 @@
 	{
 		init: function(data, viewMode)
 		{
-			var me = this;
-
 			this.viewMode = viewMode || Component.ViewMode.Edit;
 
-			if (typeof data === 'undefined')
+			if (BX.Type.isUndefined(data))
+			{
 				data = {};
+			}
 
 			this.data = data;
 			this.initData();
@@ -76,9 +78,14 @@
 			this.initButtonsPosition();
 			this.initHelpTips();
 			this.initSelectors();
-			this.fixTitleColors();
+
+			const stages = new BX.Bizproc.Automation.Statuses(this.node);
+			stages.init(this.templateManager.templates);
+			stages.fixColors();
 
 			this.initRobotSelector();
+
+			this.initHowCheckAutomationTourGuide();
 
 			if (!this.embeddedMode)
 			{
@@ -86,9 +93,13 @@
 				{
 					if (this.isNeedSave())
 					{
-						return BX.message('BIZPROC_AUTOMATION_CMP_NEED_SAVE');
+						return BX.Loc.getMessage('BIZPROC_AUTOMATION_CMP_NEED_SAVE');
 					}
 				};
+			}
+			if (this.frameMode)
+			{
+				this.subscribeOnSliderClose();
 			}
 		},
 		isNeedSave: function()
@@ -124,7 +135,7 @@
 		},
 		initContext: function()
 		{
-			var context = new BX.Bizproc.Automation.Context({
+			const context = new BX.Bizproc.Automation.Context({
 				document: this.document,
 				signedDocument: this.documentSigned,
 				ajaxUrl: this.getAjaxUrl(),
@@ -141,9 +152,15 @@
 				isFrameMode: this.isFrameMode,
 
 				marketplaceRobotCategory: this.data['MARKETPLACE_ROBOT_CATEGORY'],
-				showTemplatePropertiesMenuOnSelecting: this.data['SHOW_TEMPLATE_PROPERTIES_MENU_ON_SELECTING'] === true
+				showTemplatePropertiesMenuOnSelecting: this.data['SHOW_TEMPLATE_PROPERTIES_MENU_ON_SELECTING'] === true,
+
+				automationGlobals: new BX.Bizproc.Automation.AutomationGlobals({
+					variables: this.data['GLOBAL_VARIABLES'],
+					constants: this.data['GLOBAL_CONSTANTS'],
+				}),
 			});
 			context.set('TRIGGER_CAN_SET_EXECUTE_BY', this.data['TRIGGER_CAN_SET_EXECUTE_BY']);
+			context.set('IS_WORKTIME_AVAILABLE', this.data['IS_WORKTIME_AVAILABLE']);
 
 			BX.Bizproc.Automation.setGlobalContext(context);
 		},
@@ -448,6 +465,21 @@
 			{
 				self.markModified();
 			});
+			this.triggerManager.subscribe('TriggerManager:trigger:delete', function (event)
+			{
+				const deletedTrigger = event.getData().trigger;
+
+				//analytics
+				BX.ajax.runAction(
+					'bizproc.analytics.push',
+					{
+						analyticsLabel: {
+							automation_trigger_delete: 'Y',
+							delete_trigger: deletedTrigger.getCode().toLowerCase(),
+						}
+					}
+				);
+			});
 		},
 		reInitTriggerManager: function(triggers)
 		{
@@ -588,19 +620,18 @@
 				'BX.Bizproc.Automation:Template:onSelectorMenuOpen',
 				function (event)
 				{
-					var template = event.getData().template;
-					var selector = event.getData().selector;
-					var robot = event.getData().robot;
-					var isMixedCondition = event.getData().isMixedCondition;
+					const template = event.getData().template;
+					const selector = event.getData().selector;
+					const isMixedCondition = event.getData().isMixedCondition;
 
 					if (BX.Type.isBoolean(isMixedCondition) && !isMixedCondition)
 					{
 						return;
 					}
 
-					var triggersReturnProperties = this.triggerManager.getReturnProperties(template.getStatusId());
+					const triggersReturnProperties = this.triggerManager.getReturnProperties(template.getStatusId());
 
-					var triggerMenuItems = triggersReturnProperties.map((property) => ({
+					const triggerMenuItems = triggersReturnProperties.map((property) => ({
 						id: property['SystemExpression'],
 						title: property['Name'] || property['Id'],
 						subtitle: property['ObjectName'] || property['ObjectId'],
@@ -611,63 +642,9 @@
 					{
 						selector.addGroup('__TRESULT', {
 							id: '__TRESULT',
-							title: BX.message('BIZPROC_AUTOMATION_CMP_TRIGGER_LIST'),
+							title: BX.Loc.getMessage('BIZPROC_AUTOMATION_CMP_TRIGGER_LIST'),
 							children: triggerMenuItems,
 						});
-					}
-
-					// TODO - test !this.showTemplatePropertiesMenuOnSelecting
-					var constantList = template.getConstants().map(function (constant)
-					{
-						return {
-							id: constant.SystemExpression,
-							title: constant['Name'],
-							supertitle: BX.message('BIZPROC_AUTOMATION_CMP_TEMPLATE_CONSTANTS_LIST'),
-							customData: { field: constant }
-						};
-					});
-
-					if (this.data['GLOBAL_CONSTANTS'])
-					{
-						this.getConstants().forEach(function(constant) {
-							constantList.push({
-								id: constant.SystemExpression,
-								title: constant['Name'],
-								supertitle: constant.supertitle,
-								customData: { field: constant },
-							});
-						}.bind(this));
-
-						if (constantList.length > 0)
-						{
-							selector.addGroup('__CONSTANTS', {
-								id: '__CONSTANTS',
-								title: BX.message('BIZPROC_AUTOMATION_CMP_CONSTANTS_LIST'),
-								children: constantList
-							});
-						}
-					}
-
-					if (this.data['GLOBAL_VARIABLES'])
-					{
-						const globalVariableList = this.getGVariables().map(function(variable)
-						{
-							return {
-								id: variable.SystemExpression,
-								title: variable['Name'],
-								supertitle: variable.supertitle,
-								customData: { field: variable }
-							};
-						}.bind(this));
-
-						if (globalVariableList.length > 0)
-						{
-							selector.addGroup('__GLOB_VARIABLES', {
-								id: '__GLOB_VARIABLES',
-								title: BX.message('BIZPROC_AUTOMATION_CMP_GLOB_VARIABLES_LIST_1'),
-								children: globalVariableList
-							});
-						}
 					}
 				}.bind(this)
 			);
@@ -691,27 +668,6 @@
 			this.templateManager.disableDragAndDrop();
 			this.triggerManager.disableDragAndDrop();
 		},
-		fixTitleColors: function()
-		{
-			var i, bgcolor, titles = this.node.querySelectorAll('[data-role="automation-status-title"]');
-			for (i = 0; i < titles.length; ++i)
-			{
-				bgcolor = titles[i].getAttribute('data-bgcolor');
-				if (bgcolor)
-				{
-					var bigint = parseInt(bgcolor, 16);
-					var r = (bigint >> 16) & 255;
-					var g = (bigint >> 8) & 255;
-					var b = bigint & 255;
-					var y = 0.21 * r + 0.72 * g + 0.07 * b;
-
-					if (y < 145) // dark background
-					{
-						titles[i].style.color =  'white';
-					}
-				}
-			}
-		},
 		initTracker: function()
 		{
 			this.tracker = new Tracker(this.document, this.getAjaxUrl());
@@ -733,19 +689,24 @@
 		},
 		bindCancelButton: function()
 		{
-			var me = this, button = this.node.querySelector('[data-role="automation-btn-cancel"]');
+			const button = this.node.querySelector('[data-role="automation-btn-cancel"]');
 
 			if (button)
 			{
-				BX.bind(button, 'click', function(e)
-				{
-					e.preventDefault();
-					me.reInitTriggerManager();
-					me.reInitTemplateManager();
-					me.reInitSearch();
-					me.markModified(false);
-				});
+				BX.bind(button, 'click', this.onCancelButtonClick.bind(this));
 			}
+		},
+		onCancelButtonClick: function (event)
+		{
+			if (event)
+			{
+				event.preventDefault();
+			}
+
+			this.reInitTriggerManager();
+			this.reInitTemplateManager();
+			this.reInitSearch();
+			this.markModified(false);
 		},
 		bindCreationButton: function()
 		{
@@ -757,16 +718,32 @@
 				if (me.canEdit())
 				{
 					BX.bind(button, 'click', () => {
-						this.robotSelector.setStageId(this.templateManager.templates[0].getStatusId());
+						this.robotSelector.setStageId(this.templateManager.templates[0]?.getStatusId());
 						this.robotSelector.show();
 					});
 
 					const settings = new BX.Bizproc.LocalSettings.Settings('aut-cmp');
 					if (settings.get('beginning-guide-shown') !== true)
 					{
+						const documentRawType = this.document.getRawType();
+						const module = documentRawType[0];
+						const documentType = documentRawType[2];
+						const isSellingDocumentType = (
+							module === 'crm'
+							&& ['LEAD', 'DEAL', 'INVOICE', 'SMART_INVOICE', 'QUOTE'].includes(documentType)
+						);
+
 						(new BX.Bizproc.Automation.BeginningGuide({
 							target: button,
-						})).start();
+							text: (
+								isSellingDocumentType
+									? BX.Loc.getMessage('BIZPROC_AUTOMATION_TOUR_GUIDE_BEGINNING_SUBTITLE_SELLING_DOCUMENT_TYPE')
+									: null
+							),
+							article: isSellingDocumentType ? '16547606' : null,
+						}))
+							.start()
+						;
 					}
 
 					settings.set('beginning-guide-shown', true);
@@ -779,14 +756,14 @@
 		},
 		getLimits: function()
 		{
-			var limit = this.data['ROBOTS_LIMIT'];
+			const limit = this.data['ROBOTS_LIMIT'];
 			if (limit <= 0)
 			{
 				return false;
 			}
 
-			var triggersCnt = this.triggerManager.countAllTriggers();
-			var robotsCnt = this.templateManager.countAllRobots();
+			const triggersCnt = this.triggerManager.countAllTriggers();
+			const robotsCnt = this.templateManager.countAllRobots();
 
 			return (triggersCnt + robotsCnt > limit) ? [limit, triggersCnt, robotsCnt] : false;
 		},
@@ -797,48 +774,59 @@
 				return;
 			}
 
-			var limits = this.getLimits();
+			const limits = this.getLimits();
 
 			if (limits)
 			{
 				if (top.BX.UI && top.BX.UI.InfoHelper)
 				{
 					top.BX.UI.InfoHelper.show('limit_crm_robots');
+
 					return;
 				}
 
 				BX.UI.Dialogs.MessageBox.show({
-					title: BX.message('BIZPROC_AUTOMATION_ROBOTS_LIMIT_ALERT_TITLE'),
-					message: BX.message('BIZPROC_AUTOMATION_ROBOTS_LIMIT_SAVE_ALERT')
+					title: BX.Loc.getMessage('BIZPROC_AUTOMATION_ROBOTS_LIMIT_ALERT_TITLE'),
+					message: BX.Loc.getMessage('BIZPROC_AUTOMATION_ROBOTS_LIMIT_SAVE_ALERT')
 								.replace('#LIMIT#', limits[0])
 								.replace('#SUM#', limits[1] + limits[2])
 								.replace('#TRIGGERS#', limits[1])
 								.replace('#ROBOTS#', limits[2]),
 					modal: true,
 					buttons: BX.UI.Dialogs.MessageBoxButtons.OK,
-					okCaption: BX.message('BIZPROC_AUTOMATION_CLOSE_CAPTION')
+					okCaption: BX.Loc.getMessage('BIZPROC_AUTOMATION_CLOSE_CAPTION')
 				});
+
 				return;
 			}
 
-			var me = this, data = {
+			const me = this;
+			const data = {
 				ajax_action: 'save_automation',
 				document_signed: this.documentSigned,
 				triggers_json: Helper.toJsonString(this.triggerManager.serialize()),
 				templates_json: Helper.toJsonString(this.templateManager.serializeModified())
 			};
 
+			const analyticsLabel = {
+				'automation_save': 'Y',
+				'robots_count': this.templateManager.countAllRobots(),
+				'triggers_count': this.triggerManager.countAllTriggers(),
+				'automation_module': this.document.getRawType()[0],
+				'automation_entity': this.document.getRawType()[2] + '_' + this.document.getCategoryId()
+			};
+
 			this.savingAutomation = true;
 			return BX.ajax({
 				method: 'POST',
 				dataType: 'json',
-				url: this.getAjaxUrl(),
+				url: BX.Uri.addParam(this.getAjaxUrl(), {analyticsLabel}),
 				data: data,
 				onsuccess: function(response)
 				{
 					me.savingAutomation = null;
 					response.DATA.templates.forEach(function (updatedTemplate) {
-						var updatedTemplateIndex = me.data.TEMPLATES.findIndex(function (template) {
+						const updatedTemplateIndex = me.data.TEMPLATES.findIndex(function (template) {
 							return template.ID === updatedTemplate.ID;
 						});
 
@@ -850,6 +838,10 @@
 						me.reInitTemplateManager();
 						me.reInitSearch();
 						me.markModified(false);
+						BX.Event.EventEmitter.emit(
+							'BX.Bizproc.Component.Automation.Component:onSuccessAutomationSave',
+							new BX.Event.BaseEvent({data: {analyticsLabel}})
+						);
 						if (callback)
 						{
 							callback(response.DATA)
@@ -861,6 +853,72 @@
 					}
 				}
 			});
+		},
+		subscribeOnSliderClose: function()
+		{
+			const slider = BX.SidePanel.Instance.getSliderByWindow(window);
+			if (slider)
+			{
+				const dialog = BX.UI.Dialogs.MessageBox.create({
+					message: BX.Loc.getMessage('BIZPROC_AUTOMATION_CMP_ON_CLOSE_SLIDER_MESSAGE'),
+					okCaption: BX.Loc.getMessage('BIZPROC_AUTOMATION_CMP_ON_CLOSE_SLIDER_OK_TITLE'),
+					onOk: () => {
+						if (slider.isCacheable())
+						{
+							this.onCancelButtonClick();
+						}
+
+						slider.getData().set('ignoreChanges', true);
+						slider.close();
+
+						return true;
+					},
+					buttons: BX.UI.Dialogs.MessageBoxButtons.OK_CANCEL,
+				});
+
+				BX.addCustomEvent(slider, 'SidePanel.Slider:onClose', (event) => {
+					if (this.isNeedSave() && slider.getData()?.get('ignoreChanges') !== true)
+					{
+						event.denyAction();
+						dialog.show();
+
+						return;
+					}
+
+					slider.getData()?.set('ignoreChanges', false);
+				});
+			}
+		},
+		initHowCheckAutomationTourGuide()
+		{
+			const documentRawType = this.document.getRawType();
+			const module = documentRawType[0];
+			const documentType = documentRawType[2];
+			const categoryId = this.document.getCategoryId();
+			const documentId = this.data['DOCUMENT_ID'];
+
+			if (module === 'crm')
+			{
+				const rawUserOptions = BX.Type.isPlainObject(this.data.USER_OPTIONS) ? this.data.USER_OPTIONS : {};
+				const hasCrmCheckAutomationOption =
+					BX.Type.isPlainObject(rawUserOptions['crm_check_automation'])
+						? Object.keys(rawUserOptions['crm_check_automation']).length > 0
+						: false
+				;
+				if (this.canEdit() && !hasCrmCheckAutomationOption)
+				{
+					BX.Bizproc.Automation.CrmCheckAutomationGuide.startCheckAutomationTour(documentType, Number(categoryId));
+				}
+
+				if (hasCrmCheckAutomationOption && BX.Type.isStringFilled(documentId))
+				{
+					BX.Bizproc.Automation.CrmCheckAutomationGuide.showSuccessAutomation(
+						documentType,
+						categoryId,
+						rawUserOptions['crm_check_automation']
+					);
+				}
+			}
 		},
 		saveTemplates: function(templatesData)
 		{
@@ -993,94 +1051,28 @@
 		},
 		getConstants: function()
 		{
-			if (!this.data['GLOBAL_CONSTANTS'])
-			{
-				return [];
-			}
-			var constants = [];
-			var visibilityNames = this.data['G_CONSTANTS_VISIBILITY'];
-			Object.keys(this.data['GLOBAL_CONSTANTS']).forEach(function(id)
-			{
-				var constant = BX.clone(this.data['GLOBAL_CONSTANTS'][id]);
-				constant.Id = id;
-				constant.ObjectId = 'GlobalConst';
-				constant.SystemExpression = '{=GlobalConst:' + id + '}';
-				constant.Expression = '{=GlobalConst:' + id + '}';
+			const context = BX.Bizproc.Automation.getGlobalContext();
 
-				var constantVisibility = String(constant.Visibility).toUpperCase();
-				var visibilityName = visibilityNames[constantVisibility];
-				if (visibilityName)
-				{
-					constant.Expression = '{{' + visibilityName + ': ' + constant.Name + '}}';
-					constant.supertitle = visibilityName;
-				}
-
-				constants.push(constant);
-			}, this);
-
-			return constants;
+			return context.automationGlobals.globalConstants;
 		},
 		getConstant: function(id)
 		{
-			var constants = this.getConstants();
-			for (var i = 0; i < constants.length; ++i)
-			{
-				if (constants[i].Id === id)
-				{
-					return constants[i];
-				}
-			}
-
-			return null;
+			return this.getConstants().find((constant) => constant.Id === id) || null;
 		},
 		getGVariables: function()
 		{
-			if (!this.data['GLOBAL_VARIABLES'])
-			{
-				return [];
-			}
+			const context = BX.Bizproc.Automation.getGlobalContext();
 
-			var variables = [];
-			var visibilityNames = this.data['G_VARIABLES_VISIBILITY'];
-			BX.util.object_keys(this.data['GLOBAL_VARIABLES']).forEach(function(id)
-			{
-				var variable = BX.clone(this.data['GLOBAL_VARIABLES'][id]);
-				variable.Id = id;
-				variable.ObjectId = 'GlobalVar';
-				variable.SystemExpression = '{=GlobalVar:' + id + '}';
-				variable.Expression = '{=GlobalVar:' + id + '}';
-
-				var variableVisibility = String(variable.Visibility).toUpperCase();
-				var visibilityName = visibilityNames[variableVisibility];
-				if (visibilityName)
-				{
-					variable.Expression = '{{' + visibilityName + ': ' + variable.Name + '}}';
-					variable.supertitle = visibilityName;
-				}
-
-				variables.push(variable);
-			}, this);
-
-			return variables;
+			return context.automationGlobals.globalVariables;
 		},
 		getGVariable: function(id)
 		{
-			var variables = this.getGVariables();
-			for (var i = 0; i < variables.length; i++)
-			{
-				if (variables[i].Id === id)
-				{
-					return variables[i];
-				}
-			}
-
-			return null;
+			return this.getGVariables().find((variable) => variable.Id === id) || null;
 		},
 		getDocumentFields: function ()
 		{
 			return this.document.getFields();
 		},
-
 		initRobotSelector()
 		{
 			if (!this.robotSelector)
@@ -1095,7 +1087,7 @@
 
 				this.robotSelector = new BX.Bizproc.Automation.RobotSelector({
 					context: BX.Bizproc.Automation.getGlobalContext(),
-					stageId: this.templateManager.templates[0].getStatusId(),
+					stageId: this.templateManager.templates[0]?.getStatusId(),
 					events: {
 						robotSelected: (event) => {
 							if (!this.canEdit())
@@ -1125,14 +1117,20 @@
 											? 'setShowSupportingRobotGuide'
 											: 'setShowRobotGuide'
 									;
-									automationGuide[setShowRobotGuide](true, robot.node);
 
 									this.notifyAboutNewRobot(template, robot);
 
-									if (originalEvent.ctrlKey || originalEvent.metaKey)
+									if (!(originalEvent.ctrlKey || originalEvent.metaKey))
 									{
 										self.robotSelector.close();
 										template.openRobotSettingsDialog(robot);
+
+										template.subscribeOnce('Template:robot:closeSettings', () => {
+											automationGuide[setShowRobotGuide](true, robot.node);
+											automationGuide.start();
+											settings.set('robot-guide-shown', automationGuide.isShownRobotGuide);
+											settings.set('trigger-guide-shown', automationGuide.isShownTriggerGuide);
+										});
 									}
 								});
 							}
@@ -1161,19 +1159,44 @@
 								this.triggerManager.insertTriggerNode(stageId, trigger.node);
 								this.triggerManager.insertTrigger(trigger);
 
-								automationGuide.setShowTriggerGuide(true, trigger.node);
-
 								this.notifyAboutNewTrigger(trigger);
 
-								if (originalEvent.ctrlKey || originalEvent.metaKey)
+								if (!(originalEvent.ctrlKey || originalEvent.metaKey))
 								{
 									self.robotSelector.close();
 									this.triggerManager.openTriggerSettingsDialog(trigger);
+
+									this.triggerManager.subscribeOnce(
+										'TriggerManager:onCloseTriggerSettingsDialog',
+										() => {
+											automationGuide.setShowTriggerGuide(true, trigger.node);
+											automationGuide.start();
+											settings.set('robot-guide-shown', automationGuide.isShownRobotGuide);
+											settings.set('trigger-guide-shown', automationGuide.isShownTriggerGuide);
+										}
+									);
 								}
 							});
 						},
 						onAfterShow: () => {
 							BX.Dom.addClass(this.node, 'automation-base-blocked');
+
+							if (!this.isOpenRobotSelectorAnalyticsPushed)
+							{
+								const document = this.document;
+								//analytics
+								BX.ajax.runAction(
+									'bizproc.analytics.push',
+									{
+										analyticsLabel: {
+											automation_enter_dialog: 'Y',
+											start_module: document.getRawType()[0],
+											start_entity: document.getRawType()[2] + '_' + document.getCategoryId()
+										}
+									}
+								);
+								this.isOpenRobotSelectorAnalyticsPushed = true;
+							}
 						},
 						onAfterClose: () => {
 							BX.Dom.removeClass(this.node, 'automation-base-blocked');
@@ -1181,10 +1204,6 @@
 							{
 								this.markModified();
 							}
-
-							automationGuide.start();
-							settings.set('robot-guide-shown', automationGuide.isShownRobotGuide);
-							settings.set('trigger-guide-shown', automationGuide.isShownTriggerGuide);
 						}
 					}
 				});
@@ -1384,11 +1403,9 @@
 		},
 		createTemplate: function (templateData)
 		{
-			var template = new BX.Bizproc.Automation.Template({
+			const template = new BX.Bizproc.Automation.Template({
 				constants: {},
-				globalConstants: this.component.getConstants(),
 				variables: {},
-				globalVariables: this.component.getGVariables(),
 				templateContainerNode: this.component.node,
 				delayMinLimitM: this.component.data['DELAY_MIN_LIMIT_M'],
 				userOptions: this.component.userOptions,
@@ -1447,6 +1464,24 @@
 						this.getRobotEventListeners(template).forEach(function (eventListener) {
 							draftRobot.subscribe(eventListener.eventName, eventListener.listener);
 						});
+					}.bind(this)
+				},
+				{
+					eventName: 'Template:robot:delete',
+					listener: function (event) {
+						const deletedRobot = event.getData().robot;
+
+						//analytics
+						BX.ajax.runAction(
+							'bizproc.analytics.push',
+							{
+								analyticsLabel: {
+									automation_robot_delete: 'Y',
+									delete_robot: deletedRobot.data.Type.toLowerCase(),
+								}
+							}
+						);
+
 					}.bind(this)
 				},
 				{
@@ -1642,20 +1677,6 @@
 			}
 			return modified;
 		},
-		updateGVariables: function ()
-		{
-			this.templates.forEach((template) =>
-			{
-				template.setGlobalVariables(this.component.getGVariables());
-			});
-		},
-		updateGConstants: function ()
-		{
-			this.templates.forEach((template) =>
-			{
-				template.setGlobalConstants(this.component.getConstants());
-			});
-		}
 	};
 
 	// -> FileSelector
@@ -2099,45 +2120,49 @@
 		}
 	};
 
-	var API = {
+	const API = {
 		documentName: null,
 		documentType: null,
 		documentFields: null,
 		documentSigned: null,
-		showRobotSettings: function(robotData, documentType, documentStatus, onSaveCallback)
-		{
-			var document = new BX.Bizproc.Automation.Document({
+		showRobotSettings: function (robotData, documentType, documentStatus, onSaveCallback) {
+			const document = new BX.Bizproc.Automation.Document({
 				rawDocumentType: documentType,
 				statusId: documentStatus,
 				documentFields: this.documentFields,
 				title: this.documentName,
 			});
-			var robot = new Robot({
+			const robot = new Robot({
 				document: document,
 				isFrameMode: false,
 			});
+			const automationGlobals = new BX.Bizproc.Automation.AutomationGlobals({
+				variables: [],
+				constants: [],
+			});
+
 			robot.init(robotData, BX.Bizproc.Automation.ViewMode.none());
 			BX.Bizproc.Automation.setGlobalContext(new BX.Bizproc.Automation.Context({
 				document: document,
 				signedDocument: this.documentSigned,
 				ajaxUrl: getAjaxUrl(),
+				automationGlobals: automationGlobals,
 			}));
 
-			var config = {
+			const config = {
 				document: document,
 				documentSigned: this.documentSigned,
 
 				ajaxUrl: getAjaxUrl(),
 			};
-			var tpl = new Template({
+			const tpl = new Template({
 				config: config,
 			});
 			tpl.init({DOCUMENT_FIELDS: this.documentFields}, Component.ViewMode.None);
 
 			tpl.subscribe('Template:help:show', event => {
 				event.preventDefault();
-				if (top.BX.Helper)
-				{
+				if (top.BX.Helper) {
 					top.BX.Helper.show('redirect=detail&code=14889274');
 				}
 			});
@@ -2146,55 +2171,60 @@
 		}
 	};
 
-	var showGlobals = {
-		showVariables: function (documentType)
+	const showGlobals = {
+		showVariables: function ()
 		{
-			var me = this;
-			BX.Bizproc.Globals.Manager.Instance.showGlobals(
-				BX.Bizproc.Globals.Manager.Instance.mode.variable,
-				documentType
-			).then(function (slider) {
-				me.onAfterSliderClose(slider, 'GLOBAL_VARIABLES');
-			});
+			const documentTypeSigned = this.component.data['DOCUMENT_TYPE_SIGNED'];
+			const mode = BX.Bizproc.Globals.Manager.Instance.mode.variable;
+
+			BX.Bizproc.Globals.Manager.Instance.showGlobals(mode, documentTypeSigned)
+				.then(this.onAfterSliderClose.bind(this, mode))
+			;
 		},
-		showConstants: function (documentType)
+		showConstants: function ()
 		{
-			var me = this;
-			BX.Bizproc.Globals.Manager.Instance.showGlobals(
-				BX.Bizproc.Globals.Manager.Instance.mode.constant,
-				documentType
-			).then(function (slider) {
-				me.onAfterSliderClose(slider, 'GLOBAL_CONSTANTS');
-			});
+			const documentTypeSigned = this.component.data['DOCUMENT_TYPE_SIGNED'];
+			const mode = BX.Bizproc.Globals.Manager.Instance.mode.constant;
+
+			BX.Bizproc.Globals.Manager.Instance.showGlobals(mode, documentTypeSigned)
+				.then(this.onAfterSliderClose.bind(this, mode))
+			;
 		},
-		onAfterSliderClose: function (slider, componentDataKey)
+		onAfterSliderClose: function (mode, slider)
 		{
-			var sliderInfo = slider.getData();
-			if (sliderInfo.get('upsert'))
+			if (!this.isCorrectMode(mode) || !slider)
 			{
-				var newGFields = sliderInfo.get('upsert');
-				for (var fieldId in newGFields)
-				{
-					this.component.data[componentDataKey][fieldId] = newGFields[fieldId];
-				}
-			}
-			if (sliderInfo.get('delete'))
-			{
-				var deletedGFields = sliderInfo.get('delete');
-				for (var i in deletedGFields)
-				{
-					delete this.component.data[componentDataKey][deletedGFields[i]];
-				}
+				return;
 			}
 
-			if (componentDataKey === 'GLOBAL_VARIABLES')
+			const updatedGlobals = slider.getData().get('upsert');
+			const deletedGlobals = slider.getData().get('delete');
+
+			const context = BX.Bizproc.Automation && BX.Bizproc.Automation.tryGetGlobalContext();
+			if (!context)
 			{
-				this.component.templateManager.updateGVariables();
+				return;
 			}
-			else if (componentDataKey === 'GLOBAL_CONSTANTS')
+
+			const automationGlobals = context.automationGlobals;
+			if (!automationGlobals)
 			{
-				this.component.templateManager.updateGConstants();
+				return;
 			}
+
+			if (BX.Type.isPlainObject(updatedGlobals))
+			{
+				automationGlobals.updateGlobals(mode, updatedGlobals);
+			}
+
+			if (BX.Type.isArrayFilled(deletedGlobals))
+			{
+				automationGlobals.deleteGlobals(mode, deletedGlobals);
+			}
+		},
+		isCorrectMode: function (mode)
+		{
+			return BX.Type.isStringFilled(mode) && Object.values(BX.Bizproc.Globals.Manager.Instance.mode).includes(mode);
 		}
 	}
 
@@ -2231,13 +2261,13 @@
 		},
 	};
 
-	var Designer = BX.Bizproc.Automation.Designer;
-	var Tracker = BX.Bizproc.Automation.Tracker;
-	var Helper = BX.Bizproc.Automation.Helper;
+	const Designer = BX.Bizproc.Automation.Designer;
+	const Tracker = BX.Bizproc.Automation.Tracker;
+	const Helper = BX.Bizproc.Automation.Helper;
 
-	var TriggerManager = BX.Bizproc.Automation.TriggerManager;
-	var Robot = BX.Bizproc.Automation.Robot;
-	var Template = BX.Bizproc.Automation.Template;
+	const TriggerManager = BX.Bizproc.Automation.TriggerManager;
+	const Robot = BX.Bizproc.Automation.Robot;
+	const Template = BX.Bizproc.Automation.Template;
 
 	BX.Bizproc.Automation.Component = Component;
 	BX.Bizproc.Automation.API = API;

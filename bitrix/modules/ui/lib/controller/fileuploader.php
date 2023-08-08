@@ -160,18 +160,7 @@ class FileUploader extends Controller
 		$uploadResult = $uploader->upload($chunk, $token);
 		if ($uploadResult->isSuccess())
 		{
-			$tempFile = $uploadResult->getTempFile();
-			$file = null;
-			if ($uploadResult->isDone() && $tempFile->getUploaded())
-			{
-				$file = $uploader->getFileInfo($uploadResult->getToken());
-			}
-
-			return [
-				'token' => $uploadResult->getToken(),
-				'done' => $uploadResult->isDone(),
-				'file' => $file,
-			];
+			return $uploadResult->jsonSerialize();
 		}
 		else
 		{
@@ -238,8 +227,10 @@ class FileUploader extends Controller
 
 			if (is_array($imageData))
 			{
+				// Sync with \Bitrix\UI\FileUploader\Uploader::getFileInfo
 				$response = new Response\ResizedImage($imageData, 300, 300);
 				$response->setResizeType(BX_RESIZE_IMAGE_PROPORTIONAL);
+				$response->setCacheTime(86400);
 
 				return $response;
 			}

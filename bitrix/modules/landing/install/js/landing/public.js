@@ -7,11 +7,6 @@
 			// region INIT
 			BX.namespace("BX.Landing");
 
-			BX.Landing.getMode = function()
-			{
-				return "view";
-			};
-
 			const blocks = [].slice.call(document.getElementsByClassName("block-wrapper"));
 			if (!!blocks && blocks.length)
 			{
@@ -25,21 +20,6 @@
 			{
 				BX.Landing.EventTracker.getInstance().run();
 			}
-
-			// height of float header
-			let headerOffset = 0;
-			const headerFix = document.querySelector('.u-header.u-header--sticky');
-			if (!!headerFix)
-			{
-				const navbar = headerFix.querySelector('.navbar');
-				if (!!navbar)
-				{
-					const navSection = BX.findParent(navbar, {class: 'u-header__section'});
-					headerOffset = !!navSection
-						? navSection.offsetHeight
-						: navbar.offsetHeight;
-				}
-			}
 			// endregion
 
 			// region PSEUDO LINKS
@@ -48,40 +28,41 @@
 			{
 				pseudoLinks.forEach(link => {
 					const linkOptions = BX.Landing.Utils.data(link, "data-pseudo-url");
-					if (linkOptions.href && linkOptions.enabled)
+					if (
+						linkOptions.href
+						&& linkOptions.enabled
+						&& linkOptions.href.indexOf('/bitrix/services/main/ajax.php?action=landing.api.diskFile.download') !== 0
+					)
 					{
-						if (linkOptions.target !== "_popup")
+						if (linkOptions.target === "_self" || linkOptions.target === "_blank")
 						{
 							link.addEventListener("click", event => {
 								event.preventDefault();
-								// mobile device
-								if (typeof BXMobileApp !== "undefined")
-								{
-									BXMobileApp.PageManager.loadPageBlank({
-										url: linkOptions.href,
-										cache: false,
-										bx24ModernStyle: true,
-									});
+								let url;
+								try {
+									url = new URL(linkOptions.href);
+								} catch (e) {
+									url = null;
 								}
-								// desktop
+								if (
+									url
+									&& url.hostname === window.location.host
+									&& url.pathname !== window.location.pathname
+									&& url.searchParams.get('IFRAME') !== "Y"
+								)
+								{
+									BX.addClass(document.body, "landing-page-transition");
+									linkOptions.href = url.href;
+									setTimeout(() => {
+										openPseudoLinks(linkOptions, event);
+									}, 400);
+									setTimeout(() => {
+										BX.removeClass(document.body, "landing-page-transition");
+									}, 3000);
+								}
 								else
 								{
-									if (
-										linkOptions.target === '_self'
-										&& isBlockLink(linkOptions.href)
-									)
-									{
-										scrollTo(event);
-									}
-									else if (window.top === window)
-									{
-										if (linkOptions.query)
-										{
-											linkOptions.href += (linkOptions.href.indexOf('?') === -1) ? '?' : '&';
-											linkOptions.href += linkOptions.query;
-										}
-										top.open(linkOptions.href, linkOptions.target);
-									}
+									openPseudoLinks(linkOptions, event);
 								}
 							});
 						}
@@ -94,6 +75,15 @@
 							{
 								stopPropagation(node);
 							});
+						}
+
+						if (BX.hasClass(link, 'g-bg-cover'))
+						{
+							const child = link.firstElementChild;
+							if (child)
+							{
+								stopPropagation(child);
+							}
 						}
 					}
 				});
@@ -111,20 +101,21 @@
 			// endregion
 
 			// region all LINKS FOR MOBILE
-			if (typeof BXMobileApp !== "undefined")
+			if (typeof BXMobileApp !== 'undefined')
 			{
-				var allLinks = [].slice.call(document.querySelectorAll("a"));
+				const allLinks = [].slice.call(document.querySelectorAll('a'));
 				if (allLinks.length)
 				{
 					allLinks.forEach(function(link) {
-						if (link.href)
+						//file links
+						if (link.href && link.href.indexOf('file:') === 0)
 						{
-							link.addEventListener("click", function(event) {
+							link.addEventListener('click', function(event) {
 								event.preventDefault();
 								BXMobileApp.PageManager.loadPageBlank({
 									url: link.href,
 									cache: false,
-									bx24ModernStyle: true
+									bx24ModernStyle: true,
 								});
 							});
 						}
@@ -134,21 +125,50 @@
 			// endregion
 
 			// region SCROLL-TO for #block links
-			const blocksLinks = [].slice.call(document.querySelectorAll('a[href*="#"]'))
-			if (!!blocksLinks && blocksLinks.length)
+			if (typeof BXMobileApp === "undefined")
 			{
-				blocksLinks.forEach(link => {
-					const href = link.getAttribute("href");
-					if (
-						link.target === '_self'
-						&& isBlockLink(href)
-					)
-					{
-						link.addEventListener("click", scrollTo);
-					}
-				});
+				const blocksLinks = [].slice.call(document.querySelectorAll('a[href*="#"]'))
+				if (!!blocksLinks && blocksLinks.length)
+				{
+					blocksLinks.forEach(link => {
+						const href = link.getAttribute("href");
+						if (link.target === '_self' || link.target === '')
+						{
+							if (isBlockLink(href))
+							{
+								link.addEventListener("click", onBlockLinkClick);
+							}
+						}
+					});
+				}
 			}
 			// endregion
+
+			const setLinks = [].slice.call(document.querySelectorAll("a"));
+			setLinks.forEach(function(link) {
+				const href = link.getAttribute("href");
+				if (link.target === '_self' && !isBlockLink(href))
+				{
+					link.addEventListener("click", event => {
+						const url = new URL(link.href);
+						if (
+							url.hostname === window.location.host
+							&& url.pathname !== window.location.pathname
+							&& url.searchParams.get('IFRAME') !== "Y"
+						)
+						{
+							event.preventDefault();
+							BX.addClass(document.body, "landing-page-transition");
+							setTimeout(() => {
+								top.open(url.href, link.target);
+							}, 400);
+							setTimeout(() => {
+								BX.removeClass(document.body, "landing-page-transition");
+							}, 3000);
+						}
+					});
+				}
+			});
 
 			// region FUNCTIONS
 			function stopPropagation(node)
@@ -165,9 +185,12 @@
 			 */
 			function isBlockLink(url)
 			{
-				if (url === '#')
+				if (url !== null)
 				{
-					return false;
+					if (url === '#' || url.startsWith('#/'))
+					{
+						return false;
+					}
 				}
 				const urlObj = new URL(url, document.location);
 				return urlObj.hash !== ''
@@ -175,7 +198,35 @@
 					&& urlObj.hostname === document.location.hostname;
 			}
 
-			function scrollTo(event)
+			// height of float header
+			let headerOffset = 0;
+			const headerFix = document.querySelector('.u-header.u-header--sticky');
+			if (!!headerFix)
+			{
+				const navbar = headerFix.querySelector('.navbar');
+				if (!!navbar)
+				{
+					const navSection = BX.findParent(navbar, {class: 'u-header__section'});
+					headerOffset = !!navSection
+						? navSection.offsetHeight
+						: navbar.offsetHeight;
+				}
+			}
+
+			// scroll correction if open page by link with hash (to block)
+			if (headerOffset && isBlockLink(document.URL))
+			{
+				document.addEventListener('DOMContentLoaded', () => {
+					if (window.pageYOffset > 0)
+					{
+						window.scrollTo({
+							top: window.pageYOffset - headerOffset,
+						});
+					}
+				});
+			}
+
+			function onBlockLinkClick(event)
 			{
 				try
 				{
@@ -208,10 +259,47 @@
 						top: target.offsetTop - headerOffset,
 						behavior: 'smooth'
 					});
-					event.target.blur(); // disable :focus after click
+					link.blur(); // disable :focus after click
 					history.pushState({}, '', urlForHistory);
 				}
 				catch (e) {}
+			}
+
+			function openPseudoLinks(linkOptions, event)
+			{
+				if (linkOptions.href.indexOf('/bitrix/services/main/ajax.php?action=landing.api.diskFile.download') === 0)
+				{
+					return;
+				}
+				// mobile device
+				if (typeof BXMobileApp !== "undefined")
+				{
+					BXMobileApp.PageManager.loadPageBlank({
+						url: linkOptions.href,
+						cache: false,
+						bx24ModernStyle: true,
+					});
+				}
+				// desktop
+				else
+				{
+					if (
+						linkOptions.target === '_self'
+						&& isBlockLink(linkOptions.href)
+					)
+					{
+						onBlockLinkClick(event);
+					}
+					else
+					{
+						if (linkOptions.query)
+						{
+							linkOptions.href += (linkOptions.href.indexOf('?') === -1) ? '?' : '&';
+							linkOptions.href += linkOptions.query;
+						}
+						top.open(linkOptions.href, linkOptions.target);
+					}
+				}
 			}
 			// endregion
 		}

@@ -87,9 +87,11 @@ if($_REQUEST["OKEI"] == "Y")
 
 					$DB->Rollback();
 				}
-
-				$DB->Commit();
-				$okMessage = GetMessage("CAT_MEASURE_SUCCESS_ADD")."\n";
+				else
+				{
+					$DB->Commit();
+					$okMessage = GetMessage("CAT_MEASURE_SUCCESS_ADD")."\n";
+				}
 			}
 		}
 	}
@@ -103,7 +105,7 @@ if($_REQUEST["OKEI"] == "Y")
 	$lAdmin->AddHeaders(array(
 		array(
 			"id" => "CODE",
-			"content" => GetMessage("CAT_MEASURE_CODE"),
+			"content" => GetMessage("CAT_MEASURE_CODE_MSGVER_1"),
 			"default" => true
 		),
 		array(
@@ -384,7 +386,7 @@ $actionUrl = $adminSidePanelHelper->setDefaultQueryParams($actionUrl);
 		</td>
 	</tr>
 	<tr class="adm-detail-required-field">
-		<td><?= GetMessage("CAT_MEASURE_CODE") ?>:</td>
+		<td><?= GetMessage("CAT_MEASURE_CODE_MSGVER_1") ?>:</td>
 		<td>
 			<input type="text" style="width:50px" name="CODE" value="<?=$str_CODE?>" <?=($bReadOnly) ? " disabled" : ""?>/>
 		</td>
@@ -417,9 +419,14 @@ $actionUrl = $adminSidePanelHelper->setDefaultQueryParams($actionUrl);
 <?endif;?>
 <?
 $tabControl->EndTab();
-if(!$classifierMode && !$bReadOnly)
+if (!$classifierMode)
 {
-	$tabControl->Buttons(array("back_url" => $listUrl));
+	$tabControl->Buttons([
+		'btnSave' => !$bReadOnly,
+		'btnApply' => !$bReadOnly,
+		'disabled' => false,
+		'back_url' => $listUrl,
+	]);
 }
 $tabControl->End();
 ?>

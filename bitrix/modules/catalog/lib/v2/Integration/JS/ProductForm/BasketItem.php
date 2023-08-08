@@ -13,6 +13,8 @@ use Bitrix\Catalog\Access\ActionDictionary;
 use Bitrix\Catalog\Url\ShopBuilder;
 use Bitrix\Iblock\PropertyEnumerationTable;
 use Bitrix\Iblock\PropertyTable;
+use Bitrix\Main\Loader;
+use Bitrix\Sale\Internals;
 use Bitrix\Iblock\Url\AdminPage\BuilderManager;
 use Bitrix\Main\Web\Json;
 
@@ -40,6 +42,7 @@ class BasketItem
 			'innerId' => $this->id,
 			'productId' => 0,
 			'skuId' => 0,
+			'type' => null,
 			'code' => '',
 			'name' => '',
 			'sort' => 0,
@@ -61,6 +64,8 @@ class BasketItem
 			'additionalFields' => [],
 			'properties' => [],
 			'brands' => '',
+			'weight' => 0,
+			'dimensions' => [],
 		];
 
 		$this->setDetailUrlManagerType(ShopBuilder::TYPE_ID);
@@ -196,11 +201,13 @@ class BasketItem
 	private function fillFieldsFromSku(): void
 	{
 		$this->setName($this->sku->getName());
+		$this->setType($this->sku->getType());
 		$this->fillProperties();
 		$this->fillBrands();
 		$this->fillMeasureFields();
 		$this->fillTaxFields();
 		$this->fillPriceFields();
+		$this->fillDeliveryFields();
 	}
 
 	private function fillProperties(): void
@@ -292,15 +299,14 @@ class BasketItem
 			$displayProperty = array_merge(
 				$propertySettings,
 				[
-					'DESCRIPTION' => $valueInfo['DESCRIPTION'],
-					'~DESCRIPTION' => $valueInfo['DESCRIPTION'],
+					'DESCRIPTION' => $valueInfo['DESCRIPTION'] ?? null,
+					'~DESCRIPTION' => $valueInfo['DESCRIPTION'] ?? null,
 					'VALUE' => $value,
 					'~VALUE' => $value,
-					'~PROPERTY_VALUE_ID' => $valueInfo['PROPERTY_VALUE_ID'],
 				]
 			);
 
-			$displayProperty = \CIBlockFormatProperties::GetDisplayValue([], $displayProperty, '');
+			$displayProperty = \CIBlockFormatProperties::GetDisplayValue([], $displayProperty);
 
 			$formattedValues[$propertyValueId]['DISPLAY_VALUE'] = $displayProperty['DISPLAY_VALUE'];
 		}
@@ -377,6 +383,17 @@ class BasketItem
 		}
 	}
 
+	private function fillDeliveryFields(): void
+	{
+		$this->fields['weight'] = $this->sku->getField('WEIGHT');
+
+		$this->fields['dimensions'] = [
+			'LENGTH' => $this->sku->getField('LENGTH'),
+			'WIDTH' => $this->sku->getField('WIDTH'),
+			'HEIGHT' => $this->sku->getField('HEIGHT'),
+		];
+	}
+
 	private function hasEditRights(): bool
 	{
 		global $USER;
@@ -428,6 +445,13 @@ class BasketItem
 	public function setCode(string $value): self
 	{
 		$this->fields['code'] = $value;
+
+		return $this;
+	}
+
+	public function setType(?int $value): self
+	{
+		$this->fields['type'] = $value;
 
 		return $this;
 	}

@@ -10,6 +10,11 @@ use Bitrix\Catalog\Access\ActionDictionary;
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php");
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/catalog/prolog.php");
 
+/** @global CAdminPage $adminPage */
+global $adminPage;
+/** @global CAdminSidePanelHelper $adminSidePanelHelper */
+global $adminSidePanelHelper;
+
 $selfFolderUrl = $adminPage->getSelfFolderUrl();
 $listUrl = $selfFolderUrl."cat_extra.php?lang=".LANGUAGE_ID;
 $listUrl = $adminSidePanelHelper->editUrlToPublicPage($listUrl);
@@ -91,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && $Update <> '' && !$bReadOnly && chec
 			}
 			else
 			{
-				$applyUrl = $selfFolderUrl."cat_extra_edit.php?lang=".$lang."&ID=".$ID;
+				$applyUrl = $selfFolderUrl."cat_extra_edit.php?lang=".LANGUAGE_ID."&ID=".$ID;
 				$applyUrl = $adminSidePanelHelper->setDefaultQueryParams($applyUrl);
 				LocalRedirect($applyUrl);
 			}
@@ -184,45 +189,53 @@ $aTabs = array(
 
 $tabControl = new CAdminTabControl("tabControl", $aTabs);
 $tabControl->Begin();
-
 $tabControl->BeginNextTab();
-	if ($ID > 0)
-	{
-		?><tr>
-			<td width="40%">ID:</td>
-			<td width="60%"><?=$ID?></td>
-		</tr><?
-	}
-	?>
-	<tr class="adm-detail-required-field">
-		<td width="40%"><?echo GetMessage("CEEN_NAME")?>:</td>
-		<td width="60%">
-			<input type="text" name="NAME" size="50" value="<? echo htmlspecialcharsbx($str_NAME); ?>">
-		</td>
-	</tr>
-	<tr class="adm-detail-required-field">
-		<td width="40%"><?echo GetMessage("CEEN_PERCENTAGE")?>:</td>
-		<td width="60%">
-			<input type="text" name="PERCENTAGE" size="10" maxlength="20" value="<?=htmlspecialcharsbx($str_PERCENTAGE); ?>" />%
-		</td>
-	</tr>
-	<?
+	$disabledAttribute = $bReadOnly ? ' disabled ' : '';
 	if ($ID > 0)
 	{
 		?>
 		<tr>
-			<td width="40%"><?echo GetMessage("CEEN_RECALC")?>:</td>
+			<td width="40%">ID:</td>
+			<td width="60%"><?=$ID?></td>
+		</tr>
+		<?php
+	}
+	?>
+	<tr class="adm-detail-required-field">
+		<td width="40%"><?= GetMessage("CEEN_NAME")?>:</td>
+		<td width="60%">
+			<input type="text" name="NAME" size="50" <?= $disabledAttribute ?> value="<?= htmlspecialcharsbx($str_NAME) ?>">
+		</td>
+	</tr>
+	<tr class="adm-detail-required-field">
+		<td width="40%"><?= GetMessage("CEEN_PERCENTAGE")?>:</td>
+		<td width="60%">
+			<input type="text" name="PERCENTAGE" size="10" maxlength="20" <?=$disabledAttribute?> value="<?=(float)$str_PERCENTAGE?>" />%
+		</td>
+	</tr>
+	<?php
+	if ($ID > 0)
+	{
+		?>
+		<tr>
+			<td width="40%"><?= GetMessage("CEEN_RECALC")?>:</td>
 			<td width="60%">
 				<input type="hidden" name="RECALCULATE" value="N" />
-				<input type="checkbox" name="RECALCULATE" value="Y"<?if ($str_RECALCULATE == "Y") echo " checked"?> />
+				<input type="checkbox" name="RECALCULATE" value="Y" <?=$disabledAttribute?> <?= ($str_RECALCULATE === "Y") ? " checked" : ''?> />
 			</td>
 		</tr>
-		<?
+		<?php
 	}
 
 $tabControl->EndTab();
-$tabControl->Buttons(array("disabled" => $bReadOnly, "back_url" => $listUrl));
+$tabControl->Buttons([
+	'btnSave' => !$bReadOnly,
+	'btnApply' => !$bReadOnly,
+	'disabled' => false,
+	'back_url' => $listUrl,
+]);
 $tabControl->End();
 ?>
 </form>
-<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php");
+<?php
+require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/epilog_admin.php");

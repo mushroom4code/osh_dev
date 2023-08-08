@@ -14,6 +14,7 @@ import {
 } from "calendar.controls";
 import {Entry, EntryManager} from "calendar.entry";
 import {SectionManager} from "calendar.sectionmanager";
+import { MessageBox } from 'ui.dialogs.messagebox';
 
 export class CompactEventForm extends EventEmitter
 {
@@ -94,6 +95,19 @@ export class CompactEventForm extends EventEmitter
 				}
 
 				this.popup.show();
+				if (
+					this.userPlannerSelector
+					&& (
+						this.isLocationCalendar
+						|| (
+							this.userPlannerSelector.attendeesEntityList.length > 1
+							&& this.getMode() !== CompactEventForm.VIEW_MODE
+						)
+					)
+				)
+				{
+					this.userPlannerSelector.showPlanner();
+				}
 
 				this.checkDataBeforeCloseMode = true;
 				if (this.canDo('edit') && this.DOM.titleInput && mode === CompactEventForm.EDIT_MODE)
@@ -156,15 +170,29 @@ export class CompactEventForm extends EventEmitter
 		return this.displayed;
 	}
 
-	close()
+	close(fromButton = true, fromPopup = false)
 	{
+		if (
+			!fromButton
+			&& !this.checkTopSlider()
+		)
+		{
+			if (this.popup)
+			{
+				this.popup.destroyed = true;
+				setTimeout(() => {this.popup.destroyed = false;}, 0);
+			}
+			return;
+		}
+
 		if (
 			this.getMode() === CompactEventForm.EDIT_MODE
 			&& this.formDataChanged()
 			&& this.checkDataBeforeCloseMode
-			&& !confirm(Loc.getMessage('EC_SAVE_ENTRY_CONFIRM'))
+			&& !fromPopup
 		)
 		{
+			this.showConfirmClosePopup();
 			// Workaround to prevent form closing even if user don't want to and presses "cancel" in confirm
 			if (this.popup)
 			{
@@ -204,6 +232,7 @@ export class CompactEventForm extends EventEmitter
 			${this.DOM.titleOuterWrap = Tag.render`
 			<div class="calendar-field-container calendar-field-container-string-select">
 				<div class="calendar-field-block">
+					${this.getEntryCounter()}
 					${this.getTitleControl()}
 					${this.getColorControl()}
 				</div>
@@ -542,6 +571,14 @@ export class CompactEventForm extends EventEmitter
 	{
 		this.emit('doRefresh');
 		this.popup.setButtons(this.getButtons());
+		if (this.entry.isInvited())
+		{
+			Dom.removeClass(this.DOM.entryCounter, 'calendar-event-invite-counter-none');
+		}
+		else
+		{
+			Dom.addClass(this.DOM.entryCounter, 'calendar-event-invite-counter-none');
+		}
 		if (this.userPlannerSelector)
 		{
 			this.userPlannerSelector.displayAttendees(this.entry.getAttendees());
@@ -798,6 +835,27 @@ export class CompactEventForm extends EventEmitter
 				});
 			}
 		});
+	}
+
+	getEntryCounter()
+	{
+		if (!this.DOM.entryCounter)
+		{
+			this.DOM.entryCounter = Tag.render`
+				<span class="calendar-event-invite-counter calendar-event-invite-counter-big">1</span>
+			`;
+		}
+
+		if (this.entry.isInvited())
+		{
+			Dom.removeClass(this.DOM.entryCounter, 'calendar-event-invite-counter-none');
+		}
+		else
+		{
+			Dom.addClass(this.DOM.entryCounter, 'calendar-event-invite-counter-none');
+		}
+
+		return this.DOM.entryCounter;
 	}
 
 	getTitleControl()
@@ -1102,6 +1160,7 @@ export class CompactEventForm extends EventEmitter
 		if (this.userPlannerSelector)
 		{
 			this.userPlannerSelector.subscribe('onDisplayAttendees', this.checkLocationForm.bind(this));
+			this.userPlannerSelector.planner?.subscribe('onDisplayAttendees', this.checkLocationForm.bind(this));
 		}
 
 		return this.DOM.locationOuterWrap;
@@ -1199,16 +1258,31 @@ export class CompactEventForm extends EventEmitter
 				return false;
 			}
 
+			if (this.entry.permissions)
+			{
+				return this.entry.permissions?.['edit'];
+			}
+
 			return section.canDo('edit');
 		}
 
 		if (action === 'view')
 		{
+			if (this.entry.permissions)
+			{
+				return this.entry.permissions?.['view_time'];
+			}
+
 			return section.canDo('view_time');
 		}
 
 		if (action === 'viewFull')
 		{
+			if (this.entry.permissions)
+			{
+				return this.entry.permissions?.['view_full'];
+			}
+
 			return section.canDo('view_full');
 		}
 
@@ -1336,10 +1410,6 @@ export class CompactEventForm extends EventEmitter
 			});
 			this.userPlannerSelector.setDateTime(this.dateTimeControl.getValue());
 			this.userPlannerSelector.setViewMode(readOnly);
-			if (this.isLocationCalendar)
-			{
-				this.userPlannerSelector.showPlanner();
-			}
 		}
 		else
 		{
@@ -1407,15 +1477,19 @@ export class CompactEventForm extends EventEmitter
 	save(options = {}): boolean
 	{
 		if (this.state === this.STATE.REQUEST)
+		{
 			return false;
+		}
 
 		const entry = this.getCurrentEntry();
 		options = Type.isPlainObject(options) ? options : {};
 
-		if (this.isNewEntry()
+		if (
+			this.isNewEntry()
 			&& this.userPlannerSelector.hasExternalEmailUsers()
 			&& Util.checkEmailLimitationPopup()
-			&& !options.emailLimitationDialogShown)
+			&& !options.emailLimitationDialogShown
+		)
 		{
 			EntryManager.showEmailLimitationDialog({
 				callback: (params) => {
@@ -1426,8 +1500,10 @@ export class CompactEventForm extends EventEmitter
 			return false;
 		}
 
-		if (!this.userSettings.sendFromEmail
-			&& this.userPlannerSelector.hasExternalEmailUsers())
+		if (
+			!this.userSettings.sendFromEmail
+			&& this.userPlannerSelector.hasExternalEmailUsers()
+		)
 		{
 			EntryManager.showConfirmedEmailDialog({
 				callback: (params) => {
@@ -1437,10 +1513,12 @@ export class CompactEventForm extends EventEmitter
 			return false;
 		}
 
-		if (!this.isNewEntry()
+		if (
+			!this.isNewEntry()
 			&& entry.isRecursive()
 			&& !options.confirmed
-			&& this.getFormDataChanges(['section', 'notify']).length > 0)
+			&& this.getFormDataChanges(['section', 'notify']).length > 0
+		)
 		{
 			EntryManager.showConfirmEditDialog({
 				callback: (params) => {
@@ -1454,7 +1532,8 @@ export class CompactEventForm extends EventEmitter
 			return false;
 		}
 
-		if (!this.isNewEntry()
+		if (
+			!this.isNewEntry()
 			&& entry.isMeeting()
 			&& options.sendInvitesAgain === undefined
 			&& this.getFormDataChanges().includes('date&time')
@@ -1468,6 +1547,16 @@ export class CompactEventForm extends EventEmitter
 				}
 			});
 			return false;
+		}
+
+		if (
+			!this.isNewEntry()
+			&& entry.isRecursive()
+			&& !options.confirmed
+			&& this.getFormDataChanges().includes('section')
+		)
+		{
+			options.recursionMode = entry.isFirstInstance() ? 'all' : 'next';
 		}
 
 		const dateTime = this.dateTimeControl.getValue();
@@ -1668,11 +1757,13 @@ export class CompactEventForm extends EventEmitter
 		)
 		{
 			this.checkDataBeforeCloseMode = false;
+			this.locationSelector.selectContol.onChangeCallback();
 			this.save();
 		}
 		else if (
 			this.checkTopSlider()
 			&& e.keyCode === Util.getKeyCode('escape')
+			&& e.type === 'keyup'
 			&& this.couldBeClosedByEsc()
 		)
 		{
@@ -1694,6 +1785,13 @@ export class CompactEventForm extends EventEmitter
 				});
 				EntryManager.deleteEntry(this.entry);
 			}
+		}
+		else if (
+			e.keyCode === Util.getKeyCode('enter')
+			&& this.DOM.confirmPopup
+		)
+		{
+			this.close(true, true);
 		}
 	}
 
@@ -1823,7 +1921,9 @@ export class CompactEventForm extends EventEmitter
 				|| this.isNewEntry())
 		)
 		{
-			setTimeout(this.close.bind(this), 0);
+			setTimeout(() => {
+				this.close(false);
+			}, 0);
 		}
 	}
 
@@ -1888,8 +1988,10 @@ export class CompactEventForm extends EventEmitter
 
 	handlePull(params)
 	{
-		if (this.userPlannerSelector
-			&& this.userPlannerSelector?.planner?.isShown())
+		if (
+			this.userPlannerSelector
+			&& this.userPlannerSelector?.planner?.isShown()
+		)
 		{
 			const userIdList = Type.isArray(params?.fields?.ATTENDEES) ? params.fields.ATTENDEES: [];
 			const eventOwner = params?.fields?.CAL_TYPE === 'user'
@@ -2003,7 +2105,8 @@ export class CompactEventForm extends EventEmitter
 				owner_id: entry.data.CREATED_BY,
 			}
 		})
-		.then((response) => {
+		.then(
+			(response) => {
 				this.unfreezePopup();
 				this.state = this.STATE.READY;
 				EntryManager.showReleaseLocationNotification();
@@ -2014,8 +2117,49 @@ export class CompactEventForm extends EventEmitter
 				this.unfreezePopup();
 				this.state = this.STATE.ERROR;
 				this.close();
-		});
+			}
+		);
 
 		return true;
+	}
+
+	showConfirmClosePopup()
+	{
+		this.DOM.confirmPopup = new MessageBox({
+			message: this.getConfirmContent(),
+			minHeight: 120,
+			minWidth: 280,
+			maxWidth: 300,
+			buttons: BX.UI.Dialogs.MessageBoxButtons.OK_CANCEL,
+			onOk: () => {
+				this.close(true, true);
+			},
+			onCancel: () => {
+				this.DOM.confirmPopup.close();
+			},
+			okCaption: Loc.getMessage('EC_SEC_SLIDER_CLOSE'),
+			popupOptions: {
+				events: {
+					onPopupClose: () => {
+						delete this.DOM.confirmPopup;
+					},
+				},
+				closeByEsc: true,
+				padding: 0,
+				contentPadding: 0,
+				animation: 'fading-slide',
+			}
+		});
+
+		this.DOM.confirmPopup.show();
+	}
+
+	getConfirmContent()
+	{
+		return Tag.render`
+			<div class="calendar-list-slider-messagebox-text">${Loc.getMessage('EC_LEAVE_EVENT_CONFIRM_QUESTION') 
+				+ '<br>' 
+				+ Loc.getMessage('EC_LEAVE_EVENT_CONFIRM_DESC')}</div>
+		`;
 	}
 }

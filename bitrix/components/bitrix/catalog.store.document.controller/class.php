@@ -9,29 +9,41 @@ use Bitrix\Main\Loader;
 use Bitrix\Catalog;
 use Bitrix\Catalog\Access\AccessController;
 use Bitrix\Catalog\Access\ActionDictionary;
+use Bitrix\Catalog\v2\Contractor\Provider\Manager;
 
 class CatalogStoreDocumentControllerComponent extends CBitrixComponent
 {
 	private const URL_TEMPLATE_DOCUMENT = 'document';
 	private const URL_TEMPLATE_DOCUMENT_LIST = 'list';
 	private const URL_TEMPLATE_CONTRACTORS_LIST = 'contractors';
+	private const URL_TEMPLATE_CONTRACTORS_CONTACTS = 'contractors_contacts';
 	private const URL_TEMPLATE_DOCUMENT_SHIPMENT = 'sales_order';
 	private const URL_TEMPLATE_ERROR = 'error';
 
 	private $isIframe = false;
 
+	public function onPrepareComponentParams($params)
+	{
+		if (!is_array($params))
+		{
+			$params = [];
+		}
+		$params['SEF_URL_TEMPLATES'] = $params['SEF_URL_TEMPLATES'] ?? [];
+		$params['VARIABLE_ALIASES'] = $params['VARIABLE_ALIASES'] ?? [];
+
+		return $params;
+	}
+
 	public function executeComponent()
 	{
-		if (Loader::includeModule('catalog'))
+		if (!Loader::includeModule('catalog'))
 		{
-			if (!Catalog\Config\Feature::isInventoryManagementEnabled())
-			{
-				LocalRedirect('/shop/');
-			}
+			ShowError(\Bitrix\Main\Localization\Loc::getMessage('CATALOG_STORE_DOCUMENT_CONTROLLER_MODULE_CATALOG_NOT_INSTALLED'));
 		}
+
 		$this->initConfig();
 
-		if (\Bitrix\Main\Loader::includeModule('crm'))
+		if (Loader::includeModule('crm'))
 		{
 			/** installing demo data for crm used for PresetCrmStoreMenu creation*/
 			\CAllCrmInvoice::installExternalEntities();
@@ -53,6 +65,9 @@ class CatalogStoreDocumentControllerComponent extends CBitrixComponent
 		}
 		$this->arResult['VARIABLES'] = $variables;
 
+		$this->arResult['IS_CRM_CONTRACTORS_PROVIDER'] = Manager::isActiveProviderByModule('crm');
+		$this->arResult['CONTRACTORS_MIGRATION_PROGRESS'] = Manager::getMigrationProgressHtml();
+
 		$this->includeComponentTemplate($template);
 	}
 
@@ -72,6 +87,7 @@ class CatalogStoreDocumentControllerComponent extends CBitrixComponent
 			self::URL_TEMPLATE_DOCUMENT_LIST => '#DOCUMENT_TYPE#/',
 			self::URL_TEMPLATE_DOCUMENT => 'details/#DOCUMENT_ID#/',
 			self::URL_TEMPLATE_CONTRACTORS_LIST => 'contractors/',
+			self::URL_TEMPLATE_CONTRACTORS_CONTACTS => 'contractors_contacts/',
 			self::URL_TEMPLATE_DOCUMENT_SHIPMENT => 'details/sales_order/#DOCUMENT_ID#/',
 		];
 	}
@@ -137,7 +153,7 @@ class CatalogStoreDocumentControllerComponent extends CBitrixComponent
 			$redirectUrl = (new \Bitrix\Main\Web\Uri($defaultUrl))
 				->addParams([
 					'inventoryManagementSource' => 'inventory',
-					]);
+				]);
 
 			LocalRedirect($redirectUrl);
 		}

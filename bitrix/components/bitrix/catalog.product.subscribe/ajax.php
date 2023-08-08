@@ -16,7 +16,7 @@ if(isset($_REQUEST['reloadCaptcha']) && $_REQUEST['reloadCaptcha'] == 'Y')
 	die();
 }
 
-//if(!check_bitrix_sessid()) die();
+if(!check_bitrix_sessid()) die();
 
 Loc::loadMessages(__FILE__);
 global $USER;
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		die();
 	}
 
-	if($_POST['checkSubscribe'] == 'Y')
+	if (($_POST['checkSubscribe'] ?? null) === 'Y')
 	{
 		if(!empty($_SESSION['SUBSCRIBE_PRODUCT']['LIST_PRODUCT_ID']))
 		{
