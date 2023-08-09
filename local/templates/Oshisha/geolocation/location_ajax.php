@@ -1,6 +1,8 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
+Bitrix\Main\Loader::includeModule("sale");
+
 $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 
 if ($request->getPost('action') == 'setLocationsListStorage' || $request->getPost('action') == 'locationsListSearch'
