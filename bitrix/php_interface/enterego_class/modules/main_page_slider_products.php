@@ -107,7 +107,7 @@ $lAdmin->AddHeaders(array(
         "default" => true,
     ),
     array("id" => "PROPERTY_" . SORT_POPULARITY . "_VALUE",
-        "content" => "Использование на главной странице",
+        "content" => "Популярность",
         "sort" => "PROPERTY_" . SORT_POPULARITY,
         "default" => true,
     ),
