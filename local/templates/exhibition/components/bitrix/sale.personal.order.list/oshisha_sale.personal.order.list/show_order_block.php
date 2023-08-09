@@ -47,7 +47,7 @@ function showOrderBlock($listStatuses, $accountNumber)
                 </div>
             </div>
             <?php
-            if (count($order['PICTURE']) <= 4) {
+            if (!empty($order['PICTURE']) && count($order['PICTURE']) <= 4) {
                 $class_box = 'justify-content-evenly';
             } else {
                 $class_box = 'justify-content-between';
