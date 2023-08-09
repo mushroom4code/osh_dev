@@ -242,7 +242,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "200",
                     "text" => "Товары для отображения в сладере на главной странице",
                     "title" => "Товары для отображения в сладере на главной странице",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/main_page_slider_products.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=main_page_slider_products.php",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "main_page_slider_products.php",
