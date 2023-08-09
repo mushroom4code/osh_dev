@@ -7,6 +7,7 @@ session_start(); // Обязательно запускаем (возобнов�
 
 $curPage = $APPLICATION->GetCurPage(); // получение текущего url
 CModule::IncludeModule('sale');
+
 use \Bitrix\Sale\Location\LocationTable;
 
 $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
@@ -15,43 +16,18 @@ if (empty($_SESSION['city_of_user'])) {
     $_SESSION['city_of_user'] = $arResult['REAL_REGION'];
 }
 
-if (isset($_POST['submitcity']) || isset($_GET["city"]) || $request->getPost('action') == 'setLocationsListStorage') {
+if (isset($_GET["city"])) {
     $res = \Bitrix\Sale\Location\LocationTable::getList(array(
         'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=TYPE.ID' => '5'),
         'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE')
     ));
 
-    if (isset($_POST['submitcity'])) {
-        if (!empty($_POST['cityother'])) {
-            while ($itemcity = $res->fetch()) {
-                if ($itemcity['NAME_RU'] == $_POST['cityother']) {
-                    $_SESSION["city_of_user"] = $itemcity['NAME_RU'];
-                    $_SESSION["id_region"] = $itemcity['CITY_ID'];
-                    $_SESSION["code_region"] = $itemcity['CODE'];
-                    $_SESSION["real_region"] = 'n';
-                }
-            }
+    while ($itemcity = $res->fetch()) {
+        if ($itemcity['NAME_RU'] == $_GET["city"]) {
+            $_SESSION["city_of_user"] = $itemcity['NAME_RU'];
+            $_SESSION["id_region"] = $itemcity['CITY_ID'];
+            $_SESSION["code_region"] = $itemcity['CODE'];
         }
-        list($first, $host) = explode(".", $_SERVER["SERVER_NAME"]);
     }
-    if (isset($_GET["city"])) {
-        while ($itemcity = $res->fetch()) {
-            if ($itemcity['NAME_RU'] == $_GET["city"]) {
-                $_SESSION["city_of_user"] = $itemcity['NAME_RU'];
-                $_SESSION["id_region"] = $itemcity['CITY_ID'];
-                $_SESSION["code_region"] = $itemcity['CODE'];
-            }
-        }
-        $_SESSION["city_of_user"] = $_GET["city"];
-    }
-
-    if ($request->getPost('action') == 'setLocationsListStorage') {
-        $runames = array();
-        while ($item = $res->fetch()) {
-            $runames[] = $item["NAME_RU"];
-        }
-        sort($runames);
-
-        echo json_encode($runames);
-    }
+    $_SESSION["city_of_user"] = $_GET["city"];
 }

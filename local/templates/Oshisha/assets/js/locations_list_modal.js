@@ -1,4 +1,15 @@
 $(document).ready(function () {
+    function setupCityItems() {
+        let all_cities = $('#cities-list');
+        $('.city-item').each(function () {
+            $(this).click(function () {
+                let city_selected = $(this).text();
+                $('#city-search').val(city_selected);
+                $('#choose-city-btn').removeAttr('disabled');
+                all_cities.hide();
+            });
+        });
+    }
     function setLocationsListContent() {
         var locations_array = BX.localStorage.get('city_choosers_locations_array');
         var placeModalTemplate = `<input id="city-search" class="form-control search" type="text" name="cityother"
@@ -52,16 +63,30 @@ $(document).ready(function () {
                 big_cities.show();
             }
         });
-        $('.city-item').each(function () {
-            $(this).click(function () {
-                let city_selected = $(this).text();
-                $('#city-search').val(city_selected);
-                $('#choose-city-btn').removeAttr('disabled');
-                all_cities.hide();
-            });
-        });
-        new List('locations', {
-            valueNames: ['city-item']
+        setupCityItems();
+
+        let input = $('#city-search');
+        input.on('input', function() {
+            $.ajax({
+                url: window.location.origin + '/local/templates/Oshisha/geolocation/location_ajax.php',
+                method: 'POST',
+                data: {
+                    action: 'locationsListSearch',
+                    searchText: input.val()
+                },
+                success: function (result) {
+                    if (result) {
+                        let cities_list = '';
+                        JSON.parse(result).forEach((element) => {
+                            cities_list += `<li>
+                            <span class="city-item">${element}</span>
+                            </li>`
+                        });
+                        $('#cities-list').html(cities_list);
+                        setupCityItems();
+                    }
+                }.bind(this)
+            })
         })
     }
 
@@ -72,7 +97,7 @@ $(document).ready(function () {
             }
         } else {
             $.ajax({
-                url: window.location.origin + '/local/templates/Oshisha/geolocation/location_select.php',
+                url: window.location.origin + '/local/templates/Oshisha/geolocation/location_ajax.php',
                 method: 'POST',
                 data: {
                     action: 'setLocationsListStorage'
@@ -88,4 +113,26 @@ $(document).ready(function () {
             })
         }
     })
+
+    $("#formofcity").submit(function (event) {
+        $.ajax({
+            url: window.location.origin + '/local/templates/Oshisha/geolocation/location_ajax.php',
+            method: 'POST',
+            data: {
+                action: 'locationsListSubmit',
+                searchText: $("#city-search").val()
+            },
+            success: function (result) {
+                if (result) {
+                    if (JSON.parse(result)['status'] == 'success') {
+                        location.reload();
+                    } else {
+                        console.log(result);
+                    }
+                }
+            }.bind(this)
+        });
+
+        event.preventDefault();
+    });
 });
