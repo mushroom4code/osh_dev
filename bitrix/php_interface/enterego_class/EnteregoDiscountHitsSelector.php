@@ -4,7 +4,7 @@ namespace Enterego;
 
 class EnteregoDiscountHitsSelector
 {
-    public function getSectionProductsForFilter(string $link, array $params, bool $useActive = true): array
+    public function getSectionProductsForFilter(string $link, array $params, bool $useActive = true, array &$items = [] ): array
     {
         global $DB;
         $productIds = [];
@@ -13,6 +13,7 @@ class EnteregoDiscountHitsSelector
 
         while ($arElement = $rsElements->Fetch()) {
             $productIds[] = $arElement['ID'];
+            $items[] = $arElement;
         }
         if (!empty($productIds)) {
             $productIds = implode(',', $productIds);

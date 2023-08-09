@@ -79,13 +79,13 @@ $tabControl = new CAdminTabControl("tabControl", []);
 if ($_REQUEST["mess"] == "ok")
     CAdminMessage::ShowMessage(array("MESSAGE" => 'Изменения сохранены', "TYPE" => "OK"));
 ?>
-    <form method="POST" ENCTYPE="multipart/form-data" id=post_form name="post_form">
+    <form method="POST" ENCTYPE="multipart/form-data" id=post_form name="post_form" style="width:fit-content">
 <?= bitrix_sessid_post(); ?>
     <input type="hidden" name="action" value="update_form">
     <div style="display: flex; flex-direction: column; justify-content: center;align-items: center">
-        <table class="internal" style="margin-bottom: 3rem; max-height: 1000px;overflow: auto;display: block;">
+        <table class="internal" style="max-height: 1000px;overflow: auto;display: block;">
             <tbody>
-            <tr class="heading">
+            <tr class="heading" style="position: sticky;top: 0;">
                 <td colspan="4">Наименование</td>
                 <td colspan="4">Активно</td>
                 <td colspan="3">Показать</td>

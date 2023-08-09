@@ -768,7 +768,7 @@ class ProfileHandler extends \Bitrix\Sale\Delivery\Services\Base
         return $extraServices;
     }
 
-    public static function onAfterAdd($serviceId, $fields)
+    public static function onAfterAdd($serviceId, $fields = [])
     {
         if(substr($fields["CLASS_NAME"], 0, 1) != "\\") {
             $fields["CLASS_NAME"] = "\\" . $fields["CLASS_NAME"];

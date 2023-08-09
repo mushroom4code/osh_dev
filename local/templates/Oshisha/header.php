@@ -189,8 +189,8 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                 <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
                     <a href="/about/o-nas/" class="text_header">О нас</a>
 
-                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentaion.pdf')) { ?>
-                        <a href="/local/templates/Oshisha/images/presentaion.pdf" download class="text_header ">Презентация</a>
+                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                        <a href="/local/templates/Oshisha/images/presentation.pdf" download class="text_header ">Презентация</a>
                     <?php }
                     if ($USER->IsAuthorized()) { ?>
                         <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
@@ -239,9 +239,9 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                 <a href="/about/o-nas/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">О нас</span>
                                 </a>
-                                <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentaion.pdf')) { ?>
-                                    <a href="/local/templates/Oshisha/images/presentaion.pdf" download
-                                       class="text_header ">Презентация</a>
+                                <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                                    <a href="/local/templates/Oshisha/images/presentation.pdf" download
+                                       class="text_header "> <span class="text_catalog_link not_weight"> Презентация</span></a>
                                 <?php } ?>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
