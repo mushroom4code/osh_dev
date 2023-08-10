@@ -13,13 +13,14 @@ use Bitrix\Calendar\UserSettings;
 use Bitrix\Main\Entity\ReferenceField;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\ORM\Query;
+use Bitrix\Main\Text\Emoji;
 
 Loc::loadMessages(__FILE__);
 
 class Manager
 {
 	public const TYPE = 'location';
-	
+
 	/** @var Room|null $room */
 	private ?Room $room = null;
 	/** @var Error|null $error */
@@ -86,14 +87,14 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		$this->room->create();
-		
+
 		if ($this->room->getError())
 		{
 			$this->addError($this->room->getError());
 		}
-		
+
 		return $this;
 	}
 
@@ -109,7 +110,7 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		$this->room->update();
 
 		if ($this->room->getError())
@@ -132,12 +133,12 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		if (!$this->room->getName())
 		{
 			$this->room->setName($this->getRoomName($this->room->getId()));
 		}
-		
+
 		$this->room->delete();
 
 		if ($this->room->getError())
@@ -191,7 +192,7 @@ class Manager
 				'ownerId' => 0
 			]);
 			LocationTable::cleanCache();
-			
+
 			return null;
 		}
 
@@ -213,7 +214,7 @@ class Manager
 	 * @throws \Bitrix\Main\ObjectPropertyException
 	 * @throws \Bitrix\Main\SystemException
 	 */
-	public static function getRoomById(int $id): array
+	public static function getRoomById(int $id, array $params = []): array
 	{
 		$roomQuery = LocationTable::query()
 			->setSelect([
@@ -249,7 +250,13 @@ class Manager
 			\CCalendarSect::HandlePermission($room);
 		}
 
-		return \CCalendarSect::GetSectionPermission($result);
+		$applyPermission = $params['checkPermission'] ?? true;
+		if ($applyPermission !== false)
+		{
+			return \CCalendarSect::GetSectionPermission($result);
+		}
+
+		return [...$result];
 	}
 
 	/**
@@ -263,30 +270,41 @@ class Manager
 	 */
 	public static function reserveRoom(array $params = []): ?int
 	{
-		$roomList = self::getRoomById((int)$params['room_id']);
+		$params['checkPermission'] = $params['checkPermission'] ?? null;
+		$params['room_id'] = $params['room_id'] ?? null;
+		$roomList = self::getRoomById((int)$params['room_id'], ['checkPermission' => $params['checkPermission']]);
 
-		if (!$roomList || empty($roomList[0])
+		if (
+			!$roomList || empty($roomList[0])
 			|| empty($roomList[0]['NAME'])
-			|| !$roomList[0]['PERM']['view_full'])
+			|| (
+				empty($roomList[0]['PERM']['view_full'])
+				&& $params['checkPermission'] !== false
+			)
+		)
 		{
 			return null;
 		}
 
-		$createdBy = ($params['parentParams']['arFields']['CREATED_BY']
-			?? $params['parentParams']['arFields']['MEETING_HOST']);
+		$createdBy = $params['parentParams']['arFields']['CREATED_BY']
+			?? $params['parentParams']['arFields']['MEETING_HOST']
+			?? null
+		;
 		$userId = $params['parentParams']['userId']
-			??  $params['parentParams']['arFields']['userId'];
+			?? $params['parentParams']['arFields']['userId']
+			?? null
+		;
 
 		$arFields = [
-			'ID' => $params['room_event_id'],
-			'SECTIONS' => $params['room_id'],
-			'DATE_FROM' => $params['parentParams']['arFields']['DATE_FROM'],
-			'DATE_TO' => $params['parentParams']['arFields']['DATE_TO'],
-			'TZ_FROM' => $params['parentParams']['arFields']['TZ_FROM'],
-			'TZ_TO' => $params['parentParams']['arFields']['TZ_TO'],
-			'SKIP_TIME' => $params['parentParams']['arFields']['SKIP_TIME'],
-			'RRULE' => $params['parentParams']['arFields']['RRULE'],
-			'EXDATE' => $params['parentParams']['arFields']['EXDATE'],
+			'ID' => $params['room_event_id'] ?? null,
+			'SECTIONS' => $params['room_id'] ?? null,
+			'DATE_FROM' => $params['parentParams']['arFields']['DATE_FROM'] ?? null,
+			'DATE_TO' => $params['parentParams']['arFields']['DATE_TO'] ?? null,
+			'TZ_FROM' => $params['parentParams']['arFields']['TZ_FROM'] ?? null,
+			'TZ_TO' => $params['parentParams']['arFields']['TZ_TO'] ?? null,
+			'SKIP_TIME' => $params['parentParams']['arFields']['SKIP_TIME'] ?? null,
+			'RRULE' => $params['parentParams']['arFields']['RRULE'] ?? null,
+			'EXDATE' => $params['parentParams']['arFields']['EXDATE'] ?? null,
 		];
 
 		if (!$params['room_event_id'])
@@ -311,6 +329,15 @@ class Manager
 	 */
 	public function cancelBooking(array $params = []): Manager
 	{
+		$params = [
+			'recursion_mode' => $params['recursion_mode'] ?? null,
+			'parent_event_id' => $params['parent_event_id'] ?? null,
+			'section_id' => $params['section_id'] ?? null,
+			'current_event_date_from' => $params['current_event_date_from'] ?? null,
+			'current_event_date_to' => $params['current_event_date_to'] ?? null,
+			'owner_id' => $params['owner_id'] ?? null,
+		];
+
 		if($this->getError() !== null)
 		{
 			return $this;
@@ -320,11 +347,11 @@ class Manager
 		{
 			$event = \CCalendarEvent::GetById($params['parent_event_id']);
 
-			$params['frequency'] = $event['RRULE']['FREQ'];
+			$params['frequency'] = $event['RRULE']['FREQ'] ?? null;
 			if($params['recursion_mode'] === 'all')
 			{
-				$params['current_event_date_from'] = $event['DATE_FROM'];
-				$params['current_event_date_to'] = $event['DATE_TO'];
+				$params['current_event_date_from'] = $event['DATE_FROM'] ?? null;
+				$params['current_event_date_to'] = $event['DATE_TO'] ?? null;
 			}
 		}
 
@@ -342,7 +369,7 @@ class Manager
 			],
 		]);
 
-		$params['event_id'] = $result['recEventId'] ?? $result['id'];
+		$params['event_id'] = $result['recEventId'] ?? $result['id'] ?? null;
 
 		$this->sendCancelBookingNotification($params);
 		return $this;
@@ -350,6 +377,14 @@ class Manager
 
 	private function sendCancelBookingNotification(array $params): void
 	{
+		$params = [
+			'section_id' => $params['section_id'],
+			'event_id' => $params['event_id'],
+			'owner_id' => $params['owner_id'],
+			'current_event_date_from' => $params['current_event_date_from'],
+			'recursion_mode' => $params['recursion_mode'],
+		];
+
 		$section = \CCalendarSect::GetById($params['section_id']);
 		$userId = \CCalendar::GetCurUserId();
 		$event = \CCalendarEvent::GetById($params['event_id'], false);
@@ -357,14 +392,13 @@ class Manager
 		\CCalendarNotify::Send([
 			'eventId' => $params['event_id'],
 			'mode' => 'cancel_booking',
-			'location' => $section['NAME'],
+			'location' => $section['NAME'] ?? null,
 			'locationId' => $params['section_id'],
 			'guestId' => $params['owner_id'],
 			'userId' => $userId,
 			'from' => $params['current_event_date_from'],
-			'eventName' => $event['NAME'],
+			'eventName' => $event['NAME'] ?? null,
 			'recursionMode' => $params['recursion_mode'],
-			'frequency' => $params['frequency'],
 			'fields' => $event,
 		]);
 	}
@@ -379,7 +413,7 @@ class Manager
 	public static function releaseRoom(array $params = [])
 	{
 		return \CCalendar::DeleteEvent(
-			(int)$params['room_event_id'],
+			(int)($params['room_event_id'] ?? null),
 			false,
 			[
 				'checkPermissions' => false,
@@ -399,7 +433,7 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		\CCalendarSect::SetClearOperationCache(true);
 		\CCalendar::clearCache([
 			'section_list',
@@ -409,7 +443,7 @@ class Manager
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return Manager
 	 */
@@ -419,9 +453,9 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		\CCalendarSect::CleanAccessTable();
-		
+
 		return $this;
 	}
 
@@ -467,7 +501,7 @@ class Manager
 	public function prepareResponseData(): array
 	{
 		$result = [];
-		
+
 		$result['rooms'] = self::getRoomsList();
 		$sectionList = \CCalendar::GetSectionList([
 			'CAL_TYPE' => self::TYPE,
@@ -481,7 +515,7 @@ class Manager
 			\CCalendar::getSectionListAvailableForUser(\CCalendar::GetUserId())
 		);
 		$result['sections'] = $sectionList;
-		
+
 		return $result;
 	}
 
@@ -503,7 +537,7 @@ class Manager
 			'ADDITIONAL_IDS' => $followedSectionList,
 		]);
 		$sectionList = array_merge($sectionList, \CCalendar::getSectionListAvailableForUser($userId));
-		
+
 		$sectionAccessTasks = \CCalendar::GetAccessTasks('calendar_section', 'location');
 		$hiddenSections = UserSettings::getHiddenSections(
 			$userId,
@@ -516,7 +550,7 @@ class Manager
 			self::TYPE,
 			$userId
 		);
-		
+
 		$result['rooms'] = self::getRoomsList();
 		$result['sections'] = $sectionList;
 		$result['config'] = [
@@ -527,9 +561,10 @@ class Manager
 			'userId' => $userId,
 			'defaultSectionAccess' => $defaultSectionAccess,
 			'sectionAccessTasks' => $sectionAccessTasks,
-			'showTasks' => false
+			'showTasks' => false,
+			'accessNames' => \CCalendar::GetAccessNames(),
 		];
-		
+
 		return $result;
 	}
 
@@ -544,24 +579,24 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		foreach(EventManager::getInstance()->findEventHandlers('calendar', $handler) as $event)
 		{
 			ExecuteModuleEventEx($event, [
 				$this->room->getId(),
 			]);
 		}
-	
+
 		return $this;
 	}
-	
+
 	public function addPullEvent($event): Manager
 	{
 		if ($this->getError())
 		{
 			return $this;
 		}
-		
+
 		\Bitrix\Calendar\Util::addPullEvent(
 			$event,
 			$this->room->getCreatedBy(),
@@ -569,7 +604,7 @@ class Manager
 				'ID' => $this->room->getId()
 			]
 		);
-		
+
 		return $this;
 	}
 
@@ -588,7 +623,7 @@ class Manager
 			->where('ID', $id)
 			->exec()->fetch()
 		;
-		
+
 		return $section ? $section['NAME'] : null;
 	}
 
@@ -600,13 +635,18 @@ class Manager
 	 */
 	public static function checkRoomName(?string $name): ?string
 	{
+		if (!$name)
+		{
+			return '';
+		}
+
 		$name = trim($name);
-		
+
 		if (empty($name))
 		{
 			return '';
 		}
-		
+
 		return $name;
 	}
 
@@ -621,7 +661,7 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		global $DB;
 		$guestsId = [];
 		$idTemp = "(#ID#, ''),";
@@ -631,7 +671,7 @@ class Manager
 		$locationId = 'calendar_' . $id;
 
 		$events = $DB->Query("
-			SELECT ID, PARENT_ID, OWNER_ID, LOCATION
+			SELECT ID, PARENT_ID, OWNER_ID, CREATED_BY, LOCATION
 			FROM b_calendar_event
 			WHERE LOCATION LIKE '" . $locationId . "%';
 		");
@@ -667,7 +707,7 @@ class Manager
 				]);
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -683,7 +723,7 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		$events = self::getLocationEventsId($this->room->getId());
 
 		foreach ($events as $event)
@@ -697,10 +737,10 @@ class Manager
 				);
 			}
 		}
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * @return Manager
 	 */
@@ -710,7 +750,7 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		\CCalendarEvent::DeleteEmpty();
 
 		return $this;
@@ -747,10 +787,10 @@ class Manager
 		{
 			return $this;
 		}
-		
+
 		$access = $this->room->getAccess();
 		$id = $this->room->getId();
-		
+
 		if (!empty($access))
 		{
 			\CCalendarSect::SavePermissions(
@@ -768,7 +808,7 @@ class Manager
 				)
 			);
 		}
-		
+
 		return $this;
 	}
 
@@ -787,6 +827,10 @@ class Manager
 			$room['ID'] = $room['SECTION_ID'];
 			unset($room['SECTION_ID']);
 
+			if (!empty($room['NAME']))
+			{
+				$room['NAME'] = Emoji::decode($room['NAME']);
+			}
 			$roomId = (int)$room['ID'];
 			$roomsId[] = $roomId;
 			$result[$roomId] = $room;
@@ -823,7 +867,7 @@ class Manager
 
 		while ($access = $accessQuery->fetch())
 		{
-			if (!$rooms[$access['SECT_ID']]['ACCESS'])
+			if (!isset($rooms[$access['SECT_ID']]['ACCESS']))
 			{
 				$rooms[$access['SECT_ID']]['ACCESS'] = [];
 			}

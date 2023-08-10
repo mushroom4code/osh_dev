@@ -7,6 +7,7 @@
  */
 
 use Bitrix\Main;
+use Bitrix\Main\Diag;
 use Bitrix\Main\Config\Configuration;
 use Bitrix\Main\Text;
 use Bitrix\Main\Application;
@@ -72,8 +73,8 @@ function SelectBox($strBoxName, $a,	$strDetText = "", $strSelectedVal = "", $fie
 		$strReturnBox = $strReturnBox."<option value=\"NOT_REF\">".$strDetText."</option>";
 	while (($ar = $a->Fetch()))
 	{
-		$reference_id = $ar["REFERENCE_ID"];
-		$reference = $ar["REFERENCE"];
+		$reference_id = $ar["REFERENCE_ID"] ?? '';
+		$reference = $ar["REFERENCE"] ?? '';
 		if ($reference_id == '')
 			$reference_id = $ar["reference_id"];
 		if ($reference == '')
@@ -348,6 +349,12 @@ function CheckDateTime($datetime, $format=false)
 		$format = FORMAT_DATETIME;
 
 	$ar = ParseDateTime($datetime, $format);
+
+	if ($ar === false)
+	{
+		return false;
+	}
+
 	$day = intval($ar["DD"]);
 	$hour = $month = 0;
 
@@ -381,7 +388,7 @@ function CheckDateTime($datetime, $format=false)
 				$month = intval(date('m', strtotime($ar["M"])));
 		}
 	}
-	$year  = intval($ar["YYYY"]);
+	$year  = intval($ar["YYYY"] ?? 0);
 	if (isset($ar["HH"]))
 	{
 		$hour  = intval($ar["HH"]);
@@ -400,7 +407,7 @@ function CheckDateTime($datetime, $format=false)
 	}
 	if (isset($ar['TT']) || isset($ar['T']))
 	{
-		$middletime = isset($ar['TT']) ? $ar['TT'] : $ar['T'];
+		$middletime = $ar['TT'] ?? $ar['T'];
 		if (strcasecmp('pm', $middletime)===0)
 		{
 			if ($hour < 12)
@@ -457,7 +464,7 @@ function MakeTimeStamp($datetime, $format=false)
 
 	$ar = ParseDateTime($datetime, $format);
 
-	$day = intval($ar["DD"]);
+	$day = intval($ar["DD"] ?? 0);
 	$hour = $month = 0;
 
 	if (isset($ar["MMMM"]))
@@ -490,7 +497,7 @@ function MakeTimeStamp($datetime, $format=false)
 				$month = intval(date('m', strtotime($ar["M"])));
 		}
 	}
-	$year  = intval($ar["YYYY"]);
+	$year  = intval($ar["YYYY"] ?? 0);
 	if (isset($ar["HH"]))
 	{
 		$hour  = intval($ar["HH"]);
@@ -509,7 +516,7 @@ function MakeTimeStamp($datetime, $format=false)
 	}
 	if (isset($ar['TT']) || isset($ar['T']))
 	{
-		$middletime = isset($ar['TT']) ? $ar['TT'] : $ar['T'];
+		$middletime = $ar['TT'] ?? $ar['T'];
 		if (strcasecmp('pm', $middletime)===0)
 		{
 			if ($hour < 12)
@@ -530,11 +537,7 @@ function MakeTimeStamp($datetime, $format=false)
 	if($hour>24 || $hour<0 || $min<0 || $min>59 || $sec<0 || $sec>59)
 		return false;
 
-	$ts = mktime($hour, $min, $sec, $month, $day, $year);
-	if($ts === false)
-		return false;
-
-	return $ts;
+	return mktime($hour, $min, $sec, $month, $day, $year);
 }
 
 /**
@@ -542,6 +545,10 @@ function MakeTimeStamp($datetime, $format=false)
  */
 function ParseDateTime($datetime, $format=false)
 {
+	if ($datetime === null)
+	{
+		return false;
+	}
 	if ($format===false && defined("FORMAT_DATETIME"))
 		$format = FORMAT_DATETIME;
 
@@ -592,29 +599,26 @@ function AddToTimeStamp($arrAdd, $stmp=false)
 		foreach($arrAdd as $key => $value)
 		{
 			$value = intval($value);
-			if (is_int($value))
+			switch ($key)
 			{
-				switch ($key)
-				{
-					case "DD":
-						$stmp = AddTime($stmp, $value, "D");
-						break;
-					case "MM":
-						$stmp = AddTime($stmp, $value, "MN");
-						break;
-					case "YYYY":
-						$stmp = AddTime($stmp, $value, "Y");
-						break;
-					case "HH":
-						$stmp = AddTime($stmp, $value, "H");
-						break;
-					case "MI":
-						$stmp = AddTime($stmp, $value, "M");
-						break;
-					case "SS":
-						$stmp = AddTime($stmp, $value, "S");
-						break;
-				}
+				case "DD":
+					$stmp = AddTime($stmp, $value, "D");
+					break;
+				case "MM":
+					$stmp = AddTime($stmp, $value, "MN");
+					break;
+				case "YYYY":
+					$stmp = AddTime($stmp, $value, "Y");
+					break;
+				case "HH":
+					$stmp = AddTime($stmp, $value, "H");
+					break;
+				case "MI":
+					$stmp = AddTime($stmp, $value, "M");
+					break;
+				case "SS":
+					$stmp = AddTime($stmp, $value, "S");
+					break;
 			}
 		}
 	}
@@ -676,17 +680,17 @@ function IsAmPmMode($returnConst = false)
 {
 	if($returnConst)
 	{
-		if(mb_strpos(FORMAT_DATETIME, 'TT') !== false)
+		if(strpos(FORMAT_DATETIME, 'TT') !== false)
 		{
 			return AM_PM_UPPER;
 		}
-		if(mb_strpos(FORMAT_DATETIME, 'T') !== false)
+		if(strpos(FORMAT_DATETIME, 'T') !== false)
 		{
 			return AM_PM_LOWER;
 		}
 		return AM_PM_NONE;
 	}
-	return mb_strpos(FORMAT_DATETIME, 'T') !== false;
+	return strpos(FORMAT_DATETIME, 'T') !== false;
 }
 
 function convertTimeToMilitary ($strTime, $fromFormat = 'H:MI T', $toFormat = 'HH:MI')
@@ -710,7 +714,7 @@ function convertTimeToMilitary ($strTime, $fromFormat = 'H:MI T', $toFormat = 'H
 
 	if (isset($arParsedDate['TT']) || isset($arParsedDate['T']))
 	{
-		$middletime = isset($arParsedDate['TT']) ? $arParsedDate['TT'] : $arParsedDate['T'];
+		$middletime = $arParsedDate['TT'] ?? $arParsedDate['T'];
 		if (strcasecmp('pm', $middletime)===0)
 		{
 			if ($arParsedDate["HH"] < 12)
@@ -722,7 +726,7 @@ function convertTimeToMilitary ($strTime, $fromFormat = 'H:MI T', $toFormat = 'H
 		}
 	}
 
-	$ts = mktime($arParsedDate['HH'], $arParsedDate['MI'], (isset($arParsedDate['SS']) ? $arParsedDate['SS'] : 0), 3, 7, 2012);
+	$ts = mktime($arParsedDate['HH'], $arParsedDate['MI'], ($arParsedDate['SS'] ?? 0), 3, 7, 2012);
 	return FormatDate($DB->dateFormatToPHP($toFormat), $ts);
 }
 
@@ -1342,7 +1346,7 @@ function FormatDateEx($strDate, $format=false, $new_format=false)
 
 	if (isset($arParsedDate['TT']) || isset($arParsedDate['T']))
 	{
-		$middletime = isset($arParsedDate['TT']) ? $arParsedDate['TT'] : $arParsedDate['T'];
+		$middletime = $arParsedDate['TT'] ?? $arParsedDate['T'];
 		if (strcasecmp('pm', $middletime)===0)
 		{
 			if ($arParsedDate["HH"] < 12)
@@ -1679,8 +1683,8 @@ function PHPFormatDateTime($strDateTime, $format="d.m.Y H:i:s")
  */
 
 /*
-пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-пїЅпїЅпїЅпїЅпїЅпїЅ
+удаляет дубли в массиве сортировки
+массив
 Array
 (
 	[0] => T.NAME DESC
@@ -1689,7 +1693,7 @@ Array
 	[3] => T.ID DESC
 	[4] => T.DESC
 )
-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+преобразует в
 Array
 (
 	[0] => T.NAME DESC
@@ -1699,7 +1703,7 @@ Array
 */
 function DelDuplicateSort(&$arSort)
 {
-	if (is_array($arSort) && count($arSort)>0)
+	if (is_array($arSort) && !empty($arSort))
 	{
 		$arSort2 = array();
 		foreach($arSort as $val)
@@ -1738,7 +1742,7 @@ function array_convert_name_2_value($arr)
 
 function InitBVarFromArr($arr)
 {
-	if (is_array($arr) && count($arr)>0)
+	if (is_array($arr) && !empty($arr))
 	{
 		foreach($arr as $value)
 		{
@@ -1930,7 +1934,7 @@ function convert_code_tag_for_email($text="", $arMsg=array())
 
 function PrepareTxtForEmail($text, $lang=false, $convert_url_tag=true, $convert_image_tag=true)
 {
-	$text = Trim($text);
+	$text = trim($text);
 	if($text == '')
 		return "";
 
@@ -2002,14 +2006,14 @@ function PrepareTxtForEmail($text, $lang=false, $convert_url_tag=true, $convert_
 function delete_special_symbols($text, $replace="")
 {
 	static $arr = array(
-		"\x1",		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ URL'пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ http, https, ftp
-		"\x2",		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ ($iMaxStringLen)
-		"\x3",		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ URL'пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ mailto
-		"\x4",		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ \n (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <code>)
-		"\x5",		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ \r (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <code>)
-		"\x6",		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <code>)
-		"\x7",		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <code>)
-		"\x8",		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ "\"
+		"\x1",		// спецсимвол для преобразования URL'ов протокола http, https, ftp
+		"\x2",		// спецсимвол для пробела ($iMaxStringLen)
+		"\x3",		// спецсимвол для преобразования URL'ов протокола mailto
+		"\x4",		// спецсимвол заменяющий \n (используется для преобразования <code>)
+		"\x5",		// спецсимвол заменяющий \r (используется для преобразования <code>)
+		"\x6",		// спецсимвол заменяющий пробел (используется для преобразования <code>)
+		"\x7",		// спецсимвол заменяющий табуляцию (используется для преобразования <code>)
+		"\x8",		// спецсимвол заменяющий слэш "\"
 	);
 	return str_replace($arr, $replace, $text);
 }
@@ -2092,7 +2096,7 @@ function convert_to_href($url, $link_class="", $event1="", $event2="", $event3="
 	return $s;
 }
 
-// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ TxtToHTML
+// используется как вспомогательная функция для TxtToHTML
 function convert_to_mailto($s, $link_class="")
 {
 	$s = stripslashes($s);
@@ -2101,23 +2105,23 @@ function convert_to_mailto($s, $link_class="")
 }
 
 function TxtToHTML(
-	$str,                                    // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-	$bMakeUrls             = true,           // true - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ URL пїЅ <a href="URL">URL</a>
-	$iMaxStringLen         = 0,              // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-	$QUOTE_ENABLED         = "N",            // Y - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <QUOTE>...</QUOTE> пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-	$NOT_CONVERT_AMPERSAND = "Y",            // Y - пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "&" пїЅ "&amp;"
-	$CODE_ENABLED          = "N",            // Y - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <CODE>...</CODE> пїЅ readonly textarea
-	$BIU_ENABLED           = "N",            // Y - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <B>...</B> пїЅ пїЅ.пїЅ. пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ HTML пїЅпїЅпїЅпїЅ
-	$quote_table_class     = "quotetable",   // css пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-	$quote_head_class      = "tdquotehead",  // css пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ TD пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-	$quote_body_class      = "tdquote",      // css пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ TD пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-	$code_table_class      = "codetable",    // css пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
-	$code_head_class       = "tdcodehead",   // css пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ TD пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
-	$code_body_class       = "tdcodebody",   // css пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ TD пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
-	$code_textarea_class   = "codetextarea", // css пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ textarea пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
-	$link_class            = "txttohtmllink",// css пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	$str,                                    // текст для преобразования
+	$bMakeUrls             = true,           // true - преобразовавыть URL в <a href="URL">URL</a>
+	$iMaxStringLen         = 0,              // максимальная длина фразы без пробелов или символов перевода каретки
+	$QUOTE_ENABLED         = "N",            // Y - преобразовать <QUOTE>...</QUOTE> в рамку цитаты
+	$NOT_CONVERT_AMPERSAND = "Y",            // Y - не преобразовывать символ "&" в "&amp;"
+	$CODE_ENABLED          = "N",            // Y - преобразовать <CODE>...</CODE> в readonly textarea
+	$BIU_ENABLED           = "N",            // Y - преобразовать <B>...</B> и т.д. в соответствующие HTML тэги
+	$quote_table_class     = "quotetable",   // css класс на таблицу цитаты
+	$quote_head_class      = "tdquotehead",  // css класс на первую TD таблицы цитаты
+	$quote_body_class      = "tdquote",      // css класс на вторую TD таблицы цитаты
+	$code_table_class      = "codetable",    // css класс на таблицу кода
+	$code_head_class       = "tdcodehead",   // css класс на первую TD таблицы кода
+	$code_body_class       = "tdcodebody",   // css класс на вторую TD таблицы кода
+	$code_textarea_class   = "codetextarea", // css класс на textarea в таблице кода
+	$link_class            = "txttohtmllink",// css класс на ссылках
 	$arUrlEvent            = array(),        // deprecated
-	$link_target           = "_self"         // tagret пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	$link_target           = "_self"         // tagret открытия страницы
 )
 {
 	global $QUOTE_ERROR, $QUOTE_OPENED, $QUOTE_CLOSED;
@@ -2125,12 +2129,12 @@ function TxtToHTML(
 
 	$str = delete_special_symbols($str);
 
-	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ chr(2) пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	// вставим спецсимвол chr(2) там где в дальнейшем необходимо вставить пробел
 	if($iMaxStringLen>0)
 		$str = InsertSpaces($str, $iMaxStringLen, chr(2), true);
 
 	// \ => chr(8)
-	$str = str_replace("\\", chr(8), $str); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ "\"
+	$str = str_replace("\\", chr(8), $str); // спецсимвол заменяющий слэш "\"
 
 	// <quote>...</quote> => [quote]...[/quote]
 	if ($QUOTE_ENABLED=="Y")
@@ -2167,7 +2171,7 @@ function TxtToHTML(
 		$str = str_replace(chr(11), '@', $str);
 	}
 
-	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	// конвертация критичных символов
 	if ($NOT_CONVERT_AMPERSAND!="Y") $str = str_replace("&", "&amp;", $str);
 	static $search=array("<",">","\"","'","%",")","(","+");
 	static $replace=array("&lt;","&gt;","&quot;","&#39;","&#37;","&#41;","&#40;","&#43;");
@@ -2276,32 +2280,32 @@ function HTMLToTxt($str, $strSiteUrl="", $aDelete=array(), $maxlen=70)
 	$str = preg_replace("#<div[^>]*>#i", "\r\n", $str);
 	$str = preg_replace("#<[/]{0,1}(font|div|span)[^>]*>#i", "", $str);
 
-	//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	//ищем списки
 	$str = preg_replace("#<ul[^>]*>#i", "\r\n", $str);
 	$str = preg_replace("#<li[^>]*>#i", "\r\n  - ", $str);
 
-	//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	//удалим то что заданно
 	foreach($aDelete as $del_reg)
 		$str = preg_replace($del_reg, "", $str);
 
-	//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	//ищем картинки
 	$str = preg_replace("/(<img\\s[^>]*?src\\s*=\\s*)([\"']?)(\\/.*?)(\\2)(\\s.+?>|\\s*>)/is", "[".chr(1).$strSiteUrl."\\3".chr(1)."] ", $str);
 	$str = preg_replace("/(<img\\s[^>]*?src\\s*=\\s*)([\"']?)(.*?)(\\2)(\\s.+?>|\\s*>)/is", "[".chr(1)."\\3".chr(1)."] ", $str);
 
-	//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	//ищем ссылки
 	$str = preg_replace("/(<a\\s[^>]*?href\\s*=\\s*)([\"']?)(\\/.*?)(\\2)(.*?>)(.*?)<\\/a>/is", "\\6 [".chr(1).$strSiteUrl."\\3".chr(1)."] ", $str);
 	$str = preg_replace("/(<a\\s[^>]*?href\\s*=\\s*)([\"']?)(.*?)(\\2)(.*?>)(.*?)<\\/a>/is", "\\6 [".chr(1)."\\3".chr(1)."] ", $str);
 
-	//пїЅпїЅпїЅпїЅ <br>
+	//ищем <br>
 	$str = preg_replace("#<br[^>]*>#i", "\r\n", $str);
 
-	//пїЅпїЅпїЅпїЅ <p>
+	//ищем <p>
 	$str = preg_replace("#<p[^>]*>#i", "\r\n\r\n", $str);
 
-	//пїЅпїЅпїЅпїЅ <hr>
+	//ищем <hr>
 	$str = preg_replace("#<hr[^>]*>#i", "\r\n----------------------\r\n", $str);
 
-	//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	//ищем таблицы
 	$str = preg_replace("#<[/]{0,1}(thead|tbody)[^>]*>#i", "", $str);
 	$str = preg_replace("#<([/]{0,1})th[^>]*>#i", "<\\1td>", $str);
 
@@ -2311,13 +2315,13 @@ function HTMLToTxt($str, $strSiteUrl="", $aDelete=array(), $maxlen=70)
 
 	$str = preg_replace("#\r\n[ ]+#", "\r\n", $str);
 
-	//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+	//мочим вообще все оставшиеся тэги
 	$str = preg_replace("#<[/]{0,1}[^>]+>#i", "", $str);
 
 	$str = preg_replace("#[ ]+ #", " ", $str);
 	$str = str_replace("\t", "    ", $str);
 
-	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+	//переносим длинные строки
 	if($maxlen > 0)
 		$str = preg_replace("#(^|[\\r\\n])([^\\n\\r]{".intval($maxlen)."}[^ \\r\\n]*[\\] ])([^\\r])#", "\\1\\2\r\n\\3", $str);
 
@@ -2380,7 +2384,7 @@ function CheckDirPath($path)
 	return is_dir($path);
 }
 
-function CopyDirFiles($path_from, $path_to, $ReWrite = True, $Recursive = False, $bDeleteAfterCopy = False, $strExclude = "")
+function CopyDirFiles($path_from, $path_to, $ReWrite = true, $Recursive = false, $bDeleteAfterCopy = false, $strExclude = "")
 {
 	if (mb_strpos($path_to."/", $path_from."/") === 0 || realpath($path_to) === realpath($path_from))
 		return false;
@@ -2396,7 +2400,7 @@ function CopyDirFiles($path_from, $path_to, $ReWrite = True, $Recursive = False,
 		CheckDirPath($path_to_dir."/");
 
 		if (file_exists($path_to) && !$ReWrite)
-			return False;
+			return false;
 
 		@copy($path_from, $path_to);
 		if(is_file($path_to))
@@ -2405,11 +2409,11 @@ function CopyDirFiles($path_from, $path_to, $ReWrite = True, $Recursive = False,
 		if ($bDeleteAfterCopy)
 			@unlink($path_from);
 
-		return True;
+		return true;
 	}
 	else
 	{
-		return True;
+		return true;
 	}
 
 	if ($handle = @opendir($path_from))
@@ -2689,7 +2693,7 @@ function GetPagePath($page=false, $get_index_page=null)
 			$get_index_page = true;
 	}
 
-	if($page===false && $_SERVER["REQUEST_URI"]<>"")
+	if($page===false && !empty($_SERVER["REQUEST_URI"]))
 		$page = $_SERVER["REQUEST_URI"];
 	if($page===false)
 		$page = $_SERVER["SCRIPT_NAME"];
@@ -2729,7 +2733,7 @@ function GetPagePath($page=false, $get_index_page=null)
 
 function GetRequestUri()
 {
-	$uriPath = "/".ltrim($_SERVER["REQUEST_URI"], "/");
+	$uriPath = "/".ltrim($_SERVER["REQUEST_URI"] ?? '', "/");
 	if (($index = mb_strpos($uriPath, "?")) !== false)
 	{
 		$uriPath = mb_substr($uriPath, 0, $index);
@@ -2972,7 +2976,7 @@ function GetLangFileName($before, $after, $lang=false)
 	if(file_exists($before."en".$after))
 		return $before."en".$after;
 
-	if(mb_strpos($before, "/bitrix/modules/") === false)
+	if(strpos($before, "/bitrix/modules/") === false)
 		return $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/lang/en/tools.php";
 
 	$old_path = Rtrim($before, "/");
@@ -3126,7 +3130,7 @@ function IncludeTemplateLangFile($filepath, $lang=false)
 	);
 	foreach($dirs as $dir)
 	{
-		if(mb_strpos($filepath, $dir) !== false)
+		if(strpos($filepath, $dir) !== false)
 		{
 			$templ_path = $dir;
 			$templ_pos = mb_strlen($filepath) - mb_strpos(strrev($filepath), strrev($templ_path));
@@ -3144,7 +3148,7 @@ function IncludeTemplateLangFile($filepath, $lang=false)
 	}
 	if($templ_path == "")
 	{
-		if(mb_strpos($filepath, $module_path) !== false)
+		if(strpos($filepath, $module_path) !== false)
 		{
 			$templ_pos = mb_strlen($filepath) - mb_strpos(strrev($filepath), strrev($module_path));
 			$rel_path = mb_substr($filepath, $templ_pos);
@@ -3277,7 +3281,7 @@ function IncludeModuleLangFile($filepath, $lang=false, $bReturnArray=false)
 
 	$filepath = rtrim(preg_replace("'[\\\\/]+'", "/", $filepath), "/ ");
 	$module_path = "/modules/";
-	if(mb_strpos($filepath, $module_path) !== false)
+	if(strpos($filepath, $module_path) !== false)
 	{
 		$pos = mb_strlen($filepath) - mb_strpos(strrev($filepath), strrev($module_path));
 		$rel_path = mb_substr($filepath, $pos);
@@ -3290,7 +3294,7 @@ function IncludeModuleLangFile($filepath, $lang=false, $bReturnArray=false)
 		$BX_DOC_ROOT = rtrim(preg_replace("'[\\\\/]+'", "/", $_SERVER["DOCUMENT_ROOT"]), "/ ");
 		$module_path = $BX_DOC_ROOT.getLocalPath($module_path.$module_name);
 	}
-	elseif(mb_strpos($filepath, "/.last_version/") !== false)
+	elseif(strpos($filepath, "/.last_version/") !== false)
 	{
 		$pos = mb_strlen($filepath) - mb_strpos(strrev($filepath), strrev("/.last_version/"));
 		$rel_path = mb_substr($filepath, $pos);
@@ -3428,9 +3432,13 @@ function AddMessage2Log($text, $module = '', $traceDepth = 6, $showArgs = false)
 {
 	if (defined('LOG_FILENAME') && LOG_FILENAME <> '')
 	{
-		$logger = new Main\Diag\FileLogger(LOG_FILENAME, 0);
-		$formatter = new Main\Diag\LogFormatter($showArgs);
-		$logger->setFormatter($formatter);
+		$logger = Diag\Logger::create('main.Default', [LOG_FILENAME, $showArgs]);
+		if ($logger === null)
+		{
+			$logger = new Diag\FileLogger(LOG_FILENAME, 0);
+			$formatter = new Diag\LogFormatter($showArgs);
+			$logger->setFormatter($formatter);
+		}
 
 		$trace = '';
 		if ($traceDepth > 0)
@@ -3619,7 +3627,7 @@ function IsIE()
 function GetCountryByID($id, $lang=LANGUAGE_ID)
 {
 	$msg = IncludeModuleLangFile(__FILE__, $lang, true);
-	return $msg["COUNTRY_".$id];
+	return $msg["COUNTRY_".$id] ?? '';
 }
 
 function GetCountryArray($lang=LANGUAGE_ID)
@@ -3756,7 +3764,7 @@ function QueryGetData($SITE, $PORT, $PATH, $QUERY_STR, &$errno, &$errstr, $sMeth
 			$sMethod,
 			$SITE,
 			$PORT,
-			$PATH . ($sMethod == 'GET' ? ((mb_strpos($PATH, '?') === false ? '?' : '&') . $QUERY_STR) : ''),
+			$PATH . ($sMethod == 'GET' ? ((strpos($PATH, '?') === false ? '?' : '&') . $QUERY_STR) : ''),
 			$sMethod == 'POST' ? $QUERY_STR : false,
 			$sProto,
 			$sContentType
@@ -3809,14 +3817,7 @@ function xml_depth_xmldata($vals, &$i)
 		switch ($vals[$i]['type'])
 		{
 			case 'open':
-				if (isset($vals[$i]['tag']))
-				{
-					$tagname = $vals[$i]['tag'];
-				}
-				else
-				{
-					$tagname = '';
-				}
+				$tagname = $vals[$i]['tag'] ?? '';
 
 				if (isset($children[$tagname]))
 				{
@@ -3993,7 +3994,7 @@ function ShowMessage($arMess)
 	if(!is_array($arMess))
 		$arMess=Array("MESSAGE" => $arMess, "TYPE" => "ERROR");
 
-	if($arMess["MESSAGE"] <> "")
+	if(!empty($arMess["MESSAGE"]))
 	{
 		$APPLICATION->IncludeComponent(
 			"bitrix:system.show_message",
@@ -4012,8 +4013,8 @@ function ShowMessage($arMess)
 
 function DeleteParam($ParamNames)
 {
-    if(empty($_GET) || count($_GET) < 1)
-        return "";
+	if(empty($_GET) || count($_GET) < 1)
+		return "";
 
 	$aParams = $_GET;
 	foreach(array_keys($aParams) as $key)
@@ -4050,13 +4051,16 @@ function check_email($email, $strict = false, $domainCheck = false)
 	}
 
 	//convert to UTF to use extended regular expressions
-	static $encoding = null;
-	if($encoding === null)
-	{
-		$encoding = strtolower(Context::getCurrent()->getCulture()->getCharset());
-	}
 	$encodedEmail = $email;
-	if($encoding <> "utf-8")
+	static $encoding = null;
+	if ($encoding === null)
+	{
+		if (($context = Context::getCurrent()) && ($culture = $context->getCulture()))
+		{
+			$encoding = strtolower($culture->getCharset());
+		}
+	}
+	if ($encoding !== null && $encoding != "utf-8")
 	{
 		$encodedEmail = Text\Encoding::convertEncoding($email, $encoding, "UTF-8");
 	}
@@ -4419,7 +4423,7 @@ function NormalizePhone($number, $minLength = 10)
 		return false;
 	}
 
-	if (mb_strlen($number) >= 10 && mb_substr($number, 0, 2) == '+8')
+	if (mb_strlen($number) >= 10 && mb_substr($number, 0, 2) === '+8')
 	{
 		$number = '00'.mb_substr($number, 1);
 	}
@@ -4475,13 +4479,18 @@ function bxmail($to, $subject, $message, $additional_headers="", $additional_par
 	$event->send();
 
 	$defaultMailConfiguration = Configuration::getValue("smtp");
+	$smtpEnabled =
+		is_array($defaultMailConfiguration)
+		&& isset($defaultMailConfiguration['enabled'])
+		&& $defaultMailConfiguration['enabled'] === true
+	;
+
 	if (
-		$defaultMailConfiguration
-		&& $defaultMailConfiguration['enabled']
-		&& $context->getSmtp()
-		|| $defaultMailConfiguration['enabled']
-		&& $defaultMailConfiguration['host']
-		&& $defaultMailConfiguration['login']
+		$smtpEnabled
+		&& (
+			$context->getSmtp() !== null
+			|| (!empty($defaultMailConfiguration['host']) && !empty($defaultMailConfiguration['login']))
+		)
 	)
 	{
 		$mailer = Main\Mail\Smtp\Mailer::getInstance($context);
@@ -4507,8 +4516,8 @@ function bx_accelerator_reset()
 		return;
 	if(function_exists("accelerator_reset"))
 		accelerator_reset();
-	elseif(function_exists("wincache_refresh_if_changed"))
-		wincache_refresh_if_changed();
+	elseif(function_exists("opcache_reset"))
+		opcache_reset();
 }
 
 /**

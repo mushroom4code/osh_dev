@@ -2126,7 +2126,7 @@ this.BX.UI = this.BX.UI || {};
 
 	  if (main_core.Type.isPlainObject(file) && (file['src'] || file['tmp_url'])) {
 	    const src = file['src'] || file['tmp_url'];
-	    babelHelpers.classPrivateFieldLooseBase(this, _image)[_image].src = src + (src.indexOf("?") > 0 ? '&' : '?') + 'imageUploader' + babelHelpers.classPrivateFieldLooseBase(this, _id$1)[_id$1] + babelHelpers.classPrivateFieldLooseBase(this, _justACounter)[_justACounter]++;
+	    babelHelpers.classPrivateFieldLooseBase(this, _image)[_image].src = encodeURI(src) + (src.indexOf("?") > 0 ? '&' : '?') + 'imageUploader' + babelHelpers.classPrivateFieldLooseBase(this, _id$1)[_id$1] + babelHelpers.classPrivateFieldLooseBase(this, _justACounter)[_justACounter]++;
 	  } else {
 	    const res = Object.prototype.toString.call(file);
 
@@ -3568,12 +3568,6 @@ this.BX.UI = this.BX.UI || {};
 	      }) => {
 	        var _loader$hiddenCanvas;
 
-	        if (!babelHelpers.classPrivateFieldLooseBase(this, _canvasMask)[_canvasMask]) {
-	          return resolve({
-	            blob
-	          });
-	        }
-
 	        const loader = CanvasLoader.getInstance();
 	        loader[hiddenCanvas] = (_loader$hiddenCanvas = loader[hiddenCanvas]) != null ? _loader$hiddenCanvas : document.createElement('canvas');
 	        const canvas = loader[hiddenCanvas];
@@ -3581,15 +3575,24 @@ this.BX.UI = this.BX.UI || {};
 	        canvas.height = blob.height;
 	        canvas.getContext('2d').drawImage(loader.getCanvas(), 0, 0);
 
+	        if (!babelHelpers.classPrivateFieldLooseBase(this, _canvasMask)[_canvasMask]) {
+	          return resolve({
+	            blob,
+	            canvas
+	          });
+	        }
+
 	        babelHelpers.classPrivateFieldLooseBase(this, _canvasMask)[_canvasMask].applyAndPack(canvas).then((maskedBlob, maskId) => {
 	          resolve({
 	            blob,
 	            maskedBlob,
-	            maskId
+	            maskId,
+	            canvas
 	          });
 	        }).catch(() => {
 	          resolve({
-	            blob
+	            blob,
+	            canvas
 	          });
 	        });
 	      }).catch(error => {
@@ -3722,7 +3725,8 @@ this.BX.UI = this.BX.UI || {};
 	    this.packBlobAndMask().then(({
 	      blob,
 	      maskedBlob,
-	      maskId
+	      maskId,
+	      canvas
 	    }) => {
 	      if (blob instanceof Blob) {
 	        if (maskId > 0) {
@@ -3730,7 +3734,7 @@ this.BX.UI = this.BX.UI || {};
 	        }
 
 	        const ev = new main_core_events.BaseEvent({
-	          compatData: [blob, maskedBlob],
+	          compatData: [blob, canvas],
 	          data: {
 	            blob,
 	            maskedBlob
@@ -3758,21 +3762,29 @@ this.BX.UI = this.BX.UI || {};
 	        blob,
 	        maskedBlob
 	      } = event.getData();
-	      formObj.append(fieldName + '[file]', blob, blob['name']);
+	      formObj.append(fieldName, blob, blob['name']);
+	      const maskedFileId = ['maskedFile', Editor.justANumber++].join(':');
+	      formObj.append(main_core.Loc.getMessage('UI_AVATAR_MASK_REQUEST_FIELD_NAME') + fieldName, maskedFileId);
 
 	      if (maskedBlob) {
-	        formObj.append(fieldName + '[maskedFile]', maskedBlob, blob['name']);
-	        formObj.append(fieldName + '[maskedFile][maskId]', maskedBlob['maskId']);
+	        formObj.append(main_core.Loc.getMessage('UI_AVATAR_MASK_REQUEST_FIELD_NAME') + '[' + maskedFileId + ']', maskedBlob, blob['name']);
+	        formObj.append(main_core.Loc.getMessage('UI_AVATAR_MASK_REQUEST_FIELD_NAME') + '[' + maskedFileId + '][maskId]', maskedBlob['maskId']);
+	        callback(new main_core_events.BaseEvent({
+	          data: {
+	            form: formObj,
+	            blob,
+	            maskedBlob,
+	            maskId: maskedBlob['maskId']
+	          }
+	        }));
+	      } else {
+	        callback(new main_core_events.BaseEvent({
+	          data: {
+	            form: formObj,
+	            blob
+	          }
+	        }));
 	      }
-
-	      callback(new main_core_events.BaseEvent({
-	        data: {
-	          form: formObj,
-	          blob,
-	          maskedBlob,
-	          maskId: maskedBlob ? maskedBlob['maskId'] : null
-	        }
-	      }));
 	    });
 	  } //region Compatibility
 

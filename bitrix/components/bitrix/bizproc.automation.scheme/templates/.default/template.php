@@ -21,7 +21,8 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass . ' ' : '') 
 	'bizproc.automation',
 	'ui.buttons',
 	'ui.forms',
-	'ui.alerts'
+	'ui.alerts',
+	'ui.fonts.opensans',
 ]);
 
 /** @var BizprocAutomationSchemeComponent $component */
@@ -29,7 +30,7 @@ $component = $this->getComponent();
 ?>
 <?php $this->SetViewTarget('pagetitle') ?>
 <div class="ui-btn-container">
-	<button class="ui-btn ui-btn-light-border">
+	<button class="ui-btn ui-btn-light-border" onclick="top.BX.Helper.show('redirect=detail&code=14922900');">
 		<?=Loc::getMessage('BIZPROC_AUTOMATION_SCHEME_HELP_BUTTON')?>
 	</button>
 </div>
@@ -140,7 +141,6 @@ $APPLICATION->IncludeComponent(
 		var component = new BX.Bizproc.Component.Scheme({
 			scheme: <?= \Bitrix\Main\Web\Json::encode($arResult['templatesScheme']) ?>,
 			signedParameters: '<?= $component->getSignedParameters() ?>',
-			robotNames: <?= \Bitrix\Main\Web\Json::encode($arResult['robotNames']) ?>,
 			action: '<?=CUtil::JSEscape($arResult['action'])?>',
 
 			errorsContainer: document.querySelector('[data-role="errors-container"]'),

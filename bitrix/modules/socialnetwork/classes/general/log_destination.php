@@ -8,6 +8,8 @@ class CSocNetLogDestination
 {
 	const LIST_USER_LIMIT = 11;
 
+	private const USERS_STEP_COUNT = 500;
+
 	/**
 	* Retrieves last used users from socialnetwork/log_destination UserOption
 	* @deprecated
@@ -245,7 +247,7 @@ class CSocNetLogDestination
 		)
 		{
 			$result["department_relation"] = self::GetTreeList('DR'.(intval($department_id) > 0 ? $department_id : 0), $result["department"], true);
-			if (intval($arParams["HEAD_DEPT"]) > 0)
+			if ((int) ($arParams["HEAD_DEPT"] ?? 0) > 0)
 			{
 				$result["department_relation_head"] = self::GetTreeList('DR'.intval($arParams["HEAD_DEPT"]), $result["department"], true);
 			}
@@ -464,8 +466,8 @@ class CSocNetLogDestination
 		}
 
 		$avatarSize = array(
-			"width" => (intval($arParams["THUMBNAIL_SIZE_WIDTH"]) > 0 ? $arParams["THUMBNAIL_SIZE_WIDTH"] : 100),
-			"height" => (intval($arParams["THUMBNAIL_SIZE_HEIGHT"]) > 0 ? $arParams["THUMBNAIL_SIZE_HEIGHT"] : 100)
+			"width" => (intval($arParams["THUMBNAIL_SIZE_WIDTH"] ?? 0) > 0 ? $arParams["THUMBNAIL_SIZE_WIDTH"] : 100),
+			"height" => (intval($arParams["THUMBNAIL_SIZE_HEIGHT"] ?? 0) > 0 ? $arParams["THUMBNAIL_SIZE_HEIGHT"] : 100)
 		);
 
 		$cacheTtl = 3153600;
@@ -1724,12 +1726,16 @@ class CSocNetLogDestination
 					{
 						$arFileTmp = CFile::ResizeImageGet(
 							$imageFile,
-							array(
-								"width" => ((int)$arParams["THUMBNAIL_SIZE_WIDTH"] > 0 ? $arParams["THUMBNAIL_SIZE_WIDTH"] : 100),
-								"height" => ((int)$arParams["THUMBNAIL_SIZE_HEIGHT"] > 0 ? $arParams["THUMBNAIL_SIZE_HEIGHT"] : 100)
-							),
-							BX_RESIZE_IMAGE_PROPORTIONAL,
-							false
+							[
+								"width" => ((int) ($arParams["THUMBNAIL_SIZE_WIDTH"] ?? 0) > 0
+									? $arParams["THUMBNAIL_SIZE_WIDTH"]
+									: 100
+								),
+								"height" => ((int) ($arParams["THUMBNAIL_SIZE_HEIGHT"] ?? 0) > 0
+									? $arParams["THUMBNAIL_SIZE_HEIGHT"]
+									: 100
+								)
+							],
 						);
 						$group["avatar"] = $arFileTmp["src"];
 					}
@@ -1802,7 +1808,7 @@ class CSocNetLogDestination
 		}
 
 		$arRelations = Array();
-		if (is_array($relation[$id]))
+		if (is_array($relation[$id] ?? null))
 		{
 			foreach ($relation[$id] as $relId)
 			{
@@ -1849,7 +1855,7 @@ class CSocNetLogDestination
 			{
 				foreach ($tmpOps as $key=>$val)
 				{
-					if (!$arGroupsPerms[$key])
+					if (!($arGroupsPerms[$key] ?? null))
 					{
 						$arGroupsPerms[$key] = $val;
 					}
@@ -1989,14 +1995,16 @@ class CSocNetLogDestination
 
 					while ($user = $dbRes->Fetch())
 					{
-						if (!in_array($user['ID'], $userIds))
+						if (array_key_exists($user['ID'], $userIds))
 						{
-							$userIds[] = $user['ID'];
-							if ($fetchUsers)
-							{
-								$user['USER_ID'] = $user['ID'];
-								$users[] = $user;
-							}
+							continue;
+						}
+
+						$userIds[$user['ID']] = $user['ID'];
+						if ($fetchUsers)
+						{
+							$user['USER_ID'] = $user['ID'];
+							$users[] = $user;
 						}
 					}
 					break;
@@ -2004,12 +2012,12 @@ class CSocNetLogDestination
 				elseif (mb_substr($code, 0, 1) === 'U')
 				{
 					$userId = (int)mb_substr($code, 1);
-					if (!in_array($userId, $userIds))
+					if (!array_key_exists($userId, $userIds))
 					{
 						$usersToFetch[] = $userId;
 						if (!$fetchUsers)
 						{
-							$userIds[] = $userId;
+							$userIds[$userId] = $userId;
 						}
 					}
 				}
@@ -2039,21 +2047,22 @@ class CSocNetLogDestination
 					{
 						while ($user = $dbMembers->GetNext())
 						{
-							if (!in_array($user["USER_ID"], $userIds))
+							if (array_key_exists($user['USER_ID'], $userIds))
 							{
-								$userIds[] = $user["USER_ID"];
-								$users[] = [
-									'ID' => $user["USER_ID"],
-									'USER_ID' => $user["USER_ID"],
-									'LOGIN' => $user["USER_LOGIN"],
-									'NAME' => $user["USER_NAME"],
-									'LAST_NAME' => $user["USER_LAST_NAME"],
-									'SECOND_NAME' => $user["USER_SECOND_NAME"],
-									'EMAIL' => $user["USER_EMAIL"],
-									'PERSONAL_PHOTO' => $user["USER_PERSONAL_PHOTO"],
-									'WORK_POSITION' => $user["USER_WORK_POSITION"]
-								];
+								continue;
 							}
+							$userIds[$user['USER_ID']] = $user["USER_ID"];
+							$users[] = [
+								'ID' => $user["USER_ID"],
+								'USER_ID' => $user["USER_ID"],
+								'LOGIN' => $user["USER_LOGIN"],
+								'NAME' => $user["USER_NAME"],
+								'LAST_NAME' => $user["USER_LAST_NAME"],
+								'SECOND_NAME' => $user["USER_SECOND_NAME"],
+								'EMAIL' => $user["USER_EMAIL"],
+								'PERSONAL_PHOTO' => $user["USER_PERSONAL_PHOTO"],
+								'WORK_POSITION' => $user["USER_WORK_POSITION"]
+							];
 						}
 					}
 				}
@@ -2070,9 +2079,9 @@ class CSocNetLogDestination
 
 					while ($user = $res->Fetch())
 					{
-						if (!in_array($user['ID'], $userIds))
+						if (!array_key_exists($user['ID'], $userIds))
 						{
-							$userIds[] = $user['ID'];
+							$userIds[$user['ID']] = $user['ID'];
 							if ($fetchUsers)
 							{
 								$user['USER_ID'] = $user['ID'];
@@ -2089,18 +2098,28 @@ class CSocNetLogDestination
 			&& $fetchUsers
 		)
 		{
-			$dbRes = CUser::GetList('ID', 'ASC',
-				[
-					'ID' => implode('|', $usersToFetch)
-				],
-				['FIELDS' => $fields]
-			);
+			$usersToFetch = array_chunk(array_values($usersToFetch), self::USERS_STEP_COUNT);
 
-			while ($user = $dbRes->Fetch())
+			foreach ($usersToFetch as $chunk)
 			{
-				if (!in_array($user['ID'], $userIds))
+				$usersRes = \Bitrix\Main\UserTable::getList([
+					'select' => $fields,
+					'filter' => [
+						'@ID' => array_values($chunk)
+					],
+					'order' => [
+						'ID' => 'ASC'
+					]
+				])->fetchAll();
+
+				foreach ($usersRes as $user)
 				{
-					$userIds[] = $user['ID'];
+					if (array_key_exists($user['ID'], $userIds))
+					{
+						continue;
+					}
+
+					$userIds[$user['ID']] = $user['ID'];
 					$user['USER_ID'] = $user['ID'];
 					$users[] = $user;
 				}
@@ -2140,7 +2159,7 @@ class CSocNetLogDestination
 			["RAND" => "ASC"],
 			[
 				"GROUP_ID" => $groupId,
-				"=ROLE" => $role,
+				"=ROLE" => $isScrumCustomRole ? [SONET_ROLES_OWNER, SONET_ROLES_MODERATOR] : $role,
 				"USER_ACTIVE" => "Y"
 			],
 			false,

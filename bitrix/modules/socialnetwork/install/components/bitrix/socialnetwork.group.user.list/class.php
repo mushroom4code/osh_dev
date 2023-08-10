@@ -15,9 +15,12 @@ use Bitrix\Main\Error;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Filter;
 use Bitrix\Socialnetwork\Helper;
+use Bitrix\Socialnetwork\Internals\Counter\CounterDictionary;
 use Bitrix\Socialnetwork\Item\Workgroup;
+use Bitrix\Socialnetwork\Item\Workgroup\AccessManager;
 use Bitrix\Socialnetwork\UserToGroupTable;
 use Bitrix\Main\Search;
+use Bitrix\Socialnetwork\WorkgroupTable;
 
 Loader::includeModule('socialnetwork');
 
@@ -29,9 +32,6 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 	protected const PRESET_REQUESTS_OUT = 'requests_out';
 	protected const PRESET_EXTERNAL = 'external';
 	protected const PRESET_AUTO = 'auto';
-
-	protected const COUNTER_REQUESTS_IN = 'workgroup_requests_in';
-	protected const COUNTER_REQUESTS_OUT = 'workgroup_requests_out';
 
 	protected $gridId = 'SOCIALNETWORK_WORKGROUP_USER_LIST';
 	protected $filterId = 'SOCIALNETWORK_WORKGROUP_USER_LIST';
@@ -60,6 +60,8 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 		'AUTO_MEMBER',
 		'INITIATED_BY_TYPE',
 		'INITIATED_BY_USER_ID',
+		'USER_ID',
+		'GROUP_ID',
 		'DEPARTMENT',
 		'DATE_CREATE',
 		'IS_SCRUM_MASTER',
@@ -140,7 +142,7 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 			foreach ($result as $key => $column)
 			{
 				if (
-					!$column['default']
+					!($column['default'] ?? false)
 					&& in_array($column['id'], $defaultSelectedGridHeaders, true)
 				)
 				{
@@ -225,10 +227,10 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 		switch ($this->arParams['MODE'])
 		{
 			case 'REQUESTS_IN':
-				$result = self::COUNTER_REQUESTS_IN;
+				$result = CounterDictionary::COUNTER_WORKGROUP_REQUESTS_IN;
 				break;
 			case 'REQUESTS_OUT':
-				$result = self::COUNTER_REQUESTS_OUT;
+				$result = CounterDictionary::COUNTER_WORKGROUP_REQUESTS_OUT;
 				break;
 			default:
 				$result = '';
@@ -298,7 +300,7 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 			];
 		}
 
-		if ($componentResult['GROUP_PERMS']['UserCanProcessRequestsIn'])
+		if ($componentResult['GROUP_PERMS']['UserCanProcessRequestsIn'] ?? null)
 		{
 			$result[self::PRESET_REQUESTS_IN] = [
 				'name' => Loc::getMessage('SOCIALNETWORK_GROUP_USER_LIST_FILTER_PRESET_REQUESTS_IN'),
@@ -514,7 +516,7 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 
 		if (
 			!$initiatedByUser
-			&& !$componentResult['GROUP_PERMS']['UserCanProcessRequestsIn']
+			&& !($componentResult['GROUP_PERMS']['UserCanProcessRequestsIn'] ?? null)
 			&& !Helper\Workgroup::isCurrentUserModuleAdmin()
 		)
 		{
@@ -685,8 +687,7 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 	 */
 	private function getFilter(array $gridFilter): array
 	{
-		$result = [
-		];
+		$result = [];
 
 		if (!\Bitrix\Main\Filter\UserDataProvider::getFiredAvailability())
 		{
@@ -719,12 +720,14 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 			}
 		}
 
+		$gridFilter['DEPARTMENT'] = ($gridFilter['DEPARTMENT'] ?? '');
+
 		$integerFieldsList = [
 			[
 				'FILTER_FIELD_NAME' => 'ID',
 				'FIELD_NAME' => 'ID',
 				'OPERATION' => '=',
-				'VALUE' => $gridFilter['ID'],
+				'VALUE' => $gridFilter['ID'] ?? '',
 			],
 			[
 				'FILTER_FIELD_NAME' => 'DEPARTMENT',
@@ -755,37 +758,37 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 				'FILTER_FIELD_NAME' => 'NAME',
 				'FIELD_NAME' => 'NAME',
 				'OPERATION' => '%=',
-				'VALUE' => $gridFilter['NAME'] . '%',
+				'VALUE' => ($gridFilter['NAME'] ?? '') . '%',
 			],
 			[
 				'FILTER_FIELD_NAME' => 'LAST_NAME',
 				'FIELD_NAME' => 'LAST_NAME',
 				'OPERATION' => '%=',
-				'VALUE' => $gridFilter['LAST_NAME'] . '%',
+				'VALUE' => ($gridFilter['LAST_NAME'] ?? '') . '%',
 			],
 			[
 				'FILTER_FIELD_NAME' => 'EMAIL',
 				'FIELD_NAME' => 'EMAIL',
 				'OPERATION' => '%=',
-				'VALUE' => $gridFilter['EMAIL'] . '%',
+				'VALUE' => ($gridFilter['EMAIL'] ?? '') . '%',
 			],
 			[
 				'FILTER_FIELD_NAME' => 'ROLE',
 				'FIELD_NAME' => 'ROLE',
 				'OPERATION' => '=',
-				'VALUE' => $gridFilter['ROLE'],
+				'VALUE' => ($gridFilter['ROLE'] ?? ''),
 			],
 			[
 				'FILTER_FIELD_NAME' => 'INITIATED_BY_TYPE',
 				'FIELD_NAME' => 'INITIATED_BY_TYPE',
 				'OPERATION' => '=',
-				'VALUE' => $gridFilter['INITIATED_BY_TYPE'],
+				'VALUE' => $gridFilter['INITIATED_BY_TYPE'] ?? '',
 			],
 			[
 				'FILTER_FIELD_NAME' => 'AUTO_MEMBER',
 				'FIELD_NAME' => 'AUTO_MEMBER',
 				'OPERATION' => '=',
-				'VALUE' => $gridFilter['AUTO_MEMBER'],
+				'VALUE' => $gridFilter['AUTO_MEMBER'] ?? '',
 			],
 		];
 
@@ -868,7 +871,11 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 
 	protected function getSelect(\Bitrix\Main\Grid\Options $gridOptions, array $componentResult = []): array
 	{
-		$result = [ 'USER.ID', 'USER.CONFIRM_CODE', 'ROLE', 'INITIATED_BY_TYPE', 'INITIATED_BY_USER_ID', 'AUTO_MEMBER', 'DATE_CREATE'  ];
+		$result = [
+			'GROUP_ID', 'USER_ID',
+			'ROLE', 'INITIATED_BY_TYPE', 'INITIATED_BY_USER_ID', 'AUTO_MEMBER', 'DATE_CREATE',
+			'USER.ID', 'USER.CONFIRM_CODE',
+		];
 		if (ModuleManager::isModuleInstalled('intranet'))
 		{
 			$result[] = 'USER.USER_TYPE';
@@ -1017,38 +1024,59 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 		$removeModeratorRelationIdList = [];
 		$rejectIncomingRequestRelationIdList = [];
 
+		$group = WorkgroupTable::getList([
+			'filter' => [
+				'=ID' => $groupId,
+			],
+			'select' => [
+				'ID',
+				'CLOSED',
+				'PROJECT',
+				'SCRUM_MASTER_ID',
+				'INITIATE_PERMS',
+			],
+		])->fetchObject();
+
+		$currentUserRelation = UserToGroupTable::getList([
+			'filter' => [
+				'=GROUP_ID' => $groupId,
+				'=USER_ID' => Helper\User::getCurrentUserId(),
+			],
+			'select' => [ 'ID', 'ROLE', 'USER_ID', 'GROUP_ID', 'INITIATED_BY_TYPE' ],
+		])->fetchObject();
+
 		$res = UserToGroupTable::getList([
 			'filter' => [
 				'=GROUP_ID' => $groupId,
 				'@USER_ID' => $idList,
 			],
-			'select' => [ 'ID', 'USER', 'ROLE', 'INITIATED_BY_TYPE', 'INITIATED_BY_USER_ID', 'AUTO_MEMBER' ],
+			'select' => [
+				'ID',
+				'GROUP_ID',
+				'USER_ID',
+				'USER',
+				'ROLE',
+				'INITIATED_BY_TYPE',
+				'INITIATED_BY_USER_ID',
+				'AUTO_MEMBER',
+			],
 		]);
 		$relations = $res->fetchCollection();
 
 		foreach ($relations as $relation)
 		{
+			$accessManager = new AccessManager(
+				$group,
+				$relation,
+				$currentUserRelation,
+			);
+
 			if ($this->actionData['NAME'] === 'delete')
 			{
-				$canRemoveModerator = Helper\Workgroup::canRemoveModerator([
-					'relation' => $relation,
-					'groupId' => $groupId,
-				]);
-
-				$canDeleteOutgoingRequest = Helper\Workgroup::canDeleteOutgoingRequest([
-					'relation' => $relation,
-					'groupId' => $groupId,
-				]);
-
-				$canExclude = Helper\Workgroup::canExclude([
-					'relation' => $relation,
-					'groupId' => $groupId,
-				]);
-
-				$canProcessIncomingRequest = Helper\Workgroup::canProcessIncomingRequest([
-					'relation' => $relation,
-					'groupId' => $groupId,
-				]);
+				$canRemoveModerator = $accessManager->canRemoveModerator();
+				$canDeleteOutgoingRequest = $accessManager->canDeleteOutgoingRequest();
+				$canExclude = $accessManager->canExclude();
+				$canProcessIncomingRequest = $accessManager->canProcessIncomingRequest();
 
 				if (
 					!$canDeleteOutgoingRequest
@@ -1244,7 +1272,6 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 		$query->setLimit($nav->getLimit());
 		$query->disableDataDoubling();
 		$res = $query->exec();
-
 		$records = $res->fetchCollection();
 
 		$gridColumns = $gridOptions->getVisibleColumns();
@@ -1266,6 +1293,21 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 		$rowsList = [];
 		$showActionsColumn = false;
 
+		$currentUserRelation = UserToGroupTable::getList([
+			'filter' => [
+				'=GROUP_ID' => (int)$this->arParams['GROUP_ID'],
+				'=USER_ID' => Helper\User::getCurrentUserId(),
+			],
+			'select' => [ 'ID', 'ROLE', 'USER_ID', 'GROUP_ID', 'INITIATED_BY_TYPE' ],
+		])->fetchObject();
+
+		$group = \Bitrix\Socialnetwork\WorkgroupTable::getList([
+			'filter' => [
+				'=ID' => (int)$this->arParams['GROUP_ID'],
+			],
+			'select' => [ 'ID', 'CLOSED', 'PROJECT', 'SCRUM_MASTER_ID', 'INITIATE_PERMS' ],
+		])->fetchObject();
+
 		foreach ($records as $record)
 		{
 			$row['ROW_FIELDS'] = $record;
@@ -1277,6 +1319,8 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 				'RELATION' => $row['ROW_FIELDS'],
 				'PATH_TO_USER' => $this->arParams['PATH_TO_USER'],
 				'GROUP_ID' => $this->arParams['GROUP_ID'],
+				'GROUP' => $group,
+				'CURRENT_RELATION' => $currentUserRelation,
 			]);
 
 			if (
@@ -1631,11 +1675,17 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 		return $result;
 	}
 
-	public function actAction(string $action = '', array $fields = []): array
+	public function actAction(string $action = '', array $fields = []): ?array
 	{
 		if (!$this->checkAction($action))
 		{
-			throw new \Bitrix\Main\NotSupportedException(Loc::getMessage('SOCIALNETWORK_GROUP_USER_LIST_ERROR_ACTION_NOT_SUPPORTED'));
+			$this->errorCollection->setError(
+				new Error(
+					Loc::getMessage('SOCIALNETWORK_GROUP_USER_LIST_ERROR_ACTION_NOT_SUPPORTED')
+				)
+			);
+
+			return null;
 		}
 
 		try
@@ -1722,9 +1772,11 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 			}
 
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
-			throw new Exception($e->getMessage(), $e->getCode());
+			$this->errorCollection->setError(new Error($e->getMessage()));
+
+			return null;
 		}
 
 		return [
@@ -1748,7 +1800,7 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 		], true);
 	}
 
-	public function disconnectDepartmentAction(array $fields = []): array
+	public function disconnectDepartmentAction(array $fields = []): ?array
 	{
 		try
 		{
@@ -1757,9 +1809,11 @@ class CSocialnetworkGroupUserListComponent extends WorkgroupUserList
 				'departmentId' => (int)($fields['id'] ?? 0),
 			]);
 		}
-		catch(Exception $e)
+		catch (\Exception $e)
 		{
-			throw new Exception($e->getMessage(), $e->getCode());
+			$this->errorCollection->setError(new Error($e->getMessage()));
+
+			return null;
 		}
 
 		return [

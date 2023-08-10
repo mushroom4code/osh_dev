@@ -4,5 +4,7 @@ export const PullCommand = Object.freeze({
 });
 
 export const PullHandlers = Object.freeze({
-	recent: 'recent'
+	recent: 'recent',
+	notification: 'notification',
+	sidebar: 'sidebar',
 });

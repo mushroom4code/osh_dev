@@ -1,5 +1,4 @@
 <?php
-$MESS["BPSGCA_ACCESS_DENIED"] = "Nur die Bitrix24 Administratoren können auf Aktionseigenschaften zugreifen.";
 $MESS["BPSGCA_EMPTY_VARIABLES"] = "Es wurde kein Wert den globalen Variablen zugewiesen";
 $MESS["BPSGVA_ADD_PARAMETER"] = "+ Parameter hinzufügen";
 $MESS["BPSGVA_ADD_VARIABLE"] = "+ Variable hinzufügen";
@@ -14,8 +13,6 @@ $MESS["BPSGVA_DOCUMENT"] = "Feldwert";
 $MESS["BPSGVA_EMPTY"] = "Nicht ausgewählt";
 $MESS["BPSGVA_GCONSTANT_NOT_FOUND"] = "Konstante wurde nicht gefunden";
 $MESS["BPSGVA_GCONSTANT_NO_EXIST"] = "Es gibt keine Konstanten";
-$MESS["BPSGVA_GLOBAL_CONST"] = "Globale Konstanten";
-$MESS["BPSGVA_GLOBAL_VAR"] = "Globale Variablen";
 $MESS["BPSGVA_GVARIABLE_NOT_FOUND"] = "Variable wurde nicht gefunden";
 $MESS["BPSGVA_GVARIABLE_NO_EXIST"] = "Es gibt keine Variablen";
 $MESS["BPSGVA_INPUT_TEXT"] = "Wert eingeben";

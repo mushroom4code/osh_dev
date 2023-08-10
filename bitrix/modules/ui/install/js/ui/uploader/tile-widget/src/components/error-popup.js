@@ -1,9 +1,13 @@
-import { BitrixVue } from 'ui.vue';
 import { Popup } from 'main.popup';
 import { Type } from 'main.core';
-import type { UploaderError } from 'ui.uploader.core';
 
-export const ErrorPopup = BitrixVue.localComponent('ui.uploader.error-popup', {
+import type { UploaderError } from 'ui.uploader.core';
+import type { BitrixVueComponentProps } from 'ui.vue3';
+
+/**
+ * @memberof BX.UI.Uploader
+ */
+export const ErrorPopup: BitrixVueComponentProps = {
 	props: {
 		error: {
 			type: [Object, String],
@@ -20,14 +24,9 @@ export const ErrorPopup = BitrixVue.localComponent('ui.uploader.error-popup', {
 			}
 		},
 	},
-	data()
-	{
-		return {
-			errorPopup: null,
-		};
-	},
+	emits: ['onDestroy'],
 	watch: {
-		error(newValue)
+		error(newValue): void
 		{
 			if (this.errorPopup)
 			{
@@ -38,7 +37,11 @@ export const ErrorPopup = BitrixVue.localComponent('ui.uploader.error-popup', {
 			this.errorPopup.show();
 		}
 	},
-	mounted()
+	created(): void
+	{
+		this.errorPopup = null;
+	},
+	mounted(): void
 	{
 		if (this.error)
 		{
@@ -46,7 +49,7 @@ export const ErrorPopup = BitrixVue.localComponent('ui.uploader.error-popup', {
 			this.errorPopup.show();
 		}
 	},
-	beforeDestroy()
+	beforeUnmount(): void
 	{
 		if (this.errorPopup)
 		{
@@ -55,7 +58,7 @@ export const ErrorPopup = BitrixVue.localComponent('ui.uploader.error-popup', {
 		}
 	},
 	methods: {
-		createContent(error: UploaderError | string)
+		createContent(error: UploaderError | string): string
 		{
 			if (Type.isStringFilled(error))
 			{
@@ -63,13 +66,13 @@ export const ErrorPopup = BitrixVue.localComponent('ui.uploader.error-popup', {
 			}
 			else if (Type.isObject(error))
 			{
-				return error.getMessage() + '<br>' + error.getDescription();
+				return error.message + '<br>' + error.description;
 			}
 
 			return '';
 		},
 
-		createPopup(error: UploaderError | string)
+		createPopup(error: UploaderError | string): Popup
 		{
 			const content = this.createContent(error);
 			let defaultOptions;
@@ -123,4 +126,4 @@ export const ErrorPopup = BitrixVue.localComponent('ui.uploader.error-popup', {
 		}
 	},
 	template: '<span></span>',
-});
+};

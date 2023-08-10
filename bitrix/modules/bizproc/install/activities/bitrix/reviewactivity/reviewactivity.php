@@ -1,9 +1,11 @@
-<?
-if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php
 
-class CBPReviewActivity
-	extends CBPCompositeActivity
-	implements IBPEventActivity, IBPActivityExternalEventListener
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
+{
+	die();
+}
+
+class CBPReviewActivity extends CBPCompositeActivity implements IBPEventActivity, IBPActivityExternalEventListener
 {
 	private $taskId = 0;
 	private $taskUsers = array();
@@ -319,8 +321,12 @@ class CBPReviewActivity
 
 		if (!$this->IsPropertyExists("SetStatusMessage") || $this->SetStatusMessage == "Y")
 		{
-			$messageTemplate = ($this->IsPropertyExists("StatusMessage") && $this->StatusMessage <> '') ? $this->StatusMessage : GetMessage("BPAR_ACT_INFO");
-			$votedPercent = intval($this->ReviewedCount / $this->TotalCount * 100);
+			$messageTemplate = \CBPHelper::stringify($this->StatusMessage);
+			if (!$messageTemplate)
+			{
+				$messageTemplate = GetMessage("BPAR_ACT_INFO");
+			}
+			$votedPercent = (int)($this->ReviewedCount / $this->TotalCount * 100);
 			$votedCount = $this->ReviewedCount;
 			$totalCount = $this->TotalCount;
 
@@ -674,17 +680,24 @@ class CBPReviewActivity
 		foreach ($arMap as $key => $value)
 		{
 			if ($key == "review_users")
+			{
 				continue;
-			$arProperties[$value] = $arCurrentValues[$key];
+			}
+
+			$arProperties[$value] = $arCurrentValues[$key] ?? null;
 		}
 
 		$arProperties["Users"] = CBPHelper::UsersStringToArray($arCurrentValues["review_users"], $documentType, $arErrors);
 		if (count($arErrors) > 0)
+		{
 			return false;
+		}
 
 		$arErrors = self::ValidateProperties($arProperties, new CBPWorkflowTemplateUser(CBPWorkflowTemplateUser::CurrentUser));
 		if (count($arErrors) > 0)
+		{
 			return false;
+		}
 
 		$arCurrentActivity = &CBPWorkflowTemplateLoader::FindActivityByName($arWorkflowTemplate, $activityName);
 		$arCurrentActivity["Properties"] = $arProperties;

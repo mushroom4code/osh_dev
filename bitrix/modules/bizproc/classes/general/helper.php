@@ -1,5 +1,7 @@
 <?php
 
+use Bitrix\Main;
+use Bitrix\Bitrix24;
 use Bitrix\Bizproc;
 
 class CBPHelper
@@ -189,7 +191,7 @@ class CBPHelper
 					$bCorrectUser = true;
 					$arResult[] = $k1;
 				}
-				elseif (preg_match('#\[([A-Z]{1,}[0-9A-Z_]+)\]#i', $user, $arMatches))
+				elseif (preg_match('#\[([A-Z]{1,}[0-9A-Z_]+)\]$#i', $user, $arMatches))
 				{
 					$bCorrectUser = true;
 					$arResult[] = 'group_' . mb_strtolower($arMatches[1]);
@@ -792,7 +794,7 @@ class CBPHelper
 		foreach ($arOrder as $by => $order)
 		{
 			$by = mb_strtoupper($by);
-			$order = mb_strtoupper($order);
+			$order = $order ? mb_strtoupper($order) : '';
 
 			if ($order != "ASC")
 				$order = "DESC";
@@ -866,18 +868,15 @@ class CBPHelper
 			$entity = $parameterDocumentId[0];
 		}
 
-		$moduleId = trim($moduleId);
+		$moduleId = is_scalar($moduleId) ? trim($moduleId) : '';
+		$entity = is_scalar($entity) ? trim($entity) : '';
+		$documentId = is_scalar($documentId) ? trim($documentId) : '';
 
-		if (!is_array($documentId))
-		{
-			$documentId = trim($documentId);
-		}
 		if ($documentId === '')
 		{
 			throw new CBPArgumentNullException("documentId");
 		}
 
-		$entity = trim($entity);
 		if ($entity === '')
 		{
 			throw new CBPArgumentNullException("entity");
@@ -1001,7 +1000,7 @@ class CBPHelper
 		return $newResult;
 	}
 
-	public static function convertUserToPrintableForm($userId, $nameTemplate = "")
+	public static function convertUserToPrintableForm($userId, $nameTemplate = "", $htmlSpecialChars = true)
 	{
 		if (mb_substr($userId, 0, mb_strlen("user_")) == "user_")
 		{
@@ -1035,7 +1034,7 @@ class CBPHelper
 		$str = "";
 		if ($ar = $db->Fetch())
 		{
-			$str = CUser::FormatName($nameTemplate, $ar, true);
+			$str = CUser::FormatName($nameTemplate, $ar, true, $htmlSpecialChars);
 			$str = $str." [".$ar["ID"]."]";
 			$str = str_replace(",", " ", $str);
 		}
@@ -2169,6 +2168,11 @@ class CBPHelper
 		return null;
 	}
 
+	public static function extractFirstUser($userGroups, $documentId): ?int
+	{
+		return static::extractUsers($userGroups, $documentId, true);
+	}
+
 	public static function makeArrayFlat($ar)
 	{
 		if (!is_array($ar))
@@ -2178,7 +2182,13 @@ class CBPHelper
 
 		$result = [];
 
-		if (!CBPHelper::IsAssociativeArray($ar) && (count($ar) == 2) && in_array($ar[0], array("Variable", "Document", "Template", "Workflow", "User", "System")) && is_string($ar[1]))
+		if (
+			!CBPHelper::isAssociativeArray($ar)
+			&& (count($ar) === 2)
+			&& isset($ar[0], $ar[1])
+			&& in_array($ar[0], ["Variable", "Document", "Template", "Workflow", "User", "System"])
+			&& is_string($ar[1])
+		)
 		{
 			$result[] = $ar;
 			return $result;
@@ -2201,9 +2211,37 @@ class CBPHelper
 		return $result;
 	}
 
+	public static function flatten($array): array
+	{
+		if (!is_array($array))
+		{
+			return [$array];
+		}
+
+		$result = [];
+		array_walk_recursive($array, function($a) use (&$result) { $result[] = $a; });
+
+		return $result;
+	}
+
+	public static function stringify($mixed): string
+	{
+		if (is_array($mixed))
+		{
+			return implode(', ', static::flatten($mixed));
+		}
+
+		return (string)$mixed;
+	}
+
 	public static function getBool($value)
 	{
-		if (empty($value) || $value === 'false' || is_int($value) && ($value == 0) || (mb_strtoupper($value) == 'N'))
+		if (
+			empty($value)
+			|| $value === 'false'
+			|| (is_int($value) && ($value == 0))
+			|| (is_scalar($value) && mb_strtoupper($value) == 'N')
+		)
 		{
 			return false;
 		}
@@ -2303,7 +2341,9 @@ class CBPHelper
 		$group = mb_strtoupper($group);
 		$access = self::getAccessProvider();
 		$arNames = $access->GetNames(array($group));
-		return $arNames[$group]['name'].($appendId? ' ['.$group.']' : '');
+		$groupName = $arNames[$group]['name'] ?? null;
+
+		return $groupName . ($appendId ? ' ['.$group.']' : '');
 	}
 
 	/**
@@ -2514,7 +2554,12 @@ class CBPHelper
 			return $date->getTimestamp();
 		}
 
-		if (intval($date)."!" === $date."!")
+		if ($date instanceof Main\Type\Date)
+		{
+			return $date->getTimestamp();
+		}
+
+		if (intval($date) . '!' === $date . '!')
 		{
 			return $date;
 		}
@@ -2523,12 +2568,47 @@ class CBPHelper
 		{
 			if (($result = MakeTimeStamp($date, FORMAT_DATE)) === false)
 			{
-				if (($result = MakeTimeStamp($date, "YYYY-MM-DD HH:MI:SS")) === false)
+				if (($result = MakeTimeStamp($date, 'YYYY-MM-DD HH:MI:SS')) === false)
 				{
-					$result = MakeTimeStamp($date, "YYYY-MM-DD");
+					$result = MakeTimeStamp($date, 'YYYY-MM-DD');
 				}
 			}
 		}
+
 		return (int) $result;
+	}
+
+	public static function isWorkTimeAvailable(): bool
+	{
+		if (
+			Main\Loader::includeModule('bitrix24')
+			&& !Bitrix24\Feature::isFeatureEnabled('bizproc_timeman')
+		)
+		{
+			return false;
+		}
+
+		if (Main\Loader::includeModule('intranet'))
+		{
+			$workTime = \Bitrix\Intranet\Site\Sections\TimemanSection::getWorkTime();
+
+			return $workTime['available'] && \Bitrix\Main\Loader::includeModule('timeman');
+		}
+
+		return false;
+	}
+
+	public static function hasStringRepresentation($value): bool
+	{
+		return (is_scalar($value) || (is_object($value) && method_exists($value, '__toString')));
+	}
+
+	public static function isEqualDocument(array $documentA, array $documentB): bool
+	{
+		return (
+			(string)$documentA[0] === (string)$documentB[0]
+			&& (string)$documentA[1] === (string)$documentB[1]
+			&& (string)$documentA[2] === (string)$documentB[2]
+		);
 	}
 }

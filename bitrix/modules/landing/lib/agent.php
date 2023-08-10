@@ -427,10 +427,6 @@ class Agent
 		$request->query(HttpClient::HTTP_HEAD, $file['SRC']);
 		if ($request->getStatus() !== 200)
 		{
-			\Bitrix\Landing\Debug::logToFile(
-				"[lndgdbg] AGENT check file {$fileId} with ORIG_NAME {$file['ORIGINAL_NAME']} and it not exists"
-			);
-
 			$filesToDelete = [$fileId];
 
 			// find duplicates of file
@@ -496,5 +492,20 @@ class Agent
 		}
 
 		return '';
+	}
+
+	/**
+	 * Publication landing and drop public cache if success.
+	 * F.e. need for recovery form-loader file, that is not created at the moment of first public
+	 * @param $landingId
+	 * @return void
+	 */
+	public static function rePublicationLanding($landingId): void
+	{
+		$landing = Landing::createInstance($landingId);
+		if ($landing->publication())
+		{
+			Manager::clearCacheForSite($landing->getSiteId());
+		}
 	}
 }

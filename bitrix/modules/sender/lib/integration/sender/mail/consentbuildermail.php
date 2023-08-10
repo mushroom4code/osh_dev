@@ -68,22 +68,22 @@ class ConsentBuilderMail extends AbstractConsentMessageBuilder
 	protected function buildLinkApply(): string
 	{
 		return static::buildLink([
-			'CODE' => $this->fields['CONTACT_CODE'],
-			'CONTACT' => $this->fields['CONTACT_ID'],
-			'RECIPIENT' => $this->fields['RECIPIENT_ID'],
-			'POSTING' => $this->fields['POSTING_ID'],
-			'CONSENT' => $this->fields['CONSENT_ID'],
-		], $this->fields['SITE_ID'], static::APPLY);
+			'CODE' => $this->fields['CONTACT_CODE'] ?? '',
+			'CONTACT' => $this->fields['CONTACT_ID'] ?? '',
+			'RECIPIENT' => $this->fields['RECIPIENT_ID'] ?? '',
+			'POSTING' => $this->fields['POSTING_ID'] ?? '',
+			'CONSENT' => $this->fields['CONSENT_ID'] ?? '',
+		], $this->fields['SITE_ID'] ?? '', static::APPLY);
 	}
 
 	protected function buildLinkReject(): string
 	{
 		return static::buildLink([
-			'CODE' => $this->fields['CONTACT_CODE'],
-			'CONTACT' => $this->fields['CONTACT_ID'],
-			'RECIPIENT' => $this->fields['RECIPIENT_ID'],
-			'POSTING' => $this->fields['POSTING_ID'],
-			'CONSENT' => $this->fields['CONSENT_ID'],
+			'CODE' => $this->fields['CONTACT_CODE'] ?? '',
+			'CONTACT' => $this->fields['CONTACT_ID'] ?? '',
+			'RECIPIENT' => $this->fields['RECIPIENT_ID'] ?? '',
+			'POSTING' => $this->fields['POSTING_ID'] ?? '',
+			'CONSENT' => $this->fields['CONSENT_ID'] ?? '',
 		], $this->fields['SITE_ID'], static::REJECT);
 	}
 
@@ -121,7 +121,12 @@ class ConsentBuilderMail extends AbstractConsentMessageBuilder
 		if (static::checkUri($siteId))
 		{
 			$uri = static::URI;
-			if (Service::isCloud() && !in_array(mb_substr(BX24_HOST_NAME, -7), ['.com.br', '.com.de'])) // exclude com.br & com.de domains
+			// exclude com.br & com.de domains
+			if (
+				Service::isCloud()
+				&& defined('BX24_HOST_NAME')
+				&& !in_array(mb_substr(BX24_HOST_NAME, -7), ['.com.br', '.com.de'])
+			)
 			{
 				$domain = BX24_HOST_NAME;
 				if (!\CBitrix24::isCustomDomain())

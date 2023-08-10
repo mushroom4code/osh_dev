@@ -124,10 +124,6 @@ if ($boolSubCatalog)
 }
 $changeUserByActive = Main\Config\Option::get('iblock', 'change_user_by_group_active_modify') === 'Y';
 
-const MODULE_ID = "iblock";
-const ENTITY = "CIBlockDocument";
-define("DOCUMENT_TYPE", "iblock_".$intSubIBlockID);
-
 $currentUser = array(
 	'ID' => $USER->GetID(),
 	'GROUPS' => $USER->GetUserGroupArray()
@@ -139,9 +135,6 @@ if ($boolSubBizproc)
 {
 	$iblockDocument = new CIBlockDocument();
 }
-
-if (isset($_REQUEST['mode']) && ($_REQUEST['mode']=='list' || $_REQUEST['mode']=='frame'))
-	CFile::DisableJSFunction(true);
 
 $intSubPropValue = (int)$intSubPropValue;
 
@@ -177,6 +170,10 @@ $sTableID = "tbl_iblock_sub_element_".md5($strSubIBlockType.".".$intSubIBlockID)
 
 $arHideFields = array('PROPERTY_'.$arSubCatalog['SKU_PROPERTY_ID']);
 $lAdmin = new CAdminSubList($sTableID,false,$strSubElementAjaxPath,$arHideFields);
+if ($lAdmin->isAjaxMode())
+{
+	CFile::DisableJSFunction(true);
+}
 if (!$allowProductEdit)
 {
 	$lAdmin->setReadDialogButtons();
@@ -754,8 +751,11 @@ if (defined('B_ADMIN_SUBELEMENTS_LIST') && true === B_ADMIN_SUBELEMENTS_LIST)
 				continue;
 			}
 
-			if (!is_array($arFields["PROPERTY_VALUES"]))
-				$arFields["PROPERTY_VALUES"] = array();
+			if (!isset($arFields["PROPERTY_VALUES"]) || !is_array($arFields["PROPERTY_VALUES"]))
+			{
+				$arFields["PROPERTY_VALUES"] = [];
+			}
+
 			$bFieldProps = array();
 			foreach ($arFields as $k=>$v)
 			{
@@ -800,6 +800,14 @@ if (defined('B_ADMIN_SUBELEMENTS_LIST') && true === B_ADMIN_SUBELEMENTS_LIST)
 			//All not displayed required fields from DB
 			foreach ($arSubIBlock["FIELDS"] as $FIELD_ID => $field)
 			{
+				if ($field["VISIBLE"] === "N")
+				{
+					continue;
+				}
+				if (preg_match("/^(SECTION_|LOG_)/", $FIELD_ID))
+				{
+					continue;
+				}
 				if (
 					$field["IS_REQUIRED"] === "Y"
 					&& !array_key_exists($FIELD_ID, $arFields)
@@ -932,14 +940,32 @@ if (defined('B_ADMIN_SUBELEMENTS_LIST') && true === B_ADMIN_SUBELEMENTS_LIST)
 
 		if ($boolSubCatalog)
 		{
-			if ($boolCatalogPrice && (isset($_POST["CATALOG_PRICE"]) || isset($_POST["CATALOG_CURRENCY"])))
+			if (
+				$boolCatalogPrice
+				&& isset($_POST['CATALOG_PRICE'])
+				&& is_array($_POST['CATALOG_PRICE'])
+				&& isset($_POST['CATALOG_CURRENCY'])
+				&& is_array($_POST['CATALOG_CURRENCY'])
+			)
 			{
 				$CATALOG_PRICE = $_POST["CATALOG_PRICE"];
 				$CATALOG_CURRENCY = $_POST["CATALOG_CURRENCY"];
-				$CATALOG_EXTRA = $_POST["CATALOG_EXTRA"];
+				$CATALOG_EXTRA = ($_POST["CATALOG_EXTRA"] ?? []);
+				if (!is_array($CATALOG_EXTRA))
+				{
+					$CATALOG_EXTRA = [];
+				}
 				$CATALOG_PRICE_ID = $_POST["CATALOG_PRICE_ID"];
-				$CATALOG_QUANTITY_FROM = $_POST["CATALOG_QUANTITY_FROM"];
-				$CATALOG_QUANTITY_TO = $_POST["CATALOG_QUANTITY_TO"];
+				$CATALOG_QUANTITY_FROM = ($_POST["CATALOG_QUANTITY_FROM"] ?? []);
+				if (!is_array($CATALOG_QUANTITY_FROM))
+				{
+					$CATALOG_QUANTITY_FROM = [];
+				}
+				$CATALOG_QUANTITY_TO = ($_POST["CATALOG_QUANTITY_TO"] ?? []);
+				if (!is_array($CATALOG_QUANTITY_TO))
+				{
+					$CATALOG_QUANTITY_TO = [];
+				}
 				$CATALOG_PRICE_old = $_POST["CATALOG_old_PRICE"];
 				$CATALOG_CURRENCY_old = $_POST["CATALOG_old_CURRENCY"];
 
@@ -948,13 +974,26 @@ if (defined('B_ADMIN_SUBELEMENTS_LIST') && true === B_ADMIN_SUBELEMENTS_LIST)
 				while ($extras = $db_extras->Fetch())
 					$arCatExtraUp[$extras["ID"]] = $extras["PERCENTAGE"];
 
+				$checkBasePriceTypeId = Catalog\GroupTable::getBasePriceTypeId();
 				$arBaseGroup = CCatalogGroup::GetBaseGroup();
 				$arCatalogGroupList = Catalog\GroupTable::getTypeList();
 				foreach ($CATALOG_PRICE as $elID => $arPrice)
 				{
-					if (!(CIBlockElementRights::UserHasRightTo($intSubIBlockID, $elID, "element_edit_price")
-						&& CIBlockElementRights::UserHasRightTo($intSubIBlockID, $elID, "element_edit")))
+					if (!is_array($arPrice))
+					{
 						continue;
+					}
+					if (!(isset($CATALOG_CURRENCY[$elID]) && is_array($CATALOG_CURRENCY[$elID])))
+					{
+						continue;
+					}
+					if (!(
+						CIBlockElementRights::UserHasRightTo($intSubIBlockID, $elID, "element_edit_price")
+						&& CIBlockElementRights::UserHasRightTo($intSubIBlockID, $elID, "element_edit")
+					))
+					{
+						continue;
+					}
 					//1 Find base price ID
 					//2 If such a column is displayed then
 					//	check if it is greater than 0
@@ -963,11 +1002,11 @@ if (defined('B_ADMIN_SUBELEMENTS_LIST') && true === B_ADMIN_SUBELEMENTS_LIST)
 					//	output an error if not found or found less or equal then zero
 					$bError = false;
 
-					if ($strSaveWithoutPrice != 'Y')
+					if ($checkBasePriceTypeId !== null && $strSaveWithoutPrice !== 'Y')
 					{
-						if (isset($arPrice[$arBaseGroup['ID']]))
+						if (isset($arPrice[$checkBasePriceTypeId]))
 						{
-							if ($arPrice[$arBaseGroup['ID']] < 0)
+							if ($arPrice[$checkBasePriceTypeId] < 0)
 							{
 								$bError = true;
 								$lAdmin->AddUpdateError($elID.': '.Loc::getMessage('IB_CAT_NO_BASE_PRICE'), $elID);
@@ -975,14 +1014,46 @@ if (defined('B_ADMIN_SUBELEMENTS_LIST') && true === B_ADMIN_SUBELEMENTS_LIST)
 						}
 						else
 						{
-							$arBasePrice = CPrice::GetBasePrice(
-								$elID,
-								$CATALOG_QUANTITY_FROM[$elID][$arBaseGroup['ID']],
-								$CATALOG_QUANTITY_FROM[$elID][$arBaseGroup['ID']],
-								false
-							);
+							$quantityFrom = null;
+							if (
+								isset($CATALOG_QUANTITY_FROM[$elID][$basePriceTypeId])
+								&& is_string($CATALOG_QUANTITY_FROM[$elID][$basePriceTypeId])
+								&& $CATALOG_QUANTITY_FROM[$elID][$basePriceTypeId] !== ''
+							)
+							{
+								$quantityFrom = (int)$CATALOG_QUANTITY_FROM[$elID][$basePriceTypeId];
+								if ($quantityFrom <= 0)
+								{
+									$quantityFrom = null;
+								}
+							}
+							$quantityTo = null;
+							if (
+								isset($CATALOG_QUANTITY_TO[$elID][$basePriceTypeId])
+								&& is_string($CATALOG_QUANTITY_TO[$elID][$basePriceTypeId])
+								&& $CATALOG_QUANTITY_TO[$elID][$basePriceTypeId] !== ''
+							)
+							{
+								$quantityTo = (int)$CATALOG_QUANTITY_TO[$elID][$basePriceTypeId];
+								if ($quantityTo <= 0)
+								{
+									$quantityTo = null;
+								}
+							}
 
-							if (!is_array($arBasePrice) || $arBasePrice['PRICE'] < 0)
+							$basePrice = Catalog\PriceTable::getRow([
+								'select' => [
+									'ID',
+									'PRICE',
+								],
+								'filter' => [
+									'=PRODUCT_ID' => $elID,
+									'=CATALOG_GROUP_ID' => $basePriceTypeId,
+									'=QUANTITY_FROM' => $quantityFrom,
+									'=QUANTITY_TO' => $quantityTo,
+								],
+							]);
+							if ($basePrice === null || (float)$basePrice['PRICE'] < 0)
 							{
 								$bError = true;
 								$lAdmin->AddGroupError($elID.': '.Loc::getMessage('IB_CAT_NO_BASE_PRICE'), $elID);
@@ -998,10 +1069,22 @@ if (defined('B_ADMIN_SUBELEMENTS_LIST') && true === B_ADMIN_SUBELEMENTS_LIST)
 					{
 						foreach ($arCatalogGroupList as $arCatalogGroup)
 						{
-							if ($arPrice[$arCatalogGroup["ID"]] != $CATALOG_PRICE_old[$elID][$arCatalogGroup["ID"]]
-								|| $arCurrency[$arCatalogGroup["ID"]] != $CATALOG_CURRENCY_old[$elID][$arCatalogGroup["ID"]])
+							$priceTypeId = $arCatalogGroup['ID'];
+							if (!isset(
+								$arPrice[$priceTypeId],
+								$arCurrency[$priceTypeId],
+								$CATALOG_PRICE_old[$elID][$priceTypeId],
+								$CATALOG_CURRENCY_old[$elID][$priceTypeId]
+							))
 							{
-								if ('Y' == $arCatalogGroup["BASE"]) // if base price check extra for other prices
+								continue;
+							}
+							if (
+								$arPrice[$priceTypeId] != $CATALOG_PRICE_old[$elID][$priceTypeId]
+								|| $arCurrency[$priceTypeId] != $CATALOG_CURRENCY_old[$elID][$priceTypeId]
+							)
+							{
+								if ($arCatalogGroup["BASE"] == 'Y') // if base price check extra for other prices
 								{
 									$arFields = array(
 										"PRODUCT_ID" => $elID,
@@ -1300,7 +1383,7 @@ if (defined('B_ADMIN_SUBELEMENTS_LIST') && true === B_ADMIN_SUBELEMENTS_LIST)
 						if ($elementAccess)
 						{
 							if ($boolSubBizproc)
-								call_user_func(array(ENTITY, "UnlockDocument"), $subID, "");
+								call_user_func(array('CIBlockDocument', "UnlockDocument"), $subID, "");
 							else
 								CIBlockElement::WF_UnLock($subID);
 						}
@@ -2252,14 +2335,18 @@ if (!empty($arRows))
 			$row->AddInputField("SORT", array('size'=>'3'));
 			$row->AddInputField("CODE");
 			$row->AddInputField("EXTERNAL_ID");
-			if ($boolSubSearch)
+			if (isset($arSelectedFieldsMap['TAGS']))
 			{
-				$row->AddViewField("TAGS", htmlspecialcharsEx($row->arRes["TAGS"]));
-				$row->AddEditField("TAGS", InputTags("FIELDS[".$itemId."][TAGS]", $row->arRes["TAGS"], $arSubIBlock["SITE_ID"]));
-			}
-			else
-			{
-				$row->AddInputField("TAGS");
+				if ($boolSubSearch)
+				{
+					$row->AddViewField("TAGS", htmlspecialcharsEx($row->arRes["TAGS"]));
+					$row->AddEditField("TAGS",
+						InputTags("FIELDS[" . $itemId . "][TAGS]", $row->arRes["TAGS"], $arSubIBlock["SITE_ID"]));
+				}
+				else
+				{
+					$row->AddInputField("TAGS");
+				}
 			}
 			if ($arWFStatus)
 			{
@@ -2318,7 +2405,7 @@ if (!empty($arRows))
 				$row->AddInputField('CATALOG_LENGTH');
 				$row->AddCheckField("CATALOG_VAT_INCLUDED");
 				$row->AddSelectField('VAT_ID', $vatList);
-				if ($boolCatalogPurchasInfo)
+				if ($boolCatalogPurchasInfo && isset($arSelectedFieldsMap["CATALOG_PURCHASING_PRICE"]))
 				{
 					$price = '&nbsp;';
 					if ((float)$row->arRes['CATALOG_PURCHASING_PRICE'] > 0)
@@ -2363,7 +2450,7 @@ if (!empty($arRows))
 				$row->AddInputField('CATALOG_LENGTH', false);
 				$row->AddCheckField("CATALOG_VAT_INCLUDED", false);
 				$row->AddSelectField('VAT_ID', $vatList, false);
-				if ($boolCatalogPurchasInfo)
+				if ($boolCatalogPurchasInfo && isset($arSelectedFieldsMap["CATALOG_PURCHASING_PRICE"]))
 				{
 					$price = '&nbsp;';
 					if ((float)$row->arRes["CATALOG_PURCHASING_PRICE"] > 0)
@@ -2386,7 +2473,10 @@ if (!empty($arRows))
 			$row->AddInputField("SORT", false);
 			$row->AddInputField("CODE", false);
 			$row->AddInputField("EXTERNAL_ID", false);
-			$row->AddViewField("TAGS", htmlspecialcharsEx($row->arRes["TAGS"]));
+			if (isset($arSelectedFieldsMap['TAGS']))
+			{
+				$row->AddViewField("TAGS", htmlspecialcharsEx($row->arRes["TAGS"]));
+			}
 			if ($arWFStatus)
 			{
 				$row->AddViewField("WF_STATUS_ID", htmlspecialcharsEx($arWFStatus[$row->arRes['WF_STATUS_ID']]));
@@ -2403,7 +2493,7 @@ if (!empty($arRows))
 				$row->AddInputField('CATALOG_LENGTH', false);
 				$row->AddCheckField("CATALOG_VAT_INCLUDED", false);
 				$row->AddSelectField('VAT_ID', $vatList, false);
-				if ($boolCatalogPurchasInfo)
+				if ($boolCatalogPurchasInfo && isset($arSelectedFieldsMap["CATALOG_PURCHASING_PRICE"]))
 				{
 					$price = '&nbsp;';
 					if ((float)$row->arRes["CATALOG_PURCHASING_PRICE"] > 0)
@@ -2782,7 +2872,7 @@ if (!empty($arRows))
 					$priceControl .= '<input type="hidden" name="CATALOG_old_CURRENCY['.$productId.']['.$priceType.']" value="'.htmlspecialcharsbx($row['CURRENCY']).'">';
 					$priceControl .= '<input type="hidden" name="CATALOG_PRICE_ID['.$productId.']['.$priceType.']" value="'.htmlspecialcharsbx($row['ID']).'">';
 					$priceControl .= '<input type="hidden" name="CATALOG_QUANTITY_FROM['.$productId.']['.$priceType.']" value="'.htmlspecialcharsbx($row['QUANTITY_FROM']).'">';
-					$priceControl .= '<input type="hidden" name="CATALOG_QUANTITY_TO['.$productId.']['.$priceType.']" value="'.htmlspecialcharsbx($arRes['QUANTITY_TO']).'">';
+					$priceControl .= '<input type="hidden" name="CATALOG_QUANTITY_TO['.$productId.']['.$priceType.']" value="'.htmlspecialcharsbx($row['QUANTITY_TO']).'">';
 
 					$arRows[$productId]->AddEditField('CATALOG_GROUP_'.$priceType, $priceControl);
 					unset($priceControl, $currencyControl);
@@ -3094,7 +3184,7 @@ function ShowSkuGenerator(id)
 }
 </script><?php
 	//We need javascript not in excel mode
-	if (($_REQUEST["mode"]=='list' || $_REQUEST["mode"]=='frame') && $boolSubCatalog && $boolSubCurrency)
+	if ($lAdmin->isAjaxMode() && $boolSubCatalog && $boolSubCurrency)
 	{
 		?><script type="text/javascript">
 		top.arSubCatalogShowedGroups = [];

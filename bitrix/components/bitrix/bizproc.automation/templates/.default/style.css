@@ -12,6 +12,12 @@
 	margin-bottom: 0 !important;
 }
 
+@media (max-width: 1000px) {
+	.ui-page-slider-wrapper.bizpoc-automation-body .automation-base {
+		min-width: auto;
+	}
+}
+
 .automation-base-script-mode {
 	width: auto;
 	min-width: auto;
@@ -94,13 +100,16 @@
 }
 
 .bizproc-automation-status-title {
+	--automation-height: 32px;
+	--automation-border-radius: 3px;
 	display: block;
-	height: 32px;
+	height: var(--automation-height);
 	position: relative;
 	overflow: hidden;
 	padding: 0 17px;
 	margin: 0 4px 0 0;
-	font-family: 'OpenSans-Semibold';
+	font-family: var(--ui-font-family-secondary, var(--ui-font-family-open-sans));
+	font-weight: var(--ui-font-weight-semi-bold, 600);
 	line-height: 32px;
 	font-size: 13px;
 	color: #404956;
@@ -111,22 +120,41 @@
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	-wenkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
+	-wenkit-border-radius: var(--automation-border-radius);
+	-moz-border-radius: var(--automation-border-radius);
+	border-radius: var(--automation-border-radius);
 }
 
-.bizproc-automation-status-bg {
+.bizproc-automation__status--bg {
+	width: calc(100% - 6px);
+	height: var(--automation-height);
+	border-radius: var(--automation-border-radius);
 	position: absolute;
-	width: calc(100% - 13px);
-	z-index: 9;
-	height: 32px;
 	top: 0;
-	right: 4px;
 	left: 0;
-	-wenkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
+	background: transparent;
+	z-index: -1;
+	pointer-events: none;
+}
+
+.bizproc-automation__status--bg-arrow {
+	width: 0;
+	height: 0;
+	border-top: calc(var(--automation-height) / 2 - (var(--automation-border-radius) - 1px)) solid transparent;
+	border-bottom: calc(var(--automation-height) / 2 - (var(--automation-border-radius) - 1px)) solid transparent;
+	border-left: 6px solid transparent;
+	border-left-color: inherit;
+	position: absolute;
+	left: 100%;
+	top: calc(var(--automation-border-radius) - 1px);
+}
+
+.bizproc-automation-status-list-item:nth-last-child(2) .bizproc-automation__status--bg {
+	width: 100%;
+}
+
+.bizproc-automation-status-list-item:nth-last-child(2) .bizproc-automation__status--bg-arrow {
+	display: none;
 }
 
 .bizproc-automation-status-name {
@@ -198,24 +226,6 @@
 .bizproc-automation-status-help-right {
 	float: right;
 	margin: 15px 0 0 7px;
-}
-
-.bizproc-automation-status-title-right {
-	content: '';
-	width: 13px;
-	height: 32px;
-	position: absolute;
-	right: -10px;
-	top: 0;
-	background: #fff url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2213%22%20height%3D%2232%22%20viewBox%3D%220%200%2013%2032%22%3E%3Cpath%20fill%3D%22%23AEF2F9%22%20fill-rule%3D%22evenodd%22%20d%3D%22M0%200h3c2.8%200%204%203%204%203l6%2013-6%2013s-1.06%203-4%203H0V0z%22/%3E%3C/svg%3E)
-}
-
-.bizproc-automation-status-list-item:nth-last-child(2) .bizproc-automation-status-title-right {
-	display: none;
-}
-
-.bizproc-automation-status-list-item:nth-last-child(2) .bizproc-automation-status-bg {
-	right: 24px;
 }
 
 .bizproc-automation-status-list-item:nth-last-child(2) .bizproc-automation-status-title {
@@ -352,7 +362,7 @@
 	left: 0;
 	width: 34px;
 	height: 34px;
-	border-radius: 50%;
+	border-radius: var(--ui-border-radius-circle, 50%);
 	background-color: rgba(82, 92, 105, .1);
 	background-image: url("data:image/svg+xml,%3Csvg width='19' height='17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='m15.375 4.763 1.007-3.382a.867.867 0 0 0-.194-.836.844.844 0 0 0-1.433.34l-.862 2.902a9.134 9.134 0 0 0-8.556.01L4.471.884A.848.848 0 0 0 3.41.31a.861.861 0 0 0-.567 1.071l1.01 3.395a9.686 9.686 0 0 0-3.58 7.559c0 5.306 4.184 4.004 9.35 4.004 5.165 0 9.35 1.302 9.35-4.004a9.676 9.676 0 0 0-3.599-7.572Zm-5.76 6.85c-3.687 0-6.678.388-6.678-1.193s2.99-2.865 6.678-2.865c3.687 0 6.682 1.283 6.682 2.865 0 1.582-2.99 1.194-6.682 1.194ZM6.56 8.74a1.022 1.022 0 0 0-.823 1.13c.064.537.53.93 1.065.898.534-.032.951-.48.951-1.021A1.112 1.112 0 0 0 6.561 8.74Zm5.284 1.132c.066.537.533.93 1.067.897a1.02 1.02 0 0 0 .951-1.022 1.112 1.112 0 0 0-1.198-1.007 1.023 1.023 0 0 0-.82 1.132Z' fill='%236A737F'/%3E%3C/svg%3E");
 	background-position: center 8px;
@@ -391,6 +401,8 @@
 	margin: 0 0 5px 0;
 	position: relative;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+	/*border-radius: var(--ui-border-radius-2xs, 0);*/
+	border-radius: var(--ui-border-radius-md, 0);
 }
 
 .bizproc-automation-trigger-item::after {
@@ -404,7 +416,7 @@
 	z-index: -1;
 	background: #e6f8fe;
 	border-left: 3px solid transparent;
-	border-radius: 3px;
+	border-radius: var(--ui-border-radius-md, 3px);
 }
 
 .bizproc-automation-trigger-item-pre::after {
@@ -430,7 +442,9 @@
 	height: 36px;
 	background: #fff;
 	font-size: 14px;
-	border-radius: 2px;
+	border-radius: var(--ui-border-radius-md, 2px);
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: var(--ui-border-radius-2xs, 3px);
 	color: #333333;
 	padding: 0 20px 0 3px;
 	position: relative;
@@ -466,6 +480,7 @@
 
 .bizproc-automation-trigger-item-wrapper-complete-light::after {
 	background: rgba(255,255,255,.8);
+	border-radius: var(--ui-border-radius-md, 0);
 }
 
 .bizproc-automation-trigger-item-wrapper::before {
@@ -555,7 +570,6 @@
 }
 
 .bitrix24-light-theme .automation-toolbar-search .automation-toolbar-search-input {
-	border-radius: 2px;
 	border-color: rgba(255, 255, 255, .44);
 	background-color: rgba(255, 255, 255, .143824);
 	color: #fff;
@@ -566,7 +580,7 @@
 }
 
 .bitrix24-light-theme .automation-toolbar-search .automation-toolbar-search-input::placeholder {
-	color: #fff;
+	color:#bdc0c4
 }
 
 .bitrix24-dark-theme .automation-toolbar-search .automation-toolbar-search-input {
@@ -590,7 +604,8 @@
 
 .automation-base-node-edit {
 	float: right;
-	font-family: "OpenSans-SemiBold", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: var(--ui-font-family-secondary, var(--ui-font-family-open-sans));
+	font-weight: var(--ui-font-weight-semi-bold, 600);
 	font-size: 14px;
 	color: #1058d0;
 	text-transform: lowercase;
@@ -598,7 +613,8 @@
 }
 
 .automation-base-node-title {
-	font: 26px/36px "OpenSans-Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: 26px/36px var(--ui-font-family-secondary, var(--ui-font-family-open-sans));
+	font-weight: var(--ui-font-weight-light, 300);
 	float: left;
 	overflow: hidden;
 	color: #525c69;
@@ -748,7 +764,7 @@
 	align-items: center;
 	justify-content: space-between;
 	margin: 0 0 6px 0;
-	border-radius: 3px;
+	border-radius: var(--ui-border-radius-md, 3px);
 }
 
 .bizproc-automation-robot-container::after {
@@ -762,7 +778,7 @@
 	background: #e8f9fd;
 	border-left: 3px solid transparent;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
-	border-radius: 3px;
+	border-radius: var(--ui-border-radius-md, 3px);
 	z-index: -1;
 }
 
@@ -788,7 +804,7 @@
 	width: 100%;
 	height: 100%;
 	background: rgba(119,222,255,.35);
-	border-radius: 2px;
+	border-radius: var(--ui-border-radius-md, 2px) var(--ui-border-radius-md, 2px) 0 var(--ui-border-radius-2xs, 2px);
 	z-index: 99;
 	pointer-events: none;
 }
@@ -864,7 +880,9 @@
 	padding: 9px 9px 8px;
 	position: relative;
 	background: #fff;
-	border-radius: 3px;
+	border-radius: var(--ui-border-radius-md, 3px);
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: var(--ui-border-radius-2xs, 3px);
 	transition: .1s;
 }
 
@@ -1316,7 +1334,7 @@
 /*popup styles*/
 
 .bizproc-automation-popup {
-	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-family: var(--ui-font-family-primary, var(--ui-font-family-helvetica));
 }
 
 .bizproc-automation-popup-settings {
@@ -1379,15 +1397,20 @@
 	margin: 0 6px;
 	padding: 0 0 2px 0;
 	font-size: 13px;
-	font-weight: bold;
+	font-weight: var(--ui-font-weight-bold);
 	color: #0b66c3;
-	border-bottom: 1px dashed #0b66c3;
+	border-bottom: 1px dashed rgba(11,102,195,.4);
 	line-height: normal;
 	text-decoration: none;
 	cursor: pointer;
 	-webkit-transition: .1s;
 	-moz-transition: .1s;
 	transition: .1s;
+}
+
+.bizproc-automation-popup-settings-link:hover,
+.bizproc-automation-popup-settings-button:hover {
+	border-bottom-color: rgba(11,102,195,1);
 }
 
 .bizproc-automation-popup-settings-link-light {
@@ -1425,7 +1448,7 @@
 .bizproc-automation-popup-select-input:checked + .bizproc-automation-popup-settings-link {
 	border-bottom: 1px dashed transparent;
 	color: #525c68;
-	font-weight: bold;
+	font-weight: var(--ui-font-weight-bold);
 }
 
 .bizproc-automation-popup-settings .multiple
@@ -1470,7 +1493,7 @@
 	display: block;
 	width: 100%;
 	resize: vertical;
-	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-family: var(--ui-font-family-primary, var(--ui-font-family-helvetica));
 	color: #80868e;
 	font-size: 14px;
 	line-height: 20px;
@@ -1489,10 +1512,10 @@
 	width: 100%;
 	background: #fff;
 	border: 1px solid #c6cdd3;
-	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-family: var(--ui-font-family-primary, var(--ui-font-family-helvetica));
 	color: #80868e;
 	font-size: 14px;
-	border-radius: 2px;
+	border-radius: var(--ui-field-border-radius, 2px);
 	height: 36px;
 	padding: 0 17px;
 	-webkit-box-sizing: border-box;
@@ -1540,7 +1563,7 @@
 	height: 46px;
 	line-height: 46px;
 	background: #eef2f4;
-	border-radius: 2px;
+	border-radius: var(--ui-border-radius-2xs, 2px);
 	padding: 0 10px;
 	position: relative;
 }
@@ -1573,7 +1596,7 @@
 	vertical-align: middle;
 	background: #fff;
 	border: 1px solid #c6cdd3;
-	border-radius: 2px;
+	border-radius: var(--ui-field-border-radius, 2px);
 	width: 30px;
 	padding: 0 5px;
 	overflow: hidden;
@@ -1582,7 +1605,7 @@
 	line-height: 36px;
 	text-align: center;
 	height: 36px;
-	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-family: var(--ui-font-family-primary, var(--ui-font-family-helvetica));
 	font-size: 16px;
 	color: #555c6d;
 }
@@ -1655,7 +1678,7 @@
 	height: 32px;
 	line-height: 32px;
 	margin: 1px;
-	font-weight: bold;
+	font-weight: var(--ui-font-weight-bold);
 	border-radius: 1px;
 	background: #a1e7f7;
 	white-space: nowrap;
@@ -1718,7 +1741,7 @@
 
 .bizproc-automation-popup-adv-title {
 	float: left;
-	font-weight: bold;
+	font-weight: var(--ui-font-weight-bold);
 	font-size: 13px;
 	color: #80868e;
 	padding: 0 7px 0 0;
@@ -1796,7 +1819,8 @@
 	margin: 14px 0;
 	cursor: pointer;
 	border-radius: 2px;
-	font-family: "OpenSans-Bold", Helvetica, Arial, sans-serif;
+	font-family: var(--ui-font-family-secondary, var(--ui-font-family-open-sans));
+	font-weight: var(--ui-font-weight-bold, 700);
 	font-size: 12px;
 	outline: none;
 	padding: 0 18px;
@@ -1864,9 +1888,9 @@
 	background: #82868c;
 	opacity: .6;
 	box-shadow: 6px 0 0 #82868c, 12px 0 0 #82868c;
-	-webkit-border-radius:50%;
-	-moz-border-radius:50%;
-	border-radius:50%;
+	-webkit-border-radius: var(--ui-border-radius-circle, 50%);
+	-moz-border-radius: var(--ui-border-radius-circle, 50%);
+	border-radius: var(--ui-border-radius-circle, 50%);
 	-webkit-transition: .1s;
 	-moz-transition: .1s;
 	transition: .1s;
@@ -1896,7 +1920,7 @@
 	height: 38px;
 	outline: none;
 	margin: 0 10px 0 0;
-	font: 13px "HelveticaNeue", Arial, Helvetica, sans-serif;
+	font: 13px var(--ui-font-family-primary, var(--ui-font-family-helvetica));
 	background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2010.97%206.86%22%3E%3Cpolygon%20points%3D%225.49%204.11%201.37%200%200%201.37%204.8%206.17%205.49%206.86%2010.97%201.37%209.6%200%205.49%204.11%22%20fill%3D%22%23535c69%22/%3E%3C/svg%3E');
 	background-position: right 10px center;
 	background-repeat: no-repeat;
@@ -1906,9 +1930,7 @@
 	color: #000000;
 	border: 1px solid #c6cdd3;
 	cursor: pointer;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
+	border-radius: var(--ui-field-border-radius, 2px);
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -1935,7 +1957,7 @@
 	min-width: 155px;
 	padding: 10px;
 	outline: none;
-	font: 13px "HelveticaNeue", Arial, Helvetica, sans-serif;
+	font: 13px var(--ui-font-family-primary, var(--ui-font-family-helvetica));
 	line-height: 14px;
 	color: #000000;
 	border: 1px solid #c6cdd3;
@@ -2106,7 +2128,7 @@
 	vertical-align: middle;
 	text-align: center;
 	text-overflow: ellipsis;
-	font: 400 16px/36px "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: 400 16px/36px var(--ui-font-family-primary, var(--ui-font-family-helvetica));
 }
 
 .bizproc-automation-popup-settings-lbl {
@@ -2119,7 +2141,8 @@
 	color: #b0b7bd;
 	vertical-align: middle;
 	text-align: right;
-	font: 400 12px/16px "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: 12px/16px var(--ui-font-family-secondary, var(--ui-font-family-open-sans));
+	font-weight: var(--ui-font-weight-regular, 400);
 	margin: 5px 30px 0 0;
 }
 

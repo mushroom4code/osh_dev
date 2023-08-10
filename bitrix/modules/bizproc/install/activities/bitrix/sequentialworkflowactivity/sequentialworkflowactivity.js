@@ -230,6 +230,7 @@ SequentialWorkflowActivity = function()
 
 		t.rows[0].style.height = '30px';
 		t.rows[0].cells[0].style.width = '30px';
+		t.rows[0].cells[0].style.minWidth = '30px';
 
 		if(!dCont.activityTemplate['Icon'] && arAllActivities[dCont.activityTemplate['Type'].toLowerCase()])
 			dCont.activityTemplate['Icon'] = arAllActivities[dCont.activityTemplate['Type'].toLowerCase()]['ICON'];
@@ -353,6 +354,25 @@ SequentialWorkflowActivity = function()
 					divGroupList = ob.DrawGroup(arAllActGroups[groupId]);
 
 				ob.DrawGroupItem(divGroupList, arAllActivities[act_i]);
+
+				const presets = arAllActivities[act_i]['PRESETS'];
+
+				if (BX.Type.isArrayFilled(presets))
+				{
+					presets.forEach((preset) => {
+						const activity = {
+							Properties: {
+								Title: preset['NAME'],
+								...preset['PROPERTIES'],
+							},
+							Type: arAllActivities[act_i]['CLASS'],
+							Children: [],
+							Icon: arAllActivities[act_i]['ICON']
+						};
+
+						ob.DrawGroupItem(divGroupList, activity);
+					});
+				}
 			}
 
 			if (groupId === 'rest' && BX.getClass('BX.rest.Marketplace'))

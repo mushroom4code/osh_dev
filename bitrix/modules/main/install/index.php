@@ -1757,8 +1757,25 @@ class main extends CModule
 		COption::SetOptionString("main", "server_name", "");
 		COption::SetOptionString("main", "~sale_converted_15", 'Y');
 
-		COption::RemoveOption("main", "~controller_group_name");
 		CControllerClient::Unlink();
+		$DB->Query("
+			DELETE FROM b_option
+			WHERE MODULE_ID = 'main'
+			AND NAME IN (
+				'~controller_backup'
+				,'~controller_date_create'
+				,'~controller_disconnect_command'
+				,'~controller_group_name'
+				,'~controller_group_till'
+				,'~controller_limited_admin'
+				,'~prev_controller_group_name'
+				,'controller_member'
+				,'controller_member_id'
+				,'controller_member_secret_id'
+				,'controller_ticket'
+				,'controller_url'
+			)
+		");
 
 		$users = $DB->Query("SELECT ID FROM b_user WHERE EXTERNAL_AUTH_ID = 'bot'");
 		while($user = $users->Fetch())
@@ -1769,5 +1786,6 @@ class main extends CModule
 		$DB->Query("UPDATE b_user SET EXTERNAL_AUTH_ID = NULL WHERE EXTERNAL_AUTH_ID = 'socservices'");
 		$DB->Query("UPDATE b_file SET HANDLER_ID=NULL WHERE HANDLER_ID is not null");
 		$DB->Query("UPDATE b_event_message SET EMAIL_FROM='#DEFAULT_EMAIL_FROM#' WHERE EMAIL_FROM LIKE '%no-reply@bitrix24%'");
+		$DB->Query("UPDATE b_geoip_handlers SET ACTIVE = 'N', CONFIG = ''");
 	}
 }

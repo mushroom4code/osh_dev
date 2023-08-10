@@ -27,7 +27,7 @@ class forumTextParser extends CTextParser
 	public $component = null;
 	public $smilesGallery = 0;
 	public $arFilesIDParsed = array();
-
+	public $MaxStringLen = null;
 
 	function __construct($lang = false, $pathToSmiles = '', $type=false, $mode = 'full')
 	{
@@ -133,8 +133,8 @@ class forumTextParser extends CTextParser
 	{
 		$text = str_replace(array("\013", "\014"), "", $text);
 
-		$this->imageWidth = ($this->image_params["width"] > 0 ? $this->image_params["width"] : ($this->imageWidth > 0 ? $this->imageWidth : 300));
-		$this->imageHeight = ($this->image_params["height"] > 0 ? $this->image_params["height"] : ($this->imageHeight > 0 ? $this->imageHeight : 300));
+		$this->imageWidth = (isset($this->image_params["width"]) && $this->image_params["width"] > 0 ? $this->image_params["width"] : ($this->imageWidth > 0 ? $this->imageWidth : 300));
+		$this->imageHeight = (isset($this->image_params["height"]) && $this->image_params["height"] > 0 ? $this->image_params["height"] : ($this->imageHeight > 0 ? $this->imageHeight : 300));
 
 		$this->userPath = str_replace(array("#UID#", "#uid#"), "#user_id#", (empty($this->userPath) && !empty($this->pathToUser) ? $this->pathToUser : $this->userPath));
 
@@ -711,6 +711,8 @@ class CForumCacheManager
 
 			AddEventHandler("forum", "onAfterTopicAdd", array(&$this, "OnTopicAdd"));
 			AddEventHandler("forum", "onAfterTopicUpdate", array(&$this, "OnTopicUpdate"));
+			AddEventHandler("forum", "onTopicOpen", array(&$this, "OnTopicUpdate"));
+			AddEventHandler("forum", "onTopicClose", array(&$this, "OnTopicUpdate"));
 			AddEventHandler("forum", "onAfterTopicDelete", array(&$this, "OnTopicDelete"));
 
 			//AddEventHandler("forum", "onAfterForumAdd", array(&$this, "OnForumAdd"));
@@ -880,7 +882,7 @@ class CForumCacheManager
 			return;
 		}
 		self::ClearTag("T", $ID);
-		self::ClearTag("F", $arFields["FORUM_ID"]);
+		self::ClearTag("F", $arFields["FORUM_ID"] ?? 0);
 	}
 
 	public function OnTopicDelete(&$ID, $arTopic)

@@ -145,7 +145,7 @@ class SenderSegmentListComponent extends Bitrix\Sender\Internals\CommonSenderCom
 				'EDIT' => str_replace('#id#', $item['ID'], $this->arParams['PATH_TO_EDIT']),
 			);
 
-			$item['STATUS'] = Loc::getMessage('SENDER_SEGMENT_LIST_COMP_UI_COLUMN_STATUS_' . $item['STATUS']);
+			$item['STATUS'] = Loc::getMessage('SENDER_SEGMENT_LIST_COMP_UI_COLUMN_STATUS_' . $item['STATUS'] . '_MSGVER_1');
 
 			$item['ADDRESS_COUNTER'] = Entity\Segment::getAddressCounter($item['ID'])->getArray();
 			$this->arResult['ROWS'][] = $item;
@@ -305,8 +305,8 @@ class SenderSegmentListComponent extends Bitrix\Sender\Internals\CommonSenderCom
 				"default" => true,
 				'params' => array('multiple' => 'Y'),
 				"items" => [
-					'N,P' => Loc::getMessage('SENDER_SEGMENT_LIST_COMP_UI_COLUMN_STATUS_P'),
-					'R,D' => Loc::getMessage('SENDER_SEGMENT_LIST_COMP_UI_COLUMN_STATUS_R'),
+					'N,P' => Loc::getMessage('SENDER_SEGMENT_LIST_COMP_UI_COLUMN_STATUS_P'. '_MSGVER_1'),
+					'R,D' => Loc::getMessage('SENDER_SEGMENT_LIST_COMP_UI_COLUMN_STATUS_R'. '_MSGVER_1'),
 				]
 			],
 		];
@@ -316,19 +316,19 @@ class SenderSegmentListComponent extends Bitrix\Sender\Internals\CommonSenderCom
 	{
 		$data['USER'] = '';
 		$data['USER_PATH'] = '';
-		if (!$data['USER_ID'])
+		if (!($data['USER_ID'] ?? false))
 		{
 			return;
 		}
 
-		$data['USER_PATH'] = str_replace('#id#', $data['USER_ID'], $this->arParams['PATH_TO_USER_PROFILE']);
+		$data['USER_PATH'] = str_replace('#id#', $data['USER_ID'] ?? '', $this->arParams['PATH_TO_USER_PROFILE'] ?? '');
 		$data['USER'] = \CUser::FormatName(
 			$this->arParams['NAME_TEMPLATE'],
 			array(
-				'LOGIN' => $data['USER_LOGIN'],
-				'NAME' => $data['USER_NAME'],
-				'LAST_NAME' => $data['USER_LAST_NAME'],
-				'SECOND_NAME' => $data['USER_SECOND_NAME']
+				'LOGIN' => $data['USER_LOGIN'] ?? '',
+				'NAME' => $data['USER_NAME'] ?? '',
+				'LAST_NAME' => $data['USER_LAST_NAME'] ?? '',
+				'SECOND_NAME' => $data['USER_SECOND_NAME'] ?? ''
 			),
 			true, false
 		);

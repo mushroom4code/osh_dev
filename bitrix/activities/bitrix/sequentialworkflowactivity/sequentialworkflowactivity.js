@@ -59,9 +59,20 @@ SequentialWorkflowActivity = function()
 		}
 	};
 
+	ob.UpdateButtonPanel = function()
+	{
+		if (BX.UI.ButtonPanel && BX.UI.ButtonPanel.pinner)
+		{
+			BX.UI.ButtonPanel.pinner.onChange();
+		}
+	};
+
 	ob.DrawSequenceActivity = ob.Draw;
 	ob.Draw = function (div)
 	{
+		requestAnimationFrame(() => {
+			ob.UpdateButtonPanel();
+		});
 		if(!window.dlgSnippetsSettings)
 		{
 			window.dlgSnippetsSettings = new BX.CDialog({
@@ -177,6 +188,9 @@ SequentialWorkflowActivity = function()
 		divGroup.swftoolboxid = ind;
 		divGroup.onclick = function (e) 
 		{
+			requestAnimationFrame(() => {
+				ob.UpdateButtonPanel();
+			});
 			if(this.className=='swftoolboxgroupclosed')
 			{
 				this.className = 'swftoolboxgroupopened';
@@ -216,6 +230,7 @@ SequentialWorkflowActivity = function()
 
 		t.rows[0].style.height = '30px';
 		t.rows[0].cells[0].style.width = '30px';
+		t.rows[0].cells[0].style.minWidth = '30px';
 
 		if(!dCont.activityTemplate['Icon'] && arAllActivities[dCont.activityTemplate['Type'].toLowerCase()])
 			dCont.activityTemplate['Icon'] = arAllActivities[dCont.activityTemplate['Type'].toLowerCase()]['ICON'];
@@ -339,6 +354,25 @@ SequentialWorkflowActivity = function()
 					divGroupList = ob.DrawGroup(arAllActGroups[groupId]);
 
 				ob.DrawGroupItem(divGroupList, arAllActivities[act_i]);
+
+				const presets = arAllActivities[act_i]['PRESETS'];
+
+				if (BX.Type.isArrayFilled(presets))
+				{
+					presets.forEach((preset) => {
+						const activity = {
+							Properties: {
+								Title: preset['NAME'],
+								...preset['PROPERTIES'],
+							},
+							Type: arAllActivities[act_i]['CLASS'],
+							Children: [],
+							Icon: arAllActivities[act_i]['ICON']
+						};
+
+						ob.DrawGroupItem(divGroupList, activity);
+					});
+				}
 			}
 
 			if (groupId === 'rest' && BX.getClass('BX.rest.Marketplace'))
@@ -416,6 +450,9 @@ SequentialWorkflowActivity = function()
 	ob.RemoveResourcesSequenceActivity = ob.RemoveResources;
 	ob.RemoveResources = function ()
 	{
+		requestAnimationFrame(() => {
+			ob.UpdateButtonPanel();
+		});
 		if(ob.hSnippid1)
 		{
 			DragNDrop.RemoveHandler('ondragging', ob.hSnippid1);

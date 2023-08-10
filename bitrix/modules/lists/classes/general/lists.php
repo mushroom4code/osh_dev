@@ -988,10 +988,14 @@ class CLists
 				{
 					$firstValues = array();
 					$secondValues = array();
-					foreach($fieldValue as $values)
-						$firstValues = $values;
-					foreach($elementOldData[$fieldName] as $values)
-						$secondValues = $values;
+					foreach ($fieldValue as $values)
+					{
+						$firstValues = is_array($values) ? $values : [$values];
+					}
+					foreach ($elementOldData[$fieldName] as $values)
+					{
+						$secondValues = is_array($values) ? $values : [$values];
+					}
 
 					if(array_key_exists("TEXT", $firstValues))
 					{
@@ -1355,8 +1359,7 @@ class CLists
 
 	private static function createSeachableContent(array $fields)
 	{
-		$searchableContent = $fields["NAME"];
-
+		$searchableContent = $fields["NAME"] ?? '';
 
 		if(!empty($fields["DATE_CREATE"]))
 		{
@@ -1525,7 +1528,11 @@ class CLists
 									if($unserialize)
 										$value = $unserialize;
 								}
-								if (is_array($value) && trim($value["TEXT"]) <> '')
+								if (
+									is_array($value)
+									&& !empty($value['TEXT'])
+									&& is_string($value['TEXT'])
+								)
 								{
 									if (isset($value["TYPE"]))
 									{

@@ -1,13 +1,17 @@
 <?php
 if (ini_get('short_open_tag') == 0 && mb_strtoupper(ini_get('short_open_tag')) != 'ON')
 	die("Error: short_open_tag parameter must be turned on in php.ini\n");
-?><?
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
 define('START_TIME', microtime(1));
 define('BX_FORCE_DISABLE_SEPARATED_SESSION_MODE', true);
 define('CLI', defined('BX_CRONTAB') && BX_CRONTAB === true || !$_SERVER['DOCUMENT_ROOT']);
-@define('LANGUAGE_ID', 'en');
-@define('NOT_CHECK_PERMISSIONS', true);
+
+if (!defined('NOT_CHECK_PERMISSIONS'))
+{
+	define('NOT_CHECK_PERMISSIONS', true);
+}
+
 $NS = array(); // NewState
 
 if (CLI && defined('BX_CRONTAB')) // start from cron_events.php
@@ -79,7 +83,7 @@ $public = $USER->IsAdmin();
 if ($public) // backup from public
 {
 	$NS =& $_SESSION['BX_DUMP_STATE'];
-	if ($_REQUEST['start'] == 'Y')
+	if (isset($_REQUEST['start']) && $_REQUEST['start'] == 'Y')
 		$NS = array();
 }
 elseif (!CLI) // hit from bitrixcloud service
@@ -89,7 +93,7 @@ elseif (!CLI) // hit from bitrixcloud service
 #		echo $backup_secret_key."\n"; COption::SetOptionInt('main', 'dump_auto_enable'.'_auto', 2); # debug
 		RaiseErrorAndDie('Secret key is incorrect', 10);
 	}
-	elseif ($_REQUEST['check_auth'])
+	elseif (isset($_REQUEST['check_auth']) && $_REQUEST['check_auth'])
 	{
 		echo 'SUCCESS';
 		exit(0);
@@ -160,7 +164,7 @@ else
 		'dump_archive_size_limit' => IntOption('dump_archive_size_limit'),
 		'dump_use_compression' => $bGzip && IntOption('dump_use_compression'),
 		'dump_integrity_check' => IntOption('dump_integrity_check'),
-		
+
 		'dump_delete_old' => IntOption('dump_delete_old'),
 		'dump_old_time' => IntOption('dump_old_time'),
 		'dump_old_cnt' => IntOption('dump_old_cnt'),
@@ -185,7 +189,7 @@ else
 
 	if (!is_array($arExpertBackupParams))
 		$arExpertBackupParams = array();
-		
+
 	$arParams = array_merge($arExpertBackupDefaultParams, $arExpertBackupParams, $arParams);
 }
 
@@ -231,7 +235,7 @@ if (!$NS['step'])
 	$NS['arc_name'] = $arc_name.($NS['dump_encrypt_key'] ? ".enc" : ".tar").($arParams['dump_use_compression'] ? ".gz" : '');
 	$NS['dump_name'] = $arc_name.'.sql';
 
-	if (count($arParams['dump_site_id']))
+	if (!empty($arParams['dump_site_id']))
 	{
 		$NS['site_path_list'] = array();
 		$res = CSite::GetList('sort', 'asc', array('ACTIVE'=>'Y'));
@@ -295,7 +299,7 @@ if ($NS['step'] <= 2)
 			$rs = $DB->Query('SHOW VARIABLES LIKE "collation_database"');
 			if (($f = $rs->Fetch()) && array_key_exists ('Value', $f))
 				file_put_contents($after_file, "ALTER DATABASE `<DATABASE>` COLLATE ".$f['Value'].";\n",8);
-			
+
 			$NS['step'] = 2;
 			$NS['step_finished']++;
 			clearstatcache();
@@ -365,7 +369,7 @@ if ($NS['step'] <= 2)
 		$NS["ReadBlockCurrent"] = $tar->ReadBlockCurrent;
 		$NS["ReadFileSize"] = $tar->ReadFileSize;
 		$NS['step_done'] = $NS['data_size'] / $NS['dump_size'];
-		
+
 		CheckPoint();
 	}
 	$NS['step'] = 3;
@@ -445,6 +449,11 @@ if ($NS['step'] == 4)
 
 			$r = $DirScan->Scan($DOCUMENT_ROOT_SITE);
 			$tar->close();
+
+			if (!isset($NS["data_size"]))
+			{
+				$NS["data_size"] = 0;
+			}
 			$NS["data_size"] += 512 * ($tar->Block - $Block);
 
 			if ($r === false)
@@ -453,6 +462,11 @@ if ($NS['step'] == 4)
 			$NS["ReadBlockCurrent"] = $tar->ReadBlockCurrent;
 			$NS["ReadFileSize"] = $tar->ReadFileSize;
 			$NS["startPath"] = $DirScan->nextPath;
+
+			if (!isset($NS["cnt"]))
+			{
+				$NS["cnt"] = 0;
+			}
 			$NS["cnt"] += $DirScan->FileCount;
 
 			$last_files_count = IntOption('last_files_count');
@@ -503,7 +517,7 @@ if ($NS['step'] == 5)
 			RaiseErrorAndDie(GetMessage('DUMP_NO_PERMS_READ').'<br>'.implode('<br>',$tar->err), 510, $NS['arc_name']);
 		else
 		{
-			if(($Block = intval($NS['Block'])) && !$tar->SkipTo($Block))
+			if(($Block = intval($NS['Block'] ?? 0)) && !$tar->SkipTo($Block))
 				RaiseErrorAndDie(implode('<br>',$tar->err), 520, $tar->file, true);
 			while(($r = $tar->extractFile()) && haveTime());
 			$NS["Block"] = $tar->Block;
@@ -592,7 +606,7 @@ if ($NS['step'] == 6)
 						$strError = $e->GetString();
 					else
 						$strError = GetMessage('MAIN_DUMP_INT_CLOUD_ERR');
-					RaiseErrorAndDie($strError,640,$NS['arc_name']);
+					RaiseErrorAndDie($strError, 640, $NS['arc_name']);
 				}
 
 				if (is_object($obBucket))
@@ -601,7 +615,7 @@ if ($NS['step'] == 6)
 
 			if (!$fp = fopen($NS['arc_name'],'rb'))
 				RaiseErrorAndDie(GetMessage("MAIN_DUMP_ERR_OPEN_FILE").' '.$NS['arc_name'], 650, $NS['arc_name']);
-			
+
 			fseek($fp, $obUpload->getPos());
 			while($obUpload->getPos() < $file_size && haveTime())
 			{
@@ -613,14 +627,20 @@ if ($NS['step'] == 6)
 					if($res = $obUpload->Next($part, $obBucket))
 						break;
 					elseif (++$fails >= 10)
-						RaiseErrorAndDie('Internal Error: could not init upload for '.$fails.' times', 660, $NS['arc_name']);
+					{
+						$e = $APPLICATION->GetException();
+						$strError = $e ? '. ' . $e->GetString() : '';
+						RaiseErrorAndDie('Internal Error: could not init upload for ' . $fails . ' times' . $strError, 660, $NS['arc_name']);
+					}
 				}
 				$NS['step_done'] = $obUpload->getPos() / $NS['arc_size'];
 
 				if (!$res)
 				{
 					$obUpload->Delete();
-					RaiseErrorAndDie(GetMessage("MAIN_DUMP_ERR_FILE_SEND").' '.basename($NS['arc_name']), 670, $NS['arc_name']);
+					$e = $APPLICATION->GetException();
+					$strError = $e ? '. ' . $e->GetString() : '';
+					RaiseErrorAndDie(GetMessage('MAIN_DUMP_ERR_FILE_SEND') . ' ' . basename($NS['arc_name']) . $strError, 670, $NS['arc_name']);
 				}
 			}
 			fclose($fp);
@@ -647,7 +667,7 @@ if ($NS['step'] == 6)
 						$ob = new CBitrixCloudBackup;
 						$ob->clearOptions();
 					}
-					
+
 					if ($arParams['dump_delete_old'] == 1)
 					{
 						$name = CTar::getFirstName($NS['arc_name']);
@@ -665,7 +685,9 @@ if ($NS['step'] == 6)
 			else
 			{
 				$obUpload->Delete();
-				RaiseErrorAndDie(GetMessage("MAIN_DUMP_ERR_FILE_SEND").basename($NS['arc_name']), 680, $NS['arc_name']);
+				$e = $APPLICATION->GetException();
+				$strError = $e ? '. ' . $e->GetString() : '';
+				RaiseErrorAndDie(GetMessage('MAIN_DUMP_ERR_FILE_SEND') . basename($NS['arc_name']) . $strError, 680, $NS['arc_name']);
 			}
 		}
 		$NS['step_finished']++;
@@ -895,7 +917,7 @@ function CheckPoint()
 {
 	if (haveTime())
 		return true;
-	
+
 	global $NS;
 	$NS['WORK_TIME'] = microtime(1) - START_TIME;
 	$NS['TIMESTAMP'] = time();

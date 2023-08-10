@@ -24,10 +24,9 @@ $formParams = [
 	"PARSER" => Array(
 		"Bold", "Italic", "Underline", "Strike", "ForeColor",
 		"FontList", "FontSizeList", "RemoveFormat", "Quote",
-		"Code",
-		(!$arResult['NoCommentUrl'] ? 'CreateLink' : ''),
+		"Code", (!($arResult['NoCommentUrl'] ?? '') ? 'CreateLink' : ''),
 		"Image",
-		($arResult['allowImageUpload'] === 'Y' ? 'UploadImage' : ''),
+		(($arResult['allowImageUpload'] ?? null) === 'Y' ? 'UploadImage' : 'UploadFile'),
 		($arResult['allowVideo'] === 'Y' ? 'InputVideo' : ''),
 		"Table", "Justify", "InsertOrderedList",
 		"InsertUnorderedList",
@@ -40,7 +39,7 @@ $formParams = [
 				? "UploadFile"
 				: ""
 		),
-		(!$arResult["NoCommentUrl"] ? 'CreateLink' : ''),
+		(!($arResult["NoCommentUrl"] ?? '') ? 'CreateLink' : ''),
 		($arResult['allowVideo'] === 'Y' ? 'InputVideo' : ''),
 		//(($arResult["allowImageUpload"] == "Y") ? 'UploadImage' : ''),
 		"Quote",
@@ -60,7 +59,7 @@ $formParams = [
 		"HEIGHT" => "80px"
 	),
 	"DESTINATION" => Array(
-		"VALUE" => (!$arParams["bPublicPage"] ? $arResult["FEED_DESTINATION"] : array()),
+		"VALUE" => (!$arParams["bPublicPage"] ? ($arResult["FEED_DESTINATION"] ?? []) : []),
 		"SHOW" => "N",
 		"USE_CLIENT_DATABASE" => ($arParams["bPublicPage"] ? "N" : "Y")
 	),
@@ -70,18 +69,17 @@ $formParams = [
 	"UPLOAD_FILE_PARAMS" => array("width" => 400, "height" => 400),
 	"FILES" => Array(
 		"VALUE" => array(),
-		"DEL_LINK" => $arResult["urlToDelImage"],
+		"DEL_LINK" => $arResult["urlToDelImage"] ?? '',
 		"SHOW" => "N",
 		"POSTFIX" => "file"
 	),
 	"SMILES" => COption::GetOptionInt("blog", "smile_gallery_id", 0),
 	"LHE" => array(
 		"documentCSS" => "body {color:#434343;}",
-		"iframeCss" => "html body {padding-left: 14px!important; font-size: 13px!important; line-height: 18px!important;}",
+		"iframeCss" => "html body {padding-left: 14px!important; line-height: 18px!important;}",
 //		"ctrlEnterHandler" => "__submit" . $arResult['FORM_ID'],
 		"id" => "idLHE_blogCommentForm" . $arResult['FORM_ID'],
-		"fontFamily" => "'Helvetica Neue', Helvetica, Arial, sans-serif",
-		"fontSize" => "12px",
+		"fontSize" => "14px",
 		"bInitByJS" => true,
 		"height" => 80
 	),
@@ -218,7 +216,7 @@ BX.ready(function(){
 		entitiesId : {},
 		formId : '<?=$formParams["FORM_ID"]?>',
 		editorId : '<?=$formParams["LHE"]["id"]?>',
-		editorName : '<?=$formParams["LHE"]["jsObjName"]?>'
+		editorName : '<?=$formParams["LHE"]["jsObjName"] ?? ''?>'
 	});
 
 	window["__submit<?= $arResult['FORM_ID'] ?>"] = function ()

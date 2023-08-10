@@ -9,8 +9,10 @@ return [
 	'js' => 'dist/uploader.bundle.js',
 	'rel' => [
 		'ui.uploader.core',
+		'ui.dialogs.messagebox',
 		'ui.sidepanel.layout',
 		'main.loader',
+		'ui.draganddrop.draggable',
 		'main.core',
 		'main.core.events',
 		'ui.buttons',

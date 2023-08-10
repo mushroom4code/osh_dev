@@ -275,6 +275,7 @@ class OrderBasketShipment extends OrderBasket
 			$basketItem = $item->getBasketItem();
 			if ($basketItem)
 			{
+				$systemShipmentItem = null;
 				if ($systemShipmentItemCollection)
 				{
 					/** @var \Bitrix\Sale\ShipmentItemCollection $systemShipmentItemCollection */
@@ -283,18 +284,28 @@ class OrderBasketShipment extends OrderBasket
 
 				$productId = $basketItem->getProductId();
 
-				if ($basketItem->getField("MODULE") == "catalog" && !empty($catalogProductsFields[$productId]))
+				if ($basketItem->getField("MODULE") === "catalog" && !empty($catalogProductsFields[$productId]))
+				{
 					$params = $catalogProductsFields[$productId];
+				}
 
 				if (intval($basketItem->getField("MEASURE_CODE")) > 0)
+				{
 					$params["MEASURE_CODE"] = intval($basketItem->getField("MEASURE_CODE"));
+				}
 				elseif (!isset($params["MEASURE_CODE"]))
+				{
 					$params["MEASURE_CODE"] = 0;
+				}
 
-				if($basketItem->getField("MEASURE_NAME") <> '')
+				if (!empty($basketItem->getField("MEASURE_NAME")))
+				{
 					$params["MEASURE_TEXT"] = $basketItem->getField("MEASURE_NAME");
+				}
 				elseif(!isset($params["MEASURE_TEXT"]))
+				{
 					$params["MEASURE_TEXT"] = "";
+				}
 
 				if ($basketItem->isBundleParent())
 				{
@@ -342,7 +353,6 @@ class OrderBasketShipment extends OrderBasket
 				$params["AMOUNT"] = floatval($item->getQuantity());
 				$params["PRICE"] = $basketItem->getPrice();
 				$params["CURRENCY"] = $basketItem->getCurrency();
-				$params["PRODUCT_PROVIDER_CLASS"] = $basketItem->getProvider();
 				$params["PROPS"] = array();
 
 				/** @var \Bitrix\Sale\BasketPropertyItem $property */
@@ -359,13 +369,15 @@ class OrderBasketShipment extends OrderBasket
 				if(\Bitrix\Main\Loader::includeModule("catalog"))
 				{
 					$productInfo = \CCatalogSku::GetProductInfo($productId);
-					$params["OFFERS_IBLOCK_ID"] = $productInfo["OFFER_IBLOCK_ID"];
-					$params["IBLOCK_ID"] = $productInfo["IBLOCK_ID"];
-					$params["PRODUCT_ID"] = $productInfo["ID"];
+					if ($productInfo)
+					{
+						$params["OFFERS_IBLOCK_ID"] = $productInfo["OFFER_IBLOCK_ID"];
+						$params["IBLOCK_ID"] = $productInfo["IBLOCK_ID"];
+						$params["PRODUCT_ID"] = $productInfo["ID"];
+					}
 				}
 
-				if ($basketItem->isBundleChild())
-					$params["PARENT_BASKET_ID"] = $basketItem->getParentBasketItem()->getId();
+				$params["PARENT_BASKET_ID"] = $basketItem->getParentBasketItemId() ?? 0;
 
 				//If product became bundle, but in saved order it is a simple product.
 				if ($basketItem->getBasketCode() == intval($basketItem->getBasketCode()) && !$basketItem->isBundleParent() && !empty($params['SET_ITEMS']))
@@ -378,6 +390,7 @@ class OrderBasketShipment extends OrderBasket
 			}
 			else
 			{
+				$systemShipmentItem = null;
 				if ($systemShipmentItemCollection)
 				{
 					/** @var \Bitrix\Sale\ShipmentItemCollection $systemShipmentItemCollection */
@@ -537,7 +550,7 @@ class OrderBasketShipment extends OrderBasket
 			static::$jsInited = true;
 		}
 		$data =	$this->prepareData();
-		
+
 		if (!empty($recoveryData))
 		{
 			$data = $this->modifyFromRequest($data, $recoveryData['1']['PRODUCT']);
@@ -616,7 +629,7 @@ class OrderBasketShipment extends OrderBasket
 		\Bitrix\Main\UI\Extension::load('sale.admin_order');
 
 		$data = $this->prepareData();
-		
+
 		return '<script>
 			BX.message({
 				SALE_ORDER_SHIPMENT_VIEW_BASKET_NO_PRODUCTS: "'.\CUtil::JSEscape(Loc::getMessage("SALE_ORDER_SHIPMENT_VIEW_BASKET_NO_PRODUCTS")).'",
@@ -655,16 +668,19 @@ class OrderBasketShipment extends OrderBasket
 			// PREPARE DATA FOR SET_FIELDS
 			foreach ($shipmentBasket as $items)
 			{
-				$items['QUANTITY'] = floatval(str_replace(',', '.', $items['QUANTITY']));
+				$items['QUANTITY'] = floatval(str_replace(',', '.', $items['QUANTITY'] ?? 0));
 				$items['AMOUNT'] = floatval(str_replace(',', '.', $items['AMOUNT']));
 				if (isset($items['BASKET_ID']) && $items['BASKET_ID'] > 0)
 				{
 					if (!$basketItem = $basket->getItemById($items['BASKET_ID']))
 					{
-						$result->addError( new ResultError(
-						   Loc::getMessage('SALE_ORDER_SHIPMENT_BASKET_BASKET_ITEM_NOT_FOUND',  array(
-							   '#BASKET_ITEM_ID#' => $items['BASKET_ID'],
-						   )), 
+						$result->addError(new ResultError(
+							Loc::getMessage(
+								'SALE_ORDER_SHIPMENT_BASKET_BASKET_ITEM_NOT_FOUND',
+								[
+									'#BASKET_ITEM_ID#' => $items['BASKET_ID'],
+								]
+							),
 							'PROVIDER_UNRESERVED_SHIPMENT_ITEM_WRONG_BASKET_ITEM')
 						);
 						return $result;
@@ -677,11 +693,14 @@ class OrderBasketShipment extends OrderBasket
 					$basketCode = $items['BASKET_CODE'];
 					if(!$basketItem = $basket->getItemByBasketCode($basketCode))
 					{
-						$result->addError( new ResultError(
-						   Loc::getMessage('SALE_ORDER_SHIPMENT_BASKET_BASKET_ITEM_NOT_FOUND',  array(
-							   '#BASKET_ITEM_ID#' => $items['BASKET_ID'],
-						   )),
-						   'PROVIDER_UNRESERVED_SHIPMENT_ITEM_WRONG_BASKET_ITEM')
+						$result->addError(new ResultError(
+							Loc::getMessage(
+								'SALE_ORDER_SHIPMENT_BASKET_BASKET_ITEM_NOT_FOUND',
+								[
+									'#BASKET_ITEM_ID#' => $items['BASKET_ID'],
+								]
+							),
+							'PROVIDER_UNRESERVED_SHIPMENT_ITEM_WRONG_BASKET_ITEM')
 						);
 						return $result;
 					}
@@ -690,11 +709,11 @@ class OrderBasketShipment extends OrderBasket
 				$tmp = array(
 					'BASKET_CODE' => $basketCode,
 					'AMOUNT' => $items['AMOUNT'],
-					'ORDER_DELIVERY_BASKET_ID' => $items['ORDER_DELIVERY_BASKET_ID']
+					'ORDER_DELIVERY_BASKET_ID' => $items['ORDER_DELIVERY_BASKET_ID'] ?? null,
 				);
 				$idsFromForm[$basketCode] = array();
 
-				if ($items['BARCODE_INFO'] && (self::$useStoreControl || $basketItem->isSupportedMarkingCode()))
+				if (!empty($items['BARCODE_INFO']) && (self::$useStoreControl || $basketItem->isSupportedMarkingCode()))
 				{
 					foreach ($items['BARCODE_INFO'] as $item)
 					{
@@ -711,7 +730,7 @@ class OrderBasketShipment extends OrderBasket
 						);
 
 						$barcodeCount = 0;
-						if ($item['BARCODE'])
+						if (!empty($item['BARCODE']) && is_array($item['BARCODE']))
 						{
 							foreach ($item['BARCODE'] as $barcode)
 							{

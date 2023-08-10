@@ -1,9 +1,115 @@
+import { BaseEvent } from 'main.core.events';
+import { FileStatus } from 'ui.uploader.core';
 import Uploader from '../src/uploader';
-import AbstractUploadController from '../src/backend/abstract-upload-controller';
-import Server from '../src/backend/server';
+import createFileByType from './utils/create-file-by-type.es6';
+import CustomUploadController from './utils/custom-upload-controller.es6';
+import { UploaderEvent } from '../src/enums/uploader-event';
 // import mock from 'xhr-mock';
 
+const png = createFileByType('png'); // 100 x 100
+
 describe('Upload Controller', () => {
+	describe('Custom Upload Controller', () => {
+		it('should upload a file', (done) => {
+			const progressValues = [19, 37, 56, 74, 93, 100];
+			const handleProgress = sinon.stub().callsFake((event: BaseEvent) => {
+				const { progress } = event.getData();
+				assert.equal(progress, progressValues.shift(), 'progress values');
+			});
+
+			const uploader = new Uploader({
+				serverOptions : {
+					chunkSize: 7,
+					forceChunkSize: true,
+					uploadControllerClass: CustomUploadController
+				},
+				events: {
+					[UploaderEvent.FILE_UPLOAD_PROGRESS]: handleProgress,
+					[UploaderEvent.FILE_ERROR]: (event) => {
+						done(event.getData().error);
+					},
+					[UploaderEvent.FILE_COMPLETE]: () => {
+						try
+						{
+							assert.equal(handleProgress.callCount, 6, 'onProgress Count');
+							done();
+						}
+						catch (exception)
+						{
+							done(exception);
+						}
+					}
+				}
+			});
+
+			const file = new File(['<html><body><b>Hello</b></body></html>'], 'index2.html', { type: 'text/html' });
+			uploader.addFile(file);
+		});
+
+		it('should raise an error', (done) => {
+			const progressValues = [12, 23, 34, 45, 56, 67, 78, 89, 100, 100];
+			const handleProgress = sinon.stub().callsFake((event: BaseEvent) => {
+				const { progress } = event.getData();
+				assert.equal(progress, progressValues.shift(), 'progress values');
+			});
+
+			const uploader = new Uploader({
+				serverOptions : {
+					chunkSize: 50,
+					forceChunkSize: true,
+					uploadControllerClass: CustomUploadController,
+					uploadControllerOptions: {
+						raiseError: true,
+						raiseErrorStep: 7
+					},
+				},
+				events: {
+					[UploaderEvent.FILE_UPLOAD_PROGRESS]: handleProgress,
+					[UploaderEvent.FILE_ERROR]: (event) => {
+						const { error } = event.getData();
+
+						assert.equal(handleProgress.callCount, 7, 'onProgress Count');
+						assert.equal(error.getCode(), 'CUSTOM_UPLOAD_ERROR');
+						done();
+					},
+				}
+			});
+
+			uploader.addFile(createFileByType('gif'));
+		});
+
+		it('validate a file before', (done) => {
+			const uploader = new Uploader({
+				serverOptions: {
+					chunkSize: 7,
+					forceChunkSize: true,
+					uploadControllerClass: CustomUploadController,
+				},
+				imageMinWidth: 10,
+				imageMinHeight: 10,
+				imageMaxWidth: 90,
+				imageMaxHeight: 90,
+				events: {
+					[UploaderEvent.FILE_ADD]: (event: BaseEvent) => {
+						try
+						{
+							const { file, error } = event.getData();
+							assert.equal(file.isFailed(), true);
+							assert.equal(file.getStatus(), FileStatus.LOAD_FAILED);
+
+							done();
+						}
+						catch(exception)
+						{
+							done(exception);
+						}
+					},
+				},
+			});
+
+			uploader.addFile(png);
+		});
+	});
 
 	describe('Default Upload Controller', () => {
 
@@ -16,7 +122,7 @@ describe('Upload Controller', () => {
 					chunkSize: 7,
 					forceChunkSize: true,
 				},
-				'File:onError': () => {
+				[UploaderEvent.FILE_ERROR]: () => {
 					console.log('error');
 				},
 			});*/
@@ -46,85 +152,6 @@ describe('Upload Controller', () => {
 				uploader.start();
 			}, 100);*/
 
-		});
-	});
-
-	describe('Custom Upload Controller', () => {
-
-		class UploadController extends AbstractUploadController
-		{
-			constructor(server: Server)
-			{
-				super(server);
-			}
-
-			upload(file: File)
-			{
-				const chunkSize = this.getServer().getChunkSize();
-				const fileSize = file.size;
-				let chunkOffset = 0;
-				let uploadedBytes = 0;
-
-				const upload = () => {
-					if (chunkOffset === 0 && fileSize <= chunkSize)
-					{
-						chunkOffset = fileSize;
-						uploadedBytes = fileSize;
-					}
-					else
-					{
-						const currentChunkSize = Math.min(chunkSize, fileSize - chunkOffset);
-						const nextOffset = chunkOffset + currentChunkSize;
-
-						uploadedBytes += currentChunkSize;
-						this.emit('onProgress', { progress: Math.ceil(uploadedBytes / fileSize * 100) });
-
-						chunkOffset = nextOffset;
-					}
-
-					if (chunkOffset >= fileSize)
-					{
-						clearInterval(internal);
-						this.emit('onUpload');
-					}
-				};
-
-				const internal = setInterval(upload, 200);
-			}
-
-			abort(): void
-			{
-
-			}
-		}
-
-		it('should upload a file', (done) => {
-			const progressValues = [19, 37, 56, 74, 93, 100];
-			const handleProgress = sinon.stub().callsFake((event: BaseEvent) => {
-				const { progress } = event.getData();
-				assert.equal(progress, progressValues.shift(), 'progress values');
-			});
-
-			const uploader = new Uploader({
-				serverOptions : {
-					chunkSize: 7,
-					forceChunkSize: true,
-					uploadControllerClass: UploadController
-				},
-				events: {
-					'File:onUploadProgress': handleProgress,
-					'File:onError': () => {
-
-					},
-					'File:onComplete': () => {
-						assert.equal(handleProgress.callCount, 6, 'onProgress Count');
-						done();
-					}
-				}
-			});
-
-			const file = new File(['<html><body><b>Hello</b></body></html>'], 'index2.html', { type: 'text/html' });
-			uploader.addFile(file);
 		});
 	});
 });

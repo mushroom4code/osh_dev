@@ -11,6 +11,12 @@ $pathTemplate24 = getLocalPath($pathTemplate24);
 $pathCSS = '/bitrix/js/landing/css';
 $pathLang = BX_ROOT . '/modules/landing/lang/' . LANGUAGE_ID;
 
+if (\Bitrix\Main\Config\Option::get('landing', 'update_block_domainua_ran', 'N') !== 'Y')
+{
+	\Bitrix\Main\Config\Option::set('landing', 'update_block_domainua_ran', 'Y');
+	\Bitrix\Main\Update\Stepper::bindClass('Bitrix\Landing\Update\Block\DomainUa', 'landing', 5);
+	\Bitrix\Main\Config\Option::set('landing', 'update_block_domainua', 0);
+}
 
 $jsConfig = [
 	'landing_master' => [
@@ -214,7 +220,6 @@ $jsConfig = [
 		'js' => [
 			$pathTemplate24 . '/assets/vendor/bootstrap/js/dist/util.js',
 			$pathTemplate24 . '/assets/vendor/bootstrap/js/dist/collapse.js',
-			$pathTemplate24 . '/assets/js/helpers/menu/hamburgers.js',
 			$pathTemplate24 . '/assets/js/helpers/menu/scrollspy.js',
 			$pathTemplate24 . '/assets/js/helpers/menu/menu_init.js',
 		],
@@ -321,10 +326,11 @@ $jsConfig = [
 
 	'landing_auto_font_scale' => [
 		'js' => [
-			$pathJS . '/ui/tool/auto-font-scale.js',
-			$pathJS . '/ui/tool/auto-font-scale-entry.js',
 			$pathTemplate24 . '/assets/js/helpers/auto_font_scale_init.js',
 		],
+		'rel' => [
+			'landing.ui.tool.auto_font_scale',
+		]
 	],
 
 	'landing_backlinks' => [

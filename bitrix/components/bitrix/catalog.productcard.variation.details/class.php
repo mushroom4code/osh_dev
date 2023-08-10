@@ -7,10 +7,13 @@ use Bitrix\Catalog\Component\GridVariationForm;
 use Bitrix\Catalog\Component\UseStore;
 use Bitrix\Catalog\Component\VariationForm;
 use Bitrix\Catalog\Component\StoreAmount;
+use Bitrix\Catalog\Config\State;
 use Bitrix\Catalog\v2\BaseIblockElementEntity;
 use Bitrix\Catalog\v2\IoC\ServiceContainer;
 use Bitrix\Catalog\v2\Sku\BaseSku;
 use Bitrix\Currency\Integration\IblockMoneyProperty;
+use Bitrix\Iblock\Component\Property\ComponentLinksBuilder;
+use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\Engine\Contract\Controllerable;
 use Bitrix\Main\Errorable;
 use Bitrix\Main\ErrorableImplementation;
@@ -177,9 +180,26 @@ class CatalogProductVariationDetailsComponent
 		}
 	}
 
+	private function prepareDateFields(&$fields): void
+	{
+		if (isset($fields['ACTIVE_FROM']) && $fields['ACTIVE_FROM'] !== '')
+		{
+			$date = \Bitrix\Main\Type\DateTime::createFromUserTime($fields['ACTIVE_FROM']);
+			$date->disableUserTime();
+			$fields['ACTIVE_FROM'] = $date;
+		}
+
+		if (isset($fields['ACTIVE_TO']) && $fields['ACTIVE_TO'] !== '')
+		{
+			$date = \Bitrix\Main\Type\DateTime::createFromUserTime($fields['ACTIVE_TO']);
+			$date->disableUserTime();
+			$fields['ACTIVE_TO'] = $date;
+		}
+	}
+
 	private function prepareFileFields(&$fields): void
 	{
-		$files = $_FILES['data'];
+		$files = $_FILES['data'] ?? [];
 		if (!empty($files))
 		{
 			CFile::ConvertFilesToPost($files, $fields);
@@ -199,32 +219,111 @@ class CatalogProductVariationDetailsComponent
 	{
 		$propertyFields = [];
 		$prefixLength = mb_strlen(BaseForm::PROPERTY_FIELD_PREFIX);
+		$propertyCollection = $this->variation->getPropertyCollection();
+
+		$this->prepareFieldKeys($fields);
 
 		foreach ($fields as $name => $field)
 		{
+			$index = mb_substr($name, $prefixLength);
+
+			$property = $propertyCollection->findById((int)$index);
+			if ($property === null)
+			{
+				$property = $propertyCollection->findByCode($index);
+			}
+
 			if (
 				mb_strpos($name, BaseForm::PROPERTY_FIELD_PREFIX) === 0
 				&& mb_substr($name, -7) !== '_custom'
 			)
 			{
+				$index = mb_substr($name, $prefixLength);
+
+				$property = $propertyCollection->findById((int)$index);
+				if ($property === null)
+				{
+					$property = $propertyCollection->findByCode($index);
+				}
+
+				$propertyType = null;
+				if ($property !== null)
+				{
+					$propertyType = $property->getPropertyType();
+				}
+
 				// grid file properties
 				if (!empty($fields[$name.'_custom']['isFile']))
 				{
-					unset($fields[$name.'_custom']['isFile']);
 					$field = $this->prepareFilePropertyFromGrid($fields[$name.'_custom']);
+					if (empty($field))
+					{
+						$field = '';
+					}
 					unset($fields[$name.'_custom']);
 				}
 				// editor file properties
-				elseif (isset($fields[$name.'_descr']) || isset($fields[$name.'_del']))
+				elseif ($propertyType === PropertyTable::TYPE_FILE)
 				{
 					$descriptions = $fields[$name.'_descr'] ?? [];
 					$deleted = $fields[$name.'_del'] ?? [];
-					$field = $this->prepareFilePropertyFromEditor($fields[$name], $descriptions, $deleted);
+					$entityId = $this->variation->getId();
+					$controlId = BaseForm::PROPERTY_FIELD_PREFIX . $index . '_uploader_' . $entityId;
+
+					$editorFiles = $this->prepareFilePropertyFromEditor($fields[$name] ?? [], $descriptions, $deleted);
+					$editorFiles = array_column($editorFiles ?? [], 'VALUE');
+					$checkedField = [];
+
+					if ($this->form->isImageProperty($property->getSettings()))
+					{
+						$actualFilesCollection = $this->variation->getPropertyCollection()->getValues()[$property->getId()];
+						$actualFiles = [];
+						foreach ($actualFilesCollection as $item)
+						{
+							$actualFiles[] = $item['VALUE']; // already saved images
+						}
+
+						foreach ($editorFiles as $editorFile)
+						{
+							if (is_numeric($editorFile))
+							{
+								if (in_array($editorFile, $actualFiles))
+								{
+									$checkedField[] = $editorFile; // already recorded image
+								}
+							}
+							elseif (is_array($editorFile))
+							{
+								$checkedField[] = $editorFile; // array file ['tmp_name', 'size', ...], no need to check
+							}
+						}
+					}
+					else
+					{
+						$checkedField = \Bitrix\Main\UI\FileInputUtility::instance()->checkFiles(
+							$controlId,
+							$editorFiles
+						);
+					}
+					$field = $checkedField;
 					if (empty($field))
 					{
 						$field = '';
 					}
 					unset($fields[$name.'_descr']);
+				}
+				elseif (isset($property) && $property->getListType() === PropertyTable::CHECKBOX)
+				{
+					$variant = \Bitrix\Iblock\PropertyEnumerationTable::getRow([
+						'select' => ['ID', 'PROPERTY_ID', 'VALUE'],
+						'filter' => [
+							'=PROPERTY_ID' => $index,
+						],
+					]);
+					if ($variant && $field === $variant['VALUE'])
+					{
+						$field = $variant['ID'];
+					}
 				}
 				elseif (Loader::includeModule('currency'))
 				{
@@ -241,7 +340,6 @@ class CatalogProductVariationDetailsComponent
 					}
 				}
 
-				$index = mb_substr($name, $prefixLength);
 				$propertyFields[$index] = $field;
 
 				unset($fields[$name]);
@@ -249,6 +347,25 @@ class CatalogProductVariationDetailsComponent
 		}
 
 		return $propertyFields;
+	}
+
+	private function prepareFieldKeys(&$fields)
+	{
+		foreach ($fields as $name => $field)
+		{
+			if (mb_substr($name, -8) === '_deleted')
+			{
+				$explodedName = explode('_', $name);
+				$propertyId = $explodedName[count($explodedName) - 2];
+				$propertyName = BaseForm::PROPERTY_FIELD_PREFIX . $propertyId;
+				$propertyNameDel = BaseForm::PROPERTY_FIELD_PREFIX . $propertyId . '_del';
+				if (!isset($fields[$propertyName]))
+				{
+					$fields[$propertyName] = '';
+				}
+				$fields[$propertyNameDel] = $field;
+			}
+		}
 	}
 
 	private function prepareFilePropertyFromEditor($propertyFields, $descriptions, $deleted): ?array
@@ -315,16 +432,26 @@ class CatalogProductVariationDetailsComponent
 
 		foreach ($propertyFields as $key => $value)
 		{
+			if (
+				mb_substr($key, -9) === '_deleted['
+				|| mb_substr($key, -4) === '_del'
+				|| isset($propertyFields[$key . '_del'])
+			)
+			{
+				continue;
+			}
+
+			$description = $propertyFields[$key.'_descr'] ?? null;
+
 			if (is_array($value))
 			{
-				$description = $propertyFields[$key.'_descr'] ?? null;
 				$fileProp[] = \CIBlock::makeFilePropArray($value, false, $description);
 			}
-			elseif (is_numeric($value) && isset($propertyFields[$key.'_descr']))
+			elseif (is_numeric($value))
 			{
 				$fileProp[] = [
 					'VALUE' => $value,
-					'DESCRIPTION' => $propertyFields[$key.'_descr'],
+					'DESCRIPTION' => $description ?? '',
 				];
 			}
 		}
@@ -391,29 +518,87 @@ class CatalogProductVariationDetailsComponent
 		$skuField = $fields[$skuGridId][$this->variationId] ?? [];
 		unset($fields['ID'], $fields[$skuGridId]);
 
-		foreach ($fields as $name => $field)
-		{
-			if (mb_strpos($name, BaseForm::GRID_FIELD_PREFIX) === 0)
-			{
-				unset($fields[$name]);
-			}
-		}
-
 		$prefixLength = mb_strlen(BaseForm::GRID_FIELD_PREFIX);
+		$propertyPrefixLength = mb_strlen(BaseForm::PROPERTY_FIELD_PREFIX);
 
 		foreach ($skuField as $name => $value)
 		{
 			if (mb_strpos($name, BaseForm::GRID_FIELD_PREFIX) === 0)
 			{
 				$originalName = mb_substr($name, $prefixLength);
-				$skuField[$originalName] = $value;
+
+				$propertyId = mb_substr($originalName, $propertyPrefixLength);
+				if (is_numeric($propertyId))
+				{
+					$propertySettings = $this->variation->getPropertyCollection()->findById($propertyId)->getSettings();
+
+					if ($propertySettings['PROPERTY_TYPE'] === 'F')
+					{
+						if ($propertySettings['MULTIPLE'] === 'Y')
+						{
+							if (isset($skuField[$name . '_custom']))
+							{
+								unset($skuField[$name . '_custom']);
+							}
+						}
+						elseif (!isset($fields[$name]))
+						{
+							$value = '';
+							$skuField[$originalName] = $value;
+
+							continue;
+						}
+
+						if (isset($fields[$name . '_del']))
+						{
+							if (!is_array($fields[$name]))
+							{
+								$fields[$name] = [$fields[$name]];
+							}
+
+							if (!is_array($fields[$name.'_del']))
+							{
+								$fields[$name.'_del'] = [$fields[$name.'_del']];
+							}
+							$value = array_diff($fields[$name], $fields[$name.'_del']);
+							if (empty($value))
+							{
+								$value = '';
+							}
+						}
+						else
+						{
+							$value = $fields[$name];
+						}
+					}
+				}
+
+				if (!isset($skuField[$name]))
+				{
+					continue;
+				}
+
 				unset($skuField[$name]);
+				$skuField[$originalName] = $value;
 			}
 		}
 
 		if (!$this->getForm()->isPricesEditable())
 		{
 			unset($fields['VAT_ID'], $fields['VAT_INCLUDED'], $fields['PURCHASING_PRICE']);
+		}
+
+		if (State::isUsedInventoryManagement() || !$this->getForm()->isPurchasingPriceAllowed())
+		{
+			unset($fields['PURCHASING_PRICE']);
+		}
+
+		foreach ($fields as $name => $field)
+		{
+			if (mb_strpos($name, BaseForm::GRID_FIELD_PREFIX) === 0)
+			{
+				unset($fields[$name]);
+			}
 		}
 
 		return $fields = array_merge($fields, $skuField);
@@ -492,6 +677,7 @@ class CatalogProductVariationDetailsComponent
 					$this->prepareDescriptionFields($fields);
 					$this->preparePictureFields($fields);
 					$this->prepareCatalogFields($fields);
+					$this->prepareDateFields($fields);
 
 					if (isset($fields['PURCHASING_PRICE']) && $fields['PURCHASING_PRICE'] === '')
 					{
@@ -787,6 +973,7 @@ class CatalogProductVariationDetailsComponent
 	{
 		$this->arResult['VARIATION_ENTITY'] = $variation;
 		$this->arResult['VARIATION_FIELDS'] = $variation->getFields();
+		$this->arResult['IS_NEW_PRODUCT'] = $variation->isNew();
 
 		$this->arResult['UI_ENTITY_FIELDS'] = $this->getForm()->getDescriptions();
 		$this->arResult['UI_ENTITY_CONFIG'] = $this->getForm()->getConfig();
@@ -796,6 +983,7 @@ class CatalogProductVariationDetailsComponent
 		$this->arResult['UI_ENTITY_READ_ONLY'] = $this->getForm()->isReadOnly();
 		$this->arResult['UI_ENTITY_CARD_SETTINGS_EDITABLE'] = $this->getForm()->isCardSettingsEditable();
 		$this->arResult['UI_ENTITY_ENABLE_SETTINGS_FOR_ALL'] = $this->getForm()->isEnabledSetSettingsForAll();
+		$this->arResult['UI_CREATION_SKU_PROPERTY_URL'] = $this->getCreationSkuPropertyLink();
 		$this->arResult['VARIATION_GRID_ID'] = $this->getForm()->getVariationGridId();
 		$this->arResult['STORE_AMOUNT_GRID_ID'] = $this->getStoreAmount()->getStoreAmountGridId();
 		$this->arResult['CARD_SETTINGS'] = $this->getForm()->getCardSettings();
@@ -1043,14 +1231,21 @@ class CatalogProductVariationDetailsComponent
 	{
 		$iblockInfo = ServiceContainer::getIblockInfo($this->getIblockId());
 
-		if ($iblockInfo)
+		if ($iblockInfo && Loader::includeModule('iblock'))
 		{
-			return "/shop/settings/iblock_edit_property/?lang=".LANGUAGE_ID
-				."&IBLOCK_ID=".urlencode($iblockInfo->getSkuIblockId())
-				."&ID=n0&publicSidePanel=Y&newProductCard=Y";
+			return (new ComponentLinksBuilder)->getActionCreateUrl($iblockInfo->getSkuIblockId());
 		}
 
 		return '';
+	}
+
+	protected function getCreationSkuPropertyLink()
+	{
+		return str_replace(
+			'#IBLOCK_ID#',
+			$this->getForm()->getVariationIblockId(),
+			$this->arParams['PATH_TO']['PROPERTY_CREATOR']
+		);
 	}
 
 	protected function getVariationDetailUrl(): string

@@ -290,6 +290,21 @@
 		BX.remove(BX('bx-desktop-loader'));
 	}
 
+	Desktop.prototype.isFeatureEnabled = function(code)
+	{
+		if (!this.ready())
+		{
+			return false;
+		}
+
+		if (typeof BXDesktopSystem.FeatureEnabled !== 'function')
+		{
+			return false;
+		}
+
+		return !!BXDesktopSystem.FeatureEnabled(code);
+	}
+
 	Desktop.prototype.getBackgroundImage = function()
 	{
 		if (!this.apiReady)
@@ -297,19 +312,12 @@
 			return {id: 'none', source: ''};
 		}
 
-		var imagePath = BXDesktopSystem.QuerySettings("bxd_camera_background", "");
-		if (imagePath && !imagePath.startsWith('file://'))
-		{
-			imagePath = 'file://'+imagePath;
-		}
+		var id = BXDesktopSystem.QuerySettings("bxd_camera_background_id") || 'none';
 
-		return {
-			id: BXDesktopSystem.QuerySettings("bxd_camera_background_id") || 'none',
-			source: imagePath,
-		};
+		return {id: id};
 	}
 
-	Desktop.prototype.setBackgroundImage = function(id, source)
+	Desktop.prototype.setCallBackground = function(id, source)
 	{
 		if (source === 'none' || source === '')
 		{
@@ -318,38 +326,19 @@
 		else if (source === 'blur')
 		{
 		}
-		else if(source === 'gaussianBlur')
+		else if (source === 'gaussianBlur')
 		{
 			source = 'GaussianBlur';
 		}
 		else
 		{
-			try
-			{
-				var url = new URL(source, location.origin);
-				source = url.href;
-
-				if (source)
-				{
-					if (source.startsWith('file:///'))
-					{
-						source = source.substr(8);
-					}
-					else if (source.startsWith('file://'))
-					{
-						source = source.substr(7);
-					}
-				}
-			}
-			catch(e)
-			{
-				source = '';
-			}
+			source = this.prepareResourcePath(source);
 		}
 
 		var promise = new BX.Promise();
 
-		setTimeout(function() {
+		setTimeout(() => {
+			this.setCallMask(false);
 			BXDesktopSystem.StoreSettings("bxd_camera_background_id", id);
 			BXDesktopSystem.StoreSettings("bxd_camera_background", source);
 
@@ -357,6 +346,60 @@
 		}, 100);
 
 		return promise;
+	}
+
+	Desktop.prototype.setCallMaskLoadHandlers = function(callback)
+	{
+		this.addCustomEvent("BX3dAvatarReady", callback);
+		this.addCustomEvent("BX3dAvatarError", callback);
+	}
+
+	Desktop.prototype.setCallMask = function(id, maskUrl, backgroundUrl)
+	{
+		if (!this.enableInVersion(72))
+		{
+			return false;
+		}
+
+		if (!id)
+		{
+			BXDesktopSystem.Set3dAvatar("", "");
+			BXDesktopSystem.StoreSettings("bxd_camera_3dbackground_id", '');
+			return true;
+		}
+
+		maskUrl = this.prepareResourcePath(maskUrl);
+		backgroundUrl = this.prepareResourcePath(backgroundUrl);
+
+		BXDesktopSystem.Set3dAvatar(maskUrl, backgroundUrl);
+		BXDesktopSystem.StoreSettings("bxd_camera_3dbackground_id", id);
+	}
+
+	Desktop.prototype.getMask = function()
+	{
+		if (!this.apiReady)
+		{
+			return {id: ''};
+		}
+
+		return {
+			id: BXDesktopSystem.QuerySettings("bxd_camera_3dbackground_id") || ''
+		};
+	}
+
+	Desktop.prototype.prepareResourcePath = function(source)
+	{
+		try
+		{
+			const url = new URL(source, location.origin);
+			source = url.href;
+		}
+		catch(e)
+		{
+			source = '';
+		}
+
+		return source;
 	}
 
 	Desktop.prototype.getCurrentUrl = function ()
@@ -1096,13 +1139,13 @@
 		{
 			resultText = BX.util.htmlspecialcharsback(resultText);
 			resultText = resultText.split('&nbsp;&nbsp;&nbsp;&nbsp;').join("\t");
-			resultText = resultText.replace(/<img.*?data-code="([^"]*)".*?>/ig, '$1');
-			resultText = resultText.replace(/&nbsp;/ig, ' ').replace(/&copy;/, '(c)');
-			resultText = resultText.replace(/<div class=\"bx-messenger-hr\"><\/div>/ig, '\n');
-			resultText = resultText.replace(/<span class=\"bx-messenger-clear\"><\/span>/ig, '\n');
-			resultText = resultText.replace(/<s>([^"]*)<\/s>/ig, '');
-			resultText = resultText.replace(/<(\/*)([buis]+)>/ig, '[$1$2]');
-			resultText = resultText.replace(/<a.*?href="([^"]*)".*?>.*?<\/a>/ig, '$1');
+			resultText = resultText.replace(/<img.*?data-code="([^"]*)".*?>/gi, '$1');
+			resultText = resultText.replace(/&nbsp;/gi, ' ').replace(/&copy;/, '(c)');
+			resultText = resultText.replace(/<div class=\"bx-messenger-hr\"><\/div>/gi, '\n');
+			resultText = resultText.replace(/<span class=\"bx-messenger-clear\"><\/span>/gi, '\n');
+			resultText = resultText.replace(/<s>([^"]*)<\/s>/gi, '');
+			resultText = resultText.replace(/<(\/*)([buis]+)>/gi, '[$1$2]');
+			resultText = resultText.replace(/<a.*?href="([^"]*)".*?>.*?<\/a>/gi, '$1');
 			resultText = resultText.replace(/------------------------------------------------------(.*?)------------------------------------------------------/gmi, "["+BX.message("BXD_QUOTE_BLOCK")+"]");
 			resultText = resultText.replace(/<br( \/)?>/gi, '\n').replace(/<\/?[^>]+>/gi, '');
 		}

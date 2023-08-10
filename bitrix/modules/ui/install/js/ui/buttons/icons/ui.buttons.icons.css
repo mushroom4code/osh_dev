@@ -447,14 +447,14 @@
 .ui-btn-icon-done.ui-btn-danger-dark,
 .ui-btn-icon-done.ui-btn-success-dark,
 .ui-btn-icon-done.ui-btn-primary-dark,
-.bitrix24-light-theme .ui-btn-icon-done.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-done-light.svg?v=1.1); }
+.bitrix24-light-theme .ui-btn-icon-done.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-done-light.svg?v=1.2); }
 
 .ui-btn-icon-done.ui-btn-link,
 .ui-btn-icon-done.ui-btn-light,
 .ui-btn-icon-done.ui-btn-success,
 .ui-btn-icon-done.ui-btn-secondary,
 .ui-btn-icon-done.ui-btn-light-border,
-.bitrix24-dark-theme .ui-btn-icon-done.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-done-dark.svg?v=1.1); }
+.bitrix24-dark-theme .ui-btn-icon-done.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-done-dark.svg?v=1.2); }
 
 /*endregion*/
 
@@ -592,6 +592,26 @@
 .ui-btn-icon-setting.ui-btn-secondary,
 .ui-btn-icon-setting.ui-btn-light-border,
 .bitrix24-dark-theme .ui-btn-icon-setting.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-setting-black.svg?v=1.1); }
+
+/*endregion*/
+
+/*region ui-btn-icon-copy*/
+.ui-btn-icon-copy.ui-btn-split,
+.ui-btn-icon-copy.ui-btn-danger,
+.ui-btn-icon-copy.ui-btn-primary,
+.ui-btn-icon-copy.ui-btn-default,
+.ui-btn-icon-copy.ui-btn-danger-dark,
+.ui-btn-icon-copy.ui-btn-success-dark,
+.ui-btn-icon-copy.ui-btn-primary-dark,
+.bitrix24-light-theme .ui-btn-icon-copy.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-btn-icon-copy-light.svg?v=1.1); }
+.ui-btn-icon-copy.ui-btn,
+
+.ui-btn-icon-copy.ui-btn-link,
+.ui-btn-icon-copy.ui-btn-light,
+.ui-btn-icon-copy.ui-btn-success,
+.ui-btn-icon-copy.ui-btn-secondary,
+.ui-btn-icon-copy.ui-btn-light-border,
+.bitrix24-dark-theme .ui-btn-icon-copy.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-btn-icon-copy-dark.svg?v=1.1); }
 
 /*endregion*/
 
@@ -1261,4 +1281,24 @@
 .ui-btn-icon-print-2.ui-btn-primary-dark,
 .bitrix24-light-theme .ui-btn-icon-print-2.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-btn-icon-print-2.svg); }
 
+/*endregion*/
+
+
+/*region ui-btn-icon-cancel*/
+.ui-btn-icon-cancel.ui-btn,
+.ui-btn-icon-cancel.ui-btn-split,
+.ui-btn-icon-cancel.ui-btn-danger,
+.ui-btn-icon-cancel.ui-btn-primary,
+.ui-btn-icon-cancel.ui-btn-default,
+.bitrix24-light-theme .ui-btn-icon-cancel.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-cancel-light.svg); }
+
+.ui-btn-icon-cancel.ui-btn-danger-dark,
+.ui-btn-icon-cancel.ui-btn-success-dark,
+.ui-btn-icon-cancel.ui-btn-primary-dark,
+.ui-btn-icon-cancel.ui-btn-link,
+.ui-btn-icon-cancel.ui-btn-light,
+.ui-btn-icon-cancel.ui-btn-success,
+.ui-btn-icon-cancel.ui-btn-secondary,
+.ui-btn-icon-cancel.ui-btn-light-border,
+.bitrix24-dark-theme .ui-btn-icon-cancel.ui-btn-themes { --ui-btn-icon: url(/bitrix/js/ui/buttons/icons/images/ui-cancel-dark.svg); }
 /*endregion*/

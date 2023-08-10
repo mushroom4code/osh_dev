@@ -18,13 +18,6 @@ class DocumentCard extends BaseCard
 	static #modelFactory;
 	static #controllersFactory;
 
-	static initializeEntityEditorFactories()
-	{
-		DocumentCard.registerFieldFactory();
-		DocumentCard.registerModelFactory();
-		DocumentCard.registerDocumentControllersFactory();
-	}
-
 	constructor(id, settings)
 	{
 		super(id, settings);
@@ -34,7 +27,11 @@ class DocumentCard extends BaseCard
 		this.signedParameters = settings.signedParameters;
 		this.isConductLocked = settings.isConductLocked;
 		this.masterSliderUrl = settings.masterSliderUrl;
+		this.isInventoryManagementDisabled = settings.isInventoryManagementDisabled;
+		this.inventoryManagementFeatureCode = settings.inventoryManagementFeatureCode;
+		this.editorName = settings.includeCrmEntityEditor ? 'BX.Crm.EntityEditor' : 'BX.UI.EntityEditor';
 		this.inventoryManagementSource = settings.inventoryManagementSource;
+		this.activeTabId = 'main';
 
 		this.isTabAnalyticsSent = false;
 
@@ -78,7 +75,12 @@ class DocumentCard extends BaseCard
 					if (slider)
 					{
 						slider.url = BX.Uri.addParam(slider.getUrl(), {DOCUMENT_TYPE: type});
-						slider.url = BX.Uri.removeParam(slider.url, ['firstTime']);
+						slider.url = BX.Uri.removeParam(slider.url, ['firstTime', 'focusedTab']);
+
+						if (this.activeTabId !== 'main')
+						{
+							slider.url = BX.Uri.addParam(slider.getUrl(), {focusedTab: this.activeTabId});
+						}
 
 						if (type === 'A' || type === 'S')
 						{
@@ -199,9 +201,9 @@ class DocumentCard extends BaseCard
 		return;
 	}
 
-	static registerDocumentControllersFactory()
+	focusOnTab(tabId)
 	{
-		DocumentCard.#controllersFactory = new ControllersFactory();
+		EventEmitter.emit('BX.Catalog.EntityCard.TabManager:onOpenTab', {tabId: tabId});
 	}
 
 	// deprecated
@@ -218,9 +220,10 @@ class DocumentCard extends BaseCard
 
 	getEditorInstance()
 	{
-		if (Reflection.getClass('BX.UI.EntityEditor'))
+		const editorInstance = Reflection.getClass(this.editorName);
+		if (editorInstance)
 		{
-			return BX.UI.EntityEditor.getDefault();
+			return editorInstance.getDefault();
 		}
 
 		return null;
@@ -239,6 +242,11 @@ class DocumentCard extends BaseCard
 
 	subscribeToUserSelectorEvent()
 	{
+		if (this.editorName !== 'BX.UI.EntityEditor')
+		{
+			return;
+		}
+
 		EventEmitter.subscribe('BX.UI.EntityEditorUser:openSelector', (event) => {
 			let eventData = event.data[1];
 			const dialog = new Dialog({
@@ -295,7 +303,7 @@ class DocumentCard extends BaseCard
 
 	subscribeToValidationFailedEvent()
 	{
-		EventEmitter.subscribe('BX.UI.EntityEditor:onFailedValidation', (event) => {
+		EventEmitter.subscribe(this.editorName + ':onFailedValidation', (event) => {
 			EventEmitter.emit('BX.Catalog.EntityCard.TabManager:onOpenTab', {tabId: 'main'});
 		});
 		EventEmitter.subscribe('onProductsCheckFailed', (event) => {
@@ -305,12 +313,20 @@ class DocumentCard extends BaseCard
 
 	subscribeToOnSaveEvent()
 	{
-		EventEmitter.subscribe('BX.UI.EntityEditor:onSave', (event) => {
+		EventEmitter.subscribe(this.editorName + ':onSave', (event) => {
 			const eventEditor = event.data[0];
 			const action = event.data[1]?.actionId;
 			if (eventEditor && eventEditor._ajaxForm)
 			{
 				eventEditor._toolPanel?.clearErrors();
+
+				if (this.isInventoryManagementDisabled && this.inventoryManagementFeatureCode)
+				{
+					event.data[1].cancel = true;
+					event.data[0]._toolPanel?.setLocked(false);
+					top.BX.UI.InfoHelper.show(this.inventoryManagementFeatureCode);
+					return;
+				}
 
 				if (action === 'SAVE_AND_CONDUCT')
 				{
@@ -362,14 +378,27 @@ class DocumentCard extends BaseCard
 				});
 				this.isTabAnalyticsSent = true;
 			}
+
+			if (tabId)
+			{
+				this.activeTabId = tabId;
+			}
 		});
 	}
 
 	subscribeToDirectActionEvent()
 	{
-		EventEmitter.subscribe('BX.UI.EntityEditor:onDirectAction', (event) => {
+		EventEmitter.subscribe(this.editorName + ':onDirectAction', (event) => {
 
 			const eventEditor = event.data[0];
+
+			if (this.isInventoryManagementDisabled && this.inventoryManagementFeatureCode)
+			{
+				event.data[1].cancel = true;
+				event.data[0]._toolPanel?.setLocked(false);
+				top.BX.UI.InfoHelper.show(this.inventoryManagementFeatureCode);
+				return;
+			}
 
 			if (event.data[1]?.actionId === 'CONDUCT')
 			{
@@ -548,6 +577,11 @@ class DocumentCard extends BaseCard
 	static registerModelFactory()
 	{
 		DocumentCard.#modelFactory = new ModelFactory();
+	}
+
+	static registerDocumentControllersFactory(eventName)
+	{
+		DocumentCard.#controllersFactory = new ControllersFactory(eventName);
 	}
 
 	setSliderText()

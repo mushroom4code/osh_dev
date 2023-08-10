@@ -17,6 +17,8 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\UI;
 
 UI\Extension::load([
+	'ui.design-tokens',
+	'ui.fonts.opensans',
 	'ui.buttons',
 	'ui.alerts',
 	'ui.icons.b24',
@@ -36,11 +38,11 @@ if (empty($arResult['TAB']))
 	$APPLICATION->setPageProperty('BodyClass', implode(' ', $bodyClassList));
 }
 
-if ($arResult['NEED_AUTH'] === 'Y')
+if (($arResult['NEED_AUTH'] ?? '') === 'Y')
 {
 	$APPLICATION->AuthForm("");
 }
-elseif ($arResult["FatalError"] <> '')
+elseif (($arResult["FatalError"] ?? '') <> '')
 {
 	?><span class='errortext'><?=$arResult["FatalError"]?></span><br /><br /><?php
 }
@@ -58,7 +60,13 @@ else
 	$APPLICATION->SetAdditionalCSS("/bitrix/components/bitrix/main.post.form/templates/.default/style.css");
 	$APPLICATION->SetAdditionalCSS("/bitrix/components/bitrix/socialnetwork.blog.post.edit/templates/.default/style.css");
 
-	?><div id="sonet_group_create_error_block" class="ui-alert ui-alert-xs ui-alert-danger ui-alert-icon-danger<?=($arResult["ErrorMessage"] <> '' ? "" : " sonet-ui-form-error-block-invisible")?>"><?=$arResult["ErrorMessage"]?></div><?php
+	?>
+		<div
+			id="sonet_group_create_error_block"
+			class="ui-alert ui-alert-xs ui-alert-danger ui-alert-icon-danger<?=(($arResult["ErrorMessage"] ?? '') <> '' ? "" : " sonet-ui-form-error-block-invisible")?>"
+		><?=$arResult["ErrorMessage"] ?? ''?>
+		</div>
+	<?php
 
 	if ($arResult["ShowForm"] === "Input")
 	{
@@ -136,13 +144,15 @@ else
 						groupId: <?= (int)$arParams["GROUP_ID"] ?>,
 						isScrumProject: <?= ($arResult['isScrumProject'] ? 'true' : 'false') ?>,
 						config: <?= CUtil::phpToJSObject($arResult['ClientConfig']) ?>,
-						avatarUploaderId: '<?= $arResult['AVATAR_UPLOADER_CID'] ?>',
+						avatarUploaderId: '<?= $arResult['AVATAR_UPLOADER_CID'] ?? '' ?>',
 						themePickerData: <?= CUtil::phpToJSObject($arResult['themePickerData']) ?>,
 						projectOptions: <?= CUtil::phpToJSObject($arParams['PROJECT_OPTIONS']) ?>,
 						projectTypes: <?= CUtil::phpToJSObject($arResult['ProjectTypes']) ?>,
 						confidentialityTypes: <?= CUtil::phpToJSObject($arResult['ConfidentialityTypes']) ?>,
 						expandableSettingsNodeId: 'sonet_group_create_settings_expandable',
 						stepsCount: <?= ($arResult['USE_PRESETS'] === 'Y' && $arParams['GROUP_ID'] <= 0 ? 4 : 1) ?>,
+						focus: '<?= CUtil::JSEscape(\Bitrix\Main\Context::getCurrent()->getRequest()->get('focus')) ?>',
+						culture: <?= CUtil::phpToJSObject($arResult['culture']) ?>
 					});
 				}
 			);
@@ -174,7 +184,7 @@ else
 		}
 		$actionUrl = $uri->getUri();
 
-		$isProject = ($arResult['POST']['PROJECT'] === 'Y');
+		$isProject = (($arResult['POST']['PROJECT'] ?? '') === 'Y');
 		$isScrumProject = $arResult['isScrumProject'];
 
 		?>
@@ -188,7 +198,7 @@ else
 				'socialnetwork-group-create-ex__scope',
 			];
 
-			switch ((string)$arResult['TAB'])
+			switch ((string) ($arResult['TAB'] ?? ''))
 			{
 				case '':
 					$classList[] = 'socialnetwork-group-create-ex__create';
@@ -263,7 +273,7 @@ else
 						];
 
 						if (
-							$arResult['TAB'] === 'edit'
+							($arResult['TAB'] ?? '') === 'edit'
 							|| (
 								empty($arResult['TAB'])
 								&& count($arResult['ProjectTypes']) <= 1
@@ -296,8 +306,8 @@ else
 						];
 
 						if (
-							$arResult['TAB'] === 'edit'
-							|| $arResult['TAB'] === 'invite'
+							($arResult['TAB'] ?? '') === 'edit'
+							|| ($arResult['TAB'] ?? '') === 'invite'
 						)
 						{
 							$bodyClassList[] = '--active';
@@ -320,7 +330,12 @@ else
 			?>
 			<input type="hidden" name="SONET_USER_ID" value="<?= $arResult['currentUserId'] ?>">
 			<input type="hidden" name="SONET_GROUP_ID" id="SONET_GROUP_ID" value="<?= (int)$arResult["GROUP_ID"] ?>">
-			<input type="hidden" name="TAB" id="TAB" value="<?= htmlspecialcharsbx(CUtil::JSEscape($arResult['TAB'])) ?>">
+			<input
+				type="hidden"
+				name="TAB"
+				id="TAB"
+				value="<?= htmlspecialcharsbx(CUtil::JSEscape($arResult['TAB'] ?? '')) ?>"
+			>
 		</form>
 		<?php
 	}

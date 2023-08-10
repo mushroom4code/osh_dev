@@ -1,17 +1,13 @@
+/* eslint-disable */
 (function (exports,ui_designTokens,im_view_element_media,im_view_element_attach,im_view_element_keyboard,im_view_element_chatteaser,ui_vue_components_reaction,ui_vue,ui_vue_vuex,im_model,im_const,im_lib_utils,main_core,main_core_events) {
 	'use strict';
 
 	function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
 	function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-	function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
+	function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 	function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
 	function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { babelHelpers.defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 	var BX = window.BX;
-
 	var _ContentType = Object.freeze({
 	  "default": 'default',
 	  progress: 'progress',
@@ -20,7 +16,6 @@
 	  video: 'video',
 	  richLink: 'richLink'
 	});
-
 	ui_vue.BitrixVue.component('bx-im-view-message-body', {
 	  /**
 	   * @emits EventType.dialog.clickOnChatTeaser {message: object, event: MouseEvent}
@@ -71,7 +66,6 @@
 	      if (this.showAvatar && im_lib_utils.Utils.platform.isMobile()) {
 	        return false;
 	      }
-
 	      main_core_events.EventEmitter.emit(im_const.EventType.dialog.clickOnUserName, event);
 	    },
 	    clickByChatTeaser: function clickByChatTeaser(event) {
@@ -93,28 +87,22 @@
 	    },
 	    formatDate: function formatDate(date) {
 	      var id = date.toJSON().slice(0, 10);
-
 	      if (this.cacheFormatDate[id]) {
 	        return this.cacheFormatDate[id];
 	      }
-
 	      var dateFormat = im_lib_utils.Utils.date.getFormatType(BX.Messenger.Const.DateFormat.message, this.$Bitrix.Loc.getMessages());
 	      this.cacheFormatDate[id] = this._getDateFormat().format(dateFormat, date);
 	      return this.cacheFormatDate[id];
 	    },
 	    _getDateFormat: function _getDateFormat() {
 	      var _this = this;
-
 	      if (this.dateFormatFunction) {
 	        return this.dateFormatFunction;
 	      }
-
 	      this.dateFormatFunction = Object.create(BX.Main.Date);
-
 	      this.dateFormatFunction._getMessage = function (phrase) {
 	        return _this.$Bitrix.Loc.getMessage(phrase);
 	      };
-
 	      return this.dateFormatFunction;
 	    },
 	    isDesktop: function isDesktop() {
@@ -140,14 +128,11 @@
 	        var onlyVideo = false;
 	        var onlyAudio = false;
 	        var inProgress = false;
-
 	        var _iterator = _createForOfIteratorHelper(this.filesData),
-	            _step;
-
+	          _step;
 	        try {
 	          for (_iterator.s(); !(_step = _iterator.n()).done;) {
 	            var file = _step.value;
-
 	            if (file.progress < 0) {
 	              inProgress = true;
 	              break;
@@ -157,7 +142,6 @@
 	                onlyVideo = false;
 	                break;
 	              }
-
 	              onlyAudio = true;
 	            } else if (file.type === 'image' && file.image) {
 	              if (onlyVideo || onlyAudio) {
@@ -165,7 +149,6 @@
 	                onlyVideo = false;
 	                break;
 	              }
-
 	              onlyImage = true;
 	            } else if (file.type === 'video') {
 	              if (onlyImage || onlyAudio) {
@@ -173,7 +156,6 @@
 	                onlyImage = false;
 	                break;
 	              }
-
 	              onlyVideo = true;
 	            } else {
 	              onlyAudio = false;
@@ -187,7 +169,6 @@
 	        } finally {
 	          _iterator.f();
 	        }
-
 	        if (inProgress) {
 	          return _ContentType.progress;
 	        } else if (onlyImage) {
@@ -198,44 +179,20 @@
 	          return _ContentType.video;
 	        }
 	      }
-
 	      return _ContentType["default"];
 	    },
 	    formattedDate: function formattedDate() {
 	      return this.formatDate(this.message.date);
 	    },
 	    messageText: function messageText() {
-	      var _this2 = this;
-
 	      if (this.isDeleted) {
 	        return this.$Bitrix.Loc.getMessage('IM_MESSENGER_MESSAGE_DELETED');
 	      }
-
-	      var message = this.message.textConverted;
+	      var message = this.message.textConverted ? this.message.textConverted : im_lib_utils.Utils.text.decode(this.message.text);
 	      var messageParams = this.message.params;
-	      var replacement = [];
-	      message = message.replace(/<!--IM_COMMAND_START-->([\0-\uFFFF]+?)<!--IM_COMMAND_END-->/ig, function (whole, text) {
-	        var id = replacement.length;
-	        replacement.push(text);
-	        return '####REPLACEMENT_' + id + '####';
-	      });
-	      message = message.replace(/\[USER=([0-9]{1,})\](.*?)\[\/USER\]/ig, function (whole, userId, userName) {
-	        if (!userName) {
-	          var user = _this2.$store.getters['users/get'](userId);
-
-	          userName = user ? im_lib_utils.Utils.text.htmlspecialchars(user.name) : 'User ' + userId;
-	        }
-
-	        return '<span class="bx-im-mention" data-type="USER" data-value="' + userId + '">' + userName + '</span>';
-	      });
-	      replacement.forEach(function (value, index) {
-	        message = message.replace('####REPLACEMENT_' + index + '####', value);
-	      });
-
 	      if (typeof messageParams.LINK_ACTIVE !== 'undefined' && messageParams.LINK_ACTIVE.length > 0 && !messageParams.LINK_ACTIVE.includes(this.userId)) {
-	        message = message.replace(/<a.*?href="([^"]*)".*?>(.*?)<\/a>/ig, '$2');
+	        message = message.replace(/<a.*?href="([^"]*)".*?>(.*?)<\/a>/gi, '$2');
 	      }
-
 	      return message;
 	    },
 	    messageAttach: function messageAttach() {
@@ -261,32 +218,25 @@
 	      return this.$store.getters['users/get'](this.message.authorId, true);
 	    },
 	    filesData: function filesData() {
-	      var _this3 = this;
-
+	      var _this2 = this;
 	      var files = [];
-
 	      if (!this.message.params.FILE_ID || this.message.params.FILE_ID.length <= 0) {
 	        return files;
 	      }
-
 	      this.message.params.FILE_ID.forEach(function (fileId) {
 	        if (!fileId) {
 	          return false;
 	        }
-
-	        var file = _this3.$store.getters['files/get'](_this3.chatId, fileId, true);
-
+	        var file = _this2.$store.getters['files/get'](_this2.chatId, fileId, true);
 	        if (!file) {
-	          _this3.$store.commit('files/set', {
-	            data: [_this3.$store.getters['files/getBlank']({
+	          _this2.$store.commit('files/set', {
+	            data: [_this2.$store.getters['files/getBlank']({
 	              id: fileId,
-	              chatId: _this3.chatId
+	              chatId: _this2.chatId
 	            })]
 	          });
-
-	          file = _this3.$store.getters['files/get'](_this3.chatId, fileId, true);
+	          file = _this2.$store.getters['files/get'](_this2.chatId, fileId, true);
 	        }
-
 	        if (file) {
 	          files.push(file);
 	        }
@@ -295,18 +245,15 @@
 	    },
 	    keyboardButtons: function keyboardButtons() {
 	      var result = false;
-
 	      if (!this.message.params.KEYBOARD || this.message.params.KEYBOARD === 'N') {
 	        return result;
 	      }
-
 	      return this.message.params.KEYBOARD;
 	    },
 	    chatTeaser: function chatTeaser() {
 	      if (typeof this.message.params.CHAT_ID === 'undefined' || typeof this.message.params.CHAT_LAST_DATE === 'undefined' || typeof this.message.params.CHAT_MESSAGE === 'undefined') {
 	        return false;
 	      }
-
 	      return {
 	        messageCounter: this.message.params.CHAT_MESSAGE,
 	        messageLastDate: this.message.params.CHAT_LAST_DATE,
@@ -317,7 +264,6 @@
 	      if (this.message.params.NAME) {
 	        return main_core.Text.decode(this.message.params.NAME);
 	      }
-
 	      if (!this.showAvatar) {
 	        return this.user.name;
 	      } else {
@@ -328,7 +274,6 @@
 	      if (this.user.extranet) {
 	        return "#CA7B00";
 	      }
-
 	      return this.user.color;
 	    }
 	  }, ui_vue_vuex.Vuex.mapState({

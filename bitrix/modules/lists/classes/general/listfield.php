@@ -132,7 +132,7 @@ abstract class CListField
 		$arField = $this->_read_from_cache($this->_field_id);
 		if($arField)
 		{
-			$res = unserialize($arField["SETTINGS"]);
+			$res = unserialize($arField["SETTINGS"], ['allowed_classes' => false]);
 			if(is_array($res))
 				return $res;
 		}
@@ -265,7 +265,7 @@ class CListElementField extends CListField
 			"NAME" => $this->_label,
 			"IS_REQUIRED" => $this->_iblock_field["IS_REQUIRED"],
 			"MULTIPLE" => "N",
-			"DEFAULT_VALUE" => $this->_iblock_field["DEFAULT_VALUE"],
+			"DEFAULT_VALUE" => $this->_iblock_field["DEFAULT_VALUE"] ?? null,
 			"TYPE" => $this->GetTypeID(),
 			"PROPERTY_TYPE" => false,
 			"PROPERTY_USER_TYPE" => false,
@@ -536,7 +536,7 @@ class CListPropertyField extends CListField
 			{
 				throw new NotSupportedException(GetMessage("LIST_PROPERTY_FIELD_DUPLICATE_CODE"));
 			}
-			$property_id = intval($arFields["ID"]);
+			$property_id = intval($arFields["ID"] ?? 0);
 			if($property_id > 0)
 			{
 				return new CListPropertyField($iblock_id, "PROPERTY_".$property_id, $arFields["NAME"], $arFields["SORT"]);
@@ -561,13 +561,16 @@ class CListPropertyField extends CListField
 				{
 					self::resetPropertyArrayCache();
 
-					if($arFields["PROPERTY_TYPE"] == "L" && is_array($arFields["LIST"]))
+					if($arFields["PROPERTY_TYPE"] == "L" && is_array($arFields["LIST"] ?? null))
+					{
 						CList::UpdatePropertyList($res, $arFields["LIST"]);
+					}
 
 					return new CListPropertyField($iblock_id, "PROPERTY_".$res, $arFields["NAME"], $arFields["SORT"]);
 				}
 			}
 		}
+
 		return null;
 	}
 

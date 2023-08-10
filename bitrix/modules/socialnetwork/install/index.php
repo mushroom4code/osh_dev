@@ -183,6 +183,9 @@ Class socialnetwork extends CModule
 		$eventManager->registerEventHandler('main', 'OnUISelectorEntitiesGetList', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UISelector\Handler', 'OnUISelectorEntitiesGetList');
 		$eventManager->registerEventHandler('main', 'OnUISelectorGetProviderByEntityType', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UISelector\Handler', 'OnUISelectorGetProviderByEntityType');
 		$eventManager->registerEventHandler('main', 'OnBuildFilterFactoryMethods', 'socialnetwork', '\Bitrix\Socialnetwork\Filter\FactorySocialnetwork', 'onBuildFilterFactoryMethods');
+		$eventManager->registerEventHandler('main', 'onUserCounterGetValuesFromDb', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UserCounter', 'onUserCounterGetValuesFromDb');
+		$eventManager->registerEventHandler('main', 'onUserCounterProcessCategory', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UserCounter', 'onUserCounterProcessCategory');
+		$eventManager->registerEventHandler('main', 'onUserCounterClean', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UserCounter', 'onUserCounterClean');
 
 		$eventManager->registerEventHandler('tasks', 'onTaskUpdateViewed', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Tasks\Task', 'onTaskUpdateViewed');
 		$eventManager->registerEventHandler('calendar', 'onViewEvent', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Calendar\CalendarEvent', 'onViewEvent');
@@ -418,6 +421,9 @@ Class socialnetwork extends CModule
 		$eventManager->unregisterEventHandler('main', 'OnUISelectorEntitiesGetList', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UISelector\Handler', 'OnUISelectorEntitiesGetList');
 		$eventManager->unregisterEventHandler('main', 'OnUISelectorGetProviderByEntityType', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UISelector\Handler', 'OnUISelectorGetProviderByEntityType');
 		$eventManager->unregisterEventHandler('main', 'OnBuildFilterFactoryMethods', 'socialnetwork', '\Bitrix\Socialnetwork\Filter\FactorySocialnetwork', 'onBuildFilterFactoryMethods');
+		$eventManager->unregisterEventHandler('main', 'onUserCounterGetValuesFromDb', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UserCounter', 'onUserCounterGetValuesFromDb');
+		$eventManager->unregisterEventHandler('main', 'onUserCounterProcessCategory', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UserCounter', 'onUserCounterProcessCategory');
+		$eventManager->unregisterEventHandler('main', 'onUserCounterClean', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Main\UserCounter', 'onUserCounterClean');
 
 		$eventManager->unregisterEventHandler('tasks', 'onTaskUpdateViewed', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Tasks\Task', 'onTaskUpdateViewed');
 		$eventManager->unregisterEventHandler('calendar', 'onViewEvent', 'socialnetwork', '\Bitrix\Socialnetwork\Integration\Calendar\CalendarEvent', 'onViewEvent');
@@ -500,7 +506,7 @@ Class socialnetwork extends CModule
 					}
 					$arFields[] = $arImportantPostUF;
 
-					$arImportantDateEndUF = array(
+					$arImportantDateEndUF = [
 						"USER_TYPE_ID" => "datetime",
 						"ENTITY_ID" => "BLOG_POST",
 						"FIELD_NAME" => "UF_IMPRTANT_DATE_END",
@@ -511,9 +517,10 @@ Class socialnetwork extends CModule
 						"SHOW_IN_LIST" => "N",
 						"EDIT_IN_LIST" => "Y",
 						"IS_SEARCHABLE" => "N",
-						"EDIT_FORM_LABEL" => Array(),
-						"LIST_COLUMN_LABEL" => Array(),
-						"LIST_FILTER_LABEL" => Array());
+						"EDIT_FORM_LABEL" => [],
+						"LIST_COLUMN_LABEL" => [],
+						"LIST_FILTER_LABEL" => [],
+					];
 
 					$dbLangs = CLanguage::GetList('', '', array("ACTIVE" => "Y"));
 					while ($arLang = $dbLangs->Fetch())
@@ -627,19 +634,12 @@ Class socialnetwork extends CModule
 					else if (
 						$arField["FIELD_NAME"] == "UF_BLOG_POST_IMPRTNT"
 						&& $DB->TableExists("b_uts_blog_post")
-						&& !$DB->IndexExists("b_uts_blog_post", array("UF_BLOG_POST_IMPRTNT", "VALUE_ID"))
-					)
-					{
-						$DB->Query("CREATE INDEX UX_UF_BLOG_POST_IMPRTNT ON b_uts_blog_post(UF_BLOG_POST_IMPRTNT, VALUE_ID)", true);
-					}
-					else if (
-						$arField["FIELD_NAME"] == "UF_IMPRTANT_DATE_END"
-						&& $DB->TableExists("b_uts_blog_post")
 						&& $DB->Query("SELECT UF_BLOG_POST_IMPRTNT FROM b_uts_blog_post WHERE 1=0", true)
-						&& !$DB->IndexExists("b_uts_blog_post", array("UF_IMPRTANT_DATE_END", "UF_BLOG_POST_IMPRTNT", "VALUE_ID"))
+						&& $DB->Query("SELECT UF_IMPRTANT_DATE_END FROM b_uts_blog_post WHERE 1=0", true)
+						&& !$DB->IndexExists('b_uts_blog_post', ['UF_IMPRTANT_DATE_END', 'UF_BLOG_POST_IMPRTNT'])
 					)
 					{
-						$DB->Query("CREATE INDEX UX_UF_BLOG_POST_IMPRTNT2 ON b_uts_blog_post(UF_IMPRTANT_DATE_END, UF_BLOG_POST_IMPRTNT, VALUE_ID)", true);
+						$DB->Query("CREATE INDEX UX_UF_BLOG_POST_IMPRTNT2 ON b_uts_blog_post(UF_IMPRTANT_DATE_END, UF_BLOG_POST_IMPRTNT)", true);
 					}
 				}
 				else if ($arField["FIELD_NAME"] == "UF_BLOG_POST_VOTE")
@@ -873,12 +873,10 @@ Class socialnetwork extends CModule
 						&& $DB->TableExists("b_uts_blog_post")
 					)
 					{
-						if ($DB->IndexExists("b_uts_blog_post", array("UF_BLOG_POST_IMPRTNT", "VALUE_ID")))
-						{
-							$DB->Query("DROP INDEX UX_UF_BLOG_POST_IMPRTNT ON b_uts_blog_post", true);
-						}
-
-						if ($DB->IndexExists("b_uts_blog_post", array("UF_IMPRTANT_DATE_END", "UF_BLOG_POST_IMPRTNT", "VALUE_ID")))
+						if (
+							$DB->IndexExists('b_uts_blog_post', ['UF_IMPRTANT_DATE_END', 'UF_BLOG_POST_IMPRTNT'])
+							|| $DB->IndexExists('b_uts_blog_post', ['UF_IMPRTANT_DATE_END'])
+						)
 						{
 							$DB->Query("DROP INDEX UX_UF_BLOG_POST_IMPRTNT2 ON b_uts_blog_post", true);
 						}

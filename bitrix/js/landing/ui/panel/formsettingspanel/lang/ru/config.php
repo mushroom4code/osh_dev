@@ -40,6 +40,7 @@ $MESS['LANDING_HEADER_AND_BUTTONS_VARIABLE_DATE'] = 'Дата и время';
 
 $MESS['LANDING_SPAM_PROTECTION_TITLE'] = 'Защита от спама';
 $MESS['LANDING_SPAM_PROTECTION_TABS_TITLE'] = 'Выберите вариант использования модуля reCAPTCHA v2';
+$MESS['LANDING_SPAM_PROTECTION_MESSAGE_WARNING_RECAPTCHA'] = 'Google reCAPTCHA является сервисом Google LLC.<br> Подключая reCAPTCHA, вы принимаете, что её использование повлечет сбор и передачу данных в Google LLC в соответствии с <a href="#URL_POLICIES_TERMS#" target="_blank">Условиями использования</a> и <a href="#URL_POLICIES_PRIVACY#" target="_blank">политикой конфиденциальности</a> Google LLC.';
 $MESS['LANDING_SPAM_PROTECTION_KEYS_FORM_TITLE'] = 'Введите ключи reCAPTCHA v2';
 $MESS['LANDING_SPAM_PROTECTION_RECAPTCHA_KEY_FIELD_TITLE'] = 'Ключ';
 $MESS['LANDING_SPAM_PROTECTION_RECAPTCHA_SECRET_KEY_FIELD_TITLE'] = 'Секретный ключ';
@@ -247,7 +248,7 @@ $MESS['LANDING_RULE_ENTRY_HEADER'] = 'Если значение поля…';
 $MESS['LANDING_RULE_ENTRY_ADD_FIELD_LABEL'] = 'Выбрать поле';
 
 
-$MESS['LANDING_RULE_CONDITION_VALUE_EMPTY'] = 'Не указано';
+$MESS['LANDING_RULE_CONDITION_VALUE_EMPTY_MSGVER_1'] = 'Не указано';
 $MESS['LANDING_RULE_CONDITION_VALUE_YES'] = 'Да';
 $MESS['LANDING_RULE_CONDITION_VALUE_NO'] = 'Нет';
 
@@ -275,3 +276,7 @@ $MESS['LANDING_ACTIONS_MESSAGE_DESCRIPTION_type3'] = 'Менеджер, у ко�
 $MESS['LANDING_FORM_EXPERT_MODE_SWITCHER_LABEL'] = 'Экспертный режим';
 
 $MESS['LANDING_FORM_HISTORY_DISABLED_HINT'] = 'Кнопки доступны при редактировании дизайна страницы с формой';
+
+$MESS["LANDING_FORM_EDITOR_PHONE_VERIFY_CUSTOM_SLIDER_TITLE"] = "Изменение формы";
+$MESS["LANDING_FORM_EDITOR_PHONE_VERIFY_CUSTOM_TITLE"] = "Получите проверочный код в CMC";
+$MESS["LANDING_FORM_EDITOR_PHONE_VERIFY_CUSTOM_DESCRIPTION"] = "В целях безопасности для изменения формы вам необходимо указать проверочный код из СМС. Это выполняется однократно для каждой формы.";

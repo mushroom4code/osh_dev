@@ -11,7 +11,7 @@ use Bitrix\Main\Page\Asset;
 
 \Bitrix\Main\Loader::includeModule('rest');
 CUtil::InitJSCore(['window', 'ajax', 'bp_selector', 'clipboard', 'marketplace', 'bp_field_type']);
-\Bitrix\Main\UI\Extension::load(['ui.hint', 'bizproc.globals']);
+\Bitrix\Main\UI\Extension::load(['ui.hint', 'bizproc.automation', 'bizproc.globals']);
 
 if ($isAdminSection)
 {
@@ -43,12 +43,12 @@ if (!array_key_exists('SKIP_BP_TEMPLATES_LIST', $arParams) || $arParams['SKIP_BP
 {
 	$listMenuItem = [
 		"TEXT" => (
-			($arParams["BIZPROC_EDIT_MENU_LIST_MESSAGE"] <> '')
+			(!empty($arParams["BIZPROC_EDIT_MENU_LIST_MESSAGE"]))
 				? htmlspecialcharsbx($arParams["BIZPROC_EDIT_MENU_LIST_MESSAGE"])
 				: GetMessage("BIZPROC_WFEDIT_MENU_LIST")
 		),
 		"TITLE" => (
-			($arParams["BIZPROC_EDIT_MENU_LIST_TITLE_MESSAGE"] <> '')
+			(!empty($arParams["BIZPROC_EDIT_MENU_LIST_TITLE_MESSAGE"]))
 				? htmlspecialcharsbx($arParams["BIZPROC_EDIT_MENU_LIST_TITLE_MESSAGE"])
 				: GetMessage("BIZPROC_WFEDIT_MENU_LIST_TITLE")
 		),
@@ -266,14 +266,14 @@ $aMenu[] = [
 	});
 
 </script>
-<?php if ($arParams['SHOW_ADMIN_TOOLBAR'] == 'Y')
+<?php if (isset($arParams['SHOW_ADMIN_TOOLBAR']) && $arParams['SHOW_ADMIN_TOOLBAR'] == 'Y')
 {
 	$context = new CAdminContextMenu($aMenu);
 	$context->Show();
 }
 ?>
 <div style="background-color: #FFFFFF;<?php if($isAdminSection): ?>padding: 10px<?php endif;?>">
-	<? if ($arParams['SHOW_TOOLBAR'] == 'Y')
+	<?php if (isset($arParams['SHOW_TOOLBAR']) && $arParams['SHOW_TOOLBAR'] == 'Y')
 	{
 		$APPLICATION->IncludeComponent(
 			"bitrix:main.interface.toolbar",

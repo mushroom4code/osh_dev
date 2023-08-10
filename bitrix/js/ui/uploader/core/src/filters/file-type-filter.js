@@ -14,9 +14,8 @@ export default class FileTypeFilter extends Filter
 
 	apply(file: UploaderFile): Promise
 	{
-		return new Promise((resolve, reject) => {
-
-			if (isValidFileType(file.getFile(), this.getUploader().getAcceptedFileTypes()))
+		return new Promise((resolve, reject): void => {
+			if (isValidFileType(file.getBinary(), this.getUploader().getAcceptedFileTypes()))
 			{
 				resolve();
 			}
