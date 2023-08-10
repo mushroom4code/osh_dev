@@ -84,7 +84,7 @@ BX.message({
 	BPC_MES_DELETE : '<?=GetMessageJS("BPC_MES_DELETE")?>',
 	BPC_MES_DELETE_POST_CONFIRM : '<?=GetMessageJS("BPC_MES_DELETE_POST_CONFIRM")?>',
 	BPC_MES_CREATE_TASK_RESULT : '<?=GetMessageJS("BPC_MES_CREATE_TASK_RESULT")?>',
-	BPC_MES_REMOVE_TASK_RESULT : '<?=GetMessageJS("BPC_MES_REMOVE_TASK_RESULT")?>',
+	BPC_MES_DELETE_TASK_RESULT : '<?=GetMessageJS("BPC_MES_DELETE_TASK_RESULT")?>',
 	BPC_MES_CREATE_TASK : '<?=GetMessageJS("BPC_MES_CREATE_TASK")?>',
 	BPC_MES_CREATE_SUBTASK : '<?=GetMessageJS("BPC_MES_CREATE_SUBTASK")?>',
 <?/* deprecated ?>	MPL_RECORD_TEMPLATE : '<?=CUtil::JSEscape($template)?>',<?*/?>
@@ -96,6 +96,10 @@ BX.message({
 	MPL_SAFE_EDIT : '<?=GetMessageJS('MPL_SAFE_EDIT')?>',
 	MPL_ERROR_OCCURRED : '<?=GetMessageJS('MPL_ERROR_OCCURRED')?>',
 	MPL_CLOSE : '<?=GetMessageJS('MPL_CLOSE')?>',
+	MPL_MOBILE_HINTS : '<?=GetMessageJS('MPL_MOBILE_HINTS')?>',
+	MPL_MOBILE_HINTS_DETAILS : '<?=GetMessageJS('MPL_MOBILE_HINTS_DETAILS')?>',
+	MPL_MOBILE_POPUP_TITLE : '<?=GetMessageJS('MPL_MOBILE_POPUP_TITLE')?>',
+	MPL_MOBILE_POPUP_BOTTOM_TEXT : '<?=GetMessageJS('MPL_MOBILE_POPUP_BOTTOM_TEXT')?>',
 	MPL_LINK_COPIED : '<?=GetMessageJS('MPL_LINK_COPIED')?>'
 	<?
 		if (IsModuleInstalled("socialnetwork"))

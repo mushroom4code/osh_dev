@@ -138,8 +138,9 @@ class User extends Base
 	{
 		if ($value !== null && !is_array($value))
 		{
-			if (strpos($value, '[') !== false || strpos($value, '{') !== false)
+			if (self::isRawValue($value))
 			{
+				$errors = [];
 				$value = \CBPHelper::UsersStringToArray($value, $fieldType->getDocumentType(), $errors);
 			}
 			else
@@ -203,7 +204,9 @@ class User extends Base
 			$controlIdHtml = htmlspecialcharsbx($controlId);
 			$configHtml = htmlspecialcharsbx(Main\Web\Json::encode($config));
 			$className = htmlspecialcharsbx(static::generateControlClassName($fieldType, $field));
-			$propertyHtml = htmlspecialcharsbx(Main\Web\Json::encode($fieldType->getProperty()));
+			$property = $fieldType->getProperty();
+			$property['Type'] = static::getType();
+			$propertyHtml = htmlspecialcharsbx(Main\Web\Json::encode($property));
 
 			return <<<HTML
 				<script>
@@ -211,7 +214,7 @@ class User extends Base
 						var c = document.getElementById('{$controlIdJs}');
 						if (c)
 						{
-							BX.Bizproc.UserSelector.decorateNode(c);
+							BX.Bizproc.FieldType.initControl(c.parentNode, JSON.parse(c.dataset.property));
 						}
 					});
 				</script>
@@ -285,7 +288,8 @@ HTML;
 	{
 		static::cleanErrors();
 		$result = static::extractValue($fieldType, $field, $request);
-		return is_array($result)? $result[0] : $result;
+
+		return is_array($result)? array_shift($result) : $result;
 	}
 
 	/**
@@ -333,11 +337,11 @@ HTML;
 
 		$mapCallback = function ($value)
 		{
-			if (strpos($value, 'user_') === 0)
+			if ($value && strpos($value, 'user_') === 0)
 			{
 				return ['user', \CBPHelper::StripUserPrefix($value)];
 			}
-			if (strpos($value, 'group_d') === 0)
+			if ($value && strpos($value, 'group_d') === 0)
 			{
 				return ['department', preg_replace('|[^0-9]+|', '', $value)];
 			}
@@ -408,6 +412,16 @@ HTML;
 		$value = parent::validateValueMultiple($value, $fieldType);
 		$value = array_filter($value, fn($v) => (!is_null($v)));
 
-		return array_unique($value);
+		return array_values(array_unique($value));
+	}
+
+	private static function isRawValue($value): bool
+	{
+		return (
+			is_string($value)
+			&& !is_numeric($value)
+			&& strpos($value, 'user_') === false
+			&& strpos($value, 'group_') === false
+		);
 	}
 }

@@ -170,15 +170,15 @@ if ($catalogIncluded)
 	}
 }
 
+$oSort = new CAdminUiSorting($sTableID, "timestamp_x", "desc");
+$by = mb_strtoupper($oSort->getField());
+$order = mb_strtoupper($oSort->getOrder());
 if ($useTree)
 {
 	$by = "left_margin";
 	$order = "asc";
 }
-
-$oSort = new CAdminUiSorting($sTableID, "timestamp_x", "desc");
-global $by, $order;
-$arOrder = (mb_strtoupper($by) === "ID"? array($by => $order): array($by => $order, "ID" => "ASC"));
+$arOrder = ($by === "ID"? array($by => $order): array($by => $order, "ID" => "ASC"));
 $lAdmin = new CAdminUiList($sTableID, $oSort);
 $lAdmin->setPublicModeState($pageConfig['PUBLIC_MODE']);
 
@@ -200,6 +200,8 @@ if ($useTree)
 {
 	$lAdmin->AddVisibleHeaderColumn("DEPTH_LEVEL");
 }
+
+// region Filter definitions
 
 $sectionItems = array(
 	"" => GetMessage("IBLOCK_ALL"),
@@ -283,6 +285,8 @@ $filterFields[] = array(
 global $USER_FIELD_MANAGER;
 $USER_FIELD_MANAGER->AdminListAddFilterFieldsV2($entity_id, $filterFields);
 
+// endregion
+
 //We have to handle current section in a special way
 $parent_section_id = $find_section_section === '' || $find_section_section === null ? '' : (int)$find_section_section;
 $find_section_section = $parent_section_id;
@@ -309,9 +313,19 @@ if (isset($arFilter["SECTION_ID"]))
 }
 else
 {
-	$isDifferences = array_diff($baseFilter, array_diff($arFilter, array_map(function ($field) {
-		return $field["id"];
-	}, $filterFields)));
+	$isDifferences = array_diff(
+		$baseFilter,
+		array_diff(
+			$arFilter,
+			array_map(
+				function ($field)
+				{
+					return $field["id"];
+				},
+				$filterFields
+			)
+		)
+	);
 	if ($isDifferences)
 	{
 		$arFilter["SECTION_ID"] = $find_section_section;
@@ -549,6 +563,7 @@ if ($arID = $lAdmin->GroupAction())
 	}
 }
 
+// region Columns definition
 // list header
 $arHeaders = array(
 	array(
@@ -656,6 +671,8 @@ if ($useTree)
 		if (isset($arHeader["sort"]))
 			unset($arHeaders[$i]["sort"]);
 }
+
+// endregion
 
 $lAdmin->AddHeaders($arHeaders);
 

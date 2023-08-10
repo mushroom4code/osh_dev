@@ -19,10 +19,13 @@ export class ProductSelector extends EventEmitter
 {
 	static MODE_VIEW = 'view';
 	static MODE_EDIT = 'edit';
+	static SHORT_VIEW_FORMAT = 'short';
+	static FULL_VIEW_FORMAT = 'full';
 	static INPUT_FIELD_NAME = 'NAME';
 	static INPUT_FIELD_BARCODE = 'BARCODE';
 
 	static ErrorCodes = SelectorErrorCode;
+	static UIInputRequest = null;
 	#inAjaxProcess = false;
 	mode: ProductSelector.MODE_EDIT | ProductSelector.MODE_VIEW = ProductSelector.MODE_EDIT;
 	cache = new Cache.MemoryCache();
@@ -149,6 +152,11 @@ export class ProductSelector extends EventEmitter
 	isViewMode(): boolean
 	{
 		return this.mode === ProductSelector.MODE_VIEW;
+	}
+
+	isShortViewFormat(): boolean
+	{
+		return this.getConfig('VIEW_FORMAT', ProductSelector.FULL_VIEW_FORMAT) === ProductSelector.SHORT_VIEW_FORMAT;
 	}
 
 	isSaveable(): boolean
@@ -350,15 +358,28 @@ export class ProductSelector extends EventEmitter
 		{
 			if (!Reflection.getClass('BX.UI.ImageInput'))
 			{
-				ajax
-					.runAction(	'catalog.productSelector.getFileInput', {
-						json:{
-							iblockId: this.getModel().getIblockId()
-						}
-					})
-					.then(() => {
+				if (ProductSelector.UIInputRequest instanceof Promise)
+				{
+					ProductSelector.UIInputRequest.then(() => {
 						this.layoutImage();
 					});
+				}
+				else
+				{
+					ProductSelector.UIInputRequest = new Promise(resolve => {
+						ajax
+							.runAction(	'catalog.productSelector.getFileInput', {
+								json:{
+									iblockId: this.getModel().getIblockId()
+								}
+							})
+							.then(() => {
+								this.layoutImage();
+								ProductSelector.UIInputRequest = null;
+								resolve();
+							});
+					});
+				}
 			}
 			else
 			{
@@ -422,6 +443,11 @@ export class ProductSelector extends EventEmitter
 		const errors = this.model.getErrorCollection().getErrors();
 		for (const code in errors)
 		{
+			if (!ProductSelector.ErrorCodes.getCodes().includes(code))
+			{
+				continue;
+			}
+
 			if (code === 'EMPTY_IMAGE')
 			{
 				this.setImageErrorBorder();
@@ -540,11 +566,21 @@ export class ProductSelector extends EventEmitter
 		{
 			Dom.addClass(wrapper, 'catalog-product-view');
 			Dom.removeClass(wrapper, 'catalog-product-edit');
+
+			if (this.isShortViewFormat())
+			{
+				Dom.addClass(wrapper, '--short-format');
+			}
 		}
 		else
 		{
 			Dom.addClass(wrapper, 'catalog-product-edit');
 			Dom.removeClass(wrapper, 'catalog-product-view');
+		}
+
+		if (this.isImageFieldEnabled())
+		{
+			Dom.addClass(wrapper, '--with-images');
 		}
 	}
 
@@ -667,6 +703,7 @@ export class ProductSelector extends EventEmitter
 				skuTree: this.getModel().getSkuTree(),
 				selectable: this.getConfig('ENABLE_SKU_SELECTION', true),
 				hideUnselected: this.getConfig('HIDE_UNSELECTED_ITEMS', false),
+				isShortView: this.isViewMode() && this.isShortViewFormat(),
 			});
 		}
 
@@ -853,6 +890,16 @@ export class ProductSelector extends EventEmitter
 		const data = response?.data || null;
 		this.#inAjaxProcess = false;
 
+		const fields = data?.fields || [];
+		if (Type.isArray(config.immutableFields))
+		{
+			config.immutableFields.forEach((field) => {
+				fields[field] = this.getModel().getField(field);
+			});
+
+			data.fields = fields;
+		}
+
 		if (isProductAction)
 		{
 			this.clearState();
@@ -875,14 +922,6 @@ export class ProductSelector extends EventEmitter
 			this.layout();
 		}
 
-		const fields = data?.fields || null;
-		if (Type.isArray(config.immutableFields))
-		{
-			config.immutableFields.forEach((field) => {
-				fields[field] = this.getModel().getField(field);
-			});
-		}
-
 		this.emit('onChange', {
 			selectorId: this.id,
 			rowId: this.getRowId(),
@@ -903,20 +942,6 @@ export class ProductSelector extends EventEmitter
 			this.getModel().setOption('skuId', Text.toInteger(data.skuId));
 			this.getModel().setOption('isSimpleModel', false);
 			this.getModel().setOption('isNew', config.isNew);
-		}
-
-		if (Type.isArray(this.options.immutableFields))
-		{
-			this.options.immutableFields.forEach((field) => {
-				data.fields[field] = this.getModel().getField(field);
-			});
-		}
-
-		if (Type.isArray(config.immutableFields))
-		{
-			config.immutableFields.forEach((field) => {
-				data.fields[field] = this.getModel().getField(field);
-			});
 		}
 
 		this.getModel().initFields(data.fields);

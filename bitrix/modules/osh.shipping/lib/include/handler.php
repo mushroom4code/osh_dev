@@ -19,7 +19,7 @@ class COshDeliveryHandler
 {
     const MODULE_ID = "osh.shipping";
 
-    public function addCustomDeliveryServices(/* \Bitrix\Main\Event $event */)
+    public static function addCustomDeliveryServices(/* \Bitrix\Main\Event $event */)
     {
         $libPath = sprintf("/bitrix/modules/%s/lib", self::MODULE_ID);
         $result = new \Bitrix\Main\EventResult(
@@ -31,7 +31,7 @@ class COshDeliveryHandler
         return $result;
     }
 
-    public function addCustomRestrictions()
+    public static function addCustomRestrictions()
     {
         $libPath = sprintf("/bitrix/modules/%s/lib", self::MODULE_ID);
         return new \Bitrix\Main\EventResult(
@@ -42,7 +42,7 @@ class COshDeliveryHandler
         );
     }
 
-    public function addCustomExtraServices()
+    public static function addCustomExtraServices()
     {
         $libPath = sprintf("/bitrix/modules/%s/lib", self::MODULE_ID);
         return new \Bitrix\Main\EventResult(
@@ -54,7 +54,7 @@ class COshDeliveryHandler
         );
     }
 
-    public function showCreateAnswer($order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
+    public static function showCreateAnswer(\Bitrix\Sale\Order $order, $arUserResult, $request, &$arParams, &$arResult, &$arDeliveryServiceAll, &$arPaySystemServiceAll)
     {
         /* @var $order /Bitrix/Sale/Order */
 
@@ -167,8 +167,10 @@ class COshDeliveryHandler
                     JS;
                 $cAsset->addString($jsNoPvz);
             }
-            $dateDateliveryId = DateDelivery::getId($deliveryId);
-            $timeExtraServiceId = TimeDelivery::getId($deliveryId);
+            $dateClass= new DateDelivery($deliveryId);
+            $dateDateliveryId = $dateClass->getId($deliveryId);
+//            $timeClass = new TimeDelivery($deliveryId);
+            $timeExtraServiceId = TimeDelivery::get_id($deliveryId);
             if ($oDelivery instanceof \Osh\Delivery\ProfileHandler
                 && $oDelivery->getExtraServices()->getItem($dateDateliveryId)) {
                 $dateDeliveryDefault = $oDelivery->getExtraServices()->getItem($dateDateliveryId)->getValue();
@@ -208,7 +210,7 @@ class COshDeliveryHandler
         }
     }
 
-    public function saveInNewOrderMethodPVZ(Event $event)
+    public static function saveInNewOrderMethodPVZ(Event $event)
     {
         $order = $event->getParameter("ENTITY");
         $showNoPvzError = Config::getDataValue("pvzStrict");

@@ -11,6 +11,7 @@ use Bitrix\Catalog\v2\Image\ImageRepositoryContract;
 use Bitrix\Catalog\v2\Property\HasPropertyCollection;
 use Bitrix\Catalog\v2\Property\PropertyCollection;
 use Bitrix\Catalog\v2\Property\PropertyRepositoryContract;
+use Bitrix\Main\Engine\CurrentUser;
 use Bitrix\Main\NotSupportedException;
 use Bitrix\Main\Result;
 
@@ -237,6 +238,16 @@ abstract class BaseIblockElementEntity extends BaseEntity implements HasProperty
 		);
 	}
 
+	public function allowConvertToSku(): bool
+	{
+		$type = $this->getType();
+
+		return (
+			$type === ProductTable::TYPE_PRODUCT
+			|| $type === ProductTable::TYPE_EMPTY_SKU
+		);
+	}
+
 	public function setActive(bool $active): BaseEntity
 	{
 		return $this->setField('ACTIVE', $active ? 'Y' : 'N');
@@ -270,6 +281,11 @@ abstract class BaseIblockElementEntity extends BaseEntity implements HasProperty
 	public function saveInternal(): Result
 	{
 		$entityChanged = $this->isChanged();
+		if ($entityChanged && !$this->hasChangedFields())
+		{
+			$this->setField('MODIFIED_BY', CurrentUser::get()->getId());
+		}
+
 		$propertyCollectionChanged = $this->propertyCollection && $this->propertyCollection->isChanged();
 		$imageCollectionChanged = $this->imageCollection && $this->imageCollection->isChanged();
 

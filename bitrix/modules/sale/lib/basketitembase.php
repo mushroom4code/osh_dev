@@ -81,12 +81,14 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 	 */
 	public function findItemById($id)
 	{
+		$id = (int)$id;
+
 		if ($id <= 0)
 		{
 			return null;
 		}
 
-		if ($this->getId() === (int)$id)
+		if ($this->getId() === $id)
 		{
 			return $this;
 		}
@@ -272,16 +274,6 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 	 */
 	protected function __construct(array $fields = [])
 	{
-		$priceFields = ['BASE_PRICE', 'PRICE', 'DISCOUNT_PRICE'];
-
-		foreach ($priceFields as $code)
-		{
-			if (isset($fields[$code]))
-			{
-				$fields[$code] = PriceMaths::roundPrecision($fields[$code]);
-			}
-		}
-
 		parent::__construct($fields);
 
 		$this->calculatedFields = new Internals\Fields();
@@ -400,6 +392,20 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 		return $result;
 	}
 
+	protected function normalizeValue($name, $value)
+	{
+		if ($this->isPriceField($name))
+		{
+			$value = PriceMaths::roundPrecision($value);
+		}
+		elseif ($name === 'VAT_RATE')
+		{
+			$value = is_numeric($value) ? (float)$value : null;
+		}
+
+		return parent::normalizeValue($name, $value);
+	}
+
 	/**
 	 * @param string $name						Field name.
 	 * @param string|int|float $value			Field value.
@@ -409,16 +415,6 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 	 */
 	public function setField($name, $value)
 	{
-		$priceFields = [
-			'BASE_PRICE' => 'BASE_PRICE',
-			'PRICE' => 'PRICE',
-			'DISCOUNT_PRICE' => 'DISCOUNT_PRICE',
-		];
-		if (isset($priceFields[$name]))
-		{
-			$value = PriceMaths::roundPrecision($value);
-		}
-
 		if ($this->isCalculatedField($name))
 		{
 			$this->calculatedFields->set($name, $value);
@@ -450,16 +446,6 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 	 */
 	public function setFieldNoDemand($name, $value)
 	{
-		$priceFields = [
-			'BASE_PRICE' => 'BASE_PRICE',
-			'PRICE' => 'PRICE',
-			'DISCOUNT_PRICE' => 'DISCOUNT_PRICE',
-		];
-		if (isset($priceFields[$name]))
-		{
-			$value = PriceMaths::roundPrecision($value);
-		}
-
 		if ($this->isCalculatedField($name))
 		{
 			$this->calculatedFields->set($name, $value);
@@ -571,13 +557,14 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 	 */
 	public function getCallbackFunction()
 	{
-		$callbackFunction = trim($this->getField('CALLBACK_FUNC'));
-		if (!isset($callbackFunction) || (strval(trim($callbackFunction)) == ""))
+		$callbackFunction = $this->getField('CALLBACK_FUNC');
+		if (empty($callbackFunction))
 		{
 			return null;
 		}
 
-		if (!function_exists($callbackFunction))
+		$callbackFunction = trim((string)$callbackFunction);
+		if (empty($callbackFunction) || !function_exists($callbackFunction))
 		{
 			return null;
 		}
@@ -946,7 +933,7 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 
 		if (!$this->isVatInPrice())
 		{
-			$vatRate = $this->getVatRate();
+			$vatRate = (float)$this->getVatRate();
 			$price += $this->getBasePrice() * $vatRate;
 		}
 
@@ -963,7 +950,7 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 
 		if (!$this->isVatInPrice())
 		{
-			$vatRate = $this->getVatRate();
+			$vatRate = (float)$this->getVatRate();
 			$price += $this->getPrice() * $vatRate;
 		}
 
@@ -1105,7 +1092,7 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 	}
 
 	/**
-	 * @return float|null|string
+	 * @return float|null
 	 * @throws Main\ArgumentNullException
 	 */
 	public function getVatRate()
@@ -1724,6 +1711,15 @@ abstract class BasketItemBase extends Internals\CollectableEntity
 	public static function getEntityEventName()
 	{
 		return 'SaleBasketItem';
+	}
+
+	protected function isPriceField(string $name) : bool
+	{
+		return
+			$name === 'BASE_PRICE'
+			|| $name === 'PRICE'
+			|| $name === 'DISCOUNT_PRICE'
+		;
 	}
 
 	/**

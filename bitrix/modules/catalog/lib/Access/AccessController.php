@@ -3,12 +3,13 @@
  * Bitrix Framework
  * @package bitrix
  * @subpackage catalog
- * @copyright 2001-2021 Bitrix
+ * @copyright 2001-2023 Bitrix
  */
 
 namespace Bitrix\Catalog\Access;
 
 use Bitrix\Catalog\Access\Filter\Factory\CatalogFilterFactory;
+use Bitrix\Catalog\Access\IblockRule\Factory\IblockRuleFactory;
 use Bitrix\Catalog\Access\Install\AccessInstaller\InstallStatus;
 use Bitrix\Catalog\Access\Rule\BaseRule;
 use Bitrix\Catalog\Access\Rule\VariableRule;
@@ -20,10 +21,13 @@ use Bitrix\Catalog\Access\Rule\Factory\CatalogRuleFactory;
 use Bitrix\Catalog\StoreTable;
 use Bitrix\Main\Access\Exception\UnknownActionException;
 use Bitrix\Main\Engine\CurrentUser;
+use Bitrix\Main\Loader;
 use Bitrix\Main\ModuleManager;
 
 class AccessController extends BaseAccessController
 {
+	protected IblockRuleFactory $iblockRuleFactory;
+
 	/**
 	 * @inheritDoc
 	 */
@@ -32,6 +36,7 @@ class AccessController extends BaseAccessController
 		parent::__construct($userId);
 
 		$this->ruleFactory = new CatalogRuleFactory();
+		$this->iblockRuleFactory = new IblockRuleFactory();
 		$this->filterFactory = new CatalogFilterFactory();
 	}
 
@@ -131,7 +136,7 @@ class AccessController extends BaseAccessController
 
 	public function isAdmin()
 	{
-		return $this->user->isAdmin();
+		return $this->user->isAdmin() || (Loader::includeModule("bitrix24") && \CBitrix24::isPortalAdmin($this->user->getUserId()));
 	}
 
 	protected function loadItem(int $itemId = null): ?AccessibleItem
@@ -174,5 +179,44 @@ class AccessController extends BaseAccessController
 		}
 
 		return reset($allowStoresIds);
+	}
+
+	/**
+	 * @param string $action
+	 * @return bool
+	 */
+	public function hasIblockAccess(string $action): bool
+	{
+		/** @var BaseRule $rule */
+		$rule = $this->iblockRuleFactory->createFromAction($action, $this);
+		if (!$rule)
+		{
+			throw new UnknownActionException($action);
+		}
+
+		return $rule->execute();
+	}
+
+	/**
+	 * Returns true if user have full access to right <b>$action</b> or false otherwise
+	 *
+	 * @param string $action
+	 * @return bool
+	 */
+	public function checkCompleteRight(string $action): bool
+	{
+		$permissionValue = $this->getPermissionValue($action);
+
+		if ($permissionValue === null)
+		{
+			return false;
+		}
+
+		if (is_array($permissionValue))
+		{
+			return in_array(PermissionDictionary::VALUE_VARIATION_ALL, $permissionValue, true);
+		}
+
+		return $this->check($action);
 	}
 }

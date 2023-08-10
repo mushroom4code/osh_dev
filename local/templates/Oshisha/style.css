@@ -6245,48 +6245,6 @@ header {
     border-top-color: #F55F5C;
 }
 
-@media screen and (max-width: 1340px) {
-    .js__tastes .variation_taste_toggle.d-none.many-tastes {
-        display: block !important;
-    }
-}
-
-@media screen and (max-width: 1300px) {
-    .js__tastes .variation_taste_toggle.d-none.many-tastes {
-        display: none !important;
-    }
-}
-
-@media screen and (max-width: 1150px) {
-    .js__tastes .variation_taste_toggle.d-none.many-tastes {
-        display: block !important;
-    }
-}
-
-@media screen and (max-width: 1024px) {
-    .js__tastes .variation_taste_toggle.d-none.many-tastes {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .js__tastes .variation_taste_toggle.d-none.many-tastes {
-        display: block;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .js__tastes .variation_taste_toggle.d-none.many-tastes {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 365px) {
-    .js__tastes .variation_taste_toggle.d-none.many-tastes {
-        display: block;
-    }
-}
-
 .js__tastes .variation_taste {
     position: absolute;
     flex-flow: row wrap;

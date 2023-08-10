@@ -2,6 +2,7 @@
 
 namespace Bitrix\Catalog\Component;
 
+use Bitrix\Catalog\Config\State;
 use Bitrix\Catalog\v2\Property\Property;
 use Bitrix\Currency\CurrencyManager;
 use Bitrix\Main\Component\ParameterSigner;
@@ -134,22 +135,6 @@ class VariationForm extends BaseForm
 		);
 	}
 
-	protected function buildIblockPropertiesDescriptions(): array
-	{
-		$propertyDescriptions = [];
-
-		foreach ($this->entity->getPropertyCollection() as $property)
-		{
-			if ($property->getUserType() === \CIBlockPropertySKU::USER_TYPE)
-			{
-				continue;
-			}
-			$propertyDescriptions[] = $this->getPropertyDescription($property);
-		}
-
-		return $propertyDescriptions;
-	}
-
 	protected function getPriceDescriptions(): array
 	{
 		$descriptions = [];
@@ -173,13 +158,23 @@ class VariationForm extends BaseForm
 		}
 
 		$purchasingPriceFieldName = static::formatFieldName('PURCHASING_PRICE');
-		$descriptions[] = $this->preparePriceDescription([
-			'NAME' => $purchasingPriceFieldName.'_FIELD',
-			'TYPE_ID' => 'PURCHASING_PRICE',
-			'TITLE' => Loc::getMessage('CATALOG_C_F_VARIATION_SETTINGS_PURCHASING_PRICE_FIELD_TITLE'),
-			'PRICE_FIELD' => $purchasingPriceFieldName,
-			'CURRENCY_FIELD' => static::formatFieldName('PURCHASING_CURRENCY'),
-		]);
+		if ($this->isPurchasingPriceAllowed())
+		{
+			$purchasingPriceDescription = $this->preparePriceDescription([
+				'NAME' => $purchasingPriceFieldName.'_FIELD',
+				'TYPE_ID' => 'PURCHASING_PRICE',
+				'TITLE' => Loc::getMessage('CATALOG_C_F_VARIATION_SETTINGS_PURCHASING_PRICE_FIELD_TITLE'),
+				'PRICE_FIELD' => $purchasingPriceFieldName,
+				'CURRENCY_FIELD' => static::formatFieldName('PURCHASING_CURRENCY'),
+			]);
+
+			if (State::isUsedInventoryManagement())
+			{
+				$purchasingPriceDescription['editable'] = false;
+			}
+
+			$descriptions[] = $purchasingPriceDescription;
+		}
 
 		return $descriptions;
 	}

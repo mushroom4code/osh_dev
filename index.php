@@ -1,5 +1,6 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+global $APPLICATION;
 if (SITE_EXHIBITION == SITE_ID) {
     $APPLICATION->SetTitle("OSHISHA.shop");
 } else {

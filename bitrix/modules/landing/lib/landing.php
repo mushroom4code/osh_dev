@@ -252,7 +252,7 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 		// check landing folder if exists
 		if (!empty($landing['FOLDER_ID']))
 		{
-			$breadCrumbs = Folder::getBreadCrumbs($landing['FOLDER_ID'], $landing['SITE_ID_ID']);
+			$breadCrumbs = Folder::getBreadCrumbs($landing['FOLDER_ID'], $landing['SITE_ID']);
 			foreach ($breadCrumbs as $crumb)
 			{
 				if ($crumb['DELETED'] === 'Y')
@@ -1008,7 +1008,13 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 									($bitrix24 ? $row['SITE_ID'] : '/') .
 									($previewMode ? 'preview/' . $publicHash . '/' : '') .
 									($row['FOLDER_ID'] ? ltrim(Folder::getFullPath($row['FOLDER_ID'], $row['SITE_ID_ORIG'], $lastFolderItem), '/') : '');
-				$folderIndex = $row['ID'] == $lastFolderItem['INDEX_ID'] || !$lastFolderItem['INDEX_ID'] && trim($row['CODE'], '/') === $lastFolderItem['CODE'];
+				$folderIndex = $row['ID'] == ($lastFolderItem['INDEX_ID'] ?? 0)
+												||
+											!($lastFolderItem['INDEX_ID'] ?? 0)
+											&& ($row['CODE'] ?? null)
+											&& ($lastFolderItem['CODE'] ?? null)
+											&& trim($row['CODE'], '/') === $lastFolderItem['CODE']
+				;
 				$data[$row['ID']] = $fullUrl[$row['ID']] .
 									(($row['ID'] == $row['SITE_ID_INDEX'] || $folderIndex || $row['RULE']) ? '' : $row['CODE']);
 				if (!$row['RULE'])
@@ -1136,7 +1142,7 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 					);
 				}
 			}
-			else if ($this->siteRow['LANDING_ID_INDEX'] != $this->id)
+			else if (($this->siteRow['LANDING_ID_INDEX'] ?? 0) != $this->id)
 			{
 				Manager::getApplication()->addChainItem(
 					$this->title,
@@ -1402,10 +1408,9 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 	{
 		$pattern = '/([",\'\;]{1})(page:|block:|user:)?#(landing|block|dynamic|user)([\d\_]+)\@{0,1}([^\'"]*)([",\'\&]{1})/is';
 		$patternWithoutUser = '/([",\'\;]{1})(page:|block:)?#(landing|block|dynamic)([\d\_]+)\@{0,1}([^\'"]*)([",\'\&]{1})/is';
-		$patternForUser = '/(user:)?#(user)([\d\_]+)/is';
 		static $isIframe = null;
 
-		if (!self::$editMode)
+		if (!self::$editMode && $content)
 		{
 			$content = Subtype\Form::prepareFormsToView(
 				$content
@@ -1646,6 +1651,17 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 			// replace user urls
 			if (!empty($urls['USER']))
 			{
+				$patternForPseudoUrlUser = '/data-pseudo-url="{\S*(user:)?#user([\d\_]+)\S*}"/is';
+				$content = preg_replace_callback(
+					$patternForPseudoUrlUser,
+					function($matches)
+					{
+						$url = "'" . Domain::getHostUrl() . '/company/personal/user/' . $matches[2] . "/'";
+						return 'onClick="BX.SidePanel.Instance.open('. $url . ')" ';
+					},
+					$content
+				);
+				$patternForUser = '/(user:)?#(user)([\d\_]+)/is';
 				$content = preg_replace_callback(
 					$patternForUser,
 					function($matches)
@@ -2026,10 +2042,10 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 		}
 		if ($this->version <= 10)
 		{
-			// $needUpdate = true;
-			// Update\Block\DuplicateImages::updateLanding($this->id);
+			$needUpdate = true;
+			Update\Block\DuplicateImages::updateLanding($this->id);
 
-			// $this->version = 11;
+			$this->version = 11;
 		}
 		if ($needUpdate)
 		{
@@ -2141,6 +2157,13 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 
 			$this->touch();
 			$this->addBlockToCollection($block);
+
+			if (History::isActive())
+			{
+				$history = new History($this->id, History::ENTITY_TYPE_LANDING);
+				$history->push('ADD_BLOCK', ['block' => $block]);
+			}
+
 			return $block->getId();
 		}
 
@@ -2198,7 +2221,7 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 			$this->blocks[$id]->getLandingId() == $this->getId()
 		)
 		{
-			if ($this->blocks[$id]->getAccess() >= $this->blocks[$id]->ACCESS_X)
+			if ($this->blocks[$id]->getAccess() >= $this->blocks[$id]::ACCESS_X)
 			{
 				$this->blocks[$id]->markDeleted($mark);
 				if (!$mark)
@@ -2211,6 +2234,12 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 				{
 					if ($mark)
 					{
+						if (History::isActive())
+						{
+							$history = new History($this->id, History::ENTITY_TYPE_LANDING);
+							$history->push('REMOVE_BLOCK', ['block' => $this->blocks[$id]]);
+						}
+
 						unset($this->blocks[$id]);
 					}
 					else
@@ -2307,7 +2336,7 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 	 * @param string $action Code: up or down.
 	 * @return boolean
 	 */
-	protected function sortBlock($id, $action)
+	protected function sortBlock(int $id, string $action): bool
 	{
 		$id = intval($id);
 		if (isset($this->blocks[$id]))
@@ -2318,7 +2347,7 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 				if ($blocks[$i] == $id)
 				{
 					// change sort between two blocks
-					$targetKey = $i + ($action == 'up' ? -1 : 1);
+					$targetKey = $i + ($action === 'up' ? -1 : 1);
 					if (isset($blocks[$targetKey]))
 					{
 						$thisBlock = $this->blocks[$id];
@@ -2341,14 +2370,13 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 
 						return $res1 && $res2;
 					}
-					else
-					{
-						$this->error->addError(
-							'BLOCK_WRONG_SORT',
-							Loc::getMessage('LANDING_BLOCK_WRONG_SORT')
-						);
-						return false;
-					}
+
+					$this->error->addError(
+						'BLOCK_WRONG_SORT',
+						Loc::getMessage('LANDING_BLOCK_WRONG_SORT')
+					);
+
+					return false;
 				}
 			}
 		}
@@ -2368,9 +2396,24 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 	 * @param int $id Block id.
 	 * @return boolean
 	 */
-	public function upBlock($id)
+	public function upBlock(int $id): bool
 	{
-		return $this->sortBlock($id, 'up');
+		if ($this->sortBlock($id, 'up'))
+		{
+			if (History::isActive())
+			{
+				$history = new History($this->id, History::ENTITY_TYPE_LANDING);
+				$history->push('SORT_BLOCK', [
+					'block' => $id,
+					'lid' => $this->getId(),
+					'up' => true,
+				]);
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -2378,9 +2421,24 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 	 * @param int $id Block id.
 	 * @return boolean
 	 */
-	public function downBlock($id)
+	public function downBlock(int $id): bool
 	{
-		return $this->sortBlock($id, 'down');
+		if ($this->sortBlock($id, 'down'))
+		{
+			if (History::isActive())
+			{
+				$history = new History($this->id, History::ENTITY_TYPE_LANDING);
+				$history->push('SORT_BLOCK', [
+					'block' => $id,
+					'lid' => $this->getId(),
+					'up' => false,
+				]);
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -2744,6 +2802,77 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 	}
 
 	/**
+	 * System method for checking ability to publication page after copy/move.
+	 *
+	 * @return bool
+	 */
+	private function canPublicAfterCopy(): bool
+	{
+		$siteId = $this->getSiteId();
+		$folderId = $this->getFolderId();
+
+		// if permissions enough
+		if (!$this->canPublication())
+		{
+			return false;
+		}
+
+		// in root, we can
+		if (!$folderId)
+		{
+			return true;
+		}
+
+		// check all folders above the page
+		$crumbs = Folder::getBreadCrumbs($folderId, $siteId);
+		foreach ($crumbs as $crumb)
+		{
+			// if folder is active, we don't care about
+			if ($crumb['ACTIVE'] === 'Y')
+			{
+				continue;
+			}
+
+			// check active pages in each folder above
+			$res = self::getList([
+				'select' => [
+					'ID'
+				],
+				'filter' => [
+					'=ACTIVE' => 'Y',
+					'FOLDER_ID' => $crumb['ID'],
+				],
+				'limit' => 1
+			]);
+			if ($res->fetch())
+			{
+				// if such folder exists we cant public any folder
+				return false;
+			}
+
+			// check active folders in folders above
+			$res = Folder::getList([
+				'select' => [
+					'ID'
+				],
+				'filter' => [
+					'=ACTIVE' => 'Y',
+					'PARENT_ID' => $crumb['ID'],
+				],
+				'limit' => 1
+				]);
+			if ($res->fetch())
+			{
+				// if such folder exists we cant public any folder
+				return false;
+			}
+		}
+
+		// all folders are active or not exists active pages
+		return true;
+	}
+
+	/**
 	 * Move current page to site/folder.
 	 * @param int|null $toSiteId Destination site id (if you want copy in another site).
 	 * @param int|null $toFolderId Destination folder id.
@@ -2791,6 +2920,10 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 		if ($result->isSuccess())
 		{
 			$this->clearFolderIndex();
+			if ($this->active && $this->canPublicAfterCopy($toFolderId))
+			{
+				$this->publication();
+			}
 		}
 
 		$this->error->addFromResult($result);
@@ -2891,6 +3024,11 @@ class Landing extends \Bitrix\Landing\Internals\BaseTable
 					if (($refs = TemplateRef::getForLanding($this->id)))
 					{
 						TemplateRef::setForLanding($landingNew->getId(), $refs);
+					}
+					// publication if needed
+					if ($landingRow['ACTIVE'] === 'Y' && $landingNew->canPublicAfterCopy($toFolderId))
+					{
+						$landingNew->publication();
 					}
 					return $landingNew->getId();
 				}

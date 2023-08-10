@@ -259,7 +259,13 @@ class Notification extends Base
 	 */
 	public function checkDisableFeature(string $feature): bool
 	{
-		return (bool)self::getDefaultSettings()[$this->module]['NOTIFY'][$this->name]['DISABLED'][mb_strtoupper($feature)];
+		$defaultSettings = self::getDefaultSettings();
+		if (isset($defaultSettings[$this->module]['NOTIFY'][$this->name]['DISABLED'][mb_strtoupper($feature)]))
+		{
+			return (bool)$defaultSettings[$this->module]['NOTIFY'][$this->name]['DISABLED'][mb_strtoupper($feature)];
+		}
+
+		return false;
 	}
 
 	public function getDefaultFeature(string $feature): bool
@@ -284,7 +290,11 @@ class Notification extends Base
 		$defaultSettings = self::encodeSettings(self::getDefaultSettings());
 
 		$cachedPreset = Configuration::getUserPresetFromCache($userId);
-		if (!empty($cachedPreset))
+		if (
+			!empty($cachedPreset)
+			&& isset($cachedPreset[Configuration::NOTIFY_GROUP])
+			&& is_array($cachedPreset[Configuration::NOTIFY_GROUP])
+		)
 		{
 			$notifySettings = $cachedPreset[Configuration::NOTIFY_GROUP]['settings'];
 
@@ -381,7 +391,7 @@ class Notification extends Base
 					$config['XMPP'] = !isset($config['XMPP']) || $config['XMPP'] == 'Y';
 					$config['PUSH'] = isset($config['PUSH']) && $config['PUSH'] == 'Y';
 
-					$config['LIFETIME'] = (int)$config['LIFETIME'];
+					$config['LIFETIME'] = isset($config['LIFETIME']) ? (int)$config['LIFETIME'] : 0;
 
 					self::$defaultSettings[$moduleId]['NOTIFY'][$notifyEvent] = $config;
 				}
@@ -389,6 +399,40 @@ class Notification extends Base
 		}
 
 		return self::$defaultSettings;
+	}
+
+	public static function getSimpleNotifySettings(array $generalSettings): array
+	{
+		$defaultGeneralSettings = General::getDefaultSettings();
+
+		$send['SITE'] = $generalSettings['notifySchemeSendSite'] ?? $defaultGeneralSettings['notifySchemeSendSite'];
+		$send['MAIL'] = $generalSettings['notifySchemeSendEmail'] ?? $defaultGeneralSettings['notifySchemeSendEmail'];
+		$send['XMPP'] = $generalSettings['notifySchemeSendXmpp'] ?? $defaultGeneralSettings['notifySchemeSendXmpp'];
+		$send['PUSH'] = $generalSettings['notifySchemeSendPush'] ?? $defaultGeneralSettings['notifySchemeSendPush'];
+
+		$notifySettings = Notification::getDefaultSettings();
+
+		foreach ($notifySettings as $moduleId => $moduleSchema)
+		{
+			foreach ($moduleSchema['NOTIFY'] as $eventName => $eventSchema)
+			{
+				foreach (['SITE', 'MAIL', 'XMPP', 'PUSH'] as $type)
+				{
+					if ($eventSchema['DISABLED'][$type])
+					{
+						continue;
+					}
+
+					$notifySettings[$moduleId]['NOTIFY'][$eventName][$type] =
+						!$send[$type]
+							? false
+							: $eventSchema[$type]
+					;
+				}
+			}
+		}
+
+		return $notifySettings;
 	}
 
 	/**
@@ -555,9 +599,9 @@ class Notification extends Base
 	 * @throws SystemException
 	 * @throws ArgumentException
 	 */
-	public static function setSettings(int $groupId, array $settings): void
+	public static function setSettings(int $groupId, array $settings = [], bool $forInitialize = false): void
 	{
-		if (empty($settings))
+		if (empty($settings) && !$forInitialize)
 		{
 			return;
 		}
@@ -575,6 +619,7 @@ class Notification extends Base
 		}
 		$defaultSettings = self::encodeSettings(self::getDefaultSettings());
 		$encodedSettings = self::encodeSettings($settings);
+		$encodedSettings = array_merge($defaultSettings, $encodedSettings);
 
 		$rows = [];
 		foreach ($encodedSettings as $name => $value)
@@ -765,7 +810,7 @@ class Notification extends Base
 	 */
 	private static function getPostfix(string $type): ?int
 	{
-		return self::$types[mb_strtoupper($type)];
+		return self::$types[mb_strtoupper($type)] ?? null;
 	}
 
 	/**

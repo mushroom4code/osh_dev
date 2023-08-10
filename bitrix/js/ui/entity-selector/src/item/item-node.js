@@ -9,6 +9,7 @@ import MatchField from '../search/match-field';
 import TextNode from '../common/text-node';
 import Animation from '../common/animation';
 import Item from './item';
+import encodeUrl from '../common/encode-url';
 
 import type Tab from '../dialog/tabs/tab';
 import type Dialog from '../dialog/dialog';
@@ -99,6 +100,8 @@ export default class ItemNode
 				bgSize: null,
 				bgColor: null,
 				bgImage: null,
+				border: null,
+				borderRadius: null,
 			};
 			this.textColor = '';
 			this.link = '';
@@ -652,7 +655,7 @@ export default class ItemNode
 		const avatar = this.getAvatar();
 		if (Type.isStringFilled(avatar))
 		{
-			this.getAvatarContainer().style.backgroundImage = `url('${avatar}')`;
+			this.getAvatarContainer().style.backgroundImage = `url('${encodeUrl(avatar)}')`;
 		}
 		else
 		{
@@ -663,7 +666,7 @@ export default class ItemNode
 			}
 			else
 			{
-				this.getAvatarContainer().style.removeProperty('background-size');
+				this.getAvatarContainer().style.removeProperty('background-image');
 			}
 		}
 
@@ -685,6 +688,26 @@ export default class ItemNode
 		else
 		{
 			this.getAvatarContainer().style.removeProperty('background-size');
+		}
+
+		const border = this.getAvatarOption('border');
+		if (Type.isStringFilled(border))
+		{
+			this.getAvatarContainer().style.border = border;
+		}
+		else
+		{
+			this.getAvatarContainer().style.removeProperty('border');
+		}
+
+		const borderRadius = this.getAvatarOption('borderRadius');
+		if (Type.isStringFilled(borderRadius))
+		{
+			this.getAvatarContainer().style.borderRadius = borderRadius;
+		}
+		else
+		{
+			this.getAvatarContainer().style.removeProperty('border-radius');
 		}
 
 		Dom.clean(this.getBadgeContainer());

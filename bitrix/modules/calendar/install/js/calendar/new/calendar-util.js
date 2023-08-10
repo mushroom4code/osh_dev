@@ -865,7 +865,7 @@
 		{
 			return this.type === 'user';
 		},
-		
+
 		isCompanyCalendar: function()
 		{
 			return this.type === 'company_calendar'
@@ -883,6 +883,11 @@
 			return this.isUserCalendar() && this.userId === this.ownerId;
 		},
 
+		isExtranetUser: function ()
+		{
+			return this.config.isExtranetUser;
+		},
+
 		hexToRgb: function(hex)
 		{
 			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -893,12 +898,60 @@
 			} : null;
 		},
 
+		addOpacityToHex(hex, opacity)
+		{
+			return this.rgbaToHex(this.hexToRgba(hex, opacity));
+		},
+
 		hexToRgba: function(hex, opacity)
 		{
 			var color = this.hexToRgb(hex);
 			if (!color)
 				color = this.hexToRgb('#9dcf00');
 			return 'rgba(' + color.r + ', ' + color.g + ', ' + color.b + ', ' + opacity + ')';
+		},
+
+		rgbaToHex: function(rgba)
+		{
+			return this.rgbToHex(this.rgbaToRgb(rgba));
+		},
+
+		rgbToHex: function(rgb)
+		{
+			function componentToHex(component)
+			{
+				const hex = component.toString(16);
+				return hex.length === 1 ? "0" + hex : hex;
+			}
+
+			return "#" + componentToHex(rgb.r) + componentToHex(rgb.g) + componentToHex(rgb.b);
+		},
+
+		rgbaToRgb: function(rgba)
+		{
+			if (rgba.r === undefined)
+			{
+				rgba = this.rgbaFromString(rgba);
+			}
+
+			return {
+				r: Math.round((rgba.a * (rgba.r / 255) + (1 - rgba.a)) * 255),
+				g: Math.round((rgba.a * (rgba.g / 255) + (1 - rgba.a)) * 255),
+				b: Math.round((rgba.a * (rgba.b / 255) + (1 - rgba.a)) * 255)
+			};
+		},
+
+		rgbaFromString(rgba)
+		{
+			const parsedRgba = rgba.replace(/^rgba?\(|\s+|\)$/g, '')
+				.split(',')
+				.map(string => parseFloat(string));
+			return {
+				r: parsedRgba[0],
+				g: parsedRgba[1],
+				b: parsedRgba[2],
+				a: parsedRgba[3] ?? 255
+			};
 		},
 
 		parseLocation : function(str)
@@ -1036,7 +1089,7 @@
 				|| this.isCompanyCalendar()
 				|| this.isGroupCalendar();
 		},
-		
+
 		getCounters: function()
 		{
 			return this.config.counters;
@@ -1055,7 +1108,7 @@
 		isDarkColor: function(color)
 		{
 			color = color.toLowerCase();
-			if ({'#86b100':true,'#0092cc':true,'#00afc7':true,'#da9100':true,'#00b38c':true,'#de2b24':true,'#bd7ac9':true,'#838fa0':true,'#ab7917':true,'#e97090':true, //current
+			if ({'#86b100':true,'#0092cc':true,'#00afc7':true,'#da9100':true,'#e89b06':true,'#00b38c':true,'#de2b24':true,'#bd7ac9':true,'#838fa0':true,'#ab7917':true,'#c3612c':true,'#e97090':true, //current
 				'#9dcf00':true,'#2fc6f6':true,'#56d1e0':true,'#ffa900':true,'#47e4c2':true,'#f87396':true,'#9985dd':true,'#a8adb4':true,'#af7e00':true, // old ones
 			}[color])
 			{

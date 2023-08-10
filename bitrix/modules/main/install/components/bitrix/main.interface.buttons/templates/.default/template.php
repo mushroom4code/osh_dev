@@ -122,7 +122,7 @@ $this->addExternalJs($templateFolder."/utils.js");
 						?></span><?
 						?><span
 							<?= $dataCounterId ?>
-							class="main-buttons-item-counter<?=$arParams["CLASS_ITEM_COUNTER"] ? " ".$arParams["CLASS_ITEM_COUNTER"] : ""?>"><?=$arItem["COUNTER"] > $arItem['MAX_COUNTER_SIZE'] ? $arItem['MAX_COUNTER_SIZE'].'+' : $arItem["COUNTER"]?></span><?
+							class="main-buttons-item-counter<?=!empty($arParams["CLASS_ITEM_COUNTER"]) ? (" ".$arParams["CLASS_ITEM_COUNTER"]) : ""?>"><?=(isset($arItem["COUNTER"]) && ($arItem["COUNTER"] > $arItem['MAX_COUNTER_SIZE'])) ? $arItem['MAX_COUNTER_SIZE'].'+' : ($arItem["COUNTER"] ?? '')?></span><?
 					if (!empty($arItem["URL"])):
 						?></a><?
 					else:
@@ -178,6 +178,19 @@ $this->addExternalJs($templateFolder."/utils.js");
 									$dataCounterId = 'data-mib-counter-id=' . $arChildItem['COUNTER_ID'];
 								}
 
+								$counterValue = '';
+								if (isset($arChildItem["COUNTER"]))
+								{
+									if ($arChildItem["COUNTER"] > $arChildItem['MAX_COUNTER_SIZE'])
+									{
+										$counterValue = $arChildItem['MAX_COUNTER_SIZE'] . '+';
+									}
+									else
+									{
+										$counterValue = $arChildItem["COUNTER"];
+									}
+								}
+
 								$title = $arChildItem["TEXT"];
 								if (mb_strlen($title) > $arParams['MAX_ITEM_LENGTH'])
 								{
@@ -228,7 +241,7 @@ $this->addExternalJs($templateFolder."/utils.js");
 									?></span><?
 									?><span
 										<?= $dataCounterId ?>
-										class="main-buttons-item-counter<?=$arParams["CLASS_ITEM_COUNTER"] ? " ".$arParams["CLASS_ITEM_COUNTER"] : ""?>"><?=$arChildItem["COUNTER"] > $arChildItem['MAX_COUNTER_SIZE'] ? $arChildItem['MAX_COUNTER_SIZE'].'+' : $arChildItem["COUNTER"]?></span><?
+										class="main-buttons-item-counter<?=$arParams["CLASS_ITEM_COUNTER"] ? " ".$arParams["CLASS_ITEM_COUNTER"] : ""?>"><?=$counterValue?></span><?
 									if (!empty($arChildItem["URL"])):
 										?></a><?
 									else:

@@ -20,23 +20,23 @@ if(!CModule::IncludeModule('lists'))
 $lists_perm = CListPermissions::CheckAccess(
 	$USER,
 	$arParams["~IBLOCK_TYPE_ID"],
-	$arParams["~IBLOCK_ID"] > 0? intval($arParams["~IBLOCK_ID"]): false,
-	$arParams["~SOCNET_GROUP_ID"]
+	!empty($arParams["~IBLOCK_ID"]) ? (int)$arParams["~IBLOCK_ID"] : false,
+	$arParams["~SOCNET_GROUP_ID"] ?? null
 );
 if($lists_perm < 0)
 	return;
 
-$arIBlock = CIBlock::GetArrayByID(intval($arParams["~IBLOCK_ID"]));
+$arIBlock = CIBlock::GetArrayByID((int)($arParams["~IBLOCK_ID"] ?? 0));
 $arResult["~IBLOCK"] = $arIBlock;
 $arResult["IBLOCK"] = htmlspecialcharsex($arIBlock);
-$arResult["IBLOCK_ID"] = intval($arIBlock["ID"]);
+$arResult["IBLOCK_ID"] = $arIBlock ? (int)$arIBlock["ID"] : 0;
 
 if(isset($arParams["SOCNET_GROUP_ID"]) && $arParams["SOCNET_GROUP_ID"] > 0)
 	$arParams["SOCNET_GROUP_ID"] = intval($arParams["SOCNET_GROUP_ID"]);
 else
 	$arParams["SOCNET_GROUP_ID"] = "";
 
-if($arParams["ADD_NAVCHAIN_GROUP"] === "Y" && $arParams["SOCNET_GROUP_ID"])
+if (isset($arParams['ADD_NAVCHAIN_GROUP']) && $arParams["ADD_NAVCHAIN_GROUP"] === "Y" && $arParams["SOCNET_GROUP_ID"])
 {
 	$arResult["~LISTS_URL"] = str_replace(
 		array("#group_id#"),
@@ -62,7 +62,7 @@ if($arParams["ADD_NAVCHAIN_GROUP"] === "Y" && $arParams["SOCNET_GROUP_ID"])
 	}
 }
 
-if($arParams["ADD_NAVCHAIN_LIST"] !== "N")
+if (!isset($arParams['ADD_NAVCHAIN_LIST']) || $arParams["ADD_NAVCHAIN_LIST"] !== "N")
 {
 	$arResult["~LIST_URL"] = CHTTP::urlAddParams(str_replace(
 		array("#list_id#", "#section_id#", "#group_id#"),

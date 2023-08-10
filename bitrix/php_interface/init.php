@@ -72,7 +72,7 @@ require_once(__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
 
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
-
+const STATIC_P = '';
 //Типы цен на сайте
 const SALE_PRICE_TYPE_ID = 3;
 const BASIC_PRICE = 2;
@@ -84,7 +84,7 @@ const PERSON_TYPE_BUYER = 1;
 AddEventHandler("main", "OnBuildGlobalMenu", "DoBuildGlobalMenu");
 #AddEventHandler("main", "OnEndBufferContent", "deleteKernelJs");
 AddEventHandler("main", "OnBeforeProlog", "PriceTypeANDStatusUser", 50);
-AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
+//AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
 
 AddEventHandler('sale', 'OnCondSaleActionsControlBuildList',
     ['\Enterego\EnteregoActionDiscountPriceType', 'GetControlDescr']);
@@ -304,7 +304,7 @@ AddEventHandler("main", "OnBeforeUserRegister", array("CUserEx", "OnBeforeUserUp
 
 class CUserEx
 {
-    function OnBeforeUserLogin($arFields)
+    static function OnBeforeUserLogin($arFields)
     {
         $filter = array("EMAIL" => $arFields["LOGIN"]);
         $rsUsers = CUser::GetList(($by = "LAST_NAME"), ($order = "asc"), $filter);
@@ -313,12 +313,11 @@ class CUserEx
         /*else $arFields["LOGIN"] = "";*/
     }
 
-    function OnBeforeUserRegister(&$arFields)
+    static function OnBeforeUserRegister(&$arFields)
     {
         $arFields["LOGIN"] = $arFields["EMAIL"];
     }
 }
-
 
 AddEventHandler("sale", "OnOrderSave", "OnOrderAddHandlerSave");
 function OnOrderAddHandlerSave($ID, $arFields, $arOrder)

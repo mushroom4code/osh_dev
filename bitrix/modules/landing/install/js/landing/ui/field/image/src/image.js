@@ -4,13 +4,21 @@ import {Main} from 'landing.main'
 import {TextField} from 'landing.ui.field.textfield';
 import {ImageUploader} from 'landing.imageuploader';
 import {BaseButton} from 'landing.ui.button.basebutton';
-import {ImageEditor} from 'landing.imageeditor';
+import {AiImageButton} from 'landing.ui.button.aiimagebutton';
+import {PageObject} from 'landing.pageobject';
+import {Env} from 'landing.env';
+import {Picker} from 'ai.picker';
 
 import 'ui.fonts.opensans';
+// todo: remove most likely
+import 'ui.forms';
 import './css/style.css';
 
 export class Image extends TextField
 {
+	static CONTEXT_TYPE_CONTENT = 'content';
+	static CONTEXT_TYPE_STYLE = 'style';
+
 	constructor(data)
 	{
 		super(data);
@@ -20,15 +28,17 @@ export class Image extends TextField
 		this.uploadParams = typeof data.uploadParams === "object" ? data.uploadParams : {};
 		this.onValueChangeHandler = data.onValueChange ? data.onValueChange : (() => {});
 		this.type = this.content.type || "image";
+		this.contextType = data.contextType || Image.CONTEXT_TYPE_CONTENT;
 		this.allowClear = data.allowClear;
 		this.input.innerText = this.content.src;
 		this.input.hidden = true;
 		this.input2x = this.createInput();
-		this.input2x.innerText = this.content.src2x;
+		this.input2x.innerText = this.content.src2x || '';
 		this.input2x.hidden = true;
 
 		this.layout.classList.add("landing-ui-field-image");
-		if (data.compactMode === true)
+		this.compactMode = data.compactMode === true;
+		if (this.compactMode)
 		{
 			this.layout.classList.add("landing-ui-field-image--compact");
 		}
@@ -37,13 +47,13 @@ export class Image extends TextField
 
 		this.fileInput = Image.createFileInput(this.selector);
 		this.fileInput.addEventListener("change", this.onFileInputChange.bind(this));
+		// Do not append input to layout! Ticket 172032
 
 		this.linkInput = Image.createLinkInput();
 		this.linkInput.onInputHandler = Runtime.debounce(this.onLinkInput.bind(this), 777);
 
 		this.dropzone = Image.createDropzone(this.selector);
 		this.dropzone.hidden = true;
-		this.dropzone.insertBefore(this.fileInput, this.dropzone.firstElementChild);
 
 		this.onDragOver = this.onDragOver.bind(this);
 		this.onDragLeave = this.onDragLeave.bind(this);
@@ -98,16 +108,26 @@ export class Image extends TextField
 		this.left.appendChild(this.altField.layout);
 		this.left.appendChild(this.linkInput.layout);
 
-		this.uploadButton = Image.createUploadButton();
+		this.aiButton = Image.createAiButton(this.compactMode);
+		this.aiButton.on("click", this.onAiClick.bind(this));
+		this.aiPicker = null;
+
+		this.uploadButton = Image.createUploadButton(this.compactMode);
 		this.uploadButton.on("click", this.onUploadClick.bind(this));
 
 		this.editButton = Image.createEditButton();
 		this.editButton.on("click", this.onEditClick.bind(this));
 
 		this.right = Image.createRightLayout();
+		if (
+			Env.getInstance().getOptions()['allow_ai_image']
+			&& (this.type === "background" || this.type === "image")
+		)
+		{
+			this.right.appendChild(this.aiButton.layout);
+		}
 		this.right.appendChild(this.uploadButton.layout);
 		this.right.appendChild(this.editButton.layout);
-
 		this.form = Image.createForm();
 		this.form.appendChild(this.left);
 		this.form.appendChild(this.right);
@@ -190,6 +210,7 @@ export class Image extends TextField
 			additionalParams: {context: 'imageeditor'},
 			dimensions: this.dimensions,
 			sizes: ['1x', '2x'],
+			allowSvg: Main.getInstance().options.allow_svg === true,
 		});
 
 		this.adjustEditButtonState();
@@ -319,6 +340,20 @@ export class Image extends TextField
 	 * Creates upload button
 	 * @return {BaseButton}
 	 */
+	static createAiButton(compactMode: boolean = false)
+	{
+		return new AiImageButton("ai", {
+			text: Loc.getMessage(
+				"LANDING_FIELD_IMAGE_AI_BUTTON" + (compactMode ? '_COMPACT' : '')
+			),
+			className: "landing-ui-field-image-ai-button" + (compactMode ? ' --compact' : ''),
+		});
+	}
+
+	/**
+	 * Creates ia create button
+	 * @return {BaseButton}
+	 */
 	static createUploadButton()
 	{
 		return new BaseButton("upload", {
@@ -433,6 +468,58 @@ export class Image extends TextField
 	onFileInputChange(event)
 	{
 		this.onFileChange(event.currentTarget.files[0]);
+	}
+
+	onAiClick()
+	{
+		this.getAiPicker().image()
+	}
+
+	getAiPicker(): Picker
+	{
+		if (!this.aiPicker)
+		{
+			const demoPrompt =
+				this.contextType === Image.CONTEXT_TYPE_CONTENT
+					? 'large, heart shaped bouquet of red roses on a white background'
+					: 'background, smooth, blue color'
+			;
+			this.aiPicker = new Picker({
+				startMessage: demoPrompt,
+				moduleId: 'landing',
+				contextId: this.getAiContext(),
+				analyticLabel: 'landing_image',
+				history: true,
+				popupContainer: PageObject.getRootWindow().document.body,
+				onSelect: (url: string) => {
+					const proxyUrl = BX.util.add_url_param("/bitrix/tools/landing/proxy.php", {
+						"sessid": BX.bitrix_sessid(),
+						"url": url
+					});
+					BX.Landing.Utils.urlToBlob(proxyUrl)
+						.then(blob => {
+							blob.lastModifiedDate = new Date();
+							blob.name = url.slice(url.lastIndexOf('/') + 1);
+
+							return blob;
+						})
+						.then(this.upload.bind(this))
+						.then(this.setValue.bind(this))
+						.then(this.hideLoader.bind(this))
+				},
+				onTariffRestriction: () => {
+					BX.UI.InfoHelper.show('limit_sites_ImageAssistant_AI');
+				},
+			});
+			this.aiPicker.setLangSpace('image');
+		}
+
+		return this.aiPicker;
+	}
+
+	getAiContext(): string
+	{
+		return 'image_site_' + Env.getInstance().getSiteId();
 	}
 
 	onUploadClick(event)
@@ -706,6 +793,12 @@ export class Image extends TextField
 			this.image.dataset.fileid = value && value.id ? value.id : -1;
 			this.image.dataset.fileid2x = value && value.id2x ? value.id2x : -1;
 
+			if (value.type === 'image')
+			{
+				this.altField.layout.hidden = false;
+				this.altField.setValue(value.alt);
+			}
+
 			this.classList = [];
 		}
 		else
@@ -771,29 +864,39 @@ export class Image extends TextField
 	 */
 	getValue()
 	{
-		var fileId = parseInt(this.image.dataset.fileid);
-		var fileId2x = parseInt(this.image.dataset.fileid2x);
-		fileId = fileId === fileId ? fileId : -1;
-		fileId2x = fileId2x === fileId2x ? fileId2x : -1;
+		const value = {type: "", src: "", alt: "", url: ""};
 
-		var value = {type: "", src: "", id: fileId, id2x: fileId2x, src2x: "", alt: "", url: ""};
+		const fileId = parseInt(this.image.dataset.fileid);
+		if (Type.isNumber(fileId) && fileId > 0)
+		{
+			value.id = fileId;
+		}
+
+		const fileId2x = parseInt(this.image.dataset.fileid2x);
+		if (Type.isNumber(fileId2x) && fileId2x > 0)
+		{
+			value.id2x = fileId2x;
+		}
+
+		const src2x = this.input2x.innerText.trim();
+		if (Type.isString(src2x) && src2x)
+		{
+			value.src2x = src2x;
+		}
+
+		if (this.type === "background" || this.type === "image")
+		{
+			value.src = this.input.innerText.trim();
+		}
 
 		if (this.type === "background")
 		{
 			value.type = "background";
-			value.src = this.input.innerText.trim();
-			value.src2x = this.input2x.innerText.trim();
-			value.id = fileId;
-			value.id2x = fileId2x;
 		}
 
 		if (this.type === "image")
 		{
 			value.type = "image";
-			value.src = this.input.innerText.trim();
-			value.src2x = this.input2x.innerText.trim();
-			value.id = fileId;
-			value.id2x = fileId2x;
 			value.alt = this.altField.getValue();
 		}
 
@@ -810,7 +913,7 @@ export class Image extends TextField
 
 	edit(data)
 	{
-		ImageEditor
+		parent.BX.Landing.ImageEditor
 			.edit({
 				image: data.src,
 				dimensions: this.dimensions,
@@ -861,9 +964,14 @@ export class Image extends TextField
 			&& file.type.includes('png')
 		);
 
+		const isSvg = (
+			Type.isStringFilled(file.type)
+			&& file.type.includes('svg')
+		);
+
 		const checkSize = new Promise(function (resolve)
 		{
-			let sizes = isPng ? ['2x'] : ['1x', '2x'];
+			let sizes = (isPng || isSvg) ? ['2x'] : ['1x', '2x'];
 
 			if (this.create2xByDefault === false)
 			{
@@ -882,7 +990,7 @@ export class Image extends TextField
 						) === false
 					)
 					{
-						sizes = isPng ? ['2x'] : ['1x'];
+						sizes = (isPng || isSvg) ? ['2x'] : ['1x'];
 					}
 
 					resolve(sizes);
@@ -908,7 +1016,7 @@ export class Image extends TextField
 						return allowedSizes;
 					}
 
-					return isPng ? ['2x'] : ['1x', '2x'];
+					return (isPng || isSvg) ? ['2x'] : ['1x', '2x'];
 				}.bind(this))();
 
 				return this.uploader

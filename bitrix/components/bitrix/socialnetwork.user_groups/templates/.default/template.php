@@ -12,14 +12,17 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 /** @global CUser $USER */
 /** @global CMain $APPLICATION */
 
+use Bitrix\Main\Loader;
 use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Update\Stepper;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\UI;
+use Bitrix\Main\Web\Uri;
 
 \Bitrix\Main\UI\Extension::load([
-	'socialnetwork.common',
+	'ui.design-tokens',
 	'ui.fonts.opensans',
+	'socialnetwork.common',
 	'ui.icons.b24',
 ]);
 
@@ -27,7 +30,7 @@ $bodyClass = $APPLICATION->GetPageProperty("BodyClass");
 $bodyClass = $bodyClass ? $bodyClass." no-paddings" : "no-paddings";
 $APPLICATION->SetPageProperty("BodyClass", $bodyClass);
 
-if($arResult["FatalError"] <> '')
+if(!empty($arResult["FatalError"]))
 {
 	?><span class="sonet-groups-menu-errortext"><?=$arResult["FatalError"]?></span><br /><br /><?php
 }
@@ -71,7 +74,7 @@ else
 			array("HIDE_ICONS" => "Y")
 		);
 
-		if($arResult["ErrorMessage"] <> '')
+		if(!empty($arResult["ErrorMessage"]))
 		{
 			?><span class="sonet-groups-menu-errortext"><?=$arResult["ErrorMessage"]?></span><br /><br /><?php
 		}
@@ -220,10 +223,10 @@ else
 
 		if (
 			!$arResult["AJAX_CALL"]
-			&& SITE_TEMPLATE_ID == "bitrix24"
+			&& SITE_TEMPLATE_ID === "bitrix24"
 			&& (
 				(
-					ModuleManager::isModuleInstalled('bitrix24')
+					Loader::includeModule('bitrix24')
 					&& \CBitrix24::isPortalAdmin($USER->getId())
 				)
 				|| (
@@ -288,7 +291,7 @@ else
 
 						?><div class="sonet-groups-group-block"><?php
 							?><span class="<?= implode(' ', $classList) ?>">
-								<i <?= ($group["GROUP_PHOTO_RESIZED_COMMON"] ? " style=\"background:#fff url('".$group["GROUP_PHOTO_RESIZED_COMMON"]["src"]."') no-repeat; background-size: cover;\"" : "") ?>></i>
+								<i <?= ($group["GROUP_PHOTO_RESIZED_COMMON"] ? " style=\"background:#fff url('".Uri::urnEncode($group["GROUP_PHOTO_RESIZED_COMMON"]["src"])."') no-repeat; background-size: cover;\"" : "") ?>></i>
 							</span><?php
 							?><span class="sonet-groups-group-text"><?php
 								?><span class="sonet-groups-group-title<?= ($group["IS_EXTRANET"] === "Y" ? " sonet-groups-group-title-extranet" : "") ?>"><?php
@@ -461,7 +464,7 @@ else
 						}
 
 						?><span class="<?= implode(' ', $classList)?>">
-								<i <?=($group["IMAGE_RESIZED"] ? " style=\"background:#fff url('".$group["IMAGE_RESIZED"]["src"]."') no-repeat; background-size: cover;\"" : "") ?>></i>
+								<i <?=($group["IMAGE_RESIZED"] ? " style=\"background:#fff url('". Uri::urnEncode($group["IMAGE_RESIZED"]["src"])."') no-repeat; background-size: cover;\"" : "") ?>></i>
 							</span><?php
 							?><span class="sonet-groups-group-text"><?php
 								?><span class="sonet-groups-group-title<?=($group["IS_EXTRANET"] === "Y" ? " sonet-groups-group-title-extranet" : "") ?>"><?php

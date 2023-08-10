@@ -28,7 +28,6 @@
 	 * @param {boolean} arParams.ALLOW_PIN_HEADER
 	 * @param {boolean} arParams.SHOW_ACTION_PANEL
 	 * @param {boolean} arParams.PRESERVE_HISTORY
-	 * @param {boolean} arParams.BACKEND_URL
 	 * @param {boolean} arParams.ALLOW_CONTEXT_MENU
 	 * @param {object} arParams.DEFAULT_COLUMNS
 	 * @param {boolean} arParams.ENABLE_COLLAPSIBLE_ROWS
@@ -701,6 +700,17 @@
 			this.reloadTable('POST', data);
 		},
 
+		sendRowAction: function(action, data)
+		{
+			if(!BX.type.isPlainObject(data))
+			{
+				data = {};
+			}
+
+			data[this.getActionKey()] = action;
+
+			this.reloadTable('POST', data);
+		},
 
 		/**
 		 * @return {?BX.Grid.ActionPanel}

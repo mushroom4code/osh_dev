@@ -20,7 +20,7 @@ class CKladr
 	
 	public static $versionBxNewFunc=16;
 	
-	function zajsonit($handle){// � UTF
+	static function zajsonit($handle){// � UTF
 		if(LANG_CHARSET !== 'UTF-8'){
 			if(is_array($handle))
 				foreach($handle as $key => $val){
@@ -33,7 +33,7 @@ class CKladr
 		}
 		return $handle;
 	}
-	function zaDEjsonit($handle){//�� UTF
+	static function zaDEjsonit($handle){//�� UTF
 		if(LANG_CHARSET !== 'UTF-8'){
 			if(is_array($handle))
 				foreach($handle as $key => $val){
@@ -47,7 +47,7 @@ class CKladr
 		return $handle;
 	}
 		
-	function PrintLog($somecontent, $rewrite=false,$err=false) {
+	static function PrintLog($somecontent, $rewrite=false,$err=false) {
 		$filename = $_SERVER["DOCUMENT_ROOT"]."/KladrLog.txt";
 		if($err) $filename = $_SERVER["DOCUMENT_ROOT"]."/KladrErrorLog.txt";
 			if($rewrite) $rewrite = 'w'; else $rewrite = 'a';
@@ -63,11 +63,11 @@ class CKladr
 			fclose($handle);
 	}
 	
-	function Error($err){
+	static function Error($err){
 		self::PrintLog($err,false,true);
 	}
 	
-	function toUpper($str,$lang=false){
+	static function toUpper($str,$lang=false){
 		if(!$lang) $lang=LANG_CHARSET;
 		$str = str_replace( //H8 ANSI
 			array(
@@ -88,11 +88,11 @@ class CKladr
 			return strtoupper($str);
 	}
 	
-	function getComercToken() {
+	static function getComercToken() {
 		return "59c24e610a69de8d718b4582";
 	}
 	
-	function SetJS(&$arResult, &$arUserResult, $arParams){		
+	static function SetJS(&$arResult, &$arUserResult, $arParams){
 		if(COption::GetOptionString(self::$MODULE_ID, "FUCK")=='Y') return;
 				
 		$errors = self::HaveErrors();
@@ -215,21 +215,21 @@ class CKladr
 		}
 	}
 	
-	function retRegion($region){//$region - ������� � ��������� ����� 
+	static function retRegion($region){//$region - ������� � ��������� �����
 		$arChange=GetMessage('CHANGE');
 		foreach($arChange as $key => $value) {$k = self::toUpper($key); unset($arChange[$key]); $arChange[$k] = $value;}
 		if(in_array(self::toUpper($region),array_keys($arChange))) $region=$arChange[self::toUpper($region)]; 
 		return $region;
 	}
 	
-	function retType($type){//$type - �������� ��� ����� ������,����,������� � ��������� ����� 
+	static function retType($type){//$type - �������� ��� ����� ������,����,������� � ��������� �����
 		$arChange=GetMessage('CHANGE_TYPES_FOR_NAMES');
 		foreach($arChange as $key => $value) {$k = self::toUpper($key); unset($arChange[$key]); $arChange[$k] = $value;}
 		if(in_array(self::toUpper($type),array_keys($arChange))) $type=$arChange[self::toUpper($type)];
 		return $type;
 	}
 
-	function SetLocation(){//������ ������ �������, ����� ��������� �����
+	static function SetLocation(){//������ ������ �������, ����� ��������� �����
 
 		if($_REQUEST["ipolkladrnewregion"]) $region=self::retRegion($_REQUEST["ipolkladrnewregion"]);			
 
@@ -276,7 +276,7 @@ class CKladr
 		}			
 	}
 
-	function OnSaleComponentOrderOneStepDeliveryHandler(&$arResult, &$arUserResult, $arParams)
+	static function OnSaleComponentOrderOneStepDeliveryHandler(&$arResult, &$arUserResult, $arParams)
 	{//����� ����������� �������� ��������
 		if((COption::GetOptionString(self::$MODULE_ID, "FUCK")=='Y')) return;
 		
@@ -534,7 +534,7 @@ class CKladr
 		echo '</script>';
 	}
 	
-	function OnEndBufferContentHandler(&$content)
+	static function OnEndBufferContentHandler(&$content)
 	{
 		if((COption::GetOptionString(self::$MODULE_ID, "FUCK")=='Y')) return;
 		if ((defined("ADMIN_SECTION") && ADMIN_SECTION == true) || strpos($_SERVER['PHP_SELF'], "/bitrix/admin") === true) return false;
@@ -562,7 +562,7 @@ class CKladr
 		
 	}
 	
-	function GetKladrSetText($type){
+	static function GetKladrSetText($type){
 		$kltobl= CKladr::$townobj;
 		$NotRussia= CKladr::$NotRussia;
 		
@@ -585,7 +585,7 @@ class CKladr
 		return $text;		
 	} 
 	
-	function ParseAddr($adr){
+	static function ParseAddr($adr){
 		$ans = array();
 		$containment = explode(",",$adr);
 		$numCon=count($containment);
@@ -602,11 +602,11 @@ class CKladr
 		return $ans;
 	}
 	
-	function no_json($wat){
+	static function no_json($wat){
 		return is_null(json_decode(self::zajsonit($wat),true));
 	}
 	
-	function getCityNameByID($locationID)
+	static function getCityNameByID($locationID)
 	{
 		if(method_exists("CSaleLocation","isLocationProMigrated") && CSaleLocation::isLocationProMigrated())
 		{//���� ������������� 2.0
@@ -651,20 +651,20 @@ class CKladr
 	    return $arCity;
 	}
 	
-	public function SetErrorConnect($unix=false,$code=false) {
+	public static function SetErrorConnect($unix=false,$code=false) {
 		
 		COption::SetOptionString(self::$MODULE_ID,"ERRWRONGANSWERDATE",$unix);
 		COption::SetOptionString(self::$MODULE_ID,"ERRWRONGANSWER",$code);
 		
 	}
 	
-	public function GetErrorConnectDate() {
+	public static function GetErrorConnectDate() {
 		
 		return intval(COption::GetOptionString(self::$MODULE_ID, "ERRWRONGANSWERDATE"));
 		
 	}
 	
-	public function HaveErrors() {
+	public static function HaveErrors() {
 		
 		// ���� �� ������, � ���� ���� ������ �� 15 ����� ?
 		$errAnswerdate = self::GetErrorConnectDate();
@@ -685,7 +685,7 @@ class CKladr
 	}
 
 	// ������� ������� � ��������
-	function getBitrixLocationCodeByName(){
+	static function getBitrixLocationCodeByName(){
 		
 		if($_REQUEST["ipolkladrlocation"]){
 			if($_REQUEST["ipolkladrnewcity"])

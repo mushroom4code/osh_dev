@@ -2,8 +2,10 @@
 namespace Bitrix\Im\Model;
 
 use Bitrix\Im\Internals\ChatIndex;
+use Bitrix\Im\V2\Chat;
 use Bitrix\Main\Entity;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\ORM\Event;
 use Bitrix\Main\Search\MapBuilder;
 
 Loc::loadMessages(__FILE__);
@@ -186,6 +188,22 @@ class ChatTable extends Entity\DataManager
 				'required' => false,
 				'default_value' => array(__CLASS__, 'getCurrentDate'),
 			),
+			'MANAGE_USERS' => array(
+				'data_type' => 'string',
+				'default_value' => Chat::MANAGE_RIGHTS_ALL,
+			),
+			'MANAGE_UI' => array(
+				'data_type' => 'string',
+				'default_value' => Chat::MANAGE_RIGHTS_ALL,
+			),
+			'MANAGE_SETTINGS' => array(
+				'data_type' => 'string',
+				'default_value' => Chat::MANAGE_RIGHTS_OWNER,
+			),
+			'CAN_POST' => array(
+				'data_type' => 'string',
+				'default_value' => Chat::MANAGE_RIGHTS_ALL,
+			),
 			'INDEX' => array(
 				'data_type' => 'Bitrix\Im\Model\ChatIndex',
 				'reference' => array('=this.ID' => 'ref.CHAT_ID'),
@@ -195,6 +213,9 @@ class ChatTable extends Entity\DataManager
 				'data_type' => 'Bitrix\Im\Model\AliasTable',
 				'reference' => array('=this.ID' => 'ref.ENTITY_ID', '=this.ENTITY_TYPE' => 'ref.ENTITY_TYPE'),
 				'join_type' => 'LEFT',
+			),
+			'DISAPPEARING_TIME' => array(
+				'data_type' => 'integer'
 			),
 		);
 	}
@@ -212,6 +233,19 @@ class ChatTable extends Entity\DataManager
 			;
 			static::updateIndexRecord($chatIndex);
 		}
+
+		if (static::needCacheInvalidate($fields))
+		{
+			Chat::cleanCache((int)$event->getParameter("id")['ID']);
+		}
+
+		return new Entity\EventResult();
+	}
+
+	public static function onAfterDelete(Event $event)
+	{
+		$id = (int)$event->getParameter('primary')['ID'];
+		Chat::cleanCache($id);
 
 		return new Entity\EventResult();
 	}
@@ -265,6 +299,31 @@ class ChatTable extends Entity\DataManager
 			'CHAT_ID',
 			$updateData
 		);
+	}
+
+	protected static function needCacheInvalidate(array $updatedFields): bool
+	{
+		$cacheInvalidatingFields = [
+			'TITLE',
+			'DESCRIPTION',
+			'COLOR',
+			'TYPE',
+			'EXTRANET',
+			'AUTHOR_ID',
+			'AVATAR',
+			'ENTITY_TYPE',
+			'ENTITY_ID',
+			'ENTITY_DATA_1',
+			'ENTITY_DATA_2',
+			'ENTITY_DATA_3',
+			'DISK_FOLDER_ID',
+			'MANAGE_USERS',
+			'MANAGE_UI',
+			'MANAGE_SETTINGS',
+			'CAN_POST',
+		];
+
+		return !empty(array_intersect($cacheInvalidatingFields, array_keys($updatedFields)));
 	}
 
 

@@ -17,8 +17,8 @@ CUtil::InitJSCore(array('tooltip'));
 				Input params
 ********************************************************************/
 $arParams["iIndex"] = $iIndex = rand();
-$message = ($_SERVER['REQUEST_METHOD'] == "POST" ? $_POST["message_id"] : $_GET["message_id"]);
-$action = mb_strtoupper($_SERVER['REQUEST_METHOD'] == "POST"? $_POST["ACTION"] : $_GET["ACTION"]);
+$message = ($_SERVER['REQUEST_METHOD'] == "POST" ? $_POST["message_id"] ?? null : $_GET["message_id"] ?? null);
+$action = mb_strtoupper($_SERVER['REQUEST_METHOD'] == "POST" ? $_POST["ACTION"] ?? '' : $_GET["ACTION"] ?? '');
 $message = (is_array($message) ? $message : array($message));
 
 $res = false;
@@ -28,7 +28,6 @@ if (
 	&& $USER->IsAuthorized()
 )
 {
-	require_once($_SERVER["DOCUMENT_ROOT"].BX_ROOT."/modules/main/classes/".mb_strtolower($DB->type)."/favorites.php");
 	$arUserSettings = CUserOptions::GetOption("forum", "default_template", "");
 	$arUserSettings = (CheckSerializedData($arUserSettings) ? @unserialize($arUserSettings, [ 'allowed_classes' => false ]) : array());
 	$arUserSettings["first_post"] = ($arUserSettings["first_post"] == "hide" ? "hide" : "show");

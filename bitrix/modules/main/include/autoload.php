@@ -10,6 +10,9 @@ foreach(
 		'Bitrix\\UI' => '/bitrix/modules/ui/lib',
 		'Psr\\Container' => '/bitrix/modules/main/vendor/psr/container/src',
 		'Psr\\Log' => '/bitrix/modules/main/vendor/psr/log/Psr/Log',
+		'Psr\\Http\\Message' => '/bitrix/modules/main/vendor/psr/http-message/src',
+		'Psr\\Http\\Client' => '/bitrix/modules/main/vendor/psr/http-client/src',
+		'Http\\Promise' => '/bitrix/modules/main/vendor/php-http/promise/src',
 		'PHPMailer\\PHPMailer' => '/bitrix/modules/main/vendor/phpmailer/phpmailer/src',
 		'GeoIp2' => '/bitrix/modules/main/vendor/geoip2/geoip2/src',
 		'MaxMind\\Db' => '/bitrix/modules/main/vendor/maxmind-db/reader/src/MaxMind/Db',
@@ -17,9 +20,15 @@ foreach(
 	as $namespace => $namespacePath
 )
 {
-	Loader::registerNamespace($namespace, $documentRoot.$namespacePath);
+	Loader::registerNamespace($namespace, $documentRoot . $namespacePath);
 }
 unset($namespace, $namespacePath);
+
+if (is_dir($documentRoot . '/bitrix/modules/main/dev'))
+{
+	// developer mode
+	Loader::registerNamespace('Dev\Main', $documentRoot . '/bitrix/modules/main/dev');
+}
 
 spl_autoload_register([Loader::class, 'autoLoad']);
 

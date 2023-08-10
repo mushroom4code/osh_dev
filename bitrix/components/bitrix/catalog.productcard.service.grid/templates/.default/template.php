@@ -68,6 +68,7 @@ $isProduct = $arParams['VARIATION_ID_LIST'] === null;
 				'SHOW_ACTION_PANEL' => $arResult['GRID']['SHOW_ACTION_PANEL'],
 				'ACTION_PANEL' => $arResult['GRID']['ACTION_PANEL'],
 				'HANDLE_RESPONSE_ERRORS' => true,
+				'ENABLE_FIELDS_SEARCH' => $arResult['GRID']['ENABLE_FIELDS_SEARCH'],
 			],
 			$component
 		);
@@ -94,6 +95,7 @@ $isProduct = $arParams['VARIATION_ID_LIST'] === null;
 			//'storeAmount' => $arResult['STORE_AMOUNT'],
 			//'isShowedStoreReserve' => $arResult['IS_SHOWED_STORE_RESERVE'],
 			'reservedDealsSliderLink' => $arResult['RESERVED_DEALS_SLIDER_LINK'],
+			'supportedAjaxFields' => $arResult['SUPPORTED_AJAX_FIELDS'],
 		])?>);
 	});
 </script>

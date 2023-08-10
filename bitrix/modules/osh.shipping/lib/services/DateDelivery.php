@@ -27,7 +27,7 @@ class DateDelivery extends ExtraServicesBase
      * @param array $additionalParams
      * @throws ArgumentNullException
      */
-    public function __construct($id, array $structure, $currency, $value = null, array $additionalParams = array())
+    public function __construct($id, array $structure = [], $currency = '', $value = null, array $additionalParams = array())
     {
         $structure["PARAMS"]["ONCHANGE"] = $this->createJSOnchange($id, $structure["PARAMS"]["PRICE"]);
         $structure["PARAMS"]["ONCLICK"] = $this->createJSOnclick($id, $structure["PARAMS"]["PRICE"]);
@@ -197,7 +197,7 @@ class DateDelivery extends ExtraServicesBase
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public function getId($deliveryId): int
+    public function getId($deliveryId = 0): int
     {
         $destParams = array(
             "filter" => array("CLASS_NAME" => "%Service%DateDelivery", "ACTIVE" => "Y", "DELIVERY_ID" => $deliveryId),
@@ -214,7 +214,8 @@ class DateDelivery extends ExtraServicesBase
     {
         $from = date("Y-m-d", strtotime("+1day"));
         $till = date("Y-m-d", strtotime("+10day"));
-        $arDaysOff = \COshDeliveryHelper::getDaysOff($from, $till);
+        $arDaysOff = [$from,$till];
+//        $arDaysOff = \COshDeliveryHelper::getDaysOff($from, $till);
         if (!empty($arDaysOff)) {
             array_walk($arDaysOff, function (&$item, $key) {
                 $item = date("d.m.Y", strtotime($item));

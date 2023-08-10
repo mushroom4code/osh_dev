@@ -299,7 +299,7 @@ class GoodsPicker
             while ($tmp = $elementsDB->fetch()) {
                 $itemsToIblocks[$tmp['IBLOCK_ID']][$tmp['ID']] = [];
 
-                if (array_key_exists($tmp['ID'], $offersToParents)) {
+                if (array_key_exists($tmp['ID'], $offersToParents?? [])) {
                     $itemsToIblocks[$tmp['IBLOCK_ID']][$tmp['ID']]['SKU_PARENT'] = $offersToParents[$tmp['ID']];
                 }
             }
@@ -326,13 +326,13 @@ class GoodsPicker
                 $hasOwnProps = is_array($itemsProperties[$arGood['PRODUCT_ID']]['PROPERTIES']);
                 foreach ($propertyCodes as $propertyCode) {
                     // Take own property value first
-                    $goods[$key]['PROPERTIES'][$propertyCode] = ($hasOwnProps && array_key_exists($propertyCode, $itemsProperties[$arGood['PRODUCT_ID']]['PROPERTIES'])) ?
+                    $goods[$key]['PROPERTIES'][$propertyCode] = ($hasOwnProps && array_key_exists($propertyCode, $itemsProperties[$arGood['PRODUCT_ID']]['PROPERTIES']?? [])) ?
                         $itemsProperties[$arGood['PRODUCT_ID']]['PROPERTIES'][$propertyCode] : '';
 
                     // Try SKU parent property if own property are empty and parent exists
-                    if (empty($goods[$key]['PROPERTIES'][$propertyCode]) && array_key_exists('SKU_PARENT', $itemsProperties[$arGood['PRODUCT_ID']])) {
+                    if (empty($goods[$key]['PROPERTIES'][$propertyCode]) && array_key_exists('SKU_PARENT', $itemsProperties[$arGood['PRODUCT_ID']]?? [])) {
                         $parentId = $itemsProperties[$arGood['PRODUCT_ID']]['SKU_PARENT'];
-                        if (is_array($itemsProperties[$parentId]['PROPERTIES']) && array_key_exists($propertyCode, $itemsProperties[$parentId]['PROPERTIES'])) {
+                        if (is_array($itemsProperties[$parentId]['PROPERTIES']) && array_key_exists($propertyCode, $itemsProperties[$parentId]['PROPERTIES']?? [])) {
                             $goods[$key]['PROPERTIES'][$propertyCode] = $itemsProperties[$parentId]['PROPERTIES'][$propertyCode];
                         }
                     }

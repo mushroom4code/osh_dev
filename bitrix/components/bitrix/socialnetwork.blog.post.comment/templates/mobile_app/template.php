@@ -33,8 +33,8 @@ $arResult["OUTPUT_LIST"] = $APPLICATION->IncludeComponent(
 		"RATING_TYPE_ID" => ($arParams["SHOW_RATING"] === "Y" ? "BLOG_COMMENT" : ""),
 		"ENTITY_XML_ID" => $arParams["ENTITY_XML_ID"],
 		"RECORDS" => $arResult["RECORDS"],
-		"NAV_STRING" => $arResult["NAV_STRING"],
-		"NAV_RESULT" => $arResult["NAV_RESULT"],
+		"NAV_STRING" => $arResult["NAV_STRING"] ?? null,
+		"NAV_RESULT" => $arResult["NAV_RESULT"] ?? null,
 		"PREORDER" => "N",
 		"RIGHTS" => array(
 			"MODERATE" => ($arResult["Perm"] >= BLOG_PERMS_MODERATE ? "Y" : "N"),
@@ -51,11 +51,11 @@ $arResult["OUTPUT_LIST"] = $APPLICATION->IncludeComponent(
 						: $arResult["newCount"]
 				)
 		),
-		"WARNING_CODE" => ($arResult["WARNING_CODE"] ?: ''),
-		"WARNING_MESSAGE" => ($arResult["WARNING_MESSAGE"] ?: ''),
-		"ERROR_MESSAGE" => ($arResult["ERROR_MESSAGE"] ?: $arResult["COMMENT_ERROR"]),
+		"WARNING_CODE" => ($arResult["WARNING_CODE"] ?? ''),
+		"WARNING_MESSAGE" => ($arResult["WARNING_MESSAGE"] ?? ''),
+		"ERROR_MESSAGE" => ($arResult["ERROR_MESSAGE"] ?: ($arResult["COMMENT_ERROR"] ?? '')),
 		"OK_MESSAGE" => $arResult["MESSAGE"],
-		"RESULT" => ($arResult["ajax_comment"] ?: $_GET["commentId"]),
+		"RESULT" => ($arResult["ajax_comment"] ?: ($_GET["commentId"] ?? null)),
 		"PUSH&PULL" => $arResult["PUSH&PULL"],
 		"VIEW_URL" => str_replace("#comment_id#", "#ID#", $arResult["urlMobileToComment"]),
 		"EDIT_URL" => str_replace("#comment_id#", "#ID#", $arResult["urlMobileToComment"]),
@@ -67,12 +67,12 @@ $arResult["OUTPUT_LIST"] = $APPLICATION->IncludeComponent(
 		"DELETE_URL" => str_replace("#comment_id#", "#ID#", $arResult["urlMobileToDelete"]),
 		"AUTHOR_URL" => "/mobile/users/?user_id=#user_id#",
 
-		"AVATAR_SIZE" => $arParams["AVATAR_SIZE_COMMENT"],
+		"AVATAR_SIZE" => $arParams["AVATAR_SIZE_COMMENT"] ?? null,
 		"NAME_TEMPLATE" => $arParams["NAME_TEMPLATE"],
 		"SHOW_LOGIN" => $arParams['SHOW_LOGIN'],
 
 		"DATE_TIME_FORMAT" => $arParams["DATE_TIME_FORMAT"],
-		"LAZYLOAD" => $arParams["LAZYLOAD"],
+		"LAZYLOAD" => $arParams["LAZYLOAD"] ?? null,
 
 		"NOTIFY_TAG" => ($arParams["bFromList"] ? "BLOG|COMMENT" : ""),
 		"NOTIFY_TEXT" => ($arParams["bFromList"] ? TruncateText(str_replace(Array("\r\n", "\n"), " ", $arParams["POST_DATA"]["~TITLE"]), 100) : ""),
@@ -82,12 +82,12 @@ $arResult["OUTPUT_LIST"] = $APPLICATION->IncludeComponent(
 		"SHOW_MENU" => !$arParams["bFromList"],
 		"REPLY_ACTION" => (
 			$arParams["bFromList"]
-				? $arResult["replyAction"]
+				? $arResult["replyAction"] ?? ''
 				: ''
 		),
 
-		"IMAGE_SIZE" => $arParams["IMAGE_SIZE"],
-		"mfi" => $arParams["mfi"],
+		"IMAGE_SIZE" => $arParams["IMAGE_SIZE"] ?? null,
+		"mfi" => $arParams["mfi"] ?? null,
 
 		"FORM" => array(
 			"ID" => $this->__component->__name,
@@ -98,11 +98,9 @@ $arResult["OUTPUT_LIST"] = $APPLICATION->IncludeComponent(
 		),
 		"AUTHOR_URL_PARAMS" => array(
 			"entityType" => 'LOG_ENTRY',
-			"entityId" => $arParams["LOG_ID"]
+			"entityId" => $arParams["LOG_ID"],
 		),
 		"IS_POSTS_LIST" => ($arParams["bFromList"] ? "Y" : "N"),
-		'CONTENT_VIEW_KEY' => $arParams['CONTENT_VIEW_KEY'],
-		'CONTENT_VIEW_KEY_SIGNED' => $arParams['CONTENT_VIEW_KEY_SIGNED'],
 	),
 	$this->__component
 );
@@ -121,20 +119,31 @@ if ($arParams["bFromList"])
 			"bitrix:mobile.comments.pseudoform",
 			"",
 			[
-				'REPLY_ACTION' => $arResult["replyAction"]
+				'REPLY_ACTION' => $arResult["replyAction"] ?? null
 			]
 		);
 		$arResult["OUTPUT_LIST"]["HTML"] .= ob_get_clean();
 	}
 }
-elseif ($arResult['CanUserComment'])
+else
 {
 	ob_start();
-	include_once(__DIR__ . "/script.php");
+	?>
+	<script>
+		BXMobileApp.onCustomEvent('onCommentsGet', {
+			log_id: <?= $arParams["LOG_ID"] ?>,
+			ts: '<?= time() ?>',
+		}, true);
+	</script>
+	<?php
+	if ($arResult['CanUserComment'])
+	{
+		include_once(__DIR__ . "/script.php");
+	}
 	$arResult["OUTPUT_LIST"]["HTML"] .= ob_get_clean();
 }
 
-if ($_REQUEST['empty_get_comments'] === 'Y')
+if (isset($_REQUEST['empty_get_comments']) && $_REQUEST['empty_get_comments'] === 'Y')
 {
 	$APPLICATION->RestartBuffer();
 	while(ob_get_clean()) {};
@@ -150,10 +159,12 @@ if ($_REQUEST['empty_get_comments'] === 'Y')
 <script>
 	app.setPageID('BLOG_POST_<?=$arParams["ID"]?>');
 	BX.addCustomEvent(window, "OnUCFormSubmit", function(xml, id, obj, post) {
-		if (xml=='<?=$arParams["ENTITY_XML_ID"]?>') {
+		if (xml == '<?=$arParams["ENTITY_XML_ID"]?>')
+		{
 			post['comment_post_id'] = '<?=$arParams["ID"]?>';
 			post['logId'] = '<?=$arParams["LOG_ID"]?>';
-	} });
+		}
+	});
 </script>
 <div class="post-comments-wrap" id="post-comments-wrap">
 	<?=$arResult["OUTPUT_LIST"]["HTML"]?>

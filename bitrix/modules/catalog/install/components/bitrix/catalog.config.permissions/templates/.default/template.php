@@ -30,7 +30,6 @@ Bitrix\Main\UI\Extension::load(
 );
 \Bitrix\Main\UI\Extension::load('loader');
 
-//CUtil::InitJSCore(Array('access'));
 
 $bodyClass = $APPLICATION->GetPageProperty("BodyClass");
 $APPLICATION->SetPageProperty("BodyClass", ($bodyClass ? $bodyClass." " : "") . "no-all-paddings no-background");
@@ -42,7 +41,7 @@ $openPopupEvent = 'catalog:onComponentOpen';
 $cantUse = isset($arResult['CANT_USE']);
 \Bitrix\UI\Toolbar\Facade\Toolbar::deleteFavoriteStar();
 ?>
-<span id="<?=$componentId?>>">
+<span id="<?=$componentId?>">
 
 <div id="bx-catalog-role-main"></div>
 <?php
@@ -53,7 +52,6 @@ $APPLICATION->IncludeComponent(
 	[
 		'API_VERSION'    => 2,
 		'ID'             => $componentId,
-		'BIND_ID'        => $componentId,
 		'ITEMS_SELECTED' => [],
 		'CALLBACK'       => [
 			'select'      => "AccessRights.onMemberSelect",
@@ -122,11 +120,13 @@ $APPLICATION->IncludeComponent('bitrix:ui.button.panel', '', [
 	});
 
 	AccessRights.draw();
-	setTimeout(function() {
+	
+	BX.ready(function() {
+		setTimeout(function() {
 			BX.onCustomEvent('<?= $initPopupEvent ?>', [{
 				openDialogWhenInit: false,
 				multiple: true
 			}]);
-		},
-	1);
+		});
+	});
 </script>

@@ -1,6 +1,7 @@
 <?php
 namespace Bitrix\Im;
 
+use Bitrix\Im\Model\StatusTable;
 use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
@@ -25,7 +26,7 @@ class User
 	const SERVICE_ZOOM = 'zoom';
 	const SERVICE_SKYPE = 'skype';
 
-	function __construct($userId = null)
+	protected function __construct($userId = null)
 	{
 		global $USER;
 
@@ -38,9 +39,9 @@ class User
 
 	/**
 	 * @param null $userId
-	 * @return User
+	 * @return self
 	 */
-	public static function getInstance($userId = null)
+	public static function getInstance($userId = null): self
 	{
 		global $USER;
 
@@ -124,6 +125,20 @@ class User
 		}
 
 		return $fields['avatar'];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getProfile()
+	{
+		$fields = $this->getFields();
+		if (!$fields)
+		{
+			return '';
+		}
+
+		return $fields['profile'];
 	}
 
 	/**
@@ -455,6 +470,11 @@ class User
 			return null;
 		}
 
+		$hrPhotoOption = $options['HR_PHOTO'] ?? null;
+		$livechatOption = $options['LIVECHAT'] ?? null;
+		$jsonOption = $options['JSON'] ?? null;
+		$skipOnlineOption = $options['SKIP_ONLINE'] ?? null;
+
 		$result = [
 			'ID' => $this->getId(),
 			'ACTIVE' => $this->isActive(),
@@ -472,23 +492,23 @@ class User
 			'CONNECTOR' => $this->isConnector(),
 			'EXTERNAL_AUTH_ID' => $this->getExternalAuthId(),
 			'STATUS' => $this->getStatus(),
-			'IDLE' => $options['SKIP_ONLINE'] === 'Y'? false: $this->getIdle(),
-			'LAST_ACTIVITY_DATE' => $options['SKIP_ONLINE'] === 'Y'? false: $this->getLastActivityDate(),
-			'MOBILE_LAST_DATE' => $options['SKIP_ONLINE'] === 'Y'? false: $this->getMobileLastDate(),
+			'IDLE' => $skipOnlineOption === 'Y' ? false: $this->getIdle(),
+			'LAST_ACTIVITY_DATE' => $skipOnlineOption === 'Y' ? false: $this->getLastActivityDate(),
+			'MOBILE_LAST_DATE' => $skipOnlineOption === 'Y' ? false: $this->getMobileLastDate(),
 			'ABSENT' => $this->isAbsent(),
 			'DEPARTMENTS' => $this->getDepartments(),
 			'PHONES' => $this->getPhones(),
 		];
-		if ($options['HR_PHOTO'])
+		if ($hrPhotoOption)
 		{
 			$result['AVATAR_HR'] = $this->getAvatarHr();
 		}
 
 		//TODO: Live chat, open lines
 		//Just one call, here: \Bitrix\ImOpenLines\Connector::onStartWriting and \Bitrix\Im\Chat::getMessages
-		if ($options['LIVECHAT'] && !$this->isConnector())
+		if ($livechatOption && !$this->isConnector())
 		{
-			$lineId = \Bitrix\ImOpenLines\Queue::getActualLineId(['LINE_ID' => $options['LIVECHAT'], 'USER_CODE' => $options['USER_CODE']]);
+			$lineId = \Bitrix\ImOpenLines\Queue::getActualLineId(['LINE_ID' => $livechatOption, 'USER_CODE' => $options['USER_CODE']]);
 
 			$imolUserData = \Bitrix\ImOpenLines\Queue::getUserData($lineId, $this->getId());
 			if ($imolUserData)
@@ -499,7 +519,7 @@ class User
 		}
 		//TODO: END: Live chat, open lines
 
-		if ($options['JSON'])
+		if ($jsonOption)
 		{
 			foreach ($result as $key => $value)
 			{
@@ -519,6 +539,44 @@ class User
 	}
 
 	/**
+	 * @param static[] $users
+	 * @return array
+	 */
+	public static function getArrayWithOnline(array $users, array $options = ['JSON' => 'Y', 'SKIP_ONLINE' => 'Y']): array
+	{
+		$result = [];
+
+		foreach ($users as $user)
+		{
+			$result[$user->getId()] = $user->getArray($options);
+		}
+
+		$ids = array_keys($result);
+
+		if (empty($ids))
+		{
+			return [];
+		}
+
+		$statuses = StatusTable::query()
+			->setSelect(['USER_ID', 'IDLE', 'MOBILE_LAST_DATE', 'DESKTOP_LAST_DATE', 'LAST_ACTIVITY_DATE' => 'USER.LAST_ACTIVITY_DATE'])
+			->whereIn('USER_ID', $ids)
+			->fetchAll()
+		;
+
+		foreach ($statuses as $status)
+		{
+			$id = (int)$status['USER_ID'];
+			$result[$id]['last_activity_date'] = $status['LAST_ACTIVITY_DATE'] ? $status['LAST_ACTIVITY_DATE']->format('c') : false;
+			$result[$id]['desktop_last_date'] = $status['DESKTOP_LAST_DATE'] ? $status['DESKTOP_LAST_DATE']->format('c') : false;
+			$result[$id]['mobile_last_date'] = $status['MOBILE_LAST_DATE'] ? $status['MOBILE_LAST_DATE']->format('c') : false;
+			$result[$id]['idle'] = $status['IDLE'] ? $status['IDLE']->format('c') : false;
+		}
+
+		return array_values($result);
+	}
+
+	/**
 	 * @return array|null
 	 */
 	private function getParams()
@@ -526,15 +584,15 @@ class User
 		if (is_null($this->userData))
 		{
 			$userData = \CIMContactList::GetUserData(Array(
-				'ID' => self::getId(),
+				'ID' => $this->getId(),
 				'PHONES' => 'Y',
 				'EXTRA_FIELDS' => 'Y',
 				'DATE_ATOM' => 'N',
 				'SHOW_ONLINE' => 'N',
 			));
-			if (isset($userData['users'][self::getId()]))
+			if (isset($userData['users'][$this->getId()]))
 			{
-				$this->userData['user'] = $userData['users'][self::getId()];
+				$this->userData['user'] = $userData['users'][$this->getId()];
 			}
 		}
 		return $this->userData;

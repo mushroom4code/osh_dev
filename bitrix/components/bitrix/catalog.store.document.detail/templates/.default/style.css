@@ -79,6 +79,15 @@
 	color: lightgrey;
 }
 
+.catalog-entity-wrap-crm {
+	position: relative;
+	padding-bottom: 60px;
+}
+
+.catalog-entity-wrap-crm .ui-ctl-element::placeholder {
+	color: lightgrey;
+}
+
 .catalog-entity-section-product-loader {
 	background: url(images/skeleton.svg) no-repeat;
 	height: 446px;
@@ -514,6 +523,10 @@ input.pagetitle-item {
 .catalog-title-buttons-wrapper {
 	display: inline-flex;
 	align-items: center;
+}
+
+.catalog-title-buttons-wrapper .ui-label-inner {
+	font-weight: var(--ui-font-weight-bold, 700);
 }
 
 .catalog-document-card-left {

@@ -18,7 +18,14 @@ final class Section extends Controller
 		return ['SECTION' => $this->getViewFields()];
 	}
 
-	public function listAction($select=[], $filter=[], $order=[], PageNavigation $pageNavigation)
+	/**
+	 * @param $select
+	 * @param $filter
+	 * @param $order
+	 * @param PageNavigation $pageNavigation
+	 * @return Page|null
+	 */
+	public function listAction(PageNavigation $pageNavigation, array $select = [], array $filter = [], array $order = []): ?Page
 	{
 		$r = $this->checkPermissionIBlockSectionList($filter['IBLOCK_ID']);
 		if($r->isSuccess())
@@ -40,7 +47,7 @@ final class Section extends Controller
 
 			return new Page('SECTIONS', $result, function() use ($filter)
 			{
-				return (int)\CIBlockSection::GetList([], $filter, []);
+				return \CIBlockSection::GetCount($filter);
 			});
 		}
 		else
@@ -79,7 +86,7 @@ final class Section extends Controller
 		$r = $this->checkPermissionIBlockSectionAdd($fields['IBLOCK_ID']);
 		if($r->isSuccess())
 		{
-			if(isset($fields['IBLOCK_SECTION_ID']) && intval($fields['IBLOCK_SECTION_ID']>0))
+			if (isset($fields['IBLOCK_SECTION_ID']) && (int)$fields['IBLOCK_SECTION_ID'] > 0)
 			{
 				$r = $this->checkPermissionIBlockSectionSectionBindUpdate($fields['IBLOCK_SECTION_ID']);
 			}
@@ -117,7 +124,7 @@ final class Section extends Controller
 		$r = $this->checkPermissionIBlockSectionUpdate($id);
 		if($r->isSuccess())
 		{
-			if(isset($fields['IBLOCK_SECTION_ID']) && intval($fields['IBLOCK_SECTION_ID']>0))
+			if (isset($fields['IBLOCK_SECTION_ID']) && (int)$fields['IBLOCK_SECTION_ID'] > 0)
 			{
 				$r = $this->checkPermissionIBlockSectionSectionBindUpdate($fields['IBLOCK_SECTION_ID']);
 			}

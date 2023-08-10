@@ -49,6 +49,13 @@ class CBPGetListsDocumentActivity extends CBPActivity
 			$elementId = array_shift($elementId);
 		}
 
+		if (!$documentType || !$elementId)
+		{
+			$this->WriteToTrackingService(GetMessage('BPGLDA_ERROR_DT'), 0, CBPTrackingType::Error);
+
+			return CBPActivityExecutionStatus::Closed;
+		}
+
 		$documentId = [$documentType[0], $documentType[1], $elementId];
 
 		$documentService = $this->workflow->GetService("DocumentService");
@@ -207,7 +214,7 @@ class CBPGetListsDocumentActivity extends CBPActivity
 
 	protected static function getPropertiesMap(array $documentType, array $context = []): array
 	{
-		$fieldList = $context['listsDocumentType'] ? self::getDocumentFieldsOptions($context['listsDocumentType']) : [];
+		$fieldList = isset($context['listsDocumentType']) ? self::getDocumentFieldsOptions($context['listsDocumentType']) : [];
 
 		return [
 			'ElementId' => [

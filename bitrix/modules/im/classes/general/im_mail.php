@@ -13,9 +13,11 @@ class CIMMail
 		$arGroupNotify = array();
 		$arGroupNotifyUser = array();
 		$arUnsendNotify = CIMNotify::GetUnsendNotify();
+		$maxId = 0;
 
 		foreach($arUnsendNotify as $id => $arNotify)
 		{
+			$maxId = ((int)$id > $maxId) ? (int)$id : $maxId;
 			if (!isset($arMark[$arNotify["CHAT_ID"]]) || $arMark[$arNotify["CHAT_ID"]] < $arNotify["ID"])
 				$arMark[$arNotify["CHAT_ID"]] = $arNotify["ID"];
 
@@ -98,12 +100,24 @@ class CIMMail
 				}
 			}
 		}
-		foreach ($arMark as $chatId => $lastSendId)
-			CIMNotify::SetLastSendId($chatId, $lastSendId);
+
+		if ($maxId > 0)
+		{
+			\Bitrix\Main\Config\Option::set('im', 'last_send_mail_notification', $maxId);
+		}
 
 		$CTP = new CTextParser;
 		foreach($arUnsendNotify as $id => $arNotify)
 		{
+			$message = $CTP->convert4mail(str_replace("#BR#", "\n", strip_tags($arNotify["MESSAGE_OUT"])));
+			$messageShort = str_replace(array("<br>","<br/>","<br />", "#BR#"), Array(" ", " ", " ", " "), nl2br($CTP->convert4mail(strip_tags($arNotify["MESSAGE_OUT"]))));
+			$message = \Bitrix\Im\Text::removeBbCodes($message);
+			$messageShort = $CTP->html_cut(\Bitrix\Im\Text::removeBbCodes($messageShort), 50);
+			$title = trim($arNotify["NOTIFY_TITLE"] ?? '');
+			if ($title !== '')
+			{
+				$title = \Bitrix\Im\Text::removeBbCodes($title);
+			}
 			$arFields = array(
 				"MESSAGE_ID" => $arNotify["ID"],
 				"USER" => $arNotify["USER"],
@@ -122,9 +136,9 @@ class CIMMail
 				"SENDER_LAST_NAME" => $arNotify["FROM_USER_LAST_NAME"], // legacy
 				"SENDER_SECOND_NAME" => $arNotify["FROM_USER_SECOND_NAME"], // legacy
 				"EMAIL_TO" => $arNotify["TO_USER_EMAIL"],
-				"TITLE" => trim($arNotify["NOTIFY_TITLE"]),
-				"MESSAGE" => $CTP->convert4mail(str_replace("#BR#", "\n", strip_tags($arNotify["MESSAGE_OUT"]))),
-				"MESSAGE_50" => $CTP->html_cut(str_replace(array("<br>","<br/>","<br />", "#BR#"), Array(" ", " ", " ", " "), nl2br($CTP->convert4mail(strip_tags($arNotify["MESSAGE_OUT"])))), 50),
+				"TITLE" => $title,
+				"MESSAGE" => $message,
+				"MESSAGE_50" => $messageShort,
 			);
 
 			if ($arFields['TITLE'] <> '')
@@ -159,9 +173,11 @@ class CIMMail
 		$arFromUser = Array();
 		$arDialog = Array();
 		$parser = new CTextParser();
+		$maxId = 0;
 
 		foreach($arUnsendMessage as $id => $arMessage)
 		{
+			$maxId = ((int)$id > $maxId) ? (int)$id : $maxId;
 			if (!isset($arMark[$arMessage["TO_USER_ID"]][$arMessage["CHAT_ID"]]) || $arMark[$arMessage["TO_USER_ID"]][$arMessage["CHAT_ID"]] < $arMessage["ID"])
 				$arMark[$arMessage["TO_USER_ID"]][$arMessage["CHAT_ID"]] = $arMessage["ID"];
 
@@ -205,18 +221,18 @@ class CIMMail
 				$arNotify["USER"] = \Bitrix\Im\User::formatFullNameFromDatabase(array(
 					"NAME" => $arMessage["TO_USER_NAME"],
 					"LAST_NAME" => $arMessage["TO_USER_LAST_NAME"],
-					"SECOND_NAME" => $arMessage["TO_USER_SECOND_NAME"],
+					"SECOND_NAME" => $arMessage["TO_USER_SECOND_NAME"] ?? null,
 					"LOGIN" => $arMessage["TO_USER_LOGIN"],
 					"EXTERNAL_AUTH_ID" => $arMessage["TO_EXTERNAL_AUTH_ID"],
 				));
 
 				$arToUser[$arMessage["TO_USER_ID"]] = Array(
-					"USER" => $arMessage["USER"],
+					"USER" => $arMessage['USER'] ?? null,
 					"USER_ID" => $arMessage["TO_USER_ID"],
 					"USER_LOGIN" => $arMessage["TO_USER_LOGIN"],
 					"USER_NAME" => $arMessage["TO_USER_NAME"],
 					"USER_LAST_NAME" => $arMessage["TO_USER_LAST_NAME"],
-					"USER_SECOND_NAME" => $arMessage["TO_USER_SECOND_NAME"],
+					"USER_SECOND_NAME" => $arMessage["TO_USER_SECOND_NAME"] ?? null,
 					"TO_USER_LID" => $siteID,
 					"EMAIL_TO" => $arMessage["TO_USER_EMAIL"],
 				);
@@ -232,7 +248,7 @@ class CIMMail
 					$arMessage["FROM_USER"] = \Bitrix\Im\User::formatFullNameFromDatabase(array(
 						"NAME" => $arMessage["FROM_USER_NAME"],
 						"LAST_NAME" => $arMessage["FROM_USER_LAST_NAME"],
-						"SECOND_NAME" => $arMessage["FROM_USER_SECOND_NAME"],
+						"SECOND_NAME" => $arMessage["FROM_USER_SECOND_NAME"] ?? null,
 						"LOGIN" => $arMessage["FROM_USER_LOGIN"],
 						"EXTERNAL_AUTH_ID" => $arMessage["FROM_EXTERNAL_AUTH_ID"],
 					));
@@ -244,19 +260,22 @@ class CIMMail
 					"FROM_USER_LOGIN" => $arMessage["FROM_USER_LOGIN"],
 					"FROM_USER_NAME" => $arMessage["FROM_USER_NAME"],
 					"FROM_USER_LAST_NAME" => $arMessage["FROM_USER_LAST_NAME"],
-					"FROM_USER_SECOND_NAME" => $arMessage["FROM_USER_SECOND_NAME"],
+					"FROM_USER_SECOND_NAME" => $arMessage["FROM_USER_SECOND_NAME"] ?? null,
 				);
 			}
 
+			$message = $parser->convert4mail(str_replace("#BR#", "\n", strip_tags($arMessage["MESSAGE_OUT"])));
+			$message = \Bitrix\Im\Text::removeBbCodes($message);
 			$arDialog[$arMessage["TO_USER_ID"]][$arMessage["FROM_USER_ID"]][] = Array(
 				'DATE_CREATE' => FormatDate("FULL", $arMessage["DATE_CREATE"]),
-				'MESSAGE' => $parser->convert4mail(str_replace("#BR#", "\n", strip_tags($arMessage["MESSAGE_OUT"])))
+				'MESSAGE' => $message
 			);
 		}
 
-		foreach ($arMark as $userId => $ar)
-			foreach ($ar as $chatId => $lastSendId)
-				CIMMessage::SetLastSendId($chatId, $userId, $lastSendId);
+		if ($maxId > 0)
+		{
+			\Bitrix\Main\Config\Option::set('im', 'last_send_mail_message', $maxId);
+		}
 
 		foreach ($arToUser as $toID=> $arToInfo)
 		{
@@ -292,17 +311,20 @@ class CIMMail
 			if ($bHeader)
 				$message .= "\n".GetMessage('IM_MAIL_TEMPLATE_NEW_MESSAGE_FOOTER');
 
+			$fromUserId = $arToInfo["FROM_USER_ID"] ?? null;
+
 			$arFields = array(
 				"USER" => $arToInfo["USER_ID"],
-				"USER_ID" => count($arNames) > 1? $arToInfo["USER_ID"]: $arToInfo["FROM_USER_ID"],
+				"USER_ID" => count($arNames) > 1? $arToInfo["USER_ID"]: $fromUserId,
 				"USER_LOGIN" => $arToInfo["USER_LOGIN"],
 				"USER_NAME" => $arToInfo["USER_NAME"],
 				"USER_LAST_NAME" => $arToInfo["USER_LAST_NAME"],
 				"USER_SECOND_NAME" => $arToInfo["USER_SECOND_NAME"],
 				"EMAIL_TO" => $arToInfo["EMAIL_TO"],
-				"TITLE" => $arToInfo["TITLE"],
+				"TITLE" => $arToInfo["TITLE"] ?? null,
 				"MESSAGES" => $message,
-				"MESSAGES_FROM_USERS" => serialize($messagesFromUsers)
+				"MESSAGES_FROM_USERS" => serialize($messagesFromUsers),
+				"DATE_CREATE" => null,
 			);
 			$arFields['FROM_USER_ID'] = implode(', ', $arFromId);
 			if (count($arNames) > 1)

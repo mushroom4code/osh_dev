@@ -2,12 +2,14 @@
 
 namespace Bitrix\Catalog\Controller;
 
+use Bitrix\Main\Config\Option;
 use Bitrix\Catalog\Access\AccessController;
 use Bitrix\Catalog\Access\ActionDictionary;
 use Bitrix\Catalog\Component\ImageInput;
 use Bitrix\Catalog\MeasureTable;
 use Bitrix\Catalog\ProductTable;
 use Bitrix\Catalog\StoreBarcodeTable;
+use Bitrix\Catalog\UI\PropertyProduct;
 use Bitrix\Catalog\v2\Barcode\Barcode;
 use Bitrix\Catalog\v2\BaseIblockElementEntity;
 use Bitrix\Catalog\v2\Image\DetailImage;
@@ -249,12 +251,14 @@ class ProductSelector extends JsonController
 		$builder = new BasketBuilder();
 		$basketItem = $builder->createItem();
 		$basketItem->setSku($sku);
-		if ($options['priceId'] && (int)$options['priceId'] > 0)
+
+		$priceId = (int)($options['priceId'] ?? 0);
+		if ($priceId > 0)
 		{
-			$basketItem->setPriceGroupId((int)$options['priceId']);
+			$basketItem->setPriceGroupId($priceId);
 		}
 
-		if ($options['urlBuilder'])
+		if (!empty($options['urlBuilder']))
 		{
 			$basketItem->setDetailUrlManagerType($options['urlBuilder']);
 		}
@@ -297,6 +301,8 @@ class ProductSelector extends JsonController
 			$purchasingCurrency = $options['currency'];
 		}
 
+		$productProps = $this->getProductProperties($sku);
+
 		$fields = [
 			'TYPE' => $sku->getType(),
 			'ID' => $formFields['skuId'],
@@ -319,7 +325,12 @@ class ProductSelector extends JsonController
 			'VAT_ID' => $formFields['taxId'],
 			'VAT_INCLUDED' => $formFields['taxIncluded'],
 			'BRANDS' => $this->getProductBrand($sku),
+			'WEIGHT' => $formFields['weight'],
+			'DIMENSIONS' => $formFields['dimensions'],
+			'PRODUCT_PROPERTIES' => $productProps,
 		];
+
+		$fields = array_merge($fields, $productProps);
 
 		$previewImage = $sku->getFrontImageCollection()->getFrontImage();
 		if ($previewImage)
@@ -406,6 +417,30 @@ class ProductSelector extends JsonController
 		}
 
 		return $selectedBrandItems;
+	}
+
+	private function getProductProperties(BaseSku $sku): array
+	{
+		$columns = PropertyProduct::getColumnNames();
+		$emptyProps = [];
+		foreach ($columns as $columnName)
+		{
+			$emptyProps[$columnName] = '';
+		}
+
+		$productId = $sku->getParent()->getId();
+		$productIblockId = $sku->getIblockInfo()->getProductIblockId();
+		$productProps = PropertyProduct::getIblockProperties($productIblockId, $productId);
+
+		$skuId = $sku->getId();
+		$skuIblockId = $sku->getIblockId();
+		$skuProps = [];
+		if ($skuId && $skuIblockId)
+		{
+			$skuProps = PropertyProduct::getSkuProperties($skuIblockId, $skuId);
+		}
+
+		return array_merge($emptyProps, $productProps, $skuProps);
 	}
 
 	public function createProductAction(array $fields): ?array
@@ -532,6 +567,10 @@ class ProductSelector extends JsonController
 		if ($fields['MEASURE'] > 0)
 		{
 			$sku->setField('MEASURE', $fields['MEASURE']);
+		}
+		if (Option::get('catalog', 'default_product_vat_included') === 'Y')
+		{
+			$sku->setField('VAT_INCLUDED', ProductTable::STATUS_YES);
 		}
 
 		if (isset($fields['PRICE']) && $fields['PRICE'] >= 0)
@@ -878,6 +917,9 @@ class ProductSelector extends JsonController
 			$fields['MEASURE'] = $this->getMeasureIdByCode($fields['MEASURE_CODE']);
 		}
 
+		$sectionId = $fields['IBLOCK_SECTION_ID'] ?? null;
+		unset($fields['IBLOCK_SECTION_ID']);
+
 		$sku->setFields($fields);
 
 		if (!empty($fields['PRICES']) && is_array($fields['PRICES']))
@@ -966,9 +1008,9 @@ class ProductSelector extends JsonController
 			$parentProduct->getPropertyCollection()->setValues(['BRAND_FOR_FACEBOOK' => $fields['BRANDS']]);
 		}
 
-		if (isset($fields['IBLOCK_SECTION_ID']))
+		if (isset($sectionId))
 		{
-			$parentProduct->setField('IBLOCK_SECTION_ID', $fields['IBLOCK_SECTION_ID']);
+			$parentProduct->setField('IBLOCK_SECTION_ID', $sectionId);
 		}
 
 		if (

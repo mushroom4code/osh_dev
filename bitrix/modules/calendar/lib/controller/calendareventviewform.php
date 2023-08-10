@@ -2,7 +2,6 @@
 
 namespace Bitrix\Calendar\Controller;
 
-use Bitrix\Calendar\ControllerHelper\CalendarEventViewFormHelper;
 use Bitrix\Calendar\Integration\Bitrix24Manager;
 use Bitrix\Calendar\UserSettings;
 use Bitrix\Main\Engine\Controller;
@@ -10,10 +9,8 @@ use Bitrix\Main\Engine\Response\Component;
 use Bitrix\Main\Error;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
-use CCalendar;
-use CCalendarEvent;
-use CCalendarReminder;
-use CCalendarSect;
+use Bitrix\Main\Web\Json;
+use Bitrix\Main\Security\Sign\Signer;
 
 class CalendarEventViewForm extends Controller
 {
@@ -21,17 +18,15 @@ class CalendarEventViewForm extends Controller
 	public function getCalendarViewSliderParamsAction(int $entryId, string $dateFrom, int $timezoneOffset = 0): array
 	{
 		$responseParams = [];
-		$userId = CCalendar::GetCurUserId();
+		$userId = \CCalendar::GetCurUserId();
 
 		if ($entryId)
 		{
-			$entry = CCalendarEvent::getEventForViewInterface($entryId,
-				[
-					'eventDate' => $dateFrom,
-					'timezoneOffset' => $timezoneOffset,
-					'userId' => $userId
-				]
-			);
+			$entry = \CCalendarEvent::getEventForViewInterface($entryId, [
+				'eventDate' => $dateFrom,
+				'timezoneOffset' => $timezoneOffset,
+				'userId' => $userId
+			]);
 		}
 		else
 		{
@@ -46,21 +41,23 @@ class CalendarEventViewForm extends Controller
 		}
 
 		$responseParams['userId'] = $userId;
-		$responseParams['userTimezone'] = CCalendar::GetUserTimezoneName($userId);
+		$responseParams['userTimezone'] = \CCalendar::GetUserTimezoneName($userId);
 		$responseParams['entry'] = $entry;
-		$responseParams['userIndex'] = CCalendarEvent::getUserIndex();
+		$responseParams['userIndex'] = \CCalendarEvent::getUserIndex();
 		$responseParams['userSettings'] = UserSettings::get($userId);
 		$responseParams['plannerFeatureEnabled'] = Bitrix24Manager::isPlannerFeatureEnabled();
 		$responseParams['entryUrl'] = \CHTTP::urlAddParams(
-			CCalendar::GetPath($entry['CAL_TYPE'], $entry['OWNER_ID'], true),
+			\CCalendar::GetPath($entry['CAL_TYPE'], $entry['OWNER_ID'], true),
 			[
 				'EVENT_ID' => (int)$entry['ID'],
 				'EVENT_DATE' => urlencode($entry['DATE_FROM'])
 			]
 		);
-		$responseParams['dayOfWeekMonthFormat'] = \Bitrix\Main\Context::getCurrent()
-			->getCulture()
-			->getDayOfWeekMonthFormat();
+		$responseParams['dayOfWeekMonthFormat'] = stripslashes(
+			\Bitrix\Main\Context::getCurrent()
+				->getCulture()
+				->getDayOfWeekMonthFormat()
+		);
 
 		$sections = \CCalendarSect::GetList([
 			'arFilter' => [
@@ -80,20 +77,20 @@ class CalendarEventViewForm extends Controller
 
 		$params = array_merge([
 			'event' => $entry,
-			'type' => CCalendar::GetType(),
-			'bIntranet' => CCalendar::IsIntranetEnabled(),
-			'bSocNet' => CCalendar::IsSocNet(),
+			'type' => \CCalendar::GetType(),
+			'bIntranet' => \CCalendar::IsIntranetEnabled(),
+			'bSocNet' => \CCalendar::IsSocNet(),
 			'AVATAR_SIZE' => 21,
 		], $responseParams);
 
-		$userId = CCalendar::GetCurUserId();
+		$userId = \CCalendar::GetCurUserId();
 		$event = $params['event'];
 
-		$timezoneHint = CalendarEventViewFormHelper::getTimezoneHint($userId, $event);
+		$timezoneHint = $this->getTimezoneHint($userId, $event);
 
-		$UF = CCalendarEvent::GetEventUserFields($event);
+		$UF = \CCalendarEvent::GetEventUserFields($event);
 
-		if (!is_null($event['UF_CRM_CAL_EVENT']))
+		if (isset($event['UF_CRM_CAL_EVENT']))
 		{
 			$event['UF_CRM_CAL_EVENT'] = $UF['UF_CRM_CAL_EVENT'];
 			if (empty($event['UF_CRM_CAL_EVENT']['VALUE']))
@@ -102,7 +99,7 @@ class CalendarEventViewForm extends Controller
 			}
 		}
 
-		if (!is_null($event['UF_WEBDAV_CAL_EVENT']))
+		if (isset($event['UF_WEBDAV_CAL_EVENT']))
 		{
 			$event['UF_WEBDAV_CAL_EVENT'] = $UF['UF_WEBDAV_CAL_EVENT'];
 			if(empty($event['UF_WEBDAV_CAL_EVENT']['VALUE']))
@@ -111,30 +108,23 @@ class CalendarEventViewForm extends Controller
 			}
 		}
 
-		$event['REMIND'] = CCalendarReminder::GetTextReminders($event['REMIND']);
+		$event['REMIND'] = \CCalendarReminder::GetTextReminders($event['REMIND'] ?? []);
+
+		$event['permissions'] = \CCalendarEvent::getEventPermissions($event, $userId);
 
 		$curUserStatus = '';
-		$userId = CCalendar::GetCurUserId();
+		$userId = \CCalendar::GetCurUserId();
 
-		$viewComments = Loader::includeModule('forum')
-			&& (
-				CCalendar::IsPersonal($event['CAL_TYPE'], $event['OWNER_ID'], $userId)
-				|| CCalendarSect::CanDo('calendar_view_full', $event['SECT_ID'], $userId)
-			);
-
-		if ($event['EVENT_TYPE'] === '#resourcebooking#')
-		{
-			$viewComments = false;
-		}
+		$viewComments = $event['permissions']['view_comments'];
 
 		//get meeting host and attendees
 		$meetingHost = false;
 		if ($event['IS_MEETING'])
 		{
-			$userIndex = CCalendarEvent::getUserIndex();
+			$userIndex = \CCalendarEvent::getUserIndex();
 			$attendees = ['y' => [], 'n' => [], 'q' => [], 'i' => []];
 
-			if (is_array($event['ATTENDEE_LIST']))
+			if (isset($event['ATTENDEE_LIST']) && is_array($event['ATTENDEE_LIST']))
 			{
 				foreach ($event['ATTENDEE_LIST'] as $attendee)
 				{
@@ -158,12 +148,19 @@ class CalendarEventViewForm extends Controller
 			}
 		}
 
-		if (!isset($meetingHost) || !$meetingHost)
+		if (!$meetingHost && isset($event['MEETING_HOST']))
 		{
-			$meetingHost = CCalendar::GetUser($event['CREATED_BY'], true);
-			$meetingHost['DISPLAY_NAME'] = CCalendar::GetUserName($meetingHost);
-			$meetingHost['AVATAR'] = CCalendar::GetUserAvatarSrc($meetingHost);
-			$meetingHost['URL'] = CCalendar::GetUserUrl($meetingHost["ID"], $params["PATH_TO_USER"]);
+			$meetingHost = \CCalendar::GetUser($event['MEETING_HOST'], true);
+		}
+
+		if ($meetingHost && is_array($meetingHost))
+		{
+			$meetingHost['DISPLAY_NAME'] = \CCalendar::GetUserName($meetingHost);
+			if (!isset($meetingHost['AVATAR']))
+			{
+				$meetingHost['AVATAR'] = \CCalendar::GetUserAvatarSrc($meetingHost);
+			}
+			$meetingHost['URL'] = \CCalendar::GetUserUrl($meetingHost["ID"], ($params["PATH_TO_USER"] ?? ''));
 		}
 
 		$params['id'] = 'calendar_view_slider_'.mt_rand();
@@ -171,70 +168,245 @@ class CalendarEventViewForm extends Controller
 		$params['eventId'] = $event['ID'];
 		$params['parentId'] = $event['PARENT_ID'];
 		$params['name'] = $event['NAME'];
-		$params['fromToHtml'] = CalendarEventViewFormHelper::getFromToHtml($event);
+		$params['fromToHtml'] = $this->getFromToHtml($event);
 		$params['timezoneHint'] = $timezoneHint;
 		$params['isMeeting'] = $event['IS_MEETING'];
 		$params['isRemind'] = $event['REMIND'];
 		$params['isRrule'] = $event['RRULE'];
-		$params['rruleDescription'] = CCalendarEvent::GetRRULEDescription($event, false);
+		$params['rruleDescription'] = \CCalendarEvent::GetRRULEDescription($event, false);
 
 		$params['avatarSize'] = 34;
 		$params['attendees'] = $attendees ?? [];
 
 		$params['curUserStatus'] = $curUserStatus;
-		$params['meetingHostUrl'] = $meetingHost['URL'];
-		$params['meetingHostAvatar'] = $meetingHost['AVATAR'];
-		$params['meetingHostId'] = $meetingHost['ID'];
-		$params['meetingHostDisplayName'] = htmlspecialcharsbx($meetingHost['DISPLAY_NAME']);
-		$params['meetingHostWorkPosition'] = htmlspecialcharsbx($meetingHost['WORK_POSITION']);
+		$params['meetingHost'] = $meetingHost;
+		$params['meetingHostDisplayName'] = htmlspecialcharsbx($meetingHost['DISPLAY_NAME'] ?? null);
+		$params['meetingHostWorkPosition'] = htmlspecialcharsbx($meetingHost['WORK_POSITION'] ?? null);
 
-		$meetingCreator = CalendarEventViewFormHelper::getMeetingCreator($event);
-		$params['meetingCreatorUrl'] = $meetingCreator['URL'];
-		$params['meetingCreatorDisplayName'] = $meetingCreator['DISPLAY_NAME'];
+		$meetingCreator = $this->getMeetingCreator($event);
+		$params['meetingCreatorUrl'] = $meetingCreator['URL'] ?? null;
+		$params['meetingCreatorDisplayName'] = $meetingCreator['DISPLAY_NAME'] ?? null;
 
 		$params['isHighImportance'] = $event['IMPORTANCE'] === 'high';
-		$params['description'] = $event['~DESCRIPTION'];
+		$params['description'] = $event['~DESCRIPTION'] ?? null;
 
-		$params['isWebdavEvent'] = $event['UF_WEBDAV_CAL_EVENT'];
-		$params['isCrmEvent'] = $event['UF_CRM_CAL_EVENT'];
+		$params['isWebdavEvent'] = $event['UF_WEBDAV_CAL_EVENT'] ?? null;
+		$params['isCrmEvent'] = $event['UF_CRM_CAL_EVENT'] ?? null;
 
 		$params['accessibility'] = $event['ACCESSIBILITY'];
-		$params['isIntranetEnabled'] = CCalendar::IsIntranetEnabled();
+		$params['isIntranetEnabled'] = \CCalendar::IsIntranetEnabled();
 		$params['isPrivate'] = $event['PRIVATE_EVENT'];
 
-		$params['location'] = htmlspecialcharsbx(CCalendar::GetTextLocation($event['LOCATION']));
+		$params['location'] = htmlspecialcharsbx(\CCalendar::GetTextLocation($event['LOCATION'] ?? null));
 
-		$parentSectionId = CCalendarSect::GetSectionIdByEventId($event['PARENT_ID']);
-		$params['canEditCalendar'] = CCalendarSect::CanDo('calendar_edit', $parentSectionId['SECTION_ID'], $userId);
+		$params['canEditCalendar'] = $event['permissions']['edit'];
 
 		$params['showComments'] = $viewComments;
 
 		//views
-		if ($params['isWebdavEvent'])
+		if (!empty($params['isWebdavEvent']))
 		{
-			$params['filesView'] = CalendarEventViewFormHelper::getFilesView($event)->getContent();
+			$params['filesView'] = $this->getFilesView($event)->getContent();
 		}
-		if ($params['isCrmEvent'])
+		if (!empty($params['isCrmEvent']))
 		{
-			$params['crmView'] = CalendarEventViewFormHelper::getCrmView($event)->getContent();
+			$params['crmView'] = $this->getCrmView($event)->getContent();
 		}
+
+		$signedEvent = [
+			'UF_CRM_CAL_EVENT' => $params['event']['UF_CRM_CAL_EVENT'] ?? null,
+			'UF_WEBDAV_CAL_EVENT' => $params['event']['UF_WEBDAV_CAL_EVENT'] ?? null,
+			'PARENT_ID' => $params['event']['PARENT_ID'],
+			'ID' => $params['event']['ID'],
+			'CREATED_BY' => $params['event']['CREATED_BY'],
+		];
+
+		if (
+			isset($params['event']['RELATIONS']['COMMENT_XML_ID'])
+			&& $params['event']['RELATIONS']['COMMENT_XML_ID']
+		)
+		{
+			$signedEvent['ENTITY_XML_ID'] = $params['event']['RELATIONS']['COMMENT_XML_ID'];
+		}
+		else
+		{
+			$signedEvent['ENTITY_XML_ID'] = \CCalendarEvent::GetEventCommentXmlId($params['event']);
+		}
+
+		$params['signedEvent'] = (new Signer())->sign(Json::encode($signedEvent));
 
 		return $params;
 	}
 
 	//get components actions
-	public function getCrmViewAction(array $event): Component
+	public function getCrmViewAction(string $signedEvent): ?Component
 	{
-		return CalendarEventViewFormHelper::getCrmView($event);
+		try
+		{
+			$event = Json::decode((new Signer())->unsign($signedEvent));
+		}
+		catch (\Exception $e)
+		{
+			$this->addError(new Error(Loc::getMessage('EC_EVENT_NOT_FOUND'), 'EVENT_NOT_FOUND_01'));
+			return null;
+		}
+
+		return $this->getCrmView($event);
 	}
 
-	public function getFilesViewAction(array $event): Component
+	public function getFilesViewAction(string $signedEvent): ?Component
 	{
-		return CalendarEventViewFormHelper::getFilesView($event);
+		try
+		{
+			$event = Json::decode((new Signer())->unsign($signedEvent));
+		}
+		catch (\Exception $e)
+		{
+			$this->addError(new Error(Loc::getMessage('EC_EVENT_NOT_FOUND'), 'EVENT_NOT_FOUND_01'));
+			return null;
+		}
+
+		return $this->getFilesView($event);
 	}
 
-	public function getCommentsViewAction(array $event): Component
+	public function getCommentsViewAction(string $signedEvent): ?Component
 	{
-		return CalendarEventViewFormHelper::getCommentsView($event);
+		try
+		{
+			$event = Json::decode((new Signer())->unsign($signedEvent));
+		}
+		catch (\Exception $e)
+		{
+			$this->addError(new Error(Loc::getMessage('EC_EVENT_NOT_FOUND'), 'EVENT_NOT_FOUND_01'));
+			return null;
+		}
+
+		return $this->getCommentsView($event);
 	}
+
+	private function getTimezoneHint($userId, $event): string
+	{
+		$skipTime = $event['DT_SKIP_TIME'] === "Y";
+		$timezoneHint = '';
+		if (
+			!$skipTime
+			&& (
+				(int)$event['~USER_OFFSET_FROM'] !== 0
+				|| (int)$event['~USER_OFFSET_TO'] !== 0
+				|| $event['TZ_FROM'] !== $event['TZ_TO']
+				|| $event['TZ_FROM'] !== \CCalendar::GetUserTimezoneName($userId)
+			)
+		)
+		{
+			if ($event['TZ_FROM'] === $event['TZ_TO'])
+			{
+				$timezoneHint = \CCalendar::GetFromToHtml(
+					\CCalendar::Timestamp($event['DATE_FROM']),
+					\CCalendar::Timestamp($event['DATE_TO']),
+					false,
+					$event['DT_LENGTH']
+				);
+				if ($event['TZ_FROM'])
+				{
+					$timezoneHint .= ' (' . $event['TZ_FROM'] . ')';
+				}
+			}
+			else
+			{
+				$timezoneHint = Loc::getMessage('EC_VIEW_DATE_FROM_TO', array('#DATE_FROM#' => $event['DATE_FROM'].' ('.$event['TZ_FROM'].')', '#DATE_TO#' => $event['DATE_TO'].' ('.$event['TZ_TO'].')'));
+			}
+		}
+		return $timezoneHint;
+	}
+
+	private function getFromToHtml(array $event): string
+	{
+		$skipTime = $event['DT_SKIP_TIME'] === "Y";
+		$fromTs = \CCalendar::Timestamp($event['DATE_FROM']);
+		$toTs = \CCalendar::Timestamp($event['DATE_TO']);
+		if ($skipTime)
+		{
+			$toTs += \CCalendar::DAY_LENGTH;
+		}
+		else
+		{
+			$fromTs -= $event['~USER_OFFSET_FROM'];
+			$toTs -= $event['~USER_OFFSET_TO'];
+		}
+
+		return \CCalendar::GetFromToHtml($fromTs, $toTs, $skipTime, $event['DT_LENGTH']);
+	}
+
+	private function getMeetingCreator(array $event): array
+	{
+		$meetingCreator = [];
+		if (
+			$event['IS_MEETING']
+			&& $event['MEETING']['MEETING_CREATOR']
+			&& $event['MEETING']['MEETING_CREATOR'] !== $event['MEETING_HOST']
+		)
+		{
+			$meetingCreator = \CCalendar::GetUser($event['MEETING']['MEETING_CREATOR'], true);
+			$meetingCreator['DISPLAY_NAME'] = \CCalendar::GetUserName($meetingCreator);
+			$meetingCreator['URL'] = \CCalendar::GetUserUrl(
+				$meetingCreator["ID"],
+				$meetingCreator["PATH_TO_USER"] ?? null
+			);
+		}
+		return $meetingCreator;
+	}
+
+	private function getCrmView(array $event): Component
+	{
+		return new Component(
+			"bitrix:system.field.view",
+			$event['UF_CRM_CAL_EVENT']["USER_TYPE"]["USER_TYPE_ID"],
+			array("arUserField" => $event['UF_CRM_CAL_EVENT']),
+			array("HIDE_ICONS"=>"Y")
+		);
+	}
+
+	private function getFilesView(array $event): Component
+	{
+		return new Component(
+			"bitrix:system.field.view",
+			$event['UF_WEBDAV_CAL_EVENT']["USER_TYPE"]["USER_TYPE_ID"],
+			array("arUserField" => $event['UF_WEBDAV_CAL_EVENT']),
+			array("HIDE_ICONS"=>"Y")
+		);
+	}
+
+	private function getCommentsView(array $event): Component
+	{
+		$userId = \CCalendar::GetCurUserId();
+		if (
+			$userId === (int)$event['CREATED_BY']
+			&& ((int)$event['PARENT_ID'] === (int)$event['ID'] || !$event['PARENT_ID'])
+		)
+		{
+			$permission = "Y";
+		}
+		else
+		{
+			$permission = 'M';
+		}
+		$set = \CCalendar::GetSettings();
+		$eventCommentId = $event['PARENT_ID'] ?: $event['ID'];
+
+		return new Component(
+			"bitrix:forum.comments", "bitrix24", [
+			"FORUM_ID" => $set['forum_id'],
+			"ENTITY_TYPE" => "EV",
+			"ENTITY_ID" => $eventCommentId,
+			"ENTITY_XML_ID" => $event['ENTITY_XML_ID'],
+			"PERMISSION" => $permission,
+			"URL_TEMPLATES_PROFILE_VIEW" => $set['path_to_user'],
+			"SHOW_RATING" => \COption::GetOptionString('main', 'rating_vote_show', 'N'),
+			"SHOW_LINK_TO_MESSAGE" => "N",
+			"BIND_VIEWER" => "Y"
+		],
+			['HIDE_ICONS' => 'Y']
+		);
+	}
+
 }

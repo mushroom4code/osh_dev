@@ -1,50 +1,53 @@
-import { Type } from 'main.core';
+import { Extension, Type } from 'main.core';
 import Filter from './filter';
 import UploaderError from '../uploader-error';
 import formatFileSize from '../helpers/format-file-size';
+import isResizableImage from '../helpers/is-resizable-image';
 
 import type Uploader from '../uploader';
 import type UploaderFile from '../uploader-file';
+import type { UploaderOptions } from '../types/uploader-options';
 
 export default class FileSizeFilter extends Filter
 {
-	maxFileSize: number = null;
-	minFileSize: number = null;
-	maxTotalFileSize: number = null;
-	imageMaxFileSize: number = null;
-	imageMinFileSize: number = null;
+	#maxFileSize: ?number = 256 * 1024 * 1024;
+	#minFileSize: number = 0;
+	#maxTotalFileSize: ?number = null;
+	#imageMaxFileSize: ?number = 48 * 1024 * 1024;
+	#imageMinFileSize: number = 0;
+	#treatOversizeImageAsFile: boolean = false;
 
-	constructor(uploader: Uploader, filterOptions: { [key: string]: any } = {})
+	constructor(uploader: Uploader, filterOptions: UploaderOptions = {})
 	{
 		super(uploader);
 
-		const options = Type.isPlainObject(filterOptions) ? filterOptions : {};
+		const settings = Extension.getSettings('ui.uploader.core');
+		this.#maxFileSize = settings.get('maxFileSize', this.#maxFileSize);
+		this.#minFileSize = settings.get('minFileSize', this.#minFileSize);
+		this.#maxTotalFileSize = settings.get('maxTotalFileSize', this.#maxTotalFileSize);
+		this.#imageMaxFileSize = settings.get('imageMaxFileSize', this.#imageMaxFileSize);
+		this.#imageMinFileSize = settings.get('imageMinFileSize', this.#imageMinFileSize);
 
-		const integerOptions = [
-			'maxFileSize',
-			'minFileSize',
-			'maxTotalFileSize',
-			'imageMaxFileSize',
-			'imageMinFileSize',
-		];
-
-		integerOptions.forEach(option => {
-			this[option] = Type.isNumber(options[option]) && options[option] >= 0 ? options[option] : this[option];
-		});
+		const options: UploaderOptions = Type.isPlainObject(filterOptions) ? filterOptions : {};
+		this.setMaxFileSize(options.maxFileSize);
+		this.setMinFileSize(options.minFileSize);
+		this.setMaxTotalFileSize(options.maxTotalFileSize);
+		this.setImageMaxFileSize(options.imageMaxFileSize);
+		this.setImageMinFileSize(options.imageMinFileSize);
+		this.setTreatOversizeImageAsFile(options.treatOversizeImageAsFile);
 	}
 
 	apply(file: UploaderFile): Promise
 	{
-		return new Promise((resolve, reject) => {
-
-			if (this.maxFileSize !== null && file.getSize() > this.maxFileSize)
+		return new Promise((resolve, reject): void => {
+			if (this.getMaxFileSize() !== null && file.getSize() > this.getMaxFileSize())
 			{
 				reject(
 					new UploaderError(
 						'MAX_FILE_SIZE_EXCEEDED',
 						{
-							maxFileSize: formatFileSize(this.maxFileSize),
-							maxFileSizeInBytes: this.maxFileSize,
+							maxFileSize: formatFileSize(this.getMaxFileSize()),
+							maxFileSizeInBytes: this.getMaxFileSize(),
 						},
 					),
 				);
@@ -52,14 +55,14 @@ export default class FileSizeFilter extends Filter
 				return;
 			}
 
-			if (this.minFileSize !== null && file.getSize() < this.minFileSize)
+			if (file.getSize() < this.getMinFileSize())
 			{
 				reject(
 					new UploaderError(
 						'MIN_FILE_SIZE_EXCEEDED',
 						{
-							minFileSize: formatFileSize(this.minFileSize),
-							minFileSizeInBytes: this.minFileSize,
+							minFileSize: formatFileSize(this.getMinFileSize()),
+							minFileSizeInBytes: this.getMinFileSize(),
 						},
 					),
 				);
@@ -67,59 +70,147 @@ export default class FileSizeFilter extends Filter
 				return;
 			}
 
-			if (file.isImage())
+			if (isResizableImage(file.getName(), file.getType()))
 			{
-				if (this.imageMaxFileSize !== null && file.getSize() > this.imageMaxFileSize)
+				if (this.getImageMaxFileSize() !== null && file.getSize() > this.getImageMaxFileSize())
 				{
-					reject(
-						new UploaderError(
-							'IMAGE_MAX_FILE_SIZE_EXCEEDED',
-							{
-								imageMaxFileSize: formatFileSize(this.imageMaxFileSize),
-								imageMaxFileSizeInBytes: this.imageMaxFileSize,
-							},
-						),
-					);
+					if (this.shouldTreatOversizeImageAsFile())
+					{
+						file.setTreatImageAsFile(true);
+					}
+					else
+					{
+						reject(
+							new UploaderError(
+								'IMAGE_MAX_FILE_SIZE_EXCEEDED',
+								{
+									imageMaxFileSize: formatFileSize(this.getImageMaxFileSize()),
+									imageMaxFileSizeInBytes: this.getImageMaxFileSize(),
+								},
+							),
+						);
 
-					return;
+						return;
+					}
 				}
 
-				if (this.imageMinFileSize !== null && file.getSize() < this.imageMinFileSize)
+				if (file.getSize() < this.getImageMinFileSize())
 				{
-					reject(
-						new UploaderError(
-							'IMAGE_MIN_FILE_SIZE_EXCEEDED',
-							{
-								imageMinFileSize: formatFileSize(this.imageMinFileSize),
-								imageMinFileSizeInBytes: this.imageMinFileSize,
-							},
-						),
-					);
+					if (this.shouldTreatOversizeImageAsFile())
+					{
+						file.setTreatImageAsFile(true);
+					}
+					else
+					{
+						reject(
+							new UploaderError(
+								'IMAGE_MIN_FILE_SIZE_EXCEEDED',
+								{
+									imageMinFileSize: formatFileSize(this.getImageMinFileSize()),
+									imageMinFileSizeInBytes: this.getImageMinFileSize(),
+								},
+							),
+						);
 
-					return;
+						return;
+					}
 				}
 			}
 
-			if (this.maxTotalFileSize !== null)
+			if (this.getMaxTotalFileSize() !== null && this.getUploader().getTotalSize() > this.getMaxTotalFileSize())
 			{
-				if (this.getUploader().getTotalSize() > this.maxTotalFileSize)
-				{
-					reject(
-						new UploaderError(
-							'MAX_TOTAL_FILE_SIZE_EXCEEDED',
-							{
-								maxTotalFileSize: formatFileSize(this.maxTotalFileSize),
-								maxTotalFileSizeInBytes: this.maxTotalFileSize,
-							},
-						),
-					);
+				reject(
+					new UploaderError(
+						'MAX_TOTAL_FILE_SIZE_EXCEEDED',
+						{
+							maxTotalFileSize: formatFileSize(this.getMaxTotalFileSize()),
+							maxTotalFileSizeInBytes: this.getMaxTotalFileSize(),
+						},
+					),
+				);
 
-					return;
-				}
+				return;
 			}
 
 			resolve();
 		});
+	}
 
+	getMaxFileSize(): ?number
+	{
+		return this.#maxFileSize;
+	}
+
+	setMaxFileSize(value: ?number)
+	{
+		if ((Type.isNumber(value) && value >= 0) || Type.isNull(value))
+		{
+			this.#maxFileSize = value;
+		}
+	}
+
+	getMinFileSize(): number
+	{
+		return this.#minFileSize;
+	}
+
+	setMinFileSize(value: number)
+	{
+		if (Type.isNumber(value) && value >= 0)
+		{
+			this.#minFileSize = value;
+		}
+	}
+
+	getMaxTotalFileSize(): ?number
+	{
+		return this.#maxTotalFileSize;
+	}
+
+	setMaxTotalFileSize(value: ?number)
+	{
+		if ((Type.isNumber(value) && value >= 0) || Type.isNull(value))
+		{
+			this.#maxTotalFileSize = value;
+		}
+	}
+
+	getImageMaxFileSize(): ?number
+	{
+		return this.#imageMaxFileSize;
+	}
+
+	setImageMaxFileSize(value: ?number)
+	{
+		if ((Type.isNumber(value) && value >= 0) || Type.isNull(value))
+		{
+			this.#imageMaxFileSize = value;
+		}
+	}
+
+	getImageMinFileSize(): number
+	{
+		return this.#imageMinFileSize;
+	}
+
+	setImageMinFileSize(value: number)
+	{
+		if (Type.isNumber(value) && value >= 0)
+		{
+			this.#imageMinFileSize = value;
+		}
+	}
+
+	setTreatOversizeImageAsFile(value: boolean): void
+	{
+		if (Type.isBoolean(value))
+		{
+			this.#treatOversizeImageAsFile = value;
+		}
+	}
+
+	shouldTreatOversizeImageAsFile(): boolean
+	{
+		return this.#treatOversizeImageAsFile;
 	}
 }

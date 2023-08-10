@@ -64,8 +64,8 @@ if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
 
             $basket->save();
         }
-        $answer['QUANTITY'] = round(array_sum($basket->getQuantityList()));
-        $answer['SUM_PRICE'] = round($basket->getPrice());
+        $answer['QUANTITY'] = round(array_sum($basket->getQuantityList())??0);
+        $answer['SUM_PRICE'] = round($basket->getPrice()??0);
         $answer['STATUS'] = 'success';
     }
 }

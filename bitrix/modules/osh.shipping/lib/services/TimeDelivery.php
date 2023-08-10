@@ -16,7 +16,7 @@ Loc::loadMessages(__FILE__);
 
 class TimeDelivery extends ExtraServicesBase
 {
-    public function __construct($id, array $structure, $currency, $value = null, array $additionalParams = array())
+    public function __construct($id, array $structure = [], $currency, $value = null, array $additionalParams = array())
     {
         $structure["PARAMS"]["ONCHANGE"] = $this->createJSOnchange($id, $structure["PARAMS"]["PRICE"]);
         parent::__construct($id, $structure, $currency, $value);
@@ -71,7 +71,16 @@ class TimeDelivery extends ExtraServicesBase
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public function getId($deliveryId): int
+    public function getId($deliveryId=0): int
+    {
+        $destParams = array(
+            "filter" => array("CLASS_NAME" => "%Service%TimeDelivery", "ACTIVE" => "Y", "DELIVERY_ID" => $deliveryId),
+            "select" => array("ID")
+        );
+        $res = DEST::getList($destParams)->fetch();
+        return intval($res["ID"]);
+    }
+    public static function get_id($deliveryId=0): int
     {
         $destParams = array(
             "filter" => array("CLASS_NAME" => "%Service%TimeDelivery", "ACTIVE" => "Y", "DELIVERY_ID" => $deliveryId),

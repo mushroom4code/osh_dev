@@ -88,7 +88,7 @@ class CSocNetTextParser
 
 			$CACHE_MANAGER->Set("b_sonet_smile", $arSmiles);
 		}
-		$this->smiles = $arSmiles[$strLang];
+		$this->smiles = $arSmiles[$strLang] ?? null;
 	}
 
 	function convert($text, $bPreview = True, $arImages = array(), $allow = array("HTML" => "N", "ANCHOR" => "Y", "BIU" => "Y", "IMG" => "Y", "QUOTE" => "Y", "CODE" => "Y", "FONT" => "Y", "LIST" => "Y", "SMILES" => "Y", "NL2BR" => "N", "VIDEO" => "Y"), $type = "html")	//, "KEEP_AMP" => "N"
@@ -409,7 +409,7 @@ class CSocNetTextParser
 				}
 			}
 		}
-		if ($allow["VIDEO"] == "Y")
+		if (($allow["VIDEO"] ?? null) === "Y")
 		{
 			while (preg_match("/\[video(.+?)\](.+?)\[\/video[\s]*\]/is".BX_UTF_PCRE_MODIFIER, $text))
 			{
@@ -1497,12 +1497,28 @@ class CSocNetAllowed
 
 	public static function runEventForAllowedFeature()
 	{
-		$newAllowedFeatures = array();
+		$newAllowedFeatures = [];
 
-		$events = GetModuleEvents("socialnetwork", "OnFillSocNetFeaturesList");
+		$ignoreList = [];
+
+		$events = GetModuleEvents('socialnetwork', 'OnFillSocNetFeaturesList');
 		while ($arEvent = $events->Fetch())
 		{
-			ExecuteModuleEventEx($arEvent, array(&$newAllowedFeatures, SITE_ID));
+			if ($arEvent['TO_MODULE_ID'] === 'wiki')
+			{
+				if (
+					Loader::includeModule('bitrix24')
+					&& !\Bitrix\Bitrix24\Feature::isFeatureEnabled('socialnetwork_wiki')
+				)
+				{
+					$ignoreList[] = $arEvent['TO_MODULE_ID'];
+				}
+			}
+
+			if (!in_array($arEvent['TO_MODULE_ID'], $ignoreList, true))
+			{
+				ExecuteModuleEventEx($arEvent, array(&$newAllowedFeatures, SITE_ID));
+			}
 		}
 
 		foreach($newAllowedFeatures as $strFeatureCode => $arFeature)
