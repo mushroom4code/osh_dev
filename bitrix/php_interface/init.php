@@ -171,7 +171,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "100",
                     "text" => "Черная пятница/Распродажа",
                     "title" => "Черная пятница/Распродажа",
-                    "url" => "/bitrix/php_interface/enterego_class/init_sale.php",
+                    "url" => "bitrix/admin/enterego_admin.php?category=init_sale",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "init_sale.php",
@@ -186,7 +186,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "100",
                     "text" => "Свойства товара",
                     "title" => "Свойства товара",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/product_prop_setting.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=product_prop_setting",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "product_prop_setting.php",
@@ -200,7 +200,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "200",
                     "text" => "Прайс-лист",
                     "title" => "Прайс-лист",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/priceList.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=priceList",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "priceList.php",
@@ -214,7 +214,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 		              "sort" => "200",
 		              "text" => "Строка Информатор",
 		              "title" => "Строка Информатор",
-		              "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
+		              "url" => "/bitrix/admin/enterego_admin.php?category=informator",
 		              "parent_page" => "global_menu_enterego",
 		              "more_url" => array(
 			              "informator.php",
@@ -228,7 +228,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "200",
                     "text" => "Выставка",
                     "title" => "Выставка",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/exhibition.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=exhibition",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "exhibition.php",
