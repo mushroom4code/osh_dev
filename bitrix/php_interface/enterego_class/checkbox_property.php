@@ -8,7 +8,7 @@ $MESS['IBLOCK_PROP_CHECKBOX_NA'] = '(любой)';
 class CIBlockPropertyCheckbox
 {
 
-    function GetUserTypeDescription()
+    public static function GetUserTypeDescription()
     {
 
         return array(
