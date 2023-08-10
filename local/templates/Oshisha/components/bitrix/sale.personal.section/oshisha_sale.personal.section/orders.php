@@ -18,7 +18,6 @@ if ($arParams["MAIN_CHAIN_NAME"] <> '') {
 
 $orders_status = $_REQUEST['show_canceled'] ? 'show_canceled' : ($_REQUEST['show_delivery'] ? 'show_delivery' : 'filter_history');
 
-
 $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_TO_ORDERS']);
 ?>
 <div class="hides <?= empty($arResult['BASKET_ITEMS']) ? 'js--basket-empty' : 'js--basket-not-empty'?>" id="personal_orders" >
@@ -30,7 +29,7 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
         </div>
         <div class="d-flex row_section justify-content-between align-items-center">
             <input type="text" data-range="true" data-multiple-dates-separator=" - "
-                   class="datepicker-here form-control date_input mr-3"/>
+                   class="datepicker-here form-control date_input mr-3" id="date_interval_orders"/>
             <a class="sort_orders" href="javascript:void(0)"><span class="sort_orders_by">Сортировать по</span><i
                         class="fa fa-angle-down"
                         aria-hidden="true"></i>

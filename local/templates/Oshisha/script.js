@@ -2168,6 +2168,26 @@ $(document).ready(function () {
         })
     })
 
+    $('#date_interval_orders').datepicker({
+        onSelect: function (date, datepicker) {
+            if (/^\d\d.\d\d.\d\d\d\d\s-\s\d\d.\d\d.\d\d\d\d$/.test(date)) {
+                console.log(date);
+                $.ajax({
+                    url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
+                    type: 'POST',
+                    data: {date: date},
+                    success: function (response) {
+                        if (response != 'error') {
+                            $('.sale-order-list-inner-container').remove();
+                            $('div#personal_orders').append(response);
+                            $('a.sale-order-list-repeat-link').on('click', copyOrderPopups);
+                        }
+                    }
+                })
+            }
+        }
+    })
+
     $(document).on('click', function (e) {
         let elem = e.target;
         if (elem.classList.contains('close_modalWindow')) {
