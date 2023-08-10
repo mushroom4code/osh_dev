@@ -8,7 +8,7 @@ $MESS['IBLOCK_PROP_CHECKBOX_NA'] = '(любой)';
 class CIBlockPropertyCheckbox
 {
 
-    function GetUserTypeDescription()
+    static function GetUserTypeDescription()
     {
 
         return array(
@@ -28,21 +28,21 @@ class CIBlockPropertyCheckbox
 
     }
 
-    function GetTextVal($arProperty, $value, $strHTMLControlName)
+    static function GetTextVal($arProperty, $value, $strHTMLControlName)
     {
 
         return $value['VALUE'] == 'Y' ? GetMessage('IBLOCK_PROP_CHECKBOX_YES') : GetMessage('IBLOCK_PROP_CHECKBOX_NO');
 
     }
 
-    function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
+    static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
     {
 
         return '<input type="checkbox" name="' . $strHTMLControlName['VALUE'] . '" value="Y" ' . ($value['VALUE'] == 'Y' ? 'checked="checked"' : '') . '/>';
 
     }
 
-    function AddFilterFields($arProperty, $strHTMLControlName, &$arFilter, &$filtered)
+    static function AddFilterFields($arProperty, $strHTMLControlName, &$arFilter, &$filtered)
     {
 
         if (isset($_REQUEST[$strHTMLControlName['VALUE']])) {
@@ -56,7 +56,7 @@ class CIBlockPropertyCheckbox
 
     }
 
-    function GetFilterHTML($arProperty, $strHTMLControlName)
+    static function GetFilterHTML($arProperty, $strHTMLControlName)
     {
 
         $select = '<select name="' . $strHTMLControlName['VALUE'] . '">
@@ -69,7 +69,7 @@ class CIBlockPropertyCheckbox
 
     }
 
-    function GetSearchContent($arProperty, $value, $strHTMLControlName)
+    static function GetSearchContent($arProperty, $value, $strHTMLControlName)
     {
 
         $propId = $arProperty;  //  $arProperty contains property id, not array.
@@ -81,7 +81,7 @@ class CIBlockPropertyCheckbox
 
     }
 
-    function ConvertToFromDB($arProperty, $value)
+    static function ConvertToFromDB($arProperty, $value)
     {
 
         $value['VALUE'] = $value['VALUE'] == 'Y' ? 'Y' : 'N';
@@ -90,7 +90,7 @@ class CIBlockPropertyCheckbox
 
     }
 
-    function GetLength($arProperty, $value)
+    static function GetLength($arProperty, $value)
     {
 
         return 1;  //  checkbox is always filled
@@ -98,6 +98,5 @@ class CIBlockPropertyCheckbox
     }
 
 }
-
 
 AddEventHandler('iblock', 'OnIBlockPropertyBuildList', array('CIBlockPropertyCheckbox', 'GetUserTypeDescription'));

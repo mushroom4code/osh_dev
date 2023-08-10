@@ -143,6 +143,7 @@ $oFilter = new CAdminFilter(
 ?>
     <form name="find_form" method="get" action="<?php echo $APPLICATION->GetCurPage(); ?>">
         <?php $oFilter->Begin(); ?>
+        <input type="hidden" name="category" value="main_page_slider_products">
         <tr>
             <td><?= "ID" ?>:</td>
             <td>
