@@ -171,7 +171,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "100",
                     "text" => "Черная пятница/Распродажа",
                     "title" => "Черная пятница/Распродажа",
-                    "url" => "bitrix/admin/enterego_admin.php?category=init_sale",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=init_sale",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "init_sale.php",
