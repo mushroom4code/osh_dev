@@ -166,7 +166,6 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
 }?>
 <script>
     if ($('#hits_slider_<?=$strRand?>').is('.bx_catalog_tile_section')) {
-        console.log('sus');
         let count = 4,
             variableWidth = false;
             screenWidth = window.screen.width;
