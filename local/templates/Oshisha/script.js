@@ -20,6 +20,7 @@ function tasteInit() {
         );
     });
 }
+
 $(document).ready(function () {
     let div = $('div'),
         body = $('body'),
@@ -157,8 +158,9 @@ $(document).ready(function () {
             altField: inputPicker,
         });
     }
-    function setPriceGenerate(elem,value){
-        if($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0){
+
+    function setPriceGenerate(elem, value) {
+        if ($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0) {
             $('.ganerate_price').text(getPriceForProduct(elem) * value + ' ₽');
         }
     }
@@ -178,11 +180,11 @@ $(document).ready(function () {
                 priceBox = cardWrapper.find('.info-prices-box-hover');
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
-                tasteOverlay.css({height:'100%'});
-                priceBox.css({zIndex:'791'});
+                tasteOverlay.css({height: '100%'});
+                priceBox.css({zIndex: '791'});
             } else {
-                tasteOverlay.css({height:'0'});
-                priceBox.css({zIndex:'791'});
+                tasteOverlay.css({height: '0'});
+                priceBox.css({zIndex: '791'});
             }
         })
         tasteInit();
@@ -305,7 +307,7 @@ $(document).ready(function () {
         if (value > 0) {
             $('.ganerate_price_wrap').show();
         }
-        setPriceGenerate(this,value)
+        setPriceGenerate(this, value)
     }
 
     $(document).on('keypress', '.card_element', function (e) {
@@ -386,7 +388,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal);
+                    setPriceGenerate(this, beforeVal);
 
                     product_data = {
                         'ID': product_id,
@@ -403,7 +405,7 @@ $(document).ready(function () {
                     } else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,max_QUANTITY);
+                    setPriceGenerate(this, max_QUANTITY);
 
                     product_data = {
                         'ID': product_id,
@@ -427,7 +429,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal)
+                    setPriceGenerate(this, beforeVal)
 
                     product_data = {
                         'ID': product_id,
@@ -484,8 +486,8 @@ $(document).ready(function () {
 
             // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
             let basketItem = $(boxInput).val();
-            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="'+product_id+'"]');
-            let parseUpdate= [], boxUpdate;
+            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="' + product_id + '"]');
+            let parseUpdate = [], boxUpdate;
             let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
 
             if (!boxUpdateAfterAppend.hasClass('catalog-fast-window')) {
@@ -633,7 +635,7 @@ $(document).ready(function () {
             var popup_mess = $(this).closest('div#popup_mess');
             var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
             var product_name = $(this).closest('div.item-product-info').find('a.bx_catalog_item_title').text().trim();
-            if ($(this).closest('div#popup_mess').hasClass('subscribed')){
+            if ($(this).closest('div#popup_mess').hasClass('subscribed')) {
                 var subscribe = "N";
                 var subscription_id = popup_mess.attr('data-subscription_id');
             } else {
@@ -643,16 +645,21 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/local/templates/Oshisha/components/bitrix/catalog.product.subscribe/oshisha_catalog.product.subscribe/ajax.php',
-                data: {subscribe: subscribe, item_id: product_id, product_name: product_name, subscription_id: subscription_id},
+                data: {
+                    subscribe: subscribe,
+                    item_id: product_id,
+                    product_name: product_name,
+                    subscription_id: subscription_id
+                },
                 success: function (result_jsn) {
                     var result = JSON.parse(result_jsn);
-                    if(result.success === true){
+                    if (result.success === true) {
                         var item_controls = popup_mess.parent();
-                        if(result.clickDbError != 'false') {
+                        if (result.clickDbError != 'false') {
                             console.log('error while updating productsSubscriptionsTable');
                             console.log(result.clickDbError);
                         }
-                        if(result.message === "subscribed") {
+                        if (result.message === "subscribed") {
                             popup_mess.addClass('subscribed');
                             popup_mess.attr('data-subscription_id', result.subscribeId);
                             item_controls.find('.detail_popup').addClass('subscribed');
@@ -2151,7 +2158,9 @@ $(document).ready(function () {
     });
 
     $('.order_sort_item').on('click', function () {
-        $(this).closest('.sort_orders').find('.sort_orders_by').text($(this).text());
+        let sort_item_preview = $(this).closest('.sort_orders').find('.sort_orders_by');
+        sort_item_preview.text($(this).text());
+        sort_item_preview.attr('data-sort-order', $(this).attr('data-sort-order'));
         let typeSort = $(this).attr('data-sort-order');
         let sortStatus = $(this).closest('.sort_orders_elements').attr('data-sort-status');
         $.ajax({
@@ -2171,11 +2180,12 @@ $(document).ready(function () {
     $('#date_interval_orders').datepicker({
         onSelect: function (date, datepicker) {
             if (/^\d\d.\d\d.\d\d\d\d\s-\s\d\d.\d\d.\d\d\d\d$/.test(date)) {
-                console.log(date);
+                let typeSort = $('div#personal_orders span.sort_orders_by').attr('data-sort-order');
+                let sortStatus = $('div#personal_orders div.sort_orders_elements').attr('data-sort-status');
                 $.ajax({
                     url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
                     type: 'POST',
-                    data: {date: date},
+                    data: {dateInterval: date, typeSort: typeSort, sortStatus: sortStatus},
                     success: function (response) {
                         if (response != 'error') {
                             $('.sale-order-list-inner-container').remove();
@@ -2186,7 +2196,26 @@ $(document).ready(function () {
                 })
             }
         }
-    })
+    });
+
+    $('#date_interval_orders').datepicker().on('blur', function () {
+           if(!(/^\d\d.\d\d.\d\d\d\d\s-\s\d\d.\d\d.\d\d\d\d$/.test($(this).val()))) {
+               let typeSort = $('div#personal_orders span.sort_orders_by').attr('data-sort-order');
+               let sortStatus = $('div#personal_orders div.sort_orders_elements').attr('data-sort-status');
+               $.ajax({
+                   url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/sale.personal.order.list/oshisha_sale.personal.order.list/ajax_for_sort.php',
+                   type: 'POST',
+                   data: {sortStatus: sortStatus, typeSort: typeSort},
+                   success: function (response) {
+                       if (response != 'error') {
+                           $('.sale-order-list-inner-container').remove();
+                           $('div#personal_orders').append(response);
+                           $('a.sale-order-list-repeat-link').on('click', copyOrderPopups);
+                       }
+                   }
+               })
+           }
+    });
 
     $(document).on('click', function (e) {
         let elem = e.target;
@@ -2402,7 +2431,7 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
                 '<a href="#" id="no_mess" class="d-flex basket-empty link_message_box_product ' +
@@ -2414,10 +2443,10 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
-                '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="no_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Нет</a></div>';
         }
@@ -2989,15 +3018,15 @@ $(document).ready(function () {
         $('.overlay').hide();
     });
 
-    $(document).on('click', '.js__taste ', function() {
+    $(document).on('click', '.js__taste ', function () {
         let tasteCheckId = $(this).attr('data-filter-get'),
-            taste =  $(this).closest('.js__tastes');
+            taste = $(this).closest('.js__tastes');
         // Сбрасываем повторную фильтрацию по уже выбранному вкусу
 
         if (BX(tasteCheckId).checked) {
             $(taste).append('<span class="taste-errors">Вкус уже выбран</span>');
             setTimeout(BX.delegate(
-                    function() {
+                    function () {
                         $(taste).find('.taste-errors').fadeOut(
                             'slow',
                             function () {
@@ -3009,15 +3038,15 @@ $(document).ready(function () {
             return;
         }
 
-        $('#'+tasteCheckId).prop('checked', true);
+        $('#' + tasteCheckId).prop('checked', true);
         window.smartFilter.addHorizontalFilter(BX(tasteCheckId));
-        window.smartFilter.timer = setTimeout(BX.delegate(function(){
+        window.smartFilter.timer = setTimeout(BX.delegate(function () {
             this.reload(BX(tasteCheckId));
         }, window.smartFilter), 500);
     })
 });
 
-$(document).on('click', '.js__close-count-alert', function() {
+$(document).on('click', '.js__close-count-alert', function () {
     $(this).parents('.alert_quantity').html('').removeClass('show_block');
 })
 
@@ -3029,7 +3058,7 @@ $(document).on('click', '.js__close-count-alert', function() {
  * @param propCodePriority
  * @returns {*[]}
  */
-function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = ''){
+function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority = '') {
     const selectedPropData = {};
     const productsSuccess = [];
 

@@ -30,7 +30,7 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
         <div class="d-flex row_section justify-content-between align-items-center">
             <input type="text" data-range="true" data-multiple-dates-separator=" - "
                    class="datepicker-here form-control date_input mr-3" id="date_interval_orders"/>
-            <a class="sort_orders" href="javascript:void(0)"><span class="sort_orders_by">Сортировать по</span><i
+            <a class="sort_orders" href="javascript:void(0)"><span class="sort_orders_by" data-sort-order="new">Сортировать по</span><i
                         class="fa fa-angle-down"
                         aria-hidden="true"></i>
                 <div class="sort_orders_elements" data-sort-status="<?= $orders_status ?>">
