@@ -18,7 +18,7 @@ $APPLICATION->SetTitle("О нас");
                     бизнеса.
                 </p>
                 <p class="mb-lg-5 mb-md-5 mb-3">
-                    Уже более 8 лет мы являемся одним
+                    Уже более 9 лет мы являемся одним
                     из крупнейших оптово-розничных поставщиков на рынке кальянной продукции и вейп индустрии.
                     Мы стремимся к предоставлению исключительного качества сервиса и услуг для наших партнёров и
                     клиентов.
@@ -155,6 +155,11 @@ $APPLICATION->SetTitle("О нас");
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
                 <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/sarma_1/' : 'javascript:void(0)'?>">
                     <img src="/about/o-nas/sarma.png" class="bonche"/>
+                </a>
+            </div>
+            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/nash_1/' : 'javascript:void(0)'?>">
+                    <img src="/about/o-nas/наш.png" class="bonche"/>
                 </a>
             </div>
             <div class="m-4 box_with_picture d-flex justify-content-center width-20">
