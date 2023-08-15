@@ -1,1 +1,1 @@
-<img src="<?=SITE_DIR?>/images/logo_osh.png"  srcset="<?=SITE_DIR?>/images/logo_osh.png" />
+<img src="/local/templates/Oshisha/images/logo/osh.svg"  srcset="/local/templates/Oshisha/images/logo/osh.svg" />

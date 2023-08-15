@@ -13,7 +13,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 IncludeTemplateLangFile($_SERVER["DOCUMENT_ROOT"] . "/bitrix/templates/" . SITE_TEMPLATE_ID . "/header.php");
 
 CJSCore::Init(array("fx"));
-Extension::load("ui.bootstrap4");
 
 $curPage = $APPLICATION->GetCurPage(true);
 $MESS["CITY_CHOOSE_TITLE"] = 'Выберите город';
@@ -56,10 +55,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     <title><?php $APPLICATION->ShowTitle() ?></title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
-
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo SITE_TEMPLATE_PATH; ?>/images/favicon.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
 
     <?php
     Asset::getInstance()->addCss("/local/assets/js/arcticmodal/jquery.arcticmodal-0.3.css");
@@ -68,11 +65,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 
 
     Asset::getInstance()->addCss("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
-    Asset::getInstance()->addCss("https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css");
-    Asset::getInstance()->addJs("https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/script.js");
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/style.css");
+    Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/tailwind.css");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/assets/js/list.js");
+    
     Asset::getInstance()->addJs('https://use.fontawesome.com/d071b13f63.js');
     Asset::getInstance()->addJs('https://code.jquery.com/jquery-3.6.0.min.js');
     Asset::getInstance()->addJs("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.js");
@@ -96,11 +93,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     $APPLICATION->ShowHead(); ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
-<body class="bx-background-image">
+<body class="bg-white dark:bg-dark dark:text-textDark">
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
 </div>
 <div id="bx_eshop_wrap">
-    <header>
+    <header class="bg-white dark:bg-dark">
         <?php if (CHECKED_INFO) {
             $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
             <div class="alert-info-setting">
@@ -114,8 +111,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
             </div>
         <?php } ?>
-        <div class="header_top_panel">
-            <div class="header_logo_mobile">
+        <div class="flex flex-row border-b border-white-100 justify-center width-100">
+            <div class="header_logo_mobile xs:flex hidden">
                 <a href="<?= SITE_DIR ?>">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:main.include",
@@ -184,30 +181,25 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         </button>
                     </div></a>
                     </span>
-                    <a href="/about/feedback_new_site/" class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
-                        отзыв</a>
+                    <a href="https://oshisha.net" class="red_text dark:text-textDark text-xs ml-2 mr-2 font-weight-600">
+                        Розничный сайт</a>
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
-                    <a href="/about/o-nas/" class="text_header">О нас</a>
+                    <a href="/about/o-nas/" class="text-xs dark:text-textDark mr-3">О нас</a>
 
                     <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                        <a href="/local/templates/Oshisha/images/presentation.pdf" download class="text_header ">Презентация</a>
+                        <a href="/local/templates/Oshisha/images/presentation.pdf" download class="text-xs mr-3 dark:text-textDark ">Презентация</a>
                     <?php }
                     if ($USER->IsAuthorized()) { ?>
-                        <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
+                        <a href="<?= $option->price_list_link; ?>" class="text-xs dark:text-textDark text-textLigth mr-3">Прайс-лист</a>
                     <?php } else { ?>
-                        <a href="/login/" class="text_header ">Прайс-лист</a>
+                        <a href="/login/" class="text-xs dark:text-textDark mr-3">Прайс-лист</a>
                     <?php } ?>
-                    <a href="/about/contacts/" class="text_header">Контакты</a>
+                    <a href="/about/contacts/" class="text-xs dark:text-textDark mr-3">Контакты</a>
                     <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
+                        <a href="/about/delivery/" class="text-xs dark:text-textDark mr-3">Доставка и оплата</a>
                     <?php } ?>
-                    <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
-                    <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
-                    <?php } else { ?>
-                        <a href="/about/FAQ/#support" class="text_header">Поддержка</a>
-                    <?php } ?>
+                    <a href="javascript:void(0)" class="text-xs dark:text-textDark callback js__callback">Обратный звонок</a>
                 </div>
             </div>
         </div>
@@ -295,19 +287,19 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             <!--        header menu search/login/basket/like     -->
             <div class="header_box_logo">
                 <div class="box_left_header">
-                    <div class="header_logo_desktop">
+                    <div class="w-44 mr-8">
                         <a href="<?= SITE_DIR ?>">
                             <?php $APPLICATION->IncludeComponent(
                                 "bitrix:main.include",
                                 "",
                                 array(
                                     "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_DIR . "include/company_logo.php"),
+                                    "PATH" =>  "/local/templates/Oshisha/include/company_logo.php"),
                                 false
                             ); ?>
                         </a>
                     </div>
-                    <div class="text_header_menu"><span>Вся продукция <br>для кальяна</span></div>
+                    <div class="dark:text-textDark text-sm font-extralight">Вся продукция <br>для кальяна</div>
                 </div>
                 <div class="box_right_header">
                     <div class="box_with_search">

@@ -70,7 +70,7 @@ a.link_header:hover *, .text_link_footer, .product-item__favorite-star, .btn_bas
 .box_with_loginBasket, .mobile_lk, .box_with_properties, .box_with_news, .box_for_banner_footer, .banners_container,
 .main_menu, .title_home, .title_footer, .box_with_brands_parents, .header_box_logo, .flex_header, .box_with_titles,
 .sort-panel__view-buttons-list, .view-buttons-list, .box_with_prod, .box_left_header, .box_right_header,
-.header_top_panel, .ul_menu, .box_with_tags, .link_menu_header_catalog, .box_with_icons, .box_with_input {
+.ul_menu, .box_with_tags, .link_menu_header_catalog, .box_with_icons, .box_with_input {
     display: flex;
     flex-direction: row;
 }
@@ -2946,7 +2946,7 @@ div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_
     stroke: #f55f5c;
 }
 
-.btn_black, .header_top_panel, .cart_box_bonus, .cart_box_black {
+.btn_black, .cart_box_bonus, .cart_box_black {
     background-color: #393939;
 }
 
@@ -2983,7 +2983,7 @@ div.box_with_icons > a > i.icons_theme:hover, .mail_footer, .mail_footer, .link_
     border-radius: 22px;
 }
 
-.box_map_mobile, .icon_footer_menu, .hide_input, .header_logo_mobile, .box_for_menu, .mobile, .hide_class,
+.box_map_mobile, .icon_footer_menu, .hide_input, .box_for_menu, .mobile, .hide_class,
 .by-line.opt .toggle_taste, .popup .product-item-detail-slider-block .box_with_net, .by-line.opt .detail-text {
     display: none !important;
 }
@@ -3396,11 +3396,6 @@ b.decoration-color-red {
 
     .section_wrapper > .container_header, .foot_container {
         width: 90% !important;
-    }
-
-    .header_logo_mobile {
-        display: flex !important;
-        align-items: center;
     }
 
     .banners_container {
