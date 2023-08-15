@@ -58,6 +58,7 @@ Thumbs.db
 .viminfo
 *.ignore*
 ._*
+/local/templates/Oshisha/tailwind.css
 /bitrix/.settings_extra.php
 /bitrix/catalog_export/
 /bitrix/js/ipol.sdek/list.json
