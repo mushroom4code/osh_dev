@@ -235,20 +235,6 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     ),
                     "items" => array(),
                 ),
-                array(
-                    "parent_menu" => "global_menu_enterego",
-                    "icon" => "default_menu_icon",
-                    "page_icon" => "default_page_icon",
-                    "sort" => "200",
-                    "text" => "Товары для отображения в сладере на главной странице",
-                    "title" => "Товары для отображения в сладере на главной странице",
-                    "url" => "/bitrix/admin/enterego_admin.php?category=main_page_slider_products",
-                    "parent_page" => "global_menu_enterego",
-                    "more_url" => array(
-                        "main_page_slider_products.php",
-                    ),
-                    "items" => array(),
-                )
             )
         ),
     );
@@ -421,5 +407,3 @@ AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToke
 
 // bitrix24 feedback and callback integrations
 AddEventHandler('iblock', 'OnAfterIBlockElementAdd', ['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
-
-require_once(__DIR__ . '/enterego_class/checkbox_property.php');
