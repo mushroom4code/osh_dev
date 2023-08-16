@@ -194,7 +194,7 @@ if (SITE_ID !== SITE_EXHIBITION) {
     <div class="by-card">
         <?php
         $GLOBALS['FILTER_SALE'] = array(
-            'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
+                'PROPERTY_'.PROPERTY_USE_ON_MAIN_PAGE => 'Y'
         );
         $APPLICATION->IncludeComponent(
             "bitrix:catalog.top",
@@ -217,9 +217,9 @@ if (SITE_ID !== SITE_EXHIBITION) {
                 "DETAIL_URL" => "",
                 "DISPLAY_COMPARE" => "N",
                 "ELEMENT_COUNT" => "16",
-                "ELEMENT_SORT_FIELD" => "timestamp_x",
-                "ELEMENT_SORT_FIELD2" => "id",
-                "ELEMENT_SORT_ORDER" => "asc",
+                "ELEMENT_SORT_FIELD" => "PROPERTY_".SORT_POPULARITY,
+                "ELEMENT_SORT_FIELD2" => "ID",
+                "ELEMENT_SORT_ORDER" => "desc",
                 "ELEMENT_SORT_ORDER2" => "desc",
                 "ENLARGE_PRODUCT" => "PROP",
                 "ENLARGE_PROP" => "-",
