@@ -23,7 +23,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 <html xml:lang="<?= LANGUAGE_ID ?>" lang="<?= LANGUAGE_ID ?>">
 <head>
 
-    <!-- Yandex.Metrika counter -->
+    <!--     Yandex.Metrika counter-->
     <script type="text/javascript">
         (function (m, e, t, r, i, k, a) {
             m[i] = m[i] || function () {
@@ -66,10 +66,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 
     Asset::getInstance()->addCss("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/script.js");
-    Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/style.css");
+    //    Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/style.css");
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/tailwind.css");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/assets/js/list.js");
-    
+
     Asset::getInstance()->addJs('https://use.fontawesome.com/d071b13f63.js');
     Asset::getInstance()->addJs('https://code.jquery.com/jquery-3.6.0.min.js');
     Asset::getInstance()->addJs("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.js");
@@ -93,26 +93,27 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     $APPLICATION->ShowHead(); ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
-<body class="bg-white dark:bg-dark dark:text-textDark">
-<div id="panel"><?php $APPLICATION->ShowPanel(); ?>
+<body class="bg-white dark:bg-dark dark:text-textDark min-h-screen">
+<div id="panel">
+    <?php $APPLICATION->ShowPanel(); ?>
 </div>
-<div id="bx_eshop_wrap">
+<div>
     <header class="bg-white dark:bg-dark">
         <?php if (CHECKED_INFO) {
             $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
             <div class="alert-info-setting">
                 <p class="mb-0 text-center d-lg-block d-md-block d-none">
-                    <?= !empty($Option->text_info) ?  $Option->text_info : '' ?>
-                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                    <?= !empty($Option->text_info) ? $Option->text_info : '' ?>
+                    <a href="<?= !empty($Option->link_info) ? $Option->link_info : '/' ?>"
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
                 <p class="mb-0 text-center d-lg-none d-md-none d-block">
-                    <?= !empty($Option->text_info_mobile) ?  $Option->text_info_mobile : '' ?>
-                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                    <?= !empty($Option->text_info_mobile) ? $Option->text_info_mobile : '' ?>
+                    <a href="<?= !empty($Option->link_info) ? $Option->link_info : '/' ?>"
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
             </div>
         <?php } ?>
-        <div class="flex flex-row border-b border-white-100 justify-center width-100">
-            <div class="header_logo_mobile xs:flex hidden">
+        <div class="flex flex-row border-b border-white-100 justify-center width-100 py-3">
+            <div class="xs:flex hidden">
                 <a href="<?= SITE_DIR ?>">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:main.include",
@@ -124,6 +125,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     ); ?>
                 </a>
             </div>
+            <!--            TODO -->
             <div class="right_mobile_top">
                 <div class="search_mobile"></div>
                 <a class="box_for_menu" data-toggle="collapse" href="#MenuHeader" aria-controls="MenuHeader"
@@ -135,18 +137,20 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </div>
                 </a>
             </div>
-            <div class="container_header flex_header">
-                <div class="box_with_city flex_header col-4 pl-0">
-                    <span class="d-flex flex-row align-items-center">
-                        <img src="/local/assets/images/icon_location.svg" class="icon_location">
-                        <a href="#" class="text_header">
+            <!--            TODO -->
+            <div class="xl:container container flex flex-row justify-between items-center">
+                <div class="flex flex-row items-center">
+                    <span class="flex flex-row items-center">
+                        <div class="bg-dark-red p-1 w-2 h-2 mr-0.5 rounded-full"></div>
+                         <div class="bg-dark-red p-1 w-2 h-2 mr-1.5 rounded-full"></div>
+                        <a href="#" class="leading-3">
                             <div class="place">
                                 <?php $styleNone = '';
                                 if (strripos($_SERVER['REQUEST_URI'], '/personal/order/make') !== false) {
                                     $styleNone = 'style="display:none;"';
                                 } ?>
-                        <button type="button" class="place__button" data-toggle="modal"
-                                data-target="#placeModal" <?= $styleNone ?>>
+                        <button type="button" data-toggle="modal"
+                                data-target="#placeModal"  <?= $styleNone ?>>
                             <?php
                             // отключение композитного кеша вне компонента
                             Bitrix\Main\Page\Frame::getInstance()->startDynamicWithID("city-title");
@@ -173,7 +177,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                     $code_region = $result->fetch()['VALUE'];
                                 }
                             } ?>
-                            <span id="city-title" class="text_header" data-city="<?= $code_region ?>">
+                            <span id="city-title" class="dark:text-white text-textLight text-xs font-medium" data-city="<?= $code_region ?>">
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_select.php") ?>
                             </span>
@@ -181,25 +185,30 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         </button>
                     </div></a>
                     </span>
-                    <a href="https://oshisha.net" class="red_text dark:text-textDark text-xs ml-2 mr-2 font-weight-600">
+                    <a href="https://oshisha.net"
+                       class="dark:text-white text-textLight text-xs ml-2 mr-2 font-medium">
                         Розничный сайт</a>
                 </div>
-                <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
-                    <a href="/about/o-nas/" class="text-xs dark:text-textDark mr-3">О нас</a>
-
+                <div>
+                    <a href="/about/o-nas/" class="text-xs dark:text-textDark mr-3 font-light hover:text-hover-red">О нас</a>
                     <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                        <a href="/local/templates/Oshisha/images/presentation.pdf" download class="text-xs mr-3 dark:text-textDark ">Презентация</a>
+                        <a href="/local/templates/Oshisha/images/presentation.pdf"
+                           download class="text-xs mr-3 dark:text-textDark font-light hover:text-hover-red">Презентация</a>
                     <?php }
                     if ($USER->IsAuthorized()) { ?>
-                        <a href="<?= $option->price_list_link; ?>" class="text-xs dark:text-textDark text-textLigth mr-3">Прайс-лист</a>
+                        <a href="<?= $option->price_list_link; ?>"
+                           class="text-xs dark:text-textDark text-textLight font-light mr-3 hover:text-hover-red">Прайс-лист</a>
                     <?php } else { ?>
-                        <a href="/login/" class="text-xs dark:text-textDark mr-3">Прайс-лист</a>
+                        <a href="/login/"
+                           class="text-xs dark:text-textDark mr-3 font-light hover:text-hover-red">Прайс-лист</a>
                     <?php } ?>
-                    <a href="/about/contacts/" class="text-xs dark:text-textDark mr-3">Контакты</a>
+                    <a href="/about/contacts/" class="text-xs dark:text-textDark font-light mr-3 hover:text-hover-red">Контакты</a>
                     <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="/about/delivery/" class="text-xs dark:text-textDark mr-3">Доставка и оплата</a>
+                        <a href="/about/delivery/" class="text-xs dark:text-textDark font-light mr-3 hover:text-hover-red">Доставка
+                            и оплата</a>
                     <?php } ?>
-                    <a href="javascript:void(0)" class="text-xs dark:text-textDark callback js__callback">Обратный звонок</a>
+                    <a href="javascript:void(0)"
+                       class="text-xs dark:text-textDark callback js__callback font-light hover:text-hover-red">Обратный звонок</a>
                 </div>
             </div>
         </div>
@@ -234,7 +243,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 </a>
                                 <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
                                     <a href="/local/templates/Oshisha/images/presentation.pdf" download
-                                       class="text_header "> <span class="text_catalog_link not_weight"> Презентация</span></a>
+                                       class="text_header "> <span
+                                                class="text_catalog_link not_weight"> Презентация</span></a>
                                 <?php } ?>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
@@ -283,10 +293,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
             </div>
         <?php } ?>
-        <div class="container_header">
+        <div class="flex flex-col justify-center width-100 py-3 items-center">
             <!--        header menu search/login/basket/like     -->
-            <div class="header_box_logo">
-                <div class="box_left_header">
+            <div class="xl:container container flex flex-row justify-between items-center mb-4">
+                <div class="flex flex-row">
                     <div class="w-44 mr-8">
                         <a href="<?= SITE_DIR ?>">
                             <?php $APPLICATION->IncludeComponent(
@@ -294,15 +304,16 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 "",
                                 array(
                                     "AREA_FILE_SHOW" => "file",
-                                    "PATH" =>  "/local/templates/Oshisha/include/company_logo.php"),
+                                    "PATH" => "/local/templates/Oshisha/include/company_logo.php"),
                                 false
                             ); ?>
                         </a>
                     </div>
-                    <div class="dark:text-textDark text-sm font-extralight">Вся продукция <br>для кальяна</div>
+                    <div class="dark:text-textDark text-sm font-extralight xs:hidden ">Вся продукция <br>для кальяна
+                    </div>
                 </div>
-                <div class="box_right_header">
-                    <div class="box_with_search">
+                <div class="flex flex-row items-center justify-between">
+                    <div class="w-3/4">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:search.title",
                             "oshisha_search.title",
@@ -334,7 +345,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             true
                         ); ?>
                     </div>
-                    <div class="block_menu_mobile bx-header-personal z-index-1200">
+                    <div class="z-50 flex flex-row items-center justify-between">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:sale.basket.basket.line",
                             "oshisha_sale.basket.basket.line",
@@ -357,7 +368,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
             </div>
             <?php if (!$mobile->isMobile()) { ?>
-                <div class="box_with_menu">
+                <div class="box_with_menu xl:container container">
                     <div class="menu_header">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:menu",
@@ -388,7 +399,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             <?php } ?>
         </div>
     </header>
-    <div class="section_wrapper">
-        <div class="container_header">
+
+    <div class="section_wrapper min-h-550 flex flex-col justify-center items-center">
+        <div class="xl:container container">
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
             <div class="bx-content <?= STATIC_P ?>">

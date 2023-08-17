@@ -38,7 +38,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
 
 
 ?>
-<div class="box_with_loginBasket">
+<div class="flex flex-row justify-between items-center">
     <?php if (!$compositeStub && $arParams['SHOW_AUTHOR'] == 'Y'): ?>
         <div class="box_with_basket_login">
             <?php if ($USER->IsAuthorized()):

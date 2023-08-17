@@ -7,10 +7,10 @@ if (SITE_EXHIBITION == SITE_ID) {
     $APPLICATION->SetTitle("OSHISHA - Главная");
 }
 if (IsModuleInstalled("advertising")):?>
-    <div class="banners_box mt-3">
-        <div class="banners_container">
-            <div class="banner_small">
-                <div class="banner_box_item">
+    <div class="mt-3 xl:container container">
+        <div class="flex xs:flex-row flex-column justify-between w-fit">
+            <div class="banner_small flex xs:flex-row flex-col w-96 justify-between">
+                <div class="max-w-sm rounded-lg">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:advertising.banner",
                         "oshisha_banners",
@@ -35,7 +35,7 @@ if (IsModuleInstalled("advertising")):?>
                     ); ?>
                 </div>
 
-                <div class="banner_box_item">
+                <div class="max-w-sm rounded-lg">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:advertising.banner",
                         "oshisha_banners",
@@ -60,7 +60,7 @@ if (IsModuleInstalled("advertising")):?>
                     ); ?>
                 </div>
             </div>
-            <div class="banner_big">
+            <div class="w-3/4 rounded-lg relative overflow-hidden">
                 <?php $APPLICATION->IncludeComponent(
                     "bitrix:advertising.banner",
                     "oshisha_banners",

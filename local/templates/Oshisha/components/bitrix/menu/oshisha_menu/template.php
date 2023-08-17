@@ -49,17 +49,19 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 }
 ?>
 <nav class="box_with_menu_header">
-    <ul class="ul_menu">
-        <li class="li_menu_header">
-            <a class="link_menu_header_catalog link_red_button" title="Просмотреть меню" href="javascript:void(0)"
+    <ul class="ul_menu flex flex-row">
+        <li class="li_menu_header mr-3">
+            <div class="dark:text-textDark flex flex-row justify-center text-textLight min-w-164 dark:bg-dark-red
+            bg-light-red py-2 px-4 rounded-5"
+               title="Просмотреть меню"
                id="main_menus">
-                <div class="span_bar">
+                <div class="span_bar mr-4">
                     <span class="bar_span span_1"></span>
                     <span class="bar_span span_2"></span>
                     <span class="small_bar span_3"></span>
                 </div>
-                <span class="text_catalog_button">Каталог</span>
-            </a>
+                <span class="dark:text-textDark text-textLight font-normal text-sm">Каталог</span>
+            </div>
         </li>
 
         <?php
@@ -72,31 +74,26 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         }
 
         $result = json_encode($menu_for_JS) ?>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+        <li class="mr-3" data-role="bx-menu-item">
             <a class="link_menu_header" href="/diskont/">
                 <span class="text_catalog_link">Дисконт</span>
             </a>
         </li>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+        <li class="mr-3" data-role="bx-menu-item">
             <a class="link_menu_header" href="/catalog_new/">
                 <span class="text_catalog_link">Новинки</span>
             </a>
         </li>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+        <li class="mr-3" data-role="bx-menu-item">
             <a class="link_menu_header" href="/hit/">
                 <span class="text_catalog_link">Хиты</span>
             </a>
         </li>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+        <li class="mr-3" data-role="bx-menu-item">
             <a class="link_menu_header" href="/brands/">
                 <span class="text_catalog_link">Бренды</span>
             </a>
         </li>
-        <!--		<li class="li_menu_header  none_mobile" data-role="bx-menu-item">-->
-        <!--            <a class="link_menu_header" href="/promotions/">-->
-        <!--                <span class="text_catalog_link">Акции</span>-->
-        <!--            </a>-->
-        <!--        </li>		-->
         <div class="open_menu" style="display: none" id="main_menu">
             <div class="parent_menu"></div>
             <div class="menu_items hide"></div>

@@ -318,13 +318,7 @@ body {
 
 a,
 .btn-link {
-    color: #3b3b3b;
-    transition: 0.3s
-}
-
-a:hover,
-.btn-link:hover {
-    color: #F55F5C;
+    color: white;
     transition: 0.3s
 }
 

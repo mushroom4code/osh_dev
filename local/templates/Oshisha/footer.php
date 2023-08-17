@@ -17,10 +17,10 @@ $option = $option_site; ?>
 </div><!--end .workarea-->
 
 <?php $userData = EnteregoUser::getInstance(); ?>
-<footer class="footer">
-    <div class="container foot_container">
-        <div class="row">
-            <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
+<footer class="flex flew-row justify-center dark:bg-dark width-100 dark:text-textDark">
+    <div class="xl:container container foot_container">
+        <div class="flex flex-row xs:flex-col">
+            <div class="columns-3 flex flex-col">
                 <a class="logo" href="<?= SITE_DIR ?>">
                     <?php
                     $APPLICATION->IncludeComponent(
@@ -34,7 +34,6 @@ $option = $option_site; ?>
                     );
                     ?>
                 </a>
-
                 <div class='company-info'>
                     <span class='about'>
                         <span class="info-row info-row--about">
@@ -69,7 +68,7 @@ $option = $option_site; ?>
             </div>
 
 
-            <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
+            <div class="columns-3 flex flex-col">
                 <span class="col-title js__collapse-list">Каталог</span>
                 <ul class="col-menu">
                     <?php $APPLICATION->IncludeComponent(
@@ -93,7 +92,7 @@ $option = $option_site; ?>
             </div>
 
 
-            <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
+            <div class="columns-3 flex flex-col">
                 <span class="col-title js__collapse-list">Покупателям</span>
                 <ul class="col-menu">
                     <li class="col-menu-item">
@@ -129,7 +128,7 @@ $option = $option_site; ?>
             </div>
 
 
-            <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
+            <div class="columns-3 flex flex-col">
                 <span class="col-title js__collapse-list">О компании</span>
                 <ul class="col-menu">
                     <?php $APPLICATION->IncludeComponent(
@@ -194,72 +193,72 @@ $option = $option_site; ?>
     </div>
 
     <!-- MODALS -->
-    <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="placeModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header d-flex align-items-center">
-                    <h4 class="modal-title font_weight_500" id="placeModalLabel"><?= GetMessage('CITY_CHOOSE_TITLE') ?>
-                        <i class="fa fa-map-marker ml-2" aria-hidden="true"></i></h4>
-                    <button type="button" class="close close_button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"></span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <nav class="navbar navbar-light">
-                        <div class="cities js_city_chooser"
-                             data-param-url="<?= urlencode($APPLICATION->GetCurUri()); ?>"
-                             data-param-form_id="city_chooser">
-                            <form id="formofcity" name="formofcity" method="POST" class="form-inline">
-                                <div class="w-100" id="locations">
-                                    <input id="city-search" class="form-control search" type="text" name="cityother"
-                                           placeholder="<?= GetMessage('CITY_CHOOSE_PLACEHOLDER') ?>" value=""
-                                           autocomplete="off" required>
-                                    <div class="cities-list-wrap mb-3">
-                                        <ul id="big-cities-list">
-                                            <li>
-                                                <span class="city-item"><?= $runames[$moskow] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$st_petersburg] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$nizhny_novgorod] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$yekaterinburg] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$permian] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$novosibirsk] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$kazan] ?></span>
-                                            </li>
-                                        </ul>
-                                        <ul id="cities-list" class="list" style="display: none">
-                                            <?
-                                            $i = 0;
-                                            foreach ($runames as $name) { ?>
-                                                <li>
-                                                    <span class="city-item"><?= $name ?></span>
-                                                </li>
-                                                <? $i++;
-                                            } ?>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <input id="choose-city-btn" name="submitcity" class="btn btnok btn-region" type="submit"
-                                       value="Выбрать" disabled/>
-                            </form>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+<!--    <div class="modal fade" id="placeModal" tabindex="-1" role="dialog" aria-labelledby="placeModalLabel"-->
+<!--         aria-hidden="true">-->
+<!--        <div class="modal-dialog" role="document">-->
+<!--            <div class="modal-content">-->
+<!--                <div class="modal-header d-flex align-items-center">-->
+<!--                    <h4 class="modal-title font_weight_500" id="placeModalLabel">--><?php //= GetMessage('CITY_CHOOSE_TITLE') ?>
+<!--                        <i class="fa fa-map-marker ml-2" aria-hidden="true"></i></h4>-->
+<!--                    <button type="button" class="close close_button" data-dismiss="modal" aria-label="Close">-->
+<!--                        <span aria-hidden="true"></span>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--                <div class="modal-body">-->
+<!--                    <nav class="navbar navbar-light">-->
+<!--                        <div class="cities js_city_chooser"-->
+<!--                             data-param-url="--><?php //= urlencode($APPLICATION->GetCurUri()); ?><!--"-->
+<!--                             data-param-form_id="city_chooser">-->
+<!--                            <form id="formofcity" name="formofcity" method="POST" class="form-inline">-->
+<!--                                <div class="w-100" id="locations">-->
+<!--                                    <input id="city-search" class="form-control search" type="text" name="cityother"-->
+<!--                                           placeholder="--><?php //= GetMessage('CITY_CHOOSE_PLACEHOLDER') ?><!--" value=""-->
+<!--                                           autocomplete="off" required>-->
+<!--                                    <div class="cities-list-wrap mb-3">-->
+<!--                                        <ul id="big-cities-list">-->
+<!--                                            <li>-->
+<!--                                                <span class="city-item">--><?php //= $runames[$moskow] ?><!--</span>-->
+<!--                                            </li>-->
+<!--                                            <li>-->
+<!--                                                <span class="city-item">--><?php //= $runames[$st_petersburg] ?><!--</span>-->
+<!--                                            </li>-->
+<!--                                            <li>-->
+<!--                                                <span class="city-item">--><?php //= $runames[$nizhny_novgorod] ?><!--</span>-->
+<!--                                            </li>-->
+<!--                                            <li>-->
+<!--                                                <span class="city-item">--><?php //= $runames[$yekaterinburg] ?><!--</span>-->
+<!--                                            </li>-->
+<!--                                            <li>-->
+<!--                                                <span class="city-item">--><?php //= $runames[$permian] ?><!--</span>-->
+<!--                                            </li>-->
+<!--                                            <li>-->
+<!--                                                <span class="city-item">--><?php //= $runames[$novosibirsk] ?><!--</span>-->
+<!--                                            </li>-->
+<!--                                            <li>-->
+<!--                                                <span class="city-item">--><?php //= $runames[$kazan] ?><!--</span>-->
+<!--                                            </li>-->
+<!--                                        </ul>-->
+<!--                                        <ul id="cities-list" class="list" style="display: none">-->
+<!--                                            --><?//
+//                                            $i = 0;
+//                                            foreach ($runames as $name) { ?>
+<!--                                                <li>-->
+<!--                                                    <span class="city-item">--><?php //= $name ?><!--</span>-->
+<!--                                                </li>-->
+<!--                                                --><?// $i++;
+//                                            } ?>
+<!--                                        </ul>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <input id="choose-city-btn" name="submitcity" class="btn btnok btn-region" type="submit"-->
+<!--                                       value="Выбрать" disabled/>-->
+<!--                            </form>-->
+<!--                        </div>-->
+<!--                    </nav>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <div style="display:none;">
         <div id="callbackModal" class="box-modal-white">
             <div class="box-modal_close arcticmodal-close"></div>

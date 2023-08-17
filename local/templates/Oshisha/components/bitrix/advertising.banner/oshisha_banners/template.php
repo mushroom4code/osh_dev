@@ -35,7 +35,7 @@
 
             <!--region Wrapper for slides -->
             <?php if ($arParams['TYPE'] === 'MAIN') { ?>
-                <div class="carousel-inner carousel-inner-main" role="listbox">
+                <div class="carousel-inner carousel-inner-main overflow-hidden" role="listbox">
                     <div class="swiper-wrapper">
                         <? foreach ($arResult["BANNERS"] as $k => $banner): ?>
 
@@ -81,7 +81,8 @@
                                                                              aria-hidden="true"></i></span>
                 </a>
                 <a href="#carousel-<?= $arResult['ID'] ?>"
-                   class="carousel-nav-<?= $arParams['TYPE'] ?>-next carousel_custom_next" role="button"
+                   class="carousel-nav-<?= $arParams['TYPE'] ?>-next carousel_custom_next absolute inset-y-0 right-0"
+                   role="button"
                    data-slide="next">
                     <span class="carousel_elem_custom" aria-hidden="true"><i class="fa fa-angle-right"
                                                                              aria-hidden="true"></i></span>
