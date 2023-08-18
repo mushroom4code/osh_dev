@@ -27,7 +27,7 @@
         <? endif; ?>
 
         <div id="carousel-<?= $arResult['ID'] ?>"
-             class="carousel <?= $arParams['BS_EFFECT'] ?><?= $arParams['BS_HIDE_FOR_TABLETS'] ?>"
+             class="carousel w-inherit <?= $arParams['BS_EFFECT'] ?><?= $arParams['BS_HIDE_FOR_TABLETS'] ?>"
              data-interval="<?= $arParams['BS_INTERVAL'] ?>" data-wrap="<?= $arParams['BS_WRAP'] ?>"
              data-pause="<?= $arParams['BS_PAUSE'] ?>" data-keyboard="<?= $arParams['BS_KEYBOARD'] ?>"
              data-ride="carousel">
@@ -51,7 +51,7 @@
                     </div>
 
                 </div>
-                <div class="carousel-indicators swiper-pagination-block"></div>
+                <div class="carousel-indicators swiper-pagination-block absolute"></div>
                 <?
             } else {
                 ?>
@@ -59,12 +59,7 @@
 
                     <? foreach ($arResult["BANNERS"] as $k => $banner): ?>
 
-                        <div class=" carousel-item-elems <? if ($k == 0) echo 'active'; ?>">
-                            <?php if ($arParams['TYPE'] === 'MAIN') { ?>
-                                <div class="link_banner" style="display:none;">
-                                    <a href="javascript:void(0);">Новинка</a>
-                                </div>
-                            <? } ?>
+                        <div class="carousel-item-elems   <? if ($k == 0) echo 'active'; ?>">
                             <?= $banner ?>
                         </div>
                     <? endforeach; ?>
@@ -76,16 +71,16 @@
             <!-- region Controls -->
             <? if ($arParams['BS_ARROW_NAV'] == 'Y' || $arParams['PREVIEW'] == 'Y'): ?>
                 <a href="#carousel-<?= $arResult['ID'] ?>"
-                   class="carousel-nav-<?= $arParams['TYPE'] ?>-prev carousel_custom" role="button" data-slide="prev">
-                    <span class="carousel_elem_custom" aria-hidden="true"><i class="fa fa-angle-left"
-                                                                             aria-hidden="true"></i></span>
+                   class="carousel-nav-<?= $arParams['TYPE'] ?>-prev
+                   carousel_custom absolute inset-y-0 left-0 flex items-center z-10" role="button" data-slide="prev">
+                    <span class="dark:bg-dark-red text-white hover:bg-white py-2 px-5 text-3xl rounded-full hover:text-dark">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i></span>
                 </a>
                 <a href="#carousel-<?= $arResult['ID'] ?>"
-                   class="carousel-nav-<?= $arParams['TYPE'] ?>-next carousel_custom_next absolute inset-y-0 right-0"
-                   role="button"
-                   data-slide="next">
-                    <span class="carousel_elem_custom" aria-hidden="true"><i class="fa fa-angle-right"
-                                                                             aria-hidden="true"></i></span>
+                   class="carousel-nav-<?= $arParams['TYPE'] ?>-next carousel_custom_next  absolute inset-y-0 right-0 z-10
+                   flex items-center" role="button" data-slide="next">
+                    <span class="dark:bg-dark-red text-white hover:bg-white py-2 px-5 text-3xl rounded-full hover:text-dark">
+                        <i class="fa fa-angle-right" aria-hidden="true"></i></span>
                 </a>
             <? endif; ?>
             <!--endregion-->

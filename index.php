@@ -8,9 +8,9 @@ if (SITE_EXHIBITION == SITE_ID) {
 }
 if (IsModuleInstalled("advertising")):?>
     <div class="mt-3 xl:container container">
-        <div class="flex xs:flex-row flex-column justify-between w-fit">
-            <div class="banner_small flex xs:flex-row flex-col w-96 justify-between">
-                <div class="max-w-sm rounded-lg">
+        <div class="flex xs:flex-row flex-column justify-between w-full relative mb-10">
+            <div class="banner_small flex xs:flex-row flex-col justify-between mr-8">
+                <div class="w-full mb-5 rounded-lg">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:advertising.banner",
                         "oshisha_banners",
@@ -34,8 +34,7 @@ if (IsModuleInstalled("advertising")):?>
                         false
                     ); ?>
                 </div>
-
-                <div class="max-w-sm rounded-lg">
+                <div class="w-full rounded-lg">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:advertising.banner",
                         "oshisha_banners",
@@ -60,7 +59,7 @@ if (IsModuleInstalled("advertising")):?>
                     ); ?>
                 </div>
             </div>
-            <div class="w-3/4 rounded-lg relative overflow-hidden">
+            <div class="max-w-6xl w-full rounded-lg relative flex justify-center items-center overflow-hidden">
                 <?php $APPLICATION->IncludeComponent(
                     "bitrix:advertising.banner",
                     "oshisha_banners",

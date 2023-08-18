@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: ["./local/templates/Oshisha/**/**/*.{js,php}"],
+    content: ["./local/templates/Oshisha/**/**/*.{js,php}",'./index.php'],
     darkMode: 'media',
     theme: {
         extend:{
@@ -23,6 +23,9 @@ module.exports = {
             minWidth: {
                 '164': '164px'
             },
+            width: {
+                'inherit': 'inherit'
+            }
         }
     },
     plugins: [],
