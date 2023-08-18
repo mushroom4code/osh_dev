@@ -151,7 +151,9 @@ class AddressType extends BaseType
 
 	public static function getDbColumnType(): string
 	{
-		return 'text';
+		$connection = \Bitrix\Main\Application::getConnection();
+		$helper = $connection->getSqlHelper();
+		return $helper->getColumnTypeByField(new \Bitrix\Main\ORM\Fields\TextField('x'));
 	}
 
 	public static function prepareSettings(array $userField): array
@@ -166,6 +168,24 @@ class AddressType extends BaseType
 		return [];
 	}
 
+	public static function onBeforeSaveAll(array $userField, $value)
+	{
+		$result = [];
+		foreach ($value as $item)
+		{
+			$processedValue = self::onBeforeSave($userField, $item);
+			if ($processedValue)
+			{
+				$result[] = $processedValue;
+			}
+		}
+
+		$fieldName = ($userField['FIELD_NAME'] ?? null);
+		unset($_POST[$fieldName . '_manual_edit']);
+
+		return $result;
+	}
+
 	/**
 	 * @param array $userField
 	 * @param $value
@@ -176,11 +196,25 @@ class AddressType extends BaseType
 	{
 		if (!$value)
 		{
+			self::clearManualEditFlag($userField);
+
 			return null;
 		}
 
 		if (!Loader::includeModule('location') || self::isRawValue($value))
 		{
+			// if the value hasn't been set manually (e.g. from bizproc), then we have to remove the
+			// address' id because otherwise we'll end up with multiple UF values pointing to a single address
+			$fieldName = ($userField['FIELD_NAME'] ?? null);
+			$isManualAddressEdit = $_POST[$fieldName . '_manual_edit'] ?? null;
+			if (!$isManualAddressEdit)
+			{
+				$parsedValue = self::parseValue($value);
+				$value = $parsedValue[0] . '|' . $parsedValue[1][0] . ';' . $parsedValue[1][1];
+			}
+
+			self::clearManualEditFlag($userField);
+
 			return $value;
 		}
 
@@ -192,6 +226,9 @@ class AddressType extends BaseType
 			{
 				$oldAddress->delete();
 			}
+
+			self::clearManualEditFlag($userField);
+
 			return '';
 		}
 
@@ -212,6 +249,8 @@ class AddressType extends BaseType
 
 		if (!$address)
 		{
+			self::clearManualEditFlag($userField);
+
 			return $value;
 		}
 
@@ -221,7 +260,18 @@ class AddressType extends BaseType
 			$value = self::formatAddressToString($address);
 		}
 
+		self::clearManualEditFlag($userField);
+
 		return $value;
+	}
+
+	private static function clearManualEditFlag(array $userField): void
+	{
+		$fieldName = ($userField['FIELD_NAME'] ?? null);
+		if (($userField['MULTIPLE'] ?? null) !== 'Y')
+		{
+			unset($_POST[$fieldName . '_manual_edit']);
+		}
 	}
 
 	/**
@@ -353,8 +403,8 @@ class AddressType extends BaseType
 		[$address, $coords] = self::parseValue($addressString);
 
 		return [
-			'latitude' => $coords[0],
-			'longitude' => $coords[1],
+			'latitude' => $coords[0] ?? null,
+			'longitude' => $coords[1] ?? null,
 			'fieldCollection' => [
 				Address\FieldType::ADDRESS_LINE_2 => $address,
 			],

@@ -1,5 +1,8 @@
 <?
 
+use Bitrix\Calendar\Access\ActionDictionary;
+use Bitrix\Calendar\Access\Model\SectionModel;
+use Bitrix\Calendar\Access\SectionAccessController;
 use Bitrix\Calendar\Internals\EventTable;
 use Bitrix\Calendar\Internals\SectionTable;
 use Bitrix\Calendar\Sync\Factories\FactoriesCollection;
@@ -18,6 +21,7 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\Security\Random;
 use Bitrix\Main\SystemException;
+use Bitrix\Main\Text\Emoji;
 
 class CCalendarSect
 {
@@ -32,6 +36,7 @@ class CCalendarSect
 	private static
 		$sections,
 		$Permissions = [],
+		$userSectionPermissions = [],
 		$arOp = [],
 		$bClearOperationCache = false,
 		$authHashiCal = null, // for login by hash
@@ -40,30 +45,45 @@ class CCalendarSect
 	private static function GetFields()
 	{
 		global $DB;
-		if (!count(self::$Fields))
-			self::$Fields = array(
-			"ID" => Array("FIELD_NAME" => "CS.ID", "FIELD_TYPE" => "int"),
-			"NAME" => Array("FIELD_NAME" => "CS.NAME", "FIELD_TYPE" => "string"),
-			"XML_ID" => Array("FIELD_NAME" => "CS.XML_ID", "FIELD_TYPE" => "string"),
-			"EXTERNAL_ID" => Array("FIELD_NAME" => "CS.EXTERNAL_ID", "FIELD_TYPE" => "string"),
-			"ACTIVE" => Array("FIELD_NAME" => "CS.ACTIVE", "FIELD_TYPE" => "string"),
-			"COLOR" => Array("FIELD_NAME" => "CS.COLOR", "FIELD_TYPE" => "string"),
-			"SORT" => Array("FIELD_NAME" => "CS.SORT", "FIELD_TYPE" => "int"),
-			"CAL_TYPE" => Array("FIELD_NAME" => "CS.CAL_TYPE", "FIELD_TYPE" => "string", "PROCENT" => "N"),
-			"OWNER_ID" => Array("FIELD_NAME" => "CS.OWNER_ID", "FIELD_TYPE" => "int"),
-			"CREATED_BY" => Array("FIELD_NAME" => "CS.CREATED_BY", "FIELD_TYPE" => "int"),
-			"PARENT_ID" => Array("FIELD_NAME" => "CS.PARENT_ID", "FIELD_TYPE" => "int"),
-			"TIMESTAMP_X" => Array("~FIELD_NAME" => "CS.TIMESTAMP_X", "FIELD_NAME" => $DB->DateToCharFunction("CS.TIMESTAMP_X").' as TIMESTAMP_X', "FIELD_TYPE" => "date"),
-			"DATE_CREATE" => Array("~FIELD_NAME" => "CS.DATE_CREATE", "FIELD_NAME" => $DB->DateToCharFunction("CS.DATE_CREATE").' as DATE_CREATE', "FIELD_TYPE" => "date"),
-			"DAV_EXCH_CAL" => Array("FIELD_NAME" => "CS.DAV_EXCH_CAL", "FIELD_TYPE" => "string"), // Exchange calendar
-			"DAV_EXCH_MOD" => Array("FIELD_NAME" => "CS.DAV_EXCH_MOD", "FIELD_TYPE" => "string"), // Exchange calendar modification label
-			"CAL_DAV_CON" => Array("FIELD_NAME" => "CS.CAL_DAV_CON", "FIELD_TYPE" => "string"), // CalDAV connection
-			"CAL_DAV_CAL" => Array("FIELD_NAME" => "CS.CAL_DAV_CAL", "FIELD_TYPE" => "string"), // CalDAV calendar
-			"CAL_DAV_MOD" => Array("FIELD_NAME" => "CS.CAL_DAV_MOD", "FIELD_TYPE" => "string"), // CalDAV calendar modification label
-			"IS_EXCHANGE" => Array("FIELD_NAME" => "CS.IS_EXCHANGE", "FIELD_TYPE" => "string"),
-			"SYNC_TOKEN" => Array("FIELD_NAME" => "CS.SYNC_TOKEN", "FIELD_TYPE" => "string"),
-			"PAGE_TOKEN" => Array("FIELD_NAME" => "CS.PAGE_TOKEN", "FIELD_TYPE" =>	"string"),
-		);
+		if (empty(self::$Fields))
+		{
+			self::$Fields = [
+				"ID" => ["FIELD_NAME" => "CS.ID", "FIELD_TYPE" => "int"],
+				"NAME" => ["FIELD_NAME" => "CS.NAME", "FIELD_TYPE" => "string"],
+				"XML_ID" => ["FIELD_NAME" => "CS.XML_ID", "FIELD_TYPE" => "string"],
+				"EXTERNAL_ID" => ["FIELD_NAME" => "CS.EXTERNAL_ID", "FIELD_TYPE" => "string"],
+				"ACTIVE" => ["FIELD_NAME" => "CS.ACTIVE", "FIELD_TYPE" => "string"],
+				"COLOR" => ["FIELD_NAME" => "CS.COLOR", "FIELD_TYPE" => "string"],
+				"SORT" => ["FIELD_NAME" => "CS.SORT", "FIELD_TYPE" => "int"],
+				"CAL_TYPE" => ["FIELD_NAME" => "CS.CAL_TYPE", "FIELD_TYPE" => "string", "PROCENT" => "N"],
+				"OWNER_ID" => ["FIELD_NAME" => "CS.OWNER_ID", "FIELD_TYPE" => "int"],
+				"CREATED_BY" => ["FIELD_NAME" => "CS.CREATED_BY", "FIELD_TYPE" => "int"],
+				"PARENT_ID" => ["FIELD_NAME" => "CS.PARENT_ID", "FIELD_TYPE" => "int"],
+				"TIMESTAMP_X" => [
+					"~FIELD_NAME" => "CS.TIMESTAMP_X",
+					"FIELD_NAME" => $DB->DateToCharFunction("CS.TIMESTAMP_X") . ' as TIMESTAMP_X',
+					"FIELD_TYPE" => "date"
+				],
+				"DATE_CREATE" => [
+					"~FIELD_NAME" => "CS.DATE_CREATE",
+					"FIELD_NAME" => $DB->DateToCharFunction("CS.DATE_CREATE") . ' as DATE_CREATE',
+					"FIELD_TYPE" => "date"
+				],
+				"DAV_EXCH_CAL" => ["FIELD_NAME" => "CS.DAV_EXCH_CAL", "FIELD_TYPE" => "string"],
+				// Exchange calendar
+				"DAV_EXCH_MOD" => ["FIELD_NAME" => "CS.DAV_EXCH_MOD", "FIELD_TYPE" => "string"],
+				// Exchange calendar modification label
+				"CAL_DAV_CON" => ["FIELD_NAME" => "CS.CAL_DAV_CON", "FIELD_TYPE" => "string"],
+				// CalDAV connection
+				"CAL_DAV_CAL" => ["FIELD_NAME" => "CS.CAL_DAV_CAL", "FIELD_TYPE" => "string"],
+				// CalDAV calendar
+				"CAL_DAV_MOD" => ["FIELD_NAME" => "CS.CAL_DAV_MOD", "FIELD_TYPE" => "string"],
+				// CalDAV calendar modification label
+				"IS_EXCHANGE" => ["FIELD_NAME" => "CS.IS_EXCHANGE", "FIELD_TYPE" => "string"],
+				"SYNC_TOKEN" => ["FIELD_NAME" => "CS.SYNC_TOKEN", "FIELD_TYPE" => "string"],
+				"PAGE_TOKEN" => ["FIELD_NAME" => "CS.PAGE_TOKEN", "FIELD_TYPE" => "string"],
+			];
+		}
 		return self::$Fields;
 	}
 
@@ -73,12 +93,12 @@ class CCalendarSect
 		$result = false;
 		$filter = $params['arFilter'];
 		$sort = $params['arOrder'] ?? ['SORT' => 'asc'];
-		$params['joinTypeInfo'] = !!$params['joinTypeInfo'];
-		$checkPermissions = $params['checkPermissions'] !== false;
+		$params['joinTypeInfo'] = (bool)($params['joinTypeInfo'] ?? null);
+		$checkPermissions = ($params['checkPermissions'] ?? null) !== false;
 		$params['checkPermissions'] = $checkPermissions;
-		$getPermissions = $params['getPermissions'] !== false;
+		$getPermissions = ($params['getPermissions'] ?? null) !== false;
 		$params['getPermissions'] = $getPermissions;
-		$userId = $params['userId'] ? (int)$params['userId'] : CCalendar::GetCurUserId();
+		$userId = ($params['userId'] ?? false) ? (int)$params['userId'] : CCalendar::GetCurUserId();
 		$params['userId'] = $userId;
 		$cacheEnabled = CCalendar::CacheTime() > 0;
 
@@ -110,18 +130,28 @@ class CCalendarSect
 			$arSqlSearch = [];
 			if(is_array($filter))
 			{
-				$filter_keys = array_keys($filter);
-				for ($i = 0, $l = count($filter_keys); $i < $l; $i++)
+				$filterKeys = array_keys($filter);
+				foreach ($filterKeys as $filterKey)
 				{
-					$n = mb_strtoupper($filter_keys[$i]);
-					$val = $filter[$filter_keys[$i]];
-					if (($val === '') || (string)$val === "NOT_REF")
+					$n = mb_strtoupper($filterKey);
+					$val = $filter[$filterKey] ?? '';
+					if (($val === '') || $val === "NOT_REF")
 					{
 						continue;
 					}
-					if ($n === 'ID' || $n === 'XML_ID' || $n === 'OWNER_ID' || $n === 'EXTERNAL_TYPE')
+					if ($n === 'CAL_TYPE' && ($val === 'company_calendar' || $val === 'calendar_company'))
 					{
-						if(is_array($val))
+						$arSqlSearch[] = 'CS.CAL_TYPE = \'' . $val . '\' AND CS.CAL_TYPE IS NOT NULL';
+					}
+					else if (
+						$n === 'ID'
+						|| $n === 'XML_ID'
+						|| $n === 'OWNER_ID'
+						|| $n === 'EXTERNAL_TYPE'
+						// || $n === 'CAL_DAV_CON'
+					)
+					{
+						if (is_array($val))
 						{
 							$val = array_map(array($DB, "ForSQL"), $val);
 							$arSqlSearch[] = 'CS.'.$n.' IN (\''.implode('\',\'', $val).'\')';
@@ -131,13 +161,13 @@ class CCalendarSect
 							$arSqlSearch[] = GetFilterQuery("CS.".$n, $val, 'N');
 						}
 					}
-					elseif($n === '>ID' && (int)$val > 0)
+					else if($n === '>ID' && (int)$val > 0)
 					{
 						$arSqlSearch[] = "CS.ID > ". (int)$val;
 					}
 					elseif($n === 'ACTIVE' && $val === "Y")
 					{
-						$arSqlSearch[] = "CS.ACTIVE='Y'";
+						$arSqlSearch[] = "CS.ACTIVE = 'Y'";
 					}
 					elseif ($n === 'CAL_TYPE' && is_array($val))
 					{
@@ -231,12 +261,12 @@ class CCalendarSect
 
 			while($section = $res->Fetch())
 			{
-				$sectId = $section['ID'];
+				$sectId = (int)$section['ID'];
 				if ($checkPermissions)
 				{
 					self::HandlePermission($section);
 				}
-				if (in_array($sectId, $arSectionIds))
+				if (in_array($sectId, $arSectionIds, true))
 				{
 					continue;
 				}
@@ -250,18 +280,11 @@ class CCalendarSect
 				)
 				{
 					$section['OUTLOOK_JS'] = 'needAction';
-					// CCalendarSect::GetOutlookLink(array(
-                  //     'ID' => intval($sectId),
-                  //     'XML_ID' => $section['XML_ID'],
-                  //     'TYPE' => $sectionType,
-                  //     'NAME' => $section['NAME'],
-                  //     'PREFIX' => CCalendar::GetOwnerName($sectionType, $section['OWNER_ID']),
-                  //     'LINK_URL' => CCalendar::GetOuterUrl(),
-                  // ));
 				}
 
 				unset($section['ACCESS_CODE'], $section['TASK_ID']);
 				$section['COLOR'] = CCalendar::Color($section['COLOR']);
+				$section['NAME'] = Emoji::decode($section['NAME']);
 				$arSectionIds[] = $sectId;
 				$section['EXPORT'] = [
 					'ALLOW' => true,
@@ -274,11 +297,14 @@ class CCalendarSect
 					if ($section['CAL_DAV_CON'] && $isCalDAVEnabled)
 					{
 						$section['CAL_DAV_CON'] = (int)$section['CAL_DAV_CON'];
-						$resCon = CDavConnection::GetList(["ID" => "ASC"], ["ID" => $section["CAL_DAV_CON"]]);
+						$connection = CDavConnection::GetList(
+							["ID" => "ASC"],
+							["ID" => $section["CAL_DAV_CON"]]
+						);
 
-						if ($con = $resCon->Fetch())
+						if ($connection)
 						{
-							$section['CAL_DAV_CON'] = $con["ID"];
+							$section['CAL_DAV_CON'] = $connection["ID"];
 						}
 						else
 						{
@@ -324,68 +350,41 @@ class CCalendarSect
 		{
 			$sectId = $section['ID'];
 			$userId = CCalendar::GetUserId();
-			$isOwner = $section['CAL_TYPE'] === 'user' && (int)$section['OWNER_ID'] === $userId;
 
-			$isManager = Loader::includeModule('intranet')
-				&& $section['CAL_TYPE'] === 'user'
-				&& $settings['dep_manager_sub']
-				&& Bitrix\Calendar\Util::isManagerForUser($userId, $section['OWNER_ID']);
+			$accessController = new SectionAccessController($userId);
+			$sectionModel = SectionModel::createFromArray($section);
 
-			if(
-				$isOwner
-				|| $isManager
-				|| self::CanDo('calendar_view_time', $sectId, $userId))
+			$request = [
+				ActionDictionary::ACTION_SECTION_EVENT_VIEW_TIME => [],
+				ActionDictionary::ACTION_SECTION_EVENT_VIEW_TITLE => [],
+				ActionDictionary::ACTION_SECTION_EVENT_VIEW_FULL => [],
+				ActionDictionary::ACTION_SECTION_ADD => [],
+				ActionDictionary::ACTION_SECTION_EDIT => [],
+				ActionDictionary::ACTION_SECTION_ACCESS => [],
+			];
+
+			$result = $accessController->batchCheck($request, $sectionModel);
+
+			if ($result[ActionDictionary::ACTION_SECTION_EVENT_VIEW_TIME])
 			{
-				$canView = CCalendarType::CanDo('calendar_type_view', $section['CAL_TYPE']);
-
 				$section['PERM'] = [
-					'view_time' => false,
-					'view_title' => false,
-					'view_full' => false,
-					'add' => false,
-					'edit' => false,
-					'edit_section' => false,
-					'access' => false,
+					'view_time' => $result[ActionDictionary::ACTION_SECTION_EVENT_VIEW_TIME],
+					'view_title' => $result[ActionDictionary::ACTION_SECTION_EVENT_VIEW_TITLE],
+					'view_full' => $result[ActionDictionary::ACTION_SECTION_EVENT_VIEW_FULL],
+					'add' => $result[ActionDictionary::ACTION_SECTION_ADD],
+					'edit' => $result[ActionDictionary::ACTION_SECTION_EDIT],
+					'edit_section' => $result[ActionDictionary::ACTION_SECTION_EDIT],
+					'access' => $result[ActionDictionary::ACTION_SECTION_ACCESS],
 				];
 
-				if ($canView)
-				{
-					$section['PERM'] = [
-						'view_time' => $isManager
-							|| $isOwner
-							|| self::CanDo('calendar_view_time', $sectId, $userId),
-						'view_title' => $isManager
-							|| $isOwner
-							|| self::CanDo('calendar_view_title', $sectId, $userId),
-						'view_full' => $isManager
-							|| $isOwner
-							|| self::CanDo('calendar_view_full', $sectId, $userId),
-					];
-				}
-
-				$canEdit = CCalendarType::CanDo('calendar_type_edit', $section['CAL_TYPE']);
-
-				if ($canView && $canEdit)
-				{
-					$section['PERM']['add'] = $isOwner
-						|| self::CanDo('calendar_add', $sectId, $userId);
-					$section['PERM']['edit'] = $isOwner
-						|| self::CanDo('calendar_edit', $sectId, $userId);
-					$section['PERM']['edit_section'] = $isOwner
-						|| self::CanDo('calendar_edit_section', $sectId, $userId);
-				}
-
-				$hasFullAccess = CCalendarType::CanDo('calendar_type_edit_access', $section['CAL_TYPE']);
-
-				if ($hasFullAccess || $isOwner)
-				{
-					$section['PERM']['access'] = $isOwner || self::CanDo('calendar_edit_access', $sectId, $userId);
-				}
-
-				if (($getPermissions || $isOwner || self::CanDo('calendar_edit_access', $sectId, $userId)) || $section['CAL_TYPE'] === 'location')
+				if ($getPermissions || $section['PERM']['access'] || $section['CAL_TYPE'] === 'location')
 				{
 					$section['ACCESS'] = [];
-					if (is_array(self::$Permissions[$sectId]) && count(self::$Permissions[$sectId]) > 0)
+					if (
+						isset(self::$Permissions[$sectId])
+						&& is_array(self::$Permissions[$sectId])
+						&& !empty(self::$Permissions[$sectId])
+					)
 					{
 						// Add codes to get they full names for interface
 						$arAccessCodes = array_merge($arAccessCodes, array_keys(self::$Permissions[$sectId]));
@@ -396,6 +395,7 @@ class CCalendarSect
 				$res[] = $section;
 			}
 		}
+
 		return $res;
 	}
 
@@ -429,8 +429,8 @@ class CCalendarSect
 	public static function GetSuperposedList($params = [])
 	{
 		global $DB;
-		$checkPermissions = $params['checkPermissions'] !== false;
-		$userId = isset($params['userId']) ? intval($params['userId']) : CCalendar::GetCurUserId();
+		$checkPermissions = ($params['checkPermissions'] ?? null) !== false;
+		$userId = isset($params['userId']) ? (int)$params['userId'] : CCalendar::GetCurUserId();
 
 		$arResult = [];
 		$arSectionIds = [];
@@ -449,25 +449,35 @@ class CCalendarSect
 		if (isset($params['TYPES']) && is_array($params['TYPES']))
 		{
 			foreach($params['TYPES'] as $type)
-				$strTypes .= ",'".$DB->ForSql($type)."'";
+			{
+				$strTypes .= ",'" . $DB->ForSql($type) . "'";
+			}
 
 			$strTypes = trim($strTypes, ", ");
 			if ($strTypes != "")
-				$sqlSearch .= "(CS.CAL_TYPE in (".$strTypes."))";
+			{
+				$sqlSearch .= "(CS.CAL_TYPE in (" . $strTypes . "))";
+			}
 		}
 
 		// Group's calendars
 		$strGroups = "0";
-		if (is_array($params['GROUPS']) && count($params['GROUPS']) > 0)
+		if (!empty($params['GROUPS']) && is_array($params['GROUPS']))
 		{
 			foreach($params['GROUPS'] as $ownerId)
-				if (intval($ownerId) > 0)
-					$strGroups .= ",".intval($ownerId);
+			{
+				if ((int)$ownerId > 0)
+				{
+					$strGroups .= "," . (int)$ownerId;
+				}
+			}
 
 			if ($strGroups != "0")
 			{
 				if ($sqlSearch != "")
+				{
 					$sqlSearch .= " OR ";
+				}
 				$sqlSearch .= "(CS.OWNER_ID in (".$strGroups.") AND CS.CAL_TYPE='group')";
 			}
 		}
@@ -512,13 +522,13 @@ class CCalendarSect
 		// User's calendars
 		$strUsers = "0";
 
-		if (is_array($params['USERS']) && count($params['USERS']) > 0)
+		if (isset($params['USERS']) && is_array($params['USERS']) && count($params['USERS']) > 0)
 		{
 			foreach($params['USERS'] as $ownerId)
 			{
-				if (intval($ownerId) > 0)
+				if ((int)$ownerId > 0)
 				{
-					$strUsers .= ",".intval($ownerId);
+					$strUsers .= ",". (int)$ownerId;
 				}
 			}
 
@@ -568,17 +578,34 @@ class CCalendarSect
 				$sectId = $sect['ID'];
 				$ownerId = $sect['OWNER_ID'];
 
-				if (self::CanDo('calendar_view_time', $sectId) && !in_array($sectId, $sectIds))
+				$accessController = new SectionAccessController($userId);
+				$sectionModel =
+					SectionModel::createFromId((int)$sectId)
+						->setType($sect['CAL_TYPE'])
+						->setOwnerId((int)$ownerId)
+				;
+				$request = [
+					ActionDictionary::ACTION_SECTION_EVENT_VIEW_TIME => [],
+					ActionDictionary::ACTION_SECTION_EVENT_VIEW_TITLE => [],
+					ActionDictionary::ACTION_SECTION_EVENT_VIEW_FULL => [],
+					ActionDictionary::ACTION_SECTION_ADD => [],
+					ActionDictionary::ACTION_SECTION_EDIT => [],
+					ActionDictionary::ACTION_SECTION_ACCESS => [],
+				];
+
+				$result = $accessController->batchCheck($request, $sectionModel);
+
+				if ($result[ActionDictionary::ACTION_SECTION_EVENT_VIEW_TIME] && !in_array($sectId, $sectIds))
 				{
-					$sect['PERM'] = array(
-						'view_time' => self::CanDo('calendar_view_time', $sectId),
-						'view_title' => self::CanDo('calendar_view_title', $sectId),
-						'view_full' => self::CanDo('calendar_view_full', $sectId),
-						'add' => self::CanDo('calendar_add', $sectId),
-						'edit' => self::CanDo('calendar_edit', $sectId),
-						'edit_section' => self::CanDo('calendar_edit_section', $sectId),
-						'access' => self::CanDo('calendar_edit_access', $sectId),
-					);
+					$sect['PERM'] = [
+						'view_time' => $result[ActionDictionary::ACTION_SECTION_EVENT_VIEW_TIME],
+						'view_title' => $result[ActionDictionary::ACTION_SECTION_EVENT_VIEW_TITLE],
+						'view_full' => $result[ActionDictionary::ACTION_SECTION_EVENT_VIEW_FULL],
+						'add' => $result[ActionDictionary::ACTION_SECTION_ADD],
+						'edit' => $result[ActionDictionary::ACTION_SECTION_EDIT],
+						'edit_section' => $result[ActionDictionary::ACTION_SECTION_EDIT],
+						'access' => $result[ActionDictionary::ACTION_SECTION_ACCESS],
+					];
 
 					if ($sect['CAL_TYPE'] === 'user')
 					{
@@ -615,6 +642,14 @@ class CCalendarSect
 			$arResult = $res;
 		}
 
+		foreach ($arResult as &$section)
+		{
+			if (!empty($section['NAME']))
+			{
+				$section['NAME'] = Emoji::decode($section['NAME']);
+			}
+		}
+
 		return $arResult;
 	}
 
@@ -627,19 +662,26 @@ class CCalendarSect
 		$isNewSection = !isset($sectionFields['ID']) || $sectionFields['ID'] <= 0;
 		if (isset($sectionFields['COLOR']) || $isNewSection)
 		{
-			$sectionFields['COLOR'] = CCalendar::Color($sectionFields['COLOR']);
+			$sectionFields['COLOR'] = CCalendar::Color($sectionFields['COLOR'] ?? null);
 		}
 
 		$sectionFields['TIMESTAMP_X'] = CCalendar::Date(time());
 
-		if (is_array($sectionFields['EXPORT']))
+		if (isset($sectionFields['EXPORT']) && is_array($sectionFields['EXPORT']))
 		{
 			$sectionFields['EXPORT'] = [
 				'ALLOW' => (bool)$sectionFields['EXPORT']['ALLOW'],
-				'SET' => (in_array($sectionFields['EXPORT']['set'], array('all', '3_9', '6_12'))) ? $sectionFields['EXPORT']['set'] : 'all',
+				'SET' => (in_array($sectionFields['EXPORT']['set'] ?? null, array('all', '3_9', '6_12')))
+					? $sectionFields['EXPORT']['set']
+					: 'all',
 			];
 
 			$sectionFields['EXPORT'] = serialize($sectionFields['EXPORT']);
+		}
+
+		if (!empty($sectionFields['NAME']))
+		{
+			$sectionFields['NAME'] = Emoji::encode($sectionFields['NAME']);
 		}
 
 		if ($isNewSection) // Add
@@ -652,6 +694,11 @@ class CCalendarSect
 			if ((!isset($sectionFields['CREATED_BY']) || !$sectionFields['CREATED_BY']))
 			{
 				$sectionFields['CREATED_BY'] = CCalendar::GetCurUserId();
+			}
+
+			if (!isset($sectionFields['EXTERNAL_TYPE']))
+			{
+				$sectionFields['EXTERNAL_TYPE'] = 'local';
 			}
 
 			unset($sectionFields['ID']);
@@ -673,27 +720,26 @@ class CCalendarSect
 
 			unset($sectionFields['ID']);
 			$strUpdate = $DB->PrepareUpdate("b_calendar_section", $sectionFields);
-			$strSql =
-				"UPDATE b_calendar_section SET ".
-					$strUpdate.
-				" WHERE ID = " . $id;
+			$strSql = "UPDATE b_calendar_section SET ". $strUpdate . " WHERE ID = " . $id;
 
-			$DB->QueryBind($strSql, array('DESCRIPTION' => $sectionFields['DESCRIPTION']));
+			$DB->QueryBind($strSql, array('DESCRIPTION' => $sectionFields['DESCRIPTION'] ?? null));
 		}
 
 		//SaveAccess
-		if ($id > 0 && is_array($sectionFields['ACCESS']))
+		if ($id > 0 && isset($sectionFields['ACCESS']) && is_array($sectionFields['ACCESS']))
 		{
-			if (
-				($sectionFields['CAL_TYPE'] === 'user' && $sectionFields['OWNER_ID'] == $userId)
-				|| self::CanDo('calendar_edit_access', $id)
-			)
+			$sectionModel =
+				SectionModel::createFromId($id)
+					->setType($sectionFields['CAL_TYPE'])
+					->setOwnerId((int)($sectionFields['OWNER_ID'] ?? null))
+			;
+			if ((new SectionAccessController($userId))->check(ActionDictionary::ACTION_SECTION_ACCESS, $sectionModel))
 			{
 				if (empty($sectionFields['ACCESS']))
 				{
 					self::SavePermissions(
 						$id,
-						self::GetDefaultAccess($sectionFields['CAL_TYPE'], $sectionFields['OWNER_ID'])
+						self::GetDefaultAccess($sectionFields['CAL_TYPE'], $sectionFields['OWNER_ID'] ?? null)
 					);
 				}
 				else
@@ -768,7 +814,7 @@ class CCalendarSect
 
 		}
 
-		$pullUserId = (int)$sectionFields['CREATED_BY'] > 0 ? (int)$sectionFields['CREATED_BY'] : $userId;
+		$pullUserId = (int) ($sectionFields['CREATED_BY'] ?? $userId);
 		Util::addPullEvent(
 			'edit_section',
 			$pullUserId,
@@ -784,14 +830,15 @@ class CCalendarSect
 	public static function Delete($id, $checkPermissions = true, $params = [])
 	{
 		global $DB;
-		if ($checkPermissions !== false && !self::CanDo('calendar_edit_section', $id))
+		$id = (int)$id;
+
+		$sectionFields = self::GetById($id);
+		$canEdit = $sectionFields['PERM']['edit'] ?? false;
+		if ($checkPermissions !== false && !$canEdit)
 		{
 			return CCalendar::ThrowError('EC_ACCESS_DENIED');
 		}
 
-		$id = (int)$id;
-
-		$sectionFields = self::GetById($id);
 		$meetingIds = [];
 		if (Util::isSectionStructureConverted())
 		{
@@ -918,7 +965,7 @@ class CCalendarSect
 			{
 				$arFields['NECESSITY'] = 'N';
 				$arFields['CAPACITY'] = 0;
-//TODO test this
+
 				$builder = new \Bitrix\Calendar\Core\Builders\Rooms\RoomBuilderFromArray($arFields);
 				$room = $builder->build();
 
@@ -1022,8 +1069,9 @@ class CCalendarSect
 		self::$bClearOperationCache = $val;
 	}
 
-	public static function CanDo($operation, $sectId = 0, $userId = false)
+	public static function CanDo($operation, $sectId = 0, $userId = null)
 	{
+		$res = null;
 		global $USER;
 		if ((!$USER || !is_object($USER)) || $USER->CanDoOperation('edit_php'))
 		{
@@ -1044,38 +1092,62 @@ class CCalendarSect
 			return true;
 		}
 
-		if ((
+		if (
+			CCalendar::IsSocNet()
+			&& CCalendar::IsSocnetAdmin()
+			&&(
 				CCalendar::GetType() === 'group'
 				|| CCalendar::GetType() === 'user'
 				|| CCalendar::IsBitrix24()
 			)
-			&& CCalendar::IsSocNet()
-			&& CCalendar::IsSocnetAdmin()
 		)
 		{
 			return true;
 		}
 
-		$res = in_array($operation, self::GetOperations($sectId, $userId));
+		if ((int)$sectId && (int)$userId && !self::$bClearOperationCache)
+		{
+			$sectionPermKey = $userId . '|' . $sectId;
+			if (isset(self::$userSectionPermissions[$sectionPermKey]))
+			{
+				$res = in_array($operation, self::$userSectionPermissions[$sectionPermKey], true);
+			}
+		}
+
+		if ($res === null)
+		{
+			$res = in_array($operation, self::GetOperations($sectId, $userId), true);
+		}
 
 		self::$bClearOperationCache = false;
 		return $res;
 	}
 
-	public static function GetOperations($sectId, $userId = false)
+	public static function GetOperations($sectId, $userId = null)
 	{
 		if (!$userId)
 		{
 			$userId = CCalendar::GetCurUserId();
 		}
 
+		if ((int)$sectId && (int)$userId && !self::$bClearOperationCache)
+		{
+			$sectionPermKey = $userId . '|' . $sectId;
+			if (isset(self::$userSectionPermissions[$sectionPermKey]))
+			{
+				return self::$userSectionPermissions[$sectionPermKey];
+			}
+		}
+
 		$codes = Util::getUserAccessCodes($userId);
 
 		$key = $sectId.'|'.implode(',', $codes);
-		if (self::$bClearOperationCache || !is_array(self::$arOp[$key]))
+		if (self::$bClearOperationCache || !is_array(self::$arOp[$key] ?? null))
 		{
 			if (!isset(self::$Permissions[$sectId]))
-				self::GetArrayPermissions(array($sectId));
+			{
+				self::GetArrayPermissions([$sectId]);
+			}
 			$perms = self::$Permissions[$sectId];
 
 			self::$arOp[$key] = [];
@@ -1083,13 +1155,22 @@ class CCalendarSect
 			{
 				foreach ($perms as $code => $taskId)
 				{
-					if (in_array($code, $codes))
+					if (in_array($code, $codes, true))
 					{
 						self::$arOp[$key] = array_merge(self::$arOp[$key], CTask::GetOperations($taskId, true));
 					}
 				}
 			}
 		}
+
+		if ((int)$sectId && (int)$userId)
+		{
+			$sectionPermKey = $userId . '|' . $sectId;
+			self::$userSectionPermissions[$sectionPermKey] = self::$arOp[$key];
+		}
+
+		self::$bClearOperationCache = false;
+
 		return self::$arOp[$key];
 	}
 
@@ -1102,26 +1183,32 @@ class CCalendarSect
 		$strIds = [];
 		$result = [];
 		foreach($arIds as $id)
-			if (intval($id) > 0)
+		{
+			if ((int)$id > 0)
 			{
-				$strIds[] = intval($id);
-				$result[intval($id)] = 0;
+				$strIds[] = (int)$id;
+				$result[(int)$id] = 0;
 			}
+		}
 		$strIds = implode(',', $strIds);
 
 		$strSql = "SELECT ID, CAL_DAV_CON FROM b_calendar_section WHERE ID in (".$strIds.")";
 		$res = $DB->Query($strSql, false, "File: ".__FILE__."<br>Line: ".__LINE__);
 
 		while ($arRes = $res->Fetch())
-			$result[$arRes['ID']] = ($arRes['CAL_DAV_CON'] > 0) ? intval($arRes['CAL_DAV_CON']) : 0;
+		{
+			$result[$arRes['ID']] = ($arRes['CAL_DAV_CON'] > 0) ? (int)$arRes['CAL_DAV_CON'] : 0;
+		}
 
 		if (!is_array($section))
+		{
 			return $result[$section];
+		}
 
 		return $result;
 	}
 
-	public static function GetExportLink($sectionId, $type = '', $ownerId = false)
+	public static function GetExportLink($sectionId, $type = '', $ownerId = null)
 	{
 		$userId = CCalendar::getCurUserId();
 		$ownerId = (int)$ownerId;
@@ -1176,7 +1263,19 @@ class CCalendarSect
 			return null;
 		}
 
-		if ($params['params']['originalFrom'] === $params['sectionFields']['EXTERNAL_TYPE'])
+		$originalFrom = $params['params']['originalFrom'] ?? null;
+		if ($originalFrom === ($params['sectionFields']['EXTERNAL_TYPE'] ?? null))
+		{
+			return null;
+		}
+
+		if (
+			!empty($params['sectionFields']['EXTERNAL_TYPE'])
+			&& (
+				$params['sectionFields']['EXTERNAL_TYPE'] === Bitrix\Calendar\Sync\Caldav\Helper::CALDAV_TYPE
+				|| $params['sectionFields']['EXTERNAL_TYPE'] === Bitrix\Calendar\Sync\Caldav\Helper::EXCHANGE_TYPE
+			)
+		)
 		{
 			return null;
 		}
@@ -1186,7 +1285,12 @@ class CCalendarSect
 			return null;
 		}
 
+		/** @var \Bitrix\Calendar\Core\Section\Section $section */
 		$section = (new Bitrix\Calendar\Core\Mappers\Section())->getById($id);
+		if (!$section)
+		{
+			return null;
+		}
 
 		$factories = FactoriesCollection::createByUserId($params['userId']);
 		if ($factories->count() === 0)
@@ -1196,9 +1300,9 @@ class CCalendarSect
 
 		$syncManager = new Synchronization($factories);
 		$context = new Context([]);
-		if (!empty($params['params']['originalFrom']))
+		if (!empty($originalFrom))
 		{
-			$context->add('sync', 'originalFrom', $params['params']['originalFrom']);
+			$context->add('sync', 'originalFrom', $originalFrom);
 		}
 
 		$result = $syncManager->createSection($section, $context);
@@ -1213,12 +1317,12 @@ class CCalendarSect
 				{
 					$outgoingManager = new \Bitrix\Calendar\Sync\Managers\OutgoingManager($factory->getConnection());
 					/** @var Result $vendorResult */
-					if ($vendorResult = $result->getData()[$factory->getCode()])
+					if (
+						($vendorResult = $result->getData()[$factory->getCode()])
+						&& $sectionConnection = $vendorResult->getData()['sectionConnection']
+					)
 					{
-						if ($sectionConnection = $vendorResult->getData()['sectionConnection'])
-						{
-							$outgoingManager->subscribeSection($sectionConnection);
-						}
+						$outgoingManager->subscribeSection($sectionConnection);
 					}
 				}
 			}
@@ -1235,7 +1339,7 @@ class CCalendarSect
 			return null;
 		}
 
-		if ($params['params']['arFields']['CAL_TYPE'] !== 'user')
+		if (($params['params']['arFields']['CAL_TYPE'] ?? null) !== 'user')
 		{
 			return null;
 		}
@@ -1245,7 +1349,12 @@ class CCalendarSect
 			return new Result();
 		}
 
+		/** @var \Bitrix\Calendar\Core\Section\Section $section */
 		$section = (new Bitrix\Calendar\Core\Mappers\Section())->getById($id);
+		if (!$section)
+		{
+			return null;
+		}
 
 		$factories = FactoriesCollection::createBySection($section);
 		if ($factories->count() === 0)
@@ -1344,16 +1453,18 @@ class CCalendarSect
 	public static function ReturnICal($Params)
 	{
 		$sectId = $Params['sectId'];
-		$userId = intval($Params['userId']);
+		$userId = (int)$Params['userId'];
 		$sign = $Params['sign'];
 		$type = mb_strtolower($Params['type']);
-		$ownerId = intval($Params['ownerId']);
+		$ownerId = (int)$Params['ownerId'];
 		$bCache = false;
 
 		$GLOBALS['APPLICATION']->RestartBuffer();
 
 		if (!self::CheckSign($sign, $userId, $sectId))
+		{
 			return CCalendar::ThrowError(Loc::getMessage('EC_ACCESS_DENIED'));
+		}
 
 		$arSections = self::GetList(
 			array(
@@ -1386,18 +1497,6 @@ class CCalendarSect
 		self::ShowICalHeaders();
 		echo $iCalEvents;
 		exit();
-	}
-
-	function ExtendExportEventsArray($arEvents, $arCalEx)
-	{
-		for($i = 0, $l = count($arEvents); $i < $l; $i++)
-		{
-			$calId = $arEvents[$i]['IBLOCK_SECTION_ID'];
-			if (!isset($arCalEx[$calId]))
-				continue;
-			$arEvents[$i]['NAME'] = $arEvents[$i]['NAME'].' ['.$arCalEx[$calId]['SP_PARAMS']['NAME'].' :: '.$arCalEx[$calId]['NAME'].']';
-		}
-		return $arEvents;
 	}
 
 	private static function ShowICalHeaders()
@@ -1677,27 +1776,27 @@ class CCalendarSect
 		if ($section && $section['ID'])
 		{
 			$sectionId = $section['ID'];
-			if (!is_array(self::$Permissions[$sectionId]))
+			if (!isset(self::$Permissions[$sectionId]) || !is_array(self::$Permissions[$sectionId]))
 			{
 				self::$Permissions[$sectionId] = [];
 			}
 
-			if($section['ACCESS_CODE'] != '' && $section['ACCESS_CODE'] != '0' && $section['TASK_ID'] > 0)
+			if (isset($section['ACCESS_CODE']) && $section['ACCESS_CODE'] != '' && $section['ACCESS_CODE'] != '0' && $section['TASK_ID'] > 0)
 			{
 				self::$Permissions[$sectionId][$section['ACCESS_CODE']] = $section['TASK_ID'];
 			}
 
-			if($section['CAL_TYPE'] === 'location' && $section['ACCESS'] != '' && $section['ACCESS_CODE'] != '0')
+			if ($section['CAL_TYPE'] === 'location' && ($section['ACCESS'] ?? null) != '' && ($section['ACCESS_CODE'] ?? null) != '0')
 			{
 				self::$Permissions[$sectionId] = $section['ACCESS'];
 			}
 
-			if($section['CAL_TYPE'] !== 'group' && $section['OWNER_ID'] > 0) // Owner for user or other calendar types
+			if ($section['CAL_TYPE'] !== 'group' && $section['OWNER_ID'] > 0) // Owner for user or other calendar types
 			{
 				self::$Permissions[$sectionId]['U'.$section['OWNER_ID']] = CCalendar::GetAccessTasksByName('calendar_section', 'calendar_access');
 			}
 
-			if($section['CAL_TYPE'] === 'group' && $section['OWNER_ID'] > 0) // Owner for group
+			if ($section['CAL_TYPE'] === 'group' && $section['OWNER_ID'] > 0) // Owner for group
 			{
 				self::$Permissions[$sectionId]['SG'.$section['OWNER_ID'].'_A'] = CCalendar::GetAccessTasksByName('calendar_section', 'calendar_access');
 			}
@@ -1736,8 +1835,8 @@ class CCalendarSect
 	 */
 	public static function CheckGoogleVirtualSection($davXmlId = '', $externalType = ''): bool
 	{
-		return $davXmlId !== '' && (preg_match('/@virtual\/events\//i', $davXmlId)
-			|| preg_match('/@group\.v\.calendar\.google/i', $davXmlId)
+		return $davXmlId !== '' && (preg_match('/@virtual\/events\//i', (string)$davXmlId)
+			|| preg_match('/@group\.v\.calendar\.google/i', (string)$davXmlId)
 			|| $externalType === Dictionary::ACCESS_ROLE_TO_EXTERNAL_TYPE['reader']
 			|| $externalType === Dictionary::ACCESS_ROLE_TO_EXTERNAL_TYPE['freeBusyOrder']
 		);
@@ -1757,10 +1856,10 @@ class CCalendarSect
 		return $count;
 	}
 
-	public static function GetSectionIdByEventId($id)
+	public static function GetSectionByEventId($id)
 	{
 		$resDb = EventTable::getList([
-			'select' => ['SECTION_ID',],
+			'select' => ['SECTION_ID', 'OWNER_ID', 'CAL_TYPE'],
 			'filter' => ['ID' => $id],
 		]);
 
@@ -1781,7 +1880,7 @@ class CCalendarSect
 				if (
 					$section['EXTERNAL_TYPE'] === self::EXTERNAL_TYPE_LOCAL
 					&& $section['CAL_TYPE'] === 'user'
-					&& (int)$section['OWNER_ID'] === CCalendar::GetUserId()
+					&& (int)$section['OWNER_ID'] === CCalendar::GetOwnerId()
 				)
 				{
 					return true;
@@ -1901,6 +2000,10 @@ class CCalendarSect
 					$section['SUPERPOSED'] = true;
 				}
 
+				if (!empty($section['NAME']))
+				{
+					$section['NAME'] = Emoji::decode($section['NAME']);
+				}
 				$sections[] = $section;
 				$sectionIdList[] = (int) $section['ID'];
 			}

@@ -562,6 +562,9 @@ class CBPDocument
 
 		//Deferred deletion
 		Bizproc\Worker\Document\DeleteStepper::bindDocument($documentId);
+
+		//touch runtime
+		CBPRuntime::getRuntime()->onDocumentDelete($documentId);
 	}
 
 	public static function postTaskForm($arTask, $userId, $arRequest, &$arErrors, $userName = "")
@@ -798,7 +801,10 @@ class CBPDocument
 			$ar = array();
 
 			foreach ($arWorkflowParameters as $parameterKey => $arParameter)
-				$ar[$parameterKey] = $arRequest["bizproc".$templateId."_".$parameterKey];
+			{
+				$key = "bizproc" . $templateId . "_" . $parameterKey;
+				$ar[$parameterKey] = $arRequest[$key] ?? null;
+			}
 
 			$arWorkflowParametersValues = CBPWorkflowTemplateLoader::CheckWorkflowParameters(
 				$arWorkflowParameters,
@@ -987,14 +993,11 @@ class CBPDocument
 
 	public static function showParameterField($type, $name, $values, $arParams = Array())
 	{
-		if($arParams['id'] <> '')
-			$id = $arParams['id'];
-		else
-			$id = md5(uniqid());
+		$id = !empty($arParams['id']) ? $arParams['id'] : md5(uniqid());
 
-		$cols = $arParams['size']>0?intval($arParams['size']):70;
+		$cols = !empty($arParams['size']) ? intval($arParams['size']) : 70;
 		$defaultRows = $type == "user" ? 3 : 1;
-		$rows = max(($arParams['rows']>0?intval($arParams['rows']):$defaultRows), min(5, ceil(mb_strlen($values) / $cols)));
+		$rows = max((isset($arParams['rows']) && $arParams['rows']>0?intval($arParams['rows']):$defaultRows), min(5, ceil(mb_strlen((string)$values) / $cols)));
 
 		if($type == "user")
 		{

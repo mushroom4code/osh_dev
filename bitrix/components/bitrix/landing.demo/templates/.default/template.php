@@ -14,17 +14,15 @@ use \Bitrix\Landing\Manager;
 use \Bitrix\Main\Page\Asset;
 use \Bitrix\Main\Localization\Loc;
 use \Bitrix\Main\ModuleManager;
+use Bitrix\Main\UI\Extension;
 
-\Bitrix\Main\UI\Extension::load([
+Extension::load([
 	'ui.fonts.opensans',
 	'sidepanel',
 	'ui.design-tokens',
 ]);
 
 Loc::loadMessages(__FILE__);
-Loc::loadMessages(
-	Manager::getDocRoot() . '/bitrix/components/bitrix/landing.demo/templates/.default/designed_by.php'
-);
 
 $context = \Bitrix\Main\Application::getInstance()->getContext();
 $request = $context->getRequest();
@@ -137,9 +135,9 @@ if (!$component->isAjax())
 	}
 
 	// create empty button
-	if ($arParams['TYPE'] !== 'STORE')
+	if ($arParams['TYPE'] === 'KNOWLEDGE' || $arParams['TYPE'] === 'GROUP')
 	{
-		$emptyTpl = ($arParams['TYPE'] === 'KNOWLEDGE' && !$arParams['SITE_ID'])
+		$emptyTpl = !$arParams['SITE_ID']
 			? 'empty-multipage/main'
 			: 'empty'
 		;
@@ -155,7 +153,7 @@ if (!$component->isAjax())
 			>'
 			. Loc::getMessage("LANDING_TPL_CREATE_EMPTY")
 			. '</div>';
-		$APPLICATION->addViewContent('title_actions', $createEmptyButton);
+		$APPLICATION->addViewContent('inside_pagetitle', $createEmptyButton);
 	}
 	?>
 	<div style="display: none">
@@ -265,7 +263,7 @@ if (!$component->isAjax())
 					<div class="landing-title-overflow">
 						<?= \htmlspecialcharsbx($item['TITLE'])?>
 					</div>
-					<?if ($item['IS_NEW'] === 'Y'): ?>
+					<?if (($item['IS_NEW'] ?? null) === 'Y'): ?>
 						<span class="landing-title-new"><?= Loc::getMessage('LANDING_TPL_LABEL_NEW');?></span>
 					<?endif;?>
 				</div>
@@ -278,26 +276,18 @@ if (!$component->isAjax())
 						srcset="<?= \htmlspecialcharsbx($item['PREVIEW2X'] ? $item['PREVIEW2X'] : $item['PREVIEW'])?> 2x,
 									<?= \htmlspecialcharsbx($item['PREVIEW3X'] ? $item['PREVIEW3X'] : $item['PREVIEW'])?> 3x">
 				<?endif;?>
-				<?php if ($item['LABELS']):?>
+				<?php if ($item['LABELS'] ?? null):?>
 					<span class="landing-item-label">
-						<?=$item['LABELS'][0]['TEXT']?>
+						<?=Loc::getMessage('LANDING_TPL_LABEL_SUBSCRIPTION')?>
+					</span>
+				<?php elseif($item['TYPE'] === 'PAGE'):?>
+					<span class="landing-item-label landing-item-label-free">
+						<?=Loc::getMessage('LANDING_TPL_LABEL_FREE')?>
 					</span>
 				<?php endif;?>
 			</span>
 
 			<div class="landing-item-bottom">
-				<?php if ($item['DESIGNED_BY']):?>
-					<a class="landing-item-designed"
-						href="<?= Loc::getMessage('LANDING_TPL_DESIGNED_BY_' . $item['DESIGNED_BY'] . '_URL')?>"
-						target="_blank"
-					>
-						<?php $name = Loc::getMessage('LANDING_TPL_DESIGNED_BY_' . $item['DESIGNED_BY'] . '_NAME'); ?>
-						<?= Loc::getMessage('LANDING_TPL_DESIGN_BY', [
-							'#DESIGNER#' => $name,
-						]);?>
-					</a>
-				<?php endif;?>
-
 				<?php if (trim($item['DESCRIPTION'])):?>
 					<span class="landing-item-description">
 						<span class="landing-item-desc-inner">

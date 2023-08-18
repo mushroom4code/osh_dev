@@ -1,14 +1,16 @@
-import { Type, Tag } from 'main.core';
-import { Popup } from 'main.popup';
+import {Type, Tag, Dom} from 'main.core';
+import {Popup} from 'main.popup';
+import {EventEmitter} from "main.core.events";
 
 import PopupComponentsMakerItem from './popup.item';
 
 import 'ui.fonts.opensans';
 import 'ui.design-tokens';
+import './style.css';
 
-export class PopupComponentsMaker
+class PopupComponentsMaker
 {
-	constructor({ id, target, content, width, cacheable })
+	constructor({ id, target, content, width, cacheable, contentPadding, padding, offsetTop, blurBackground })
 	{
 		this.id = Type.isString(id) ? id : null;
 		this.target = Type.isElementNode(target) ? target : null;
@@ -19,6 +21,10 @@ export class PopupComponentsMaker
 		this.items = [];
 		this.width = Type.isNumber(width) ? width : null;
 		this.cacheable = Type.isBoolean(cacheable) ? cacheable : true;
+		this.contentPadding = Type.isNumber(contentPadding) ? contentPadding : 0;
+		this.padding = Type.isNumber(padding) ? padding : 13;
+		this.offsetTop = Type.isNumber(offsetTop) ? offsetTop : 0;
+		this.blurBlackground = Type.isBoolean(blurBackground) ? blurBackground : false;
 	}
 
 	getItems()
@@ -53,20 +59,35 @@ export class PopupComponentsMaker
 
 			this.popup = new Popup(popupId, this.target, {
 				className: 'ui-popupcomponentmaker',
-
 				contentBackground: 'transparent',
+				contentPadding: this.contentPadding,
 				angle: {
 					offset: (popupWidth / 2) - 16
 				},
+				offsetTop: this.offsetTop,
 				width: popupWidth,
 				offsetLeft: -(popupWidth / 2) + (this.target ? this.target.offsetWidth / 2 : 0) + 40,
 				autoHide: true,
 				closeByEsc: true,
-				padding: 13,
+				padding: this.padding,
 				animation: 'fading-slide',
 				content: this.getContentWrapper(),
 				cacheable: this.cacheable
 			});
+
+			if (this.blurBlackground)
+			{
+				Dom.addClass(this.popup.getPopupContainer(), 'popup-with-radius');
+				this.setBlurBackground();
+				EventEmitter.subscribe(
+					EventEmitter.GLOBAL_TARGET,
+					'BX.Intranet.Bitrix24:ThemePicker:onThemeApply', () => {
+						setTimeout(() => {
+							this.setBlurBackground();
+						}, 200)
+					}
+				);
+			}
 
 			this.popup.getContentContainer().style.overflowX = null;
 		}
@@ -103,6 +124,15 @@ export class PopupComponentsMaker
 					Type.isNumber(item.marginBottom)
 						? sectionNode.style.marginBottom = item.marginBottom + 'px'
 						: null;
+				}
+				if (item?.className)
+				{
+					Dom.addClass(sectionNode, item.className);
+				}
+
+				if (item?.attrs)
+				{
+					Dom.adjust(sectionNode, {attrs: item.attrs});
 				}
 
 				if (Type.isDomNode(item?.html))
@@ -183,6 +213,52 @@ export class PopupComponentsMaker
 		`;
 	}
 
+	setBlurBackground(): void
+	{
+		const container = this.getPopup().getPopupContainer();
+		const windowStyles = window.getComputedStyle(document.body);
+		const backgroundImage = windowStyles.backgroundImage;
+		const backgroundColor = windowStyles.backgroundColor;
+
+		if (Type.isDomNode(container))
+		{
+			Dom.addClass(container, 'popup-window-blur');
+		}
+
+		let blurStyle = Dom.create('style', {
+			attrs: {
+				type: 'text/css',
+				id: 'styles-widget-blur',
+			}
+		});
+
+		let styles = '.popup-window-content:after { '
+			+ 'background-image: '
+			+ backgroundImage
+			+ ';'
+			+ 'background-color: '
+			+ backgroundColor
+			+ '} ';
+
+		styles = document.createTextNode(styles);
+		blurStyle.appendChild(styles);
+
+		let stylesWithAngle = '.popup-window-angly:after { ' + 'background-color: ' + backgroundColor + '} ';
+
+		stylesWithAngle = document.createTextNode(stylesWithAngle);
+		blurStyle.appendChild(stylesWithAngle);
+		const headStyle = document.head.querySelector('#styles-widget-blur');
+
+		if (headStyle)
+		{
+			Dom.replace(headStyle, blurStyle);
+		}
+		else
+		{
+			document.head.appendChild(blurStyle);
+		}
+	}
+
 	show()
 	{
 		if (!Type.isDomNode(this.target))
@@ -198,3 +274,8 @@ export class PopupComponentsMaker
 		this.getPopup().close();
 	}
 }
+
+export {
+	PopupComponentsMakerItem,
+	PopupComponentsMaker
+};

@@ -103,7 +103,7 @@ class SavedDeliveryProfiles
         try {
             $savedProfilesRes = ProfilesAddressesTable::getList(['filter' => [
                 'USER_ID' => $userId,
-                ]
+            ]
             ]);
             $savedProfiles = [];
             while ($savedProfile = $savedProfilesRes->fetch()) {

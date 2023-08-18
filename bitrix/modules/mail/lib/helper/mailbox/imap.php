@@ -859,23 +859,9 @@ class Imap extends Mail\Helper\Mailbox
 			return null;
 		}
 
-		$pushParams = ['dir' => $dir->getPath()];
-
 		$result = $this->syncDirInternal($dir);
 
 		$dir->stopSyncLock();
-
-		if (false === $result)
-		{
-			$pushParams['complete'] = -1;
-			$pushParams['status'] = -1;
-			$pushParams['errors'] = $this->client->getErrors()->toArray();
-		}
-		else
-		{
-			$pushParams['complete'] = $this->isTimeQuotaExceeded() ? -1 : $dir->getPath() !== $this->syncParams['currentDir'];
-			$pushParams['new'] = $result;
-		}
 
 		$this->lastSyncResult['newMessages'] += $result;
 		if (!$dir->isTrash() && !$dir->isSpam() && !$dir->isDraft() && !$dir->isOutcome())
@@ -1689,7 +1675,7 @@ class Imap extends Mail\Helper\Mailbox
 			'DIR_UIDV'     => $uidToken,
 			'MSG_UID'      => $message['UID'],
 			'INTERNALDATE' => $message['__internaldate'],
-			'IS_SEEN'      => preg_grep('/^ \x5c Seen $/ix', $message['FLAGS']) ? 'Y' : 'N',
+			'IS_SEEN'      => (isset($message['FLAGS']) && preg_grep('/^ \x5c Seen $/ix', $message['FLAGS'])) ? 'Y' : 'N',
 			'HEADER_MD5'   => $this->buildMessageHeaderHashForDataBase($message),
 			'MESSAGE_ID'   => 0,
 		];

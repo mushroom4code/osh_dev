@@ -1235,10 +1235,19 @@ CalendarPlanner.prototype =
 
 		if (!img || img === "/bitrix/images/1.gif")
 		{
+			let defaultAvatarClass = 'ui-icon-common-user';
+			if (entry.emailUser)
+			{
+				defaultAvatarClass = 'ui-icon-common-user-mail';
+			}
+			if (entry.sharingUser)
+			{
+				defaultAvatarClass += ' ui-icon-common-user-sharing';
+			}
+
 			imageNode = BX.create("DIV", {
 				props: {
-					className: 'ui-icon calendar-planner-user-image-icon '
-					+ (entry.emailUser ? 'ui-icon-common-user-mail' : 'ui-icon-common-user')
+					className: 'ui-icon calendar-planner-user-image-icon ' + defaultAvatarClass,
 				},
 				attrs: {
 					'bx-tooltip-user-id': entry.id,
@@ -1259,7 +1268,7 @@ CalendarPlanner.prototype =
 					'bx-tooltip-classname': 'calendar-planner-user-tooltip',
 					'title': BX.Text.encode(entry.name)
 				},
-				html: '<i style="background-image: url(\'' + (entry.avatar) + '\')"></i>'
+				html: '<i style="background-image: url(\'' + (encodeURI(entry.avatar)) + '\')"></i>'
 			});
 		}
 		return imageNode;

@@ -43,7 +43,7 @@ class EnteregoBasket
      * @throws \Bitrix\Main\NotImplementedException
      * @throws \Bitrix\Main\NotSupportedException
      */
-    public function OnSaleBasketBeforeSaved(Main\Event $event)
+    public static function OnSaleBasketBeforeSaved(Main\Event $event)
     {
         //TODO на форме заказа вызывается на почти на любое действие
         CModule::IncludeModule('iblock') || die();
@@ -83,12 +83,16 @@ class EnteregoBasket
                 }
             }
 
-            if ($origin_total_price <= 10000) {
-                $price_id = RETAIL_PRICE;
-            } elseif ($origin_total_price <= 30000) {
-                $price_id = BASIC_PRICE;
-            } else {
+            if (SITE_ID === SITE_EXHIBITION) {
                 $price_id = B2B_PRICE;
+            } else {
+                if ($origin_total_price <= 10000) {
+                    $price_id = RETAIL_PRICE;
+                } elseif ($origin_total_price <= 30000) {
+                    $price_id = BASIC_PRICE;
+                } else {
+                    $price_id = B2B_PRICE;
+                }
             }
 
             foreach ($product_prices as $product_id => $price_data) {
@@ -108,8 +112,7 @@ class EnteregoBasket
                     array('CODE' => 'USE_DISCOUNT'));
                 $newProp = $propsUseSale->Fetch();
 
-                if (USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') {
-
+                if ((USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') && SITE_ID !== 'V3' ) {
                     $typePriceIds[] = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
                 }
 

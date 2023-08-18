@@ -524,6 +524,7 @@ BX.SaleCommonPVZ = {
 
         if (this.curDeliveryId === this.doorDeliveryId) {
             this.buildDeliveryDate()
+            this.buildDeliveryTime()
             this.buildAddressField()
             this.buildDoorDelivery(BX.Sale.OrderAjaxComponent.result)
         } else  {
@@ -658,6 +659,7 @@ BX.SaleCommonPVZ = {
      */
     buildPVZMap: function () {
         this.removeDeliveryDate()
+        this.removeDeliveryTime()
         BX.remove(BX('user-address-wrap'))
         BX.remove(BX('button-success-delivery'))
         BX.show(BX('wrap_data_view'))
@@ -1237,6 +1239,7 @@ BX.SaleCommonPVZ = {
                                                         BX('ID_DELIVERY_ID_' + __this.doorDeliveryId).checked = true
                                                         //TODO default delivery type if not send
                                                         __this.buildDeliveryDate()
+                                                        __this.buildDeliveryTime()
                                                         __this.buildAddressField()
                                                         BX.Sale.OrderAjaxComponent.sendRequest()
 
@@ -1269,13 +1272,19 @@ BX.SaleCommonPVZ = {
       }
     },
 
+    removeDeliveryTime: function () {
+        if (BX('wrap_delivery_time')){
+            BX.remove(BX('wrap_delivery_time'));
+        }
+    },
+
     buildDeliveryDate: function () {
         const dateDeliveryNode = BX.create({
             tag: 'input',
             props: {
                 type: 'text',
                 readOnly: 'readonly',
-                className: 'datepicker_order readonly form-control bx-soa-customer-input bx-ios-fix',
+                className: 'datepicker_order date_delivery_main readonly form-control bx-soa-customer-input bx-ios-fix',
                 style: 'background-color: unset',
             },
             dataset: {name: 'DATE_DELIVERY'},
@@ -1311,7 +1320,7 @@ BX.SaleCommonPVZ = {
                 BX('pvz_user_data')
             );
 
-            const tomorrow    = new Date();
+            let tomorrow    = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             let curDate = new Date(this.getValueProp(this.propDateDeliveryId))
             if (isNaN(curDate)) {
@@ -1321,6 +1330,10 @@ BX.SaleCommonPVZ = {
                 minDate: tomorrow,
                 selectedDates: curDate,
                 onSelect: function (date, opts, datepicker) {
+                    let datepicker_osh_input = $('input.datepicker_order.date_delivery_osh');
+                    if (datepicker_osh_input.length !== 0) {
+                        datepicker_osh_input.val(date)
+                    }
                     this.updateValueProp(this.propDateDeliveryId, date)
                     if (datepicker.opts.silentBool !== true) {
                         window.commonDelivery.oshMkadDistance.init(this.oshishaDeliveryOptions).then(oshMkad => {
@@ -1337,6 +1350,55 @@ BX.SaleCommonPVZ = {
         }
 
         return this
+    },
+
+    buildDeliveryTime: function () {
+        let __this = this;
+        let datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
+        const TimeDeliveryNode = BX.create({
+            tag: 'div',
+            html: '<select style="background-color: unset; height: 40px; padding: 0 23px;"' +
+                ' class="form-control bx-soa-customer-input bx-ios-fix" id="datetime_interval_popup">' +
+                datetime_interval_order.html()+'</select>',
+            dataset: {name: 'DELIVERYTIME_INTERVAL'},
+        })
+
+        if (!BX('wrap_delivery_time')) {
+            BX.append(
+                BX.create({
+                    tag: 'div',
+                    props: {
+                        id: 'wrap_delivery_time',
+                        className: "wrap_filter_block mr-2 order-5"
+                    },
+                    children: [
+                        BX.create('DIV', {
+                            children: [
+                                BX.create({
+                                    tag: 'label',
+                                    props: {className: 'title'},
+                                    text: 'Удобное время получения:'
+                                }),
+                                BX.create({
+                                        tag: 'div',
+                                        children: [
+                                            TimeDeliveryNode
+                                        ]
+                                    }
+                                )
+                            ]
+                        })
+                    ]
+                }),
+                BX('pvz_user_data')
+            );
+
+            let datetime_interval_popup = $('#datetime_interval_popup');
+            datetime_interval_popup.val(datetime_interval_order.val());
+            datetime_interval_popup.on("change", function () {
+                $('[name="ORDER_PROP_'+__this.propDeliveryTimeInterval+'"]').val(this.value);
+            });
+        }
     },
 
     buildSuccessButtonPVZ: function () {
@@ -1994,10 +2056,8 @@ BX.SaleCommonPVZ = {
             'class':'bx-soa-section-title-container'}, true)
         this.checkout.paysystem.title = BX.findChild(this.checkout.paysystem.titleBox, {
             'class':'bx-soa-section-title'}, true)
-        this.checkout.paysystem.titleIcon = BX.create('span', {attrs: {className: 'payment-title-icon'}});
 
         BX.removeClass(this.checkout.paysystem.titleBox, 'justify-content-between')
-        BX.insertAfter(this.checkout.paysystem.titleIcon, this.checkout.paysystem.title)
 
         return this
     },
@@ -2014,7 +2074,6 @@ BX.SaleCommonPVZ = {
         this.checkout.delivery.title = BX.findChild(deliveryTitleBox,
             {'class':'bx-soa-section-title'}, true)
         BX.removeClass(deliveryTitleBox, 'justify-content-between')
-        BX.insertAfter(BX.create('span', {attrs: {className: 'delivery-title-icon'}}), this.checkout.delivery.title)
 
         //Поиск блока с единой доставкой и замена его на виджет
         const pvzCheckBox = BX('ID_DELIVERY_ID_' + this.pvzDeliveryId)

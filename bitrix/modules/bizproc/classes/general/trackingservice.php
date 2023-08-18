@@ -4,11 +4,20 @@ use Bitrix\Main;
 
 class CBPTrackingService extends CBPRuntimeService
 {
+	protected const CLEAR_LOG_SELECT_LIMIT = 50000;
+	protected const CLEAR_LOG_DELETE_LIMIT = 1000;
 	protected $skipTypes = [];
 	protected $forcedModeWorkflows = [];
 	protected static $userGroupsCache = [];
 
 	private $cutQueue = [];
+
+	public const DEBUG_TRACK_TYPES = [
+		\CBPTrackingType::Debug,
+		\CBPTrackingType::DebugAutomation,
+		\CBPTrackingType::DebugDesigner,
+		\CBPTrackingType::DebugLink
+	];
 
 	public function start(CBPRuntime $runtime = null)
 	{
@@ -40,6 +49,7 @@ class CBPTrackingService extends CBPRuntimeService
 			"WHERE WORKFLOW_ID = '".$DB->ForSql($workflowId)."' ".
 			"ORDER BY ID "
 		);
+		$dbResult = new CBPTrackingServiceResult($dbResult);
 
 		$r = array();
 		$level = 0;
@@ -97,7 +107,8 @@ class CBPTrackingService extends CBPRuntimeService
 
 	public static function deleteByWorkflow($workflowId)
 	{
-		global $DB;
+		$connection = \Bitrix\Main\Application::getConnection();
+		$helper = $connection->getSqlHelper();
 
 		$workflowId = trim($workflowId);
 		if (!$workflowId)
@@ -105,11 +116,22 @@ class CBPTrackingService extends CBPRuntimeService
 			throw new Exception("workflowId");
 		}
 
-		$DB->Query(
-			"DELETE FROM b_bp_tracking ".
-			"WHERE WORKFLOW_ID = '".$DB->ForSql($workflowId)."' ",
-			true
+		$queryString = sprintf(
+			"SELECT ID FROM b_bp_tracking t WHERE WORKFLOW_ID = '%s'",
+			$helper->forSql($workflowId)
 		);
+
+		$ids = $connection->query($queryString)->fetchAll();
+
+		while ($partIds = array_splice($ids, 0, static::CLEAR_LOG_DELETE_LIMIT))
+		{
+			$connection->query(
+				sprintf(
+					'DELETE from b_bp_tracking WHERE ID IN(%s)',
+					implode(',', array_column($partIds, 'ID'))
+				)
+			);
+		}
 	}
 
 	public function setCompletedByWorkflow($workflowId, $flag = true)
@@ -134,10 +156,11 @@ class CBPTrackingService extends CBPRuntimeService
 	public static function clearOldAgent()
 	{
 		CBPTrackingService::ClearOld(COption::GetOptionString("bizproc", "log_cleanup_days", "90"));
+
 		return "CBPTrackingService::ClearOldAgent();";
 	}
 
-	public static function parseStringParameter($string, $documentType = null)
+	public static function parseStringParameter($string, $documentType = null, $htmlSpecialChars = true)
 	{
 		if (!$documentType)
 		{
@@ -146,67 +169,85 @@ class CBPTrackingService extends CBPRuntimeService
 
 		return preg_replace_callback(
 			CBPActivity::ValueInlinePattern,
-			function ($matches) use ($documentType)
+			static function ($matches) use ($documentType, $htmlSpecialChars)
 			{
 				return CBPAllTrackingService::parseStringParameterMatches(
 					$matches,
-					[$documentType[0], $documentType[1], $documentType[2]]
+					[$documentType[0], $documentType[1], $documentType[2]],
+					$htmlSpecialChars
 				);
 			},
 			$string
 		);
 	}
 
-	public static function parseStringParameterMatches($matches, $documentType = null)
+	public static function parseStringParameterMatches($matches, $documentType = null, $htmlSpecialChars = true)
 	{
 		$result = "";
 		$documentType = is_array($documentType) ? array_filter($documentType) : null;
 
-		if ($matches[1] == "user")
+		if ($matches[1] === "user")
 		{
 			$user = $matches[2];
 
 			$l = mb_strlen("user_");
-			if (mb_substr($user, 0, $l) == "user_")
+			if (mb_strpos($user, "user_") === 0)
 			{
-				$result = CBPHelper::ConvertUserToPrintableForm(intval(mb_substr($user, $l)));
+				$result = CBPHelper::ConvertUserToPrintableForm((int)(mb_substr($user, $l)), '', $htmlSpecialChars);
 			}
 			elseif (mb_strpos($user, 'group_') === 0)
 			{
-				$result = htmlspecialcharsbx(CBPHelper::getExtendedGroupName($user));
+				$result =
+					$htmlSpecialChars
+						? htmlspecialcharsbx(CBPHelper::getExtendedGroupName($user))
+						: CBPHelper::getExtendedGroupName($user)
+				;
 			}
 			elseif ($documentType)
 			{
 				$v = implode(",", $documentType);
 				if (!array_key_exists($v,self::$userGroupsCache ))
+				{
 					self::$userGroupsCache[$v] = CBPDocument::GetAllowableUserGroups($documentType);
+				}
 
 				$result = self::$userGroupsCache[$v][$user];
 			}
 			else
+			{
 				$result = $user;
+			}
 		}
-		elseif ($matches[1] == "group")
+		elseif ($matches[1] === "group")
 		{
 			if (mb_strpos($matches[2], 'group_') === 0)
 			{
-				$result = htmlspecialcharsbx(CBPHelper::getExtendedGroupName($matches[2]));
+				$result =
+					$htmlSpecialChars
+						? htmlspecialcharsbx(CBPHelper::getExtendedGroupName($matches[2]))
+						: CBPHelper::getExtendedGroupName($matches[2])
+				;
 			}
 			elseif ($documentType)
 			{
 				$v = implode(",", $documentType);
 				if (!array_key_exists($v, self::$userGroupsCache))
+				{
 					self::$userGroupsCache[$v] = CBPDocument::GetAllowableUserGroups($documentType);
+				}
 
 				$result = self::$userGroupsCache[$v][$matches[2]];
 			}
 			else
+			{
 				$result = $matches[2];
+			}
 		}
 		else
 		{
 			$result = $matches[0];
 		}
+
 		return $result;
 	}
 
@@ -223,7 +264,7 @@ class CBPTrackingService extends CBPRuntimeService
 
 	public function canWrite($type, $workflowId)
 	{
-		if (in_array($type, [CBPTrackingType::Debug, CBPTrackingType::DebugAutomation, CBPTrackingType::DebugDesigner]))
+		if (in_array((int)$type, self::DEBUG_TRACK_TYPES, true))
 		{
 			return false;
 		}
@@ -280,25 +321,44 @@ class CBPTrackingService extends CBPRuntimeService
 		return $id;
 	}
 
-	public static function getList($arOrder = array("ID" => "DESC"), $arFilter = array(), $arGroupBy = false, $arNavStartParams = false, $arSelectFields = array())
+	public static function getList(
+		$arOrder = ["ID" => "DESC"],
+		$arFilter = [],
+		$arGroupBy = false,
+		$arNavStartParams = false,
+		$arSelectFields = []
+	)
 	{
 		global $DB;
 
 		if (count($arSelectFields) <= 0)
-			$arSelectFields = array("ID", "WORKFLOW_ID", "TYPE", "MODIFIED", "ACTION_NAME", "ACTION_TITLE", "EXECUTION_STATUS", "EXECUTION_RESULT", "ACTION_NOTE", "MODIFIED_BY");
+		{
+			$arSelectFields = [
+				"ID",
+				"WORKFLOW_ID",
+				"TYPE",
+				"MODIFIED",
+				"ACTION_NAME",
+				"ACTION_TITLE",
+				"EXECUTION_STATUS",
+				"EXECUTION_RESULT",
+				"ACTION_NOTE",
+				"MODIFIED_BY",
+			];
+		}
 
-		static $arFields = array(
-			"ID" => Array("FIELD" => "T.ID", "TYPE" => "int"),
-			"WORKFLOW_ID" => Array("FIELD" => "T.WORKFLOW_ID", "TYPE" => "string"),
-			"TYPE" => Array("FIELD" => "T.TYPE", "TYPE" => "int"),
-			"ACTION_NAME" => Array("FIELD" => "T.ACTION_NAME", "TYPE" => "string"),
-			"ACTION_TITLE" => Array("FIELD" => "T.ACTION_TITLE", "TYPE" => "string"),
-			"MODIFIED" => Array("FIELD" => "T.MODIFIED", "TYPE" => "datetime"),
-			"EXECUTION_STATUS" => Array("FIELD" => "T.EXECUTION_STATUS", "TYPE" => "int"),
-			"EXECUTION_RESULT" => Array("FIELD" => "T.EXECUTION_RESULT", "TYPE" => "int"),
-			"ACTION_NOTE" => Array("FIELD" => "T.ACTION_NOTE", "TYPE" => "string"),
-			"MODIFIED_BY" => Array("FIELD" => "T.MODIFIED_BY", "TYPE" => "int"),
-		);
+		static $arFields = [
+			"ID" => ["FIELD" => "T.ID", "TYPE" => "int"],
+			"WORKFLOW_ID" => ["FIELD" => "T.WORKFLOW_ID", "TYPE" => "string"],
+			"TYPE" => ["FIELD" => "T.TYPE", "TYPE" => "int"],
+			"ACTION_NAME" => ["FIELD" => "T.ACTION_NAME", "TYPE" => "string"],
+			"ACTION_TITLE" => ["FIELD" => "T.ACTION_TITLE", "TYPE" => "string"],
+			"MODIFIED" => ["FIELD" => "T.MODIFIED", "TYPE" => "datetime"],
+			"EXECUTION_STATUS" => ["FIELD" => "T.EXECUTION_STATUS", "TYPE" => "int"],
+			"EXECUTION_RESULT" => ["FIELD" => "T.EXECUTION_RESULT", "TYPE" => "int"],
+			"ACTION_NOTE" => ["FIELD" => "T.ACTION_NOTE", "TYPE" => "string"],
+			"MODIFIED_BY" => ["FIELD" => "T.MODIFIED_BY", "TYPE" => "int"],
+		];
 
 		$arSqls = CBPHelper::PrepareSql($arFields, $arOrder, $arFilter, $arGroupBy, $arSelectFields);
 
@@ -317,9 +377,11 @@ class CBPTrackingService extends CBPRuntimeService
 
 			$dbRes = $DB->Query($strSql, false, "File: ".__FILE__."<br>Line: ".__LINE__);
 			if ($arRes = $dbRes->Fetch())
+			{
 				return $arRes["CNT"];
-			else
-				return False;
+			}
+
+			return false;
 		}
 
 		$strSql =
@@ -349,7 +411,9 @@ class CBPTrackingService extends CBPRuntimeService
 			if ($arSqls["GROUPBY"] == '')
 			{
 				if ($arRes = $dbRes->Fetch())
+				{
 					$cnt = $arRes["CNT"];
+				}
 			}
 			else
 			{
@@ -368,12 +432,12 @@ class CBPTrackingService extends CBPRuntimeService
 			$dbRes = $DB->Query($strSql, false, "File: ".__FILE__."<br>Line: ".__LINE__);
 		}
 
-		return $dbRes;
+		return new CBPTrackingServiceResult($dbRes);
 	}
 
 	public static function clearOld($days = 0)
 	{
-		global $DB;
+		$connection = \Bitrix\Main\Application::getConnection();
 
 		$days = intval($days);
 		if ($days <= 0)
@@ -382,14 +446,27 @@ class CBPTrackingService extends CBPRuntimeService
 		}
 
 		$completed = self::shouldClearCompletedTracksOnly() ? "= 'Y'" : "IN ('N', 'Y')";
+		$limit = static::CLEAR_LOG_SELECT_LIMIT;
+		$partLimit = static::CLEAR_LOG_DELETE_LIMIT;
 
-		$strSql = "DELETE t FROM b_bp_tracking t".
-			" WHERE t.COMPLETED {$completed} ".
-			" AND t.MODIFIED < DATE_SUB(NOW(), INTERVAL ".$days." DAY)".
-			" AND t.TYPE IN (0,1,2,3,4,5,7,8,9)";
-		$bSuccess = $DB->Query($strSql, true);
+		$strSql = "SELECT ID FROM b_bp_tracking t WHERE t.COMPLETED {$completed} "
+			. " AND t.MODIFIED < DATE_SUB(NOW(), INTERVAL " . $days . " DAY)"
+			. " AND t.TYPE IN (0,1,2,3,4,5,7,8,9) LIMIT {$limit}"
+		;
 
-		return $bSuccess;
+		$ids = $connection->query($strSql)->fetchAll();
+
+		while ($partIds = array_splice($ids, 0, $partLimit))
+		{
+			$connection->query(
+				sprintf(
+					'DELETE from b_bp_tracking WHERE ID IN(%s)',
+					implode(',', array_column($partIds, 'ID'))
+				)
+			);
+		}
+
+		return true;
 	}
 
 	private function cutLogSize(string $workflowId, int $size): bool
@@ -481,20 +558,76 @@ class CBPTrackingService extends CBPRuntimeService
 	}
 }
 
+class CBPTrackingServiceResult extends CDBResult
+{
+	public function fetch()
+	{
+		$result = parent::Fetch();
+
+		if ($result && isset($result['ACTION_NOTE']) && is_string($result['ACTION_NOTE']))
+		{
+			$actionNote = $result['ACTION_NOTE'];
+
+			if (isset($result['TYPE']) && in_array((int)$result['TYPE'], CBPTrackingService::DEBUG_TRACK_TYPES, true))
+			{
+				$actionNote = \Bitrix\Main\Web\Json::decode($actionNote);
+				if (isset($actionNote['propertyValue']) && is_string($actionNote['propertyValue']))
+				{
+					$propertyValue = $actionNote['propertyValue'];
+					$propertyValue = \CBPTrackingService::parseStringParameter($propertyValue, null, false);
+					$propertyValue = self::convertTimestampTag($propertyValue);
+					$actionNote['propertyValue'] = $propertyValue;
+				}
+
+				$result['ACTION_NOTE'] = \Bitrix\Main\Web\Json::encode($actionNote);
+			}
+			else
+			{
+				$actionNote = \CBPTrackingService::parseStringParameter($actionNote, null, false);
+				$actionNote = self::convertTimestampTag($actionNote);
+
+				$result['ACTION_NOTE'] = $actionNote;
+			}
+		}
+
+		return $result;
+	}
+
+	private static function convertTimestampTag($string): string
+	{
+		return preg_replace_callback(
+			'/\[timestamp=(\d+)\].*\[\/timestamp\]/i',
+			static function ($matches)
+			{
+				$timestamp = (int)$matches[1];
+
+				$datetime = new \Bitrix\Bizproc\BaseType\Value\DateTime($timestamp, CTimeZone::GetOffset());
+				if ($datetime->getTimestamp() === null)
+				{
+					return '';
+				}
+
+				return (string)$datetime;
+			},
+			$string
+		);
+	}
+}
+
 class CBPTrackingType
 {
-	const Unknown = 0;
-	const ExecuteActivity = 1;
-	const CloseActivity = 2;
-	const CancelActivity = 3;
-	const FaultActivity = 4;
-	const Custom = 5;
-	const Report = 6;
-	const AttachedEntity = 7;
-	const Trigger = 8;
-	const Error = 9;
-	const Debug = 10;
-	const DebugAutomation = 11;
-	const DebugDesigner = 12;
-	const DebugLink = 13;
+	public const Unknown = 0;
+	public const ExecuteActivity = 1;
+	public const CloseActivity = 2;
+	public const CancelActivity = 3;
+	public const FaultActivity = 4;
+	public const Custom = 5;
+	public const Report = 6;
+	public const AttachedEntity = 7;
+	public const Trigger = 8;
+	public const Error = 9;
+	public const Debug = 10;
+	public const DebugAutomation = 11;
+	public const DebugDesigner = 12;
+	public const DebugLink = 13;
 }

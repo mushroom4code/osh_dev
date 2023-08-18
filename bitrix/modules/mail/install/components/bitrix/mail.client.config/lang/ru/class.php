@@ -57,7 +57,7 @@ $MESS["MAIL_CLIENT_CONFIG_SMTP_LOGIN"] = "Логин";
 $MESS["MAIL_CLIENT_CONFIG_SMTP_PASS"] = "Пароль";
 
 $MESS["MAIL_CLIENT_CONFIG_ACCESS"] = "Доступ к почтовому ящику";
-$MESS["MAIL_CLIENT_CONFIG_ACCESS_HINT"] = "Разрешите другим сотрудникам получать письма из этого ящика и отвечать на них. Добавьте нужных сотрудников и организуйте совместную работу с почтой, например, для отдела продаж или службы поддержки клиентов.";
+$MESS["MAIL_CLIENT_CONFIG_ACCESS_HINT_MSGVER_1"] = "Разрешите другим сотрудникам получать письма из этого ящика и отвечать на них. Добавьте нужных сотрудников и организуйте совместную работу с почтой, например, для отдела продаж или службы поддержки клиентов.";
 $MESS["MAIL_CLIENT_CONFIG_ACCESS_MORE"] = "подробнее";
 $MESS["MAIL_CLIENT_CONFIG_ACCESS_ADD"] = "Добавить";
 
@@ -127,3 +127,4 @@ $MESS["MAIL_MAILBOX_LICENSE_SHARED_LIMIT_BODY"] = "Количество почт
 
 $MESS["MAIL_MAILBOX_REMOVE_CONFIRM_TEXT"] = "Вы действительно хотите отключить почтовый ящик?";
 $MESS["MAIL_MAILBOX_REMOVE_CONFIRM"] = "Отключить почтовый ящик?";
+

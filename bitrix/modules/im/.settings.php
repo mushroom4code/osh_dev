@@ -1,24 +1,29 @@
 <?php
 
-use Bitrix\Im\Integration\UI\EntitySelector\DepartmentDataFilter;
-
 return [
 	'controllers' => [
 		'value' => [
+			'namespaces' => [
+				'\\Bitrix\\Im\\V2\\Controller' => 'v2',
+			],
 			'defaultNamespace' => '\\Bitrix\\Im\\Controller',
 			'restIntegration' => [
-				'enabled' => true
+				'enabled' => true,
+				'scopes' => ['im.import']
 			]
 		],
 		'readonly' => true,
 	],
 	'services' => [
 		'value' => [
+			'Im.Messenger' => [
+				'className' => \Bitrix\Im\V2\Service\Messenger::class,
+			],
 			'Im.Services.Message' => [
-				'className' => '\\Bitrix\\Im\\Services\\Message',
+				'className' => \Bitrix\Im\Services\Message::class,
 			],
 			'Im.Services.MessageParam' => [
-				'className' => '\\Bitrix\\Im\\Services\\MessageParam',
+				'className' => \Bitrix\Im\Services\MessageParam::class,
 			],
 		],
 		'readonly' => true,
@@ -29,12 +34,12 @@ return [
 				[
 					'id' => 'im.userDataFilter',
 					'entityId' => 'user',
-					'className' => '\\Bitrix\\Im\\Integration\\UI\\EntitySelector\\UserDataFilter',
+					'className' => \Bitrix\Im\Integration\UI\EntitySelector\UserDataFilter::class,
 				],
 				[
 					'id' => 'im.departmentDataFilter',
 					'entityId' => 'department',
-					'className' => DepartmentDataFilter::class,
+					'className' => \Bitrix\Im\Integration\UI\EntitySelector\DepartmentDataFilter::class,
 				]
 			],
 			'entities' => [
@@ -42,28 +47,28 @@ return [
 					'entityId' => 'im-bot',
 					'provider' => [
 						'moduleId' => 'im',
-						'className' => '\\Bitrix\\Im\\Integration\\UI\\EntitySelector\\BotProvider',
+						'className' => \Bitrix\Im\Integration\UI\EntitySelector\BotProvider::class,
 					],
 				],
 				[
 					'entityId' => 'im-chat',
 					'provider' => [
 						'moduleId' => 'im',
-						'className' => '\\Bitrix\\Im\\Integration\\UI\\EntitySelector\\ChatProvider',
+						'className' => \Bitrix\Im\Integration\UI\EntitySelector\ChatProvider::class,
 					],
 				],
 				[
 					'entityId' => 'im-chat-user',
 					'provider' => [
 						'moduleId' => 'im',
-						'className' => '\\Bitrix\\Im\\Integration\\UI\\EntitySelector\\ChatUserProvider',
+						'className' => \Bitrix\Im\Integration\UI\EntitySelector\ChatUserProvider::class,
 					],
 				],
 				[
 					'entityId' => 'im-recent',
 					'provider' => [
 						'moduleId' => 'im',
-						'className' => '\\Bitrix\\Im\\Integration\\UI\\EntitySelector\\RecentChatProvider',
+						'className' => \Bitrix\Im\Integration\UI\EntitySelector\RecentChatProvider::class,
 					],
 				],
 			],

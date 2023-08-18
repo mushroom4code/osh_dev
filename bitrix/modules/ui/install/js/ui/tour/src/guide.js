@@ -57,6 +57,8 @@ export class Guide extends Event.EventEmitter
 		this.targetPos = null;
 		this.clickOnBackBtn = false;
 		this.helper = top.BX.Helper;
+		this.targetContainer = Type.isDomNode(options.targetContainer) ? options.targetContainer : null;
+		this.overlay = Type.isBoolean(options.overlay) ? options.overlay : true;
 
 		this.finalStep = options.finalStep || false;
 		this.finalText = options.finalText || "";
@@ -134,7 +136,10 @@ export class Guide extends Event.EventEmitter
 			this.save();
 		}
 
-		this.setOverlay();
+		if (this.overlay)
+		{
+			this.setOverlay();
+		}
 
 		const popup = this.getPopup();
 		popup.show();
@@ -224,12 +229,15 @@ export class Guide extends Event.EventEmitter
 
 		if (this.layout.backBtn)
 		{
-			setTimeout(function() {
+			setTimeout(() => {
 				this.layout.backBtn.style.display = "block";
-			}.bind(this), 10);
+			}, 10);
 		}
 
-		this.setOverlayElementForm();
+		if (this.overlay)
+		{
+			this.setOverlayElementForm();
+		}
 
 		if(this.getCurrentStep())
 		{
@@ -421,21 +429,13 @@ export class Guide extends Event.EventEmitter
 				{
 					offsetTop = - (this.layout.element.getAttribute("height") / 2 - this.targetPos.height / 2 + 10);
 				}
+				else
+				{
+					offsetTop = 0;
+				}
 
 				angleOffset = 0;
 			}
-		}
-
-		if(this.onEvents)
-		{
-			const bindElement = this.getCurrentStep()
-				? this.getCurrentStep().getTarget()
-				: window;
-			const popupWidth = this.onEvents ? 280 : 420;
-
-			offsetTop = 0;
-			offsetLeft = -(popupWidth / 2) + (bindElement.offsetWidth / 2) + 40;
-			angleOffset = (popupWidth / 2) - 15;
 		}
 
 		let bindElement = this.getCurrentStep().getTarget();
@@ -472,7 +472,14 @@ export class Guide extends Event.EventEmitter
 		`;
 
 		Dom.addClass(document.body, 'ui-tour-body-overflow');
-		Dom.append(this.layout.overlay, document.body);
+		if (this.targetContainer)
+		{
+			Dom.append(this.layout.overlay, this.targetContainer);
+		}
+		else
+		{
+			Dom.append(this.layout.overlay, document.body);
+		}
 
 		this.setOverlayElementForm();
 	}
@@ -561,9 +568,9 @@ export class Guide extends Event.EventEmitter
 
 		if (this.currentStepIndex + 1 === this.steps.length && !this.finalStep && !this.onEvents)
 		{
-			setTimeout(function() {
+			setTimeout(() => {
 				this.layout.nextBtn.textContent = Loc.getMessage("JS_UI_TOUR_BUTTON_CLOSE");
-			}.bind(this), 200);
+			}, 200);
 		}
 	}
 
@@ -579,9 +586,9 @@ export class Guide extends Event.EventEmitter
 
 		if (this.currentStepIndex < this.steps.length && !this.finalStep)
 		{
-			setTimeout(function() {
+			setTimeout(() => {
 				this.layout.nextBtn.textContent = Loc.getMessage("JS_UI_TOUR_BUTTON");
-			}.bind(this), 200);
+			}, 200);
 		}
 
 		this.currentStepIndex--;
@@ -640,6 +647,7 @@ export class Guide extends Event.EventEmitter
 			const popupWidth = this.onEvents ? 280 : 420;
 
 			this.popup = new Popup({
+				targetContainer: this.targetContainer,
 				content: this.getContent(),
 				bindElement: bindElement,
 				className: className,
@@ -893,6 +901,7 @@ export class Guide extends Event.EventEmitter
 				</button>
 			`;
 
+
 			this.layout.backBtn = Tag.render`
 				<button id="back" class="ui-tour-popup-btn-back">
 				</button>
@@ -985,9 +994,9 @@ export class Guide extends Event.EventEmitter
 		}
 		else
 		{
-			setTimeout(function() {
+			setTimeout(() => {
 				this.showStep();
-			}.bind(this), 200);
+			}, 200);
 
 			if (Dom.hasClass(this.layout.backBtn, 'ui-tour-popup-btn-hidden'))
 			{
@@ -1011,10 +1020,10 @@ export class Guide extends Event.EventEmitter
 		}
 
 		this.clickOnBackBtn = true;
-		setTimeout(function() {
+		setTimeout(() => {
 			this.layout.backBtn.style.display = "none";
 			this.showStep();
-		}.bind(this), 200);
+		}, 200);
 
 		if (this.getCurrentStep().getTarget())
 		{
@@ -1137,9 +1146,9 @@ export class Guide extends Event.EventEmitter
 	{
 		this.setCursorPos();
 
-		setTimeout(function() {
+		setTimeout(() => {
 			this.animateCursor();
-		}.bind(this), 1000);
+		}, 1000);
 	}
 
 	getCursor()
@@ -1149,9 +1158,9 @@ export class Guide extends Event.EventEmitter
 			this.layout.cursor = Tag.render`
 				<div class="ui-tour-cursor"></div>
 			`;
-			Event.bind(this.layout.cursor, 'transitionend', function() {
+			Event.bind(this.layout.cursor, 'transitionend', () => {
 				this.getCurrentStep().initTargetEvent();
-			}.bind(this));
+			});
 			Dom.append(this.layout.cursor, document.body);
 		}
 

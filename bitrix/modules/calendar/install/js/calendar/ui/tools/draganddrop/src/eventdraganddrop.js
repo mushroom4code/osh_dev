@@ -1,4 +1,5 @@
 import DragAndDropInterface from './draganddropinterface';
+import { Util } from 'calendar.util';
 
 /**
  * @implements DragAndDropInterface
@@ -17,6 +18,12 @@ export class EventDragAndDrop implements DragAndDropInterface
 		this.getEvents = getEvents;
 	}
 
+	setFinalTimeInterval(from, to)
+	{
+		this.finalFrom = new Date(from.getTime());
+		this.finalTo = new Date(to.getTime());
+	}
+
 	getFinalFrom()
 	{
 		return this.finalFrom;
@@ -31,9 +38,8 @@ export class EventDragAndDrop implements DragAndDropInterface
 	{
 		this.savedDuration = duration;
 		this.tryDuration = 0;
-		const startBoundary = this.getBoundaryFromPosition(startPosition);
-		this.finalFrom = startBoundary.from;
-		this.finalTo = startBoundary.to;
+		this.startBoundary = this.getBoundaryFromPositionAndDuration(startPosition, duration);
+		this.setFinalTimeInterval(this.startBoundary.from, this.startBoundary.to);
 	}
 
 	getDragBoundary(position)
@@ -43,7 +49,7 @@ export class EventDragAndDrop implements DragAndDropInterface
 		this.calculateTryDuration(diff);
 		this.resetMagnetStamps(diff);
 
-		let boundary = this.getBoundaryFromPosition(position);
+		let boundary = this.getBoundaryFromPositionAndDuration(position, this.savedDuration);
 		if (this.doMagnetize())
 		{
 			boundary = this.getMagnetizedBoundary(boundary, diff);
@@ -55,10 +61,10 @@ export class EventDragAndDrop implements DragAndDropInterface
 		return boundary;
 	}
 
-	getBoundaryFromPosition(position)
+	getBoundaryFromPositionAndDuration(position, duration)
 	{
 		const from = this.getDateByPos(position);
-		const to = from ? new Date(from.getTime() + this.savedDuration) : null;
+		const to = from ? new Date(from.getTime() + duration) : null;
 		return { from, to, position, wasMagnetized: false };
 	}
 
@@ -236,21 +242,12 @@ export class EventDragAndDrop implements DragAndDropInterface
 
 	doMagnetize()
 	{
-		return !this.isAnyModifierKeyPressed() && !this.isUserTryingToTurnOffMagnet();
+		return !Util.isAnyModifierKeyPressed() && !this.isUserTryingToTurnOffMagnet();
 	}
 
 	isUserTryingToTurnOffMagnet()
 	{
 		return this.tryDuration > this.maxTryDuration;
-	}
-
-	isAnyModifierKeyPressed()
-	{
-		if (window.event)
-		{
-			return window.event.altKey || window.event.shiftKey || window.event.ctrlKey || window.event.metaKey;
-		}
-		return true;
 	}
 
 }

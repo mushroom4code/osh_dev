@@ -10,7 +10,15 @@ $APPLICATION->SetPageProperty("BodyClass", ($bodyClass ? $bodyClass." " : "") . 
 
 $script = $arResult['SCRIPT'];
 
-\Bitrix\Main\UI\Extension::load(["ui.forms", "ui.alerts", "ui.layout-form", "sidepanel", "ui.sidepanel-content"]);
+\Bitrix\Main\UI\Extension::load([
+	"ui.design-tokens",
+	"ui.fonts.opensans",
+	"ui.forms",
+	"ui.alerts",
+	"ui.layout-form",
+	"sidepanel",
+	"ui.sidepanel-content",
+]);
 
 $menu = [
 	[
@@ -78,7 +86,7 @@ $APPLICATION->IncludeComponent("bitrix:ui.sidepanel.wrappermenu", "", [
 			$APPLICATION->IncludeComponent('bitrix:bizproc.automation', '', [
 				'ONE_TEMPLATE_MODE' => true,
 				'TEMPLATE' => [
-					'ID' => $script['WORKFLOW_TEMPLATE_ID']
+					'ID' => $script['WORKFLOW_TEMPLATE_ID'] ?? 0,
 				],
 				'DOCUMENT_TYPE' => [$script['MODULE_ID'], $script['ENTITY'], $script['DOCUMENT_TYPE']],
 				'DOCUMENT_ID'                   => null,

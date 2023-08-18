@@ -21,14 +21,7 @@ $colorSchemes = array(
 	"red" => "bx-red",
 	"blue" => "bx-blue",
 );
-if(isset($colorSchemes[$arParams["TEMPLATE_THEME"]]))
-{
-	$colorScheme = $colorSchemes[$arParams["TEMPLATE_THEME"]];
-}
-else
-{
-	$colorScheme = "";
-}
+$colorScheme = $colorSchemes[$arParams["TEMPLATE_THEME"]] ?? "";
 ?>
 
 <div class="bx-pagination <?=$colorScheme?>">
@@ -93,13 +86,9 @@ else
 				<li class="bx-pag-prev"><a href="<?=$arResult["sUrlPath"]?><?=$strNavQueryStringFull?>"><span><?echo GetMessage("round_nav_back")?></span></a></li>
 			<?endif?>
 			<li class=""><a href="<?=$arResult["sUrlPath"]?><?=$strNavQueryStringFull?>"><span>1</span></a></li>
-			<?if($arResult["NavPageNomer"] > 3 && $arResult["NavPageCount"] > 5):?>
-			<span class="dotted_nav">...</span>
-			<?endif;?>
 		<?endif?>
 	<?else:?>
 			<li class="bx-pag-prev"><span><?echo GetMessage("round_nav_back")?></span></li>
-			
 			<li class="bx-active"><span>1</span></li>
 	<?endif?>
 
@@ -117,8 +106,6 @@ else
 
 	<?if($arResult["NavPageNomer"] < $arResult["NavPageCount"]):?>
 		<?if($arResult["NavPageCount"] > 1):?>
-			<?if($arResult["NavPageCount"] > $arResult["nStartPage"] + 1):?><span class="dotted_nav">...</span><?endif;?>
-			
 			<li class=""><a href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=$arResult["NavPageCount"]?>"><span><?=$arResult["NavPageCount"]?></span></a></li>
 		<?endif?>
 			<li class="bx-pag-next"><a href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>"><span><?echo GetMessage("round_nav_forward")?></span></a></li>

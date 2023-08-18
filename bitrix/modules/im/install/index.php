@@ -44,9 +44,12 @@ class im extends CModule
 	function InstallDB()
 	{
 		global $DB, $APPLICATION;
+		$connection = \Bitrix\Main\Application::getConnection();
 
-		if(!$DB->Query("SELECT 'x' FROM b_im_chat", true))
-			$this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/im/install/db/mysql/install.sql");
+		if (!$DB->TableExists('b_im_chat'))
+		{
+			$this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/im/install/db/' . $connection->getType() . '/install.sql');
+		}
 
 		if(!empty($this->errors))
 		{
@@ -64,7 +67,7 @@ class im extends CModule
 		RegisterModuleDependences("main", "OnBeforeUserSendPassword", "im", "CIMEvent", "OnBeforeUserSendPassword");
 		RegisterModuleDependences("pull", "OnGetDependentModule", "im", "CIMEvent", "OnGetDependentModule");
 		RegisterModuleDependences("main", "OnProlog", "main", "", "", 3, "/modules/im/ajax_hit.php");
-		RegisterModuleDependences("perfmon", "OnGetTableSchema", "im", "CIMTableSchema", "OnGetTableSchema");
+		RegisterModuleDependences("perfmon", "OnGetTableSchema", "im", "im", "OnGetTableSchema");
 		RegisterModuleDependences("im", "OnGetNotifySchema", "im", "CIMNotifySchema", "OnGetNotifySchema");
 		RegisterModuleDependences("main", "OnFileDelete", "im", "CIMEvent", "OnFileDelete");
 		RegisterModuleDependences("disk", "onAfterDeleteFile", "im", "CIMDisk", "OnAfterDeleteFile");
@@ -74,6 +77,9 @@ class im extends CModule
 		RegisterModuleDependences('rest', 'OnRestServiceBuildDescription', 'im', 'CIMRestService', 'OnRestServiceBuildDescription');
 		RegisterModuleDependences('rest', 'OnRestAppDelete', 'im', 'CIMRestService', 'OnRestAppDelete');
 		RegisterModuleDependences('main', 'OnAuthProvidersBuildList', 'im', '\Bitrix\Im\Access\ChatAuthProvider', 'getProviders');
+		RegisterModuleDependences('main', 'OnAfterUserUpdate', 'im', '\Bitrix\Im\Configuration\EventHandler', 'onAfterUserUpdate');
+		RegisterModuleDependences( 'main', 'OnAfterUserDelete', 'im', '\Bitrix\Im\Configuration\EventHandler', 'onAfterUserDelete');
+		RegisterModuleDependences('main', 'OnAfterUserAdd', 'im', '\Bitrix\Im\Configuration\EventHandler', 'onAfterUserAdd');
 
 		CAgent::AddAgent("CIMMail::MailNotifyAgent();", "im", "N", 600);
 		CAgent::AddAgent("CIMMail::MailMessageAgent();", "im", "N", 600);
@@ -82,7 +88,10 @@ class im extends CModule
 		CAgent::AddAgent("\\Bitrix\\Im\\Bot::deleteExpiredTokenAgent();", "im", "N", 86400);
 		CAgent::AddAgent("\\Bitrix\\Im\\Disk\\NoRelationPermission::cleaningAgent();", "im", "N", 3600);
 		CAgent::AddAgent("\\Bitrix\\Im\\Call\\Conference::removeTemporaryAliases();", "im", "N", 86400);
-		CAgent::AddAgent("\\Bitrix\\Im\\Message\\Uuid::cleanOldRecords();", "im", "N", 86400);
+		CAgent::AddAgent('\Bitrix\Im\Message\Uuid::cleanOldRecords();', 'im', 'N', 86400);/** @see \Bitrix\Im\Message\Uuid::cleanOldRecords */
+		CAgent::AddAgent('\Bitrix\Im\V2\Link\Reminder\ReminderService::remindAgent();', 'im', 'N', 60);
+		CAgent::AddAgent('\Bitrix\Im\V2\Link\File\TemporaryFileService::cleanAgent();', 'im', 'N', 3600);
+		CAgent::AddAgent('\Bitrix\Im\Update\MessageDisappearing::disappearMessagesAgent();', 'im', 'N', 60);
 
 		$eventManager = \Bitrix\Main\EventManager::getInstance();
 		$eventManager->registerEventHandler('pull', 'onGetMobileCounter', 'im', '\Bitrix\Im\Counter', 'onGetMobileCounter');
@@ -90,6 +99,13 @@ class im extends CModule
 		$eventManager->registerEventHandler('voximplant', 'onConferenceFinished', 'im', '\Bitrix\Im\Call\Call', 'onVoximplantConferenceFinished');
 
 		$eventManager->registerEventHandler('rest', 'onRestCheckAuth', 'im', '\Bitrix\Im\Call\Auth', 'onRestCheckAuth');
+
+		$eventManager->registerEventHandler('calendar', 'OnAfterCalendarEntryUpdate', 'im', '\Bitrix\Im\V2\Service\Messenger', 'updateCalendar');
+		$eventManager->registerEventHandler('calendar', 'OnAfterCalendarEventDelete', 'im', '\Bitrix\Im\V2\Service\Messenger', 'unregisterCalendar');
+		$eventManager->registerEventHandler('im', 'OnAfterMessagesAdd', 'im', '\Bitrix\Im\V2\Message\Delete\DisappearService', 'checkDisappearing');
+
+		//marketplace
+		$eventManager->registerEventHandler('rest', 'OnRestServiceBuildDescription', 'im','\Bitrix\Im\V2\Marketplace\Placement', 'onRestServiceBuildDescription');
 
 		$solution = COption::GetOptionString("main", "wizard_solution", false);
 		if ($solution == 'community')
@@ -106,7 +122,7 @@ class im extends CModule
 
 		\Bitrix\Im\Integration\Intranet\User::registerEventHandler();
 
-		$errors = $DB->RunSQLBatch($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/im/install/db/mysql/install_ft.sql");
+		$errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/im/install/db/' . $connection->getType() . '/install_ft.sql');
 		if ($errors === false)
 		{
 			\Bitrix\Im\Model\MessageIndexTable::getEntity()->enableFullTextIndex("SEARCH_CONTENT");
@@ -127,6 +143,7 @@ class im extends CModule
 		$this->InstallTemplateRules();
 		$this->InstallEvents();
 		$this->InstallUserFields();
+		$this->installDefaultConfigurationPreset();
 
 		CAgent::AddAgent("CIMChat::InstallGeneralChat(true);", "im", "N", 900, "", "Y", ConvertTimeStamp(time()+CTimeZone::GetOffset()+900, "FULL"));
 
@@ -314,6 +331,63 @@ class im extends CModule
 		}
 	}
 
+	function installDefaultConfigurationPreset()
+	{
+		$defaultGroupId = \Bitrix\Main\Config\Option::get('im', \Bitrix\Im\Configuration\Configuration::DEFAULT_PRESET_SETTING_NAME, null);
+		if ($defaultGroupId !== null)
+		{
+			return $defaultGroupId;
+		}
+
+		$defaultGroupId =
+			\Bitrix\Im\Model\OptionGroupTable::add([
+				'NAME' => \Bitrix\Im\Configuration\Configuration::DEFAULT_PRESET_NAME,
+				'SORT' => 0,
+				'CREATE_BY_ID' => 0,
+			])
+				->getId()
+		;
+		$generalDefaultSettings = \Bitrix\Im\Configuration\General::getDefaultSettings();
+		\Bitrix\Im\Configuration\General::setSettings($defaultGroupId, $generalDefaultSettings);
+
+		$notifySettings = \Bitrix\Im\Configuration\Notification::getSimpleNotifySettings($generalDefaultSettings);
+		\Bitrix\Im\Configuration\Notification::setSettings($defaultGroupId, $notifySettings);
+
+
+		if (\Bitrix\Main\Loader::includeModule('intranet'))
+		{
+			$topDepartmentId = \Bitrix\Im\Configuration\Department::getTopDepartmentId();
+			\Bitrix\Im\Model\OptionAccessTable::add([
+				'GROUP_ID' => $defaultGroupId,
+				'ACCESS_CODE' => $topDepartmentId ? 'DR' . $topDepartmentId : 'AU'
+			]);
+		}
+
+		$usersQuery =
+			\Bitrix\Main\UserTable::query()
+				->addSelect('ID')
+				->where('IS_REAL_USER', 'Y')
+		;
+
+		$userBindings = [];
+		foreach ($usersQuery->exec() as $row)
+		{
+			$userBindings[] = [
+				'USER_ID' => $row['ID'],
+				'GENERAL_GROUP_ID' => $defaultGroupId,
+				'NOTIFY_GROUP_ID' => $defaultGroupId,
+			];
+		}
+		if (!empty($userBindings))
+		{
+			\Bitrix\Im\Model\OptionUserTable::addMulti($userBindings, true);
+		}
+
+		\Bitrix\Main\Config\Option::set('im', \Bitrix\Im\Configuration\Configuration::DEFAULT_PRESET_SETTING_NAME, (int)$defaultGroupId);
+
+		return $defaultGroupId;
+	}
+
 	function DoUninstall()
 	{
 		global $DOCUMENT_ROOT, $APPLICATION, $step;
@@ -338,15 +412,16 @@ class im extends CModule
 	function UnInstallDB($arParams = Array())
 	{
 		global $APPLICATION, $DB, $errors;
-
+		$connection = \Bitrix\Main\Application::getConnection();
 		$this->errors = false;
 
 		CModule::IncludeModule('im');
 
 		if (!$arParams['savedata'])
 		{
-			$this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/im/install/db/mysql/uninstall.sql");
+			$this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/im/install/db/' . $connection->getType() . '/uninstall.sql');
 			COption::RemoveOption("im", "general_chat_id");
+			\Bitrix\Main\Config\Option::delete('im', ['name' => \Bitrix\Im\Configuration\Configuration::DEFAULT_PRESET_SETTING_NAME]);
 		}
 
 		if(is_array($this->errors))
@@ -371,10 +446,13 @@ class im extends CModule
 		CAgent::RemoveAgent("\\Bitrix\\Im\\Disk\\NoRelationPermission::cleaningAgent();", "im");
 		CAgent::RemoveAgent("\\Bitrix\\Im\\Call\\Conference::removeTemporaryAliases();", "im");
 		CAgent::RemoveAgent("\\Bitrix\\Im\\Message\\Uuid::cleanOldRecords();", "im");
+		CAgent::RemoveAgent('\Bitrix\Im\V2\Link\Reminder\ReminderService::remindAgent();', 'im');
+		CAgent::RemoveAgent('\Bitrix\Im\V2\Link\File\TemporaryFileService::cleanAgent();', 'im');
+		CAgent::RemoveAgent('\Bitrix\Im\Update\MessageDisappearing::disappearMessagesAgent();', 'im');
 		UnRegisterModuleDependences("im", "OnGetNotifySchema", "im", "CIMNotifySchema", "OnGetNotifySchema");
 		UnRegisterModuleDependences("main", "OnFileDelete", "im", "CIMEvent", "OnFileDelete");
 		UnRegisterModuleDependences("disk", "onAfterDeleteFile", "im", "CIMDisk", "OnAfterDeleteFile");
-		UnRegisterModuleDependences("perfmon", "OnGetTableSchema", "im", "CIMTableSchema", "OnGetTableSchema");
+		UnRegisterModuleDependences("perfmon", "OnGetTableSchema", "im", "im", "OnGetTableSchema");
 		UnRegisterModuleDependences('main', 'OnAddRatingVote', 'im', 'CIMEvent', 'OnAddRatingVote');
 		UnRegisterModuleDependences('main', 'OnChangeRatingVote', 'im', 'CIMEvent', 'OnAddRatingVote');
 		UnRegisterModuleDependences('main', 'OnAfterUserAdd', 'im', 'CIMEvent', 'OnAfterUserAdd');
@@ -390,11 +468,19 @@ class im extends CModule
 		UnRegisterModuleDependences('rest', 'OnRestServiceBuildDescription', 'im', 'CIMRestService', 'OnRestServiceBuildDescription');
 		UnRegisterModuleDependences('rest', 'OnRestAppDelete', 'im', 'CIMRestService', 'OnRestAppDelete');
 		UnRegisterModuleDependences('main', 'OnAuthProvidersBuildList', 'im', '\Bitrix\Im\Access\ChatAuthProvider', 'getProviders');
+		UnRegisterModuleDependences('main', 'OnAfterUserUpdate', 'im', '\Bitrix\Im\Configuration\EventHandler', 'onAfterUserUpdate');
+		UnRegisterModuleDependences( 'main', 'OnAfterUserDelete', 'im', '\Bitrix\Im\Configuration\EventHandler', 'onAfterUserDelete');
+		UnRegisterModuleDependences('main', 'OnAfterUserAdd', 'im', '\Bitrix\Im\Configuration\EventHandler', 'onAfterUserAdd');
 
 		$eventManager = \Bitrix\Main\EventManager::getInstance();
 		$eventManager->unRegisterEventHandler('pull', 'onGetMobileCounter', 'im', '\Bitrix\Im\Counter', 'onGetMobileCounter');
 		$eventManager->unRegisterEventHandler('pull', 'onGetMobileCounterTypes', 'im', '\Bitrix\Im\Counter', 'onGetMobileCounterTypes');
 		$eventManager->unRegisterEventHandler('voximplant', 'onConferenceFinished', 'im', '\Bitrix\Im\Call\Call', 'onVoximplantConferenceFinished');
+
+		$eventManager->unregisterEventHandler('calendar', 'OnAfterCalendarEntryUpdate', 'im', '\Bitrix\Im\V2\Service\Messenger', 'updateCalendar');
+		$eventManager->unregisterEventHandler('calendar', 'OnAfterCalendarEventDelete', 'im', '\Bitrix\Im\V2\Service\Messenger', 'unregisterCalendar');
+		$eventManager->unregisterEventHandler('rest', 'OnRestServiceBuildDescription', 'im','\Bitrix\Im\V2\Marketplace\Placement', 'onRestServiceBuildDescription');
+		$eventManager->unregisterEventHandler('im', 'OnAfterMessagesAdd', 'im', '\Bitrix\Im\V2\Message\Delete\DisappearService', 'checkDisappearing');
 
 		$this->UnInstallUserFields($arParams);
 
@@ -441,5 +527,64 @@ class im extends CModule
 		}
 
 		return true;
+	}
+
+	public static function OnGetTableSchema()
+	{
+		return array(
+			"im" => array(
+				"b_im_message" => array(
+					"ID" => array(
+						"b_im_relation" => "LAST_ID",
+						"b_im_relation^" => "LAST_SEND_ID",
+						"b_im_relation^^" => "START_ID",
+						"b_im_relation^^^" => "UNREAD_ID",
+						"b_disk_object" => "LAST_FILE_ID",
+						"b_im_chat" => "LAST_MESSAGE_ID",
+						"b_im_message_param" => "MESSAGE_ID",
+						"b_im_recent" => "ITEM_MID",
+					),
+					"CHAT_ID" => array(
+						"b_im_chat" => "ID",
+					),
+				),
+				"b_im_chat" => array(
+					"ID" => array(
+						"b_im_message" => "CHAT_ID",
+						"b_im_relation" => "CHAT_ID",
+						"b_im_recent" => "ITEM_CID",
+					),
+				),
+				"b_im_relation" => array(
+					"ID" => array(
+						"b_im_recent" => "ITEM_RID",
+					),
+					"CHAT_ID" => array(
+						"b_im_chat" => "ID",
+					),
+				),
+			),
+			"main" => array(
+				"b_user" => array(
+					"ID" => array(
+						"b_im_relation" => "USER_ID",
+						"b_im_message" => "AUTHOR_ID",
+						"b_im_chat" => "AUTHOR_ID",
+					),
+				),
+				"b_module" => array(
+					"ID" => array(
+						"b_im_message" => "NOTIFY_MODULE",
+					),
+				),
+			),
+			"imopelines" => array(
+				"b_imopenlines_session" => array(
+					"ID" => array(
+						"b_im_recent" => "ITEM_OLID",
+					),
+				),
+			),
+		);
 	}
 }

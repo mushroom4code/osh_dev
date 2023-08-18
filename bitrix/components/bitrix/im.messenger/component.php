@@ -14,12 +14,37 @@ if (intval($USER->GetID()) <= 0)
 if (!CModule::IncludeModule('im'))
 	return;
 
+if (\Bitrix\Im\Settings::isBetaActivated())
+{
+	$arResult['MESSENGER_V2'] = true;
+	$arResult['DESKTOP'] = $arParams['CONTEXT'] === 'DESKTOP';
+	if ($arResult['DESKTOP'] === true)
+	{
+		CIMMessenger::SetDesktopVersion(empty($_GET['BXD_API_VERSION'])? 0 : $_GET['BXD_API_VERSION']);
+		CIMMessenger::SetDesktopStatusOnline(null, false);
+	}
+
+	if (CModule::IncludeModule('disk'))
+	{
+		CJSCore::Init([
+			'file_dialog',
+			'im.integration.viewer'
+		]);
+	}
+	CModule::IncludeModule('voximplant');
+
+	$this->IncludeComponentTemplate();
+	return;
+}
+
 CModule::IncludeModule('voximplant');
 CModule::IncludeModule('disk');
 
 $arParams["DESKTOP"] = isset($arParams['DESKTOP']) && $arParams['DESKTOP'] == 'Y'? 'Y': 'N';
 
 $arResult = Array();
+
+$isFullscreen = $arParams['FULLSCREEN'] ?? null;
 
 if ($arParams['CONTEXT'] == 'DESKTOP' || $arParams['DESKTOP'] == 'Y')
 {
@@ -35,7 +60,7 @@ if ($arParams['CONTEXT'] == 'DESKTOP' || $arParams['DESKTOP'] == 'Y')
 	$event = new \Bitrix\Main\Event("im", "onDesktopStart", array('USER_ID' => $USER->GetID()));
 	$event->send();
 }
-else if ($arParams["CONTEXT"] == "FULLSCREEN" || $arParams['FULLSCREEN'] == 'Y')
+else if ($arParams["CONTEXT"] == "FULLSCREEN" || $isFullscreen)
 {
 	$APPLICATION->SetPageProperty("BodyClass", "bx-im-fullscreen bx-language-".LANGUAGE_ID);
 	if (!isset($arParams["DESIGN"]))
@@ -93,8 +118,8 @@ if ($arParams["INIT"] == 'Y')
 {
 	if (CIMMail::IsExternalMailAvailable())
 	{
-		$arResult["PATH_TO_USER_MAIL"] = $arParams['PATH_TO_SONET_EXTMAIL'];
-		$arResult["MAIL_COUNTER"] = intval($arResult["COUNTERS"]["mail_unseen"]);
+		$arResult["PATH_TO_USER_MAIL"] = $arParams['PATH_TO_SONET_EXTMAIL'] ?? null;
+		$arResult["MAIL_COUNTER"] = (int)($arResult["COUNTERS"]["mail_unseen"] ?? null);
 	}
 	else if (CModule::IncludeModule("dav"))
 	{

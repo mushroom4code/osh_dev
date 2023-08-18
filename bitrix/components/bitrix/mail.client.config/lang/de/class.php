@@ -2,6 +2,7 @@
 $MESS["MAIL_CLIENT_CONFIG_ACCESS"] = "Zugriffsrechte für Mailbox";
 $MESS["MAIL_CLIENT_CONFIG_ACCESS_ADD"] = "Hinzufügen";
 $MESS["MAIL_CLIENT_CONFIG_ACCESS_HINT"] = "Geben Sie den Mitarbeitern die Zugriffsrechte für diese Mailbox, sodass sie die Nachrichten empfangen und darauf antworten können. Es ist ein einfacher Weg zu einer Plattform der gemeinsamen Arbeit für Ihre Vertriebsabteilung oder Ihr Helpdesk-Team.";
+$MESS["MAIL_CLIENT_CONFIG_ACCESS_HINT_MSGVER_1"] = "Geben Sie den Mitarbeitern die Zugriffsrechte für diese Mailbox, sodass sie die Nachrichten empfangen und darauf antworten können. Es ist ein einfacher Weg zu einer Plattform der gemeinsamen Arbeit für Ihre Vertriebsabteilung oder Ihr Helpdesk-Team.";
 $MESS["MAIL_CLIENT_CONFIG_ACCESS_MORE"] = "Details";
 $MESS["MAIL_CLIENT_CONFIG_BTN_CANCEL"] = "Abbrechen";
 $MESS["MAIL_CLIENT_CONFIG_BTN_CONNECT"] = "Verbinden";
@@ -105,3 +106,4 @@ In Ihrem aktuellen Tarif können #LIMIT# Mailboxen gemeinsam genutzt werden.";
 $MESS["MAIL_MAILBOX_LICENSE_SHARED_LIMIT_TITLE"] = "Gemeinsam genutzte Mailboxen in Bitrix24";
 $MESS["MAIL_MAILBOX_REMOVE_CONFIRM"] = "Soll das Mail-Konto deaktiviert werden?";
 $MESS["MAIL_MAILBOX_REMOVE_CONFIRM_TEXT"] = "Möchten Sie dieses Mail-Konto wirklich löschen?";
+$MESS["MAIL_MAILBOX_TEMPORARY_ALERT_MSG_2"] = "Gmail-Integration ist vorübergehend nicht verfügbar. Der Service wird bald wieder verfügbar sein, wir bitten um Entschuldigung für etwaige Unannehmlichkeiten. In der Zwischenzeit können Sie einen anderen Mail-Service nutzen.";

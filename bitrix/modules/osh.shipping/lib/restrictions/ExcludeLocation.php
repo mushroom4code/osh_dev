@@ -38,7 +38,7 @@ class ExcludeLocation extends \Bitrix\Sale\Delivery\Restrictions\Base{
         }
     }
 
-    protected static function extractParams(CollectableEntity $shipment){
+    protected static function extractParams(\Bitrix\Sale\Internals\Entity $shipment){
         $order = $shipment->getCollection()->getOrder();
         if (!$props = $order->getPropertyCollection()) {
             return '';

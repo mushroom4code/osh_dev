@@ -7,6 +7,11 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 
 class CBPSetGlobalVariableActivity extends CBPActivity
 {
+	private array $logMap = [];
+	private array $logValues = [];
+
+	private static array $visibilityMessages = [];
+
 	public function __construct($name)
 	{
 		parent::__construct($name);
@@ -18,27 +23,76 @@ class CBPSetGlobalVariableActivity extends CBPActivity
 
 	public function execute(): int
 	{
-		$variableValue = $this->getRawProperty('GlobalVariableValue');
-		if (!$variableValue)
+		$changeVariables = $this->getRawProperty('GlobalVariableValue');
+		if (!$changeVariables)
 		{
 			return CBPActivityExecutionStatus::Closed;
 		}
 
-		foreach ($variableValue as $variable => $value)
+		foreach ($changeVariables as $systemExpression => $changeTo)
 		{
-			[$groupId, $varId] = static::getGroupIdAndIdFromSystemExpression($variable);
-			$varId = $varId ?? $variable;
+			[$groupId, $variableId] = static::getGroupIdAndIdFromSystemExpression($systemExpression);
+			$variableId = $variableId ?? $systemExpression;
 
-			$property = \Bitrix\Bizproc\Workflow\Type\GlobalVar::getById($varId);
+			$property = \Bitrix\Bizproc\Workflow\Type\GlobalVar::getById($variableId);
 			if ($property === null)
 			{
+				if ($this->workflow->isDebug())
+				{
+					$this->addToDebugLog($systemExpression, [], $changeTo);
+				}
+
 				continue;
 			}
-			$property['Default'] = $this->parseValue($value, $property['Type']);
-			\Bitrix\Bizproc\Workflow\Type\GlobalVar::upsert($varId, $property);
+
+			$documentService = $this->workflow->GetService("DocumentService");
+			$fieldType = $documentService->getFieldTypeObject($this->getDocumentType(), $property);
+			$fieldType->setValue($this->parseValue($changeTo, $property['Type']));
+			$property['Default'] = $fieldType->getValue();
+
+			\Bitrix\Bizproc\Workflow\Type\GlobalVar::upsert($variableId, $property);
+
+			if ($this->workflow->isDebug())
+			{
+				$this->addToDebugLog($systemExpression, $property);
+			}
+		}
+
+		if ($this->workflow->isDebug())
+		{
+			$this->writeDebugInfo($this->getDebugInfo($this->logValues, $this->logMap));
 		}
 
 		return CBPActivityExecutionStatus::Closed;
+	}
+
+	private function addToDebugLog($systemExpression, $property, $changeTo = '')
+	{
+		[$groupId, $variableId] = static::getGroupIdAndIdFromSystemExpression($systemExpression);
+		$variableId = $variableId ?? $systemExpression;
+
+		if (empty($property))
+		{
+			$this->logMap[$systemExpression] = [
+				'Name' => $groupId . ':' . $variableId,
+				'Type' => 'string',
+				'Multiple' => true,
+			];
+			$this->logValues[$systemExpression] = $this->parseValue($changeTo, 'string');
+
+			return;
+		}
+
+		$visibilityMessages = static::getVisibilityMessages($this->getDocumentType());
+		$fullName = $visibilityMessages[$groupId][$property['Visibility']] . ': ' . $property['Name'];
+
+		$this->logMap[$systemExpression] = [
+			'Name' => $fullName,
+			'Type' => $property['Type'],
+			'Multiple' => $property['Multiple'],
+			'Options' => $property['Options'],
+		];
+		$this->logValues[$systemExpression] = $property['Default'];
 	}
 
 	public static function GetPropertiesDialog(
@@ -76,11 +130,14 @@ class CBPSetGlobalVariableActivity extends CBPActivity
 		);
 
 		$currentActivity = &CBPWorkflowTemplateLoader::FindActivityByName($arWorkflowTemplate, $activityName);
-		$variableValuesTmp =
-			is_array($currentActivity['Properties']['GlobalVariableValue'])
-				? $currentActivity['Properties']['GlobalVariableValue']
-				: []
-		;
+		$variableValuesTmp = [];
+		if (
+			isset($currentActivity['Properties']['GlobalVariableValue'])
+			&& is_array($currentActivity['Properties']['GlobalVariableValue'])
+		)
+		{
+			$variableValuesTmp = $currentActivity['Properties']['GlobalVariableValue'];
+		}
 
 		$variableValues = [];
 		foreach ($variableValuesTmp as $varId => $value)
@@ -160,7 +217,7 @@ class CBPSetGlobalVariableActivity extends CBPActivity
 		foreach ($globals as $id => $property)
 		{
 			$visibility = $property['Visibility'];
-			if (!$result[$visibility])
+			if (!isset($result[$visibility]))
 			{
 				$result[$visibility] = [];
 			}
@@ -215,7 +272,7 @@ class CBPSetGlobalVariableActivity extends CBPActivity
 			$posColon = mb_strpos($fieldName, ': ');
 			if ($fieldName && $groupKey !== 'ROOT' && $posColon !== false)
 			{
-				$names = mb_split(': ', $fieldName);
+				$names = explode(': ', $fieldName);
 				$groupName = array_shift($names);
 				$fieldName = join(': ', $names);
 			}
@@ -224,14 +281,14 @@ class CBPSetGlobalVariableActivity extends CBPActivity
 			if ($posAssignedBy !== false && !in_array($fieldName, ['ASSIGNED_BY_ID', 'ASSIGNED_BY_PRINTABLE']))
 			{
 				$groupKey = 'ASSIGNED_BY';
-				$names = mb_split(' ', $fieldName);
+				$names = explode(' ', $fieldName);
 				$groupName = array_shift($names);
 				$fieldName = join(' ', $names);
 				$fieldName = mb_ereg_replace('(', '', $fieldName);
 				$fieldName = mb_ereg_replace(')', '', $fieldName);
 			}
 
-			if (!$result[$groupKey])
+			if (!isset($result[$groupKey]))
 			{
 				$result[$groupKey] = [
 					'title' => $groupName,
@@ -263,14 +320,21 @@ class CBPSetGlobalVariableActivity extends CBPActivity
 
 	private static function getVisibilityMessages(array $documentType): array
 	{
+		if (isset(self::$visibilityMessages[implode('@', $documentType)]))
+		{
+			return self::$visibilityMessages[implode('@', $documentType)];
+		}
+
 		$variables = \Bitrix\Bizproc\Workflow\Type\GlobalVar::getVisibilityFullNames($documentType);
 		$constants = \Bitrix\Bizproc\Workflow\Type\GlobalConst::getVisibilityFullNames($documentType);
 
-		return [
+		self::$visibilityMessages[implode('@', $documentType)] = [
 			\Bitrix\Bizproc\Workflow\Type\GlobalVar::getObjectNameForExpressions() => $variables,
 			\Bitrix\Bizproc\Workflow\Type\GlobalConst::getObjectNameForExpressions() => $constants,
 			'Document' => ['Document' => \Bitrix\Main\Localization\Loc::getMessage('BPSGVA_DOCUMENT')],
 		];
+
+		return self::$visibilityMessages[implode('@', $documentType)];
 	}
 
 	private static function getGroupIdAndIdFromSystemExpression(string $text): array

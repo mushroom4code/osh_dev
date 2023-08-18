@@ -18,11 +18,13 @@ export class TeamManager
 
 	static getInstance()
 	{
-		return WorkgroupForm.instance;
+		return TeamManager.instance;
 	}
 
 	constructor(params)
 	{
+		this.groupId = parseInt(params.groupId, 10);
+
 		this.ownerSelector = null;
 		this.scrumMasterSelector = null;
 		this.moderatorsSelector = null;
@@ -41,6 +43,8 @@ export class TeamManager
 		this.isCurrentUserAdmin = (Type.isBoolean(params.isCurrentUserAdmin) ? params.isCurrentUserAdmin : false);
 		this.extranetInstalled = (Type.isBoolean(params.extranetInstalled) ? params.extranetInstalled : false);
 		this.allowExtranet = (Type.isBoolean(params.allowExtranet) ? params.allowExtranet : false);
+
+		TeamManager.instance = this;
 
 		this.buildOwnerSelector();
 		this.buildScrumMasterSelector();
@@ -79,7 +83,8 @@ export class TeamManager
 							intranetUsersOnly: !this.allowExtranet,
 							inviteEmployeeLink: true,
 							inviteExtranetLink: true,
-							checkWorkgroupWhenInvite: false,
+							groupId: this.groupId,
+							checkWorkgroupWhenInvite: true,
 						},
 					},
 					{
@@ -156,7 +161,6 @@ export class TeamManager
 		const selectorOptions = this.moderatorsOptions;
 
 		this.moderatorsSelector = new TagSelector({
-
 			id: selectorOptions.selectorId || 'group_create_moderators',
 			dialogOptions: {
 				id: selectorOptions.selectorId || 'group_create_moderators',
@@ -173,7 +177,8 @@ export class TeamManager
 						options: {
 							intranetUsersOnly: !this.allowExtranet,
 							inviteEmployeeLink: true,
-							checkWorkgroupWhenInvite: false,
+							groupId: this.groupId,
+							checkWorkgroupWhenInvite: true,
 						},
 					},
 					{
@@ -221,7 +226,8 @@ export class TeamManager
 							inviteEmployeeLink: true,
 							'!userId': (this.isCurrentUserAdmin ? [ parseInt(Loc.getMessage('USER_ID')) ] : []),
 							intranetUsersOnly: !this.allowExtranet,
-							checkWorkgroupWhenInvite: false,
+							groupId: this.groupId,
+							checkWorkgroupWhenInvite: true,
 						}
 					},
 					{
@@ -396,6 +402,12 @@ export class TeamManager
 					isChecked: this.allowExtranet,
 					options: this.moderatorsOptions,
 				});
+
+				if (WorkgroupForm.getInstance().initialFocus === 'addModerator')
+				{
+					this.moderatorsSelector.getAddButtonLink().click();
+				}
+
 				break;
 			case TeamManager.contextList.users:
 				this.recalcSelectorByExtranetSwitched({

@@ -188,7 +188,7 @@ if (!empty($actualItem['DETAIL_PICTURE'])) {
 
 if (!empty($actualItem['MORE_PHOTO'])) {
     foreach ($actualItem['MORE_PHOTO'] as $item) {
-        if (!in_array($item['SRC'], $actualItem['PICTURE'][0])) {
+        if (!in_array($item['SRC'] ?? [], $actualItem['PICTURE'][0] ?? [])) {
             $actualItem['PICTURE'][] = $item;
         }
     }
@@ -451,11 +451,12 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 $type = $propsForOffers[$keyCODE]['TYPE'] ?? 'text';
                                                 $title = 'Товар';
                                                 $select = 'selected';
+                                                $arrayEl = $productSelect[$keyCODE]['JS_PROP'] ?? [];
+                                                $count = array_diff_assoc($arrayEl, $group);
+                                                    if (!empty($count) && (count($count) > 0 || count($arrayEl) !== count($group))) {
+                                                        $select = '';
+                                                    }
 
-                                                if (count(array_diff_assoc($productSelect[$keyCODE]['JS_PROP'], $group)) > 0 ||
-                                                    count($productSelect[$keyCODE]['JS_PROP']) !== count($group)) {
-                                                    $select = '';
-                                                }
 
                                                 foreach ($group as $name => $prop) {
                                                     if (empty($prop['VALUE_ENUM'])) {

@@ -7,8 +7,13 @@
  * @copyright 2001-2019 Bitrix
  */
 
+import {Text, Type, Dom} from 'main.core';
+
 import {DateFormat} from 'im.const';
+
 import 'main.date';
+
+import './css/utils.css';
 
 let Utils =
 {
@@ -126,6 +131,20 @@ let Utils =
 			this.getDesktopVersionStatic = version[3];
 
 			return this.getDesktopVersionStatic;
+		},
+		isDesktopFeatureEnabled(code)
+		{
+			if (typeof BXDesktopSystem === 'undefined')
+			{
+				return false;
+			}
+
+			if (typeof BXDesktopSystem.FeatureEnabled !== 'function')
+			{
+				return false;
+			}
+
+			return !!BXDesktopSystem.FeatureEnabled(code);
 		},
 		isMobile()
 		{
@@ -347,12 +366,12 @@ let Utils =
 				localize = BX.message;
 			}
 
-			text = text.replace(/\[USER=([0-9]{1,})](.*?)\[\/USER]/ig, (whole, userId, text) => text);
-			text = text.replace(/\[CHAT=(imol\|)?([0-9]{1,})](.*?)[\/CHAT]/ig, (whole, imol, chatId, text) => text);
-			text = text.replace(/\[CALL(?:=(.+?))?](.+?)?\[\/CALL]/ig, (whole, command, text) => text? text: command);
-			text = text.replace(/\[ATTACH=([0-9]{1,})]/ig, (whole, command, text) => command === 10000? '': '['+localize['IM_UTILS_TEXT_ATTACH']+'] ');
-			text = text.replace(/\[RATING=([1-5]{1})]/ig, (whole, rating) => '['+localize.IM_F_RATING+'] ');
-			text = text.replace(/&nbsp;/ig, " ");
+			text = text.replace(/\[USER=([0-9]{1,})](.*?)\[\/USER]/gi, (whole, userId, text) => text);
+			text = text.replace(/\[CHAT=(imol\|)?([0-9]{1,})](.*?)[\/CHAT]/gi, (whole, imol, chatId, text) => text);
+			text = text.replace(/\[CALL(?:=(.+?))?](.+?)?\[\/CALL]/gi, (whole, command, text) => text? text: command);
+			text = text.replace(/\[ATTACH=([0-9]{1,})]/gi, (whole, command, text) => command === 10000? '': '['+localize['IM_UTILS_TEXT_ATTACH']+'] ');
+			text = text.replace(/\[RATING=([1-5]{1})]/gi, (whole, rating) => '['+localize.IM_F_RATING+'] ');
+			text = text.replace(/&nbsp;/gi, " ");
 
 			text = text.replace(/------------------------------------------------------(.*?)------------------------------------------------------/gmis, "["+localize["IM_UTILS_TEXT_QUOTE"]+"]");
 			text = text.replace(/^(>>(.*)\n)/gi, "["+localize["IM_UTILS_TEXT_QUOTE"]+"]\n");
@@ -422,48 +441,54 @@ let Utils =
 				text = text.substr(6);
 			}
 
-			text = text.replace(/<br><br \/>/ig, '<br />');
-			text = text.replace(/<br \/><br>/ig, '<br />');
+			text = text.replace(/<br><br \/>/gi, '<br />');
+			text = text.replace(/<br \/><br>/gi, '<br />');
 
 			const codeReplacement = [];
-			text = text.replace(/\[CODE\]\n?([\0-\uFFFF]*?)\[\/CODE\]/ig, function(whole,text)
+			text = text.replace(/\[CODE](<br \/>)?(.*?)\[\/CODE]/sig, (whole, br, text) =>
 			{
 				const id = codeReplacement.length;
 				codeReplacement.push(text);
 				return '####REPLACEMENT_CODE_'+id+'####';
 			});
 
-			text = text.replace(/\[PUT(?:=(?:.+?))?\](?:.+?)?\[\/PUT]/ig, function(match)
+			text = text.replace(/\[PUT(?:=(?:.+?))?\](?:.+?)?\[\/PUT]/gi, function(match)
 			{
-				return match.replace(/\[PUT(?:=(.+))?\](.+?)?\[\/PUT]/ig, function(whole, command, text) {
+				return match.replace(/\[PUT(?:=(.+))?\](.+?)?\[\/PUT]/gi, function(whole, command, text) {
 					return  text? text: command;
 				});
 			});
 
-			text = text.replace(/\[SEND(?:=(?:.+?))?\](?:.+?)?\[\/SEND]/ig, function(match)
+			text = text.replace(/\[SEND(?:=(?:.+?))?\](?:.+?)?\[\/SEND]/gi, function(match)
 			{
-				return match.replace(/\[SEND(?:=(.+))?\](.+?)?\[\/SEND]/ig, function(whole, command, text) {
+				return match.replace(/\[SEND(?:=(.+))?\](.+?)?\[\/SEND]/gi, function(whole, command, text) {
 					return  text? text: command;
 				});
 			});
 
-			text = text.replace(/\[[buis]](.*?)\[\/[buis]]/ig, '$1');
-			text = text.replace(/\[url](.*?)\[\/url]/ig, '$1');
-			text = text.replace(/\[RATING=([1-5]{1})]/ig, () => '['+localize['IM_UTILS_TEXT_RATING']+'] ');
-			text = text.replace(/\[ATTACH=([0-9]{1,})]/ig, () => '['+localize['IM_UTILS_TEXT_ATTACH']+'] ');
-			text = text.replace(/\[USER=([0-9]{1,})](.*?)\[\/USER]/ig, '$2');
-			text = text.replace(/\[CHAT=([0-9]{1,})](.*?)\[\/CHAT]/ig, '$2');
-			text = text.replace(/\[SEND(?:=(?:.+?))?\](.+?)?\[\/SEND]/ig, '$1');
-			text = text.replace(/\[PUT(?:=(?:.+?))?\](.+?)?\[\/PUT]/ig, '$1');
-			text = text.replace(/\[CALL=(.*?)](.*?)\[\/CALL\]/ig, '$2');
-			text = text.replace(/\[PCH=([0-9]{1,})](.*?)\[\/PCH]/ig, '$2');
-			text = text.replace(/<img.*?data-code="([^"]*)".*?>/ig, '$1');
-			text = text.replace(/<span.*?title="([^"]*)".*?>.*?<\/span>/ig, '($1)');
-			text = text.replace(/<img.*?title="([^"]*)".*?>/ig, '($1)');
-			text = text.replace(/\[ATTACH=([0-9]{1,})]/ig, (whole, command, text) => command === 10000? '': '['+localize['IM_UTILS_TEXT_ATTACH']+'] ');
-			text = text.replace(/<s>([^"]*)<\/s>/ig, ' ');
-			text = text.replace(/\[s]([^"]*)\[\/s]/ig, ' ');
-			text = text.replace(/\[icon=([^\]]*)]/ig, (whole) =>
+			text = text.replace(/\[b]([^[]*(?:\[(?!b]|\/b])[^[]*)*)\[\/b]/gi, (whole, text) => text);
+			text = text.replace(/\[u]([^[]*(?:\[(?!u]|\/u])[^[]*)*)\[\/u]/gi, (whole, text) => text);
+			text = text.replace(/\[i]([^[]*(?:\[(?!i]|\/i])[^[]*)*)\[\/i]/gi, (whole, text) => text);
+
+			text = text.replace(/\[url](.*?)\[\/url]/gis, '$1');
+			text = text.replace(/\[RATING=([1-5]{1})]/gi, () => '['+localize['IM_UTILS_TEXT_RATING']+'] ');
+			text = text.replace(/\[ATTACH=([0-9]{1,})]/gi, () => '['+localize['IM_UTILS_TEXT_ATTACH']+'] ');
+			text = text.replace(/\[USER=([0-9]+)( REPLACE)?](.*?)\[\/USER]/gi, '$3');
+			text = text.replace(/\[CHAT=([0-9]{1,})](.*?)\[\/CHAT]/gi, '$2');
+			text = text.replace(/\[context=(chat\d+|\d+:\d+)\/(\d+)](.*?)\[\/context]/gis, (whole, dialogId, messageId, message) => message);
+			text = text.replace(/\[SEND(?:=(?:.+?))?\](.+?)?\[\/SEND]/gi, '$1');
+			text = text.replace(/\[PUT(?:=(?:.+?))?\](.+?)?\[\/PUT]/gi, '$1');
+			text = text.replace(/\[CALL=(.*?)](.*?)\[\/CALL\]/gi, '$2');
+			text = text.replace(/\[PCH=([0-9]{1,})](.*?)\[\/PCH]/gi, '$2');
+			text = text.replace(/\[size=(\d+)](.*?)\[\/size]/gis, '$2');
+			text = text.replace(/\[color=#([0-9a-f]{3}|[0-9a-f]{6})](.*?)\[\/color]/gis, '$2');
+			text = text.replace(/<img.*?data-code="([^"]*)".*?>/gi, '$1');
+			text = text.replace(/<span.*?title="([^"]*)".*?>.*?<\/span>/gi, '($1)');
+			text = text.replace(/<img.*?title="([^"]*)".*?>/gi, '($1)');
+			text = text.replace(/\[ATTACH=([0-9]{1,})]/gi, (whole, command, text) => command === 10000? '': '['+localize['IM_UTILS_TEXT_ATTACH']+'] ');
+			text = text.replace(/<s>([^"]*)<\/s>/gi, ' ');
+			text = text.replace(/\[s]([^"]*)\[\/s]/gi, ' ');
+			text = text.replace(/\[icon=([^\]]*)]/gi, (whole) =>
 			{
 				let title = whole.match(/title=(.*[^\s\]])/i);
 				if (title && title[1])
@@ -553,6 +578,549 @@ let Utils =
 			}
 
 			return text.replace('\n', ' ').trim();
+		},
+
+		decode(text = '', options = {})
+		{
+			if (!text)
+			{
+				return text;
+			}
+
+			const enableBigSmile = true;
+
+			text = text.toString().trim();
+			text = Utils.text.htmlspecialchars(text);
+
+			if (text.startsWith('/me'))
+			{
+				text = `<i>${text.substr(4)}</i>`;
+			}
+			else if (text.startsWith('/loud'))
+			{
+				text = `<b>${text.substr(6)}</b>`;
+			}
+
+			const quoteSign = "&gt;&gt;";
+			if (text.indexOf(quoteSign) >= 0)
+			{
+				let textPrepareFlag = false;
+				const textPrepare = text.split("\n");
+				for (let i = 0; i < textPrepare.length; i++)
+				{
+					if (textPrepare[i].startsWith(quoteSign))
+					{
+						textPrepare[i] = textPrepare[i].replace(quoteSign, '<div class="bx-im-message-content-quote"><div class="bx-im-message-content-quote-wrap">');
+						while (++i < textPrepare.length && textPrepare[i].startsWith(quoteSign))
+						{
+							textPrepare[i] = textPrepare[i].replace(quoteSign, '');
+						}
+						textPrepare[i - 1] += '</div></div><br>';
+						textPrepareFlag = true;
+					}
+				}
+				text = textPrepare.join("<br />");
+			}
+
+			text = text.replace(/\n/gi, '<br />');
+
+			text = text.replace(/\t/gi, '&nbsp;&nbsp;&nbsp;&nbsp;');
+
+			text = this.decodeBbCode(text, enableBigSmile);
+
+			text = text.replace(/------------------------------------------------------<br \/>(.*?)\[(.*?)\](?: #(?:(?:chat)?\d+|\d+:\d+)\/\d+)?<br \/>(.*?)------------------------------------------------------(<br \/>)?/g, function (whole, p1, p2, p3, p4, offset) {
+				return (offset > 0? '<br>': '') + "<div class=\"bx-im-message-content-quote\"><div class=\"bx-im-message-content-quote-wrap\"><div class=\"bx-im-message-content-quote-name\"><span class=\"bx-im-message-content-quote-name-text\">" + p1 + "</span><span class=\"bx-im-message-content-quote-name-time\">" + p2 + "</span></div>" + p3 + "</div></div><br />";
+			});
+			text = text.replace(/------------------------------------------------------<br \/>(.*?)------------------------------------------------------(<br \/>)?/g, function (whole, p1, p2, p3, offset) {
+				return (offset > 0? '<br>': '') + "<div class=\"bx-im-message-content-quote\"><div class=\"bx-im-message-content-quote-wrap\">" + p1 + "</div></div><br />";
+			});
+
+			if (options.skipImages !== true)
+			{
+
+				let changed = false;
+				text = text.replace(/(.)?((https|http):\/\/([\S]+)\.(jpg|jpeg|png|gif|webp)(\?[\S]+)?)/gi, function(whole, letter, url, offset)
+				{
+					if(
+						letter && !(['>', ']'].includes(letter))
+						|| !url.match(/(\.(jpg|jpeg|png|gif|webp)\?|\.(jpg|jpeg|png|gif|webp)$)/i)
+						|| url.toLowerCase().indexOf("/docs/pub/") > 0
+						|| url.toLowerCase().indexOf("logout=yes") > 0
+					)
+					{
+						return whole;
+					}
+					else
+					{
+						changed = true;
+						return (letter? letter: '')+'<span class="bx-im-element-file-image"><img src="'+url+'" class="bx-im-element-file-image-source-text" onerror="Utils.hideErrorImage(this)"></span>';
+					}
+				});
+				if (changed)
+				{
+					text = text
+						.replace(/<\/span>(\n?)<\/a>(\n?)<br(\s\/?)>/gi, '</span></a>')
+						.replace(/<\/span>(\n?)(\n?)<br(\s\/?)>/gi, '</span>')
+					;
+				}
+
+				if (enableBigSmile)
+				{
+					text = text.replace(
+						/^(\s*<img\s+src=[^>]+?data-code=[^>]+?data-definition="UHD"[^>]+?style="width:)(\d+)(px[^>]+?height:)(\d+)(px[^>]+?class="bx-smile"\s*\/?>\s*)$/,
+						function doubleSmileSize(match, start, width, middle, height, end) {
+							return start + (parseInt(width, 10) * 1.7) + middle + (parseInt(height, 10) * 1.7) + end;
+						}
+					);
+				}
+			}
+
+			if (text.substr(-6) == '<br />')
+			{
+				text = text.substr(0, text.length - 6);
+			}
+			text = text.replace(/<br><br \/>/gi, '<br />');
+			text = text.replace(/<br \/><br>/gi, '<br />');
+
+			return text;
+		},
+
+		decodeBbCode(text, enableBigSmile = true)
+		{
+			const textOnly = false;
+
+			let putReplacement = [];
+			text = text.replace(/\[PUT(?:=(.+?))?\](.+?)?\[\/PUT\]/gi, function(whole)
+			{
+				var id = putReplacement.length;
+				putReplacement.push(whole);
+				return '####REPLACEMENT_PUT_'+id+'####';
+			});
+
+			let sendReplacement = [];
+			text = text.replace(/\[SEND(?:=(.+?))?\](.+?)?\[\/SEND\]/gi, function(whole)
+			{
+				var id = sendReplacement.length;
+				sendReplacement.push(whole);
+				return '####REPLACEMENT_SEND_'+id+'####';
+			});
+
+			let codeReplacement = [];
+			text = text.replace(/\[CODE\]\n?(.*?)\[\/CODE\]/gis, function(whole, text) {
+				let id = codeReplacement.length;
+				codeReplacement.push(text);
+				return '####REPLACEMENT_CODE_'+id+'####';
+			});
+
+			// base pattern for urls
+			text = text.replace(/\[url(?:=([^[\]]+))?](.*?)\[\/url]/gis, (whole, link, text) =>
+			{
+				const url = Text.decode(link || text);
+				if (!Utils.text.checkUrl(url))
+				{
+					return text;
+				}
+
+				return Dom.create({
+					tag: 'a',
+					attrs: {
+						href: url,
+						target: "_blank"
+					},
+					html: text
+				}).outerHTML;
+			});
+
+			// url like https://bitrix24.com/?params[1]="test"
+			text = text.replace(/\[url(?:=(.+?[^[\]]))?](.*?)\[\/url]/gis, (whole, link, text) =>
+			{
+				let url = Text.decode(link || text);
+				if (!Utils.text.checkUrl(url))
+				{
+					return text;
+				}
+
+				if (!url.slice(url.lastIndexOf('[')).includes(']'))
+				{
+					if (text.startsWith(']'))
+					{
+						url = `${url}]`;
+						text = text.slice(1);
+					}
+					else if (text.startsWith('='))
+					{
+						const urlPart = Text.decode(text.slice(1, text.lastIndexOf(']')));
+						url = `${url}]=${urlPart}`;
+						text = text.slice(text.lastIndexOf(']')+1);
+					}
+				}
+
+				return Dom.create({
+					tag: 'a',
+					attrs: {
+						href: url,
+						target: "_blank"
+					},
+					html: text
+				}).outerHTML;
+			});
+
+			text = text.replace(/\[LIKE\]/gi, '<span class="bx-smile bx-im-smile-like"></span>');
+			text = text.replace(/\[DISLIKE\]/gi, '<span class="bx-smile bx-im-smile-dislike"></span>');
+
+			text = text.replace(/\[BR\]/gi, '<br/>');
+
+			text = text.replace(/\[b]([^[]*(?:\[(?!b]|\/b])[^[]*)*)\[\/b]/gi, (whole, text) => '<b>'+text+'</b>');
+			text = text.replace(/\[u]([^[]*(?:\[(?!u]|\/u])[^[]*)*)\[\/u]/gi, (whole, text) => '<u>'+text+'</u>');
+			text = text.replace(/\[i]([^[]*(?:\[(?!i]|\/i])[^[]*)*)\[\/i]/gi, (whole, text) => '<i>'+text+'</i>');
+			text = text.replace(/\[s]([^[]*(?:\[(?!s]|\/s])[^[]*)*)\[\/s]/gi, (whole, text) => '<s>'+text+'</s>');
+
+			text = text.replace(/\[size=(\d+)(?:pt|px)?](.*?)\[\/size]/gis, (whole, number, text) => {
+				return Dom.create({
+					tag: 'span',
+					style: { fontSize: number + 'px' },
+					html: text
+				}).outerHTML;
+			});
+
+			text = text.replace(/\[color=#([0-9a-f]{3}|[0-9a-f]{6})](.*?)\[\/color]/gis, (whole, hex, text) => {
+				return Dom.create({
+					tag: 'span',
+					style: { color: '#'+ hex },
+					html: text
+				}).outerHTML;
+			});
+
+			text = text.replace(/\[USER=([0-9]+)( REPLACE)?](.*?)\[\/USER]/gi, (whole, userId, replace, userName) => {
+				userId = Number.parseInt(userId, 10);
+
+				if (!Type.isNumber(userId) || userId === 0)
+				{
+					return userName;
+				}
+
+				if (replace || !userName)
+				{
+					const user = BX.Messenger.Application.Core.controller.store.getters['users/get'](userId);
+					if (user)
+					{
+						userName = Utils.text.htmlspecialchars(user.name);
+					}
+				}
+				else
+				{
+					userName = Text.decode(userName);
+				}
+
+				if (!userName)
+				{
+					userName = `User ${userId}`;
+				}
+
+				return BX.Dom.create({
+					tag: 'span',
+					attrs: {
+						className: 'bx-im-mention',
+						'data-type': 'USER',
+						'data-value': userId,
+					},
+					text: userName
+				}).outerHTML;
+			});
+
+			text = text.replace(/\[RATING\=([1-5]{1})\]/gi, (whole, rating) => {
+				// todo: refactor legacy call
+				return BX.MessengerCommon.linesVoteHeadNodes(0, rating, false).outerHTML;
+			});
+
+			text = text.replace(/\[CHAT=(imol\|)?([0-9]{1,})\](.*?)\[\/CHAT\]/gi, (whole, openlines, chatId, inner) => {
+				chatId = parseInt(chatId);
+
+				if (chatId <= 0)
+				{
+					return inner;
+				}
+
+				if (openlines)
+				{
+					return Dom.create({
+						tag: 'span',
+						attrs: {
+							className: 'bx-im-mention',
+							'data-type': 'OPENLINES',
+							'data-value': chatId,
+						},
+						text: inner
+					}).outerHTML;
+				}
+
+				return Dom.create({
+					tag: 'span',
+					attrs: {
+						className: 'bx-im-mention',
+						'data-type': 'CHAT',
+						'data-value': chatId,
+					},
+					text: inner
+				}).outerHTML;
+			});
+
+			text = text.replace(/\[context=(chat\d+|\d+:\d+)\/(\d+)](.*?)\[\/context]/gis, (whole, dialogId, messageId, message) => {
+				return message;
+			});
+
+			if (false && Utils.device.isMobile())
+			{
+				let replacements = [];
+				text = text.replace(/\[CALL(?:=(.+?))?\](.+?)?\[\/CALL\]/gi, (whole, number, text) => {
+					let index = replacements.length;
+					replacements.push({number, text});
+					return `####REPLACEMENT_MARK_${index}####`;
+				});
+
+				text = text.replace(/[+]{0,1}(?:[-\/. ()\[\]~;#,]*[0-9]){10,}[^\n\r<][-\/. ()\[\]~;#,0-9^]*/g, (number) => {
+					let pureNumber = number.replace(/\D/g, '');
+					return `[CALL=${pureNumber}]${number}[/CALL]`;
+				});
+
+				replacements.forEach((item, index) => {
+					text = text.replace(`####REPLACEMENT_MARK_${index}####`, `[CALL=${item.number}]${item.text}[/CALL]`)
+				});
+			}
+
+			text = text.replace(/\[CALL(?:=(.+?))?\](.+?)?\[\/CALL\]/gi, (whole, number, text) => '<span class="bx-im-mention" data-type="CALL" data-value="'+Utils.text.htmlspecialchars(number)+'">'+text+'</span>'); // TODO tag CHAT
+
+			text = text.replace(/\[PCH=([0-9]{1,})\](.*?)\[\/PCH\]/gi, (whole, historyId, text) => text); // TODO tag PCH
+
+			let textElementSize = 0;
+			if (enableBigSmile)
+			{
+				textElementSize = text.replace(/\[icon\=([^\]]*)\]/gi, '').trim().length;
+			}
+
+			text = text.replace(/\[icon\=([^\]]*)\]/gi, (whole) =>
+			{
+				let url = whole.match(/icon\=(\S+[^\s.,> )\];\'\"!?])/i);
+				if (url && url[1])
+				{
+					url = url[1];
+				}
+				else
+				{
+					return '';
+				}
+
+				let attrs = {'src': url, 'border': 0};
+
+				let size = whole.match(/size\=(\d+)/i);
+				if (size && size[1])
+				{
+					attrs['width'] = size[1];
+					attrs['height'] = size[1];
+				}
+				else
+				{
+					let width = whole.match(/width\=(\d+)/i);
+					if (width && width[1])
+					{
+						attrs['width'] = width[1];
+					}
+
+					let height = whole.match(/height\=(\d+)/i);
+					if (height && height[1])
+					{
+						attrs['height'] = height[1];
+					}
+
+					if (attrs['width'] && !attrs['height'])
+					{
+						attrs['height'] = attrs['width'];
+					}
+					else if (attrs['height'] && !attrs['width'])
+					{
+						attrs['width'] = attrs['height'];
+					}
+					else if (attrs['height'] && attrs['width'])
+					{}
+					else
+					{
+						attrs['width'] = 20;
+						attrs['height'] = 20;
+					}
+				}
+
+				attrs['width'] = attrs['width']>100? 100: attrs['width'];
+				attrs['height'] = attrs['height']>100? 100: attrs['height'];
+
+				if (enableBigSmile && textElementSize === 0 && attrs['width'] === attrs['height'] && attrs['width'] === 20)
+				{
+					attrs['width'] = 40;
+					attrs['height'] = 40;
+				}
+
+				let title = whole.match(/title\=(.*[^\s\]])/i);
+				if (title && title[1])
+				{
+					title = title[1];
+					if (title.indexOf('width=') > -1)
+					{
+						title = title.substr(0, title.indexOf('width='))
+					}
+					if (title.indexOf('height=') > -1)
+					{
+						title = title.substr(0, title.indexOf('height='))
+					}
+					if (title.indexOf('size=') > -1)
+					{
+						title = title.substr(0, title.indexOf('size='))
+					}
+					if (title)
+					{
+						attrs['title'] = Utils.text.htmlspecialchars(title).trim();
+						attrs['alt'] = attrs['title'];
+					}
+				}
+
+				let attributes = '';
+				for (let name in attrs)
+				{
+					if (attrs.hasOwnProperty(name))
+					{
+						attributes += name+'="'+attrs[name]+'" ';
+					}
+				}
+
+				return '<img class="bx-smile bx-icon" '+attributes+'>';
+			});
+
+			sendReplacement.forEach((value, index) => {
+				text = text.replace('####REPLACEMENT_SEND_'+index+'####', value);
+			});
+
+			text = text.replace(/\[SEND(?:=(?:.+?))?\](?:.+?)?\[\/SEND]/gi, (match) =>
+			{
+				return match.replace(/\[SEND(?:=(.+))?\](.+?)?\[\/SEND]/gi, (whole, command, text) =>
+				{
+					let html = '';
+
+					text = text? text: command;
+					command = (command? command: text).replace('<br />', '\n');
+
+					if (!textOnly && text)
+					{
+						text = text.replace(/<([\w]+)[^>]*>(.*?)<\\1>/i, "$2", text);
+						text = text.replace(/\[([\w]+)[^\]]*\](.*?)\[\/\1\]/i, "$2", text);
+
+						command = command.split('####REPLACEMENT_PUT_').join('####REPLACEMENT_SP_');
+
+						html = '<!--IM_COMMAND_START-->' +
+							'<span class="bx-im-message-command-wrap">'+
+							'<span class="bx-im-message-command" data-entity="send">'+text+'</span>'+
+							'<span class="bx-im-message-command-data">'+command+'</span>'+
+							'</span>'+
+							'<!--IM_COMMAND_END-->';
+					}
+					else
+					{
+						html = text;
+					}
+
+					return html;
+				});
+			});
+
+			putReplacement.forEach((value, index) => {
+				text = text.replace('####REPLACEMENT_PUT_'+index+'####', value);
+			});
+
+			text = text.replace(/\[PUT(?:=(?:.+?))?\](?:.+?)?\[\/PUT]/gi, (match) =>
+			{
+				return match.replace(/\[PUT(?:=(.+))?\](.+?)?\[\/PUT]/gi, (whole, command, text) =>
+				{
+					let html = '';
+
+					text = text? text: command;
+					command = (command? command: text).replace('<br />', '\n');
+
+					if (!textOnly && text)
+					{
+						text = text.replace(/<([\w]+)[^>]*>(.*?)<\/\1>/i, "$2", text);
+						text = text.replace(/\[([\w]+)[^\]]*\](.*?)\[\/\1\]/i, "$2", text);
+
+						html = '<!--IM_COMMAND_START-->' +
+							'<span class="bx-im-message-command-wrap">'+
+							'<span class="bx-im-message-command" data-entity="put">'+text+'</span>'+
+							'<span class="bx-im-message-command-data">'+command+'</span>'+
+							'</span>'+
+							'<!--IM_COMMAND_END-->';
+					}
+					else
+					{
+						html = text;
+					}
+
+					return html;
+				});
+			});
+
+			codeReplacement.forEach((code, index) => {
+				text = text.replace('####REPLACEMENT_CODE_'+index+'####',
+					!textOnly? '<div class="bx-im-message-content-code">'+code+'</div>': code
+				)
+			});
+
+			if (sendReplacement.length > 0)
+			{
+				do
+				{
+					sendReplacement.forEach((value, index) => {
+						text = text.replace('####REPLACEMENT_SEND_'+index+'####', value);
+					});
+				}
+				while (text.includes('####REPLACEMENT_SEND_'));
+			}
+
+			text = text.split('####REPLACEMENT_SP_').join('####REPLACEMENT_PUT_');
+
+			if (putReplacement.length > 0)
+			{
+				do
+				{
+					putReplacement.forEach((value, index) => {
+						text = text.replace('####REPLACEMENT_PUT_'+index+'####', value);
+					});
+				}
+				while (text.includes('####REPLACEMENT_PUT_'));
+			}
+
+			return text;
+		},
+
+		checkUrl(url): boolean
+		{
+			const allowList = [
+				"http:",
+				"https:",
+				"ftp:",
+				"file:",
+				"tel:",
+				"callto:",
+				"mailto:",
+				"skype:",
+				"viber:",
+			];
+
+			const checkCorrectStartLink = ['/', ...allowList].find(protocol => {
+				return url.startsWith(protocol);
+			});
+			if (!checkCorrectStartLink)
+			{
+				return false;
+			}
+
+			const element = Dom.create({ tag: 'a', attrs: { href: url }});
+
+			return allowList.indexOf(element.protocol) > -1;
 		},
 
 		htmlspecialchars(text)
@@ -992,6 +1560,15 @@ let Utils =
 			hash = hash & hash;
 		}
 		return hash;
+	},
+
+	hideErrorImage(element)
+	{
+		if (element.parentNode)
+		{
+			element.parentNode.innerHTML = '<a href="'+encodeURI(element.src)+'" target="_blank">'+element.src+'</a>';
+		}
+		return true;
 	},
 
 	/**

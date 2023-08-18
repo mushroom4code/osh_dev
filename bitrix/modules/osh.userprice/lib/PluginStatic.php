@@ -11,32 +11,6 @@ class PluginStatic
 {
 
     /**
-     * У нас есть типы цен, которые не используются на сайте в обычном случае,
-     * Например, они могут быть индивидуальными.
-     * Тогда их применение полностью ручное через обработчики событий корзины.
-     * После каждого обмена, когда они создаются,
-     * Нужно убрать доступ к этим ценам для всех пользователей.
-     * Что бы они не срабатывали, заменяя базовую цену, когда не нужно.
-     */
-    public static function UpdateStopAccessToSpecialPriceTypesOnSale(): bool
-    {
-        $ids = implode(', ', PRICE_TYPE_IDS) . ', 3';
-
-        $sql = "delete  from b_catalog_group2group
-                    where `BUY`='Y' AND CATALOG_GROUP_ID NOT IN (" . $ids . ");";
-
-        $db = Application::getConnection();
-
-        try {
-            $db->query($sql);
-            return true;
-        } catch (\Exception $ex) {
-        }
-
-        return false;
-    }
-
-    /**
      * Добавить новое ценовое правило в базу
      *
      * @param int|string|null $PRODUCT_ID ID товара правила

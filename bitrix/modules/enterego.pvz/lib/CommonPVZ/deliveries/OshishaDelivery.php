@@ -10,7 +10,9 @@ use Bitrix\Main\Config\Option;
 use Bitrix\Main\Entity;
 use Bitrix\Sale\Delivery\DeliveryLocationTable;
 use Bitrix\Sale\Internals\PersonTypeTable;
-
+use Bitrix\Sale\Location\Connector;
+use Bitrix\Sale\Location\LocationTable;
+use Bitrix\Sale\Location\Util\Assert;
 
 
 class OshishaDelivery extends CommonPVZ
@@ -39,19 +41,52 @@ class OshishaDelivery extends CommonPVZ
 //        'quantity_override'
     );
 
-    public static function checkMoscowOrNot($locationCode)
+    /**
+     * validate location delivery on moscow or moscow region
+     *
+     * @param $locationCode string code location for delivery
+     * @return bool
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function checkMoscowOrNot(string $locationCode): bool
     {
-        $result = DeliveryLocationTable::checkConnectionExists(DOOR_DELIVERY_ID, $locationCode,
+        $node = LocationTable::getList(
             array(
-                'LOCATION_LINK_TYPE' => 'AUTO'
+                'filter' => array('=CODE' => $locationCode),
+                'select' => array('ID', 'LEFT_MARGIN', 'RIGHT_MARGIN'),
+                'limit' => 1
+            )
+        )->fetch();
+        if (empty($node)) {
+            return  false;
+        }
+
+        $node = Assert::expectNotEmptyArray($node, '$nodeInfo[]');
+        $node['ID'] = Assert::expectIntegerPositive($node['ID'], '$nodeInfo[][ID]');
+        $node['LEFT_MARGIN'] = Assert::expectIntegerNonNegative($node['LEFT_MARGIN'], '$nodeInfo[][LEFT_MARGIN]');
+        $node['RIGHT_MARGIN'] = Assert::expectIntegerPositive($node['RIGHT_MARGIN'], '$nodeInfo[][RIGHT_MARGIN]');
+
+        //moscow and moscow region
+        $moscowConnectors = ["0000028025","0000073738"];
+        $connectors = LocationTable::getList(
+            array(
+                'filter' => array('=CODE' => $moscowConnectors),
+                'select' => array('ID', 'LEFT_MARGIN', 'RIGHT_MARGIN'),
             )
         );
-        return $result;
-    }
+        while ($connector = $connectors->fetch()) {
+            if($connector['ID'] === $node['ID']) {
+                return true;
+            } elseif($node['LEFT_MARGIN'] >= $connector['LEFT_MARGIN']
+                && $node['RIGHT_MARGIN'] <= $connector['RIGHT_MARGIN']) {
 
-    public static function updateOshishaRegionRestrictions() {
-        $arLocation = ["L" => ["0000028025","0000073738"]];
-        DeliveryLocationTable::resetMultipleForOwner(DOOR_DELIVERY_ID, $arLocation);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function getDeliveryStatus() {
@@ -60,7 +95,6 @@ class OshishaDelivery extends CommonPVZ
 
     public static function getInstanceForDoor($deliveryParams): array
     {
-        //TODO validate moscow and region!!!!
         $res = self::checkMoscowOrNot($deliveryParams['location'] ?? '');
 
        if ($res && Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_door_active')) {
@@ -71,10 +105,9 @@ class OshishaDelivery extends CommonPVZ
 
     public static function getInstanceForPvz($deliveryParams): array
     {
-        //TODO validate moscow and region!!!!
         $res = self::checkMoscowOrNot($deliveryParams['codeCity'] ?? '');
 
-        if (Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_pvz_active')) {
+        if ($res || Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_pvz_active')) {
             return [new OshishaDelivery()];
         }
         return [];
@@ -139,37 +172,6 @@ class OshishaDelivery extends CommonPVZ
     public static function getOshishaOptionsData()
     {
         $data = array();
-//        foreach (self::$oshisha_fields as $field) {
-//            $data[$field] = self::getOshishaDataValue($field);
-//        }
-////        $this->data['debug'] = boolval($this->data['debug']);
-////        $this->data['direct'] = boolval($this->data['direct']);
-//        $arPersonTypes = self::getOshishaPersonTypes();
-//        $isAddressSimple = boolval($data["address_type"] != self::OSHISHA_ADDRESS_COMPLEX);
-////        if($isAddressSimple) {
-////            $this->data["mirror_pvz_address"] = boolval($this->getDataValue('mirror_pvz_address'));
-////        }
-//        foreach ($arPersonTypes as $id => $name) {
-////            $this->fields[] = 'pvz_prop_'.$id;
-////            $this->data['pvz_prop_'.$id] = $this->getDataValue('pvz_prop_'.$id);
-//            if ($isAddressSimple) {
-//                self::$oshisha_fields[] = 'address_prop_id_' . $id;
-//                self::$oshisha_fields[] = 'time_period_' . $id;
-//                $data['address_prop_id_' . $id] = self::getOshishaDataValue('address_prop_id_' . $id);
-//                $data['time_period_' . $id] = self::getOshishaDataValue('time_period_' . $id);
-//
-//            } else {
-//                self::$oshisha_fields[] = 'street_prop_id_' . $id;
-//                $data['street_prop_id_' . $id] = self::getOshishaDataValue('street_prop_id_' . $id);
-//                self::$oshisha_fields[] = 'corp_prop_id_' . $id;
-//                $data['corp_prop_id_' . $id] = self::getOshishaDataValue('corp_prop_id_' . $id);
-//                self::$oshisha_fields[] = 'bld_prop_id_' . $id;
-//                $data['bld_prop_id_' . $id] = self::getOshishaDataValue('bld_prop_id_' . $id);
-//                self::$oshisha_fields[] = 'flat_prop_id_' . $id;
-//                $data['flat_prop_id_' . $id] = self::getOshishaDataValue('flat_prop_id_' . $id);
-//            }
-//            return $data;
-//        }
     }
 
     public static function generate($arOptions, $arConfigData)
@@ -238,7 +240,7 @@ class OshishaDelivery extends CommonPVZ
                                        <img src='/bitrix/themes/.default/images/actions/delete_button.gif' 
                                         border='0' width='20' height='20'/></a>";
 
-                            if (count($start) == 0) {
+                            if (empty($start) || count($start) == 0) {
                                 $start[] = '';
                                 $end[] = '';
                             }

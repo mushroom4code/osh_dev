@@ -5,10 +5,14 @@ use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Enterego\EnteregoSettings;
 use Enterego\UserPrice\UserPriceHelperOsh;
 
+require_once(__DIR__ . '/conf.php');
+
+if (SITE_ID === SITE_EXHIBITION) {
+    require_once(__DIR__ . '/redefinedClass/component.php');
+}
+
 CModule::IncludeModule("iblock");
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
-
-require_once(__DIR__ . '/conf.php');
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
@@ -42,6 +46,7 @@ require_once(__DIR__ . '/enterego_class/sale_cond.php');
 
 define("USE_CUSTOM_SALE_PRICE", EnteregoSettings::getParamOnCheckAndPeriod('USE_CUSTOM_SALE_PRICE', 'activation_price_admin'));
 define("CHECKED_INFO", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_INFO', 'activation_info_admin'));
+define("CHECKED_EXHIBITION", EnteregoSettings::getParamOnCheckAndPeriod('CHECKED_EXHIBITION', 'exhibition_info_admin_params'));
 // add rest api web hook  - validate products without photo
 AddEventHandler('rest', 'OnRestServiceBuildDescription',
     array('CatalogAPIService', 'OnRestServiceBuildDescription'));
@@ -67,7 +72,7 @@ require_once(__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
 
 const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
-
+const STATIC_P = '';
 //Типы цен на сайте
 const SALE_PRICE_TYPE_ID = 3;
 const BASIC_PRICE = 2;
@@ -79,7 +84,7 @@ const PERSON_TYPE_BUYER = 1;
 AddEventHandler("main", "OnBuildGlobalMenu", "DoBuildGlobalMenu");
 #AddEventHandler("main", "OnEndBufferContent", "deleteKernelJs");
 AddEventHandler("main", "OnBeforeProlog", "PriceTypeANDStatusUser", 50);
-AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
+//AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
 
 AddEventHandler('sale', 'OnCondSaleActionsControlBuildList',
     ['\Enterego\EnteregoActionDiscountPriceType', 'GetControlDescr']);
@@ -166,7 +171,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "100",
                     "text" => "Черная пятница/Распродажа",
                     "title" => "Черная пятница/Распродажа",
-                    "url" => "/bitrix/php_interface/enterego_class/init_sale.php",
+                    "url" => "bitrix/admin/enterego_admin.php?category=init_sale",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "init_sale.php",
@@ -181,7 +186,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "100",
                     "text" => "Свойства товара",
                     "title" => "Свойства товара",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/product_prop_setting.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=product_prop_setting",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "product_prop_setting.php",
@@ -195,7 +200,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "200",
                     "text" => "Прайс-лист",
                     "title" => "Прайс-лист",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/priceList.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=priceList",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "priceList.php",
@@ -209,13 +214,27 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 		              "sort" => "200",
 		              "text" => "Строка Информатор",
 		              "title" => "Строка Информатор",
-		              "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
+		              "url" => "/bitrix/admin/enterego_admin.php?category=informator",
 		              "parent_page" => "global_menu_enterego",
 		              "more_url" => array(
 			              "informator.php",
 		              ),
 		              "items" => array(),
-	              )
+	              ),
+                array(
+                    "parent_menu" => "global_menu_enterego",
+                    "icon" => "default_menu_icon",
+                    "page_icon" => "default_page_icon",
+                    "sort" => "200",
+                    "text" => "Выставка",
+                    "title" => "Выставка",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=exhibition",
+                    "parent_page" => "global_menu_enterego",
+                    "more_url" => array(
+                        "exhibition.php",
+                    ),
+                    "items" => array(),
+                ),
             )
         ),
     );
@@ -228,6 +247,7 @@ class BXConstants
 {
 
     private static $_listPriceType;
+
     /**
      * @return array|string[]
      * @throws \Bitrix\Main\Db\SqlQueryException
@@ -239,7 +259,7 @@ class BXConstants
             return self::$_listPriceType;
         }
 
-        $priceTypes =  array(
+        $priceTypes = array(
             SALE_PRICE_TYPE_ID => "Сайт скидка",
             BASIC_PRICE => "Основная",
             B2B_PRICE => "b2b",
@@ -285,7 +305,7 @@ AddEventHandler("main", "OnBeforeUserRegister", array("CUserEx", "OnBeforeUserUp
 
 class CUserEx
 {
-    function OnBeforeUserLogin($arFields)
+    static function OnBeforeUserLogin($arFields)
     {
         $filter = array("EMAIL" => $arFields["LOGIN"]);
         $rsUsers = CUser::GetList(($by = "LAST_NAME"), ($order = "asc"), $filter);
@@ -294,12 +314,11 @@ class CUserEx
         /*else $arFields["LOGIN"] = "";*/
     }
 
-    function OnBeforeUserRegister(&$arFields)
+    static function OnBeforeUserRegister(&$arFields)
     {
         $arFields["LOGIN"] = $arFields["EMAIL"];
     }
 }
-
 
 AddEventHandler("sale", "OnOrderSave", "OnOrderAddHandlerSave");
 function OnOrderAddHandlerSave($ID, $arFields, $arOrder)
@@ -387,4 +406,4 @@ AddEventHandler('main', 'OnAfterUserAuthorize', ['\Enterego\AuthTokenTable', 'ge
 AddEventHandler('main', 'OnUserLogout', ['\Enterego\AuthTokenTable', 'removeToken']);
 
 // bitrix24 feedback and callback integrations
-AddEventHandler('iblock', 'OnAfterIBlockElementAdd',['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);
+AddEventHandler('iblock', 'OnAfterIBlockElementAdd', ['\Enterego\EnteregoBitrix24', 'sendToBitrix24']);

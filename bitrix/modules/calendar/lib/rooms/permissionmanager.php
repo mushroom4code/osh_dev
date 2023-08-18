@@ -5,6 +5,7 @@ use Bitrix\Calendar\Integration\Bitrix24Manager;
 class PermissionManager
 {
 	/**
+	 * @deprecated
 	 * @param $operation
 	 *
 	 * @return boolean
@@ -22,6 +23,7 @@ class PermissionManager
 	}
 
 	/**
+	 * @deprecated
 	 * @param $operation
 	 * @param $sectionId
 	 *
@@ -50,7 +52,7 @@ class PermissionManager
 	/**
 	 * @return array
 	 */
-	public static function getAvailableOperations(): array
+	public static function getAvailableOperations(): ?array
 	{
 		$result = \CCalendarType::GetList([
 			'arFilter' => [
@@ -58,6 +60,6 @@ class PermissionManager
 			],
 		]);
 
-		return $result[0]['PERM'];
+		return $result[0]['PERM'] ?? null;
 	}
 }

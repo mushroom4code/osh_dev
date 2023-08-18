@@ -462,7 +462,7 @@ class App
 		if (Common::isChatId($messageFields['DIALOG_ID']))
 		{
 			$chatId = \Bitrix\Im\Dialog::getChatId($messageFields['DIALOG_ID']);
-			$relations = \CIMChat::GetRelationById($chatId);
+			$relations = \CIMChat::GetRelationById($chatId, false, true, false);
 		}
 		else
 		{
@@ -717,7 +717,7 @@ class App
 			$result[] = Array(
 				'id' => $app['ID'],
 				'botId' => $app['BOT_ID'],
-				'botCode' => htmlspecialcharsbx($botData['CODE']),
+				'botCode' => htmlspecialcharsbx($botData['CODE'] ?? ''),
 				'domainHash' => self::getDomainHash($app['HASH']),
 				'userHash' => self::getUserHash($userId, $app['HASH']),
 				'code' => htmlspecialcharsbx($app['CODE']),

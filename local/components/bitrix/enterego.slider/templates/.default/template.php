@@ -91,9 +91,6 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
     );
 
     foreach ($arParams['SECTIONS_ITEMS'] as $sectionId => $section) { ?>
-        <?php if (\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)) { ?>
-            <div class="h2"><?= $arParams['SECTIONS'][$sectionId]['NAME'] ?></div class="h2">
-        <?php } ?>
         <div class="by-card">
             <?php
             $intRowsCount = 1;
@@ -101,8 +98,8 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             $strContID = 'cat_top_cont_' . $strRand;
             ?>
             <div id="<?= $strContID; ?>"
-                 class="bx_catalog_tile_home_type_2 col2 mt-3 mb-3 <?= $templateData['TEMPLATE_CLASS']; ?>">
-                <div class="bx_catalog_tile_section">
+                 class="col2 <?= $templateData['TEMPLATE_CLASS']; ?>">
+                <div class="bx_catalog_tile_section" id="hits_slider_<?=$strRand?>">
                     <?php
                     $boolFirst = true;
                     $arRowIDs = array();
@@ -163,15 +160,33 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                     ?>
                 </div>
             </div>
-            <?php if (count($section) > 4 && \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)) { ?>
-                <div class="text-center" data-entity="lazy-container-1">
-                    <a href="/hit/<?= $arParams['SECTIONS'][$sectionId]['CODE'] ?>/"
-                       class="btn text_catalog_button link_red_button btn-md" style="margin: 15px;"
-                       data-use="show-more-1">
-                        Смотреть все </a>
-                </div>
-            <?php } ?>
         </div>
         <?php
     }
-}
+}?>
+<script>
+    if ($('#hits_slider_<?=$strRand?>').is('.bx_catalog_tile_section')) {
+        let count = 4,
+            variableWidth = false;
+            screenWidth = window.screen.width;
+        if (screenWidth <= 1380) {
+            count = 4;
+        }
+        if (screenWidth <= 1080) {
+            count = 3;
+        }
+        if (screenWidth <= 746) {
+            count = 2;
+        }
+        $('#hits_slider_<?=$strRand?>').slick({
+            slidesToShow: count,
+            arrows: true,
+            infinite: false,
+            variableWidth: variableWidth,
+            prevArrow: '<span class="new_custom_button_slick_left_cat"  aria-hidden="true"><i class="fa fa-angle-left"'
+                + ' aria-hidden="true"></i></span>',
+            nextArrow: '<span class="new_custom_button_slick_right_cat" aria-hidden="true"><i class="fa fa-angle-right"'
+                + ' aria-hidden="true"></i></span>',
+        })
+    }
+</script>

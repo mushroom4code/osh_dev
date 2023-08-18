@@ -121,7 +121,8 @@ class CIMHistory
 					'recipientId' => $arRes['TO_USER_ID'],
 					'date' => $arRes['DATE_CREATE'],
 					'system' => $arRes['NOTIFY_EVENT'] == 'private'? 'N': 'Y',
-					'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE'])
+					'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE']),
+					'textLegacy' => \Bitrix\Im\Text::parseLegacyFormat($arRes['MESSAGE'])
 				);
 
 				$arUsers[$convId][] = $arRes['ID'];
@@ -256,7 +257,8 @@ class CIMHistory
 					'recipientId' => $arRes['TO_USER_ID'],
 					'date' => \Bitrix\Main\Type\DateTime::createFromTimestamp($arRes['DATE_CREATE']),
 					'system' => $arRes['NOTIFY_EVENT'] == 'private' ? 'N' : 'Y',
-					'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE'])
+					'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE']),
+					'textLegacy' => \Bitrix\Im\Text::parseLegacyFormat($arRes['MESSAGE'])
 				);
 
 				$arUsers[$convId][] = $arRes['ID'];
@@ -325,7 +327,7 @@ class CIMHistory
 		else
 		{
 			$arRelation = \CIMChat::GetPrivateRelation($fromUserId, $toUserId);
-			$chatId = $arRelation['CHAT_ID'];
+			$chatId = $arRelation['CHAT_ID'] ?? null;
 			$startId = $arRelation['START_ID'];
 		}
 
@@ -391,7 +393,8 @@ class CIMHistory
 						'recipientId' => $arRes['TO_USER_ID'],
 						'date' => \Bitrix\Main\Type\DateTime::createFromTimestamp($arRes['DATE_CREATE']),
 						'system' => $arRes['NOTIFY_EVENT'] == 'private'? 'N': 'Y',
-						'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE'])
+						'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE']),
+						'textLegacy' => \Bitrix\Im\Text::parseLegacyFormat($arRes['MESSAGE'])
 					);
 					$arUsers[$convId][] = $arRes['ID'];
 					$arMessageId[] = $arRes['ID'];
@@ -458,8 +461,12 @@ class CIMHistory
 		$dbRes = $DB->Query($strSql, false, "File: ".__FILE__."<br>Line: ".__LINE__);
 		if ($arRes = $dbRes->Fetch())
 		{
-			$strSql = "UPDATE b_im_relation SET START_ID = ".intval($arRes['MAX_ID']).", LAST_ID = ".(intval($arRes['MAX_ID'])-1)." WHERE ID = ".intval($arRes['R1_ID']);
+			$strSql = "UPDATE b_im_relation SET START_ID = ".intval($arRes['MAX_ID'])." WHERE ID = ".intval($arRes['R1_ID']);
 			$DB->Query($strSql, false, "File: ".__FILE__."<br>Line: ".__LINE__);
+
+			$counterService = new IM\V2\Message\CounterService($this->user_id);
+
+			$counterService->deleteByChatId((int)$arRes['CHAT_ID']);
 
 			if ($arRes['MAX_ID'] >= $arRes['R2_START_ID'] && $arRes['R2_START_ID'] > 0)
 			{
@@ -490,7 +497,7 @@ class CIMHistory
 		$chatId = intval($chatId);
 
 		$limitById = '';
-		$ar = \CIMChat::GetRelationById($chatId, $this->user_id);
+		$ar = \CIMChat::GetRelationById($chatId, $this->user_id, true, false);
 		if ($ar && $ar['START_ID'] > 0)
 		{
 			$limitById = 'AND M.ID >= '.intval($ar['START_ID']);
@@ -511,8 +518,12 @@ class CIMHistory
 		$dbRes = $DB->Query($strSql, false, "File: ".__FILE__."<br>Line: ".__LINE__);
 		if ($arRes = $dbRes->Fetch())
 		{
-			$strSql = "UPDATE b_im_relation SET START_ID = ".intval($arRes['MAX_ID']).", LAST_ID = ".(intval($arRes['MAX_ID'])-1)." WHERE ID = ".intval($arRes['R1_ID']);
+			$strSql = "UPDATE b_im_relation SET START_ID = ".intval($arRes['MAX_ID'])." WHERE ID = ".intval($arRes['R1_ID']);
 			$dbRes = $DB->Query($strSql, false, "File: ".__FILE__."<br>Line: ".__LINE__);
+
+			$counterService = new IM\V2\Message\CounterService($this->user_id);
+
+			$counterService->deleteByChatId((int)$arRes['CHAT_ID']);
 
 			$chatType = $ar ? $ar['MESSAGE_TYPE'] : IM_MESSAGE_CHAT;
 			$primaryKey = ['USER_ID' => $this->user_id, 'ITEM_TYPE' => $chatType, 'ITEM_ID' => $chatId];
@@ -551,7 +562,7 @@ class CIMHistory
 			);
 		}
 
-		$ar = \CIMChat::GetRelationById($chatId, $this->user_id);
+		$ar = \CIMChat::GetRelationById($chatId, $this->user_id, true, false);
 		if ($ar && $ar['START_ID'] > 0)
 		{
 			$where['>=ID'] = intval($ar['START_ID']);
@@ -585,7 +596,8 @@ class CIMHistory
 				'senderId' => $arRes['AUTHOR_ID'],
 				'recipientId' => $arRes['CHAT_ID'],
 				'date' => $arRes['DATE_CREATE'],
-				'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE'])
+				'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE']),
+				'textLegacy' => \Bitrix\Im\Text::parseLegacyFormat($arRes['MESSAGE'])
 			);
 
 			$usersMessage[$arRes['CHAT_ID']][] = $arRes['ID'];
@@ -633,7 +645,7 @@ class CIMHistory
 		}
 
 		$limitById = '';
-		$ar = \CIMChat::GetRelationById($chatId, $this->user_id);
+		$ar = \CIMChat::GetRelationById($chatId, $this->user_id, true, false);
 		if ($ar && $ar['START_ID'] > 0)
 		{
 			$limitById = 'AND M.ID >= '.intval($ar['START_ID']);
@@ -675,7 +687,8 @@ class CIMHistory
 				'senderId' => $arRes['AUTHOR_ID'],
 				'recipientId' => $arRes['CHAT_ID'],
 				'date' => \Bitrix\Main\Type\DateTime::createFromTimestamp($arRes['DATE_CREATE']),
-				'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE'])
+				'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE']),
+				'textLegacy' => \Bitrix\Im\Text::parseLegacyFormat($arRes['MESSAGE'])
 			);
 
 			$usersMessage[$arRes['CHAT_ID']][] = $arRes['ID'];
@@ -724,14 +737,26 @@ class CIMHistory
 		}
 
 		$limitById = '';
-		$ar = \CIMChat::GetRelationById($chatId, $this->user_id);
+		$ar = \CIMChat::GetRelationById($chatId, $this->user_id, true, false);
 		if ($ar && $ar['START_ID'] > 0)
 		{
 			$limitById = 'AND M.ID >= '.intval($ar['START_ID']);
 		}
 
 		if (!$bTimeZone)
+		{
 			CTimeZone::Disable();
+		}
+
+		$lineId = 0;
+		if (
+			$chatData['TYPE'] == IM_MESSAGE_OPEN_LINE
+			&& \Bitrix\Main\Loader::includeModule('imopenlines')
+		)
+		{
+			$lineId = \Bitrix\ImOpenLines\Chat::parseLinesChatEntityId($chatData['ENTITY_ID'])['lineId'];
+		}
+
 		if ($chatData['TYPE'] == IM_MESSAGE_OPEN)
 		{
 			$strCountSql ="
@@ -758,7 +783,11 @@ class CIMHistory
 				ORDER BY M.DATE_CREATE DESC, M.ID DESC
 			";
 		}
-		else if ($chatData['TYPE'] == IM_MESSAGE_OPEN_LINE && \Bitrix\Main\Loader::includeModule('imopenlines') && \Bitrix\ImOpenLines\Config::canJoin($chatId))
+		elseif (
+			$chatData['TYPE'] == IM_MESSAGE_OPEN_LINE
+			&& \Bitrix\Main\Loader::includeModule('imopenlines')
+			&& \Bitrix\ImOpenLines\Config::canJoin($lineId)
+		)
 		{
 			$strCountSql ="
 				SELECT COUNT(M.ID) as CNT
@@ -838,7 +867,8 @@ class CIMHistory
 					'recipientId' => $arRes['CHAT_ID'],
 					'date' => \Bitrix\Main\Type\DateTime::createFromTimestamp($arRes['DATE_CREATE']),
 					'system' => $arRes['AUTHOR_ID'] > 0? 'N': 'Y',
-					'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE'])
+					'text' => \Bitrix\Im\Text::parse($arRes['MESSAGE']),
+					'textLegacy' => \Bitrix\Im\Text::parseLegacyFormat($arRes['MESSAGE'])
 				);
 
 				$usersMessage[$arRes['CHAT_ID']][] = $arRes['ID'];
@@ -996,7 +1026,8 @@ class CIMHistory
 				'recipientId' => $recipientId,
 				'date' => \Bitrix\Main\Type\DateTime::createFromTimestamp($message['DATE_CREATE']),
 				'system' => $message['AUTHOR_ID'] > 0? 'N': 'Y',
-				'text' => \Bitrix\Im\Text::parse($message['MESSAGE'])
+				'text' => \Bitrix\Im\Text::parse($message['MESSAGE']),
+				'textLegacy' => \Bitrix\Im\Text::parseLegacyFormat($arRes['MESSAGE'])
 			);
 
 			$usersMessage[$dialogId][] = $message['ID'];
@@ -1053,6 +1084,7 @@ class CIMHistory
 				'ID','DATE_CREATE', 'CHAT_ID', 'AUTHOR_ID',
 				'CHAT_TYPE' => 'CHAT.TYPE',
 				'CHAT_ENTITY_TYPE' => 'CHAT.ENTITY_TYPE',
+				'CHAT_ENTITY_ID' => 'CHAT.ENTITY_ID',
 				'CHAT_ENTITY_DATA_1' => 'CHAT.ENTITY_DATA_1',
 			),
 			'filter' => Array(
@@ -1064,7 +1096,7 @@ class CIMHistory
 			return false;
 		}
 
-		$relations = CIMChat::GetRelationById($message['CHAT_ID']);
+		$relations = CIMChat::GetRelationById($message['CHAT_ID'], false, true, false);
 		if (!isset($relations[$this->user_id]))
 		{
 			if (
@@ -1076,7 +1108,9 @@ class CIMHistory
 				$crmEntityType = ($explodeData[0] == 'Y') ? $explodeData[1] : null;
 				$crmEntityId = ($explodeData[0] == 'Y') ? intval($explodeData[2]) : null;
 
-				if (!\Bitrix\ImOpenLines\Config::canJoin($message['CHAT_ID'], $crmEntityType, $crmEntityId))
+				$lineId = \Bitrix\ImOpenLines\Chat::parseLinesChatEntityId($message['CHAT_ENTITY_ID'])['lineId'];
+
+				if (!\Bitrix\ImOpenLines\Config::canJoin($lineId, $crmEntityType, $crmEntityId))
 				{
 					return false;
 				}
@@ -1159,7 +1193,8 @@ class CIMHistory
 				'recipientId' => $recipientId,
 				'date' => \Bitrix\Main\Type\DateTime::createFromTimestamp($mess['DATE_CREATE']),
 				'system' => $mess['AUTHOR_ID'] > 0? 'N': 'Y',
-				'text' => $textParser? \Bitrix\Im\Text::parse($mess['MESSAGE']): $mess['MESSAGE']
+				'text' => $textParser? \Bitrix\Im\Text::parse($mess['MESSAGE']): $mess['MESSAGE'],
+				'textLegacy' => $textParser? \Bitrix\Im\Text::parseLegacyFormat($mess['MESSAGE']): $mess['MESSAGE']
 			);
 
 			$usersMessage[$dialogId][] = $mess['ID'];

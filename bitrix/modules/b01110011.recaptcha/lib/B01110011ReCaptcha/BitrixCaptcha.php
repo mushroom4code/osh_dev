@@ -17,7 +17,7 @@ class BitrixCaptcha
     /**
      * Подключаем JS скрипты для reCaptcha v3
      */
-    public function initJS()
+    public static function initJS()
     {
         $Asset = Asset::getInstance();
         $siteKey = Option::get(M::id(), 'site_key_'. SITE_ID);
@@ -36,7 +36,7 @@ class BitrixCaptcha
     /**
      * Подключаем проверку на спам
      */
-    public function initCheckSpam()
+    public static function initCheckSpam()
     {
         $secretKey = Option::get(M::id(), 'secret_key_'. SITE_ID);
         if (empty($secretKey)) return true;
@@ -53,7 +53,7 @@ class BitrixCaptcha
     /**
      * Проверка форм из модуля веб форм
      */
-    public function checkWebForm($WEB_FORM_ID, &$arFields, &$arValues)
+    public static function checkWebForm($WEB_FORM_ID, &$arFields, &$arValues)
     {
         if ($arFields['RECAPTCHA_DISABLE']) return true;
 
@@ -70,7 +70,7 @@ class BitrixCaptcha
     /**
      * Проверка при регистрации пользователя
      */
-    public function checkRegistration(&$arArgs)
+    public static function checkRegistration(&$arArgs)
     {
         $registrationEnable = Option::get(M::id(), 'registration_enable_'. SITE_ID, 'N');
         if ($registrationEnable == 'N') return true;
@@ -81,7 +81,7 @@ class BitrixCaptcha
     /**
      * Проверка при оформлении заказа
      */
-    public function checkSaleOrder(&$arFields)
+    public static function checkSaleOrder(&$arFields)
     {
         if ($arFields['RECAPTCHA_DISABLE']) return true;
 
@@ -94,7 +94,7 @@ class BitrixCaptcha
     /**
      * Проверка при отправки формы обратной связи main.feedback
      */
-    public function checkFeedback(&$event, &$lid, &$arFields, &$messageId, &$files, &$languageId)
+    public static function checkFeedback(&$event, &$lid, &$arFields, &$messageId, &$files, &$languageId)
     {
         if ($arFields['RECAPTCHA_DISABLE']) return true;
 
@@ -111,7 +111,7 @@ class BitrixCaptcha
     /**
      * Проверка при добавлении в инфоблок
      */
-    public function checkIBlock(&$arParams)
+    public static function checkIBlock(&$arParams)
     {
         if ($arParams['RECAPTCHA_DISABLE']) return true;
 

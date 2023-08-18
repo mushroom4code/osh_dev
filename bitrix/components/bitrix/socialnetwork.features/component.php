@@ -30,7 +30,7 @@ if (!CModule::IncludeModule("socialnetwork"))
 	return;
 }
 
-$arResult["IS_IFRAME"] = ($_REQUEST["IFRAME"] == "Y");
+$arResult["IS_IFRAME"] = (($_REQUEST["IFRAME"] ?? null) == "Y");
 
 $arParams["GROUP_ID"] = intval($arParams["GROUP_ID"]);
 $arParams["USER_ID"] = intval($arParams["USER_ID"]);
@@ -57,9 +57,9 @@ $arParams["PATH_TO_GROUP"] = trim($arParams["PATH_TO_GROUP"]);
 if ($arParams["PATH_TO_GROUP"] == '')
 	$arParams["PATH_TO_GROUP"] = htmlspecialcharsbx($APPLICATION->GetCurPage()."?".$arParams["PAGE_VAR"]."=group&".$arParams["GROUP_VAR"]."=#group_id#");
 
-if ($arParams["NAME_TEMPLATE"] == '')
+if (($arParams["NAME_TEMPLATE"] ?? null) == '')
 	$arParams["NAME_TEMPLATE"] = CSite::GetNameFormat();
-$bUseLogin = $arParams['SHOW_LOGIN'] != "N" ? true : false;
+$bUseLogin = (($arParams['SHOW_LOGIN'] ?? null) != "N" ? true : false);
 
 $arResult["FatalError"] = "";
 
@@ -171,16 +171,23 @@ else
 
 						if ($feature == 'files')
 						{
-							$arResult["Features"][$feature]['note'] = GetMessage("SONET_WEBDAV_RIGHS_NOTE");
+							$arResult["Features"][$feature]['note'] = GetMessage("SONET_WEBDAV_RIGHS_NOTE2");
 							continue;
 						}
 
-						if (
-							$feature === 'tasks'
-							&& $tasksLimited
-						)
+						if ($feature === 'tasks')
 						{
-							$arResult["Features"][$feature]['limit'] = 'limit_tasks_access_permissions';
+							if ($arGroup['isScrumProject'])
+							{
+								$arResult["Features"][$feature]['note'] = Loc::getMessage('SONET_TASKS_SCRUM_ACCESS_NOTE');
+								continue;
+							}
+
+							if ($tasksLimited)
+							{
+								$arResult["Features"][$feature]['limit'] = 'limit_tasks_access_permissions';
+							}
+
 						}
 
 						if (
@@ -244,7 +251,7 @@ else
 
 						if ($feature == 'files')
 						{
-							$arResult["Features"][$feature]['note'] = GetMessage("SONET_WEBDAV_RIGHS_NOTE");
+							$arResult["Features"][$feature]['note'] = GetMessage("SONET_WEBDAV_RIGHS_NOTE2");
 							continue;
 						}
 
@@ -332,7 +339,6 @@ else
 			$pageTitle = Loc::getMessage('SONET_C3_USER_SETTINGS');
 		}
 
-
 		if ($arParams["SET_TITLE"] === "Y")
 		{
 			if ($arResult['IS_IFRAME'])
@@ -356,11 +362,11 @@ else
 
 		if (
 			$_SERVER["REQUEST_METHOD"] == "POST"
-			&& $_POST["save"] <> ''
+			&& !empty($_POST["save"])
 			&& check_bitrix_sessid()
 		)
 		{
-			if ($_POST["ajax_request"] == "Y")
+			if (isset($_POST["ajax_request"]) && $_POST["ajax_request"] == "Y")
 			{
 				CUtil::JSPostUnescape();
 			}
@@ -372,7 +378,7 @@ else
 				$updateFields = [];
 
 				if (
-					(string)$_POST['GROUP_SPAM_PERMS'] !== ''
+					(string) ($_POST['GROUP_SPAM_PERMS'] ?? null) !== ''
 					&& in_array((string)$_POST['GROUP_SPAM_PERMS'], array_merge(UserToGroupTable::getRolesMember(), [ SONET_ROLES_ALL ]), true)
 				)
 				{
@@ -405,8 +411,14 @@ else
 				}
 
 				if (
-					$feature == 'tasks'
-					&& $tasksLimited
+					$feature === 'tasks'
+					&& (
+						$tasksLimited
+						|| (
+							isset($arGroup)
+							&& $arGroup['isScrumProject']
+						)
+					)
 				)
 				{
 					continue;
@@ -416,13 +428,13 @@ else
 					($arParams["PAGE_ID"] == "group_features" ? SONET_ENTITY_GROUP : SONET_ENTITY_USER),
 					($arParams["PAGE_ID"] == "group_features" ? $arResult["Group"]["ID"] : $arResult["User"]["ID"]),
 					$feature,
-					($_REQUEST[$feature."_active"] == "Y"),
-					($_REQUEST[$feature."_name"] <> '' ? $_REQUEST[$feature."_name"] : false)
+					(($_REQUEST[$feature."_active"] ?? null) == "Y"),
+					(($_REQUEST[$feature."_name"] ?? '') <> '' ? $_REQUEST[$feature."_name"] : false)
 				);
 
 				if (
 					$idTmp
-					&& $_REQUEST[$feature."_active"] == "Y"
+					&& ($_REQUEST[$feature."_active"] ?? null) == "Y"
 					&& (
 						!array_key_exists("hide_operations_settings", $arResult["arSocNetFeaturesSettings"][$feature])
 						|| !$arResult["arSocNetFeaturesSettings"][$feature]["hide_operations_settings"]
@@ -433,7 +445,7 @@ else
 					{
 						if (
 							!array_key_exists("restricted", $arResult["arSocNetFeaturesSettings"][$feature]["operations"][$operation])
-							|| !in_array($key, $arResult["arSocNetFeaturesSettings"][$feature]["operations"][$operation]["restricted"][($arParams["PAGE_ID"] == "group_features" ? SONET_ENTITY_GROUP : SONET_ENTITY_USER)])
+							|| !in_array($key ?? null, $arResult["arSocNetFeaturesSettings"][$feature]["operations"][$operation]["restricted"][($arParams["PAGE_ID"] == "group_features" ? SONET_ENTITY_GROUP : SONET_ENTITY_USER)])
 						)
 						{
 							$id1Tmp = CSocNetFeaturesPerms::SetPerm(
@@ -452,7 +464,7 @@ else
 				}
 			}
 
-			if ($_REQUEST["ajax_request"] == "Y")
+			if (isset($_REQUEST["ajax_request"]) && $_REQUEST["ajax_request"] == "Y")
 			{
 				$APPLICATION->RestartBuffer();
 				echo CUtil::PhpToJsObject(array(
@@ -479,7 +491,7 @@ else
 				}
 				else
 				{
-					if ($_REQUEST['backurl'])
+					if (!empty($_REQUEST['backurl']))
 					{
 						LocalRedirect($_REQUEST['backurl']);
 					}

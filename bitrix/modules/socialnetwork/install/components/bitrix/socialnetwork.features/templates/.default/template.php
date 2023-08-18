@@ -24,11 +24,11 @@ UI\Extension::load([
 	'ui.info-helper',
 ]);
 
-if ($arResult["NEED_AUTH"] == "Y")
+if (($arResult["NEED_AUTH"] ?? null) == "Y")
 {
 	$APPLICATION->AuthForm("");
 }
-elseif ($arResult["FatalError"] <> '')
+elseif (!empty($arResult["FatalError"]))
 {
 	?><span class='errortext'><?=$arResult["FatalError"]?></span><br /><br /><?php
 }
@@ -37,7 +37,7 @@ else
 	$isProject = ($arResult['Group']['PROJECT'] === 'Y');
 
 	if (
-		$arResult["ErrorMessage"] <> ''
+		!empty($arResult["ErrorMessage"])
 		&& $arResult["ShowForm"] != "Input"
 	)
 	{
@@ -58,7 +58,7 @@ else
 			});
 		</script>
 
-		<div id="sonet_features_error_block" class="ui-alert ui-alert-xs ui-alert-danger ui-alert-icon-danger<?=($arResult["ErrorMessage"] <> '' ? "" : " sonet-ui-form-error-block-invisible")?>"><?=$arResult["ErrorMessage"]?></div><?php
+		<div id="sonet_features_error_block" class="ui-alert ui-alert-xs ui-alert-danger ui-alert-icon-danger<?=(!empty($arResult["ErrorMessage"]) ? "" : " sonet-ui-form-error-block-invisible")?>"><?=$arResult["ErrorMessage"] ?? ''?></div><?php
 
 		$uri = new Bitrix\Main\Web\Uri(POST_FORM_ACTION_URI);
 		if (!empty($arResult["groupTypeCode"]))
@@ -143,7 +143,7 @@ else
 
 						if (
 							$feature == 'tasks'
-							&& $arFeature['limit']
+							&& ($arFeature['limit'] ?? null)
 						)
 						{
 							$APPLICATION->IncludeComponent('bitrix:ui.info.helper', '', []);
@@ -162,7 +162,10 @@ else
 									: Loc::getMessage("SONET_FEATURES_".$feature)
 						);
 
-						?><div class="<?=$featureBlockClass?>">
+						?>
+						<div class="<?= $featureBlockClass ?>"
+							 onclick="BX.UI.InfoHelper.show('<?= $arFeature['limit'] ?? '' ?>',{isLimit: true,limitAnalyticsLabels: {module: 'socialnetwork',source: 'features',feature: 'tasks',}})"
+							 style="cursor:pointer;">
 							<div class="sn-features-title-box">
 								<h4 class="sn-features-title"><?=$featureName?></h4>
 								<span class="sn-features-subtitle"><?=$featureSubTitleText?></span>

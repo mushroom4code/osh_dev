@@ -169,8 +169,9 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	      actionClick = data.onclick;
 	    }
 
+	    const buttonClasses = `landing-ui-button-grid-center-cell ${data.className || ''}`;
 	    return new BX.Landing.UI.Button.BaseButton("center_cell_button", {
-	      className: "landing-ui-button-grid-center-cell " + data.className,
+	      className: buttonClasses,
 	      text: data.text,
 	      onClick: actionClick
 	    });
@@ -371,6 +372,7 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	    }
 
 	    const data = {};
+	    const buttonClasses = 'fa fa-chevron-right';
 
 	    switch (type) {
 	      case LinkUrl.TYPE_HREF_PAGE:
@@ -381,7 +383,7 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	          "_popup": BX.Landing.Loc.getMessage("FIELD_LINK_TARGET_POPUP")
 	        };
 	        data.button = {
-	          'className': 'fa fa-chevron-right',
+	          'className': buttonClasses,
 	          'text': '',
 	          'action': LinkUrl.TYPE_PAGE
 	        };
@@ -397,7 +399,7 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	          "_popup": BX.Landing.Loc.getMessage("FIELD_LINK_TARGET_POPUP")
 	        };
 	        data.button = {
-	          'className': 'fa fa-chevron-right',
+	          'className': buttonClasses,
 	          'text': '',
 	          'action': LinkUrl.TYPE_BLOCK
 	        };
@@ -408,7 +410,7 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	      case LinkUrl.TYPE_HREF_CRM_FORM:
 	        data.title = BX.Landing.Loc.getMessage("LANDING_LINK_URL_TITLE_CRM_FORM");
 	        data.button = {
-	          'className': 'fa fa-chevron-right',
+	          'className': buttonClasses,
 	          'text': '',
 	          'action': LinkUrl.TYPE_CRM_FORM
 	        };
@@ -420,7 +422,7 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	      case LinkUrl.TYPE_CATALOG:
 	        data.title = BX.Landing.Loc.getMessage("LANDING_LINK_URL_TITLE_PRODUCT");
 	        data.button = {
-	          'className': 'fa fa-chevron-right',
+	          'className': buttonClasses,
 	          'text': '',
 	          'action': LinkUrl.TYPE_CATALOG_SECTION
 	        };
@@ -430,8 +432,11 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 
 	      case LinkUrl.TYPE_HREF_TEL:
 	        data.title = BX.Landing.Loc.getMessage("LANDING_LINK_URL_TITLE_TEL");
+	        data.items = {
+	          "_blank": ''
+	        };
 	        data.button = {
-	          'className': 'fa fa-chevron-right',
+	          'className': buttonClasses,
 	          'text': '',
 	          'action': LinkUrl.TYPE_CRM_PHONE
 	        };
@@ -456,6 +461,9 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 
 	      case LinkUrl.TYPE_HREF_MAILTO:
 	        data.title = BX.Landing.Loc.getMessage("LANDING_LINK_URL_TITLE_MAILTO");
+	        data.items = {
+	          "_blank": ""
+	        };
 	        data.hideInput = false;
 	        data.needValidate = 'mail';
 	        data.contentEditable = true;
@@ -478,6 +486,7 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	          "_blank": ''
 	        };
 	        data.button = {
+	          'className': buttonClasses,
 	          'text': '',
 	          'onclick': this.onDiskFileShow.bind(this)
 	        };
@@ -488,6 +497,7 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	      case LinkUrl.TYPE_HREF_USER:
 	        data.title = BX.Landing.Loc.getMessage("LANDING_LINK_URL_TITLE_USER");
 	        data.button = {
+	          'className': buttonClasses,
 	          'text': '',
 	          'onclick': this.onUserListShow.bind(this)
 	        };
@@ -512,8 +522,10 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	      return this.constantType;
 	    }
 
-	    if (this.matchers.pageOld.test(segment)) {
-	      return LinkUrl.TYPE_HREF_PAGE;
+	    const foundHrefStringType = this.matchHrefStringType(segment);
+
+	    if (foundHrefStringType !== null) {
+	      return foundHrefStringType;
 	    } //for blocks with default href="#"
 
 
@@ -581,6 +593,43 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	    }
 
 	    return type;
+	  }
+	  /**
+	   * Match type href for old values
+	   * @param {string} value
+	   */
+
+
+	  matchHrefStringType(value) {
+	    if (this.matchers.catalogElement.test(value)) {
+	      return LinkUrl.TYPE_HREF_PRODUCT;
+	    }
+
+	    if (this.matchers.catalogSection.test(value)) {
+	      return LinkUrl.TYPE_HREF_PRODUCT;
+	    }
+
+	    if (this.matchers.block.test(value)) {
+	      return LinkUrl.TYPE_HREF_BLOCK;
+	    }
+
+	    if (this.matchers.pageOld.test(value)) {
+	      return LinkUrl.TYPE_HREF_PAGE;
+	    }
+
+	    if (this.matchers.crmForm.test(value)) {
+	      return LinkUrl.TYPE_HREF_CRM_FORM;
+	    }
+
+	    if (this.matchers.crmPhone.test(value)) {
+	      return LinkUrl.TYPE_HREF_TEL;
+	    }
+
+	    if (this.matchers.diskFile.test(value)) {
+	      return LinkUrl.TYPE_HREF_FILE;
+	    }
+
+	    return null;
 	  }
 	  /**
 	   * Sets placeholder by href type
@@ -778,10 +827,10 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	      value: LinkUrl.TYPE_HREF_LINK,
 	      className: 'landing-ui-field-link-url-select-action-item fas landing-ui-field-link-url-icon--link'
 	    }, {
-	      name: BX.Landing.Loc.getMessage("LANDING_LINK_URL_ACTION_FILE"),
+	      name: BX.Landing.Loc.getMessage("LANDING_LINK_URL_ACTION_FILE_MSGVER_1"),
 	      value: LinkUrl.TYPE_HREF_FILE,
 	      className: 'landing-ui-field-link-url-select-action-item fas landing-ui-field-link-url-icon--file',
-	      type: 'KNOWLEDGE'
+	      type: ['KNOWLEDGE', 'GROUP']
 	    }, {
 	      name: BX.Landing.Loc.getMessage("LANDING_LINK_URL_ACTION_USER"),
 	      value: LinkUrl.TYPE_HREF_USER,
@@ -794,7 +843,7 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	    }];
 	    let setItems = [];
 	    items.forEach(function (item) {
-	      if (!item.hasOwnProperty('type') || item.type === type) {
+	      if (!item.hasOwnProperty('type') || item.type === type || main_core.Type.isArray(item.type) && item.type.includes(type)) {
 	        setItems.push(item);
 	      }
 	    });
@@ -995,28 +1044,39 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	    return this.cache.remember(section, function () {
 	      let matchRes;
 	      let id;
-	      let type = 'Section';
+	      let type;
 	      matchRes = section.match(this.matchers.catalog);
 
 	      if (matchRes === null) {
 	        matchRes = section.match(this.matchers.element);
-	        type = 'Element';
+
+	        if (matchRes !== null) {
+	          type = 'Element';
+	        }
+	      } else {
+	        type = 'Section';
 	      }
 
 	      if (matchRes) {
 	        id = matchRes[1];
 	      }
 
-	      let requestBody;
+	      let requestBody = null;
 
 	      if (type === 'Section') {
 	        requestBody = {
 	          sectionId: id
 	        };
-	      } else {
+	      }
+
+	      if (type === 'Element') {
 	        requestBody = {
 	          elementId: id
 	        };
+	      }
+
+	      if (requestBody === null) {
+	        return null;
 	      }
 
 	      const action = 'Utils::getCatalog' + type;
@@ -1054,19 +1114,24 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 
 
 	  getUserData(userData) {
-	    return this.cache.remember(userData, function () {
-	      const userId = userData.replace("user:", "").replace("#user", "");
-	      return BX.Landing.Backend.getInstance().action("Block::getUserNameById", {
-	        userId: userId
-	      }).then(function (result) {
-	        if (result) {
-	          return {
+	    const userId = userData.replace("user:", "").replace("#user", "");
+	    return new Promise(function (resolve) {
+	      BX.ajax({
+	        url: '/bitrix/services/main/ajax.php?action=landing.api.user.getUserNameById',
+	        method: 'POST',
+	        dataType: 'json',
+	        data: {
+	          userId: userId
+	        },
+	        onsuccess: function (result) {
+	          const response = {
 	            type: LinkUrl.TYPE_USER,
 	            id: userId,
-	            name: result.NAME
+	            name: result.data
 	          };
+	          resolve(response);
 	        }
-	      }.bind(this));
+	      });
 	    }.bind(this));
 	  }
 
@@ -1119,37 +1184,14 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	      this.popup.close();
 	    }
 
-	    const urlSelect = "/bitrix/tools/disk/uf.php?action=selectFile&dialog2=Y&SITE_ID=" + BX.message("SITE_ID");
-	    const dialogName = "LandingDiskFile";
-	    BX.ajax.get(urlSelect, "multiselect=N&dialogName=" + dialogName, BX.delegate(function () {
-	      setTimeout(BX.delegate(function () {
-	        BX.DiskFileDialog.obElementBindPopup[dialogName].overlay = {
-	          backgroundColor: "#cdcdcd",
-	          opacity: ".1"
-	        };
-	        BX.DiskFileDialog.obCallback[dialogName] = {
-	          saveButton: function (tab, path, selected) {
-	            const selectedItem = selected[Object.keys(selected)[0]];
-
-	            if (!selectedItem) {
-	              return;
-	            }
-
-	            let fileId = selectedItem.id;
-
-	            if (fileId[0] === 'n') {
-	              fileId = fileId.substr(1);
-	            }
-
-	            this.getDiskFileData("#diskFile" + fileId).then(function (data) {
-	              this.setValue(this.createPlaceholder(data), true);
-	            }.bind(this));
-	            this.setHrefTypeSwitcherValue(LinkUrl.TYPE_HREF_FILE);
-	          }.bind(this)
-	        };
-	        BX.DiskFileDialog.openDialog(dialogName);
-	      }, this), 10);
-	    }, this));
+	    parent.BX.Landing.Connector.Disk.openDialog({
+	      onSelect: fileId => {
+	        this.getDiskFileData("#diskFile" + fileId).then(function (data) {
+	          this.setValue(this.createPlaceholder(data), true);
+	        }.bind(this));
+	        this.setHrefTypeSwitcherValue(LinkUrl.TYPE_HREF_FILE);
+	      }
+	    });
 	  }
 
 	  onUserListShow() {
@@ -1165,7 +1207,10 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	      events: {
 	        'Item:onSelect': this.onSelectUser.bind(this)
 	      },
-	      multiple: false
+	      multiple: false,
+	      popupOptions: {
+	        targetContainer: parent.document.body
+	      }
 	    });
 	    this.dialog.show();
 	  }
@@ -1389,6 +1434,10 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	    this.prepareInputField(this.hrefTypeSwithcer.getValue(), valueText);
 
 	    if (valueText === '') {
+	      if (selectedHrefType === 'catalog') {
+	        return '';
+	      }
+
 	      return LinkUrl.TYPE_HREF_START;
 	    }
 
@@ -1402,7 +1451,11 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 
 	    if (!main_core.Type.isUndefined(this.constantType)) {
 	      if (this.constantType === LinkUrl.TYPE_CATALOG) {
-	        return valueText;
+	        if (this.matchers.catalogElement.test(valueText) || this.matchers.catalogSection.test(valueText) || this.matchers.catalog.test(valueText) || this.matchers.element.test(valueText)) {
+	          return valueText;
+	        }
+
+	        return '';
 	      }
 
 	      if (this.constantType === LinkUrl.TYPE_PAGE) {
@@ -1430,7 +1483,7 @@ this.BX.Landing.UI = this.BX.Landing.UI || {};
 	    const setRegs = [];
 	    setRegs['phoneExtended'] = /(^[\d+][\d-]{4,14}\d$)|#crmPhone\d+/;
 	    setRegs['phone'] = /^[\d+][\d-]{4,14}\d$/;
-	    setRegs['mail'] = /^[\w-.]+@[\w-]+\.[a-z]{2,4}$|#crmEmail[\d]+$/i;
+	    setRegs['mail'] = /^\S+@\S+[.]\S+$/i;
 	    setRegs['skype'] = /^[a-z\d-.:]{6,32}$/i;
 	    const type = this.hrefTypeSwithcer.getValue();
 	    const data = this.getTypeData(type);

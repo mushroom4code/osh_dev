@@ -1,3 +1,4 @@
+/* eslint-disable */
 this.BX = this.BX || {};
 (function (exports,im_lib_animation,ui_forms,ui_designTokens,im_view_element_attach,im_view_element_keyboard,ui_vue,main_core,ui_vue_vuex,im_lib_logger,ui_vue_portal,im_view_popup,main_popup,im_lib_utils,im_const,im_lib_timer,main_core_events) {
 	'use strict';
@@ -16,7 +17,6 @@ this.BX = this.BX || {};
 	  methods: {
 	    toggleQuickAnswer: function toggleQuickAnswer() {
 	      var _this = this;
-
 	      if (this.successSentQuickAnswer) {
 	        this.showQuickAnswer = true;
 	        this.successSentQuickAnswer = false;
@@ -24,7 +24,6 @@ this.BX = this.BX || {};
 	      } else {
 	        this.showQuickAnswer = !this.showQuickAnswer;
 	      }
-
 	      if (this.showQuickAnswer) {
 	        this.$nextTick(function () {
 	          _this.$refs['input'].focus();
@@ -33,11 +32,9 @@ this.BX = this.BX || {};
 	    },
 	    sendQuickAnswer: function sendQuickAnswer(event) {
 	      var _this2 = this;
-
 	      if (this.quickAnswerText.trim() === '') {
 	        return;
 	      }
-
 	      this.isSendingQuickAnswer = true;
 	      var notificationId = event.item.id;
 	      this.$Bitrix.RestClient.get().callMethod('im.notify.answer', {
@@ -59,8 +56,18 @@ this.BX = this.BX || {};
 	  template: "\n\t\t<div class=\"bx-notifier-item-text-vue\">\n\t\t\t<div class=\"bx-notifier-answer-link-vue\">\n\t\t\t\t<span class=\"bx-notifier-answer-reply bx-messenger-ajax\" @click=\"toggleQuickAnswer()\" @dblclick.stop>\n\t\t\t\t\t{{ $Bitrix.Loc.getMessage('IM_NOTIFICATIONS_QUICK_ANSWER_BUTTON') }}\n\t\t\t\t</span>\n\t\t\t</div>\n\t\t\t<transition name=\"quick-answer-slide\">\n\t\t\t\t<div v-if=\"showQuickAnswer && !successSentQuickAnswer\" class=\"bx-notifier-answer-box-vue\">\n\t\t\t\t\t<span v-if=\"isSendingQuickAnswer\" class=\"bx-notifier-answer-progress-vue bx-messenger-content-load-img\"></span>\n\t\t\t\t\t<span class=\"bx-notifier-answer-input\">\n\t\t\t\t\t\t<input\n\t\t\t\t\t\t\ttype=\"text\"\n\t\t\t\t\t\t\tref=\"input\"\n\t\t\t\t\t\t\tautofocus\n\t\t\t\t\t\t\tclass=\"bx-messenger-input\"\n\t\t\t\t\t\t\tv-model=\"quickAnswerText\"\n\t\t\t\t\t\t\t:disabled=\"isSendingQuickAnswer\"\n\t\t\t\t\t\t\t@keyup.enter=\"sendQuickAnswer({item: listItem, event: $event})\"\n\t\t\t\t\t\t>\n\t\t\t\t\t</span>\n\t\t\t\t\t<div class=\"bx-notifier-answer-button\" @click=\"sendQuickAnswer({item: listItem, event: $event})\"></div>\n\t\t\t\t</div>\n\t\t\t</transition>\n\t\t\t<div v-if=\"successSentQuickAnswer\" class=\"bx-notifier-answer-text-vue\">\n\t\t\t\t{{ quickAnswerResultMessage }}\n\t\t\t</div>\n\t\t</div>\n\t"
 	};
 
+	// @vue/component
 	var NotificationItemHeader = {
-	  props: ['listItem'],
+	  props: {
+	    listItem: {
+	      type: Object,
+	      required: true
+	    },
+	    isExtranet: {
+	      type: Boolean,
+	      "default": false
+	    }
+	  },
 	  computed: {
 	    moreUsers: function moreUsers() {
 	      var phrase = this.$Bitrix.Loc.getMessage('IM_NOTIFICATIONS_MORE_USERS').split('#COUNT#');
@@ -100,7 +107,7 @@ this.BX = this.BX || {};
 	    }
 	  },
 	  //language=Vue
-	  template: "\n\t\t<div class=\"bx-im-notifications-item-content-header\">\n\t\t\t<div v-if=\"listItem.title\" class=\"bx-im-notifications-item-header-title\">\n\t\t\t\t<span\n\t\t\t\t\tv-if=\"!listItem.systemType\"\n\t\t\t\t\t@click.prevent=\"onUserTitleClick({userId: listItem.authorId, event: $event})\"\n\t\t\t\t\tclass=\"bx-im-notifications-item-header-title-text-link\"\n\t\t\t\t>\n\t\t\t\t\t{{ listItem.title.value }}\n\t\t\t\t</span>\n\t\t\t\t<span v-else class=\"bx-im-notifications-item-header-title-text\">{{ listItem.title.value }}</span>\n\t\t\t\t<span\n\t\t\t\t\tv-if=\"isMoreUsers && !listItem.systemType\"\n\t\t\t\t\tclass=\"bx-im-notifications-item-header-more-users\"\n\t\t\t\t>\n\t\t\t\t\t{{ moreUsers.start }}\n\t\t\t\t\t<span class=\"bx-messenger-ajax\" @click=\"onMoreUsersClick({users: listItem.params.USERS, event: $event})\">\n\t\t\t\t\t\t{{ moreUsers.end }}\n\t\t\t\t\t</span>\n\t\t\t\t</span>\n\t\t\t</div>\n\t\t\t<div class=\"bx-im-notifications-item-content-header-right\">\n\t\t\t\t<div class=\"bx-im-notifications-item-header-date\">\n\t\t\t\t\t{{ listItem.date.value }}\n\t\t\t\t</div>\n\t\t\t\t<span\n\t\t\t\t\tv-if=\"isAbleToDelete\"\n\t\t\t\t\tclass=\"bx-im-notifications-item-header-delete\"\n\t\t\t\t\t@click=\"onDeleteClick({item: listItem, event: $event})\">\n\t\t\t\t</span>\n\t\t\t</div>\n\t\t</div>\n\t"
+	  template: "\n\t\t<div class=\"bx-im-notifications-item-content-header\">\n\t\t\t<div v-if=\"listItem.title\" class=\"bx-im-notifications-item-header-title\">\n\t\t\t\t<span\n\t\t\t\t\tv-if=\"!listItem.systemType\"\n\t\t\t\t\t@click.prevent=\"onUserTitleClick({userId: listItem.authorId, event: $event})\"\n\t\t\t\t\tclass=\"bx-im-notifications-item-header-title-text-link\"\n\t\t\t\t\t:class=\"[isExtranet ? '--extranet' : '']\"\n\t\t\t\t>\n\t\t\t\t\t{{ listItem.title.value }}\n\t\t\t\t</span>\n\t\t\t\t<span v-else class=\"bx-im-notifications-item-header-title-text\">{{ listItem.title.value }}</span>\n\t\t\t\t<span\n\t\t\t\t\tv-if=\"isMoreUsers && !listItem.systemType\"\n\t\t\t\t\tclass=\"bx-im-notifications-item-header-more-users\"\n\t\t\t\t>\n\t\t\t\t\t{{ moreUsers.start }}\n\t\t\t\t\t<span class=\"bx-messenger-ajax\" @click=\"onMoreUsersClick({users: listItem.params.USERS, event: $event})\">\n\t\t\t\t\t\t{{ moreUsers.end }}\n\t\t\t\t\t</span>\n\t\t\t\t</span>\n\t\t\t</div>\n\t\t\t<div class=\"bx-im-notifications-item-content-header-right\">\n\t\t\t\t<div class=\"bx-im-notifications-item-header-date\">\n\t\t\t\t\t{{ listItem.date.value }}\n\t\t\t\t</div>\n\t\t\t\t<span\n\t\t\t\t\tv-if=\"isAbleToDelete\"\n\t\t\t\t\tclass=\"bx-im-notifications-item-header-delete\"\n\t\t\t\t\t@click=\"onDeleteClick({item: listItem, event: $event})\">\n\t\t\t\t</span>\n\t\t\t</div>\n\t\t</div>\n\t"
 	};
 
 	var NotificationPlaceholder = {
@@ -159,34 +166,31 @@ this.BX = this.BX || {};
 	    userTitle: function userTitle() {
 	      if (this.isRealItem && this.rawListItem.authorId > 0) {
 	        return this.userData.name;
-	      } else if (this.isRealItem && this.rawListItem.authorId === 0) {
-	        // System notification
-	        return this.rawListItem.title;
-	      } else {
-	        return '';
 	      }
+	      var title = this.rawListItem.title;
+	      return title.length > 0 ? title : this.$Bitrix.Loc.getMessage('IM_NOTIFICATIONS_ITEM_SYSTEM');
 	    },
 	    avatar: function avatar() {
 	      var avatar = '';
-
 	      if (this.isRealItem && this.rawListItem.authorId > 0) {
 	        avatar = this.userData.avatar;
 	      } else if (this.isRealItem && this.rawListItem.authorId === 0) {
 	        //system notification
 	        return '';
 	      }
-
 	      return avatar;
 	    },
 	    defaultAvatarColor: function defaultAvatarColor() {
 	      if (this.rawListItem.authorId <= 0) {
 	        return '';
 	      }
-
 	      return this.userData.color;
 	    },
 	    userData: function userData() {
 	      return this.$store.getters['users/get'](this.rawListItem.authorId, true);
+	    },
+	    isExtranet: function isExtranet() {
+	      return this.userData.extranet;
 	    },
 	    avatarStyles: function avatarStyles() {
 	      return {
@@ -197,7 +201,7 @@ this.BX = this.BX || {};
 	  methods: {
 	    //events
 	    onDoubleClick: function onDoubleClick(event) {
-	      if (!this.searchMode && event.item.sectionCode === im_const.NotificationTypesCodes.simple) {
+	      if (!this.searchMode) {
 	        this.$emit('dblclick', event);
 	      }
 	    },
@@ -227,26 +231,21 @@ this.BX = this.BX || {};
 	    },
 	    onRightClick: function onRightClick(event) {
 	      var _this = this;
-
 	      if (im_lib_utils.Utils.platform.isBitrixDesktop() && event.target.tagName === 'A' && (!event.target.href.startsWith('/desktop_app/') || event.target.href.startsWith('/desktop_app/show.file.php'))) {
 	        var hrefToCopy = event.target.href;
-
 	        if (!hrefToCopy) {
 	          return;
 	        }
-
 	        if (this.menuPopup) {
 	          this.menuPopup.destroy();
 	          this.menuPopup = null;
-	        } //menu for other items
+	        }
 
-
+	        //menu for other items
 	        var existingMenu = main_popup.PopupManager.getPopupById(this.menuId);
-
 	        if (existingMenu) {
 	          existingMenu.destroy();
 	        }
-
 	        var menuItem = main_core.Dom.create('span', {
 	          attrs: {
 	            className: 'bx-messenger-popup-menu-item-text bx-messenger-popup-menu-item'
@@ -254,9 +253,7 @@ this.BX = this.BX || {};
 	          events: {
 	            click: function click(event) {
 	              BX.desktop.clipboardCopy(hrefToCopy);
-
 	              _this.menuPopup.destroy();
-
 	              _this.menuPopup = null;
 	            }
 	          },
@@ -281,17 +278,15 @@ this.BX = this.BX || {};
 	          },
 	          content: menuItem
 	        });
-
 	        if (!BX.MessengerTheme.isDark()) {
 	          this.menuPopup.setAngle({});
 	        }
-
 	        this.menuPopup.show();
 	      }
 	    }
 	  },
 	  //language=Vue
-	  template: "\n\t\t<div \n\t\t\tclass=\"bx-im-notifications-item\"\n\t\t\t:class=\"[listItem.unread && !searchMode ? 'bx-im-notifications-item-unread' : '']\"\n\t\t\t@dblclick=\"onDoubleClick({item: listItem, event: $event})\"\n\t\t\t@contextmenu=\"onRightClick\"\n\t\t>\n\t\t\t<template v-if=\"listItem.sectionCode !== NotificationTypesCodes.placeholder\">\n\t\t\t\t<div v-if=\"listItem.avatar\" class=\"bx-im-notifications-item-image-wrap\">\n\t\t\t\t\t<div \n\t\t\t\t\t\tv-if=\"listItem.avatar.url\" \n\t\t\t\t\t\tclass=\"bx-im-notifications-item-image\"\n\t\t\t\t\t\t:style=\"avatarStyles\"\n\t\t\t\t\t></div>\n\t\t\t\t\t<div v-else-if=\"listItem.systemType\" class=\"bx-im-notifications-item-image bx-im-notifications-image-system\"></div>\n\t\t\t\t\t<div \n\t\t\t\t\t\tv-else-if=\"!listItem.avatar.url\" \n\t\t\t\t\t\tclass=\"bx-im-notifications-item-image bx-im-notifications-item-image-default\"\n\t\t\t\t\t\t:style=\"{backgroundColor: listItem.avatar.color}\"\n\t\t\t\t\t\t>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"bx-im-notifications-item-content\" @click=\"onContentClick\">\n\t\t\t\t\t<NotificationItemHeader \n\t\t\t\t\t\t:listItem=\"listItem\"\n\t\t\t\t\t\t@deleteClick=\"onDeleteClick\"\n\t\t\t\t\t\t@moreUsersClick=\"onMoreUsersClick\"\n\t\t\t\t\t/>\n\t\t\t\t\t<div v-if=\"listItem.subtitle.value.length > 0\" class=\"bx-im-notifications-item-content-bottom\">\n\t\t\t\t\t\t<div class=\"bx-im-notifications-item-bottom-subtitle\">\n\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t:class=\"[!listItem.title.value ? 'bx-im-notifications-item-bottom-subtitle-text' : 'bx-im-notifications-item-bottom-no-subtitle-text']\"\n\t\t\t\t\t\t\t\tv-html=\"listItem.subtitle.value\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<NotificationQuickAnswer v-if=\"isNeedQuickAnswer\" :listItem=\"listItem\"/>\n\t\t\t\t\t<div v-if=\"listItem.params['ATTACH']\" class=\"bx-im-notifications-item-content-additional\">\n\t\t\t\t\t\t<div v-for=\"attach in listItem.params['ATTACH']\">\n\t\t\t\t\t\t\t<bx-im-view-element-attach :config=\"attach\"/>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div v-if=\"listItem.notifyButtons\">\n\t\t\t\t\t\t<bx-im-view-element-keyboard @click=\"onButtonsClick\" :buttons=\"listItem.notifyButtons\"/>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</template>\n\t\t\t<NotificationPlaceholder v-else-if=\"listItem.sectionCode === NotificationTypesCodes.placeholder\"/>\n\t\t</div>\n\t"
+	  template: "\n\t\t<div \n\t\t\tclass=\"bx-im-notifications-item\"\n\t\t\t:class=\"[listItem.unread && !searchMode ? 'bx-im-notifications-item-unread' : '']\"\n\t\t\t@dblclick=\"onDoubleClick({item: listItem, event: $event})\"\n\t\t\t@contextmenu=\"onRightClick\"\n\t\t>\n\t\t\t<template v-if=\"listItem.sectionCode !== NotificationTypesCodes.placeholder\">\n\t\t\t\t<div v-if=\"listItem.avatar\" class=\"bx-im-notifications-item-image-wrap\">\n\t\t\t\t\t<div \n\t\t\t\t\t\tv-if=\"listItem.avatar.url\" \n\t\t\t\t\t\tclass=\"bx-im-notifications-item-image\"\n\t\t\t\t\t\t:style=\"avatarStyles\"\n\t\t\t\t\t></div>\n\t\t\t\t\t<div v-else-if=\"listItem.systemType\" class=\"bx-im-notifications-item-image bx-im-notifications-image-system\"></div>\n\t\t\t\t\t<div \n\t\t\t\t\t\tv-else-if=\"!listItem.avatar.url\" \n\t\t\t\t\t\tclass=\"bx-im-notifications-item-image bx-im-notifications-item-image-default\"\n\t\t\t\t\t\t:style=\"{backgroundColor: listItem.avatar.color}\"\n\t\t\t\t\t\t>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"bx-im-notifications-item-content\" @click=\"onContentClick\">\n\t\t\t\t\t<NotificationItemHeader \n\t\t\t\t\t\t:listItem=\"listItem\"\n\t\t\t\t\t\t:isExtranet=\"isExtranet\"\n\t\t\t\t\t\t@deleteClick=\"onDeleteClick\"\n\t\t\t\t\t\t@moreUsersClick=\"onMoreUsersClick\"\n\t\t\t\t\t/>\n\t\t\t\t\t<div v-if=\"listItem.subtitle.value.length > 0\" class=\"bx-im-notifications-item-content-bottom\">\n\t\t\t\t\t\t<div class=\"bx-im-notifications-item-bottom-subtitle\">\n\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t:class=\"[!listItem.title.value ? 'bx-im-notifications-item-bottom-subtitle-text' : 'bx-im-notifications-item-bottom-no-subtitle-text']\"\n\t\t\t\t\t\t\t\tv-html=\"listItem.subtitle.value\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<NotificationQuickAnswer v-if=\"isNeedQuickAnswer\" :listItem=\"listItem\"/>\n\t\t\t\t\t<div v-if=\"listItem.params['ATTACH']\" class=\"bx-im-notifications-item-content-additional\">\n\t\t\t\t\t\t<div v-for=\"attach in listItem.params['ATTACH']\">\n\t\t\t\t\t\t\t<bx-im-view-element-attach :config=\"attach\"/>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div v-if=\"listItem.notifyButtons\">\n\t\t\t\t\t\t<bx-im-view-element-keyboard @click=\"onButtonsClick\" :buttons=\"listItem.notifyButtons\"/>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</template>\n\t\t\t<NotificationPlaceholder v-else-if=\"listItem.sectionCode === NotificationTypesCodes.placeholder\"/>\n\t\t</div>\n\t"
 	};
 
 	var NotificationCore = {
@@ -310,7 +305,6 @@ this.BX = this.BX || {};
 	    },
 	    generatePlaceholders: function generatePlaceholders(amount) {
 	      var placeholders = [];
-
 	      for (var i = 0; i < amount; i++) {
 	        placeholders.push({
 	          id: "placeholder".concat(this.placeholderCount),
@@ -318,7 +312,6 @@ this.BX = this.BX || {};
 	        });
 	        this.placeholderCount++;
 	      }
-
 	      return placeholders;
 	    },
 	    getRestClient: function getRestClient() {
@@ -326,16 +319,14 @@ this.BX = this.BX || {};
 	    },
 	    onContentClick: function onContentClick(event) {
 	      var _this = this;
-
 	      this.contentPopupType = event.content.type.toLowerCase();
 	      this.contentPopupValue = event.content.value;
-
 	      if (this.popupInstance != null) {
 	        this.popupInstance.destroy();
 	        this.popupInstance = null;
-	      } // TODO: replace it with new popups.
+	      }
 
-
+	      // TODO: replace it with new popups.
 	      if (this.contentPopupType === 'user' || this.contentPopupType === 'chat') {
 	        var popupAngle = !this.isDarkTheme;
 	        BXIM.messenger.openPopupExternalData(event.event.target, this.contentPopupType, popupAngle, {
@@ -366,13 +357,12 @@ this.BX = this.BX || {};
 	            }
 	          }
 	        });
-
 	        if (!this.isDarkTheme) {
 	          popup.setAngle({});
 	        }
+	        this.popupIdSelector = "#".concat(popup.getContentContainer().id);
 
-	        this.popupIdSelector = "#".concat(popup.getContentContainer().id); //little hack for correct open several popups in a row.
-
+	        //little hack for correct open several popups in a row.
 	        this.$nextTick(function () {
 	          return _this.popupInstance = popup;
 	        });
@@ -384,14 +374,12 @@ this.BX = this.BX || {};
 	      if (this.darkTheme === undefined) {
 	        return BX.MessengerTheme.isDark();
 	      }
-
 	      return this.darkTheme;
 	    }
 	  }
 	};
 
 	function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
 	function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { babelHelpers.defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 	var NotificationSearchResult = {
 	  components: {
@@ -453,30 +441,23 @@ this.BX = this.BX || {};
 	  methods: {
 	    search: function search() {
 	      var _this = this;
-
 	      this.resetSearchState();
 	      var localResults = this.notification.filter(function (item) {
 	        var result = false;
-
 	        if (_this.searchQuery.length >= 3) {
 	          result = item.textConverted.toLowerCase().includes(_this.searchQuery.toLowerCase());
-
 	          if (!result) {
 	            return result;
 	          }
 	        }
-
 	        if (_this.searchType !== '') {
 	          result = item.settingName === _this.searchType;
-
 	          if (!result) {
 	            return result;
 	          }
 	        }
-
 	        if (_this.searchDate !== '') {
 	          var date = BX.parseDate(_this.searchDate);
-
 	          if (date instanceof Date) {
 	            // compare dates excluding time.
 	            var itemDateForCompare = new Date(item.date.getTime()).setHours(0, 0, 0, 0);
@@ -484,19 +465,15 @@ this.BX = this.BX || {};
 	            result = itemDateForCompare === dateFromInput;
 	          }
 	        }
-
 	        return result;
 	      });
-
 	      if (localResults.length > 0) {
 	        this.$store.dispatch('notifications/setSearchResults', {
 	          notification: localResults,
 	          type: 'local'
 	        });
 	      }
-
 	      var isNeedPlaceholders = this.pageLimit - localResults.length > 0;
-
 	      if (isNeedPlaceholders > 0) {
 	        this.drawPlaceholders(this.pageLimit).then(function () {
 	          _this.searchServerDelayed();
@@ -507,13 +484,10 @@ this.BX = this.BX || {};
 	    },
 	    getSearchResultsFromServer: function getSearchResultsFromServer() {
 	      var _this2 = this;
-
 	      var queryParams = this.getSearchRequestParams();
 	      this.getRestClient().callMethod('im.notify.history.search', queryParams).then(function (result) {
 	        im_lib_logger.Logger.warn('im.notify.history.search: first page results', result.data());
-
 	        _this2.processHistoryData(result.data());
-
 	        _this2.initialDataReceived = true;
 	        _this2.isLoadingNewPage = false;
 	        _this2.searchPageLoaded++;
@@ -523,11 +497,9 @@ this.BX = this.BX || {};
 	    },
 	    processHistoryData: function processHistoryData(data) {
 	      this.$store.dispatch('notifications/clearPlaceholders');
-
 	      if (data.notifications.length <= 0) {
 	        return false;
 	      }
-
 	      this.lastId = this.getLastItemId(data.notifications);
 	      this.searchResultsTotal = data.total_results;
 	      this.$store.dispatch('notifications/setSearchResults', {
@@ -538,25 +510,19 @@ this.BX = this.BX || {};
 	    },
 	    loadNextPage: function loadNextPage() {
 	      var _this3 = this;
-
 	      im_lib_logger.Logger.warn("Loading more search results!");
 	      var queryParams = this.getSearchRequestParams();
 	      this.getRestClient().callMethod('im.notify.history.search', queryParams).then(function (result) {
 	        im_lib_logger.Logger.warn('im.notify.history.search: new page results', result.data());
 	        var newUsers = result.data().users;
 	        var newItems = result.data().notifications;
-
 	        if (!newItems || newItems.length === 0) {
 	          _this3.$store.dispatch('notifications/clearPlaceholders');
-
 	          _this3.searchResultsTotal = _this3.searchResults.length;
 	          return false;
 	        }
-
 	        _this3.lastId = _this3.getLastItemId(newItems);
-
 	        _this3.$store.dispatch('users/set', newUsers);
-
 	        return _this3.$store.dispatch('notifications/updatePlaceholders', {
 	          searchCollection: true,
 	          items: newItems,
@@ -567,13 +533,11 @@ this.BX = this.BX || {};
 	        return _this3.onAfterLoadNextPageRequest();
 	      })["catch"](function (result) {
 	        _this3.$store.dispatch('notifications/clearPlaceholders');
-
 	        im_lib_logger.Logger.warn('History request error', result);
 	      });
 	    },
 	    onAfterLoadNextPageRequest: function onAfterLoadNextPageRequest() {
 	      im_lib_logger.Logger.warn('onAfterLoadNextPageRequest');
-
 	      if (this.searchPagesRequested > 0) {
 	        im_lib_logger.Logger.warn('We have delayed requests -', this.searchPagesRequested);
 	        this.searchPagesRequested--;
@@ -592,15 +556,12 @@ this.BX = this.BX || {};
 	        'LIMIT': this.pageLimit,
 	        'CONVERT_TEXT': 'Y'
 	      };
-
 	      if (BX.parseDate(this.searchDate) instanceof Date) {
 	        params['SEARCH_DATE'] = BX.parseDate(this.searchDate).toISOString();
 	      }
-
 	      if (this.lastId > 0) {
 	        params['LAST_ID'] = this.lastId;
 	      }
-
 	      return params;
 	    },
 	    resetSearchState: function resetSearchState() {
@@ -621,17 +582,16 @@ this.BX = this.BX || {};
 	    //events
 	    onScroll: function onScroll(event) {
 	      var _this4 = this;
-
 	      if (!this.isReadyToLoadNewPage(event) || !this.initialDataReceived || this.remainingPages <= 0) {
 	        return;
 	      }
-
 	      if (this.isLoadingNewPage) {
 	        this.drawPlaceholders(this.pageLimit).then(function () {
 	          _this4.searchPagesRequested++;
 	          im_lib_logger.Logger.warn('Already loading! Draw placeholders and add request, total - ', _this4.pagesRequested);
 	        });
-	      } else //if (!this.isLoadingNewPage)
+	      } else
+	        //if (!this.isLoadingNewPage)
 	        {
 	          im_lib_logger.Logger.warn('Starting new request');
 	          this.isLoadingNewPage = true;
@@ -642,7 +602,6 @@ this.BX = this.BX || {};
 	    },
 	    onButtonsClick: function onButtonsClick(event) {
 	      var _this5 = this;
-
 	      var params = this.getConfirmRequestParams(event);
 	      var itemId = +params.NOTIFY_ID;
 	      var notification = this.$store.getters['notifications/getById'](itemId);
@@ -650,7 +609,6 @@ this.BX = this.BX || {};
 	        _this5.$store.dispatch('notifications/delete', {
 	          id: itemId
 	        });
-
 	        if (notification.unread) {
 	          _this5.$store.dispatch('notifications/setCounter', {
 	            unreadTotal: _this5.unreadCounter - 1
@@ -673,7 +631,6 @@ this.BX = this.BX || {};
 	    },
 	    onDeleteClick: function onDeleteClick(event) {
 	      var _this6 = this;
-
 	      var itemId = +event.item.id;
 	      var notification = this.$store.getters['notifications/getSearchItemById'](itemId);
 	      this.getRestClient().callMethod('im.notify.delete', {
@@ -682,17 +639,14 @@ this.BX = this.BX || {};
 	        _this6.$store.dispatch('notifications/delete', {
 	          id: itemId,
 	          searchMode: true
-	        }); //we need to load more, if we are on the first page and we have not enough elements (~15).
-
-
+	        });
+	        //we need to load more, if we are on the first page and we have not enough elements (~15).
 	        if (!_this6.isLoadingNewPage && _this6.remainingPages > 0 && _this6.searchResults.length < 15) {
 	          _this6.isLoadingNewPage = true;
-
 	          _this6.drawPlaceholders(_this6.pageLimit).then(function () {
 	            _this6.loadNextPage();
 	          });
 	        }
-
 	        if (notification.unread) {
 	          _this6.$store.dispatch('notifications/setCounter', {
 	            unreadTotal: _this6.unreadCounter - 1
@@ -700,7 +654,6 @@ this.BX = this.BX || {};
 	        }
 	      })["catch"](function (error) {
 	        console.error(error);
-
 	        _this6.$store.dispatch('notifications/update', {
 	          id: itemId,
 	          fields: {
@@ -723,22 +676,18 @@ this.BX = this.BX || {};
 	};
 
 	function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
 	function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-	function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
+	function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 	function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
 	function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys$1(Object(source), !0).forEach(function (key) { babelHelpers.defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 	var ObserverType = Object.freeze({
 	  read: 'read',
 	  none: 'none'
 	});
+
 	/**
 	 * @notice Do not mutate or clone this component! It is under development.
 	 */
-
 	ui_vue.BitrixVue.component('bx-im-component-notifications', {
 	  components: {
 	    NotificationItem: NotificationItem,
@@ -752,13 +701,11 @@ this.BX = this.BX || {};
 	        if (bindings.value === ObserverType.none) {
 	          return false;
 	        }
-
 	        if (!vnode.context.observers[bindings.value]) {
 	          vnode.context.observers[bindings.value] = vnode.context.getObserver({
 	            type: bindings.value
 	          });
 	        }
-
 	        vnode.context.observers[bindings.value].observe(element);
 	        return true;
 	      },
@@ -766,11 +713,9 @@ this.BX = this.BX || {};
 	        if (bindings.value === ObserverType.none) {
 	          return true;
 	        }
-
 	        if (vnode.context.observers[bindings.value]) {
 	          vnode.context.observers[bindings.value].unobserve(element);
 	        }
-
 	        return true;
 	      }
 	    }
@@ -830,16 +775,12 @@ this.BX = this.BX || {};
 	      }, 0);
 	    },
 	    isNeedToReadAll: function isNeedToReadAll() {
-	      var confirmCounterInModel = this.notification.filter(function (notificationItem) {
-	        return notificationItem.sectionCode === im_const.NotificationTypesCodes.confirm;
-	      }).length;
-	      return confirmCounterInModel < this.unreadCounter;
+	      return this.unreadCounter > 0;
 	    },
 	    panelStyles: function panelStyles() {
 	      if (this.callViewState === BX.Call.Controller.ViewState.Folded && !this.showSearch) {
 	        return {
 	          paddingBottom: '60px' // height of .bx-messenger-videocall-panel-folded
-
 	        };
 	      }
 
@@ -849,7 +790,6 @@ this.BX = this.BX || {};
 	      if (this.callViewState === BX.Call.Controller.ViewState.Folded && this.showSearch) {
 	        return {
 	          paddingTop: '70px' // height of .bx-messenger-videocall-panel-folded + 10px for space
-
 	        };
 	      }
 
@@ -858,36 +798,30 @@ this.BX = this.BX || {};
 	    firstUnreadNotification: function firstUnreadNotification() {
 	      var unreadNotification = null;
 	      var maxNotificationIndex = this.notification.length - 1;
-
 	      for (var i = 0; i <= maxNotificationIndex; i++) {
 	        if (this.notification[i].unread && this.notification[i].sectionCode !== im_const.NotificationTypesCodes.placeholder) {
 	          unreadNotification = this.notification[i];
 	          break;
 	        }
 	      }
-
 	      return unreadNotification;
 	    },
 	    firstUnreadNotificationBelowVisible: function firstUnreadNotificationBelowVisible() {
 	      var minIdOnScreen = Math.max.apply(Math, babelHelpers.toConsumableArray(this.notificationsOnScreen));
 	      var unreadId = null;
 	      var maxNotificationIndex = this.notification.length - 1;
-
 	      for (var i = 0; i <= maxNotificationIndex; i++) {
 	        if (this.notification[i].unread && minIdOnScreen > this.notification[i].id && this.notification[i].sectionCode === im_const.NotificationTypesCodes.simple) {
 	          unreadId = this.notification[i].id;
 	          break;
 	        }
 	      }
-
 	      return unreadId;
 	    },
 	    isUnreadNotificationVisible: function isUnreadNotificationVisible() {
 	      var _this = this;
-
 	      var unreadOnScreen = Array.from(this.notificationsOnScreen).filter(function (idOnScreen) {
 	        var notificationOnScreen = _this.$store.getters['notifications/getById'](idOnScreen);
-
 	        return notificationOnScreen ? notificationOnScreen.unread : false;
 	      });
 	      return unreadOnScreen.length > 0;
@@ -896,36 +830,30 @@ this.BX = this.BX || {};
 	      if (!this.initialDataReceived) {
 	        return false;
 	      }
-
 	      if (this.unreadCounter <= 0 || !BXIM.settings.notifyAutoRead) {
 	        return false;
 	      }
-
 	      if (this.notificationsOnScreen.length === 0) {
 	        return false;
 	      }
-
 	      if (this.isUnreadNotificationVisible) {
 	        return false;
 	      }
-
 	      return true;
 	    },
 	    hasUnreadBelowVisible: function hasUnreadBelowVisible() {
 	      var unreadCounterBeforeVisible = 0;
-
 	      for (var i = 0; i <= this.notification.length - 1; i++) {
 	        if (this.notification[i].unread && this.notification[i].sectionCode !== im_const.NotificationTypesCodes.placeholder) {
 	          ++unreadCounterBeforeVisible;
-	        } // In this case we decide that there is no more unread notifications below visible notifications,
+	        }
+
+	        // In this case we decide that there is no more unread notifications below visible notifications,
 	        // so we show arrow up on scroll button.
-
-
 	        if (this.notificationsOnScreen.includes(this.notification[i].id) && this.unreadCounter === unreadCounterBeforeVisible) {
 	          return false;
 	        }
 	      }
-
 	      return true;
 	    },
 	    arrowButtonClass: function arrowButtonClass() {
@@ -937,36 +865,34 @@ this.BX = this.BX || {};
 	      };
 	    },
 	    filterTypes: function filterTypes() {
-	      var originalSchema = Object.assign({}, this.schema); // get rid of some subcategories
+	      var originalSchema = Object.assign({}, this.schema);
 
+	      // get rid of some subcategories
 	      var modulesToReduceListItems = ['timeman', 'mail', 'disk', 'bizproc', 'voximplant', 'sender', 'blog', 'vote', 'socialnetwork', 'imopenlines', 'photogallery', 'intranet', 'forum'];
 	      modulesToReduceListItems.forEach(function (moduleId) {
 	        if (originalSchema.hasOwnProperty(moduleId)) {
 	          delete originalSchema[moduleId].LIST;
 	        }
-	      }); // rename some groups
+	      });
 
+	      // rename some groups
 	      if (originalSchema.hasOwnProperty('calendar')) {
 	        originalSchema['calendar'].NAME = this.localize['IM_NOTIFICATIONS_SEARCH_FILTER_TYPE_CALENDAR'];
 	      }
-
 	      if (originalSchema.hasOwnProperty('sender')) {
 	        originalSchema['sender'].NAME = this.localize['IM_NOTIFICATIONS_SEARCH_FILTER_TYPE_SENDER'];
 	      }
-
 	      if (originalSchema.hasOwnProperty('blog')) {
 	        originalSchema['blog'].NAME = this.localize['IM_NOTIFICATIONS_SEARCH_FILTER_TYPE_BLOG'];
 	      }
-
 	      if (originalSchema.hasOwnProperty('socialnetwork')) {
 	        originalSchema['socialnetwork'].NAME = this.localize['IM_NOTIFICATIONS_SEARCH_FILTER_TYPE_SOCIALNETWORK'];
 	      }
-
 	      if (originalSchema.hasOwnProperty('intranet')) {
 	        originalSchema['intranet'].NAME = this.localize['IM_NOTIFICATIONS_SEARCH_FILTER_TYPE_INTRANET'];
-	      } // we need only this modules in this order!
+	      }
 
-
+	      // we need only this modules in this order!
 	      var modulesToShowInFilter = ['tasks', 'calendar', 'crm', 'timeman', 'mail', 'disk', 'bizproc', 'voximplant', 'sender', 'blog', 'vote', 'socialnetwork', 'imopenlines', 'photogallery', 'intranet', 'forum'];
 	      var notificationFilterTypes = [];
 	      modulesToShowInFilter.forEach(function (moduleId) {
@@ -992,19 +918,16 @@ this.BX = this.BX || {};
 	  })),
 	  created: function created() {
 	    var _this2 = this;
-
 	    this.drawPlaceholders().then(function () {
 	      _this2.getInitialData();
 	    });
 	    main_core_events.EventEmitter.subscribe(im_const.EventType.notification.updateState, this.onUpdateState);
 	    window.addEventListener('focus', this.onWindowFocus);
 	    window.addEventListener('blur', this.onWindowBlur);
-
 	    if (BXIM && BX.Call) {
 	      this.callViewState = BXIM.callController.callViewState;
 	      BXIM.callController.subscribe(BX.Call.Controller.Events.onViewStateChanged, this.onCallViewStateChange);
 	    }
-
 	    this.timer = new im_lib_timer.Timer();
 	    this.readNotificationsQueue = new Set();
 	    this.readNotificationsNodes = {};
@@ -1019,7 +942,6 @@ this.BX = this.BX || {};
 	    window.removeEventListener('focus', this.onWindowFocus);
 	    window.removeEventListener('blur', this.onWindowBlur);
 	    main_core_events.EventEmitter.unsubscribe(im_const.EventType.notification.updateState, this.onUpdateState);
-
 	    if (BXIM && BX.Call) {
 	      BXIM.callController.unsubscribe(BX.Call.Controller.Events.onViewStateChanged, this.onCallViewStateChange);
 	    }
@@ -1029,17 +951,14 @@ this.BX = this.BX || {};
 	      if (this.unreadCounter <= 0) {
 	        return null;
 	      }
-
 	      var unreadId = null;
 	      var maxNotificationIndex = this.notification.length - 1;
-
 	      for (var i = 0; i <= maxNotificationIndex; i++) {
 	        if (this.notification[i].unread) {
 	          unreadId = this.notification[i].id;
 	          break;
 	        }
 	      }
-
 	      return unreadId;
 	    },
 	    onCallViewStateChange: function onCallViewStateChange(_ref) {
@@ -1048,33 +967,28 @@ this.BX = this.BX || {};
 	    },
 	    onUpdateState: function onUpdateState(event) {
 	      var lastNotificationId = event.data.lastId;
-
 	      if (!this.isLoadingInitialData && this.highestNotificationId > 0 && lastNotificationId !== this.highestNotificationId) {
 	        this.getInitialData();
 	      }
 	    },
 	    readVisibleNotifications: function readVisibleNotifications() {
 	      var _this3 = this;
-
 	      //todo: replace legacy chat API
 	      if (!this.windowFocused || !BXIM.settings.notifyAutoRead) {
 	        im_lib_logger.Logger.warn('reading is disabled!');
 	        return false;
 	      }
-
 	      this.readNotificationsQueue.forEach(function (notificationId) {
 	        if (_this3.readNotificationsNodes[notificationId]) {
 	          delete _this3.readNotificationsNodes[notificationId];
 	        }
-
 	        _this3.readNotifications(parseInt(notificationId, 10));
 	      });
 	      this.readNotificationsQueue.clear();
 	    },
 	    getInitialData: function getInitialData() {
 	      var _queryParams,
-	          _this4 = this;
-
+	        _this4 = this;
 	      this.isLoadingInitialData = true;
 	      var queryParams = (_queryParams = {}, babelHelpers.defineProperty(_queryParams, im_const.RestMethodHandler.imNotifyGet, [im_const.RestMethod.imNotifyGet, {
 	        'LIMIT': this.perPage,
@@ -1082,11 +996,8 @@ this.BX = this.BX || {};
 	      }]), babelHelpers.defineProperty(_queryParams, im_const.RestMethodHandler.imNotifySchemaGet, [im_const.RestMethod.imNotifySchemaGet, {}]), _queryParams);
 	      this.getRestClient().callBatch(queryParams, function (response) {
 	        im_lib_logger.Logger.warn('im.notify.get: initial result', response[im_const.RestMethodHandler.imNotifyGet].data());
-
 	        _this4.processInitialData(response[im_const.RestMethodHandler.imNotifyGet].data());
-
 	        _this4.processSchemaData(response[im_const.RestMethodHandler.imNotifySchemaGet].data());
-
 	        _this4.pagesLoaded++;
 	        _this4.isLoadingInitialData = false;
 	        _this4.firstUnreadNotificationOnInit = _this4.getFirstUnreadNotificationOnInit();
@@ -1101,7 +1012,6 @@ this.BX = this.BX || {};
 	        });
 	        return false;
 	      }
-
 	      this.lastId = this.getLastItemId(data.notifications);
 	      this.lastType = this.getLastItemType(data.notifications);
 	      this.$store.dispatch('notifications/clearPlaceholders');
@@ -1129,7 +1039,6 @@ this.BX = this.BX || {};
 	    },
 	    loadNextPage: function loadNextPage() {
 	      var _this5 = this;
-
 	      im_lib_logger.Logger.warn("Loading more notifications!");
 	      var queryParams = {
 	        'LIMIT': this.perPage,
@@ -1140,24 +1049,21 @@ this.BX = this.BX || {};
 	      this.getRestClient().callMethod('im.notify.get', queryParams).then(function (result) {
 	        im_lib_logger.Logger.warn('im.notify.get: new page results', result.data());
 	        var newUsers = result.data().users;
-	        var newItems = result.data().notifications; //if we got empty data - clear all placeholders
+	        var newItems = result.data().notifications;
 
+	        //if we got empty data - clear all placeholders
 	        if (!newItems || newItems.length === 0) {
 	          _this5.$store.dispatch('notifications/clearPlaceholders');
-
 	          _this5.$store.dispatch('notifications/setTotal', {
 	            total: _this5.notification.length
 	          });
-
 	          return false;
 	        }
-
 	        _this5.lastId = _this5.getLastItemId(newItems);
 	        _this5.lastType = _this5.getLastItemType(newItems);
+	        _this5.$store.dispatch('users/set', newUsers);
 
-	        _this5.$store.dispatch('users/set', newUsers); //change temp data in models to real data, we need new items, first item to update and section
-
-
+	        //change temp data in models to real data, we need new items, first item to update and section
 	        return _this5.$store.dispatch('notifications/updatePlaceholders', {
 	          items: newItems,
 	          firstItem: _this5.pagesLoaded * _this5.perPage
@@ -1172,7 +1078,6 @@ this.BX = this.BX || {};
 	    },
 	    onAfterLoadNextPageRequest: function onAfterLoadNextPageRequest() {
 	      im_lib_logger.Logger.warn('onAfterLoadNextPageRequest');
-
 	      if (this.pagesRequested > 0) {
 	        im_lib_logger.Logger.warn('We have delayed requests -', this.pagesRequested);
 	        this.pagesRequested--;
@@ -1186,12 +1091,11 @@ this.BX = this.BX || {};
 	    },
 	    changeReadStatus: function changeReadStatus(item) {
 	      var _this6 = this;
-
 	      this.$store.dispatch('notifications/read', {
 	        ids: [item.id],
 	        action: item.unread
-	      }); // change the unread counter
-
+	      });
+	      // change the unread counter
 	      var originalCounterBeforeUpdate = this.unreadCounter;
 	      var counterValue = item.unread ? this.unreadCounter - 1 : this.unreadCounter + 1;
 	      this.updateRecentList(counterValue);
@@ -1208,15 +1112,12 @@ this.BX = this.BX || {};
 	          im_lib_logger.Logger.warn("Notification ".concat(item.id, " unread status set to ").concat(!item.unread));
 	        })["catch"](function (error) {
 	          console.error(error);
-
 	          _this6.$store.dispatch('notifications/read', {
 	            ids: [item.id],
 	            action: !item.unread
-	          }); // restore the unread counter in case of an error
-
-
+	          });
+	          // restore the unread counter in case of an error
 	          _this6.updateRecentList(originalCounterBeforeUpdate);
-
 	          _this6.$store.dispatch('notifications/setCounter', {
 	            unreadTotal: originalCounterBeforeUpdate
 	          });
@@ -1225,7 +1126,6 @@ this.BX = this.BX || {};
 	    },
 	    "delete": function _delete(item) {
 	      var _this7 = this;
-
 	      var itemId = +item.id;
 	      this.notificationsToDelete.push(itemId);
 	      var notification = this.$store.getters['notifications/getById'](itemId);
@@ -1234,8 +1134,8 @@ this.BX = this.BX || {};
 	        fields: {
 	          display: false
 	        }
-	      }); // change the unread counter
-
+	      });
+	      // change the unread counter
 	      var originalCounterBeforeUpdate = this.unreadCounter;
 	      var counterValue = notification.unread ? this.unreadCounter - 1 : this.unreadCounter;
 	      this.updateRecentList(counterValue, true);
@@ -1246,7 +1146,6 @@ this.BX = this.BX || {};
 	      this.timer.start('deleteNotificationServer', 'notifications', .5, function () {
 	        var idsToDelete = _this7.notificationsToDelete;
 	        _this7.notificationsToDelete = [];
-
 	        _this7.getRestClient().callMethod('im.notify.delete', {
 	          id: idsToDelete
 	        }).then(function () {
@@ -1264,10 +1163,10 @@ this.BX = this.BX || {};
 	                display: true
 	              }
 	            });
-	          }); // restore the unread counter in case of an error
+	          });
 
+	          // restore the unread counter in case of an error
 	          _this7.updateRecentList(originalCounterBeforeUpdate, true);
-
 	          _this7.$store.dispatch('notifications/setCounter', {
 	            unreadTotal: originalCounterBeforeUpdate
 	          });
@@ -1276,28 +1175,23 @@ this.BX = this.BX || {};
 	    },
 	    getObserver: function getObserver(config) {
 	      var _this8 = this;
-
 	      if (typeof window.IntersectionObserver === 'undefined' || config.type === ObserverType.none) {
 	        return {
 	          observe: function observe() {},
 	          unobserve: function unobserve() {}
 	        };
 	      }
-
 	      var observerCallback = function observerCallback(entries) {
 	        entries.forEach(function (entry) {
 	          var sendReadEvent = false;
 	          var entryNotificationId = parseInt(entry.target.dataset.id, 10);
-
 	          if (entry.isIntersecting) {
 	            //on Windows with interface scaling intersectionRatio will never be 1
 	            if (entry.intersectionRatio >= 0.99) {
 	              sendReadEvent = true;
-
 	              _this8.notificationsOnScreen.push(entryNotificationId);
 	            } else if (entry.intersectionRatio > 0 && entry.intersectionRect.height > entry.rootBounds.height / 2) {
 	              sendReadEvent = true;
-
 	              _this8.notificationsOnScreen.push(entryNotificationId);
 	            } else {
 	              _this8.notificationsOnScreen = _this8.notificationsOnScreen.filter(function (notificationId) {
@@ -1309,21 +1203,16 @@ this.BX = this.BX || {};
 	              return notificationId !== entryNotificationId;
 	            });
 	          }
-
 	          if (sendReadEvent) {
 	            _this8.readNotificationsQueue.add(entryNotificationId);
-
 	            _this8.readNotificationsNodes[entryNotificationId] = entry.target;
 	          } else {
 	            _this8.readNotificationsQueue["delete"](entryNotificationId);
-
 	            delete _this8.readNotificationsNodes[entryNotificationId];
 	          }
-
 	          _this8.readVisibleNotificationsDelayed();
 	        });
 	      };
-
 	      var observerOptions = {
 	        root: this.$refs['listNotifications'],
 	        threshold: new Array(101).fill(0).map(function (zero, index) {
@@ -1335,21 +1224,19 @@ this.BX = this.BX || {};
 	    //events
 	    onScroll: function onScroll(event) {
 	      var _this9 = this;
-
 	      if (!this.isReadyToLoadNewPage(event)) {
 	        return;
 	      }
-
 	      if (this.remainingPages === 0 || !this.initialDataReceived) {
 	        return;
 	      }
-
 	      if (this.isLoadingNewPage) {
 	        this.drawPlaceholders().then(function () {
 	          _this9.pagesRequested++;
 	          im_lib_logger.Logger.warn('Already loading! Draw placeholders and add request, total - ', _this9.pagesRequested);
 	        });
-	      } else //if (!this.isLoadingNewPage)
+	      } else
+	        //if (!this.isLoadingNewPage)
 	        {
 	          im_lib_logger.Logger.warn('Starting new request');
 	          this.isLoadingNewPage = true;
@@ -1370,7 +1257,6 @@ this.BX = this.BX || {};
 	    },
 	    onButtonsClick: function onButtonsClick(event) {
 	      var _this10 = this;
-
 	      var params = this.getConfirmRequestParams(event);
 	      var itemId = +params.NOTIFY_ID;
 	      this.$store.dispatch('notifications/update', {
@@ -1378,8 +1264,8 @@ this.BX = this.BX || {};
 	        fields: {
 	          display: false
 	        }
-	      }); // change the unread counter
-
+	      });
+	      // change the unread counter
 	      var counterValueBeforeUpdate = this.unreadCounter;
 	      var counterValue = this.unreadCounter - 1;
 	      this.updateRecentList(counterValue, true);
@@ -1396,11 +1282,9 @@ this.BX = this.BX || {};
 	          fields: {
 	            display: true
 	          }
-	        }); // restore the unread counter in case of an error
-
-
+	        });
+	        // restore the unread counter in case of an error
 	        _this10.updateRecentList(counterValueBeforeUpdate, true);
-
 	        _this10.$store.dispatch('notifications/setCounter', {
 	          unreadTotal: counterValueBeforeUpdate
 	        });
@@ -1408,9 +1292,9 @@ this.BX = this.BX || {};
 	    },
 	    onDeleteClick: function onDeleteClick(event) {
 	      var _this11 = this;
+	      this["delete"](event.item);
 
-	      this["delete"](event.item); //we need to load more, if we are on the first page and we have more elements.
-
+	      //we need to load more, if we are on the first page and we have more elements.
 	      if (!this.isLoadingNewPage && this.remainingPages > 0 && this.notification.length === this.perPage - 1) {
 	        this.isLoadingNewPage = true;
 	        this.drawPlaceholders().then(function () {
@@ -1420,11 +1304,9 @@ this.BX = this.BX || {};
 	    },
 	    onRightClick: function onRightClick(event) {
 	      var _this12 = this;
-
 	      if (this.contextPopupInstance !== null) {
 	        this.closeContextMenuPopup();
 	      }
-
 	      var items = this.getContextMenu(event.item);
 	      this.contextPopupInstance = main_popup.MenuManager.create({
 	        id: 'bx-messenger-context-popup-external-data',
@@ -1443,11 +1325,9 @@ this.BX = this.BX || {};
 	    },
 	    onDateFilterClick: function onDateFilterClick(event) {
 	      var _this13 = this;
-
 	      if (typeof BX !== 'undefined' && BX.calendar && BX.calendar.get().popup) {
 	        BX.calendar.get().popup.close();
 	      }
-
 	      BX.calendar({
 	        node: event.target,
 	        field: event.target,
@@ -1460,28 +1340,24 @@ this.BX = this.BX || {};
 	    },
 	    getContextMenu: function getContextMenu(notification) {
 	      var _this14 = this;
-
 	      var unreadMenuItemText = notification.unread ? this.localize['IM_NOTIFICATIONS_CONTEXT_POPUP_SET_READ'] : this.localize['IM_NOTIFICATIONS_CONTEXT_POPUP_SET_UNREAD'];
 	      var blockMenuItemText = main_core.Type.isUndefined(BXIM.settingsNotifyBlocked[notification.settingName]) ? this.localize['IM_NOTIFICATIONS_CONTEXT_POPUP_DONT_NOTIFY'] : this.localize['IM_NOTIFICATIONS_CONTEXT_POPUP_NOTIFY'];
 	      return [{
 	        text: unreadMenuItemText,
 	        onclick: function onclick(event, item) {
 	          _this14.changeReadStatus(notification);
-
 	          _this14.closeContextMenuPopup();
 	        }
 	      }, {
 	        text: this.localize['IM_NOTIFICATIONS_CONTEXT_POPUP_DELETE_NOTIFICATION'],
 	        onclick: function onclick(event, item) {
 	          _this14["delete"](notification);
-
 	          _this14.closeContextMenuPopup();
 	        }
 	      }, {
 	        text: blockMenuItemText,
 	        onclick: function onclick(event, item) {
 	          console.log(notification);
-
 	          _this14.closeContextMenuPopup();
 	        }
 	      }];
@@ -1498,50 +1374,45 @@ this.BX = this.BX || {};
 	          'NOTIFY_VALUE': options[1]
 	        };
 	      }
-
 	      return null;
 	    },
 	    readNotifications: function readNotifications(notificationId) {
 	      var _this15 = this;
-
 	      var notification = this.$store.getters['notifications/getById'](notificationId);
-
-	      if (notification.unread === false || notification.sectionCode === im_const.NotificationTypesCodes.confirm) {
+	      if (notification.unread === false) {
 	        return false;
 	      }
-
-	      this.notificationsToRead.push(notificationId); // read on front
-
+	      this.notificationsToRead.push(notificationId);
+	      // read on front
 	      this.$store.dispatch('notifications/read', {
 	        ids: [notificationId],
 	        action: true
-	      }); // change the unread counter
+	      });
 
+	      // change the unread counter
 	      var counterValueBeforeUpdate = this.unreadCounter;
 	      var counterValue = this.unreadCounter - 1;
 	      this.$store.dispatch('notifications/setCounter', {
 	        unreadTotal: counterValue
-	      }); // update recent counter
-
+	      });
+	      // update recent counter
 	      this.updateRecentList(counterValue);
 	      this.timer.stop('readNotificationServer', 'notifications', true);
 	      this.timer.start('readNotificationServer', 'notifications', .5, function () {
 	        var idsToRead = _this15.notificationsToRead;
-	        _this15.notificationsToRead = []; // we can read all notifications from some ID, only if we have not received new notifications
+	        _this15.notificationsToRead = [];
+
+	        // we can read all notifications from some ID, only if we have not received new notifications
 	        // (otherwise we will read notifications at the top that we are not actually seeing)
-
 	        var canReadFromId = false;
-
 	        if (_this15.firstUnreadNotificationOnInit !== null) {
 	          canReadFromId = Math.max.apply(Math, babelHelpers.toConsumableArray(idsToRead)) <= _this15.firstUnreadNotificationOnInit;
 	        }
-
 	        var restMethod = 'im.notify.read.list';
 	        var requestParams = {
 	          ids: idsToRead,
 	          action: 'Y'
 	        };
-
 	        if (canReadFromId) {
 	          var readFromId = Math.min.apply(Math, babelHelpers.toConsumableArray(idsToRead));
 	          restMethod = 'im.notify.read';
@@ -1550,20 +1421,17 @@ this.BX = this.BX || {};
 	            action: 'Y'
 	          };
 	        }
-
 	        _this15.getRestClient().callMethod(restMethod, requestParams).then(function () {
 	          im_lib_logger.Logger.warn('I have read the notifications', requestParams);
 	        })["catch"](function () {
 	          _this15.$store.dispatch('notifications/read', {
 	            ids: idsToRead,
 	            action: false
-	          }); // restore the unread counter in case of an error
-
-
+	          });
+	          // restore the unread counter in case of an error
 	          _this15.$store.dispatch('notifications/setCounter', {
 	            unreadTotal: counterValueBeforeUpdate
 	          });
-
 	          _this15.updateRecentList(counterValueBeforeUpdate);
 	        });
 	      });
@@ -1582,14 +1450,11 @@ this.BX = this.BX || {};
 	      var latestNotification = {
 	        id: 0
 	      };
-
 	      var _iterator = _createForOfIteratorHelper(this.notification),
-	          _step;
-
+	        _step;
 	      try {
 	        for (_iterator.s(); !(_step = _iterator.n()).done;) {
 	          var notification = _step.value;
-
 	          if (notification.id > latestNotification.id) {
 	            latestNotification = notification;
 	          }
@@ -1599,7 +1464,6 @@ this.BX = this.BX || {};
 	      } finally {
 	        _iterator.f();
 	      }
-
 	      return latestNotification;
 	    },
 	    //todo: refactor this method for the new chat
@@ -1626,30 +1490,18 @@ this.BX = this.BX || {};
 	    },
 	    readAll: function readAll() {
 	      var _this16 = this;
-
 	      if (this.notification.lastId <= 0) {
 	        return;
 	      }
-
 	      if (!this.isNeedToReadAll) {
 	        return false;
 	      }
-
-	      this.$store.dispatch('notifications/readAll'); //we need to count "confirms" because its always "unread"
-
-	      var confirms = this.notification.filter(function (notificationItem) {
-	        return notificationItem.sectionCode === im_const.NotificationTypesCodes.confirm;
-	      });
-	      this.$store.dispatch('notifications/setCounter', {
-	        unreadTotal: confirms.length
-	      });
-	      this.updateRecentList(confirms.length);
+	      this.$store.dispatch('notifications/readAll');
 	      this.getRestClient().callMethod('im.notify.read', {
 	        id: 0,
 	        action: 'Y'
 	      })["catch"](function (result) {
 	        _this16.getInitialData();
-
 	        console.error(result);
 	      });
 	    },
@@ -1658,7 +1510,6 @@ this.BX = this.BX || {};
 	      var fields = {
 	        counter: counterValue
 	      };
-
 	      if (setPreview) {
 	        var latestNotification = this.getLatest();
 	        fields.message = {
@@ -1667,7 +1518,6 @@ this.BX = this.BX || {};
 	          date: latestNotification.date
 	        };
 	      }
-
 	      this.$store.dispatch('recent/update', {
 	        id: 'notify',
 	        fields: fields
@@ -1677,22 +1527,17 @@ this.BX = this.BX || {};
 	      if (this.isLoadingNewPage || !this.initialDataReceived) {
 	        return false;
 	      }
-
 	      var notificationIdToScroll = null;
-
 	      if (this.firstUnreadNotificationBelowVisible !== null) {
 	        notificationIdToScroll = this.firstUnreadNotificationBelowVisible;
 	      } else if (!this.hasUnreadBelowVisible) {
 	        notificationIdToScroll = this.firstUnreadNotification.id;
 	      }
-
 	      var firstUnreadNotificationNode = null;
-
 	      if (notificationIdToScroll !== null) {
 	        var selector = ".bx-im-notifications-item[data-id=\"".concat(notificationIdToScroll, "\"]");
 	        firstUnreadNotificationNode = document.querySelector(selector);
 	      }
-
 	      if (firstUnreadNotificationNode) {
 	        this.animatedScrollToPosition({
 	          start: this.$refs['listNotifications'].scrollTop,
@@ -1700,9 +1545,7 @@ this.BX = this.BX || {};
 	        });
 	      } else {
 	        var latestNotification = this.notification[this.notification.length - 1];
-
 	        var _selector = ".bx-im-notifications-item[data-id=\"".concat(latestNotification.id, "\"]");
-
 	        var latestNotificationNode = document.querySelector(_selector);
 	        this.animatedScrollToPosition({
 	          start: this.$refs['listNotifications'].scrollTop,
@@ -1712,36 +1555,30 @@ this.BX = this.BX || {};
 	    },
 	    animatedScrollToPosition: function animatedScrollToPosition() {
 	      var _this17 = this;
-
 	      var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
 	      if (this.animateScrollId) {
 	        im_lib_animation.Animation.cancel(this.animateScrollId);
 	        this.scrollAnimating = false;
 	      }
-
 	      if (typeof params === 'function') {
 	        params = {
 	          callback: params
 	        };
 	      }
-
 	      var container = this.$refs.listNotifications;
 	      var _params = params,
-	          _params$start = _params.start,
-	          start = _params$start === void 0 ? container.scrollTop : _params$start,
-	          _params$end = _params.end,
-	          end = _params$end === void 0 ? container.scrollHeight - container.clientHeight : _params$end,
-	          _params$increment = _params.increment,
-	          increment = _params$increment === void 0 ? 20 : _params$increment,
-	          _callback = _params.callback,
-	          _params$duration = _params.duration,
-	          duration = _params$duration === void 0 ? 500 : _params$duration;
-
+	        _params$start = _params.start,
+	        start = _params$start === void 0 ? container.scrollTop : _params$start,
+	        _params$end = _params.end,
+	        end = _params$end === void 0 ? container.scrollHeight - container.clientHeight : _params$end,
+	        _params$increment = _params.increment,
+	        increment = _params$increment === void 0 ? 20 : _params$increment,
+	        _callback = _params.callback,
+	        _params$duration = _params.duration,
+	        duration = _params$duration === void 0 ? 500 : _params$duration;
 	      if (container && end - start > container.offsetHeight * 3) {
 	        start = end - container.offsetHeight * 3;
 	      }
-
 	      this.scrollAnimating = true;
 	      this.animateScrollId = im_lib_animation.Animation.start({
 	        start: start,
@@ -1753,7 +1590,6 @@ this.BX = this.BX || {};
 	        callback: function callback() {
 	          _this17.animateScrollId = null;
 	          _this17.scrollAnimating = false;
-
 	          if (_callback && typeof _callback === 'function') {
 	            _callback();
 	          }

@@ -7,6 +7,7 @@ $MESS["IM_NOTIFICATIONS_CONTEXT_POPUP_SET_READ"] = "Als gelesen markieren";
 $MESS["IM_NOTIFICATIONS_CONTEXT_POPUP_SET_UNREAD"] = "Als ungelesen markieren";
 $MESS["IM_NOTIFICATIONS_DELETED_ITEM_STUB"] = "Benachrichtigung wurde gelöscht";
 $MESS["IM_NOTIFICATIONS_HEADER"] = "Benachrichtigungen";
+$MESS["IM_NOTIFICATIONS_ITEM_SYSTEM"] = "Systembenachrichtigung";
 $MESS["IM_NOTIFICATIONS_MORE_USERS"] = "und noch #COUNT# Nutzer";
 $MESS["IM_NOTIFICATIONS_NO_ITEMS"] = "Es gibt keine Benachrichtigungen";
 $MESS["IM_NOTIFICATIONS_NO_ITEMS_30_DAYS"] = "Innerhalb von letzten 30 Tagen gab es keine Benachrichtigungen";
