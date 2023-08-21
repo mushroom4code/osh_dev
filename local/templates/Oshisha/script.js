@@ -3068,3 +3068,28 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
     }
     return productsSuccess;
 }
+
+// NEW DESIGN opt
+toggleThemeLocalStorages();
+// togger themes
+function toggleTheme(item) {
+    item.classList.toggle('bg-indigo-600');
+    item.classList.toggle('bg-gray-200');
+    item.querySelector('.js--togglerIcon').classList.toggle('translate-x-0')
+    item.querySelector('.js--togglerIcon').classList.toggle('translate-x-3.5')
+    if (localStorage.theme === 'dark') {
+        localStorage.theme = 'light'
+    } else {
+        localStorage.theme = 'dark'
+    }
+    toggleThemeLocalStorages();
+}
+
+// install theme
+function toggleThemeLocalStorages() {
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
+}

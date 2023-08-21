@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: ["./local/templates/Oshisha/**/**/*.{js,php}",'./index.php'],
-    darkMode: 'media',
+    darkMode: 'class',
     theme: {
         extend:{
             borderRadius: {
@@ -28,5 +28,7 @@ module.exports = {
             }
         }
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/forms'),
+    ],
 }
