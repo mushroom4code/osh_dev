@@ -189,7 +189,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                        class="dark:text-white text-textLight text-xs ml-2 mr-2 font-medium">
                         Розничный сайт</a>
                 </div>
-                <div>
+                <div class="flex flex-row">
                     <a href="/about/o-nas/" class="text-xs dark:text-textDark mr-3 font-light hover:text-hover-red">О нас</a>
                     <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
                         <a href="/local/templates/Oshisha/images/presentation.pdf"
