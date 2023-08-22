@@ -30,35 +30,15 @@ $FUser_id = Fuser::getId($id_USER);
 $item_id = [];
 
 foreach ($item as $row) {
-    if ($row['CAN_BUY'] == 'N') {
-        if (!isset($result['DELETED_ITEMS'])) {
-            $result['DELETED_ITEMS'][$row['ID']] = $row;
-        }
-//        CSaleBasket::Delete($row['ID']);
-        continue;
-    }
-
     $item_id[] = $row['ID'];
-}
-
-foreach ($result['BASKET_ITEM_RENDER_DATA_CUSTOM'] as $category => $items) {
-    foreach ($result['DELETED_ITEMS'] as $deletedItemKey => $deletedItem) {
-        if (($searchKey = array_search($deletedItemKey, $items)) !== false) {
-            array_splice($result['BASKET_ITEM_RENDER_DATA_CUSTOM'][$category], $searchKey, 1);
-        }
-    }
-    if (empty($result['BASKET_ITEM_RENDER_DATA_CUSTOM'][$category])) {
-        unset($result['BASKET_ITEM_RENDER_DATA_CUSTOM'][$category]);
-    }
 }
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
 foreach ($item as $row) {
-    /*if($row['CAN_BUY'] == 'N')
-        CSaleBasket::Delete($row['ID']);*/
+
     //enterego - remove gift from basket if condition not execute
-    if (\Enterego\EnteregoHelper::productIsGift($row['PRODUCT_ID']) && $row['PRICE'] !== 0.0) {
+    if (EnteregoHelper::productIsGift($row['PRODUCT_ID']) && $row['PRICE'] !== 0.0) {
         (new CSaleBasket)->Delete($row['ID']);
         unset($row);
         continue;

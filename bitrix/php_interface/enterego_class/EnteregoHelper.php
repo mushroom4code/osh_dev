@@ -133,7 +133,8 @@ class EnteregoHelper
                 $id = $type == 'basket' ? $basket_item['PRODUCT_ID'] : $basket_item['data']['PRODUCT_ID'];
 
                 \CModule::IncludeModule("iblock");
-                $rsElement = CIBlockElement::GetList(array(), array('ID' => $id), false, false);
+                $rsElement = CIBlockElement::GetList(array(), array('ID' => $id), false, false,
+                    ['IBLOCK_SECTION_ID', 'IBLOCK_ID', 'ID']);
                 if ($arElement = $rsElement->Fetch()) {
                     if (!empty($arElement['IBLOCK_SECTION_ID'])) {
                         $section_id = $arElement['IBLOCK_SECTION_ID'];
@@ -156,65 +157,24 @@ class EnteregoHelper
                     $parent_id = $cat_info['ID'];
                     if (trim($parent_name) == 'Кальян') $parent_name = 'Кальяны';
 
+                    if ($basket_item['CAN_BUY'] !== 'Y') {
+                        $basketParent = "Нет в наличии_NotAvailable";
+                    } else {
+                        $basketParent = $parent_name . '_' . $parent_id;
+                    }
                     if ($type == 'basket') {
                         $basket_item['BASKET_KEY'] = $key_basket;
-                        $data[$parent_name . '_' . $parent_id][] = $basket_item;
+                        $data[$basketParent][] = $basket_item;
                         if (self::productIsGift($id)) {
                             $basket_item['GIFT'] = true;
                             $basket_item['SHOW_DISCOUNT_PRICE'] = false;
                             $basket_item['SHOW_MAX_PRICE'] = false;
                         }
                     } else {
-                        $data[$parent_name . '_' . $parent_id][$basket_item['id']] = $basket_item;
+                        $data[$basketParent][$basket_item['id']] = $basket_item;
                     }
-                }
-            }
-            if (!empty($data));
 
-            foreach ($data as $main_brand_name => $data_item) {
-                $temp_ar = [];
-                foreach ($data_item as $product_item) {
-                    if ($main_brand_name == 'presents') $product_item['DETAIL_PAGE_URL'] = 'javascript:void()';
-                    $rsData = CIBlockElement::GetList(
-                        array(),
-                        array('ID' => $product_item['PRODUCT_ID']),
-                        false,
-                        false,
-                        array('IBLOCK_SECTION_ID')
-                    );
-                    if ($arData = $rsData->Fetch()) {
-                        if (!empty($arData['IBLOCK_SECTION_ID'])) {
-                            $section_id = $arData['IBLOCK_SECTION_ID'];
-                            $iblock_id = $arData['IBLOCK_ID'];
-                        } else {
-                            $product = CCatalogSKU::GetProductInfo($product_item['PRODUCT_ID']);
-                            $prod_id = $product['ID'];
-                            $section_id = CIBlockElement::GetList(
-                                array(),
-                                array('ID' => $prod_id),
-                                false,
-                                false,
-                                array('IBLOCK_SECTION_ID')
-                            )->Fetch()['IBLOCK_SECTION_ID'];
-                            $iblock_id = $product['IBLOCK_ID'];
-                        }
-                        $itemInfo = self::getParentElementId((string)$iblock_id, (string)$section_id);
-                        $parentNameCategory = $itemInfo['NAME'];
-                        $parent_id = $itemInfo['ID'];
-                        if (!empty($parent_id) && !empty($parentNameCategory)) {
-                            $temp_ar[$parentNameCategory . '_' . $parent_id][] = $product_item['ID'];
-                        } else {
-                            $temp_ar["Без категории"][] = $product_item;
-                        }
-                    }
-                }
-                ksort($temp_ar);
-
-                $result[$main_brand_name] = [];
-                foreach ($temp_ar as $products) {
-                    foreach ($products as $product) {
-                        array_push($result[$main_brand_name], $product);
-                    }
+                    $result[$basketParent][] = (string) $key_basket;
                 }
             }
         }

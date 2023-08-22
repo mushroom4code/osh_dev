@@ -357,10 +357,15 @@
             if (totalNodes && totalNodes.length) {
                 var totalTemplate = this.getTemplate('basket-total-template');
                 if (totalTemplate) {
-                    this.result.TOTAL_RENDER_DATA['BASKET_ITEMS_COUNT'] = this.result.DELETED_ITEMS
-                        ? (this.result.BASKET_ITEMS_COUNT - Object.keys(this.result.DELETED_ITEMS).length)
-                        : this.result.BASKET_ITEMS_COUNT;
-                    var totalRender = this.render(totalTemplate, this.result.TOTAL_RENDER_DATA);
+                    this.result.TOTAL_RENDER_DATA['BASKET_ITEMS_COUNT'] = this.result.BASKET_ITEMS_COUNT;
+                    let disableCheckout  = this.result.TOTAL_RENDER_DATA.DISABLE_CHECKOUT;
+                    this.result.BASKET_ITEM_RENDER_DATA.forEach(function (item) {
+                        if (item['NOT_AVAILABLE']) {
+                            disableCheckout = true;
+                        }
+                    })
+                    var totalRender = this.render(totalTemplate,
+                        { ...this.result.TOTAL_RENDER_DATA, DISABLE_CHECKOUT: disableCheckout });
 
                     for (var i in totalNodes) {
                         if (totalNodes.hasOwnProperty(i) && BX.type.isDomNode(totalNodes[i])) {
@@ -1017,34 +1022,33 @@
 
                 sortIndex = BX.util.array_search(itemId, this.sortedItems);
 
-                if (this.items[itemId]['NOT_AVAILABLE']) {
-                    category_id = [false, 'DeletedProducts']
-                    in_category = true;
-                } else {
-                    categoryArray = this.result?.BASKET_ITEM_RENDER_DATA_CUSTOM;
+                categoryArray = this.result?.BASKET_ITEM_RENDER_DATA_CUSTOM;
 
-                    for (i in categoryArray) {
+                for (i in categoryArray) {
 
-                        category_id = i.split('_');
-                        category_item = categoryArray[i];
+                    category_id = i.split('_');
+                    category_item = categoryArray[i];
 
-                        for (key = 0; key < category_item.length; key++) {
-                            if (category_item[key] === itemId) {
-                                in_category = true;
-                                break;
-                            }
-                        }
-                        if (in_category) {
+                    for (key = 0; key < category_item.length; key++) {
+                        if (category_item[key] === itemId) {
+                            in_category = true;
                             break;
                         }
                     }
+                    if (in_category) {
+                        break;
+                    }
                 }
+
 
                 if (in_category) {
                     categoryItem = BX('basket-items-list-wrapper')
                         .querySelector('div[data-id-block-category="' + category_id[1] + '"]');
 
-                    if (sortIndex < BX.util.array_search(this.shownItems[0], this.sortedItems)) {
+                    if (categoryItem === null ) {
+
+                    }
+                    else if (sortIndex < BX.util.array_search(this.shownItems[0], this.sortedItems)) {
                         // insert before
                         categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
                         this.shownItems.unshift(itemId);
@@ -1359,8 +1363,10 @@
                     oldHeight = nodeAligner.clientHeight;
                 }
 
-                var basketItemHtml = this.renderBasketItem(basketItemTemplate, this.items[itemId]);
-                basketItemNode.insertAdjacentHTML('beforebegin', basketItemHtml);
+                if (!this.items[itemId].NOT_AVAILABLE) {
+                    var basketItemHtml = this.renderBasketItem(basketItemTemplate, this.items[itemId]);
+                    basketItemNode.insertAdjacentHTML('beforebegin', basketItemHtml);
+                }
 
                 let parentBox = basketItemNode.closest('div .box');
                 basketItemNode.remove();
@@ -1392,6 +1398,10 @@
                 if (this.filter.isActive()) {
                     this.filter.highlightSearchMatch(this.items[itemId]);
                 }
+
+                // if (this.items[itemId].NOT_AVAILABLE) {
+                //     delete this.items[itemId];
+                // }
             }
         },
 
@@ -1604,7 +1614,6 @@
 
             if (quantity > parseInt(itemData.AVAILABLE_QUANTITY)) {
                 let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
-                //alert('К покупке доступно максимум '+AVAILABLE_QUANTITY+'шт.');
                 $('.alert_quantity[data-id="' + itemData.PRODUCT_ID + '"]').html('К покупке доступно максимум: ' + AVAILABLE_QUANTITY + 'шт.' +
                     ' <div class="close-count-alert js__close-count-alert"></div>').addClass('show_block');
 

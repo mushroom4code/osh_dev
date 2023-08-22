@@ -227,7 +227,23 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 </div>
                                 <?php
                             }
-
+                             if (!empty($arResult['ITEMS']['nAnCanBuy'])) { ?>
+                                <div class="box" id=NotAvailable">
+                                    <div class="card-header basket_category alert alert-danger" id="openDNotAvailableProducts">
+                                        <button class="btn btn-link btn-block d-flex justify-content-between btn_basket_collapse" type="button"
+                                                data-id-category="NotAvailable">
+                                            <span class="font-weight-bold">Нет в наличии </span>
+                                            <i class="fa fa-angle-down" aria-hidden="true"
+                                               style="transform:rotate(180deg);"></i>
+                                        </button>
+                                    </div>
+                                    <div id="openCategoryNotAvailableProducts" class="category"
+                                         data-id-block-category="NotAvailable">
+                                        <div class="card-body basket-items-list-table"></div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
                             $i = 0;
                             foreach ($arResult['BASKET_ITEM_RENDER_DATA_CUSTOM'] as $key => $item) {
                                 $classCat = '';
@@ -239,7 +255,10 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                     $styleIcon = 'style="transform:rotate(0deg);"';
                                     $classCat = 'collapse_hide';
                                 }
-                                $newName = explode('_', $key); ?>
+                                $newName = explode('_', $key);
+                                if ($newName[1]==='NotAvailable') {
+                                    continue;
+                                } ?>
                                 <div class="box" id="<?= $newName[1] ?>">
                                     <div class="card-header basket_category" id="open<?= $newName[1] ?>">
                                         <button class="btn btn-link btn-block d-flex justify-content-between
