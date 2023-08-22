@@ -88,7 +88,7 @@
             <!--region Indicators-->
             <?php if ($arParams['TYPE'] != 'MAIN') { ?>
                 <? if ($arParams['BS_BULLET_NAV'] == 'Y' || $arParams['BS_PREVIEW'] == 'Y'): ?>
-                    <div class="carousel-indicators">
+                    <div class="carousel-indicators absolute inset-x-0 top-full">
                         <? $i = 0; ?>
                         <? while ($i < count($arResult['BANNERS'])): ?>
                             <span data-target="#carousel-<?= $arResult['ID'] ?>"
