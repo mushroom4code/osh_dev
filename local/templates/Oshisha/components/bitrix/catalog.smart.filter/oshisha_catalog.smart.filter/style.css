@@ -169,7 +169,7 @@
     max-height: 320px;
     overflow: auto;
 scrollbar-color: #F55F5C transparent;
-scrollbar-width: thin;	
+scrollbar-width: thin;
 }
 .smart-filter-block::-webkit-scrollbar {
  width:6px
@@ -728,7 +728,7 @@ color: #464646;
 }
 
 /*
-*	BTN result and reset 
+*	BTN result and reset
 *
 */
 
@@ -919,15 +919,15 @@ font-weight: 500;
 font-size: 14px;
 line-height: 110.4%;
 text-decoration-line: underline;
-color: #F55F5C;	
+color: #F55F5C;
 cursor:pointer;
 }
 .list_brand_none{
 	display:none;
-	
+
 }
 .all_brand {
-	
+
 	cursor:pointer;
 	margin-top:18px;
 font-family: 'Montserrat';
@@ -949,7 +949,7 @@ color: #F55F5C;
 }
 .catalog-section-list-tile-list{
 max-height: initial;
-overflow: initial;	
+overflow: initial;
 margin-bottom:30px;
 }
 .catalog-section-list-item-wrap{
@@ -958,11 +958,11 @@ margin-bottom:30px;
 	width:100%;
 	justify-content:space-between;
 	font-size: 14px;
-	
+
 }
 .catalog-section-list-item-l span.smart-filter-angle-up{
 position: relative;
-left: -4px;	
+left: -4px;
 }
 .catalog-section-list-tile-list .catalog-section-list-item-l:not(:last-child){
 	margin-bottom:15px;
@@ -973,7 +973,7 @@ font-style: normal;
 font-weight: 700;
 font-size: 14px;
 line-height: 110.4%;
-color: #464646;	
+color: #464646;
 margin-right: 20px;
 }
 .catalog-section-list-item-sub{
@@ -1008,7 +1008,4 @@ label.smart-filter-checkbox-text.form-check-label.hide_not_available {
         font-size: 18px;
         font-weight: bold;
     }
-}
-.js__filter-close {
-    font-size: 1500px;
 }

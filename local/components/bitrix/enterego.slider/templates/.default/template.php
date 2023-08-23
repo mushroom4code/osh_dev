@@ -99,7 +99,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             ?>
             <div id="<?= $strContID; ?>"
                  class="col2 <?= $templateData['TEMPLATE_CLASS']; ?>">
-                <div class="bx_catalog_tile_section" id="hits_slider_<?=$strRand?>">
+                <div class="bx_catalog_tile_section p-7" id="hits_slider_<?=$strRand?>">
                     <?php
                     $boolFirst = true;
                     $arRowIDs = array();
@@ -183,9 +183,9 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             arrows: true,
             infinite: false,
             variableWidth: variableWidth,
-            prevArrow: '<span class="new_custom_button_slick_left_cat"  aria-hidden="true"><i class="fa fa-angle-left"'
+            prevArrow: '<span class="text-6xl cursor-pointer text-gray-slider-arrow flex items-center absolute inset-y-0 left-0"  aria-hidden="true"><i class="fa fa-angle-left"'
                 + ' aria-hidden="true"></i></span>',
-            nextArrow: '<span class="new_custom_button_slick_right_cat" aria-hidden="true"><i class="fa fa-angle-right"'
+            nextArrow: '<span class="text-6xl cursor-pointer inset-y-0 right-0 flex items-center absolute dark:text-white" aria-hidden="true"><i class="fa fa-angle-right"'
                 + ' aria-hidden="true"></i></span>',
         })
     }

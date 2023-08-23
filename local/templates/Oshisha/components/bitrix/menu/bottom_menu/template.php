@@ -29,8 +29,8 @@ foreach ($arResult as $itemIdex => $arItem):
     } ?>
 
     <?php if ($arItem["DEPTH_LEVEL"] == "1" && !empty(htmlspecialcharsbx($arItem["LINK"]))): ?>
-    <li class="col-menu-item mb-2">
-        <a class="col-menu-link" <?=$download?>
+    <li class="mb-2">
+        <a class="hover:text-hover-red" <?=$download?>
            href="<?= htmlspecialcharsbx($arItem["LINK"]) ?>"><?= htmlspecialcharsbx($arItem["TEXT"]) ?>
         </a>
     </li>

@@ -210,7 +210,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     <a href="javascript:void(0)"
                        class="text-xs dark:text-textDark callback js__callback font-light hover:text-hover-red">Обратный звонок</a>
                     <button type="button"
-                            class="bg-gray-200 flex w-8 flex-none cursor-pointer rounded-full p-px ring-1 ring-inset
+                            class="bg-gray-200 ml-3 flex w-8 flex-none cursor-pointer rounded-full p-px ring-1 ring-inset
                             ring-gray-900/5 transition-colors duration-200 ease-in-out" onclick="toggleTheme(this)"
                             role="switch" aria-checked="true" aria-labelledby="switch-1-label">
                         <span class="sr-only">Agree to policies</span>

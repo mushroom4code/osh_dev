@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*, h1, h2, h3, h4, h5, div, span, p, body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+@font-face {
+    font-display: swap;
+}

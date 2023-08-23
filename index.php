@@ -88,71 +88,8 @@ if (IsModuleInstalled("advertising")):?>
         </div>
     </div>
 <?php endif;
-if (SITE_ID !== SITE_EXHIBITION) {
-    global $trendFilter;
-    $trendFilter = array('PROPERTY_TREND' => '4');
-    $actualBlockData = array(
-        'select' => array('ID', 'UF_IMG', 'UF_STR', 'UF_LINK'),
-        'order' => array('ID' => 'ASC'),
-        'limit' => '50',
-    );
-    $resGetHlbActual = Enterego\EnteregoHelper::getHeadBlock('MainPageActual', $actualBlockData); ?>
-    <div class="slider single-items box_slide box_with_actual_none">
-        <div class="swiper-wrapper">
-            <?php
-            foreach ($resGetHlbActual as $items) {
-                ?>
-                <div class="swiper-slide image_box_wrap">
-                    <a href="<?php echo $items['UF_LINK']; ?>" class=" image_box">
-                        <img src="<?php echo $items['UF_IMG']; ?> " alt="actual"> </a>
-                </div>
-            <?php }
-            ?>
-        </div>
-        <div class="swiper-pagination"></div>
-        <div class="navigation-slide">
-            <span class="new_custom_button_slick_left" aria-hidden="true"><i class="fa fa-angle-left"
-                                                                             aria-hidden="true"></i></span>
-            <span class="new_custom_button_slick_right" aria-hidden="true"><i class="fa fa-angle-right"
-                                                                              aria-hidden="true"></i></span>
-        </div>
-    </div>
-    <script type="text/javascript">
-        var swiper = new Swiper('.box_slide', {
-            slidesPerView: 4,
-            adaptiveHeight: true,
-            spaceBetween: 10,
-            pagination: false,
-            navigation: {
-                prevEl: '.new_custom_button_slick_left',
-                nextEl: '.new_custom_button_slick_right'
-            },
-            speed: 3000,
-
-            autoplay: {
-                enabled: true,
-                delay: 4000,
-            },
-            breakpoints: {
-                320: {
-                    slidesPerView: 2,
-                    adaptiveHeight: true,
-                    spaceBetween: 10
-                },
-                991: {
-                    slidesPerView: 3,
-                    adaptiveHeight: true,
-                    spaceBetween: 10
-                },
-                1440: {
-                    slidesPerView: 4,
-                    adaptiveHeight: true,
-                    spaceBetween: 10
-                },
-            }
-        });
-    </script>
-    <div class="box_with_banner_dop">
+if (SITE_ID !== SITE_EXHIBITION) { ?>
+    <div class="box_with_banner_dop mb-7">
         <?php $APPLICATION->IncludeComponent(
             "bitrix:advertising.banner",
             "oshisha_banners",
@@ -176,22 +113,99 @@ if (SITE_ID !== SITE_EXHIBITION) {
             false
         ); ?>
     </div>
-    <?php $APPLICATION->IncludeComponent(
-        "bitrix:main.include",
-        "",
-        array(
-            "AREA_FILE_SHOW" => "sect",
-            "AREA_FILE_SUFFIX" => "bottom",
-            "AREA_FILE_RECURSIVE" => "N",
-            "EDIT_MODE" => "html",
-        ),
-        false,
-        array('HIDE_ICONS' => 'Y')
-    );
+    <div class="flex flex-row mb-7">
+        <div class="w-6/12 mb-2">
+            <?php $APPLICATION->IncludeComponent(
+                "bitrix:advertising.banner",
+                "oshisha_banners",
+                array(
+                    "ANIMATION_DURATION" => "500",
+                    "ARROW_NAV" => "1",
+                    "BS_ARROW_NAV" => "N",
+                    "BS_BULLET_NAV" => "N",
+                    "BS_CYCLING" => "N",
+                    "BS_EFFECT" => "fade",
+                    "BS_HIDE_FOR_PHONES" => "Y",
+                    "BS_HIDE_FOR_TABLETS" => "N",
+                    "BS_KEYBOARD" => "N",
+                    "BS_PAUSE" => "Y",
+                    "BS_WRAP" => "N",
+                    "BULLET_NAV" => "2",
+                    "CACHE_TIME" => "36000000",
+                    "CACHE_TYPE" => "Y",
+                    "COMPONENT_TEMPLATE" => "oshisha_banners",
+                    "CONTROL_NAV" => "Y",
+                    "CYCLING" => "N",
+                    "DEFAULT_TEMPLATE" => "-",
+                    "DIRECTION_NAV" => "Y",
+                    "EFFECT" => "random",
+                    "EFFECTS" => "",
+                    "HEIGHT" => "400",
+                    "JQUERY" => "Y",
+                    "KEYBOARD" => "N",
+                    "NOINDEX" => "Y",
+                    "PARALL_HEIGHT" => "400",
+                    "QUANTITY" => "1",
+                    "SCALE" => "N",
+                    "SPEED" => "500",
+                    "TYPE" => "NEW_MINI_FOOTER",
+                    "WRAP" => "1"
+                ),
+                false,
+                array(
+                    "ACTIVE_COMPONENT" => "Y"
+                )
+            ); ?>
+        </div>
+        <div class="w-6/12 mb-7">
+            <?php $APPLICATION->IncludeComponent(
+                "bitrix:advertising.banner",
+                "oshisha_banners",
+                array(
+                    "ANIMATION_DURATION" => "500",
+                    "ARROW_NAV" => "1",
+                    "BS_ARROW_NAV" => "N",
+                    "BS_BULLET_NAV" => "N",
+                    "BS_CYCLING" => "N",
+                    "BS_EFFECT" => "slide",
+                    "BS_HIDE_FOR_PHONES" => "Y",
+                    "BS_HIDE_FOR_TABLETS" => "N",
+                    "BS_KEYBOARD" => "N",
+                    "BS_PAUSE" => "Y",
+                    "BS_WRAP" => "N",
+                    "BULLET_NAV" => "2",
+                    "CACHE_TIME" => "36000000",
+                    "CACHE_TYPE" => "N",
+                    "COMPONENT_TEMPLATE" => "oshisha_banners",
+                    "CONTROL_NAV" => "Y",
+                    "CYCLING" => "N",
+                    "DEFAULT_TEMPLATE" => "bootstrap_v4",
+                    "DIRECTION_NAV" => "Y",
+                    "EFFECT" => "random",
+                    "EFFECTS" => "",
+                    "HEIGHT" => "400",
+                    "JQUERY" => "Y",
+                    "KEYBOARD" => "N",
+                    "NOINDEX" => "Y",
+                    "PARALL_HEIGHT" => "400",
+                    "QUANTITY" => "1",
+                    "SCALE" => "N",
+                    "SPEED" => "500",
+                    "TYPE" => "NEW_MINI_FOOTER_2",
+                    "WRAP" => "1"
+                ),
+                false,
+                array(
+                    "ACTIVE_COMPONENT" => "Y"
+                )
+            ); ?>
+        </div>
+    </div>
+    <?php
 
     if (defined('PROPERTY_USE_ON_MAIN_PAGE')) { ?>
-        <div class="h1">Распродажа</div>
-        <div class="by-card">
+        <div class="dark:text-textDarkLightGray dark:font-extralight font-medium text-textLight text-5xl mb-4">Распродажа</div>
+        <div class="by-card mb-7">
         <?php
 
             $GLOBALS['FILTER_SALE'] = array(

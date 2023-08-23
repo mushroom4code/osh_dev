@@ -147,7 +147,8 @@ if ($show_price) {
 }
 $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 ?>
-<div class="catalog-item-product <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
+<div class="catalog-item-product border border-gray-product rounded-md mr-4 p-5
+<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?=$item['ID']?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
@@ -234,17 +235,6 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 
             <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
                 <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
-                    <div class="all-prices-by-line">
-                        <div class="d-flex flex-column prices-block">
-                            <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                                <p class="price-row mb-1">
-                                    <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
-                                    <span class="dash"> - </span><br>
-                                    <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                                </p>
-                            <?php } ?>
-                        </div>
-                    </div>
 
                     <div class="box_with_price line-price font_weight_600 d-flex flex-column min-height-auto">
                         <div class="d-flex flex-column">
@@ -304,18 +294,6 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                     </div>
                 </div>
             <?php } else { ?>
-                <div class="all-prices-by-line">
-                    <div class="d-flex flex-column prices-block">
-                        <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                            <p class="price-row mb-1">
-                                <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
-                                <span class="dash"> - </span><br>
-                                <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                            </p>
-                        <?php } ?>
-                    </div>
-                </div>
-
                 <div class="box_with_titles">
                     <div class="not_product">
                         Товара нет в наличии
@@ -508,60 +486,6 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                         </div>
                     </div>
                 <?php } ?>
-
-                <div class="box_with_titles line-view">
-                    <?php
-                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                        'templates',
-                        [
-                            'ID_PROD' => $item['ID_PROD'],
-                            'F_USER_ID' => $item['F_USER_ID'],
-                            'LOOK_LIKE' => false,
-                            'LOOK_FAVORITE' => true,
-                            'COUNT_LIKE' => $item['COUNT_LIKE'],
-                            'COUNT_FAV' => $item['COUNT_FAV'],
-                            'COUNT_LIKES' => $item['COUNT_LIKES'],
-                        ],
-                        $component,
-                        [
-                            'HIDE_ICONS' => 'Y'
-                        ]
-                    );
-                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                        'templates',
-                        array(
-                            'ID_PROD' => $item['ID_PROD'],
-                            'F_USER_ID' => $item['F_USER_ID'],
-                            'LOOK_LIKE' => true,
-                            'LOOK_FAVORITE' => false,
-                            'COUNT_LIKE' => $item['COUNT_LIKE'],
-                            'COUNT_FAV' => $item['COUNT_FAV'],
-                            'COUNT_LIKES' => $item['COUNT_LIKES'],
-                        ),
-                        $component,
-                        array('HIDE_ICONS' => 'Y'),
-                    );
-                    ?>
-                </div>
-
-            </div>
-        </div>
-        <div class="info-prices-box-hover info-prices-box-bottom cursor-pointer ml-2">
-            <i class="fa fa-info-circle info-price" aria-hidden="true"></i>
-            <div class="d-flex align-items-center justify-content-center font-11 show-prices js__show-all-prices">
-                <span>Показать цены</span>
-            </div>
-            <div class="position-absolute js__all-prices">
-                <div class="d-flex flex-column prices-block">
-                    <div class="prices-block-close js__prices-block-close"></div>
-                    <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                        <p class="mb-1">
-                            <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
-                            <span class="dash"> - </span><br>
-                            <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                        </p>
-                    <?php } ?>
-                </div>
             </div>
         </div>
         <?php

@@ -27,7 +27,7 @@
         <? endif; ?>
 
         <div id="carousel-<?= $arResult['ID'] ?>"
-             class="carousel w-inherit <?= $arParams['BS_EFFECT'] ?><?= $arParams['BS_HIDE_FOR_TABLETS'] ?>"
+             class="carousel w-full <?= $arParams['BS_EFFECT'] ?><?= $arParams['BS_HIDE_FOR_TABLETS'] ?>"
              data-interval="<?= $arParams['BS_INTERVAL'] ?>" data-wrap="<?= $arParams['BS_WRAP'] ?>"
              data-pause="<?= $arParams['BS_PAUSE'] ?>" data-keyboard="<?= $arParams['BS_KEYBOARD'] ?>"
              data-ride="carousel">
@@ -51,7 +51,7 @@
                     </div>
 
                 </div>
-                <div class="carousel-indicators swiper-pagination-block absolute"></div>
+                <div class="carousel-indicators swiper-pagination-block absolute inset-x-0 top-full"></div>
                 <?
             } else {
                 ?>
@@ -73,13 +73,13 @@
                 <a href="#carousel-<?= $arResult['ID'] ?>"
                    class="carousel-nav-<?= $arParams['TYPE'] ?>-prev
                    carousel_custom absolute inset-y-0 left-0 flex items-center z-10" role="button" data-slide="prev">
-                    <span class="dark:bg-dark-red text-white hover:bg-white py-2 px-5 text-3xl rounded-full hover:text-dark">
+                    <span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-2 px-5 text-3xl rounded-full hover:text-dark">
                         <i class="fa fa-angle-left" aria-hidden="true"></i></span>
                 </a>
                 <a href="#carousel-<?= $arResult['ID'] ?>"
                    class="carousel-nav-<?= $arParams['TYPE'] ?>-next carousel_custom_next  absolute inset-y-0 right-0 z-10
                    flex items-center" role="button" data-slide="next">
-                    <span class="dark:bg-dark-red text-white hover:bg-white py-2 px-5 text-3xl rounded-full hover:text-dark">
+                    <span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-2 px-5 text-3xl rounded-full hover:text-dark">
                         <i class="fa fa-angle-right" aria-hidden="true"></i></span>
                 </a>
             <? endif; ?>

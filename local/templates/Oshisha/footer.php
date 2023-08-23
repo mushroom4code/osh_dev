@@ -17,34 +17,27 @@ $option = $option_site; ?>
 </div><!--end .workarea-->
 
 <?php $userData = EnteregoUser::getInstance(); ?>
-<footer class="flex flew-row justify-center dark:bg-dark dark:text-textDark w-full border-t border-white">
-    <div class="xl:container container foot_container mt-6">
+<footer class="flex flew-row justify-center dark:bg-dark dark:text-textDark w-full border-t border-white mb-4">
+    <div class="xl:container container foot_container mt-10">
         <div class="flex flex-row xs:flex-col mb-8 justify-between">
             <div class="columns-3 flex flex-col">
-                <a class="logo" href="<?= SITE_DIR ?>">
-                    <?php
-                    $APPLICATION->IncludeComponent(
-                        'bitrix:main.include',
-                        '',
-                        [
-                            'AREA_FILE_SHOW' => 'file',
-                            'PATH' => SITE_DIR . 'include/logo_footer.php'
-                        ],
-                        false
-                    );
-                    ?>
-                </a>
+                    <div class="w-44 mb-3">
+                        <a href="/">
+                            <img src="/local/templates/Oshisha/images/logo/osh.svg"
+                                 srcset="/local/templates/Oshisha/images/logo/osh.svg"/>
+                        </a>
+                    </div>
                 <div class="flex flex-col dark:text-textDarkLightGray">
                     <span class="text-sm font-light mb-5">Оптовый портал<br>товаров для кальяна</span>
-                    <a class="text-sm font-light mb-2 underline" href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
-                    <a class="text-sm font-light mb-5 underline" href="tel:88006004424">8-800-600-44-24</a>
+                    <a class="text-sm font-light mb-2 underline hover:text-hover-red" href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
+                    <a class="text-sm font-light mb-5 underline hover:text-hover-red" href="tel:88006004424">8-800-600-44-24</a>
                     <span class="text-sm font-light mb-5">Время работы <br>10:00 - 20:00, ежедневно.</span>
-                    <a class="text-sm font-light underline" href="mailto:info@oshisha.net">info@oshisha.net </a>
+                    <a class="text-sm font-light underline hover:text-hover-red" href="mailto:info@oshisha.net">info@oshisha.net </a>
                 </div>
             </div>
             <div class="columns-3 flex flex-col dark:text-textDarkLightGray">
-                <span class="text-sm font-med dark:text-white js__collapse-list mb-3">Каталог</span>
-                <ul class="col-menu text-sm font-light">
+                <span class="text-sm font-medium dark:text-white js__collapse-list mb-3">Каталог</span>
+                <ul class="text-sm font-light">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "bottom_menu",
@@ -66,35 +59,35 @@ $option = $option_site; ?>
             </div>
             <div class="columns-3 flex flex-col dark:text-textDarkLightGray">
                 <span class="text-sm font-semibold js__collapse-list mb-3">Покупателям</span>
-                <ul class="col-menu">
-                    <li class="col-menu-item">
-                        <a class="col-menu-link" href="/about/contacts/">Контакты</a>
+                <ul class="text-sm font-light">
+                    <li class="mb-2">
+                        <a class="hover:text-hover-red" href="/about/contacts/">Контакты</a>
                     </li>
-                    <li class="col-menu-item">
-                        <a class="col-menu-link" href="/about/feedback/">Обратная связь</a>
+                    <li class="mb-2">
+                        <a class="hover:text-hover-red" href="/about/feedback/">Обратная связь</a>
                     </li>
-                    <li class="col-menu-item">
-                        <a class="col-menu-link js__callback" href="javascript:void(0)">Обратный звонок</a>
+                    <li class="mb-2">
+                        <a class="hover:text-hover-red js__callback" href="javascript:void(0)">Обратный звонок</a>
                     </li>
                     <?php if ($USER->IsAuthorized()): ?>
-                        <li class="col-menu-item">
-                            <a class="col-menu-link" href="/about/FAQ/">FAQ</a>
+                        <li class="mb-2">
+                            <a class="hover:text-hover-red" href="/about/FAQ/">FAQ</a>
                         </li>
                     <?php endif; ?>
-                    <li class="col-menu-item">
-                        <a class="col-menu-link" href="/about/users_rules/">Пользовательское соглашение</a>
+                    <li class="mb-2">
+                        <a class="hover:text-hover-red" href="/about/users_rules/">Пользовательское соглашение</a>
                     </li>
-                    <li class="col-menu-item">
-                        <a class="col-menu-link" href="/about/politics/">Политика конфиденциальности</a>
+                    <li class="mb-2">
+                        <a class="hover:text-hover-red" href="/about/politics/">Политика конфиденциальности</a>
                     </li>
-                    <li class="col-menu-item">
-                        <a class="col-menu-link" href="/about/cookie/">Политика обработки Cookie</a>
+                    <li class="mb-2">
+                        <a class="hover:text-hover-red" href="/about/cookie/">Политика обработки Cookie</a>
                     </li>
                 </ul>
             </div>
             <div class="columns-3 flex flex-col dark:text-textDarkLightGray">
                 <span class="text-sm font-semibold js__collapse-list mb-3">О компании</span>
-                <ul class="col-menu">
+                <ul class="text-sm font-light">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "bottom_menu",
@@ -109,16 +102,16 @@ $option = $option_site; ?>
                         ],
                         false
                     ); ?>
-                    <li class="col-menu-item">
+                    <li class="mb-2">
                         <?php $href = $USER->IsAuthorized() ? $option->price_list_link : '/login/' ?>
-                        <a class="col-menu-link" href="<?= $href ?>">Прайс-лист</a>
+                        <a class="col-menu-link hover:text-hover-red" href="<?= $href ?>">Прайс-лист</a>
                     </li>
-                    <li class="col-menu-item">
-                        <a href="/about/vacancy/" class="col-menu-link">Вакансии</a>
+                    <li class="mb-2">
+                        <a href="/about/vacancy/" class="col-menu-link hover:text-hover-red">Вакансии</a>
                     </li>
                 </ul>
                 <div class="mt-5">
-                    <span class="text-sm font-semibold js__collapse-list mb-3">Социальные сети</span>
+                    <div class="text-sm font-semibold js__collapse-list mb-3">Социальные сети</div>
                     <nav class="flex flex-row">
                         <a href="<?= $option->TG; ?>" target="_blank">
                             <img class="tg" src="<?= SITE_TEMPLATE_PATH . '/images/tg.svg' ?>">
@@ -138,8 +131,8 @@ $option = $option_site; ?>
             </div>
         </div>
         <?php if (!empty($option->text_rospetrebnadzor_row)): ?>
-            <p class="text-xs mb-3 font-thin dark:text-textDarkLightGray"><?= $option->text_rospetrebnadzor_row; ?></p>
-            <p class="text-xs mb-4 font-thin dark:text-textDarkLightGray"><?= $option->text_rospetrebnadzor_column; ?></p>
+            <p class="text-xs mb-2 font-thin dark:text-textDarkLightGray"><?= $option->text_rospetrebnadzor_row; ?></p>
+            <p class="text-xs mb-7 font-thin dark:text-textDarkLightGray"><?= $option->text_rospetrebnadzor_column; ?></p>
         <?php endif; ?>
         <div class="text-xs font-light dark:text-textDarkLightGray flex flex-col mb-2">
             <span class="year">© 2014-<?= date('Y'); ?> <?= $option->COMPANY ?>.</span>

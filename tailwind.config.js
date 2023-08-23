@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: ["./local/templates/Oshisha/**/**/*.{js,php}",'./index.php'],
+    content: [
+        "./local/templates/Oshisha/**/**/*.{js,php}",
+        './index.php',
+        "./local/components/bitrix/enterego.slider/templates/.default/template.php"
+    ],
     darkMode: 'class',
     theme: {
         extend:{
@@ -11,12 +15,14 @@ module.exports = {
             colors: {
                 dark: '#1C1C1C',
                 textLight: '#1A1A1A',
-                textDarkLightGray:'#E8E8E8',
+                textDarkLightGray: '#E8E8E8',
                 textDark: '#F0F0F0',
-                'dark-red': '#b11512',
+                'gray-product': '#CFCFCF',
+                'gray-slider-arrow': '#676767',
+                'dark-red': '#B11512',
                 'light-red': '#CD1D1D',
                 'hover-red': '#FE3431',
-                'gray-box-dark': '#313131'
+                'gray-box-dark': '#3C3C3C'
             },
             minHeight: {
                 '550': '550px',
