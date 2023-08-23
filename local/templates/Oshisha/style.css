@@ -3440,7 +3440,7 @@ b.decoration-color-red {
         display: flex !important;
         justify-content: space-around;
         background-color: white;a
-        align-items: center;
+    align-items: center;
     }
     .block_menu_mobile {
         bottom: 0;

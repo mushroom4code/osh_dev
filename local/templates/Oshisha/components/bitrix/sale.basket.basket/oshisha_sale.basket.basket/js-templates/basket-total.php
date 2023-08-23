@@ -4,6 +4,7 @@ use Bitrix\Main\Localization\Loc;
 
 /**
  * @var array $arParams
+ * @var array $arResult
  */
 ?>
 <script id="basket-total-template" type="text/html">
@@ -60,11 +61,17 @@ use Bitrix\Main\Localization\Loc;
                 <div class="basket-checkout-block mb-4 basket-checkout-block-btn text-left">
                     <?php
                     if ($USER->IsAuthorized()) {
+                        $canOrder = empty($arResult['ITEMS']['nAnCanBuy']);
                         ?>
-                        <button class="btn_basket  basket-btn-checkout{{#DISABLE_CHECKOUT}} disabled{{/DISABLE_CHECKOUT}}"
+                        <button class="btn_basket  basket-btn-checkout" {{#DISABLE_CHECKOUT}} disabled{{/DISABLE_CHECKOUT}}
                                 data-entity="basket-checkout-button">
                             <?= Loc::getMessage('SBB_ORDER') ?>
                         </button>
+                        {{#DISABLE_CHECKOUT}}
+                            <div id="basket_bnt_checkout_errors" class="text-center  mt-3 font-13 text-danger">
+                                Удалите или замените отсутствующие товары корзины.
+                            </div>
+                        {{/DISABLE_CHECKOUT}}
                         <?php
                     }  else {
                         ?>
