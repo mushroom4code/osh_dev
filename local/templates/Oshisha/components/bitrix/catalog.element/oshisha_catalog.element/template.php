@@ -119,8 +119,8 @@ $useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
 $rowResHidePrice = $arResult['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $price = $actualItem['PRICES_CUSTOM'];
 
-$priceCalculate = $price['PRICE_DATA'][1]['PRICE'];
-$price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
+$priceCalculate = $price['PRICE_DATA']['PRICE'];
+$price_new =  $price['PRICE_DATA']['PRINT_PRICE'];
 
 if (!empty($price['USER_PRICE']['PRICE'])) {
     $specialPrice = $price['USER_PRICE'];
@@ -218,7 +218,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             </div>
         </div>
         <?php if ($rowResHidePrice == 'Нет' && !empty($option_site->text_rospetrebnadzor_product)) { ?>
-            <p class="font-14  mb-lg-4  mb-md-4 mb-2"><?= $option_site->text_rospetrebnadzor_product; ?></p>
+            <p class="font-14 dark:text-textDark text-textLight  mb-lg-4  mb-md-4 mb-2"><?= $option_site->text_rospetrebnadzor_product; ?></p>
         <?php } ?>
         <div class="box_with_photo_product row">
             <?php $count = count($actualItem['PICTURE']);
@@ -227,10 +227,10 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             <div
                     class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product
 				not-input-parse justify-content-between">
-                <h1 class="head-title"><?= $name ?></h1>
+                <h1 class="head-title dark:text-textDark text-textLight"><?= $name ?></h1>
                 <?php if ($isGift) { ?>
                     <div>
-                        <h4 class="bx-title">Данная продукция не продается отдельно</h4>
+                        <h4 class="bx-title dark:text-textDark text-textLight">Данная продукция не продается отдельно</h4>
                     </div>
                     <?php
                 } else { ?>
@@ -282,29 +282,21 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                         switch ($blockName) {
                             case 'price':
                             $styles = ''; ?>
-                                <div class="mb-4 d-flex flex-column">
+                                <div class="mb-4 d-flex flex-column dark:text-textDark text-textLight">
                                     <div class="mb-3 d-flex flex-row align-items-center">
-                                        <div class="product-item-detail-price-current"
+                                        <div class="product-item-detail-price-current dark:text-textDark text-textLight"
                                              id="<?= $itemIds['PRICE_ID'] ?>">
                                             <?=
-                                                $specialPrice['PRINT_PRICE'] ?? '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                                                $specialPrice['PRINT_PRICE'] ?? $price['PRICE_DATA']['PRINT_PRICE'];
                                             ?>
                                         </div>
                                         <?php if (isset($specialPrice)) {
                                             $styles = 'price-discount';
-                                            $old_sum = (int)$price['PRICE_DATA'][0]['PRICE'] - (int)$specialPrice['PRICE'] ?? 0; ?>
+                                            $old_sum = (int)$price['PRICE_DATA']['PRICE'] - (int)$specialPrice['PRICE'] ?? 0; ?>
                                             <span class="font-14 ml-3">
-                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
+                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA']['PRINT_PRICE']; ?></b>
                                             <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
                                         </span>
-                                        <?php } ?>
-                                    </div>
-                                    <div class="d-flex flex-column prices-block">
-                                        <?php foreach ($price['PRICE_DATA'] as $items) { ?>
-                                            <p>
-                                                <span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
-                                                <span class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
-                                            </p>
                                         <?php } ?>
                                     </div>
                                 </div>

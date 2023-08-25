@@ -326,13 +326,6 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                                 <b class="sale-percent"> - {{{SALE_PRICE_VAL}}}₽</b>
                                             </div>
                                         {{/SHOW_SALE_PRICE}}
-                                        <div class="box-with-prices-net d-none position-absolute p-2">
-                                            {{#PRICES_NET}}
-                                                {{#PRICE_DATA}}
-                                                    <p class="font-12 mb-2"><b>{{{NAME}}}</b> - <b>{{{VAL}}} ₽</b></p>
-                                                {{/PRICE_DATA}}
-                                            {{/PRICES_NET}}
-                                        </div>
                                     </div>
                                 </div>
                             <?php } ?>
@@ -397,13 +390,6 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
         <div class="d-flex flex-column justify-content-between align-items-end end-column col-lg-5 col-md-12 col-12 pr-0">
             <?php if (!$mobile->isMobile() || $mobile->isTablet()) { ?>
                 <div class="d-flex flex-row width_100 justify-content-between">
-                    <div class="box-with-prices-net p-2">
-                        {{#PRICES_NET}}
-                        {{#PRICE_DATA}}
-                        <p class="font-12 mb-2"><b>{{{NAME}}}</b> - <b>{{{VAL}}} ₽</b></p>
-                        {{/PRICE_DATA}}
-                        {{/PRICES_NET}}
-                    </div>
                     <div class="d-flex flex-column price-column ml-2">
                         <div class="basket-items-list-item-price mb-1 <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
                             <div class="basket-item-block-price d-flex flex-column align-items-end">

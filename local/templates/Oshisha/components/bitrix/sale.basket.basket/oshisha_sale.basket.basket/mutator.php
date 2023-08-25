@@ -58,9 +58,7 @@ foreach ($item as $row) {
         false,
         false,
         array(
-            "CATALOG_PRICE_" . RETAIL_PRICE,
             "CATALOG_PRICE_" . B2B_PRICE,
-            'CATALOG_PRICE_' . BASIC_PRICE,
             "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID)
     );
     $showDiscountPrice = (float)$row['DISCOUNT_PRICE'] > 0;
@@ -84,14 +82,6 @@ foreach ($item as $row) {
                 }
             }
 
-            if (!empty($ar_res["CATALOG_PRICE_" . RETAIL_PRICE])) {
-                $price['PRICE_DATA'][0]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE])[0];
-                $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
-            }
-            if (!empty($ar_res["CATALOG_PRICE_" . BASIC_PRICE])) {
-                $price['PRICE_DATA'][1]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE])[0];
-                $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
-            }
             if (!empty($ar_res["CATALOG_PRICE_" . B2B_PRICE])) {
                 $price['PRICE_DATA'][2]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . B2B_PRICE])[0];
                 $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';

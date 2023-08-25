@@ -65,8 +65,7 @@ $APPLICATION->IncludeComponent(
 		"USE_PRODUCT_QUANTITY" => "Y",
 		"CONVERT_CURRENCY" => "N",
 		"QUANTITY_FLOAT" => "N",
-		"OFFERS_CART_PROPERTIES" => array(
-		),
+		"OFFERS_CART_PROPERTIES" => "",
 		"SHOW_TOP_ELEMENTS" => "N",
 		"SECTION_COUNT_ELEMENTS" => "Y",
 		"SECTION_TOP_DEPTH" => "1",
@@ -110,8 +109,9 @@ $APPLICATION->IncludeComponent(
 		"LIST_OFFERS_LIMIT" => "5",
 		"SECTION_BACKGROUND_IMAGE" => "-",
 		"DETAIL_PROPERTY_CODE" => array(
-			0 => "BREND",
-			1 => "",
+			0 => "",
+			1 => "BREND",
+			2 => "",
 		),
 		"DETAIL_META_KEYWORDS" => "-",
 		"DETAIL_META_DESCRIPTION" => "-",
@@ -159,8 +159,7 @@ $APPLICATION->IncludeComponent(
 		),
 		"PRODUCT_DISPLAY_MODE" => "Y",
 		"OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
-		"OFFER_TREE_PROPS" => array(
-		),
+		"OFFER_TREE_PROPS" => "",
 		"SHOW_DISCOUNT_PERCENT" => "Y",
 		"SHOW_OLD_PRICE" => "Y",
 		"MESS_BTN_BUY" => "Купить",

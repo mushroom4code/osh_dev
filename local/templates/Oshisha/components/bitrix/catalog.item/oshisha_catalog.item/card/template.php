@@ -233,7 +233,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                 } ?>
             </div>
 
-            <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
+            <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                 <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
 
                     <div class="box_with_price line-price font_weight_600 d-flex flex-column min-height-auto">
@@ -243,15 +243,15 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                 if (!empty($specialPrice)) {
                                     echo(round($specialPrice));
                                 } else {
-                                    echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
+                                echo (round($price['PRICE_DATA']['PRICE']));
                                 } ?>₽
                             </div>
 
                             <?php if (!empty($specialPrice)) { ?>
                                 <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
-                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
+                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA']['PRICE'] ?>₽</b>
                                     <b class="sale-percent">
-                                        - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($specialPrice)) ?>₽
+                                        - <?= (round($price['PRICE_DATA']['PRICE']) - round($specialPrice)) ?>₽
                                     </b>
                                 </div>
                             <?php } ?>
@@ -377,9 +377,9 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
             <div class="bx_catalog_item_controls">
-                <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
+                <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
                     <div class="box_with_fav_bask align-items-lg-center align-items-md-center align-items-end">
-                        <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
+                        <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                             <div class="box_with_price card-price font_weight_600 d-flex flex-column min-height-auto">
                                 <div class="d-flex flex-column">
                                     <div class="bx_price <?= $styleForNo ?> position-relative">
@@ -387,15 +387,15 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
                                         } else {
-                                            echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
+                                            echo (round($price['PRICE_DATA']['PRICE']));
                                         } ?>₽
                                     </div>
 
                                     <?php if (!empty($specialPrice)) { ?>
                                         <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
-                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRICE'] ?>₽</b>
+                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA']['PRICE'] ?>₽</b>
                                             <b class="sale-percent">
-                                                - <?= (round($price['PRICE_DATA'][0]['PRICE']) - round($specialPrice)) ?>₽
+                                                - <?= (round($price['PRICE_DATA']['PRICE']) - round($specialPrice)) ?>₽
                                             </b>
                                         </div>
                                     <?php } ?>

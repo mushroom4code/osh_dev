@@ -261,9 +261,7 @@ class BXConstants
 
         $priceTypes = array(
             SALE_PRICE_TYPE_ID => "Сайт скидка",
-            BASIC_PRICE => "Основная",
             B2B_PRICE => "b2b",
-            RETAIL_PRICE => 'Розничная',
         );
 
         if (Loader::includeModule('osh.userprice')) {

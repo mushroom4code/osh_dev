@@ -77,23 +77,12 @@ class EnteregoBasket
                 $origin_price = self::loadProductPrice($product_id, RETAIL_PRICE);
                 if ($origin_price) {
                     $new_basket_data[$product_id]['PRICE'] = $origin_price;
-                    $origin_total_price += $product_quantity * $origin_price;
                     $product_prices[$product_id]['PRICE'] = $origin_price;
                     $product_prices[$product_id]['PRICE_TYPE'] = RETAIL_PRICE;
                 }
             }
 
-            if (SITE_ID === SITE_EXHIBITION) {
-                $price_id = B2B_PRICE;
-            } else {
-                if ($origin_total_price <= 10000) {
-                    $price_id = RETAIL_PRICE;
-                } elseif ($origin_total_price <= 30000) {
-                    $price_id = BASIC_PRICE;
-                } else {
-                    $price_id = B2B_PRICE;
-                }
-            }
+            $price_id = B2B_PRICE;
 
             foreach ($product_prices as $product_id => $price_data) {
 
@@ -182,12 +171,10 @@ class EnteregoBasket
     {
         $price = [];
         $sale = $arPrices['PRICES'][SALE_PRICE_TYPE_ID];
-        $retail = $arPrices['PRICES'][RETAIL_PRICE];
-        $base = $arPrices['PRICES'][BASIC_PRICE];
         $b2b = $arPrices['PRICES'][B2B_PRICE];
 
         if (USE_CUSTOM_SALE_PRICE || $useDiscount) {
-            if (!empty($sale) && ((int)$sale['PRICE'] < (int)$retail['PRICE'])) {
+            if (!empty($sale) && ((int)$sale['PRICE'] < (int)$b2b['PRICE'])) {
                 $price['SALE_PRICE'] = $sale;
             }
         }
@@ -197,17 +184,9 @@ class EnteregoBasket
                 $price['USER_PRICE'] = $arPrices['PRICES'][$userPriceTypeId] ?? null;
             }
         }
-        if (!empty($retail)) {
-            $price['PRICE_DATA'][0] = $retail;
-            $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
-        }
-        if (!empty($base)) {
-            $price['PRICE_DATA'][1] = $base;
-            $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
-        }
         if (!empty($b2b)) {
-            $price['PRICE_DATA'][2] = $b2b;
-            $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
+            $price['PRICE_DATA'] = $b2b;
+            $price['PRICE_DATA']['NAME'] = 'b2b (от 30к)';
         }
 
         return $price;
