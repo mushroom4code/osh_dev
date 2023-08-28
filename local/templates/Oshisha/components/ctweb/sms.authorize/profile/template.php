@@ -65,9 +65,9 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                         <!--STEP PHONE WAITING-->
                         <div id="ctweb_form_step_1"
-                             class="ctweb-smsauth-menu-step d-none">
+                             class="ctweb-smsauth-menu-step hidden">
                             <p class="form-group mb-2 col-sm-12 col-md-12 profile-asterisk">* Будет выслан код подтверждения</p>
-                            <div class="form-group mb-2">
+                            <div class="form-group mb-2 flex flex-col">
                                 <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                        for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                 <span id="flag"></span>
@@ -77,13 +77,13 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                            placeholder="+_ (___)-___-____"
                                            inputmode="text"
                                            value="<?= $arParams['USER_PHONE'] ?? '' ?>"
-                                           class="form-control profile input_lk auth-phone-profile"
+                                           class="form-control dark:bg-grayButton profile input_lk auth-phone-profile"
                                            id="<?= $mainID . "phone" ?>"
                                            autocomplete="off"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="checkbox d-none">
+                        <div class="checkbox hidden">
                             <label>
                                 <input type="checkbox" name="SAVE_SESSION" value="Y"
                                        id="<?= $jsParams['TEMPLATE']['SAVE_SESSION'] ?>"
@@ -95,10 +95,10 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                 <!-- STEP CODE WAITING -->
                 <div id="ctweb_form_step_3"
-                     class="profile ctweb-smsauth-menu-step <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'd-none' ?> ">
+                     class="profile ctweb-smsauth-menu-step <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'hidden' ?> ">
                     <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
 
-                    <div class="form-group mb-2">
+                    <div class="form-group flex flex-col mb-2">
                         <label style="margin-bottom: 10px" class="ctweb-label" for="sms-auth-code"></label>
                         <div style="display: none">
                             <a class="ctweb-link"><?= GetMessage("SMS_AUTH_CHANGE_NUMBER_PHONE") ?></a>
@@ -107,18 +107,18 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
                         <div class="col-sm-12 col-md-12">
                             <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
-                                   class="form-control input_lk profile auth_code" autocomplete="off">
+                                   class="form-control dark:bg-grayButton input_lk profile auth_code" autocomplete="off">
                         </div>
                         <span id="result"></span>
                     </div>
 
                     <div <?= $arResult['REUSE_TIME'] <= 0 ? 'style="display: none"' : 0 ?>
                             id="<?= $jsParams['TEMPLATE']['TIMER'] ?>" class="ctweb-timer"></div>
-                    <input type="submit" id="submit_code" class="d-none">
+                    <input type="submit" id="submit_code" class="hidden">
                 </div>
 
                 <!-- ERROR STEP -->
-                <div id="ctweb_form_step_error" class="ctweb-smsauth-menu-step d-none">
+                <div id="ctweb_form_step_error" class="ctweb-smsauth-menu-step hidden">
                     <h3 class="ctweb-title" id="<?= $jsParams['TEMPLATE']['ERROR_TITLE'] ?>"></h3>
                     <div class="form-group">
                         <label class="ctweb-label ctweb-label-error"
@@ -220,35 +220,35 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                 </p>
                             </div>
                             <div class="d-flex flex-lg-row flex-md-row flex-column">
-                                <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pl-lg-0 pl-md-0 pl-0 pr-lg-3 pr-md-3 pr-0">
+                                <div class="form-group mb-3 pl-lg-0 pl-md-0 pl-0 pr-lg-3 pr-md-3 pr-0">
                                     <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2 p-0 mb-2"
                                            for="main-profile-name"><?= GetMessage("AUTH_NAME") ?></label>
                                     <input type="text" name="NAME" maxlength="50"
-                                           class="form-control input_lk bx-auth-input"
+                                           class="form-control dark:bg-grayButton input_lk bx-auth-input"
                                            value="<?= $arResult["NAME"] ?>"/>
                                 </div>
-                                <div class="form-group mb-3 col-md-6 col-lg-6 col-12 p-0">
+                                <div class="form-group mb-3  p-0">
                                     <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
                                            for="main-profile-name"><?= GetMessage("AUTH_LAST_NAME") ?></label>
                                     <input type="text" name="LAST_NAME" maxlength="50"
-                                           class="form-control input_lk bx-auth-input"
+                                           class="form-control dark:bg-grayButton input_lk bx-auth-input"
                                            value="<?= $arResult["LAST_NAME"] ?>"/>
                                 </div>
                             </div>
                             <div class="d-flex flex-lg-row flex-md-row flex-column">
-                                <div class="form-group mb-3 col-md-6 col-lg-6 col-12 pl-lg-0 pl-md-0 pl-0 pr-lg-3 pr-md-3 pr-0">
+                                <div class="form-group mb-3 pl-lg-0 pl-md-0 pl-0 pr-lg-3 pr-md-3 pr-0">
                                     <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
                                            for="main-profile-name">
                                         <span class="starrequired color-redLight  color-redLight">* </span>
                                         <?= GetMessage("AUTH_EMAIL") ?>
                                     </label>
                                     <input type="text" name="EMAIL" maxlength="255"
-                                           class="form-control input_lk bx-auth-input"
+                                           class="form-control dark:bg-grayButton input_lk bx-auth-input"
                                            required minlength="5"
                                            placeholder="_@_._"
                                            value="<?= $arResult["EMAIL"] ?>"/>
                                 </div>
-                                <div class="form-group mb-3 col-md-6 col-lg-6 col-12 p-0">
+                                <div class="form-group mb-3 p-0">
                                     <div class="d-flex flex-row align-items-center mb-2 position-relative">
                                         <label class="col-form-label main-profile-form-label p-0"
                                                for="main-profile-name">
@@ -257,7 +257,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                         </label>
                                         <i class="fa fa-question-circle-o font-20 color-redLight ml-2 block-icon-text"
                                            aria-hidden="true"></i>
-                                        <div class="d-none block-text br-10 p-3">
+                                        <div class="hidden block-text br-10 p-3">
                                             <p class="m-0">
                                                 Возраст необходимо указать для открытия информации не доступной к
                                                 просмотру
@@ -265,7 +265,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                         </div>
                                     </div>
                                     <input type="text" name="PERSONAL_BIRTHDAY" required
-                                           class="form-control input_lk bx-auth-input user-birthday readonly"
+                                           class="form-control dark:bg-grayButton input_lk bx-auth-input user-birthday readonly"
                                            inputmode="none"
                                            id="main-profile-brd"
                                            autocomplete="Off"
@@ -275,7 +275,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                 </div>
                             </div>
                             <div class="form-group mb-1">
-                                <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
+                                <label class="col-form-label main-profile-form-label p-0 mb-2"
                                        for="main-profile-name">
                                     <span class="starrequired color-redLight">* </span>
                                     <?= GetMessage("AUTH_PASSWORD_REQ") ?>
@@ -351,12 +351,12 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                    inputmode="text"
                                                    data-input-type="phone"
                                                    value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
-                                                   class="form-control auth-phone input_lk bx-auth-input"
+                                                   class="form-control auth-phone dark:bg-grayButton input_lk bx-auth-input"
                                                    id="<?= $mainID . "phone" ?>"
                                                    autocomplete="off"/>
                                         </div>
                                     </div>
-                                    <div class="checkbox d-none">
+                                    <div class="checkbox hidden">
                                         <label>
                                             <input type="checkbox" name="SAVE_SESSION" value="Y"
                                                    id="<?= $jsParams['TEMPLATE']['SAVE_SESSION'] ?>"
@@ -370,22 +370,22 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         <!-- STEP CODE WAITING -->
                         <div id="ctweb_form_step_3"
                              class="ctweb-smsauth-menu-step col-md-6 col-lg-6 col-12 p-0
-                             <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'd-none' ?> ">
+                             <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'hidden' ?> ">
                             <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
 
                             <div class="form-group mb-3 d-flex flex-column">
                                 <label class="ctweb-label mb-3" for="sms-auth-code"></label>
                                 <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
-                                       class="form-control auth_code" autocomplete="off">
+                                       class="form-control dark:bg-grayButton auth_code" autocomplete="off">
                                 <span id="result"></span>
                             </div>
 
                             <div <?= $arResult['REUSE_TIME'] <= 0 ? 'style="display: none"' : 0 ?>
                                     id="<?= $jsParams['TEMPLATE']['TIMER'] ?>" class="ctweb-timer"></div>
-                            <input type="submit" id="submit_code" class="d-none">
+                            <input type="submit" id="submit_code" class="hidden">
                         </div>
                         <!-- ERROR STEP -->
-                        <div id="ctweb_form_step_error" class="ctweb-smsauth-menu-step d-none">
+                        <div id="ctweb_form_step_error" class="ctweb-smsauth-menu-step hidden">
                             <h3 class="ctweb-title" id="<?= $jsParams['TEMPLATE']['ERROR_TITLE'] ?>"></h3>
                             <div class="form-group">
                                 <label class="ctweb-label ctweb-label-error"
@@ -421,7 +421,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                    id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>"><?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
                             </div>
                             <div>
-                                <a class="ctweb-link font-14" href="<? SITE_DIR ?>about/FAQ/"
+                                <a class="ctweb-link font-14" href="/about/FAQ/"
                                    id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>"><?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
                             </div>
                         </div>
@@ -451,7 +451,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                     });
 
                     $('i.block-icon-text').on('click', function () {
-                        $('.block-text').toggleClass('d-none');
+                        $('.block-text').toggleClass('hidden');
                     });
 
                     $(document).on('click', 'input.form-check-input', function () {
@@ -468,7 +468,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
     </div>
 <?php else:
     if (strripos($_SERVER['REQUEST_URI'], '/?register=yes') === false) {?>
-        <div style="display: none" class="ctweb-smsauth-menu-block radius_10 position-absolute" data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+        <div class="ctweb-smsauth-menu-block p-5 fixed top-1/3 left-1/2 w-fit hidden rounded-lg dark:bg-darkBox bg-white rounded-lx"
+             data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
             <div class="close_login_menu">
                 <a class="close_header_box" href="">
                     <span class="login_span_bar login_span"></span>
@@ -511,9 +512,9 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                                 <!--STEP PNONE WAITING-->
                                 <div id="ctweb_form_step_1"
-                                     class="ctweb-smsauth-menu-step d-none">
+                                     class="ctweb-smsauth-menu-step hidden">
                                     <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
-                                    <div class="form-group">
+                                    <div class="form-group flex flex-col">
                                         <label class="ctweb-label"
                                                for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                         <span id="flag"></span>
@@ -522,7 +523,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                    inputmode="text"
                                                    data-input-type="phone"
                                                    value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
-                                                   class="form-control custom_style_auth auth-phone"
+                                                   class="form-control dark:bg-grayButton custom_style_auth auth-phone"
                                                    id="<?= $mainID . "phone" ?>"
                                                    autocomplete="off"/>
                                         </div>
@@ -539,10 +540,10 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                                 <!-- STEP CODE WAITING -->
                                 <div id="ctweb_form_step_3"
-                                     class="ctweb-smsauth-menu-step <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'd-none' ?> ">
+                                     class="ctweb-smsauth-menu-step <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'hidden' ?> ">
                                     <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
 
-                                    <div class="form-group">
+                                    <div class="form-group flex flex-col">
                                         <label class="ctweb-label" for="sms-auth-code"></label>
                                         <div>
                                             <a class="ctweb-link"><?= GetMessage("SMS_AUTH_CHANGE_NUMBER_PHONE") ?></a>
@@ -550,17 +551,17 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                         <label class="ctweb-label"
                                                for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
                                         <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
-                                               class="form-control auth_code" autocomplete="off">
+                                               class="form-control dark:bg-grayButton auth_code" autocomplete="off">
                                         <span id="result"></span>
                                     </div>
 
                                     <div <?= $arResult['REUSE_TIME'] <= 0 ? 'style="display: none"' : 0 ?>
                                             id="<?= $jsParams['TEMPLATE']['TIMER'] ?>" class="ctweb-timer"></div>
-                                    <input type="submit" id="submit_code" class="d-none">
+                                    <input type="submit" id="submit_code" class="hidden">
                                 </div>
 
                                 <!-- ERROR STEP -->
-                                <div id="ctweb_form_step_error" class="ctweb-smsauth-menu-step d-none">
+                                <div id="ctweb_form_step_error" class="ctweb-smsauth-menu-step hidden">
                                     <h3 class="ctweb-title" id="<?= $jsParams['TEMPLATE']['ERROR_TITLE'] ?>"></h3>
                                     <div class="form-group">
                                         <label class="ctweb-label ctweb-label-error"
@@ -614,15 +615,15 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                             <!-- STEP AUTH EMAIL LOGIN -->
                             <form id="<?= $jsParams['TEMPLATE']['MAIL_FORM'] ?>"
                                   action="/bitrix/components/ctweb/sms.authorize/ajax.php"
-                                  method="POST" class="ctweb-smsauth-menu-step d-none">
+                                  method="POST" class="ctweb-smsauth-menu-step hidden">
                                 <?= bitrix_sessid_post(); ?>
                                 <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
-                                <div class="form-group">
+                                <div class="form-group flex flex-col">
                                     <input type="hidden" name="METHOD" placeholder="" value="EMAIL_AUTH"/>
                                     <label class="ctweb-label"><?= GetMessage("SMS_AUTH_EMAIL") ?></label>
                                     <input type="text" name="EMAIL" placeholder=""
                                            value="<?= $arResult['USER_VALUES']['EMAIL'] ?? '' ?>"
-                                           class="form-control auth-by-email"
+                                           class="form-control dark:bg-grayButton auth-by-email"
                                            id="<?= $mainID . "email" ?>"/>
                                     <label class="ctweb-label"><?= GetMessage("SMS_AUTH_PASSWORD") ?></label>
                                     <span style="float: right"><a href="/auth/?forgot_password=yes"

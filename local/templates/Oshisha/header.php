@@ -93,7 +93,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     $APPLICATION->ShowHead(); ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
-<body class="bg-white dark:bg-dark dark:text-textDark min-h-screen">
+<body class="bg-white dark:bg-dark dark:text-textDark min-h-screen relative">
 <div id="panel">
     <?php $APPLICATION->ShowPanel(); ?>
 </div>

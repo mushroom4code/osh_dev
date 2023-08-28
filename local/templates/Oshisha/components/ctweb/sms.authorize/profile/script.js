@@ -307,7 +307,7 @@
     BX.Ctweb.SMSAuth.Controller.prototype.stateTransition = function (state, prev) {
         this.obState.value = state;
 
-        $('.ctweb-smsauth-menu-step').addClass('d-none');
+        $('.ctweb-smsauth-menu-step').addClass('hidden');
 
         // Элементы управления
         BX.hide(this.obSubmit);
@@ -322,7 +322,7 @@
                     this.setState(STATE_PHONE_WAITING);
                 break;
             case STATE_PHONE_WAITING:
-                BX.toggleClass(BX(`ctweb_form_step_${state}`), 'd-none');
+                BX.toggleClass(BX(`ctweb_form_step_${state}`), 'hidden');
                 BX.show(this.obSubmit);
                 BX.hide(this.obMessage);
                 BX.hide(this.obChangePhone);
@@ -331,7 +331,7 @@
                 break;
             case STATE_CODE_WAITING:
                 BX.style(this.obReuse, 'visibility', 'hidden');
-                BX.toggleClass(BX(`ctweb_form_step_${state}`), 'd-none');
+                BX.toggleClass(BX(`ctweb_form_step_${state}`), 'hidden');
                 BX.show(this.obReuse.closest('div'));
                 BX.show(this.obTimer);
                 BX.show(this.obMessage);
@@ -386,7 +386,7 @@
                 break;
             case STATE_CODE_NOT_VALID:
                 clearInterval(this.timerId);
-                BX.toggleClass(BX('ctweb_form_step_error'), 'd-none');
+                BX.toggleClass(BX('ctweb_form_step_error'), 'hidden');
                 BX.hide(this.obSubmit);
                 BX.adjust(this.errotTitle, {text: BX.message('SMS_AUTH_ERROR_CODE_NOT_CORRECT_TITLE')});
                 BX.adjust(this.errorText, {text: BX.message('SMS_AUTH_ERROR_CODE_NOT_CORRECT_TEXT')});
@@ -398,7 +398,7 @@
                 break;
             case STATE_CAPTCHA_WRONG:
                 clearInterval(this.timerId);
-                BX.toggleClass(BX('ctweb_form_step_error'), 'd-none');
+                BX.toggleClass(BX('ctweb_form_step_error'), 'hidden');
                 BX.hide(this.obSubmit);
                 BX.adjust(this.errotTitle, {text: BX.message('SMS_AUTH_ERROR_CAPTCHA_WRONG_TITLE')});
                 BX.adjust(this.errorText, {text: BX.message('SMS_AUTH_ERROR_CAPTCHA_WRONG_TEXT')});
@@ -406,7 +406,7 @@
                 BX.show(this.obChangePhone);
                 break;
             case STATE_PHONE_EXISTS:
-                BX.toggleClass(BX('ctweb_form_step_error'), 'd-none');
+                BX.toggleClass(BX('ctweb_form_step_error'), 'hidden');
                 BX.adjust(this.errotTitle, {text: BX.message('SMS_AUTH_ERROR_PHONE_EXISTS_TITLE')});
                 BX.adjust(this.errorText, {text: BX.message('SMS_AUTH_ERROR_PHONE_EXISTS_TEXT')});
 ;
@@ -414,7 +414,7 @@
                 break;
             case STATE_CODE_REUSED:
                 clearInterval(this.timerId);
-                BX.toggleClass(BX(`ctweb_form_step_${STATE_CODE_WAITING}`), 'd-none');
+                BX.toggleClass(BX(`ctweb_form_step_${STATE_CODE_WAITING}`), 'hidden');
                 BX.hide(this.obTimer);
                 BX.show(this.obChangePhone);
                 BX.show(this.obReuse.closest('div'));
@@ -422,7 +422,7 @@
 
                 break;
             case STATE_EXPIRED:
-                BX.toggleClass(BX('ctweb_form_step_error'), 'd-none');
+                BX.toggleClass(BX('ctweb_form_step_error'), 'hidden');
                 clearInterval(this.timerId);
                 BX.adjust(this.errotTitle, {text: BX.message('SMS_AUTH_ERROR_TIME_EXPIRED_TITLE')});
                 BX.adjust(this.errorText, {text: BX.message('SMS_AUTH_ERROR_TIME_EXPIRED_TEXT')});
@@ -474,8 +474,8 @@
     BX.Ctweb.SMSAuth.Controller.prototype.changeTypeAuth = function () {
         clearInterval(this.timerId);
         BX.hide(this.errorAlert);
-        BX.toggleClass(this.mailForm, 'd-none');
-        BX.toggleClass(this.obFormId, 'd-none');
+        BX.toggleClass(this.mailForm, 'hidden');
+        BX.toggleClass(this.obFormId, 'hidden');
     }
 
 })();
