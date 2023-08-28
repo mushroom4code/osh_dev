@@ -87,11 +87,6 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                 <span class="text_catalog_link">Хиты</span>
             </a>
         </li>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/brands/">
-                <span class="text_catalog_link">Бренды</span>
-            </a>
-        </li>
         <!--		<li class="li_menu_header  none_mobile" data-role="bx-menu-item">-->
         <!--            <a class="link_menu_header" href="/promotions/">-->
         <!--                <span class="text_catalog_link">Акции</span>-->
