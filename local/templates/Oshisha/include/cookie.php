@@ -4,14 +4,15 @@ $user_consent = $USER->IsAuthorized() ?
     (new Cuser)->GetById($USER->GetID())->Fetch()[USER_CONSENT_PROPERTY] : false;
 if (!$USER->IsAuthorized() || $user_consent != '1'): ?>
     <div id="consent-cookie-popup"
-         class="dark:bg-darkBox bg-white shadow-lg dark:shadow-none fixed bottom-10 lg:xl:md:left-10 hidden
-         lg:xl:px-8 lg:xl:py-6 px-5 py-4 rounded-2xl <?= $USER->IsAuthorized() ? 'js-auth' : 'js-noauth' ?>">
-        <p class="dark:text-textDark xl:lg:text-sm text-xs mb-4 text-center font-medium dark:font-light">
+         class="dark:bg-darkBox bg-white shadow-lg z-20 dark:shadow-none fixed lg:xl:md:bottom-10 bottom-2
+         lg:xl:md:left-10 hidden lg:xl:px-8 lg:xl:py-6 px-4 py-4 lg:xl:m-0 m-4 rounded-2xl
+         <?= $USER->IsAuthorized() ? 'js-auth' : 'js-noauth' ?>">
+        <p class="dark:text-textDark xl:lg:text-sm text-xs xl:lg:md:mb-4 mb-3 text-center font-medium dark:font-light">
             Мы используем файлы Cookie, чтобы улучшить сайт для вас.
         </p>
         <div class="flex flex-row items-center justify-around">
             <a id="cookie-popup-accept" href="javascript:void(0)"
-               class="flex flex-row items-center font-medium dark:font-light text-sm mr-3 hover:underline">
+               class="flex flex-row items-center font-medium dark:font-light lg:xl:md:text-sm  text-xs mr-3 hover:underline">
                 <div class="rounded-full p-2 dark:border-none border-greenButton dark:bg-grayButton border mr-3">
                     <svg width="18" height="16" viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg">
                         <g id="checked-tick_svgrepo.com" clip-path="url(#clip0_1100_2679)">
@@ -26,15 +27,16 @@ if (!$USER->IsAuthorized() || $user_consent != '1'): ?>
                         </g>
                         <defs>
                             <clipPath id="clip0_1100_2679">
-                                <rect width="17.6197" height="15.1725" class="dark:fill-white fill-greenButton" transform="translate(0.25 0.75)"/>
+                                <rect width="17.6197" height="15.1725" class="dark:fill-white fill-greenButton"
+                                      transform="translate(0.25 0.75)"/>
                             </clipPath>
                         </defs>
                     </svg>
                 </div>
                 Принять
             </a>
-            <a id="cookie-popup-about" class="flex flex-row items-center text-sm font-medium dark:font-light hover:underline"
-               href="/about/cookie/">
+            <a id="cookie-popup-about" class="flex flex-row items-center lg:xl:md:text-sm text-xs font-medium
+            dark:font-light hover:underline" href="/about/cookie/">
                 <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 33 33" fill="none"
                      class="mr-3">
                     <path d="M16.5 30.25C24.0938 30.25 30.25 24.0938 30.25 16.5C30.25 8.90608 24.0938 2.75 16.5 2.75C8.90608 2.75 2.75 8.90608 2.75 16.5C2.75 19.0044 3.54438 22.0204 4.71429 24.0428L3.30001 28.7571L8.48572 27.8143C10.5082 28.9841 13.9956 30.25 16.5 30.25Z"

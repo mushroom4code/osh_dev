@@ -18,8 +18,8 @@ $option = $option_site; ?>
 
 <?php $userData = EnteregoUser::getInstance(); ?>
 <footer class="flex flew-row justify-center dark:bg-dark dark:text-textDark w-full border-t border-white mb-4">
-    <div class="xl:container container foot_container mt-10">
-        <div class="flex flex-row xs:flex-col mb-8 justify-between">
+    <div class="xl:container container ls:lg:md:p-0 p-4 foot_container mt-10">
+        <div class="flex flex-row xs:flex-col mb-8 justify-between flex-wrap">
             <div class="columns-3 flex flex-col">
                 <div class="w-44 mb-3">
                     <a href="/">
