@@ -4092,13 +4092,32 @@ class CIBlockCMLImportEe
                     'filter' => array('=PRODUCT_ID' => $arElement['ID'])
                 ));
                 $ratioRow = $iterator->fetch();
+
+                if (isset($arXMLElement['Единицы'])) {
+                    if (isset($arXMLElement['Единицы']['Единица'])) {
+                        if (isset($arXMLElement['Единицы']['Единица']['Коэффициент'])) {
+                           $newRatio = $arXMLElement['Единицы']['Единица']['Коэффициент'];
+                        }
+                    }
+                }
+
                 if (empty($ratioRow))
                 {
                     $ratioResult = \Bitrix\Catalog\MeasureRatioTable::add(array(
                         'PRODUCT_ID' => $arElement['ID'],
-                        'RATIO' => 1,
+                        'RATIO' => isset($newRatio) ? $newRatio : 1,
                         'IS_DEFAULT' => 'Y'
                     ));
+                    unset($ratioResult);
+                } else {
+                    $sas = 'sas';
+                    $ratioResult = \Bitrix\Catalog\MeasureRatioTable::update(
+                        $ratioRow['ID'],
+                        array(
+                            'RATIO' => isset($newRatio) ? $newRatio : 1,
+                            'IS_DEFAULT' => 'Y'
+                        )
+                    );
                     unset($ratioResult);
                 }
                 unset($ratioRow, $iterator);
@@ -4564,25 +4583,7 @@ class CIBlockCMLImportEe
                         )
                     );
                 }
-                if ($productResult->isSuccess())
-                {
-                    //TODO: replace this code after upload measure ratio from 1C
-                    $iterator = \Bitrix\Catalog\MeasureRatioTable::getList(array(
-                        'select' => array('ID'),
-                        'filter' => array('=PRODUCT_ID' => $arElement['ID'])
-                    ));
-                    $ratioRow = $iterator->fetch();
-                    if (empty($ratioRow))
-                    {
-                        $ratioResult = \Bitrix\Catalog\MeasureRatioTable::add(array(
-                            'PRODUCT_ID' => $arElement['ID'],
-                            'RATIO' => 1,
-                            'IS_DEFAULT' => 'Y'
-                        ));
-                        unset($ratioResult);
-                    }
-                    unset($ratioRow, $iterator);
-                }
+                // here was MeasureRatioTable update/add
 
                 $this->SetProductPrice($arElement["ID"], $arElement["PRICES"], $arElement["DISCOUNTS"]);
                 \Bitrix\Iblock\PropertyIndex\Manager::updateElementIndex($IBLOCK_ID, $arElement["ID"]);
