@@ -339,21 +339,21 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                             <div class="basket-item-block-amount{{#NOT_AVAILABLE}} disabled{{/NOT_AVAILABLE}}"
                                  data-entity="basket-item-quantity-block">
                                 {{^GIFT}}
-                                <span class="basket-item-amount-btn-minus" data-max="{{AVAILABLE_QUANTITY}}"
+                                <span class="basket-item-amount-btn-minus" data-max="{{AVAILABLE_QUANTITY_WITH_RATIO}}"
                                       data-entity="basket-item-quantity-minus"></span>
                                 {{/GIFT}}
                                 <div class="basket-item-amount-filed-block">
 
-                                    <input type="text" class="product-item-amount" value="{{QUANTITY}}"
+                                    <input type="text" class="product-item-amount" value="{{QUANTITY_WITH_RATIO}}"
                                            {{#GIFT}} disabled="disabled" {{/GIFT}}
                                     {{#NOT_AVAILABLE}} disabled="disabled" {{/NOT_AVAILABLE}}
 
-                                    data-value="{{QUANTITY}}" data-max="{{AVAILABLE_QUANTITY}}"
+                                    data-value="{{QUANTITY_WITH_RATIO}}" data-max="{{AVAILABLE_QUANTITY_WITH_RATIO}}"
                                     data-entity="basket-item-quantity-field"
                                     id="basket-item-quantity-{{ID}}">
                                 </div>
                                 {{^GIFT}}
-                                <span class="basket-item-amount-btn-plus" data-max="{{AVAILABLE_QUANTITY}}"
+                                <span class="basket-item-amount-btn-plus" data-max="{{AVAILABLE_QUANTITY_WITH_RATIO}}"
                                       data-entity="basket-item-quantity-plus"></span>
                                 {{/GIFT}}
                                 {{#SHOW_LOADING}}
@@ -694,9 +694,9 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                             <span class="basket-item-amount-btn-minus" data-entity="basket-item-quantity-minus"></span>
                             {{/GIFT}}
                             <div class="basket-item-amount-filed-block">
-                                <input type="text" class="product-item-amount" value="{{QUANTITY}}"
+                                <input type="text" class="product-item-amount" value="{{QUANTITY_WITH_RATIO}}"
                                        {{#NOT_AVAILABLE}} disabled="disabled" {{/NOT_AVAILABLE}}
-                                data-value="{{QUANTITY}}" data-entity="basket-item-quantity-field"
+                                data-value="{{QUANTITY_WITH_RATIO}}" data-entity="basket-item-quantity-field"
                                 id="basket-item-quantity-{{ID}}">
                             </div>
                             {{^GIFT}}

@@ -556,7 +556,6 @@
                 data: this.getData(data),
                 onsuccess: BX.delegate(function (result) {
                     this.actionPool.doProcessing(false);
-
                     if (isCouponActivate) {
                         location.href = this.params.PATH_TO_BASKET;
                         return;
@@ -1126,7 +1125,6 @@
 
                     continue;
                 }
-                // console.log(item.ID)
                 if (BX.type.isDomNode(BX(this.ids.item + item.ID))) {
                     this.redrawBasketItemNode(item.ID);
                     this.applyQuantityAnimation(item.ID);
@@ -1535,19 +1533,16 @@
                 target = BX.proxy_context;
                 this.clearQuantityInterval();
             }
-
             var itemData = this.getItemDataByTarget(target);
             if (itemData) {
                 var quantityField = BX(this.ids.quantity + itemData.ID);
                 var isQuantityFloat = this.isQuantityFloat(itemData);
-
                 var currentQuantity = isQuantityFloat ? parseFloat(quantityField.value) : Math.round(quantityField.value);
                 var measureRatio = isQuantityFloat ? parseFloat(itemData.MEASURE_RATIO) : parseInt(itemData.MEASURE_RATIO);
-
-                var quantity = parseFloat((currentQuantity + measureRatio).toFixed(5));
+                var quantity = parseFloat((currentQuantity * measureRatio + measureRatio).toFixed(5));
                 quantity = this.getCorrectQuantity(itemData, quantity);
 
-                this.setQuantity(itemData, quantity);
+                this.setQuantity(itemData, quantity, measureRatio);
             }
         },
 
@@ -1562,10 +1557,10 @@
                 var currentQuantity = isQuantityFloat ? parseFloat(quantityField.value) : Math.round(quantityField.value);
                 var measureRatio = isQuantityFloat ? parseFloat(itemData.MEASURE_RATIO) : parseInt(itemData.MEASURE_RATIO);
 
-                var quantity = parseFloat((currentQuantity - measureRatio).toFixed(5));
+                var quantity = parseFloat((currentQuantity * measureRatio - measureRatio).toFixed(5));
                 quantity = this.getCorrectQuantity(itemData, quantity);
 
-                this.setQuantity(itemData, quantity);
+                this.setQuantity(itemData, quantity, measureRatio);
             }
         },
         tasteInit: function () {
@@ -1603,6 +1598,7 @@
                 measureRatio = isQuantityFloat ? parseFloat(itemData.MEASURE_RATIO) : parseInt(itemData.MEASURE_RATIO),
                 availableQuantity = 0;
 
+
             quantity = (isQuantityFloat ? parseFloat(quantity) : parseInt(quantity, 10)) || 0;
             if (quantity < 0) {
                 quantity = 0;
@@ -1611,10 +1607,9 @@
             if (measureRatio > 0 && quantity < measureRatio) {
                 quantity = measureRatio;
             }
-
             if (quantity > parseInt(itemData.AVAILABLE_QUANTITY)) {
-                let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
-                $('.alert_quantity[data-id="' + itemData.PRODUCT_ID + '"]').html('К покупке доступно максимум: ' + AVAILABLE_QUANTITY + 'шт.' +
+                let AVAILABLE_QUANTITY_WITH_RATIO = parseInt(itemData.AVAILABLE_QUANTITY_WITH_RATIO)
+                $('.alert_quantity[data-id="' + itemData.PRODUCT_ID + '"]').html('К покупке доступно максимум: ' + AVAILABLE_QUANTITY_WITH_RATIO + 'шт.' +
                     ' <div class="close-count-alert js__close-count-alert"></div>').addClass('show_block');
 
             } else {
@@ -1659,7 +1654,7 @@
             return quantity;
         },
 
-        setQuantity: function (itemData, quantity) {
+        setQuantity: function (itemData, quantity, measureRatio) {
             var quantityField = BX(this.ids.quantity + itemData.ID),
                 currentQuantity;
 
@@ -1668,7 +1663,7 @@
                 quantity = parseFloat(quantity);
                 currentQuantity = parseFloat(quantityField.getAttribute('data-value'));
 
-                quantityField.value = quantity;
+                quantityField.value = quantity / measureRatio;
 
                 if (parseFloat(itemData.QUANTITY) !== parseFloat(quantity)) {
                     this.animatePriceByQuantity(itemData, quantity);

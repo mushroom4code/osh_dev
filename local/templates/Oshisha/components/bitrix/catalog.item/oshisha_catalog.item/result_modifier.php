@@ -36,3 +36,23 @@ if ($item["PREVIEW_PICTURE"]["ID"]) {
 $useDiscount = ($item['PROPERTIES']['USE_DISCOUNT']['VALUE'] ?? 'Нет') === 'Да' ;
 $item['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($item['ITEM_ALL_PRICES'][0],
     $useDiscount, $item['ID']);
+
+$measureRatio = \Bitrix\Catalog\MeasureRatioTable::getList(array(
+    'select' => array('RATIO'),
+    'filter' => array('=PRODUCT_ID' => $item['ID'])
+))->fetch()['RATIO'];
+
+$item['MEASURE_RATIO'] = $item['ITEM_MEASURE_RATIOS'][$item['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
+
+$activeUnitId = $item['PROPERTIES']['ACTIVE_UNIT']['VALUE'];
+
+if (!empty($activeUnitId)) {
+    $item['ACTIVE_UNIT'] = CCatalogMeasure::GetList(array(), array("CODE" => $activeUnitId))->fetch();
+    if (!empty($item['ACTIVE_UNIT'])) {
+        $item['ACTIVE_UNIT'] = $item['ACTIVE_UNIT']['SYMBOL_RUS'];
+    } else {
+        $item['ACTIVE_UNIT'] = 'шт';
+    }
+} else {
+    $item['ACTIVE_UNIT'] = 'шт';
+}

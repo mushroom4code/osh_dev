@@ -4093,10 +4093,10 @@ class CIBlockCMLImportEe
                 ));
                 $ratioRow = $iterator->fetch();
 
-                if (isset($arXMLElement['Единицы'])) {
-                    if (isset($arXMLElement['Единицы']['Единица'])) {
-                        if (isset($arXMLElement['Единицы']['Единица']['Коэффициент'])) {
-                           $newRatio = $arXMLElement['Единицы']['Единица']['Коэффициент'];
+                if (isset($arXMLElement[$this->mess["IBLOCK_XML2_UNITS"]])) {
+                    if (isset($arXMLElement[$this->mess["IBLOCK_XML2_UNITS"]][$this->mess["IBLOCK_XML2_MEASURE"]])) {
+                        if (isset($arXMLElement[$this->mess["IBLOCK_XML2_UNITS"]][$this->mess["IBLOCK_XML2_MEASURE"]][$this->mess["IBLOCK_XML2_COEFF"]])) {
+                           $newRatio = $arXMLElement[$this->mess["IBLOCK_XML2_UNITS"]][$this->mess["IBLOCK_XML2_MEASURE"]][$this->mess["IBLOCK_XML2_COEFF"]];
                         }
                     }
                 }

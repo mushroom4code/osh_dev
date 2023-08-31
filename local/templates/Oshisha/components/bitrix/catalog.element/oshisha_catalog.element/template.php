@@ -113,6 +113,21 @@ if ($haveOffers) {
 }
 
 $measureRatio = $actualItem['ITEM_MEASURE_RATIOS'][$actualItem['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
+$activeUnitId = $arResult['PROPERTIES']['ACTIVE_UNIT']['VALUE'];
+
+if (!empty($activeUnitId)) {
+    $activeUnitShorthand = CCatalogMeasure::GetList(array(), array("CODE" => $activeUnitId))->fetch();
+    if (!empty($activeUnitShorthand)) {
+        $activeUnitShorthand = $activeUnitShorthand['SYMBOL_RUS'];
+    } else {
+        $activeUnitShorthand = 'шт';
+    }
+} else {
+    $activeUnitShorthand = 'шт';
+}
+
+
+
 $skuProps = [];
 $isGift = EnteregoHelper::productIsGift($arResult['ID']);
 $useDiscount = $arResult['PROPERTIES']['USE_DISCOUNT'];
@@ -287,14 +302,14 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         <div class="product-item-detail-price-current"
                                              id="<?= $itemIds['PRICE_ID'] ?>">
                                             <?=
-                                                $specialPrice['PRINT_PRICE'] ?? '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
+                                                $specialPrice['PRINT_RATIO_PRICE'] ?? '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_RATIO_PRICE'];
                                             ?>
                                         </div>
                                         <?php if (isset($specialPrice)) {
                                             $styles = 'price-discount';
-                                            $old_sum = (int)$price['PRICE_DATA'][0]['PRICE'] - (int)$specialPrice['PRICE'] ?? 0; ?>
+                                            $old_sum = (int)$price['PRICE_DATA'][0]['RATIO_PRICE'] - (int)$specialPrice['RATIO_PRICE'] ?? 0; ?>
                                             <span class="font-14 ml-3">
-                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_PRICE']; ?></b>
+                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_RATIO_PRICE']; ?></b>
                                             <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
                                         </span>
                                         <?php } ?>
@@ -303,7 +318,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         <?php foreach ($price['PRICE_DATA'] as $items) { ?>
                                             <p>
                                                 <span class="font-14 mr-2"><b><?= $items['NAME'] ?></b></span> -
-                                                <span class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                                <span class="font-14 ml-2 <?= $styles ?>"><b><?= $items['PRINT_RATIO_PRICE'] ?></b></span>
                                             </p>
                                         <?php } ?>
                                     </div>
@@ -352,7 +367,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 break;
                             case 'quantity':
                                 if ($show_price) {
-                                    if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?>
+                                    if (($actualItem['PRODUCT']['QUANTITY'] / $measureRatio) >= 1) { ?>
                                         <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
                                             <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
                                              data-entity="quantity-block">
@@ -361,26 +376,36 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                                                           data-product_id="<?= $arResult['ID']; ?>"
                                                                           id="<?= $itemIds['QUANTITY_DOWN_ID'] ?>"
-                                                                          data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>">
+                                                                          data-measure-ratio="<?= $measureRatio ?>"
+                                                                          data-active-unit="<?= $activeUnitShorthand ?>"
+                                                                          data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] / $measureRatio ?>">
                                                                     </span>
                                                 <div class="product-item-amount-field-block">
                                                     <input class="product-item-amount card_element cat-det"
                                                            id="<?= $itemIds['QUANTITY_ID'] ?>"
-                                                           type="number" value="<?= $priceBasket ?>"
+                                                           type="number" value="<?= $priceBasket / $measureRatio ?>"
                                                            data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                           max="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
+                                                           max="<?= $actualItem['PRODUCT']['QUANTITY'] / $measureRatio ?>"
                                                            data-product_id="<?= $arResult['ID']; ?>"
-                                                           data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
+                                                           data-measure-ratio="<?= $measureRatio ?>"
+                                                           data-active-unit="<?= $activeUnitShorthand ?>"
+                                                           data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] / $measureRatio ?>"/>
                                                 </div>
                                                 <span class="btn-plus no-select plus_icon add2basket basket_prod_detail"
                                                       data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                      data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
+                                                      data-measure-ratio="<?= $measureRatio ?>"
+                                                      data-active-unit="<?= $activeUnitShorthand ?>"
+                                                      data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] / $measureRatio ?>"
                                                       data-product_id="<?= $arResult['ID']; ?>"
                                                       id="<?= $itemIds['QUANTITY_UP_ID'] ?>"></span>
                                             </div>
                                             <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)" rel="nofollow"
                                                class="add2basket basket_prod_detail btn red_button_cart"
-                                               data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>" data-product_id="<?= $arResult['ID']; ?>"
+                                               data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                               data-product_id="<?= $arResult['ID']; ?>"
+                                               data-measure-ratio="<?= $measureRatio ?>"
+                                               data-active-unit="<?= $activeUnitShorthand ?>"
+                                               data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] / $measureRatio ?>"
                                                title="Добавить в корзину">
                                                 <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
                                             </a>
