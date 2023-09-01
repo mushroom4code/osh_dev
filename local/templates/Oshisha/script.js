@@ -307,7 +307,7 @@ $(document).ready(function () {
         if (value >= measureRatio) {
             $('.ganerate_price_wrap').show();
         }
-        setPriceGenerate(this,value)
+        setPriceGenerate(this,value / measureRatio)
     }
 
     $(document).on('keypress', '.card_element', function (e) {
@@ -390,7 +390,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal);
+                    setPriceGenerate(this,beforeVal / measure_ratio);
                     product_data = {
                         'ID': product_id,
                         'QUANTITY': beforeVal,
@@ -406,7 +406,7 @@ $(document).ready(function () {
                     } else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,max_QUANTITY * measure_ratio);
+                    setPriceGenerate(this,max_QUANTITY);
 
                     product_data = {
                         'ID': product_id,
@@ -430,7 +430,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal)
+                    setPriceGenerate(this,beforeVal / measure_ratio)
 
                     product_data = {
                         'ID': product_id,

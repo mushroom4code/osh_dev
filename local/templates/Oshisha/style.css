@@ -7294,3 +7294,11 @@ footer.footer .container .copyrights > span {
 .datepickers-container {
     z-index: 10000;
 }
+
+.product-item-detail-price-current-unit {
+    color: #000;
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 33px;
+    transition: font-size .2s ease;
+}

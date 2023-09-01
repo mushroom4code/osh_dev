@@ -316,7 +316,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                             <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
                                         </span>
                                         <?php } ?>
-                                        <div class="product-item-detail-price-current" style="margin-left: 10px;">
+                                        <div class="product-item-detail-price-current-unit" style="margin-left: 10px;">
                                             <span class="font-14 card-price-text"><?= $activeUnitFull ?></span>
                                         </div>
                                     </div>
