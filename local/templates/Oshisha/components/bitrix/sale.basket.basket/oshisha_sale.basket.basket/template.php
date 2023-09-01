@@ -227,7 +227,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 </div>
                                 <?php
                             }
-                             if (!empty($arResult['ITEMS']['nAnCanBuy'])) { ?>
+                             if (!empty($arResult['ITEMS']['nAnCanBuy']) || !empty($arResult['ITEMS']['ProdSubscribe'])) { ?>
                                 <div class="box" id=NotAvailable">
                                     <div class="card-header basket_category alert alert-danger" id="openDNotAvailableProducts">
                                         <button class="btn btn-link btn-block d-flex justify-content-between btn_basket_collapse" type="button"
