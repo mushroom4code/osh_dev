@@ -113,17 +113,20 @@ if ($haveOffers) {
 }
 
 $measureRatio = $actualItem['ITEM_MEASURE_RATIOS'][$actualItem['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
-$activeUnitId = $arResult['PROPERTIES']['ACTIVE_UNIT']['VALUE'];
+$activeUnitId = $arResult['PROPERTIES'][PROPERTY_ACTIVE_UNIT]['VALUE'];
 
 if (!empty($activeUnitId)) {
     $activeUnitShorthand = CCatalogMeasure::GetList(array(), array("CODE" => $activeUnitId))->fetch();
     if (!empty($activeUnitShorthand)) {
+        $activeUnitFull = $activeUnitShorthand['MEASURE_TITLE'];
         $activeUnitShorthand = $activeUnitShorthand['SYMBOL_RUS'];
     } else {
         $activeUnitShorthand = 'шт';
+        $activeUnitFull = 'Штука';
     }
 } else {
     $activeUnitShorthand = 'шт';
+    $activeUnitFull = 'Штука';
 }
 
 
@@ -313,6 +316,9 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                             <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
                                         </span>
                                         <?php } ?>
+                                        <div class="product-item-detail-price-current" style="margin-left: 10px;">
+                                            <span class="font-14 card-price-text"><?= $activeUnitFull ?></span>
+                                        </div>
                                     </div>
                                     <div class="d-flex flex-column prices-block">
                                         <?php foreach ($price['PRICE_DATA'] as $items) { ?>
