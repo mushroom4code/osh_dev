@@ -1609,7 +1609,7 @@
             }
             if (quantity > parseInt(itemData.AVAILABLE_QUANTITY)) {
                 let AVAILABLE_QUANTITY_WITH_RATIO = parseInt(itemData.AVAILABLE_QUANTITY_WITH_RATIO)
-                $('.alert_quantity[data-id="' + itemData.PRODUCT_ID + '"]').html('К покупке доступно максимум: ' + AVAILABLE_QUANTITY_WITH_RATIO + 'шт.' +
+                $('.alert_quantity[data-id="' + itemData.PRODUCT_ID + '"]').html('К покупке доступно максимум: ' + AVAILABLE_QUANTITY_WITH_RATIO + ' ' + itemData.ACTIVE_UNIT + '.' +
                     ' <div class="close-count-alert js__close-count-alert"></div>').addClass('show_block');
 
             } else {

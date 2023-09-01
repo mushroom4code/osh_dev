@@ -104,6 +104,19 @@ foreach ($item as $row) {
         }
     }
 
+    $activeUnitId = $row['PROPERTY_'.PROPERTY_ACTIVE_UNIT.'_VALUE'];
+
+    if (!empty($activeUnitId)) {
+        $row[PROPERTY_ACTIVE_UNIT] = CCatalogMeasure::GetList(array(), array("CODE" => $activeUnitId))->fetch();
+        if (!empty($row[PROPERTY_ACTIVE_UNIT])) {
+            $row[PROPERTY_ACTIVE_UNIT] = $row[PROPERTY_ACTIVE_UNIT]['SYMBOL_RUS'];
+        } else {
+            $row[PROPERTY_ACTIVE_UNIT] = 'шт';
+        }
+    } else {
+        $row[PROPERTY_ACTIVE_UNIT] = 'шт';
+    }
+
     $rowData = array(
         'ID' => $row['ID'],
         'PRODUCT_ID' => $row['PRODUCT_ID'],
@@ -156,6 +169,7 @@ foreach ($item as $row) {
             ? $row[$this->arParams['BRAND_PROPERTY'] . '_VALUE']
             : '',
         'GIFT' => $row['GIFT'] ?? false,
+        'ACTIVE_UNIT' => $row[PROPERTY_ACTIVE_UNIT],
     );
     foreach ($count_likes['USER'] as $keyLike => $count) {
         if ($keyLike == $row['ID']) {
