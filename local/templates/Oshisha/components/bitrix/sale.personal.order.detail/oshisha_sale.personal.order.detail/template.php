@@ -290,7 +290,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
 													<div>
 														<div class="sale-order-detail-order-item-properties text-right">
 															<strong class="bx-price"><?= $basketItem['FORMATED_SUM'] ?>
-																x <?= $basketItem['QUANTITY'] ?> шт.</strong>
+																x <?= $basketItem['QUANTITY_WITH_RATIO'] ?> <?= $basketItem[PROPERTY_ACTIVE_UNIT] ?>.</strong>
 														</div>
 													</div>
 												</div>
