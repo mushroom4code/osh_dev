@@ -4110,7 +4110,6 @@ class CIBlockCMLImportEe
                     ));
                     unset($ratioResult);
                 } else {
-                    $sas = 'sas';
                     $ratioResult = \Bitrix\Catalog\MeasureRatioTable::update(
                         $ratioRow['ID'],
                         array(
