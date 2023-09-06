@@ -1,7 +1,7 @@
 
 .feed-add-grat-block {
 	background-color: #eef2f4;
-	border-radius: 2px;
+	border-radius: var(--ui-border-radius-xs, 2px);
 	margin: 0 19px 15px;
 	padding: 37px 24px 37px 86px;
 	position: relative;
@@ -174,7 +174,7 @@
 .feed-add-grat-list-title {
 	color: #555;
 	font-size: 12px;
-	font-weight: bold;
+	font-weight: var(--ui-font-weight-bold);
 	margin: 8px 20px 6px 10px;
 	white-space: nowrap;
 }
@@ -235,7 +235,7 @@
 	border-radius: 1px;
 	font-size: 13px;
 	display: inline-block;
-	font-weight: bold;
+	font-weight: var(--ui-font-weight-bold);
 	margin: 0 6px 6px 0;
 	height: 30px;
 	line-height: 29px;
@@ -272,7 +272,7 @@
 	color: #2067b0;
 	display: inline-block;
 	font-size: 13px;
-	font-weight: bold;
+	font-weight: var(--ui-font-weight-bold);
 	line-height: 17px;
 	margin: 7px 7px 7px 18px;
 	text-decoration: none;
@@ -300,7 +300,7 @@
 	border: medium none;
 	color: #555;
 	display: inline-block;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: var(--ui-font-family-primary, var(--ui-font-family-helvetica));
 	font-size: 12px;
 	height: 20px;
 	margin: 0 9px 9px 0;
@@ -334,7 +334,8 @@
 	color: #80868e;
 	cursor: pointer;
 	display: inline-block;
-	font-family: "OpenSans-Bold", Helvetica, Arial, sans-serif;
+	font-family: var(--ui-font-family-secondary, var(--ui-font-family-open-sans));
+	font-weight: var(--ui-font-weight-bold, 700);
 	font-size: 12px;
 	height: 40px;
 	line-height: 40px;
@@ -467,7 +468,8 @@ form.comments-form .feed-add-post-buttons {
 .feed-add-post-micro {
 	color: #80868e;
 	font-size: 18px;
-	font-family: "OpenSans-Regular", Helvetica, Arial, sans-serif;
+	font-family: var(--ui-font-family-secondary, var(--ui-font-family-open-sans));
+	font-weight: var(--ui-font-weight-regular, 400);
 	margin: 0;
 	height: 18px;
 	padding: 19px 2px 27px 22px;
@@ -542,6 +544,7 @@ form.comments-form .feed-add-post-buttons {
 	background-color: #f3f6f8;
 	padding: 17px 21px 16px;
 	margin: 8px 18px 9px 17px;
+	border-radius: var(--ui-border-radius-xs);
 }
 
 .feed-add-post-expire-date-inner {
@@ -562,7 +565,7 @@ form.comments-form .feed-add-post-buttons {
 .feed-add-post-expire-date-duration, .feed-add-post-expire-date-final {
 	border-bottom: 1px dashed #0b66c3;
 	cursor: pointer;
-	font-weight: bold;
+	font-weight: var(--ui-font-weight-bold);
 	padding: 0 1px;
 	font-size: 13px;
 	line-height: 22px;
@@ -582,6 +585,14 @@ form.comments-form .feed-add-post-buttons {
 
 .feed-add-post-expire-date-customize .feed-add-post-expire-date-final {
 	display: inline;
+}
+
+.feed-add-post-editor-btn-ai-text {
+	background: url(images/ai-text.svg) no-repeat center;
+}
+
+.feed-add-post-editor-btn-ai-image {
+	background: url(images/ai-image.svg) no-repeat center;
 }
 
 @-webkit-keyframes rotate {

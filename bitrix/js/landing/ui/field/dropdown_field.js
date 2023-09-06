@@ -24,6 +24,7 @@
 		this.setEventNamespace('BX.Landing.UI.Field.Dropdown');
 		this.subscribeFromOptions(BX.Landing.UI.Component.fetchEventsFromOptions(options));
 		this.onChangeHandler = typeof options.onChange === "function" ? options.onChange : (function() {});
+		this.frame = typeof options.frame === "object" ? options.frame : null;
 		this.layout.classList.add("landing-ui-field-dropdown");
 		this.popup = null;
 		this.input.addEventListener("click", this.onInputClick.bind(this));
@@ -62,6 +63,10 @@
 
 		if (this.content !== "")
 		{
+			setTimeout(() => {
+				this.emit("onInit", this.items[this.content]);
+			}, 0);
+
 			this.setValue(this.content);
 		}
 	};
@@ -169,7 +174,7 @@
 			this.onChangeHandler(item.value, this.items, this.postfix, this.property);
 			this.onValueChangeHandler(this);
 			BX.fireEvent(this.input, "input");
-			this.emit('onChange');
+			this.emit("onChange", item);
 		},
 
 		/**
@@ -190,7 +195,7 @@
 			}
 		},
 
-		setValue: function(value)
+		setValue: function(value, preventEvent)
 		{
 			this.items.forEach(function(item) {
 				// noinspection EqualityComparisonWithCoercionJS
@@ -198,10 +203,29 @@
 				{
 					setTextContent(this.input, item.name, this.classForTextNode);
 					data(this.input, "value", item.value);
+
+					if (preventEvent)
+					{
+						setTimeout(() => {
+							this.emit("onInit", item);
+						}, 0);
+					}
 				}
 			}, this);
 		},
 
+		onFrameLoad: function ()
+		{
+			const element = this.frame.document.querySelector(this.selector);
+			if (element)
+			{
+				const value = this.items.find(item => element.classList.contains(item.value));
+				if (value)
+				{
+					this.setValue(value.value, true);
+				}
+			}
+		},
 
 		/**
 		 * @inheritDoc

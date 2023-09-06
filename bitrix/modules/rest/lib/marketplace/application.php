@@ -22,6 +22,17 @@ Loc::loadMessages(__FILE__);
 
 class Application
 {
+	/**
+	 * Id of user on whose behalf are the actions do. If not set - use current system user
+	 * @var null
+	 */
+	protected static ?int $contextUserId = null;
+
+	public static function setContextUserId(int $id): void
+	{
+		self::$contextUserId = $id;
+	}
+
 	public static function install($code, $version = false, $checkHash = false, $installHash = false, $from = null) : array
 	{
 		$result = [];
@@ -85,22 +96,22 @@ class Application
 			}
 			elseif ($appDetailInfo)
 			{
-				if (CRestUtil::canInstallApplication($appDetailInfo))
+				if (CRestUtil::canInstallApplication($appDetailInfo, self::$contextUserId))
 				{
 					$queryFields = [
 						'CLIENT_ID' => $appDetailInfo['APP_CODE'],
 						'VERSION' => $appDetailInfo['VER'],
-						'BY_SUBSCRIPTION' => $appDetailInfo['BY_SUBSCRIPTION'] === 'Y' ? 'Y' : 'N',
+						'BY_SUBSCRIPTION' => $appDetailInfo['BY_SUBSCRIPTION'] ?? 'N',
 					];
 
-					if (isset($checkHash, $installHash))
+					if (!empty($checkHash) && !empty($installHash))
 					{
 						$queryFields['CHECK_HASH'] = $checkHash;
 						$queryFields['INSTALL_HASH'] = $installHash;
 					}
 
 					$installResult = OAuthService::getEngine()->getClient()->installApplication($queryFields);
-					if ($installResult['error'] === 'verification_needed')
+					if (isset($installResult['error']) && $installResult['error'] === 'verification_needed')
 					{
 						if (\Bitrix\Main\ModuleManager::isModuleInstalled('bitrix24'))
 						{
@@ -125,7 +136,7 @@ class Application
 						}
 					}
 
-					if ($installResult['error'])
+					if (isset($installResult['error']) && $installResult['error'])
 					{
 						$result['error'] = $installResult['error'];
 						$result['errorDescription'] = $installResult['error_description'];
@@ -201,12 +212,12 @@ class Application
 								AppLogTable::log($appId, AppLogTable::ACTION_TYPE_INSTALL);
 							}
 
-							if (!CRestUtil::isAdmin())
+							if (!CRestUtil::isAdmin(self::$contextUserId))
 							{
 								CRestUtil::notifyInstall($appFields);
 							}
 
-							if (is_array($appDetailInfo['MENU_TITLE']))
+							if (isset($appDetailInfo['MENU_TITLE']) && is_array($appDetailInfo['MENU_TITLE']))
 							{
 								foreach ($appDetailInfo['MENU_TITLE'] as $lang => $langName)
 								{
@@ -258,6 +269,7 @@ class Application
 
 							$redirect = false;
 							$open = false;
+							$sliderUrl = false;
 							if ($appDetailInfo['TYPE'] !== AppTable::TYPE_CONFIGURATION)
 							{
 								$uriString = CRestUtil::getApplicationPage($appId);
@@ -273,6 +285,29 @@ class Application
 								$redirect = $uri->getUri();
 								$open = $appDetailInfo['OPEN_API'] !== 'Y';
 							}
+							else
+							{
+								if ((int)$appDetailInfo['IMPORT_ZIP_ID'] > 0)
+								{
+									$url = Url::getConfigurationImportZipUrl((int)$appDetailInfo['IMPORT_ZIP_ID']);
+								}
+								else
+								{
+									$url = Url::getConfigurationImportAppUrl($appDetailInfo['CODE']);
+								}
+
+								$uri = new Uri($url);
+								if (!empty($checkHash) && !empty($installHash))
+								{
+									$uri->addParams(
+										[
+											'check_hash' => $checkHash,
+											'install_hash' => $installHash,
+										]
+									);
+								}
+								$sliderUrl = $uri->getUri();
+							}
 
 							$result = [
 								'success' => 1,
@@ -280,6 +315,7 @@ class Application
 								'open' => $open,
 								'installed' => $appFields['INSTALLED'] === 'Y',
 								'redirect' => $redirect,
+								'openSlider' => $sliderUrl,
 							];
 
 							Analytic::logToFile(
@@ -293,6 +329,14 @@ class Application
 							$result['errorDescription'] = implode('<br />', $addResult->getErrorMessages());
 						}
 					}
+				}
+				elseif (
+					!empty($appInfo['HOLD_INSTALL_BY_TRIAL'])
+					&& $appInfo['HOLD_INSTALL_BY_TRIAL'] === 'Y'
+					&& Client::isSubscriptionDemo()
+				)
+				{
+					$result = ['error' => Loc::getMessage('RMP_TRIAL_HOLD_INSTALL')];
 				}
 				else
 				{
@@ -318,7 +362,7 @@ class Application
 			];
 		}
 
-		if ($result['error'])
+		if (isset($result['error']) && $result['error'])
 		{
 			if ($result['error'] === 'SUBSCRIPTION_REQUIRED')
 			{
@@ -335,7 +379,7 @@ class Application
 
 	public static function uninstall($code, bool $clean = false, $from = null) : array
 	{
-		if (CRestUtil::isAdmin())
+		if (CRestUtil::isAdmin(self::$contextUserId))
 		{
 			$res = AppTable::getList(
 				[
@@ -412,7 +456,7 @@ class Application
 	public static function reinstall($id) : array
 	{
 		$result = [];
-		if (CRestUtil::isAdmin())
+		if (CRestUtil::isAdmin(self::$contextUserId))
 		{
 			$appInfo = AppTable::getByClientId($id);
 			if (
@@ -462,6 +506,7 @@ class Application
 	public static function setRights($appId, $rights) : array
 	{
 		$result = [];
+		// todo: maybe can add self::$contextUser to isAdmin check
 		if (CRestUtil::isAdmin())
 		{
 			if ($appId > 0)
@@ -490,6 +535,7 @@ class Application
 
 	public static function getRights($appId)
 	{
+		// todo: maybe can add self::$contextUser to isAdmin check
 		if (CRestUtil::isAdmin())
 		{
 			if ($appId > 0)

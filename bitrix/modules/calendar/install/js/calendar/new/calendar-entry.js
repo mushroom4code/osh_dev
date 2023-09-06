@@ -1,80 +1,87 @@
 ;(function(window) {
 
-	function EntryController(calendar, data)
+	function EntryController(calendar)
 	{
 		this.calendar = calendar;
 		this.pulledEntriesIndex = {};
-		this.requestedEntriesIndex = {};
 		this.entriesRaw = [];
 		this.userIndex = {};
 		this.loadedEntriesIndex = {};
 		this.externalEntryIndex = {};
+		this.movedEntries = [];
+		this.sentRequests = [];
+
+		this.REQUEST_GET_LIST = 'getList';
+		this.REQUEST_MOVE_EVENT = 'moveEvent';
 	}
 
 	EntryController.prototype = {
+
+		isAwaitingAnyResponses: function()
+		{
+			return this.sentRequests.length > 0;
+		},
+
 		getList: function (params)
 		{
-			if ((params.startDate
-				&& params.finishDate
-				&& !this.checkDateRange(params.startDate, params.finishDate))
-				|| params.loadNext
-				|| params.loadPrevious
-			)
-			{
-				this.loadEntries(params);
-				return false;
-			}
-
-			var
-				activeSectionIndex = {},
-				entry,
-				entries = [],
-				entriesRaw = this.entriesRaw;
-
-			if(this.calendar.util.type === 'location')
-			{
-				this.calendar.roomsManager.getRoomsInfo().allActive.forEach(function(sectionId)
+			return new Promise(async (resolve) => {
+				if (this.calendar.isExternalMode())
 				{
-					activeSectionIndex[sectionId === 'tasks' ? sectionId : parseInt(sectionId)] = true;
-				});
-			}
-			else
-			{
-				this.calendar.sectionManager.getSectionsInfo().allActive.forEach(function(sectionId)
-				{
-					activeSectionIndex[sectionId === 'tasks' ? sectionId : parseInt(sectionId)] = true;
-				});
-			}
-
-			for (var i = 0; i < entriesRaw.length; i++)
-			{
-				if (entriesRaw[i])
-				{
-					if ((entriesRaw[i]['~TYPE'] === 'tasks' && !activeSectionIndex['tasks'])
-						||
-						(entriesRaw[i]['~TYPE'] !== 'tasks' && entriesRaw[i]['SECT_ID']
-						&& !activeSectionIndex[parseInt(entriesRaw[i]['SECT_ID'])])
-					)
-					{
-						continue;
-					}
-
-					entry = new Entry(this.calendar, entriesRaw[i]);
-					if (params.viewRange)
-					{
-						if (entry.applyViewRange(params.viewRange))
-						{
-							entries.push(entry);
-						}
-					}
-					else
-					{
-						entries.push(entry);
-					}
+					const entries = await this.getExternalLoadedList(params);
+					resolve(entries);
 				}
-			}
+				else if (this.doesDateRangeContainUnloadedEvents(params.startDate, params.finishDate))
+				{
+					const entries = await this.getLoadedList(params);
+					resolve(entries);
+				}
+				else
+				{
+					const entries = this.getCachedList(params);
+					resolve(entries);
+				}
+			});
+		},
+
+		getExternalLoadedList: async function(params)
+		{
+			let entries;
+			this.sentRequests.push(this.REQUEST_GET_LIST);
+			await this.loadExternalEntries(params).then(() => {
+					this.sentRequests.pop();
+					entries = this.getEntriesFromEntriesRaw(params.viewRange);
+				});
 
 			return entries;
+		},
+
+		getLoadedList: async function(params)
+		{
+			let entries;
+			this.sentRequests.push(this.REQUEST_GET_LIST);
+			await BX.Calendar.EntryManager.doDelayedActions()
+				.then(() => this.loadEntries(params))
+				.then((responseData) => {
+					this.sentRequests.pop();
+					if (responseData.newYearFrom !== undefined && responseData.newMonthFrom !== undefined)
+					{
+						const previousStart = params.viewRange.start;
+						params.viewRange.start = new Date(responseData.newYearFrom, responseData.newMonthFrom - 1, previousStart.getDate());
+					}
+					if (responseData.newYearTo !== undefined && responseData.newMonthTo !== undefined)
+					{
+						const previousEnd = params.viewRange.end;
+						params.viewRange.end = new Date(responseData.newYearTo, responseData.newMonthTo - 1, previousEnd.getDate());
+					}
+					entries = this.getEntriesFromEntriesRaw(params.viewRange);
+				});
+
+			return entries;
+		},
+
+		getCachedList: function(params)
+		{
+			return this.getEntriesFromEntriesRaw(params.viewRange);
 		},
 
 		canDo: function(entry, action)
@@ -127,12 +134,89 @@
 			return this.calendar.newEntryName || BX.message('EC_DEFAULT_ENTRY_NAME');
 		},
 
-		moveEventToNewDate: function(entry, dateFrom, dateTo, options)
+		moveEventToNewDate: function(entry, dateFrom, dateTo, params = {})
 		{
-			if (!options)
+			entry = this.setDateRangeToEntry(entry, dateFrom, dateTo);
+			this.addMovedEntry(entry);
+
+			if (this.calendar.isExternalMode())
 			{
-				options = {};
+				this.calendar.triggerEvent('entryOnDragEnd', {
+					entry: entry,
+					dateFrom: entry.from,
+					dateTo: entry.to
+				});
+				return new Promise((resolve) => {
+					resolve(false);
+				});
 			}
+
+			if (entry.isMeeting()
+				&& params.sendInvitesAgain === undefined
+				&& entry.getAttendees().find(item => item.STATUS === 'N')
+			)
+			{
+				return new Promise((resolve) => {
+					BX.Calendar.EntryManager.showReInviteUsersDialog({
+						callback: (result) => {
+							this.moveEventToNewDate(entry, dateFrom, dateTo, {
+								sendInvitesAgain: result.sendInvitesAgain
+							}).then((isEntrySavedSuccessfully) => {
+								resolve(isEntrySavedSuccessfully)
+							});
+						}
+					});
+				});
+			}
+
+			this.sentRequests.push(this.REQUEST_MOVE_EVENT);
+			return new Promise((resolve) => {
+				BX.ajax.runAction('calendar.api.calendarentryajax.moveEvent', {
+					data: {
+						id: entry.id,
+						current_date_from: entry.data.DATE_FROM,
+						date_from: entry.isFullDay() ? this.calendar.util.formatDate(entry.from) : this.calendar.util.formatDateTime(entry.from),
+						date_to: entry.isFullDay() ? this.calendar.util.formatDate(entry.to) : this.calendar.util.formatDateTime(entry.to),
+						skip_time: entry.isFullDay() ? 'Y' : 'N',
+						attendees: this.getEntryAttendeesIds(entry),
+						location: entry.location || '',
+						recursive: entry.isRecursive() ? 'Y' : 'N',
+						is_meeting: entry.isMeeting() ? 'Y' : 'N',
+						section: entry.sectionId,
+						timezone: this.calendar.util.getUserOption('timezoneName'), //timezone
+						set_timezone: 'Y',
+						sendInvitesAgain: params.sendInvitesAgain ? 'Y' : 'N',
+						requestUid: BX.Calendar.Util.registerRequestId()
+					}
+				}).then((response) => {
+					this.sentRequests.pop();
+
+					let isEntrySavedSuccessfully = true;
+					if (entry.isMeeting() && response.data.busy_warning)
+					{
+						alert(BX.message('EC_BUSY_ALERT'));
+						isEntrySavedSuccessfully = false;
+					}
+
+					if (response.data.location_busy_warning)
+					{
+						alert(BX.message('EC_LOCATION_RESERVE_ERROR'));
+						isEntrySavedSuccessfully = false;
+					}
+
+					if (!isEntrySavedSuccessfully)
+					{
+						this.removeMovedEntry(entry);
+					}
+
+					this.calendar.reload();
+					resolve(isEntrySavedSuccessfully);
+				});
+			});
+		},
+
+		setDateRangeToEntry: function(entry, dateFrom, dateTo)
+		{
 			entry.from.setFullYear(dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate());
 			if (entry.fullDay)
 			{
@@ -151,82 +235,19 @@
 			{
 				entry.to = new Date(entry.from.getTime() + (entry.data.DT_LENGTH - (entry.fullDay ? 1 : 0)) * 1000);
 			}
+			return entry;
+		},
 
-			if (this.calendar.isExternalMode())
-			{
-				this.calendar.triggerEvent('entryOnDragEnd', {
-					entry: entry,
-					dateFrom: entry.from,
-					dateTo: entry.to
-				});
-				return;
-			}
-
-			if (this.calendar.isExternalMode())
-			{
-				this.calendar.triggerEvent('entryOnDragEnd', {
-					entry: entry,
-					dateFrom: entry.from,
-					dateTo: entry.to,
-					previousDateFrom: BX.parseDate(entry.data.DATE_FROM),
-					previousDateTo: BX.parseDate(entry.data.DATE_TO),
-				});
-				return;
-			}
-
-			if (entry.isMeeting()
-				&& options.sendInvitesAgain === undefined
-				&& entry.getAttendees().find(function(item){return item.STATUS === 'N';}))
-			{
-				BX.Calendar.EntryManager.showReInviteUsersDialog({
-					callback: function(params) {
-						this.moveEventToNewDate(
-							entry, dateFrom, dateTo,
-							{sendInvitesAgain: params.sendInvitesAgain});
-					}.bind(this)
-				});
-				return false;
-			}
-
-			var attendees = [];
+		getEntryAttendeesIds: function(entry)
+		{
+			const attendees = [];
 			if (entry.isMeeting())
 			{
-				entry.data['ATTENDEE_LIST'].forEach(function(user){attendees.push(user['id']);});
+				entry.data['ATTENDEE_LIST'].forEach((user) => {
+					attendees.push(user['id']);
+				});
 			}
-
-			BX.ajax.runAction('calendar.api.calendarentryajax.moveEvent', {
-				data: {
-					id: entry.id,
-					current_date_from: entry.data.DATE_FROM,
-					date_from: entry.isFullDay() ? this.calendar.util.formatDate(entry.from) : this.calendar.util.formatDateTime(entry.from),
-					date_to: entry.isFullDay() ? this.calendar.util.formatDate(entry.to) : this.calendar.util.formatDateTime(entry.to),
-					skip_time: entry.isFullDay() ? 'Y' : 'N',
-					attendees: attendees,
-					location: entry.location || '',
-					recursive: entry.isRecursive() ? 'Y' : 'N',
-					is_meeting: entry.isMeeting() ? 'Y' : 'N',
-					section: entry.sectionId,
-					timezone: this.calendar.util.getUserOption('timezoneName'), //timezone
-					set_timezone: 'Y',
-					sendInvitesAgain: options.sendInvitesAgain ? 'Y' : 'N',
-					requestUid: BX.Calendar.Util.registerRequestId()
-				}
-			}).then(function(response){
-				if (response && response.data)
-				{
-					if (entry.isMeeting() && response.data.busy_warning)
-					{
-						alert(BX.message('EC_BUSY_ALERT'));
-					}
-
-					if (response.data.location_busy_warning)
-					{
-						alert(BX.message('EC_LOCATION_RESERVE_ERROR'));
-					}
-
-					this.calendar.reload();
-				}
-			}.bind(this));
+			return attendees;
 		},
 
 		viewEntry: function(params)
@@ -239,46 +260,27 @@
 			this.calendar.getView().showEditSlider(params);
 		},
 
-		checkDateRange: function(start, end, params)
+		doesDateRangeContainUnloadedEvents: function(dateStart, dateEnd)
 		{
-			params = BX.Type.isObjectLike(params) ? params : {};
-
 			if (this.calendar.isExternalMode())
 			{
-				return this.externalEntryIndex[this.getChunkIdByDate(start)]
-					&& this.externalEntryIndex[this.getChunkIdByDate(end)];
+				return this.externalEntryIndex[this.getChunkIdByDate(dateStart)]
+					&& this.externalEntryIndex[this.getChunkIdByDate(dateEnd)];
 			}
-			else
+
+			const activeSections = this.getSections().allActive;
+			for (const sectionId of activeSections)
 			{
-				if(this.calendar.util.type === 'location')
+				if (!this.pulledEntriesIndex[sectionId]
+					|| !this.pulledEntriesIndex[sectionId][this.getChunkIdByDate(dateStart)]
+					|| !this.pulledEntriesIndex[sectionId][this.getChunkIdByDate(dateEnd)]
+				)
 				{
-					params.sections = params.sections || this.calendar.roomsManager.getRoomsInfo().allActive;
-				}
-				else
-				{
-					params.sections = params.sections || this.calendar.sectionManager.getSectionsInfo().allActive;
-				}
-				params.index = params.index || this.pulledEntriesIndex;
-				var i, sectionId;
-				for (i = 0; i < params.sections.length; i++)
-				{
-					sectionId = params.sections[i];
-					if (!params.index[sectionId]
-						|| !params.index[sectionId][this.getChunkIdByDate(start)]
-						|| !params.index[sectionId][this.getChunkIdByDate(end)]
-					)
-					{
-						return false;
-					}
+					return true;
 				}
 			}
 
-			return true;
-		},
-
-		getChunkIdByDate: function(date)
-		{
-			return date.getFullYear() + '-' + (date.getMonth() + 1);
+			return false;
 		},
 
 		fillChunkIndex: function(startDate, finishDate, params)
@@ -352,98 +354,60 @@
 			}
 		},
 
+		getChunkIdByDate: function(date)
+		{
+			return date.getFullYear() + '-' + (date.getMonth() + 1);
+		},
+
 		getLoadedEntiesLimits: function()
 		{
 			return {start: this.loadedStartDate, end: this.loadedFinishDate};
 		},
 
-		loadEntries: function (params)
+		loadEntries: function(params)
 		{
-			if (this.calendar.isExternalMode())
-			{
-				return this.loadExternalEntries(params);
-			}
+			return new Promise((resolve) => {
+				const sections = this.getSections();
+				BX.ajax.runAction('calendar.api.calendarentryajax.loadEntries', {
+					data: {
+						ownerId: this.calendar.util.ownerId,
+						type: this.calendar.util.type,
+						month_from: params.startDate ? (params.startDate.getMonth() + 1) : '',
+						year_from: params.startDate ? params.startDate.getFullYear() : '',
+						month_to: params.finishDate ? params.finishDate.getMonth() + 1 : '',
+						year_to: params.finishDate ? params.finishDate.getFullYear() : '',
+						active_sect: sections.active,
+						sup_sect: sections.superposed,
+						cal_dav_data_sync: this.calendar.reloadGoogle ? 'Y' : 'N',
+						direction: params.direction ?? '',
+					}
+				}).then((response) => {
+					this.appendToEntriesRaw(response.data.entries);
+					this.updateUserIndex(response.data.userIndex);
 
-			// Fulfill previous deletions to avoid data inconsistency
-			BX.Calendar.EntryManager.doDelayedActions()
-				.then(function() {
-					if (this.loadInProgress)
+					if (response.data.newYearFrom !== undefined && response.data.newMonthFrom !== undefined)
 					{
-						this.delayedReload = true;
-						return;
+						const previousStart = params.startDate;
+						params.startDate = new Date(response.data.newYearFrom, response.data.newMonthFrom - 1, previousStart.getDate());
 					}
 
-					this.loadInProgress = true;
-					var sections = this.calendar.util.type === 'location'
-						? this.calendar.roomsManager.getRoomsInfo()
-						: this.calendar.sectionManager.getSectionsInfo();
+					if (response.data.newYearTo !== undefined && response.data.newMonthTo !== undefined)
+					{
+						const previousFinish = params.finishDate;
+						params.finishDate = new Date(response.data.newYearTo, response.data.newMonthTo - 1, previousFinish.getDate());
+					}
 
-					BX.ajax.runAction('calendar.api.calendarentryajax.loadEntries', {
-						data: {
-							ownerId: this.calendar.util.ownerId,
-							type: this.calendar.util.type,
-							month_from: params.startDate ? (params.startDate.getMonth() + 1) : '',
-							year_from: params.startDate ? params.startDate.getFullYear() : '',
-							month_to: params.finishDate ? params.finishDate.getMonth() + 1 : '',
-							year_to: params.finishDate ? params.finishDate.getFullYear() : '',
-							active_sect: sections.active,
-							sup_sect: sections.superposed,
-							loadNext: params.loadNext ? 'Y' : 'N',
-							loadPrevious: params.loadPrevious ? 'Y' : 'N',
-							loadLimit: params.loadLimit || 0,
-							cal_dav_data_sync: this.calendar.reloadGoogle ? 'Y' : 'N'
-						}
-					}).then(
-						function(response){
-							this.calendar.hideLoader();
-							this.loadInProgress = false;
-
-							if (this.delayedReload)
-							{
-								this.delayedReload = false;
-								this.loadEntries(params);
-							}
-							else
-							{
-								if (response && response.data)
-								{
-									this.handleEntriesList(response.data.entries, response.data.userIndex);
-
-									if (!params.finishDate && this.entriesRaw.length > 0)
-									{
-										var finishDate = this.entriesRaw[this.entriesRaw.length - 1].DATE_FROM;
-										finishDate = BX.parseDate(finishDate);
-										if (finishDate)
-										{
-											finishDate.setFullYear(finishDate.getFullYear(), finishDate.getMonth(), 0);
-											params.finishDate = finishDate;
-										}
-									}
-
-									if (params.startDate && params.finishDate)
-									{
-										this.fillChunkIndex(params.startDate, params.finishDate, {
-											sections: sections.allActive
-										});
-									}
-
-									if (BX.type.isFunction(params.finishCallback))
-									{
-										params.finishCallback(response);
-									}
-
-									this.calendar.reloadGoogle = false;
-
-									BX.Event.EventEmitter.emit('BX.Calendar:onEntryListReload');
-								}
-							}
-						}.bind(this),
-						function(){
-							this.loadInprogress = false;
-							this.calendar.hideLoader();
-						}.bind(this)
-					);
-				}.bind(this));
+					this.fillChunkIndex(params.startDate, params.finishDate, {
+						sections: sections.allActive
+					});
+					this.calendar.reloadGoogle = false;
+					BX.Event.EventEmitter.emit('BX.Calendar:onEntryListReload', {
+						isBoundaryOfPastReached: response.data.isBoundaryOfPastReached,
+						isBoundaryOfFutureReached: response.data.isBoundaryOfFutureReached,
+					});
+					resolve(response.data);
+				});
+			});
 		},
 
 		loadExternalEntries: function (params)
@@ -453,89 +417,184 @@
 				this.calendar.showLoader();
 			}
 
-			this.calendar.triggerEvent('loadEntries',
-				{
-					params: params,
-					onLoadCallback : function(json)
+			return new Promise((resolve) => {
+				this.calendar.triggerEvent('loadEntries',
 					{
-						this.calendar.hideLoader();
-						this.handleEntriesList(json.entries);
-
-						if (!params.finishDate && this.entriesRaw.length > 0)
+						params: params,
+						onLoadCallback : function(json)
 						{
-							var finishDate = this.entriesRaw[this.entriesRaw.length - 1].DATE_FROM;
-							finishDate = BX.parseDate(finishDate);
-							if (finishDate)
+							this.calendar.hideLoader();
+							this.appendToEntriesRaw(json.entries);
+
+							if (!params.finishDate && this.entriesRaw.length > 0)
 							{
-								finishDate.setFullYear(finishDate.getFullYear(), finishDate.getMonth(), 0);
-								params.finishDate = finishDate;
+								var finishDate = this.entriesRaw[this.entriesRaw.length - 1].DATE_FROM;
+								finishDate = BX.parseDate(finishDate);
+								if (finishDate)
+								{
+									finishDate.setFullYear(finishDate.getFullYear(), finishDate.getMonth(), 0);
+									params.finishDate = finishDate;
+								}
 							}
-						}
 
-						if (params.startDate && params.finishDate)
-						{
-							this.fillChunkIndex(params.startDate, params.finishDate);
-						}
+							if (params.startDate && params.finishDate)
+							{
+								this.fillChunkIndex(params.startDate, params.finishDate);
+							}
 
-						if (BX.type.isFunction(params.finishCallback))
+							if (BX.type.isFunction(params.finishCallback))
+							{
+								params.finishCallback(json);
+							}
+
+							resolve();
+						}.bind(this),
+						onErrorCallback : function(error)
 						{
-							params.finishCallback(json);
-						}
-					}.bind(this),
-					onErrorCallback : function(error)
-					{
-						this.calendar.hideLoader();
-					}.bind(this)
-				});
+							this.calendar.hideLoader();
+						}.bind(this)
+					});
+			});
 		},
 
-		handleEntriesList: function(entries, userIndex)
+		appendToEntriesRaw: function(entries)
 		{
-			if (entries && entries.length)
+			const showDeclined = this.calendar.util.getUserOption('showDeclined');
+			for (const entry of entries)
 			{
-				var
-					i,
-					smartId,
-					showDeclined = this.calendar.util.getUserOption('showDeclined');
-
-				for (i = 0; i < entries.length; i++)
+				if (
+					(!showDeclined || parseInt(entry.CREATED_BY) !== this.calendar.util.userId)
+					&& entry.MEETING_STATUS === 'N'
+				)
 				{
-					if((!showDeclined || parseInt(entries[i].CREATED_BY) !== this.calendar.util.userId)
-						&& entries[i].MEETING_STATUS === 'N')
+					continue;
+				}
+				const smartId = this.getUniqueId(entry);
+				if (this.loadedEntriesIndex[smartId] === undefined)
+				{
+					this.entriesRaw.push(entry);
+					this.loadedEntriesIndex[smartId] = this.entriesRaw.length - 1;
+				}
+				else if (entry.CAL_TYPE === this.calendar.util.type
+					&& parseInt(entry.OWNER_ID) === parseInt(this.calendar.util.ownerId)
+				)
+				{
+					this.entriesRaw[this.loadedEntriesIndex[smartId]] = entry;
+				}
+			}
+		},
+
+		updateUserIndex: function(userIndex)
+		{
+			if (!BX.type.isNotEmptyObject(userIndex))
+			{
+				return;
+			}
+			for (const id in userIndex)
+			{
+				if (userIndex.hasOwnProperty(id))
+				{
+					this.userIndex[id] = userIndex[id];
+				}
+			}
+			BX.Calendar.EntryManager.setUserIndex(this.userIndex);
+		},
+
+		getEntriesFromEntriesRaw: function(viewRange)
+		{
+			const entries = [];
+			const activeSectionIndex = this.getActiveSectionsIndex();
+			for (const entryRaw of this.entriesRaw)
+			{
+				if ((entryRaw['~TYPE'] === 'tasks' && !activeSectionIndex['tasks'])
+					|| (entryRaw['~TYPE'] !== 'tasks' && entryRaw['SECT_ID'] && !activeSectionIndex[parseInt(entryRaw['SECT_ID'])])
+				)
+				{
+					continue;
+				}
+
+				const movedEntry = this.findMovedEntry(entryRaw);
+				if (movedEntry)
+				{
+					if (entryRaw.DATE_FROM === movedEntry.DATE_FROM && entryRaw.DATE_TO === movedEntry.DATE_TO && parseInt(entryRaw.DT_LENGTH) === movedEntry.DT_LENGTH)
 					{
-						continue;
-					}
-					smartId = this.getUniqueId(entries[i]);
-					if (this.loadedEntriesIndex[smartId] === undefined)
-					{
-						this.entriesRaw.push(entries[i]);
-						this.loadedEntriesIndex[smartId] = this.entriesRaw.length - 1;
+						this.movedEntries = this.movedEntries.filter(e => e.ID !== movedEntry.ID);
 					}
 					else
 					{
-						if (entries[i].CAL_TYPE === this.calendar.util.type
-							&&
-							parseInt(entries[i].OWNER_ID) === parseInt(this.calendar.util.ownerId)
-						)
-						{
-							this.entriesRaw[this.loadedEntriesIndex[smartId]] = entries[i];
-						}
+						entryRaw.DATE_FROM = movedEntry.DATE_FROM;
+						entryRaw.DATE_TO = movedEntry.DATE_TO;
+						entryRaw.DT_LENGTH = movedEntry.DT_LENGTH;
 					}
 				}
-			}
 
-			if (BX.type.isNotEmptyObject(userIndex))
-			{
-				for (var id in userIndex)
+				const entry = new Entry(this.calendar, entryRaw);
+				if (!viewRange || viewRange && entry.applyViewRange(viewRange))
 				{
-					if (userIndex.hasOwnProperty(id))
-					{
-						this.userIndex[id] = userIndex[id];
-					}
+					entries.push(entry);
 				}
 			}
+			return entries;
+		},
 
-			BX.Calendar.EntryManager.setUserIndex(this.userIndex);
+		addMovedEntry: function(entry)
+		{
+			const formattedDateFrom = entry.isFullDay() ? this.calendar.util.formatDate(entry.from) : this.calendar.util.formatDateTime(entry.from);
+			const formattedDateTo = entry.isFullDay() ? this.calendar.util.formatDate(entry.to) : this.calendar.util.formatDateTime(entry.to);
+
+			this.movedEntries = this.movedEntries.filter(e => e.ID !== entry.uid);
+			this.movedEntries.push({
+				ID: entry.uid,
+				RECURRENCE_ID: entry.parentId,
+				ORIGINAL_DATE_FROM: this.calendar.util.formatDateTime(BX.parseDate(entry.data.DATE_FROM)),
+				DATE_FROM: formattedDateFrom,
+				DATE_TO: formattedDateTo,
+				DT_LENGTH: (entry.to.getTime() - entry.from.getTime()) / 1000,
+			});
+		},
+
+		removeMovedEntry: function(entry)
+		{
+			this.movedEntries = this.movedEntries.filter(e => e.ID !== entry.uid);
+		},
+
+		findMovedEntry: function(entryRaw)
+		{
+			return this.movedEntries.filter((e) => {
+				const isRecursive = !!entryRaw.RRULE;
+
+				if (isRecursive)
+				{
+					return entryRaw.RECURRENCE_ID === e.RECURRENCE_ID && entryRaw.ORIGINAL_DATE_FROM === e.ORIGINAL_DATE_FROM;
+				}
+
+				return entryRaw.ID === e.ID;
+			})[0];
+		},
+
+		findMovedEntryById: function(id)
+		{
+			return this.movedEntries.filter((e) => {
+				return id === e.ID;
+			})[0];
+		},
+
+		getActiveSectionsIndex: function()
+		{
+			const activeSectionIndex = {};
+			this.getSections().allActive.forEach((sectionId) => {
+				activeSectionIndex[sectionId === 'tasks' ? sectionId : parseInt(sectionId)] = true;
+			});
+			return activeSectionIndex;
+		},
+
+		getSections()
+		{
+			if (this.calendar.util.type === 'location')
+			{
+				return this.calendar.roomsManager.getRoomsInfo();
+			}
+			return this.calendar.sectionManager.getSectionsInfo();
 		},
 
 		getUniqueId: function(entryData, entry)
@@ -579,7 +638,6 @@
 		clearLoadIndexCache: function()
 		{
 			this.pulledEntriesIndex = {};
-			this.requestedEntriesIndex = {};
 			this.entriesRaw = [];
 			this.loadedEntriesIndex = {};
 			this.externalEntryIndex = {};
@@ -807,7 +865,9 @@
 				toTime = this.to.getTime();
 
 			if (toTime < viewRangeStart || fromTime > viewRangeEnd)
+			{
 				return false;
+			}
 
 			if (fromTime < viewRangeStart)
 			{
@@ -841,6 +901,16 @@
 		isTask: function()
 		{
 			return this.data['~TYPE'] === 'tasks';
+		},
+
+		isSharingEvent: function()
+		{
+			return this.data['EVENT_TYPE'] === '#shared#' || this.data['EVENT_TYPE'] === '#shared_crm#';
+		},
+
+		isInvited: function()
+		{
+			return this.getCurrentStatus() === 'Q';
 		},
 
 		isLocation: function()
@@ -948,31 +1018,6 @@
 		{
 			this.selected = true;
 		},
-
-		// deleteParts: function()
-		// {
-		// 	this.parts.forEach(function(part){
-		// 		if (part.params)
-		// 		{
-		// 			if (part.params.wrapNode)
-		// 			{
-		// 				part.params.wrapNode.style.opacity = 0;
-		// 			}
-		// 		}
-		// 	}, this);
-		//
-		// 	setTimeout(BX.delegate(function(){
-		// 		this.parts.forEach(function(part){
-		// 			if (part.params)
-		// 			{
-		// 				if (part.params.wrapNode)
-		// 				{
-		// 					BX.remove(part.params.wrapNode);
-		// 				}
-		// 			}
-		// 		}, this);
-		// 	}, this), 300);
-		// },
 
 		getUniqueId: function()
 		{

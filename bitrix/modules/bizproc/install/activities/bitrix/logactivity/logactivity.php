@@ -1,8 +1,11 @@
-<?
-if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php
 
-class CBPLogActivity
-	extends CBPActivity
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
+{
+	die();
+}
+
+class CBPLogActivity extends CBPActivity
 {
 	public function __construct($name)
 	{
@@ -73,8 +76,12 @@ class CBPLogActivity
 			$arCurrentActivity = &CBPWorkflowTemplateLoader::FindActivityByName($arWorkflowTemplate, $activityName);
 			if (is_array($arCurrentActivity["Properties"]))
 			{
-				$arCurrentValues["text"] = $arCurrentActivity["Properties"]["Text"];
-				$arCurrentValues["set_variable"] = ($arCurrentActivity["Properties"]["SetVariable"] ? "Y" : "N");
+				$arCurrentValues["text"] = $arCurrentActivity["Properties"]["Text"] ?? null;
+				$arCurrentValues["set_variable"] = (
+					isset($arCurrentActivity['Properties']['SetVariable']) && $arCurrentActivity['Properties']['SetVariable']
+						? 'Y'
+						: 'N'
+				);
 			}
 		}
 

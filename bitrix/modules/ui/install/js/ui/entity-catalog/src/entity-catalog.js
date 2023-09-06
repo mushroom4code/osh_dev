@@ -2,6 +2,7 @@ import { Loc, Tag, Text, Type } from 'main.core';
 import { BaseEvent, EventEmitter } from 'main.core.events';
 import { Popup, PopupOptions } from 'main.popup';
 import { BitrixVue } from 'ui.vue3';
+import { createPinia } from 'ui.vue3.pinia';
 import { Hint } from "ui.vue3.components.hint";
 import { feedback} from "./directives/feedback";
 
@@ -22,6 +23,18 @@ export type {
 	FilterData,
 };
 
+import { EmptyContent } from './components/stubs/empty-content';
+
+import { useGlobalState } from './stores/global-state';
+
+export const Stubs = {
+	EmptyContent,
+}
+
+export const States = {
+	useGlobalState,
+}
+
 export class EntityCatalog extends EventEmitter
 {
 	static DEFAULT_POPUP_WIDTH = 881;
@@ -32,7 +45,10 @@ export class EntityCatalog extends EventEmitter
 	static SLOT_GROUP = 'group';
 	static SLOT_GROUP_LIST_FOOTER = 'group-list-footer';
 	static SLOT_MAIN_CONTENT_HEADER = 'main-content-header';
+	static SLOT_MAIN_CONTENT_FILTERS_STUB = 'main-content-filter-stub';
+	static SLOT_MAIN_CONTENT_FILTERS_STUB_TITLE = 'main-content-filter-stub-title';
 	static SLOT_MAIN_CONTENT_SEARCH_NOT_FOUND = 'search-not-found';
+	static SLOT_MAIN_CONTENT_WELCOME_STUB = 'main-content-welcome-stub';
 	static SLOT_MAIN_CONTENT_NO_SELECTED_GROUP_STUB = 'main-content-no-selected-group-stub';
 	static SLOT_MAIN_CONTENT_EMPTY_GROUP_STUB = 'main-content-empty-group-stub';
 	static SLOT_MAIN_CONTENT_EMPTY_GROUP_STUB_TITLE = 'main-content-empty-group-stub-title';
@@ -58,11 +74,13 @@ export class EntityCatalog extends EventEmitter
 	};
 	#application;
 	#slots: object;
+	#customComponents: object;
 
 	constructor(props: {
 		groups?: Array<Array<GroupData>>,
 		items?: Array<ItemData>,
 		recentGroupData?: GroupData,
+		canDeselectGroups?: boolean,
 		showEmptyGroups?: boolean,
 		showRecentGroup?: boolean,
 		showSearch?: boolean,
@@ -75,6 +93,7 @@ export class EntityCatalog extends EventEmitter
 		title?: string,
 		slots?: object,
 		events?: { [eventName: string]: (event: BaseEvent) => void },
+		customComponents?: object,
 	})
 	{
 		super();
@@ -83,6 +102,16 @@ export class EntityCatalog extends EventEmitter
 		this.setGroups(Type.isArray(props.groups) ? props.groups : []);
 		this.setItems(Type.isArray(props.items) ? props.items : []);
 		this.#recentGroupData = props.recentGroupData;
+
+		if (Type.isBoolean(props.canDeselectGroups))
+		{
+			this.#groups.forEach((groupList) => {
+				groupList.forEach((group) => {
+					group.deselectable = props.canDeselectGroups
+				});
+			});
+		}
+
 		this.#showEmptyGroups = Type.isBoolean(props.showEmptyGroups) ? props.showEmptyGroups : false;
 		this.#showRecentGroup = Type.isBoolean(props.showRecentGroup) ? props.showRecentGroup : false;
 		this.#showSearch = Type.isBoolean(props.showSearch) ? props.showSearch : false;
@@ -99,6 +128,7 @@ export class EntityCatalog extends EventEmitter
 			Type.isObject(props.popupOptions) ? props.popupOptions : {}
 		);
 		this.#slots = props.slots ?? {};
+		this.#customComponents = props.customComponents ?? {};
 
 		this.subscribeFromOptions(props.events);
 	}
@@ -113,6 +143,7 @@ export class EntityCatalog extends EventEmitter
 
 			return groupList.map(group => ({
 				selected: false,
+				deselectable: true,
 				...group
 			}));
 		});
@@ -165,11 +196,11 @@ export class EntityCatalog extends EventEmitter
 		this.#application = BitrixVue.createApp(
 			{
 				name: 'ui-entity-catalog',
-				components: {
+				components: Object.assign(this.#customComponents, {
 					Application,
 					Hint,
 					Button,
-				},
+				}),
 				directives: {
 					feedback
 				},
@@ -207,11 +238,20 @@ export class EntityCatalog extends EventEmitter
 						<template #main-content-header>
 							${this.#slots[EntityCatalog.SLOT_MAIN_CONTENT_HEADER] ?? ''}
 						</template>
+						<template #main-content-filter-stub v-if="${!!this.#slots[EntityCatalog.SLOT_MAIN_CONTENT_FILTERS_STUB]}">
+							${this.#slots[EntityCatalog.SLOT_MAIN_CONTENT_FILTERS_STUB]}
+						</template>
+						<template #main-content-filter-stub-title v-if="${!!this.#slots[EntityCatalog.SLOT_MAIN_CONTENT_FILTERS_STUB_TITLE]}">
+							${this.#slots[EntityCatalog.SLOT_MAIN_CONTENT_FILTERS_STUB_TITLE]}
+						</template>
 						<template #main-content-search-not-found-stub>
 							${
 								this.#slots[EntityCatalog.SLOT_MAIN_CONTENT_SEARCH_NOT_FOUND]
 								?? Loc.getMessage('UI_JS_ENTITY_CATALOG_GROUP_LIST_ITEM_LIST_SEARCH_STUB_DEFAULT_TITLE')
 							}
+						</template>
+						<template #main-content-welcome-stub>
+							${this.#slots[EntityCatalog.SLOT_MAIN_CONTENT_WELCOME_STUB] ?? ''}
 						</template>
 						<template #main-content-no-selected-group-stub>
 							${this.#slots[EntityCatalog.SLOT_MAIN_CONTENT_NO_SELECTED_GROUP_STUB] ?? ''}
@@ -231,7 +271,7 @@ export class EntityCatalog extends EventEmitter
 			rootProps
 		);
 
-		this.#application.mount(this.getPopup().getContentContainer());
+		this.#application.use(createPinia()).mount(this.getPopup().getContentContainer());
 	}
 
 	getPopup(): Popup

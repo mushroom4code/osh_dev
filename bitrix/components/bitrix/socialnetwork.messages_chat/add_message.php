@@ -4,22 +4,31 @@ define("NO_AGENT_STATISTIC", true);
 define("NO_LANG_FILES", true);
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 
-$path = str_replace(array("\\", "//"), "/", dirname(__FILE__)."/lang/en/add_message.php");
+$path = str_replace(array("\\", "//"), "/", __DIR__."/lang/en/add_message.php");
 @include_once($path);
-$path = str_replace(array("\\", "//"), "/", dirname(__FILE__)."/lang/".LANGUAGE_ID."/add_message.php");
+$path = str_replace(array("\\", "//"), "/", __DIR__."/lang/".LANGUAGE_ID."/add_message.php");
 @include_once($path);
 
 if (CModule::IncludeModule("socialnetwork"))
 {
 	$aUserId = array();
-	if(is_array($_REQUEST["user_id"]))
+	if (is_array($_REQUEST["user_id"] ?? null))
 	{
 		foreach($_REQUEST["user_id"] as $id)
-			if(intval($id) > 0)
+		{
+			if (intval($id) > 0)
+			{
 				$aUserId[] = intval($id);
+			}
+		}
 	}
-	elseif(intval($_REQUEST["user_id"]) > 0)
+	elseif (
+		isset($_REQUEST["user_id"])
+		&& intval($_REQUEST["user_id"]) > 0
+	)
+	{
 		$aUserId[] = intval($_REQUEST["user_id"]);
+	}
 
 	$aUserId = array_unique($aUserId);
 

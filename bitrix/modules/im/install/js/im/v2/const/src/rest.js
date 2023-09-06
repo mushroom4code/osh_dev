@@ -1,13 +1,32 @@
-/**
- * Bitrix Messenger
- * Device constants
- *
- * @package bitrix
- * @subpackage im
- * @copyright 2001-2020 Bitrix
- */
-
 export const RestMethod = Object.freeze({
+	imV2ChatLoad: 'im.v2.Chat.load',
+	imV2ChatGetDialogId: 'im.v2.Chat.getDialogId',
+	imV2ChatShallowLoad: 'im.v2.Chat.shallowLoad',
+	imV2ChatLoadInContext: 'im.v2.Chat.loadInContext',
+	imV2ChatLoadContext: 'im.v2.Chat.loadInContext',
+	imV2ChatAdd: 'im.v2.Chat.add',
+	imV2ChatRead: 'im.v2.Chat.read',
+	imV2ChatReadAll: 'im.v2.Chat.readAll',
+	imV2ChatUnread: 'im.v2.Chat.unread',
+	imV2ChatMessageGetContext: 'im.v2.Chat.Message.getContext',
+	imV2ChatMessageList: 'im.v2.Chat.Message.list',
+	imV2ChatMessageTail: 'im.v2.Chat.Message.tail',
+	imV2ChatMessageRead: 'im.v2.Chat.Message.read',
+	imV2ChatMessageMark: 'im.v2.Chat.Message.mark',
+	imV2ChatMessageDelete: 'im.v2.Chat.Message.delete',
+	imV2ChatMessageReactionAdd: 'im.v2.Chat.Message.Reaction.add',
+	imV2ChatMessageReactionDelete: 'im.v2.Chat.Message.Reaction.delete',
+	imV2ChatMessageReactionTail: 'im.v2.Chat.Message.Reaction.tail',
+	imV2ChatMessagePin: 'im.v2.Chat.Message.pin',
+	imV2ChatMessageUnpin: 'im.v2.Chat.Message.unpin',
+	imV2ChatMessageTailViewers: 'im.v2.Chat.Message.tailViewers',
+	imV2ChatPinTail: 'im.v2.Chat.Pin.tail',
+	imV2SettingsGeneralUpdate: 'im.v2.Settings.General.update',
+	imV2DesktopLogout: 'im.v2.Desktop.logout',
+	imV2BetaEnable: 'im.v2.Beta.enable',
+	imV2BetaDisable: 'im.v2.Beta.disable',
+
+	imCallBetaCreateRoom: 'im.call.beta.createRoom',
 
 	imMessageAdd: 'im.message.add',
 	imMessageUpdate: 'im.message.update',
@@ -16,10 +35,33 @@ export const RestMethod = Object.freeze({
 	imMessageCommand: 'im.message.command',
 	imMessageShare: 'im.message.share',
 
+	imChatAdd: 'im.chat.add',
 	imChatGet: 'im.chat.get',
 	imChatLeave: 'im.chat.leave',
 	imChatMute: 'im.chat.mute',
+	imChatUpdateTitle: 'im.chat.updateTitle',
 	imChatParentJoin: 'im.chat.parent.join',
+	imChatFileCollectionGet: 'im.chat.file.collection.get',
+	imChatFileGet: 'im.chat.file.get',
+	imChatUrlGet: 'im.chat.url.get',
+	imChatUrlDelete: 'im.chat.url.delete',
+	imChatTaskGet: 'im.chat.task.get',
+	imChatTaskDelete: 'im.chat.task.delete',
+	imChatCalendarGet: 'im.chat.calendar.get',
+	imChatFavoriteAdd: 'im.chat.favorite.add',
+	imChatFavoriteDelete: 'im.chat.favorite.delete',
+	imChatFavoriteGet: 'im.chat.favorite.get',
+	imChatFavoriteCounterGet: 'im.chat.favorite.counter.get',
+	imChatUrlCounterGet: 'im.chat.url.counter.get',
+	imChatPinGet: 'im.chat.pin.get',
+	imChatPinAdd: 'im.chat.pin.add',
+	imChatPinDelete: 'im.chat.pin.delete',
+	imChatTaskPrepare: 'im.chat.task.prepare',
+	imChatCalendarPrepare: 'im.chat.calendar.prepare',
+	imChatCalendarAdd: 'im.chat.calendar.add',
+	imChatCalendarDelete: 'im.chat.calendar.delete',
+	imChatUserDelete: 'im.chat.user.delete',
+	imChatUserAdd: 'im.chat.user.add',
 
 	imDialogGet: 'im.dialog.get',
 	imDialogMessagesGet: 'im.dialog.messages.get',
@@ -27,13 +69,23 @@ export const RestMethod = Object.freeze({
 	imDialogUnread: 'im.dialog.unread',
 	imDialogWriting: 'im.dialog.writing',
 	imDialogRestrictionsGet: 'im.dialog.restrictions.get',
+	imDialogReadAll: 'im.dialog.read.all',
+	imDialogContextGet: 'im.dialog.context.get',
+	imDialogUsersList: 'im.dialog.users.list',
 
 	imUserGet: 'im.user.get',
 	imUserListGet: 'im.user.list.get',
+	imUserStatusSet: 'im.user.status.set',
+	imUserStatusIdleStart: 'im.user.status.idle.start',
+	imUserStatusIdleEnd: 'im.user.status.idle.end',
 
 	imDiskFolderGet: 'im.disk.folder.get',
+	imDiskFolderListGet: 'im.disk.folder.list.get',
 	imDiskFileUpload: 'disk.folder.uploadfile',
+	imDiskFilePreviewUpload: 'disk.api.file.attachPreview',
 	imDiskFileCommit: 'im.disk.file.commit',
+	imDiskFileDelete: 'im.disk.file.delete',
+	imDiskFileSave: 'im.disk.file.save',
 
 	mobileBrowserConstGet: 'mobile.browser.const.get',
 
@@ -41,11 +93,24 @@ export const RestMethod = Object.freeze({
 	imRecentList: 'im.recent.list',
 	imRecentPin: 'im.recent.pin',
 	imRecentUnread: 'im.recent.unread',
+	imRecentHide: 'im.recent.hide',
 
 	imCallGetCallLimits: 'im.call.getCallLimits',
 
 	imNotifyGet: 'im.notify.get',
+	imNotifyRead: 'im.notify.read',
 	imNotifySchemaGet: 'im.notify.schema.get',
+	imNotifyHistorySearch: 'im.notify.history.search',
+	imNotifyAnswer: 'im.notify.answer',
+
+	imCallBackgroundGet: 'im.v2.Call.Background.get',
+	imCallBackgroundCommit: 'im.v2.Call.Background.commit',
+	imCallBackgroundDelete: 'im.v2.Call.Background.delete',
+	imCallMaskGet: 'im.v2.Call.Mask.get',
+	imSmilesGet: 'smile.get',
+
+	imBotGiphyListPopular: 'imbot.Giphy.listPopular',
+	imBotGiphyList: 'imbot.Giphy.list',
 });
 
 export const RestMethodHandler = Object.freeze({

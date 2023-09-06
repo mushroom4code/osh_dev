@@ -4,6 +4,7 @@
 namespace Bitrix\Calendar\ICal\MailInvitation;
 
 
+use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ObjectException;
 use Bitrix\Main\Text\Encoding;
@@ -42,6 +43,7 @@ class SenderCancelInvitation extends SenderInvitation
 	 */
 	protected function getMailEventField(): array
 	{
+		$this->event['SKIP_TIME'] ??= null;
 		return [
 			"=Reply-To" => "{$this->context->getAddresser()->getFullName()} <{$this->context->getAddresser()->getEmail()}>",
 			"=From" => "{$this->context->getAddresser()->getFullName()} <{$this->context->getAddresser()->getEmail()}>",
@@ -75,6 +77,11 @@ class SenderCancelInvitation extends SenderInvitation
 	 */
 	protected function getSubjectTitle(): string
 	{
+		if (Loader::includeModule('bitrix24') && \CBitrix24::isFreeLicense())
+		{
+			return Loc::getMessage("EC_CALENDAR_ICAL_MAIL_METHOD_CANCEL");
+		}
+
 		return Loc::getMessage("EC_CALENDAR_ICAL_MAIL_METHOD_CANCEL") . ": {$this->event['NAME']}";
 	}
 

@@ -10,6 +10,7 @@ this.BX = this.BX || {};
 	};
 
 	babelHelpers.defineProperty(CounterColor, "DANGER", "ui-counter-danger");
+	babelHelpers.defineProperty(CounterColor, "WARNING", "ui-counter-warning");
 	babelHelpers.defineProperty(CounterColor, "SUCCESS", "ui-counter-success");
 	babelHelpers.defineProperty(CounterColor, "PRIMARY", "ui-counter-primary");
 	babelHelpers.defineProperty(CounterColor, "GRAY", "ui-counter-gray");
@@ -215,7 +216,7 @@ this.BX = this.BX || {};
 	    key: "getCounterContainer",
 	    value: function getCounterContainer() {
 	      if (this.counterContainer === null) {
-	        this.counterContainer = main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<div class=\"ui-counter-inner\">", "</div>\n\t\t\t"])), this.value);
+	        this.counterContainer = main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<div class=\"ui-counter-inner\">", "</div>\n\t\t\t"])), this.getValue());
 	      }
 
 	      return this.counterContainer;
@@ -286,6 +287,8 @@ this.BX = this.BX || {};
 	babelHelpers.defineProperty(Counter, "Size", CounterSize);
 
 	exports.Counter = Counter;
+	exports.CounterColor = CounterColor;
+	exports.CounterSize = CounterSize;
 
 }((this.BX.UI = this.BX.UI || {}),BX,BX));
 //# sourceMappingURL=cnt.bundle.js.map

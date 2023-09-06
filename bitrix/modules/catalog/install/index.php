@@ -85,10 +85,14 @@ class catalog extends CModule
 	{
 		global $APPLICATION;
 		global $DB;
-		global $errors;
+		$connection = \Bitrix\Main\Application::getConnection();
 
-		if(!$DB->Query("SELECT 'x' FROM b_catalog_group", true))
-			$errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/catalog/install/db/mysql/install.sql");
+		$errors = null;
+
+		if (!$DB->TableExists('b_catalog_group'))
+		{
+			$errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/catalog/install/db/' . $connection->getType() . '/install.sql');
+		}
 
 		if (!empty($errors))
 		{
@@ -342,6 +346,7 @@ class catalog extends CModule
 	{
 		global $APPLICATION, $DB, $errors;
 		global $USER_FIELD_MANAGER;
+		$connection = \Bitrix\Main\Application::getConnection();
 
 		if (!defined('BX_CATALOG_UNINSTALLED'))
 			define('BX_CATALOG_UNINSTALLED', true);
@@ -349,7 +354,7 @@ class catalog extends CModule
 		$enableDeprecatedEvents = Main\Config\Option::get('catalog', 'enable_processing_deprecated_events') === 'Y';
 		if (!isset($arParams["savedata"]) || $arParams["savedata"] != "Y")
 		{
-			$errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/catalog/install/db/mysql/uninstall.sql");
+			$errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/catalog/install/db/".$connection->getType()."/uninstall.sql");
 			if (!empty($errors))
 			{
 				$APPLICATION->ThrowException(implode("", $errors));
@@ -476,13 +481,13 @@ class catalog extends CModule
 			'onCatalogWebhookHandler'
 		);
 
-		if ($this->bitrix24mode)
+		if (Main\Loader::includeModule('catalog'))
 		{
-			\Bitrix\Catalog\Compatible\EventCompatibility::unRegisterEvents();
-		}
-		else
-		{
-			if ($enableDeprecatedEvents)
+			if ($this->bitrix24mode)
+			{
+				\Bitrix\Catalog\Compatible\EventCompatibility::unRegisterEvents();
+			}
+			elseif ($enableDeprecatedEvents)
 			{
 				\Bitrix\Catalog\Compatible\EventCompatibility::unRegisterEvents();
 			}

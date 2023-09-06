@@ -64,11 +64,20 @@ class BoolType extends Base
 		{
 			case FieldType::DOUBLE:
 			case FieldType::INT:
-				$value = (int) ($value == 'Y');
+				$value = (int)($value == 'Y');
 				break;
 			case FieldType::BOOL:
 			case FieldType::STRING:
 			case FieldType::TEXT:
+				if (in_array(mb_strtolower($value), ['y', 'yes', 'true', '1'], true))
+				{
+					$value = 'Y';
+				}
+				elseif (in_array(mb_strtolower($value), ['n', 'no', 'false', '0'], true))
+				{
+					$value = 'N';
+				}
+
 				$value = $value == 'Y' ? 'Y' : 'N';
 				break;
 			default:
@@ -217,5 +226,13 @@ class BoolType extends Base
 		}
 
 		return parent::externalizeValue($fieldType, $context, $value);
+	}
+
+	public static function compareValues($valueA, $valueB)
+	{
+		$valueA = \CBPHelper::getBool($valueA);
+		$valueB = \CBPHelper::getBool($valueB);
+
+		return parent::compareValues($valueA, $valueB);
 	}
 }

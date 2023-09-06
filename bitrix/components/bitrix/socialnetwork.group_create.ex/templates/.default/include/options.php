@@ -24,21 +24,27 @@ if (
 )
 {
 	?>
-	<div class="socialnetwork-group-create-ex__content-block --space-bottom--xl socialnetwork-group-create-ex__create--switch-nonscrum <?= ($isScrumProject ? '--scrum' : '') ?>">
-		<div class="socialnetwork-group-create-ex__project-instruments">
+	<div class="socialnetwork-group-create-ex__content-block --space-bottom--xl">
+		<?php
+		$classList = [ 'socialnetwork-group-create-ex__project-instruments' ];
+		if (empty($arResult['TAB']))
+		{
+			$classList[] = 'socialnetwork-group-create-ex__create--switch-nonscrum';
+			if ($isScrumProject)
+			{
+				$classList[] = '--scrum';
+			}
+		}
+		?>
+		<div class="<?= implode(' ', $classList) ?>">
 			<div class="socialnetwork-group-create-ex__text --s ui-ctl-label-text socialnetwork-group-create-ex__create--switch-nonproject <?= ($isProject ? '--project' : '') ?>"><?= Loc::getMessage('SONET_GCE_T_TITLE_TYPE') ?></div>
-			<div class="socialnetwork-group-create-ex__text --s ui-ctl-label-text socialnetwork-group-create-ex__create--switch-project <?= ($isProject ? '--project' : '') ?>"><?= Loc::getMessage('SONET_GCE_T_TITLE_TYPE_PROJECT') ?></div>
+			<div class="socialnetwork-group-create-ex__text --s ui-ctl-label-text socialnetwork-group-create-ex__create--switch-project <?= ($isProject ? '--project' : '') ?> socialnetwork-group-create-ex__create--switch-nonscrum <?= ($isScrumProject ? '--scrum' : '') ?>"><?= Loc::getMessage('SONET_GCE_T_TITLE_TYPE_PROJECT') ?></div>
+			<div class="socialnetwork-group-create-ex__text --s ui-ctl-label-text socialnetwork-group-create-ex__create--switch-scrum <?= ($isScrumProject ? '--scrum' : '') ?>"><?= Loc::getMessage('SONET_GCE_T_TITLE_TYPE_SCRUM') ?></div>
 			<?php
 			$labelClassList = [
 				'ui-ctl',
 				'ui-ctl-checkbox',
-				'socialnetwork-group-create-ex__create--switch-nonscrum',
 			];
-
-			if ($labelClassList)
-			{
-				$labelClassList[] = '--scrum';
-			}
 
 			if (
 				$arResult['bExtranet']
@@ -74,7 +80,13 @@ if (
 				)
 			)
 			{
-				?><input type="hidden" value="<?= ($arResult['POST']['OPENED'] === 'Y') ? 'Y' : 'N' ?>" name="GROUP_OPENED" id="GROUP_OPENED"><?php
+				?>
+				<input
+					type="hidden"
+					value="<?= (($arResult['POST']['OPENED'] ?? '') === 'Y') ? 'Y' : 'N' ?>"
+					name="GROUP_OPENED"
+					id="GROUP_OPENED"
+				><?php
 			}
 			else
 			{
@@ -111,7 +123,7 @@ if (
 			if ($arResult['intranetInstalled'])
 			{
 				$setByOptions = isset($arParams['PROJECT_OPTIONS']['project']);
-				$disabled = $setByOptions;
+				$disabled = ($setByOptions || $isScrumProject);
 				$checked = (
 					$setByOptions
 						? $arParams['PROJECT_OPTIONS']['project'] === true || $arParams['PROJECT_OPTIONS']['project'] === 'true'
@@ -135,7 +147,7 @@ if (
 				))
 				{
 					?>
-					<div class="socialnetwork-group-create-ex__project-instruments--item">
+					<div class="socialnetwork-group-create-ex__project-instruments--item socialnetwork-group-create-ex__create--switch-nonscrum <?= ($isScrumProject ? '--scrum' : '') ?>">
 						<label class="<?= implode(' ', $labelClassList) ?>" <?= ($disabled ? 'style="pointer-events: none"' : '') ?>>
 							<input type="checkbox" id="GROUP_PROJECT" name="GROUP_PROJECT" class="ui-ctl-element" value="Y" <?= ($checked ? 'checked' : '') ?> <?= ($disabled ? 'disabled' : '') ?>>
 							<div class="ui-ctl-label-text"><?= Loc::getMessage('SONET_GCE_T_PARAMS_PROJECT') ?></div>
@@ -152,7 +164,7 @@ if (
 				$checked = (
 					$setByOptions
 						? $arParams['PROJECT_OPTIONS']['landing'] === true || $arParams['PROJECT_OPTIONS']['landing'] === 'true'
-						: $arResult['POST']['LANDING'] === 'Y'
+						: ($arResult['POST']['LANDING'] ?? '') === 'Y'
 				);
 
 				if ($disabled)
@@ -161,7 +173,7 @@ if (
 				}
 
 				?>
-				<div class="socialnetwork-group-create-ex__project-instruments--item">
+				<div class="socialnetwork-group-create-ex__project-instruments--item socialnetwork-group-create-ex__create--switch-nonscrum <?= ($isScrumProject ? '--scrum' : '') ?>">
 					<label class="<?= implode(' ', $labelClassList) ?>" <?= ($disabled ? 'style="pointer-events: none"' : '') ?>>
 						<input type="checkbox" id="GROUP_LANDING" name="GROUP_LANDING" class="ui-ctl-element" value="Y" <?= ($checked ? 'checked' : '') ?> <?= ($disabled ? 'disabled' : '') ?>>
 						<div class="ui-ctl-label-text"><?= Loc::getMessage('SONET_GCE_T_PARAMS_LANDING') ?></div>
@@ -169,7 +181,7 @@ if (
 				</div>
 				<?php
 			}
-		?>
+			?>
 		</div>
 		<?php
 
@@ -180,7 +192,7 @@ if (
 				$checked = (
 				$setByOptions
 					? ($arParams['PROJECT_OPTIONS']['extranet'] === true || $arParams['PROJECT_OPTIONS']['extranet'] === 'true')
-					: ($arResult["POST"]['IS_EXTRANET_GROUP'] === 'Y')
+					: (($arResult["POST"]['IS_EXTRANET_GROUP'] ?? '') === 'Y')
 			);
 
 			if ($disabled)

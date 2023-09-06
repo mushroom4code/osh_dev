@@ -212,13 +212,13 @@ abstract class Result implements \IteratorAggregate
 			}
 		}
 
-		if ($converter != null)
+		if ($converter !== null)
 		{
 			foreach ($data as $key => $val)
 			{
 				$data[$key] = $converter->encode(
 					$val,
-					(isset($data[$key."_TYPE"])? $data[$key."_TYPE"] : \Bitrix\Main\Text\Converter::TEXT)
+					($data[$key."_TYPE"] ?? \Bitrix\Main\Text\Converter::TEXT)
 				);
 			}
 		}

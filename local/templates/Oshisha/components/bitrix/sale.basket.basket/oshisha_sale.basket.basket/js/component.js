@@ -358,7 +358,14 @@
                 var totalTemplate = this.getTemplate('basket-total-template');
                 if (totalTemplate) {
                     this.result.TOTAL_RENDER_DATA['BASKET_ITEMS_COUNT'] = this.result.BASKET_ITEMS_COUNT;
-                    var totalRender = this.render(totalTemplate, this.result.TOTAL_RENDER_DATA);
+                    let disableCheckout  = this.result.TOTAL_RENDER_DATA.DISABLE_CHECKOUT;
+                    this.result.BASKET_ITEM_RENDER_DATA.forEach(function (item) {
+                        if (item['NOT_AVAILABLE']) {
+                            disableCheckout = true;
+                        }
+                    })
+                    var totalRender = this.render(totalTemplate,
+                        { ...this.result.TOTAL_RENDER_DATA, DISABLE_CHECKOUT: disableCheckout });
 
                     for (var i in totalNodes) {
                         if (totalNodes.hasOwnProperty(i) && BX.type.isDomNode(totalNodes[i])) {
@@ -488,6 +495,12 @@
         },
 
         checkOutAction: function () {
+            for (const [key, value] of Object.entries(this.items)) {
+                if (value['NOT_AVAILABLE']) {
+                    this.actionPool.deleteItem(key);
+                }
+            }
+
             document.location.href = this.params.PATH_TO_ORDER;
         },
 
@@ -998,6 +1011,7 @@
             }
             let basketItemHtml, sortIndex, categoryArray, i, key, categoryItem, category_item, category_id,
                 basketItemTemplate;
+            let in_category = false;
 
             basketItemTemplate = this.listTemplate === 'line'
                 ? this.getTemplate('basket-item-template')
@@ -1017,24 +1031,35 @@
 
                     for (key = 0; key < category_item.length; key++) {
                         if (category_item[key] === itemId) {
-                            categoryItem = BX('basket-items-list-wrapper')
-                                .querySelector('div[data-id-block-category="' + category_id[1] + '"]');
-
-                            if (sortIndex < BX.util.array_search(this.shownItems[0], this.sortedItems)) {
-                                // insert before
-                                categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
-                                this.shownItems.unshift(itemId);
-                            } else if (sortIndex > BX.util.array_search(this.shownItems[this.shownItems.length - 1], this.sortedItems)) {
-                                // insert after
-                                categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
-                                this.shownItems.push(itemId);
-                            } else {
-                                // insert between
-                                categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
-                                this.shownItems.splice(sortIndex + 1, 0, itemId);
-                            }
-
+                            in_category = true;
+                            break;
                         }
+                    }
+                    if (in_category) {
+                        break;
+                    }
+                }
+
+
+                if (in_category) {
+                    categoryItem = BX('basket-items-list-wrapper')
+                        .querySelector('div[data-id-block-category="' + category_id[1] + '"]');
+
+                    if (categoryItem === null ) {
+
+                    }
+                    else if (sortIndex < BX.util.array_search(this.shownItems[0], this.sortedItems)) {
+                        // insert before
+                        categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
+                        this.shownItems.unshift(itemId);
+                    } else if (sortIndex > BX.util.array_search(this.shownItems[this.shownItems.length - 1], this.sortedItems)) {
+                        // insert after
+                        categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
+                        this.shownItems.push(itemId);
+                    } else {
+                        // insert between
+                        categoryItem.querySelector('.card-body').insertAdjacentHTML('beforeEnd', basketItemHtml);
+                        this.shownItems.splice(sortIndex + 1, 0, itemId);
                     }
                 }
 
@@ -1338,11 +1363,13 @@
                     oldHeight = nodeAligner.clientHeight;
                 }
 
-                var basketItemHtml = this.renderBasketItem(basketItemTemplate, this.items[itemId]);
-                basketItemNode.insertAdjacentHTML('beforebegin', basketItemHtml);
+                if (!this.items[itemId].NOT_AVAILABLE) {
+                    var basketItemHtml = this.renderBasketItem(basketItemTemplate, this.items[itemId]);
+                    basketItemNode.insertAdjacentHTML('beforebegin', basketItemHtml);
+                }
 
                 let parentBox = basketItemNode.closest('div .box');
-                BX.remove(basketItemNode);
+                basketItemNode.remove();
 
                 if (oldHeight) {
                     nodeAligner = BX(this.ids.itemHeightAligner + itemId);
@@ -1371,6 +1398,10 @@
                 if (this.filter.isActive()) {
                     this.filter.highlightSearchMatch(this.items[itemId]);
                 }
+
+                // if (this.items[itemId].NOT_AVAILABLE) {
+                //     delete this.items[itemId];
+                // }
             }
         },
 
@@ -1439,7 +1470,7 @@
                         }
                         return -1;
                     }
-                }else {
+                } else {
                     return 0;
                 }
             });
@@ -1581,21 +1612,17 @@
                 quantity = measureRatio;
             }
 
-			if( quantity > parseInt(itemData.AVAILABLE_QUANTITY) )
-			{
-				let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
-				//alert('К покупке доступно максимум '+AVAILABLE_QUANTITY+'шт.');
-					$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('К покупке доступно максимум: '+AVAILABLE_QUANTITY+'шт.' +
-                        ' <div class="close-count-alert js__close-count-alert"></div>').addClass('show_block');
-				
-			} 
-			else
-			{
-				$('.alert_quantity[data-id="'+itemData.PRODUCT_ID+'"]').html('').removeClass('show_block');
-			}
-				 
-            
-			if (itemData.CHECK_MAX_QUANTITY === 'Y') {
+            if (quantity > parseInt(itemData.AVAILABLE_QUANTITY)) {
+                let AVAILABLE_QUANTITY = parseInt(itemData.AVAILABLE_QUANTITY)
+                $('.alert_quantity[data-id="' + itemData.PRODUCT_ID + '"]').html('К покупке доступно максимум: ' + AVAILABLE_QUANTITY + 'шт.' +
+                    ' <div class="close-count-alert js__close-count-alert"></div>').addClass('show_block');
+
+            } else {
+                $('.alert_quantity[data-id="' + itemData.PRODUCT_ID + '"]').html('').removeClass('show_block');
+            }
+
+
+            if (itemData.CHECK_MAX_QUANTITY === 'Y') {
                 availableQuantity = isQuantityFloat ? parseFloat(itemData.AVAILABLE_QUANTITY) : parseInt(itemData.AVAILABLE_QUANTITY);
                 if (availableQuantity > 0 && quantity > availableQuantity) {
                     quantity = availableQuantity;

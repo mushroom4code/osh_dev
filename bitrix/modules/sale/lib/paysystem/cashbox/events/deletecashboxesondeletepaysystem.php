@@ -21,15 +21,13 @@ class DeleteCashboxesOnDeletePaySystem implements IExecuteEvent
 	{
 		$result = new Sale\Result();
 
-		if (!$this->service->isSupportPrintCheck())
+		if (!$this->service || !$this->service->isSupportPrintCheck())
 		{
 			return $result;
 		}
 
 		/** @var Sale\Cashbox\CashboxPaySystem $cashboxClass */
 		$cashboxClass = $this->service->getCashboxClass();
-		$paySystemCodeForKkm = $cashboxClass::getPaySystemCodeForKkm();
-
 		$supportedKkmModels = [];
 
 		$paySystemIterator = Sale\PaySystem\Manager::getList([
@@ -45,7 +43,7 @@ class DeleteCashboxesOnDeletePaySystem implements IExecuteEvent
 				&& $paySystemService->getCashboxClass() === $cashboxClass
 			)
 			{
-				$supportedKkmModels[] = Sale\BusinessValue::getValuesByCode($paySystemService->getConsumerName(), $paySystemCodeForKkm);
+				$supportedKkmModels[] = $cashboxClass::getKkmValue($this->service);
 			}
 		}
 

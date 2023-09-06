@@ -24,6 +24,7 @@ class CZip implements IBXArchive
 	private $add_path = "";
 	private $replaceExistentFiles = false;
 	private $checkBXPermissions = false;
+	private $rule = [];
 
 	const ReadBlockSize = 2048;
 
@@ -104,7 +105,7 @@ class CZip implements IBXArchive
 
 		//starting measuring start time from here (only packing time)
 		define("ZIP_START_TIME", microtime(true));
-		unset($this->tempres);
+		$this->tempres = null;
 
 		$arFileList = &$this->_parseFileParams($arFileList);
 
@@ -113,7 +114,7 @@ class CZip implements IBXArchive
 			$arConvertedFileList[] = $this->io->GetPhysicalName($fullpath);
 
 		$packRes = null;
-		if (is_array($arFileList) && count($arFileList)>0)
+		if (is_array($arFileList) && !empty($arFileList))
 			$packRes = $this->_processFiles($arConvertedFileList, $this->add_path, $this->remove_path);
 
 		if ($isNewArchive)
@@ -144,7 +145,7 @@ class CZip implements IBXArchive
 			//make central dir footer
 			if (($res = $this->_writeCentralHeader($counter, $size, $offset, $zip_comment)) != 1)
 			{
-				unset($this->arHeaders);
+				$this->arHeaders = null;
 				return $res;
 			}
 
@@ -193,7 +194,7 @@ class CZip implements IBXArchive
 			if (($res = $this->_writeCentralHeader($counter + $arCentralDirInfo['entries'], $size, $offset, $zip_comment)) != 1)
 			{
 				//clear file list
-				unset($this->arHeaders);
+				$this->arHeaders = null;
 				return $res;
 			}
 
@@ -253,7 +254,7 @@ class CZip implements IBXArchive
 			return false;
 		}
 
-		if (!is_array($arFileList) || count($arFileList)<=0)
+		if (!is_array($arFileList) || empty($arFileList))
 			return true;
 
 		$j = -1;
@@ -264,7 +265,7 @@ class CZip implements IBXArchive
 		//files and directory scan
 		while ($j++ < count($arFileList) && ($this->tempres === "started"))
 		{
-			$filename = $arFileList[$j];
+			$filename = $arFileList[$j] ?? '';
 
 			if ($filename == '')
 				continue;
@@ -291,7 +292,7 @@ class CZip implements IBXArchive
 					else
 					{
 						//if startFile is found, continue to pack files and folders without startFile, starting from next
-						unset($this->startFile);
+						$this->startFile = null;
 						continue;
 					}
 				}
@@ -305,7 +306,7 @@ class CZip implements IBXArchive
 
 				if ($this->_haveTime())
 				{
-					if (!$this->_addFile($filename, $arFileHeaders, $this->add_path, $this->remove_path, array(), $arP))
+					if (!$this->_addFile($filename, $arFileHeaders, $this->add_path, $this->remove_path))
 					{
 						//$arErrors is filled in the _addFile method
 						$this->tempres = false;
@@ -379,6 +380,8 @@ class CZip implements IBXArchive
 	{
 		$this->SetOptions(array("ADD_PATH"=>$strPath));
 
+		$rule = $this->GetOptions()['RULE'];
+
 		$arParams = array(
 			"add_path"              => $this->add_path,
 			"remove_path"           => $this->remove_path,
@@ -388,7 +391,7 @@ class CZip implements IBXArchive
 			"callback_post_extract" => "",
 			"set_chmod"             => 0,
 			"by_name"               => "",
-			"by_index"              => "",
+			"by_index"              => array_key_exists("by_index", $rule) ?  $rule['by_index'] : "",
 			"by_preg"               => ""
 		);
 
@@ -434,6 +437,9 @@ class CZip implements IBXArchive
 
 		if (array_key_exists("CHECK_PERMISSIONS", $arOptions))
 			$this->checkBXPermissions = $arOptions["CHECK_PERMISSIONS"] === true;
+
+		if (array_key_exists("RULE", $arOptions))
+			$this->rule = $arOptions["RULE"];
 	}
 
 	/**
@@ -448,7 +454,8 @@ class CZip implements IBXArchive
 			"REMOVE_PATH"       => $this->remove_path,
 			"STEP_TIME"         => $this->step_time,
 			"UNPACK_REPLACE"    => $this->replaceExistentFiles,
-			"CHECK_PERMISSIONS" => $this->checkBXPermissions
+			"CHECK_PERMISSIONS" => $this->checkBXPermissions,
+			"RULE" 				=> $this->rule,
 			);
 
 		return $arOptions;
@@ -692,8 +699,6 @@ class CZip implements IBXArchive
 
 	private function _checkFormat()
 	{
-		$res = true;
-
 		$this->_errorReset();
 
 		if (!is_file($this->io->GetPhysicalName($this->zipname)))
@@ -709,7 +714,7 @@ class CZip implements IBXArchive
 		}
 
 		//possible checks: magic code, central header, each file header
-		return $res;
+		return true;
 	}
 
 	private function _createArchive($arFilesList, &$arResultList, &$arParams)
@@ -1003,7 +1008,7 @@ class CZip implements IBXArchive
 		return $res;
 	}
 
-	private function _addFile($filename, &$arHeader, $addDir, $removeDir, $removeAllDir, &$arParams)
+	private function _addFile($filename, &$arHeader, $addDir, $removeDir, $removeAllDir = false, $arParams = [])
 	{
 		$res = 1;
 
@@ -1142,21 +1147,12 @@ class CZip implements IBXArchive
 					return $this->arErrors;
 				}
 
-				if ($arParams['no_compression'])
-				{
-					//reading file content
-					$compressedContent = @fread($file, $arHeader['size']);
-					//calculating crc
-					$arHeader['crc'] = crc32($compressedContent);
-				}
-				else
-				{
-					//reading the file content
-					$content = fread($file, $arHeader['size']);
-					$arHeader['crc'] = crc32($content);
-					//compress the file
-					$compressedContent = gzdeflate($content);
-				}
+				//reading the file content
+				$content = $arHeader['size'] > 0 ? fread($file, $arHeader['size']) : '';
+				//calculating crc
+				$arHeader['crc'] = crc32($content);
+				//compress the file
+				$compressedContent = empty($arParams['no_compression']) ? gzdeflate($content) : $content;
 
 				//set header params
 				$arHeader['compressed_size'] = strlen($compressedContent);
@@ -2457,7 +2453,7 @@ class CZip implements IBXArchive
 			}
 
 			//compare items
-			if (($arTmpDirList[$i] != $arTmpPathList[$j]) && ($arTmpDirList[$i] != '') && ( $arTmpPathList[$j] != ''))
+			if ($arTmpDirList[$i] != $arTmpPathList[$j])
 			{
 				$res = 0;
 			}

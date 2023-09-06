@@ -33,13 +33,13 @@ UI\Extension::load([
 
 CJSCore::init([ 'avatar_editor' ]);
 
-if ((string)$arResult['FatalError'] !== '')
+if ((string) ($arResult['FatalError'] ?? '') !== '')
 {
 	?><span class="errortext"><?= $arResult['FatalError'] ?></span><br /><br /><?php
 }
 else
 {
-	if ((string)$arResult['ErrorMessage'] !== '')
+	if ((string) ($arResult['ErrorMessage'] ?? '') !== '')
 	{
 		?><span class="errortext"><?= $arResult['ErrorMessage'] ?></span><br /><br /><?php
 	}
@@ -66,14 +66,14 @@ else
 				initiatedByUserId: '<?= (int) $arResult['CurrentUserPerms']['InitiatedByUserId'] ?>',
 				favoritesValue: <?=($arResult["FAVORITES"] ? 'true' : 'false')?>,
 				canInitiate: <?=($arResult["CurrentUserPerms"]["UserCanInitiate"] && !$arResult["HideArchiveLinks"] ? 'true' : 'false')?>,
-				canProcessRequestsIn: <?=($arResult["CurrentUserPerms"]["UserCanProcessRequestsIn"] && !$arResult["HideArchiveLinks"] ? 'true' : 'false')?>,
+				canProcessRequestsIn: <?=(($arResult["CurrentUserPerms"]["UserCanProcessRequestsIn"] ?? null) && !$arResult["HideArchiveLinks"] ? 'true' : 'false')?>,
 				canModify: <?=($arResult["CurrentUserPerms"]["UserCanModifyGroup"] ? 'true' : 'false')?>,
 				canModerate: <?=($arResult["CurrentUserPerms"]["UserCanModerateGroup"] ? 'true' : 'false')?>,
 				hideArchiveLinks: <?=($arResult["HideArchiveLinks"] ? 'true' : 'false')?>,
 				containerNodeId: 'socialnetwork-group-card-box',
 				subscribeButtonNodeId: 'group_card_subscribe_button',
 				menuButtonNodeId: 'group_card_menu_button',
-				sliderMenuNodeId: '<?= CUtil::JSEscape((string)$arParams['SLIDER_MENU_CONTAINER_ID']) ?>',
+				sliderMenuNodeId: '<?= CUtil::JSEscape((string) ($arParams['SLIDER_MENU_CONTAINER_ID'] ?? '')) ?>',
 				styles: {
 					tags: {
 						box: 'socialnetwork-group-tag-box',
@@ -126,7 +126,7 @@ else
 
 		$avatarStyle = (
 			!empty($arResult['Group']['IMAGE_ID_FILE']['SRC'])
-				? 'style="background:url(\'' . $arResult['Group']['IMAGE_ID_FILE']['SRC'] . '\') no-repeat center center; background-size: cover;"'
+				? 'style="background:url(\'' . Uri::urnEncode($arResult['Group']['IMAGE_ID_FILE']['SRC']) . '\') no-repeat center center; background-size: cover;"'
 				: ''
 		);
 
@@ -273,7 +273,7 @@ else
 				<?php
 				$style = (
 					!empty($arResult['themePickerData'])
-						? 'background-image: url("' . $arResult['themePickerData']['previewImage'] . '"); background-color: ' . $arResult['themePickerData']['previewColor'] . ';'
+						? 'background-image: url("' . $arResult['themePickerData']['previewImage'] . '"); background-color: ' . ($arResult['themePickerData']['previewColor'] ?? '') . ';'
 						: ''
 				);
 				?>
@@ -307,7 +307,7 @@ else
 
 					$avatarStyle = (
 						!empty($arResult['Group']['IMAGE_ID_FILE']['SRC'])
-							? 'style="background: url(\'' . $arResult['Group']['IMAGE_ID_FILE']['SRC'] . '\') no-repeat center center; background-size: cover;"'
+							? 'style="background: url(\'' . Uri::urnEncode($arResult['Group']['IMAGE_ID_FILE']['SRC']). '\') no-repeat center center; background-size: cover;"'
 							: ''
 					);
 
@@ -390,7 +390,7 @@ else
 				$ownerBackgroundStyle = (
 					!empty($ownerData['USER_PERSONAL_PHOTO_FILE'])
 					&& !empty($ownerData['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED'])
-						? "background-image: url('" . htmlspecialcharsbx($ownerData['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED']) . "'); background-size: cover;"
+						? "background-image: url('" . Uri::urnEncode(htmlspecialcharsbx($ownerData['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED'])) . "'); background-size: cover;"
 						: ''
 				);
 
@@ -417,7 +417,7 @@ else
 					$backgroundStyle = (
 						!empty($scrumMaster['USER_PERSONAL_PHOTO_FILE'])
 						&& !empty($scrumMaster['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED'])
-							? "background-image: url('" . htmlspecialcharsbx($scrumMaster['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED']) . "'); background-size: cover;"
+							? "background-image: url('" . Uri::urnEncode(htmlspecialcharsbx($scrumMaster['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED'])) . "'); background-size: cover;"
 							: ''
 					);
 
@@ -501,7 +501,7 @@ else
 								$backgroundStyle = (
 									!empty($moderator['USER_PERSONAL_PHOTO_FILE'])
 									&& !empty($moderator['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED'])
-										? "background-image: url('" . htmlspecialcharsbx($moderator['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED']) . "'); background-size: cover;"
+										? "background-image: url('" . Uri::urnEncode(htmlspecialcharsbx($moderator['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED'])) . "'); background-size: cover;"
 										: ''
 								);
 
@@ -615,7 +615,7 @@ else
 								$backgroundStyle = (
 									!empty($member['USER_PERSONAL_PHOTO_FILE'])
 									&& !empty($member['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED'])
-										? "background-image: url('" . htmlspecialcharsbx($member['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED']) . "'); background-size: cover;"
+										? "background-image: url('" . Uri::urnEncode(htmlspecialcharsbx($member['USER_PERSONAL_PHOTO_FILE']['SRC_RESIZED'])) . "'); background-size: cover;"
 										: ''
 								);
 

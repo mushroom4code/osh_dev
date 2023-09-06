@@ -27,9 +27,9 @@ use Bitrix\Main\NotImplementedException;
  *
  * <<< ORMENTITYANNOTATION
  * @method static EO_UserTag_Query query()
- * @method static EO_UserTag_Result getByPrimary($primary, array $parameters = array())
+ * @method static EO_UserTag_Result getByPrimary($primary, array $parameters = [])
  * @method static EO_UserTag_Result getById($id)
- * @method static EO_UserTag_Result getList(array $parameters = array())
+ * @method static EO_UserTag_Result getList(array $parameters = [])
  * @method static EO_UserTag_Entity getEntity()
  * @method static \Bitrix\Socialnetwork\EO_UserTag createObject($setDefaultValues = true)
  * @method static \Bitrix\Socialnetwork\EO_UserTag_Collection createCollection()
@@ -107,6 +107,8 @@ class UserTagTable extends Entity\DataManager
 				: false
 		);
 
+		$params['tagName'] = $params['tagName'] ?? null;
+
 		$tagName = (
 			(is_array($params['tagName']) && !empty($params['tagName']))
 			|| (!is_array($params['tagName']) && $params['tagName'] <> '')
@@ -176,6 +178,8 @@ class UserTagTable extends Entity\DataManager
 		$connection = \Bitrix\Main\Application::getConnection();
 		$connection->queryExecute('SET @user_rank = 0');
 		$connection->queryExecute('SET @current_entity_id = 0');
+
+		$params['tagName'] = $params['tagName'] ?? null;
 
 		$tagName = (
 			(is_array($params['tagName']) && !empty($params['tagName']))

@@ -207,18 +207,58 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                             </div>
                         </div>
                         <div class="accordion mt-4" id="accordionBasket">
-                            <?php $i = 0;
+                            <?php
+                            if (!empty($arResult['DELETED_ITEMS'])) {
+                                ?>
+                                <div class="box" id="deleted_products_box">
+                                    <div class="card-header basket_category" id="openDeletedProducts">
+                                        <button class="btn btn-link btn-block d-flex justify-content-between
+                                           btn_basket_collapse" type="button"
+                                                data-id-category="DeletedProducts">
+                                            <span>Удаленные товары</span>
+                                            <i class="fa fa-angle-down" aria-hidden="true"
+                                               style="transform:rotate(180deg);"></i>
+                                        </button>
+                                    </div>
+                                    <div id="openCategoryDeletedProducts" class="category"
+                                         data-id-block-category="DeletedProducts">
+                                        <div class="card-body basket-items-list-table"></div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                             if (($arResult['NOT_AVAILABLE_BASKET_ITEMS_COUNT'] ?? 0) > 0 ) { ?>
+                                <div class="box" id=NotAvailable">
+                                    <div class="card-header basket_category alert alert-danger" id="openDNotAvailableProducts">
+                                        <button class="btn btn-link btn-block d-flex justify-content-between btn_basket_collapse" type="button"
+                                                data-id-category="NotAvailable">
+                                            <span class="font-weight-bold">Нет в наличии </span>
+                                            <i class="fa fa-angle-down" aria-hidden="true"
+                                               style="transform:rotate(180deg);"></i>
+                                        </button>
+                                    </div>
+                                    <div id="openCategoryNotAvailableProducts" class="category"
+                                         data-id-block-category="NotAvailable">
+                                        <div class="card-body basket-items-list-table"></div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            $i = 0;
                             foreach ($arResult['BASKET_ITEM_RENDER_DATA_CUSTOM'] as $key => $item) {
                                 $classCat = '';
                                 $styleIcon = '';
                                 $styleIcon = 'style="transform:rotate(180deg);"';
-                                if ($i === 0) {
+                                if ($i === 0 && empty($arResult['DELETED_ITEMS'])) {
                                     $styleIcon = 'style="transform:rotate(180deg);"';
                                 } else {
                                     $styleIcon = 'style="transform:rotate(0deg);"';
                                     $classCat = 'collapse_hide';
                                 }
-                                $newName = explode('_', $key); ?>
+                                $newName = explode('_', $key);
+                                if ($newName[1]==='NotAvailable') {
+                                    continue;
+                                } ?>
                                 <div class="box" id="<?= $newName[1] ?>">
                                     <div class="card-header basket_category" id="open<?= $newName[1] ?>">
                                         <button class="btn btn-link btn-block d-flex justify-content-between

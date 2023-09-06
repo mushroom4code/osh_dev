@@ -11,8 +11,8 @@ CUtil::InitJSCore(array("ajax", "fx"));
 ********************************************************************/
 /***************** BASE ********************************************/
 $arResult["SHOW_PANEL"]["TAGS"] = ($arParams["SHOW_TAGS"] != "N" ? "Y" : "N");
-$arParams["IMAGE_SIZE"] = (intval($arParams["IMAGE_SIZE"]) > 0 ? $arParams["IMAGE_SIZE"] : 100);
-$arParams["form_index"] = $_REQUEST["INDEX"];
+$arParams["IMAGE_SIZE"] = (intval($arParams["IMAGE_SIZE"] ?? 0) > 0 ? $arParams["IMAGE_SIZE"] : 100);
+$arParams["form_index"] = $_REQUEST["INDEX"] ?? null;
 if (!empty($arParams["form_index"]))
 	$arParams["form_index"] = preg_replace("/[^a-z0-9]/is", "_", $arParams["form_index"]);
 $arParams["tabIndex"] = intval(!empty($arParams["TAB_INDEX"]) ? $arParams["TAB_INDEX"] : 10);
@@ -20,7 +20,7 @@ $arParams["FORM_ID"] = "REPLIER".$arParams["form_index"];
 $arParams["EDITOR_CODE_DEFAULT"] = ($arParams["EDITOR_CODE_DEFAULT"] == "Y" ? "Y" : "N");
 /*******************************************************************/
 if (LANGUAGE_ID == 'ru') {
-	$path = str_replace(array("\\", "//"), "/", dirname(__FILE__)."/ru/script.php");
+	$path = str_replace(array("\\", "//"), "/", __DIR__."/ru/script.php");
 	@include_once($path); }
 /********************************************************************
 				/Input params

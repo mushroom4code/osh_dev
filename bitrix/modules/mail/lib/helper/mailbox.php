@@ -41,7 +41,7 @@ abstract class Mailbox
 	 * @return \Bitrix\Mail\Helper\Mailbox|false
 	 * @throws \Exception
 	 */
-	public static function createInstance($id, $throw = true)
+	public static function createInstance($id, $throw = true): Mailbox|bool
 	{
 		return static::rawInstance(array('=ID' => (int) $id, '=ACTIVE' => 'Y'), $throw);
 	}
@@ -294,6 +294,30 @@ abstract class Mailbox
 		return $this->mailbox;
 	}
 
+	public function getMailboxId(): int
+	{
+		$mailbox = self::getMailbox();
+
+		if (isset($mailbox['ID']))
+		{
+			return (int) $mailbox['ID'];
+		}
+
+		return 0;
+	}
+
+	public function getMailboxOwnerId(): int
+	{
+		$mailbox = self::getMailbox();
+
+		if (isset($mailbox['USER_ID']))
+		{
+			return (int) $mailbox['USER_ID'];
+		}
+
+		return 0;
+	}
+
 	/*
 	Additional check that the quota has not been exceeded
 	since the actual creation of the mailbox instance in php
@@ -325,8 +349,7 @@ abstract class Mailbox
 
 	private function findMessagesWithAnEmptyBody(int $count, $mailboxId)
 	{
-		$resyncTime = new Main\Type\DateTime();
-		$resyncTime->add('- '.static::MESSAGE_RESYNCHRONIZATION_TIME.' seconds');
+		$reSyncTime = (new Main\Type\DateTime())->add('- '.static::MESSAGE_RESYNCHRONIZATION_TIME.' seconds');
 
 		$ids = Mail\Internals\MailEntityOptionsTable::getList(
 			[
@@ -337,35 +360,20 @@ abstract class Mailbox
 					'=ENTITY_TYPE' => 'MESSAGE',
 					'=PROPERTY_NAME' => 'UNSYNC_BODY',
 					'=VALUE' => 'Y',
-					'<=DATE_INSERT' => $resyncTime,
+					'<=DATE_INSERT' => $reSyncTime,
 				]
 				,
 				'limit' => $count,
 			]
 		)->fetchAll();
 
-		$messIds = array_map(
+		return array_map(
 			function ($item)
 			{
 				return $item['ENTITY_ID'];
 			},
 			$ids
 		);
-
-		foreach($messIds as $id)
-		{
-			Mail\Internals\MailEntityOptionsTable::update([
-				'MAILBOX_ID' => $mailboxId,
-				'ENTITY_ID' => $id,
-				'ENTITY_TYPE' => 'MESSAGE',
-				'PROPERTY_NAME' => 'UNSYNC_BODY',
-			],
-			[
-				'VALUE' => 'N',
-			]);
-		}
-
-		return $messIds;
 	}
 
 	//Finds completely missing messages
@@ -431,7 +439,7 @@ abstract class Mailbox
 			Setting a new time for an attempt to synchronize the mailbox
 			through the agent for users with a free tariff
 		*/
-		if (!LicenseManager::isSyncAvailable())
+		if (!LicenseManager::isSyncAvailable() || !LicenseManager::checkTheMailboxForSyncAvailability($this->mailbox['ID']))
 		{
 			$this->mailbox['OPTIONS']['next_sync'] = time() + 3600 * 24;
 
@@ -592,7 +600,7 @@ abstract class Mailbox
 						array(
 							'id' => $this->mailbox['ID'],
 							'status' => sprintf('%.3f', $status),
-							'sessid' => $this->syncParams['sessid'] ?: $this->session,
+							'sessid' => $this->syncParams['sessid'] ?? $this->session,
 							'timestamp' => microtime(true),
 						),
 						$params
@@ -1837,6 +1845,7 @@ abstract class Mailbox
 				$this->mailbox['USER_ID'],
 				'new_message',
 				array(
+					'mailboxOwnerId' => $this->mailbox['USER_ID'],
 					'mailboxId' => $this->mailbox['ID'],
 					'count' => $count,
 					'message' => $message,
@@ -1852,5 +1861,41 @@ abstract class Mailbox
 	final public static function getTimeout()
 	{
 		return min(max(0, ini_get('max_execution_time')) ?: static::SYNC_TIMEOUT, static::SYNC_TIMEOUT);
+	}
+
+	final public static function getForUserByEmail($email)
+	{
+		$mailbox = Mail\MailboxTable::getUserMailboxWithEmail($email);
+		if (isset($mailbox['EMAIL']))
+		{
+			return static::createInstance($mailbox['ID'], false);
+		}
+
+		return null;
+	}
+
+	final public static function findBy($id, $email): ?Mailbox
+	{
+		$instance = null;
+
+		if ($id > 0)
+		{
+			if ($mailbox = Mail\MailboxTable::getUserMailbox($id))
+			{
+				$instance = static::createInstance($mailbox['ID'], false);
+			}
+		}
+
+		if (!empty($email) && empty($instance))
+		{
+			$instance = static::getForUserByEmail($email);
+		}
+
+		if (!empty($instance))
+		{
+			return $instance;
+		}
+
+		return null;
 	}
 }

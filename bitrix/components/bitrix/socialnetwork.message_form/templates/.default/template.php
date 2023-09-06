@@ -4,7 +4,7 @@ $GLOBALS["APPLICATION"]->AddHeadScript("/bitrix/js/main/utils.js");
 // *****************************************************************************************
 if (LANGUAGE_ID == 'ru')
 {
-	$path = str_replace(array("\\", "//"), "/", dirname(__FILE__)."/ru/script.php");
+	$path = str_replace(array("\\", "//"), "/", __DIR__."/ru/script.php");
 	@include_once($path);
 }
 // *****************************************************************************************
@@ -12,7 +12,7 @@ if ($arResult["NEED_AUTH"] == "Y")
 {
 	$APPLICATION->AuthForm("");
 }
-elseif ($arResult["FatalError"] <> '')
+elseif (!empty($arResult["FatalError"]))
 {
 	?>
 	<span class="errortext"><?=$arResult["FatalError"]?></span><br /><br />
@@ -20,7 +20,7 @@ elseif ($arResult["FatalError"] <> '')
 }
 else
 {
-	if($arResult["ErrorMessage"] <> '')
+	if(!empty($arResult["ErrorMessage"]))
 	{
 		?>
 		<span class="errortext"><?=$arResult["ErrorMessage"]?></span><br /><br />

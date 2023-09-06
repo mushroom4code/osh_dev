@@ -16,7 +16,7 @@ class CBPMixedCondition extends CBPActivityCondition
 		$this->condition = $condition;
 	}
 
-	public function Evaluate(CBPActivity $ownerActivity)
+	public function evaluate(CBPActivity $ownerActivity)
 	{
 		if (!$this->isConditionGroupExist())
 		{
@@ -33,14 +33,14 @@ class CBPMixedCondition extends CBPActivityCondition
 			[$property, $value] = $ownerActivity->getRuntimeProperty($cond['object'], $cond['field'], $rootActivity);
 			$fieldTypeObject = $this->getFieldTypeObject($rootActivity, $property);
 
-			$conditionValue = ($property && $cond['value']) ? self::additionalExtractValue($fieldTypeObject, $cond['value']) : $cond['value'];
+			$conditionValue = self::additionalExtractValue($fieldTypeObject, $cond['value']);
 
 			$items[] = [
 				'joiner' => $this->getJoiner($cond),
 				'operator' => $cond['operator'],
 				'valueToCheck' => $value,
 				'fieldType' => $fieldTypeObject,
-				'value' => $property ? $rootActivity->ParseValue($conditionValue, $property['Type']) : null,
+				'value' => $property ? $rootActivity->parseValue($conditionValue, $property['Type']) : null,
 				'fieldName' => $property['Name'] ?? $cond['field'],
 			];
 		}
@@ -51,7 +51,10 @@ class CBPMixedCondition extends CBPActivityCondition
 		]);
 
 		$result = $conditionGroup->evaluate();
-		$this->writeAutomationConditionLog($items, $conditionGroup->getEvaluateResults(), $result, $ownerActivity);
+		if ($ownerActivity->workflow->isDebug())
+		{
+			$this->writeAutomationConditionLog($items, $conditionGroup->getEvaluateResults(), $result, $ownerActivity);
+		}
 
 		return $result;
 	}
@@ -79,8 +82,17 @@ class CBPMixedCondition extends CBPActivityCondition
 	}
 
 	public static function GetPropertiesDialog(
-		$documentType, $arWorkflowTemplate, $arWorkflowParameters, $arWorkflowVariables, $defaultValue,
-		$arCurrentValues = null, $formName = "", $popupWindow = null, $currentSiteId = null, $arWorkflowConstants = null)
+		$documentType,
+		$arWorkflowTemplate,
+		$arWorkflowParameters,
+		$arWorkflowVariables,
+		$defaultValue,
+		$arCurrentValues = null,
+		$formName = "",
+		$popupWindow = null,
+		$currentSiteId = null,
+		$arWorkflowConstants = null
+	)
 	{
 		$runtime = CBPRuntime::GetRuntime();
 		$documentService = $runtime->GetService("DocumentService");
@@ -105,8 +117,13 @@ class CBPMixedCondition extends CBPActivityCondition
 			foreach ($defaultValue as $cond)
 			{
 				$property = static::getDialogProperty(
-					$cond['object'], $cond['field'], $documentType,
-					$arWorkflowTemplate, $arWorkflowParameters, $arWorkflowVariables, $arWorkflowConstants
+					$cond['object'],
+					$cond['field'],
+					$documentType,
+					$arWorkflowTemplate,
+					$arWorkflowParameters,
+					$arWorkflowVariables,
+					$arWorkflowConstants
 				);
 				if ($property)
 				{
@@ -120,13 +137,6 @@ class CBPMixedCondition extends CBPActivityCondition
 			$arCurrentValues['conditions'][] = ['operator' => '!empty'];
 		}
 
-		$javascriptFunctions = $documentService->GetJSFunctionsForFields(
-			$documentType,
-			"objFieldsPVC",
-			$arWorkflowParameters + $arWorkflowVariables,
-			$arFieldTypes
-		);
-
 		return $runtime->ExecuteResourceFile(
 			__FILE__,
 			"properties_dialog.php",
@@ -138,12 +148,19 @@ class CBPMixedCondition extends CBPActivityCondition
 				"arVariables" => $arWorkflowVariables,
 				"formName" => $formName,
 				"arFieldTypes" => $arFieldTypes,
-				"javascriptFunctions" => $javascriptFunctions,
 			]
 		);
 	}
 
-	public static function GetPropertiesDialogValues($documentType, $arWorkflowTemplate, $arWorkflowParameters, $arWorkflowVariables, $arCurrentValues, &$errors, $arWorkflowConstants = null)
+	public static function GetPropertiesDialogValues(
+		$documentType,
+		$arWorkflowTemplate,
+		$arWorkflowParameters,
+		$arWorkflowVariables,
+		$arCurrentValues,
+		&$errors,
+		$arWorkflowConstants = null
+	)
 	{
 		$errors = [];
 
@@ -160,11 +177,7 @@ class CBPMixedCondition extends CBPActivityCondition
 			return null;
 		}
 
-		$runtime = CBPRuntime::GetRuntime();
-		$documentService = $runtime->GetService("DocumentService");
-
 		$result = [];
-
 		foreach ($arCurrentValues['mixed_condition'] as $index => $condition)
 		{
 			$property = static::getDialogProperty(
@@ -182,21 +195,30 @@ class CBPMixedCondition extends CBPActivityCondition
 				continue;
 			}
 
-			$errors = [];
-			$value = $documentService->GetFieldInputValue(
+			$inputResult = static::getConditionFieldInputValue(
+				$condition['operator'],
 				$documentType,
 				$property,
-				"mixed_condition_value_".$index,
+				"mixed_condition_value_" . $index,
 				$arCurrentValues,
-				$errors
 			);
+			if (!$inputResult->isSuccess())
+			{
+				foreach ($inputResult->getErrors() as $error)
+				{
+					$errors[] = [
+						'message' => $error->getMessage(),
+						'code' => $error->getCode(),
+					];
+				}
+			}
 
 			$result[] = [
 				'object' => $condition['object'],
 				'field' => $condition['field'],
 				'operator' => $condition['operator'],
-				'value' => $value,
-				'joiner' => (int)$condition['joiner'],
+				'value' => $inputResult->getData()['value'] ?? '',
+				'joiner' => (int)($condition['joiner'] ?? 0),
 			];
 		}
 

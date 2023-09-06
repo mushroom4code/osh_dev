@@ -188,7 +188,16 @@ class CCatalogAdminTools extends CCatalogAdminToolsAll
 
 		$arItems = array();
 
-		$productLimits = Catalog\Config\State::getExceedingProductLimit($intIBlockID);
+		$sectionId = $arParams['find_section_section'] ?? null;
+		if ($sectionId !== null)
+		{
+			$sectionId = (int)$sectionId;
+			if ($sectionId <= 0)
+			{
+				$sectionId = null;
+			}
+		}
+		$productLimits = Catalog\Config\State::getExceedingProductLimit($intIBlockID, $sectionId);
 		if (!empty($productLimits))
 		{
 			if (!empty($productLimits['HELP_MESSAGE']))
@@ -410,7 +419,9 @@ class CCatalogAdminTools extends CCatalogAdminToolsAll
 				&& \Bitrix\Main\Loader::includeModule('crm')
 			)
 			{
-				if (\Bitrix\Crm\Order\Import\Instagram::isAvailable())
+				if (\Bitrix\Crm\Order\Import\Instagram::isAvailable()
+					&& Access\AccessController::getCurrent()->check(Access\ActionDictionary::ACTION_CATALOG_IMPORT_EXECUTION)
+				)
 				{
 					$arItems[] = [
 						'TEXT' => Loc::getMessage('BT_CAT_ADM_TOOLS_ADD_INSTAGRAM_IMPORT_2'),
@@ -1665,7 +1676,7 @@ class CCatalogAdminTools extends CCatalogAdminToolsAll
 			'CAN_BUY_ZERO' => false,
 			'CATALOG_PURCHASING_PRICE' => [],
 			'CATALOG_MEASURE_RATIO' => false,
-			'CATALOG_MEASURE' => false,
+			'CATALOG_MEASURE' => [],
 			'CATALOG_VAT_INCLUDED' => [],
 			'VAT_ID' => [],
 			'CATALOG_WEIGHT' => false,
@@ -1782,6 +1793,11 @@ class CCatalogAdminTools extends CCatalogAdminToolsAll
 	 */
 	public static function needSummaryStoreAmountByPermissions(): bool
 	{
+		if (!Loader::includeModule('crm'))
+		{
+			return false;
+		}
+
 		if (!Catalog\Config\State::isUsedInventoryManagement())
 		{
 			return false;
@@ -1803,6 +1819,11 @@ class CCatalogAdminTools extends CCatalogAdminToolsAll
 
 	public static function allowedShowQuantityFields(): bool
 	{
+		if (!Loader::includeModule('crm'))
+		{
+			return true;
+		}
+
 		if (!Catalog\Config\State::isUsedInventoryManagement())
 		{
 			return true;
@@ -1820,6 +1841,11 @@ class CCatalogAdminTools extends CCatalogAdminToolsAll
 
 	public static function getSummaryStoreAmountByPermissions(array $productIds): array
 	{
+		if (!Loader::includeModule('crm'))
+		{
+			return [];
+		}
+
 		if (!Catalog\Config\State::isUsedInventoryManagement())
 		{
 			return [];
@@ -1996,7 +2022,8 @@ class CCatalogAdminProductSetEdit
 						'DISCOUNT_PERCENT' => '',
 						'SORT' => 100,
 						'NEW_ITEM' => true,
-						'EMPTY_ITEM' => true
+						'EMPTY_ITEM' => true,
+						'ITEM_NAME' => '',
 					);
 				}
 				break;
@@ -2008,7 +2035,8 @@ class CCatalogAdminProductSetEdit
 						'QUANTITY' => '',
 						'SORT' => 100,
 						'NEW_ITEM' => true,
-						'EMPTY_ITEM' => true
+						'EMPTY_ITEM' => true,
+						'ITEM_NAME' => '',
 					);
 				}
 				break;
@@ -2279,7 +2307,8 @@ class CCatalogAdminProductSetEdit
 				'BTN_ID' => $strIDPrefix.'_ITEMS_ADD',
 				'CELLS' => $arCellInfo['CELLS'],
 				'CELL_PARAMS' => $arCellInfo['CELL_PARAMS'],
-				'SEARCH_PAGE' => (defined('SELF_FOLDER_URL') ? SELF_FOLDER_URL : '/bitrix/admin/').'cat_product_search_dialog.php'
+				// TODO: remove this dirty hack after disable old product card in public shop
+				'SEARCH_PAGE' => (defined('SELF_FOLDER_URL') ? '/shop/settings/' : '/bitrix/admin/').'cat_product_search_dialog.php',
 			);
 			?>
 <script type="text/javascript">
