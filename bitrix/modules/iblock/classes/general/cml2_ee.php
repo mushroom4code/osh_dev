@@ -4084,6 +4084,8 @@ class CIBlockCMLImportEe
                     )
                 );
             }
+
+            //enterego добавлено создание и обновление коэффициента единиц измерения товаров
             if ($productResult->isSuccess())
             {
                 //TODO: replace this code after upload measure ratio from 1C
@@ -4092,20 +4094,13 @@ class CIBlockCMLImportEe
                     'filter' => array('=PRODUCT_ID' => $arElement['ID'])
                 ));
                 $ratioRow = $iterator->fetch();
-
-                if (isset($arXMLElement[$this->mess["IBLOCK_XML2_UNITS"]])) {
-                    if (isset($arXMLElement[$this->mess["IBLOCK_XML2_UNITS"]][$this->mess["IBLOCK_XML2_MEASURE"]])) {
-                        if (isset($arXMLElement[$this->mess["IBLOCK_XML2_UNITS"]][$this->mess["IBLOCK_XML2_MEASURE"]][$this->mess["IBLOCK_XML2_COEFF"]])) {
-                           $newRatio = $arXMLElement[$this->mess["IBLOCK_XML2_UNITS"]][$this->mess["IBLOCK_XML2_MEASURE"]][$this->mess["IBLOCK_XML2_COEFF"]];
-                        }
-                    }
-                }
+                $newRatio = $arXMLElement[$this->mess["IBLOCK_XML2_UNITS"]][$this->mess["IBLOCK_XML2_MEASURE"]][$this->mess["IBLOCK_XML2_COEFF"]] ?? 1;
 
                 if (empty($ratioRow))
                 {
                     $ratioResult = \Bitrix\Catalog\MeasureRatioTable::add(array(
                         'PRODUCT_ID' => $arElement['ID'],
-                        'RATIO' => isset($newRatio) ? $newRatio : 1,
+                        'RATIO' => $newRatio,
                         'IS_DEFAULT' => 'Y'
                     ));
                     unset($ratioResult);
@@ -4113,7 +4108,7 @@ class CIBlockCMLImportEe
                     $ratioResult = \Bitrix\Catalog\MeasureRatioTable::update(
                         $ratioRow['ID'],
                         array(
-                            'RATIO' => isset($newRatio) ? $newRatio : 1,
+                            'RATIO' => $newRatio,
                             'IS_DEFAULT' => 'Y'
                         )
                     );
@@ -4121,6 +4116,7 @@ class CIBlockCMLImportEe
                 }
                 unset($ratioRow, $iterator);
             }
+            //enterego
 
             if(isset($arElement["PRICES"]))
                 $this->SetProductPrice($arElement["ID"], $arElement["PRICES"], $arElement["DISCOUNTS"]);
@@ -4582,7 +4578,7 @@ class CIBlockCMLImportEe
                         )
                     );
                 }
-                // here was MeasureRatioTable update/add
+                //enterego убрано лишнее использование MeasureRatioTable update/add
 
                 $this->SetProductPrice($arElement["ID"], $arElement["PRICES"], $arElement["DISCOUNTS"]);
                 \Bitrix\Iblock\PropertyIndex\Manager::updateElementIndex($IBLOCK_ID, $arElement["ID"]);

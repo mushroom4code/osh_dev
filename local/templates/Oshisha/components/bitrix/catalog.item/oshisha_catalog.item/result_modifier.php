@@ -44,15 +44,4 @@ $measureRatio = \Bitrix\Catalog\MeasureRatioTable::getList(array(
 
 $item['MEASURE_RATIO'] = $item['ITEM_MEASURE_RATIOS'][$item['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
 
-$activeUnitId = $item['PROPERTIES'][PROPERTY_ACTIVE_UNIT]['VALUE'];
-
-if (!empty($activeUnitId)) {
-    $item[PROPERTY_ACTIVE_UNIT] = CCatalogMeasure::GetList(array(), array("CODE" => $activeUnitId))->fetch();
-    if (!empty($item[PROPERTY_ACTIVE_UNIT])) {
-        $item[PROPERTY_ACTIVE_UNIT] = $item[PROPERTY_ACTIVE_UNIT]['SYMBOL_RUS'];
-    } else {
-        $item[PROPERTY_ACTIVE_UNIT] = 'шт';
-    }
-} else {
-    $item[PROPERTY_ACTIVE_UNIT] = 'шт';
-}
+EnteregoHelper::setProductsActiveUnit($item);

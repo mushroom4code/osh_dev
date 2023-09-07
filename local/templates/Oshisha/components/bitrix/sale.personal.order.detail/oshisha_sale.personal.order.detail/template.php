@@ -171,33 +171,6 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
 									$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
 									foreach ($arResult['BASKET'] as $basketItem) {
-
-                                        $db_props = CIBlockElement::GetProperty(IBLOCK_CATALOG, $basketItem['PRODUCT_ID'], array("sort" => "asc"), array("CODE" => PROPERTY_ACTIVE_UNIT));
-                                        if ($ar_props = $db_props->Fetch()) {
-                                            $activeUnitId = IntVal($ar_props["VALUE"]);
-                                        } else {
-                                            $activeUnitId = '';
-                                        }
-
-                                        if (!empty($activeUnitId)) {
-                                            $basketItem[PROPERTY_ACTIVE_UNIT] = CCatalogMeasure::GetList(array(), array("CODE" => $activeUnitId))->fetch();
-                                            if (!empty($basketItem[PROPERTY_ACTIVE_UNIT])) {
-
-                                                $basketItem[PROPERTY_ACTIVE_UNIT] = $basketItem[PROPERTY_ACTIVE_UNIT]['SYMBOL_RUS'];
-                                            } else {
-                                                $basketItem[PROPERTY_ACTIVE_UNIT] = 'шт';
-                                            }
-                                        } else {
-                                            $basketItem[PROPERTY_ACTIVE_UNIT] = 'шт';
-                                        }
-
-                                        $basketItem['MEASURE_RATIO'] = \Bitrix\Catalog\MeasureRatioTable::getList(array(
-                                            'select' => array('RATIO'),
-                                            'filter' => array('=PRODUCT_ID' => $basketItem['PRODUCT_ID'])
-                                        ))->fetch()['RATIO'];
-
-                                        $basketItem['QUANTITY_WITH_RATIO'] = $basketItem['QUANTITY'] / $basketItem['MEASURE_RATIO'];
-
                                         foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
 											$basketItem['COUNT_LIKES'] = $count;
 										}
@@ -290,7 +263,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
 													<div>
 														<div class="sale-order-detail-order-item-properties text-right">
 															<strong class="bx-price"><?= $basketItem['FORMATED_SUM'] ?>
-																x <?= $basketItem['QUANTITY_WITH_RATIO'] ?> <?= $basketItem[PROPERTY_ACTIVE_UNIT] ?>.</strong>
+																x <?= $basketItem['QUANTITY_WITH_RATIO'] ?> <?= $basketItem['ACTIVE_UNIT'] ?>.</strong>
 														</div>
 													</div>
 												</div>

@@ -61,7 +61,6 @@ $useDiscount = $item['PROPERTIES']['USE_DISCOUNT'];
 $newProduct = $item['PROPERTIES'][PROP_NEW];
 $hitProduct = $item['PROPERTIES'][PROP_HIT];
 $rowResHidePrice = $item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
-$measureRatio = $item['MEASURE_RATIO'];
 
 $show_price = true;
 $priceBasket = 0;
@@ -444,9 +443,9 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                     <div class="btn red_button_cart btn-plus add2basket"
                                          data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                          data-product_id="<?= $item['ID']; ?>"
-                                         data-active-unit="<?= $item[PROPERTY_ACTIVE_UNIT] ?>"
-                                         data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $measureRatio ?>"
-                                         data-measure-ratio="<?= $measureRatio ?>"
+                                         data-active-unit="<?= $item['ACTIVE_UNIT'] ?>"
+                                         data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                         data-measure-ratio="<?= $item['MEASURE_RATIO'] ?>"
                                          id="<?= $arItemIDs['BUY_LINK']; ?>"
                                          <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
                                         <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
@@ -458,25 +457,25 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                             <a class="btn-minus  minus_icon no-select add2basket"
                                                id="<?= $arItemIDs['BUY_LINK']; ?>"
                                                href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                               data-active-unit="<?= $item[PROPERTY_ACTIVE_UNIT] ?>"
-                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $measureRatio ?>"
-                                               data-measure-ratio="<?= $measureRatio ?>"
+                                               data-active-unit="<?= $item['ACTIVE_UNIT'] ?>"
+                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                               data-measure-ratio="<?= $item['MEASURE_RATIO'] ?>"
                                                data-product_id="<?= $item['ID']; ?>">
                                             </a>
                                             <div class="product-item-amount-field-block">
                                                 <input class="product-item-amount card_element"
                                                        id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                                        type="number"
-                                                       max="<?= $item['PRODUCT']['QUANTITY'] / $measureRatio ?>"
-                                                       data-active-unit="<?= $item[PROPERTY_ACTIVE_UNIT] ?>"
-                                                       data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $measureRatio ?>"
-                                                       data-measure-ratio="<?= $measureRatio ?>"
-                                                       value="<?= $priceBasket / $measureRatio ?>">
+                                                       max="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                                       data-active-unit="<?= $item['ACTIVE_UNIT'] ?>"
+                                                       data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                                       data-measure-ratio="<?= $item['MEASURE_RATIO'] ?>"
+                                                       value="<?= $priceBasket / $item['MEASURE_RATIO'] ?>">
                                             </div>
                                             <a class="btn-plus plus_icon no-select add2basket"
-                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $measureRatio ?>"
-                                               data-measure-ratio="<?= $measureRatio ?>"
-                                               data-active-unit="<?= $item[PROPERTY_ACTIVE_UNIT] ?>"
+                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                               data-measure-ratio="<?= $item['MEASURE_RATIO'] ?>"
+                                               data-active-unit="<?= $item['ACTIVE_UNIT'] ?>"
                                                id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
                                                data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                                data-product_id="<?= $item['ID']; ?>"
