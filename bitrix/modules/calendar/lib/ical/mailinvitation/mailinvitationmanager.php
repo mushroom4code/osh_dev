@@ -29,6 +29,7 @@ class MailInvitationManager
 	public static function manageSendingInvitation($serializedSenders): void
 	{
 		$serializedSenders = str_replace("\'", "'", $serializedSenders);
+		$serializedSenders = \Bitrix\Main\Text\Emoji::decode($serializedSenders);
 		$sendersCollection = self::unserializeMailSendersBatch($serializedSenders);
 
 		if (!is_iterable($sendersCollection))
@@ -62,12 +63,12 @@ class MailInvitationManager
 				}
 			}
 
-			if (count($unsuccessfulSent) > 0)
+			if (!empty($unsuccessfulSent))
 			{
 				self::createAgentSent($unsuccessfulSent);
 			}
 
-			if (count($failSent) > 0)
+			if (!empty($failSent))
 			{
 				self::sentFailSentNotify($failSent);
 			}
@@ -95,17 +96,27 @@ class MailInvitationManager
 	 */
 	public static function createAgentSent(array $sendersCollection): void
 	{
+		// TODO: it's better to avoid serialized data in the agent parameters, maybe use QueueManager here
 		$serializedData = str_replace("'", "\'", serialize($sendersCollection));
-//		$nextAgentDate = DateTime::createFromTimestamp(strtotime('now') + 10)->format(Date::convertFormatToPhp(FORMAT_DATETIME));
-		CAgent::addAgent(
-			"\\Bitrix\\Calendar\\ICal\\MailInvitation\\MailInvitationManager::manageSendingInvitation('" . $serializedData . "');",
-			"calendar",
-			"N",
-			0,
-			"",
-			"Y",
-			""
-		);
+		$agentName = "\\Bitrix\\Calendar\\ICal\\MailInvitation\\MailInvitationManager::manageSendingInvitation('"
+			. $serializedData
+			. "');";
+		$agentName = \Bitrix\Main\Text\Emoji::encode($agentName);
+
+		// Workaround to avoid deserialization bug like mantis#162578
+		// We need length in bytes not in symbols
+		if (strlen($agentName) < 65000)
+		{
+			CAgent::addAgent(
+				$agentName,
+				"calendar",
+				"N",
+				0,
+				"",
+				"Y",
+				""
+			);
+		}
 	}
 
 	/**
@@ -115,14 +126,18 @@ class MailInvitationManager
 	{
 		foreach ($failSent as $parentId => $item)
 		{
+			if (isset($item[0]))
+			{
+				$item = $item[0];
+			}
 			CCalendarNotify::Send([
 				'mode' => 'fail_ical_invite',
 				'eventId' => $parentId,
-				'userId' => $item[0]['userId'],
-				'guestId' => $item[0]['userId'],
+				'userId' => $item['userId'],
+				'guestId' => $item['userId'],
 				'items' => $item,
-				'name' => $item[0]['name'],
-				'icalMethod' => $item[0]['method'],
+				'name' => $item['name'],
+				'icalMethod' => $item['method'],
 			]);
 		}
 	}

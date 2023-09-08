@@ -1,6 +1,6 @@
 import {ajax as Ajax} from 'main.core';
 import {Logger} from 'im.v2.lib.logger';
-import {ChatTypes, EventType, RestMethod} from 'im.v2.const';
+import {DialogType, EventType, RestMethod} from 'im.v2.const';
 import {EventEmitter} from 'main.core.events';
 import {SearchCache} from './search-cache';
 import {EntityIdTypes, ImSearchItem} from './types/search-item';
@@ -61,10 +61,10 @@ export class SearchService
 
 	loadRecentSearchFromServer(): Promise
 	{
-		return this.loadRecentFromServer().then(responseFromCache => {
+		return this.loadRecentFromServer().then(responseFromServer => {
 			Logger.warn('Im.Search: Recent search loaded from server');
-			const items = SearchUtils.createItemMap(responseFromCache.items);
-			const recentItems = SearchUtils.prepareRecentItems(responseFromCache.recentItems);
+			const items = SearchUtils.createItemMap(responseFromServer.items);
+			const recentItems = SearchUtils.prepareRecentItems(responseFromServer.recentItems);
 
 			return this.updateModels(items, true).then(() => {
 				return this.getItemsFromRecentItems(recentItems, items);
@@ -236,7 +236,7 @@ export class SearchService
 			avatar: user.avatar,
 			color: user.color,
 			name: user.name,
-			type: ChatTypes.user
+			type: DialogType.user
 		};
 	}
 
@@ -507,7 +507,7 @@ export class SearchService
 					avatar: preparedUser.avatar,
 					color: preparedUser.color,
 					name: preparedUser.name,
-					type: ChatTypes.user,
+					type: DialogType.user,
 					dialogId: item.getId()
 				});
 			}

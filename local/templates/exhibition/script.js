@@ -260,7 +260,7 @@ $(document).ready(function () {
     }
 
 
-    if ($(div).is('.bx_catalog_tile_section')) {
+    if ($('.bx_catalog_tile_section').find('.product-item-small-card').length > 3) {
         let count = 4,
             variableWidth = false;
         if (screenWidth <= 1380) {

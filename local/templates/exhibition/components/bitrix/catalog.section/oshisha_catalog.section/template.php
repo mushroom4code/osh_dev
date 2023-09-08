@@ -255,25 +255,25 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             <!-- items-container -->
             <?php if (!empty($arResult['ITEMS']) && !empty($arResult['ITEM_ROWS'])) {
 
-                $areaIds = array();
-                global $option_site;
-            foreach ($arResult['ITEMS'] as $item) {
+                    $areaIds = array();
+                    global $option_site;
+                    foreach ($arResult['ITEMS'] as &$elem) {
 
-            if ($item['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'] == 'Нет') {
-            if ($GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] !== 'Нет'){
-                $GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] = 'Нет'; ?>
-                <script type="application/javascript">
-                    $(document).find('.message_for_user_minzdrav').text('<?=$option_site->text_rospetrebnadzor_catalog?>');
-                </script>
-            <?php
-            }
-            }
+                        if ($elem['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'] == 'Нет') {
+                            if ($GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] !== 'Нет'){
+                                $GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] = 'Нет'; ?>
+                                <script type="application/javascript">
+                                    $(document).find('.message_for_user_minzdrav').text('<?=$option_site->text_rospetrebnadzor_catalog?>');
+                                </script>
+                            <?php
+                            }
+                        }
 
-            $uniqueId = $item['ID'] . '_' . md5($this->randString() . $component->getAction());
-            $areaIds[$item['ID']] = $this->GetEditAreaId($uniqueId);
-            $this->AddEditAction($uniqueId, $item['EDIT_LINK'], $elementEdit);
-            $this->AddDeleteAction($uniqueId, $item['DELETE_LINK'], $elementDelete, $elementDeleteParams);
-            }
+                        $uniqueId = $elem['ID'] . '_' . md5($this->randString() . $component->getAction());
+                        $areaIds[$elem['ID']] = $this->GetEditAreaId($uniqueId);
+                        $this->AddEditAction($uniqueId, $elem['EDIT_LINK'], $elementEdit);
+                        $this->AddDeleteAction($uniqueId, $elem['DELETE_LINK'], $elementDelete, $elementDeleteParams);
+                    }
             foreach ($arResult['ITEM_ROWS'] as $rowData) {
             $rowItems = array_splice($arResult['ITEMS'], 0, $rowData['COUNT']);
 
@@ -463,36 +463,40 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                             <div class="col-sm-6 product-item-small-card bx_catalog_item double">
                                 <div class="row">
                                     <?php
-                                    for ($i = 0; $i < $rowItemsCount - 1; $i++) {
-                                        ?>
-                                        <div class="col-6">
-                                            <?php
-                                            $APPLICATION->IncludeComponent(
-                                                'bitrix:catalog.item',
-                                                'oshisha_catalog.item',
-                                                array(
-                                                    'RESULT' => array(
-                                                        'ITEM' => $rowItems[$i],
-                                                        'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
-                                                        'TYPE' => $rowData['TYPE'],
-                                                        'BIG_LABEL' => 'N',
-                                                        'BIG_DISCOUNT_PERCENT' => 'N',
-                                                        'BIG_BUTTONS' => 'N',
-                                                        'SCALABLE' => 'N',
-                                                        'AR_BASKET' => $arBasketItems,
-                                                        'F_USER_ID' => $FUser_id,
-                                                        'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
-                                                        'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
-                                                    ),
-                                                    'PARAMS' => $generalParams
-                                                        + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
-                                                ),
-                                                $component,
-                                                array('HIDE_ICONS' => 'Y')
-                                            );
+                                    if ($rowItemsCount) {
+
+
+                                        for ($i = 0; $i < $rowItemsCount - 1; $i++) {
                                             ?>
-                                        </div>
-                                        <?php
+                                            <div class="col-6">
+                                                <?php
+                                                $APPLICATION->IncludeComponent(
+                                                    'bitrix:catalog.item',
+                                                    'oshisha_catalog.item',
+                                                    array(
+                                                        'RESULT' => array(
+                                                            'ITEM' => $rowItems[$i],
+                                                            'AREA_ID' => $areaIds[$rowItems[$i]['ID']],
+                                                            'TYPE' => $rowData['TYPE'],
+                                                            'BIG_LABEL' => 'N',
+                                                            'BIG_DISCOUNT_PERCENT' => 'N',
+                                                            'BIG_BUTTONS' => 'N',
+                                                            'SCALABLE' => 'N',
+                                                            'AR_BASKET' => $arBasketItems,
+                                                            'F_USER_ID' => $FUser_id,
+                                                            'IS_SUBSCRIPTION_PAGE' => $arParams['IS_SUBSCRIPTION_PAGE'],
+                                                            'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
+                                                        ),
+                                                        'PARAMS' => $generalParams
+                                                            + array('SKU_PROPS' => $arResult['SKU_PROPS'][$rowItems[$i]['IBLOCK_ID']])
+                                                    ),
+                                                    $component,
+                                                    array('HIDE_ICONS' => 'Y')
+                                                );
+                                                ?>
+                                            </div>
+                                            <?php
+                                        }
                                     }
                                     ?>
                                 </div>

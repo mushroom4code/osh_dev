@@ -1,13 +1,18 @@
-import {ConfirmDeleteDialog} from "calendar.controls";
 import {Util} from 'calendar.util';
 import {EntryManager} from "./entrymanager";
-import { Type, Dom } from 'main.core';
+import { Type } from 'main.core';
 
 export {EntryManager};
 
 export class Entry
 {
 	FULL_DAY_LENGTH = 86400;
+
+	static CAL_TYPES = {
+		'user': 'user',
+		'group': 'group',
+		'company': 'company_calendar',
+	};
 	constructor(options = {})
 	{
 		this.prepareData(options.data);
@@ -50,7 +55,7 @@ export class Entry
 		{
 			this.data.DT_LENGTH = this.FULL_DAY_LENGTH;
 		}
-		
+
 		if (
 			!Type.isString(this.data.DATE_FROM) && !Type.isString(this.data.DATE_TO)
 			&& Type.isDate(this.data.dateFrom) && Type.isDate(this.data.dateTo)
@@ -116,6 +121,11 @@ export class Entry
 				this.data.REMIND.push({type: 'min', count: value});
 			}, this);
 			delete this.data.remind;
+		}
+
+		if (this.data.permissions)
+		{
+			this.permissions = this.data.permissions;
 		}
 	}
 
@@ -252,6 +262,16 @@ export class Entry
 	isTask()
 	{
 		return this.data['~TYPE'] === 'tasks';
+	}
+
+	isSharingEvent()
+	{
+		return this.data['EVENT_TYPE'] === '#shared#' || this.data['EVENT_TYPE'] === '#shared_crm#';
+	}
+
+	isInvited()
+	{
+		return this.getCurrentStatus() === 'Q';
 	}
 
 	isLocation()
@@ -549,9 +569,9 @@ export class Entry
 		return Math.round((to.getTime() - from.getTime()) / Util.getDayLength()) + 1;
 	}
 
-	getName()
+	getName(): string
 	{
-		return this.name || this.defaultNewName;
+		return (this.name || '');
 	}
 
 	getColor()
@@ -581,7 +601,7 @@ export class Entry
 		else
 		{
 			// Broadcast event
-			BX.onCustomEvent('BX.Calendar.Entry:beforeDelete', [{entryId: this.id, recursionMode: recursionMode}]);
+			BX.onCustomEvent('BX.Calendar.Entry:beforeDelete', [{entryId: this.id, recursionMode: recursionMode, entryData: this.data}]);
 
 			EntryManager.showDeleteEntryNotification(this);
 			this.deleteParts(recursionMode);
@@ -613,7 +633,7 @@ export class Entry
 		let recursionMode = 'this';
 		if (this.isRecursive())
 		{
-			BX.onCustomEvent('BX.Calendar.Entry:beforeDelete', [{entryId: this.id, recursionMode: recursionMode}]);
+			BX.onCustomEvent('BX.Calendar.Entry:beforeDelete', [{entryId: this.id, recursionMode: recursionMode, entryData: this.data}]);
 
 			EntryManager.showDeleteEntryNotification(this);
 			this.deleteParts(recursionMode);
@@ -698,6 +718,7 @@ export class Entry
 			if (deleteTimeoutData)
 			{
 				EntryManager.unregisterDeleteTimeout(deleteTimeoutData);
+				BX.onCustomEvent('BX.Calendar.Entry:cancelDelete', [{entryId: this.id, entryData: this.data}]);
 				this.delayTimeoutMap.delete(this.delayTimeoutMap);
 			}
 			clearTimeout(this.deleteTimeout);

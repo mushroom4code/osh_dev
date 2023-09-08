@@ -66,6 +66,19 @@ class SkuRepository extends BaseIblockElementRepository implements SkuRepository
 	}
 
 	/**
+	 * Sku entities for product.
+	 *
+	 * @param BaseProduct $product
+	 * @param array $params parameters for `getList` method
+	 *
+	 * @return \Bitrix\Catalog\v2\Sku\Sku[]
+	 */
+	public function getEntitiesByProduct(BaseProduct $product, array $params): \Generator
+	{
+		return $this->getSkuIteratorForProduct($product, $params);
+	}
+
+	/**
 	 * @param \Bitrix\Catalog\v2\Product\BaseProduct $product
 	 * @return \Bitrix\Catalog\v2\Sku\SkuCollection|\Bitrix\Catalog\v2\Sku\BaseSku[]
 	 */
@@ -312,11 +325,45 @@ class SkuRepository extends BaseIblockElementRepository implements SkuRepository
 
 	public function setDetailUrlTemplate(?string $template): BaseIblockElementRepository
 	{
-		if ($this->productRepository->getDetailUrlTemplate() === null)
+		if (isset($this->productRepository))
 		{
-			$this->productRepository->setDetailUrlTemplate($template);
+			if ($this->productRepository->getDetailUrlTemplate() === null)
+			{
+				$this->productRepository->setDetailUrlTemplate($template);
+				$this->productRepository->setAutoloadDetailUrl($template !== null);
+			}
 		}
 
 		return parent::setDetailUrlTemplate($template);
+	}
+
+	public function setAutoloadDetailUrl(bool $state): BaseIblockElementRepository
+	{
+		if (isset($this->productRepository))
+		{
+			$this->productRepository->setAutoloadDetailUrl($state);
+		}
+
+		return parent::setAutoloadDetailUrl($state);
+	}
+
+	public function getCountByProductId(int $productId): int
+	{
+		$filter = [
+			'PROPERTY_' . $this->iblockInfo->getSkuPropertyId() => $productId,
+		];
+
+		return \CIBlockElement::GetList(
+			[],
+			array_merge(
+				[
+					// 'ACTIVE' => 'Y',
+					// 'ACTIVE_DATE' => 'Y',
+				],
+				$filter,
+				$this->getAdditionalFilter()
+			),
+			[]
+		);
 	}
 }

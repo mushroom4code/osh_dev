@@ -9,6 +9,7 @@ namespace Bitrix\Sale;
 
 use Bitrix\Currency;
 use Bitrix\Main;
+use Bitrix\Main\ArgumentNullException;
 use Bitrix\Main\Type;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Sale\Internals;
@@ -72,17 +73,8 @@ abstract class OrderBase extends Internals\Entity
 	 */
 	protected function __construct(array $fields = array())
 	{
-		$priceFields = ['PRICE', 'PRICE_DELIVERY', 'SUM_PAID', 'PRICE_PAYMENT', 'DISCOUNT_VALUE'];
-
-		foreach ($priceFields as $code)
-		{
-			if (isset($fields[$code]))
-			{
-				$fields[$code] = PriceMaths::roundPrecision($fields[$code]);
-			}
-		}
-
 		parent::__construct($fields);
+
 		$this->isNew = (empty($fields['ID']));
 	}
 
@@ -195,7 +187,7 @@ abstract class OrderBase extends Internals\Entity
 	 * @param $siteId
 	 * @param null $userId
 	 * @param null $currency
-	 * @return Order
+	 * @return static
 	 * @throws Main\ArgumentOutOfRangeException
 	 * @throws Main\NotImplementedException
 	 * @throws Main\ObjectException
@@ -463,18 +455,6 @@ abstract class OrderBase extends Internals\Entity
 	 */
 	public function setField($name, $value)
 	{
-		$priceFields = array(
-			'PRICE' => 'PRICE',
-			'PRICE_DELIVERY' => 'PRICE_DELIVERY',
-			'SUM_PAID' => 'SUM_PAID',
-			'PRICE_PAYMENT' => 'PRICE_PAYMENT',
-			'DISCOUNT_VALUE' => 'DISCOUNT_VALUE',
-		);
-		if (isset($priceFields[$name]))
-		{
-			$value = PriceMaths::roundPrecision($value);
-		}
-
 		if ($this->isCalculatedField($name))
 		{
 			$this->calculatedFields->set($name, $value);
@@ -514,6 +494,16 @@ abstract class OrderBase extends Internals\Entity
 		return $result;
 	}
 
+	protected function normalizeValue($name, $value)
+	{
+		if ($this->isPriceField($name))
+		{
+			$value = PriceMaths::roundPrecision($value);
+		}
+
+		return parent::normalizeValue($name, $value);
+	}
+
 	/**
 	 * @internal
 	 * Set value without call events on field modify
@@ -526,18 +516,6 @@ abstract class OrderBase extends Internals\Entity
 	 */
 	public function setFieldNoDemand($name, $value)
 	{
-		$priceFields = array(
-			'PRICE' => 'PRICE',
-			'PRICE_DELIVERY' => 'PRICE_DELIVERY',
-			'SUM_PAID' => 'SUM_PAID',
-			'PRICE_PAYMENT' => 'PRICE_PAYMENT',
-			'DISCOUNT_VALUE' => 'DISCOUNT_VALUE',
-		);
-		if (isset($priceFields[$name]))
-		{
-			$value = PriceMaths::roundPrecision($value);
-		}
-
 		if ($this->isCalculatedField($name))
 		{
 			$this->calculatedFields->set($name, $value);
@@ -827,6 +805,8 @@ abstract class OrderBase extends Internals\Entity
 	 * @param string $currency
 	 *
 	 * @return Main\Result
+	 *
+	 * @throws ArgumentNullException if currency empty
 	 */
 	public function changeCurrency(string $currency): Main\Result
 	{
@@ -835,6 +815,10 @@ abstract class OrderBase extends Internals\Entity
 		if ($this->getCurrency() === $currency)
 		{
 			return $result;
+		}
+		elseif (empty($currency))
+		{
+			throw new ArgumentNullException('currency');
 		}
 
 		$this->setFieldNoDemand('CURRENCY', $currency);
@@ -928,6 +912,17 @@ abstract class OrderBase extends Internals\Entity
 	public function isMarked()
 	{
 		return $this->getField('MARKED') === "Y";
+	}
+
+	protected function isPriceField(string $name) : bool
+	{
+		return
+			$name === 'PRICE'
+			|| $name === 'PRICE_DELIVERY'
+			|| $name === 'SUM_PAID'
+			|| $name === 'PRICE_PAYMENT'
+			|| $name === 'DISCOUNT_VALUE'
+		;
 	}
 
 	/**

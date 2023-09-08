@@ -39,10 +39,14 @@ class CFile extends CAllFile
 
 	public static function SaveForDB(&$arFields, $field, $strSavePath)
 	{
-		$arFile = $arFields[$field];
+		$arFile = $arFields[$field] ?? null;
 		if(isset($arFile) && is_array($arFile))
 		{
-			if($arFile["name"] <> '' || $arFile["del"] <> '' || array_key_exists("description", $arFile))
+			if(
+				(isset($arFile["name"]) && $arFile["name"] <> '')
+				|| (isset($arFile["del"]) && $arFile["del"] <> '')
+				|| array_key_exists("description", $arFile)
+			)
 			{
 				$res = static::SaveFile($arFile, $strSavePath);
 				if($res !== false)
@@ -154,18 +158,18 @@ class CFile extends CAllFile
 		return "";
 	}
 
-	public static function SaveFile($arFile, $strSavePath, $forceRandom = false, $skipExtension = false, $dirAdd = '', $checkDuplicates = true)
+	public static function SaveFile($arFile, $strSavePath, $forceRandom = false, $skipExtension = false, $dirAdd = '')
 	{
-		$strFileName = GetFileName($arFile["name"]);	/* filename.gif */
+		$strFileName = GetFileName($arFile["name"] ?? '');	/* filename.gif */
 
 		if(isset($arFile["del"]) && $arFile["del"] <> '')
 		{
-			static::Delete($arFile["old_file"]);
+			static::Delete($arFile["old_file"] ?? 0);
 			if($strFileName == '')
 				return "NULL";
 		}
 
-		if($arFile["name"] == '')
+		if(!isset($arFile["name"]) || $arFile["name"] == '')
 		{
 			if(isset($arFile["description"]) && intval($arFile["old_file"])>0)
 			{
@@ -205,10 +209,7 @@ class CFile extends CAllFile
 			return false;
 		}
 
-		if($arFile["type"] == "image/pjpeg" || $arFile["type"] == "image/jpg")
-		{
-			$arFile["type"] = "image/jpeg";
-		}
+		$arFile["type"] = Web\MimeType::normalize($arFile["type"]);
 
 		$original = null;
 
@@ -217,7 +218,7 @@ class CFile extends CAllFile
 		$bExternalStorage = false;
 		foreach(GetModuleEvents("main", "OnFileSave", true) as $arEvent)
 		{
-			if(ExecuteModuleEventEx($arEvent, array(&$arFile, $strFileName, $strSavePath, $forceRandom, $skipExtension, $dirAdd, $checkDuplicates)))
+			if(ExecuteModuleEventEx($arEvent, array(&$arFile, $strFileName, $strSavePath, $forceRandom, $skipExtension, $dirAdd)))
 			{
 				$bExternalStorage = true;
 				break;
@@ -346,7 +347,7 @@ class CFile extends CAllFile
 			$arFile["FILE_HASH"] = static::CalculateHash($physicalFileName, $arFile["size"]);
 
 			//control of duplicates
-			if($checkDuplicates && $arFile["FILE_HASH"] <> '')
+			if ($arFile["FILE_HASH"] <> '')
 			{
 				$lockId = static::lockFileHash($arFile["size"], $arFile["FILE_HASH"]);
 				$original = static::FindDuplicate($arFile["size"], $arFile["FILE_HASH"]);
@@ -362,7 +363,14 @@ class CFile extends CAllFile
 					if($physicalFileName <> $io->GetPhysicalName($originalPath))
 					{
 						unlink($physicalFileName);
-						@rmdir($io->GetPhysicalName($dirName));
+						try
+						{
+							rmdir($io->GetPhysicalName($dirName));
+						}
+						catch (\ErrorException $exception)
+						{
+							// Ignore a E_WARNING Error
+						}
 					}
 				}
 			}
@@ -385,11 +393,6 @@ class CFile extends CAllFile
 			}
 		}
 
-		if($arFile["type"] == '' || !is_string($arFile["type"]))
-		{
-			$arFile["type"] = "application/octet-stream";
-		}
-
 		/****************************** QUOTA ******************************/
 		if (COption::GetOptionInt("main", "disk_space") > 0 && $original === null)
 		{
@@ -404,11 +407,11 @@ class CFile extends CAllFile
 			"CONTENT_TYPE" => $arFile["type"],
 			"SUBDIR" => $arFile["SUBDIR"],
 			"FILE_NAME" => $arFile["FILE_NAME"],
-			"MODULE_ID" => $arFile["MODULE_ID"],
+			"MODULE_ID" => $arFile["MODULE_ID"] ?? '',
 			"ORIGINAL_NAME" => $arFile["ORIGINAL_NAME"],
-			"DESCRIPTION" => (isset($arFile["description"])? $arFile["description"] : ''),
-			"HANDLER_ID" => (isset($arFile["HANDLER_ID"])? $arFile["HANDLER_ID"] : ''),
-			"EXTERNAL_ID" => (isset($arFile["external_id"])? $arFile["external_id"]: md5(mt_rand())),
+			"DESCRIPTION" => ($arFile["description"] ?? ''),
+			"HANDLER_ID" => ($arFile["HANDLER_ID"] ?? ''),
+			"EXTERNAL_ID" => ($arFile["external_id"] ?? md5(mt_rand())),
 			"FILE_HASH" => ($original === null? $arFile["FILE_HASH"] : ''),
 		));
 
@@ -485,20 +488,22 @@ class CFile extends CAllFile
 	 * Adds information about a duplicate file.
 	 * @param int $originalId Original file ID.
 	 * @param int|null $duplicateId Duplicate file ID (optional if the original and duplicate files are the same).
+	 * @param bool $checkOriginal Check if the desired original file is already in the table and
+	 * if it's a duplicate of another file, then use the real original file ID from the table.
 	 */
-	public static function AddDuplicate($originalId, $duplicateId = null)
+	public static function AddDuplicate($originalId, $duplicateId = null, bool $checkOriginal = false)
 	{
 		if($duplicateId === null)
 		{
 			$duplicateId = $originalId;
 		}
 
-		if($originalId == $duplicateId)
+		if($checkOriginal || $originalId == $duplicateId)
 		{
 			//possibly there is the original already for the file
 			$original = Internal\FileDuplicateTable::query()
 				->addSelect("ORIGINAL_ID")
-				->where("DUPLICATE_ID", $duplicateId)
+				->where("DUPLICATE_ID", $originalId)
 				->fetch();
 
 			if($original)
@@ -608,7 +613,7 @@ class CFile extends CAllFile
 				$file = $io->GetFile($fname);
 				if ($file->isExists() && $file->unlink())
 				{
-					$deleteSize += $res['FILE_SIZE'];
+					$deleteSize += $duplicate->getFileSize();
 				}
 
 				$directory = $io->GetDirectory($dname);
@@ -637,6 +642,24 @@ class CFile extends CAllFile
 			CDiskQuota::updateDiskQuota("file", $deleteSize, "delete");
 		}
 		/****************************** QUOTA ******************************/
+	}
+
+	public static function CloneFile(int $fileId): ?int
+	{
+		$originalFile = static::GetByID($fileId)->Fetch();
+		if (!$originalFile)
+		{
+			return null;
+		}
+
+		$originalFile['FILE_HASH'] = '';
+
+		$cloneId = static::DoInsert($originalFile);
+
+		static::AddDuplicate($fileId, $cloneId, true);
+		static::CleanCache($cloneId);
+
+		return $cloneId;
 	}
 
 	public static function DoInsert($arFields)
@@ -1245,6 +1268,10 @@ class CFile extends CAllFile
 		}
 	}
 
+	/**
+	 * @deprecated Consider using \CFile::CloneFile().
+	 * @see \CFile::CloneFile()
+	 */
 	public static function CopyFile($FILE_ID, $bRegister = true, $newPath = "")
 	{
 		$z = static::GetByID($FILE_ID);
@@ -1307,12 +1334,6 @@ class CFile extends CAllFile
 			{
 				if($bRegister)
 				{
-					$hash = Internal\FileHashTable::getRowById($FILE_ID);
-					if($hash)
-					{
-						$zr["FILE_HASH"] = $hash["FILE_HASH"];
-					}
-
 					$NEW_FILE_ID = static::DoInsert($zr);
 
 					if (COption::GetOptionInt("main", "disk_space") > 0)
@@ -1476,9 +1497,14 @@ class CFile extends CAllFile
 
 	public static function CheckImageFile($arFile, $iMaxSize=0, $iMaxWidth=0, $iMaxHeight=0, $access_typies=array(), $bForceMD5=false, $bSkipExt=false)
 	{
-		if($arFile["name"] == "")
+		if (!isset($arFile["name"]) || $arFile["name"] == "")
 		{
 			return "";
+		}
+
+		if (empty($arFile["tmp_name"]))
+		{
+			return GetMessage("FILE_BAD_FILE_TYPE").".<br>";
 		}
 
 		if(preg_match("#^php://filter#i", $arFile["tmp_name"]))
@@ -1734,7 +1760,6 @@ function ImgShw(ID, width, height, alt)
 				{
 					$intWidth = $imageInfo->getWidth();
 					$intHeight = $imageInfo->getHeight();
-					$strAlt = "";
 				}
 				else
 				{
@@ -1750,7 +1775,6 @@ function ImgShw(ID, width, height, alt)
 			{
 				$intWidth = intval($iSizeWHTTP);
 				$intHeight = intval($iSizeHHTTP);
-				$strAlt = "";
 			}
 		}
 
@@ -1859,7 +1883,7 @@ function ImgShw(ID, width, height, alt)
 		}
 		else
 		{
-			$strAlt = $arImgParams['ALT']? $arImgParams['ALT'] : ($arImgParams['DESCRIPTION'] ?? '');
+			$strAlt = $arImgParams['ALT'] ?? ($arImgParams['DESCRIPTION'] ?? '');
 
 			if($sParams === null || $sParams === false)
 			{
@@ -2013,12 +2037,12 @@ function ImgShw(ID, width, height, alt)
 
 		if($path == '' || $path == "/")
 		{
-			return NULL;
+			return null;
 		}
 
 		if(preg_match("#^(php://filter|phar://)#i", $path))
 		{
-			return NULL;
+			return null;
 		}
 
 		if(preg_match("#^https?://#", $path))
@@ -2094,11 +2118,11 @@ function ImgShw(ID, width, height, alt)
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].$path))
 					$path = $_SERVER["DOCUMENT_ROOT"].$path;
 				else
-					return NULL;
+					return null;
 			}
 
 			if(is_dir($path))
-				return NULL;
+				return null;
 
 			$arFile["name"] = $io->GetLogicalName(bx_basename($path));
 			$arFile["size"] = filesize($path);
@@ -2385,10 +2409,26 @@ function ImgShw(ID, width, height, alt)
 						$io->Delete($f->GetPathWithName());
 					}
 				}
-				@rmdir($io->GetPhysicalName($dir_entry->GetPathWithName()));
+
+				try
+				{
+					@rmdir($io->GetPhysicalName($dir_entry->GetPathWithName()));
+				}
+				catch(\ErrorException $exception)
+				{
+					// Ignore a E_WARNING Error
+				}
 			}
 		}
-		@rmdir($io->GetPhysicalName($d->GetPathWithName()));
+
+		try
+		{
+			@rmdir($io->GetPhysicalName($d->GetPathWithName()));
+		}
+		catch(\ErrorException $exception)
+		{
+			// Ignore a E_WARNING Error
+		}
 
 		return $delete_size;
 	}
@@ -2877,9 +2917,9 @@ function ImgShw(ID, width, height, alt)
 		$APPLICATION->RestartBuffer();
 
 		$cur_pos = 0;
-		$filesize = ($arFile["FILE_SIZE"] > 0? $arFile["FILE_SIZE"] : $arFile["size"]);
+		$filesize = ($arFile["FILE_SIZE"] > 0? $arFile["FILE_SIZE"] : ($arFile["size"] ?? 0));
 		$size = $filesize-1;
-		$p = mb_strpos($_SERVER["HTTP_RANGE"], "=");
+		$p = mb_strpos($_SERVER["HTTP_RANGE"] ?? '', "=");
 		if(intval($p)>0)
 		{
 			$bytes = mb_substr($_SERVER["HTTP_RANGE"], $p + 1);
@@ -2904,7 +2944,7 @@ function ImgShw(ID, width, height, alt)
 		{
 			$filetime = $file->getModificationTime();
 		}
-		elseif($arFile["tmp_name"] <> '')
+		elseif(isset($arFile["tmp_name"]) && $arFile["tmp_name"] <> '')
 		{
 			$tmpFile = new IO\File($arFile["tmp_name"]);
 			$filetime = $tmpFile->getModificationTime();
@@ -3310,6 +3350,34 @@ function ImgShw(ID, width, height, alt)
 	 */
 	public static function disableTrackingResizeImage()
 	{}
+
+	public static function DeleteHashAgent()
+	{
+		global $DB;
+
+		$res = $DB->Query("select distinct h1.FILE_ID
+			FROM b_file_hash h1, b_file_hash h2
+			WHERE h1.FILE_ID > h2.FILE_ID
+				AND h1.FILE_SIZE = h2.FILE_SIZE
+				AND h1.FILE_HASH = h2.FILE_HASH
+			limit 10000
+		");
+
+		$delete = [];
+		while ($ar = $res->Fetch())
+		{
+			$delete[] = $ar['FILE_ID'];
+		}
+
+		if (!empty($delete))
+		{
+			$DB->Query("DELETE FROM b_file_hash WHERE FILE_ID IN (" . implode(',', $delete) . ")");
+
+			return __METHOD__ . '();';
+		}
+
+		return '';
+	}
 }
 
 global $arCloudImageSizeCache;

@@ -576,7 +576,6 @@ else
              //enterego custom user price
             if (\Bitrix\Main\Loader::includeModule('osh.userprice')) {
                 \Enterego\UserPrice\CmlUserPrice::LoadUserPriceRules($ABS_FILE_NAME, $loader);
-                \Enterego\UserPrice\PluginStatic::UpdateStopAccessToSpecialPriceTypesOnSale();
             }
 
             $o = new CXMLFileStream;

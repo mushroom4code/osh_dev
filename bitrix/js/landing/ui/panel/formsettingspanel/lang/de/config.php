@@ -42,6 +42,9 @@ $MESS["LANDING_FORM_CALLBACK_WARNING_HEADER"] = "Keine verfügbaren Telefonnumme
 $MESS["LANDING_FORM_CALLBACK_WARNING_TEXT"] = "Verbinden Sie bitte eine Telefonnummer auf der Seite der <a href=\"/telephony/\" class=\"landing-ui-component-link\" target=\"_blank\">Telefonie</a>, um Rückrufe nutzen zu können.";
 $MESS["LANDING_FORM_DEFAULT_PHONE_NOT_SELECTED"] = "Nicht ausgewählt";
 $MESS["LANDING_FORM_DEFAULT_VALUE_NOT_SELECTED"] = "Nicht ausgewählt";
+$MESS["LANDING_FORM_EDITOR_PHONE_VERIFY_CUSTOM_DESCRIPTION"] = "Aus Sicherheitsgründen werden Sie den Verifizierungscode eingegeben müssen, den wir Ihnen an Ihr Telefon gesendet haben. Das muss nur einmal für jeweiliges Formular gemacht werden.";
+$MESS["LANDING_FORM_EDITOR_PHONE_VERIFY_CUSTOM_SLIDER_TITLE"] = "Formular bearbeiten";
+$MESS["LANDING_FORM_EDITOR_PHONE_VERIFY_CUSTOM_TITLE"] = "Bestätigungscode wurde an Sie per SMS gesendet";
 $MESS["LANDING_FORM_EDITOR_SAVE_BUTTON_STATE_SAVED"] = "Gespeichert";
 $MESS["LANDING_FORM_EMBED_AUTO_SHOW_SETTINGS_HEADER"] = "Formular anzeigen";
 $MESS["LANDING_FORM_EMBED_CLICK_SETTINGS_HEADER"] = "Formular per Klick anzeigen";
@@ -169,7 +172,7 @@ $MESS["LANDING_HEADER_AND_BUTTONS_VARIABLE_NAME"] = "Vorname";
 $MESS["LANDING_IDENTIFY_HEADER"] = "Stammkunde";
 $MESS["LANDING_IDENTIFY_MESSAGE_DESCRIPTION"] = "Je weniger Zeit Ihre Kunden damit verbringen, um ein Formular auszufüllen, umso höher ist die Wahrscheinlichkeit, eine Auftrag zu bekommen.<br>Wenn ein Kunde ein Formular auf Ihrer Website bereits ausgefüllt hat, sind diese Informationen schon in Ihrem CRM. Das soll genutzt werden. Lassen Sie das Formular den Kunden erkennen und die Felder mit den schon vorhandenen Informationen ausfüllen.";
 $MESS["LANDING_IDENTIFY_MESSAGE_HEADER"] = "Die Funktion \"Stammkunde\" ist aktiviert.";
-$MESS["LANDING_RULE_CONDITION_VALUE_EMPTY"] = "Nicht ausgewählt";
+$MESS["LANDING_RULE_CONDITION_VALUE_EMPTY_MSGVER_1"] = "Nicht definiert";
 $MESS["LANDING_RULE_CONDITION_VALUE_NO"] = "Nein";
 $MESS["LANDING_RULE_CONDITION_VALUE_YES"] = "Ja";
 $MESS["LANDING_RULE_ENTRY_ADD_FIELD_LABEL"] = "Feld auswählen";
@@ -201,6 +204,7 @@ $MESS["LANDING_SPAM_PROTECTION_CUSTOM_KEYS_CHECKBOX_LABEL"] = "Benutzerdefiniert
 $MESS["LANDING_SPAM_PROTECTION_KEYS_FORM_HELP_HREF"] = "https://www.google.com/recaptcha/about/";
 $MESS["LANDING_SPAM_PROTECTION_KEYS_FORM_HELP_TEXT"] = "Wie bekomme ich den Schlüssel?";
 $MESS["LANDING_SPAM_PROTECTION_KEYS_FORM_TITLE"] = "Geben Sie Schlüssel reCAPTCHA ein";
+$MESS["LANDING_SPAM_PROTECTION_MESSAGE_WARNING_RECAPTCHA"] = "Google reCAPTCHA ist ein Sicherheitsservice, der von Google LLC angeboten wird.<br>Mit der Nutzung von reCAPTCHA akzeptieren Sie, dass die Daten gesammelt und an Google LLC gesendet werden, wie dies in den entsprechenden <a href=\"#URL_POLICIES_TERMS#\" target=\"_blank\">Nutzungsbedingungen</a> und in der <a href=\"#URL_POLICIES_PRIVACY#\" target=\"_blank\">Datenschutzerklärung</a> besagt wird.";
 $MESS["LANDING_SPAM_PROTECTION_RECAPTCHA_KEY_FIELD_TITLE"] = "Schlüssel";
 $MESS["LANDING_SPAM_PROTECTION_RECAPTCHA_SECRET_KEY_FIELD_TITLE"] = "Geheimschlüssel";
 $MESS["LANDING_SPAM_PROTECTION_TABS_TITLE"] = "Wählen Sie, wie Sie reCAPTCHA nutzen möchten";

@@ -2,7 +2,7 @@
 namespace Bitrix\MessageService\Internal\Entity;
 
 use Bitrix\Main\Application;
-use Bitrix\Main\Entity;
+use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\ArrayField;
 use Bitrix\Main\ORM\Fields\DatetimeField;
 use Bitrix\Main\ORM\Fields\IntegerField;
@@ -26,7 +26,7 @@ use Bitrix\Main\ORM\Fields\Validators\LengthValidator;
  * @method static \Bitrix\MessageService\Internal\Entity\EO_Message wakeUpObject($row)
  * @method static \Bitrix\MessageService\Internal\Entity\EO_Message_Collection wakeUpCollection($rows)
  */
-class MessageTable extends Entity\DataManager
+class MessageTable extends DataManager
 {
 	/**
 	 * @return string
@@ -156,6 +156,30 @@ class MessageTable extends Entity\DataManager
 			WHERE
 				ID = $id
 				AND STATUS_ID != {$newStatusId}
+		";
+
+		$connection->query($query);
+		return $connection->getAffectedRowsCount() === 1;
+	}
+
+	public static function updateMessageStatuses($id, $newInternalStatusId, $newExternalStatus)
+	{
+		$connection = Application::getConnection();
+		$tableName = static::getTableName();
+
+		$helper = $connection->getSqlHelper();
+		$newExternalStatus = $helper->forSql($newExternalStatus);
+
+		$update = "STATUS_ID = $newInternalStatusId, EXTERNAL_STATUS = '$newExternalStatus'";
+
+		$query = "
+			UPDATE
+				$tableName
+			SET
+				$update
+			WHERE
+				ID = $id
+				AND STATUS_ID < {$newInternalStatusId}
 		";
 
 		$connection->query($query);

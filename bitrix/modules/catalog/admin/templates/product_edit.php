@@ -234,8 +234,8 @@ while ($l_res = $l->Fetch())
 	}
 	?>
 <script type="text/javascript">
-const allowPriceEdit = <?= ($allowEditPrices ? 'true' : 'false'); ?>;
-const allowEdit = <?= ($allowEdit ? 'true' : 'false'); ?>;
+var allowPriceEdit = <?= ($allowEditPrices ? 'true' : 'false'); ?>;
+var allowEdit = <?= ($allowEdit ? 'true' : 'false'); ?>;
 
 function getElementForm()
 {
@@ -517,6 +517,13 @@ function togglePriceType()
 			$arPriceBoundaries[0]['FROM'] = false;
 			$arPriceBoundaries[0]['TO'] = false;
 		}
+	}
+	else
+	{
+		$arPriceBoundaries[] = [
+			'FROM' => false,
+			'TO' => false
+		];
 	}
 
 // prices tab
@@ -1993,31 +2000,13 @@ function CloneBarcodeField()
 		<tr>
 			<td width="40%"><?= GetMessage("C2IT_MEASURE"); ?>:</td>
 			<td width="60%"><?php
-				$measureFilter = [];
-				if ($isService)
-				{
-					$measureDefault = Catalog\MeasureTable::getRow([
-						'select' => [
-							'ID',
-						],
-						'filter' => [
-							'=CODE' => 796, // TODO: remove magic number after refactoring measure for services
-						]
-					]);
-					if ($measureDefault !== null)
-					{
-						$measureFilter = [
-							'=ID' => (int)$measureDefault['ID'],
-						];
-					}
-				}
-				$arAllMeasure = array();
+				$arAllMeasure = [];
 				$dbResultList = CCatalogMeasure::getList(
-					array(),
-					$measureFilter,
+					[],
+					[],
 					false,
 					false,
-					array("ID", "CODE", "MEASURE_TITLE", "SYMBOL_INTL", "IS_DEFAULT")
+					["ID", "CODE", "MEASURE_TITLE", "SYMBOL_INTL", "IS_DEFAULT"]
 				);
 				while($arMeasure = $dbResultList->Fetch())
 				{
@@ -2100,9 +2089,7 @@ function CloneBarcodeField()
 	}
 	else
 	{
-		?>
-		<input type="hidden" id="CAT_MEASURE_RATIO" name="CAT_MEASURE_RATIO" value="1">
-		<input type="hidden" id="CAT_MEASURE_RATIO_ID" name="CAT_MEASURE_RATIO_ID" value="<?= htmlspecialcharsbx($CAT_MEASURE_RATIO_ID); ?>"><?php
+		?><input type="hidden" id="CAT_MEASURE_RATIO" name="CAT_MEASURE_RATIO" value="1"><?php
 	}
 	if (
 		$showQuantityTrace || $showProductSubscribe
@@ -2609,10 +2596,14 @@ endif;
 	$stores = array();
 	$storeLink = array();
 	$storeCount = 0;
-	$permissionFilter = $accessController->getEntityFilter(
-		ActionDictionary::ACTION_STORE_VIEW,
-		Catalog\StoreTable::class
-	);
+	$permissionFilter = [];
+	if (Loader::includeModule('crm'))
+	{
+		$permissionFilter = $accessController->getEntityFilter(
+			ActionDictionary::ACTION_STORE_VIEW,
+			Catalog\StoreTable::class
+		);
+	}
 	$iterator = Catalog\StoreTable::getList(array(
 		'select' => array('ID', 'TITLE', 'ADDRESS', 'SORT'),
 		'filter' => array_merge(

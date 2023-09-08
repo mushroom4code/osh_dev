@@ -9,6 +9,10 @@ class Promotion
 	const DEVICE_TYPE_MOBILE = "mobile";
 	const DEVICE_TYPE_ALL = "all";
 
+	const USER_TYPE_OLD = "OLD";
+	const USER_TYPE_NEW = "NEW";
+	const USER_TYPE_ALL = "ALL";
+
 	private static function getConfig()
 	{
 		$result = [];
@@ -20,27 +24,44 @@ class Promotion
 /*
 		$result[] = [
 			"ID" => 'im:video:01042020:web',
-			"USER_TYPE" => \Bitrix\Main\UI\Tour::USER_TYPE_OLD,
+			"USER_TYPE" => self::USER_TYPE_OLD,
 			"DEVICE_TYPE" => self::DEVICE_TYPE_WEB
 		];
-*/
+
 		$result[] = [
 			"ID" => 'ol:crmform:17092021:web',
-			"USER_TYPE" => \Bitrix\Main\UI\Tour::USER_TYPE_OLD,
+			"USER_TYPE" => self::USER_TYPE_OLD,
 			"DEVICE_TYPE" => self::DEVICE_TYPE_WEB
 		];
 
 		$result[] = [
 			"ID" => 'im:call-document:16102021:web',
-			"USER_TYPE" => \Bitrix\Main\UI\Tour::USER_TYPE_ALL,
+			"USER_TYPE" => self::USER_TYPE_ALL,
 			"DEVICE_TYPE" => self::DEVICE_TYPE_WEB
 		];
 
 		$result[] = [
 			"ID" => 'imbot:support24:25112021:web',
-			"USER_TYPE" => \Bitrix\Main\UI\Tour::USER_TYPE_OLD,
+			"USER_TYPE" => self::USER_TYPE_OLD,
 			"DEVICE_TYPE" => self::DEVICE_TYPE_WEB
 		];
+		$result[] = [
+			"ID" => 'im:mask:06122022:desktop',
+			"USER_TYPE" => self::USER_TYPE_OLD,
+			"DEVICE_TYPE" => self::DEVICE_TYPE_DESKTOP
+		];
+*/
+		$result[] = [
+			"ID" => 'im:ai:15062023:all',
+			"USER_TYPE" => self::USER_TYPE_ALL,
+			"DEVICE_TYPE" => self::DEVICE_TYPE_ALL
+		];
+
+		$settings = \Bitrix\Main\Config\Configuration::getValue('im');
+		if (isset($settings['promotion']) && is_array($settings['promotion']))
+		{
+			$result = array_merge($result, $settings['promotion']);
+		}
 
 		return $result;
 	}

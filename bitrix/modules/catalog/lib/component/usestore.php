@@ -25,7 +25,6 @@ Loc::loadMessages(__FILE__);
 final class UseStore
 {
 	protected const CATEGORY_NAME = "use_store";
-	protected const OPTION_NAME = "catalog.warehouse.master.clear";
 
 	protected const STORE_WILDBERRIES = "WILDBERRIES";
 	protected const STORE_SBERMEGAMARKET = "SBERMEGAMARKET";
@@ -134,7 +133,6 @@ final class UseStore
 		self::registerEventsHandlers();
 
 		self::showEntityProductGridColumns();
-		self::setNeedShowSlider(false);
 
 		return true;
 	}
@@ -169,14 +167,13 @@ final class UseStore
 		self::installRealizationDocumentTradingPlatform();
 
 		self::showEntityProductGridColumns();
-		self::setNeedShowSlider(false);
 
 		return true;
 	}
 
 	public static function installCatalogStores()
 	{
-		if (self::hasDefaultCatalogStore() === false)
+		if (!self::hasDefaultCatalogStore())
 		{
 			$storeId = self::getFirstCatalogStore();
 			if ($storeId > 0)
@@ -189,7 +186,7 @@ final class UseStore
 			}
 		}
 
-		if (self::isBitrixSiteManagement() === false)
+		if (!self::isBitrixSiteManagement())
 		{
 			self::createCatalogStores();
 		}
@@ -202,22 +199,20 @@ final class UseStore
 
 	protected static function getFirstCatalogStore(): int
 	{
-		$iterator = Catalog\StoreTable::getList([
+		$row = Catalog\StoreTable::getRow([
 			'select' => [
 				'ID',
+				'SORT',
 			],
 			'filter' => [
 				'=ACTIVE' => 'Y',
 				'=SITE_ID' => '',
 			],
-			'limit' => 1,
 			'order' => [
 				'SORT' => 'ASC',
 				'ID' => 'ASC',
 			],
 		]);
-		$row = $iterator->fetch();
-		unset($iterator);
 
 		return (!empty($row) ? (int)$row['ID'] : 0);
 	}
@@ -240,6 +235,7 @@ final class UseStore
 		$r = Catalog\StoreTable::add([
 			'TITLE' => $title,
 			'ADDRESS' => $title,
+			'IS_DEFAULT' => 'Y',
 		]);
 
 		return $r->isSuccess();
@@ -263,7 +259,6 @@ final class UseStore
 			self::disableQuantityTraceSets();
 		}
 
-		self::clearNeedShowSlider();
 		self::deactivateRealizationDocumentTradingPlatform();
 
 		self::unRegisterEventsHandlers();
@@ -656,48 +651,47 @@ final class UseStore
 
 	public static function getCodesStoreByZone() :array
 	{
-		$result = [];
-
-		$portalZone = self::getPortalZone();
-
-		if ($portalZone === 'ru')
+		switch (self::getPortalZone())
 		{
-			$result = [
-				self::STORE_ALIEXPRESS,
-				self::STORE_OZON,
-				self::STORE_SBERMEGAMARKET,
-				self::STORE_WILDBERRIES,
-			];
+			case 'ru':
+				$result = [
+					self::STORE_ALIEXPRESS,
+					self::STORE_OZON,
+					self::STORE_SBERMEGAMARKET,
+					self::STORE_WILDBERRIES,
+				];
+				break;
+			case 'by':
+				$result = [
+					self::STORE_ALIEXPRESS,
+					self::STORE_OZON,
+					self::STORE_WILDBERRIES,
+				];
+				break;
+			case 'ua':
+				$result = [
+					self::STORE_ALIEXPRESS,
+				];
+				break;
+			default:
+				$result = [];
+				break;
 		}
-		else if ($portalZone === 'by')
-		{
-			$result = [
-				self::STORE_ALIEXPRESS,
-				self::STORE_OZON,
-				self::STORE_WILDBERRIES,
-			];
-		}
-		else if ($portalZone === 'ua')
-		{
-			$result = [
-				self::STORE_ALIEXPRESS,
-			];
-	}
 
 		return $result;
 	}
 
 	private static function createCatalogStores(): void
 	{
-		$codes = self::getCodesStoreByZone();
+		$codeList = self::getCodesStoreByZone();
 
-		if (!empty($codes))
+		if (!empty($codeList))
 		{
-			foreach ($codes as $code)
+			foreach ($codeList as $code)
 			{
 				$title = Loc::getMessage('CATALOG_USE_STORE_' . $code);
 
-				$iterator = Catalog\StoreTable::getList([
+				$row = Catalog\StoreTable::getRow([
 					'select' => [
 						'CODE',
 					],
@@ -705,8 +699,6 @@ final class UseStore
 						'=CODE' => $code,
 					],
 				]);
-				$row = $iterator->fetch();
-				unset($iterator);
 				if (empty($row))
 				{
 					Catalog\StoreTable::add([
@@ -851,45 +843,9 @@ final class UseStore
 		}
 	}
 
-	public static function setNeedShowSlider($need)
-	{
-		$disabled = !(bool)$need;
-
-		$currentUser = CurrentUser::get();
-		\CUserOptions::SetOption(
-			self::CATEGORY_NAME,
-			self::OPTION_NAME,
-			$disabled,
-			false,
-			(int)$currentUser->getId()
-		);
-	}
-
 	public static function needShowSlider(): bool
 	{
-		$currentUser = CurrentUser::get();
-		if (self::isUsed())
-		{
-			return false;
-		}
-
-		return \CUserOptions::GetOption(
-			self::CATEGORY_NAME,
-			self::OPTION_NAME,
-			false,
-			(int)$currentUser->getId()
-		) === false;
-	}
-
-	public static function clearNeedShowSlider()
-	{
-		$currentUser = CurrentUser::get();
-		\CUserOptions::DeleteOption(
-			self::CATEGORY_NAME,
-			self::OPTION_NAME,
-			false,
-			(int)$currentUser->getId()
-		);
+		return !self::isUsed();
 	}
 
 	public static function isPortal(): bool

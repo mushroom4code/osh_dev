@@ -18,7 +18,7 @@ CUtil::InitJSCore(
  * @var CBitrixComponentTemplate $this
  */
 
-if ($arResult['USE_DISK'])
+if (isset($arResult['USE_DISK']) && $arResult['USE_DISK'])
 {
 	$this->addExternalJs($this->GetFolder().'/disk_uploader.js');
 	$this->addExternalCss('/bitrix/js/disk/css/legacy_uf_common.css');
@@ -46,7 +46,7 @@ if (isset($arParams['~MESSAGES']) && is_array($arParams['MESSAGES']))
 			BIZPROC_AUTOMATION_NO: '<?=GetMessageJS('MAIN_NO')?>'
 		});
 
-		BX.Bizproc.Automation.API.documentName = '<?=htmlspecialcharsbx($arResult['DOCUMENT_NAME'])?>';
+		BX.Bizproc.Automation.API.documentName = '<?= CUtil::JSEscape($arResult['DOCUMENT_NAME']) ?>';
 		BX.Bizproc.Automation.API.documentSigned = <?=\Bitrix\Main\Web\Json::encode($arResult['DOCUMENT_SIGNED'])?>;
 		BX.Bizproc.Automation.API.documentFields = <?=\Bitrix\Main\Web\Json::encode($arResult['DOCUMENT_FIELDS'])?>;
 		BX.Bizproc.Automation.API.documentUserGroups = <?=\Bitrix\Main\Web\Json::encode($arResult['DOCUMENT_USER_GROUPS'])?>;

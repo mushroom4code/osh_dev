@@ -29,8 +29,8 @@ $asset = \Bitrix\Main\Page\Asset::getInstance();
 $asset->addJs('/bitrix/js/main/gp.js');
 
 $strError = "";
-$ID = intval($_REQUEST["ID"]);
-$COPY_ID = intval($_REQUEST["COPY_ID"]);
+$ID = intval($_REQUEST['ID'] ?? 0);
+$COPY_ID = intval($_REQUEST["COPY_ID"] ?? 0);
 if($COPY_ID > 0)
 	$ID = $COPY_ID;
 
@@ -195,7 +195,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && ($_REQUEST["save"] <> '' || $_REQUEST
 			}
 
 			$old_arTasks = CGroup::GetTasks($ID, true);
-			if (count(array_diff($old_arTasks, $arTasks)) > 0 || count(array_diff($arTasks, $old_arTasks)) > 0)
+			if (!empty(array_diff($old_arTasks, $arTasks)) || !empty(array_diff($arTasks, $old_arTasks)))
 				CGroup::SetTasks($ID, $arTasks);
 		}
 
@@ -395,8 +395,8 @@ $tabControl->BeginNextTab();
 							?> OnChange="CatGroupsActivate(this, <?=$ind?>)"></td>
 					<td align="left"><label for="USER_ID_ACT_ID_<?=$ind?>">[<a href="/bitrix/admin/user_edit.php?ID=<?=$arUsers["ID"]?>&lang=<?=LANGUAGE_ID?>" title="<?=GetMessage("MAIN_VIEW_USER")?>"><?=$arUsers["ID"]?></a>] (<?=htmlspecialcharsbx($arUsers["LOGIN"])?>) <?=htmlspecialcharsbx($arUsers["NAME"])?> <?=htmlspecialcharsbx($arUsers["LAST_NAME"])?></label></td>
 					<td>
-						<?=CalendarDate("USER_ID_FROM_".$ind, (array_key_exists($arUsers["ID"], $str_USER_ID) ? htmlspecialcharsbx($str_USER_ID[$arUsers["ID"]]["DATE_ACTIVE_FROM"]) : ""), "form1", "10", (array_key_exists($arUsers["ID"], $str_USER_ID) ? " " : " disabled"))?>
-						<?=CalendarDate("USER_ID_TO_".$ind, (array_key_exists($arUsers["ID"], $str_USER_ID) ? htmlspecialcharsbx($str_USER_ID[$arUsers["ID"]]["DATE_ACTIVE_TO"]) : ""), "form1", "10", (array_key_exists($arUsers["ID"], $str_USER_ID) ? " " : " disabled"))?>
+						<?=CalendarDate("USER_ID_FROM_".$ind, (array_key_exists($arUsers["ID"], $str_USER_ID) ? htmlspecialcharsbx($str_USER_ID[$arUsers["ID"]]["DATE_ACTIVE_FROM"]) : ""), "form1", "22", (array_key_exists($arUsers["ID"], $str_USER_ID) ? " " : " disabled"))?>
+						<?=CalendarDate("USER_ID_TO_".$ind, (array_key_exists($arUsers["ID"], $str_USER_ID) ? htmlspecialcharsbx($str_USER_ID[$arUsers["ID"]]["DATE_ACTIVE_TO"]) : ""), "form1", "22", (array_key_exists($arUsers["ID"], $str_USER_ID) ? " " : " disabled"))?>
 					</td>
 				</tr>
 				<?
@@ -629,7 +629,7 @@ $arBXGroupPolicy = [
 				if (
 					array_key_exists("use_site", $ar)
 					&& is_array($ar["use_site"])
-					&& count($ar["use_site"]) > 0
+					&& !empty($ar["use_site"])
 				)
 				{
 
@@ -659,7 +659,7 @@ $arBXGroupPolicy = [
 				if (
 					array_key_exists("use_site", $ar)
 					&& is_array($ar["use_site"])
-					&& count($ar["use_site"]) > 0
+					&& !empty($ar["use_site"])
 				)
 				{
 					foreach ($arSites["reference_id"] as $i => $site_id_tmp)
@@ -720,7 +720,7 @@ $arBXGroupPolicy = [
 		if (
 			array_key_exists("use_site", $ar)
 			&& is_array($ar["use_site"])
-			&& count($ar["use_site"]) > 0
+			&& !empty($ar["use_site"])
 		)
 		{
 			?><a href="javascript:void(0)" onclick="settingsAddRights(this)" class="bx-action-href"><?echo GetMessage("RIGHTS_ADD")?></a><?

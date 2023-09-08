@@ -1513,9 +1513,10 @@ if(typeof BX.UI.EntityEditorField === "undefined")
 
 		if(!isNeedToDisplay && BX.prop.getBoolean(options, "notifyIfNotDisplayed", false))
 		{
+			const plainTitle =  BX.util.htmlspecialchars(this.getTitle());
 			BX.UI.Notification.Center.notify(
 				{
-					content: BX.message("UI_ENTITY_EDITOR_FIELD_HIDDEN_IN_VIEW_MODE").replace(/#TITLE#/gi, this.getTitle()),
+					content: BX.message("UI_ENTITY_EDITOR_FIELD_HIDDEN_IN_VIEW_MODE").replace(/#TITLE#/gi, plainTitle),
 					position: "top-center",
 					autoHideDelay: 5000
 				}
@@ -1970,9 +1971,10 @@ if(typeof BX.UI.EntityEditorField === "undefined")
 				if(!this.isNeedToDisplay())
 				{
 					window.setTimeout(BX.delegate(this.clearLayout, this), 500);
+					var handledTitle =  BX.util.htmlspecialchars(this.getTitle());
 					BX.UI.Notification.Center.notify(
 						{
-							content: BX.message("UI_ENTITY_EDITOR_FIELD_HIDDEN_DUE_TO_SHOW_ALWAYS_CHANGED").replace(/#TITLE#/gi, this.getTitle()),
+							content: BX.message("UI_ENTITY_EDITOR_FIELD_HIDDEN_DUE_TO_SHOW_ALWAYS_CHANGED").replace(/#TITLE#/gi, handledTitle),
 							position: "top-center",
 							autoHideDelay: 5000
 						}
@@ -3188,6 +3190,13 @@ if(typeof BX.UI.EntityEditorSection === "undefined")
 				props: { className: "ui-entity-editor-header-title-text" },
 				text: title
 			});
+
+			var hint = this.createTitleHint();
+			if (hint)
+			{
+				this._titleView.appendChild(hint);
+				BX.UI.Hint.init(this._titleView);
+			}
 
 			this._titleInput = BX.create("input",
 			{
@@ -5277,6 +5286,21 @@ if(typeof BX.UI.EntityEditorSection === "undefined")
 		}
 		return this._buttonPanelWrapper;
 	};
+	BX.UI.EntityEditorSection.prototype.createTitleHint = function()
+	{
+		var hint = this._schemeElement ? this._schemeElement.getHint() : null;
+		if(hint)
+		{
+			return BX.create("span", {
+				dataset: {
+					hint,
+					hintHtml: true,
+					hintInteractivity: true,
+				}
+			});
+		}
+		return null;
+	};
 	BX.UI.EntityEditorSection.create = function(id, settings)
 	{
 		var self = new BX.UI.EntityEditorSection();
@@ -6558,12 +6582,27 @@ if(typeof BX.UI.EntityEditorMultiMoney === "undefined")
 			}
 		);
 	};
-	BX.UI.EntityEditorMultiMoney.prototype.onAmountValueChange = function(v, index)
+	BX.UI.EntityEditorMultiMoney.prototype.onAmountValueChange = function(value, index)
 	{
-		if(this._amountValue[index])
+		if(!this._amountValue[index])
 		{
-			this._amountValue[index].value = v;
+			return;
 		}
+
+		var currencyFormat = BX.prop.getObject(
+			BX.Currency.Editor.currencyList,
+			this._selectedCurrencyValue[index],
+			null
+		);
+		if (currencyFormat)
+		{
+			value = BX.Currency.Editor.getFormattedValue(
+				value,
+				this._selectedCurrencyValue[index]
+			);
+			value = value.replaceAll(currencyFormat['SEPARATOR'], '');
+		}
+		this._amountValue[index].value = value;
 	};
 	BX.UI.EntityEditorMultiMoney.prototype.getViewInnerLayout = function()
 	{
@@ -7484,7 +7523,7 @@ if(typeof BX.UI.EntityEditorDatetime === "undefined")
 							BX.create("div",
 								{
 									props: {className: "ui-entity-editor-content-block-text"},
-									text: value
+									text: value.replaceAll('\\', '')
 								}
 							)
 						]
@@ -8147,12 +8186,20 @@ if(typeof BX.UI.EntityEditorList === "undefined")
 			menu.push(itemParams);
 		}
 
+		const selectBottomY = BX.Dom.getPosition(this._select).y;
+
+		const distanceToTop = selectBottomY - window.pageYOffset;
+		const distanceToBottom = document.documentElement.clientHeight + window.pageYOffset - selectBottomY;
+
+		const popupMaxHeight = distanceToTop > distanceToBottom ? distanceToTop - 50 : distanceToBottom - 100;
+
 		BX.PopupMenu.show(
 			this._id,
 			this._select,
 			menu,
 			{
 				angle: false, width: this._select.offsetWidth + 'px',
+				maxHeight: popupMaxHeight,
 				events:
 					{
 						onPopupShow: BX.delegate( this.onMenuShow, this),
@@ -8901,7 +8948,9 @@ if(typeof BX.UI.EntityEditorHtml === "undefined")
 					"OnCreateIframeAfter",
 					this._editorInitializationHandler
 				);
-				this._htmlEditor.Init();
+				setTimeout(function() {
+					this._htmlEditor.Init();
+				}.bind(this), 0);
 			}
 
 			window.top.setTimeout(BX.delegate(this.bindChangeEvent, this), 1000);
@@ -9140,6 +9189,50 @@ if(typeof BX.UI.EntityEditorHtml === "undefined")
 	BX.UI.EntityEditorHtml.create = function(id, settings)
 	{
 		var self = new BX.UI.EntityEditorHtml();
+		self.initialize(id, settings);
+		return self;
+	};
+}
+
+if (typeof BX.UI.EntityEditorBB === 'undefined')
+{
+	BX.UI.EntityEditorBB = function()
+	{
+		BX.UI.EntityEditorBB.superclass.constructor.apply(this);
+	};
+	BX.extend(BX.UI.EntityEditorBB, BX.UI.EntityEditorHtml);
+	BX.UI.EntityEditorBB.prototype.layout = function(options)
+	{
+		if (this._hasLayout)
+		{
+			return;
+		}
+
+		BX.UI.EntityEditorBB.superclass.layout.apply(this, [options]);
+
+		if (this._mode !== BX.UI.EntityEditorMode.edit) // view mode
+		{
+			let contentNode = null;
+			if (this._innerWrapper)
+			{
+				contentNode = this._innerWrapper.querySelector('.ui-entity-editor-content-block-inner-html');
+			}
+
+			if (contentNode)
+			{
+				let value = this._model.getField(this.getDataKey() + '_HTML', '');
+				if (!BX.Type.isStringFilled(value))
+				{
+					value = BX.Text.encode(this.getValue());
+				}
+
+				contentNode.innerHTML = value;
+			}
+		}
+	};
+	BX.UI.EntityEditorBB.create = function(id, settings)
+	{
+		var self = new BX.UI.EntityEditorBB();
 		self.initialize(id, settings);
 		return self;
 	};
@@ -9447,7 +9540,7 @@ if(typeof BX.UI.EntityEditorImage === "undefined")
 										props:
 											{
 												className: "crm-entity-widget-content-block-photo",
-												src: this._model.getSchemeField(this._schemeElement, "showUrl", "")
+												src: encodeURI(this._model.getSchemeField(this._schemeElement, "showUrl", ""))
 											}
 									}
 								)
@@ -10017,6 +10110,7 @@ if(typeof BX.UI.EntityEditorMoney === "undefined")
 	{
 		BX.UI.EntityEditorMoney.superclass.constructor.apply(this);
 		this._currencyEditor = null;
+		this._amountWrapper = null;
 		this._amountInput = null;
 		this._currencyInput = null;
 		this._sumElement = null;
@@ -10044,7 +10138,7 @@ if(typeof BX.UI.EntityEditorMoney === "undefined")
 	};
 	BX.UI.EntityEditorMoney.prototype.focus = function()
 	{
-		if(this._amountInput)
+		if(this._amountInput && !this.isInputDisabled())
 		{
 			BX.focus(this._amountInput);
 			BX.UI.EditorTextHelper.getCurrent().selectAll(this._amountInput);
@@ -10109,6 +10203,7 @@ if(typeof BX.UI.EntityEditorMoney === "undefined")
 		var amountValue = this._model.getField(amountFieldName, ""); //SET CURRENT SUM VALUE
 		var formatted = this._model.getField(BX.prop.getString(data, "formatted"), ""); //SET FORMATTED VALUE
 
+		this._amountWrapper = null;
 		this._amountValue = null;
 		this._amountInput = null;
 		this._currencyInput = null;
@@ -10140,10 +10235,18 @@ if(typeof BX.UI.EntityEditorMoney === "undefined")
 				{
 					attrs:
 						{
-							className: "ui-ctl-inline ui-ctl-element ui-ctl-w75",
+							className: "ui-ctl-element",
 							type: "text",
 							value: formatted
 						}
+				}
+			);
+			this._amountWrapper = BX.create('div',
+				{
+					props: { className: 'ui-ctl-inline ui-ctl-w75'},
+					children: [
+						this._amountInput,
+					]
 				}
 			);
 
@@ -10151,7 +10254,7 @@ if(typeof BX.UI.EntityEditorMoney === "undefined")
 
 			if(this._model.isFieldLocked(amountFieldName))
 			{
-				this._amountInput.disabled = true;
+				this.setInputDisabled(true);
 			}
 
 			this._currencyInput = BX.create("input",
@@ -10206,7 +10309,7 @@ if(typeof BX.UI.EntityEditorMoney === "undefined")
 						[
 							this._amountValue,
 							this._currencyInput,
-							this._amountInput,
+							this._amountWrapper,
 							this._selectContainer,
 						]
 				}
@@ -10296,6 +10399,7 @@ if(typeof BX.UI.EntityEditorMoney === "undefined")
 			this._currencyEditor = null;
 		}
 
+		this._amountWrapper = null;
 		this._amountValue = null;
 		this._amountInput = null;
 		this._currencyInput = null;
@@ -10335,19 +10439,32 @@ if(typeof BX.UI.EntityEditorMoney === "undefined")
 				currencyValue
 			);
 
-			this._amountInput.disabled = this._model.isFieldLocked(amountFieldName);
+			this.setInputDisabled(this._model.isFieldLocked(amountFieldName));
 		}
 		else if(this._mode === BX.UI.EntityEditorMode.view && this._sumElement)
 		{
 			this._sumElement.innerHTML = this.renderMoney();
 		}
 	};
-	BX.UI.EntityEditorMoney.prototype.onAmountValueChange = function(v)
+	BX.UI.EntityEditorMoney.prototype.onAmountValueChange = function(value)
 	{
-		if(this._amountValue)
+		if(!this._amountValue)
 		{
-			this._amountValue.value = v;
+			return;
 		}
+
+		var currencyFormat = BX.prop.getObject(
+			BX.Currency.Editor.currencyList,
+			this._selectedCurrencyValue,
+			null
+		);
+
+		if (currencyFormat)
+		{
+			value = BX.Currency.Editor.getUnFormattedValue(value, this._selectedCurrencyValue);
+		}
+
+		this._amountValue.value = value;
 	};
 	BX.UI.EntityEditorMoney.prototype.getAmountFieldName = function()
 	{
@@ -10507,6 +10624,26 @@ if(typeof BX.UI.EntityEditorMoney === "undefined")
 			BX.removeClass(this._amountInput, "ui-entity-editor-field-error");
 		}
 	};
+	BX.UI.EntityEditorMoney.prototype.setInputDisabled = function(isDisabled)
+	{
+		if (!this._amountInput || !this._amountWrapper)
+		{
+			return;
+		}
+		this._amountInput.readOnly = isDisabled;
+		if (isDisabled)
+		{
+			BX.Dom.addClass(this._amountWrapper, 'ui-ctl-disabled');
+		}
+		else
+		{
+			BX.Dom.removeClass(this._amountWrapper, 'ui-ctl-disabled');
+		}
+	};
+	BX.UI.EntityEditorMoney.prototype.isInputDisabled = function()
+	{
+		return this._amountInput.readOnly;
+	};
 	BX.UI.EntityEditorMoney.prototype.getRuntimeValue = function()
 	{
 		var data = [];
@@ -10664,7 +10801,7 @@ if(typeof BX.UI.EntityEditorUser === "undefined")
 				props: { className: "ui-entity-editor-user-avatar-container", target: "_blank" },
 				style:
 					{
-						backgroundImage: BX.type.isNotEmptyString(photoUrl) ? "url('" + photoUrl + "')" : "",
+						backgroundImage: BX.type.isNotEmptyString(photoUrl) ? "url('" + encodeURI(photoUrl) + "')" : "",
 						backgroundSize: BX.type.isNotEmptyString(photoUrl) ? "30px" : ""
 					}
 			}
@@ -10796,7 +10933,7 @@ if(typeof BX.UI.EntityEditorUser === "undefined")
 
 		this._input.value = this._selectedData["id"];
 		this._photoElement.style.backgroundImage = this._selectedData["photoUrl"] !== ""
-			? "url('" + this._selectedData["photoUrl"] + "')" : "";
+			? "url('" + encodeURI(this._selectedData["photoUrl"]) + "')" : "";
 		this._photoElement.style.backgroundSize = this._selectedData["photoUrl"] !== ""
 			? "30px" : "";
 
@@ -11219,7 +11356,7 @@ if(typeof BX.UI.EntityEditorProductRowSummary === "undefined")
 		if (photoUrl !== '')
 		{
 			photoSettings.style = {
-				backgroundImage: `url(${photoUrl})`
+				backgroundImage: `url(${encodeURI(photoUrl)})`
 			};
 		}
 

@@ -363,6 +363,7 @@ BXEditorIframeView.prototype.Clear = function()
 BXEditorIframeView.prototype.GetValue = function(bParse, bFormat)
 {
 	this.iframeValue = this.IsEmpty() ? "" : this.editor.GetInnerHtml(this.element);
+	this.iframeValue = this.iframeValue.replace(/<span style="font-family: var\(--ui-font-family-primary, var\(--ui-font-family-helvetica\)\);">(.*?)<\/span>/g, '$1');
 	this.editor.On('OnIframeBeforeGetValue', [this.iframeValue]);
 	if (bParse)
 	{
@@ -750,7 +751,16 @@ var focusWithoutScrolling = function(element)
 		}
 
 		BX.bind(element, 'drop', BX.delegate(this.OnPasteHandler, this));
-		BX.bind(element, 'paste', BX.delegate(this.OnPasteHandler, this));
+
+		BX.bind(element, 'paste', (clipboardEvent) => {
+			const event = new BX.Event.BaseEvent({ data: { clipboardEvent: clipboardEvent } });
+			BX.Event.EventEmitter.emitAsync(this.editor, 'BXEditor:onBeforePasteAsync', event).then(() => {
+				if (!event.isDefaultPrevented())
+				{
+					this.OnPasteHandler(clipboardEvent);
+				}
+			});
+		});
 
 		BX.bind(element, "keyup", function(e)
 		{
@@ -1656,20 +1666,6 @@ var focusWithoutScrolling = function(element)
 
 	BXEditorIframeView.prototype.OnPasteHandler = function(e)
 	{
-		let pasteHandlerTime = 10;
-		if (BX.Loader)
-		{
-			if (!this.pasteLoader)
-			{
-				this.pasteLoader = new BX.Loader({
-					target: this.editor.dom.cont
-				});
-				this.pasteLoader.data.container.style.zIndex = 999;
-			}
-			this.pasteLoader.show();
-			pasteHandlerTime = 1000;
-		}
-
 		if (!this.editor.skipPasteHandler)
 		{
 			this.editor.skipPasteHandler = true;
@@ -1765,15 +1761,11 @@ var focusWithoutScrolling = function(element)
 					_this.editor.synchro.StartSync();
 				}
 
-				if (_this.pasteLoader)
-				{
-					_this.pasteLoader.hide();
-				}
 				if (window.scrollTo)
 				{
 					window.scrollTo(originalScrollLeft, originalScrollTop);
 				}
-			}, pasteHandlerTime);
+			}, 0);
 		}
 	};
 

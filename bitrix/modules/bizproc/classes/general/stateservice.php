@@ -17,7 +17,7 @@ class CBPStateService extends CBPRuntimeService
 
 		$DB->Query(
 			"UPDATE b_bp_workflow_state SET ".
-			"	STATE_TITLE = ".($stateTitle <> '' ? "'".$DB->ForSql($stateTitle)."'" : "NULL").", ".
+			"	STATE_TITLE = ".($stateTitle && is_string($stateTitle) ? "'".$DB->ForSql($stateTitle)."'" : "NULL").", ".
 			"	MODIFIED = ".$DB->CurrentTimeFunction()." ".
 			"WHERE ID = '".$DB->ForSql($workflowId)."' "
 		);
@@ -233,11 +233,10 @@ class CBPStateService extends CBPRuntimeService
 	{
 		global $DB;
 
-		$arDocumentId = CBPHelper::ParseDocumentId($documentId);
+		[$moduleId, $entity, $ids] = $documentId;
 
-		$ids = (array) $arDocumentId[2];
-		$idsCondition = array();
-		foreach ($ids as $id)
+		$idsCondition = [];
+		foreach ((array)$ids as $id)
 		{
 			$idsCondition[] = 'WS.DOCUMENT_ID = \''.$DB->ForSql($id).'\'';
 		}
@@ -273,8 +272,8 @@ class CBPStateService extends CBPRuntimeService
 			"	LEFT JOIN b_bp_workflow_template WT ON (WS.WORKFLOW_TEMPLATE_ID = WT.ID) ".
 			"	LEFT JOIN b_bp_workflow_instance WI ON (WS.ID = WI.ID) ".
 			"WHERE (".implode(' OR ', $idsCondition).") ".
-			"	AND WS.ENTITY = '".$DB->ForSql($arDocumentId[1])."' ".
-			"	AND WS.MODULE_ID ".(($arDocumentId[0] <> '') ? "= '".$DB->ForSql($arDocumentId[0])."'" : "IS NULL")." ".
+			"	AND WS.ENTITY = '" . $DB->ForSql($entity) . "' " .
+			"	AND WS.MODULE_ID " . ($moduleId ? "= '" . $DB->ForSql($moduleId) . "'" : "IS NULL") . " ".
 			$sqlAdditionalFilter
 		);
 
@@ -561,10 +560,23 @@ class CBPStateService extends CBPRuntimeService
 			if (!isset($runtime) || !is_object($runtime))
 				$runtime = CBPRuntime::GetRuntime();
 			$documentService = $runtime->GetService("DocumentService");
-			$documentService->SetPermissions($arState["DOCUMENT_ID"], $workflowId, $arStatePermissions, true);
+
+			$permissionRewrite = true;
+			if (isset($arStatePermissions['__mode']) || isset($arStatePermissions['__scope']))
+			{
+				$permissionRewrite = [
+					'setMode' => $arStatePermissions['__mode'] ?? CBPSetPermissionsMode::Clear,
+					'setScope' => $arStatePermissions['__scope'] ?? CBPSetPermissionsMode::ScopeWorkflow,
+				];
+				unset($arStatePermissions['__mode'], $arStatePermissions['__scope']);
+			}
+
+			$documentService->SetPermissions($arState["DOCUMENT_ID"], $workflowId, $arStatePermissions, $permissionRewrite);
 			$documentType = $documentService->GetDocumentType($arState["DOCUMENT_ID"]);
 			if ($documentType)
+			{
 				$arStatePermissions = $documentService->toInternalOperations($documentType, $arStatePermissions);
+			}
 
 			$DB->Query(
 				"DELETE FROM b_bp_workflow_permissions ".

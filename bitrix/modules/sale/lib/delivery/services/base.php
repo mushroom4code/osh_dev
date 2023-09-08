@@ -115,7 +115,11 @@ abstract class Base
 		if(isset($initParams["RESTRICTED"]))
 			$this->restricted = $initParams["RESTRICTED"];
 
-		$this->trackingParams = is_array($initParams["TRACKING_PARAMS"]) ? $initParams["TRACKING_PARAMS"] : array();
+		$this->trackingParams =
+			isset($initParams["TRACKING_PARAMS"]) && is_array($initParams["TRACKING_PARAMS"])
+				? $initParams["TRACKING_PARAMS"]
+				: []
+		;
 
 		if(isset($initParams["EXTRA_SERVICES"]))
 			$this->extraServices = new \Bitrix\Sale\Delivery\ExtraServices\Manager($initParams["EXTRA_SERVICES"], $this->currency);
@@ -313,25 +317,31 @@ abstract class Base
 		{
 			foreach($rParams["ITEMS"] as $key2 => $iParams)
 			{
-				if($iParams["TYPE"] == "DELIVERY_SECTION")
-					continue;
-
-				$errors = \Bitrix\Sale\Internals\Input\Manager::getRequiredError($iParams, $fields["CONFIG"][$key1][$key2]);
-
-				if(empty($errors))
+				if ($iParams["TYPE"] == "DELIVERY_SECTION")
 				{
-					$errors = \Bitrix\Sale\Internals\Input\Manager::getError($iParams, $fields["CONFIG"][$key1][$key2]);
+					continue;
 				}
 
-				if(!empty($errors))
+				$value = $fields["CONFIG"][$key1][$key2] ?? null;
+
+				$errors = \Bitrix\Sale\Internals\Input\Manager::getRequiredError($iParams, $value);
+
+				if (empty($errors))
+				{
+					$errors = \Bitrix\Sale\Internals\Input\Manager::getError($iParams, $value);
+				}
+
+				if (!empty($errors))
 				{
 					$strError .= Loc::getMessage("SALE_DLVR_BASE_FIELD")." \"".$iParams["NAME"]."\": ".implode("<br>\n", $errors)."<br>\n";
 				}
 			}
 		}
 
-		if($strError != "")
+		if ($strError != "")
+		{
 			throw new SystemException($strError);
+		}
 
 		if(mb_strpos($fields['CLASS_NAME'], '\\') !== 0)
 		{
@@ -857,7 +867,7 @@ abstract class Base
 				$deliveryServiceClone->extraServices = $cloneEntity[$extraServices];
 			}
 		}
-		
+
 		return $deliveryServiceClone;
 	}
 

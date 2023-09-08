@@ -11,9 +11,6 @@ global $APPLICATION;
 
 $APPLICATION->SetTitle(Loc::getMessage('CATALOG_STORE_LIST_TITLE'));
 
-$bodyClass = $APPLICATION->GetPageProperty("BodyClass");
-$APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'no-background');
-
 $this->setViewTarget('above_pagetitle');
 $APPLICATION->IncludeComponent(
 	'bitrix:catalog.store.document.control_panel',
@@ -46,41 +43,12 @@ $APPLICATION->IncludeComponent(
 ?>
 
 <script>
-	function openStoreCreation(event)
-	{
-		openStoreSlider();
-	}
+	BX.ready(function() {
 
-	function openStoreSlider(id = 0)
-	{
-		var url = '/shop/documents-stores/details/'+parseInt(id)+'/';
+		BX.Catalog.Store.Grid.init(<?= CUtil::PhpToJSObject([
+			'gridId' => $arResult['GRID']['GRID_ID'],
+			'tariff' => $arResult['TARIFF_HELP_LINK']['FEATURE_CODE'] ?? '',
+		]) ?>);
 
-		BX.SidePanel.Instance.open(
-			url,
-			{
-				allowChangeHistory: true,
-				cacheable: false,
-				width: 500,
-				events: {
-					onClose: function(event)
-					{
-						var grid = BX.Main.gridManager.getInstanceById('<?= CUtil::JSEscape($arResult['GRID']['GRID_ID']) ?>');
-						if(grid)
-						{
-							grid.reload();
-						}
-					}
-				}
-			}
-		);
-	}
-
-	function openTariffHelp()
-	{
-		var tariff = '<?= CUtil::JSEscape($arResult['TARIFF_HELP_LINK']['FEATURE_CODE'] ?? '') ?>';
-		if (tariff !== '')
-		{
-			BX.UI.InfoHelper.show(tariff);
-		}
-	}
+	});
 </script>

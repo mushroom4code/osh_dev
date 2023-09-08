@@ -78,7 +78,7 @@ final class ExportOneCCRM extends CSaleExport
 
 	protected static function getUserTimeStapmX(array $arOrder)
 	{
-		return new \Bitrix\Main\Type\DateTime(\CAllDatabase::FormatDate($arOrder["CRM_INVOICE_INTERNALS_INVOICE_USER_TIMESTAMP_X"]));
+		return new \Bitrix\Main\Type\DateTime(CDatabase::FormatDate($arOrder["CRM_INVOICE_INTERNALS_INVOICE_USER_TIMESTAMP_X"]));
 	}
 
 	protected static function getUserXmlId(array $arOrder, array $arProp)
@@ -215,7 +215,7 @@ class CSaleExport
 
     protected static function getUserTimeStapmX(array $arOrder)
     {
-		return new \Bitrix\Main\Type\DateTime(\CAllDatabase::FormatDate($arOrder["SALE_INTERNALS_ORDER_USER_TIMESTAMP_X"]));
+		return new \Bitrix\Main\Type\DateTime(CDatabase::FormatDate($arOrder["SALE_INTERNALS_ORDER_USER_TIMESTAMP_X"]));
     }
 
     protected static function getUserXmlId(array $arOrder, array $arProp)
@@ -1170,13 +1170,13 @@ class CSaleExport
 
 			$agentParams = (array_key_exists($arOrder["PERSON_TYPE_ID"], $arAgent) ? $arAgent[$arOrder["PERSON_TYPE_ID"]] : array() );
 
-            $arResultPayment = self::getPayment($arOrder);
-            $paySystems = $arResultPayment['paySystems'];
-            $arPayment = $arResultPayment['payment'];
+			$arResultPayment = self::getPayment($arOrder);
+			$paySystems = $arResultPayment['paySystems'] ?? [];
+			$arPayment = $arResultPayment['payment'] ?? [];
 
 			$arResultShipment = self::getShipment($arOrder);
-			$arShipment = $arResultShipment['shipment'];
-			$delivery = $arResultShipment['deliveryServices'];
+			$arShipment = $arResultShipment['shipment'] ?? [];
+			$delivery = $arResultShipment['deliveryServices'] ?? [];
 
 			self::setDeliveryAddress('');
 			self::setSiteNameByOrder($arOrder);
@@ -2438,7 +2438,7 @@ class CSaleExport
 			switch ($typeDocument)
 			{
                 case 'Order':
-					$filedsTolog['ENTITY_DATE_UPDATE'] = new \Bitrix\Main\Type\DateTime(\CAllDatabase::FormatDate($document['DATE_UPDATE']));
+					$filedsTolog['ENTITY_DATE_UPDATE'] = new \Bitrix\Main\Type\DateTime(CDatabase::FormatDate($document['DATE_UPDATE']));
 					if(self::getVersionSchema() >= self::CONTAINER_VERSION)
 						$filedsTolog['PARENT_ID'] = $document["ID"];
                     break;

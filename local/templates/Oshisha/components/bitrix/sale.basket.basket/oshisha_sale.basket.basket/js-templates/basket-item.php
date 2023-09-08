@@ -112,7 +112,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     </h2>
                     {{#NOT_AVAILABLE}}
                     <div class="basket-items-list-item-warning-container">
-                        <div class="alert alert-warning text-center">
+                        <div class="text-center border border-danger rounded">
                             <?= Loc::getMessage('SBB_BASKET_ITEM_NOT_AVAILABLE') ?>.
                         </div>
                     </div>
@@ -537,7 +537,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     </h2>
                     {{#NOT_AVAILABLE}}
                     <div class="basket-items-list-item-warning-container">
-                        <div class="alert alert-warning text-center">
+                        <div class="alert alert-danger text-center">
                             <?= Loc::getMessage('SBB_BASKET_ITEM_NOT_AVAILABLE') ?>.
                         </div>
                     </div>

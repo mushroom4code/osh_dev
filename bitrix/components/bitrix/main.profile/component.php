@@ -154,18 +154,11 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
 			}
 		}
 
-		//Проверяем дату рождения
-//PERSONAL_BIRTHDAY
-		$rowUser = $obUser->GetByID($USER->GetId())->Fetch();
-		if( $rowUser['PERSONAL_BIRTHDAY'] != $arFields['PERSONAL_BIRTHDAY'] )
-		{
-			$arFields['UF_DATE_CHANGE_BH'] = date('d.m.Y');
-		}
 		$USER_FIELD_MANAGER->EditFormAddFields("USER", $arFields);
 	
 		if($obUser->Update($arResult["ID"], $arFields))
 		{
-			/*if($arResult["PHONE_REGISTRATION"] == true && $arFields["PHONE_NUMBER"] <> '')
+			if($arResult["PHONE_REGISTRATION"] == true && $arFields["PHONE_NUMBER"] <> '')
 			{
 				if(!($phone = \Bitrix\Main\UserPhoneAuthTable::getRowById($arResult["ID"])))
 				{
@@ -196,7 +189,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
 					$arResult["SHOW_SMS_FIELD"] = true;
 					$arResult["SIGNED_DATA"] = \Bitrix\Main\Controller\PhoneAuth::signData(['phoneNumber' => $phoneNumber]);
 				}
-			}*/
+			}
 		}
 		else
 		{
@@ -331,9 +324,9 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
 
 	if($strError == '')
 	{
-		/*if($arParams['SEND_INFO'] == 'Y')
+		if($arParams['SEND_INFO'] == 'Y')
 			$obUser->SendUserInfo($arResult["ID"], SITE_ID, GetMessage("main_profile_update"), true);
-*/
+
 		$bOk = true;
 	}
 }
@@ -341,7 +334,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST" && ($_REQUEST["save"] <> '' || $_REQUEST["
 // verify phone code
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_REQUEST["code_submit_button"] <> '' && check_bitrix_sessid())
 {
-	if($_REQUEST["SIGNED_DATA"] <> '')
+	if (!empty($_REQUEST["SIGNED_DATA"]))
 	{
 		if(($params = \Bitrix\Main\Controller\PhoneAuth::extractData($_REQUEST["SIGNED_DATA"])) !== false)
 		{
@@ -485,21 +478,20 @@ $arResult["USER_PROPERTIES"] = array("SHOW" => "N");
 if (!empty($arParams["USER_PROPERTY"]))
 {
 	$arUserFields = $USER_FIELD_MANAGER->GetUserFields("USER", $arResult["ID"], LANGUAGE_ID);
-	if (count($arParams["USER_PROPERTY"]) > 0)
+	foreach ($arUserFields as $FIELD_NAME => $arUserField)
 	{
-		foreach ($arUserFields as $FIELD_NAME => $arUserField)
-		{
-			if (!in_array($FIELD_NAME, $arParams["USER_PROPERTY"]))
-				continue;
-			$arUserField["EDIT_FORM_LABEL"] = $arUserField["EDIT_FORM_LABEL"] <> '' ? $arUserField["EDIT_FORM_LABEL"] : $arUserField["FIELD_NAME"];
-			$arUserField["EDIT_FORM_LABEL"] = htmlspecialcharsEx($arUserField["EDIT_FORM_LABEL"]);
-			$arUserField["~EDIT_FORM_LABEL"] = $arUserField["EDIT_FORM_LABEL"];
-			$arResult["USER_PROPERTIES"]["DATA"][$FIELD_NAME] = $arUserField;
-		}
+		if (!in_array($FIELD_NAME, $arParams["USER_PROPERTY"]))
+			continue;
+		$arUserField["EDIT_FORM_LABEL"] = $arUserField["EDIT_FORM_LABEL"] <> '' ? $arUserField["EDIT_FORM_LABEL"] : $arUserField["FIELD_NAME"];
+		$arUserField["EDIT_FORM_LABEL"] = htmlspecialcharsEx($arUserField["EDIT_FORM_LABEL"]);
+		$arUserField["~EDIT_FORM_LABEL"] = $arUserField["EDIT_FORM_LABEL"];
+		$arResult["USER_PROPERTIES"]["DATA"][$FIELD_NAME] = $arUserField;
 	}
 	if (!empty($arResult["USER_PROPERTIES"]["DATA"]))
+	{
 		$arResult["USER_PROPERTIES"]["SHOW"] = "Y";
-	$arResult["bVarsFromForm"] = ($strError == ''? false : true);
+	}
+	$arResult["bVarsFromForm"] = $strError != '';
 }
 // ******************** /User properties ***************************************************
 

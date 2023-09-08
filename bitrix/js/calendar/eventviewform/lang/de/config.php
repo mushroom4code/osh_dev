@@ -13,6 +13,7 @@ $MESS["EC_ACCESSIBILITY_TITLE"] = "Verfügbarkeitsstatus";
 $MESS["EC_CRM_TITLE"] = "CRM-Elemente";
 $MESS["EC_EDDIV_SPECIAL_NOTES"] = "Anmerkungen";
 $MESS["EC_PRIVATE_EVENT"] = "Privater Termin";
+$MESS["EC_T_REPEAT"] = "Wiederholung";
 $MESS["EC_VIEW_ATTENDEES_ADD"] = "Weitere Teilnehmer einladen";
 $MESS["EC_VIEW_ATTENDEES_TITLE"] = "Teilnehmer";
 $MESS["EC_VIEW_CREATED_BY"] = "Ersteller";

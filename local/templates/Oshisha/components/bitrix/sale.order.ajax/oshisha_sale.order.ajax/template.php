@@ -461,29 +461,6 @@ if ($request->get('ORDER_ID') <> '') {
                             </div>
                             <div class="bx-soa-section-content"></div>
                         </div>
-                        <div class="new_block_with_sms bx-soa-section mb-3" id="new_block_with_sms">
-                            <div id="new_block_with_sms_box" class="bx-selected">
-                                <div class="mb-4 mt-2 bx-soa-section-title">Подтверждение заказа через:</div>
-                                <div class="form-check d-flex flex-row">
-                                    <div class="mr-5">
-                                        <input type="radio" class="form-check-input  mr-1 check_custom"
-                                               value="sms" id="sms" name="checked" checked/>
-                                        <label for="sms">Смс</label>
-                                    </div>
-                                    <div class="mr-5">
-                                        <input type="radio" id="telegram" class="form-check-input  mr-1 check_custom"
-                                               value="telegram" name="checked"/>
-                                        <label for="telegram">Телеграм</label>
-                                    </div>
-                                    <div class="mr-5">
-                                        <input type="radio" class="form-check-input mr-1  check_custom"
-                                               value="telephone" name="checked" id="telephone"/>
-                                        <label for="telephone">Звонок</label>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
                         <div class="p-3">
                             <p class="d-flex flex-row align-items-center font-14">
                                 <input type="checkbox" required

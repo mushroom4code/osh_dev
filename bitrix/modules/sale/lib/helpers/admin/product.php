@@ -521,7 +521,8 @@ class Product
 						'PROPERTY_FIELDS' => array(
 							'ID', 'IBLOCK_ID', 'NAME', 'CODE', 'PROPERTY_TYPE',
 							'MULTIPLE', 'LINK_IBLOCK_ID',
-							'USER_TYPE', 'USER_TYPE_SETTINGS'
+							'USER_TYPE', 'USER_TYPE_SETTINGS',
+							'LIST_TYPE',
 						)
 					)
 				);
@@ -573,14 +574,23 @@ class Product
 
 		foreach ($properties as $prop)
 		{
-			if ($prop['XML_ID'] == 'CML2_LINK' || $prop['PROPERTY_TYPE'] == 'F')
+			if (
+				(isset($prop['XML_ID']) && $prop['XML_ID'] === 'CML2_LINK')
+				|| $prop['PROPERTY_TYPE'] == 'F'
+			)
+			{
 				continue;
+			}
 
-			if(is_array($prop["VALUE"]) && empty($prop["VALUE"]))
+			if (is_array($prop["VALUE"]) && empty($prop["VALUE"]))
+			{
 				continue;
+			}
 
-			if(!is_array($prop["VALUE"]) && $prop["VALUE"] == '')
+			if (!is_array($prop["VALUE"]) && $prop["VALUE"] == '')
+			{
 				continue;
+			}
 
 			$displayProperty = \CIBlockFormatProperties::GetDisplayValue(array(), $prop, '');
 
@@ -863,52 +873,76 @@ class Product
 	{
 		$res = "";
 
-		if ($propData["MULTIPLE"] == "Y")
+		if ($propData["MULTIPLE"] === "Y")
 		{
 			$arVal = array();
 			if (!is_array($value))
 			{
+				$value = (string)$value;
 				if (mb_strpos($value, ",") !== false)
+				{
 					$arVal = explode(",", $value);
+				}
 				else
+				{
 					$arVal[] = $value;
+				}
 			}
 			else
+			{
 				$arVal = $value;
+			}
 
 			if (count($arVal) > 0)
 			{
 				foreach ($arVal as $key => $val)
 				{
-					if ($propData["PROPERTY_TYPE"] == "F")
+					if ($propData["PROPERTY_TYPE"] === "F")
 					{
+						$val = (string)$val;
 						if ($res <> '')
+						{
 							$res .= "<br/> ".self::showImageOrDownloadLink(trim($val), $orderId, $arSize);
+						}
 						else
+						{
 							$res = self::showImageOrDownloadLink(trim($val), $orderId, $arSize);
+						}
 					}
 					else
 					{
 						if ($res <> '')
+						{
 							$res .= ", ".$val;
+						}
 						else
+						{
 							$res = $val;
+						}
 					}
 				}
 			}
 		}
 		else
 		{
-			if ($propData["PROPERTY_TYPE"] == "F")
+			if ($propData["PROPERTY_TYPE"] === "F")
+			{
 				$res = self::showImageOrDownloadLink($value, $orderId, $arSize);
-			elseif($propData["PROPERTY_TYPE"] == "S" && $propData["USER_TYPE"] == "HTML" && isset($value["TEXT"]))
+			}
+			elseif($propData["PROPERTY_TYPE"] === "S" && $propData["USER_TYPE"] === "HTML" && isset($value["TEXT"]))
+			{
 				$res = $value["TEXT"];
+			}
 			else
+			{
 				$res = $value;
+			}
 		}
 
 		if ($res == '')
+		{
 			$res = null;
+		}
 
 		return $res;
 	}

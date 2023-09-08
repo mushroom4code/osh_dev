@@ -443,7 +443,8 @@ class CBPApproveActivity
 		$rejecters = "";
 		if (!$this->IsPropertyExists("SetStatusMessage") || $this->SetStatusMessage == "Y")
 		{
-			$messageTemplate = ($this->IsPropertyExists("StatusMessage") && $this->StatusMessage <> '') ? $this->StatusMessage : GetMessage("BPAA_ACT_INFO");
+			$statusMessage = $this->StatusMessage;
+			$messageTemplate = ($statusMessage && is_string($statusMessage)) ? $statusMessage : GetMessage("BPAA_ACT_INFO");
 			$votedPercent = $this->VotedPercent;
 			$votedCount = $this->VotedCount;
 			$totalCount = $this->TotalCount;
@@ -920,10 +921,14 @@ class CBPApproveActivity
 			if ($key == "approve_users")
 				continue;
 
-			if($arCurrentValues[$key."_X"] <> '')
-				$arProperties[$value] = $arCurrentValues[$key."_X"];
+			if(!empty($arCurrentValues[$key . '_X']))
+			{
+				$arProperties[$value] = $arCurrentValues[$key . "_X"];
+			}
 			else
-				$arProperties[$value] = $arCurrentValues[$key];
+			{
+				$arProperties[$value] = $arCurrentValues[$key] ?? null;
+			}
 		}
 
 		$arProperties["Users"] = CBPHelper::UsersStringToArray($arCurrentValues["approve_users"], $documentType, $arErrors);

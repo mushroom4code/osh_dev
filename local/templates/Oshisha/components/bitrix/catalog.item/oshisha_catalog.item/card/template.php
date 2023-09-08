@@ -103,7 +103,7 @@ if (!$show_price) {
     $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
 }
 
-$subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"], 'ITEM_ID');
+$subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"]??[], 'ITEM_ID');
 $found_key = array_search((string)$item['ID'], $subscription_item_ids);
 $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
 
@@ -162,8 +162,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
         $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
         $togglerState = 'd-none';
         $listClass = '';
-
-        if (count($taste['VALUE']) > 0) {
+        if ($taste['VALUE']) {
             if (count($taste['VALUE']) > 2) {
                 $showToggler = true;
             } elseif (count($taste['VALUE']) > 1) {
@@ -172,38 +171,40 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
             }
             $togglerState = $showToggler ? ' many-tastes' : ' d-none many-tastes';
             $listClass = $showToggler ? ' js__tastes-list' : '';
-        } ?>
+        }
+
+?>
 
         <div class="item-product-info">
             <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
                 <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
+                    <?php if ($taste['VALUE']) {
+                        foreach ($taste['VALUE'] as $key => $name) {
+                            foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
+                                if ($key === $keys) {
+                                    $color = explode('#', $value);
+                                    $tasteSize = 'taste-small';
 
-                    <?php foreach ($taste['VALUE'] as $key => $name) {
-                        foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
-                            if ($key === $keys) {
-                                $color = explode('#', $value);
-                                $tasteSize = 'taste-small';
+                                    if (4 < mb_strlen($name) && mb_strlen($name) <= 8) {
+                                        $tasteSize = 'taste-normal';
+                                    } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
+                                        $tasteSize = 'taste-long';
+                                    } elseif (mb_strlen($name) > 13) {
+                                        $tasteSize = 'taste-xxl';
+                                    }
 
-                                if (4 < mb_strlen($name) && mb_strlen($name) <= 8) {
-                                    $tasteSize = 'taste-normal';
-                                } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
-                                    $tasteSize = 'taste-long';
-                                } elseif (mb_strlen($name) > 13) {
-                                    $tasteSize = 'taste-xxl';
-                                }
-
-                                $propId = $taste['ID'];
-                                $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
-                                ?>
-                                <span class="taste js__taste <?= $tasteSize ?>"
-                                      data-prop-id="<?= "ArFilter_{$propId}" ?>"
-                                      data-background="<?= '#' . $color[1] ?>"
-                                      id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
-                                      data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?></span>
-                            <?php }
+                                    $propId = $taste['ID'];
+                                    $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
+                                    ?>
+                                    <span class="taste js__taste <?= $tasteSize ?>"
+                                          data-prop-id="<?= "ArFilter_{$propId}" ?>"
+                                          data-background="<?= '#' . $color[1] ?>"
+                                          id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
+                                          data-filter-get='<?= "ArFilter_{$propId}_{$valueKey}" ?>'><?= $name ?></span>
+                                <?php }
+                            }
                         }
                     } ?>
-
                 </div>
                 <div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
             </div>
@@ -219,15 +220,16 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                     <?php } ?>
                 </a>
                 <i class="open-fast-window mb-2" data-item-id="<?= $item['ID'] ?>"></i>
-                <?php if (!empty($listGroupedProduct) && count($listGroupedProduct) > 1 &&
-                    (int)$item['PRODUCT']['QUANTITY'] > 0) { ?>
-                    <i class="fa fa-pencil js__open-grouped-product-window"
-                       aria-hidden="true"
-                       id="<?='grouped_'.$item['ID']?>"
-                       data-item-id="<?= $item['ID'] ?>"
-                       data-quantity-id="<?=$arItemIDs['QUANTITY_ID']?>"
-                       data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct))?>"></i>
-                <?php } ?>
+                <?php if (!empty($listGroupedProduct)) {
+                    if (count($listGroupedProduct) > 1 && (int)$item['PRODUCT']['QUANTITY'] > 0) { ?>
+                        <i class="fa fa-pencil js__open-grouped-product-window"
+                           aria-hidden="true"
+                           id="<?= 'grouped_' . $item['ID'] ?>"
+                           data-item-id="<?= $item['ID'] ?>"
+                           data-quantity-id="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                           data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct)) ?>"></i>
+                    <?php }
+                } ?>
             </div>
 
             <?php if ($price['PRICE_DATA'][1]['PRICE'] !== '') { ?>
@@ -351,7 +353,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                 </div>
             <?php } ?>
             <div class="box_with_title_like d-flex align-items-center">
-                <?php if (count($taste['VALUE']) > 0) { ?>
+                <?php if ($taste['VALUE']) { ?>
                     <div class="toggle_taste_line">
                         <div class="variation_taste">
                             <?php foreach ($taste['VALUE'] as $key => $name) {

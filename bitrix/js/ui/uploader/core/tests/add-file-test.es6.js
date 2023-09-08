@@ -1,5 +1,7 @@
 import Uploader from '../src/uploader';
 import { BaseEvent } from 'main.core.events';
+import createFileByType from './utils/create-file-by-type.es6';
+import { UploaderEvent } from '../src/enums/uploader-event';
 
 describe('Add File Method', () => {
 
@@ -8,7 +10,7 @@ describe('Add File Method', () => {
 		const uploader = new Uploader({
 			autoUpload: false,
 			events: {
-				'File:onAdd': (event: BaseEvent) => {
+				[UploaderEvent.FILE_ADD]: (event: BaseEvent) => {
 					try
 					{
 						const { file, error } = event.getData();
@@ -38,7 +40,7 @@ describe('Add File Method', () => {
 		const uploader = new Uploader({
 			autoUpload: false,
 			events: {
-				'File:onAdd': (event: BaseEvent) => {
+				[UploaderEvent.FILE_ADD]: (event: BaseEvent) => {
 					try
 					{
 						const { file, error } = event.getData();
@@ -55,8 +57,6 @@ describe('Add File Method', () => {
 					{
 						done(exception);
 					}
-
-
 				},
 			}
 		});
@@ -69,7 +69,7 @@ describe('Add File Method', () => {
 		const uploader = new Uploader({
 			autoUpload: false,
 			events: {
-				'File:onAdd': (event: BaseEvent) => {
+				[UploaderEvent.FILE_ADD]: (event: BaseEvent) => {
 					try
 					{
 						const { file, error } = event.getData();
@@ -98,7 +98,7 @@ describe('Add File Method', () => {
 		const uploader = new Uploader({
 			autoUpload: false,
 			events: {
-				'File:onAdd': (event: BaseEvent) => {
+				[UploaderEvent.FILE_ADD]: (event: BaseEvent) => {
 					try
 					{
 						const { file, error } = event.getData();
@@ -123,10 +123,53 @@ describe('Add File Method', () => {
 
 	});
 
+	it('should return total files size', () => {
+		const uploader = new Uploader({
+			autoUpload: false,
+			multiple: true,
+		});
+
+		assert.equal(uploader.getTotalSize(), 0);
+		uploader.addFile(new Blob(['text'], { type: 'text/plain' }));
+		assert.equal(uploader.getTotalSize(), 4);
+		uploader.addFile(new Blob(['123'], { type: 'text/plain' }));
+		assert.equal(uploader.getTotalSize(), 7);
+	});
+
+	it('should find file by id', function() {
+		const uploader = new Uploader({
+			autoUpload: false,
+			multiple: true,
+		});
+
+		const id = 'my-file-id'
+		uploader.addFile(
+			new Blob(['text'], { type: 'text/plain' }),
+			{ id: id, type: 'text/plain', name: 'say-my-name.txt' }
+		);
+
+		uploader.addFile(createFileByType('gif'));
+		uploader.addFile(createFileByType('png'), { id: 'png' });
+
+		const file = uploader.getFile(id);
+
+		assert.equal(file, uploader.getFiles()[0]);
+		assert.equal(file.getSize(), 4);
+		assert.equal(file.getType(), 'text/plain');
+		assert.equal(file.getName(), 'say-my-name.txt');
+
+		const png = uploader.getFile('png');
+
+		assert.equal(png, uploader.getFiles()[2]);
+		assert.equal(png.getSize(), 1041);
+		assert.equal(png.getType(), 'image/png');
+		assert.equal(png.getName(), 'image.png');
+	});
+
 	/*it('should accept a pseudo file object', (done) => {
 		const uploader = new Uploader({
 			events: {
-				'File:onAdd': (event: BaseEvent) => {
+				[UploaderEvent.FILE_ADD]: (event: BaseEvent) => {
 					try
 					{
 						const { file, error } = event.getData();

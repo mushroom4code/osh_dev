@@ -9,7 +9,7 @@ use Bitrix\Sale\Internals\Entity;
 
 Loc::getMessage(__FILE__);
 
-abstract class ProductCategoryRestriction extends Base
+abstract class ProductCategoryRestriction extends Restriction
 {
 	/**
 	 * Return js object name that must have 'addRestrictionProductSection(id, name, nodeId)'
@@ -70,6 +70,11 @@ abstract class ProductCategoryRestriction extends Base
 	public static function getClassTitle() : string
 	{
 		return Loc::getMessage('SALE_BASE_RESTRICTION_BY_CATEGORY');
+	}
+
+	public static function getOnApplyErrorMessage(): string
+	{
+		return Loc::getMessage('SALE_BASE_RESTRICTION_BY_CATEGORY_ON_APPLY_ERROR_MSG');
 	}
 
 	/**
@@ -160,21 +165,17 @@ abstract class ProductCategoryRestriction extends Base
 	 */
 	protected static function getCategoriesPath($categoryId) : array
 	{
-		if (!\Bitrix\Main\Loader::includeModule('catalog'))
+		if (!\Bitrix\Main\Loader::includeModule('iblock'))
 		{
 			return [];
 		}
 
-		$result = [$categoryId];
+		$result = [];
 
-		$nav = \CIBlockSection::GetNavChain(false, $categoryId);
-
-		while ($arSectionPath = $nav->GetNext())
+		$nav = \CIBlockSection::GetNavChain(false, $categoryId, ['ID'], true);
+		foreach ($nav as $arSectionPath)
 		{
-			if (!in_array($arSectionPath['ID'], $result))
-			{
-				$result[] = $arSectionPath['ID'];
-			}
+			$result[] = $arSectionPath['ID'];
 		}
 
 		return $result;

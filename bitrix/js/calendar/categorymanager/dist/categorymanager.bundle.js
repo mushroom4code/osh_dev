@@ -8,25 +8,20 @@ this.BX = this.BX || {};
 	    this.calendarContext = calendar_util.Util.getCalendarContext();
 	    this.rooms = [];
 	  }
-
 	  updateData(data) {
 	    this.data = data || {};
 	    this.id = parseInt(data.ID, 10);
 	    this.name = data.NAME;
 	  }
-
 	  addRoom(room) {
 	    this.rooms.push(room);
 	  }
-
 	  getId() {
 	    return this.id;
 	  }
-
 	  setCheckboxStatus(checkboxStatus) {
 	    this.checkboxStatus = checkboxStatus;
 	  }
-
 	}
 
 	class CategoryManager$$1 extends calendar_sectionmanager.SectionManager {
@@ -38,25 +33,21 @@ this.BX = this.BX || {};
 	    this.permissions = config.perm;
 	    this.locationContext = config.locationContext || null;
 	  }
-
 	  sortCategories() {
 	    this.categoryIndex = {};
 	    this.categories = this.categories.sort((a, b) => {
 	      if (a.name.toLowerCase() > b.name.toLowerCase()) {
 	        return 1;
 	      }
-
 	      if (a.name.toLowerCase() < b.name.toLowerCase()) {
 	        return -1;
 	      }
-
 	      return 0;
 	    });
 	    this.categories.forEach((category, i) => {
 	      this.categoryIndex[category.getId()] = i;
 	    });
 	  }
-
 	  setCategories(params = []) {
 	    this.categories = [];
 	    this.categoryIndex = {};
@@ -66,15 +57,12 @@ this.BX = this.BX || {};
 	      this.categoryIndex[category.getId()] = this.categories.length - 1;
 	    });
 	  }
-
 	  getCategories() {
 	    return this.categories;
 	  }
-
 	  getCategory(id) {
 	    return this.categories[this.categoryIndex[id]];
 	  }
-
 	  createCategory(params) {
 	    return new Promise(resolve => {
 	      params.name = this.checkName(params.name);
@@ -100,7 +88,6 @@ this.BX = this.BX || {};
 	      });
 	    });
 	  }
-
 	  updateCategory(params) {
 	    return new Promise(resolve => {
 	      params.name = this.checkName(params.name);
@@ -126,75 +113,59 @@ this.BX = this.BX || {};
 	      });
 	    });
 	  }
-
-	  deleteCategory(id, unfreezeButtonsCallback) {
-	    if (confirm(BX.message('EC_CATEGORY_DELETE_CONFIRM'))) {
-	      return new Promise(resolve => {
-	        BX.ajax.runAction('calendar.api.locationajax.deleteCategory', {
+	  deleteCategory(id) {
+	    return new Promise(resolve => {
+	      BX.ajax.runAction('calendar.api.locationajax.deleteCategory', {
+	        data: {
+	          id
+	        }
+	      }).then(response => {
+	        const categories = response.data || [];
+	        if (!categories.length) {
+	          BX.reload();
+	        }
+	        this.setCategories(categories);
+	        this.sortCategories();
+	        calendar_util.Util.getBX().Event.EventEmitter.emit('BX.Calendar.Rooms.Categories:delete', new main_core.Event.BaseEvent({
 	          data: {
-	            id
+	            categoryList: categories
 	          }
-	        }).then(response => {
-	          const categories = response.data || [];
-
-	          if (!categories.length) {
-	            BX.reload();
-	          }
-
-	          this.setCategories(categories);
-	          this.sortCategories();
-	          calendar_util.Util.getBX().Event.EventEmitter.emit('BX.Calendar.Rooms.Categories:delete', new main_core.Event.BaseEvent({
-	            data: {
-	              categoryList: categories
-	            }
-	          }));
-	          this.updateLocationContext(categories);
-	          resolve(response.data);
-	        }, response => {
-	          BX.Calendar.Util.displayError(response.errors);
-	          resolve(response.data);
-	        });
+	        }));
+	        this.updateLocationContext(categories);
+	        resolve(response.data);
+	      }, response => {
+	        BX.Calendar.Util.displayError(response.errors);
+	        resolve(response.data);
 	      });
-	    } else {
-	      unfreezeButtonsCallback();
-	    }
+	    });
 	  }
-
 	  checkName(name) {
 	    if (typeof name === 'string') {
 	      name = name.trim();
-
 	      if (CategoryManager$$1.isEmpty(name)) {
 	        name = main_core.Loc.getMessage('EC_SEC_SLIDER_NEW_CATEGORY');
 	      }
 	    } else {
 	      name = main_core.Loc.getMessage('EC_SEC_SLIDER_NEW_CATEGORY');
 	    }
-
 	    return name;
 	  }
-
 	  static isEmpty(param) {
 	    if (main_core.Type.isArray(param)) {
 	      return !param.length;
 	    }
-
 	    return param === null || param === undefined || param === '' || param === [] || param === {};
 	  }
-
 	  canDo(action) {
 	    //actions:view|edit|access
 	    return this.permissions[action];
 	  }
-
 	  unsetRooms() {
 	    this.categories.map(category => category.rooms = []);
 	  }
-
 	  handlePullCategoryChanges(params) {
 	    if (params.command === 'delete_category') {
 	      const categoryId = parseInt(params.ID, 10);
-
 	      if (this.categoryIndex[categoryId]) {
 	        this.reloadCategoriesFromDatabase().then(this.reloadDataDebounce());
 	        calendar_util.Util.getBX().Event.EventEmitter.emit('BX.Calendar.Rooms:pull-delete', new main_core.Event.BaseEvent({
@@ -219,7 +190,6 @@ this.BX = this.BX || {};
 	      this.reloadCategoriesFromDatabase().then(this.reloadDataDebounce());
 	    }
 	  }
-
 	  reloadCategoriesFromDatabase() {
 	    return new Promise(resolve => {
 	      BX.ajax.runAction('calendar.api.locationajax.getCategoryList').then(response => {
@@ -227,17 +197,16 @@ this.BX = this.BX || {};
 	        this.sortCategories();
 	        BX.Calendar.Controls.Location.setLocationList(response.data.rooms);
 	        resolve(response.data);
-	      }, // Failure
+	      },
+	      // Failure
 	      response => {
 	        resolve(response.data);
 	      });
 	    });
 	  }
-
 	  unsetCategoryRooms(categoryId) {
 	    this.getCategory(categoryId).rooms = [];
 	  }
-
 	  getCategoriesWithRooms(rooms) {
 	    this.unsetRooms();
 	    const categoriesWithRooms = {
@@ -247,7 +216,6 @@ this.BX = this.BX || {};
 	    let categoryIndexForRoom;
 	    rooms.forEach(room => {
 	      categoryIndexForRoom = this.categoryIndex[room.categoryId];
-
 	      if (categoriesWithRooms['categories'][categoryIndexForRoom]) {
 	        categoriesWithRooms['categories'][categoryIndexForRoom].addRoom(room);
 	      } else {
@@ -256,13 +224,11 @@ this.BX = this.BX || {};
 	    }, this);
 	    return categoriesWithRooms;
 	  }
-
 	  updateLocationContext() {
 	    if (this.locationContext !== null && this.locationContext.roomsManagerFromDB !== null) {
 	      this.locationContext.roomsManagerFromDB.reloadRoomsFromDatabase().then(this.locationContext.setValues.bind(this.locationContext));
 	    }
 	  }
-
 	  getCategoryRooms(category, rooms) {
 	    const categoryRooms = [];
 	    rooms.forEach(room => {
@@ -272,7 +238,6 @@ this.BX = this.BX || {};
 	    });
 	    return categoryRooms;
 	  }
-
 	}
 
 	exports.CategoryManager = CategoryManager$$1;

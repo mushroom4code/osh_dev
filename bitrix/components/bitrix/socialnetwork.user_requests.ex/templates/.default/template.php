@@ -8,20 +8,23 @@
 
 use Bitrix\Main\UI;
 
-UI\Extension::load("ui.tooltip");
+UI\Extension::load([
+	"ui.design-tokens",
+	"ui.tooltip"
+]);
 
-if ($arResult["NEED_AUTH"] == "Y")
+if (($arResult["NEED_AUTH"] ?? null) === "Y")
 {
 	$APPLICATION->AuthForm("");
 }
-elseif ($arResult["FatalError"] <> '')
+elseif (($arResult["FatalError"] ?? '') <> '')
 {
 	?><span class='errortext'><?=$arResult["FatalError"]?></span><br /><br /><?
 }
 else
 {
 	CUtil::InitJSCore(array("popup"));
-	if($arResult["ErrorMessage"] <> '')
+	if(!empty($arResult["ErrorMessage"]))
 	{
 		?><span class='errortext'><?=$arResult["ErrorMessage"]?></span><br /><br /><?
 	}
@@ -42,13 +45,13 @@ else
 		array(
 			"AJAX_ONLY" => "Y",
 			"PATH_TO_SONET_USER_PROFILE" => $arParams["~PATH_TO_USER"],
-			"PATH_TO_SONET_MESSAGES_CHAT" => $arParams["~PATH_TO_MESSAGES_CHAT"],
-			"DATE_TIME_FORMAT" => $arParams["DATE_TIME_FORMAT"],
-			"SHOW_YEAR" => $arParams["SHOW_YEAR"],
+			"PATH_TO_SONET_MESSAGES_CHAT" => $arParams["~PATH_TO_MESSAGES_CHAT"] ?? null,
+			"DATE_TIME_FORMAT" => $arParams["DATE_TIME_FORMAT"] ?? null,
+			"SHOW_YEAR" => $arParams["SHOW_YEAR"] ?? null,
 			"NAME_TEMPLATE" => $arParams["NAME_TEMPLATE"],
 			"SHOW_LOGIN" => $arParams["SHOW_LOGIN"],
-			"PATH_TO_CONPANY_DEPARTMENT" => $arParams["~PATH_TO_CONPANY_DEPARTMENT"],
-			"PATH_TO_VIDEO_CALL" => $arParams["~PATH_TO_VIDEO_CALL"],
+			"PATH_TO_CONPANY_DEPARTMENT" => $arParams["~PATH_TO_CONPANY_DEPARTMENT"] ?? null,
+			"PATH_TO_VIDEO_CALL" => $arParams["~PATH_TO_VIDEO_CALL"] ?? null,
 		),
 		false,
 		array("HIDE_ICONS" => "Y")
@@ -58,7 +61,10 @@ else
 		<div class="invite-title"><?=GetMessage("SONET_URE_T_SUBTITLE_IN")?></div>
 		<form method="post" name="form1" action="<?=POST_FORM_ACTION_URI?>" enctype="multipart/form-data" id="form_requests"><?
 		$noItems = true;
-		if ($arResult["RequestsIn"] && $arResult["RequestsIn"]["List"])
+		if (
+			$arResult["RequestsIn"]
+			&& ($arResult["RequestsIn"]["List"] ?? null)
+		)
 		{
 			$noItems = false;
 			?><table class="invite-list" cellspacing="0">
@@ -142,7 +148,10 @@ else
 	<div class="invite-main-wrap invite-main-wrap-out">
 		<div class="invite-title"><?=GetMessage("SONET_URE_T_SUBTITLE_OUT")?></div>
 		<form method="post" name="form2" action="<?=POST_FORM_ACTION_URI?>" enctype="multipart/form-data" id="form_requests_out"><?
-		if ($arResult["RequestsOut"] && $arResult["RequestsOut"]["List"])
+		if (
+			$arResult["RequestsOut"]
+			&& ($arResult["RequestsOut"]["List"] ?? null)
+		)
 		{
 			?><table class="invite-list" cellspacing="0">
 			<tr>
@@ -202,7 +211,10 @@ else
 		}
 
 		?><div class="invite-buttons-block"><?
-		if ($arResult["RequestsOut"] && $arResult["RequestsOut"]["List"])
+		if (
+			$arResult["RequestsOut"]
+			&& ($arResult["RequestsOut"]["List"] ?? null)
+		)
 		{
 			?><a class="sonet-group-requests-smbutton" href="#" onclick="__URESubmitForm('out', 'reject');"><?
 				?><span class="sonet-group-requests-smbutton-left"></span><?

@@ -357,7 +357,7 @@ class OrderSender
         <?
     }
 
-    protected function loadExportCSS(){
+    protected static function loadExportCSS(){
         Tools::getCommonCss();
         ?>
         <style>
