@@ -198,7 +198,7 @@ class EnteregoHelper
     {
         if (defined('PROPERTY_ACTIVE_UNIT')) {
             if ($isRawElement && defined('IBLOCK_CATALOG')) {
-                $db_props = CIBlockElement::GetProperty(IBLOCK_CATALOG, $item['PRODUCT_ID'], array("sort" => "asc"), array("CODE" => PROPERTY_ACTIVE_UNIT));
+                $db_props = CIBlockElement::GetProperty(IBLOCK_CATALOG, $item['PRODUCT_ID'] ?? $item['ID'], array("sort" => "asc"), array("CODE" => PROPERTY_ACTIVE_UNIT));
                 if ($ar_props = $db_props->Fetch()) {
                     $activeUnitId = IntVal($ar_props["VALUE"]);
                 } else {

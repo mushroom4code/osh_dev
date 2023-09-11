@@ -1,6 +1,7 @@
 <?php
 
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+use Enterego\EnteregoHelper;
 if (empty($arResult["CATEGORIES"]))
     return;
 
@@ -75,7 +76,11 @@ if (empty($arResult["CATEGORIES"]))
 
                     $specialPrice = $arElement['PRICES_CUSTOM']['SALE_PRICE'];
                 }
-
+            EnteregoHelper::setProductsActiveUnit($arElement, true);
+            $arElement['MEASURE_RATIO'] = \Bitrix\Catalog\MeasureRatioTable::getList(array(
+                'select' => array('RATIO'),
+                'filter' => array('=PRODUCT_ID' => $arElement['ID'])
+            ))->fetch()['RATIO'];
             ?>
                 <div class="bx_item_block" onclick="window.location='<?= $arItem["URL"]?>';">
                     <?if (is_array($arElement["PICTURE"])):?>
@@ -104,7 +109,7 @@ if (empty($arResult["CATEGORIES"]))
                         <p>
                             <span class="font-14 mr-2">Розничная (до 10к)</span> -
                             <span class="font-14 ml-2">
-                                <?= $arElement['PRICES']['Розничная']['PRINT_VALUE'] ?></span>
+                                <?= $arElement['PRICES']['Розничная']['PRINT_VFALUE'] ?></span>
                         </p>
                         <p>
                             <span class="font-14 mr-2">Основная (до 30к)</span> -
@@ -126,7 +131,7 @@ if (empty($arResult["CATEGORIES"]))
                             <span class="span">Старая цена <?= $arElement['PRICES_CUSTOM']['PRICE_DATA'][0]['PRINT_VALUE_VAT'] ?></span>
                         <?php } ?>
                     </div>
-                    <?if ($arElement['CATALOG_QUANTITY'] > 0):?>
+                    <?if ($arElement['CATALOG_QUANTITY'] >= $arElement['MEASURE_RATIO']):?>
                         <div class="mb-lg-3 mb-md-3 mb-4 d-flex flex-row align-items-center bx_catalog_item bx_catalog_item_controls"
                             <?= (!$arElement['PRICES']['Основная']['CAN_BUY'] ? ' style="display: none;"' : '') ?>
                              data-entity="quantity-block">
@@ -135,20 +140,27 @@ if (empty($arResult["CATEGORIES"]))
                                       data-url="<?= $arItem['URL'] ?>"
                                       data-product_id="<?= $arElement['ID']; ?>"
                                       id="<?= $arElement['QUANTITY_DOWN_ID'] ?>"
-                                      data-max-quantity="<?= $arElement['CATALOG_QUANTITY'] ?>"
+                                      data-measure-ratio="<?= $arElement['MEASURE_RATIO'] ?>"
+                                      data-active-unit="<?= $arElement['ACTIVE_UNIT'] ?>"
+                                      data-max-quantity="<?= $arElement['CATALOG_QUANTITY'] / $arElement['MEASURE_RATIO'] ?>"
                                       tabindex="0">
                                 </span>
                                 <div class="product-item-amount-field-block">
                                     <input class="product-item-amount card_element cat-det"
                                            id="<?= $arElement['QUANTITY_ID'] ?>"
-                                           type="number" value="<?= $arElement['BASKET_QUANTITY'] ?>"
+                                           type="number" value="<?= $arElement['BASKET_QUANTITY'] / $arElement['MEASURE_RATIO']?>"
                                            data-url="<?= $arItem['URL'] ?>"
                                            data-product_id="<?= $arElement['ID']; ?>"
-                                           data-max-quantity="<?= $arElement['CATAlOG_QUANTITY'] ?>"/>
+                                           data-measure-ratio="<?= $arElement['MEASURE_RATIO'] ?>"
+                                           data-active-unit="<?= $arElement['ACTIVE_UNIT'] ?>"
+                                           data-max-quantity="<?= $arElement['CATALOG_QUANTITY'] / $arElement['MEASURE_RATIO'] ?>"
+                                    />
                                 </div>
                                 <span class="btn-plus no-select plus_icon add2basket basket_prod_detail"
                                       data-url="<?= $arItem['URL'] ?>"
-                                      data-max-quantity="<?= $arElement['CATALOG_QUANTITY'] ?>"
+                                      data-measure-ratio="<?= $arElement['MEASURE_RATIO'] ?>"
+                                      data-active-unit="<?= $arElement['ACTIVE_UNIT'] ?>"
+                                      data-max-quantity="<?= $arElement['CATALOG_QUANTITY'] / $arElement['MEASURE_RATIO'] ?>"
                                       data-product_id="<?= $arElement['ID']; ?>"
                                       id="<?= $arElement['QUANTITY_UP_ID'] ?>" tabindex="0">
                                 </span>
