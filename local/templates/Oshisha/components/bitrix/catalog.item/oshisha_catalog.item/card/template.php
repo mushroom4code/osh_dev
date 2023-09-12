@@ -479,7 +479,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                                id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
                                                data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                                data-product_id="<?= $item['ID']; ?>"
-                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
+                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?> <?= $item['ACTIVE_UNIT'] ?>."></a>
                                         </div>
                                         <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
                                     </div>

@@ -204,7 +204,7 @@ if (empty($arResult["CATEGORIES"]))
                         }
                     });
                 </script>
-                <div class="alert_quantity" data-id="<?= $arElement['ID'] ?>"></div>
+                <div class="alert_quantity alert_search" data-id="<?= $arElement['ID'] ?>" tabindex="0"></div>
             <?endif;?>
         <?endforeach;?>
     <?endforeach;?>
@@ -230,11 +230,19 @@ if (empty($arResult["CATEGORIES"]))
     <?endif;?>
 </div>
 <script>
-    $('#search_results_container').focusout(function () {
-        if(!event.relatedTarget
-            || ((event.relatedTarget.getAttribute('id') != 'input_search_desktop')
-            && ($('#search_results_container').find(event.relatedTarget).length != 1))) {
+    $('#search_results_container, #input_search_desktop').focusout(function () {
+        try {
+            if((event.relatedTarget.getAttribute('id') != 'input_search_desktop')
+                    && ($('#search_results_container').find(event.relatedTarget).length != 1)) {
                 setTimeout(function(){$('#search_results_container').parent().css("display", "none");}, 250);
+            }
+        } catch (err) {
+            if(!event.relatedTarget && !event.target.classList.contains('close-count-alert')) {
+                setTimeout(function(){$('#search_results_container').parent().css("display", "none");}, 250);
+            }
+            if(event.target.classList.contains('close-count-alert')) {
+                $('#input_search_desktop').focus();
+            }
         }
     })
 </script>

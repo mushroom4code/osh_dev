@@ -402,7 +402,7 @@ $(document).ready(function () {
                     $(boxInput).val(max_QUANTITY);
                     if (max_QUANTITY > 0) {
                         $('.ganerate_price_wrap').show();
-                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;' + activeUnit + '.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
+                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;' + activeUnit + '.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert" tabindex="0"></div>');
                     } else
                         $('.ganerate_price_wrap').hide();
 
