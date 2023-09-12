@@ -80,7 +80,8 @@ if (empty($arResult["CATEGORIES"]))
             $arElement['MEASURE_RATIO'] = \Bitrix\Catalog\MeasureRatioTable::getList(array(
                 'select' => array('RATIO'),
                 'filter' => array('=PRODUCT_ID' => $arElement['ID'])
-            ))->fetch()['RATIO'];
+            ))->fetch()['RATIO'] ?? 1;
+
             foreach ($arElement['PRICES'] as &$priceRow) {
                 $priceRow['PRINT_RATIO_PRICE'] = \CCurrencyLang::CurrencyFormat(
                     $priceRow['VALUE'] * $arElement['MEASURE_RATIO'],
