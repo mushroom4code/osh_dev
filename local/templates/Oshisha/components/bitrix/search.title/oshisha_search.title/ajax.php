@@ -81,6 +81,13 @@ if (empty($arResult["CATEGORIES"]))
                 'select' => array('RATIO'),
                 'filter' => array('=PRODUCT_ID' => $arElement['ID'])
             ))->fetch()['RATIO'];
+            foreach ($arElement['PRICES'] as &$priceRow) {
+                $priceRow['PRINT_RATIO_PRICE'] = \CCurrencyLang::CurrencyFormat(
+                    $priceRow['VALUE'] * $arElement['MEASURE_RATIO'],
+                    $priceRow['CURRENCY'],
+                    true
+                );
+            }
             ?>
                 <div class="bx_item_block" onclick="window.location='<?= $arItem["URL"]?>';">
                     <?if (is_array($arElement["PICTURE"])):?>
@@ -109,17 +116,17 @@ if (empty($arResult["CATEGORIES"]))
                         <p>
                             <span class="font-14 mr-2">Розничная (до 10к)</span> -
                             <span class="font-14 ml-2">
-                                <?= $arElement['PRICES']['Розничная']['PRINT_VFALUE'] ?></span>
+                                <?= $arElement['PRICES']['Розничная']['PRINT_RATIO_PRICE'] ?? $arElement['PRICES']['Розничная']['PRINT_VALUE']?></span>
                         </p>
                         <p>
                             <span class="font-14 mr-2">Основная (до 30к)</span> -
                             <span class="font-14 ml-2">
-                                <?= $arElement['PRICES']['Основная']['PRINT_VALUE'] ?></span>
+                                <?= $arElement['PRICES']['Основная']['PRINT_RATIO_PRICE'] ?? $arElement['PRICES']['Основная']['PRINT_VALUE'] ?></span>
                         </p>
                         <p>
                             <span class="font-14 mr-2">b2b (от 30к)</span> -
                             <span class="font-14 ml-2">
-                                <?= $arElement['PRICES']['b2b']['PRINT_VALUE'] ?></span>
+                                <?= $arElement['PRICES']['b2b']['PRINT_RATIO_PRICE'] ?? $arElement['PRICES']['b2b']['PRINT_VALUE'] ?></span>
                         </p>
                     </div>
                     <div class="old_and_current_prices_block">

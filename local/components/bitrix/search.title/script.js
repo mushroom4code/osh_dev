@@ -316,15 +316,6 @@ function JCTitleSearch(arParams)
 		}
 	};
 
-	this.onFocusLost = function(hide)
-	{
-		if(!event.relatedTarget
-			|| ((event.relatedTarget.getAttribute('id') != 'search_results_container')
-			&& ($('#search_results_container').find(event.relatedTarget).length != 1))) {
-				setTimeout(function(){_this.RESULT.style.display = 'none'}, 250);
-		}
-	};
-
 	this.onFocusGain = function()
 	{
 		if(_this.RESULT.innerHTML.length)
