@@ -290,22 +290,24 @@ $(document).ready(function () {
     });
 
     function changePrice() {
-        let value = parseInt($('.card_element').val()),
-            maxValue = parseInt($('.btn-plus').attr('data-max-quantity')),
+        let maxValue = parseInt($('.btn-plus').attr('data-max-quantity')),
+            measureRatio = parseInt($('.btn-plus').attr('data-measure-ratio')),
+            value = parseInt($('.card_element').val()) * measureRatio,
+            activeUnit = $('.btn-plus').attr('data-active-unit'),
             minValue = 0;
         if (value < minValue) {
             value = minValue
             $('.card_element').val(minValue)
-        } else if (value > maxValue) {
+        } else if (value > (maxValue * measureRatio)) {
             value = maxValue;
             $('.card_element').val(maxValue);
-            $('.alert_quantity').html('К покупке доступно максимум: ' + maxValue + ' шт.').addClass('show_block');
+            $('.alert_quantity').html('К покупке доступно максимум: ' + maxValue + ' ' + activeUnit + '.').addClass('show_block');
 
         }
-        if (value > 0) {
+        if (value >= measureRatio) {
             $('.ganerate_price_wrap').show();
         }
-        setPriceGenerate(this,value)
+        setPriceGenerate(this,value / measureRatio)
     }
 
     $(document).on('keypress', '.card_element', function (e) {
@@ -374,20 +376,21 @@ $(document).ready(function () {
                 boxInput = $(this).closest('.bx_catalog_item_controls').find('input.card_element'),
                 plus = $(this).hasClass('btn-plus'),
                 minus = $(this).hasClass('btn-minus'),
-                max_QUANTITY = parseInt($(this).attr('data-max-quantity'));
+                measure_ratio = parseInt($(this).attr('data-measure-ratio')),
+                max_QUANTITY = parseInt($(this).attr('data-max-quantity')),
+                activeUnit = $(this).attr('data-active-unit');
 
             if (plus === true) {
                 if (parseInt($(boxInput).val()) < max_QUANTITY) {
-                    let beforeVal = parseInt($(boxInput).val()) + 1;
-                    $(boxInput).val(beforeVal);
+                    let beforeVal = (parseInt($(boxInput).val()) + 1) * measure_ratio;
+                    $(boxInput).val(beforeVal / measure_ratio);
 
                     if (beforeVal > 0)
                         $('.ganerate_price_wrap').show();
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal);
-
+                    setPriceGenerate(this,beforeVal / measure_ratio);
                     product_data = {
                         'ID': product_id,
                         'QUANTITY': beforeVal,
@@ -399,7 +402,7 @@ $(document).ready(function () {
                     $(boxInput).val(max_QUANTITY);
                     if (max_QUANTITY > 0) {
                         $('.ganerate_price_wrap').show();
-                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
+                        $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;' + activeUnit + '.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                     } else
                         $('.ganerate_price_wrap').hide();
 
@@ -407,7 +410,7 @@ $(document).ready(function () {
 
                     product_data = {
                         'ID': product_id,
-                        'QUANTITY': max_QUANTITY,
+                        'QUANTITY': max_QUANTITY * measure_ratio,
                         'URL': product_url,
                     };
                 }
@@ -419,15 +422,15 @@ $(document).ready(function () {
                 $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
 
                 if (parseInt($(boxInput).val()) > 0) {
-                    let beforeVal = parseInt($(boxInput).val()) - 1;
-                    $(boxInput).val(beforeVal);
+                    let beforeVal = (parseInt($(boxInput).val()) - 1) * measure_ratio;
+                    $(boxInput).val(beforeVal / measure_ratio);
 
                     if (beforeVal > 0)
                         $('.ganerate_price_wrap').show();
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal)
+                    setPriceGenerate(this,beforeVal / measure_ratio)
 
                     product_data = {
                         'ID': product_id,
@@ -447,22 +450,21 @@ $(document).ready(function () {
                     product_url = addBasketButton.data('url');
 
                 if (quantityProdDet) {
-                    let quantity = parseInt(quantityProdDet);
+                    let quantity = parseInt(quantityProdDet) * measure_ratio;
                     if ((quantity > 1) || (quantity !== 0)) {
                         product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
-                        $(boxInput).val(quantity);
-                        if (quantity > max_QUANTITY) {
-                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
-
+                        $(boxInput).val(quantity / measure_ratio);
+                        if (quantity > (max_QUANTITY * measure_ratio)) {
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: ' + max_QUANTITY + '&nbsp;' + activeUnit + 'шт.').addClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                         } else {
                             $('.alert_quantity[data-id="' + product_id + '"]').html('').removeClass('show_block').append('<div class="close-count-alert js__close-count-alert"></div>');
                         }
                     } else {
-                        product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
+                        product_data = {'QUANTITY': measure_ratio, 'URL': product_url, 'ID': product_id};
                         $(boxInput).val(1);
                     }
                 } else {
-                    product_data = {'QUANTITY': 1, 'URL': product_url, 'ID': product_id};
+                    product_data = {'QUANTITY': measure_ratio, 'URL': product_url, 'ID': product_id};
                     $(boxInput).val(1);
                 }
             }
@@ -512,7 +514,6 @@ $(document).ready(function () {
 
             $(box_with_product).empty();
             $(box_with_products_order).empty();
-
             addItemArrayANDSend(product_data);
         }
 
@@ -552,7 +553,6 @@ $(document).ready(function () {
 
         function sendArrayItems(ItemArray) {
             let product_data = [], new_time, time;
-
             if (ItemArray.length !== 0) {
                 $(ItemArray).each(function (key, itemVal) {
                     if (itemVal.TIME === 0) {
@@ -649,8 +649,6 @@ $(document).ready(function () {
                     if(result.success === true){
                         var item_controls = popup_mess.parent();
                         if(result.clickDbError != 'false') {
-                            console.log('error while updating productsSubscriptionsTable');
-                            console.log(result.clickDbError);
                         }
                         if(result.message === "subscribed") {
                             popup_mess.addClass('subscribed');
@@ -2184,7 +2182,6 @@ $(document).ready(function () {
     })
 
     $(document).on('click', '.retail_orders', function () {
-        console.log('entry', '');
         $(this).closest('div').find('.wholesale_orders').css({
             'background': '#F0F0F0',
             'borderRadius': '10px'

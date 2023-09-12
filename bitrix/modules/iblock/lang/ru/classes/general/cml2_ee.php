@@ -190,6 +190,7 @@ $MESS["IBLOCK_XML2_DELETE_MARK"] = "ПометкаУдаления";
 $MESS["IBLOCK_XML2_RESTS"] = "Остатки";
 $MESS["IBLOCK_XML2_REST"] = "Остаток";
 $MESS["IBLOCK_XML2_BASE_UNITS"] = "ЕдиницыИзмерения";
+$MESS["IBLOCK_XML2_UNITS"] = "Единицы";
 $MESS["IBLOCK_XML2_CODE"] = "Код";
 $MESS["IBLOCK_XML2_FULL_NAME"] = "НаименованиеПолное";
 $MESS["IBLOCK_XML2_SHORT_NAME"] = "НаименованиеКраткое";
