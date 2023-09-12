@@ -373,7 +373,6 @@ function JCTitleSearch(arParams)
 		this.INPUT = document.getElementById(this.arParams.INPUT_ID);
 		this.startText = this.oldValue = this.INPUT.value;
 		BX.bind(this.INPUT, 'focus', function() {_this.onFocusGain()});
-		BX.bind(this.INPUT, 'blur', function() {_this.onFocusLost()});
 		this.INPUT.onkeydown = this.onKeyDown;
 
 		if(this.arParams.WAIT_IMAGE)
