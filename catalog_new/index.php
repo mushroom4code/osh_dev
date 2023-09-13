@@ -3,15 +3,23 @@
 define("HIDE_SIDEBAR", true);
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+
+use Enterego\EnteregoHelper;
+
 global $APPLICATION;
 $APPLICATION->SetPageProperty("title", "Новинки");
 $APPLICATION->SetTitle("Новинки");
 /**
  * @var  CAllMain|CMain $APPLICATION
  */
+
+$merchSectionsIds = [];
+EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+
 if (SITE_ID !== SITE_EXHIBITION) {
     $GLOBALS['ArFilter'] = array(
-        'PROPERTY_NEW_VALUE' => 'Да'
+        'PROPERTY_NEW_VALUE' => 'Да',
+        '!IBLOCK_SECTION_ID' => $merchSectionsIds
     );
     $GLOBALS['PREFILTER_NAME'] = array(
         'PROPERTY_NEW_VALUE' => 'Да'

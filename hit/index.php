@@ -1,8 +1,8 @@
 <?php
 
 define("HIDE_SIDEBAR", true);
-
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+use Enterego\EnteregoHelper;
 global $APPLICATION;
 $APPLICATION->SetPageProperty("title", "Хиты");
 $APPLICATION->SetTitle("Хиты");
@@ -11,9 +11,14 @@ $APPLICATION->SetTitle("Хиты");
  */
 $nowDate = date("Y-m-d H:i:s");
 $date = new DateTime($nowDate);
+
+$merchSectionsIds = [];
+EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+
 if (SITE_ID !== SITE_EXHIBITION) {
     $GLOBALS['ArrFilter'] = array(
-        'PROPERTY_HIT_VALUE' => 'да'
+        'PROPERTY_HIT_VALUE' => 'да',
+        '!IBLOCK_SECTION_ID' => $merchSectionsIds
     );
     $GLOBALS['ArrPreFilter'] = array(
         'PROPERTY_HIT_VALUE' => 'да'

@@ -15,10 +15,18 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\Page\Asset;
+use Enterego\EnteregoHelper;
 
 $this->setFrameMode(true);
 
 global $searchFilter;
+
+$merchSectionsIds = [];
+EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+
+$GLOBALS['searchFilter'] = $GLOBALS['searchFilter']
+    ? array_merge($GLOBALS['searchFilter'], ['!=IBLOCK_SECTION_ID' => $merchSectionsIds])
+    : ['!=IBLOCK_SECTION_ID' => $merchSectionsIds];
 
 if (Loader::includeModule("sale")) {
     $recommendedData = array();
@@ -79,7 +87,6 @@ if (Loader::includeModule("sale")) {
 }
 
 
-
 $elementOrder = array();
 if ($arParams['USE_SEARCH_RESULT_ORDER'] === 'N') {
     $elementOrder = array(
@@ -103,7 +110,7 @@ if (Loader::includeModule('search')) {
             "arrFILTER_iblock_" . $arParams["IBLOCK_TYPE"] => array($arParams["IBLOCK_ID"]),
             "USE_TITLE_RANK" => "Y",
             "DEFAULT_SORT" => "rank",
-            "FILTER_NAME" => "",
+            "FILTER_NAME" => "searchFilter",
             "SHOW_WHERE" => "N",
             "arrWHERE" => array(),
             "SHOW_WHEN" => "N",
@@ -116,20 +123,29 @@ if (Loader::includeModule('search')) {
         ),
         $component,
         array('HIDE_ICONS' => 'Y')
-    );	//var_dump($arElements);
+    );
+
     if (!empty($arElements) && is_array($arElements)) {
-        $searchFilter = array(
-            "ID" => $arElements,
-        );
+        $arElementsRes = CIBlockElement::getList([], ['ID' => $arElements], false, false, ['ID', 'IBLOCK_SECTION_ID']);
+        while ($element = $arElementsRes->fetch()) {
+            if (array_search($element['IBLOCK_SECTION_ID'], $merchSectionsIds)) {
+                unset($arElements[array_search($element['ID'], $arElements)]);
+            }
+        }
+    }
+
+    if (!empty($arElements) && is_array($arElements)) {
+        $searchFilter = $searchFilter
+            ? array_merge(array("ID" => $arElements), $searchFilter)
+            : array("ID" => $arElements);
         if ($arParams['USE_SEARCH_RESULT_ORDER'] === 'Y') {
             $elementOrder = array(
                 "ELEMENT_SORT_FIELD" => "ID",
                 "ELEMENT_SORT_ORDER" => $arElements
             );
-			
-		}
-		 echo '<div class="mb-5" style="color: #999999;font-weight: 600;font-size: 24px;">Вы искали "'.htmlspecialcharsbx($_GET['q']).'". Найдено '.count($arElements).' совпадений</div>';	
-        
+
+        }
+        echo '<div class="mb-5" style="color: #999999;font-weight: 600;font-size: 24px;">Вы искали "' . htmlspecialcharsbx($_GET['q']) . '". Найдено ' . count($arElements) . ' совпадений</div>';
     } else {
         if (is_array($arElements)) {
             echo '<div class="mb-5" style="color: #999999;font-weight: 600;font-size: 37px;">К сожалению, такого товара нет на сайте.</div>';
@@ -236,9 +252,9 @@ if (Loader::includeModule('search')) {
     if (isset($_REQUEST['q']) && is_string($_REQUEST['q']))
         $searchQuery = trim($_REQUEST['q']);
     if ($searchQuery !== '') {
-        $searchFilter = array(
-            '*SEARCHABLE_CONTENT' => $searchQuery
-        );
+        $searchFilter = $searchFilter
+            ? array_merge(array('*SEARCHABLE_CONTENT' => $searchQuery), $searchFilter)
+            : array('*SEARCHABLE_CONTENT' => $searchQuery);
     }
     unset($searchQuery);
 }
@@ -271,7 +287,7 @@ if (!empty($searchFilter) && is_array($searchFilter)) {
             "CACHE_TIME" => $arParams["CACHE_TIME"],
             "DISPLAY_COMPARE" => $arParams["DISPLAY_COMPARE"],
             "PRICE_CODE" => $arParams["~PRICE_CODE"],
-            "FILL_ITEM_ALL_PRICES"=>"Y",
+            "FILL_ITEM_ALL_PRICES" => "Y",
             "USE_PRICE_COUNT" => $arParams["USE_PRICE_COUNT"],
             "SHOW_PRICE_COUNT" => $arParams["SHOW_PRICE_COUNT"],
             "PRICE_VAT_INCLUDE" => $arParams["PRICE_VAT_INCLUDE"],
@@ -350,16 +366,16 @@ if (!empty($searchFilter) && is_array($searchFilter)) {
             'COMPARE_NAME' => (isset($arParams['COMPARE_NAME']) ? $arParams['COMPARE_NAME'] : ''),
             'USE_COMPARE_LIST' => (isset($arParams['USE_COMPARE_LIST']) ? $arParams['USE_COMPARE_LIST'] : '')
         ) + $elementOrder;
-?>
-<div class="search_result">
-<?
-    $APPLICATION->IncludeComponent(
-        "bitrix:catalog.section",
-        "oshisha_catalog.section",
-        $componentParams,
-        $arResult["THEME_COMPONENT"],
-        array('HIDE_ICONS' => 'Y')
-    );?>
-	</div>
-	<?
+    ?>
+    <div class="search_result">
+        <?
+        $APPLICATION->IncludeComponent(
+            "bitrix:catalog.section",
+            "oshisha_catalog.section",
+            $componentParams,
+            $arResult["THEME_COMPONENT"],
+            array('HIDE_ICONS' => 'Y')
+        ); ?>
+    </div>
+    <?
 }

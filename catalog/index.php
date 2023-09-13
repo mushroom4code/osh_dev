@@ -2,7 +2,7 @@
 
 define("HIDE_SIDEBAR", true);
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-
+use Enterego\EnteregoHelper;
 /**
  * @var  CAllMain|CMain $APPLICATION
  */
@@ -15,6 +15,13 @@ if (SITE_ID === SITE_EXHIBITION) {
     $iblock_id = IBLOCK_CATALOG_EX;
     $priceCodes = [0 => "b2b"];
 }
+
+$merchSectionsIds = [];
+EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+
+$GLOBALS['ArFilter'] = array(
+    '!IBLOCK_SECTION_ID' => $merchSectionsIds
+);
 
 $APPLICATION->IncludeComponent(
 	"bitrix:catalog", 

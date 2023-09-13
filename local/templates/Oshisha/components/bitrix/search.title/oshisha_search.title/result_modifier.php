@@ -1,4 +1,6 @@
-<? use Enterego\EnteregoBasket;
+<?php
+use Enterego\EnteregoBasket;
+use \Enterego\EnteregoHelper;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
@@ -93,6 +95,7 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
     $arSelect = array(
         "ID",
         "IBLOCK_ID",
+        "IBLOCK_SECTION_ID",
         "PREVIEW_TEXT",
         "PREVIEW_PICTURE",
         "DETAIL_PICTURE",
@@ -119,6 +122,21 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
             $arElement["PREVIEW_TEXT"] = $obParser->html_cut($arElement["PREVIEW_TEXT"], $arParams["PREVIEW_TRUNCATE_LEN"]);
 
         $arResult["ELEMENTS"][$arElement["ID"]] = $arElement;
+    }
+}
+
+$merchSectionsIds = [];
+EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+
+if(!empty($arResult["ELEMENTS"])) {
+    foreach($arResult['ELEMENTS'] as $key => $arElement) {
+        if (array_search($arElement['IBLOCK_SECTION_ID'], $merchSectionsIds)) {
+            if(count($arResult['ELEMENTS']) < 2) {
+                unset($arResult['SEARCH']);
+                unset($arResult['CATEGORIES']);
+            }
+            unset($arResult['ELEMENTS'][$key]);
+        }
     }
 }
 
@@ -163,5 +181,4 @@ foreach($arResult["SEARCH"] as $i=>$arItem)
 
     $arResult["SEARCH"][$i]["ICON"] = true;
 }
-
 ?>

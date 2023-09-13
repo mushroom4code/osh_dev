@@ -142,9 +142,14 @@ $context->getResponse()->writeHeaders();
 
 
 $hitRestriction = isset($parameters['GLOBAL_FILTER']['PROPERTY_HIT_VALUE']) ? true : false;
+$merchRestriction = $parameters['GLOBAL_FILTER']['!IBLOCK_SECTION_ID'] ?? false;
 $parameters['GLOBAL_FILTER'] = $GLOBALS[$parameters["FILTER_NAME"]];
-if ($hitRestriction)
+if ($hitRestriction) {
     $parameters['GLOBAL_FILTER']['PROPERTY_HIT_VALUE'] = "да";
+}
+if ($merchRestriction) {
+    $parameters['GLOBAL_FILTER']['!IBLOCK_SECTION_ID'] = $merchRestriction;
+}
 
 
 //enterego static filter for special group
