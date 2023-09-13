@@ -239,7 +239,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                 <p class="price-row mb-1">
                                     <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
                                     <span class="dash"> - </span><br>
-                                    <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                    <span class="font-12 font-11-md"><b><?= $items['PRINT_RATIO_PRICE'] ?></b></span>
                                 </p>
                             <?php } ?>
                         </div>
@@ -309,7 +309,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                             <p class="price-row mb-1">
                                 <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
                                 <span class="dash"> - </span><br>
-                                <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                <span class="font-12 font-11-md"><b><?= $items['PRINT_RATIO_PRICE'] ?></b></span>
                             </p>
                         <?php } ?>
                     </div>
@@ -567,7 +567,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                         <p class="mb-1">
                             <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
                             <span class="dash"> - </span><br>
-                            <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                            <span class="font-12 font-11-md"><b><?= $items['PRINT_RATIO_PRICE'] ?></b></span>
                         </p>
                     <?php } ?>
                 </div>
