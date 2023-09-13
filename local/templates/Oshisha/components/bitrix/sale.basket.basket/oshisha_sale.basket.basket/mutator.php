@@ -85,23 +85,36 @@ foreach ($item as $row) {
             }
 
             if (!empty($ar_res["CATALOG_PRICE_" . RETAIL_PRICE])) {
-                $price['PRICE_DATA'][0]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE])[0];
+                $price['PRICE_DATA'][0]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE])[0] * $row['MEASURE_RATIO'];
                 $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
             }
             if (!empty($ar_res["CATALOG_PRICE_" . BASIC_PRICE])) {
-                $price['PRICE_DATA'][1]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE])[0];
+                $price['PRICE_DATA'][1]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE])[0] * $row['MEASURE_RATIO'];
                 $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
             }
             if (!empty($ar_res["CATALOG_PRICE_" . B2B_PRICE])) {
-                $price['PRICE_DATA'][2]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . B2B_PRICE])[0];
+                $price['PRICE_DATA'][2]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . B2B_PRICE])[0] * $row['MEASURE_RATIO'];
                 $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
             }
 
             $product_prices = $str_product_prices[0] . '₽';
             $sale_price_val = (int)$str_product_prices[0];
-            $sum_sale = ((round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']) - round($row['SUM_VALUE']));
-            $sum_old = (round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']);
+            $sum_sale = (((round($row['QUANTITY']) / $row['MEASURE_RATIO']) * $price['PRICE_DATA'][0]['VAL']) - round($row['SUM_VALUE']));
+            $sum_old = ((round($row['QUANTITY']) / $row['MEASURE_RATIO']) * $price['PRICE_DATA'][0]['VAL']);
         }
+    }
+
+    $activeUnitId = $row['PROPERTY_'.PROPERTY_ACTIVE_UNIT.'_VALUE'];
+
+    if (!empty($activeUnitId)) {
+        $row[PROPERTY_ACTIVE_UNIT] = CCatalogMeasure::GetList(array(), array("CODE" => $activeUnitId))->fetch();
+        if (!empty($row[PROPERTY_ACTIVE_UNIT])) {
+            $row[PROPERTY_ACTIVE_UNIT] = $row[PROPERTY_ACTIVE_UNIT]['SYMBOL_RUS'];
+        } else {
+            $row[PROPERTY_ACTIVE_UNIT] = 'шт';
+        }
+    } else {
+        $row[PROPERTY_ACTIVE_UNIT] = 'шт';
     }
 
     $rowData = array(
@@ -109,6 +122,7 @@ foreach ($item as $row) {
         'PRODUCT_ID' => $row['PRODUCT_ID'],
         'NAME' => isset($row['~NAME']) ? $row['~NAME'] : $row['NAME'],
         'QUANTITY' => $row['QUANTITY'],
+        'QUANTITY_WITH_RATIO' =>$row['QUANTITY'] / $row['MEASURE_RATIO'],
         'PROPS' => $row['PROPS'],
         'PROPS_ALL' => $row['PROPS_ALL'],
         'HASH' => $row['HASH'],
@@ -141,6 +155,7 @@ foreach ($item as $row) {
         'MEASURE_RATIO' => isset($row['MEASURE_RATIO']) ? $row['MEASURE_RATIO'] : 1,
         'MEASURE_TEXT' => $row['MEASURE_TEXT'],
         'AVAILABLE_QUANTITY' => $row['AVAILABLE_QUANTITY'],
+        'AVAILABLE_QUANTITY_WITH_RATIO' => $row['AVAILABLE_QUANTITY'] / $row['MEASURE_RATIO'],
         'CHECK_MAX_QUANTITY' => $row['CHECK_MAX_QUANTITY'],
         'MODULE' => $row['MODULE'],
         'PRODUCT_PROVIDER_CLASS' => $row['PRODUCT_PROVIDER_CLASS'],
@@ -154,6 +169,7 @@ foreach ($item as $row) {
             ? $row[$this->arParams['BRAND_PROPERTY'] . '_VALUE']
             : '',
         'GIFT' => $row['GIFT'] ?? false,
+        'ACTIVE_UNIT' => $row[PROPERTY_ACTIVE_UNIT],
     );
     foreach ($count_likes['USER'] as $keyLike => $count) {
         if ($keyLike == $row['ID']) {

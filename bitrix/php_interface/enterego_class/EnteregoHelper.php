@@ -9,10 +9,12 @@ use CIBlockProperty;
 use CIBlockSection;
 use CModule;
 use CSaleBasket;
+use CCatalogMeasure;
 use Bitrix\Sale\Order;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use DateInterval;
 use DateTime;
+use Ipol\Fivepost\Admin\BitrixLoggerController;
 
 
 /**
@@ -112,7 +114,7 @@ class EnteregoHelper
         $scRes = \CIBlockSection::GetNavChain(
             $iblock_id,
             $iblock_section_id,
-            array("ID", "DEPTH_LEVEL","NAME")
+            array("ID", "DEPTH_LEVEL", "NAME")
         );
 
         $name = [];
@@ -174,7 +176,7 @@ class EnteregoHelper
                         $data[$basketParent][$basket_item['id']] = $basket_item;
                     }
 
-                    $result[$basketParent][] = (string) $key_basket;
+                    $result[$basketParent][] = (string)$key_basket;
                 }
             }
         }
@@ -192,4 +194,31 @@ class EnteregoHelper
         return $rsRes->SelectedRowsCount() > 0;
     }
 
+    public static function setProductsActiveUnit(array &$item, bool $isRawElement = false): void
+    {
+        if (defined('PROPERTY_ACTIVE_UNIT')) {
+            if ($isRawElement && defined('IBLOCK_CATALOG')) {
+                $db_props = CIBlockElement::GetProperty(IBLOCK_CATALOG, $item['PRODUCT_ID'] ?? $item['ID'], array("sort" => "asc"), array("CODE" => PROPERTY_ACTIVE_UNIT));
+                if ($ar_props = $db_props->Fetch()) {
+                    $activeUnitId = IntVal($ar_props["VALUE"]);
+                } else {
+                    $activeUnitId = false;
+                }
+            } else {
+                $activeUnitId = $item['PROPERTIES'][PROPERTY_ACTIVE_UNIT]['VALUE'] ?? false;
+            }
+            if (!empty($activeUnitId)) {
+                $item['ACTIVE_UNIT'] = CCatalogMeasure::GetList(array(), array("CODE" => $activeUnitId))->fetch();
+                if (!empty($item['ACTIVE_UNIT'])) {
+                    $item['ACTIVE_UNIT_FULL'] = $item['ACTIVE_UNIT']['MEASURE_TITLE'];
+                    $item['ACTIVE_UNIT'] = $item['ACTIVE_UNIT']['SYMBOL_RUS'];
+                    $isActiveUnitSet = true;
+                }
+            }
+        }
+        if (!isset($isActiveUnitSet)) {
+            $item['ACTIVE_UNIT_FULL'] = 'Штука';
+            $item['ACTIVE_UNIT'] = 'шт';
+        }
+    }
 }

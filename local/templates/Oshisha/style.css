@@ -5789,26 +5789,15 @@ li, ul {
     letter-spacing: 0.05em;
     border-radius: 10px;
 }
-.alert_quantity::after {
-    display: none;
-}
-.alert_quantity.show_block::after {
-    display: block;
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    right: 42.5px;
-    width: 20px;
-    height: 20px;
-    background-color: #ffe2e2;
-    transform: rotate(45deg);
-    z-index: -1;
-}
-.by-line .alert_quantity.show_block::after {
+.alert_quantity.show_block.alert_search {
+    position: relative;
+    top: 0;
     left: 0;
-    right: auto;
-    transform: translate(35px, 0%) rotate(45deg);
+    transform: unset;
+    border-radius: 0;
+    width:100%;
 }
+
 .alert_quantity.show_block .close-count-alert {
     cursor: pointer;
     width: 15px;
@@ -7293,4 +7282,12 @@ footer.footer .container .copyrights > span {
 
 .datepickers-container {
     z-index: 10000;
+}
+
+.product-item-detail-price-current-unit {
+    color: #000;
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 33px;
+    transition: font-size .2s ease;
 }

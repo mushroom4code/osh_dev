@@ -64,7 +64,18 @@ if (CModule::IncludeModule("iblock") and CModule::IncludeModule("sale") and
 
             $basket->save();
         }
-        $answer['QUANTITY'] = round(array_sum($basket->getQuantityList())??0);
+        $basketItems = $basket->getBasketItems();
+        foreach ($basketItems as $basketItem) {
+            $measureRatio = \Bitrix\Catalog\MeasureRatioTable::getList(array(
+                'select' => array('RATIO'),
+                'filter' => array('=PRODUCT_ID' => $basketItem->getField('PRODUCT_ID'))
+            ))->fetch();
+            if (empty($measureRatio)) {
+                $answer['QUANTITY'] = (int)round($answer['QUANTITY']) + (int)round($basketItem->getField('QUANTITY'));
+            } else {
+                $answer['QUANTITY'] = (int)round($answer['QUANTITY']) + (int)round($basketItem->getField('QUANTITY') / $measureRatio['RATIO']);
+            }
+        }
         $answer['SUM_PRICE'] = round($basket->getPrice()??0);
         $answer['STATUS'] = 'success';
     }

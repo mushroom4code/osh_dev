@@ -27,12 +27,20 @@ $cntBasketItems = CSaleBasket::GetList(
         "ORDER_ID" => "NULL"
     ),
     false, false,
-    array('QUANTITY', 'SUM_PRICE')
+    array('QUANTITY', 'SUM_PRICE', 'PRODUCT_ID')
 );
 
 $arBasket = [];
 while ($arItems = $cntBasketItems->Fetch()) {
-    $arBasket['QUANTITY'] = (int)round($arBasket['QUANTITY']) + (int)round($arItems['QUANTITY']);
+    $measureRatio = \Bitrix\Catalog\MeasureRatioTable::getList(array(
+            'select' => array('RATIO'),
+            'filter' => array('=PRODUCT_ID' => $arItems['PRODUCT_ID'])
+        ))->fetch();
+    if (empty($measureRatio)) {
+        $arBasket['QUANTITY'] = (int)round($arBasket['QUANTITY']) + (int)round($arItems['QUANTITY']);
+    } else {
+        $arBasket['QUANTITY'] = (int)round($arBasket['QUANTITY']) + (int)round($arItems['QUANTITY'] / $measureRatio['RATIO']);
+    }
     $arBasket['SUM_PRICE'] = (int)round($arBasket['SUM_PRICE']) + (int)round($arItems['SUM_PRICE']);
 }
 
