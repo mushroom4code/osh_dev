@@ -164,8 +164,8 @@ $FUser_id = Fuser::getId($id_USER);
 $item_id[] = $arResult['ID'];
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
-foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
-    $arResult['COUNT_LIKES'] = $count;
+foreach ($count_likes['ALL_LIKE'] as $keyLike => $count_like) {
+    $arResult['COUNT_LIKES'] = $count_like;
 }
 
 $arResult['COUNT_LIKE'] = $count_likes['USER'][$arResult['ID']]['Like'][0];
@@ -464,8 +464,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 $title = 'Товар';
                                                 $select = 'selected';
                                                 $arrayEl = $productSelect[$keyCODE]['JS_PROP'] ?? [];
-                                                $count = array_diff_assoc($arrayEl, $group);
-                                                    if (!empty($count) && (count($count) > 0 || count($arrayEl) !== count($group))) {
+                                                $counts = array_diff_assoc($arrayEl, $group);
+                                                    if (!empty($counts) && (count($counts) > 0 || count($arrayEl) !== count($group))) {
                                                         $select = '';
                                                     }
 
