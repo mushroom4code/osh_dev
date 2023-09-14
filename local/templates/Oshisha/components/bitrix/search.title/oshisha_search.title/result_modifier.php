@@ -125,17 +125,19 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
     }
 }
 
-$merchSectionsIds = [];
-EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+if (defined('MERCH_SECTION_ID')) {
+    $merchSectionsIds = [];
+    EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
 
-if(!empty($arResult["ELEMENTS"])) {
-    foreach($arResult['ELEMENTS'] as $key => $arElement) {
-        if (array_search($arElement['IBLOCK_SECTION_ID'], $merchSectionsIds)) {
-            if(count($arResult['ELEMENTS']) < 2) {
-                unset($arResult['SEARCH']);
-                unset($arResult['CATEGORIES']);
+    if (!empty($arResult["ELEMENTS"])) {
+        foreach ($arResult['ELEMENTS'] as $key => $arElement) {
+            if (array_search($arElement['IBLOCK_SECTION_ID'], $merchSectionsIds)) {
+                if (count($arResult['ELEMENTS']) < 2) {
+                    unset($arResult['SEARCH']);
+                    unset($arResult['CATEGORIES']);
+                }
+                unset($arResult['ELEMENTS'][$key]);
             }
-            unset($arResult['ELEMENTS'][$key]);
         }
     }
 }

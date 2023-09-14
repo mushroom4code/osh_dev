@@ -12,14 +12,20 @@ $APPLICATION->SetTitle("Хиты");
 $nowDate = date("Y-m-d H:i:s");
 $date = new DateTime($nowDate);
 
-$merchSectionsIds = [];
-EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
-
 if (SITE_ID !== SITE_EXHIBITION) {
     $GLOBALS['ArrFilter'] = array(
         'PROPERTY_HIT_VALUE' => 'да',
-        '!IBLOCK_SECTION_ID' => $merchSectionsIds
     );
+
+    if (defined('MERCH_SECTION_ID')) {
+        $merchSectionsIds = [];
+        EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+
+        $GLOBALS['ArrFilter'] = array_merge($GLOBALS['ArrFilter'], array(
+            '!IBLOCK_SECTION_ID' => $merchSectionsIds
+        ));
+    }
+
     $GLOBALS['ArrPreFilter'] = array(
         'PROPERTY_HIT_VALUE' => 'да'
     );

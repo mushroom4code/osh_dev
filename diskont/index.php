@@ -1,6 +1,6 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-use Enterego\EnteregoHelper
+use Enterego\EnteregoHelper;
 global $APPLICATION;
 $APPLICATION->SetPageProperty("title", "Дисконт");
 $APPLICATION->SetTitle("Дисконт");
@@ -18,14 +18,20 @@ define("HIDE_SIDEBAR", true);
  * @var  CAllMain|CMain $APPLICATION
  */
 
-$merchSectionsIds = [];
-EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
-
 if (SITE_ID !== SITE_EXHIBITION) {
     $GLOBALS['ArFilter'] = array(
         'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
-        '!IBLOCK_SECTION_ID' => $merchSectionsIds
     );
+
+    if (defined('MERCH_SECTION_ID')) {
+        $merchSectionsIds = [];
+        EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+
+        $GLOBALS['ArFilter'] = array_merge($GLOBALS['ArFilter'], array(
+            '!IBLOCK_SECTION_ID' => $merchSectionsIds
+        ));
+    }
+
     $GLOBALS['ArPreFilter'] = array(
         'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
     );

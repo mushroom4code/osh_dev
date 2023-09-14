@@ -196,10 +196,10 @@ class EnteregoHelper
      * @param int $productId
      * @param array &$nestedSectionsIds
      */
-    public static function getSectionNestedSectionIds(array &$nestedSectionsIds, string $sectionId = MERCH_SECTION_ID ?? '478'): void
+    public static function getSectionNestedSectionIds(array &$nestedSectionsIds, string $sectionId = MERCH_SECTION_ID): void
     {
-        if (!isset($nestedSectionsIds[MERCH_SECTION_ID ?? '478'])) {
-            $nestedSectionsIds[MERCH_SECTION_ID ?? '478'] = MERCH_SECTION_ID ?? '478';
+        if (!isset($nestedSectionsIds[MERCH_SECTION_ID])) {
+            $nestedSectionsIds[MERCH_SECTION_ID] = MERCH_SECTION_ID;
         }
         $childSectionIdsRes = CIBlockSection::GetList([],['SECTION_ID' => $sectionId], false, ['ID']);
         while($section = $childSectionIdsRes->fetch()) {

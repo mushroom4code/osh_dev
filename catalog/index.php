@@ -16,12 +16,14 @@ if (SITE_ID === SITE_EXHIBITION) {
     $priceCodes = [0 => "b2b"];
 }
 
-$merchSectionsIds = [];
-EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+if (defined('MERCH_SECTION_ID')) {
+    $merchSectionsIds = [];
+    EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
 
-$GLOBALS['ArFilter'] = array(
-    '!IBLOCK_SECTION_ID' => $merchSectionsIds
-);
+    $GLOBALS['ArFilter'] = array(
+        '!IBLOCK_SECTION_ID' => $merchSectionsIds
+    );
+}
 
 $APPLICATION->IncludeComponent(
 	"bitrix:catalog", 

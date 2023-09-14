@@ -21,12 +21,14 @@ $this->setFrameMode(true);
 
 global $searchFilter;
 
-$merchSectionsIds = [];
-EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+if (defined('MERCH_SECTION_ID')) {
+    $merchSectionsIds = [];
+    EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
 
-$GLOBALS['searchFilter'] = $GLOBALS['searchFilter']
-    ? array_merge($GLOBALS['searchFilter'], ['!=IBLOCK_SECTION_ID' => $merchSectionsIds])
-    : ['!=IBLOCK_SECTION_ID' => $merchSectionsIds];
+    $GLOBALS['searchFilter'] = $GLOBALS['searchFilter']
+        ? array_merge($GLOBALS['searchFilter'], ['!=IBLOCK_SECTION_ID' => $merchSectionsIds])
+        : ['!=IBLOCK_SECTION_ID' => $merchSectionsIds];
+}
 
 if (Loader::includeModule("sale")) {
     $recommendedData = array();
@@ -125,7 +127,7 @@ if (Loader::includeModule('search')) {
         array('HIDE_ICONS' => 'Y')
     );
 
-    if (!empty($arElements) && is_array($arElements)) {
+    if (!empty($arElements) && is_array($arElements) && defined('MERCH_SECTION_ID')) {
         $arElementsRes = CIBlockElement::getList([], ['ID' => $arElements], false, false, ['ID', 'IBLOCK_SECTION_ID']);
         while ($element = $arElementsRes->fetch()) {
             if (array_search($element['IBLOCK_SECTION_ID'], $merchSectionsIds)) {

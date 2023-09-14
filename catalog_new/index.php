@@ -13,14 +13,20 @@ $APPLICATION->SetTitle("Новинки");
  * @var  CAllMain|CMain $APPLICATION
  */
 
-$merchSectionsIds = [];
-EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
-
 if (SITE_ID !== SITE_EXHIBITION) {
     $GLOBALS['ArFilter'] = array(
         'PROPERTY_NEW_VALUE' => 'Да',
-        '!IBLOCK_SECTION_ID' => $merchSectionsIds
     );
+
+    if (defined('MERCH_SECTION_ID')) {
+        $merchSectionsIds = [];
+        EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
+
+        $GLOBALS['ArFilter'] = array_merge($GLOBALS['ArFilter'], array(
+            '!IBLOCK_SECTION_ID' => $merchSectionsIds
+        ));
+    }
+
     $GLOBALS['PREFILTER_NAME'] = array(
         'PROPERTY_NEW_VALUE' => 'Да'
     );
