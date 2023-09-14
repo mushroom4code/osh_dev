@@ -134,9 +134,9 @@ if ($_GET['page'] != '') {
 $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
 ?>
-<div class="row mb-4 box_with_prod">
+<div class="row flex mb-4 box_with_prod">
     <?php if ($isFilter) : ?>
-        <div class=" box_filter_catalog
+        <div class=" box_filter_catalog width-1/5
         <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
@@ -227,7 +227,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         </div>
     <? endif ?>
     <? global $GLOBAL_SECTION; ?>
-    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> padding_product_box">
+    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> width-4/5 p-5 padding_product_box">
         <div class="row navigation-wrap">
             <div class="col" id="navigation">
                 <?php $APPLICATION->IncludeComponent(

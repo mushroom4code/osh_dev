@@ -292,12 +292,12 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             } else {
                 $cols = 'col-md-5 col-lg-3';
             }?>
-                <div class="row <?= $rowData['CLASS'] ?> products_box" data-entity="items-row">
+                <div class="row grid grid-cols-4 gap-4 <?= $rowData['CLASS'] ?> products_box" data-entity="items-row">
                     <?php
                     switch ($rowData['VARIANT']) {
                         case 0:
                             ?>
-                            <div class="col product-item-big-card bx_catalog_item double">
+                            <div class="product-item-big-card bx_catalog_item double">
                                 <?php
                                 $item = reset($rowItems);
                                 $APPLICATION->IncludeComponent(
