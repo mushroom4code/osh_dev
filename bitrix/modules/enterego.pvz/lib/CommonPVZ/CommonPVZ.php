@@ -22,32 +22,25 @@ abstract class CommonPVZ
 //        TODO - заменить статичные строковые кейсы на вызов параметра статичного кода в классе как
 //        TODO - OshishaDelivery::$code
         switch ($typeDelivery) {
-            case 'SDEK':
-            case 'СДЭК':
+            case SDEKDelivery::$code:
                 return new SDEKDelivery();
-            case 'FivePost':
-            case '5Post':
+            case FivePostDelivery::$code:
                 return new FivePostDelivery();
-            case 'OSHISHA':
-            case 'Oshisha':
             case OshishaDelivery::$code:
                 return new OshishaDelivery();
-            case 'PEK':
-            case 'ПЭК':
+            case PEKDelivery::$code:
                 return new PEKDelivery();
-            case 'PickPoint':
+            case PickPointDelivery::$code:
                 return new PickPointDelivery();
-            case 'Почта России':
-            case 'RussianPost':
+            case RussianPostDelivery::$code:
                 return new RussianPostDelivery();
-            case 'RussianPostEms':
-                return new RussianPostDelivery('RussianPostEms');
-            case 'RussianPostFirstClass':
-                return new RussianPostDelivery('RussianPostFirstClass');
-            case 'RussianPostRegular':
-                return new RussianPostDelivery('RussianPostRegular');
-            case 'Dellin':
-            case 'Деловые линии':
+            case RussianPostDelivery::$code_ems:
+                return new RussianPostDelivery(RussianPostDelivery::$code_ems);
+            case RussianPostDelivery::$code_first_class:
+                return new RussianPostDelivery(RussianPostDelivery::$code_first_class);
+            case RussianPostDelivery::$code_regular:
+                return new RussianPostDelivery(RussianPostDelivery::$code_regular);
+            case DellinDelivery::$code:
                 return new DellinDelivery();
             default:
                 return null;

@@ -387,7 +387,7 @@ class OshishaDelivery extends CommonPVZ
                 'type' => 'PVZ',
                 'fullAddress' => $arStore['ADDRESS'],
                 'comment' => $arStore['DESCRIPTION'],
-                'deliveryName' => 'OSHISHA',
+                'deliveryName' => $this::$code,
                 'iconCaption' => 'OSHISHA',
                 'hintContent' => $arStore['ADDRESS'],
                 'openEmptyBalloon' => true,

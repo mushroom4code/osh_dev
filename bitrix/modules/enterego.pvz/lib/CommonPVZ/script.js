@@ -35,6 +35,7 @@ BX.SaleCommonPVZ = {
     shipmentCost: undefined,
     orderPackages: null,
     oshishaDeliveryOptions: null,
+    oshishaDeliveryCode: null,
     propTypePvzId: null,
     componentParams: {
         'displayPVZ': typeDisplayPVZ.map,
@@ -48,6 +49,7 @@ BX.SaleCommonPVZ = {
         this.shipmentCost = params.params?.shipmentCost;
         this.orderPackages = params.params?.packages;
         this.oshishaDeliveryOptions = params.params?.deliveryOptions;
+        this.oshishaDeliveryCode = params.params?.oshishaDeliveryCode;
 
         this.refresh()
         this.updateFromDaData()
@@ -129,11 +131,14 @@ BX.SaleCommonPVZ = {
 
         this.drawInterface()
         let deliveryName = this.getValueProp(this.propTypeDeliveryId);
-
         if (curDelivery.CALCULATE_DESCRIPTION !== '') {
-            const deliveryBox = JSON.parse(curDelivery.CALCULATE_DESCRIPTION ?? []).find(name => name.checked === true ||
-                name.code === deliveryName )
-            deliveryName = deliveryBox?.name;
+            try {
+                const deliveryBox = JSON.parse(curDelivery.CALCULATE_DESCRIPTION ?? []).find(name => name.checked === true ||
+                    name.code === deliveryName )
+                deliveryName = deliveryBox?.name;
+            } catch (e) {
+                console.log(JSON.parse(curDelivery.CALCULATE_DESCRIPTION ?? []));
+            }
         }
 
         let date = BX.Sale.OrderAjaxComponent.result.ORDER_PROP

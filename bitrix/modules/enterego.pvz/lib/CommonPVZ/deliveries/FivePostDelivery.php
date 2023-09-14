@@ -12,6 +12,8 @@ class FivePostDelivery extends CommonPVZ
     public string $delivery_code = 'FivePost';
 
     public string $delivery_name = 'FivePost';
+
+    public static string $code = '5post';
     private $fivepost_cache_id = 'fivepost_delivery_prices';
     private $fivepost_client;
 
@@ -214,7 +216,7 @@ class FivePostDelivery extends CommonPVZ
                         'type' => $point['TYPE'] === 'POSTAMAT' ? 'POSTAMAT' : 'PVZ',
                         'fullAddress' => $point['FULL_ADDRESS'],
                         'comment' => $point['ADDITIONAL'],
-                        'deliveryName' => '5Post',
+                        'deliveryName' => $this::$code,
                         'iconCaption' => '5Post',
                         'hintContent' => $point['FULL_ADDRESS'],
                         'openEmptyBalloon' => true,
