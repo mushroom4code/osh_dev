@@ -199,7 +199,7 @@ class EnteregoHelper
     public static function getSectionNestedSectionIds(array &$nestedSectionsIds, string $sectionId = MERCH_SECTION_ID ?? '478'): void
     {
         if (!isset($nestedSectionsIds[MERCH_SECTION_ID ?? '478'])) {
-            $nestedSectionsIds[MERCH_SECTION_ID ?? '478'] = [MERCH_SECTION_ID ?? '478'];
+            $nestedSectionsIds[MERCH_SECTION_ID ?? '478'] = MERCH_SECTION_ID ?? '478';
         }
         $childSectionIdsRes = CIBlockSection::GetList([],['SECTION_ID' => $sectionId], false, ['ID']);
         while($section = $childSectionIdsRes->fetch()) {
