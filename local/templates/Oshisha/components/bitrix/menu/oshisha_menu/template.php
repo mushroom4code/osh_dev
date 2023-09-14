@@ -49,16 +49,16 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 }
 ?>
 <nav class="box_with_menu_header">
-    <ul class="ul_menu flex flex-row">
+    <ul class="ul_menu flex items-center flex-row">
         <li class="li_menu_header mr-3">
             <div class="dark:text-textDark flex flex-row justify-center text-textLight min-w-164 dark:bg-dark-red
             bg-light-red py-2 px-4 rounded-5"
-               title="Просмотреть меню"
-               id="main_menus">
+                 title="Просмотреть меню"
+                 id="main_menus">
                 <div class="span_bar mr-4">
-                    <span class="bar_span span_1"></span>
-                    <span class="bar_span span_2"></span>
-                    <span class="small_bar span_3"></span>
+                    <svg width="20" height="15" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 14H8.58333M1 1H18.3333H1ZM1 7.5H18.3333H1Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
                 <span class="dark:text-textDark text-textLight font-normal text-sm">Каталог</span>
             </div>
@@ -74,25 +74,17 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         }
 
         $result = json_encode($menu_for_JS) ?>
-        <li class="mr-3" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/diskont/">
-                <span class="text_catalog_link">Дисконт</span>
-            </a>
+        <li class="mr-5" data-role="bx-menu-item">
+            <a class="font-light dark:text-textDark text-textLight" href="/diskont/">Дисконт</a>
         </li>
-        <li class="mr-3" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/catalog_new/">
-                <span class="text_catalog_link">Новинки</span>
-            </a>
+        <li class="mr-5" data-role="bx-menu-item">
+            <a class="font-light dark:text-textDark text-textLight" href="/catalog_new/">Новинки</a>
         </li>
-        <li class="mr-3" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/hit/">
-                <span class="text_catalog_link">Хиты</span>
-            </a>
+        <li class="mr-5" data-role="bx-menu-item">
+            <a class="font-light dark:text-textDark text-textLight" href="/hit/">Хиты</a>
         </li>
-        <li class="mr-3" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/brands/">
-                <span class="text_catalog_link">Бренды</span>
-            </a>
+        <li class="mr-5" data-role="bx-menu-item">
+            <a class="font-light dark:text-textDark text-textLight" href="/brands/">Бренды</a>
         </li>
         <div class="open_menu" style="display: none" id="main_menu">
             <div class="parent_menu"></div>
