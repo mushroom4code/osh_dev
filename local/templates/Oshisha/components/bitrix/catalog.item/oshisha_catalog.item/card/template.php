@@ -147,7 +147,7 @@ if ($show_price) {
 }
 $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 ?>
-<div class="catalog-item-product border border-gray-product rounded-md mr-4 p-5
+<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl mr-4 p-5 mb-8
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?=$item['ID']?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
@@ -236,29 +236,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
             <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                 <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
 
-                    <div class="box_with_price line-price font_weight_600 d-flex flex-column min-height-auto">
-                        <div class="d-flex flex-column">
-                            <div class="bx_price <?= $styleForNo ?> position-relative">
-                                <?php
-                                if (!empty($specialPrice)) {
-                                    echo(round($specialPrice));
-                                } else {
-                                echo (round($price['PRICE_DATA']['PRICE']));
-                                } ?>₽
-                            </div>
-
-                            <?php if (!empty($specialPrice)) { ?>
-                                <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
-                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA']['PRICE'] ?>₽</b>
-                                    <b class="sale-percent">
-                                        - <?= (round($price['PRICE_DATA']['PRICE']) - round($specialPrice)) ?>₽
-                                    </b>
-                                </div>
-                            <?php } ?>
-                        </div>
-                    </div>
-
-                    <div class="box_with_titles">
+                    <div class="box_with_titles flex flex-row text-xs text-textLight justify-between dark:text-textDarkLightGray">
                         <?php
                         $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                             'templates',
@@ -294,7 +272,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                     </div>
                 </div>
             <?php } else { ?>
-                <div class="box_with_titles">
+                <div class="box_with_titles flex flex-row text-xs text-textLight dark:text-textDarkLightGray">
                     <div class="not_product">
                         Товара нет в наличии
                     </div>
@@ -331,24 +309,6 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                 </div>
             <?php } ?>
             <div class="box_with_title_like d-flex align-items-center">
-                <?php if ($taste['VALUE']) { ?>
-                    <div class="toggle_taste_line">
-                        <div class="variation_taste">
-                            <?php foreach ($taste['VALUE'] as $key => $name) {
-                                foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
-                                    if ($key === $keys) {
-                                        $color = explode('#', $value); ?>
-                                        <span class="taste" data-background="<?= '#' . $color[1] ?>"
-                                              id="<?= $color[0] ?>">
-                                        <?= $name ?>
-                                </span>
-                                    <?php }
-                                }
-                            } ?>
-                        </div>
-                    </div>
-                <?php } ?>
-
                 <?php if ($GLOBALS['UserTypeOpt'] === true) { ?>
                     <div class="codeProduct font-10 mr-4">
                         <?php
@@ -360,17 +320,14 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                     </div>
                 <?php }
                 ?>
-                <div class="box_with_text">
-                    <a class="bx_catalog_item_title <?= $styleForNo . ' ' . $not_auth ?>"
+                <div class="box_with_text mb-3">
+                    <a class="bx_catalog_item_title line-clamp-1 text-sm font-normal text-textLight dark:text-textDarkLightGray
+                        <?= $styleForNo . ' ' . $not_auth ?>"
                        href="<?= $item['DETAIL_PAGE_URL']; ?>"
                        data-href="<?= $href ?>"
                        title="<?= $productTitle; ?>">
                         <?= $productTitle; ?>
                     </a>
-                    <?php
-                    if (!empty($item['DETAIL_TEXT'])) { ?>
-                        <p class="detail-text"><?= $item['DETAIL_TEXT'] ?></p>
-                    <?php } ?>
                 </div>
             </div>
             <?php
@@ -378,11 +335,11 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
             <div class="bx_catalog_item_controls">
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
-                    <div class="box_with_fav_bask align-items-lg-center align-items-md-center align-items-end">
+                    <div class="box_with_fav_bask flex flex-row justify-between">
                         <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
-                            <div class="box_with_price card-price font_weight_600 d-flex flex-column min-height-auto">
-                                <div class="d-flex flex-column">
-                                    <div class="bx_price <?= $styleForNo ?> position-relative">
+                            <div class="box_with_price card-price font_weight_600  min-height-auto">
+                                <div class="flex flex-col">
+                                    <div class="bx_price text-lg font-medium <?= $styleForNo ?> position-relative">
                                         <?php
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
@@ -393,18 +350,15 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 
                                     <?php if (!empty($specialPrice)) { ?>
                                         <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
-                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA']['PRICE'] ?>₽</b>
-                                            <b class="sale-percent">
+                                            <span class="line-through font-light decoration-red text-textLight
+                                             dark:text-grayIconLights mr-2">
+                                                <?= $price['PRICE_DATA']['PRICE'] ?>₽</span>
+                                            <span class="sale-percent text-light-red font-medium">
                                                 - <?= (round($price['PRICE_DATA']['PRICE']) - round($specialPrice)) ?>₽
-                                            </b>
+                                            </span>
                                         </div>
                                     <?php } ?>
                                 </div>
-                            </div>
-
-                            <div class="box_quantity_for_uric_line">
-                                <span class="font-12 ml-1"><?= $item['PRODUCT']['QUANTITY'] ?></span>
-                                <span class="font-12">шт.</span>
                             </div>
                             <?if($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'):?>
                                 <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
@@ -419,36 +373,48 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                             <?else:?>
                             <div class="d-flex row-line-reverse justify-content-between box-basket">
                                 <?php if ($show_price) { ?>
-                                    <div class="btn red_button_cart btn-plus add2basket"
-                                         data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                         data-product_id="<?= $item['ID']; ?>"
-                                         data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                         id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                         <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
-                                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
-                                    </div>
+<!--                                    <div class="btn red_button_cart btn-plus add2basket"-->
+<!--                                         data-url="--><?php //= $item['DETAIL_PAGE_URL'] ?><!--"-->
+<!--                                         data-product_id="--><?php //= $item['ID']; ?><!--"-->
+<!--                                         data-max-quantity="--><?php //= $item['PRODUCT']['QUANTITY'] ?><!--"-->
+<!--                                         id="--><?php //= $arItemIDs['BUY_LINK']; ?><!--"-->
+<!--                                         --><?// if ($priceBasket > 0): ?><!--style="display:none;"--><?// endif; ?>
+<!--                                    >-->
+<!--                                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>-->
+<!--                                    </div>-->
                                     <div class="product-item-amount-field-contain-wrap"
-                                         <? if ($priceBasket > 0): ?>style="display:flex;"<? endif; ?>
+                                         <?php if ($priceBasket > 0): ?>style="display:flex;"<?php endif; ?>
                                          data-product_id="<?= $item['ID']; ?>">
-                                        <div class="product-item-amount-field-contain d-flex flex-row align-items-center">
-                                            <a class="btn-minus  minus_icon no-select add2basket"
+                                        <div class="product-item-amount-field-contain flex flex-row items-center">
+                                            <a class="btn-minus no-select add2basket cursor-pointer"
                                                id="<?= $arItemIDs['BUY_LINK']; ?>"
                                                href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                                data-product_id="<?= $item['ID']; ?>">
+                                                <svg width="22" height="2" viewBox="0 0 22 2" fill="none"
+                                                     class="stroke-dark dark:stroke-white stroke-[1.5px]" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M1 1H21" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
                                             </a>
                                             <div class="product-item-amount-field-block">
-                                                <input class="product-item-amount card_element"
+                                                <input class="product-item-amount dark:bg-grayButton
+                                                 bg-textDark w-16 card_element"
                                                        id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                                        type="number"
                                                        max="<?= $item['PRODUCT']['QUANTITY'] ?>"
                                                        value="<?= $priceBasket ?>">
                                             </div>
-                                            <a class="btn-plus plus_icon no-select add2basket"
+                                            <a class="btn-plus no-select add2basket cursor-pointer"
                                                data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                                                id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
                                                data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                                data-product_id="<?= $item['ID']; ?>"
-                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
+                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар">
+                                                <svg width="20" height="20" viewBox="0 0 20 20"
+                                                     class="fill-light-red dark:fill-white" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M18.8889 11.111H1.11111C0.503704 11.111 0 10.6073 0 9.9999C0 9.3925 0.503704 8.88879 1.11111 8.88879H18.8889C19.4963 8.88879 20 9.3925 20 9.9999C20 10.6073 19.4963 11.111 18.8889 11.111Z" />
+                                                    <path d="M10 20C9.39262 20 8.88892 19.4963 8.88892 18.8889V1.11111C8.88892 0.503704 9.39262 0 10 0C10.6074 0 11.1111 0.503704 11.1111 1.11111V18.8889C11.1111 19.4963 10.6074 20 10 20Z"/>
+                                                </svg>
+                                            </a>
                                         </div>
                                         <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
                                     </div>

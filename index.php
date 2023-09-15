@@ -204,7 +204,7 @@ if (SITE_ID !== SITE_EXHIBITION) { ?>
     <?php
 
     if (defined('PROPERTY_USE_ON_MAIN_PAGE')) { ?>
-        <div class="dark:text-textDarkLightGray dark:font-extralight font-medium text-textLight text-5xl mb-4">Распродажа</div>
+        <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-5xl mb-4">Распродажа</div>
         <div class="by-card mb-7">
         <?php
 

@@ -70,7 +70,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/tailwind.css");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/assets/js/list.js");
 
-    Asset::getInstance()->addJs('https://use.fontawesome.com/d071b13f63.js');
+//    Asset::getInstance()->addJs('https://use.fontawesome.com/d071b13f63.js');
     Asset::getInstance()->addJs('https://code.jquery.com/jquery-3.6.0.min.js');
     Asset::getInstance()->addJs("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.js");
     Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
@@ -80,7 +80,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addJS('https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js');
     Asset::getInstance()->addJs("https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js");
     Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.css");
-    Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css");
+//    Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css");
     Asset::getInstance()->addJs("/local/assets/js/swiper/swiper-bundle.min.js");
     Asset::getInstance()->addCss("/local/assets/js/swiper/swiper-bundle.min.css");
     /** Enterego
@@ -177,7 +177,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                     $code_region = $result->fetch()['VALUE'];
                                 }
                             } ?>
-                            <span id="city-title" class="dark:text-white text-textLight text-xs font-medium" data-city="<?= $code_region ?>">
+                            <span id="city-title" class="dark:text-textDarkLightGray text-textLight text-sm font-medium" data-city="<?= $code_region ?>">
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_select.php") ?>
                             </span>
@@ -186,29 +186,29 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </div></a>
                     </span>
                     <a href="https://oshisha.net"
-                       class="dark:text-white text-textLight text-xs ml-2 mr-2 font-medium">
+                       class="dark:text-textDarkLightGray text-textLight text-sm ml-5 mr-2 font-normal">
                         Розничный сайт</a>
                 </div>
                 <div class="flex flex-row">
-                    <a href="/about/o-nas/" class="text-xs dark:text-textDark mr-3 font-light hover:text-hover-red">О нас</a>
+                    <a href="/about/o-nas/" class="text-sm dark:text-textDarkLightGray mr-5 font-light hover:text-hover-red">О нас</a>
                     <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
                         <a href="/local/templates/Oshisha/images/presentation.pdf"
-                           download class="text-xs mr-3 dark:text-textDark font-light hover:text-hover-red">Презентация</a>
+                           download class="text-sm mr-5 dark:text-textDarkLightGray font-light hover:text-hover-red">Презентация</a>
                     <?php }
                     if ($USER->IsAuthorized()) { ?>
                         <a href="<?= $option->price_list_link; ?>"
-                           class="text-xs dark:text-textDark text-textLight font-light mr-3 hover:text-hover-red">Прайс-лист</a>
+                           class="text-sm dark:text-textDarkLightGray text-textLight font-light mr-5 hover:text-hover-red">Прайс-лист</a>
                     <?php } else { ?>
                         <a href="/login/"
-                           class="text-xs dark:text-textDark mr-3 font-light hover:text-hover-red">Прайс-лист</a>
+                           class="text-sm dark:text-textDarkLightGray mr-5 font-light hover:text-hover-red">Прайс-лист</a>
                     <?php } ?>
-                    <a href="/about/contacts/" class="text-xs dark:text-textDark font-light mr-3 hover:text-hover-red">Контакты</a>
+                    <a href="/about/contacts/" class="text-sm dark:text-textDarkLightGray font-light mr-5 hover:text-hover-red">Контакты</a>
                     <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="/about/delivery/" class="text-xs dark:text-textDark font-light mr-3 hover:text-hover-red">Доставка
+                        <a href="/about/delivery/" class="text-sm dark:text-textDarkLightGray font-light mr-5 hover:text-hover-red">Доставка
                             и оплата</a>
                     <?php } ?>
                     <a href="javascript:void(0)"
-                       class="text-xs dark:text-textDark callback js__callback font-light hover:text-hover-red">Обратный звонок</a>
+                       class="text-sm dark:text-textDarkLightGray callback js__callback font-light hover:text-hover-red">Обратный звонок</a>
                     <button type="button"
                             class="bg-gray-200 ml-3 flex w-8 flex-none cursor-pointer rounded-full p-px ring-1 ring-inset
                             ring-gray-900/5 transition-colors duration-200 ease-in-out" onclick="toggleTheme(this)"
@@ -303,7 +303,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
             </div>
         <?php } ?>
-        <div class="flex flex-col justify-center width-100 py-3 items-center">
+        <div class="flex flex-col justify-center width-100 py-5 items-center">
             <!--        header menu search/login/basket/like     -->
             <div class="xl:container container flex flex-row justify-between items-center mb-4">
                 <div class="flex flex-row">
@@ -319,7 +319,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             ); ?>
                         </a>
                     </div>
-                    <div class="dark:text-textDark text-sm font-extralight xs:hidden ">Вся продукция <br>для кальяна
+                    <div class="dark:text-textDarkLightGray text-sm font-extralight xs:hidden ">Вся продукция <br>для кальяна
                     </div>
                 </div>
                 <div class="flex flex-row items-center justify-between">

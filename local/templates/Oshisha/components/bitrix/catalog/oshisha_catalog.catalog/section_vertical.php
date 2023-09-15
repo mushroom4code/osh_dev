@@ -136,7 +136,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 ?>
 <div class="row flex mb-4 box_with_prod">
     <?php if ($isFilter) : ?>
-        <div class=" box_filter_catalog width-1/5
+        <div class=" box_filter_catalog w-1/5
         <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
@@ -227,8 +227,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         </div>
     <? endif ?>
     <? global $GLOBAL_SECTION; ?>
-    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> width-4/5 p-5 padding_product_box">
-        <div class="row navigation-wrap">
+    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> w-4/5 p-5 padding_product_box">
+        <div class="row navigation-wrap mb-5">
             <div class="col" id="navigation">
                 <?php $APPLICATION->IncludeComponent(
                     "bitrix:breadcrumb",
@@ -243,8 +243,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 ); ?>
             </div>
         </div>
-        <h1 id="pagetitle"><?php $APPLICATION->ShowTitle(false); ?></h1>
-        <p class="message_for_user_minzdrav font-14"></p>
+        <h1 class="text-3xl mb-2 font-medium"><?php $APPLICATION->ShowTitle(false); ?></h1>
+        <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-5"></p>
         <div id="osh-filter-horizontal2"></div>
         <div class="osh-block-panel <?= \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
             <div id="osh-filter-horizontal">
@@ -258,9 +258,9 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                     <span class='d-inline-block osh-filter-horizontal-remove'></span>
                 </div>
             </div>
-            <div class="mb-4 col_navigation">
+            <div class="mb-4 col_navigation mr-4">
                 <div class="count-per-page">
-                    <span>Количество</span>
+                    <span>Показать</span>
                     <a href="?page=24"
                        class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24): ?>active<?php endif; ?>">24</a>
                     <a href="?page=36"
@@ -278,7 +278,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                       style="min-width: 150px;">Сортировать по</span>
                                 <i class="fa fa-angle-down" aria-hidden="true"></i>
                             </a>
-                            <div class="sort_orders_element js__sort_orders_element">
+                            <div class="sort_orders_element js__sort_orders_element hidden">
                                 <ul>
                                     <li class="catalog_sort_item js__catalog-sort-item"
                                         data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"

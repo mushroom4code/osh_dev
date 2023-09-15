@@ -27,8 +27,8 @@ if ($arParams["SHOW_INPUT"] !== "N"):?>
         <form action="<? echo $arResult["FORM_ACTION"] ?>" class="d-flex flex-row">
             <a href="javascript:void(0)" name="s" type="submit" class="btn_search"></a>
             <input id="<? echo $INPUT_ID ?>" type="text" name="q" value="" size="50" maxlength="50"
-                   class="search_input dark:bg-gray-box-dark border-0 outline-0 dark:text-textDark py-3 px-4
-                   rounded-7 text-textLight"
+                   class="search_input dark:bg-gray-box-dark bg-textDark border-none outline-none
+                   dark:text-grayIconLights py-3 px-4 rounded-7 text-textLight"
                    placeholder="Искать на Oshisha" autocomplete="off"/>
         </form>
     </div>

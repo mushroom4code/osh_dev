@@ -292,12 +292,12 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             } else {
                 $cols = 'col-md-5 col-lg-3';
             }?>
-                <div class="row grid grid-cols-4 gap-4 <?= $rowData['CLASS'] ?> products_box" data-entity="items-row">
+                <div class="row flex-wrap flex flex-row justify-between <?= $rowData['CLASS'] ?> products_box" data-entity="items-row">
                     <?php
                     switch ($rowData['VARIANT']) {
                         case 0:
                             ?>
-                            <div class="product-item-big-card bx_catalog_item double">
+                            <div class="product-item-big-card w-1/4 bx_catalog_item double">
                                 <?php
                                 $item = reset($rowItems);
                                 $APPLICATION->IncludeComponent(
@@ -382,7 +382,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                     }
                                 }
                                 ?>
-                                <div class="product-item-small-card">
+                                <div class="product-item-small-card w-72 ">
                                     <?php $APPLICATION->IncludeComponent(
                                         'bitrix:catalog.item',
                                         'oshisha_catalog.item',

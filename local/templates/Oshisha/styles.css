@@ -9,3 +9,8 @@
 @font-face {
     font-display: swap;
 }
+
+input:focus, button:focus, [type='text']:focus {
+    outline: none;
+    box-shadow: none;
+}

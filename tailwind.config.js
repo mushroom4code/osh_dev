@@ -21,6 +21,8 @@ module.exports = {
                 textDarkLightGray: '#E8E8E8',
                 textDark: '#F0F0F0',
                 greenButton: '#0FAC2B',
+                grayIconLights:'#BFBFBF',
+                iconGray:'#979797',
                 'gray-product': '#CFCFCF',
                 'gray-slider-arrow': '#676767',
                 'dark-red': '#B11512',

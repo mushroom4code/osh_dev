@@ -37,7 +37,7 @@ $option = $option_site; ?>
                 </div>
             </div>
             <div class="columns-3 flex flex-col dark:text-textDarkLightGray">
-                <span class="text-sm font-medium dark:text-white js__collapse-list mb-3">Каталог</span>
+                <span class="text-sm font-medium dark:text-textDarkLightGray js__collapse-list mb-3">Каталог</span>
                 <ul class="text-sm font-light">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",

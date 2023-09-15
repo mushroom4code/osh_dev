@@ -129,25 +129,28 @@ while ($arItems = $cntBasketItems->Fetch()) {
             <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs mt-1">Избранное</span>
         </a>
     </div>
-    <div class="box_with_basket_login">
+    <div class="box_with_basket_login w-max">
         <a class="link_header" href="<?= $arParams['PATH_TO_BASKET'] ?>">
             <div class="basket_top position-relative flex-col flex items-center">
-                <div>
+                <div >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                          class="stroke-light-red dark:stroke-white stroke-[1.5px]"
                          xmlns="http://www.w3.org/2000/svg">
                         <path d="M16.6768 7.45443H18.2401C19.6423 7.45443 20.8104 8.52925 20.9269 9.92661L21.8256 20.7109C21.9566 22.2827 20.7162 23.6309 19.1388 23.6309H3.43039C1.85308 23.6309 0.612641 22.2827 0.74363 20.7109L1.64233 9.92661C1.75877 8.52925 2.92689 7.45443 4.32909 7.45443H5.89245M16.6768 7.45443H5.89245M16.6768 7.45443V6.10639C16.6768 4.6763 16.1087 3.30479 15.0974 2.29356C14.0862 1.28234 12.7147 0.714233 11.2846 0.714233C9.85447 0.714233 8.48301 1.28234 7.47177 2.29356C6.46056 3.30479 5.89245 4.6763 5.89245 6.10639V7.45443M16.6768 7.45443V12.8466M5.89245 7.45443V12.8466"
                               stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
+
+<!--                    --><?php //if (!empty($arBasket['QUANTITY']) && $arBasket['QUANTITY'] !== 0) { ?>
+<!--                    <span class="spanBasketTop p-1 bg-light-red text-xs rounded-full" style="">-->
+<!--                        --><?php //= $arBasket['QUANTITY'] ?>
+<!--                    </span>-->
+<!--                    --><?php //} ?>
                 </div>
                 <?php if (!empty($arBasket['QUANTITY']) && $arBasket['QUANTITY'] !== 0) { ?>
-                    <span class="spanBasketTop position-absolute top-0 text-xs bg-light-red rounded-full">
-                        <?= $arBasket['QUANTITY'] ?>
-                    </span>
-                    <?php if (!$mobile->isMobile()) { ?>
-                        <span class="font-12 font-weight-bold price_basket_top ml-3"><?= $arBasket['SUM_PRICE'] ?> ₽</span>
-                    <?php }
-                } else { ?>
+
+                    <span class="text-textLight dark:text-textDarkLightGray font-semibold text-xs mt-1">
+                            <?= $arBasket['SUM_PRICE'] ?> ₽</span>
+                    <?php } else { ?>
                     <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs mt-1">Корзина</span>
                 <?php } ?>
             </div>
