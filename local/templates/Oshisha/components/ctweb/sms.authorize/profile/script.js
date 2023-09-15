@@ -116,7 +116,8 @@
             if ($(this).attr('data-href') !== '') {
                 PRODUCT_URL = $(this).attr('data-href');
             }
-            $(document).find('[data-id="' + this.id_button + '"]').show();
+            $('.overlay-box').toggle('hidden')
+            $(document).find('[data-id="' + this.id_button + '"]').show(400);
         }.bind(this));
 
         $('.close_header_box').on('click', function (event) {

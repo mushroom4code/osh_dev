@@ -4,6 +4,8 @@ $(document).ready(function () {
     $(document).on('click', '.initial_auth_popup', function () {
         event.preventDefault();
         $('.ctweb-smsauth-menu-block').show();
+        console.log(document.querySelector('.overlay-box'))
+        $(document).find('.overlay-box').toggle('hidden');
     });
 
     $(document).on('click', 'a.method', function () {

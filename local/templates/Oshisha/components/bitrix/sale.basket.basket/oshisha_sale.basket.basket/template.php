@@ -439,6 +439,7 @@ if ($arResult['ERROR_MESSAGE'] && !$arResult['EMPTY_BASKET']) {
     <script>
         $(document).ready(function () {
 // лайки
+            document.querySelector('.overlay-box').target.classList.toggle('hidden')
             $('.ctweb-smsauth-menu-block').show();
         });
     </script>

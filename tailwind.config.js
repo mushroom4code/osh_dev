@@ -22,6 +22,8 @@ module.exports = {
                 textDark: '#F0F0F0',
                 greenButton: '#0FAC2B',
                 grayIconLights:'#BFBFBF',
+                fancyboxDark: '#000000BA',
+                fancybox:'#3C3C3C87',
                 iconGray:'#979797',
                 'gray-product': '#CFCFCF',
                 'gray-slider-arrow': '#676767',

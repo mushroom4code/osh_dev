@@ -806,6 +806,7 @@ $elementId = (isset($_REQUEST['ELEMENT_ID']) && is_string($_REQUEST['ELEMENT_ID'
                             event.preventDefault();
 
                             $('.ctweb-smsauth-menu-block').show();
+                            document.querySelector('.overlay-box').target.classList.toggle('hidden')
                         });
                     </script>
                 <?

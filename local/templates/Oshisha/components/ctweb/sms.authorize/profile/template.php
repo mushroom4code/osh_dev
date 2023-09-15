@@ -42,7 +42,7 @@ $jsParams = array(
 );
 
 if ($arParams['PROFILE_AUTH'] == "Y"):?>
-    <div style="display: block" class="ctweb-smsauth-menu-block profile col-12 col-md-7" data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+    <div style="display: block" class="ctweb-smsauth-menu-block profile" data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
         <div class="ctweb-smsauth-box profile">
             <div>
                 <div class="row">
@@ -167,7 +167,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
         </div>
     </div>
 <?php elseif ($arParams['REGISTER'] == "Y") : ?>
-    <div class="ctweb-smsauth-menu-block profile"  data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+    <div class="ctweb-smsauth-menu-block profile" data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
         <div class="ctweb-smsauth-box profile">
             <?php if ($arResult['AUTH_RESULT'] === 'SUCCESS') : ?>
                 <?php if ($arResult['STEP'] === Manager::STEP_SUCCESS) : ?>
@@ -468,7 +468,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
     </div>
 <?php else:
     if (strripos($_SERVER['REQUEST_URI'], '/?register=yes') === false) {?>
-        <div class="ctweb-smsauth-menu-block p-5 fixed top-1/3 left-1/2 w-fit hidden rounded-lg dark:bg-darkBox bg-white rounded-lx"
+        <div class="ctweb-smsauth-menu-block z-50 p-5 fixed top-1/3 left-1/2 w-fit hidden rounded-lg dark:bg-darkBox bg-white rounded-lx"
              data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
             <div class="close_login_menu">
                 <a class="close_header_box" href="">
@@ -675,7 +675,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
             </div>
         </div>
     <?php } endif; ?>
-
+<div class="fixed z-40 h-screen w-screen dark:bg-fancyboxDark top-0 left-0 bg-fancybox hidden overlay-box"></div>
 <script>
 
     $('input.auth-phone').phonecode({
