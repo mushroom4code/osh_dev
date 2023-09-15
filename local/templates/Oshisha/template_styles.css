@@ -656,11 +656,9 @@ h3.ctweb-title {
     pointer-events: none;
 }
 
-.blur_photo .product-item-amount-field-contain,
-.blur_photo .product-item-detail-price-current {
+.blur_photo .product-item-amount-field-contain {
     display: none !important;
 }
-
 
 .product-item .image_cart {
     min-height: 160px;
