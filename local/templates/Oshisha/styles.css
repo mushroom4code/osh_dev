@@ -10,7 +10,7 @@
     font-display: swap;
 }
 
-input:focus, button:focus, [type='text']:focus,  [type="checkbox"]:focus, [type="checkbox"]:hover {
+input:focus, button:focus, [type='text']:focus, [type="password"]:focus, [type="checkbox"]:focus, [type="checkbox"]:hover {
     outline: none;
     box-shadow: none;
 }

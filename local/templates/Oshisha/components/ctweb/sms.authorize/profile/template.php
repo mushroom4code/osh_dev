@@ -42,16 +42,19 @@ $jsParams = array(
 );
 
 if ($arParams['PROFILE_AUTH'] == "Y"):?>
-    <div style="display: block" class="ctweb-smsauth-menu-block profile" data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+    <div style="display: block" class="ctweb-smsauth-menu-block profile"
+         data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
         <div class="ctweb-smsauth-box profile">
             <div>
                 <div class="row">
-                    <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>" class="ctweb-smsauth-menu-form profile"
+                    <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>"
+                          class="ctweb-smsauth-menu-form profile"
                           action="/bitrix/components/ctweb/sms.authorize/ajax.php"
                           method="POST" name="auth">
                         <?php echo bitrix_sessid_post(); ?>
-                        <input type="hidden" name="FORM_ID" value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE']?>">
-                        <input type="hidden" name="PROFILE_AUTH" value="<?= $arParams['PROFILE_AUTH']?>">
+                        <input type="hidden" name="FORM_ID"
+                               value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+                        <input type="hidden" name="PROFILE_AUTH" value="<?= $arParams['PROFILE_AUTH'] ?>">
                         <input type="hidden" name="recaptcha_token" value="">
                         <input id="<?= $jsParams['TEMPLATE']['STATE'] ?? Manager::STEP_PHONE_WAITING ?>" type="hidden"
                                name=""
@@ -60,13 +63,14 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                             <? ShowNote(GetMessage('SMS_PHONE_SAVED')); ?>
                         <?php elseif ($arResult['AUTH_RESULT'] === 'FAILED'): ?>
                             <? ShowError($arResult["strProfileError"]); ?>
-                        <?php endif;?>
+                        <?php endif; ?>
                         <h5 class="mt-2 mb-4"><b>Изменение номера телефона</b></h5>
 
                         <!--STEP PHONE WAITING-->
                         <div id="ctweb_form_step_1"
                              class="ctweb-smsauth-menu-step hidden">
-                            <p class="form-group mb-2 col-sm-12 col-md-12 profile-asterisk">* Будет выслан код подтверждения</p>
+                            <p class="form-group mb-2 col-sm-12 col-md-12 profile-asterisk">* Будет выслан код
+                                подтверждения</p>
                             <div class="form-group mb-2 flex flex-col">
                                 <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                        for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
@@ -107,7 +111,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
                         <div class="col-sm-12 col-md-12">
                             <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
-                                   class="form-control dark:bg-grayButton input_lk profile auth_code" autocomplete="off">
+                                   class="form-control dark:bg-grayButton input_lk profile auth_code"
+                                   autocomplete="off">
                         </div>
                         <span id="result"></span>
                     </div>
@@ -171,28 +176,29 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
         <div class="ctweb-smsauth-box profile">
             <?php if ($arResult['AUTH_RESULT'] === 'SUCCESS') : ?>
                 <?php if ($arResult['STEP'] === Manager::STEP_SUCCESS) : ?>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="error alert alert-success">
-                                <?= GetMessage("SMS_SUCCESS_AUTH"); ?>
-                            </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="error alert alert-success">
+                            <?= GetMessage("SMS_SUCCESS_AUTH"); ?>
                         </div>
                     </div>
-                <?php else: ?>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="error alert alert-success">
-                                <?= GetMessage("SMS_AUTH_ALREADY_AUTH"); ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
+                </div>
             <?php else: ?>
-                <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE']  ?>" class="ctweb-smsauth-menu-form"
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="error alert alert-success">
+                            <?= GetMessage("SMS_AUTH_ALREADY_AUTH"); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <?php else: ?>
+                <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>" class="ctweb-smsauth-menu-form"
                       action="/bitrix/components/ctweb/sms.authorize/ajax.php"
                       method="POST" name="auth">
                     <?php echo bitrix_sessid_post(); ?>
-                    <input type="hidden" name="FORM_ID" value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?> ?>">
+                    <input type="hidden" name="FORM_ID"
+                           value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?> ?>">
                     <input type="hidden" name="PROFILE_AUTH" value="<?= $arParams['PROFILE_AUTH'] ?>">
                     <input type="hidden" name="REGISTER" value="<?= $arParams['REGISTER'] ?>">
                     <input type="hidden" name="register" value="yes">
@@ -328,7 +334,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                         </label>
                                     </div>
                                     <div class="d-flex flex-row align-items-center font-14 mb-4">
-                                        <input type="checkbox" required checked class="check_input  form-check-input mt-0 ml-0"
+                                        <input type="checkbox" required checked
+                                               class="check_input  form-check-input mt-0 ml-0"
                                                name="USER_POLITICS"/>
                                         <label class="bx-soa-custom-label mb-0 ml-3">
                                             Я принимаю условия
@@ -459,7 +466,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                             && $('input[name="USER_POLITICS"]').prop('checked') === true) {
                             $('input[name="registered"]').removeAttr('style');
                         } else {
-                            $('input[name="registered"]').attr('style','opacity: 0.65');
+                            $('input[name="registered"]').attr('style', 'opacity: 0.65');
                         }
                     });
                 </script>
@@ -467,14 +474,17 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
         </div>
     </div>
 <?php else:
-    if (strripos($_SERVER['REQUEST_URI'], '/?register=yes') === false) {?>
-        <div class="ctweb-smsauth-menu-block z-50 py-8 px-14 fixed top-1/3 left-0 right-0 m-auto max-w-md w-full hidden rounded-xl dark:bg-darkBox bg-white rounded-lx"
+    if (strripos($_SERVER['REQUEST_URI'], '/?register=yes') === false) { ?>
+        <div class="ctweb-smsauth-menu-block z-50 p-8 fixed top-1/3 left-0 right-0 m-auto max-w-md w-full hidden rounded-xl dark:bg-darkBox bg-white rounded-lx"
              data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
             <div class="close_login_menu absolute top-1.5 right-1.5">
                 <a class="close_header_box" href="">
                     <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path opacity="0.5" d="M55 30C55 43.807 43.807 55 30 55C16.1929 55 5 43.807 5 30C5 16.1929 16.1929 5 30 5C43.807 5 55 16.1929 55 30Z" fill="#464646"/>
-                        <path d="M22.4242 22.4242C23.1564 21.6919 24.3436 21.6919 25.0757 22.4242L30 27.3485L34.9242 22.4242C35.6565 21.692 36.8435 21.692 37.5757 22.4242C38.308 23.1564 38.308 24.3436 37.5757 25.076L32.6517 30L37.5757 34.924C38.308 35.6562 38.308 36.8435 37.5757 37.5757C36.8435 38.308 35.6562 38.308 34.924 37.5757L30 32.6517L25.076 37.5757C24.3436 38.308 23.1564 38.308 22.4242 37.5757C21.692 36.8435 21.692 35.6565 22.4242 34.9242L27.3485 30L22.4242 25.0757C21.6919 24.3436 21.6919 23.1564 22.4242 22.4242Z" fill="white"/>
+                        <path opacity="0.5"
+                              d="M55 30C55 43.807 43.807 55 30 55C16.1929 55 5 43.807 5 30C5 16.1929 16.1929 5 30 5C43.807 5 55 16.1929 55 30Z"
+                              fill="#464646"/>
+                        <path d="M22.4242 22.4242C23.1564 21.6919 24.3436 21.6919 25.0757 22.4242L30 27.3485L34.9242 22.4242C35.6565 21.692 36.8435 21.692 37.5757 22.4242C38.308 23.1564 38.308 24.3436 37.5757 25.076L32.6517 30L37.5757 34.924C38.308 35.6562 38.308 36.8435 37.5757 37.5757C36.8435 38.308 35.6562 38.308 34.924 37.5757L30 32.6517L25.076 37.5757C24.3436 38.308 23.1564 38.308 22.4242 37.5757C21.692 36.8435 21.692 35.6565 22.4242 34.9242L27.3485 30L22.4242 25.0757C21.6919 24.3436 21.6919 23.1564 22.4242 22.4242Z"
+                              fill="white"/>
                     </svg>
                 </a>
             </div>
@@ -500,11 +510,13 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                 <?php else: ?>
                     <div>
                         <div class="row">
-                            <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>" class="ctweb-smsauth-menu-form"
+                            <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>"
+                                  class="ctweb-smsauth-menu-form"
                                   action="/bitrix/components/ctweb/sms.authorize/ajax.php"
                                   method="POST" name="auth">
                                 <?php echo bitrix_sessid_post(); ?>
-                                <input type="hidden" name="FORM_ID" value="<?=$jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+                                <input type="hidden" name="FORM_ID"
+                                       value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
                                 <input type="hidden" name="REGISTER" value="<?= $arParams['REGISTER'] ?>">
                                 <input type="hidden" name="PROFILE_AUTH" value="<?= $arParams['PROFILE_AUTH'] ?>">
                                 <input type="hidden" name="recaptcha_token" value="">
@@ -515,36 +527,41 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                                 <!--STEP PNONE WAITING-->
                                 <div id="ctweb_form_step_1"
-                                     class="ctweb-smsauth-menu-step hidden mb-4">
-                                    <h3 class="text-center font-medium mb-4 text-textLight dark:text-textDarkLightGray text-lg">
-                                        <?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
-                                    <div class="form-group relative mb-3">
+                                     class="ctweb-smsauth-menu-step hidden mb-4 flex justify-center">
+                                    <div class=" max-w-xs">
+                                        <h3 class="text-center font-medium mb-4 text-textLight dark:text-textDarkLightGray text-lg">
+                                            <?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
                                         <div>
-                                        <label class="text-xs font-normal mb-2 text-textLight dark:text-textDarkLightGray"
-                                               for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
-                                        <div class="code relative">
-                                            <span class=""  id="flag"></span>
-                                            <input type="text" name="PHONE" placeholder="+_ (___)-___-____"
-                                                   inputmode="text"
-                                                   data-input-type="phone"
-                                                   value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
-                                                   class="bg-textDark p-3 dark:bg-grayButton cursor-pointer w-full text-textLight rounded-md
-                                                    dark:text-white border-0 text-2xl auth-phone"
-                                                   id="<?= $mainID . "phone" ?>"
-                                                   autocomplete="off"/>
-                                        </div>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label class="flex items-center">
-                                            <input type="checkbox" name="SAVE_SESSION" value="Y"
-                                                   class="p-4 dark:bg-grayButton checked:hover:bg-grayButton border-0
+                                            <div class="form-group relative mb-4">
+                                                <div>
+                                                    <label class="text-xs font-normal text-textLight dark:text-textDarkLightGray"
+                                                           for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
+                                                    <div class="code relative mt-2">
+                                                        <span class="" id="flag"></span>
+                                                        <input type="text" name="PHONE" placeholder="+_ (___)-___-____"
+                                                               inputmode="text"
+                                                               data-input-type="phone"
+                                                               value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
+                                                               class="bg-textDark p-3 dark:bg-grayButton cursor-pointer
+                                                                w-full text-textLight rounded-md
+                                                    dark:text-white border-0 text-xl auth-phone"
+                                                               id="<?= $mainID . "phone" ?>"
+                                                               autocomplete="off"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" name="SAVE_SESSION" value="Y"
+                                                           class="p-5 dark:bg-grayButton checked:hover:bg-grayButton border-0
                                                    dark:text-white cursor-pointer text-textLight font-normal rounded-full bg-textDark
                                                    checked:focus:bg-grayButton mr-2"
-                                                   id="<?= $jsParams['TEMPLATE']['SAVE_SESSION'] ?>"
-                                                <?= ($arResult['USER_VALUES']['SAVE_SESSION'] === "Y") ? 'checked="checked"' : ""; ?> />
-                                          <span class="text-xs font-normal text-textLight dark:text-textDarkLightGray">  <?= GetMessage("SMS_AUTH_SAVE_SESSION") ?></span>
-                                        </label>
+                                                           id="<?= $jsParams['TEMPLATE']['SAVE_SESSION'] ?>"
+                                                        <?= ($arResult['USER_VALUES']['SAVE_SESSION'] === "Y") ? 'checked="checked"' : ""; ?> />
+                                                    <span class="text-xs font-normal text-textLight dark:text-textDarkLightGray">  <?= GetMessage("SMS_AUTH_SAVE_SESSION") ?></span>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -581,104 +598,134 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                                 <!--Навигация по форме авторизации-->
                                 <div class="ctweb-button-block flex items-center justify-center flex-col">
-                                    <input class="btn link_menu_catalog get_code_button p-3 rounded-lg w-full dark:text-white
-                                    cursor-pointer text-textLight font-medium text-lg dark:bg-dark-red mb-4"
+                                    <input class="btn link_menu_catalog get_code_button p-3 rounded-lg w-full max-w-xs dark:text-white
+                                    cursor-pointer text-textLight font-normal text-lg dark:bg-dark-red mb-4"
                                            id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                                            type="submit"
                                            value="<?= GetMessage("SMS_AUTH_GET_CODE") ?>"
                                            onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
+                                    <div class="flex flex-col w-full">
+                                        <div class="ctweb-button-back hidden mb-2">
+                                            <a class="ctweb-link"
+                                               id="<?= $jsParams['TEMPLATE']['BACK'] ?>"><?= GetMessage("SMS_AUTH_BACK") ?></a>
+                                        </div>
 
-                                    <div style="display: none" class="ctweb-button-back">
-                                        <a class="ctweb-link"
-                                           id="<?= $jsParams['TEMPLATE']['BACK'] ?>"><?= GetMessage("SMS_AUTH_BACK") ?></a>
-                                    </div>
+                                        <div class="ctweb-button-send-code-again mb-2">
+                                            <a class="ctweb-link"
+                                               id="<?= $jsParams['TEMPLATE']['RESEND'] ?>"><?= GetMessage("SMS_AUTH_SEND_CODE_AGAIN") ?></a>
+                                        </div>
 
-                                    <div style="display: none" class="ctweb-button-send-code-again">
-                                        <a class="ctweb-link"
-                                           id="<?= $jsParams['TEMPLATE']['RESEND'] ?>"><?= GetMessage("SMS_AUTH_SEND_CODE_AGAIN") ?></a>
-                                    </div>
+                                        <div class="ctweb-button-new-code mb-2" id="new_code_block">
+                                            <a class="ctweb-link glowing-text"
+                                               id="<?= $mainID . 'REUSE' ?>"><?= GetMessage('SMS_AUTH_REUSE_CODE') ?></a>
+                                        </div>
 
-                                    <div class="ctweb-button-new-code" id="new_code_block">
-                                        <a class="ctweb-link glowing-text"
-                                           id="<?= $mainID . 'REUSE' ?>"><?= GetMessage('SMS_AUTH_REUSE_CODE') ?></a>
-                                    </div>
+                                        <div class="mb-2">
+                                            <a class="ctweb-link"
+                                               id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>"><?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
+                                        </div>
 
-                                    <div>
-                                        <a class="ctweb-link"
-                                           id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>"><?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
-                                    </div>
+                                        <div class="mb-2">
+                                            <a class="ctweb-link email-login flex flex-row items-center text-sm"
+                                               id="<?= $jsParams['TEMPLATE']['AUTH_EMAIL_LOGIN'] ?>">
+                                                 <span class="mr-2.5 p-2 dark:bg-grayButton rounded-full">
+                                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                          d="M24 5.35328V20.2225L18.198 12.9707L17.0955 13.853L22.954 21.1768H1.04605L6.90454 13.853L5.80201 12.9707L0 20.2225V5.35326L11.9993 15.7588L24 5.35328ZM23.9992 2.82495V3.48279L11.9999 13.8883L0.0005625 3.4828V2.82495H23.9992Z"
+                                                          fill="white"/>
+                                                </svg>
+                                                 </span>
+                                                <?= GetMessage("SMS_AUTH_EMAIL_LOGIN") ?></a>
+                                        </div>
 
-                                    <div class="mt-2">
-                                        <a class="ctweb-link email-login"
-                                           id="<?= $jsParams['TEMPLATE']['AUTH_EMAIL_LOGIN'] ?>"><?= GetMessage("SMS_AUTH_EMAIL_LOGIN") ?></a>
-                                    </div>
-
-                                    <div>
-                                        <a class="ctweb-link" href="<? SITE_DIR ?>about/FAQ/"
-                                           id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>"><?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
-                                    </div>
-                                    <div>
-                                        <a class="ctweb-link email-login"
-                                           href="/auth/?register=yes"><?= GetMessage("EMAIL_AUTH_REGISTRATION") ?></a>
+                                        <div class="mb-2">
+                                            <a class="ctweb-link" href="<? SITE_DIR ?>about/FAQ/"
+                                               id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>"><?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
+                                        </div>
+                                        <div class="mb-2">
+                                            <a class="ctweb-link email-login flex flex-row items-center text-sm"
+                                               href="/auth/?register=yes">
+                                            <span class="mr-2.5 p-2 dark:bg-grayButton rounded-full">
+                                            <svg width="16" height="17" viewBox="0 0 21 22" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M10.4997 10.451C13.3856 10.451 15.7252 8.11148 15.7252 5.22551C15.7252 2.33954 13.3856 0 10.4997 0C7.61371 0 5.27417 2.33954 5.27417 5.22551C5.27417 8.11148 7.61371 10.451 10.4997 10.451Z"
+                                                      fill="white"/>
+                                                <path d="M10.5 13.0635C4.71286 13.0635 0 16.575 0 20.9017C0 21.1944 0.254125 21.4243 0.577556 21.4243H20.4224C20.7459 21.4243 21 21.1944 21 20.9017C21 16.575 16.2871 13.0635 10.5 13.0635Z"
+                                                      fill="white"/>
+                                            </svg>
+                                                </span>
+                                                <?= GetMessage("EMAIL_AUTH_REGISTRATION") ?>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
                             <!-- STEP AUTH EMAIL LOGIN -->
                             <form id="<?= $jsParams['TEMPLATE']['MAIL_FORM'] ?>"
                                   action="/bitrix/components/ctweb/sms.authorize/ajax.php"
-                                  method="POST" class="ctweb-smsauth-menu-step hidden">
+                                  method="POST" class="ctweb-smsauth-menu-step hidden mb-4 flex justify-center">
                                 <?= bitrix_sessid_post(); ?>
-                                <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
-                                <div class="form-group flex flex-col">
-                                    <input type="hidden" name="METHOD" placeholder="" value="EMAIL_AUTH"/>
-                                    <label class="ctweb-label"><?= GetMessage("SMS_AUTH_EMAIL") ?></label>
-                                    <input type="text" name="EMAIL" placeholder=""
-                                           value="<?= $arResult['USER_VALUES']['EMAIL'] ?? '' ?>"
-                                           class="form-control dark:bg-grayButton auth-by-email"
-                                           id="<?= $mainID . "email" ?>"/>
-                                    <label class="ctweb-label"><?= GetMessage("SMS_AUTH_PASSWORD") ?></label>
-                                    <span style="float: right"><a href="/auth/?forgot_password=yes"
-                                                                  class="ctweb-link ctweb-link-fargot"
-                                                                  idk="<?= $jsParams['TEMPLATE']['FORGOT_PASSWORD'] ?>">Забыли пароль?</a></span>
-                                    <input type="password" name="PASSWORD" placeholder=""
-                                           value="<?= $arResult['USER_VALUES']['PASSWORD'] ?? '' ?>"
-                                           class="form-control auth-by-email js__show-pass"
-                                           id="<?= $mainID . "password" ?>"/>
-                                    <div class="ctweb-error-alert" style="display: none"
-                                         id="<?= $jsParams['TEMPLATE']['ERROR_ALERT'] ?>">
-                                        <?= GetMessage("SMS_AUTH_ERROR_EMPTY_FIELD") ?>
+                                <div class="max-w-xs">
+                                    <h3 class="text-center font-medium mb-4 text-textLight dark:text-textDarkLightGray text-lg">
+                                        <?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
+                                    <div class="form-group flex flex-col">
+                                        <input type="hidden" name="METHOD" placeholder="" value="EMAIL_AUTH"/>
+                                        <label class="text-xs font-normal text-textLight dark:text-textDarkLightGray"><?= GetMessage("SMS_AUTH_EMAIL") ?></label>
+                                        <input type="text" name="EMAIL" placeholder=""
+                                               value="<?= $arResult['USER_VALUES']['EMAIL'] ?? '' ?>"
+                                               class="form-control bg-textDark p-3 dark:bg-grayButton cursor-pointer
+                                                                w-full text-textLight rounded-md
+                                                    dark:text-white border-0 text-xl auth-by-email mb-4"
+                                               id="<?= $mainID . "email" ?>"/>
+                                        <div class="flex flex-row justify-between">
+                                            <label class="text-xs font-normal text-textLight dark:text-textDarkLightGray"><?= GetMessage("SMS_AUTH_PASSWORD") ?></label>
+                                            <span style="float: right">
+                                        <a href="/auth/?forgot_password=yes"
+                                           class="ctweb-link ctweb-link-fargot font-normal text-textLight dark:text-textDarkLightGray"
+                                           idk="<?= $jsParams['TEMPLATE']['FORGOT_PASSWORD'] ?>">Забыли пароль?</a>
+                                    </span>
+                                        </div>
+                                        <input type="password" name="PASSWORD" placeholder=""
+                                               value="<?= $arResult['USER_VALUES']['PASSWORD'] ?? '' ?>"
+                                               class="auth-by-email bg-textDark p-3 dark:bg-grayButton cursor-pointer
+                                                                w-full text-textLight rounded-md
+                                                    dark:text-white border-0 text-xl js__show-pass mb-4"
+                                               id="<?= $mainID . "password" ?>"/>
+                                        <div class="ctweb-error-alert" style="display: none"
+                                             id="<?= $jsParams['TEMPLATE']['ERROR_ALERT'] ?>">
+                                            <?= GetMessage("SMS_AUTH_ERROR_EMPTY_FIELD") ?>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="SAVE_SESSION" value="Y"
-                                               id="<?= $jsParams['TEMPLATE']['SAVE_SESSION'] ?>"
-                                            <?= ($arResult['USER_VALUES']['SAVE_SESSION'] === "Y") ? 'checked="checked"' : ""; ?> />
-                                        <?= GetMessage("SMS_AUTH_SAVE_SESSION") ?>
-                                    </label>
-                                </div>
-                                <div class="ctweb-button-block">
-                                    <input class="btn link_menu_catalog login_button"
-                                           id="<?= $jsParams['TEMPLATE']['LOGIN'] ?>"
-                                           type="button"
-                                           value="<?= GetMessage("SMS_AUTH_LOG_IN") ?>">
-                                    <div class="mt-2">
-                                        <a class="ctweb-link"
-                                           id="<?= $jsParams['TEMPLATE']['AUTH_PHONE_LOGIN'] ?>">
-                                            <?= GetMessage("AUTH_PHONE_LOGIN") ?></a>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="SAVE_SESSION" value="Y"
+                                                   class="p-5 dark:bg-grayButton checked:hover:bg-grayButton border-0
+                                                   dark:text-white cursor-pointer text-textLight font-normal rounded-full bg-textDark
+                                                   checked:focus:bg-grayButton mr-2"
+                                                   id="<?= $jsParams['TEMPLATE']['SAVE_SESSION'] ?>"
+                                                <?= ($arResult['USER_VALUES']['SAVE_SESSION'] === "Y") ? 'checked="checked"' : ""; ?> />
+                                            <?= GetMessage("SMS_AUTH_SAVE_SESSION") ?>
+                                        </label>
                                     </div>
-                                    <div>
-                                        <a class="ctweb-link email-login"
-                                           href="/auth/?register=yes"><?= GetMessage("EMAIL_AUTH_REGISTRATION") ?></a>
+                                    <div class="ctweb-button-block">
+                                        <input class="btn link_menu_catalog login_button p-3 rounded-lg w-full max-w-xs dark:text-white
+                                    cursor-pointer text-textLight font-normal text-lg dark:bg-dark-red mb-4"
+                                               id="<?= $jsParams['TEMPLATE']['LOGIN'] ?>"
+                                               type="button"
+                                               value="<?= GetMessage("SMS_AUTH_LOG_IN") ?>">
+                                        <div class="mt-2">
+                                            <a class="ctweb-link"
+                                               id="<?= $jsParams['TEMPLATE']['AUTH_PHONE_LOGIN'] ?>">
+                                                <?= GetMessage("AUTH_PHONE_LOGIN") ?></a>
+                                        </div>
+                                        <div>
+                                            <a class="ctweb-link email-login"
+                                               href="/auth/?register=yes"><?= GetMessage("EMAIL_AUTH_REGISTRATION") ?></a>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
-                            <div class="ctweb-button-block">
-                                <div><a class="ctweb-link email-register"
-                                        id="<?= $jsParams['TEMPLATE']['REGISTRATION'] ?>"
-                                        href="/login/?register=yes"><?= GetMessage("EMAIL_AUTH_REGISTRATION") ?></a>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -695,7 +742,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
     });
 
     $('input.auth-phone-profile').phonecode({
-        phone_val :$('input.auth-phone-profile').val(),
+        phone_val: $('input.auth-phone-profile').val(),
     });
 
 
