@@ -243,7 +243,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                 </a>
                                 <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
                                     <a href="/local/templates/Oshisha/images/presentation.pdf" download
-                                       class="text_header "> <span class="text_catalog_link not_weight"> Презентация</span></a>
+                                       class="text_header link_menu_top"> <span class="text_catalog_link not_weight"> Презентация</span></a>
                                 <?php } ?>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
@@ -308,7 +308,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                             ); ?>
                         </a>
                     </div>
-                    <div class="text_header_menu"><span>Вся продукция <br>для кальяна</span></div>
                 </div>
                 <div class="box_right_header">
                     <div class="box_with_search">

@@ -1,3 +1,4 @@
+/* eslint-disable */
 this.BX = this.BX || {};
 this.BX.Messenger = this.BX.Messenger || {};
 (function (exports) {
@@ -16,7 +17,6 @@ this.BX.Messenger = this.BX.Messenger || {};
 	    babelHelpers.classCallCheck(this, RequestCollector);
 	    this.list = {};
 	  }
-
 	  babelHelpers.createClass(RequestCollector, [{
 	    key: "register",
 	    value: function register(name, xhr) {
@@ -27,12 +27,10 @@ this.BX.Messenger = this.BX.Messenger || {};
 	    key: "unregister",
 	    value: function unregister(name) {
 	      var abort = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
 	      if (this.list[name]) {
 	        if (abort) {
 	          this.list[name].abort();
 	        }
-
 	        delete this.list[name];
 	      }
 	    }
@@ -47,7 +45,6 @@ this.BX.Messenger = this.BX.Messenger || {};
 	      if (this.list[name]) {
 	        this.list[name].abort();
 	      }
-
 	      return true;
 	    }
 	  }, {

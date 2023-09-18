@@ -36,4 +36,23 @@ $MESS['CALENDAR_INVENT_MESSAGE_BODY'] = "
 $MESS['CALENDAR_REPLY_MESSAGE_BODY'] = "
 <p>#NAME# ответил #ANSWER#</p>
 ";
+
+// CALENDAR_SHARING
+$MESS['CALENDAR_SHARING_EVENT_TYPE_NAME'] = "Сообщение внешнему пользователю свободных слотов";
+$MESS['CALENDAR_SHARING_EVENT_TYPE_DESC'] = "
+#EVENT_NAME# - Название события
+#EVENT_DATETIME# - Дата и время события
+#TIMEZONE# - Часовой пояс
+#STATUS# - Статус подтверждения владельцем календаря
+#OWNER_NAME# - Имя владельца календаря
+#OWNER_PHOTO# - URL фотографии владельца календаря
+#CALENDAR_WEEKDAY# - День недели события
+#CALENDAR_DAY# - Дата месяца события
+
+#NEW_EVENT_LINK# - Ссылка для создания нового события
+#ICS_FILE# - Ссылка для скачивания файла ics
+#CANCEL_LINK# - Ссылка для отмены события
+#VIDEOCONFERENCE_LINK# - Ссылка для подключения к видеоконференции
+";
+
 ?>

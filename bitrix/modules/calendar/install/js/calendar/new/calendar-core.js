@@ -45,9 +45,16 @@
 
 		BX.Calendar.Util.setDayOfWeekMonthFormat(config.dayOfWeekMonthFormat);
 		BX.Calendar.Util.setDayMonthFormat(config.dayMonthFormat);
+		BX.Calendar.Util.setLongDateFormat(config.longDateFormat);
 
 		BX.Calendar.Util.setIphoneConnectionStatus(config.isIphoneConnected);
 		BX.Calendar.Util.setMacConnectionStatus(config.isMacConnected);
+		BX.Calendar.Util.setIcloudConnectionStatus(config.isIcloudConnected);
+		BX.Calendar.Util.setGoogleConnectionStatus(config.isGoogleConnected);
+		BX.Calendar.Util.setIsSharingFeatureEnabled(config.isSharingFeatureEnabled);
+		BX.Calendar.Util.setSharingConfig(config.sharing);
+		this.payAttentionToNewSharingFeature = config.payAttentionToNewSharingFeature;
+		this.sharingFeatureLimitEnable = config.sharingFeatureLimitEnable;
 
 		this.requests = {};
 		this.currentUser = config.user;
@@ -143,6 +150,7 @@
 
 				BX.addCustomEvent(this, 'doRefresh', BX.proxy(this.refresh, this));
 				BX.Event.bind(document.body, 'keyup', BX.proxy(this.keyUpHandler, this));
+				BX.Event.bind(document.body, 'keydown', BX.proxy(this.keyDownHandler, this));
 				BX.Event.bind(window, 'beforeunload', BX.Calendar.EntryManager.doDelayedActions);
 				BX.addCustomEvent(this, 'changeViewRange', BX.Calendar.EntryManager.doDelayedActions);
 				BX.Event.bind(document, 'visibilitychange', this.handleVisibilityChange.bind(this));
@@ -173,7 +181,7 @@
 					}
 				}
 
-				if (this.util.userIsOwner())
+				if (this.util.userIsOwner() && !this.util.isExtranetUser())
 				{
 					this.syncInterface = new BX.Calendar.Sync.Manager.Manager({
 						wrapper: document.getElementById(this.id + '-sync-container'),
@@ -187,7 +195,20 @@
 						isRuZone: this.util.config.isRuZone,
 						calendar: this,
 					});
+
 					this.syncInterface.showSyncButton();
+
+					this.sharingInterface = new BX.Calendar.Sharing.Interface({
+						buttonWrap: document.querySelector('#' + this.id + '-sharing-container'),
+						userId: this.currentUser.id,
+						payAttentionToNewFeature: this.payAttentionToNewSharingFeature,
+						sharingFeatureLimit: !this.sharingFeatureLimitEnable,
+					});
+
+					if (BX.Calendar.Util.checkSharingFeatureEnabled())
+					{
+						this.sharingInterface.showSharingButton();
+					}
 				}
 
 				BX.Event.EventEmitter.subscribe('BX.Calendar.EventEditForm:onSave', function(event)
@@ -232,6 +253,12 @@
 						if (BX.Type.isObjectLike(data.counters) && this.counters && this.util.getCounters())
 						{
 							this.counters.setCountersValue(data.counters);
+						}
+
+						if (data.status === 'Y')
+						{
+							const section = this.sectionManager.getSection(data.entry.sectionId);
+							section.show();
 						}
 
 						this.reload();
@@ -289,10 +316,9 @@
 				}, this);
 			}
 
-			BX.addCustomEvent(this, 'keyup', function(params)
+			BX.addCustomEvent(this, 'keydown', function(params)
 			{
-
-				if (BX.Calendar && BX.Calendar.Util)
+				if (BX.Calendar && BX.Calendar.Util && !BX.Calendar.Util.isAnyModifierKeyPressed(params.e))
 				{
 					this.views.forEach(function(view)
 					{
@@ -548,6 +574,14 @@
 						this.rightBlock.style.display = '';
 					}
 
+					const dayLength = 24 * 60 * 60 * 1000;
+					if (view === 'day')
+					{
+						params.animation = params.animation
+							&& this.getDisplayedViewRange().start.getTime() <= params.newViewDate.getTime()
+							&& params.newViewDate.getTime() <= this.getDisplayedViewRange().end.getTime() + dayLength;
+					}
+
 					if (params.animation)
 					{
 						this.viewTransition.transit(params);
@@ -580,7 +614,6 @@
 				}
 			}
 		},
-
 		request: function(params)
 		{
 			if (!params.url)
@@ -660,7 +693,6 @@
 
 			return params;
 		},
-
 		cancelRequest: function(reqId)
 		{
 			if (this.requests[reqId] && this.requests[reqId].status === 'sent')
@@ -678,7 +710,6 @@
 
 			return {};
 		},
-
 		displayError: function(str, bReloadPage)
 		{
 			if (BX.type.isArray(str) && str.length > 0)
@@ -862,6 +893,15 @@
 			}
 		},
 
+		keyDownHandler: function(e)
+		{
+			if (this.isKeyHandlerEnabled(e))
+			{
+				const keyCode = e.keyCode;
+				this.triggerEvent('keydown', { e, keyCode });
+			}
+		},
+
 		buildCountersControl: function()
 		{
 			this.countersCont = BX(this.id + '-counter-container');
@@ -872,7 +912,7 @@
 				counters: this.util.getCounters(),
 				userId: this.currentUser.id
 			});
-			
+
 			this.counters.init();
 		},
 
@@ -1067,7 +1107,7 @@
 
 		refresh: function()
 		{
-			this.getView().redraw();
+			this.getView().reload();
 		},
 
 		reload: function(params)
@@ -1138,6 +1178,7 @@
 				{
 					from: BX.Calendar.Util.parseDate(startupEntry['~CURRENT_DATE']),
 					timezoneOffset: startupEntry.TZ_OFFSET_FROM || null,
+					link: location.href,
 				},
 			);
 		},
@@ -1151,28 +1192,29 @@
 		{
 			if (this.viewsCont)
 			{
-				if (this.entryLoaderNode)
+				if (this.entryLoader)
 				{
-					BX.remove(this.entryLoaderNode);
+					this.entryLoader.destroy();
 				}
-				this.entryLoaderNode = this.viewsCont.appendChild(BX.adjust(
-					this.util.getLoader(200), {
-						props: { className: 'calendar-entry-loader' },
-					}));
+
+				this.entryLoader = new BX.Loader({
+					target: this.viewsCont,
+				});
+				this.entryLoader.layout.style.zIndex = 1000;
+				this.entryLoader.show();
+
+				this.mainCont.style.opacity = '0.5';
 			}
 		},
 
 		hideLoader: function()
 		{
-
-			if (this.entryLoaderNode)
+			if (this.entryLoader)
 			{
-				BX.addClass(this.entryLoaderNode, 'hide');
-				setTimeout(BX.delegate(function()
-				{
-					BX.remove(this.entryLoaderNode);
-				}, this), 300);
+				this.entryLoader.destroy();
 			}
+
+			this.mainCont.style.opacity = '';
 		},
 
 		getCurrentViewName: function()

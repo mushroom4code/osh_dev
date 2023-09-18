@@ -221,7 +221,9 @@ class EntityCard extends BaseCard
 		const [popup] = event.getCompatData();
 		if (popup && popup.getId() === 'popupFM' && popup.onApplyFlag)
 		{
-			this.showNotification(Loc.getMessage('CATALOG_ENTITY_CARD_FILE_CLOSE_NOTIFICATION'), {
+			this.showNotification(Loc.getMessage('CATALOG_ENTITY_CARD_FILE_CLOSE_NOTIFICATION_2'), {
+				id: 'fileCloseNotification',
+				blinkOnUpdate: false,
 				autoHideDelay: 5000
 			});
 		}
@@ -383,11 +385,10 @@ class EntityCard extends BaseCard
 
 		BX.UI.Notification.Center.notify({
 			content: content,
-			stack: options.stack || null,
 			position: 'top-right',
 			width: 'auto',
-			category: options.category || null,
-			autoHideDelay: options.autoHideDelay || 3000
+			autoHideDelay: 3000,
+			...options
 		});
 	}
 
@@ -521,17 +522,7 @@ class EntityCard extends BaseCard
 
 	showCardSettingsPopup()
 	{
-		const okCallback = () => this.getCardSettingsPopup().show();
-		const variationGridInstance = Reflection.getClass('BX.Catalog.VariationGrid.Instance');
-
-		if (variationGridInstance)
-		{
-			variationGridInstance.askToLossGridData(okCallback);
-		}
-		else
-		{
-			okCallback();
-		}
+		this.getCardSettingsPopup().show();
 	}
 
 	prepareCardSettingsContent()
@@ -549,12 +540,17 @@ class EntityCard extends BaseCard
 
 	getSettingItem(item)
 	{
-		const input = Tag.render`
-			<input type="checkbox">
-		`;
-		input.checked = item.checked;
-		input.disabled = item.disabled ?? false;
-		input.dataset.settingId = item.id;
+		let input = '';
+		if (!item.disabledCheckbox)
+		{
+			input = Tag.render`
+				<input type="checkbox">
+			`;
+
+			input.checked = item.checked;
+			input.disabled = item.disabled ?? false;
+			input.dataset.settingId = item.id;
+		}
 
 		const hintNode = (
 			Type.isStringFilled(item.hint)
@@ -582,6 +578,20 @@ class EntityCard extends BaseCard
 				.then(() => {
 					this.reloadGrid();
 					this.getCardSettingsPopup().close();
+				});
+			})
+		}
+		else if(item.id === 'SEO')
+		{
+			Event.bind(setting, 'click', (event) =>
+			{
+				BX.SidePanel.Instance.open(item.url, {
+					cacheable: false,
+					allowChangeHistory: false,
+					data: {
+						'ELEMENT_ID': this.entityId
+					},
+					width: 1000
 				});
 			})
 		}

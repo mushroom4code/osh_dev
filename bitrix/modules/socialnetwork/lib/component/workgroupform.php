@@ -79,7 +79,7 @@ class WorkgroupForm extends \CBitrixComponent
 		$result['showThemePicker'] = (
 			$result['IS_IFRAME']
 			&& (empty($result['TAB']) || $result['TAB'] === 'edit')
-			&& $this->arParams['THEME_ENTITY_TYPE'] === 'SONET_GROUP'
+			&& ($this->arParams['THEME_ENTITY_TYPE'] ?? null) === 'SONET_GROUP'
 		);
 
 		$result['themePickerData'] = [];
@@ -160,7 +160,7 @@ class WorkgroupForm extends \CBitrixComponent
 		$currentAdmin = \CSocNetUser::isCurrentUserModuleAdmin();
 		$groupFields = \CSocNetGroup::getById($groupId);
 
-		$canUpdate = \Bitrix\Socialnetwork\Helper\Workgroup::canUpdate([
+		$canUpdate = \Bitrix\Socialnetwork\Helper\Workgroup\Access::canUpdate([
 			'groupId' => $groupId,
 		]);
 
@@ -318,7 +318,11 @@ class WorkgroupForm extends \CBitrixComponent
 			}
 
 			$featuresList[$feature] = [
-				'FeatureName' => (isset($result[$feature]) ? $result[$feature]['FEATURE_NAME'] : false),
+				'FeatureName' => (
+					isset($result[$feature])
+						? ($result[$feature]['FEATURE_NAME'] ?? '')
+						: false
+				),
 				'Active' => (!isset($result[$feature]) || $result[$feature]['ACTIVE'] === 'Y')
 			];
 		}

@@ -151,11 +151,11 @@ class ChatProvider extends BaseProvider
 			->addSelect('*')
 			->addSelect('RELATION.USER_ID', 'RELATION_USER_ID')
 			->addSelect('RELATION.NOTIFY_BLOCK', 'RELATION_NOTIFY_BLOCK')
-			->addSelect('RELATION.COUNTER', 'RELATION_COUNTER')
+			//->addSelect('RELATION.COUNTER', 'RELATION_COUNTER')
 			->addSelect('RELATION.START_COUNTER', 'RELATION_START_COUNTER')
-			->addSelect('RELATION.LAST_ID', 'RELATION_LAST_ID')
-			->addSelect('RELATION.STATUS', 'RELATION_STATUS')
-			->addSelect('RELATION.UNREAD_ID', 'RELATION_UNREAD_ID')
+			//->addSelect('RELATION.LAST_ID', 'RELATION_LAST_ID')
+			//->addSelect('RELATION.STATUS', 'RELATION_STATUS')
+			//->addSelect('RELATION.UNREAD_ID', 'RELATION_UNREAD_ID')
 			->addSelect('ALIAS.ALIAS', 'ALIAS_NAME')
 		;
 
@@ -188,9 +188,14 @@ class ChatProvider extends BaseProvider
 			$query->setOrder(['LAST_MESSAGE_ID' => 'DESC']);
 		}
 
-		$query->setLimit($options['limit']);
+		if (isset($options['limit']))
+		{
+			$query->setLimit($options['limit']);
+		}
 
-		return $query->exec()->fetchAll();
+		$chatsRaw = $query->exec()->fetchAll();
+
+		return Chat::fillCounterData($chatsRaw);
 	}
 
 	private static function getChatIds(array $options, array $chatTypes): array
@@ -219,6 +224,7 @@ class ChatProvider extends BaseProvider
 			);
 		}
 
+		$filteredChatTypes = [];
 		$relationJoinType = Join::TYPE_INNER;
 		if (
 			count($chatTypes) === 1
@@ -227,6 +233,7 @@ class ChatProvider extends BaseProvider
 		)
 		{
 			$relationJoinType = Join::TYPE_LEFT;
+			$filteredChatTypes[] = Chat::TYPE_OPEN;
 		}
 		$query->registerRuntimeField(
 			'RELATION',
@@ -255,12 +262,18 @@ class ChatProvider extends BaseProvider
 				Query::filter()
 					->logic('and')
 					->where('TYPE', '=', Chat::TYPE_GROUP)
-					->where('ENTITY_TYPE', '!=', 'SUPPORT24_QUESTION')
+					->where(Query::filter()
+						->logic('or')
+						->where('ENTITY_TYPE', '!=', 'SUPPORT24_QUESTION')
+						->whereNull('ENTITY_TYPE')
+					)
 					->where('RELATION.USER_ID', '=', $currentUserId)
 			;
 
 			$chatTypesFilter->where($groupChatFilter);
+			$filteredChatTypes[] = Chat::TYPE_GROUP;
 		}
+
 
 		if (
 			static::shouldSearchChatType(Chat::TYPE_OPEN_LINE, $options)
@@ -275,6 +288,7 @@ class ChatProvider extends BaseProvider
 			;
 
 			$chatTypesFilter->where($openLineFilter);
+			$filteredChatTypes[] = Chat::TYPE_OPEN_LINE;
 		}
 
 		if (
@@ -289,7 +303,13 @@ class ChatProvider extends BaseProvider
 			;
 
 			$chatTypesFilter->where($channelFilter);
+			$filteredChatTypes[] = Chat::TYPE_OPEN;
 		}
+		if (empty($filteredChatTypes))
+		{
+			return [];
+		}
+
 		$query->where($chatTypesFilter);
 
 		if (isset($options['chatIds']) && is_array($options['chatIds']))
@@ -306,7 +326,10 @@ class ChatProvider extends BaseProvider
 			$query->setOrder(['LAST_MESSAGE_ID' => 'DESC']);
 		}
 
-		$query->setLimit($options['limit']);
+		if (isset($options['limit']))
+		{
+			$query->setLimit($options['limit']);
+		}
 
 		$chatIdList = [];
 		foreach ($query->exec() as $chat)
@@ -454,7 +477,7 @@ class ChatProvider extends BaseProvider
 
 		foreach ($recentIds as $recentId)
 		{
-			$chat = $preloadedChats[$recentId];
+			$chat = $preloadedChats[$recentId] ?? null;
 			if ($chat)
 			{
 				$recentChats[] = $chat;
@@ -485,6 +508,7 @@ class ChatProvider extends BaseProvider
 
 		return false;
 	}
+
 
 	protected static function addFilterBySearchQuery(Filter\ConditionTree $filter, string $searchQuery): void
 	{

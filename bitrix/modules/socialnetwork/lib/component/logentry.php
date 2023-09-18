@@ -49,6 +49,53 @@ class LogEntry extends \CBitrixComponent implements \Bitrix\Main\Engine\Contract
 
 	public function onPrepareComponentParams($params = [])
 	{
+		if (
+			!isset($params['IND'])
+			|| (string)$params['IND'] === ''
+		)
+		{
+			$params['IND'] = \Bitrix\Main\Security\Random::getString(8);
+		}
+
+		if (empty($params['LOG_PROPERTY']))
+		{
+			$params['LOG_PROPERTY'] = [ 'UF_SONET_LOG_FILE' ];
+			if (
+				ModuleManager::isModuleInstalled('webdav')
+				|| ModuleManager::isModuleInstalled('disk'))
+			{
+				$params['LOG_PROPERTY'][] = 'UF_SONET_LOG_DOC';
+			}
+		}
+
+		if (empty($params['COMMENT_PROPERTY']))
+		{
+			$params['COMMENT_PROPERTY'] = [ 'UF_SONET_COM_FILE' ];
+			if (
+				ModuleManager::isModuleInstalled('webdav')
+				|| ModuleManager::isModuleInstalled('disk')
+			)
+			{
+				$params['COMMENT_PROPERTY'][] = 'UF_SONET_COM_DOC';
+			}
+
+			$params['COMMENT_PROPERTY'][] = 'UF_SONET_COM_URL_PRV';
+		}
+
+		if (empty($params['PATH_TO_LOG_TAG']))
+		{
+			$folderUsers = Option::get('socialnetwork', 'user_page', false, SITE_ID);
+			$params['PATH_TO_LOG_TAG'] = $folderUsers . 'log/?TAG=#tag#';
+			if (SITE_TEMPLATE_ID === 'bitrix24')
+			{
+				$params['PATH_TO_LOG_TAG'] .= '&apply_filter=Y';
+			}
+		}
+
+		\CSocNetLogComponent::processDateTimeFormatParams($params);
+
+		$params['COMMENT_ID'] = (int) ($params['COMMENT_ID'] ?? 0);
+
 		return $params;
 	}
 
@@ -660,7 +707,7 @@ class LogEntry extends \CBitrixComponent implements \Bitrix\Main\Engine\Contract
 			);
 		}
 
-		$navParams = \CDBResult::getNavParams($params['COMMENTS_IN_EVENT']);
+		$navParams = \CDBResult::getNavParams($params['COMMENTS_IN_EVENT'] ?? null);
 		$navPage = (int)($navParams['PAGEN'] ?? 1);
 
 		$cacheId = implode('_', [
@@ -884,7 +931,15 @@ class LogEntry extends \CBitrixComponent implements \Bitrix\Main\Engine\Contract
 					if (array_key_exists($fieldName, $commentFields))
 					{
 						$commentFields['UF'][$fieldName]['VALUE'] = $commentFields[$fieldName];
-						$commentFields["UF"][$fieldName]['ENTITY_VALUE_ID'] = $commentFields['ID'];
+						$commentFields['UF'][$fieldName]['ENTITY_VALUE_ID'] = $commentFields['ID'];
+						if (method_exists($GLOBALS['USER_FIELD_MANAGER'], 'getCustomData'))
+						{
+							$commentFields['UF'][$fieldName]['CUSTOM_DATA'] = $GLOBALS['USER_FIELD_MANAGER']->getCustomData(
+								$commentFields['UF'][$fieldName],
+								(int)$commentFields['ID']
+							);
+						}
+
 					}
 				}
 				$commentsList[] = $commentFields;
@@ -965,7 +1020,7 @@ class LogEntry extends \CBitrixComponent implements \Bitrix\Main\Engine\Contract
 			}
 		}
 
-		$arResult['NAV_RESULT'] = $navResult;
+		$arResult['NAV_RESULT'] = $navResult ?? null;
 
 		return $result;
 	}
@@ -1067,16 +1122,16 @@ class LogEntry extends \CBitrixComponent implements \Bitrix\Main\Engine\Contract
 				'LOGIN' => $comment['~CREATED_BY_LOGIN'],
 				'PERSONAL_GENDER' => $comment['~CREATED_BY_PERSONAL_GENDER'],
 				'USE_THUMBNAIL_LIST' => 'N',
-				'PATH_TO_SONET_MESSAGES_CHAT' => $params['PATH_TO_MESSAGES_CHAT'],
-				'PATH_TO_SONET_USER_PROFILE' => $params['PATH_TO_USER'],
-				'PATH_TO_VIDEO_CALL' => $params['PATH_TO_VIDEO_CALL'],
+				'PATH_TO_SONET_MESSAGES_CHAT' => $params['PATH_TO_MESSAGES_CHAT'] ?? null,
+				'PATH_TO_SONET_USER_PROFILE' => $params['PATH_TO_USER'] ?? null,
+				'PATH_TO_VIDEO_CALL' => $params['PATH_TO_VIDEO_CALL'] ?? null,
 				'DATE_TIME_FORMAT' => $params['DATE_TIME_FORMAT'],
 				'SHOW_YEAR' => $params['SHOW_YEAR'],
-				'CACHE_TYPE' => $params['CACHE_TYPE'],
-				'CACHE_TIME' => $params['CACHE_TIME'],
+				'CACHE_TYPE' => $params['CACHE_TYPE'] ?? null,
+				'CACHE_TIME' => $params['CACHE_TIME'] ?? null,
 				'NAME_TEMPLATE' => $params['NAME_TEMPLATE'].$suffix,
 				'SHOW_LOGIN' => $params['SHOW_LOGIN'],
-				'PATH_TO_CONPANY_DEPARTMENT' => $params['PATH_TO_CONPANY_DEPARTMENT'],
+				'PATH_TO_CONPANY_DEPARTMENT' => $params['PATH_TO_CONPANY_DEPARTMENT'] ?? null,
 				'INLINE' => 'Y',
 				'EXTERNAL_AUTH_ID' => $comment['~CREATED_BY_EXTERNAL_AUTH_ID']
 			];
@@ -1157,19 +1212,19 @@ class LogEntry extends \CBitrixComponent implements \Bitrix\Main\Engine\Contract
 		)
 		{
 			$logFields = (
-				$params['USER_COMMENTS'] === "Y"
+				($params['USER_COMMENTS'] ?? '') === "Y"
 					? []
 					: [
-						'TITLE' => $comment['~LOG_TITLE'],
-						'URL' => $comment['~LOG_URL'],
-						'PARAMS' => $comment['~LOG_PARAMS']
+						'TITLE' => $comment['~LOG_TITLE'] ?? '',
+						'URL' => $comment['~LOG_URL'] ?? '',
+						'PARAMS' => $comment['~LOG_PARAMS'] ?? null
 					]
 			);
 
 			$formattedFields = call_user_func([ $commentEventData['CLASS_FORMAT'], $commentEventData['METHOD_FORMAT'] ], $comment, $params, false, $logFields);
 
 			if (
-				$params['USE_COMMENTS'] !== 'Y'
+				($params['USE_COMMENTS'] ?? null) !== 'Y'
 				&& array_key_exists('CREATED_BY', $formattedFields)
 				&& isset($formattedFields['CREATED_BY']['TOOLTIP_FIELDS']))
 			{

@@ -1,7 +1,10 @@
-import { BitrixVue } from 'ui.vue';
 import { FileIcon } from 'ui.icons.generator';
 
-export const FileIconComponent = BitrixVue.localComponent('ui.uploader.file-icon', {
+import type { BitrixVueComponentProps } from 'ui.vue3';
+/**
+ * @memberof BX.UI.Uploader
+ */
+export const FileIconComponent: BitrixVueComponentProps = {
 	props: {
 		name: {
 			type: String,
@@ -17,7 +20,7 @@ export const FileIconComponent = BitrixVue.localComponent('ui.uploader.file-icon
 			default: 36,
 		},
 	},
-	mounted()
+	mounted(): void
 	{
 		const icon = new FileIcon({
 			name: this.name,
@@ -29,4 +32,4 @@ export const FileIconComponent = BitrixVue.localComponent('ui.uploader.file-icon
 		icon.renderTo(this.$el);
 	},
 	template: '<span></span>',
-});
+};

@@ -3,6 +3,7 @@ import {BaseEvent, EventEmitter} from 'main.core.events';
 
 import {Scrum} from './scrum';
 import {Avatar} from './avatar';
+import {DateCorrector} from './date.corrector';
 import {ThemePicker} from './themepicker';
 import {Tags} from './tags';
 import {Util} from './util';
@@ -32,13 +33,15 @@ class WorkgroupForm extends EventEmitter
 			selectedConfidentialityType: string,
 			groupId: number,
 			isScrumProject: boolean,
-			config: object,
+			config: Object,
 			avatarUploaderId: string,
-			themePickerData: object,
-			projectOptions: object,
-			projectTypes: object,
-			confidentialityTypes: object,
+			themePickerData: Object,
+			projectOptions: Object,
+			projectTypes: Object,
+			confidentialityTypes: Object,
 			stepsCount: number,
+			focus: string,
+			culture: Object
 		}
 	)
 	{
@@ -50,7 +53,6 @@ class WorkgroupForm extends EventEmitter
 		this.signedParameters = params.signedParameters;
 		this.userSelector = '';
 		this.lastAction = 'invite';
-		this.arUserSelector = [];
 		this.animationList = {};
 		this.selectedTypeCode = false;
 
@@ -65,6 +67,8 @@ class WorkgroupForm extends EventEmitter
 		this.confidentialityTypes = params.confidentialityTypes;
 		this.selectedProjectType = params.selectedProjectType;
 		this.selectedConfidentialityType = params.selectedConfidentialityType;
+		this.initialFocus = (Type.isStringFilled(params.focus) ? params.focus : '');
+		this.culture = params.culture ? params.culture : {};
 
 		this.scrumManager = new Scrum({
 			isScrumProject: this.isScrumProject,
@@ -111,6 +115,10 @@ class WorkgroupForm extends EventEmitter
 			});
 		}
 
+		new DateCorrector({
+			culture: this.culture
+		});
+
 		if (document.getElementById('group-tags-bind-node'))
 		{
 			new Tags({
@@ -124,10 +132,24 @@ class WorkgroupForm extends EventEmitter
 		new ConfidentialitySelector();
 		new FeaturesManager();
 
-		const groupNameNode = document.getElementById('GROUP_NAME_input');
-		if (groupNameNode)
+		if (Type.isStringFilled(this.initialFocus))
 		{
-			groupNameNode.focus();
+			if (this.initialFocus === 'description')
+			{
+				const groupDescriptionNode = document.getElementById('GROUP_DESCRIPTION_input');
+				if (groupDescriptionNode)
+				{
+					groupDescriptionNode.focus();
+				}
+			}
+		}
+		else
+		{
+			const groupNameNode = document.getElementById('GROUP_NAME_input');
+			if (groupNameNode)
+			{
+				groupNameNode.focus();
+			}
 		}
 
 		this.bindEvents();
@@ -196,7 +218,10 @@ class WorkgroupForm extends EventEmitter
 			});
 		}
 
-		EventEmitter.subscribe('BX.Socialnetwork.WorkgroupFormTeamManager::onEventsBinded', this.recalcFormDependencies.bind(this));
+		EventEmitter.subscribe(
+			'BX.Socialnetwork.WorkgroupFormTeamManager::onEventsBinded',
+			this.recalcFormDependencies.bind(this)
+		);
 	}
 
 	recalcForm(params)
@@ -265,14 +290,9 @@ class WorkgroupForm extends EventEmitter
 		}
 
 		const visibleCheckboxNode = document.getElementById('GROUP_VISIBLE');
-		const openedCheckboxNode = document.getElementById('GROUP_OPENED');
-		if (
-			visibleCheckboxNode
-			&& openedCheckboxNode
-			&& (!Util.getCheckedValue(visibleCheckboxNode))
-		)
+		if (visibleCheckboxNode)
 		{
-			Util.setCheckedValue(openedCheckboxNode, false);
+			this.switchNotVisible(visibleCheckboxNode.checked)
 		}
 	}
 
@@ -330,6 +350,8 @@ class WorkgroupForm extends EventEmitter
 					visibleBlock.value = 'N';
 				}
 			}
+
+			this.switchNotVisible(visibleBlock.checked)
 		}
 	}
 
@@ -451,48 +473,30 @@ class WorkgroupForm extends EventEmitter
 								});
 							}
 
-							if (Type.isArray(response.USERS_ID))
-							{
-								const selectedUsers = [];
-								let j = 0;
-
-								response.USERS_ID.forEach((currentValue) => {
-									selectedUsers[`U${currentValue}`] = 'users';
-								});
-
-								this.arUserSelector.forEach((selectorId) => {
-									const selectorInstance = BX.UI.SelectorManager.instances[selectorId];
-									if (Type.isUndefined(selectorInstance))
-									{
-										return;
-									}
-
-									const selectorNode = document.getElementById(`ui-tile-selector-${selectorId}`);
-									selectorNode.querySelectorAll('.ui-tile-selector-item').forEach((node) => {
-
-										const userCode = node.getAttribute('data-bx-id');
-										if (!Type.isStringFilled(userCode))
-										{
-											return;
-										}
-
-										selectorInstance.getRenderInstance().deleteItem({
-											entityType: 'USERS',
-											itemId: userCode,
-										});
-									});
-
-
-									selectorInstance.itemsSelected = selectedUsers;
-									selectorInstance.reinit();
-								});
-							}
-
 							if (
 								Type.isArray(response.SUCCESSFULL_USERS_ID)
 								&& response.SUCCESSFULL_USERS_ID.length > 0
 							)
 							{
+								response.SUCCESSFULL_USERS_ID = response.SUCCESSFULL_USERS_ID.map((userId) => {
+									return Number(userId);
+								})
+
+								const usersSelector = TeamManager.getInstance().usersSelector;
+								const usersSelectorDialog = (usersSelector ? usersSelector.getDialog() : null);
+								if (usersSelectorDialog)
+								{
+									usersSelectorDialog.getSelectedItems().forEach((item) => {
+										if (
+											item.entityId === 'user'
+											&& response.SUCCESSFULL_USERS_ID.includes(item.id)
+										)
+										{
+											item.deselect();
+										}
+									});
+								}
+
 								window.top.BX.SidePanel.Instance.postMessageAll(window, 'sonetGroupEvent', {
 									code: 'afterInvite',
 									data: {},

@@ -18,8 +18,10 @@ class CListsLiveFeed
 		);
 		$element = $elementObject->fetch();
 
-		if(!CLists::getLiveFeed($element["IBLOCK_ID"]))
+		if (!CLists::getLiveFeed($element["IBLOCK_ID"] ?? null))
+		{
 			return false;
+		}
 
 		$listSystemIblockCode = array(
 			'bitrix_holiday',
@@ -279,11 +281,12 @@ class CListsLiveFeed
 				$url = str_replace('#SITE_DIR#', $siteDir, $url);
 				$url .= ''.$fields['ID'].'/';
 
+				$componentResultMessage = $componentResult ? $componentResult['MESSAGE'] : null;
 				$element = array(
 					'EVENT' => $fields,
 					'EVENT_FORMATTED' => array(
 						'TITLE_24' => '<a href="'.$fields['TITLE_TEMPLATE'].'" class="bx-lists-live-feed-title-link">'.$fields['TITLE'].'</a>',
-						'MESSAGE' => $fields['TEXT_MESSAGE'].$componentResult['MESSAGE'],
+						'MESSAGE' => $fields['TEXT_MESSAGE'] . $componentResultMessage,
 						'IS_IMPORTANT' => false,
 						'STYLE' => 'new-employee',
 						'AVATAR_STYLE' => 'avatar-info',
@@ -292,10 +295,10 @@ class CListsLiveFeed
 					),
 					'CREATED_BY' => CSocNetLogTools::formatEvent_GetCreatedBy($fields, $params, $mail),
 					'AVATAR_SRC' => CSocNetLog::formatEvent_CreateAvatar($fields, $params),
-					'CACHED_JS_PATH' => $componentResult['CACHED_JS_PATH'],
-					'CACHED_CSS_PATH' => $componentResult['CACHED_CSS_PATH']
+					'CACHED_JS_PATH' => $componentResult['CACHED_JS_PATH'] ?? null,
+					'CACHED_CSS_PATH' => $componentResult['CACHED_CSS_PATH'] ?? null,
 				);
-				if ($params['MOBILE'] == 'Y')
+				if (isset($params['MOBILE']) && $params['MOBILE'] == 'Y')
 				{
 					$element['EVENT_FORMATTED']['TITLE_24'] = Loc::getMessage('LISTS_LF_MOBILE_DESTINATION');
 					$element['EVENT_FORMATTED']['TITLE_24_2'] = $fields['TITLE'];
@@ -628,7 +631,8 @@ class CListsLiveFeed
 		}
 
 		if(
-			$fields['ENTITY_TYPE_ID'] == 'FORUM_POST'
+			isset($fields['ENTITY_TYPE_ID'])
+			&& $fields['ENTITY_TYPE_ID'] == 'FORUM_POST'
 			&& intval($fields['PARAM1']) == $bizprocForumId
 			&& !empty($fields['PARAM2'])
 			&& !empty($bxSocNetSearch->_params["PATH_TO_WORKFLOW"])
@@ -720,23 +724,29 @@ class CListsLiveFeed
 			),
 			false,
 			false,
-			array("SOURCE_ID", "URL", "TITLE", "USER_ID", "PARAMS")
+			array("ID", "SOURCE_ID", "URL", "TITLE", "USER_ID", "PARAMS")
 		);
 
 		if (($log = $logQuery->fetch()) && (intval($log["SOURCE_ID"]) > 0))
 		{
-			$params = unserialize($log["PARAMS"]);
+			$params = unserialize($log["PARAMS"], ['allowed_classes' => false]);
 			$title = $log["TITLE"]." - ".$params["ELEMENT_NAME"];
-			CListsLiveFeed::notifyComment(
-				array(
-					"LOG_ID" => $comment["LOG_ID"],
-					"MESSAGE_ID" => $comment["SOURCE_ID"],
-					"TO_USER_ID" => $log["USER_ID"],
-					"FROM_USER_ID" => $comment["USER_ID"],
-					"URL" => $log["URL"],
-					"TITLE" => $title
-				)
-			);
+
+			$userIdsToNotify = self::getUserIdsFromRights($log['ID']);
+
+			foreach ($userIdsToNotify as $userId)
+			{
+				CListsLiveFeed::notifyComment(
+					[
+						"LOG_ID" => $comment["LOG_ID"],
+						"MESSAGE_ID" => $comment["SOURCE_ID"],
+						"TO_USER_ID" => $userId,
+						"FROM_USER_ID" => $comment["USER_ID"],
+						"URL" => $log["URL"],
+						"TITLE" => $title
+					]
+				);
+			}
 		}
 	}
 
@@ -764,18 +774,24 @@ class CListsLiveFeed
 
 		if (($log = $logQuery->fetch()) && (intval($log["SOURCE_ID"]) > 0))
 		{
-			$params = unserialize($log["PARAMS"]);
+			$params = unserialize($log["PARAMS"], ['allowed_classes' => false]);
 			$title = $log["TITLE"]." - ".$params["ELEMENT_NAME"];
-			CListsLiveFeed::notifyComment(
-				array(
-					"LOG_ID" => $log["ID"],
-					"MESSAGE_ID" => $comment["MESSAGE_ID"],
-					"TO_USER_ID" => $log["USER_ID"],
-					"FROM_USER_ID" => $comment["USER_ID"],
-					"URL" => $log["URL"],
-					"TITLE" => $title
-				)
-			);
+
+			$userIdsToNotify = self::getUserIdsFromRights($log['ID']);
+
+			foreach ($userIdsToNotify as $userId)
+			{
+				CListsLiveFeed::notifyComment(
+					[
+						"LOG_ID" => $log["ID"],
+						"MESSAGE_ID" => $comment["MESSAGE_ID"],
+						"TO_USER_ID" => $userId,
+						"FROM_USER_ID" => $comment["USER_ID"],
+						"URL" => $log["URL"],
+						"TITLE" => $title
+					]
+				);
+			}
 		}
 	}
 
@@ -857,7 +873,7 @@ class CListsLiveFeed
 				$genderSuffix = $user["PERSONAL_GENDER"];
 			}
 
-			$params = unserialize($log["~PARAMS"]);
+			$params = unserialize($log["~PARAMS"], ['allowed_classes' => false]);
 			$title = $log["TITLE"]." - ".$params["ELEMENT_NAME"];
 			$entityName = GetMessage("LISTS_LF_COMMENT_MENTION_TITLE", Array("#PROCESS#" => $title));
 			$notifyMessage = GetMessage("LISTS_LF_COMMENT_MENTION" . ($genderSuffix <> '' ? "_" . $genderSuffix : ""), Array("#title#" => "<a href=\"#url#\" class=\"bx-notifier-item-action\">".$entityName."</a>"));
@@ -902,5 +918,20 @@ class CListsLiveFeed
 		}
 
 		return true;
+	}
+
+	private static function getUserIdsFromRights(int $logId): array
+	{
+		$userIdsToNotify = [];
+		$rightsResult = \CSocNetLogRights::getList([], ['LOG_ID' => $logId]);
+		while ($right = $rightsResult->fetch())
+		{
+			if (preg_match('/^U(\d+)$/', $right["GROUP_CODE"], $matches))
+			{
+				$userIdsToNotify[] = $matches[1];
+			}
+		}
+
+		return $userIdsToNotify;
 	}
 }

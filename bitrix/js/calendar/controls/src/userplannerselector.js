@@ -2,18 +2,16 @@ import {Type, Dom, Event, Runtime, Tag, Loc, Text} from 'main.core';
 import {Util} from 'calendar.util';
 import {EventEmitter, BaseEvent} from 'main.core.events';
 import {Planner} from "calendar.planner";
-import {Popup, MenuManager} from 'main.popup';
 import {Dialog as EntitySelectorDialog} from 'ui.entity-selector';
 import { ControlButton } from 'intranet.control-button';
-import {AttendeesList, Location} from "calendar.controls";
+import {AttendeesList} from "calendar.controls";
 
 export class UserPlannerSelector extends EventEmitter
 {
 	static VIEW_MODE = 'view';
 	static EDIT_MODE = 'edit';
-	static MAX_USER_COUNT = 8; // 8
-	static MAX_USER_COUNT_DISPLAY = 10; // 10
-	static PLANNER_WIDTH = 500;
+	static MAX_USER_COUNT_DISPLAY = 8;
+	static PLANNER_WIDTH = 550;
 	zIndex = 4200;
 	readOnlyMode = true;
 	meetingNotifyValue = true;
@@ -23,7 +21,6 @@ export class UserPlannerSelector extends EventEmitter
 	prevUserList = [];
 	loadedAccessibilityData = {};
 	REFRESH_PLANNER_DELAY = 500;
-
 
 	constructor(params = {})
 	{
@@ -155,10 +152,6 @@ export class UserPlannerSelector extends EventEmitter
 
 		this.entry = entry;
 		this.entryId = this.entry.id;
-		if (this.attendeesEntityList.length > 1 && !viewMode)
-		{
-			this.showPlanner();
-		}
 
 		this.setEntityList(this.attendeesEntityList);
 		this.setInformValue(notify);
@@ -170,7 +163,34 @@ export class UserPlannerSelector extends EventEmitter
 		}
 		this.refreshPlannerStateDebounce();
 
+		let dateTime = this.getDateTime();
+		if (dateTime)
+		{
+			this.planner.updateSelector(dateTime.from, dateTime.to, dateTime.fullDay);
+		}
+
 		if (
+			this.entryId
+			&& this.entry
+			&& this.entry.data['PARENT_ID']
+			&& (
+				this.entry.data['EVENT_TYPE'] === '#shared#'
+				|| this.entry.data['EVENT_TYPE'] === '#shared_crm#'
+			)
+			&& this.entry.getCurrentStatus() !== false
+		)
+		{
+			Dom.clean(this.DOM.videocallWrap);
+			Dom.removeClass(this.DOM.videocallWrap, 'calendar-videocall-hidden');
+
+			this.conferenceButton = Tag.render`
+				<div class="calendar-text-link --gray">${Loc.getMessage('EC_CONFERENCE_START')}</div>
+			`;
+			Event.bind(this.conferenceButton, 'click', this.handleVideoconferenceButtonClick.bind(this));
+
+			Dom.append(this.conferenceButton, this.DOM.videocallWrap);
+		}
+		else if (
 			BX?.Intranet?.ControlButton
 			&& this.DOM.videocallWrap
 			&& this.entryId
@@ -264,6 +284,7 @@ export class UserPlannerSelector extends EventEmitter
 	{
 		const dateTime = this.getDateTime();
 		const entityList = this.getEntityList();
+		this.planner.updateScaleLimitsFromEntry(dateTime.from, dateTime.to);
 
 		this.runPlannerDataRequest({
 			entityList: entityList,
@@ -336,6 +357,7 @@ export class UserPlannerSelector extends EventEmitter
 					AVATAR: item.avatar,
 					DISPLAY_NAME: item.name,
 					EMAIL_USER: item.emailUser,
+					SHARING_USER: item.sharingUser,
 					STATUS: (item.status || '').toUpperCase(),
 					URL: item.url
 				};
@@ -353,10 +375,7 @@ export class UserPlannerSelector extends EventEmitter
 				location: this.getLocationValue(),
 				entryId: this.entryId,
 				prevUserList: this.prevUserList
-			})
-				.then((response) => {
-					this.displayAttendees(this.prepareAttendeesForDisplay(response.data.entries || []));
-				});
+			});
 		}
 	}
 
@@ -366,48 +385,39 @@ export class UserPlannerSelector extends EventEmitter
 		return new Promise((resolve) => {
 			this.runPlannerDataRequest(params)
 				.then((response) => {
-						for (let id in response.data.accessibility)
+					for (let id in response.data.accessibility)
+					{
+						if (response.data.accessibility.hasOwnProperty(id))
 						{
-							if (response.data.accessibility.hasOwnProperty(id))
+							this.loadedAccessibilityData[id] = response.data.accessibility[id];
+						}
+					}
+
+					if (Type.isArray(response.data.entries))
+					{
+						response.data.entries.forEach((entry) => {
+							if (entry.type === 'user' && !this.prevUserList.includes(parseInt(entry.id)))
 							{
-								this.loadedAccessibilityData[id] = response.data.accessibility[id];
+								this.prevUserList.push(parseInt(entry.id));
 							}
-						}
+						});
+					}
 
-						if (Type.isArray(response.data.entries))
-						{
-							response.data.entries.forEach((entry) => {
-								if (entry.type === 'user' && !this.prevUserList.includes(parseInt(entry.id)))
-								{
-									this.prevUserList.push(parseInt(entry.id));
-								}
-							});
-						}
+					this.planner.hideLoader();
+					this.planner.update(
+						response.data.entries,
+						this.loadedAccessibilityData
+					);
 
-						this.planner.hideLoader();
-						this.planner.update(
-							response.data.entries,
-							this.loadedAccessibilityData
-						);
-
-						resolve(response);
-					},
-					(response) => {resolve(response);}
-				);
+					resolve(response);
+				},
+				(response) => {resolve(response);}
+			);
 		});
 	}
 
 	runPlannerDataRequest(params)
 	{
-		let dateTime = this.getDateTime();
-		this.planner.updateSelector(
-			dateTime.from,
-			dateTime.to,
-			dateTime.fullDay,
-			{
-				focus: false
-			}
-		);
 		return this.BX.ajax.runAction('calendar.api.calendarajax.updatePlanner', {
 			data: {
 				entryId: params.entryId || 0,
@@ -428,6 +438,8 @@ export class UserPlannerSelector extends EventEmitter
 	setDateTime(dateTime, updatePlaner = false)
 	{
 		this.dateTime = dateTime;
+		this.planner.currentFromDate = dateTime.from;
+		this.planner.currentToDate = dateTime.to;
 		if (this.planner && updatePlaner)
 		{
 			this.planner.updateSelector(dateTime.from, dateTime.to, dateTime.fullDay);
@@ -473,14 +485,9 @@ export class UserPlannerSelector extends EventEmitter
 			}
 		}));
 
-		let userLength = this.attendeeList.accepted.length;
+		const userLength = Math.min(this.attendeeList.accepted.length, UserPlannerSelector.MAX_USER_COUNT_DISPLAY);
 		if (userLength > 0)
 		{
-			if (userLength > UserPlannerSelector.MAX_USER_COUNT_DISPLAY)
-			{
-				userLength = UserPlannerSelector.MAX_USER_COUNT;
-			}
-
 			for (let i = 0; i < userLength; i++)
 			{
 				this.attendeeList.accepted[i].shown = true;
@@ -497,7 +504,7 @@ export class UserPlannerSelector extends EventEmitter
 			this.DOM.attendeesLabel.innerHTML = Text.encode(Loc.getMessage('EC_ATTENDEES_LABEL_ONE'));
 		}
 
-		if (userLength < attendees.length)
+		if (attendees.length > 1)
 		{
 			this.DOM.moreLink.innerHTML = Text.encode(Loc.getMessage('EC_ATTENDEES_ALL_COUNT').replace('#COUNT#', attendees.length));
 			Dom.show(this.DOM.moreLink);
@@ -528,7 +535,16 @@ export class UserPlannerSelector extends EventEmitter
 			img = user.AVATAR || user.SMALL_AVATAR;
 		if (!img || img === "/bitrix/images/1.gif")
 		{
-			imageNode = Tag.render`<div title="${Text.encode(user.DISPLAY_NAME)}" class="ui-icon ${(user.EMAIL_USER ? 'ui-icon-common-user-mail' : 'ui-icon-common-user')}"><i></i></div>`;
+			let defaultAvatarClass = 'ui-icon-common-user';
+			if (user.EMAIL_USER)
+			{
+				defaultAvatarClass = 'ui-icon-common-user-mail';
+			}
+			if (user.SHARING_USER)
+			{
+				defaultAvatarClass += ' ui-icon-common-user-sharing';
+			}
+			imageNode = Tag.render`<div title="${Text.encode(user.DISPLAY_NAME)}" class="ui-icon ${defaultAvatarClass}"><i></i></div>`;
 		}
 		else
 		{
@@ -537,7 +553,7 @@ export class UserPlannerSelector extends EventEmitter
 				title="${Text.encode(user.DISPLAY_NAME)}"
 				class="calendar-member"
 				id="simple_popup_${parseInt(user.ID)}"
-				src="${img}"
+				src="${encodeURI(img)}"
 			>`;
 		}
 		return imageNode;
@@ -676,5 +692,37 @@ export class UserPlannerSelector extends EventEmitter
 				});
 			}
 		}
+	}
+
+	handleVideoconferenceButtonClick()
+	{
+		this.getConferenceChatId();
+	}
+
+	getConferenceChatId()
+	{
+		return this.BX.ajax.runAction('calendar.api.calendarajax.getConferenceChatId', {
+			data: {
+				eventId: this.entry.data['PARENT_ID'],
+			},
+		}).then(
+			(response) => {
+				if (top.window.BXIM && response.data && response.data.chatId)
+				{
+					top.BXIM.openMessenger('chat' + parseInt(response.data.chatId));
+
+					return null;
+				}
+
+				alert(Loc.getMessage('EC_CONFERENCE_ERROR'));
+
+				return null;
+			},
+			(response) => {
+				alert(Loc.getMessage('EC_CONFERENCE_ERROR'));
+
+				return null;
+			}
+		);
 	}
 }

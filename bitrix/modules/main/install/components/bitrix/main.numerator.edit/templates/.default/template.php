@@ -7,6 +7,9 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 use Bitrix\Main\Numerator\Numerator;
 use Bitrix\Main\Localization\Loc;
 
+/** @var array $arParams */
+/** @var array $arResult */
+
 \Bitrix\Main\UI\Extension::load([
 	'ui.design-tokens',
 	'ui.alerts',
@@ -28,7 +31,7 @@ if ($arResult['IS_SLIDER'])
 	<body>
 <? } ?>
 	<div class="<?= $arResult['IS_SLIDER'] ? 'main-numerator-edit-slider' : '' ?>
-	<?= htmlspecialcharsbx(isset($arParams['CSS_WRAP_CLASS']) ? $arParams['CSS_WRAP_CLASS'] : ''); ?>"
+	<?= htmlspecialcharsbx($arParams['CSS_WRAP_CLASS'] ?? ''); ?>"
 	>
 		<? if (!$arResult['IS_HIDE_PAGE_TITLE']): ?>
 			<div class="main-numerator-edit-title">
@@ -47,8 +50,17 @@ if ($arResult['IS_SLIDER'])
 		<? endif; ?>
 
 		<div class="main-numerator-edit-wrap" data-role="numerator-container">
+			<?php
+			if ($arResult['WITHOUT_FORM']):
+			?>
+			<div data-role="numerator-edit-form">
+			<?php
+			else:
+			?>
 			<form action="" method="post" data-role="numerator-edit-form">
-				<? foreach ($arResult['numeratorSettingsFields'][Numerator::getType()] as $setting) : ?>
+			<?php
+			endif;
+				foreach ($arResult['numeratorSettingsFields'][Numerator::getType()] as $setting) : ?>
 					<? $attributeName = htmlspecialcharsbx(Numerator::getType() . '[' . $setting['settingName'] . ']'); ?>
 					<? if ($setting['type'] == 'hidden'): ?>
 						<input type="hidden"
@@ -213,7 +225,17 @@ if ($arResult['IS_SLIDER'])
 						});
 					});
 				</script>
-			</form>
+			<?php
+			if ($arResult['WITHOUT_FORM']):
+				?>
+				</div>
+				<?php
+			else:
+				?>
+				</form>
+				<?php
+			endif;
+			?>
 		</div>
 	</div>
 <? if ($arResult['IS_SLIDER'])

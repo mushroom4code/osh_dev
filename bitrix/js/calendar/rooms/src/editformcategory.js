@@ -183,7 +183,13 @@ export class EditFormCategory extends EditForm
 				],
 				selectedItems: this.preparedSelectedRooms,
 				tabs: [
-					{ id: 'room', title: 'rooms', itemOrder: { title: 'asc' }, icon: 'none'},
+					{
+						id: 'room',
+						title: 'rooms',
+						itemOrder: { title: 'asc' },
+						icon: 'none',
+						stubOptions: { title: Loc.getMessage('EC_SEC_SLIDER_ROOM_SELECTOR_STUB') },
+					},
 				],
 			},
 		});

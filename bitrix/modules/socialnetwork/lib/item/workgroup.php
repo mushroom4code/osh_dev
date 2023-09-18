@@ -169,6 +169,7 @@ class Workgroup
 				'initiatorId' => (is_object($USER) ? $USER->getId() : $groupFields['OWNER_ID']),
 				'exclude' => $exclude
 			);
+			$workgroupsToSync = $this->reduceSyncList($workgroupsToSync);
 			Option::set('socialnetwork', 'workgroupsToSync', serialize($workgroupsToSync));
 			\Bitrix\Socialnetwork\Update\WorkgroupDeptSync::bind(1);
 		}
@@ -691,5 +692,29 @@ class Workgroup
 	public static function getEditFeaturesAvailability()
 	{
 		return Helper\Workgroup::getEditFeaturesAvailability();
+	}
+
+	public static function canWorkWithClosedWorkgroups(): bool
+	{
+		static $optionValue = null;
+		if ($optionValue === null)
+		{
+			$optionValue = Option::get('socialnetwork', 'work_with_closed_groups', 'N');
+		}
+
+		return ($optionValue === 'Y');
+	}
+
+	private function reduceSyncList(array $workgroupsToSync = []): array
+	{
+		$result = [];
+
+		foreach ($workgroupsToSync as $workgroupData)
+		{
+			$workgroupId = (int) $workgroupData['groupId'];
+			$result[$workgroupId] = $workgroupData;
+		}
+
+		return array_values($result);
 	}
 }

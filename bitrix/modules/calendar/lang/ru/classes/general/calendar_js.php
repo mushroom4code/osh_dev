@@ -1,5 +1,8 @@
 <?
 $MESS["EC_ADD"] = "Добавить";
+$MESS["EC_CREATE"] = "Создать";
+$MESS['EC_EVENT_BUTTON'] = 'Событие';
+$MESS['EC_TASK_BUTTON'] = 'Задачу';
 $MESS["EC_ADD_LOCATION"] = "Добавить переговорную";
 $MESS["EC_ADD_CATEGORY"] = "Добавить категорию";
 $MESS["EC_RESERVE"] = "Забронировать";
@@ -107,7 +110,9 @@ $MESS["EC_SEC_SLIDER_SECTION_CAPACITY"] = "Количество участник
 $MESS["EC_SEC_SLIDER_ROOM_CATEGORY"] = "Категория";
 $MESS["EC_SEC_SLIDER_ROOM_SELECTOR"] = "Переговорные";
 $MESS["EC_SEC_SLIDER_ROOM_SELECTOR_PLACEHOLDER"] = "Введите название переговорной";
+$MESS["EC_SEC_SLIDER_ROOM_SELECTOR_STUB"] = "Нет переговорных";
 $MESS["EC_SEC_SLIDER_CATEGORY_SELECTOR_PLACEHOLDER"] = "Введите название категории";
+$MESS["EC_SEC_SLIDER_CATEGORY_SELECTOR_STUB"] = "Нет категорий";
 $MESS["EC_SEC_SLIDER_MY_CALENDARS_LIST"] = "Мои календари";
 $MESS["EC_SEC_SLIDER_GROUP_CALENDARS_LIST"] = "Календари группы";
 $MESS["EC_SEC_SLIDER_TYPE_CALENDARS_LIST"] = "Календари компании";
@@ -197,6 +202,7 @@ $MESS["EC_REPEAT"] = "Повтор";
 $MESS["EC_HOST"] = "Организатор";
 $MESS["EC_EVENT_IS_MINE"] = "Мое событие";
 $MESS["EC_SEARCH_RESULT"] = "Результаты поиска";
+$MESS["EC_SEARCH_RESULT_BY_QUERY"] = "Результаты поиска по \"#QUERY#\"";
 $MESS["EC_SEARCH_RESET_RESULT"] = "сбросить";
 $MESS["EC_CAL_DAV_CON_WAIT"] = "Подождите, идет обработка предыдущего запроса.";
 $MESS["EC_NEW_CONNECTION_NAME"] = "Новое подключение CalDav";
@@ -296,6 +302,8 @@ $MESS["EC_REQUEST_APP_NONAME_TAB"] = "- без названия -";
 $MESS["EC_ADD_APPLICATION"] = "Добавить приложение";
 $MESS["EC_COLLAPSED_MESSAGE"] = "Событий";
 $MESS["EC_SAVE_ENTRY_CONFIRM"] = "Все несохраненные данные будут потеряны";
+$MESS['EC_LEAVE_EVENT_CONFIRM_QUESTION'] = 'Закрыть форму редактирования события?';
+$MESS['EC_LEAVE_EVENT_CONFIRM_DESC'] = 'Изменения не сохранятся';
 $MESS["EC_LOCATION_SETTINGS_MESSAGE_DESCRIPTION"] = "Выберите, кто может добавлять, удалять и настраивать переговорные комнаты вашей организации";
 $MESS["EC_LOCATION_SETTINGS_MORE_INFO"] = "Подробнее";
 $MESS["EC_ACCESS_GROUP_ADMIN"] = "Владелец группы";
@@ -318,3 +326,22 @@ $MESS["EC_SEC_SLIDER_TYPE_ARCHIVE"] = "Другие календари Google";
 $MESS["EC_SEC_SLIDER_TYPE_ARCHIVE_HELPER"] = "Календари Google, которые были ранее отключены. Сейчас эти календари не синхронизируются с вашим Google аккаунтом";
 $MESS["EC_SEC_SLIDER_ADJUST_SYNC"] = "Настроить синхронизацию";
 $MESS["EC_SEC_SLIDER_SYNC_DISABLED"] = "Отключен";
+
+$MESS['EC_CALENDAR_CONFERENCE'] = 'Видеоконференция';
+
+$MESS['EC_CALENDAR_NO_MORE_EVENTS_PAST'] = 'Ранее у вас не было событий';
+$MESS['EC_CALENDAR_NO_MORE_EVENTS_FUTURE'] = 'У вас больше нет запланированных событий';
+
+$MESS['EC_CALENDAR_EMPTY_SEARCH_RESULT_TITLE'] = 'По вашему запросу нет результатов';
+$MESS['EC_CALENDAR_EMPTY_SEARCH_RESULT_TEXT'] = 'Укажите более точные параметры поиска или введите другие ключевые слова';
+
+$MESS['EC_CALENDAR_NO_EVENTS_TITLE'] = 'Здесь пока нет событий';
+$MESS['EC_CALENDAR_NO_EVENTS_TEXT'] = 'Вы можете добавить сюда события из других календарей, чтобы видеть все запланированные встречи.';
+
+$MESS['EC_CALENDAR_GOOGLE_CALENDAR'] = 'Google Календарь';
+$MESS['EC_CALENDAR_APPLE_CALENDAR'] = 'iCloud календарь';
+$MESS['EC_CALENDAR_OFFICE365_CALENDAR'] = 'Календарь Office 365';
+
+$MESS['EC_CALENDAR_NO_INVITATIONS_TITLE'] = 'У вас пока нет неотвеченных приглашений';
+
+$MESS['EC_CALENDAR_CANT_DRAG_SHARED_EVENT'] = 'Нельзя перенести встречу с внешним участником';

@@ -1,1 +1,0 @@
-<?require_once $_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/ipol.fivepost/admin/ipol_fivepost_orders.php';?>

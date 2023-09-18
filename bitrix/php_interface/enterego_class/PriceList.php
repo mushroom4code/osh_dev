@@ -68,7 +68,8 @@ class PriceList
             }
         }
         $xlsx = SimpleXLSXGen::fromArray($this->arResult)->setDefaultFontSize(12);
-        $file_name = 'price-list-oshisha-' . date("d.m.Y") . '-' . date("H:i:s") . '.xls';
+        $xlsx->autoFilter('A4:H10000');
+        $file_name = 'price-list-oshisha-' . date("d.m.Y") . '-' . date("H:i:s") . '.xlsx';
         $path_to_file = $this->price_list_dir . $file_name;
         $xlsx->saveAs($path_to_file);
         $option = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE', false, 'N2'));

@@ -1,5 +1,6 @@
 <? if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
+use Enterego\EnteregoHelper;
 /**
  * @var CBitrixComponentTemplate $this
  * @var CatalogSectionComponent $component
@@ -29,5 +30,15 @@ while ($arItems = $dbBasketItems->Fetch())
     $arResult['BASKET_ITEMS'][] = $arItems;
 }
 
+foreach ($arResult['BASKET'] as &$basketItem) {
+    EnteregoHelper::setProductsActiveUnit($basketItem, true);
+    $basketItem['MEASURE_RATIO'] = \Bitrix\Catalog\MeasureRatioTable::getList(array(
+        'select' => array('RATIO'),
+        'filter' => array('=PRODUCT_ID' => $basketItem['PRODUCT_ID'])
+    ))->fetch()['RATIO'];
+
+    $basketItem['QUANTITY_WITH_RATIO'] = $basketItem['QUANTITY'] / $basketItem['MEASURE_RATIO'];
+}
+unset($basketItem);
 
 $component = $this->getComponent();

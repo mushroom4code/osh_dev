@@ -59,6 +59,8 @@ class CCloudStorageService_S3 extends CCloudStorageService
 		}
 
 		$htmlID = htmlspecialcharsbx($this->GetID());
+		$show = (($cur_SERVICE_ID == $this->GetID()) || !$bServiceSet)? '': 'none';
+		$useHttps = $arSettings['USE_HTTPS'] ?? 'N';
 
 		$result = '
 		<tr id="SETTINGS_0_'.$htmlID.'" style="display:'.($cur_SERVICE_ID === $this->GetID() || !$bServiceSet? '': 'none').'" class="settings-tr adm-detail-required-field">
@@ -75,7 +77,7 @@ class CCloudStorageService_S3 extends CCloudStorageService
 		</tr>
 		<tr id="SETTINGS_3_'.$htmlID.'" style="display:'.$show.'" class="settings-tr">
 			<td>'.GetMessage("CLO_STORAGE_S3_EDIT_USE_HTTPS").':</td>
-			<td><input type="hidden" name="SETTINGS['.$htmlID.'][USE_HTTPS]" id="'.$htmlID.'KEY" value="N"><input type="checkbox" name="SETTINGS['.$htmlID.'][USE_HTTPS]" id="'.$htmlID.'USE_HTTPS" value="Y" '.($arSettings['USE_HTTPS'] == 'Y'? 'checked="checked"': '').'></td>
+			<td><input type="hidden" name="SETTINGS['.$htmlID.'][USE_HTTPS]" id="'.$htmlID.'KEY" value="N"><input type="checkbox" name="SETTINGS['.$htmlID.'][USE_HTTPS]" id="'.$htmlID.'USE_HTTPS" value="Y" '.($useHttps == 'Y'? 'checked="checked"': '').'></td>
 		</tr>
 		';
 		return $result;
@@ -331,10 +333,11 @@ class CCloudStorageService_S3 extends CCloudStorageService
 		$was_end_point = $this->new_end_point;
 		$this->new_end_point = '';
 
+		$useHttps = $arSettings["USE_HTTPS"] ?? 'N';
 		$this->status = 0;
 		$this->host = $host;
 		$this->verb = $verb;
-		$this->url =  ($arSettings["USE_HTTPS"] === "Y"? "https": "http")."://".$host.$file_name.$params;
+		$this->url =  ($useHttps === "Y"? "https": "http")."://".$host.$file_name.$params;
 		$this->headers = array();
 		$this->errno = 0;
 		$this->errstr = '';
@@ -346,7 +349,7 @@ class CCloudStorageService_S3 extends CCloudStorageService
 			$stime = microtime(1);
 			$logRequest = array(
 				"request_id" => md5((string)mt_rand()),
-				"portal" => (CModule::IncludeModule('replica')? getNameByDomain(): $_SERVER["HTTP_HOST"]),
+				"portal" => $_SERVER["HTTP_HOST"],
 				"verb" => $this->verb,
 				"url" => $this->url,
 			);
@@ -361,7 +364,7 @@ class CCloudStorageService_S3 extends CCloudStorageService
 		$this->status = $request->getStatus();
 		foreach($request->getHeaders() as $key => $value)
 		{
-			$this->headers[$key] = $value;
+			$this->headers[$key] = is_array($value) ? $value[0] : $value;
 		}
 		$this->errstr = implode("\n", $request->getError());
 		$this->errno = $this->errstr? 255: 0;
@@ -774,6 +777,11 @@ class CCloudStorageService_S3 extends CCloudStorageService
 			$APPLICATION->ResetException();
 			return true;
 		}
+		elseif($this->checkForTokenExpiration($this->status, $this->result))
+		{
+			$this->tokenHasExpired = true;
+			return false;
+		}
 		else//if($this->status == 404)
 		{
 			$APPLICATION->ResetException();
@@ -837,6 +845,11 @@ class CCloudStorageService_S3 extends CCloudStorageService
 		if($this->status == 200)
 		{
 			return $this->GetFileSRC($arBucket, $filePath);
+		}
+		elseif($this->checkForTokenExpiration($this->status, $this->result))
+		{
+			$this->tokenHasExpired = true;
+			return false;
 		}
 		elseif (
 			$this->status == 400
@@ -1032,6 +1045,11 @@ class CCloudStorageService_S3 extends CCloudStorageService
 		{
 			$APPLICATION->ResetException();
 			return true;
+		}
+		elseif($this->checkForTokenExpiration($this->status, $this->result))
+		{
+			$this->tokenHasExpired = true;
+			return false;
 		}
 		else
 		{
@@ -1291,6 +1309,11 @@ class CCloudStorageService_S3 extends CCloudStorageService
 
 			return count($result) == 3 ? $result : null;
 		}
+		elseif($this->checkForTokenExpiration($this->status, $this->result))
+		{
+			$this->tokenHasExpired = true;
+			return false;
+		}
 		else
 		{
 			$APPLICATION->ResetException();
@@ -1548,7 +1571,11 @@ class CCloudStorageService_S3 extends CCloudStorageService
 			return true;
 		if ($status == 400 && mb_strpos($result, 'token is malformed') !== false)
 			return true;
+		if ($status == 400 && $result === '')
+			return true;
 		if ($status == 403 && mb_strpos($result, 'The AWS Access Key Id you provided does not exist in our records.') !== false)
+			return true;
+		if ($status == 403 && $result === '')
 			return true;
 		return false;
 	}

@@ -355,11 +355,11 @@ class Translation
 			return $langFile;
 		}
 
-		if (mb_strpos($langFile, '\\') !== false)
+		if (strpos($langFile, '\\') !== false)
 		{
 			$langFile = str_replace('\\', '/', $langFile);
 		}
-		if (mb_strpos($langFile, '//') !== false)
+		if (strpos($langFile, '//') !== false)
 		{
 			$langFile = str_replace('//', '/', $langFile);
 		}
@@ -394,7 +394,13 @@ class Translation
 		self::loadMap();
 
 		$langPathParts = preg_split('#[/]+#', trim(str_replace($documentRoot, '', $langFile), '/'), 6);
-		if (empty($langPathParts) || $langPathParts[0] !== 'bitrix')
+		if (
+			empty($langPathParts)
+			|| $langPathParts[0] !== 'bitrix'
+			|| empty($langPathParts[1])
+			|| empty($langPathParts[2])
+			|| empty($langPathParts[3])
+		)
 		{
 			return $langFile;
 		}

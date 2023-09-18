@@ -32,11 +32,11 @@ $bodyClasses = 'rest-configuration-import-slider-modifier';
 $APPLICATION->setPageProperty("BodyClass", trim(sprintf("%s %s", $bodyClass, $bodyClasses)));
 
 $titleBlock = '';
-if ($arParams['MODE'] === 'ROLLBACK')
+if (isset($arParams['MODE']) && $arParams['MODE'] === 'ROLLBACK')
 {
 	$titleBlock = Loc::getMessage('REST_CONFIGURATION_IMPORT_ROLLBACK_TITLE_BLOCK');
 }
-elseif ($arParams['MODE'] === 'ZIP' && !empty($arResult['INSTALL_APP']))
+elseif (isset($arParams['MODE']) && $arParams['MODE'] === 'ZIP' && !empty($arResult['INSTALL_APP']))
 {
 	$titleBlock = '';
 }
@@ -46,7 +46,15 @@ else
 	{
 		$titleBlock = $arResult['MANIFEST']['IMPORT_TITLE_BLOCK'];
 	}
-	else
+	if (!empty($arResult['MANIFEST']['IMPORT_TITLE_PAGE_CREATE']) && isset($arParams['FROM']) && $arParams['FROM'] !== 'configuration')
+	{
+		$titleBlock = $arResult['MANIFEST']['IMPORT_TITLE_PAGE_CREATE'];
+	}
+	if (isset($_GET['createType']) && $_GET['createType'] === 'PAGE')
+	{
+		$titleBlock = Loc::getMessage('REST_CONFIGURATION_IMPORT_PAGE_TITLE_CREATE');
+	}
+	if ($titleBlock === '')
 	{
 		$titleBlock = Loc::getMessage('REST_CONFIGURATION_IMPORT_TITLE_BLOCK');
 	}
@@ -66,7 +74,7 @@ else
 			</div>
 			<p class="rest-configuration-info"><?=htmlspecialcharsbx($arResult['ERRORS_UPLOAD_FILE'])?></p>
 		<? elseif($arResult['IMPORT_ACCESS'] === true):?>
-			<? if($arParams['MODE'] == 'ROLLBACK'):?>
+			<? if(isset($arParams['MODE']) && $arParams['MODE'] == 'ROLLBACK'):?>
 				<? if(!empty($arResult['IMPORT_FOLDER_FILES'])):?>
 					<?php
 					$APPLICATION->includeComponent(
@@ -78,7 +86,8 @@ else
 							'APP' => $arResult['APP'],
 							'MODE' => $arParams['MODE'],
 							'MANIFEST_CODE' => $arResult['MANIFEST_CODE'],
-							'UNINSTALL_APP_ON_FINISH' => $arResult['UNINSTALL_APP_ON_FINISH']
+							'UNINSTALL_APP_ON_FINISH' => $arResult['UNINSTALL_APP_ON_FINISH'],
+							'FROM' => $arResult['FROM'],
 						),
 						$component,
 						array('HIDE_ICONS' => 'Y')
@@ -95,7 +104,8 @@ else
 							'MODE' => $arParams['MODE'],
 							'MANIFEST_CODE' => $arResult['MANIFEST_CODE'],
 							'IMPORT_MANIFEST' => $arResult['IMPORT_MANIFEST_FILE'],
-							'UNINSTALL_APP_ON_FINISH' => $arResult['UNINSTALL_APP_ON_FINISH']
+							'UNINSTALL_APP_ON_FINISH' => $arResult['UNINSTALL_APP_ON_FINISH'],
+							'FROM' => $arResult['FROM'],
 						),
 						$component,
 						array('HIDE_ICONS' => 'Y')
@@ -136,6 +146,7 @@ else
 						'PROCESS_ID' => $arResult['IMPORT_PROCESS_ID'],
 						'MANIFEST_CODE' => $arResult['MANIFEST_CODE'],
 						'APP' => $arResult['APP'],
+						'FROM' => $arResult['FROM'],
 					),
 					$component,
 					array(
@@ -153,6 +164,7 @@ else
 						'IMPORT_MANIFEST' => $arResult['IMPORT_MANIFEST_FILE'],
 						'MANIFEST_CODE' => $arResult['MANIFEST_CODE'],
 						'APP' => $arResult['APP'],
+						'FROM' => $arResult['FROM'],
 					),
 					$component,
 					array(
@@ -194,6 +206,9 @@ else
 				array(
 					'APP_CODE' => $arResult['INSTALL_APP'],
 					'IFRAME' => 'Y',
+					'FROM' => $arResult['FROM'],
+					'ADDITIONAL' => $arParams['ADDITIONAL'],
+					'ZIP_ID' => $arParams['ZIP_ID'],
 				),
 				$component,
 				array('HIDE_ICONS' => 'Y')

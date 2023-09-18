@@ -29,6 +29,9 @@ class Dictionary
 	public const EVENT_TYPE = [
 		'user' => 'user',
 		'chat' => 'chat',
+		'shared' => '#shared#',
+		'shared_crm' => '#shared_crm#',
+		'resource_booking' => '#resourcebooking#'
 	];
 
 	public const MEETING_STATUS = [
@@ -36,5 +39,13 @@ class Dictionary
 		'No' => 'N',
 		'Question' => 'Q',
 		'Host' => 'H'
+	];
+
+	public const CALENDAR_TYPE = [
+		'user' => 'user',
+		'group' => 'group',
+		'company' => 'company_calendar',
+		'location' => 'location',
+		'resource' => 'resource',
 	];
 }

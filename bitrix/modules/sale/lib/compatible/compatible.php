@@ -73,31 +73,31 @@ class AliasedQuery extends Query
 
 	public function getAliasName($alias)
 	{
-		if ($field = $this->aliases[$alias])
-		{
-			if (is_string($field))
-			{
-				return $field; // name
-			}
-			elseif (is_array($field)) // TODO Field support
-			{
-				$name = '__'.$alias.'_ALIAS__';
-				if (! $field['registered'])
-				{
-					$field['registered'] = true;
-					$this->registerRuntimeField($name, $field);
-				}
-				return $name;
-			}
-			else
-			{
-				throw new SystemException("invalid alias '$alias' type", 0, __FILE__, __LINE__);
-			}
-		}
-		else
+		if (!isset($this->aliases[$alias]))
 		{
 			return null;
 		}
+
+		$field = $this->aliases[$alias];
+
+		if (is_string($field))
+		{
+			return $field; // name
+		}
+		elseif (is_array($field)) // TODO Field support
+		{
+			$name = '__'.$alias.'_ALIAS__';
+			$field['registered'] ??= false;
+			if (!$field['registered'])
+			{
+				$field['registered'] = true;
+				$this->registerRuntimeField($name, $field);
+			}
+
+			return $name;
+		}
+
+		throw new SystemException("invalid alias '$alias' type", 0, __FILE__, __LINE__);
 	}
 
 	public function addAliasSelect($alias)
@@ -720,17 +720,25 @@ class OrderQueryLocation extends OrderQuery
 		{
 			$parsed = static::explodeFilterKey($field);
 
-			if($this->locationFieldMap[$parsed['alias']])
+			if (isset($this->locationFieldMap[$parsed['alias']]))
+			{
 				return $parsed['modifier'].$parsed['operator'].'PROXY_'.$parsed['alias'];
+			}
 			else
+			{
 				return $field;
+			}
 		}
 		else
 		{
-			if($this->locationFieldMap[$field])
+			if (isset($this->locationFieldMap[$field]))
+			{
 				return 'PROXY_'.$field;
+			}
 			else
+			{
 				return $field;
+			}
 		}
 	}
 }

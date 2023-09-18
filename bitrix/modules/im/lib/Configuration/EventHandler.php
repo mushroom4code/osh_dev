@@ -38,7 +38,8 @@ class EventHandler
 			return;
 		}
 
-		if (in_array($fields['EXTERNAL_AUTH_ID'], UserTable::getExternalUserTypes(), true))
+		$externalAuthId = $fields['EXTERNAL_AUTH_ID'] ?? null;
+		if (in_array($externalAuthId, UserTable::getExternalUserTypes(), true))
 		{
 			return;
 		}
@@ -275,13 +276,19 @@ class EventHandler
 	/**
 	 * @throws Exception
 	 */
-	private static function setGroup(int $userId, int $groupId): void
+	public static function setGroup(int $userId, int $groupId): void
 	{
-		OptionUserTable::add([
+		$insertFields = [
 			'USER_ID' => $userId,
 			'GENERAL_GROUP_ID' => $groupId,
 			'NOTIFY_GROUP_ID' => $groupId
-		]);
+		];
+		$updateFields = [
+			'GENERAL_GROUP_ID' => $groupId,
+			'NOTIFY_GROUP_ID' => $groupId,
+		];
+
+		OptionUserTable::merge($insertFields, $updateFields);
 	}
 
 	/**

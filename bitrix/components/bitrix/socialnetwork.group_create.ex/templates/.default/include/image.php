@@ -6,6 +6,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 }
 
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Web\Uri;
 
 /** @var CBitrixComponentTemplate $this */
 /** @var array $arParams */
@@ -80,7 +81,7 @@ Loc::loadMessages(__FILE__);
 		if (!empty($arResult['POST']['IMAGE_SRC']))
 		{
 			$classList[] = '--selected';
-			$style = "background-image: url('" . htmlspecialcharsbx($arResult['POST']['IMAGE_SRC']) . "'); background-size: cover;";
+			$style = "background-image: url('" . Uri::urnEncode(htmlspecialcharsbx($arResult['POST']['IMAGE_SRC'])) . "'); background-size: cover;";
 		}
 		else
 		{
@@ -91,7 +92,12 @@ Loc::loadMessages(__FILE__);
 		<div class="<?= implode(' ', $classList) ?>" style="<?= $style ?>" data-role="group-avatar-image">
 			<div class="<?= implode(' ', $removeClassList) ?>" data-role="group-avatar-remove"></div>
 		</div>
-		<input type="hidden" name="GROUP_IMAGE_ID" value="<?= (int)$arResult['POST']['IMAGE_ID'] ?>" data-role="group-avatar-input">
+		<input
+			type="hidden"
+			name="GROUP_IMAGE_ID"
+			value="<?= (int) ($arResult['POST']['IMAGE_ID'] ?? 0) ?>"
+			data-role="group-avatar-input"
+		>
 		<input type="hidden" name="GROUP_AVATAR_TYPE" value="<?= htmlspecialcharsbx($arResult['POST']['AVATAR_TYPE']) ?>" data-role="group-avatar-type-input">
 	</div>
 </div>

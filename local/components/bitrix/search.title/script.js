@@ -316,15 +316,6 @@ function JCTitleSearch(arParams)
 		}
 	};
 
-	this.onFocusLost = function(hide)
-	{
-		if(!event.relatedTarget
-			|| ((event.relatedTarget.getAttribute('id') != 'search_results_container')
-			&& ($('#search_results_container').find(event.relatedTarget).length != 1))) {
-				setTimeout(function(){_this.RESULT.style.display = 'none'}, 250);
-		}
-	};
-
 	this.onFocusGain = function()
 	{
 		if(_this.RESULT.innerHTML.length)
@@ -382,7 +373,6 @@ function JCTitleSearch(arParams)
 		this.INPUT = document.getElementById(this.arParams.INPUT_ID);
 		this.startText = this.oldValue = this.INPUT.value;
 		BX.bind(this.INPUT, 'focus', function() {_this.onFocusGain()});
-		BX.bind(this.INPUT, 'blur', function() {_this.onFocusLost()});
 		this.INPUT.onkeydown = this.onKeyDown;
 
 		if(this.arParams.WAIT_IMAGE)

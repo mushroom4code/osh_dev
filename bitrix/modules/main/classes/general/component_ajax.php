@@ -47,32 +47,33 @@ class CComponentAjax
 
 		if ($USER->IsAdmin())
 		{
-			if ($_GET['bitrix_disable_ajax'] == 'N')
+			$disableAjaxInGetParameter = $_GET['bitrix_disable_ajax'] ?? null;
+			if ($disableAjaxInGetParameter === 'N')
 			{
 				unset(\Bitrix\Main\Application::getInstance()->getSession()['bitrix_disable_ajax']);
 			}
 
-			if ($_GET['bitrix_disable_ajax'] == 'Y' || \Bitrix\Main\Application::getInstance()->getSession()['bitrix_disable_ajax'] == 'Y')
+			if ($disableAjaxInGetParameter === 'Y' || \Bitrix\Main\Application::getInstance()->getSession()['bitrix_disable_ajax'] == 'Y')
 			{
 				\Bitrix\Main\Application::getInstance()->getSession()['bitrix_disable_ajax'] = 'Y';
-				return null;
+				return;
 			}
 		}
 
 		if ($parentComponent && $this->_checkParent($parentComponent))
-			return false;
+			return;
 
 		$this->componentName = $componentName;
 		$this->componentTemplate = $componentTemplate;
 		$this->arParams = $arParams;
 
-		$this->bShadow = $this->arParams['AJAX_OPTION_SHADOW'] != 'N';
-		$this->bJump = $this->arParams['AJAX_OPTION_JUMP'] != 'N';
-		$this->bStyle = $this->arParams['AJAX_OPTION_STYLE'] != 'N';
-		$this->bHistory = $this->arParams['AJAX_OPTION_HISTORY'] != 'N';
+		$this->bShadow = !isset($this->arParams['AJAX_OPTION_SHADOW']) || $this->arParams['AJAX_OPTION_SHADOW'] != 'N';
+		$this->bJump = !isset($this->arParams['AJAX_OPTION_JUMP']) || $this->arParams['AJAX_OPTION_JUMP'] != 'N';
+		$this->bStyle = !isset($this->arParams['AJAX_OPTION_STYLE']) || $this->arParams['AJAX_OPTION_STYLE'] != 'N';
+		$this->bHistory = !isset($this->arParams['AJAX_OPTION_HISTORY']) || $this->arParams['AJAX_OPTION_HISTORY'] != 'N';
 
 		if (!$this->CheckSession())
-			return false;
+			return;
 
 		CJSCore::Init(array('ajax'));
 
@@ -111,8 +112,6 @@ class CComponentAjax
 
 		$this->LocalRedirectHandlerId = AddEventHandler('main', 'OnBeforeLocalRedirect', array($this, "LocalRedirectHandler"));
 		$this->RestartBufferHandlerId = AddEventHandler('main', 'OnBeforeRestartBuffer', array($this, 'RestartBufferHandler'));
-
-		return null;
 	}
 
 	/**
@@ -121,7 +120,7 @@ class CComponentAjax
 	 */
 	function _checkParent($parent)
 	{
-		if ('Y' == $parent->arParams['AJAX_MODE'])
+		if (($parent->arParams['AJAX_MODE'] ?? null) === 'Y')
 			return true;
 		elseif (($parentComponent = $parent->GetParent()))
 			return $this->_checkParent($parentComponent);
@@ -186,7 +185,7 @@ class CComponentAjax
 
 	function CheckSession()
 	{
-		if ($this->componentID = CAjax::GetComponentID($this->componentName, $this->componentTemplate, $this->arParams['AJAX_OPTION_ADDITIONAL']))
+		if ($this->componentID = CAjax::GetComponentID($this->componentName, $this->componentTemplate, $this->arParams['AJAX_OPTION_ADDITIONAL'] ?? null))
 		{
 			if ($current_session = CAjax::GetSession())
 			{
@@ -209,7 +208,7 @@ class CComponentAjax
 	{
 		$arResult = \Bitrix\Main\UrlRewriter::getList(SITE_ID, array('QUERY' => $url));
 
-		if (is_array($arResult) && count($arResult) > 0)
+		if (is_array($arResult) && !empty($arResult))
 			return $arResult[0]['PATH'];
 		else
 			return false;
@@ -223,12 +222,12 @@ class CComponentAjax
 		if(preg_match("/^(#|mailto:|javascript:|callto:)/", $url))
 			return false;
 
-		if (mb_strpos($url, '://') !== false)
+		if (strpos($url, '://') !== false)
 			return false;
 
 		$url = preg_replace('/#.*/', '', $url);
 
-		if ($this->arParams['SEF_MODE'] == 'Y')
+		if (($this->arParams['SEF_MODE'] ?? null) === 'Y')
 		{
 			if ($url == POST_FORM_ACTION_URI)
 				return true;
@@ -246,7 +245,7 @@ class CComponentAjax
 		}
 		else
 		{
-			if (mb_strpos($url, '?') !== false)
+			if (strpos($url, '?') !== false)
 				$url = mb_substr($url, 0, mb_strpos($url, '?'));
 
 			if (mb_substr($url, -4) != '.php')
@@ -262,10 +261,10 @@ class CComponentAjax
 		{
 			$currentUrl = $APPLICATION->GetCurPage();
 
-			if ($this->arParams['SEF_MODE'] == 'Y')
+			if (($this->arParams['SEF_MODE'] ?? null) === 'Y')
 				$currentUrl = $this->__getSEFRealUrl($currentUrl);
 
-			if (mb_strpos($currentUrl, '?') !== false)
+			if (strpos($currentUrl, '?') !== false)
 				$currentUrl = mb_substr($currentUrl, 0, mb_strpos($currentUrl, '?'));
 
 			if (mb_substr($currentUrl, -4) != '.php')
@@ -386,7 +385,7 @@ class CComponentAjax
 					if ($pos !== false)
 						$real_url = mb_substr($real_url, 0, $pos);
 
-					$real_url .= mb_strpos($url, '?') === false ? '?' : '&';
+					$real_url .= strpos($url, '?') === false ? '?' : '&';
 					$real_url .= $add_param;
 
 					$url_str = CAjax::GetLinkEx($real_url, $url, $match[2], 'comp_'.$this->componentID, $strAdditional);
@@ -470,7 +469,7 @@ class CComponentAjax
 			{
 				$data = str_replace($out[0][$i], '', $data);
 
-				if ($out[1][$i] <> '' && mb_strpos($out[1][$i], 'src=') !== false)
+				if ($out[1][$i] <> '' && strpos($out[1][$i], 'src=') !== false)
 				{
 					$regexp_src = '/src="([^"]*)?"/i';
 					if (preg_match($regexp_src, $out[1][$i], $out1) != 0)
@@ -493,7 +492,7 @@ class CComponentAjax
 			}
 		}
 
-		if (count($arScripts) > 0)
+		if (!empty($arScripts))
 		{
 			$data .= "
 <script type=\"text/javascript\">

@@ -10,8 +10,9 @@ return [
 	'rel' => [
 		'ui.design-tokens',
 		'im.v2.provider.service',
-		'im.v2.lib.menu',
+		'im.v2.lib.old-chat-embedding.menu',
 		'main.date',
+		'im.v2.lib.parser',
 		'ui.vue3.vuex',
 		'main.popup',
 		'im.v2.component.old-chat-embedding.elements',

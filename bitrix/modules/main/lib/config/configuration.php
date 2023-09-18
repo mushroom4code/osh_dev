@@ -190,13 +190,15 @@ final class Configuration implements \ArrayAccess, \Iterator, \Countable
 		if (!$this->isLoaded)
 			$this->loadConfiguration();
 
-		if (isset($this->data[$name]))
-			return $this->data[$name]["value"];
+		if (isset($this->data[$name]['value']))
+		{
+			return $this->data[$name]['value'];
+		}
 
 		return null;
 	}
 
-	public function offsetExists($offset)
+	public function offsetExists($offset): bool
 	{
 		if (!$this->isLoaded)
 			$this->loadConfiguration();
@@ -204,21 +206,23 @@ final class Configuration implements \ArrayAccess, \Iterator, \Countable
 		return isset($this->data[$offset]);
 	}
 
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset)
 	{
 		return $this->get($offset);
 	}
 
-	public function offsetSet($offset, $value)
+	public function offsetSet($offset, $value): void
 	{
 		$this->add($offset, $value);
 	}
 
-	public function offsetUnset($offset)
+	public function offsetUnset($offset): void
 	{
 		$this->delete($offset);
 	}
 
+	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		if (!$this->isLoaded)
@@ -229,6 +233,7 @@ final class Configuration implements \ArrayAccess, \Iterator, \Countable
 		return $c === false ? false : $c["value"];
 	}
 
+	#[\ReturnTypeWillChange]
 	public function next()
 	{
 		if (!$this->isLoaded)
@@ -239,6 +244,7 @@ final class Configuration implements \ArrayAccess, \Iterator, \Countable
 		return $c === false ? false : $c["value"];
 	}
 
+	#[\ReturnTypeWillChange]
 	public function key()
 	{
 		if (!$this->isLoaded)
@@ -247,7 +253,7 @@ final class Configuration implements \ArrayAccess, \Iterator, \Countable
 		return key($this->data);
 	}
 
-	public function valid()
+	public function valid(): bool
 	{
 		if (!$this->isLoaded)
 			$this->loadConfiguration();
@@ -256,15 +262,15 @@ final class Configuration implements \ArrayAccess, \Iterator, \Countable
 		return isset($this->data[$key]);
 	}
 
-	public function rewind()
+	public function rewind(): void
 	{
 		if (!$this->isLoaded)
 			$this->loadConfiguration();
 
-		return reset($this->data);
+		reset($this->data);
 	}
 
-	public function count()
+	public function count(): int
 	{
 		if (!$this->isLoaded)
 			$this->loadConfiguration();

@@ -4,14 +4,21 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 CUtil::InitJSCore(
 	['tooltip', 'admin_interface', 'date', 'uploader', 'file_dialog', 'bp_user_selector', 'bp_field_type']
 );
-\Bitrix\Main\UI\Extension::load(['ui.buttons', 'ui.hint', 'ui.entity-selector']);
+\Bitrix\Main\UI\Extension::load([
+	'bizproc.automation',
+	'ui.buttons',
+	'ui.hint',
+	'ui.entity-selector',
+	'ui.design-tokens'
+]);
+\Bitrix\Main\UI\Extension::load(['bizproc.automation', 'ui.buttons', 'ui.hint', 'ui.entity-selector']);
 /**
  * @var array $arResult
  * @var array $arParams
  * @var CBitrixComponentTemplate $this
  */
 
-if ($arResult['USE_DISK'])
+if (isset($arResult['USE_DISK']) && $arResult['USE_DISK'])
 {
 	$this->addExternalJs($this->GetFolder().'/disk_uploader.js');
 	$this->addExternalCss('/bitrix/js/disk/css/legacy_uf_common.css');
@@ -29,7 +36,9 @@ if (isset($arParams['~MESSAGES']) && is_array($arParams['MESSAGES']))
 	{
 		BX.namespace('BX.Bizproc.Automation');
 		if (typeof BX.Bizproc.Automation.Component === 'undefined')
+		{
 			return;
+		}
 
 		BX.message(<?=\Bitrix\Main\Web\Json::encode($messages)?>);
 		BX.message({
@@ -37,7 +46,7 @@ if (isset($arParams['~MESSAGES']) && is_array($arParams['MESSAGES']))
 			BIZPROC_AUTOMATION_NO: '<?=GetMessageJS('MAIN_NO')?>'
 		});
 
-		BX.Bizproc.Automation.API.documentName = '<?=htmlspecialcharsbx($arResult['DOCUMENT_NAME'])?>';
+		BX.Bizproc.Automation.API.documentName = '<?= CUtil::JSEscape($arResult['DOCUMENT_NAME']) ?>';
 		BX.Bizproc.Automation.API.documentSigned = <?=\Bitrix\Main\Web\Json::encode($arResult['DOCUMENT_SIGNED'])?>;
 		BX.Bizproc.Automation.API.documentFields = <?=\Bitrix\Main\Web\Json::encode($arResult['DOCUMENT_FIELDS'])?>;
 		BX.Bizproc.Automation.API.documentUserGroups = <?=\Bitrix\Main\Web\Json::encode($arResult['DOCUMENT_USER_GROUPS'])?>;

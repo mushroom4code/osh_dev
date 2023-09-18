@@ -22,6 +22,7 @@
 
                 if ((is_array($property['VALUE']) && count($property['VALUE']) == 0) || $property['VALUE'] == '')
                     continue;
+                if (defined('PROPERTY_ACTIVE_UNIT') && $property['CODE'] == PROPERTY_ACTIVE_UNIT) continue;
                 if ($property['CODE'] == 'BREND') {
                     if (isset($arResult['DISPLAY_PROPERTIES'][$property['CODE']])) {
                         $property['VALUE'] = $arResult['DISPLAY_PROPERTIES'][$property['CODE']]['DISPLAY_VALUE'];

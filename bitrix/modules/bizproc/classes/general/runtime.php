@@ -48,7 +48,6 @@ class CBPRuntime
 	*/
 	private function __construct()
 	{
-		$this->isStarted = false;
 		$this->workflows = array();
 		$this->services = array(
 			"SchedulerService" => null,
@@ -68,37 +67,20 @@ class CBPRuntime
 			$_SERVER["DOCUMENT_ROOT"].BX_ROOT."/activities/bitrix",
 			$_SERVER["DOCUMENT_ROOT"].BX_ROOT."/modules/bizproc/activities",
 		);
-
-		/* Experimental activity autoloader
-		$runtime = $this;
-		spl_autoload_register(function ($name) use ($runtime)
-		{
-			$name = strtolower($name);
-			if (strpos($name, 'cbp') === 0)
-			{
-				$runtime->IncludeActivityFile($name);
-			}
-		});
-		*/
 	}
 
 	/**
 	 * Static method returns runtime object. Singleton pattern.
 	 *
-	 * @param bool $autoStart Starts runtime.
 	 * @return CBPRuntime
 	 */
-	public static function getRuntime($autoStart = false)
+	public static function getRuntime()
 	{
 		if (!isset(self::$instance))
 		{
 			$c = __CLASS__;
 			self::$instance = new $c;
-		}
-
-		if ($autoStart)
-		{
-			self::$instance->StartRuntime();
+			self::$instance->startRuntime();
 		}
 
 		return self::$instance;
@@ -161,7 +143,7 @@ class CBPRuntime
 			{
 				$this->services[$compatibleServiceName] = $serviceManager->getService($serviceName);
 			}
-			if (!$this->debugServices[$compatibleServiceName] && $serviceManager->hasDebugService($serviceName))
+			if (!isset($this->debugServices[$compatibleServiceName]) && $serviceManager->hasDebugService($serviceName))
 			{
 				$this->debugServices[$compatibleServiceName] = $serviceManager->getDebugService($serviceName);
 			}
@@ -174,7 +156,7 @@ class CBPRuntime
 
 	/**
 	* Public method stops runtime
-	*
+	* @deprecated Unused and not actual
 	*/
 	public function stopRuntime()
 	{
@@ -255,6 +237,13 @@ class CBPRuntime
 
 		/** @var CBPCompositeActivity $rootActivity */
 		[$rootActivity, $workflowVariablesTypes, $workflowParametersTypes] = $loader->LoadWorkflow($workflowTemplateId);
+		foreach ($workflowParametersTypes as $parameterName => $parametersProperty)
+		{
+			if (!array_key_exists($parameterName, $workflowParameters))
+			{
+				$workflowParameters[$parameterName] = $parametersProperty['Default'];
+			}
+		}
 
 		if ($rootActivity == null)
 		{
@@ -382,6 +371,18 @@ class CBPRuntime
 		}
 	}
 
+	public function onDocumentDelete(array $documentId): void
+	{
+		/** @var CBPWorkflow $workflow */
+		foreach ($this->workflows as $workflow)
+		{
+			if (CBPHelper::isEqualDocument($documentId, $workflow->getDocumentId()))
+			{
+				$workflow->abandon();
+			}
+		}
+	}
+
 	public static function generateWorkflowId(): string
 	{
 		return uniqid("", true);
@@ -455,9 +456,18 @@ class CBPRuntime
 		{
 			//check if state exists
 			$stateExists = CBPStateService::exists($workflowId);
-			if (!$stateExists)
+			$documentExists = false;
+
+			if ($stateExists)
+			{
+				$documentService = $runtime->getDocumentService();
+				$documentExists = $documentService->isDocumentExists($workflow->getDocumentId());
+			}
+
+			if (!$stateExists || !$documentExists)
 			{
 				$workflow->Terminate();
+
 				return false;
 			}
 
@@ -791,6 +801,7 @@ class CBPRuntime
 		}
 
 		$classesList[] = \CBPWorkflow::class;
+		$classesList[] = \CBPRuntime::class;
 		$classesList[] = DebugWorkflow::class;
 		$classesList[] = Bizproc\BaseType\Value\Date::class;
 		$classesList[] = Bizproc\BaseType\Value\DateTime::class;
@@ -883,10 +894,11 @@ class CBPRuntime
 		{
 			foreach ($activity['RETURN_PROPERTIES'] as $name => $property)
 			{
-				$result['RETURN'][$name] = array(
+				$result['RETURN'][$name] = [
 					'NAME' => RestActivityTable::getLocalization($property['NAME'], $lang),
-					'TYPE' => isset($property['TYPE']) ? $property['TYPE'] : \Bitrix\Bizproc\FieldType::STRING
-				);
+					'TYPE' => $property['TYPE'] ?? \Bitrix\Bizproc\FieldType::STRING,
+					'OPTIONS' => $property['OPTIONS'] ?? null,
+				];
 			}
 		}
 		if ($activity['USE_SUBSCRIPTION'] !== 'N')

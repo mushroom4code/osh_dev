@@ -12,7 +12,7 @@ return [
 		'main.core',
 		'ui.design-tokens',
 		'main.popup',
-		'ui.vue',
+		'ui.uploader.vue',
 		'ui.uploader.core',
 		'ui.progressround',
 		'ui.icons.generator',
