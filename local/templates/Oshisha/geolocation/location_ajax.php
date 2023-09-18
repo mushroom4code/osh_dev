@@ -10,6 +10,9 @@ if ($request->getPost('action') == 'setLocationsListStorage' || $request->getPos
     $locationsFilter = array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=TYPE.ID' => '5');
     if ($request->getPost('action') == 'locationsListSearch' || $request->getPost('action') == 'locationsListSubmit') {
         $locationsFilter['NAME_RU'] = '%'.$request->getPost('searchText').'%';
+        if ($request->getPost('action') == 'locationsListSubmit') {
+            $locationsFilter['CODE'] = $request->getPost('searchCode');
+        }
     }
     $res = \Bitrix\Sale\Location\LocationTable::getList(array(
         'select' => array('*', 'NAME_RU' => 'NAME.NAME', 'TYPE_CODE' => 'TYPE.CODE'),
@@ -19,7 +22,7 @@ if ($request->getPost('action') == 'setLocationsListStorage' || $request->getPos
     if ($request->getPost('action') == 'locationsListSubmit') {
         $found = false;
         while ($itemcity = $res->fetch()) {
-            if ($itemcity['NAME_RU'] == $request->getPost('searchText')) {
+            if ($itemcity['NAME_RU'] == $request->getPost('searchText') && $itemcity['CODE'] == $request->getPost('searchCode')) {
                 $_SESSION["city_of_user"] = $itemcity['NAME_RU'];
                 $_SESSION["id_region"] = $itemcity['CITY_ID'];
                 $_SESSION["code_region"] = $itemcity['CODE'];
@@ -35,7 +38,7 @@ if ($request->getPost('action') == 'setLocationsListStorage' || $request->getPos
 
     $runames = array();
     while ($item = $res->fetch()) {
-        $runames[] = $item["NAME_RU"];
+        $runames[] = ['name' => $item["NAME_RU"], 'code' => $item["CODE"]];
     }
     sort($runames);
 

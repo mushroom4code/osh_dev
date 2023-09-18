@@ -13,6 +13,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 IncludeTemplateLangFile($_SERVER["DOCUMENT_ROOT"] . "/bitrix/templates/" . SITE_TEMPLATE_ID . "/header.php");
 
 CJSCore::Init(array("fx"));
+CJSCore::Init("ls");
+
 Extension::load("ui.bootstrap4");
 
 $curPage = $APPLICATION->GetCurPage(true);
