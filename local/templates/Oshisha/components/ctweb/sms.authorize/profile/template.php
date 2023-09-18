@@ -468,11 +468,14 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
     </div>
 <?php else:
     if (strripos($_SERVER['REQUEST_URI'], '/?register=yes') === false) {?>
-        <div class="ctweb-smsauth-menu-block z-50 p-5 fixed top-1/3 left-1/2 w-fit hidden rounded-lg dark:bg-darkBox bg-white rounded-lx"
+        <div class="ctweb-smsauth-menu-block z-50 py-8 px-14 fixed top-1/3 left-0 right-0 m-auto max-w-md w-full hidden rounded-xl dark:bg-darkBox bg-white rounded-lx"
              data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
-            <div class="close_login_menu">
+            <div class="close_login_menu absolute top-1.5 right-1.5">
                 <a class="close_header_box" href="">
-                    <span class="login_span_bar login_span"></span>
+                    <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.5" d="M55 30C55 43.807 43.807 55 30 55C16.1929 55 5 43.807 5 30C5 16.1929 16.1929 5 30 5C43.807 5 55 16.1929 55 30Z" fill="#464646"/>
+                        <path d="M22.4242 22.4242C23.1564 21.6919 24.3436 21.6919 25.0757 22.4242L30 27.3485L34.9242 22.4242C35.6565 21.692 36.8435 21.692 37.5757 22.4242C38.308 23.1564 38.308 24.3436 37.5757 25.076L32.6517 30L37.5757 34.924C38.308 35.6562 38.308 36.8435 37.5757 37.5757C36.8435 38.308 35.6562 38.308 34.924 37.5757L30 32.6517L25.076 37.5757C24.3436 38.308 23.1564 38.308 22.4242 37.5757C21.692 36.8435 21.692 35.6565 22.4242 34.9242L27.3485 30L22.4242 25.0757C21.6919 24.3436 21.6919 23.1564 22.4242 22.4242Z" fill="white"/>
+                    </svg>
                 </a>
             </div>
             <div class="ctweb-smsauth-box">
@@ -512,28 +515,35 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                                 <!--STEP PNONE WAITING-->
                                 <div id="ctweb_form_step_1"
-                                     class="ctweb-smsauth-menu-step hidden">
-                                    <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
-                                    <div class="form-group flex flex-col">
-                                        <label class="ctweb-label"
+                                     class="ctweb-smsauth-menu-step hidden mb-4">
+                                    <h3 class="text-center font-medium mb-4 text-textLight dark:text-textDarkLightGray text-lg">
+                                        <?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
+                                    <div class="form-group relative mb-3">
+                                        <div>
+                                        <label class="text-xs font-normal mb-2 text-textLight dark:text-textDarkLightGray"
                                                for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
-                                        <span id="flag"></span>
-                                        <div class="code position-relative">
+                                        <div class="code relative">
+                                            <span class=""  id="flag"></span>
                                             <input type="text" name="PHONE" placeholder="+_ (___)-___-____"
                                                    inputmode="text"
                                                    data-input-type="phone"
                                                    value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
-                                                   class="form-control dark:bg-grayButton custom_style_auth auth-phone"
+                                                   class="bg-textDark p-3 dark:bg-grayButton cursor-pointer w-full text-textLight rounded-md
+                                                    dark:text-white border-0 text-2xl auth-phone"
                                                    id="<?= $mainID . "phone" ?>"
                                                    autocomplete="off"/>
                                         </div>
+                                        </div>
                                     </div>
                                     <div class="checkbox">
-                                        <label>
+                                        <label class="flex items-center">
                                             <input type="checkbox" name="SAVE_SESSION" value="Y"
+                                                   class="p-4 dark:bg-grayButton checked:hover:bg-grayButton border-0
+                                                   dark:text-white cursor-pointer text-textLight font-normal rounded-full bg-textDark
+                                                   checked:focus:bg-grayButton mr-2"
                                                    id="<?= $jsParams['TEMPLATE']['SAVE_SESSION'] ?>"
                                                 <?= ($arResult['USER_VALUES']['SAVE_SESSION'] === "Y") ? 'checked="checked"' : ""; ?> />
-                                            <?= GetMessage("SMS_AUTH_SAVE_SESSION") ?>
+                                          <span class="text-xs font-normal text-textLight dark:text-textDarkLightGray">  <?= GetMessage("SMS_AUTH_SAVE_SESSION") ?></span>
                                         </label>
                                     </div>
                                 </div>
@@ -570,8 +580,9 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                 </div>
 
                                 <!--Навигация по форме авторизации-->
-                                <div class="ctweb-button-block">
-                                    <input class="btn link_menu_catalog get_code_button"
+                                <div class="ctweb-button-block flex items-center justify-center flex-col">
+                                    <input class="btn link_menu_catalog get_code_button p-3 rounded-lg w-full dark:text-white
+                                    cursor-pointer text-textLight font-medium text-lg dark:bg-dark-red mb-4"
                                            id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                                            type="submit"
                                            value="<?= GetMessage("SMS_AUTH_GET_CODE") ?>"

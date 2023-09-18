@@ -2967,6 +2967,9 @@ jQuery(function () {
 $(document).ready(function () {
     $(document).on('click', '.close_header_box', function () {
         $('.overlay').hide();
+        if(!$('.overlay-box').hasClass('hidden')){
+            $('.overlay-box').toggle('hidden')
+        }
     });
 
     $(document).on('click', '.js__taste ', function() {

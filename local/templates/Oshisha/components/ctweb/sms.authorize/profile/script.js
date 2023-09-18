@@ -122,6 +122,7 @@
 
         $('.close_header_box').on('click', function (event) {
             event.preventDefault();
+            $('.overlay-box').toggle('hidden')
             $(document).find('[data-id="' + this.id_button + '"]').hide();
         }.bind(this));
 
