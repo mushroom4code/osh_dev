@@ -303,7 +303,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
             </div>
         <?php } ?>
-        <div class="flex flex-col justify-center width-100 py-5 items-center">
+        <div class="flex flex-col justify-center width-100 py-5 items-center flex-wrap">
             <!--        header menu search/login/basket/like     -->
             <div class="xl:container container flex flex-row justify-between items-center mb-4">
                 <div class="flex flex-row">

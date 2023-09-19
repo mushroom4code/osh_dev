@@ -13,9 +13,9 @@ if ($USER->IsAuthorized()) {
     $user_id = $USER->GetId();
     $getUsers = EnteregoCompany::GetWorkers($user_id);
     ?>
-    <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+<!--    <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>-->
+<!--    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>-->
+<!--    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">-->
     <div class="mobile_lk mb-5">
         <div class="sidebar_lk col-md-3">
             <?php $APPLICATION->IncludeComponent(

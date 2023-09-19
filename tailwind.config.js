@@ -3,6 +3,7 @@ module.exports = {
     content: [
         "./local/templates/Oshisha/**/**/*.{js,php}",
         './index.php',
+        "./personal/*.php", "./personal/contragents/*.php",
         "./local/components/bitrix/enterego.slider/templates/.default/template.php",
         "./images/icon_header/*.svg"
     ],

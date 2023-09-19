@@ -50,7 +50,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 ?>
 <nav class="box_with_menu_header">
     <ul class="ul_menu flex items-center flex-row">
-        <li class="li_menu_header mr-3">
+        <li class="li_menu_header mr-7">
             <div class="dark:text-textDark shadow-md flex flex-row justify-center text-textLight min-w-164 dark:bg-dark-red
             bg-light-red py-2 px-4 rounded-5"
                  title="Просмотреть меню"
@@ -74,16 +74,16 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         }
 
         $result = json_encode($menu_for_JS) ?>
-        <li class="mr-5" data-role="bx-menu-item">
+        <li class="mr-7" data-role="bx-menu-item">
             <a class="font-light dark:text-textDarkLightGray text-textLight" href="/diskont/">Дисконт</a>
         </li>
-        <li class="mr-5" data-role="bx-menu-item">
+        <li class="mr-7" data-role="bx-menu-item">
             <a class="font-light dark:text-textDarkLightGray text-textLight" href="/catalog_new/">Новинки</a>
         </li>
-        <li class="mr-5" data-role="bx-menu-item">
+        <li class="mr-7" data-role="bx-menu-item">
             <a class="font-light dark:text-textDarkLightGray text-textLight" href="/hit/">Хиты</a>
         </li>
-        <li class="mr-5" data-role="bx-menu-item">
+        <li class="mr-7" data-role="bx-menu-item">
             <a class="font-light dark:text-textDarkLightGray text-textLight" href="/brands/">Бренды</a>
         </li>
         <div class="open_menu" style="display: none" id="main_menu">

@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-*, h1, h2, h3, h4, h5, div, span, p, body {
+*, h1, h2, h3, h4, h5, div, span, p, body, a {
     font-family: 'Montserrat', sans-serif;
+    font-weight: normal;
 }
 
 @font-face {
