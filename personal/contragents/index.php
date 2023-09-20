@@ -1,8 +1,11 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
-use Enterego\EnteregoCompany;
-use Bitrix\Sale\Exchange\EnteregoUserExchange;
+use Bitrix\Main\Page\Asset;
+use Bitrix\Sale\Fuser;
+
+//use Bitrix\Sale\Exchange\EnteregoUserExchange;
+//use Enterego\EnteregoCompany;
 
 
 /** @var CUser $USER
@@ -10,12 +13,17 @@ use Bitrix\Sale\Exchange\EnteregoUserExchange;
  */
 
 if ($USER->IsAuthorized()) {
-    $user_id = $USER->GetId();
-    $user_object = new EnteregoUserExchange();
-    $user_object->USER_ID = $user_id;
-    $user_object->GetContragentsUser();
-    $user_object->GetCompanyForUser();
-    $workers_admin = EnteregoCompany::GetWorkersInfo($user_id);
+
+    try {
+        $contr = Enterego\contagents\EnteregoContragents::get_contragents_by_user_id($USER->GetId());
+    } catch (\Bitrix\Main\ObjectPropertyException $e) {
+    } catch (\Bitrix\Main\ArgumentException $e) {
+    } catch (\Bitrix\Main\SystemException $e) {
+    }
+//    echo '<pre>';
+//    print_r($contr);
+//    echo '</pre>';
+    Asset::getInstance()->addJs("/personal/contragents/js/script.js");
     ?>
     <div class="mobile_lk mb-5 flex flex-col xs:bg-white md:flex-row">
         <div class="sidebar_lk">
@@ -79,7 +87,7 @@ if ($USER->IsAuthorized()) {
                                 <input class="input_check" onchange="changeTypeInn(this);"
                                        type="radio" checked name="check" maxlength="50"
                                        id="URIC" value="Юр.лицо"/>
-                                <label class="text-sm font-light "
+                                <label class="text-sm dark:font-light font-normal text-textLight dark:text-textDarkLightGray"
                                        for="main-profile-radio_uric">Юр.лицо</label>
                             </div>
                             <div class="mr-7">
@@ -87,11 +95,12 @@ if ($USER->IsAuthorized()) {
                                        type="radio" name="check"
                                        maxlength="50"
                                        id="IP" value="ИП"/>
-                                <label class="radio_input main-profile-form-label"
+                                <label class="text-sm dark:font-light font-normal text-textLight dark:text-textDarkLightGray"
                                        for="main-profile-radio_IP">ИП</label>
                             </div>
                             <div class="mr-7">
-                                <input class="input_lk form-check-input input_check" onchange="changeTypeInn(this);"
+                                <input class="text-sm dark:font-light font-normal text-textLight dark:text-textDarkLightGray"
+                                       onchange="changeTypeInn(this);"
                                        type="radio" name="check"
                                        maxlength="50"
                                        id="FIZ" value="Физ. лицо"/>

@@ -1,7 +1,6 @@
 <?php
 
 use Bitrix\Main\Loader;
-use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Enterego\EnteregoSettings;
 use Enterego\UserPrice\UserPriceHelperOsh;
 
@@ -20,7 +19,6 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\ProductDeactivation' => '/bitrix/php_interface/enterego_class/ProductDeactivation.php',
     'DataBase_like' => '/bitrix/modules/osh.like_favorites/lib/DataBase_like.php',
     '\Bitrix\Like\ORM_like_favoritesTable' => '/bitrix/modules/osh.like_favorites/lib/ORM_like_favoritesTable.php',
-    '\Enterego\EnteregoCompany' => '/bitrix/php_interface/enterego_class/EnteregoCompany.php',
     '\Enterego\UserPrice\PluginStatic' => '/bitrix/modules/osh.userprice/include.php',
     '\Enterego\UserPrice\UserPriceHelperOsh' => '/bitrix/modules/osh.userprice/include.php',
     '\Enterego\EnteregoExchange' => '/bitrix/php_interface/enterego_class/EnteregoExchange.php',
@@ -39,6 +37,9 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoActionDiscountPriceType' =>
         '/bitrix/php_interface/enterego_class/EnteregoActionDiscountPriceType.php',
     '\Enterego\EnteregoGroupedProducts' => '/bitrix/php_interface/enterego_class/EnteregoGroupedProducts.php',
+    '\Enterego\ORM\EnteregoORMContragentsTable' => '/bitrix/php_interface/enterego_class/ORM/EnteregoORMContragentsTable.php',
+    '\Enterego\ORM\EnteregoORMRelationshipUserContragentsTable' => '/bitrix/php_interface/enterego_class/ORM/EnteregoORMRelationshipUserContragentsTable.php',
+    '\Enterego\contagents\EnteregoContragents' => '/bitrix/php_interface/enterego_class/contagents/EnteregoContragents.php',
 ));
 
 //redefine sale  basket condition
@@ -70,7 +71,6 @@ require_once(__DIR__ . '/enterego_class/EnteregoBasket.php');
 require_once(__DIR__ . '/enterego_class/modules/update_service_likes.php');
 require_once(__DIR__ . '/enterego_class/modules/updateMinSortPrice.php');
 
-const MAIN_IBLOCK_ID = 8;
 const LOCATION_ID = 6;
 const STATIC_P = '';
 //Типы цен на сайте
@@ -78,13 +78,8 @@ const SALE_PRICE_TYPE_ID = 3;
 const BASIC_PRICE = 2;
 const B2B_PRICE = 9;
 const RETAIL_PRICE = 4;
-const PERSON_TYPE_CONTRAGENT = 2;
-const PERSON_TYPE_BUYER = 1;
 
 AddEventHandler("main", "OnBuildGlobalMenu", "DoBuildGlobalMenu");
-#AddEventHandler("main", "OnEndBufferContent", "deleteKernelJs");
-AddEventHandler("main", "OnBeforeProlog", "PriceTypeANDStatusUser", 50);
-//AddEventHandler("sale", "OnSaleComponentOrderProperties", "initProperty");
 
 AddEventHandler('sale', 'OnCondSaleActionsControlBuildList',
     ['\Enterego\EnteregoActionDiscountPriceType', 'GetControlDescr']);
@@ -100,28 +95,6 @@ function onSalePaySystemRestrictionsClassNamesBuildListHandler()
             'EnteregoSaleRestrictions' => '/bitrix/php_interface/enterego_class/EnteregoSaleRestrictions.php'
         )
     );
-}
-
-function PriceTypeANDStatusUser()
-{
-    global $USER;
-    $user_object = new EnteregoUserExchange();
-    $user_object->USER_ID = $USER->GetID() ?? 0;
-    $user_object->GetActiveContrAgentForUserPrice();
-
-    if (!empty($user_object->contragents_user)) {
-        $GLOBALS['UserTypeOpt'] = false; //здесь поставить true для оптовиков
-        $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE; //Здесь переключение типов цен - сейчас включили розничную = 2
-    } else {
-        $GLOBALS['UserTypeOpt'] = false;
-        $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE;
-    }
-
-}
-
-function getUserType()
-{
-    return $GLOBALS['UserTypeOpt'] ?? false;
 }
 
 function setCurrentPriceId($priceId)
