@@ -1,6 +1,8 @@
 <?php
+
 namespace Enterego\ORM;
 
+use Bitrix\Bizproc\Workflow\Template\Packer\Result\Pack;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\BooleanField;
 use Bitrix\Main\ORM\Fields\IntegerField;
@@ -53,12 +55,26 @@ class EnteregoORMContragentsTable extends DataManager
                 'NAME_ORGANIZATION',
                 [
                     'title' => "Наименование ориганизации",
+                    'validate' => function () {
+                        return array(
+                            function ($value) {
+                                return !empty($value);
+                            }
+                        );
+                    }
                 ]
             ),
             new StringField(
                 'INN',
                 [
                     'title' => "ИНН",
+                    'validate' => function () {
+                        return array(
+                            function ($value) {
+                                return !empty($value);
+                            }
+                        );
+                    }
                 ]
             ),
             new StringField(
@@ -95,6 +111,13 @@ class EnteregoORMContragentsTable extends DataManager
                 'PHONE_COMPANY',
                 [
                     'title' => "Телефон",
+                    'validate' => function () {
+                        return array(
+                            function ($value) {
+                                return !empty($value);
+                            }
+                        );
+                    }
                 ]
             ),
             new StringField(
