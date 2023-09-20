@@ -28,7 +28,10 @@ module.exports = {
                 iconGray:'#979797',
                 'gray-product': '#CFCFCF',
                 'gray-slider-arrow': '#676767',
+                lightGrayBg:'#393939',
                 'dark-red': '#B11512',
+                hoverRedDark:'#c11715',
+                shadowDark:'#00000040',
                 'light-red': '#CD1D1D',
                 'hover-red': '#FE3431',
                 'gray-box-dark': '#3C3C3C'
