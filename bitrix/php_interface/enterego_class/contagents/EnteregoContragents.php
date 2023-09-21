@@ -11,13 +11,13 @@ use Enterego\ORM\EnteregoORMRelationshipUserContragentsTable;
 class EnteregoContragents
 {
     /**
-     * @param $user_id
+     * @param int $user_id
      * @return array
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function get_contragents_by_user_id($user_id): array
+    public static function getContragentsByUserId(int $user_id = 0): array
     {
         $result = [];
         $ids_new = [];
@@ -53,41 +53,71 @@ class EnteregoContragents
         return $result;
     }
 
-    public static function add_contragent($user_id)
+    /**
+     * @param int $user_id
+     * @param array $arData
+     * @return string[]
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function addContragent(int $user_id = 0, array $arData = []): array
     {
-        $inn = '2242434';
-        $phone = 'r4343443434344';
-        $name = 'test 4';;
-        $result = 'Такой контрагент уже существует';
-
-
+        $result = ['error' => 'Такой контрагент уже существует'];
         $resultSelect = EnteregoORMContragentsTable::getList(
             array(
                 'select' => array('ID_CONTRAGENT'),
-                'filter' => array(
-                    'INN' => $inn,
-                    "PHONE_COMPANY" => $phone,
-                    "NAME_ORGANIZATION" => $name
-                ),
+                'filter' => array($arData),
             )
         );
-        if (empty($resultSelect->fetch()[0])) {
+
+        if (empty($resultSelect->fetch())) {
+
             $addResult = EnteregoORMContragentsTable::add(
                 array(
-                    'INN' => $inn,
-                    'PHONE_COMPANY' => $phone,
-                    "NAME_ORGANIZATION" => $name
+                    'INN' => $arData['INN'],
+                    'PHONE_COMPANY' => $arData['PHONE_COMPANY'],
+                    "NAME_ORGANIZATION" => $arData['NAME_ORGANIZATION'],
                 )
             );
+
             if ($addResult->isSuccess()) {
                 $addResultRel = EnteregoORMRelationshipUserContragentsTable::add(array(
                     'ID_CONTRAGENT' => $addResult->getId(),
                     'USER_ID' => $user_id,
                 ));
-                $result = $addResultRel->isSuccess() ? 'Ждите подтверждения связей' : 'Вы не смогли добавить контрагента';
+                $result = $addResultRel->isSuccess() ? ['success' => 'Ждите подтверждения связей'] :
+                    ['error' => 'Вы не смогли добавить контрагента'];
             }
+
+
         }
 
+        return $result;
+    }
+
+    /**
+     * @param array $filter
+     * @return bool
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function getContragentByFilter(array $filter = []): bool
+    {
+        $result = false;
+        if (!empty($filter)) {
+            $resultSelect = EnteregoORMContragentsTable::getList(
+                array(
+                    'select' => array('ID_CONTRAGENT'),
+                    'filter' => array($filter),
+                )
+            );
+
+            if (empty($resultSelect->fetch())) {
+                $result = true;
+            }
+        }
         return $result;
     }
 }

@@ -1,30 +1,13 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-
 use Bitrix\Main\Page\Asset;
-use Bitrix\Sale\Fuser;
-
-//use Bitrix\Sale\Exchange\EnteregoUserExchange;
-//use Enterego\EnteregoCompany;
-
 
 /** @var CUser $USER
  * @var CAllMain|CMain $APPLICATION
  */
 
 if ($USER->IsAuthorized()) {
-
-    try {
-        $contr = Enterego\contagents\EnteregoContragents::get_contragents_by_user_id($USER->GetId());
-    } catch (\Bitrix\Main\ObjectPropertyException $e) {
-    } catch (\Bitrix\Main\ArgumentException $e) {
-    } catch (\Bitrix\Main\SystemException $e) {
-    }
-//    echo '<pre>';
-//    print_r($contr);
-//    echo '</pre>';
-    Asset::getInstance()->addJs("/personal/contragents/js/script.js");
-    ?>
+    Asset::getInstance()->addJs("/personal/contragents/js/script.js"); ?>
     <div class="mobile_lk mb-5 flex flex-col xs:bg-white md:flex-row">
         <div class="sidebar_lk">
             <?php $APPLICATION->IncludeComponent(
@@ -62,20 +45,7 @@ if ($USER->IsAuthorized()) {
             }
         </script>
         <div class="mb-5 w-full" id="content_box">
-            <div class="hides" id="personal_contr_agents" data-user-id="<?= $user_id ?>">
-                <input type="hidden" value='<?php if (!empty($user_object->contragents_user)) {
-                    echo(json_encode($user_object->contragents_user));
-                } ?>' id="personal_contr_agent">
-                <input type="hidden" value='<?php if (!empty($user_object->company_user['ADMIN'])) {
-                    echo(json_encode($user_object->company_user));
-                } ?>' id="company_user"/>
-                <input type="hidden" value='<?php if (!empty($workers_admin['WORKERS'])) {
-                    echo(json_encode($workers_admin['WORKERS']));
-                } ?>' id="workersForContragentAdmin"/>
-                <div id="createContragent"></div>
-                <div class="d-flex row_section flex-wrap justify-content-between mb-5 mt-3" id="boxWithContrAgents">
-                </div>
-            </div>
+            <div id="createContragent"></div>
         </div>
     </div>
     <script src="/dist/app.generated.js" defer></script>
