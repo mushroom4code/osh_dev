@@ -57,7 +57,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo SITE_TEMPLATE_PATH; ?>/images/favicon.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <?php
     Asset::getInstance()->addCss("/local/assets/js/arcticmodal/jquery.arcticmodal-0.3.css");
     Asset::getInstance()->addCss("/local/assets/js/arcticmodal/themes/simple.css");
@@ -66,6 +65,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 
     Asset::getInstance()->addCss("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/script.js");
+
     //    Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/style.css");
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/tailwind.css");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/assets/js/list.js");
@@ -415,6 +415,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 </div>
             <?php } ?>
         </div>
+        <div id="root"></div>
     </header>
 
     <div class="section_wrapper min-h-550 flex flex-col justify-center items-center">

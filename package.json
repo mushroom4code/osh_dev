@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack serve",
+    "build": "webpack",
+    "build-prod": "webpack --mode=production",
+    "watch": "webpack --watch",
+    "clean": "rd /s /q dist"
   },
   "repository": {
     "type": "git",
@@ -12,22 +16,19 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-jsmin": "^0.1.5",
-    "gulp-rename": "^2.0.0",
-    "gulp-uglify": "^3.0.2"
-  },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.4",
-    "gulp": "^4.0.2",
-    "gulp-changed": "^3.2.0",
-    "gulp-clean-css": "^4.3.0",
-    "gulp-jsmin": "^0.1.5",
-    "gulp-rename": "^2.0.0",
-    "gulp-sass": "^5.1.0",
-    "gulp-uglify": "^3.0.2",
-    "gulp-uglifycss": "^1.1.0",
-    "tailwindcss": "^3.3.3"
+    "axios": "^1.5.0",
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "tailwindcss": "^3.3.3",
+    "webpack": "^5.88.2"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.22.15",
+    "webpack-cli": "^5.1.4"
   }
 }
