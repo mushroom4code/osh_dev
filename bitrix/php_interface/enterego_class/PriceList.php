@@ -120,9 +120,9 @@ class PriceList
                 "ID",
                 'IBLOCK_ID',
                 "NAME",
-                "catalog_PRICE_" . RETAIL_PRICE,
-                "catalog_PRICE_" . BASIC_PRICE,
-                "catalog_PRICE_" . B2B_PRICE,
+                "PRICE_" . RETAIL_PRICE,
+                "PRICE_" . BASIC_PRICE,
+                "PRICE_" . B2B_PRICE,
                 "CODE",
                 "PROPERTY_MARKIROVANNYY"
             );
@@ -137,9 +137,9 @@ class PriceList
                     'PATH' => 'https://' . OSHISHA_DOMAIN . '/catalog/product/' . $arRes['CODE'] . '/'
                         ?? 'https://' . OSHISHA_DOMAIN,
                     'BASE' => $base_price,
-                    'DO_10' => $arRes['CATALOG_PRICE_' . RETAIL_PRICE],
-                    'OT_10_DO_30' => $arRes['CATALOG_PRICE_' . BASIC_PRICE],
-                    'OT_30' => $arRes['CATALOG_PRICE_' . B2B_PRICE],
+                    'DO_10' => $arRes['PRICE_' . RETAIL_PRICE],
+                    'OT_10_DO_30' => $arRes['PRICE_' . BASIC_PRICE],
+                    'OT_30' => $arRes['PRICE_' . B2B_PRICE],
                     'USE_MARKING' => $arRes['PROPERTY_MARKIROVANNYY_VALUE']
                 );
                 unset($section['LEFT_MARGIN'], $section['~LEFT_MARGIN'], $section['~NAME'], $section['~ID']);

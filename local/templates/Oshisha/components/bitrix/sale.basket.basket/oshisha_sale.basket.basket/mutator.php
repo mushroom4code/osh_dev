@@ -58,18 +58,21 @@ foreach ($item as $row) {
         false,
         false,
         array(
-            "CATALOG_PRICE_" . RETAIL_PRICE,
-            "CATALOG_PRICE_" . B2B_PRICE,
-            'CATALOG_PRICE_' . BASIC_PRICE,
-            "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID)
+            "QUANTITY",
+            "PRICE_" . RETAIL_PRICE,
+            "PRICE_" . B2B_PRICE,
+            'PRICE_' . BASIC_PRICE,
+            "PRICE_" . SALE_PRICE_TYPE_ID)
     );
     $showDiscountPrice = (float)$row['DISCOUNT_PRICE'] > 0;
     if ($ar_res = $res->fetch()) {
         if (!empty($ar_res)) {
+            //set available quantity from storage quantity
+            $row['AVAILABLE_QUANTITY'] =  $ar_res['QUANTITY'];
             $str_product_prices = '';
-            $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
-            if (($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) && (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
-                    && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) && !$showDiscountPrice) {
+            $product_prices_sql = $ar_res["PRICE_" . BASIC_PRICE];
+            if (($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) && (!empty($ar_res["PRICE_" . SALE_PRICE_TYPE_ID])
+                    && ((int)$product_prices_sql > (int)$ar_res["PRICE_" . SALE_PRICE_TYPE_ID])) && !$showDiscountPrice) {
                 $str_product_prices = explode('.', $product_prices_sql);
                 $price['SALE_PRICE'] = $str_product_prices[0] . ' ₽';
                 $show_product_prices = true;
@@ -77,23 +80,23 @@ foreach ($item as $row) {
             } else {
                 if ((int)$row['PRICE_TYPE_ID'] == BASIC_PRICE && !$showDiscountPrice) {
                     $show_product_prices = true;
-                    $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE]);
+                    $str_product_prices = explode('.', $ar_res["PRICE_" . RETAIL_PRICE]);
                 } else if ((int)$row['PRICE_TYPE_ID'] == B2B_PRICE && !$showDiscountPrice) {
                     $show_product_prices = true;
-                    $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE]);
+                    $str_product_prices = explode('.', $ar_res["PRICE_" . BASIC_PRICE]);
                 }
             }
 
-            if (!empty($ar_res["CATALOG_PRICE_" . RETAIL_PRICE])) {
-                $price['PRICE_DATA'][0]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE])[0] * $row['MEASURE_RATIO'];
+            if (!empty($ar_res["PRICE_" . RETAIL_PRICE])) {
+                $price['PRICE_DATA'][0]['VAL'] = explode('.', $ar_res["PRICE_" . RETAIL_PRICE])[0] * $row['MEASURE_RATIO'];
                 $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
             }
-            if (!empty($ar_res["CATALOG_PRICE_" . BASIC_PRICE])) {
-                $price['PRICE_DATA'][1]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE])[0] * $row['MEASURE_RATIO'];
+            if (!empty($ar_res["PRICE_" . BASIC_PRICE])) {
+                $price['PRICE_DATA'][1]['VAL'] = explode('.', $ar_res["PRICE_" . BASIC_PRICE])[0] * $row['MEASURE_RATIO'];
                 $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
             }
-            if (!empty($ar_res["CATALOG_PRICE_" . B2B_PRICE])) {
-                $price['PRICE_DATA'][2]['VAL'] = explode('.', $ar_res["CATALOG_PRICE_" . B2B_PRICE])[0] * $row['MEASURE_RATIO'];
+            if (!empty($ar_res["PRICE_" . B2B_PRICE])) {
+                $price['PRICE_DATA'][2]['VAL'] = explode('.', $ar_res["PRICE_" . B2B_PRICE])[0] * $row['MEASURE_RATIO'];
                 $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
             }
 

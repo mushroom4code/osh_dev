@@ -12,7 +12,15 @@ if (SITE_ID === SITE_EXHIBITION) {
 }
 
 CModule::IncludeModule("iblock");
+
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
+
+if (defined('SUBSIDIARY_ENABLE') && SUBSIDIARY_ENABLE) {
+    require(__DIR__ . '/catalog/general/querybuilder.php');
+    CModule::AddAutoloadClasses('', [
+        '\Enterego\Subsidiary\Storage' => '/bitrix/php_interface/enterego_class/Subsidiary/Storage.php',
+    ]);
+}
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',

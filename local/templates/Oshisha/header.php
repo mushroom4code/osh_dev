@@ -1,8 +1,9 @@
 <?php
 
 use Bitrix\Conversion\Internals\MobileDetect;
+use Bitrix\Main\Application;
 use Bitrix\Main\Page\Asset;
-use Bitrix\Main\UI\Extension;
+use Bitrix\Main\UI\Extension;use Enterego\Subsidiary\Storage;
 
 /** @var  CAllMain|CMain $APPLICATION
  ** @var  CAllUser $USER
@@ -14,6 +15,7 @@ IncludeTemplateLangFile($_SERVER["DOCUMENT_ROOT"] . "/bitrix/templates/" . SITE_
 
 CJSCore::Init(array("fx"));
 Extension::load("ui.bootstrap4");
+$session = Application::getInstance()->getSession();
 
 $curPage = $APPLICATION->GetCurPage(true);
 $MESS["CITY_CHOOSE_TITLE"] = 'Выберите город';
@@ -62,10 +64,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 
 
     <?php
+    Asset::getInstance()->addJs('/local/templates/Oshisha/assets/js/subsidiary.js');
+
     Asset::getInstance()->addCss("/local/assets/js/arcticmodal/jquery.arcticmodal-0.3.css");
     Asset::getInstance()->addCss("/local/assets/js/arcticmodal/themes/simple.css");
     Asset::getInstance()->addJs("/local/assets/js/arcticmodal/jquery.arcticmodal-0.3.min.js");
-
 
     Asset::getInstance()->addCss("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
     Asset::getInstance()->addCss("https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css");
@@ -306,6 +309,19 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 false
                             ); ?>
                         </a>
+                    </div>
+                    <div>
+                        <?php if (defined('SUBSIDIARY_ENABLE') && SUBSIDIARY_ENABLE) {
+                                $siteList = Storage::getSubsidiaryList();
+                            ?>
+                                <select id="subsidiary_link">
+                                    <?php foreach ($siteList as $siteItem) { ?>
+                                        <option <?= ($session->get('subsidiary') ?? 'N2') === $siteItem['LID'] ? 'selected' : '' ?>
+                                                value="<?= $siteItem['LID'] ?>"> <?= $siteItem['NAME'] ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="box_right_header">
