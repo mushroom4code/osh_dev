@@ -1461,7 +1461,7 @@ div.box_with_icons > a > i.icons_theme {
     z-index: 1;
 }
 
-.select2-container--open .select2-dropdown--below, .carousel_elem_custom:hover, .filters {
+.carousel_elem_custom:hover, .filters {
     filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
 }
 
@@ -7381,6 +7381,10 @@ ul#select2-subsidiary_link-results {
 
 .mobile-choose .select2-container {
     padding: 5px 10px;
+}
+
+.select2-container--open .select2-dropdown--below{
+    border: none;
 }
 
 @media (min-width: 1024px) and (max-width: 1200px) {
