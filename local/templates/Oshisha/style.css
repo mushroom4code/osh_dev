@@ -7382,3 +7382,10 @@ ul#select2-subsidiary_link-results {
 .mobile-choose .select2-container {
     padding: 5px 10px;
 }
+
+@media (min-width: 1024px) and (max-width: 1200px) {
+    .text_header,
+    .select-filial-box .select2-container--default .select2-selection--single .select2-selection__rendered {
+        font-size: 11px;
+    }
+}
