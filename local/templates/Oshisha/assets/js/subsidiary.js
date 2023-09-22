@@ -1,7 +1,12 @@
 BX.ready(
     function () {
-        BX.bind(BX('subsidiary_link'), 'change', function (event) {
-            
+        const boxSelect =  $('#subsidiary_link');
+        if (boxSelect.length > 0) {
+            $(boxSelect).select2({
+                minimumResultsForSearch: -1,
+            });
+        }
+        $(boxSelect).on('select2:select',function(event){
             BX.ajax({
                 url: '/local/ajax/subsidiary.php',
                 method: 'POST',
@@ -13,5 +18,6 @@ BX.ready(
                 }
             })
         })
+
     }
 )

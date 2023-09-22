@@ -7291,3 +7291,94 @@ footer.footer .container .copyrights > span {
     line-height: 33px;
     transition: font-size .2s ease;
 }
+
+/* STORAGES */
+.select-filial {
+    background-color: #393939;
+    color: white;
+    font-size: 13px;
+    padding-right: 16px;
+    border: none;
+}
+
+.select-filial-box .select2-container--default .select2-selection--single .select2-selection__arrow {
+    width: auto;
+}
+
+.select-filial-box .select2-container--default .select2-selection--single {
+    border: none;
+    background-color: #393939;
+}
+
+.select-filial-box .select2-container .select2-selection--single,
+.select-filial-box .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: auto;
+    top: auto;
+}
+
+.select-filial-box .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: normal;
+    color: white;
+    padding: 8px 0;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.select-filial-box .select2-container {
+    vertical-align: inherit;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b{
+    left: auto;
+    background-image: none;
+    right: 0;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b:after {
+    content: "\f107";
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    text-rendering: auto;
+    color: white;
+    font-size: 23px;
+    font-weight: bolder;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.select-filial-box .select2-container, .select2-container--open .select2-dropdown {
+    min-width: 120px;
+    border-radius: 10px;
+}
+
+ul#select2-subsidiary_link-results .select2-results__option--selectable {
+    background: #F0F0F0;
+    font-weight: 600;
+}
+
+.select2-container--default ul#select2-subsidiary_link-results .select2-results__option--highlighted.select2-results__option--selectable {
+    background: #D9D9D9;
+    color: black;
+}
+
+.select2-container--default .select2-results ul#select2-subsidiary_link-results > .select2-results__options,
+ul#select2-subsidiary_link-results {
+    border-radius: 7px;
+}
+
+.mobile-choose .select2-container--default .select2-selection--single {
+    background-color: transparent;
+}
+
+.mobile-choose {
+    padding: 0 30px 9px 20px;
+}
+
+.mobile-choose .select2-container--default .select2-selection--single .select2-selection__arrow b:after,
+.mobile-choose .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: black;
+}
+
+.mobile-choose .select2-container {
+    padding: 5px 10px;
+}
