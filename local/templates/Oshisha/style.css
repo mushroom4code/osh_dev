@@ -2175,8 +2175,8 @@ a.bx_catalog_item_title {
     background-image: url('/local/templates/Oshisha/images/close_mini.png');
     height: 30px;
     width: 31px;
-    top: 3%;
-    left: 88%;
+    top: 10%;
+    left: 87%;
 }
 
 .smart-filter-form .form-check-input:checked[type="checkbox"], .bx-soa-pp-company .form-check-input:checked[type="checkbox"] {
@@ -3478,8 +3478,8 @@ b.decoration-color-red {
         padding: 1rem;
         display: flex !important;
         justify-content: space-around;
-        background-color: white;a
-    align-items: center;
+        background-color: white;
+        align-items: center;
     }
     .block_menu_mobile {
         bottom: 0;
@@ -7392,4 +7392,25 @@ ul#select2-subsidiary_link-results {
     .select-filial-box .select2-container--default .select2-selection--single .select2-selection__rendered {
         font-size: 11px;
     }
+}
+
+.z-880 {
+    z-index: 880;
+}
+
+.z-870 {
+    z-index: 870;
+}
+
+.left-0 {
+    left: 0;
+}
+
+.popup-message-filial {
+    border-radius: 0 20px 20px 20px;
+    background: var(--white, #FFF);
+    min-width: 320px;
+    width: 100%;
+    z-index:800;
+    box-shadow: 0 2px 6px 0 rgba(184, 183, 183, 0.25);
 }
