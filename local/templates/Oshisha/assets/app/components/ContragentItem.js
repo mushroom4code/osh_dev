@@ -1,5 +1,5 @@
 import React from 'react';
-import IconNameContr from "./iconNameContr";
+import IconNameContr from "./IconNameContr";
 
 const active  = 'Активен';
 const notAccept = 'Не подтвержден';
