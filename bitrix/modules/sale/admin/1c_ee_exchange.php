@@ -12,8 +12,15 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.ph
 
 if($type=="sale")
 {
+	//enterego
+	$site_list = COption::GetOptionString("sale", "1C_SALE_SITE_LIST", "");
+	if (empty($site_list)) {
+		$request = Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+		$site_list = $request->get('site_list') ?? '';
+	}
+	//
 	$APPLICATION->IncludeComponent("bitrix:sale.export.1c_ee", "", Array(
-		"SITE_LIST" => COption::GetOptionString("sale", "1C_SALE_SITE_LIST", ""),
+		"SITE_LIST" => $site_list,
 		"EXPORT_PAYED_ORDERS" => COption::GetOptionString("sale", "1C_EXPORT_PAYED_ORDERS", ""),
 		"EXPORT_ALLOW_DELIVERY_ORDERS" => COption::GetOptionString("sale", "1C_EXPORT_ALLOW_DELIVERY_ORDERS", ""),
 		"EXPORT_FINAL_ORDERS" => COption::GetOptionString("sale", "1C_EXPORT_FINAL_ORDERS", ""),
