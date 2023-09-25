@@ -1,8 +1,12 @@
 import React from 'react';
 
-function IconNameContr() {
+function IconNameContr(props) {
+    const width = props.width
+    const height = props.height
+    const color = props.color
     return (
-        <svg width="50" height="51" viewBox="0 0 50 51" fill="none" className="mr-4" xmlns="http://www.w3.org/2000/svg">
+        <svg width={width || '50'} height={height || "51"} viewBox="0 0 50 51" fill="none" className="mr-4"
+             xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_2032_5062)">
                 <rect y="0.154785" width="50" height="50.8453" rx="25" className="dark:fill-white fill-lightGrayBg"
                       fill="white"/>

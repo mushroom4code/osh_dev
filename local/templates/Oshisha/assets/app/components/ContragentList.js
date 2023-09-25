@@ -9,19 +9,15 @@ function ContragentList() {
     const href = '/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php'
 
     function getContragents() {
-        axios.post(href,
-            {'ACTION': 'getList'}).then(res => {
-                console.log(res)
-                if (res.data) {
-                    setListContragent(res.data)
-                } else if (res.data?.error) {
-                    setResult(res.data?.error)
-                } else {
-                    setResult('При создании контрагента возникла ошибка! ' +
-                        'Можете обратиться к менеджеру или повторить попытку');
-                }
+        axios.post(href, {'ACTION': 'getList'}).then(res => {
+            if (res.data) {
+                setListContragent(res.data)
+            } else if (res.data?.error) {
+                setResult(res.data?.error)
+            } else {
+                setResult('При создании контрагента возникла ошибка! ' + 'Можете обратиться к менеджеру или повторить попытку');
             }
-        )
+        })
     }
 
     useEffect(() => {
@@ -29,7 +25,7 @@ function ContragentList() {
     }, []);
 
     return (<div>
-        <ContragentForm/>
+        <ContragentForm listLength={listContragent.length}/>
         <div>
             <p className="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal font-semibold mb-5 mt-8">
                 Контрагенты
