@@ -56,6 +56,7 @@ class EnteregoORMRelationshipUserContragentsTable extends DataManager
                 'STATUS',
                 [
                     'title' => "Статус связи контрагента и пользователя",
+                    'default' => true,
                 ]
             ),
         ];

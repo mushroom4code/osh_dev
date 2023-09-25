@@ -19,9 +19,12 @@ module.exports = {
                 textLight: '#1A1A1A',
                 darkBox: '#313131',
                 grayButton: '#464646',
+                grayLight:'#8B8B8B',
                 textDarkLightGray: '#E8E8E8',
                 textDark: '#F0F0F0',
                 greenButton: '#0FAC2B',
+                greenLight: '#0BC82D',
+                yellowSt:'#FFCB13',
                 grayIconLights:'#BFBFBF',
                 fancyboxDark: '#000000BA',
                 fancybox:'#3C3C3C87',
@@ -44,7 +47,7 @@ module.exports = {
             },
             width: {
                 'inherit': 'inherit'
-            }
+            },
         }
     },
     plugins: [

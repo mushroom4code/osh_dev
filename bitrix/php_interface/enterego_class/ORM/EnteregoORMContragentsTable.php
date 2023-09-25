@@ -2,9 +2,10 @@
 
 namespace Enterego\ORM;
 
-use Bitrix\Bizproc\Workflow\Template\Packer\Result\Pack;
+use Bitrix\Main\Type\DateTime;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\BooleanField;
+use Bitrix\Main\ORM\Fields\DatetimeField;
 use Bitrix\Main\ORM\Fields\IntegerField;
 use Bitrix\Main\ORM\Fields\StringField;
 use Bitrix\Main\ORM\Fields\TextField;
@@ -49,6 +50,13 @@ class EnteregoORMContragentsTable extends DataManager
                 [
                     'title' => "Активность контрагента",
                     'default' => false,
+                ]
+            ),
+            new StringField(
+                'STATUS_VIEW',
+                [
+                    'title' => "Статус контрагента",
+                    'default' => 'Ожидает подтверждения',
                 ]
             ),
             new StringField(
@@ -118,6 +126,26 @@ class EnteregoORMContragentsTable extends DataManager
                             }
                         );
                     }
+                ]
+            ),
+            new DatetimeField(
+                'DATE_INSERT',
+                [
+                    'title' => "Дата создания",
+                    'default' => function()
+                    {
+                        return new DateTime();
+                    },
+                ]
+            ),
+            new DatetimeField(
+                'DATE_UPDATE',
+                [
+                    'title' => "Дата обновления",
+                    'default' => function()
+                    {
+                        return new DateTime();
+                    },
                 ]
             ),
             new StringField(

@@ -27,7 +27,6 @@ class EnteregoContragents
                     'ID_CONTRAGENT',
                 ),
                 'filter' => array(
-                    'STATUS' => true,
                     'USER_ID' => $user_id
                 ),
             )
@@ -40,7 +39,6 @@ class EnteregoContragents
             array(
                 'select' => array('*'),
                 'filter' => array(
-                    'STATUS_CONTRAGENT' => true,
                     "@ID_CONTRAGENT" => $ids_new
                 ),
             )

@@ -46,7 +46,7 @@ function ContragentForm() {
 
     return (
         <div>
-            <form className="dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-5 w-4/5">
+            <form className="dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10 w-4/5">
                 <div className="mb-7">
                     <p className="text-xl font-medium dark:text-textDarkLightGray text-textLight">
                         Создайте своего первого контрагента
