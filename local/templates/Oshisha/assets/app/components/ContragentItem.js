@@ -24,15 +24,15 @@ function ContragentItem({contragent}) {
             className="mr-5 mb-5 rounded-lg dark:bg-darkBox bg-textDark lg:w-5/12 w-full flex flex-col">
             <p className={colorClass}>{contragent?.STATUS_VIEW}</p>
             <div className="pb-8 pr-8 pl-8 dark:text-textDarkLightGray text-textLight">
-                <p className="mb-5 font-medium text-xl flex flex-row items-center">
-                    <IconNameContr/>
+                <p className="mb-5 dark:font-medium font-semibold text-xl flex flex-row items-center">
+                    <IconNameContr />
                     {contragent?.NAME_ORGANIZATION}
                 </p>
-                <p className="mb-4 text-sm"> ИНН: <span
-                    className="font-light ml-3">{contragent?.INN}</span>
+                <p className="mb-4 text-sm dark:font-normal font-semibold"> ИНН: <span
+                    className="dark:font-light font-medium ml-3">{contragent?.INN}</span>
                 </p>
-                <p className="text-sm"> Телефон:
-                    <span className="font-light ml-3">{contragent?.PHONE_COMPANY}</span>
+                <p className="text-sm dark:font-normal font-semibold"> Телефон:
+                    <span className="dark:font-light font-medium ml-3">{contragent?.PHONE_COMPANY}</span>
                 </p>
             </div>
         </div>
