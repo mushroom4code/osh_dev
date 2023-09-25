@@ -2,13 +2,13 @@ import React, {useState} from 'react';
 import axios from "axios";
 import IconNameContr from "./IconNameContr";
 
-function ContragentForm({listLength}) {
+function ContragentForm({listLength, initToClick}) {
     console.log(listLength)
     const [inn, setInn] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
     const [result, setResult] = useState('')
-    const [initToClick, setInitToClick] = useState(false)
+    let className = '';
     const setInnVal = (e) => {
         setInn(e.target.value)
     }
@@ -47,9 +47,12 @@ function ContragentForm({listLength}) {
         )
     }
 
+    if (initToClick) {
+        className = 'fixed top-1/4 right-0 left-0 z-50'
+    }
     return (
         listLength === 0 || initToClick ?
-            <div>
+            <div className={className}>
                 <form
                     className="dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10 w-4/5">
                     <div className="mb-7">
@@ -123,13 +126,7 @@ function ContragentForm({listLength}) {
                 </form>
                 <div className="mt-5">{result}</div>
             </div>
-            : <div className="p-3 dark:bg-lightGrayBg rounded-lg w-fit bg-textDark flex flex-row items-center
-             dark:text-textDarkLightGray text-textLight" onClick={() => {
-                setInitToClick(!initToClick)
-            }}>
-                <IconNameContr width="35" height="36" color="dark:fill-grayButton fill-textDark"/> <span
-                className="ml-1 text-sm">Добавить</span>
-            </div>
+            : false
     );
 }
 
