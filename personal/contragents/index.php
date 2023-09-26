@@ -1,5 +1,6 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+
 use Bitrix\Main\Page\Asset;
 
 /** @var CUser $USER
@@ -7,7 +8,9 @@ use Bitrix\Main\Page\Asset;
  */
 
 if ($USER->IsAuthorized()) {
-    Asset::getInstance()->addJs("/personal/contragents/js/script.js"); ?>
+    Asset::getInstance()->addJs("/personal/contragents/js/script.js?"
+        . hash_file('md5', $_SERVER['DOCUMENT_ROOT'] . '/personal/contragents/js/script.js')); ?>
+
     <div class="mobile_lk mb-5 flex flex-col xs:bg-white md:flex-row">
         <div class="sidebar_lk">
             <?php $APPLICATION->IncludeComponent(
