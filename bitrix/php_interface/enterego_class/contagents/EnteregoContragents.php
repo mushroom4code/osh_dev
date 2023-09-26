@@ -79,22 +79,15 @@ class EnteregoContragents
         );
 
         if (empty($resultSelect->fetch())) {
-
-            $addResult = EnteregoORMContragentsTable::add(
-                array(
-                    'INN' => $arData['INN'],
-                    'PHONE_COMPANY' => $arData['PHONE_COMPANY'],
-                    "NAME_ORGANIZATION" => $arData['NAME_ORGANIZATION'],
-                    'TYPE' => $arData['TYPE'],
-                )
-            );
+            $addResult = EnteregoORMContragentsTable::add($arData);
 
             if ($addResult->isSuccess()) {
                 $addResultRel = EnteregoORMRelationshipUserContragentsTable::add(array(
                     'ID_CONTRAGENT' => $addResult->getId(),
                     'USER_ID' => $user_id,
                 ));
-                $result = $addResultRel->isSuccess() ? ['success' => 'Ждите подтверждения связей'] :
+                $result = $addResultRel->isSuccess() ?
+                    ['success' => 'Ждите подтверждения связей'] :
                     ['error' => 'Вы не смогли добавить контрагента'];
             }
 

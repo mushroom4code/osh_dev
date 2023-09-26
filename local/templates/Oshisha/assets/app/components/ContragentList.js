@@ -12,12 +12,9 @@ function ContragentList() {
 
     function getContragents() {
         axios.post(href, {'ACTION': 'getList'}).then(res => {
-            console.log(res)
             if (res.data && res.data?.error === undefined) {
                 setListContragent(res.data)
-                console.log('etedhfjf')
             } else if (res.data?.error) {
-                console.log('ytest')
                 setResult(res.data.error)
             } else {
                 setResult('При создании контрагента возникла ошибка! '

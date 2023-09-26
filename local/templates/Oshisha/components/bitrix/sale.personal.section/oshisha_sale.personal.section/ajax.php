@@ -39,7 +39,7 @@ if ($request->get('ACTION') === 'create') {
         if ($resQueryAllParams && $resQueryPHONE && $resQueryCurrent) {
             $result = EnteregoContragents::addContragent(
                 $user_id,
-                array_merge($curData,$arData)
+                array_merge($curData, $arData)
             );
         } else {
             $result = ['error' => 'Контрагент с такими данными уже существует!'];

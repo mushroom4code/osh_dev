@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import axios from "axios";
 
-const uric = 'Юридическое лицо';
-const ip = 'Индивидуальный предприниматель';
-const fiz = 'Физическое лицо';
+const uric = 'uric';
+const ip = 'ip';
+const fiz = 'fiz';
 
 function is_valid_inn(i) {
     if (i.match(/\D/)) return false;
@@ -100,13 +100,13 @@ function ContragentForm({listLength, initToClick}) {
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
                                  checked:hover:bg-none dark:ring-offset-gray-800 dark:bg-darkBox
                                  dark:border-gray-slider-arrow" onChange={(e) => {
-                                    setType(e.target.value)
+                                    setType(uric)
                                 }}
                                        checked={type === uric}
                                        type="radio" name="check"
-                                       value='uric'/>
+                                       value={uric}/>
                                 <label className="text-sm dark:font-light font-normal text-textLight ml-3
-                                    dark:text-textDarkLightGray">{uric}</label>
+                                    dark:text-textDarkLightGray">Юридическое лицо</label>
                             </div>
                             <div className="mr-7">
                                 <input className="text-white w-5 h-5 bg-darkBox border-gray-slider-arrow
@@ -114,15 +114,13 @@ function ContragentForm({listLength, initToClick}) {
                                  checked:hover:bg-none dark:ring-offset-gray-800 dark:bg-darkBox
                                  dark:border-gray-slider-arrow"
                                        onChange={(e) => {
-                                           setType(e.target.value)
+                                           setType(ip)
                                        }}
                                        checked={type === ip}
                                        type="radio" name="check"
-                                       value='ip'/>
-                                <label
-                                    className="text-sm dark:font-light font-normal text-textLight ml-3
-                                     dark:text-textDarkLightGray">
-                                    {ip}</label>
+                                       value={ip}/>
+                                <label className="text-sm dark:font-light font-normal text-textLight ml-3
+                                     dark:text-textDarkLightGray">Индивидуальный предприниматель</label>
                             </div>
                             <div className="mr-7">
                                 <input type="radio" name="check"
@@ -131,14 +129,12 @@ function ContragentForm({listLength, initToClick}) {
                                          checked:hover:bg-none dark:ring-offset-gray-800 dark:bg-darkBox
                                          dark:border-gray-slider-arrow"
                                        onChange={(e) => {
-                                           setType(e.target.value)
+                                           setType(fiz)
                                        }}
                                        checked={type === fiz}
-                                       value='fiz'/>
-                                <label
-                                    className="text-sm dark:font-light font-normal text-textLight ml-3
-                                     dark:text-textDarkLightGray">
-                                    {fiz}</label>
+                                       value={fiz}/>
+                                <label className="text-sm dark:font-light font-normal text-textLight ml-3
+                                     dark:text-textDarkLightGray">Физическое лицо</label>
                             </div>
                         </div>
                         {type === ip || type === uric ?
@@ -196,7 +192,6 @@ function ContragentForm({listLength, initToClick}) {
                                 </div>
                             </>
                         }
-
                         <div className="mb-3">
                             <input type="text"
                                    required
