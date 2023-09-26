@@ -8,7 +8,6 @@ use Bitrix\Main\Page\Asset;
  */
 
 if ($USER->IsAuthorized()) {?>
-
     <div class="mobile_lk mb-5 flex flex-col xs:bg-white md:flex-row">
         <div class="sidebar_lk">
             <?php $APPLICATION->IncludeComponent(

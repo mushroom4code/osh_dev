@@ -17,11 +17,16 @@ class EnteregoContragents
      * @throws ObjectPropertyException
      * @throws SystemException
      */
+
+    public const typeUric = 'uric';
+    public const typeFiz = 'fiz';
+    public const typeIp = 'ip';
+
     public static function getContragentsByUserId(int $user_id = 0): array
     {
         $result = [];
         $ids_new = [];
-        $resultUserRelishenships = EnteregoORMRelationshipUserContragentsTable::getList(
+        $resultUserRelationships = EnteregoORMRelationshipUserContragentsTable::getList(
             array(
                 'select' => array(
                     'ID_CONTRAGENT',
@@ -31,23 +36,27 @@ class EnteregoContragents
                 ),
             )
         );
-        while ($ids_str = $resultUserRelishenships->fetch()) {
-            $ids_new[] = $ids_str['ID_CONTRAGENT'];
-        }
 
-        $resultSelect = EnteregoORMContragentsTable::getList(
-            array(
-                'select' => array('*'),
-                'filter' => array(
-                    "@ID_CONTRAGENT" => $ids_new
-                ),
-            )
-        );
-        if ($resultSelect) {
-            while ($contargent = $resultSelect->fetch()) {
-                $result[] = $contargent;
+        if ($resultUserRelationships->fetch()) {
+            while ($ids_str = $resultUserRelationships->fetch()) {
+                $ids_new[] = $ids_str['ID_CONTRAGENT'];
+            }
+
+            $resultSelect = EnteregoORMContragentsTable::getList(
+                array(
+                    'select' => array('*'),
+                    'filter' => array(
+                        "@ID_CONTRAGENT" => $ids_new
+                    ),
+                )
+            );
+            if ($resultSelect) {
+                while ($contargent = $resultSelect->fetch()) {
+                    $result[] = $contargent;
+                }
             }
         }
+
         return $result;
     }
 
@@ -76,6 +85,7 @@ class EnteregoContragents
                     'INN' => $arData['INN'],
                     'PHONE_COMPANY' => $arData['PHONE_COMPANY'],
                     "NAME_ORGANIZATION" => $arData['NAME_ORGANIZATION'],
+                    'TYPE' => $arData['TYPE'],
                 )
             );
 

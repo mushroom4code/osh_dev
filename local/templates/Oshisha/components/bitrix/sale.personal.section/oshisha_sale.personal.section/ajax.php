@@ -13,28 +13,33 @@ $arResult = [];
 $request = Application::getInstance()->getContext()->getRequest()->getJsonList();
 
 if ($request->get('ACTION') === 'create') {
-    $inn = $request->get('INN');
+    $type = $request->get('TYPE');
     $phone = $request->get('PHONE_COMPANY');
     $name = $request->get('NAME');
+    $arData = $result = [];
     $user_id = $USER->GetID();
+    $curData = [
+        'PHONE_COMPANY' => $phone,
+        'NAME_ORGANIZATION' => $name
+    ];
 
-    $result = [];
-    if (!empty($user_id) && !empty($inn) && !empty($phone) && !empty($name)) {
+    if ($type === EnteregoContragents::typeUric || $type === EnteregoContragents::typeIp) {
+        $arData = ['INN' => $request->get('INN')];
+    } else {
+        $arData = ['EMAIL' => $request->get('EMAIL')];
+    }
 
-        $resQuery = EnteregoContragents::getContragentByFilter([
-            'INN' => $inn,
-            'PHONE_COMPANY' => $phone,
-            'NAME_ORGANIZATION' => $name
-        ]);
+    if (!empty($user_id) && !empty($phone) && !empty($name)) {
 
-        if ($resQuery) {
+        $resQueryAllParams = EnteregoContragents::getContragentByFilter($curData);
+
+        $resQueryCurrent = EnteregoContragents::getContragentByFilter($arData);
+        $resQueryPHONE = EnteregoContragents::getContragentByFilter(['PHONE_COMPANY' => $phone]);
+
+        if ($resQueryAllParams && $resQueryPHONE && $resQueryCurrent) {
             $result = EnteregoContragents::addContragent(
                 $user_id,
-                [
-                    'INN' => $inn,
-                    'PHONE_COMPANY' => $phone,
-                    'NAME_ORGANIZATION' => $name
-                ]
+                array_merge($curData,$arData)
             );
         } else {
             $result = ['error' => 'Контрагент с такими данными уже существует!'];
@@ -45,10 +50,12 @@ if ($request->get('ACTION') === 'create') {
 
 if ($request->get('ACTION') === 'getList') {
     $user_id = $USER->GetID();
+    $error = ['error' => 'У вас нет контрагентов на этом сайте'];
     if (!empty($user_id)) {
-        $arResult = EnteregoContragents::getContragentsByUserId($user_id);
+        $res = EnteregoContragents::getContragentsByUserId($user_id);
+        $arResult = !empty($res) ? $res : $error;
     } else {
-        $arResult = ['error' => 'У вас нет контрагентов на этом сайте'];
+        $arResult = $error;
     }
 }
 

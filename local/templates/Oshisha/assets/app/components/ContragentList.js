@@ -12,12 +12,16 @@ function ContragentList() {
 
     function getContragents() {
         axios.post(href, {'ACTION': 'getList'}).then(res => {
-            if (res.data) {
+            console.log(res)
+            if (res.data && res.data?.error === undefined) {
                 setListContragent(res.data)
+                console.log('etedhfjf')
             } else if (res.data?.error) {
-                setResult(res.data?.error)
+                console.log('ytest')
+                setResult(res.data.error)
             } else {
-                setResult('При создании контрагента возникла ошибка! ' + 'Можете обратиться к менеджеру или повторить попытку');
+                setResult('При создании контрагента возникла ошибка! '
+                    + 'Можете обратиться к менеджеру или повторить попытку');
             }
         })
     }
@@ -28,8 +32,9 @@ function ContragentList() {
 
     return (<div>
         <ContragentForm listLength={listContragent.length} initToClick={initToClick}/>
-
-        <div>
+        <div className="mt-5">{result}</div>
+        { listContragent.length > 0 ?
+            <div>
             <p className="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal flex flex-row
             justify-between items-center font-semibold mb-5 mt-8">
                 Контрагенты
@@ -53,8 +58,8 @@ function ContragentList() {
                     )
                 }
             </div>
-        </div>
-        <div className="mt-5">{result}</div>
+        </div> : false
+        }
     </div>);
 }
 
