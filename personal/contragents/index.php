@@ -7,9 +7,7 @@ use Bitrix\Main\Page\Asset;
  * @var CAllMain|CMain $APPLICATION
  */
 
-if ($USER->IsAuthorized()) {
-    Asset::getInstance()->addJs("/personal/contragents/js/script.js?"
-        . hash_file('md5', $_SERVER['DOCUMENT_ROOT'] . '/personal/contragents/js/script.js')); ?>
+if ($USER->IsAuthorized()) {?>
 
     <div class="mobile_lk mb-5 flex flex-col xs:bg-white md:flex-row">
         <div class="sidebar_lk">
@@ -51,7 +49,7 @@ if ($USER->IsAuthorized()) {
             <div id="createContragent"></div>
         </div>
     </div>
-    <script src="/dist/app.generated.js" defer></script>
+    <script src="/dist/app.generated.js?<?=hash_file('md5', $_SERVER['DOCUMENT_ROOT'] . '/dist/app.generated.js')?>" defer></script>
     <?php
 } else {
     LocalRedirect('/login/?login=yes');
