@@ -41,12 +41,12 @@ function ContragentList() {
                 Контрагенты
                 {
                     listContragent.length > 0 ?
-                        <div className="p-3 dark:bg-lightGrayBg rounded-lg w-fit bg-textDark flex flex-row items-center
+                        <div className="p-2 dark:bg-lightGrayBg rounded-lg w-fit bg-textDark flex flex-row items-center
                         dark:text-textDarkLightGray text-textLight"
                              onClick={() => {
                                  setInitToClick(!initToClick)
                              }}>
-                            <IconNameContr width="35" height="36" color="dark:fill-grayButton fill-textDark"/>
+                            <IconNameContr width="35" height="36" button={true} color={true}/>
                             <span className="ml-1 text-sm">Добавить</span>
                         </div>
                         : false

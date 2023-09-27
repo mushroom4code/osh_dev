@@ -51,7 +51,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 <nav class="box_with_menu_header">
     <ul class="ul_menu flex items-center flex-row">
         <li class="li_menu_header mr-7">
-            <div class="dark:text-textDark shadow-md flex flex-row justify-center text-textLight min-w-164 dark:bg-dark-red
+            <div class="dark:text-textDark shadow-md flex flex-row justify-center items-center text-textLight min-w-164 dark:bg-dark-red
             bg-light-red py-2 px-4 rounded-5"
                  title="Просмотреть меню"
                  id="main_menus">
@@ -60,7 +60,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                         <path d="M1 14H8.58333M1 1H18.3333H1ZM1 7.5H18.3333H1Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <span class="dark:text-textDark text-textLight font-normal text-sm">Каталог</span>
+                <span class="text-white font-medium text-sm">Каталог</span>
             </div>
         </li>
 

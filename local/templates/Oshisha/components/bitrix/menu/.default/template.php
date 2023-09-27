@@ -21,16 +21,16 @@ if (!$name)
 
 <div class="left-menu dark:bg-darkBox bg-textDark w-72 rounded-xl p-10 mr-8 min-h-[480px] justify-between">
     <div class="box_with_photo flex flex-col mb-7">
-        <svg width="100" height="92" viewBox="0 0 92 84" class="rounded-lg" fill="none"
+        <svg width="100" height="92" viewBox="0 0 92 84" class="rounded-lg"
              xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_1890_10033)">
                 <path d="M0 0H91.07V73.0449C91.07 78.5678 86.5928 83.0449 81.07 83.0449H9.99999C4.47715 83.0449 0 78.5678 0 73.0449V0Z"
-                      class="dark:fill-darkBox fill-white"/>
-                <rect x="0.5" y="0.5" width="91" height="84" rx="9.5" stroke="white"/>
+                      class="dark:fill-lightGrayBg fill-white"/>
+                <rect x="0.5" y="0.5" width="91" height="84" rx="9.5" class="stroke-white dark:fill-lightGrayBg fill-white"/>
                 <path d="M15.1279 83.564L15.1279 74.9453C15.1279 69.4391 17.5266 64.1584 21.7964 60.2649C26.0661 56.3714 31.8571 54.1841 37.8954 54.1841H53.0737C59.1121 54.1841 64.9031 56.3714 69.1728 60.2649C73.4425 64.1584 75.8412 69.4391 75.8412 74.9453V83.564"
-                      class="fill-darkBox dark:fill-white"/>
+                      class="fill-lightGrayBg dark:fill-white"/>
                 <path d="M15.1279 83.564L15.1279 74.9453C15.1279 69.4391 17.5266 64.1584 21.7964 60.2649C26.0661 56.3714 31.8571 54.1841 37.8954 54.1841H53.0737C59.1121 54.1841 64.9031 56.3714 69.1728 60.2649C73.4425 64.1584 75.8412 69.4391 75.8412 74.9453V83.564"
-                      class="stroke-white" stroke-linecap="round"/>
+                      class="stroke-white fill-lightGrayBg dark:fill-white" stroke-linecap="round"/>
                 <path d="M45.5367 42.0536C38.3279 42.0536 34.8005 40.4085 34.8005 35.2548C34.8005 30.0533 38.3376 28.4052 45.5367 28.4052C52.7359 28.4052 56.2312 30.0533 56.2312 35.2548C56.2312 40.4085 52.7038 42.0536 45.5367 42.0536ZM45.5367 48.0927C56.5487 48.0927 64.0236 44.3777 64.0236 35.2548C64.0236 26.084 56.5487 22.3721 45.5367 22.3721C34.4766 22.3721 27.0498 26.084 27.0498 35.2548C27.0498 44.3777 34.4766 48.0927 45.5367 48.0927Z"
                       class="fill-light-red dark:fill-white"/>
                 <path fill-rule="evenodd" clip-rule="evenodd"

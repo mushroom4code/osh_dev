@@ -33,7 +33,7 @@ function is_valid_inn(i) {
     return false;
 }
 
-function ContragentForm({listLength, initToClick, loads, setState }) {
+function ContragentForm({listLength, initToClick, loads, setState}) {
     const [inn, setInn] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
@@ -69,6 +69,11 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
             data).then(res => {
                 if (res.data?.success) {
                     setResult(res.data?.success)
+                    setPhone('')
+                    setName('')
+                    setInn('')
+                    setEmail('')
+                    setState(false)
                 } else if (res.data?.error) {
                     setResult(res.data?.error)
                 } else {
@@ -80,7 +85,7 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
     }
 
     if (initToClick) {
-        className = 'fixed top-0 h-screen flex justify-center items-center left-0 dark:bg-darkOpacityWindow' +
+        className = 'fixed top-0 h-screen flex justify-center flex-col items-center left-0 dark:bg-darkOpacityWindow' +
             ' bg-lightOpacityWindow w-screen z-50'
         classNameWindow = 'lg:w-2/4 xs:w-full'
         classInput = 'w-full'
@@ -99,9 +104,11 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
                     <div className="mb-8">
                         <div className="col-12 col-md-10 flex flex-row align-items-center mb-8">
                             <div className="mr-7">
-                                <input className="text-white w-5 h-5 bg-darkBox border-gray-slider-arrow
+                                <input className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
-                                 checked:hover:bg-none dark:ring-offset-gray-800 dark:bg-darkBox
+                                 dark:checked:focus:border-white dark:focus:checked:ring-white
+                                 focus:checked:border-light-red focus:checked:ring-light-red
+                                  dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
                                  dark:border-gray-slider-arrow" onChange={(e) => {
                                     setType(uric)
                                 }}
@@ -112,9 +119,11 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
                                     dark:text-textDarkLightGray">Юридическое лицо</label>
                             </div>
                             <div className="mr-7">
-                                <input className="text-white w-5 h-5 bg-darkBox border-gray-slider-arrow
+                                <input className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
-                                 checked:hover:bg-none dark:ring-offset-gray-800 dark:bg-darkBox
+                                 dark:checked:focus:border-white dark:focus:checked:ring-white
+                                 focus:checked:border-light-red focus:checked:ring-light-red
+                                  dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
                                  dark:border-gray-slider-arrow"
                                        onChange={(e) => {
                                            setType(ip)
@@ -127,10 +136,12 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
                             </div>
                             <div className="mr-7">
                                 <input type="radio" name="check"
-                                       className="text-white w-5 h-5 bg-darkBox border-gray-slider-arrow
-                                        dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
-                                         checked:hover:bg-none dark:ring-offset-gray-800 dark:bg-darkBox
-                                         dark:border-gray-slider-arrow"
+                                       className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
+                                dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
+                                 dark:checked:focus:border-white dark:focus:checked:ring-white
+                                 focus:checked:border-light-red focus:checked:ring-light-red
+                                  dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
+                                 dark:border-gray-slider-arrow"
                                        onChange={(e) => {
                                            setType(fiz)
                                        }}
@@ -150,7 +161,7 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
                                                setName(e.target.value)
                                            }}
                                            minLength={3}
-                                           className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                           className={'dark:bg-grayButton bg-textDark border-none py-3 px-4' +
                                                'outline-none rounded-md ' + classInput}
                                            placeholder="Полное наименование организации"/>
                                 </div>
@@ -162,7 +173,7 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
                                                setInn(e.target.value)
                                            }}
                                            minLength={8}
-                                           className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                           className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
                                                'outline-none rounded-md ' + classInput}
                                            placeholder="ИНН"/>
                                 </div>
@@ -177,7 +188,7 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
                                                setName(e.target.value)
                                            }}
                                            minLength={3}
-                                           className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                           className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
                                                'outline-none rounded-md ' + classInput}
                                            placeholder="Фамилия Имя Отчество"/>
                                 </div>
@@ -189,7 +200,7 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
                                                setEmail(e.target.value)
                                            }}
                                            minLength={8}
-                                           className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                           className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
                                                'outline-none rounded-md ' + classInput}
                                            placeholder="Email"/>
                                 </div>
@@ -199,7 +210,7 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
                             <input type="text"
                                    required
                                    minLength={8}
-                                   className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                   className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
                                        'outline-none rounded-md ' + classInput}
                                    value={phone}
                                    onChange={(e) => {
@@ -231,8 +242,8 @@ function ContragentForm({listLength, initToClick, loads, setState }) {
                                 : false
                         }
                     </div>
+                    <div className="mt-5 dark:text-textDarkLightGray text-textLight">{result}</div>
                 </form>
-                <div className="mt-5">{result}</div>
             </div>
             : false
     );
