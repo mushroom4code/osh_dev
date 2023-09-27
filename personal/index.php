@@ -30,7 +30,7 @@ if (!$USER->IsAuthorized()) {
                 )
             ); ?>
         </div>
-        <div  id="content_box">
+        <div  id="content_box" class="w-full">
             <?php $APPLICATION->IncludeComponent(
                 "bitrix:sale.personal.section",
                 "oshisha_sale.personal.section",

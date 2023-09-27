@@ -14,9 +14,6 @@ module.exports = {
                 '5': '5px',
                 '7': '7px'
             },
-            minWidth: {
-                '1/2': '50%',
-            },
             colors: {
                 dark: '#1C1C1C',
                 textLight: '#1A1A1A',
@@ -49,7 +46,8 @@ module.exports = {
                 '550': '550px',
             },
             minWidth: {
-                '164': '164px'
+                '164': '164px',
+                
             },
             width: {
                 'inherit': 'inherit'

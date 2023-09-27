@@ -26,7 +26,6 @@ $(document).ready(function () {
         inputItem = $('input'),
         href = window.location.pathname,
         screenWidth = window.screen.width,
-        boxAddress = $('#edit_addressBox'),
         checkProductOrdersReady = $('#allProducts'),
         bool = $('span').is('.taste'),
         tasted = $(div).is('#VKUS');
@@ -44,7 +43,6 @@ $(document).ready(function () {
         main_menu = $('.main_menu');
     // HIDE
     $(main_menu).hide();
-    $(boxAddress).hide();
     $('.content_for_box_delivery').hide();
     // SELECT
     let select = $('select'),
@@ -786,14 +784,6 @@ $(document).ready(function () {
     );
 
 //   LK
-    $('#edit_address').on('click', function () {
-        let display = $(boxAddress).css('display');
-        if (display === 'none') {
-            $(boxAddress).show(400);
-        } else {
-            $(boxAddress).hide(400);
-        }
-    });
 
     function hideShow(that) {
         let boolShow = $(that).attr('data-hide');
