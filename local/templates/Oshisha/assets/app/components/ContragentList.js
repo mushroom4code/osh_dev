@@ -8,15 +8,19 @@ function ContragentList() {
     const [listContragent, setListContragent] = useState([])
     const [result, setResult] = useState('')
     const [initToClick, setInitToClick] = useState(false)
+    const [loads, setLoads] = useState(false)
     const href = '/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php'
 
     function getContragents() {
         axios.post(href, {'ACTION': 'getList'}).then(res => {
             if (res.data && res.data?.error === undefined) {
                 setListContragent(res.data)
+                setLoads(true)
             } else if (res.data?.error) {
                 setResult(res.data.error)
+                setLoads(true)
             } else {
+                setLoads(true)
                 setResult('При создании контрагента возникла ошибка! '
                     + 'Можете обратиться к менеджеру или повторить попытку');
             }
@@ -28,7 +32,7 @@ function ContragentList() {
     }, []);
 
     return (<div>
-        <ContragentForm listLength={listContragent.length} initToClick={initToClick}/>
+        <ContragentForm listLength={listContragent.length} loads={loads} initToClick={initToClick} setState={setInitToClick} />
         <div className="mt-5">{result}</div>
         { listContragent.length > 0 ?
             <div>

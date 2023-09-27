@@ -33,14 +33,14 @@ function is_valid_inn(i) {
     return false;
 }
 
-function ContragentForm({listLength, initToClick}) {
+function ContragentForm({listLength, initToClick, loads, setState }) {
     const [inn, setInn] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
     const [result, setResult] = useState('')
     const [email, setEmail] = useState('')
     const [type, setType] = useState(uric)
-    let className = '';
+    let className = '', classNameWindow = 'w-9/12', classInput = 'lg:w-4/5 w-full';
 
     const handleClick = (e) => {
         e.preventDefault()
@@ -82,12 +82,15 @@ function ContragentForm({listLength, initToClick}) {
     if (initToClick) {
         className = 'fixed top-0 h-screen flex justify-center items-center left-0 dark:bg-darkOpacityWindow' +
             ' bg-lightOpacityWindow w-screen z-50'
+        classNameWindow = 'lg:w-2/4 xs:w-full'
+        classInput = 'w-full'
     }
     return (
-        listLength === 0 || initToClick ?
+        (listLength === 0 && loads) || initToClick ?
             <div className={className}>
                 <form onSubmit={handleClick}
-                      className="dark:bg-darkBox bg-white w-9/12 dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10">
+                      className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10'
+                          + classNameWindow}>
                     <div className="mb-8">
                         <p className="text-xl font-medium dark:text-textDarkLightGray text-textLight">
                             Создайте своего первого контрагента
@@ -147,8 +150,8 @@ function ContragentForm({listLength, initToClick}) {
                                                setName(e.target.value)
                                            }}
                                            minLength={3}
-                                           className="dark:bg-grayButton bg-textDark lg:w-4/5 w-full border-none p-3
-                                    outline-none rounded-md"
+                                           className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                               'outline-none rounded-md ' + classInput}
                                            placeholder="Полное наименование организации"/>
                                 </div>
                                 <div className="mb-3">
@@ -159,8 +162,8 @@ function ContragentForm({listLength, initToClick}) {
                                                setInn(e.target.value)
                                            }}
                                            minLength={8}
-                                           className="dark:bg-grayButton bg-textDark lg:w-4/5 w-full p-3 border-none
-                                   outline-none rounded-md"
+                                           className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                               'outline-none rounded-md ' + classInput}
                                            placeholder="ИНН"/>
                                 </div>
                             </>
@@ -174,8 +177,8 @@ function ContragentForm({listLength, initToClick}) {
                                                setName(e.target.value)
                                            }}
                                            minLength={3}
-                                           className="dark:bg-grayButton bg-textDark lg:w-4/5 w-full border-none p-3
-                                    outline-none rounded-md"
+                                           className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                               'outline-none rounded-md ' + classInput}
                                            placeholder="Фамилия Имя Отчество"/>
                                 </div>
                                 <div className="mb-3">
@@ -186,8 +189,8 @@ function ContragentForm({listLength, initToClick}) {
                                                setEmail(e.target.value)
                                            }}
                                            minLength={8}
-                                           className="dark:bg-grayButton bg-textDark lg:w-4/5 w-full p-3 border-none
-                                   outline-none rounded-md"
+                                           className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                               'outline-none rounded-md ' + classInput}
                                            placeholder="Email"/>
                                 </div>
                             </>
@@ -196,8 +199,8 @@ function ContragentForm({listLength, initToClick}) {
                             <input type="text"
                                    required
                                    minLength={8}
-                                   className="dark:bg-grayButton border-none outline-none p-3 lg:w-4/5
-                                    w-full rounded-md bg-textDark"
+                                   className={'dark:bg-grayButton bg-textDark border-none p-3 ' +
+                                       'outline-none rounded-md ' + classInput}
                                    value={phone}
                                    onChange={(e) => {
                                        setPhone(e.target.value)
@@ -205,13 +208,28 @@ function ContragentForm({listLength, initToClick}) {
                                    placeholder="Телефон компании"/>
                         </div>
                     </div>
-                    <div className="form-group mt-4">
+                    <div className="flex flex-row mt-4">
                         <div className="d-flex flex-row align-items-center justify-content-start">
                             <button className="dark:bg-dark-red rounded-md bg-light-red text-white px-7 py-3 w-fit
                              dark:shadow-md shadow-shadowDark dark:hover:bg-hoverRedDark cursor-pointer" type="submit">
                                 Создать контрагента
                             </button>
                         </div>
+                        {
+                            initToClick ?
+                                <div className="d-flex flex-row align-items-center justify-content-start ml-3">
+                                    <button className="dark:bg-grayButton rounded-md bg-grayButton text-white px-7 py-3 w-fit
+                             dark:shadow-md shadow-shadowDark dark:hover:bg-black cursor-pointer" onClick={
+                                        (e) => {
+                                            e.preventDefault()
+                                            setState(false);
+                                        }
+                                    }>
+                                        Отменить
+                                    </button>
+                                </div>
+                                : false
+                        }
                     </div>
                 </form>
                 <div className="mt-5">{result}</div>
