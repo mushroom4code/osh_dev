@@ -22,6 +22,50 @@ class EnteregoContragents
     public const typeFiz = 'fiz';
     public const typeIp = 'ip';
 
+    /**
+     * @param int $user_id
+     * @param int $contragent_id
+     * @return array|string[]
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function setRelationShip(int $user_id = 0, int $contragent_id = 0): array
+    {
+        $result = [];
+        $res = EnteregoORMRelationshipUserContragentsTable::getList(
+            array(
+                'select' => array(
+                    'ID_CONTRAGENT',
+                ),
+                'filter' => array(
+                    'USER_ID' => $user_id,
+                    'ID_CONTRAGENT' => $contragent_id
+                ),
+            )
+        )->fetch();
+
+        $resultSelect = EnteregoORMContragentsTable::getList(
+            array(
+                'select' => array('ID_CONTRAGENT'),
+                'filter' => array(
+                    "ID_CONTRAGENT" => $contragent_id
+                ),
+            )
+        )->fetch();
+
+        if (empty($res) && !empty($resultSelect)) {
+            $addResultRel = EnteregoORMRelationshipUserContragentsTable::add(array(
+                'ID_CONTRAGENT' => $contragent_id,
+                'USER_ID' => $user_id,
+            ));
+            $result = $addResultRel->isSuccess() ?
+                ['success' => 'Ожидайте подтверждения связи'] :
+                ['error' => 'Вы не смогли запросить связь - попробуйте еще раз или обратитесь к менеджеру'];
+        }
+        return $result;
+    }
+
     public static function getContragentsByUserId(int $user_id = 0): array
     {
         $result = [];
@@ -110,7 +154,7 @@ class EnteregoContragents
         if (!empty($filter)) {
             $resultSelect = EnteregoORMContragentsTable::getList(
                 array(
-                    'select' => array('ID_CONTRAGENT','TYPE','NAME_ORGANIZATION','PHONE_COMPANY','EMAIL','INN'),
+                    'select' => array('ID_CONTRAGENT', 'TYPE', 'NAME_ORGANIZATION', 'PHONE_COMPANY', 'EMAIL', 'INN'),
                     'filter' => $filter,
                 )
             )->fetch();
