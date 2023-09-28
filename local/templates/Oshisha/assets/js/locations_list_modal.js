@@ -5,7 +5,7 @@ BX.ready(function () {
         });
     }
 
-    function onSelectCity (event) {а
+    function onSelectCity (event) {
         const item = event.target;
         let city_selected = item.textContent;
         let city_search = document.getElementById('city-search');
