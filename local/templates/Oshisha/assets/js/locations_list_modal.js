@@ -1,79 +1,27 @@
 BX.ready(function () {
     function setupCityItems() {
-        let all_cities = document.getElementById('cities-list');
         [...document.querySelectorAll('.city-item')].forEach(item => {
-            item.addEventListener('click', function () {
-                let city_selected = item.textContent;
-                let city_search = document.getElementById('city-search');
-                city_search.setAttribute('chosen-city-code', item.getAttribute('city-code'));
-                city_search.value = city_selected;
-                document.getElementById('choose-city-btn').removeAttribute('disabled');
-                all_cities.style.display = 'none';
-            });
+            item.addEventListener('click', onSelectCity);
         });
     }
 
+    function onSelectCity (event) {а
+        const item = event.target;
+        let city_selected = item.textContent;
+        let city_search = document.getElementById('city-search');
+        city_search.setAttribute('chosen-city-code', item.getAttribute('data-city-code'));
+        city_search.value = city_selected;
+        document.getElementById('choose-city-btn').removeAttribute('disabled');
+    }
     function setLocationsListContent() {
-        var locations_array = BX.localStorage.get('city_choosers_locations_array');
-        var moscowItem = locations_array.find(element => element.name == 'Москва')
-        var saintPetersburgItem = locations_array.find(element => element.name == 'Санкт-Петербург');
-        var nizhnyNovgorodItem = locations_array.find(element => element.name == 'Нижний Новгород');
-        var ekaterinburgItem = locations_array.find(element => element.name == 'Екатеринбург');
-        var permItem = locations_array.find(element => element.name == 'Пермь');
-        var novosibirskItem = locations_array.find(element => element.name == 'Новосибирск');
-        var kazanItem = locations_array.find(element => element.name == 'Казань');
-        var placeModalTemplate = `<input id="city-search" class="form-control search" type="text" name="cityother"
+        document.getElementById('locations').innerHTML = `<input id="city-search" class="form-control search" 
+                                           type="text" name="cityother"
                                            placeholder="Ваш город ..." value=""
                                            autocomplete="off" required>
                                            <div class="cities-list-wrap mb-3">
-                <ul id="big-cities-list">
-                    <li>
-                        <span class="city-item" city-code="${moscowItem.code}">${moscowItem.name}</span>
-                    </li>
-                    <li>
-                        <span class="city-item" city-code="${saintPetersburgItem.code}">${saintPetersburgItem.name}</span>
-                    </li>
-                    <li>
-                        <span class="city-item" city-code="${nizhnyNovgorodItem.code}">${nizhnyNovgorodItem.name}</span>
-                    </li>
-                    <li>
-                        <span class="city-item" city-code="${ekaterinburgItem.code}">${ekaterinburgItem.name}</span>
-                    </li>
-                    <li>
-                        <span class="city-item" city-code="${permItem.code}">${permItem.name}</span>
-                    </li>
-                    <li>
-                        <span class="city-item" city-code="${novosibirskItem.code}">${novosibirskItem.name}</span>
-                    </li>
-                    <li>
-                        <span class="city-item" city-code="${kazanItem.code}">${kazanItem.name}</span>
-                    </li>
-                </ul>
-                <ul id="cities-list" class="list" style="display: none">`
-
-        locations_array.forEach((element) => {
-            placeModalTemplate += `<li>
-                    <span class="city-item" city-code="${element.code}">${element.name}</span>
-                    </li>`
-        })
-        placeModalTemplate += `</ul></div>`
-        document.getElementById('locations').innerHTML = placeModalTemplate;
-        let all_cities = document.getElementById('cities-list'),
-            big_cities = document.getElementById('big-cities-list');
-        document.getElementById("city-search").addEventListener('keyup', function () {
-            all_cities.style.display = 'block';
-            big_cities.style.display = 'none';
-            let length = this.value;
-            if (length.length === 0) {
-                all_cities.style.display = 'none';
-                big_cities.style.display = 'block';
-            }
-            if (all_cities.matches(':empty')) {
-                document.getElementById('choose-city-btn').setAttribute('disabled', 'disabled');
-                big_cities.style.display = 'block';
-            }
-        });
-        setupCityItems();
+                                                 <ul id="cities-list"></ul>
+                                           </div>`
+        showCitiesList([])
 
         let input = document.getElementById('city-search');
         let interval;
@@ -89,20 +37,44 @@ BX.ready(function () {
                     },
                     onsuccess: function (result) {
                         if (result) {
-                            let cities_list = '';
-                            JSON.parse(result).forEach((element) => {
-                                cities_list += `<li>
-                            <span class="city-item" city-code="${element.code}">${element.name}</span>
-                            </li>`
-                            });
-                            document.getElementById('cities-list').innerHTML = cities_list;
-                            setupCityItems();
+
+                            const locations = JSON.parse(result)
+                            showCitiesList(locations)
+
                         }
                     }.bind(this)
                 })
                 clearInterval(interval);
             }, 800);
         })
+    }
+
+    function showCitiesList (locations) {
+        let cities_list = '';
+        let search = document.getElementById('city-search').value;
+
+        let currentLocations = locations;
+        if (search === '') {
+            const locations_array = BX.localStorage.get('city_choosers_locations_array');
+
+            currentLocations = [];
+            const city = ['Москва', 'Санкт-Петербург', 'Нижний Новгород',
+                'Екатеринбург', 'Пермь', 'Новосибирск', 'Казань'];
+            city.forEach(item => {
+                const location = locations_array.find(element => element.name === item)
+                if (location !== undefined) {
+                    currentLocations.push(location)
+                }
+            })
+        }
+        currentLocations.forEach((element) => {
+            cities_list += `<li>
+                    <span class="city-item" data-city-code="${element.code}">${element.name}</span>
+                </li>`
+
+        });
+        document.getElementById('cities-list').innerHTML = cities_list;
+        setupCityItems();
     }
 
     $("#formofcity").submit(function (event) {
@@ -117,7 +89,7 @@ BX.ready(function () {
             },
             onsuccess: function (result) {
                 if (result) {
-                    if (JSON.parse(result)['status'] == 'success') {
+                    if (JSON.parse(result)['status'] === 'success') {
                         location.reload();
                     } else {
                         console.log(result);
@@ -129,7 +101,7 @@ BX.ready(function () {
         event.preventDefault();
     });
 
-    var observer = new MutationObserver(function (mutations) {
+    const observer = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
             if (mutation.target.classList.contains('show')) {
                 if (BX.localStorage.get('city_choosers_locations_array')) {
