@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import axios from "axios";
+import RelationshipContragent from "./RelationshipContragent";
 
 const uric = 'uric';
 const ip = 'ip';
@@ -35,7 +36,7 @@ function is_valid_inn(i) {
 
 let className = '', classNameWindow = 'w-9/12', classInput = 'lg:w-4/5 w-full';
 
-function ContragentForm({initToClick, loads, setState, listContragent, setResult, setColor}) {
+function ContragentForm({initToClick, loads, setState, listContragent, setResult, setColor, setShowForm, showForm}) {
     const [inn, setInn] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
@@ -43,6 +44,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
     const [colorRes, setColorRes] = useState('dark:text-hover-red text-hover-red')
     const [email, setEmail] = useState('')
     const [type, setType] = useState(uric)
+    const [contrResult, setContrResult] = useState([])
 
     const handleClick = (e) => {
         e.preventDefault()
@@ -67,6 +69,13 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
         }
     }
 
+    const emptyDataInputs = () => {
+        setPhone('')
+        setName('')
+        setInn('')
+        setEmail('')
+    }
+
     function sendContragent(data) {
         axios.post('/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php',
             data).then(res => {
@@ -74,16 +83,17 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                     setResult(res.data?.success)
                     setColor('dark:text-textDarkLightGray text-greenButton')
                     setColorRes('dark:text-textDarkLightGray text-greenButton')
-                    setPhone('')
-                    setName('')
-                    setInn('')
-                    setEmail('')
+                    emptyDataInputs()
                     setState(false)
                 } else if (res.data?.error) {
-                    setResultNew(res.data?.error)
+                    if (res.data?.error?.code) {
+                        setResultNew(res.data?.error?.code)
+                        setContrResult(res.data?.error?.item)
+                        setShowForm(false)
+                    }
                 } else {
                     setResultNew('При создании контрагента возникла ошибка! ' +
-                        'Можете обратиться к менеджеру или повторить попытку');
+                        'Можете обратиться к менеджеру нашей компании или повторить попытку');
                 }
             }
         )
@@ -98,159 +108,171 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
     return (
         (listContragent === 0 && loads) || initToClick ?
             <div className={className}>
-                <form onSubmit={handleClick}
-                      className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10'
-                          + classNameWindow}>
-                    <div className="mb-8">
-                        <p className="text-xl font-medium dark:text-textDarkLightGray text-textLight">
-                            Создайте своего первого контрагента
-                        </p>
-                    </div>
-                    <div className="mb-8">
-                        <div className="col-12 col-md-10 flex flex-row align-items-center mb-8">
-                            <div className="mr-7">
-                                <input className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
+                {contrResult?.NAME_ORGANIZATION !== undefined ?
+                    <RelationshipContragent contragent={contrResult}
+                                            setState={setState}
+                                            setContrResult={setContrResult}
+                                            setResultNew={setResultNew}
+                                            emptyDataInputs={emptyDataInputs}/>
+                    : false
+                }
+                {showForm ?
+                    <form onSubmit={handleClick}
+                          className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10'
+                              + classNameWindow}>
+                        <div className="mb-8">
+                            <p className="text-xl font-medium dark:text-textDarkLightGray text-textLight">
+                                Создайте своего первого контрагента
+                            </p>
+                        </div>
+                        <div className="mb-8">
+                            <div className="col-12 col-md-10 flex flex-row align-items-center mb-8">
+                                <div className="mr-7">
+                                    <input className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
                                  dark:checked:focus:border-white dark:focus:checked:ring-white
                                  focus:checked:border-light-red focus:checked:ring-light-red
                                   dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
                                  dark:border-gray-slider-arrow" onChange={(e) => {
-                                    setType(uric)
-                                }}
-                                       checked={type === uric}
-                                       type="radio" name="check"
-                                       value={uric}/>
-                                <label className="text-sm dark:font-light font-normal text-textLight ml-3
+                                        setType(uric)
+                                    }}
+                                           checked={type === uric}
+                                           type="radio" name="check"
+                                           value={uric}/>
+                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
                                     dark:text-textDarkLightGray">Юридическое лицо</label>
-                            </div>
-                            <div className="mr-7">
-                                <input className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
+                                </div>
+                                <div className="mr-7">
+                                    <input className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
                                  dark:checked:focus:border-white dark:focus:checked:ring-white
                                  focus:checked:border-light-red focus:checked:ring-light-red
                                   dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
                                  dark:border-gray-slider-arrow"
-                                       onChange={(e) => {
-                                           setType(ip)
-                                       }}
-                                       checked={type === ip}
-                                       type="radio" name="check"
-                                       value={ip}/>
-                                <label className="text-sm dark:font-light font-normal text-textLight ml-3
+                                           onChange={(e) => {
+                                               setType(ip)
+                                           }}
+                                           checked={type === ip}
+                                           type="radio" name="check"
+                                           value={ip}/>
+                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
                                      dark:text-textDarkLightGray">Индивидуальный предприниматель</label>
-                            </div>
-                            <div className="mr-7">
-                                <input type="radio" name="check"
-                                       className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
+                                </div>
+                                <div className="mr-7">
+                                    <input type="radio" name="check"
+                                           className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
                                  dark:checked:focus:border-white dark:focus:checked:ring-white
                                  focus:checked:border-light-red focus:checked:ring-light-red
                                   dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
                                  dark:border-gray-slider-arrow"
-                                       onChange={(e) => {
-                                           setType(fiz)
-                                       }}
-                                       checked={type === fiz}
-                                       value={fiz}/>
-                                <label className="text-sm dark:font-light font-normal text-textLight ml-3
+                                           onChange={(e) => {
+                                               setType(fiz)
+                                           }}
+                                           checked={type === fiz}
+                                           value={fiz}/>
+                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
                                      dark:text-textDarkLightGray">Физическое лицо</label>
+                                </div>
+                            </div>
+                            {type === ip || type === uric ?
+                                <>
+                                    <div className="mb-3">
+                                        <input type="text"
+                                               value={name}
+                                               required
+                                               onChange={(e) => {
+                                                   setName(e.target.value)
+                                               }}
+                                               minLength={3}
+                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4' +
+                                                   'outline-none rounded-md ' + classInput}
+                                               placeholder="Полное наименование организации"/>
+                                    </div>
+                                    <div className="mb-3">
+                                        <input type="text"
+                                               required
+                                               value={inn}
+                                               onChange={(e) => {
+                                                   setInn(e.target.value)
+                                               }}
+                                               minLength={8}
+                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
+                                                   'outline-none rounded-md ' + classInput}
+                                               placeholder="ИНН"/>
+                                    </div>
+                                </>
+                                :
+                                <>
+                                    <div className="mb-3">
+                                        <input type="text"
+                                               value={name}
+                                               required
+                                               onChange={(e) => {
+                                                   setName(e.target.value)
+                                               }}
+                                               minLength={3}
+                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
+                                                   'outline-none rounded-md ' + classInput}
+                                               placeholder="Фамилия Имя Отчество"/>
+                                    </div>
+                                    <div className="mb-3">
+                                        <input type="text"
+                                               required
+                                               value={email}
+                                               onChange={(e) => {
+                                                   setEmail(e.target.value)
+                                               }}
+                                               minLength={8}
+                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
+                                                   'outline-none rounded-md ' + classInput}
+                                               placeholder="Email"/>
+                                    </div>
+                                </>
+                            }
+                            <div className="mb-3">
+                                <input type="text"
+                                       required
+                                       minLength={8}
+                                       className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
+                                           'outline-none rounded-md ' + classInput}
+                                       value={phone}
+                                       onChange={(e) => {
+                                           setPhone(e.target.value)
+                                       }}
+                                       placeholder="Телефон компании"/>
                             </div>
                         </div>
-                        {type === ip || type === uric ?
-                            <>
-                                <div className="mb-3">
-                                    <input type="text"
-                                           value={name}
-                                           required
-                                           onChange={(e) => {
-                                               setName(e.target.value)
-                                           }}
-                                           minLength={3}
-                                           className={'dark:bg-grayButton bg-textDark border-none py-3 px-4' +
-                                               'outline-none rounded-md ' + classInput}
-                                           placeholder="Полное наименование организации"/>
-                                </div>
-                                <div className="mb-3">
-                                    <input type="text"
-                                           required
-                                           value={inn}
-                                           onChange={(e) => {
-                                               setInn(e.target.value)
-                                           }}
-                                           minLength={8}
-                                           className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                               'outline-none rounded-md ' + classInput}
-                                           placeholder="ИНН"/>
-                                </div>
-                            </>
-                            :
-                            <>
-                                <div className="mb-3">
-                                    <input type="text"
-                                           value={name}
-                                           required
-                                           onChange={(e) => {
-                                               setName(e.target.value)
-                                           }}
-                                           minLength={3}
-                                           className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                               'outline-none rounded-md ' + classInput}
-                                           placeholder="Фамилия Имя Отчество"/>
-                                </div>
-                                <div className="mb-3">
-                                    <input type="text"
-                                           required
-                                           value={email}
-                                           onChange={(e) => {
-                                               setEmail(e.target.value)
-                                           }}
-                                           minLength={8}
-                                           className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                               'outline-none rounded-md ' + classInput}
-                                           placeholder="Email"/>
-                                </div>
-                            </>
-                        }
-                        <div className="mb-3">
-                            <input type="text"
-                                   required
-                                   minLength={8}
-                                   className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                       'outline-none rounded-md ' + classInput}
-                                   value={phone}
-                                   onChange={(e) => {
-                                       setPhone(e.target.value)
-                                   }}
-                                   placeholder="Телефон компании"/>
-                        </div>
-                    </div>
-                    <div className="flex flex-row mt-4">
-                        <div className="d-flex flex-row align-items-center justify-content-start">
-                            <button className="dark:bg-dark-red rounded-md bg-light-red text-white px-7 py-3 w-fit
+                        <div className="flex flex-row mt-4">
+                            <div className="d-flex flex-row align-items-center justify-content-start">
+                                <button className="dark:bg-dark-red rounded-md bg-light-red text-white px-7 py-3 w-fit
                              dark:shadow-md shadow-shadowDark dark:hover:bg-hoverRedDark cursor-pointer" type="submit">
-                                Создать контрагента
-                            </button>
-                        </div>
-                        {
-                            initToClick ?
-                                <div className="d-flex flex-row align-items-center justify-content-start ml-3">
-                                    <button className="dark:bg-grayButton rounded-md bg-grayButton text-white px-7 py-3 w-fit
+                                    Создать контрагента
+                                </button>
+                            </div>
+                            {
+                                initToClick ?
+                                    <div className="d-flex flex-row align-items-center justify-content-start ml-3">
+                                        <button className="dark:bg-grayButton rounded-md bg-grayButton text-white px-7 py-3 w-fit
                              dark:shadow-md shadow-shadowDark dark:hover:bg-black cursor-pointer" onClick={
-                                        (e) => {
-                                            e.preventDefault()
-                                            setState(false);
-                                        }
-                                    }>
-                                        Отменить
-                                    </button>
-                                </div>
-                                : false
-                        }
-                    </div>
-                    <div className={"mt-5 " + colorRes}>{result}</div>
-                </form>
+                                            (e) => {
+                                                e.preventDefault()
+                                                setState(false);
+                                            }
+                                        }>
+                                            Отменить
+                                        </button>
+                                    </div>
+                                    : false
+                            }
+                        </div>
+                        <div className={"mt-5 " + colorRes}>{result}</div>
+                    </form>
+                    : false
+                }
             </div>
             : false
+
     );
 }
 

@@ -76,9 +76,9 @@ class EnteregoContragents
                 'select' => array('ID_CONTRAGENT'),
                 'filter' => array($arData),
             )
-        );
+        )->fetch();
 
-        if (empty($resultSelect->fetch())) {
+        if (empty($resultSelect)) {
             $addResult = EnteregoORMContragentsTable::add($arData);
 
             if ($addResult->isSuccess()) {
@@ -90,8 +90,8 @@ class EnteregoContragents
                     ['success' => 'Ожидайте подтверждения связи'] :
                     ['error' => 'Вы не смогли добавить контрагента - попробуйте еще раз'];
             }
-
-
+        } else {
+            $result = ['error' => ['code' => '', 'item' => $resultSelect]];
         }
 
         return $result;
@@ -104,20 +104,18 @@ class EnteregoContragents
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function getContragentByFilter(array $filter = []): bool
+    public static function getContragentByFilter(array $filter = []): bool|array
     {
         $result = false;
         if (!empty($filter)) {
             $resultSelect = EnteregoORMContragentsTable::getList(
                 array(
-                    'select' => array('ID_CONTRAGENT'),
+                    'select' => array('ID_CONTRAGENT','TYPE','NAME_ORGANIZATION','PHONE_COMPANY','EMAIL','INN'),
                     'filter' => $filter,
                 )
-            );
+            )->fetch();
 
-            if (empty($resultSelect->fetch())) {
-                $result = true;
-            }
+            $result = empty($resultSelect) ? true : $resultSelect;
         }
         return $result;
     }

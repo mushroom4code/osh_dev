@@ -9,6 +9,7 @@ function ContragentList() {
     const [result, setResult] = useState('')
     const [initToClick, setInitToClick] = useState(false)
     const [loads, setLoads] = useState(false)
+    const [showForm, setShowForm] = useState(true)
     const [color,setColor] = useState('dark:text-hover-red text-hover-red')
     const href = '/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php'
 
@@ -35,6 +36,7 @@ function ContragentList() {
     return (<div>
         <ContragentForm loads={loads} initToClick={initToClick} setState={setInitToClick}
         listContragent={listContragent.length} setResult={setResult} setColor={setColor}
+                        showForm={showForm} setShowForm={setShowForm}
         />
         <div className={"mt-5" + color}>{result}</div>
         { listContragent.length > 0 ?
@@ -48,6 +50,7 @@ function ContragentList() {
                         dark:text-textDarkLightGray text-textLight"
                              onClick={() => {
                                  setInitToClick(!initToClick)
+                                 setShowForm(true)
                              }}>
                             <IconNameContr width="35" height="36" button={true} color={true}/>
                             <span className="ml-1 text-sm">Добавить</span>

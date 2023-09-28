@@ -32,18 +32,25 @@ if ($request->get('ACTION') === 'create') {
 
     if (!empty($user_id) && !empty($phone) && !empty($name)) {
 
-        $resQueryAllParams = EnteregoContragents::getContragentByFilter($curData);
-
         $resQueryCurrent = EnteregoContragents::getContragentByFilter($arData);
         $resQueryPHONE = EnteregoContragents::getContragentByFilter(['PHONE_COMPANY' => $phone]);
+        if (is_array($resQueryCurrent)) {
+            $resContr = $resQueryCurrent;
+        } else if (is_array($resQueryPHONE)) {
+            $resContr = $resQueryPHONE;
+        } else {
+            $resContr = [];
+        }
 
-        if ($resQueryAllParams && $resQueryPHONE && $resQueryCurrent) {
+
+        if (($resQueryPHONE && !is_array($resQueryPHONE)) && $resQueryCurrent && (!is_array($resQueryCurrent))) {
             $result = EnteregoContragents::addContragent(
                 $user_id,
                 array_merge($curData, $arData)
             );
         } else {
-            $result = ['error' => 'Контрагент с такими данными уже существует!'];
+            $result = ['error' => ['code' => 'Контрагент с такими данными уже существует!',
+                'item' => $resContr]];
         }
     }
     $arResult = $result;
