@@ -33,14 +33,16 @@ function is_valid_inn(i) {
     return false;
 }
 
-function ContragentForm({listLength, initToClick, loads, setState}) {
+let className = '', classNameWindow = 'w-9/12', classInput = 'lg:w-4/5 w-full';
+
+function ContragentForm({initToClick, loads, setState, listContragent, setResult, setColor}) {
     const [inn, setInn] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
-    const [result, setResult] = useState('')
+    const [result, setResultNew] = useState('')
+    const [colorRes, setColorRes] = useState('dark:text-hover-red text-hover-red')
     const [email, setEmail] = useState('')
     const [type, setType] = useState(uric)
-    let className = '', classNameWindow = 'w-9/12', classInput = 'lg:w-4/5 w-full';
 
     const handleClick = (e) => {
         e.preventDefault()
@@ -50,13 +52,14 @@ function ContragentForm({listLength, initToClick, loads, setState}) {
             TYPE: type,
             ACTION: 'create'
         }
+
         if (type === uric || type === ip) {
             const innValid = is_valid_inn(inn);
             if (innValid) {
                 data.INN = inn
                 sendContragent(data)
             } else {
-                setResult('Вы некорректно заполнили ИНН');
+                setResultNew('Вы некорректно заполнили ИНН');
             }
         } else {
             data.NAME = name
@@ -69,15 +72,17 @@ function ContragentForm({listLength, initToClick, loads, setState}) {
             data).then(res => {
                 if (res.data?.success) {
                     setResult(res.data?.success)
+                    setColor('dark:text-textDarkLightGray text-greenButton')
+                    setColorRes('dark:text-textDarkLightGray text-greenButton')
                     setPhone('')
                     setName('')
                     setInn('')
                     setEmail('')
                     setState(false)
                 } else if (res.data?.error) {
-                    setResult(res.data?.error)
+                    setResultNew(res.data?.error)
                 } else {
-                    setResult('При создании контрагента возникла ошибка! ' +
+                    setResultNew('При создании контрагента возникла ошибка! ' +
                         'Можете обратиться к менеджеру или повторить попытку');
                 }
             }
@@ -91,7 +96,7 @@ function ContragentForm({listLength, initToClick, loads, setState}) {
         classInput = 'w-full'
     }
     return (
-        (listLength === 0 && loads) || initToClick ?
+        (listContragent === 0 && loads) || initToClick ?
             <div className={className}>
                 <form onSubmit={handleClick}
                       className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10'
@@ -242,7 +247,7 @@ function ContragentForm({listLength, initToClick, loads, setState}) {
                                 : false
                         }
                     </div>
-                    <div className="mt-5 dark:text-textDarkLightGray text-textLight">{result}</div>
+                    <div className={"mt-5 " + colorRes}>{result}</div>
                 </form>
             </div>
             : false

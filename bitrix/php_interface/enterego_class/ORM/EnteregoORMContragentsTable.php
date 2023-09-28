@@ -59,6 +59,12 @@ class EnteregoORMContragentsTable extends DataManager
                     'default' => 'Ожидает подтверждения',
                 ]
             ),
+            new TextField(
+                'TYPE',
+                [
+                    'title' => "Тип лица",
+                ]
+            ),
             new StringField(
                 'NAME_ORGANIZATION',
                 [
@@ -97,12 +103,6 @@ class EnteregoORMContragentsTable extends DataManager
                     'title' => "Юридический адрес",
                 ]
             ),
-            new TextField(
-                'ADDRESS',
-                [
-                    'title' => "Юридический адрес",
-                ]
-            ),
             new StringField(
                 'BIC',
                 [
@@ -126,6 +126,12 @@ class EnteregoORMContragentsTable extends DataManager
                             }
                         );
                     }
+                ]
+            ),
+            new StringField(
+                'EMAIL',
+                [
+                    'title' => "EMAIL",
                 ]
             ),
             new DatetimeField(

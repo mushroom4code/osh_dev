@@ -9,6 +9,7 @@ function ContragentList() {
     const [result, setResult] = useState('')
     const [initToClick, setInitToClick] = useState(false)
     const [loads, setLoads] = useState(false)
+    const [color,setColor] = useState('dark:text-hover-red text-hover-red')
     const href = '/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php'
 
     function getContragents() {
@@ -32,8 +33,10 @@ function ContragentList() {
     }, []);
 
     return (<div>
-        <ContragentForm listLength={listContragent.length} loads={loads} initToClick={initToClick} setState={setInitToClick} />
-        <div className="mt-5">{result}</div>
+        <ContragentForm loads={loads} initToClick={initToClick} setState={setInitToClick}
+        listContragent={listContragent.length} setResult={setResult} setColor={setColor}
+        />
+        <div className={"mt-5" + color}>{result}</div>
         { listContragent.length > 0 ?
             <div>
             <p className="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal flex flex-row

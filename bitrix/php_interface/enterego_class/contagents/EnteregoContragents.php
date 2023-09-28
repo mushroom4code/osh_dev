@@ -37,11 +37,10 @@ class EnteregoContragents
             )
         );
 
-        if ($resultUserRelationships->fetch()) {
-            while ($ids_str = $resultUserRelationships->fetch()) {
-                $ids_new[] = $ids_str['ID_CONTRAGENT'];
-            }
-
+        while ($ids_str = $resultUserRelationships->fetch()) {
+            $ids_new[] = $ids_str['ID_CONTRAGENT'];
+        }
+        if (!empty($ids_new)) {
             $resultSelect = EnteregoORMContragentsTable::getList(
                 array(
                     'select' => array('*'),
@@ -50,12 +49,13 @@ class EnteregoContragents
                     ),
                 )
             );
-            if ($resultSelect) {
+            if (!empty($resultSelect)) {
                 while ($contargent = $resultSelect->fetch()) {
                     $result[] = $contargent;
                 }
             }
         }
+
 
         return $result;
     }
@@ -87,8 +87,8 @@ class EnteregoContragents
                     'USER_ID' => $user_id,
                 ));
                 $result = $addResultRel->isSuccess() ?
-                    ['success' => 'Ждите подтверждения связей'] :
-                    ['error' => 'Вы не смогли добавить контрагента'];
+                    ['success' => 'Ожидайте подтверждения связи'] :
+                    ['error' => 'Вы не смогли добавить контрагента - попробуйте еще раз'];
             }
 
 
@@ -111,7 +111,7 @@ class EnteregoContragents
             $resultSelect = EnteregoORMContragentsTable::getList(
                 array(
                     'select' => array('ID_CONTRAGENT'),
-                    'filter' => array($filter),
+                    'filter' => $filter,
                 )
             );
 

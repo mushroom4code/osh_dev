@@ -20,7 +20,8 @@ if ($request->get('ACTION') === 'create') {
     $user_id = $USER->GetID();
     $curData = [
         'PHONE_COMPANY' => $phone,
-        'NAME_ORGANIZATION' => $name
+        'NAME_ORGANIZATION' => $name,
+        'TYPE' => $type
     ];
 
     if ($type === EnteregoContragents::typeUric || $type === EnteregoContragents::typeIp) {
