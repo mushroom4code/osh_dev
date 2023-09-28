@@ -13,6 +13,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 IncludeTemplateLangFile($_SERVER["DOCUMENT_ROOT"] . "/bitrix/templates/" . SITE_TEMPLATE_ID . "/header.php");
 
 CJSCore::Init(array("fx"));
+CJSCore::Init("ls");
+
 Extension::load("ui.bootstrap4");
 
 $curPage = $APPLICATION->GetCurPage(true);
@@ -20,6 +22,7 @@ $MESS["CITY_CHOOSE_TITLE"] = 'Выберите город';
 global $option_site;
 $option = $option_site;
 $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
+include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_select.php")
 ?><!DOCTYPE html>
 <html xml:lang="<?= LANGUAGE_ID ?>" lang="<?= LANGUAGE_ID ?>">
 <head>
@@ -74,7 +77,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/style.css");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/assets/js/list.js");
     Asset::getInstance()->addJs('https://use.fontawesome.com/d071b13f63.js');
-    Asset::getInstance()->addJs('https://code.jquery.com/jquery-3.6.0.min.js');
     Asset::getInstance()->addJs("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.js");
     Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
     Asset::getInstance()->addCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
@@ -105,12 +107,12 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
             <div class="alert-info-setting">
                 <p class="mb-0 text-center d-lg-block d-md-block d-none">
-                    <?= !empty($Option->text_info) ?  $Option->text_info : '' ?>
-                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                    <?= !empty($Option->text_info) ? $Option->text_info : '' ?>
+                    <a href="<?= !empty($Option->link_info) ? $Option->link_info : '/' ?>"
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
                 <p class="mb-0 text-center d-lg-none d-md-none d-block">
-                    <?= !empty($Option->text_info_mobile) ?  $Option->text_info_mobile : '' ?>
-                    <a href="<?= !empty($Option->link_info) ?  $Option->link_info : '/' ?>"
+                    <?= !empty($Option->text_info_mobile) ? $Option->text_info_mobile : '' ?>
+                    <a href="<?= !empty($Option->link_info) ? $Option->link_info : '/' ?>"
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
             </div>
         <?php } ?>
@@ -148,7 +150,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 if (strripos($_SERVER['REQUEST_URI'], '/personal/order/make') !== false) {
                                     $styleNone = 'style="display:none;"';
                                 } ?>
-                        <button type="button" class="place__button" data-toggle="modal"
+                        <button type="button" class="place__button" id="placeModal_toggle" data-toggle="modal"
                                 data-target="#placeModal" <?= $styleNone ?>>
                             <?php
                             // отключение композитного кеша вне компонента
@@ -178,7 +180,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             } ?>
                             <span id="city-title" class="text_header" data-city="<?= $code_region ?>">
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
-                                        <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_select.php") ?>
                             </span>
                             <?php Bitrix\Main\Page\Frame::getInstance()->finishDynamicWithID("city-title", ""); ?>
                         </button>
