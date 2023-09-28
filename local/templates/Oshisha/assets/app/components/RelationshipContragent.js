@@ -11,23 +11,25 @@ function RelationshipContragent({contragent, setState, setContrResult, emptyData
         <>
             { init ?
                 <form onSubmit={handleClick}
-                      className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10 w-1/3 xs:w-full'}>
+                      className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10 ' +
+                          'md:w-1/2 lg:w-1/2 xl:w-1/3 2xl:w-1/4 xs:w-full'}>
                     <div className="mb-10">
-                        <p className="text-xl font-medium dark:text-textDarkLightGray text-textLight">
+                        <p className="xl:text-xl lg:text-xl md:text-lg text-md font-medium dark:text-textDarkLightGray
+                        text-textLight">
                             Контрагент с такими данными уже существует.<br></br>
                             Хотите запросить привязку к нему ?
                         </p>
                     </div>
                     <div className="mb-8">
                         <div className="dark:text-textDarkLightGray text-textLight">
-                            <p className="mb-5 dark:font-medium font-semibold text-xl flex flex-row items-center">
+                            <p className="mb-5 dark:font-medium font-semibold text-lg flex flex-row items-center">
                                 <IconNameContr />
                                 {contragent?.NAME_ORGANIZATION}
                             </p>
-                            <p className="mb-4 text-md dark:font-medium font-semibold"> ИНН: <span
+                            <p className="mb-4 text-sm dark:font-normal font-semibold"> ИНН: <span
                                 className="dark:font-light font-medium ml-3">{contragent?.INN}</span>
                             </p>
-                            <p className="text-md dark:font-medium font-semibold"> Телефон:
+                            <p className="text-sm dark:font-normal font-semibold"> Телефон:
                                 <span className="dark:font-light font-medium ml-3">{contragent?.PHONE_COMPANY}</span>
                             </p>
                         </div>
