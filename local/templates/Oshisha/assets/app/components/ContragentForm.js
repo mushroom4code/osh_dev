@@ -64,7 +64,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                 setResultNew('Вы некорректно заполнили ИНН');
             }
         } else {
-            data.NAME = name
+            data.EMAIL = email
             sendContragent(data)
         }
     }

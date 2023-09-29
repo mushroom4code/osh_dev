@@ -28,6 +28,7 @@ if ($request->get('ACTION') === 'create') {
         $arData = ['INN' => $request->get('INN')];
     } else {
         $arData = ['EMAIL' => $request->get('EMAIL')];
+
     }
 
     if (!empty($user_id) && !empty($phone) && !empty($name)) {
