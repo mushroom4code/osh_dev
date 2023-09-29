@@ -16,6 +16,6 @@ input:focus, button:focus, [type='text']:focus, [type="password"]:focus, [type="
     box-shadow: none;
 }
 
-[type="radio"]:focus, [type="radio"]:hover {
+[type="radio"]:focus, [type="radio"]:hover, [type='radio']:checked:hover {
     background-color: transparent;
 }

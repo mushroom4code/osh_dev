@@ -69,7 +69,7 @@ if ($request->get('ACTION') === 'getList') {
 
 if ($request->get('ACTION') === 'createRelationship') {
     $user_id = $USER->GetID();
-    $error = ['error' => 'Вы уже привязаны к контрагенту'];
+    $error = ['error' => 'Вы уже привязаны к этому контрагенту'];
     $contragent_id = $request->get('ID_CONTRAGENT');
     if (!empty($user_id) && !empty($contragent_id)) {
         $res = EnteregoContragents::setRelationShip($user_id, $contragent_id);

@@ -26,13 +26,13 @@ function RelationshipContragent({contragent, setState, setContrResult, emptyData
 
     return (
         <>
-            <div className={"mt-5 " + colorRes}>{result}</div>
             {init ?
                 <form onSubmit={handleClick}
-                      className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10 ' +
-                          'md:w-1/2 lg:w-1/2 xl:w-1/3 2xl:w-1/4 xs:w-full'}>
+                      className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 md:rounded-xl' +
+                          ' md:mb-10 mb-0 md:w-1/2 lg:w-1/2 xl:w-1/3 2xl:w-1/4 xs:w-full md:h-auto h-screen rounded-0' +
+                          ' py-11 px-6 md:py-8'}>
                     <div className="mb-10">
-                        <p className="xl:text-xl lg:text-xl md:text-lg text-md font-medium dark:text-textDarkLightGray
+                        <p className="xl:text-xl lg:text-xl text-lg font-medium dark:text-textDarkLightGray
                         text-textLight">
                             Контрагент с такими данными уже существует.<br></br>
                             Хотите запросить привязку к нему ?
@@ -40,30 +40,31 @@ function RelationshipContragent({contragent, setState, setContrResult, emptyData
                     </div>
                     <div className="mb-8">
                         <div className="dark:text-textDarkLightGray text-textLight">
-                            <p className="mb-5 dark:font-medium font-semibold text-lg flex flex-row items-center">
+                            <p className="md:mb-5 mb-8 flex flex-row items-center">
                                 <IconNameContr/>
-                                {contragent?.NAME_ORGANIZATION}
+                                <span className='dark:font-medium font-semibold text-lg w-fit'>
+                                    {contragent?.NAME_ORGANIZATION}</span>
                             </p>
                             {
                                 contragent?.INN !== null ?
-                                    <p className="mb-4 text-sm dark:font-normal font-semibold"> ИНН: <span
-                                        className="dark:font-light font-medium ml-3">{contragent?.INN}</span>
+                                    <p className="mb-4 md:text-sm text-lg dark:font-normal font-semibold"> ИНН:
+                                        <span className="dark:font-light font-medium ml-3">{contragent?.INN}</span>
                                     </p> :
                                     false
                             }
                             {
                                 contragent?.EMAIL !== null ?
-                                    <p className="mb-4 text-sm dark:font-normal font-semibold"> Email: <span
-                                        className="dark:font-light font-medium ml-3">{contragent?.EMAIL}</span>
+                                    <p className="mb-4 md:text-sm text-lg  dark:font-normal font-semibold"> Email:
+                                        <span className="dark:font-light font-medium ml-3">{contragent?.EMAIL}</span>
                                     </p> :
                                     false
                             }
-                            <p className="text-sm dark:font-normal font-semibold"> Телефон:
+                            <p className="md:text-sm text-lg dark:font-normal font-semibold"> Телефон:
                                 <span className="dark:font-light font-medium ml-3">{contragent?.PHONE_COMPANY}</span>
                             </p>
                         </div>
                     </div>
-                    <div className="flex flex-row mt-4">
+                    <div className="flex flex-row md:mt-4 mt-6">
                         <div className="d-flex flex-row align-items-center justify-content-start w-1/2  mr-3">
                             <button className="dark:bg-greenButton rounded-md bg-greenButton text-white w-full px-7 py-3
                              dark:shadow-md shadow-shadowDark dark:hover:bg-greenLight cursor-pointer" type="submit">
@@ -86,6 +87,7 @@ function RelationshipContragent({contragent, setState, setContrResult, emptyData
                             </button>
                         </div>
                     </div>
+                    <div className={"mt-5 " + colorRes}>{result}</div>
                 </form>
                 : false
             }

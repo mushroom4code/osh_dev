@@ -102,7 +102,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
     if (initToClick) {
         className = 'fixed top-0 h-screen flex justify-center flex-col items-center left-0 dark:bg-darkOpacityWindow' +
             ' bg-lightOpacityWindow w-screen z-50'
-        classNameWindow = 'lg:w-2/4 xs:w-full'
+        classNameWindow = 'lg:w-2/4 xs:w-full h-screen md:h-auto'
         classInput = 'w-full'
     }
     return (
@@ -118,16 +118,17 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                 }
                 {showForm ?
                     <form onSubmit={handleClick}
-                          className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 rounded-xl p-8 mb-10'
+                          className={'dark:bg-darkBox bg-white dark:border-0 border-textDark border-2 md:rounded-xl' +
+                              ' md:px-8 md:py-8 py-11 px-6 md:mb-10 mb-0 rounded-0'
                               + classNameWindow}>
-                        <div className="mb-8">
+                        <div className="md:mb-8 mb-10">
                             <p className="text-xl font-medium dark:text-textDarkLightGray text-textLight">
-                                Создайте своего первого контрагента
+                                Создайте контрагента для возможности покупки товаров на сайте
                             </p>
                         </div>
-                        <div className="mb-8">
+                        <div className="md:mb-8 mb-5">
                             <div className="col-12 col-md-10 flex flex-col md:flex-row align-items-center mb-8">
-                                <div className="mr-7">
+                                <div className="md:mr-7 mr-0 md:mb-0 mb-3">
                                     <input className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
                                  dark:checked:focus:border-white dark:focus:checked:ring-white
@@ -139,10 +140,10 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                            checked={type === uric}
                                            type="radio" name="check"
                                            value={uric}/>
-                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
+                                    <label className="md:text-sm text-md dark:font-light font-normal text-textLight ml-3
                                     dark:text-textDarkLightGray">Юридическое лицо</label>
                                 </div>
-                                <div className="mr-7">
+                                <div className="md:mr-7 mr-0 md:mb-0 mb-3">
                                     <input className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
                                  dark:checked:focus:border-white dark:focus:checked:ring-white
@@ -155,10 +156,10 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                            checked={type === ip}
                                            type="radio" name="check"
                                            value={ip}/>
-                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
+                                    <label className="md:text-sm text-md dark:font-light font-normal text-textLight ml-3
                                      dark:text-textDarkLightGray">Индивидуальный предприниматель</label>
                                 </div>
-                                <div className="mr-7">
+                                <div className="md:mr-7 mr-0 md:mb-0 mb-3">
                                     <input type="radio" name="check"
                                            className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
@@ -171,7 +172,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                            }}
                                            checked={type === fiz}
                                            value={fiz}/>
-                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
+                                    <label className="md:text-sm text-md dark:font-light font-normal text-textLight ml-3
                                      dark:text-textDarkLightGray">Физическое лицо</label>
                                 </div>
                             </div>
@@ -243,18 +244,20 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                        placeholder="Телефон компании"/>
                             </div>
                         </div>
-                        <div className="flex flex-row mt-4">
-                            <div className="d-flex flex-row align-items-center justify-content-start">
-                                <button className="dark:bg-dark-red rounded-md bg-light-red text-white px-7 py-3 w-fit
-                             dark:shadow-md shadow-shadowDark dark:hover:bg-hoverRedDark cursor-pointer" type="submit">
-                                    Создать контрагента
+                        <div className="flex flex-row md:mt-4 mt-8">
+                            <div className="d-flex flex-row align-items-center justify-content-start md:w-fit w-1/2 mr-3">
+                                <button className="dark:bg-dark-red rounded-md bg-light-red text-white px-7 py-3
+                             dark:shadow-md shadow-shadowDark w-full dark:hover:bg-hoverRedDark cursor-pointer"
+                                        type="submit">
+                                    Подтвердить
                                 </button>
                             </div>
                             {
                                 initToClick ?
-                                    <div className="d-flex flex-row align-items-center justify-content-start ml-3">
-                                        <button className="dark:bg-grayButton rounded-md bg-grayButton text-white px-7 py-3 w-fit
-                             dark:shadow-md shadow-shadowDark dark:hover:bg-black cursor-pointer" onClick={
+                                    <div className="d-flex flex-row align-items-center justify-content-start ml-3 md:w-fit w-1/2">
+                                        <button className="dark:bg-grayButton rounded-md bg-grayButton text-white px-7
+                                         py-3 dark:shadow-md w-full shadow-shadowDark
+                                         dark:hover:bg-black cursor-pointer" onClick={
                                             (e) => {
                                                 e.preventDefault()
                                                 setState(false);
