@@ -42,7 +42,7 @@ function ContragentList() {
         { listContragent.length > 0 ?
             <div>
             <p className="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal flex flex-row
-            justify-between items-center font-semibold mb-5 mt-8">
+            justify-between items-center font-semibold mb-5">
                 Контрагенты
                 {
                     listContragent.length > 0 ?

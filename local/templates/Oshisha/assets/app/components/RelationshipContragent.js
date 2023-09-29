@@ -32,17 +32,18 @@ function RelationshipContragent({contragent, setState, setContrResult, emptyData
                           ' md:mb-10 mb-0 md:w-1/2 lg:w-1/2 xl:w-1/3 2xl:w-1/4 xs:w-full md:h-auto h-screen rounded-0' +
                           ' py-11 px-6 md:py-8'}>
                     <div className="mb-10">
-                        <p className="xl:text-xl lg:text-xl text-lg font-medium dark:text-textDarkLightGray
-                        text-textLight">
+                        <p className="xl:text-xl lg:text-xl text-lg dark:font-medium font-bold dark:text-textDarkLightGray
+                        text-lightGrayBg">
                             Контрагент с такими данными уже существует.<br></br>
                             Хотите запросить привязку к нему ?
                         </p>
                     </div>
                     <div className="mb-8">
-                        <div className="dark:text-textDarkLightGray text-textLight">
+                        <div className="dark:text-textDarkLightGray text-lightGrayBg">
                             <p className="md:mb-5 mb-8 flex flex-row items-center">
-                                <IconNameContr/>
-                                <span className='dark:font-medium font-semibold text-lg w-fit'>
+                                <IconNameContr newColor="dark:fill-tagFilterGray fill-textDark" form={true}
+                                               newColorIcon='fill-darkBox dark:fill-white'/>
+                                <span className='dark:font-medium font-medium text-lg w-fit'>
                                     {contragent?.NAME_ORGANIZATION}</span>
                             </p>
                             {
@@ -87,7 +88,7 @@ function RelationshipContragent({contragent, setState, setContrResult, emptyData
                             </button>
                         </div>
                     </div>
-                    <div className={"mt-5 " + colorRes}>{result}</div>
+                    {result !== '' ? <div className={"mt-5 " + colorRes}>{result}</div> : false}
                 </form>
                 : false
             }
