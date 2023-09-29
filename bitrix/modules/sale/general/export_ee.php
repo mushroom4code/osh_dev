@@ -411,6 +411,7 @@ class CSaleExportEe extends CSaleExport
 
         if(self::getVersionSchema() >= self::PARTIAL_VERSION)
         {
+//            Enterego - empty
             if(!empty($arShipment) && count($arShipment)>0)
             {
                 foreach($arShipment as $shipment)
