@@ -33,7 +33,7 @@ function ContragentList() {
         getContragents()
     }, []);
 
-    return (<div>
+    return (<div className="px-5">
         <ContragentForm loads={loads} initToClick={initToClick} setState={setInitToClick}
         listContragent={listContragent.length} setResult={setResult} setColor={setColor}
                         showForm={showForm} setShowForm={setShowForm}

@@ -1,15 +1,13 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
-use Bitrix\Main\Page\Asset;
-
 /** @var CUser $USER
  * @var CAllMain|CMain $APPLICATION
  */
 
-if ($USER->IsAuthorized()) {?>
-    <div class="mobile_lk mb-5 flex flex-col xs:bg-white md:flex-row">
-        <div class="sidebar_lk">
+if ($USER->IsAuthorized()) { ?>
+    <div class="mobile_lk mb-5  flex flex-col xs:bg-white md:flex-row">
+        <div class="sidebar_lk hidden md:block">
             <?php $APPLICATION->IncludeComponent(
                 "bitrix:menu",
                 "",
@@ -27,28 +25,12 @@ if ($USER->IsAuthorized()) {?>
                 )
             ); ?>
         </div>
-        <script>
-            function changeTypeInn(elem) {
-                if (elem.value === 'Юр.лицо') {
-                    $('input[data-name="INN"]').inputmask({"mask": "9999999999"});
-                    return;
-                }
-
-                if (elem.value === 'ИП') {
-                    $('input[data-name="INN"]').inputmask({"mask": "999999999999"});
-                    return;
-                }
-
-                if (elem.value === 'Физ. лицо') {
-                    $('input[data-name="INN"]').inputmask({"mask": "999999999999"});
-                }
-            }
-        </script>
         <div class="mb-5 w-full" id="content_box">
             <div id="createContragent"></div>
         </div>
     </div>
-    <script src="/dist/app.generated.js?<?=hash_file('md5', $_SERVER['DOCUMENT_ROOT'] . '/dist/app.generated.js')?>" defer></script>
+    <script src="/dist/app.generated.js?<?= hash_file('md5', $_SERVER['DOCUMENT_ROOT'] . '/dist/app.generated.js') ?>"
+            defer></script>
     <?php
 } else {
     LocalRedirect('/login/?login=yes');

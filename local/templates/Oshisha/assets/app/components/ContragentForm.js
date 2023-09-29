@@ -126,7 +126,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                             </p>
                         </div>
                         <div className="mb-8">
-                            <div className="col-12 col-md-10 flex flex-row align-items-center mb-8">
+                            <div className="col-12 col-md-10 flex flex-col md:flex-row align-items-center mb-8">
                                 <div className="mr-7">
                                     <input className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
                                 dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2

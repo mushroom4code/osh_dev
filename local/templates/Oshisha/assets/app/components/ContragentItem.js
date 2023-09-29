@@ -21,7 +21,7 @@ function ContragentItem({contragent}) {
 
     return (
         <div
-            className="mr-5 mb-5 rounded-lg dark:bg-darkBox bg-textDark lg:w-5/12 w-full flex flex-col">
+            className="xs:mr-1 lg:mr-5 mb-5 rounded-lg dark:bg-darkBox bg-textDark lg:w-5/12 w-full flex flex-col">
             <p className={colorClass}>{contragent?.STATUS_VIEW}</p>
             <div className="pb-8 pr-8 pl-8 dark:text-textDarkLightGray text-textLight">
                 <p className="mb-5 dark:font-medium font-semibold text-xl flex flex-row items-center">
