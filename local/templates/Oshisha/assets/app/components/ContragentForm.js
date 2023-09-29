@@ -111,8 +111,10 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                 {contrResult?.NAME_ORGANIZATION !== undefined ?
                     <RelationshipContragent contragent={contrResult}
                                             setState={setState}
+                                            setResults={setResult}
                                             setContrResult={setContrResult}
                                             setResultNew={setResultNew}
+                                            setColorResNew={setColor}
                                             emptyDataInputs={emptyDataInputs}/>
                     : false
                 }

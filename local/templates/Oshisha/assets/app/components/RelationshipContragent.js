@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import IconNameContr from "./IconNameContr";
 import axios from "axios";
 
-function RelationshipContragent({contragent, setState, setContrResult, emptyDataInputs, setResultNew}) {
+function RelationshipContragent({contragent, setState, setContrResult, emptyDataInputs, setResultNew,setResults, setColorResNew}) {
     const [init, setInit] = useState(true)
     const [result, setResult] = useState('')
     const [colorRes, setColorRes] = useState('dark:text-hover-red text-hover-red')
@@ -11,10 +11,10 @@ function RelationshipContragent({contragent, setState, setContrResult, emptyData
         axios.post('/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php',
             {'ACTION': 'createRelationship', 'ID_CONTRAGENT': contragent.ID_CONTRAGENT})
             .then(res => {
-                console.log(res)
                 if (res.data?.success) {
-                    setResult(res.data?.success)
-                    setColorRes('dark:text-textDarkLightGray text-greenButton')
+                    setResults(res.data?.success)
+                    setState(false);
+                    setColorResNew('dark:text-textDarkLightGray text-greenButton')
                     setInit(false);
                 } else if (res.data?.error) {
                     setResult(res.data?.error)
