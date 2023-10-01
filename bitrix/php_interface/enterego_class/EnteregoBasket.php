@@ -97,11 +97,11 @@ class EnteregoBasket
 
             foreach ($product_prices as $product_id => $price_data) {
 
-                $typePriceIds = ["CATALOG_PRICE_$price_id"];
+                $typePriceIds = ["PRICE_$price_id"];
                 if ($useUserPrice) {
                     $userPriceType = UserPriceHelperOsh::GetPriceIdFromRule($product_id);
                     if ($userPriceType) {
-                        $typePriceIds[] = "CATALOG_PRICE_$userPriceType";
+                        $typePriceIds[] = "PRICE_$userPriceType";
                     }
                 }
 
@@ -113,7 +113,7 @@ class EnteregoBasket
                 $newProp = $propsUseSale->Fetch();
 
                 if ((USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') && SITE_ID !== 'V3') {
-                    $typePriceIds[] = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
+                    $typePriceIds[] = "PRICE_" . SALE_PRICE_TYPE_ID;
                 }
 
                 $result = CIBlockElement::GetList(
@@ -128,7 +128,7 @@ class EnteregoBasket
                     foreach ($typePriceIds as $typePriceId) {
                         if (!empty($ar_res["$typePriceId"]) && (is_null($minPrice) || $minPrice > $ar_res["$typePriceId"])) {
                             $minPrice = $product_prices[$product_id]['PRICE'] = $ar_res[$typePriceId];
-                            $product_prices[$product_id]['PRICE_ID'] = str_replace('CATALOG_PRICE_', '', $typePriceId);
+                            $product_prices[$product_id]['PRICE_ID'] = str_replace('PRICE_', '', $typePriceId);
                         }
                     }
                 }
@@ -162,10 +162,10 @@ class EnteregoBasket
             array("ID" => $product_id),
             false,
             false,
-            ["CATALOG_PRICE_$price_type_id"]);
+            ["PRICE_$price_type_id"]);
 
         if ($ar_res = $res->Fetch()) {
-            return $ar_res["CATALOG_PRICE_$price_type_id"];
+            return $ar_res["PRICE_$price_type_id"];
         }
         return null;
     }

@@ -58,6 +58,11 @@ abstract class CommonPVZ
     {
         return [];
     }
+
+    abstract public static function getInstanceForPvz($deliveryParams) : array;
+
+    abstract public static function getInstanceForDoor($deliveryParams) : array;
+
     public function __construct()
     {
         $CONFIG_DELIVERIES = DeliveryHelper::getConfigs();
