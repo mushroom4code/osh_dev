@@ -21,13 +21,10 @@ $this->setFrameMode(true);
 
 global $searchFilter;
 
-if (defined('MERCH_SECTION_ID')) {
-    $merchSectionsIds = [];
-    EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
-
+if (defined('IS_MERCH_PROPERTY')) {
     $GLOBALS['searchFilter'] = $GLOBALS['searchFilter']
-        ? array_merge($GLOBALS['searchFilter'], ['!=IBLOCK_SECTION_ID' => $merchSectionsIds])
-        : ['!=IBLOCK_SECTION_ID' => $merchSectionsIds];
+        ? array_merge($GLOBALS['searchFilter'], ['!=PROPERTY_'.IS_MERCH_PROPERTY => 'Да'])
+        : ['!=PROPERTY_'.IS_MERCH_PROPERTY.'_VALUE' => 'Да'];
 }
 
 if (Loader::includeModule("sale")) {
@@ -127,10 +124,10 @@ if (Loader::includeModule('search')) {
         array('HIDE_ICONS' => 'Y')
     );
 
-    if (!empty($arElements) && is_array($arElements) && defined('MERCH_SECTION_ID')) {
-        $arElementsRes = CIBlockElement::getList([], ['ID' => $arElements], false, false, ['ID', 'IBLOCK_SECTION_ID']);
+    if (!empty($arElements) && is_array($arElements) && defined('IS_MERCH_PROPERTY')) {
+        $arElementsRes = CIBlockElement::getList([], ['ID' => $arElements], false, false, ['ID', 'PROPERTY_'.IS_MERCH_PROPERTY]);
         while ($element = $arElementsRes->fetch()) {
-            if (array_search($element['IBLOCK_SECTION_ID'], $merchSectionsIds)) {
+            if ($element['PROPERTY_'.IS_MERCH_PROPERTY.'_VALUE'] == 'Да') {
                 unset($arElements[array_search($element['ID'], $arElements)]);
             }
         }

@@ -18,12 +18,9 @@ if (SITE_ID !== SITE_EXHIBITION) {
         'PROPERTY_NEW_VALUE' => 'Да',
     );
 
-    if (defined('MERCH_SECTION_ID')) {
-        $merchSectionsIds = [];
-        EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
-
+    if (defined('IS_MERCH_PROPERTY')) {
         $GLOBALS['ArFilter'] = array_merge($GLOBALS['ArFilter'], array(
-            '!IBLOCK_SECTION_ID' => $merchSectionsIds
+            '!=PROPERTY_'.IS_MERCH_PROPERTY => 'Да'
         ));
     }
 

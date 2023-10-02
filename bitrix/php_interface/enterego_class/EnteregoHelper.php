@@ -191,20 +191,4 @@ class EnteregoHelper
         $rsRes = CIBlockElement::GetList([], ['ID' => $productId, 'SECTION_ID' => CATALOG_GIFT_ID]);
         return $rsRes->SelectedRowsCount() > 0;
     }
-
-    /** get all nested sections ids of passed section
-     * @param int $productId
-     * @param array &$nestedSectionsIds
-     */
-    public static function getSectionNestedSectionIds(array &$nestedSectionsIds, string $sectionId = MERCH_SECTION_ID): void
-    {
-        if (!isset($nestedSectionsIds[MERCH_SECTION_ID])) {
-            $nestedSectionsIds[MERCH_SECTION_ID] = MERCH_SECTION_ID;
-        }
-        $childSectionIdsRes = CIBlockSection::GetList([],['SECTION_ID' => $sectionId], false, ['ID']);
-        while($section = $childSectionIdsRes->fetch()) {
-            $nestedSectionsIds[$section['ID']] = $section['ID'];
-            self::getSectionNestedSectionIds($nestedSectionsIds, $section['ID']);
-        }
-    }
 }

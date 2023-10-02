@@ -100,6 +100,9 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
         "PREVIEW_PICTURE",
         "DETAIL_PICTURE",
     );
+    if (defined('IS_MERCH_PROPERTY')) {
+        $arSelect[] = 'PROPERTY_'.IS_MERCH_PROPERTY;
+    }
     $arFilter = array(
         "IBLOCK_LID" => SITE_ID,
         "IBLOCK_ACTIVE" => "Y",
@@ -125,13 +128,10 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
     }
 }
 
-if (defined('MERCH_SECTION_ID')) {
-    $merchSectionsIds = [];
-    EnteregoHelper::getSectionNestedSectionIds($merchSectionsIds);
-
+if (defined('IS_MERCH_PROPERTY')) {
     if (!empty($arResult["ELEMENTS"])) {
         foreach ($arResult['ELEMENTS'] as $key => $arElement) {
-            if (array_search($arElement['IBLOCK_SECTION_ID'], $merchSectionsIds)) {
+            if ($arElement['PROPERTY_'.IS_MERCH_PROPERTY] == 'Да') {
                 if (count($arResult['ELEMENTS']) < 2) {
                     unset($arResult['SEARCH']);
                     unset($arResult['CATEGORIES']);
