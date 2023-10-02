@@ -133,6 +133,15 @@ class EnteregoBasket
                     }
                 }
 
+                $price_offer = \Bitrix\Catalog\PriceTable::getList(
+                    ['select' => ['ID'],
+                        'filter' => [
+                            '=PRODUCT_ID' => $product_id,
+                            '=CATALOG_GROUP_ID' => $product_prices[$product_id]['PRICE_ID']
+                        ]
+                    ]
+                )->fetch();
+                $price_type_name = \CCatalogGroup::GetByID($product_prices[$product_id]['PRICE_ID'])['NAME'];
                 $item = $price_data['ITEM'];
 
                 $item->setFields([
@@ -143,8 +152,9 @@ class EnteregoBasket
                     'CUSTOM_PRICE' => 'N',
                     'BASE_PRICE' => $product_prices[$product_id]['PRICE'],
                     'PRICE_TYPE_ID' => $product_prices[$product_id]['PRICE_ID'],
+                    'PRODUCT_PRICE_ID' => $price_offer['ID'],
+                    'NOTES' => $price_type_name
                 ]);
-
             }
         }
 
