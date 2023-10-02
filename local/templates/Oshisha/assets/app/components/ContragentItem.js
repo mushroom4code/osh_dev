@@ -23,8 +23,8 @@ function ContragentItem({contragent}) {
     const [initBoxInfo, setInitBoxInfo] = useState(false)
 
     const arData = [
-        {'name': 'Банк', 'value': contragent?.BANK},
         {'name': 'Бик', 'value': contragent?.BIC},
+        {'name': 'Банк', 'value': contragent?.BANK},
         {'name': 'Расчетный счет', 'value': contragent?.RASCHET_CHET},
         {'name': 'Адрес', 'value': contragent?.ADDRESS},
     ]
@@ -40,23 +40,23 @@ function ContragentItem({contragent}) {
                         {contragent?.NAME_ORGANIZATION}
                     </p>
                     {contragent.TYPE === 'uric' || contragent.TYPE === 'ip' ?
-                        <p className="mb-4 text-sm dark:font-normal font-semibold"> ИНН: <span
-                            className="dark:font-extralight font-medium ml-3">{contragent?.INN}</span>
+                        <p className="mb-4 text-sm dark:font-medium font-semibold"> ИНН <span
+                            className="dark:font-extralight font-normal ml-3">{contragent?.INN}</span>
                         </p>
                         :
-                        <p className="mb-4 text-sm dark:font-normal font-semibold"> Email: <span
-                            className="dark:font-extralight font-medium ml-3">{contragent?.EMAIL}</span>
+                        <p className="mb-4 text-sm dark:font-medium font-semibold"> Email <span
+                            className="dark:font-extralight font-normal ml-3">{contragent?.EMAIL}</span>
                         </p>
                     }
-                    <p className="text-sm dark:font-normal font-semibold"> Телефон:
-                        <span className="dark:font-extralight font-medium ml-3">{contragent?.PHONE_COMPANY}</span>
+                    <p className="text-sm dark:font-medium font-semibold"> Телефон
+                        <span className="dark:font-extralight font-normal ml-3">{contragent?.PHONE_COMPANY}</span>
                     </p>
                 </div>
             </div>
             <div className={!initHideBox ? 'hidden' : 'dark:text-textDarkLightGray text-textLight relative pr-8 pl-8'}>
                 {
                     initHideBox ?
-                        <p className={"p-2 mt-3 mb-3 w-full cursor-pointer flex items-center justify-center" +
+                        <p className={"p-2 mt-2 mb-3 w-full cursor-pointer flex items-center justify-center" +
                             (initBoxInfo ? ' rotate-180' : '')} onClick={() => {
                             setInitBoxInfo(!initBoxInfo)
                         }}>
@@ -80,7 +80,7 @@ function ContragentItem({contragent}) {
                                     }
                                     return (
                                         <p key={i}
-                                           className="mb-4 text-sm dark:font-normal font-semibold">{item.name}:
+                                           className="mb-4 text-sm dark:font-medium font-semibold">{item.name}
                                             <span className="dark:font-extralight font-normal ml-3">{item.value}</span>
                                         </p>
                                     )
