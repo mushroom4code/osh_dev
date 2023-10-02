@@ -19,8 +19,8 @@ if ($request->get('ACTION') === 'create') {
     $arData = $result = [];
     $user_id = $USER->GetID();
     $curData = [
-        'PHONE_COMPANY' => $phone,
-        'NAME_ORGANIZATION' => $name,
+        'PHONE_COMPANY' => $phone ?? '',
+        'NAME_ORGANIZATION' => $name ?? '',
         'TYPE' => $type
     ];
 

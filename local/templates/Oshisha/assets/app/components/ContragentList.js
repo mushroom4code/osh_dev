@@ -50,6 +50,7 @@ function ContragentList() {
                 clearIncomplete: true,
                 definitionSymbol: "*"
             })
+
         }
     }, [initToClick]);
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import RelationshipContragent from "./RelationshipContragent";
 
@@ -48,9 +48,11 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
 
     const handleClick = (e) => {
         e.preventDefault()
+        const number = String(document.querySelector('.phoneCodeContragent').value);
+        const prefix = String(document.querySelector('[name="__phone_prefix"]').value);
         const data = {
             NAME: name,
-            PHONE_COMPANY: phone,
+            PHONE_COMPANY: prefix + number,
             TYPE: type,
             ACTION: 'create'
         }
@@ -67,8 +69,8 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
             data.EMAIL = email
             sendContragent(data)
         }
-    }
 
+    }
     const emptyDataInputs = () => {
         setPhone('')
         setName('')
@@ -244,14 +246,12 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                        className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
                                            'outline-none rounded-md phoneCodeContragent ' + classInput}
                                        value={phone}
-                                       onChange={(e) => {
-                                           setPhone(e.target.value)
-                                       }}
                                        placeholder="Телефон компании"/>
                             </div>
                         </div>
                         <div className="flex flex-row md:mt-4 mt-8">
-                            <div className="d-flex flex-row align-items-center justify-content-start md:w-fit w-1/2 mr-3">
+                            <div
+                                className="d-flex flex-row align-items-center justify-content-start md:w-fit w-1/2 mr-3">
                                 <button className="dark:bg-dark-red rounded-md bg-light-red text-white px-7 py-3
                              dark:shadow-md shadow-shadowDark w-full dark:hover:bg-hoverRedDark cursor-pointer"
                                         type="submit">
@@ -260,7 +260,8 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                             </div>
                             {
                                 initToClick ?
-                                    <div className="d-flex flex-row align-items-center justify-content-start ml-3 md:w-fit w-1/2">
+                                    <div
+                                        className="d-flex flex-row align-items-center justify-content-start ml-3 md:w-fit w-1/2">
                                         <button className="dark:bg-grayButton rounded-md bg-grayButton text-white px-7
                                          py-3 dark:shadow-md w-full shadow-shadowDark
                                          dark:hover:bg-black cursor-pointer" onClick={
@@ -284,4 +285,5 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
 
     );
 }
+
 export default ContragentForm
