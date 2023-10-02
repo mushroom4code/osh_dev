@@ -66,7 +66,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                 setResultNew('Вы некорректно заполнили ИНН');
             }
         } else {
-            data.EMAIL = email
+            data.EMAIL = String(document.querySelector('.emailContragent').value);
             sendContragent(data)
         }
 
@@ -107,6 +107,13 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
         classNameWindow = 'lg:w-2/4 xs:w-full h-screen md:h-auto'
         classInput = 'w-full'
     }
+
+    useEffect(() => {
+        const boxEmail = $('.emailContragent');
+        if (type === fiz && boxEmail.length > 0) {
+            boxEmail.inputmask("email");
+        }
+    }, [type]);
 
     return (
         (listContragent === 0 && loads) || initToClick ?
@@ -226,11 +233,9 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                         <input type="text"
                                                required
                                                value={email}
-                                               onChange={(e) => {
-                                                   setEmail(e.target.value)
-                                               }}
                                                minLength={8}
-                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
+                                               className={
+                                                   'dark:bg-grayButton bg-textDark emailContragent border-none py-3 px-4 ' +
                                                    'outline-none rounded-md ' + classInput}
                                                placeholder="Email"/>
                                     </div>

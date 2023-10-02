@@ -10,7 +10,7 @@ function ContragentList() {
     const [initToClick, setInitToClick] = useState(false)
     const [loads, setLoads] = useState(false)
     const [showForm, setShowForm] = useState(true)
-    const [count,setCount]= useState(0);
+    const [count, setCount] = useState(0);
     const [color, setColor] = useState('dark:text-hover-red text-hover-red')
     const href = '/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php'
 
@@ -36,6 +36,7 @@ function ContragentList() {
 
     useEffect(() => {
         const boxPhone = $('.phoneCodeContragent');
+        const boxEmail = $('.emailContragent');
         if (initToClick && boxPhone.length > 0) {
             boxPhone.phonecode({
                 preferCo: 'ru',
@@ -43,15 +44,17 @@ function ContragentList() {
             });
             boxPhone.inputmask("+7 (999)-999-9999", {
                 minLength: 10,
+                clearIncomplete: true,
+                definitionSymbol: "*",
                 removeMaskOnSubmit: true,
                 autoUnmask: true,
                 clearMaskOnLostFocus: false,
                 clearMaskOnLostHover: false,
-                clearIncomplete: true,
-                definitionSymbol: "*"
             })
-
+        } else if (initToClick && boxEmail.length > 0) {
+            boxEmail.inputmask("email");
         }
+
     }, [initToClick]);
 
     return (<div className="px-5">
