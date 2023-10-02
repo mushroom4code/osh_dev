@@ -12,15 +12,13 @@ use Enterego\EnteregoHelper;
  *
  * @var array $result
  */
-$mobileColumns = isset($this->arParams['COLUMNS_LIST_MOBILE'])
-    ? $this->arParams['COLUMNS_LIST_MOBILE']
-    : $this->arParams['COLUMNS_LIST'];
+$mobileColumns = $this->arParams['COLUMNS_LIST_MOBILE'] ?? $this->arParams['COLUMNS_LIST'];
 $mobileColumns = array_fill_keys($mobileColumns, true);
 
 $result['BASKET_ITEM_RENDER_DATA'] = array();
 
 // TODO - доработать получение базовой цены
-$result['BASKET_ITEM_RENDER_DATA_CUSTOM'] = EnteregoHelper::basketCustomSort($this->basketItems);
+$result['BASKET_ITEM_RENDER_DATA_CUSTOM'] = EnteregoHelper::basketCustomSort($result, $this->basketItems);
 
 $item = $this->basketItems;
 global $USER, $SETTINGS;
@@ -47,67 +45,11 @@ foreach ($item as $row) {
     if (intval($SETTINGS['MAX_QUANTITY']) > 0 && $SETTINGS['MAX_QUANTITY'] < $row['AVAILABLE_QUANTITY'])
         $row['AVAILABLE_QUANTITY'] = $SETTINGS['MAX_QUANTITY'];
 
-    $product_prices = '';
-    $price = [];
-    $show_product_prices = false;
-    $propsUseSale = CIBlockElement::GetProperty(IBLOCK_CATALOG, $row['PRODUCT_ID'], array(), array('CODE' => 'USE_DISCOUNT'));
-    $newProp = $propsUseSale->Fetch();
-    $res = CIBlockElement::GetList(
-        array(),
-        array("ID" => $row['PRODUCT_ID']),
-        false,
-        false,
-        array(
-            "QUANTITY",
-            "PRICE_" . RETAIL_PRICE,
-            "PRICE_" . B2B_PRICE,
-            'PRICE_' . BASIC_PRICE,
-            "PRICE_" . SALE_PRICE_TYPE_ID)
-    );
-    $showDiscountPrice = (float)$row['DISCOUNT_PRICE'] > 0;
-    if ($ar_res = $res->fetch()) {
-        if (!empty($ar_res)) {
-            //set available quantity from storage quantity
-            $row['AVAILABLE_QUANTITY'] =  $ar_res['QUANTITY'];
-            $str_product_prices = '';
-            $product_prices_sql = $ar_res["PRICE_" . BASIC_PRICE];
-            if (($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) && (!empty($ar_res["PRICE_" . SALE_PRICE_TYPE_ID])
-                    && ((int)$product_prices_sql > (int)$ar_res["PRICE_" . SALE_PRICE_TYPE_ID])) && !$showDiscountPrice) {
-                $str_product_prices = explode('.', $product_prices_sql);
-                $price['SALE_PRICE'] = $str_product_prices[0] . ' ₽';
-                $show_product_prices = true;
-
-            } else {
-                if ((int)$row['PRICE_TYPE_ID'] == BASIC_PRICE && !$showDiscountPrice) {
-                    $show_product_prices = true;
-                    $str_product_prices = explode('.', $ar_res["PRICE_" . RETAIL_PRICE]);
-                } else if ((int)$row['PRICE_TYPE_ID'] == B2B_PRICE && !$showDiscountPrice) {
-                    $show_product_prices = true;
-                    $str_product_prices = explode('.', $ar_res["PRICE_" . BASIC_PRICE]);
-                }
-            }
-
-            if (!empty($ar_res["PRICE_" . RETAIL_PRICE])) {
-                $price['PRICE_DATA'][0]['VAL'] = explode('.', $ar_res["PRICE_" . RETAIL_PRICE])[0] * $row['MEASURE_RATIO'];
-                $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
-            }
-            if (!empty($ar_res["PRICE_" . BASIC_PRICE])) {
-                $price['PRICE_DATA'][1]['VAL'] = explode('.', $ar_res["PRICE_" . BASIC_PRICE])[0] * $row['MEASURE_RATIO'];
-                $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
-            }
-            if (!empty($ar_res["PRICE_" . B2B_PRICE])) {
-                $price['PRICE_DATA'][2]['VAL'] = explode('.', $ar_res["PRICE_" . B2B_PRICE])[0] * $row['MEASURE_RATIO'];
-                $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
-            }
-
-            $product_prices = $str_product_prices[0] . '₽';
-            $sale_price_val = (int)$str_product_prices[0];
-            $sum_sale = (((round($row['QUANTITY']) / $row['MEASURE_RATIO']) * $price['PRICE_DATA'][0]['VAL']) - round($row['SUM_VALUE']));
-            $sum_old = ((round($row['QUANTITY']) / $row['MEASURE_RATIO']) * $price['PRICE_DATA'][0]['VAL']);
-        }
-    }
-
     $activeUnitId = $row['PROPERTY_'.PROPERTY_ACTIVE_UNIT.'_VALUE'];
+
+    if (empty($row['MEASURE_RATIO'])) {
+        $row['MEASURE_RATIO'] = "1";
+    }
 
     if (!empty($activeUnitId)) {
         $row[PROPERTY_ACTIVE_UNIT] = CCatalogMeasure::GetList(array(), array("CODE" => $activeUnitId))->fetch();
@@ -129,13 +71,11 @@ foreach ($item as $row) {
         'PROPS' => $row['PROPS'],
         'PROPS_ALL' => $row['PROPS_ALL'],
         'HASH' => $row['HASH'],
-        'PRICES_NET' => $price,
         'SORT' => $row['SORT'],
         'DETAIL_PAGE_URL' => $row['DETAIL_PAGE_URL'],
         'CURRENCY' => $row['CURRENCY'],
         'DISCOUNT_PRICE_PERCENT' => $row['DISCOUNT_PRICE_PERCENT'],
         'DISCOUNT_PRICE_PERCENT_FORMATED' => $row['DISCOUNT_PRICE_PERCENT_FORMATED'],
-        'SHOW_DISCOUNT_PRICE' => $showDiscountPrice,
         'PRICE' => $row['PRICE'],
         'PRICE_FORMATED' => $row['PRICE_FORMATED'],
         'FULL_PRICE' => $row['FULL_PRICE'],
@@ -149,13 +89,15 @@ foreach ($item as $row) {
         'SUM_FULL_PRICE_FORMATED' => $row['SUM_FULL_PRICE_FORMATED'],
         'SUM_DISCOUNT_PRICE' => $row['SUM_DISCOUNT_PRICE'],
         'SUM_DISCOUNT_PRICE_FORMATED' => $row['SUM_DISCOUNT_PRICE_FORMATED'],
-        //SALE PRICE
-        'SALE_PRICE' => $product_prices,
-        'SALE_PRICE_VAL' => $sum_sale ?? 0,
-        'SHOW_SALE_PRICE' => $show_product_prices,
-        "SUM_OLD" => $sum_old ?? 0,
+        //ADD custom blog
+        'SALE_PRICE' => $row['SALE_PRICE'],
+        'SALE_PRICE_VAL' => $row['SALE_PRICE_VAL'],
+        'SHOW_SALE_PRICE' => $row['SHOW_SALE_PRICE'],
+        "SUM_OLD" => $row['SUM_OLD'],
+        'SHOW_DISCOUNT_PRICE' => $row['SHOW_DISCOUNT_PRICE'],
+        'PRICES_NET' => $row['PRICES_NET'],
         //
-        'MEASURE_RATIO' => isset($row['MEASURE_RATIO']) ? $row['MEASURE_RATIO'] : 1,
+        'MEASURE_RATIO' => $row['MEASURE_RATIO'],
         'MEASURE_TEXT' => $row['MEASURE_TEXT'],
         'AVAILABLE_QUANTITY' => $row['AVAILABLE_QUANTITY'],
         'AVAILABLE_QUANTITY_WITH_RATIO' => $row['AVAILABLE_QUANTITY'] / $row['MEASURE_RATIO'],
@@ -168,15 +110,12 @@ foreach ($item as $row) {
         'COLUMN_LIST' => array(),
         'SHOW_LABEL' => false,
         'LABEL_VALUES' => array(),
-        'BRAND' => isset($row[$this->arParams['BRAND_PROPERTY'] . '_VALUE'])
-            ? $row[$this->arParams['BRAND_PROPERTY'] . '_VALUE']
-            : '',
+        'BRAND' => $row[$this->arParams['BRAND_PROPERTY'] . '_VALUE'] ?? '',
         'GIFT' => $row['GIFT'] ?? false,
         'ACTIVE_UNIT' => $row[PROPERTY_ACTIVE_UNIT],
     );
     foreach ($count_likes['USER'] as $keyLike => $count) {
         if ($keyLike == $row['ID']) {
-            //$item['COUNT_LIKE'] = $count['Like'][0];
             $rowData['COUNT_FAV'] = $count['Fav'][0];
             global $rowFavData;
             $rowFavData[$row['ID']] = $count['Fav'][0];

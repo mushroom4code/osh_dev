@@ -126,18 +126,88 @@ class EnteregoHelper
         return $name;
     }
 
-    public static function basketCustomSort(&$arResult, $type = 'basket')
+    public static function basketCustomSort(&$basketResult, &$arResult)
     { //Сортировка в корзине
         $data = $result = [];
 
+        //recalculate for storages rest
+        $basketResult['NOT_AVAILABLE_BASKET_ITEMS_COUNT'] = 0;
         if (!empty($arResult)) {
             foreach ($arResult as $key_basket => &$basket_item) {
-                $id = $type == 'basket' ? $basket_item['PRODUCT_ID'] : $basket_item['data']['PRODUCT_ID'];
+                $id = $basket_item['PRODUCT_ID'];
+                $showDiscountPrice = (float)$basket_item['DISCOUNT_PRICE'] > 0;
 
-                \CModule::IncludeModule("iblock");
-                $rsElement = CIBlockElement::GetList(array(), array('ID' => $id), false, false,
-                    ['IBLOCK_SECTION_ID', 'IBLOCK_ID', 'ID']);
+                $price = [];
+                $show_product_prices = false;
+                $rsElement = CIBlockElement::GetList(
+                    array(),
+                    array("ID" => $id),
+                    false,
+                    false,
+                    array(
+                        'IBLOCK_SECTION_ID',
+                        'IBLOCK_ID',
+                        'ID',
+                        "QUANTITY",
+                        "PRICE_" . RETAIL_PRICE,
+                        "PRICE_" . B2B_PRICE,
+                        'PRICE_' . BASIC_PRICE,
+                        "PRICE_" . SALE_PRICE_TYPE_ID,
+                        "PROPERTY_USE_DISCOUNT"
+                    )
+                );
+
                 if ($arElement = $rsElement->Fetch()) {
+                    //set available quantity from storage quantity
+                    $basket_item['AVAILABLE_QUANTITY'] =  $arElement['QUANTITY'];
+                    $basket_item['NOT_AVAILABLE'] = $arElement['QUANTITY'] == 0;
+                    $basket_item['CAN_BUY'] = $basket_item['NOT_AVAILABLE'] === true ? 'N' : 'Y';
+                    if ($basket_item['NOT_AVAILABLE'] === true ) {
+                        $basketResult['NOT_AVAILABLE_BASKET_ITEMS_COUNT']++;
+                    }
+
+                    $str_product_prices = '';
+                    $product_prices_sql = $arElement["PRICE_" . BASIC_PRICE];
+                    if (($arElement['PROPERTY_USE_DISCOUNT_VALUE'] == 'Да' || USE_CUSTOM_SALE_PRICE) && (!empty($arElement["PRICE_" . SALE_PRICE_TYPE_ID])
+                            && ((int)$product_prices_sql > (int)$arElement["PRICE_" . SALE_PRICE_TYPE_ID])) && !$showDiscountPrice) {
+                        $str_product_prices = explode('.', $product_prices_sql);
+                        $price['SALE_PRICE'] = $str_product_prices[0] . ' ₽';
+                        $show_product_prices = true;
+
+                    } else {
+                        if ((int)$basket_item['PRICE_TYPE_ID'] == BASIC_PRICE && !$showDiscountPrice) {
+                            $show_product_prices = true;
+                            $str_product_prices = explode('.', $arElement["PRICE_" . RETAIL_PRICE]);
+                        } else if ((int)$basket_item['PRICE_TYPE_ID'] == B2B_PRICE && !$showDiscountPrice) {
+                            $show_product_prices = true;
+                            $str_product_prices = explode('.', $arElement["PRICE_" . BASIC_PRICE]);
+                        }
+                    }
+
+                    if (!empty($arElement["PRICE_" . RETAIL_PRICE])) {
+                        $price['PRICE_DATA'][0]['VAL'] = explode('.', $arElement["PRICE_" . RETAIL_PRICE])[0] * $basket_item['MEASURE_RATIO'];
+                        $price['PRICE_DATA'][0]['NAME'] = 'Розничная (до 10к)';
+                    }
+                    if (!empty($arElement["PRICE_" . BASIC_PRICE])) {
+                        $price['PRICE_DATA'][1]['VAL'] = explode('.', $arElement["PRICE_" . BASIC_PRICE])[0] * $basket_item['MEASURE_RATIO'];
+                        $price['PRICE_DATA'][1]['NAME'] = 'Основная (до 30к)';
+                    }
+                    if (!empty($arElement["PRICE_" . B2B_PRICE])) {
+                        $price['PRICE_DATA'][2]['VAL'] = explode('.', $arElement["PRICE_" . B2B_PRICE])[0] * $basket_item['MEASURE_RATIO'];
+                        $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
+                    }
+
+                    $product_prices = $str_product_prices[0] . '₽';
+                    $sum_sale = (((round($basket_item['QUANTITY']) / $basket_item['MEASURE_RATIO']) * $price['PRICE_DATA'][0]['VAL']) - round($basket_item['SUM_VALUE']));
+                    $sum_old = ((round($basket_item['QUANTITY']) / $basket_item['MEASURE_RATIO']) * $price['PRICE_DATA'][0]['VAL']);
+
+                    $basket_item['PRICES_NET'] = $price;
+                    $basket_item['SHOW_DISCOUNT_PRICE'] = $showDiscountPrice;
+                    $basket_item['SALE_PRICE_VAL'] = $sum_sale;
+                    $basket_item['SALE_PRICE'] = $product_prices;
+                    $basket_item["SUM_OLD"] = $sum_old;
+                    $basket_item['SHOW_SALE_PRICE'] = $show_product_prices;
+
                     if (!empty($arElement['IBLOCK_SECTION_ID'])) {
                         $section_id = $arElement['IBLOCK_SECTION_ID'];
                         $iblock_id = $arElement['IBLOCK_ID'];
@@ -164,16 +234,13 @@ class EnteregoHelper
                     } else {
                         $basketParent = $parent_name . '_' . $parent_id;
                     }
-                    if ($type == 'basket') {
-                        $basket_item['BASKET_KEY'] = $key_basket;
-                        $data[$basketParent][] = $basket_item;
-                        if (self::productIsGift($id)) {
-                            $basket_item['GIFT'] = true;
-                            $basket_item['SHOW_DISCOUNT_PRICE'] = false;
-                            $basket_item['SHOW_MAX_PRICE'] = false;
-                        }
-                    } else {
-                        $data[$basketParent][$basket_item['id']] = $basket_item;
+
+                    $basket_item['BASKET_KEY'] = $key_basket;
+                    $data[$basketParent][] = $basket_item;
+                    if (self::productIsGift($id)) {
+                        $basket_item['GIFT'] = true;
+                        $basket_item['SHOW_DISCOUNT_PRICE'] = false;
+                        $basket_item['SHOW_MAX_PRICE'] = false;
                     }
 
                     $result[$basketParent][] = (string)$key_basket;
