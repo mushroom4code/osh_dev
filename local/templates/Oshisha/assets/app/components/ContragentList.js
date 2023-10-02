@@ -10,7 +10,8 @@ function ContragentList() {
     const [initToClick, setInitToClick] = useState(false)
     const [loads, setLoads] = useState(false)
     const [showForm, setShowForm] = useState(true)
-    const [color,setColor] = useState('dark:text-hover-red text-hover-red')
+    const [count,setCount]= useState(0);
+    const [color, setColor] = useState('dark:text-hover-red text-hover-red')
     const href = '/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php'
 
     function getContragents() {
@@ -33,39 +34,58 @@ function ContragentList() {
         getContragents()
     }, []);
 
+    useEffect(() => {
+        const boxPhone = $('.phoneCodeContragent');
+        if (initToClick && boxPhone.length > 0) {
+            boxPhone.phonecode({
+                preferCo: 'ru',
+                default_prefix: '7'
+            });
+            boxPhone.inputmask("+7 (999)-999-9999", {
+                minLength: 10,
+                removeMaskOnSubmit: true,
+                autoUnmask: true,
+                clearMaskOnLostFocus: false,
+                clearMaskOnLostHover: false,
+                clearIncomplete: true,
+                definitionSymbol: "*"
+            })
+        }
+    }, [initToClick]);
+
     return (<div className="px-5">
         <ContragentForm loads={loads} initToClick={initToClick} setState={setInitToClick}
-        listContragent={listContragent.length} setResult={setResult} setColor={setColor}
+                        listContragent={listContragent.length} setResult={setResult} setColor={setColor}
                         showForm={showForm} setShowForm={setShowForm}
         />
         <div className={"mt-5" + color}>{result}</div>
-        { listContragent.length > 0 ?
+        {listContragent.length > 0 ?
             <div>
-            <p className="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal flex flex-row
+                <p className="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal flex flex-row
             justify-between items-center font-semibold mb-5">
-                Контрагенты
-                {
-                    listContragent.length > 0 ?
-                        <div className="p-2 dark:bg-lightGrayBg rounded-lg w-fit bg-textDark flex flex-row items-center
+                    Контрагенты
+                    {
+                        listContragent.length > 0 ?
+                            <div className="p-2 dark:bg-lightGrayBg rounded-lg w-fit bg-textDark flex flex-row items-center
                         dark:text-textDarkLightGray text-textLight"
-                             onClick={() => {
-                                 setInitToClick(!initToClick)
-                                 setShowForm(true)
-                             }}>
-                            <IconNameContr width="35" height="36" button={true} color={true}/>
-                            <span className="ml-1 text-sm">Добавить</span>
-                        </div>
-                        : false
-                }
-            </p>
-            <div className="flex flex-row flex-wrap">
-                {
-                    listContragent.map((contragent, keys) =>
-                        <ContragentItem key={keys} contragent={contragent}/>
-                    )
-                }
-            </div>
-        </div> : false
+                                 onClick={() => {
+                                     setInitToClick(!initToClick)
+                                     setShowForm(true)
+                                 }}>
+                                <IconNameContr width="35" height="36" button={true} color={true}/>
+                                <span className="ml-1 text-sm">Добавить</span>
+                            </div>
+                            : false
+                    }
+                </p>
+                <div className="flex flex-row flex-wrap">
+                    {
+                        listContragent.map((contragent, keys) =>
+                            <ContragentItem key={keys} contragent={contragent}/>
+                        )
+                    }
+                </div>
+            </div> : false
         }
     </div>);
 }

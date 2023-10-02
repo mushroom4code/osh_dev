@@ -15,17 +15,20 @@ var countryRequesting = false;
         hideTimeout: null,
         options: {
             default_prefix: '',
-            phone_val : '',
+            phone_val: '',
             prefix: '',
             preferCo: ''
         },
         _create: function () {
             this._loadData();
-            this.element.wrap('<div class="country-phone d-flex flex-row">');
+        },
+
+        _createBox: function () {
+            this.element.wrap('<div class="country-phone flex flex-row items-center">');
             var container = this.element.parent('.country-phone');
             var selector = $('<div class="country-phone-selector">' +
-                '<div class="country-phone-selected"></div>' +
-                '<div class="country-phone-options">' +
+                '<div class="country-phone-selected h-full flex items-center"></div>' +
+                '<div class="country-phone-options bg-white dark:bg-grayButton">' +
                 '<input type="text" class="country-phone-search input-search-in-box form-control input_lk bx-auth-input" ' +
                 'placeholder="Введите страну" value=""><div class="options-list mt-2"></div></div></div>');
             $(selector).prependTo(container);
@@ -53,6 +56,7 @@ var countryRequesting = false;
                         countryCache = self.data;
                         self._initSelector();
                     });
+
             } else if (countryCache) {
                 this.data = countryCache;
                 self._initSelector();
@@ -66,6 +70,7 @@ var countryRequesting = false;
         },
 
         _initSelector: function () {
+            this._createBox();
             var options = this.container.find('.country-phone-options');
             /** Enterego * Выставление страны по номеру тел */
             var bool_init_mask = false;
@@ -120,7 +125,7 @@ var countryRequesting = false;
                 var prefCountry = country.co;
 
                 /** Enterego * Выставление страны по номеру тел */
-                if(this.options.phone_val !== '' &&  this.options.phone_val.search(country.ph) === 1){
+                if (this.options.phone_val !== '' && this.options.phone_val.search(country.ph) === 1) {
                     bool_init_mask = country.mask;
                     val_country_code = prefCountry.toLowerCase();
                     code_input = country.ph;
@@ -130,8 +135,8 @@ var countryRequesting = false;
 
                 var option = $(`<div data-phone="${country.ph}" data-mask="${country.mask}" data-co="${prefCountry.toLowerCase()}" 
                 class="country-phone-option"> 
-                <span class="d-flex flex-row align-items-center justify-content-end">+${country.ph} 
-                    <div class="flag flag-${country.ph} ml-1"> ${country.ic}</div>
+                <span class="flex flex-row items-center justify-content-end">+${country.ph} 
+                    <div class="flag flag-${country.ph} ml-1 w-7 h-7 flex"> ${country.ic}</div>
                 </span>
                   ${country.na}
                 </div>`
@@ -150,7 +155,7 @@ var countryRequesting = false;
             }
             if (selected) {
                 this.container.find('.country-phone-selected')
-                    .html('<div class="flag flag-' + selected.co + '"> ' + selected.ic + '</div>');
+                    .html('<div class="flag flag-' + selected.co + '  w-7 h-7"> ' + selected.ic + '</div>');
             }
             $(selector).bind('click', function (e) {
                 self._toggleSelector();
@@ -310,10 +315,10 @@ var countryRequesting = false;
             $(selector).html(flags[0] + '</span>');
 
             var new_code = String(code).split('');
-            var str_code ='';
+            var str_code = '';
 
-            $.each(new_code,function(i,val){
-                str_code +='\\'+val;
+            $.each(new_code, function (i, val) {
+                str_code += '\\' + val;
             });
 
             this.container.find('input[data-input-type="phone"]').inputmask("+ " + str_code + ' ' + mask, {

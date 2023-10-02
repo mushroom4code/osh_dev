@@ -105,6 +105,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
         classNameWindow = 'lg:w-2/4 xs:w-full h-screen md:h-auto'
         classInput = 'w-full'
     }
+
     return (
         (listContragent === 0 && loads) || initToClick ?
             <div className={className}>
@@ -233,12 +234,15 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                     </div>
                                 </>
                             }
-                            <div className="mb-3">
+                            <div className="mb-3 relative">
+                                <span className="" id="flag"></span>
                                 <input type="text"
                                        required
+                                       inputMode="text"
+                                       data-input-type="phone"
                                        minLength={8}
                                        className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                           'outline-none rounded-md ' + classInput}
+                                           'outline-none rounded-md phoneCodeContragent ' + classInput}
                                        value={phone}
                                        onChange={(e) => {
                                            setPhone(e.target.value)
@@ -280,5 +284,4 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
 
     );
 }
-
 export default ContragentForm

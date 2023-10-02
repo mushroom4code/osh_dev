@@ -5,7 +5,8 @@ module.exports = {
         './index.php',
         "./personal/*.php", "./personal/contragents/*.php",
         "./local/components/bitrix/enterego.slider/templates/.default/template.php",
-        "./images/icon_header/*.svg"
+        "./images/icon_header/*.svg",
+        "./local/assets/js/flags-mask/phonecode.js"
     ],
     darkMode: 'class',
     theme: {
