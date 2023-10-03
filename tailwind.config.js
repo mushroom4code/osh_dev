@@ -26,6 +26,7 @@ module.exports = {
                 greenButton: '#0FAC2B',
                 greenLight: '#0BC82D',
                 yellowSt: '#FFCB13',
+                borderColor:'#D9D9D9',
                 grayIconLights: '#BFBFBF',
                 tagFilterGray: '#5F5F5F',
                 fancyboxDark: '#000000BA',

@@ -67,7 +67,6 @@ BX.namespace('BX.Sale.PersonalProfileComponent');
 						streetNode.value = suggestion.data.street ?? '';
 						if( suggestion.data.street_type !== null)
 							streetNode.value += ' '+ suggestion.data.street_type;
-						console.log(suggestion.data);
 						
 						if (suggestion.data.house!==undefined && suggestion.data.house!==null) {
 							streetNode.value += ', ' + suggestion.data.house_type + ' ' + suggestion.data.house;
@@ -79,11 +78,7 @@ BX.namespace('BX.Sale.PersonalProfileComponent');
 
 						if (suggestion.data.flat!==undefined && suggestion.data.flat!== null ) {
 							streetNode.value += ', ' + suggestion.data.flat_type + ' ' + suggestion.data.flat;
-						}						
-						
-						
-						
-						
+						}
 
 					}.bind(this)
 				});

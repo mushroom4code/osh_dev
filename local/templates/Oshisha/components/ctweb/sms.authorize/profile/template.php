@@ -42,7 +42,7 @@ $jsParams = array(
 );
 
 if ($arParams['PROFILE_AUTH'] == "Y"):?>
-    <div style="display: block" class="ctweb-smsauth-menu-block profile"
+    <div style="display: block" class="ctweb-smsauth-menu-block profile mb-8"
          data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
         <div class="ctweb-smsauth-box profile">
             <div>
@@ -64,24 +64,34 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         <?php elseif ($arResult['AUTH_RESULT'] === 'FAILED'): ?>
                             <? ShowError($arResult["strProfileError"]); ?>
                         <?php endif; ?>
-                        <h5 class="mt-2 mb-4"><b>Изменение номера телефона</b></h5>
-
+                        <p class="md:text-2xl dark:text-textDarkLightGray text-textLight flex flex-row items-center
+                        mb-5 mt-8 text-xl">
+                            <span class="mr-4 font-semibold">Изменение номера телефона</span>
+                            <svg width="21" height="20" viewBox="0 0 24 23" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 3.19444C0 14.1327 9.01098 23 20.1266 23C20.628 23 21.1252 22.982 21.6176 22.9465C22.1826 22.9057 22.465 22.8854 22.7222 22.7397C22.9352 22.6191 23.1371 22.4052 23.2439 22.1873C23.3728 21.9244 23.3728 21.6176 23.3728 21.0041V17.4042C23.3728 16.8883 23.3728 16.6303 23.2864 16.4092C23.2104 16.2139 23.0865 16.0399 22.926 15.9027C22.7443 15.7473 22.4979 15.6592 22.0052 15.4828L17.8412 13.9928C17.2679 13.7877 16.9812 13.6851 16.7093 13.7025C16.4695 13.7178 16.2388 13.7985 16.0427 13.9352C15.8204 14.0902 15.6635 14.3475 15.3497 14.8623L14.2834 16.6111C10.8425 15.0777 8.0531 12.3292 6.49244 8.94444L8.26959 7.89516C8.79265 7.58633 9.05418 7.43191 9.21174 7.21313C9.35068 7.02021 9.43261 6.79314 9.44819 6.55717C9.46585 6.28957 9.36158 6.00751 9.15318 5.4434L7.63899 1.34577C7.45982 0.860915 7.37023 0.618483 7.21235 0.439683C7.07288 0.281737 6.89613 0.159914 6.69763 0.0849085C6.47291 1.52323e-07 6.21077 0 5.6865 0H2.02825C1.40481 0 1.09308 9.52019e-08 0.825813 0.12682C0.604446 0.231866 0.387131 0.430624 0.264502 0.640205C0.116449 0.893256 0.0957634 1.17124 0.0543936 1.72721C0.0183475 2.21165 0 2.70094 0 3.19444Z"
+                                      fill="#E8E8E8"/>
+                            </svg>
+                        </p>
                         <!--STEP PHONE WAITING-->
                         <div id="ctweb_form_step_1"
-                             class="ctweb-smsauth-menu-step hidden">
-                            <p class="form-group mb-2 col-sm-12 col-md-12 profile-asterisk">* Будет выслан код
-                                подтверждения</p>
-                            <div class="form-group mb-2 flex flex-col">
-                                <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
-                                       for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
+                             class="ctweb-smsauth-menu-step hidden lg:w-9/12 w-full">
+                            <p class="form-group mb-6 text-xs font-normal mt-6 dark:text-iconGray text-textLight profile-asterisk">
+                                * Будет выслан код подтверждения</p>
+                            <div class="form-group mb-2 flex flex-col relative w-full">
+                                <label class="main-profile-form-label mb-3 dark:text-textDarkLightGray text-textLight
+                                 dark:font-normal font-semibold text-md" for="smsauth-phone">
+                                    <?= GetMessage("SMS_AUTH_PHONE") ?></label>
                                 <span id="flag"></span>
-                                <div class="col-sm-12 col-md-12 code position-relative">
+                                <div class="code relative">
                                     <input type="text" name="PHONE"
                                            data-input-type="phone"
                                            placeholder="+_ (___)-___-____"
                                            inputmode="text"
                                            value="<?= $arParams['USER_PHONE'] ?? '' ?>"
-                                           class="form-control dark:bg-grayButton profile input_lk auth-phone-profile"
+                                           class="w-full dark:bg-grayButton bg-white dark:border-none border-borderColor
+                                           focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md
+                                           input_lk profile auth-phone-profile"
                                            id="<?= $mainID . "phone" ?>"
                                            autocomplete="off"/>
                                 </div>
@@ -132,8 +142,10 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                 </div>
 
                 <!--Навигация по форме авторизации-->
-                <div class="ctweb-button-block profile">
-                    <input class="btn link_menu_catalog get_code_button profile"
+                <div class="ctweb-button-block profile mt-6">
+                    <input class="btn btn dark:bg-dark-red rounded-md bg-light-red text-white xs:px-7 py-3
+                             dark:shadow-md shadow-shadowDark font-light dark:hover:bg-hoverRedDark cursor-pointer
+                              sm:w-72 px-5 w-56 get_code_button profile xs:text-md text-sm sm:font-normal"
                            id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                            type="submit"
                            value="Сохранить"

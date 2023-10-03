@@ -33,7 +33,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
         ShowNote(Loc::getMessage('PROFILE_DATA_SAVED'));
     }
     ?>
-    <form method="post" class="mb-5 w-full" name="form1" action="<?= POST_FORM_ACTION_URI ?>"
+    <form method="post" class="mb-20 w-full" name="form1" action="<?= POST_FORM_ACTION_URI ?>"
           enctype="multipart/form-data"
           role="form">
         <?= $arResult["BX_SESSION_CHECK"] ?>
@@ -42,8 +42,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
         <input type="hidden" name="LOGIN" value="<?= $arResult["arUser"]["LOGIN"] ?>"/>
         <div class="main-profile-block-shown" id="user_div_reg">
             <div class="lg:w-9/12 w-full">
-                <p class="text-2xl dark:text-textDarkLightGray text-textLight flex flex-row items-center mb-5">
-                    <span class="mr-4">Изменить профиль</span>
+                <p class="text-2xl dark:text-textDarkLightGray text-textLight flex flex-row items-center mb-8">
+                    <span class="mr-4 font-semibold">Изменить профиль</span>
                     <svg width="20" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_2080_11931)">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -70,29 +70,32 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                     </div>
                 <?php } ?>
                 <div class="form-group mb-4">
-                    <label for="main-profile-name">ФИО</label>
+                    <label for="main-profile-name"
+                           class="dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold">ФИО</label>
                     <div class="w-full mt-3">
-                        <input class="dark:bg-grayButton bg-textDark border-none py-3 px-4 outline-none rounded-md
-                             input_lk w-full" type="text" name="NAME"
+                        <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
+                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md input_lk w-full"
+                               type="text" name="NAME"
                                minlength="3" maxlength="50"
                                id="main-profile-name" value="<?= $arResult["arUser"]["NAME"] ?>"/>
                     </div>
                 </div>
-                <div class="flex flex-row xs:flex-col mb-8">
-                    <div class="form-group xs:w-full w-2/5 mb-2 mr-3">
-                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md"
+                <div class="flex flex-row mb-12">
+                    <div class="form-group xs:w-2/5 w-1/2 mb-2 mr-3">
+                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
                                for="main-profile-day">Дата рождения</label>
                         <div class="mt-3 w-full">
                             <?php if (strtotime(date('m/d/Y')) < strtotime($arResult['arUser']['UF_DATE_CHANGE_BH'])): ?>
-                                <input class="dark:bg-grayButton w-full bg-textDark border-none py-3 px-4 outline-none
-                                    rounded-md input_lk" type="text" name="PERSONAL_BIRTHDAY_INACTIVE" maxlength="50"
+                                <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor w-full
+                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md input_lk" type="text" name="PERSONAL_BIRTHDAY_INACTIVE" maxlength="50"
                                        id="main-profile-day2" disabled
                                        value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
-                                <?php $dateChange = '<br><b>Изменить дату рождения можно будет ' .
+                                <?php $dateChange = '<br><b class="font-medium">Изменить дату рождения можно будет ' .
                                     date('d/m/Y', strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])) . '</b>'; ?>
                             <?php else: ?>
-                                <input class="dark:bg-grayButton bg-textDark border-none py-3 px-4 outline-none
-                                    rounded-md input_lk user-birthday w-full" readonly type="text"
+                                <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
+                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md input_lk user-birthday
+                          w-full xs:text-md text-sm" readonly type="text"
                                        name="PERSONAL_BIRTHDAY"
                                        maxlength="50"
                                        id="main-profile-day2"
@@ -115,25 +118,28 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                             alias: "tt/mm/jjjj"
                         }).mask("input[name='PERSONAL_BIRTHDAY']");
                     </script>
-                    <div class="form-group xs:w-full w-3/5 mb-2">
-                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md"
+                    <div class="form-group xs:w-3/5 w-1/2 mb-2">
+                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
                                for="main-profile-email">Почта</label>
                         <div class="mt-3">
-                            <input class="dark:bg-grayButton bg-textDark border-none py-3 px-4 w-full outline-none
-                                    rounded-md input_lk" type="email" name="EMAIL" maxlength="50"
+                            <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
+                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md w-full" type="email"
+                                   name="EMAIL"
+                                   maxlength="50"
                                    id="main-profile-email" value="<?= $arResult["arUser"]["EMAIL"] ?>"
                                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"/>
                         </div>
                     </div>
                 </div>
                 <?php if ($arResult['CAN_EDIT_PASSWORD']) { ?>
-                    <div class="mb-8">
-                        <div class="form-group w-full mb-2">
-                            <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md"
+                    <div class="mb-12">
+                        <div class="form-group w-full mb-4">
+                            <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
                                    for="main-profile-password">Новый пароль</label>
                             <div class="mt-3">
-                                <input class="dark:bg-grayButton bg-textDark w-full border-none py-3 px-4 outline-none
-                                    rounded-md input_lk bx-auth-input main-profile-password"
+                                <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
+                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md w-full  input_lk
+                         bx-auth-input main-profile-password"
                                        type="password"
                                        name="NEW_PASSWORD" minlength="6" maxlength="50" id="main-profile-password"
                                        value=""
@@ -141,17 +147,19 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                             </div>
                         </div>
                         <div class="form-group w-full mb-2">
-                            <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md"
+                            <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
                                    for="main-profile-password-confirm">
                                 Подтвердите пароль
                             </label>
                             <div class="mt-3">
-                                <input class="dark:bg-grayButton bg-textDark w-full border-none py-3 px-4 outline-none
-                                    rounded-md input_lk" type="password" name="NEW_PASSWORD_CONFIRM"
+                                <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
+                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md w-full input_lk"
+                                       type="password" name="NEW_PASSWORD_CONFIRM"
                                        minlength="6"
                                        maxlength="50" value="" id="main-profile-password-confirm"
                                        autocomplete="new-password"/>
-                                <small id="emailHelp" class="text_small">
+                                <small id="emailHelp"
+                                       class="text-xs font-normal mt-2 dark:text-iconGray text-textLight">
                                     <?php echo $arResult["GROUP_POLICY"]["PASSWORD_REQUIREMENTS"]; ?>
                                 </small>
                             </div>
@@ -174,19 +182,20 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                 $strAddress = str_replace('г Москва, Москва', 'г Москва', $strAddress);
                 $strAddress = str_replace('г Санкт-Петербург, Санкт-Петербург', 'г Санкт-Петербург', $strAddress);
                 ?>
-                <div class="form-group mb-5">
-                    <label class="dark:text-textDarkLightGray text-textLight text-md"
+                <div class="form-group mb-6">
+                    <label class="dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
                            for="main-profile-country">Сохраненый адрес доставки:</label>
-                    <div class="w-full mt-2 dark:text-iconGray text-textLight font-light">
+                    <div class="w-full mt-3 dark:text-iconGray text-textLight font-light md:text-md text-sm">
                         <?= $strAddress ?>
                     </div>
                 </div>
-                <div class="form-group mb-6">
-                    <label class="dark:text-textDarkLightGray text-textLight text-md"
+                <div class="form-group mb-8">
+                    <label class="dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
                            for="main-profile-address">Изменить адрес</label>
                     <div class="col-sm-12 col-md-12 mt-3">
-                        <input class="dark:bg-grayButton bg-textDark border-none py-3 px-4 outline-none
-                                    rounded-md input_lk" type="text" name="" maxlength="100"
+                        <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
+                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md w-full input_lk"
+                               type="text" name="" maxlength="100"
                                id="main-profile-address" value=" <?= $strAddress ?>"/>
                     </div>
                     <a style="display:none;" href="javascript:void(0);"
@@ -194,7 +203,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         новый
                         адрес</a>
                 </div>
-                <div class="form-group mb-3 hidden"  id="edit_addressBox">
+                <div class="form-group mb-3 hidden" id="edit_addressBox">
                     <div class="form-group  mb-2">
                         <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md"
                                for="main-profile-state">Область/край</label>
@@ -223,24 +232,29 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                    id="main-profile-street" value="<?= $arResult["arUser"]["PERSONAL_STREET"] ?>"/>
                         </div>
                     </div>
-                    <a href="javascript:void(0);" class="col-sm-12 col-md-12 link_input_address mb-3">Сохранить</a>
+                    <a href="javascript:void(0);" class="w-72 link_input_address mb-3">Сохранить</a>
                 </div>
 
                 <div class="form-group notification_box mb-2">
-                    <input class="check_input p-4 dark:bg-grayButton checked:hover:bg-grayButton border-0
+                    <input class="check_input xs:p-5 p-4 dark:bg-grayButton checked:hover:bg-grayButton border-0
                     dark:text-white cursor-pointer text-textLight font-normal rounded-full bg-textDark
-                     checked:focus:bg-grayButton mr-2 input_lk_notification" type="checkbox"
-                           name="notification"
+                  checked:focus:bg-grayButton mr-2 input_lk_notification" type="checkbox"
+                           name="notification" checked
                            id="notification"/>
-                    <label class="main-profile-form-label_notification" for="notification">
+                    <label class="main-profile-form-label_notification dark:text-textDarkLightGray dark:font-light
+                    font-normal md:text-md text-sm"
+                           for="notification">
                         Согласие на обработку персональных данных</label>
                 </div>
-                <label class="col-sm-12 col-md-12 link_input_address hidden" id="notification-error">
+                <label class="link_input_address hidden" id="notification-error">
                     Необходимо согласие на обработку персольнальных данных
                 </label>
-                <div class="col">
-                    <input type="submit" class="btn dark:bg-dark-red rounded-md bg-light-red text-white px-7 py-3 w-fit
-                             dark:shadow-md shadow-shadowDark dark:hover:bg-hoverRedDark cursor-pointer link_red_button main-profile-submit" id="main-profile-submit"
+                <div class="mt-10">
+                    <input type="submit" class="btn dark:bg-dark-red rounded-md bg-light-red text-white xs:px-7 py-3
+                             dark:shadow-md shadow-shadowDark font-light dark:hover:bg-hoverRedDark cursor-pointer
+                              sm:w-72 px-5 w-56 get_code_button profile xs:text-md text-sm sm:font-normal
+                               link_red_button main-profile-submit"
+                           id="main-profile-submit"
                            name="save"
                            value="<?= (($arResult["ID"] > 0) ?
                                Loc::getMessage("MAIN_SAVE") : Loc::getMessage("MAIN_ADD")) ?>">

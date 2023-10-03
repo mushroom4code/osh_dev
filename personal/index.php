@@ -12,7 +12,7 @@ if (!$USER->IsAuthorized()) {
 } else {
     ?>
     <div class="mobile_lk mb-5 flex xs:flex-col flex-row  <? if ($APPLICATION->GetCurPage() != '/personal/'): ?>private<? endif; ?>">
-        <div class="sidebar_lk">
+        <div class="sidebar_lk md:block hidden">
             <?php $APPLICATION->IncludeComponent(
                 "bitrix:menu",
                 "",
@@ -30,7 +30,7 @@ if (!$USER->IsAuthorized()) {
                 )
             ); ?>
         </div>
-        <div  id="content_box" class="w-full">
+        <div  id="content_box" class="w-full md:p-0 p-4">
             <?php $APPLICATION->IncludeComponent(
                 "bitrix:sale.personal.section",
                 "oshisha_sale.personal.section",
