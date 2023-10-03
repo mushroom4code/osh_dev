@@ -389,6 +389,7 @@ class DeliveryHelper
         }
 
         $params['curDeliveryId'] = $order->getField('DELIVERY_ID');
+        $params['curSiteId'] = SITE_ID;
 
         $PeriodDelivery = [];
         $start_json_day = Option::get(self::$MODULE_ID, 'Oshisha_timeDeliveryStartDay');
