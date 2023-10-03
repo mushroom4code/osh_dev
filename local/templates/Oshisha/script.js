@@ -2051,38 +2051,6 @@ $(document).ready(function () {
         )
     })
 
-// LOCATIONS LIST START
-// Список городов для выбора местоположения
-    let all_cities = $('#cities-list'),
-        big_cities = $('#big-cities-list');
-    $("#city-search").keyup(function () {
-        all_cities.show();
-        big_cities.hide();
-        let length = $(this).val();
-        if (length.length === 0) {
-            all_cities.hide();
-            big_cities.show();
-        }
-        if (all_cities.is(':empty')) {
-            $('#choose-city-btn').attr('disabled', 'disabled');
-            big_cities.show();
-        }
-    });
-    $('.city-item').each(function () {
-        $(this).click(function () {
-            let city_selected = $(this).text();
-            $('#city-search').val(city_selected);
-            $('#choose-city-btn').removeAttr('disabled');
-            all_cities.hide();
-        });
-    });
-
-// list.js init
-
-    new List('locations', {
-        valueNames: ['city-item']
-    })
-
     $('.sort').on('click', function () {
         let basketItems = BX.namespace('BX.Sale.BasketComponent'),
             classes = $(this).attr('data-sort'),
@@ -2875,7 +2843,6 @@ $(document).on('submit', '.callback_form', function (e) {
             data: $(this).serialize(),
         }).done(function (dataRes) {
             if (dataRes == 1) {
-                //location.reload();
                 $('.callback_form').hide();
                 $('.result-callback').show();
             } else {
