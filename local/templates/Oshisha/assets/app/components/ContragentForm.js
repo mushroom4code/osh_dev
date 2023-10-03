@@ -36,19 +36,18 @@ function is_valid_inn(i) {
 
 let className = '', classNameWindow = 'w-9/12', classInput = 'lg:w-4/5 w-full';
 
-function ContragentForm({initToClick, loads, setState, listContragent, setResult, setColor, setShowForm, showForm}) {
+function ContragentForm({initToClick, loads, setState, listContragent, setResult, setColor, setShowForm, showForm,type, setType}) {
     const [inn, setInn] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
     const [result, setResultNew] = useState('')
     const [colorRes, setColorRes] = useState('dark:text-hover-red text-hover-red')
     const [email, setEmail] = useState('')
-    const [type, setType] = useState(uric)
     const [contrResult, setContrResult] = useState([])
 
     const handleClick = (e) => {
         e.preventDefault()
-        const number = String(document.querySelector('.phoneCodeContragent').value);
+        const number = String(document.querySelector('#phoneCodeContragent').value);
         const prefix = String(document.querySelector('[name="__phone_prefix"]').value);
         const data = {
             NAME: name,
@@ -66,11 +65,12 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                 setResultNew('Вы некорректно заполнили ИНН');
             }
         } else {
-            data.EMAIL = String(document.querySelector('.emailContragent').value);
+            data.EMAIL = String(document.querySelector('#emailContragent').value);
             sendContragent(data)
         }
 
     }
+
     const emptyDataInputs = () => {
         setPhone('')
         setName('')
@@ -108,12 +108,6 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
         classInput = 'w-full'
     }
 
-    useEffect(() => {
-        const boxEmail = $('.emailContragent');
-        if (type === fiz && boxEmail.length > 0) {
-            boxEmail.inputmask("email");
-        }
-    }, [type]);
 
     return (
         (listContragent === 0 && loads) || initToClick ?
@@ -148,11 +142,12 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                   dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
                                  dark:border-gray-slider-arrow" onChange={(e) => {
                                         setType(uric)
+                                        Inputmask.remove('#emailContragent');
                                     }}
                                            checked={type === uric}
                                            type="radio" name="check"
                                            value={uric}/>
-                                    <label className="md:text-sm text-md dark:font-light font-normal text-textLight ml-3
+                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
                                     dark:text-textDarkLightGray">Юридическое лицо</label>
                                 </div>
                                 <div className="md:mr-7 mr-0 md:mb-0 mb-3">
@@ -164,11 +159,12 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                  dark:border-gray-slider-arrow"
                                            onChange={(e) => {
                                                setType(ip)
+                                               Inputmask.remove('#emailContragent');
                                            }}
                                            checked={type === ip}
                                            type="radio" name="check"
                                            value={ip}/>
-                                    <label className="md:text-sm text-md dark:font-light font-normal text-textLight ml-3
+                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
                                      dark:text-textDarkLightGray">Индивидуальный предприниматель</label>
                                 </div>
                                 <div className="md:mr-7 mr-0 md:mb-0 mb-3">
@@ -184,13 +180,13 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                            }}
                                            checked={type === fiz}
                                            value={fiz}/>
-                                    <label className="md:text-sm text-md dark:font-light font-normal text-textLight ml-3
+                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
                                      dark:text-textDarkLightGray">Физическое лицо</label>
                                 </div>
                             </div>
                             {type === ip || type === uric ?
                                 <>
-                                    <div className="mb-3">
+                                    <div className={"mb-3 " + classInput}>
                                         <input type="text"
                                                value={name}
                                                required
@@ -199,25 +195,26 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                                }}
                                                minLength={3}
                                                className={'dark:bg-grayButton bg-textDark border-none py-3 px-4' +
-                                                   'outline-none rounded-md ' + classInput}
+                                                   'outline-none rounded-md w-full'}
                                                placeholder="Полное наименование организации"/>
                                     </div>
-                                    <div className="mb-3">
+                                    <div className={"mb-3 " + classInput}>
                                         <input type="text"
                                                required
+                                               id="inn"
                                                value={inn}
                                                onChange={(e) => {
                                                    setInn(e.target.value)
                                                }}
                                                minLength={8}
                                                className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                                   'outline-none rounded-md ' + classInput}
+                                                   'outline-none rounded-md w-full'}
                                                placeholder="ИНН"/>
                                     </div>
                                 </>
                                 :
                                 <>
-                                    <div className="mb-3">
+                                    <div className={"mb-3 " + classInput}>
                                         <input type="text"
                                                value={name}
                                                required
@@ -226,30 +223,39 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                                }}
                                                minLength={3}
                                                className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                                   'outline-none rounded-md ' + classInput}
+                                                   'outline-none rounded-md w-full'}
                                                placeholder="Фамилия Имя Отчество"/>
                                     </div>
-                                    <div className="mb-3">
+                                    <div className={"mb-3 " + classInput}>
                                         <input type="text"
                                                required
+                                               id="emailContragent"
+                                               inputMode="email"
+                                               onChange={(e) => {
+                                                   setEmail(e.target.value)
+                                               }}
                                                value={email}
                                                minLength={8}
                                                className={
-                                                   'dark:bg-grayButton bg-textDark emailContragent border-none py-3 px-4 ' +
-                                                   'outline-none rounded-md ' + classInput}
+                                                   'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
+                                                   'outline-none rounded-md w-full'}
                                                placeholder="Email"/>
                                     </div>
                                 </>
                             }
-                            <div className="mb-3 relative">
+                            <div className={"mb-3 relative " + classInput}>
                                 <span className="" id="flag"></span>
                                 <input type="text"
                                        required
+                                       onChange={(e) => {
+                                           setPhone(e.target.value)
+                                       }}
+                                       id="phoneCodeContragent"
                                        inputMode="text"
                                        data-input-type="phone"
                                        minLength={8}
                                        className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                           'outline-none rounded-md phoneCodeContragent ' + classInput}
+                                           'outline-none rounded-md w-full'}
                                        value={phone}
                                        placeholder="Телефон компании"/>
                             </div>
