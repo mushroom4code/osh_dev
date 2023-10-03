@@ -1461,7 +1461,7 @@ div.box_with_icons > a > i.icons_theme {
     z-index: 1;
 }
 
-.select2-container--open .select2-dropdown--below, .carousel_elem_custom:hover, .filters {
+.carousel_elem_custom:hover, .filters {
     filter: drop-shadow(0px 4px 4px rgba(57, 57, 57, 0.13));
 }
 
@@ -2175,8 +2175,8 @@ a.bx_catalog_item_title {
     background-image: url('/local/templates/Oshisha/images/close_mini.png');
     height: 30px;
     width: 31px;
-    top: 3%;
-    left: 88%;
+    top: 10%;
+    left: 87%;
 }
 
 .smart-filter-form .form-check-input:checked[type="checkbox"], .bx-soa-pp-company .form-check-input:checked[type="checkbox"] {
@@ -3478,8 +3478,8 @@ b.decoration-color-red {
         padding: 1rem;
         display: flex !important;
         justify-content: space-around;
-        background-color: white;a
-    align-items: center;
+        background-color: white;
+        align-items: center;
     }
     .block_menu_mobile {
         bottom: 0;
@@ -7290,4 +7290,127 @@ footer.footer .container .copyrights > span {
     font-size: 25px;
     line-height: 33px;
     transition: font-size .2s ease;
+}
+
+/* STORAGES */
+.select-filial {
+    background-color: #393939;
+    color: white;
+    font-size: 13px;
+    padding-right: 16px;
+    border: none;
+}
+
+.select-filial-box .select2-container--default .select2-selection--single .select2-selection__arrow {
+    width: auto;
+}
+
+.select-filial-box .select2-container--default .select2-selection--single {
+    border: none;
+    background-color: #393939;
+}
+
+.select-filial-box .select2-container .select2-selection--single,
+.select-filial-box .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: auto;
+    top: auto;
+}
+
+.select-filial-box .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: normal;
+    color: white;
+    padding: 8px 0;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.select-filial-box .select2-container {
+    vertical-align: inherit;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b{
+    left: auto;
+    background-image: none;
+    right: 0;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b:after {
+    content: "\f107";
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    text-rendering: auto;
+    color: white;
+    font-size: 23px;
+    font-weight: bolder;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.select-filial-box .select2-container, .select2-container--open .select2-dropdown {
+    min-width: 120px;
+    border-radius: 10px;
+}
+
+ul#select2-subsidiary_link-results .select2-results__option--selectable {
+    background: #F0F0F0;
+    font-weight: 600;
+}
+
+.select2-container--default ul#select2-subsidiary_link-results .select2-results__option--highlighted.select2-results__option--selectable {
+    background: #D9D9D9;
+    color: black;
+}
+
+.select2-container--default .select2-results ul#select2-subsidiary_link-results > .select2-results__options,
+ul#select2-subsidiary_link-results {
+    border-radius: 7px;
+}
+
+.mobile-choose .select2-container--default .select2-selection--single {
+    background-color: transparent;
+}
+
+.mobile-choose {
+    padding: 0 30px 9px 20px;
+}
+
+.mobile-choose .select2-container--default .select2-selection--single .select2-selection__arrow b:after,
+.mobile-choose .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: black;
+}
+
+.mobile-choose .select2-container {
+    padding: 5px 10px;
+}
+
+.select2-container--open .select2-dropdown--below{
+    border: none;
+}
+
+@media (min-width: 1024px) and (max-width: 1200px) {
+    .text_header,
+    .select-filial-box .select2-container--default .select2-selection--single .select2-selection__rendered {
+        font-size: 11px;
+    }
+}
+
+.z-880 {
+    z-index: 880;
+}
+
+.z-870 {
+    z-index: 870;
+}
+
+.left-0 {
+    left: 0;
+}
+
+.popup-message-filial {
+    border-radius: 0 20px 20px 20px;
+    background: var(--white, #FFF);
+    min-width: 320px;
+    width: 100%;
+    z-index:800;
+    box-shadow: 0 2px 6px 0 rgba(184, 183, 183, 0.25);
 }

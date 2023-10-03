@@ -23,14 +23,24 @@ class SDEKDelivery extends CommonPVZ
 
     public static function getInstanceForDoor($deliveryParams): array
     {
+        //TODO site id in seettings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
+
         if (Option::get(DeliveryHelper::$MODULE_ID, 'SDEK_door_active') === 'Y') {
             return [new SDEKDelivery()];
         }
         return [];
     }
 
-    public static function getInstanceForPvz(): array
+    public static function getInstanceForPvz($deliveryParams): array
     {
+        //TODO site id in seetings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
+
         if (Option::get(DeliveryHelper::$MODULE_ID, 'SDEK_pvz_active') === 'Y') {
             return [new SDEKDelivery()];
         }

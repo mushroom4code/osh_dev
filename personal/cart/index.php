@@ -97,7 +97,7 @@ $APPLICATION->IncludeComponent(
         "TOTAL_BLOCK_DISPLAY" => array(
             0 => "top",
         ),
-        "USE_DYNAMIC_SCROLL" => "Y",
+        "USE_DYNAMIC_SCROLL" => "N",
         "USE_ENHANCED_ECOMMERCE" => "N",
         "USE_GIFTS" => "Y",
         "USE_PREPAYMENT" => "N",

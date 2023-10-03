@@ -43,6 +43,11 @@ class RussianPostDelivery extends CommonPVZ
 
     public static function getInstanceForDoor($deliveryParams): array
     {
+        //TODO site id in seettings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
+
         if (Option::get(DeliveryHelper::$MODULE_ID, 'RussianPost_door_active') === 'Y') {
             return [
                 new RussianPostDelivery('RussianPostEms'),
@@ -53,8 +58,13 @@ class RussianPostDelivery extends CommonPVZ
         return [];
     }
 
-    public static function getInstanceForPVZ(): array
+    public static function getInstanceForPVZ($deliveryParams): array
     {
+        //TODO site id in seetings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
+
         if (Option::get(DeliveryHelper::$MODULE_ID, 'RussianPost_pvz_active') === 'Y') {
             return [
                 new RussianPostDelivery()

@@ -18,7 +18,7 @@ $templateData = array(
     'TEMPLATE_CLASS' => 'bx-' . $arParams['TEMPLATE_THEME']
 );
 
-PriceTypeANDStatusUser();
+//PriceTypeANDStatusUser();
 
 if (isset($templateData['TEMPLATE_THEME'])) {
     $this->addExternalCss($templateData['TEMPLATE_THEME']);

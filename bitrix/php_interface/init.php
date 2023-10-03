@@ -12,7 +12,15 @@ if (SITE_ID === SITE_EXHIBITION) {
 }
 
 CModule::IncludeModule("iblock");
+
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
+
+if (defined('SUBSIDIARY_ENABLE') && SUBSIDIARY_ENABLE) {
+    require(__DIR__ . '/catalog/general/querybuilder.php');
+    CModule::AddAutoloadClasses('', [
+        '\Enterego\Subsidiary\Storage' => '/bitrix/php_interface/enterego_class/Subsidiary/Storage.php',
+    ]);
+}
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
@@ -104,18 +112,18 @@ function onSalePaySystemRestrictionsClassNamesBuildListHandler()
 
 function PriceTypeANDStatusUser()
 {
-    global $USER;
-    $user_object = new EnteregoUserExchange();
-    $user_object->USER_ID = $USER->GetID() ?? 0;
-    $user_object->GetActiveContrAgentForUserPrice();
+//    global $USER;
+//    $user_object = new EnteregoUserExchange();
+//    $user_object->USER_ID = $USER->GetID() ?? 0;
+//    $user_object->GetActiveContrAgentForUserPrice();
 
-    if (!empty($user_object->contragents_user)) {
-        $GLOBALS['UserTypeOpt'] = false; //здесь поставить true для оптовиков
-        $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE; //Здесь переключение типов цен - сейчас включили розничную = 2
-    } else {
+//    if (!empty($user_object->contragents_user)) {
+//        $GLOBALS['UserTypeOpt'] = false; //здесь поставить true для оптовиков
+//        $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE; //Здесь переключение типов цен - сейчас включили розничную = 2
+//    } else {
         $GLOBALS['UserTypeOpt'] = false;
         $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE;
-    }
+//    }
 
 }
 
