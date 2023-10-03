@@ -46,9 +46,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                     <span class="mr-4 font-semibold">Изменить профиль</span>
                     <svg width="20" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_2080_11931)">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                  d="M0 17.4173V22H4.5827L18.0986 8.4841L13.5159 3.9014L0 17.4173ZM21.6425 4.94015C22.1192 4.46355 22.1192 3.69365 21.6425 3.21705L18.7829 0.35745C18.3063 -0.11915 17.5365 -0.11915 17.0599 0.35745L14.8235 2.59381L19.4062 7.1765L21.6425 4.94015Z"
-                                  fill="#E8E8E8"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" class="dark:fill-white fill-black"
+                                  d="M0 17.4173V22H4.5827L18.0986 8.4841L13.5159 3.9014L0 17.4173ZM21.6425 4.94015C22.1192 4.46355 22.1192 3.69365 21.6425 3.21705L18.7829 0.35745C18.3063 -0.11915 17.5365 -0.11915 17.0599 0.35745L14.8235 2.59381L19.4062 7.1765L21.6425 4.94015Z"/>
                         </g>
                         <defs>
                             <clipPath id="clip0_2080_11931">
@@ -237,12 +236,12 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
 
                 <div class="form-group notification_box mb-2">
                     <input class="check_input xs:p-5 p-4 dark:bg-grayButton checked:hover:bg-grayButton border-0
-                    dark:text-white cursor-pointer text-textLight font-normal rounded-full bg-textDark
+                    dark:text-white cursor-pointer font-normal rounded-full text-light-red
                   checked:focus:bg-grayButton mr-2 input_lk_notification" type="checkbox"
                            name="notification" checked
                            id="notification"/>
                     <label class="main-profile-form-label_notification dark:text-textDarkLightGray dark:font-light
-                    font-normal md:text-md text-sm"
+                    font-medium md:text-md text-sm"
                            for="notification">
                         Согласие на обработку персональных данных</label>
                 </div>
