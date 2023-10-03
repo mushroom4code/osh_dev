@@ -134,4 +134,13 @@ class PickPointDelivery extends CommonPVZ
     }
 
 
+    public static function getInstanceForPvz($deliveryParams): array
+    {
+        return  [];
+    }
+
+    public static function getInstanceForDoor($deliveryParams): array
+    {
+        return  [];
+    }
 }

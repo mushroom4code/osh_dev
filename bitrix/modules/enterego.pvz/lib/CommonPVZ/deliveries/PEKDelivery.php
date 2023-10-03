@@ -112,8 +112,18 @@ class PEKDelivery extends CommonPVZ
 
     public function getPriceDoorDelivery($params)
     {
-        // TODO: Implement getPriceDoorDelivery() method.
+        $this->errors[] = 'ПЭК не имеет доставки до двери';
+        return array('errors' => $this->errors);
     }
 
 
+    public static function getInstanceForPvz($deliveryParams): array
+    {
+        return [];
+    }
+
+    public static function getInstanceForDoor($deliveryParams): array
+    {
+        return [];
+    }
 }
