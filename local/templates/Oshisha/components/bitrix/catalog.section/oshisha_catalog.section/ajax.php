@@ -142,9 +142,12 @@ $context->getResponse()->writeHeaders();
 
 
 $hitRestriction = isset($parameters['GLOBAL_FILTER']['PROPERTY_HIT_VALUE']) ? true : false;
+$newRestriction = isset($parameters['GLOBAL_FILTER']['PROPERTY_NEW_VALUE']) ? true : false;
 $parameters['GLOBAL_FILTER'] = $GLOBALS[$parameters["FILTER_NAME"]];
 if ($hitRestriction)
     $parameters['GLOBAL_FILTER']['PROPERTY_HIT_VALUE'] = "да";
+if ($newRestriction)
+    $parameters['GLOBAL_FILTER']['PROPERTY_NEW_VALUE'] = "Да";
 
 
 //enterego static filter for special group
