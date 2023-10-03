@@ -72,9 +72,9 @@ class PriceList
         $file_name = 'price-list-oshisha-' . date("d.m.Y") . '-' . date("H:i:s") . '.xlsx';
         $path_to_file = $this->price_list_dir . $file_name;
         $xlsx->saveAs($path_to_file);
-        $option = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE', false, 'N2'));
+        $option = json_decode(COption::GetOptionString("BBRAIN", 'SETTINGS_SITE', false, ''));
         $option->price_list_link = '/price-list/' . $file_name;
-        COption::SetOptionString('BBRAIN', 'SETTINGS_SITE', json_encode($option), false, 'N2');
+        COption::SetOptionString('BBRAIN', 'SETTINGS_SITE', json_encode($option), false, '');
     }
 
 
