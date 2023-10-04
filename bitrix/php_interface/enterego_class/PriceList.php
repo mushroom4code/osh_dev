@@ -51,9 +51,11 @@ class PriceList
             );
 
         while ($ar = $StoragesQuery->GetNext()) {
-            $storages[$ar['ID']] = $ar;
-            $storages['TITLE'][] = 'Склад ' . $ar['TITLE'];
-            $arStore[] = "CATALOG_STORE_AMOUNT_" . $ar['ID'];
+            if (strripos($ar['TITLE'], 'Пункт выдачи') === false) {
+                $storages[$ar['ID']] = $ar;
+                $storages['TITLE'][] = 'Склад ' . $ar['TITLE'];
+                $arStore[] = "CATALOG_STORE_AMOUNT_" . $ar['ID'];
+            }
         }
 
         $this->arResult[] = ['<b style="font-size: 25px;font-weight:bold; ">ПРАЙС-ЛИСТ OSHISHA.NET - 8 (499) 350-62-01</b>'];
