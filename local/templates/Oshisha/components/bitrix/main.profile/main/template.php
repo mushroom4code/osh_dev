@@ -41,8 +41,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
         <input type="hidden" name="ID" value="<?= $arResult["ID"] ?>"/>
         <input type="hidden" name="LOGIN" value="<?= $arResult["arUser"]["LOGIN"] ?>"/>
         <div class="main-profile-block-shown" id="user_div_reg">
-            <div class="lg:w-9/12 w-full">
-                <p class="text-2xl dark:text-textDarkLightGray text-textLight flex flex-row items-center mb-8">
+            <div class="md:w-9/12 w-full">
+                <p class="text-2xl dark:text-textDarkLightGray text-lightGrayBg flex flex-row items-center mb-8">
                     <span class="mr-4 font-semibold">Изменить профиль</span>
                     <svg width="20" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_2080_11931)">
@@ -86,7 +86,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         <div class="mt-3 w-full">
                             <?php if (strtotime(date('m/d/Y')) < strtotime($arResult['arUser']['UF_DATE_CHANGE_BH'])): ?>
                                 <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor w-full
-                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md input_lk" type="text" name="PERSONAL_BIRTHDAY_INACTIVE" maxlength="50"
+                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md input_lk" type="text"
+                                       name="PERSONAL_BIRTHDAY_INACTIVE" maxlength="50"
                                        id="main-profile-day2" disabled
                                        value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
                                 <?php $dateChange = '<br><b class="font-medium">Изменить дату рождения можно будет ' .
@@ -233,7 +234,6 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                     </div>
                     <a href="javascript:void(0);" class="w-72 link_input_address mb-3">Сохранить</a>
                 </div>
-
                 <div class="form-group notification_box mb-2">
                     <input class="check_input xs:p-5 p-4 dark:bg-grayButton checked:hover:bg-grayButton border-0
                     dark:text-white cursor-pointer font-normal rounded-full text-light-red
