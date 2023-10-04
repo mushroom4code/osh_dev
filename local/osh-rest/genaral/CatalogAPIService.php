@@ -8,7 +8,7 @@ class CatalogAPIService extends \IRestService
     {
         return array(
             static::SCOPE => array(
-                static::SCOPE . '.actual_catalog' => array(__CLASS__, 'getActualCatalog'),
+                static::SCOPE . '.actual_catalog_mc' => array(__CLASS__, 'getActualCatalogMC'),
                 static::SCOPE . '.actual_catalog_rz' => array(__CLASS__, 'getActualCatalogRZ'),
                 static::SCOPE . '.products_without_photo' => array(__CLASS__, 'getProductsWithoutPhoto'),
                 'options' => array()
@@ -16,7 +16,7 @@ class CatalogAPIService extends \IRestService
         );
     }
 
-    public static function getActualCatalog($query, $n, \CRestServer $server): array
+    public static function getActualCatalogMC($query, $n, \CRestServer $server): array
     {
         if ($query['error']) {
             throw new \Bitrix\Rest\RestException(
@@ -26,14 +26,36 @@ class CatalogAPIService extends \IRestService
             );
         }
 
-        $arSelect = array('ID', 'EXTERNAL_ID', 'QUANTITY');
-        $arFilter = array("IBLOCK_ID" => IBLOCK_CATALOG, 'ACTIVE' => 'Y');
+        $arSelect = array(
+            'PRODUCT_ID',
+            'EXTERNAL_ID' => 'PRODUCT.IBLOCK_ELEMENT.XML_ID',
+            'QUANTITY' => 'AMOUNT'
+        );
+        $arFilter = array(
+            'STORE.ACTIVE'=>'Y',
+            'STORE.TITLE' => 'Москва',
+            'PRODUCT.IBLOCK_ELEMENT.IBLOCK_ID' => IBLOCK_CATALOG,
+            'PRODUCT.IBLOCK_ELEMENT.ACTIVE'=>'Y');
         $res_ar = [];
 
-        $res = CIBlockElement::GetList(array(), $arFilter, false, array(), $arSelect);
-        while ($ob = $res->GetNextElement(true, false)) {
-            $res_ar[] = $ob->GetFields();
+
+        $res = \Bitrix\Catalog\StoreProductTable::getList(array(
+            'filter' => $arFilter,
+            'select' => $arSelect,
+        ));
+//
+        while ($product = $res->fetch()) {
+            $res_ar[] = $product;
         }
+
+//        $arSelect = array('ID', 'EXTERNAL_ID', 'QUANTITY');
+//        $arFilter = array("IBLOCK_ID" => IBLOCK_CATALOG, 'ACTIVE' => 'Y');
+//        $res_ar = [];
+//
+//        $res = CIBlockElement::GetList(array(), $arFilter, false, array(), $arSelect);
+//        while ($ob = $res->GetNextElement(true, false)) {
+//            $res_ar[] = $ob->GetFields();
+//        }
 
         return array('catalog' => $res_ar, 'count' => count($res_ar), 'response' => 'ok');
     }
@@ -49,7 +71,7 @@ class CatalogAPIService extends \IRestService
         }
 
         $arSelect = array(
-            'PRODUCT_IBLOCK_ELEMENT_ID' => 'PRODUCT.IBLOCK_ELEMENT.ID',
+            'PRODUCT_ID',
             'EXTERNAL_ID' => 'PRODUCT.IBLOCK_ELEMENT.XML_ID',
             'QUANTITY' => 'AMOUNT'
         );
