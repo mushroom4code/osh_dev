@@ -14,8 +14,9 @@
 .suggestions-input::-ms-clear {
   display: none;
 }
+
 .suggestions-wrapper {
-  position: relative;
+  position: absolute;
   margin: 0;
   padding: 0;
   vertical-align: top;
@@ -48,9 +49,15 @@
 /**
  * Выпадающий блок с найденными подсказками
  */
+.dark .suggestions-suggestions {
+  background: #3C3C3C;
+  color: white;
+}
+
 .suggestions-suggestions {
     background: #fff;
     margin: 0;
+    width: 100%;
     min-width: 100px;
     max-height: 650px;
     color: #999;

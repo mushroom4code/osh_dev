@@ -1852,6 +1852,15 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
 // NEW DESIGN opt
 toggleThemeLocalStorages();
 // togger themes
+
+// install theme
+function toggleThemeLocalStorages() {
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
+}
 function toggleTheme(item) {
     item.classList.toggle('bg-indigo-600');
     item.classList.toggle('bg-gray-200');
@@ -1863,13 +1872,4 @@ function toggleTheme(item) {
         localStorage.theme = 'dark'
     }
     toggleThemeLocalStorages();
-}
-
-// install theme
-function toggleThemeLocalStorages() {
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark')
-    } else {
-        document.documentElement.classList.remove('dark')
-    }
 }

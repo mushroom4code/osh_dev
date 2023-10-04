@@ -42,7 +42,7 @@ $jsParams = array(
 );
 
 if ($arParams['PROFILE_AUTH'] == "Y"):?>
-    <div style="display: block" class="ctweb-smsauth-menu-block profile mb-8"
+    <div style="display: block" class="ctweb-smsauth-menu-block profile mb-8 md:w-9/12 w-full"
          data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
         <div class="ctweb-smsauth-box profile">
             <div>
@@ -69,7 +69,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                             <span class="mr-4 font-semibold">Изменение номера телефона</span>
                             <svg width="21" height="20" viewBox="0 0 24 23" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
-                                <path class="dark:fill-white fill-black" d="M0 3.19444C0 14.1327 9.01098 23 20.1266 23C20.628 23 21.1252 22.982 21.6176 22.9465C22.1826 22.9057 22.465 22.8854 22.7222 22.7397C22.9352 22.6191 23.1371 22.4052 23.2439 22.1873C23.3728 21.9244 23.3728 21.6176 23.3728 21.0041V17.4042C23.3728 16.8883 23.3728 16.6303 23.2864 16.4092C23.2104 16.2139 23.0865 16.0399 22.926 15.9027C22.7443 15.7473 22.4979 15.6592 22.0052 15.4828L17.8412 13.9928C17.2679 13.7877 16.9812 13.6851 16.7093 13.7025C16.4695 13.7178 16.2388 13.7985 16.0427 13.9352C15.8204 14.0902 15.6635 14.3475 15.3497 14.8623L14.2834 16.6111C10.8425 15.0777 8.0531 12.3292 6.49244 8.94444L8.26959 7.89516C8.79265 7.58633 9.05418 7.43191 9.21174 7.21313C9.35068 7.02021 9.43261 6.79314 9.44819 6.55717C9.46585 6.28957 9.36158 6.00751 9.15318 5.4434L7.63899 1.34577C7.45982 0.860915 7.37023 0.618483 7.21235 0.439683C7.07288 0.281737 6.89613 0.159914 6.69763 0.0849085C6.47291 1.52323e-07 6.21077 0 5.6865 0H2.02825C1.40481 0 1.09308 9.52019e-08 0.825813 0.12682C0.604446 0.231866 0.387131 0.430624 0.264502 0.640205C0.116449 0.893256 0.0957634 1.17124 0.0543936 1.72721C0.0183475 2.21165 0 2.70094 0 3.19444Z"/>
+                                <path class="dark:fill-white fill-black"
+                                      d="M0 3.19444C0 14.1327 9.01098 23 20.1266 23C20.628 23 21.1252 22.982 21.6176 22.9465C22.1826 22.9057 22.465 22.8854 22.7222 22.7397C22.9352 22.6191 23.1371 22.4052 23.2439 22.1873C23.3728 21.9244 23.3728 21.6176 23.3728 21.0041V17.4042C23.3728 16.8883 23.3728 16.6303 23.2864 16.4092C23.2104 16.2139 23.0865 16.0399 22.926 15.9027C22.7443 15.7473 22.4979 15.6592 22.0052 15.4828L17.8412 13.9928C17.2679 13.7877 16.9812 13.6851 16.7093 13.7025C16.4695 13.7178 16.2388 13.7985 16.0427 13.9352C15.8204 14.0902 15.6635 14.3475 15.3497 14.8623L14.2834 16.6111C10.8425 15.0777 8.0531 12.3292 6.49244 8.94444L8.26959 7.89516C8.79265 7.58633 9.05418 7.43191 9.21174 7.21313C9.35068 7.02021 9.43261 6.79314 9.44819 6.55717C9.46585 6.28957 9.36158 6.00751 9.15318 5.4434L7.63899 1.34577C7.45982 0.860915 7.37023 0.618483 7.21235 0.439683C7.07288 0.281737 6.89613 0.159914 6.69763 0.0849085C6.47291 1.52323e-07 6.21077 0 5.6865 0H2.02825C1.40481 0 1.09308 9.52019e-08 0.825813 0.12682C0.604446 0.231866 0.387131 0.430624 0.264502 0.640205C0.116449 0.893256 0.0957634 1.17124 0.0543936 1.72721C0.0183475 2.21165 0 2.70094 0 3.19444Z"/>
                             </svg>
                         </p>
                         <!--STEP PHONE WAITING-->
@@ -108,21 +109,24 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                 <!-- STEP CODE WAITING -->
                 <div id="ctweb_form_step_3"
-                     class="profile ctweb-smsauth-menu-step <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'hidden' ?> ">
-                    <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
-
+                     class="profile ctweb-smsauth-menu-step w-full
+                     <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'hidden' ?> ">
+                    <h3 class="text-xs mb-3 font-normal dark:text-iconGray text-textLight">
+                        <?= GetMessage("SMS_AUTH_ENTER_CODE") ?>
+                    </h3>
                     <div class="form-group flex flex-col mb-2">
-                        <label style="margin-bottom: 10px" class="ctweb-label" for="sms-auth-code"></label>
+                        <label class="ctweb-label text-xs mb-5 font-normal dark:text-iconGray text-textLight"
+                               for="sms-auth-code"></label>
                         <div style="display: none">
                             <a class="ctweb-link"><?= GetMessage("SMS_AUTH_CHANGE_NUMBER_PHONE") ?></a>
                         </div>
                         <label style="display: none" class="ctweb-label"
                                for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
-                        <div class="col-sm-12 col-md-12">
-                            <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
-                                   class="form-control dark:bg-grayButton input_lk profile auth_code"
-                                   autocomplete="off">
-                        </div>
+                        <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
+                               class="dark:bg-grayButton bg-white dark:border-none border-borderColor
+                                   focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md w-full
+                                    input_lk profile auth_code"
+                               autocomplete="off">
                         <span id="result"></span>
                     </div>
 
@@ -133,9 +137,10 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                 <!-- ERROR STEP -->
                 <div id="ctweb_form_step_error" class="ctweb-smsauth-menu-step hidden">
-                    <h3 class="ctweb-title" id="<?= $jsParams['TEMPLATE']['ERROR_TITLE'] ?>"></h3>
+                    <h3 class="ctweb-title text-hover-red mb-3 text-md font-semibold"
+                        id="<?= $jsParams['TEMPLATE']['ERROR_TITLE'] ?>"></h3>
                     <div class="form-group">
-                        <label class="ctweb-label ctweb-label-error"
+                        <label class="ctweb-label ctweb-label-error text-hover-red font-semibold mb-3 text-sm"
                                id="<?= $jsParams['TEMPLATE']['ERROR_TEXT'] ?>"></label>
                     </div>
                 </div>
@@ -144,35 +149,61 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                 <div class="ctweb-button-block profile mt-6">
                     <input class="btn btn dark:bg-dark-red rounded-md bg-light-red text-white xs:px-7 py-3
                              dark:shadow-md shadow-shadowDark font-light dark:hover:bg-hoverRedDark cursor-pointer
-                              sm:w-72 px-5 w-56 get_code_button profile xs:text-md text-sm sm:font-normal"
+                              sm:w-72 px-5 w-56 get_code_button profile xs:text-md text-sm sm:font-normal mb-5"
                            id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                            type="submit"
                            value="Сохранить"
                            onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
 
                     <div style="display: none" class="ctweb-button-back">
-                        <a class="ctweb-link"
-                           id="<?= $jsParams['TEMPLATE']['BACK'] ?>"><?= GetMessage("SMS_AUTH_BACK") ?></a>
+                        <a class="ctweb-link cursor-pointer flex flex-row mb-5"
+                           id="<?= $jsParams['TEMPLATE']['BACK'] ?>">
+                            <svg width="21" height="22" viewBox="0 0 34 35" class="mr-3" xmlns="http://www.w3.org/2000/svg">
+                                <path class="fill-light-red dark:fill-white"
+                                      d="M33.3333 17.025C33.3333 13.6578 32.3559 10.3662 30.5245 7.56642C28.6931 4.76668 26.0902 2.58454 23.0447 1.29596C19.9993 0.00737666 16.6482 -0.329775 13.4152 0.327138C10.1822 0.984051 7.21244 2.60553 4.88156 4.98651C2.55069 7.3675 0.96334 10.4011 0.320253 13.7036C-0.322834 17.0061 0.0072214 20.4293 1.26868 23.5402C2.53014 26.6511 4.66635 29.31 7.40717 31.1808C10.148 33.0515 13.3703 34.05 16.6667 34.05C21.087 34.05 25.3262 32.2563 28.4518 29.0635C31.5774 25.8707 33.3333 21.5403 33.3333 17.025ZM13.5667 23.3072L8.80001 18.1997C8.72947 18.1259 8.67296 18.0393 8.63334 17.9444C8.56257 17.8642 8.50615 17.772 8.46667 17.672C8.3785 17.4682 8.33295 17.2478 8.33295 17.025C8.33295 16.8022 8.3785 16.5818 8.46667 16.3781C8.546 16.1691 8.66494 15.9781 8.81668 15.8162L13.8167 10.7087C14.1305 10.3881 14.5562 10.208 15 10.208C15.4438 10.208 15.8695 10.3881 16.1833 10.7087C16.4972 11.0293 16.6735 11.4641 16.6735 11.9175C16.6735 12.3709 16.4972 12.8057 16.1833 13.1263L14.0167 15.3225H23.3333C23.7754 15.3225 24.1993 15.5019 24.5119 15.8212C24.8244 16.1404 25 16.5735 25 17.025C25 17.4765 24.8244 17.9096 24.5119 18.2289C24.1993 18.5481 23.7754 18.7275 23.3333 18.7275H13.9L15.9833 20.9578C16.2883 21.2851 16.4535 21.7229 16.4426 22.1746C16.4317 22.6264 16.2455 23.0553 15.925 23.3668C15.6045 23.6784 15.176 23.8471 14.7338 23.836C14.2915 23.8248 13.8717 23.6346 13.5667 23.3072Z"/>
+                            </svg>
+                            <?= GetMessage("SMS_AUTH_BACK") ?></a>
                     </div>
 
                     <div style="display: none" class="ctweb-button-send-code-again">
-                        <a class="ctweb-link"
-                           id="<?= $jsParams['TEMPLATE']['RESEND'] ?>"><?= GetMessage("SMS_AUTH_SEND_CODE_AGAIN") ?></a>
+                        <a class="ctweb-link cursor-pointer flex flex-row mb-5"
+                           id="<?= $jsParams['TEMPLATE']['RESEND'] ?>">
+                            <svg width="21" height="23" viewBox="0 0 21 23" fill="none" class="mr-3"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.4434 0.727539V3.86709C4.83121 3.86709 0.257324 8.09636 0.257324 13.2857C0.257324 18.4751 4.83121 22.7044 10.4434 22.7044C16.0557 22.7044 20.6296 18.4751 20.6296 13.2857C20.6296 11.224 19.8998 9.31856 18.6777 7.76496L17.064 9.25706C17.8854 10.4119 18.366 11.7945 18.366 13.2857C18.366 17.344 14.8323 20.6114 10.4434 20.6114C6.05454 20.6114 2.52091 17.344 2.52091 13.2857C2.52091 9.22752 6.05454 5.96012 10.4434 5.96012V9.09968L16.1024 4.91361L10.4434 0.727539Z"
+                                      class="fill-light-red dark:fill-white"/>
+                            </svg>
+                            <?= GetMessage("SMS_AUTH_SEND_CODE_AGAIN") ?>
+                        </a>
                     </div>
 
                     <div class="ctweb-button-new-code" id="new_code_block">
-                        <a class="ctweb-link glowing-text"
-                           id="<?= $mainID . 'REUSE' ?>"><?= GetMessage('SMS_AUTH_REUSE_CODE') ?></a>
+                        <a class="ctweb-link glowing-text flex flex-row mb-5 cursor-pointer"
+                           id="<?= $mainID . 'REUSE' ?>">
+                            <svg width="21" height="23" viewBox="0 0 21 23" fill="none" class="mr-3"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.4434 0.727539V3.86709C4.83121 3.86709 0.257324 8.09636 0.257324 13.2857C0.257324 18.4751 4.83121 22.7044 10.4434 22.7044C16.0557 22.7044 20.6296 18.4751 20.6296 13.2857C20.6296 11.224 19.8998 9.31856 18.6777 7.76496L17.064 9.25706C17.8854 10.4119 18.366 11.7945 18.366 13.2857C18.366 17.344 14.8323 20.6114 10.4434 20.6114C6.05454 20.6114 2.52091 17.344 2.52091 13.2857C2.52091 9.22752 6.05454 5.96012 10.4434 5.96012V9.09968L16.1024 4.91361L10.4434 0.727539Z"
+                                      class="fill-light-red dark:fill-white"/>
+                            </svg>
+                            <?= GetMessage('SMS_AUTH_REUSE_CODE') ?></a>
                     </div>
 
                     <div>
-                        <a class="ctweb-link"
-                           id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>"><?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
+                        <a class="ctweb-link flex flex-row cursor-pointer"
+                           id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>">
+                            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" class="mr-3"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_2080_11931)">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" class="dark:fill-white fill-light-red"
+                                          d="M0 17.4173V22H4.5827L18.0986 8.4841L13.5159 3.9014L0 17.4173ZM21.6425 4.94015C22.1192 4.46355 22.1192 3.69365 21.6425 3.21705L18.7829 0.35745C18.3063 -0.11915 17.5365 -0.11915 17.0599 0.35745L14.8235 2.59381L19.4062 7.1765L21.6425 4.94015Z"></path>
+                                </g>
+                            </svg>
+                            <?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
                     </div>
 
 
                     <div style="display:none">
-                        <a class="ctweb-link" href="<? SITE_DIR ?>about/FAQ/"
+                        <a class="ctweb-link" href="/about/FAQ/"
                            id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>"><?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
                     </div>
 

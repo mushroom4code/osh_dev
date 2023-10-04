@@ -90,7 +90,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                        name="PERSONAL_BIRTHDAY_INACTIVE" maxlength="50"
                                        id="main-profile-day2" disabled
                                        value="<?= date('d/m/Y', strtotime($arResult['arUser']['PERSONAL_BIRTHDAY'])) ?>"/>
-                                <?php $dateChange = '<br><b class="font-medium">Изменить дату рождения можно будет ' .
+                                <?php $dateChange = '<br>
+                                    <b class="dark:font-medium font-semibold">Изменить дату рождения можно будет ' .
                                     date('d/m/Y', strtotime($arResult["arUser"]["UF_DATE_CHANGE_BH"])) . '</b>'; ?>
                             <?php else: ?>
                                 <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
@@ -104,7 +105,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                            : $arResult['arUser']['PERSONAL_BIRTHDAY'] ?>"/>
                             <?php endif; ?>
                         </div>
-                        <div class="info-date text-xs font-light dark:text-iconGray text-textLight mt-3">
+                        <div class="info-date text-xs dark:font-light font-normal dark:text-iconGray text-textLight mt-3">
                             В день рождения вам будут доступны персональные скидки<br>
                             Смена дня рождения доступна не чаще одного раза в год
                             <?= $dateChange ?>
@@ -123,8 +124,10 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                for="main-profile-email">Почта</label>
                         <div class="mt-3">
                             <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
-                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md w-full" type="email"
+                         focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md w-full"
+                                   type="text"
                                    name="EMAIL"
+                                   inputmode="email"
                                    maxlength="50"
                                    id="main-profile-email" value="<?= $arResult["arUser"]["EMAIL"] ?>"
                                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"/>
@@ -136,7 +139,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         <div class="form-group w-full mb-4">
                             <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
                                    for="main-profile-password">Новый пароль</label>
-                            <div class="mt-3">
+                            <div class="mt-3 relative">
                                 <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
                          focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md w-full  input_lk
                          bx-auth-input main-profile-password"
@@ -144,6 +147,12 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                        name="NEW_PASSWORD" minlength="6" maxlength="50" id="main-profile-password"
                                        value=""
                                        autocomplete="new-password"/>
+                                <svg width="29" height="18" viewBox="0 0 29 18" class="absolute mr-4 right-0 top-0 mt-4"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14.5831 5.75639C17.7625 5.75639 20.3399 8.29345 20.3399 11.4231C20.3399 14.5527 17.7625 17.0897 14.5831 17.0897C11.4036 17.0897 8.82621 14.5527 8.82621 11.4231C8.82621 8.29345 11.4036 5.75639 14.5831 5.75639ZM14.5831 0.791504C21.2229 0.791504 26.9546 5.25401 28.545 11.5077C28.6898 12.077 28.3383 12.6539 27.76 12.7964C27.1817 12.9389 26.5956 12.593 26.4508 12.0237C25.0996 6.71028 20.2267 2.9165 14.5831 2.9165C8.93693 2.9165 4.06256 6.71355 2.71367 12.0301C2.56923 12.5995 1.98327 12.9457 1.40489 12.8035C0.826511 12.6614 0.474738 12.0846 0.619181 11.5153C2.20676 5.25786 7.94035 0.791504 14.5831 0.791504Z"
+                                          class="fill-light-red dark:fill-white"/>
+                                </svg>
+
                             </div>
                         </div>
                         <div class="form-group w-full mb-2">
@@ -192,7 +201,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                 <div class="form-group mb-8">
                     <label class="dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
                            for="main-profile-address">Изменить адрес</label>
-                    <div class="col-sm-12 col-md-12 mt-3">
+                    <div class="w-full relative mt-3">
                         <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
                          focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md w-full input_lk"
                                type="text" name="" maxlength="100"
@@ -235,7 +244,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                     <a href="javascript:void(0);" class="w-72 link_input_address mb-3">Сохранить</a>
                 </div>
                 <div class="form-group notification_box mb-2">
-                    <input class="check_input xs:p-5 p-4 dark:bg-grayButton checked:hover:bg-grayButton border-0
+                    <input class="check_input xs:p-5 p-4 dark:bg-grayButton checked:hover:bg-grayButton border-iconGray
                     dark:text-white cursor-pointer font-normal rounded-full text-light-red
                   checked:focus:bg-grayButton mr-2 input_lk_notification" type="checkbox"
                            name="notification" checked
@@ -278,6 +287,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
         let year_now = date_now.getFullYear();
         let date_datipicker = date_now.setFullYear(year_now - 18);
 
+        $('#main-profile-email').inputmask('email');
         $('input[name="PERSONAL_BIRTHDAY"]').datepicker({
             dateFormat: 'dd/mm/yyyy',
             maxDate: date_now,
