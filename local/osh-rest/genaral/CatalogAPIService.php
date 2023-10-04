@@ -26,7 +26,11 @@ class CatalogAPIService extends \IRestService
             );
         }
 
-        return array('catalog' => self::getProductsAndQuantityForStore('Москва'), 'count' => count($res_ar), 'response' => 'ok');
+        if ('SUBSIDIARY_SITE_LIST') {
+
+        }
+        $res_ar = self::getProductsAndQuantityForStore('N2');
+        return array('catalog' => $res_ar, 'count' => count($res_ar), 'response' => 'ok');
     }
 
     public static function getActualCatalogRZ($query, $n, \CRestServer $server): array
@@ -38,8 +42,8 @@ class CatalogAPIService extends \IRestService
                 \CRestServer::STATUS_PAYMENT_REQUIRED
             );
         }
-
-        return array('catalog' => self::getProductsAndQuantityForStore('Рязань'), 'count' => count($res_ar), 'response' => 'ok');
+        $res_ar = self::getProductsAndQuantityForStore('RZ');
+        return array('catalog' => $res_ar, 'count' => count($res_ar), 'response' => 'ok');
     }
 
     public static function getProductsWithoutPhoto($query, $n, \CRestServer $server): array
@@ -67,7 +71,17 @@ class CatalogAPIService extends \IRestService
         return array('catalog' => $res_ar, 'count' => count($res_ar), 'response' => 'ok');
     }
 
-    public static function getProductsAndQuantityForStore(string $storeTitle = 'Москва') {
+    public static function getProductsAndQuantityForStore($siteId = SITE_ID) {
+        $storesRes = \Bitrix\Catalog\StoreTable::getList([
+                'filter' => ['SITE_ID' => $siteId],
+                'select' => ['ID']
+            ]
+        );
+        $storeArr = [];
+        while($store = $storesRes->fetch()) {
+            $storeArr[] = $store['ID'];
+        }
+
         $arSelect = array(
             'PRODUCT_ID',
             'EXTERNAL_ID' => 'PRODUCT.IBLOCK_ELEMENT.XML_ID',
@@ -75,7 +89,7 @@ class CatalogAPIService extends \IRestService
         );
         $arFilter = array(
             'STORE.ACTIVE'=>'Y',
-            'STORE.TITLE' => $storeTitle,
+            'STORE.ID' => $storeArr,
             'PRODUCT.IBLOCK_ELEMENT.IBLOCK_ID' => IBLOCK_CATALOG,
             'PRODUCT.IBLOCK_ELEMENT.ACTIVE'=>'Y');
         $res_ar = [];
@@ -87,7 +101,11 @@ class CatalogAPIService extends \IRestService
         ));
 
         while ($product = $res->fetch()) {
-            $res_ar[] = $product;
+            if(isset($res_ar[$product['PRODUCT_ID']])) {
+                $res_ar[$product['PRODUCT_ID']]['QUANTITY'] += $product['QUANTITY'];
+            } else {
+                $res_ar[] = $product;
+            }
         }
 
         return $res_ar;
