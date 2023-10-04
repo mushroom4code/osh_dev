@@ -172,11 +172,18 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             return
         }
 
-        myMap = new ymaps.Map(html_map_id, {
-            center: msk_center_point,
-            zoom: 9,
+        myMap = new ymaps3.Map(document.getElementById(html_map_id), {
+            location: {
+                center: msk_center_point,
+                zoom: 9,
+            },
             controls: ["zoomControl", "typeSelector"]
         });
+        controls = new YMapControls({position: 'top left', orientation: 'vertical'});
+        controls.addChild(new YMapGeolocationControlI({}));
+        controls.addChild(new YMapZoomControlI({}));
+        myMap.addChild(controls);
+
 
         selfObj.initCircleControl();
         selfObj.initGeoLocationControl();
@@ -591,7 +598,7 @@ window.Osh.oshMkadDistanceObject = function oshMkadDistanceObject(param) {
             if (typeof ymaps === "undefined" )
                 return null;
 
-            ymaps.ready(selfObj.init);
+            ymaps3.ready.then(selfObj.init);
             selfObj.isInited = true;
 
 

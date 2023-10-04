@@ -627,7 +627,7 @@ else
 		?>
 		(function bx_ymaps_waiter(){
 			if (typeof ymaps !== 'undefined')
-				ymaps.ready(BX.proxy(BX.Sale.OrderAjaxComponent.initMaps, BX.Sale.OrderAjaxComponent));
+				ymaps3.ready.then(BX.proxy(BX.Sale.OrderAjaxComponent.initMaps, BX.Sale.OrderAjaxComponent));
 			else
 				setTimeout(bx_ymaps_waiter, 100);
 			})();

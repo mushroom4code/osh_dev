@@ -995,70 +995,71 @@ BX.SaleCommonPVZ = {
     setPVZOnMap: function (pvzList) {
         const oshDelivery = this
 
-        ymaps.ready(function () {
-            const myGeocoder = ymaps.geocode(oshDelivery.curCityName, {results: 1});
-            myGeocoder.then(function (res) { // получаем координаты
-                const firstGeoObject = res.geoObjects.get(0),
-                    coords = firstGeoObject.geometry.getCoordinates();
-
-                oshDelivery.propsMap = new ymaps.Map('map_for_delivery', {
-                    center: [coords[0], coords[1]],
-                    zoom: 12,
-                    controls: ['fullscreenControl']
-                });
-
-                const objectManager = new ymaps.ObjectManager({
-                    clusterize: true,
-                    clusterHasBalloon: true
-                });
-                objectManager.add({type: 'FeatureCollection', features: pvzList});
-                oshDelivery.objectManager = objectManager;
-
-                oshDelivery.propsMap.geoObjects.add(objectManager);
-                const osh_pvz = objectManager.objects.getAll()
-                    .find((item) => item?.properties?.deliveryName === 'OSHISHA');
-
-                if (osh_pvz) {
-                    const button = new ymaps.control.Button({
-                        data: {
-                            image: 'images/button.jpg',
-                            content: 'Пункт выдачи OSHISHA',
-                            title: 'Показать на карте пункт выдачи'
-                        },
-                        options: {
-                            selectOnClick: false,
-                            maxWidth: [230, 230, 230]
-                        }
-                    });
-                    button.events.add('click', () => {
-                        oshDelivery.propsMap.setZoom(15)
-                        objectManager.objects.balloon.open(osh_pvz.id);
-                    })
-                    oshDelivery.propsMap.controls.add(button, {float: 'right', floatIndex: 100});
-                }
-
-                objectManager.clusters.events.add(['balloonopen'], function (e) {
-                    const clusterId = e.get('objectId');
-                    const cluster = objectManager.clusters.getById(clusterId);
-                    if (objectManager.clusters.balloon.isOpen(clusterId)) {
-                        oshDelivery.getSelectPvzPrice(cluster.properties.geoObjects, clusterId);
+        ymaps3.ready.then(function () {
+                oshDelivery.propsMap = new ymaps3.YMap(document.getElementById('map_for_delivery'), {
+                    location: {
+                        center: [80.7522, 90.6156],
+                        zoom: 12,
                     }
                 });
+                const layer = new ymaps3.YMapDefaultSchemeLayer();
+                oshDelivery.propsMap.addChild(layer);
 
-                objectManager.objects.events.add('click', function (e) {
-                    const objectId = e.get('objectId')
-                    objectManager.objects.balloon.open(objectId);
-                });
+                console.log(oshDelivery.propsMap);
 
-                objectManager.objects.events.add('balloonopen', function (e) {
-                    const objectId = e.get('objectId'),
-                        obj = objectManager.objects.getById(objectId);
+                // const objectManager = new ymaps.ObjectManager({
+                //     clusterize: true,
+                //     clusterHasBalloon: true
+                // });
+                // objectManager.add({type: 'FeatureCollection', features: pvzList});
+                // oshDelivery.objectManager = objectManager;
+                //
+                // oshDelivery.propsMap.geoObjects.add(objectManager);
+                // const osh_pvz = objectManager.objects.getAll()
+                //     .find((item) => item?.properties?.deliveryName === 'OSHISHA');
+                //
+                // if (osh_pvz) {
+                //     const button = new ymaps.control.Button({
+                //         data: {
+                //             image: 'images/button.jpg',
+                //             content: 'Пункт выдачи OSHISHA',
+                //             title: 'Показать на карте пункт выдачи'
+                //         },
+                //         options: {
+                //             selectOnClick: false,
+                //             maxWidth: [230, 230, 230]
+                //         }
+                //     });
+                //     button.events.add('click', () => {
+                //         oshDelivery.propsMap.setZoom(15)
+                //         objectManager.objects.balloon.open(osh_pvz.id);
+                //     })
+                //     oshDelivery.propsMap.controls.add(button, {float: 'right', floatIndex: 100});
+                // }
+                //
+                // objectManager.clusters.events.add(['balloonopen'], function (e) {
+                //     const clusterId = e.get('objectId');
+                //     const cluster = objectManager.clusters.getById(clusterId);
+                //     if (objectManager.clusters.balloon.isOpen(clusterId)) {
+                //         oshDelivery.getSelectPvzPrice(cluster.properties.geoObjects, clusterId);
+                //     }
+                // });
+                //
+                // objectManager.objects.events.add('click', function (e) {
+                //     const objectId = e.get('objectId')
+                //     objectManager.objects.balloon.open(objectId);
+                // });
+                //
+                // objectManager.objects.events.add('balloonopen', function (e) {
+                //     const objectId = e.get('objectId'),
+                //         obj = objectManager.objects.getById(objectId);
+                //
+                //     oshDelivery.getSelectPvzPrice([obj]);
+                // });
 
-                    oshDelivery.getSelectPvzPrice([obj]);
-                });
-            });
         }).catch(function (e) {
-            oshDelivery.showError(oshDelivery.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
+            console.log(e);
+            // oshDelivery.showError(oshDelivery.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
             console.warn(e);
         });
     },

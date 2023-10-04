@@ -560,7 +560,7 @@ var akusherstvoMkadDistanceObject = akusherstvoMkadDistanceObject || function ak
             $.when.apply(null, [d1.promise(), d2.promise()]).always(function (v1, v2) {
                 $(function () {
                     selfObj.isInited = true;
-                    ymaps.ready(selfObj.init);
+                    ymaps3.ready.then(selfObj.init);
                 });
             });
 
