@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
-        "./local/templates/Oshisha/**/**/*.{js,php}",
+        "./local/templates/Oshisha/**/*.{js,php}",
+        "./local/templates/Oshisha/**/.default/*.{js,php}",
+        // "./local/templates/Oshisha/components/bitrix/menu/.default/template.php",
         './index.php',
         "./personal/*.php", "./personal/contragents/*.php",
         "./local/components/bitrix/enterego.slider/templates/.default/template.php",
