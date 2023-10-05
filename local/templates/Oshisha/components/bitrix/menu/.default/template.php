@@ -18,7 +18,7 @@ if ($USER->IsAuthorized()) {
 if (!$name)
     $name = trim($USER->GetLogin()); ?>
 
-<div class="left-menu dark:bg-darkBox bg-white md:w-72 w-full md:h-auto h-full md:rounded-xl rounded-0
+<div class="left-menu dark:bg-darkBox md:bg-textDark bg-white md:w-72 w-full md:h-auto h-full md:rounded-xl rounded-0
  p-10 mr-8 min-h-[480px] justify-between">
     <div class="box_with_photo flex-col mb-7 md:flex hidden">
         <svg width="100" height="92" viewBox="0 0 92 84" class="rounded-lg"
