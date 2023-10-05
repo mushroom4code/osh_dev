@@ -55,20 +55,33 @@ if (!$USER->IsAuthorized()) {
                            id="profile_people"><span><?= htmlspecialcharsbx($name) ?></span>
                         </a>
                         <div class="flex flex-row">
-                            <a href="/personal/private/" class="text-white text-xs font-light p-2 rounded-full bg-white mr-3">
-                                <svg width="17" height="17" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.6818 0.449219L13.0682 2.93797L18.2955 7.91547L20.9091 5.42672L15.6818 0.449219ZM10.4545 5.42672L0 15.3817V20.3592H5.22727L15.6818 10.4042L10.4545 5.42672Z" fill="black"/>
+                            <a href="/personal/private/"
+                               class="text-white text-xs font-light p-2 rounded-full bg-white mr-3">
+                                <svg width="17" height="17" viewBox="0 0 21 21" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.6818 0.449219L13.0682 2.93797L18.2955 7.91547L20.9091 5.42672L15.6818 0.449219ZM10.4545 5.42672L0 15.3817V20.3592H5.22727L15.6818 10.4042L10.4545 5.42672Z"
+                                          fill="black"/>
                                 </svg>
                             </a>
-                            <a href="/personal/cart/" class="text-white text-xs font-light p-2 rounded-full bg-white mr-3">
-                                <svg width="17" height="18" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.6755 8.0095H17.0512C18.2852 8.0095 19.3131 8.95534 19.4156 10.185L20.2065 19.6752C20.3218 21.0584 19.2302 22.2448 17.8421 22.2448H4.01871C2.63067 22.2448 1.53909 21.0584 1.65436 19.6752L2.44521 10.185C2.54768 8.95534 3.57562 8.0095 4.80956 8.0095H6.18532M15.6755 8.0095H6.18532M15.6755 8.0095V6.82322C15.6755 5.56474 15.1756 4.35781 14.2857 3.46793C13.3959 2.57806 12.1889 2.07812 10.9304 2.07812C9.6719 2.07812 8.46501 2.57806 7.57512 3.46793C6.68525 4.35781 6.18532 5.56474 6.18532 6.82322V8.0095M15.6755 8.0095V12.7546M6.18532 8.0095V12.7546" stroke="black" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+                            <a href="/personal/cart/"
+                               class="text-white text-xs font-light p-2 rounded-full bg-white mr-3">
+                                <svg width="17" height="18" viewBox="0 0 22 24" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.6755 8.0095H17.0512C18.2852 8.0095 19.3131 8.95534 19.4156 10.185L20.2065 19.6752C20.3218 21.0584 19.2302 22.2448 17.8421 22.2448H4.01871C2.63067 22.2448 1.53909 21.0584 1.65436 19.6752L2.44521 10.185C2.54768 8.95534 3.57562 8.0095 4.80956 8.0095H6.18532M15.6755 8.0095H6.18532M15.6755 8.0095V6.82322C15.6755 5.56474 15.1756 4.35781 14.2857 3.46793C13.3959 2.57806 12.1889 2.07812 10.9304 2.07812C9.6719 2.07812 8.46501 2.57806 7.57512 3.46793C6.68525 4.35781 6.18532 5.56474 6.18532 6.82322V8.0095M15.6755 8.0095V12.7546M6.18532 8.0095V12.7546"
+                                          stroke="black" stroke-width="2.7" stroke-linecap="round"
+                                          stroke-linejoin="round"/>
                                 </svg>
                             </a>
-                            <a href="/?logout=yes&<?= bitrix_sessid_get() ?>" class="text-white text-xs font-light p-2 rounded-full bg-white mr-3">
-                                <svg width="17" height="17" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13.0933 11.5345H20.6523M20.6523 11.5345L17.4127 14.8962M20.6523 11.5345L17.4127 8.17285" stroke="black" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M17.1182 4.81089V3.69033C17.1182 2.4526 16.1512 1.44922 14.9584 1.44922H4.15974C2.96695 1.44922 2 2.4526 2 3.69033V19.3781C2 20.6159 2.96695 21.6192 4.15974 21.6192H14.9584C16.1512 21.6192 17.1182 20.6159 17.1182 19.3781V18.2576" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <a href="/?logout=yes&<?= bitrix_sessid_get() ?>"
+                               class="text-white text-xs font-light p-2 rounded-full bg-white mr-3">
+                                <svg width="17" height="17" viewBox="0 0 22 23" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13.0933 11.5345H20.6523M20.6523 11.5345L17.4127 14.8962M20.6523 11.5345L17.4127 8.17285"
+                                          stroke="black" stroke-width="2.7" stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                    <path d="M17.1182 4.81089V3.69033C17.1182 2.4526 16.1512 1.44922 14.9584 1.44922H4.15974C2.96695 1.44922 2 2.4526 2 3.69033V19.3781C2 20.6159 2.96695 21.6192 4.15974 21.6192H14.9584C16.1512 21.6192 17.1182 20.6159 17.1182 19.3781V18.2576"
+                                          stroke="black" stroke-width="2.5" stroke-linecap="round"
+                                          stroke-linejoin="round"/>
                                 </svg>
 
                             </a>
@@ -77,8 +90,9 @@ if (!$USER->IsAuthorized()) {
                 </div>
             </div>
         <?php }
-        if ($APPLICATION->GetCurUri() === '/personal/'): ?>
-            <div class="sidebar_lk md:block">
+        if ($APPLICATION->GetCurUri() === '/personal/' && $mobile->isMobile() ||
+            strripos($APPLICATION->GetCurUri(), '/personal/') !== false && !$mobile->isMobile()): ?>
+            <div class="sidebar_lk">
                 <?php $APPLICATION->IncludeComponent(
                     "bitrix:menu",
                     "",
