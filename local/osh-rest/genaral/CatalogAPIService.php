@@ -8,15 +8,14 @@ class CatalogAPIService extends \IRestService
     {
         return array(
             static::SCOPE => array(
-                static::SCOPE . '.actual_catalog_mc' => array(__CLASS__, 'getActualCatalogMC'),
-                static::SCOPE . '.actual_catalog_rz' => array(__CLASS__, 'getActualCatalogRZ'),
+                static::SCOPE . '.actual_catalog' => array(__CLASS__, 'getActualCatalog'),
                 static::SCOPE . '.products_without_photo' => array(__CLASS__, 'getProductsWithoutPhoto'),
                 'options' => array()
             )
         );
     }
 
-    public static function getActualCatalogMC($query, $n, \CRestServer $server): array
+    public static function getActualCatalog($query, $n, \CRestServer $server): array
     {
         if ($query['error']) {
             throw new \Bitrix\Rest\RestException(
@@ -26,23 +25,7 @@ class CatalogAPIService extends \IRestService
             );
         }
 
-        if ('SUBSIDIARY_SITE_LIST') {
-
-        }
-        $res_ar = self::getProductsAndQuantityForStore('N2');
-        return array('catalog' => $res_ar, 'count' => count($res_ar), 'response' => 'ok');
-    }
-
-    public static function getActualCatalogRZ($query, $n, \CRestServer $server): array
-    {
-        if ($query['error']) {
-            throw new \Bitrix\Rest\RestException(
-                'Message',
-                'ERROR_CODE',
-                \CRestServer::STATUS_PAYMENT_REQUIRED
-            );
-        }
-        $res_ar = self::getProductsAndQuantityForStore('RZ');
+        $res_ar = self::getProductsAndQuantityForSubsidiary($query['subsidiary'] ?? SITE_ID);
         return array('catalog' => $res_ar, 'count' => count($res_ar), 'response' => 'ok');
     }
 
@@ -71,41 +54,41 @@ class CatalogAPIService extends \IRestService
         return array('catalog' => $res_ar, 'count' => count($res_ar), 'response' => 'ok');
     }
 
-    public static function getProductsAndQuantityForStore($siteId = SITE_ID) {
+    public static function getProductsAndQuantityForSubsidiary($siteId)
+    {
         $storesRes = \Bitrix\Catalog\StoreTable::getList([
                 'filter' => ['SITE_ID' => $siteId],
                 'select' => ['ID']
             ]
         );
         $storeArr = [];
-        while($store = $storesRes->fetch()) {
+        while ($store = $storesRes->fetch()) {
             $storeArr[] = $store['ID'];
         }
 
         $arSelect = array(
             'PRODUCT_ID',
             'EXTERNAL_ID' => 'PRODUCT.IBLOCK_ELEMENT.XML_ID',
-            'QUANTITY' => 'AMOUNT'
+            'QUANTITY'
         );
         $arFilter = array(
-            'STORE.ACTIVE'=>'Y',
+            'STORE.ACTIVE' => 'Y',
             'STORE.ID' => $storeArr,
             'PRODUCT.IBLOCK_ELEMENT.IBLOCK_ID' => IBLOCK_CATALOG,
-            'PRODUCT.IBLOCK_ELEMENT.ACTIVE'=>'Y');
+            'PRODUCT.IBLOCK_ELEMENT.ACTIVE' => 'Y');
         $res_ar = [];
 
 
         $res = \Bitrix\Catalog\StoreProductTable::getList(array(
             'filter' => $arFilter,
             'select' => $arSelect,
+            'runtime' => array(
+                new \Bitrix\Main\Entity\ExpressionField('QUANTITY', 'SUM(AMOUNT)')
+            )
         ));
 
         while ($product = $res->fetch()) {
-            if(isset($res_ar[$product['PRODUCT_ID']])) {
-                $res_ar[$product['PRODUCT_ID']]['QUANTITY'] += $product['QUANTITY'];
-            } else {
-                $res_ar[] = $product;
-            }
+            $res_ar[] = $product;
         }
 
         return $res_ar;
