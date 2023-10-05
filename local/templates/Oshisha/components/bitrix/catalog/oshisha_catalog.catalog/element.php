@@ -410,18 +410,19 @@ $arrFilterTop['ID'] = $ids;
                         <?
                     }
             }
-            $productRes = CIBlockElement::GetList([],['CODE' => $arResult['VARIABLES']['ELEMENT_CODE']]);
-            if ($product = $productRes->fetch()) {
-                $suitableProductsProperty = CIBlockElement::GetProperty(IBLOCK_CATALOG, $product['ID'], [], ['CODE'=>SUITABLE_PRODUCTS_PROPERTY]);
-                $arSuitableProductsIds = [];
-                while ($suitableProductsPropertyValue = $suitableProductsProperty->fetch()) {
-                    if ($suitableProductsPropertyValue && $suitableProductsPropertyValue['VALUE']) {
-                        $arSuitableProductsIds[] = $suitableProductsPropertyValue['VALUE'];
+            if (defined('SUITABLE_PRODUCTS_PROPERTY')) {
+                $productRes = CIBlockElement::GetList([], ['CODE' => $arResult['VARIABLES']['ELEMENT_CODE']]);
+                if ($product = $productRes->fetch()) {
+                    $suitableProductsProperty = CIBlockElement::GetProperty(IBLOCK_CATALOG, $product['ID'], [], ['CODE' => SUITABLE_PRODUCTS_PROPERTY]);
+                    $arSuitableProductsIds = [];
+                    while ($suitableProductsPropertyValue = $suitableProductsProperty->fetch()) {
+                        if ($suitableProductsPropertyValue && $suitableProductsPropertyValue['VALUE']) {
+                            $arSuitableProductsIds[] = $suitableProductsPropertyValue['VALUE'];
+                        }
                     }
+                    $GLOBALS['arrSuitableProductsFilter'] = ['ID' => $arSuitableProductsIds];
                 }
-                $GLOBALS['arrSuitableProductsFilter'] = ['ID' => $arSuitableProductsIds];
-            }
-            if ($USER->IsAuthorized() && $arSuitableProductsIds) {?>
+                if ($USER->IsAuthorized() && $arSuitableProductsIds) { ?>
                     <div class="mb-5 mt-5">
                         <div data-entity="parent-container">
                             <div data-entity="header" data-showed="false">
@@ -515,6 +516,7 @@ $arrFilterTop['ID'] = $ids;
                         </div>
                     </div>
                     <?
+                }
             }
             if ($USER->IsAuthorized()) {
                 if (!empty($arrFilterTop['ID'])) { ?>
