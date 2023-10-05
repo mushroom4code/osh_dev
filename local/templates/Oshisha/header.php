@@ -112,7 +112,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
             </div>
         <?php } ?>
-        <div class="flex flex-row border-b border-white-100 justify-center width-100 py-3 dark:bg-dark bg-lightGrayBg">
+        <div class="flex flex-row <?php if (strripos($APPLICATION->GetCurPage(), '/personal/') === false) { ?>
+        border-b border-white-100 <?php } ?> justify-center width-100 py-3 dark:bg-dark bg-lightGrayBg">
             <div class="xs:flex hidden">
                 <a href="<?= SITE_DIR ?>">
                     <?php $APPLICATION->IncludeComponent(
@@ -164,14 +165,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                     if (!CModule::IncludeModule('sale')) {
                                         return;
                                     }
-                                    $UserPropsTable = Bitrix\Sale\Internals\UserPropsTable::getList(array('filter' => [
-                                        'USER_ID' => $user_id,
-                                    ]));
+                                    $UserPropsTable = Bitrix\Sale\Internals\UserPropsTable::getList(array('filter' => ['USER_ID' => $user_id,]));
 
-                                    $result = Bitrix\Sale\Internals\UserPropsValueTable::getList(array('filter' => [
-                                        'USER_PROPS_ID' => $UserPropsTable->fetch()['ID'],
-                                        'NAME' => 'Город'
-                                    ]));
+                                    $result = Bitrix\Sale\Internals\UserPropsValueTable::getList(array('filter' => ['USER_PROPS_ID' => $UserPropsTable->fetch()['ID'],
+                                        'NAME' => 'Город']));
 
                                     $code_region = $result->fetch()['VALUE'];
                                 }
@@ -235,25 +232,25 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             <!--                <div class="mobile top_menu">-->
             <!--                    <div>-->
             <!--                        --><?php //$APPLICATION->IncludeComponent(
-//                            "bitrix:menu",
-//                            "oshisha_menu_mobile",
-//                            array(
-//                                "ROOT_MENU_TYPE" => "left",
-//                                "MENU_CACHE_TYPE" => "A",
-//                                "MENU_CACHE_TIME" => "36000000",
-//                                "MENU_CACHE_USE_GROUPS" => "Y",
-//                                "MENU_THEME" => "site",
-//                                "CACHE_SELECTED_ITEMS" => "N",
-//                                "MENU_CACHE_GET_VARS" => array(),
-//                                "MAX_LEVEL" => "3",
-//                                "CHILD_MENU_TYPE" => "left",
-//                                "USE_EXT" => "Y",
-//                                "DELAY" => "N",
-//                                "ALLOW_MULTI_SELECT" => "N",
-//                                "COMPONENT_TEMPLATE" => "bootstrap_v4"
-//                            ),
-//                            false
-//                        ); ?>
+            //                            "bitrix:menu",
+            //                            "oshisha_menu_mobile",
+            //                            array(
+            //                                "ROOT_MENU_TYPE" => "left",
+            //                                "MENU_CACHE_TYPE" => "A",
+            //                                "MENU_CACHE_TIME" => "36000000",
+            //                                "MENU_CACHE_USE_GROUPS" => "Y",
+            //                                "MENU_THEME" => "site",
+            //                                "CACHE_SELECTED_ITEMS" => "N",
+            //                                "MENU_CACHE_GET_VARS" => array(),
+            //                                "MAX_LEVEL" => "3",
+            //                                "CHILD_MENU_TYPE" => "left",
+            //                                "USE_EXT" => "Y",
+            //                                "DELAY" => "N",
+            //                                "ALLOW_MULTI_SELECT" => "N",
+            //                                "COMPONENT_TEMPLATE" => "bootstrap_v4"
+            //                            ),
+            //                            false
+            //                        ); ?>
             <!--                        <div class="ul_menu ul_menu_2">-->
             <!--                            <div class="box_top_panel">-->
             <!--                                <a href="/about/o-nas/" class="link_menu_top">-->
@@ -279,14 +276,14 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             <!--                            </div>-->
             <!--                            <span class="bx-header-phone-number">-->
             <!--									--><?php //$APPLICATION->IncludeComponent(
-//                                        "bitrix:main.include",
-//                                        "",
-//                                        array(
-//                                            "AREA_FILE_SHOW" => "file",
-//                                            "PATH" => SITE_DIR . "include/telephone.php"
-//                                        ),
-//                                        false
-//                                    ); ?>
+            //                                        "bitrix:main.include",
+            //                                        "",
+            //                                        array(
+            //                                            "AREA_FILE_SHOW" => "file",
+            //                                            "PATH" => SITE_DIR . "include/telephone.php"
+            //                                        ),
+            //                                        false
+            //                                    ); ?>
             <!--								</span>-->
             <!--                            <div class="box_with_contact">-->
             <!--                                <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>-->
@@ -310,10 +307,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             <!--                    </div>-->
             <!--                </div>-->
             <!--            </div>-->
-        <?php } if (strripos($APPLICATION->GetCurPage(), '/personal/') === false ||
-        strripos($APPLICATION->GetCurPage(), '/personal/') !== false && !$mobile->isMobile()):?>
-        <div class="flex xs:hidden flex-col justify-center width-100 md:py-5 py-3 items-center flex-wrap">
-            <!--        header menu search/login/basket/like     -->
+        <?php }
+        if (strripos($APPLICATION->GetCurPage(), '/personal/') === false ||
+            strripos($APPLICATION->GetCurPage(), '/personal/') !== false && !$mobile->isMobile()): ?>
+            <div class="flex xs:hidden flex-col justify-center width-100 md:py-5 py-3 items-center flex-wrap">
+                <!--        header menu search/login/basket/like     -->
                 <div class="xl:container container flex md:flex-row flex-col justify-between items-center mb-4">
                     <div class="flex flex-row">
                         <div class="w-44 mr-8">
@@ -400,37 +398,37 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         </div>
                     </div>
                 </div>
-            <?php if (!$mobile->isMobile()) { ?>
-                <div class="box_with_menu xl:container container">
-                    <div class="menu_header">
-                        <?php $APPLICATION->IncludeComponent(
-                            "bitrix:menu",
-                            "oshisha_menu",
-                            array(
-                                "ROOT_MENU_TYPE" => "left",
-                                "MENU_CACHE_TYPE" => "A",
-                                "MENU_CACHE_TIME" => "36000000",
-                                "MENU_CACHE_USE_GROUPS" => "Y",
-                                "MENU_THEME" => "site",
-                                "CACHE_SELECTED_ITEMS" => "N",
-                                "MENU_CACHE_GET_VARS" => array(),
-                                "MAX_LEVEL" => "4",
-                                "CHILD_MENU_TYPE" => "left",
-                                "USE_EXT" => "Y",
-                                "DELAY" => "N",
-                                "IBLOCK_ID" => IBLOCK_CATALOG,
-                                "TYPE" => "1c_catalog",
-                                "ALLOW_MULTI_SELECT" => "N",
-                                "COMPONENT_TEMPLATE" => "bootstrap_v4",
-                                "SECTION_PAGE_URL" => "#SECTION_ID#/",
-                                "DETAIL_PAGE_URL" => "#SECTION_ID#/#ELEMENT_ID#",
-                            ),
-                            false
-                        ); ?>
+                <?php if (!$mobile->isMobile()) { ?>
+                    <div class="box_with_menu xl:container container">
+                        <div class="menu_header">
+                            <?php $APPLICATION->IncludeComponent(
+                                "bitrix:menu",
+                                "oshisha_menu",
+                                array(
+                                    "ROOT_MENU_TYPE" => "left",
+                                    "MENU_CACHE_TYPE" => "A",
+                                    "MENU_CACHE_TIME" => "36000000",
+                                    "MENU_CACHE_USE_GROUPS" => "Y",
+                                    "MENU_THEME" => "site",
+                                    "CACHE_SELECTED_ITEMS" => "N",
+                                    "MENU_CACHE_GET_VARS" => array(),
+                                    "MAX_LEVEL" => "4",
+                                    "CHILD_MENU_TYPE" => "left",
+                                    "USE_EXT" => "Y",
+                                    "DELAY" => "N",
+                                    "IBLOCK_ID" => IBLOCK_CATALOG,
+                                    "TYPE" => "1c_catalog",
+                                    "ALLOW_MULTI_SELECT" => "N",
+                                    "COMPONENT_TEMPLATE" => "bootstrap_v4",
+                                    "SECTION_PAGE_URL" => "#SECTION_ID#/",
+                                    "DETAIL_PAGE_URL" => "#SECTION_ID#/#ELEMENT_ID#",
+                                ),
+                                false
+                            ); ?>
+                        </div>
                     </div>
-                </div>
-            <?php } ?>
-        </div>
+                <?php } ?>
+            </div>
         <?php endif; ?>
     </header>
 

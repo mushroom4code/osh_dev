@@ -11,26 +11,92 @@ global $USER;
 $mobile = new MobileDetect();
 if (!$USER->IsAuthorized()) {
     LocalRedirect('/login/?login=yes');
-} else { ?>
+} else {
+    global $USER;
+    $name = '';
+
+    if ($USER->IsAuthorized()) {
+        $name = trim($USER->GetFirstName());
+    }
+
+    if (!$name) {
+        $name = trim($USER->GetLogin());
+    } ?>
     <div class="mobile_lk flex md:flex-row flex-col <?php if ($APPLICATION->GetCurPage() != '/personal/'): ?>private<?php endif; ?>">
-        <div class="sidebar_lk md:block <?php if ($APPLICATION->GetCurPage() != '/personal/'): ?>hidden<?php endif; ?>">
-            <?php $APPLICATION->IncludeComponent(
-                "bitrix:menu",
-                "",
-                array(
-                    "ALLOW_MULTI_SELECT" => "N",
-                    "CHILD_MENU_TYPE" => "left",
-                    "DELAY" => "N",
-                    "MAX_LEVEL" => "1",
-                    "MENU_CACHE_GET_VARS" => array(""),
-                    "MENU_CACHE_TIME" => "3600",
-                    "MENU_CACHE_TYPE" => "N",
-                    "MENU_CACHE_USE_GROUPS" => "Y",
-                    "ROOT_MENU_TYPE" => "personal",
-                    "USE_EXT" => "N"
-                )
-            ); ?>
-        </div>
+        <?php
+        if ($mobile->isMobile()) { ?>
+            <div class="dark:bg-dark bg-lightGrayBg rounded-b-2xl border-b border-white-100">
+                <div class="box_with_photo flex flex-row px-5 py-6 items-end" style="
+                background-image: url('/local/assets/images/profile_mobile.png');
+                background-repeat: no-repeat;
+                 background-position: right bottom;
+                 background-size: 40%">
+                    <svg width="85" height="77" viewBox="0 0 92 84" class="rounded-lg"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_1890_10033)">
+                            <path d="M0 0H91.07V73.0449C91.07 78.5678 86.5928 83.0449 81.07 83.0449H9.99999C4.47715 83.0449 0 78.5678 0 73.0449V0Z"
+                                  class="fill-lightGrayBg"/>
+                            <rect x="0.5" y="0.5" width="91" height="84" rx="9.5"
+                                  class="stroke-white  fill-[#393939]"/>
+                            <path d="M15.1279 83.564L15.1279 74.9453C15.1279 69.4391 17.5266 64.1584 21.7964 60.2649C26.0661 56.3714 31.8571 54.1841 37.8954 54.1841H53.0737C59.1121 54.1841 64.9031 56.3714 69.1728 60.2649C73.4425 64.1584 75.8412 69.4391 75.8412 74.9453V83.564"
+                                  class="fill-white"/>
+                            <path d="M15.1279 83.564L15.1279 74.9453C15.1279 69.4391 17.5266 64.1584 21.7964 60.2649C26.0661 56.3714 31.8571 54.1841 37.8954 54.1841H53.0737C59.1121 54.1841 64.9031 56.3714 69.1728 60.2649C73.4425 64.1584 75.8412 69.4391 75.8412 74.9453V83.564"
+                                  class="stroke-white fill-white" stroke-linecap="round"/>
+                            <path d="M45.5367 42.0536C38.3279 42.0536 34.8005 40.4085 34.8005 35.2548C34.8005 30.0533 38.3376 28.4052 45.5367 28.4052C52.7359 28.4052 56.2312 30.0533 56.2312 35.2548C56.2312 40.4085 52.7038 42.0536 45.5367 42.0536ZM45.5367 48.0927C56.5487 48.0927 64.0236 44.3777 64.0236 35.2548C64.0236 26.084 56.5487 22.3721 45.5367 22.3721C34.4766 22.3721 27.0498 26.084 27.0498 35.2548C27.0498 44.3777 34.4766 48.0927 45.5367 48.0927Z"
+                                  class="fill-white"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M61.9829 24.2725C57.9566 21.3628 52.6932 20.3278 42.6041 20.0302C32.4644 19.7012 30.226 13.034 29.8958 9.90526C30.4031 10.3785 31.5099 11.0164 33.2686 11.6701C32.3233 9.76471 32.1121 7.85645 32.1435 6.57031C33.3461 7.99409 38.743 11.1049 49.739 13.088C60.6079 15.0482 62.3877 21.3307 62.0434 24.2169C62.0437 24.2505 62.0438 24.2837 62.0434 24.3165C62.0395 24.3136 62.0356 24.3107 62.0316 24.3079C62.0312 24.3108 62.0308 24.3137 62.0304 24.3166C62.0146 24.3019 61.9988 24.2872 61.9829 24.2725Z"
+                                  class="fill-white"/>
+                        </g>
+                    </svg>
+                    <div class="ml-3 flex flex-col">
+                        <a href="/personal/"
+                           class="text-textDarkLightGray text-md font-semibold mb-2"
+                           id="profile_people"><span><?= htmlspecialcharsbx($name) ?></span>
+                        </a>
+                        <div class="flex flex-row">
+                            <a href="/personal/private/" class="text-white text-xs font-light p-2 rounded-full bg-white mr-3">
+                                <svg width="17" height="17" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.6818 0.449219L13.0682 2.93797L18.2955 7.91547L20.9091 5.42672L15.6818 0.449219ZM10.4545 5.42672L0 15.3817V20.3592H5.22727L15.6818 10.4042L10.4545 5.42672Z" fill="black"/>
+                                </svg>
+                            </a>
+                            <a href="/personal/cart/" class="text-white text-xs font-light p-2 rounded-full bg-white mr-3">
+                                <svg width="17" height="18" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.6755 8.0095H17.0512C18.2852 8.0095 19.3131 8.95534 19.4156 10.185L20.2065 19.6752C20.3218 21.0584 19.2302 22.2448 17.8421 22.2448H4.01871C2.63067 22.2448 1.53909 21.0584 1.65436 19.6752L2.44521 10.185C2.54768 8.95534 3.57562 8.0095 4.80956 8.0095H6.18532M15.6755 8.0095H6.18532M15.6755 8.0095V6.82322C15.6755 5.56474 15.1756 4.35781 14.2857 3.46793C13.3959 2.57806 12.1889 2.07812 10.9304 2.07812C9.6719 2.07812 8.46501 2.57806 7.57512 3.46793C6.68525 4.35781 6.18532 5.56474 6.18532 6.82322V8.0095M15.6755 8.0095V12.7546M6.18532 8.0095V12.7546" stroke="black" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </a>
+                            <a href="/?logout=yes&<?= bitrix_sessid_get() ?>" class="text-white text-xs font-light p-2 rounded-full bg-white mr-3">
+                                <svg width="17" height="17" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13.0933 11.5345H20.6523M20.6523 11.5345L17.4127 14.8962M20.6523 11.5345L17.4127 8.17285" stroke="black" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M17.1182 4.81089V3.69033C17.1182 2.4526 16.1512 1.44922 14.9584 1.44922H4.15974C2.96695 1.44922 2 2.4526 2 3.69033V19.3781C2 20.6159 2.96695 21.6192 4.15974 21.6192H14.9584C16.1512 21.6192 17.1182 20.6159 17.1182 19.3781V18.2576" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php }
+        if ($APPLICATION->GetCurUri() === '/personal/'): ?>
+            <div class="sidebar_lk md:block">
+                <?php $APPLICATION->IncludeComponent(
+                    "bitrix:menu",
+                    "",
+                    array(
+                        "ALLOW_MULTI_SELECT" => "N",
+                        "CHILD_MENU_TYPE" => "left",
+                        "DELAY" => "N",
+                        "MAX_LEVEL" => "1",
+                        "MENU_CACHE_GET_VARS" => array(""),
+                        "MENU_CACHE_TIME" => "3600",
+                        "MENU_CACHE_TYPE" => "N",
+                        "MENU_CACHE_USE_GROUPS" => "Y",
+                        "ROOT_MENU_TYPE" => "personal",
+                        "USE_EXT" => "N"
+                    )
+                ); ?>
+            </div>
+        <?php endif; ?>
         <?php if ($APPLICATION->GetCurUri() != '/personal/'): ?>
             <div class="md:hidden flex flex-row items-center md:mt-0 mt-6 md:p-0 p-4">
                 <svg width="30" height="31" viewBox="0 0 34 35" class="mr-3" xmlns="http://www.w3.org/2000/svg">
@@ -40,7 +106,7 @@ if (!$USER->IsAuthorized()) {
                 <a href="/personal/" class="font-medium text-lg dark:text-textDarkLightGray text-lightGrayBg">Меню</a>
             </div>
         <?php endif; ?>
-    <?php if (!($APPLICATION->GetCurUri() === '/personal/' && $mobile->isMobile())): ?>
+        <?php if (!($APPLICATION->GetCurUri() === '/personal/' && $mobile->isMobile())): ?>
             <div id="content_box" class="w-full md:p-0 p-4">
                 <?php $APPLICATION->IncludeComponent(
                     "bitrix:sale.personal.section",
@@ -130,7 +196,7 @@ if (!$USER->IsAuthorized()) {
                     false
                 ); ?>
             </div>
-    <?php endif; ?>
+        <?php endif; ?>
     </div>
     <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
 }
