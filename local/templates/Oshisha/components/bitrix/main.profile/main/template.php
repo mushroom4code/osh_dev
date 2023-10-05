@@ -42,8 +42,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
         <input type="hidden" name="LOGIN" value="<?= $arResult["arUser"]["LOGIN"] ?>"/>
         <div class="main-profile-block-shown" id="user_div_reg">
             <div class="md:w-9/12 w-full">
-                <p class="text-2xl dark:text-textDarkLightGray text-lightGrayBg flex flex-row items-center mb-8">
-                    <span class="mr-4 font-semibold">Изменить профиль</span>
+                <p class="md:text-2xl text-xl dark:text-textDarkLightGray text-lightGrayBg flex flex-row items-center mb-8">
+                    <span class="mr-4 md:font-semibold font-medium">Изменить профиль</span>
                     <svg width="20" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_2080_11931)">
                             <path fill-rule="evenodd" clip-rule="evenodd" class="dark:fill-white fill-black"
@@ -310,17 +310,9 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
         function showHidePasswd(item) {
             const parentBox = item.closest('div');
             const inputBox = parentBox.querySelector('input');
-            const showText = parentBox.querySelector('[data-type="text"]');
-            const showPass = parentBox.querySelector('[data-type="password"]');
-            if (inputBox.type === 'password') {
-                inputBox.type = 'text'
-                showText.classList.remove('hidden')
-                showPass.classList.add('hidden')
-            } else {
-                inputBox.type = 'password'
-                showPass.classList.remove('hidden')
-                showText.classList.add('hidden')
-            }
+            inputBox.type === 'password' ? inputBox.type = 'text' : inputBox.type = 'password'
+            parentBox.querySelector('[data-type="text"]').classList.toggle('hidden')
+            parentBox.querySelector('[data-type="password"]').classList.toggle('hidden')
         }
 
         $('#main-profile-email').inputmask('email');

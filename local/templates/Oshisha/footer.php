@@ -19,8 +19,8 @@ $option = $option_site; ?>
 <?php $userData = EnteregoUser::getInstance(); ?>
 <footer class="flex flew-row justify-center dark:bg-dark bg-lightGrayBg dark:text-textDark text-white w-full border-t border-white mb-4">
     <div class="xl:container container ls:lg:md:p-0 p-4 foot_container mt-10">
-        <div class="flex flex-row xs:flex-col mb-8 justify-between flex-wrap">
-            <div class="columns-3 flex flex-col">
+        <div class="flex flex-col md:flex-row mb-8 justify-between flex-wrap">
+            <div class="columns-3 flex flex-col mb-7">
                 <div class="w-44 mb-3">
                     <a href="/">
                         <img src="/local/templates/Oshisha/images/logo/osh.svg"
@@ -36,7 +36,7 @@ $option = $option_site; ?>
                     <a class="text-sm font-light underline hover:text-hover-red" href="mailto:info@oshisha.net">info@oshisha.net </a>
                 </div>
             </div>
-            <div class="columns-3 flex flex-col dark:text-textDarkLightGray">
+            <div class="columns-3 flex flex-col dark:text-textDarkLightGray mb-7">
                 <span class="text-sm font-medium dark:text-textDarkLightGray js__collapse-list mb-3">Каталог</span>
                 <ul class="text-sm font-light">
                     <?php $APPLICATION->IncludeComponent(
@@ -58,7 +58,7 @@ $option = $option_site; ?>
                     ); ?>
                 </ul>
             </div>
-            <div class="columns-3 flex flex-col dark:text-textDarkLightGray">
+            <div class="columns-3 flex flex-col dark:text-textDarkLightGray mb-7">
                 <span class="text-sm font-semibold js__collapse-list mb-3">Покупателям</span>
                 <ul class="text-sm font-light">
                     <li class="mb-2">
@@ -86,7 +86,7 @@ $option = $option_site; ?>
                     </li>
                 </ul>
             </div>
-            <div class="columns-3 flex flex-col dark:text-textDarkLightGray">
+            <div class="columns-3 flex flex-col dark:text-textDarkLightGray mb-7">
                 <span class="text-sm font-semibold js__collapse-list mb-3">О компании</span>
                 <ul class="text-sm font-light">
                     <?php $APPLICATION->IncludeComponent(

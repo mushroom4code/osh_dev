@@ -227,27 +227,6 @@ $(document).ready(function () {
         }
     });
 
-    // width JS
-
-    if (screenWidth >= 320 && screenWidth <= 800) {
-        let bool_personal = href.indexOf('personal'),
-            bool_cart = href.indexOf('cart'),
-            bool_order = href.indexOf('/order/');
-        if (bool_personal !== -1 && bool_cart === -1 && bool_order === -1) {
-            $('.header_top_panel')
-                .attr('style', 'background-color:#F0F0F0;filter:drop-shadow(0px 1px 3px rgba(97, 97, 97, 0));');
-            $('.left-menu .box_with_photo').attr('style', 'box-shadow: 0px -4px 30px rgba(196, 196, 196, 0.2);');
-        }
-        if (href === '/personal/') {
-            $('.personal_hide').show();
-            $('.box_footer').attr('style', 'margin-top: 32rem;');
-        } else {
-            //  $('.personal_hide').hide();
-            // $('#content_box').attr('style', 'margin-top: 8rem;');
-        }
-
-    }
-
     // SORT ACTIVE
     function addDeleteClassSortElems() {
         let bool_bar = $('div.basket-items-list-table').hasClass('categoryColumn');
@@ -264,17 +243,10 @@ $(document).ready(function () {
         addDeleteClassSortElems();
     }
 
-    // $('input[data-name="PHONE"]').inputmask("+7 (999)-999-9999", {clearMaskOnLostFocus: false});
-
-
-    // $('input[data-name="EMAIL"]').inputmask("email");
     if ($(div).is('.bx-soa-customer-field')) {
         $('.bx-soa-customer-field input[data-name="FIO"]').attr('placeholder', 'Иванов Иван Иванович');
         $('.bx-soa-customer-field input[data-name="EMAIL"]').attr('placeholder', 'Не указана');
     }
-
-    //  $('input[data-name="INN"]').inputmask({"mask": "9999999999"});
-
     //BASKET
     $('.product-item-amount').on('input', function () {
         $(this).val($(this).val().replace(/[A-Za-zА-Яа-яЁё]/, ''))
@@ -300,7 +272,7 @@ $(document).ready(function () {
     }
 
     $(document).on('keypress', '.card_element', function (e) {
-        if (e.which == 13) {
+        if (e.which === 13) {
             clearTimeout(window.addToBasketEventTimeout);
             changePrice.call(this);
             addToBasketEvent.call(this);
@@ -598,7 +570,7 @@ $(document).ready(function () {
         if ($(this).hasClass('subscribed')) {
             $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
                 '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                'К сожалениюf, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
+                'К сожалению, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
                 '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 '<i class="fa fa-bell-o" aria-hidden="true"></i>Отменить подписку</a>' +
@@ -891,27 +863,11 @@ $(document).ready(function () {
             $('.icon_sort_bar').addClass('icon_sort_bar_active').removeClass('icon_sort_bar');
         }
     }
-    // переключение на вид картога карточками
-    $(document).on('click', '#card_catalog', function () {
-        document.cookie = 'orientation=card';
-        $('.catalog-section').removeClass('by-line').addClass('by-card');
-        $('.icon_sort_line_active').addClass('icon_sort_line').removeClass('icon_sort_line_active');
-        $(this).addClass('icon_sort_bar_active').removeClass('icon_sort_bar');
-    });
-    // переключение на вид картога списком
-    $(document).on('click', '#line_catalog', function () {
-        document.cookie = 'orientation=line';
-        $('.catalog-section').removeClass('by-card').addClass('by-line');
-        $('.icon_sort_bar_active').addClass('icon_sort_bar').removeClass('icon_sort_bar_active');
-        $(this).addClass('icon_sort_line_active').removeClass('icon_sort_line');
-    });
-
 
     $('.sort_order').on('click', function () {
         $('.sort_orders_element').toggle();
         return false;
     });
-
 
     $('.sort_orders').on('click', function () {
         if (!$(this).hasClass('active')) {
@@ -1849,13 +1805,16 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
     return productsSuccess;
 }
 
+
+
 // NEW DESIGN opt
-toggleThemeLocalStorages();
+ToggleThemeLocalStorages();
 // togger themes
 
 // install theme
-function toggleThemeLocalStorages() {
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+function ToggleThemeLocalStorages() {
+    if (localStorage.theme === 'dark' ||
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark')
     } else {
         document.documentElement.classList.remove('dark')
@@ -1871,5 +1830,5 @@ function toggleTheme(item) {
     } else {
         localStorage.theme = 'dark'
     }
-    toggleThemeLocalStorages();
+    ToggleThemeLocalStorages();
 }

@@ -1,4 +1,4 @@
-<?php use Bitrix\Sale\Exchange\EnteregoUserExchange;
+<?php
 
 /**
  * @global array $arParams
@@ -14,19 +14,20 @@ $name = '';
 if ($USER->IsAuthorized()) {
     $name = trim($USER->GetFirstName());
 }
+
 if (!$name)
-    $name = trim($USER->GetLogin());
+    $name = trim($USER->GetLogin()); ?>
 
-?>
-
-<div class="left-menu dark:bg-darkBox bg-textDark w-72 rounded-xl p-10 mr-8 min-h-[480px] justify-between">
+<div class="left-menu dark:bg-darkBox bg-white md:w-72 w-full md:h-auto h-full md:rounded-xl rounded-0
+ p-10 mr-8 min-h-[480px] justify-between">
     <div class="box_with_photo flex flex-col mb-7">
         <svg width="100" height="92" viewBox="0 0 92 84" class="rounded-lg"
              xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_1890_10033)">
                 <path d="M0 0H91.07V73.0449C91.07 78.5678 86.5928 83.0449 81.07 83.0449H9.99999C4.47715 83.0449 0 78.5678 0 73.0449V0Z"
                       class="dark:fill-lightGrayBg fill-white"/>
-                <rect x="0.5" y="0.5" width="91" height="84" rx="9.5" class="stroke-white  dark:fill-[#393939] fill-white"/>
+                <rect x="0.5" y="0.5" width="91" height="84" rx="9.5"
+                      class="stroke-white  dark:fill-[#393939] fill-white"/>
                 <path d="M15.1279 83.564L15.1279 74.9453C15.1279 69.4391 17.5266 64.1584 21.7964 60.2649C26.0661 56.3714 31.8571 54.1841 37.8954 54.1841H53.0737C59.1121 54.1841 64.9031 56.3714 69.1728 60.2649C73.4425 64.1584 75.8412 69.4391 75.8412 74.9453V83.564"
                       class="fill-lightGrayBg  dark:fill-white"/>
                 <path d="M15.1279 83.564L15.1279 74.9453C15.1279 69.4391 17.5266 64.1584 21.7964 60.2649C26.0661 56.3714 31.8571 54.1841 37.8954 54.1841H53.0737C59.1121 54.1841 64.9031 56.3714 69.1728 60.2649C73.4425 64.1584 75.8412 69.4391 75.8412 74.9453V83.564"
@@ -65,19 +66,17 @@ if (!$name)
                class="dark:text-textDarkLightGray text-sm font-light mb-3 text-textLight dark:hover:text-white hover:text-light-red"
                id="#">В доставке</a>
         </div>
-        <a href="/personal/subscriptions/"
-           class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-md font-medium mb-4 text-textLight"
-           title="Подписки на товары">Подписки на товары</a>
-        <a style="display:none;" href="/personal/profiles/"
-           class="dark:text-textDarkLightGray text-md dark:hover:text-white hover:text-light-red font-medium mb-4 text-textLight"
-           title="Мои компании">Мои компании</a>
         <a href="/personal/contragents/"
            class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-md font-medium mb-4 text-textLight"
            title="Контрагенты"
            id="personal_contragents">Контрагенты</a>
-        <a style="display:none;" href="/personal/workers/"
-           class="dark:text-white mb-4 text-sm font-medium text-textLight"
-           title="Сотрудники">Сотрудники</a>
+        <a href="/personal/subscribe/"
+           class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-md font-medium mb-4 text-textLight"
+           title="Контрагенты"
+           id="personal_contragents">Избранное</a>
+        <a href="/personal/subscriptions/"
+           class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-md font-medium mb-4 text-textLight"
+           title="Подписки на товары">Подписки на товары</a>
         <a href="/?logout=yes&<?= bitrix_sessid_get() ?>"
            class="dark:text-white mb-4 text-sm font-medium flex flex-row text-textLight dark:hover:text-white hover:text-light-red mt-4 items-center"
            title="Выйти"

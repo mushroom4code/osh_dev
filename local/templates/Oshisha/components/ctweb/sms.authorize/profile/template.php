@@ -66,7 +66,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         <?php endif; ?>
                         <p class="md:text-2xl dark:text-textDarkLightGray text-textLight flex flex-row items-center
                         mb-5 mt-8 text-xl">
-                            <span class="mr-4 font-semibold">Изменение номера телефона</span>
+                            <span class="mr-4 md:font-semibold font-medium">Изменение номера телефона</span>
                             <svg width="21" height="20" viewBox="0 0 24 23" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path class="dark:fill-white fill-black"
