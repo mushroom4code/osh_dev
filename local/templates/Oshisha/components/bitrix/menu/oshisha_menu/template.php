@@ -51,8 +51,8 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 <nav class="box_with_menu_header">
     <ul class="ul_menu flex items-center flex-row">
         <li class="li_menu_header mr-7">
-            <div class="dark:text-textDark shadow-md flex flex-row justify-center items-center text-textLight min-w-164 dark:bg-dark-red
-            bg-light-red py-2 px-4 rounded-5"
+            <div class="dark:text-textDark shadow-md flex flex-row justify-center items-center text-textLight
+            dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 w-48"
                  title="Просмотреть меню"
                  id="main_menus">
                 <div class="span_bar mr-4">
@@ -60,7 +60,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                         <path d="M1 14H8.58333M1 1H18.3333H1ZM1 7.5H18.3333H1Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <span class="text-white font-medium text-sm">Каталог</span>
+                <span class="text-white font-medium text-md">Каталог</span>
             </div>
         </li>
 
@@ -75,16 +75,17 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 
         $result = json_encode($menu_for_JS) ?>
         <li class="mr-7" data-role="bx-menu-item">
-            <a class="font-light dark:text-textDarkLightGray text-textLight" href="/diskont/">Дисконт</a>
+            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight" href="/diskont/">
+                Дисконт</a>
         </li>
         <li class="mr-7" data-role="bx-menu-item">
-            <a class="font-light dark:text-textDarkLightGray text-textLight" href="/catalog_new/">Новинки</a>
+            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight" href="/catalog_new/">Новинки</a>
         </li>
         <li class="mr-7" data-role="bx-menu-item">
-            <a class="font-light dark:text-textDarkLightGray text-textLight" href="/hit/">Хиты</a>
+            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight" href="/hit/">Хиты</a>
         </li>
         <li class="mr-7" data-role="bx-menu-item">
-            <a class="font-light dark:text-textDarkLightGray text-textLight" href="/brands/">Бренды</a>
+            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight" href="/brands/">Бренды</a>
         </li>
         <div class="open_menu" style="display: none" id="main_menu">
             <div class="parent_menu"></div>

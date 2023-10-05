@@ -91,7 +91,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
     );
 
     foreach ($arParams['SECTIONS_ITEMS'] as $sectionId => $section) { ?>
-        <div class="by-card">
+        <div class="by-card max-w-full">
             <?php
             $intRowsCount = 1;
             $strRand = $this->randString();
@@ -99,7 +99,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             ?>
             <div id="<?= $strContID; ?>"
                  class="col2 <?= $templateData['TEMPLATE_CLASS']; ?>">
-                <div class="bx_catalog_tile_section p-7" id="hits_slider_<?=$strRand?>">
+                <div class="bx_catalog_tile_section p-7 max-w-full" id="hits_slider_<?=$strRand?>">
                     <?php
                     $boolFirst = true;
                     $arRowIDs = array();
@@ -125,7 +125,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                             }
                         }
                         ?>
-                        <div class="product-item-small-card">
+                        <div class="product-item-small-card w-72 max-w-xs h-96 mb-7">
                             <?php $APPLICATION->IncludeComponent(
                                 'bitrix:catalog.item',
                                 'oshisha_catalog.item',

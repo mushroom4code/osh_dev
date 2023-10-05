@@ -1,6 +1,7 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Main\Loader;
+use Bitrix\Catalog\PriceTable;
 use Bitrix\Main\ModuleManager;
 
 /**
@@ -91,7 +92,27 @@ $sortOrder = array(
 //print_r($sortBy);
 
 $activeSort = 0;
+$arBasketItems = array();
+$dbBasketItems = CSaleBasket::GetList(
+    array("NAME" => "ASC", "ID" => "ASC"),
+    array("FUSER_ID" => $fUser, "LID" => SITE_ID, "ORDER_ID" => "NULL"),
+    false,
+    false,
+    array("ID", "PRODUCT_ID", "QUANTITY",)
+);
+while ($arItems = $dbBasketItems->Fetch()) {
+    if (strlen($arItems["CALLBACK_FUNC"]) > 0) {
+        CSaleBasket::UpdatePrice($arItems["ID"],
+            $arItems["CALLBACK_FUNC"],
+            $arItems["MODULE"],
+            $arItems["PRODUCT_ID"],
+            $arItems["QUANTITY"]);
+        $arItems = CSaleBasket::GetByID($arItems["ID"]);
+    }
 
+    $arBasketItems[$arItems["PRODUCT_ID"]] = $arItems["QUANTITY"];
+}
+// Печатаем массив, содержащий актуальную на текущий момент корзину
 foreach ($sortBy as $key => $item) {
     if (empty($item))
         continue;
@@ -134,13 +155,12 @@ if ($_GET['page'] != '') {
 $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
 ?>
-<div class="row flex mb-4 box_with_prod">
+<div class="row flex mb-4 box_with_prod mt-5 w-auto">
     <?php if ($isFilter) : ?>
-        <div class=" box_filter_catalog w-1/5
+        <div class=" box_filter_catalog w-80
         <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
-            <div class="row">
-                <div class="catalog-section-list-tile-list">
+            <div class="catalog-section-list-tile-list w-full">
                     <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap smart-filter-tog" data-role="prop_angle"
@@ -174,7 +194,6 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                     <?php endforeach; ?>
 
                 </div>
-            </div>
             <?php
 
             //region Filter
@@ -227,7 +246,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         </div>
     <? endif ?>
     <? global $GLOBAL_SECTION; ?>
-    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> w-4/5 p-5 padding_product_box">
+    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full ml-11">
         <div class="row navigation-wrap mb-5">
             <div class="col" id="navigation">
                 <?php $APPLICATION->IncludeComponent(
@@ -243,7 +262,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                 ); ?>
             </div>
         </div>
-        <h1 class="text-3xl mb-2 font-medium"><?php $APPLICATION->ShowTitle(false); ?></h1>
+        <h1 class="text-3xl mb-2 font-semibold dark:font-medium"><?php $APPLICATION->ShowTitle(false); ?></h1>
         <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-5"></p>
         <div id="osh-filter-horizontal2"></div>
         <div class="osh-block-panel <?= \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
@@ -536,7 +555,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             if (!empty($arRecomData)) {
                 if (!isset($arParams['USE_BIG_DATA']) || $arParams['USE_BIG_DATA'] != 'N') {
                     ?>
-                    <div class="row mb-3">
+                    <div class="max-w-full">
                         <div class="col" data-entity="parent-container">
                             <div class="catalog-block-header" data-entity="header" data-showed="false"
                                  style="display: none; opacity: 0;">
@@ -657,9 +676,127 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             ?>
                         </div>
                     </div>
+
                     <?php
+
                 }
             }
+        }
+        global $USER;
+        if ($USER->IsAuthorized()) {
+            global $arrFilterTop;
+            $arrFilterTop = array();
+
+            $basketUserId = (int)$fUser;
+            if ($basketUserId <= 0) {
+                $ids = array();
+            }
+            $ids = array_values(Catalog\CatalogViewedProductTable::getProductSkuMap(
+                IBLOCK_CATALOG,
+                $arResult['VARIABLES']['SECTION_ID'],
+                $basketUserId,
+                $arParams['SECTION_ELEMENT_ID'],
+                $arParams['PAGE_ELEMENT_COUNT'],
+                $arParams['DEPTH']
+            ));
+
+            $arrFilterTop['ID'] = $ids;
+            if (!empty($arrFilterTop['ID']) && $arParams['ACTIVE_BLOCK_YOU_SEE'] == 'Y') { ?>
+                <div class="mb-5 mt-5 max-w-full">
+                    <div data-entity="parent-container">
+                        <div data-entity="header" data-showed="false">
+                            <h1 class="text-2xl"><b>Вы смотрели</b></h1>
+                        </div>
+                        Поправить слайдер
+                        <div class="by-card viewed-slider max-w-full">
+                            <?php $APPLICATION->IncludeComponent(
+                                "bitrix:catalog.top",
+                                "oshisha_catalog.top",
+                                array(
+                                    "ACTION_VARIABLE" => "action",
+                                    "PRODUCTS_VIEWED" => "Y",
+                                    "ADD_PICT_PROP" => "-",
+                                    "ADD_PROPERTIES_TO_BASKET" => "Y",
+                                    "ADD_TO_BASKET_ACTION" => "ADD",
+                                    "BASKET_URL" => "/personal/basket.php",
+                                    "CACHE_FILTER" => "N",
+                                    "CACHE_GROUPS" => "Y",
+                                    "CACHE_TIME" => "36000000",
+                                    "CACHE_TYPE" => "A",
+                                    "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
+                                    "COMPATIBLE_MODE" => "Y",
+                                    "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
+                                    "CONVERT_CURRENCY" => "N",
+                                    "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
+                                    "DETAIL_URL" => "",
+                                    "DISPLAY_COMPARE" => "N",
+                                    "ELEMENT_COUNT" => "16",
+                                    "ELEMENT_SORT_FIELD" => "timestamp_x",
+                                    "ELEMENT_SORT_FIELD2" => "id",
+                                    "ELEMENT_SORT_ORDER" => "asc",
+                                    "ELEMENT_SORT_ORDER2" => "desc",
+                                    "ENLARGE_PRODUCT" => "PROP",
+                                    "ENLARGE_PROP" => "-",
+                                    "FILTER_NAME" => "arrFilterTop",
+                                    "HIDE_NOT_AVAILABLE" => "Y",
+                                    "HIDE_NOT_AVAILABLE_OFFERS" => "N",
+                                    "IBLOCK_ID" => IBLOCK_CATALOG,
+                                    "IBLOCK_TYPE" => "1c_catalog",
+                                    "LABEL_PROP" => array(),
+                                    "LABEL_PROP_MOBILE" => "",
+                                    "LABEL_PROP_POSITION" => "top-left",
+                                    "LINE_ELEMENT_COUNT" => "4",
+                                    "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
+                                    "MESS_BTN_BUY" => "Купить",
+                                    "MESS_BTN_COMPARE" => "Сравнить",
+                                    "MESS_BTN_DETAIL" => "Подробнее",
+                                    "MESS_NOT_AVAILABLE" => "Нет в наличии",
+                                    "OFFERS_CART_PROPERTIES" => $arParams["OFFERS_CART_PROPERTIES"],
+                                    "OFFERS_FIELD_CODE" => $arParams["OFFERS_FIELD_CODE"],
+                                    "OFFERS_PROPERTY_CODE" => $arParams["OFFERS_PROPERTY_CODE"],
+                                    "OFFERS_LIMIT" => "4",
+                                    "OFFERS_SORT_FIELD" => "sort",
+                                    "OFFERS_SORT_FIELD2" => "id",
+                                    "OFFERS_SORT_ORDER" => "asc",
+                                    "OFFERS_SORT_ORDER2" => "desc",
+                                    "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
+                                    "PARTIAL_PRODUCT_PROPERTIES" => "N",
+                                    "PRICE_CODE" => BXConstants::PriceCode(),
+                                    "FILL_ITEM_ALL_PRICES" => "Y",
+                                    "PRICE_VAT_INCLUDE" => "Y",
+                                    "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
+                                    "PRODUCT_DISPLAY_MODE" => "Y",
+                                    "PRODUCT_ID_VARIABLE" => "id",
+                                    "PRODUCT_PROPS_VARIABLE" => "prop",
+                                    "PRODUCT_QUANTITY_VARIABLE" => "quantity",
+                                    "PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false}]",
+                                    "PRODUCT_SUBSCRIPTION" => "Y",
+                                    "PROPERTY_CODE_MOBILE" => "",
+                                    "ROTATE_TIMER" => "30",
+                                    "SECTION_URL" => "",
+                                    "SEF_MODE" => "N",
+                                    "SHOW_CLOSE_POPUP" => "N",
+                                    "SHOW_DISCOUNT_PERCENT" => "N",
+                                    "SHOW_MAX_QUANTITY" => "N",
+                                    "SHOW_OLD_PRICE" => "N",
+                                    "SHOW_PAGINATION" => "Y",
+                                    "SHOW_PRICE_COUNT" => "1",
+                                    "SHOW_SLIDER" => "Y",
+                                    "SLIDER_INTERVAL" => "3000",
+                                    "SLIDER_PROGRESS" => "N",
+                                    "TEMPLATE_THEME" => "blue",
+                                    "USE_ENHANCED_ECOMMERCE" => "N",
+                                    "USE_PRICE_COUNT" => "N",
+                                    "USE_PRODUCT_QUANTITY" => "N",
+                                    "VIEW_MODE" => "SLIDER",
+                                    "BASKET_ITEMS" => $arBasketItems
+                                ),
+                                false
+                            ); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php }
         }
         ?>
     </div>

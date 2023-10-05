@@ -19,3 +19,12 @@ input:focus, button:focus, [type='text']:focus, [type="password"]:focus, [type="
 [type="radio"]:focus, [type="radio"]:hover, [type='radio']:checked:hover {
     background-color: transparent;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}

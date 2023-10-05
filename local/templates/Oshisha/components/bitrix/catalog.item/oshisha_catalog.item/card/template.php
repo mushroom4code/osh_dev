@@ -74,7 +74,7 @@ if (!empty($price['USER_PRICE'])) {
     $specialPrice = $price['USER_PRICE']['PRICE'];
 }
 
-if ( !empty($price['SALE_PRICE']['PRICE']) &&
+if (!empty($price['SALE_PRICE']['PRICE']) &&
     ($useDiscount['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE)) {
 
     $specialPrice = ($specialPrice === 0 || $price['SALE_PRICE']['PRICE'] < $specialPrice)
@@ -103,7 +103,7 @@ if (!$show_price) {
     $item['DETAIL_PAGE_URL'] = 'javascript:void(0)';
 }
 
-$subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"]??[], 'ITEM_ID');
+$subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"] ?? [], 'ITEM_ID');
 $found_key = array_search((string)$item['ID'], $subscription_item_ids);
 $is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
 
@@ -123,7 +123,7 @@ if ($show_price) {
         'ID' => $item['ID'],
         'BUY_LINK' => $arItemIDs['BUY_LINK'],
         'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
-        'TYPE_PRODUCT'=> 'PRODUCT',
+        'TYPE_PRODUCT' => 'PRODUCT',
         'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
         'MORE_PHOTO' => $morePhoto,
         'PRODUCT' => $item['PRODUCT'],
@@ -149,7 +149,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 ?>
 <div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl mr-4 p-5 mb-8
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
-<?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?=$item['ID']?>">
+<?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
         <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
@@ -174,7 +174,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
             $listClass = $showToggler ? ' js__tastes-list' : '';
         }
 
-?>
+        ?>
 
         <div class="item-product-info">
             <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
@@ -211,13 +211,13 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
             </div>
             <div class="bx_catalog_item_overlay"></div>
 
-            <div class="image_cart position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
-                <a class=" <?= $styleForTaste ?>"
+            <div class="image_cart h-40 position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
+                <a class="h-auto <?= $styleForTaste ?>"
                    href="<?= $item['DETAIL_PAGE_URL']; ?>">
                     <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
-                        <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" alt="<?= $productTitle ?>"/>
+                        <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" class="h-40" alt="<?= $productTitle ?>"/>
                     <?php } else { ?>
-                        <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
+                        <img src="/local/templates/Oshisha/images/no-photo.gif" class="h-40" alt="no photo"/>
                     <?php } ?>
                 </a>
                 <i class="open-fast-window mb-2" data-item-id="<?= $item['ID'] ?>"></i>
@@ -344,7 +344,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
                                         } else {
-                                            echo (round($price['PRICE_DATA']['PRICE']));
+                                            echo(round($price['PRICE_DATA']['PRICE']));
                                         } ?>₽
                                     </div>
 
@@ -360,67 +360,71 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                     <?php } ?>
                                 </div>
                             </div>
-                            <?if($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'):?>
-                                <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                            <?= $is_key_found ? 'subscribed' : ''?> min_card">
-                                    <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : ''?>" aria-hidden="true"></i>
+                            <? if ($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'): ?>
+                                <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                            <?= $is_key_found ? 'subscribed' : '' ?> min_card">
+                                    <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
                                 </div>
-                                <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth'?>
-                             <?= $is_key_found ? 'subscribed' : ''?>"
-                                     data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : ''?>"
+                                <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                             <?= $is_key_found ? 'subscribed' : '' ?>"
+                                     data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
                                      data-product_id="<?= $item['ID']; ?>">
                                 </div>
-                            <?else:?>
-                            <div class="d-flex row-line-reverse justify-content-between box-basket">
-                                <?php if ($show_price) { ?>
-<!--                                    <div class="btn red_button_cart btn-plus add2basket"-->
-<!--                                         data-url="--><?php //= $item['DETAIL_PAGE_URL'] ?><!--"-->
-<!--                                         data-product_id="--><?php //= $item['ID']; ?><!--"-->
-<!--                                         data-max-quantity="--><?php //= $item['PRODUCT']['QUANTITY'] ?><!--"-->
-<!--                                         id="--><?php //= $arItemIDs['BUY_LINK']; ?><!--"-->
-<!--                                         --><?// if ($priceBasket > 0): ?><!--style="display:none;"--><?// endif; ?>
-<!--                                    >-->
-<!--                                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>-->
-<!--                                    </div>-->
-                                    <div class="product-item-amount-field-contain-wrap"
-                                         <?php if ($priceBasket > 0): ?>style="display:flex;"<?php endif; ?>
-                                         data-product_id="<?= $item['ID']; ?>">
-                                        <div class="product-item-amount-field-contain flex flex-row items-center">
-                                            <a class="btn-minus no-select add2basket cursor-pointer"
-                                               id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                               href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                               data-product_id="<?= $item['ID']; ?>">
-                                                <svg width="22" height="2" viewBox="0 0 22 2" fill="none"
-                                                     class="stroke-dark dark:stroke-white stroke-[1.5px]" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M1 1H21" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg>
-                                            </a>
-                                            <div class="product-item-amount-field-block">
-                                                <input class="product-item-amount dark:bg-grayButton
-                                                 bg-textDark w-16 card_element"
-                                                       id="<?= $arItemIDs['QUANTITY_ID'] ?>"
-                                                       type="number"
-                                                       max="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                                       value="<?= $priceBasket ?>">
+                            <? else: ?>
+                                <div class="d-flex row-line-reverse justify-content-between box-basket">
+                                    <?php if ($show_price) { ?>
+                                        <!--                                    <div class="btn red_button_cart btn-plus add2basket"-->
+                                        <!--                                         data-url="--><?php //= $item['DETAIL_PAGE_URL'] ?><!--"-->
+                                        <!--                                         data-product_id="--><?php //= $item['ID']; ?><!--"-->
+                                        <!--                                         data-max-quantity="--><?php //= $item['PRODUCT']['QUANTITY'] ?><!--"-->
+                                        <!--                                         id="--><?php //= $arItemIDs['BUY_LINK']; ?><!--"-->
+                                        <!--                                         --><? // if ($priceBasket > 0): ?><!--style="display:none;"--><? // endif; ?>
+                                        <!--                                    >-->
+                                        <!--                                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>-->
+                                        <!--                                    </div>-->
+                                        <div class="product-item-amount-field-contain-wrap"
+                                             <?php if ($priceBasket > 0): ?>style="display:flex;"<?php endif; ?>
+                                             data-product_id="<?= $item['ID']; ?>">
+                                            <div class="product-item-amount-field-contain flex flex-row items-center">
+                                                <a class="btn-minus no-select add2basket cursor-pointer"
+                                                   id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                                   href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $item['ID']; ?>">
+                                                    <svg width="22" height="2" viewBox="0 0 22 2" fill="none"
+                                                         class="stroke-dark dark:stroke-white stroke-[1.5px]"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M1 1H21" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                    </svg>
+                                                </a>
+                                                <div class="product-item-amount-field-block">
+                                                    <input class="product-item-amount dark:bg-grayButton bg-white
+                                                dark:border-none border-borderColor focus:border-borderColor text-center
+                                                 shadow-none py-3 px-4 outline-none rounded-md w-16 card_element"
+                                                           id="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                                                           type="number"
+                                                           max="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                                           value="<?= $priceBasket ?>">
+                                                </div>
+                                                <a class="btn-plus no-select add2basket cursor-pointer"
+                                                   data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                                   id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
+                                                   data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $item['ID']; ?>"
+                                                   title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар">
+                                                    <svg width="20" height="20" viewBox="0 0 20 20"
+                                                         class="fill-light-red dark:fill-white"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M18.8889 11.111H1.11111C0.503704 11.111 0 10.6073 0 9.9999C0 9.3925 0.503704 8.88879 1.11111 8.88879H18.8889C19.4963 8.88879 20 9.3925 20 9.9999C20 10.6073 19.4963 11.111 18.8889 11.111Z"/>
+                                                        <path d="M10 20C9.39262 20 8.88892 19.4963 8.88892 18.8889V1.11111C8.88892 0.503704 9.39262 0 10 0C10.6074 0 11.1111 0.503704 11.1111 1.11111V18.8889C11.1111 19.4963 10.6074 20 10 20Z"/>
+                                                    </svg>
+                                                </a>
                                             </div>
-                                            <a class="btn-plus no-select add2basket cursor-pointer"
-                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                               id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
-                                               data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                               data-product_id="<?= $item['ID']; ?>"
-                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар">
-                                                <svg width="20" height="20" viewBox="0 0 20 20"
-                                                     class="fill-light-red dark:fill-white" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M18.8889 11.111H1.11111C0.503704 11.111 0 10.6073 0 9.9999C0 9.3925 0.503704 8.88879 1.11111 8.88879H18.8889C19.4963 8.88879 20 9.3925 20 9.9999C20 10.6073 19.4963 11.111 18.8889 11.111Z" />
-                                                    <path d="M10 20C9.39262 20 8.88892 19.4963 8.88892 18.8889V1.11111C8.88892 0.503704 9.39262 0 10 0C10.6074 0 11.1111 0.503704 11.1111 1.11111V18.8889C11.1111 19.4963 10.6074 20 10 20Z"/>
-                                                </svg>
-                                            </a>
+                                            <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
                                         </div>
-                                        <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                            <?endif;?>
+                                    <?php } ?>
+                                </div>
+                            <?endif; ?>
                         <?php }
                         if (!$USER->IsAuthorized() && !$show_price) { ?>
                             <div class="btn-plus <?= $not_auth ?>"
