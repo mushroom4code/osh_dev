@@ -112,8 +112,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
             </div>
         <?php } ?>
-        <div class="flex flex-row <?php if (strripos($APPLICATION->GetCurPage(), '/personal/') === false) { ?>
-        border-b border-white-100 <?php } ?> justify-center width-100 py-3 dark:bg-dark bg-lightGrayBg">
+        <div class="flex flex-row border-b border-white-100 justify-center width-100 py-3 dark:bg-dark bg-lightGrayBg">
             <div class="xs:flex hidden">
                 <a href="<?= SITE_DIR ?>">
                     <?php $APPLICATION->IncludeComponent(
