@@ -34,6 +34,7 @@ module.exports = {
                 tagFilterGray: '#5F5F5F',
                 fancyboxDark: '#000000BA',
                 fancybox: '#3C3C3C87',
+                iconLune:'#838383',
                 iconGray: '#979797',
                 'gray-product': '#CFCFCF',
                 'gray-slider-arrow': '#676767',

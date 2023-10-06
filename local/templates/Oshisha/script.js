@@ -1805,8 +1805,6 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
     return productsSuccess;
 }
 
-
-
 // NEW DESIGN opt
 ToggleThemeLocalStorages();
 // togger themes

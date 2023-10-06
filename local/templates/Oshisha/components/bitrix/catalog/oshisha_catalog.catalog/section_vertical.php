@@ -1,8 +1,9 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
+use Bitrix\Catalog\CatalogViewedProductTable;
 use Bitrix\Main\Loader;
-use Bitrix\Catalog\PriceTable;
 use Bitrix\Main\ModuleManager;
+use Enterego\EnteregoHitsHelper;
 
 /**
  * @global CMain $APPLICATION
@@ -155,50 +156,50 @@ if ($_GET['page'] != '') {
 $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
 ?>
-<div class="row flex mb-4 box_with_prod mt-5 w-auto">
+<div class="flex mb-4 box_with_prod md:flex-row flex-col mt-5 w-auto">
     <?php if ($isFilter) : ?>
-        <div class=" box_filter_catalog w-80
+        <div class=" box_filter_catalog w-80 xl:flex hidden flex-col
         <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="catalog-section-list-tile-list w-full">
-                    <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
-                        <div class="catalog-section-list-item-l">
-                            <div class="catalog-section-list-item-wrap smart-filter-tog" data-role="prop_angle"
-                                 data-code-vis="<?= $arSection['ID'] ?>">
-                                <a href="javascript:void(0)"><?= $arSection['NAME'] ?></a>
-                                <? if ($arSection['CHILDS']): ?>
-                                    <span data-role="prop_angle"
-                                          class="smart-filter-tog smart-filter-angle">
+                <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
+                    <div class="catalog-section-list-item-l">
+                        <div class="catalog-section-list-item-wrap smart-filter-tog" data-role="prop_angle"
+                             data-code-vis="<?= $arSection['ID'] ?>">
+                            <a href="javascript:void(0)"><?= $arSection['NAME'] ?></a>
+                            <? if ($arSection['CHILDS']): ?>
+                                <span data-role="prop_angle"
+                                      class="smart-filter-tog smart-filter-angle">
 					                    <i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
                                     </span>
-                                <? endif; ?>
-                            </div>
-                            <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
-                                 data-code="<?= $arSection['ID'] ?>">
-                                <a class="mt-2 color-redLight"
-                                   href="<?= $arSection['SECTION_PAGE_URL'] ?>">Все</a>
-                            </div>
-                            <?php if ($arSection['CHILDS']):
-                                usort($arSection['CHILDS'], 'sort_by_name');
-                                foreach ($arSection['CHILDS'] as $arSectionSub):
-                                    if (CIBlockSection::GetSectionElementsCount($arSectionSub['ID'], ['CNT_ACTIVE' => 'Y']) > 0) {
-                                        ?>
-                                        <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
-                                             data-code="<?= $arSection['ID'] ?>">
-                                            <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
-                                        </div>
-                                    <?php }
-                                endforeach; ?>
-                            <?php endif; ?>
+                            <? endif; ?>
                         </div>
-                    <?php endforeach; ?>
+                        <div class="catalog-section-list-item-sub <?php if ($smartFil != ''): ?>active<?php endif; ?>"
+                             data-code="<?= $arSection['ID'] ?>">
+                            <a class="mt-2 color-redLight"
+                               href="<?= $arSection['SECTION_PAGE_URL'] ?>">Все</a>
+                        </div>
+                        <?php if ($arSection['CHILDS']):
+                            usort($arSection['CHILDS'], 'sort_by_name');
+                            foreach ($arSection['CHILDS'] as $arSectionSub):
+                                if (CIBlockSection::GetSectionElementsCount($arSectionSub['ID'], ['CNT_ACTIVE' => 'Y']) > 0) {
+                                    ?>
+                                    <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
+                                         data-code="<?= $arSection['ID'] ?>">
+                                        <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
+                                    </div>
+                                <?php }
+                            endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
 
-                </div>
+            </div>
             <?php
 
             //region Filter
             if ($isFilter): ?>
-                <div class="bx-sidebar-block <?= \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
+                <div class="bx-sidebar-block <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
                     <?php
 
                     $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
@@ -246,7 +247,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         </div>
     <? endif ?>
     <? global $GLOBAL_SECTION; ?>
-    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full ml-11">
+    <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full w-fit ml-11">
         <div class="row navigation-wrap mb-5">
             <div class="col" id="navigation">
                 <?php $APPLICATION->IncludeComponent(
@@ -265,74 +266,93 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         <h1 class="text-3xl mb-2 font-semibold dark:font-medium"><?php $APPLICATION->ShowTitle(false); ?></h1>
         <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-5"></p>
         <div id="osh-filter-horizontal2"></div>
-        <div class="osh-block-panel <?= \Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
-            <div id="osh-filter-horizontal">
-                <div id="osh-filter-horizontal-item" class="d-inline-block" data-osh-filter-state="hide"></div>
-                <div id="osh-filter-horizontal-item-count" class="osh-filter-item"
-                     onclick="smartFilter.allFilterShowHide()">
-                </div>
-                <div id="osh-filter-horizontal-item-remove" class="osh-filter-item"
-                     onclick="smartFilter.removeHorizontalFilterAll()">
-                    Очистить все
-                    <span class='d-inline-block osh-filter-horizontal-remove'></span>
-                </div>
-            </div>
-            <div class="mb-4 col_navigation mr-4">
-                <div class="count-per-page">
-                    <span>Показать</span>
-                    <a href="?page=24"
-                       class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24): ?>active<?php endif; ?>">24</a>
-                    <a href="?page=36"
-                       class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36): ?>active<?php endif; ?>">36</a>
-                    <a href="?page=72"
-                       class="page_num <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72): ?>active<?php endif; ?>">72</a>
-                </div>
-            </div>
-            <div class="sort-panel mb-4">
-                <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
-                    <div class="sort_panel_wrap">
-                        <div class="sort_panel" id="">
-                            <a class="sort_order sort_tool" href="#">
-                                <span class="sort_orders_by sort_caption"
-                                      style="min-width: 150px;">Сортировать по</span>
-                                <i class="fa fa-angle-down" aria-hidden="true"></i>
-                            </a>
-                            <div class="sort_orders_element js__sort_orders_element hidden">
-                                <ul>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"
-                                        data-order="DESC">По популярности
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                        data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
-                                        data-order="ASC">По возрастанию цены
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
-                                        data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
-                                        data-order="DESC">По убыванию цены
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-sort="NAME"
-                                        data-order="ASC">По названию
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-sort="CREATED_DATE"
-                                        data-order="DESC">По новизне
-                                    </li>
-                                    <li class="catalog_sort_item js__catalog-sort-item"
-                                        data-sort="<?= 'PROPERTY_' . SORT_BREND ?>"
-                                        data-order="DESC">По бренду
-                                    </li>
-                                </ul>
-                            </div>
+        <div class="osh-block-panel <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
+            <div id="osh-filter-horizontal" class="flex flex-col mb-8 mt-5">
+                <div class="flex flex-row justify-between items-center">
+                    <div class="col_navigation mr-4">
+                        <div class="count-per-page">
+                            <span class="font-semibold dark:font-normal text-md mr-3 text-textLight dark:text-textDarkLightGray">Показать</span>
+                            <a href="?page=24"
+                               class="page_num p-2.5 rounded-full text-sm font-medium mr-1
+                               <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24) { ?>
+                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-textDarkLightGray dark:bg-darkBox<?php } ?>">24</a>
+                            <a href="?page=36"
+                               class="page_num p-2.5 rounded-full text-sm font-medium mr-1
+                               <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36) { ?>
+                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-textDarkLightGray dark:bg-darkBox<?php } ?>">36</a>
+                            <a href="?page=72"
+                               class="page_num p-2.5 rounded-full text-sm font-medium
+                               <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72) { ?>
+                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-textDarkLightGray dark:bg-darkBox<?php } ?>">72</a>
                         </div>
                     </div>
-                    <div class="button_panel_wrap">
-                        <div class="sort_mobile"></div>
-                        <div class="icon_sort_bar xs-d-none" id="card_catalog"></div>
-                        <div class="icon_sort_line xs-d-none" id="line_catalog"></div>
+                    <div class="flex flex-row">
+                        <div class="sort-panel">
+                            <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
+                                <div class="sort_panel_wrap">
+                                    <div class="sort_panel" id="">
+                                        <a class="sort_order sort_tool bg-textDarkLightGray dark:bg-darkBox p-3 rounded-lg"
+                                           href="#">
+                                            <span class="sort_orders_by sort_caption text-sm text-textLight font-medium
+                                            dark:text-textDarkLightGray"
+                                                  style="min-width: 150px;">
+                                                Сортировать по</span>
+                                            <i class="fa fa-angle-down text-light-red dark:text-white text-xl font-semibold"
+                                               aria-hidden="true"></i>
+                                        </a>
+                                        <div class="sort_orders_element js__sort_orders_element hidden absolute
+                                        bg-textDarkLightGray dark:bg-darkBox">
+                                            <ul>
+                                                <li class="catalog_sort_item js__catalog-sort-item"
+                                                    data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"
+                                                    data-order="DESC">По популярности
+                                                </li>
+                                                <li class="catalog_sort_item js__catalog-sort-item"
+                                                    data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                                    data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
+                                                    data-order="ASC">По возрастанию цены
+                                                </li>
+                                                <li class="catalog_sort_item js__catalog-sort-item"
+                                                    data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
+                                                    data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
+                                                    data-order="DESC">По убыванию цены
+                                                </li>
+                                                <li class="catalog_sort_item js__catalog-sort-item"
+                                                    data-sort="NAME"
+                                                    data-order="ASC">По названию
+                                                </li>
+                                                <li class="catalog_sort_item js__catalog-sort-item"
+                                                    data-sort="CREATED_DATE"
+                                                    data-order="DESC">По новизне
+                                                </li>
+                                                <li class="catalog_sort_item js__catalog-sort-item"
+                                                    data-sort="<?= 'PROPERTY_' . SORT_BREND ?>"
+                                                    data-order="DESC">По бренду
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="button_panel_wrap">
+                                    <div class="sort_mobile"></div>
+                                    <div class="icon_sort_bar xs-d-none" id="card_catalog"></div>
+                                    <div class="icon_sort_line xs-d-none" id="line_catalog"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>Переключатели-></div>
+                    </div>
+                </div>
+                <div>
+                    <div id="osh-filter-horizontal-item" class="flex flex-row flex-wrap"
+                         data-osh-filter-state="hide"></div>
+                    <div id="osh-filter-horizontal-item-count" class="osh-filter-item"
+                         onclick="smartFilter.allFilterShowHide()">
+                    </div>
+                    <div id="osh-filter-horizontal-item-remove" class="osh-filter-item"
+                         onclick="smartFilter.removeHorizontalFilterAll()">
+                        Очистить все
+                        <span class='d-inline-block osh-filter-horizontal-remove'></span>
                     </div>
                 </div>
             </div>
@@ -412,11 +432,11 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             "FILL_ITEM_ALL_PRICES" => "Y",
             "ELEMENT_SORT_FIELD2" => $ELEMENT_SORT_FIELD2,
             "ELEMENT_SORT_ORDER2" => $ELEMENT_SORT_ORDER2,
-            "ELEMENT_SORT_FIELD" => (\Enterego\EnteregoHitsHelper::checkIfStartsWithHit($APPLICATION)
-                && !(\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION))
+            "ELEMENT_SORT_FIELD" => (EnteregoHitsHelper::checkIfStartsWithHit($APPLICATION)
+                && !(EnteregoHitsHelper::checkIfHits($APPLICATION))
                 && $curSection['DEPTH_LEVEL'] == '1') ? 'PROPERTY_' . SORT_BREND : $ELEMENT_SORT_FIELD,
-            "ELEMENT_SORT_ORDER" => (\Enterego\EnteregoHitsHelper::checkIfStartsWithHit($APPLICATION)
-                && !(\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION))
+            "ELEMENT_SORT_ORDER" => (EnteregoHitsHelper::checkIfStartsWithHit($APPLICATION)
+                && !(EnteregoHitsHelper::checkIfHits($APPLICATION))
                 && $curSection['DEPTH_LEVEL'] == '1') ? 'DESC' : $ELEMENT_SORT_ORDER,
             "PROPERTY_CODE" => (isset($arParams["LIST_PROPERTY_CODE"]) ? $arParams["LIST_PROPERTY_CODE"] : []),
             "PROPERTY_CODE_MOBILE" => $arParams["LIST_PROPERTY_CODE_MOBILE"],
@@ -534,7 +554,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             'COMPATIBLE_MODE' => (isset($arParams['COMPATIBLE_MODE']) ? $arParams['COMPATIBLE_MODE'] : ''),
             'DISABLE_INIT_JS_IN_COMPONENT' => (isset($arParams['DISABLE_INIT_JS_IN_COMPONENT']) ? $arParams['DISABLE_INIT_JS_IN_COMPONENT'] : '')
         );
-        if (\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)) {
+        if (EnteregoHitsHelper::checkIfHits($APPLICATION)) {
             $intSectionID = $APPLICATION->IncludeComponent(
                 "bitrix:enterego.hit_section",
                 ".default",
@@ -691,7 +711,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
             if ($basketUserId <= 0) {
                 $ids = array();
             }
-            $ids = array_values(Catalog\CatalogViewedProductTable::getProductSkuMap(
+            $ids = array_values(CatalogViewedProductTable::getProductSkuMap(
                 IBLOCK_CATALOG,
                 $arResult['VARIABLES']['SECTION_ID'],
                 $basketUserId,

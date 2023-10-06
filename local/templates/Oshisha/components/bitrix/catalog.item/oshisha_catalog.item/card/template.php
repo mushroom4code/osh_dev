@@ -147,7 +147,7 @@ if ($show_price) {
 }
 $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 ?>
-<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl mr-4 p-5 mb-8
+<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-5 h-full
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
