@@ -3044,3 +3044,21 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
     }
     return productsSuccess;
 }
+
+// LOADER
+function loaderForSite(initParam, itemParent = false) {
+    const body = itemParent !== false ? itemParent : $('body');
+    if (initParam === 'appendLoader') {
+        if ($(body).find('div.remove-class').length === 0) {
+            $(body).append('<div class="position-fixed width-100 height-100 top-0 left-0 remove-class d-flex justify-content-center ' +
+                'align-items-center" style="background: rgba(60, 60, 60, 0.81); z-index:1000">' +
+                '<div class="loader" style="width: 107px;height: 107px;">' +
+                '<div class="inner one" style="border-bottom: 4px solid #ffffff"></div>' +
+                '<div class="inner two" style="border-bottom: 4px solid #ffffff"></div>' +
+                '<div class="inner three" style="border-bottom: 4px solid #ffffff"></div>' +
+                '</div></div>');
+        }
+    } else {
+        $(body).find('.remove-class').remove();
+    }
+}
