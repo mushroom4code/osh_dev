@@ -145,7 +145,7 @@ $APPLICATION->IncludeComponent(
 		"OFFERS_SORT_ORDER" => "desc",
 		"OFFERS_SORT_FIELD2" => "id",
 		"OFFERS_SORT_ORDER2" => "desc",
-		"PAGER_TEMPLATE" => "round",
+		"PAGER_TEMPLATE" => "oshisha.round",
 		"DISPLAY_TOP_PAGER" => "N",
 		"DISPLAY_BOTTOM_PAGER" => "Y",
 		"PAGER_TITLE" => "Товары",

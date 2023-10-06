@@ -22,8 +22,7 @@ $contentBlockClass = "col";
 
 ?>
 <div class="row mb-4 box_with_prod">
-
-    <div class="pb-4  padding_product_box">
+    <div class="pb-4 padding_product_box">
         <div class="row mb-4">
             <div class="col" id="navigation">
                 <?php $APPLICATION->IncludeComponent(
@@ -39,7 +38,6 @@ $contentBlockClass = "col";
                 ); ?>
             </div>
         </div>
-<!--        <h2 id="pagetitle"><b>--><?php //$APPLICATION->ShowTitle(false); ?><!--</b></h2>-->
         <?php
         if (ModuleManager::isModuleInstalled("sale")) {
         $arRecomData = array();

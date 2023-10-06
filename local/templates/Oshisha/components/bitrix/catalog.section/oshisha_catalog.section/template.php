@@ -39,7 +39,7 @@ if (\Enterego\EnteregoHitsHelper::checkIfHits($APPLICATION)) {
     );
 
     return;
-} 
+}
 
 if (!empty($arResult['NAV_RESULT'])) {
     $navParams = array(
@@ -213,9 +213,9 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 
 
-    ?>
+?>
 <div class="row<?= $themeClass ?> max-w-full">
-    <div class="p-0 max-w-full">
+    <div class="p-0 max-w-full flex flex-col justify-center items-end">
 
         <?php
 
@@ -243,35 +243,36 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             $classPosition = 'justify-content-end';
         } ?>
 
-        <div class="mb-4 catalog-section max-w-full <?= $col_orientation . ' ' . $classOpt ?>" data-entity="<?= $containerName ?>">
+        <div class="mb-4 catalog-section max-w-full <?= $col_orientation . ' ' . $classOpt ?>"
+             data-entity="<?= $containerName ?>">
             <!-- items-container -->
             <?php if (!empty($arResult['ITEMS'])) {
 
-                    $areaIds = array();
-                    global $option_site;
-                    foreach ($arResult['ITEMS'] as &$elem) {
+                $areaIds = array();
+                global $option_site;
+            foreach ($arResult['ITEMS'] as &$elem) {
 
-                        if ($elem['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'] == 'Нет') {
-                            if ($GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] !== 'Нет'){
-                                $GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] = 'Нет'; ?>
-                                <script type="application/javascript">
-                                    $(document).find('.message_for_user_minzdrav').text('<?=$option_site->text_rospetrebnadzor_catalog?>');
-                                </script>
-                            <?php
-                            }
-                        }
+            if ($elem['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'] == 'Нет') {
+            if ($GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] !== 'Нет') {
+                $GLOBALS['SEE_PRODUCT_AUTH_' . $arResult['ID']] = 'Нет'; ?>
+                <script type="application/javascript">
+                    $(document).find('.message_for_user_minzdrav').text('<?=$option_site->text_rospetrebnadzor_catalog?>');
+                </script>
+            <?php
+            }
+            }
 
-                        $uniqueId = $elem['ID'] . '_' . md5($this->randString() . $component->getAction());
-                        $areaIds[$elem['ID']] = $this->GetEditAreaId($uniqueId);
-                        $this->AddEditAction($uniqueId, $elem['EDIT_LINK'], $elementEdit);
-                        $this->AddDeleteAction($uniqueId, $elem['DELETE_LINK'], $elementDelete, $elementDeleteParams);
-                    }
-                            $rowData['CLASS'] = '';
+            $uniqueId = $elem['ID'] . '_' . md5($this->randString() . $component->getAction());
+            $areaIds[$elem['ID']] = $this->GetEditAreaId($uniqueId);
+            $this->AddEditAction($uniqueId, $elem['EDIT_LINK'], $elementEdit);
+            $this->AddDeleteAction($uniqueId, $elem['DELETE_LINK'], $elementDelete, $elementDeleteParams);
+            }
+            $rowData['CLASS'] = '';
             if ($_COOKIE['items'] === 'line') {
                 $cols = 'col-md-12 col-lg-12';
             } else {
                 $cols = 'col-md-5 col-lg-3';
-            }?>
+            } ?>
                 <div class="flex flex-row flex-wrap justify-between products_box" data-entity="items-row">
                     <?php
                     foreach ($arResult['ITEMS'] as $item) {
@@ -307,7 +308,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                         'POPUP_PROPS' => $prop_see_in_window,
                                         'COUNT_FAV' => $item['COUNT_FAV'],
                                         'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                        'IS_SUBSCRIPTION_PAGE'=>$arParams['IS_SUBSCRIPTION_PAGE'],
+                                        'IS_SUBSCRIPTION_PAGE' => $arParams['IS_SUBSCRIPTION_PAGE'],
                                         'CURRENT_USER_SUBSCRIPTIONS' => $arResult['CURRENT_USER_SUBSCRIPTIONS']
                                     ),
                                     'PARAMS' => $generalParams
@@ -323,48 +324,46 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                     }
                     ?>
                 </div>
-                <?php
+            <?php
 
-                unset($generalParams, $arResult['ITEMS']);
+            unset($generalParams, $arResult['ITEMS']);
 
             } else { ?>
                 <p> В этой категроии сейчас нет товаров</p>
             <?php } ?>
             <!-- items-container -->
         </div>
-        <?php
-
-        //region LazyLoad Button
-        if ($showLazyLoad) {
-            ?>
-            <div class="text-center mb-4" data-entity="lazy-<?= $containerName ?>">
-                <button type="button"
-                        class="btn text_catalog_button link_red_button btn-md"
-                        style="margin: 15px;"
-                        data-use="show-more-<?= $navParams['NavNum'] ?>">
-                    <?= $arParams['MESS_BTN_LAZY_LOAD'] ?>
-                </button>
-            </div>
+        <div class="flex flex-row items-center md:w-3/5 w-full justify-between">
             <?php
-        }
-        //endregion
-
-        //region Pagination
-        if ($showBottomPager) {
-            ?>
-            <div class=" mb-4 col_navigation d-flex justify-content-end">
-                <div class=" text-center" data-pagination-num="<?= $navParams['NavNum'] ?>">
-                    <!-- pagination-container -->
-                    <?= $arResult['NAV_STRING'] ?>
-                    <!-- pagination-container -->
+            //region LazyLoad Button
+            if ($showLazyLoad) { ?>
+                <div data-entity="lazy-<?= $containerName ?>">
+                    <button type="button"
+                            class="btn text_catalog_button text-lightGrayBg dark:text-white link_red_button
+                            bg-textDarkLightGray dark:bg-grayButton dark:font-normal
+                            px-7 py-3.5 text-sm rounded-lg font-semibold shadow-md shadow-shadowDark"
+                            data-use="show-more-<?= $navParams['NavNum'] ?>">
+                        <?= $arParams['MESS_BTN_LAZY_LOAD'] ?>
+                    </button>
                 </div>
-            </div>
-            <?php
-        }
+            <?php }
+            //endregion
+
+            //region Pagination
+            if ($showBottomPager) { ?>
+                <div class="col_navigation">
+                    <div data-pagination-num="<?= $navParams['NavNum'] ?>">
+                        <!-- pagination-container -->
+                        <?= $arResult['NAV_STRING'] ?>
+                        <!-- pagination-container -->
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+        <?php
         //endregion
         //region Description
-        if (($arParams['HIDE_SECTION_DESCRIPTION'] !== 'Y') && !empty($arResult['DESCRIPTION'])) {
-            ?>
+        if (($arParams['HIDE_SECTION_DESCRIPTION'] !== 'Y') && !empty($arResult['DESCRIPTION'])) { ?>
             <div class="row mb-4">
                 <div class="col catalog-section-description">
                     <p><?= $arResult['DESCRIPTION'] ?></p>
@@ -438,5 +437,5 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         </script>
 
     </div>
-</div><? //end wrapper?>
+</div><?php //end wrapper?>
 <!-- component-end -->

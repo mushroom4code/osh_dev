@@ -161,7 +161,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         <div class=" box_filter_catalog w-80 xl:flex hidden flex-col
         <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
-            <div class="catalog-section-list-tile-list w-full">
+            <div class="catalog-section-list-tile-list w-full bg-textDarkLightGray dark:bg-darkBox p-5 rounded-xl
+             flex flex-col mb-4">
                 <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                     <div class="catalog-section-list-item-l">
                         <div class="catalog-section-list-item-wrap smart-filter-tog" data-role="prop_angle"
@@ -174,7 +175,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                     </span>
                             <? endif; ?>
                         </div>
-                        <div class="catalog-section-list-item-sub <?php if ($smartFil != ''): ?>active<?php endif; ?>"
+                        <div class="catalog-section-list-item-sub
+                        <?php if ($smartFil != '') { ?>active<?php } else { ?>hidden<?php } ?>"
                              data-code="<?= $arSection['ID'] ?>">
                             <a class="mt-2 color-redLight"
                                href="<?= $arSection['SECTION_PAGE_URL'] ?>">Все</a>
@@ -184,7 +186,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             foreach ($arSection['CHILDS'] as $arSectionSub):
                                 if (CIBlockSection::GetSectionElementsCount($arSectionSub['ID'], ['CNT_ACTIVE' => 'Y']) > 0) {
                                     ?>
-                                    <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
+                                    <div class="catalog-section-list-item-sub <?php if ($smartFil != '') { ?>active<?php } else { ?>hidden<?php } ?>"
                                          data-code="<?= $arSection['ID'] ?>">
                                         <a href="<?= $arSectionSub['SECTION_PAGE_URL'] ?>"><?= $arSectionSub['NAME'] ?></a>
                                     </div>
@@ -199,7 +201,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
             //region Filter
             if ($isFilter): ?>
-                <div class="bx-sidebar-block <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
+                <div class="bx-sidebar-block bg-textDarkLightGray dark:bg-darkBox p-5 rounded-xl <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
                     <?php
 
                     $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",

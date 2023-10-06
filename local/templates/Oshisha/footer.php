@@ -17,8 +17,8 @@ $option = $option_site; ?>
 </div><!--end .workarea-->
 
 <?php $userData = EnteregoUser::getInstance(); ?>
-<footer class="flex flew-row justify-center dark:bg-dark bg-lightGrayBg dark:text-textDark text-white w-full border-t border-white mb-4">
-    <div class="xl:container container ls:lg:md:p-0 p-4 foot_container mt-10">
+<footer class="flex flew-row justify-center dark:bg-dark bg-lightGrayBg dark:text-textDark text-white w-full border-t border-white">
+    <div class="xl:container container ls:lg:md:p-0 p-4 foot_container mt-10 mb-4">
         <div class="flex flex-col md:flex-row mb-8 justify-between flex-wrap">
             <div class="columns-3 flex flex-col mb-7">
                 <div class="w-44 mb-3">
@@ -31,9 +31,11 @@ $option = $option_site; ?>
                     <span class="text-sm font-light mb-5">Оптовый портал<br>товаров для кальяна</span>
                     <a class="text-sm font-light mb-2 underline hover:text-hover-red"
                        href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
-                    <a class="text-sm font-light mb-5 underline hover:text-hover-red" href="tel:88006004424">8-800-600-44-24</a>
+                    <a class="text-sm font-light mb-5 underline hover:text-hover-red"
+                       href="tel:88006004424">8-800-600-44-24</a>
                     <span class="text-sm font-light mb-5">Время работы <br>10:00 - 20:00, ежедневно.</span>
-                    <a class="text-sm font-light underline hover:text-hover-red" href="mailto:info@oshisha.net">info@oshisha.net </a>
+                    <a class="text-sm font-light underline hover:text-hover-red"
+                       href="mailto:info@oshisha.net">info@oshisha.net </a>
                 </div>
             </div>
             <div class="columns-3 flex flex-col dark:text-textDarkLightGray mb-7">
@@ -311,11 +313,5 @@ $option = $option_site; ?>
 </div>
 <!-- //bx-wrapper -->
 <div class="overlay"></div>
-<div class="page-scroller">
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20"
-         height="20" viewBox="0 0 20 20" class="page-scroller__ctrl">
-        <path d="M2.582 13.891c-0.272 0.268-0.709 0.268-0.979 0s-0.271-0.701 0-0.969l7.908-7.83c0.27-0.268 0.707-0.268 0.979 0l7.908 7.83c0.27 0.268 0.27 0.701 0 0.969s-0.709 0.268-0.978 0l-7.42-7.141-7.418 7.141z"></path>
-    </svg>
-</div>
 </body>
 </html>
