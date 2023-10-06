@@ -68,13 +68,7 @@ BX.ready(
             }
         }
         $(boxSelect).on('select2:select', function (event) {
-            $('body').append('<div class="position-fixed width-100 height-100 top-0 remove-class d-flex justify-content-center ' +
-                'align-items-center" style="background: rgba(60, 60, 60, 0.81); z-index:1000">' +
-                '<div class="loader" style="width: 107px;height: 107px;">' +
-                '<div class="inner one" style="border-bottom: 4px solid #ffffff"></div>' +
-                '<div class="inner two" style="border-bottom: 4px solid #ffffff"></div>' +
-                '<div class="inner three" style="border-bottom: 4px solid #ffffff"></div>' +
-                '</div></div>');
+            loaderForSite('appendLoader')
             BX.ajax({
                 url: '/local/ajax/subsidiary.php',
                 method: 'POST',
@@ -83,7 +77,7 @@ BX.ready(
                     if (response === 'success') {
                         location.reload()
                         document.addEventListener("DOMContentLoaded", () => {
-                            $('body').find('.remove-class').remove()
+                            loaderForSite('remove')
                         });
                     }
                 }
