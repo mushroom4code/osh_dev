@@ -10,7 +10,6 @@
 /* style scroll for fireFox */
 html, body {
     scrollbar-color: #999 #b6b6b6;
-
 }
 
 body {
@@ -2136,10 +2135,6 @@ a.bx_catalog_item_title {
 
 .box_with_news_list {
     margin-bottom: 5rem;
-}
-
-.box_with_properties .news_val_data, .prop_line .news_val_data {
-    margin-left: 30px;
 }
 
 .box_news .box_with_net a, .box_news .box_with_net span.shared {

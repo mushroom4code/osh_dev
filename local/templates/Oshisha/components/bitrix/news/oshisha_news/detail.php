@@ -1,4 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -13,7 +13,7 @@
 $this->setFrameMode(true);
 ?>
 
-<?$ElementID = $APPLICATION->IncludeComponent(
+<?php $ElementID = $APPLICATION->IncludeComponent(
 	"bitrix:news.detail",
 	"oshisha_news.detail",
 	Array(
@@ -77,8 +77,8 @@ $this->setFrameMode(true);
 	$component
 );?>
 <h2 class="mt-4 mb-3"><b>Последние новости</b></h2>
-<div class="mt-5 box_with_news_list mb-5">
-    <?$APPLICATION->IncludeComponent(
+<div class="mt-2 box_with_news_list mb-5">
+    <?php $APPLICATION->IncludeComponent(
         "bitrix:news.list",
         "oshisha_news.list",
         Array(
@@ -103,7 +103,7 @@ $this->setFrameMode(true);
             "DISPLAY_PREVIEW_TEXT" => "Y",
             "DISPLAY_TOP_PAGER" => "N",
             "FIELD_CODE" => array(
-                0 => "DATE_ACTIVE_FROM",
+                0 => "DATE_CREATE",
                 1 => "TAGS",
             ),
             "FILTER_NAME" => "",
@@ -134,13 +134,13 @@ $this->setFrameMode(true);
             "SHOW_404" => "N",
             "SORT_BY1" => "ACTIVE_FROM",
             "SORT_BY2" => "ACTIVE_FROM",
-            "SORT_ORDER1" => "DESC",
-            "SORT_ORDER2" => "ASC",
+            "SORT_ORDER1" => "ASC",
+            "SORT_ORDER2" => "DESC",
             "STRICT_SECTION_CHECK" => "N"
         )
     );?>
 </div>
-<?if($arParams["USE_CATEGORIES"]=="Y" && $ElementID):
+<?php if($arParams["USE_CATEGORIES"]=="Y" && $ElementID):
 	global $arCategoryFilter;
 	$obCache = new CPHPCache;
 	$strCacheID = $componentPath.LANG.$arParams["IBLOCK_ID"].$ElementID.$arParams["CATEGORY_CODE"];
@@ -177,8 +177,8 @@ $this->setFrameMode(true);
 		);
 		?>
 		<hr /><h3><?=GetMessage("CATEGORIES")?></h3>
-		<?foreach($arParams["CATEGORY_IBLOCK"] as $iblock_id):?>
-			<?$APPLICATION->IncludeComponent(
+		<?php foreach($arParams["CATEGORY_IBLOCK"] as $iblock_id):?>
+			<?php $APPLICATION->IncludeComponent(
 				"bitrix:news.list",
 				$arParams["CATEGORY_THEME_".$iblock_id],
 				Array(
@@ -196,6 +196,6 @@ $this->setFrameMode(true);
 				),
 				$component
 			);?>
-		<?endforeach?>
-	<?endif?>
-<?endif?>
+		<?php endforeach?>
+	<?php endif?>
+<?php endif?>

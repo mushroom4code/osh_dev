@@ -1,4 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -11,31 +11,18 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
-?>
-
-<?if($arParams["USE_RSS"]=="Y"):?>
-	<?
-	if(method_exists($APPLICATION, 'addheadstring'))
-		$APPLICATION->AddHeadString('<link rel="alternate" type="application/rss+xml" title="'.$arResult["FOLDER"].$arResult["URL_TEMPLATES"]["rss"].'" href="'.$arResult["FOLDER"].$arResult["URL_TEMPLATES"]["rss"].'" />');
-	?>
-<?endif ?>
-<h2 class="mt-4 mb-3"><b><?= $APPLICATION->GetTitle();?></b></h2>
-<?php
-$res = CIBlockPropertyEnum::GetList(Array("SORT"=>"ASC"),Array( "CODE"=>"TAG"));?>
-<div class="mb-4 box_with_tags">
-    <?php while($ar_res = $res->GetNext()){
-        echo '<a href="#" class="link_news_tag">'.$ar_res['VALUE'].'</a>';
-}
-?>
-</div>
-<div class="mt-5 box_with_news_list">
-    <? $APPLICATION->IncludeComponent(
+if ($arParams["USE_RSS"] == "Y"):?>
+    <?php if (method_exists($APPLICATION, 'addheadstring'))
+        $APPLICATION->AddHeadString('<link rel="alternate" type="application/rss+xml" title="' . $arResult["FOLDER"] . $arResult["URL_TEMPLATES"]["rss"] . '" href="' . $arResult["FOLDER"] . $arResult["URL_TEMPLATES"]["rss"] . '" />'); ?>
+<?php endif ?>
+<h2 class="mt-4 mb-3"><b><?= $APPLICATION->GetTitle(); ?></b></h2>
+<div class="mt-2 d-flex flex-row flex-wrap">
+    <?php $APPLICATION->IncludeComponent(
         "bitrix:news.list",
         "oshisha_news.list",
         array(
             "IBLOCK_TYPE" => "news",
-            "IBLOCK_ID" => "1",
-            "NEWS_COUNT" => "3",
+            "IBLOCK_ID" => NEWS_IBLOCK_ID,
             "SORT_BY1" => "ACTIVE_FROM",
             "SORT_ORDER1" => "DESC",
             "SORT_BY2" => "SORT",
@@ -105,53 +92,14 @@ $res = CIBlockPropertyEnum::GetList(Array("SORT"=>"ASC"),Array( "CODE"=>"TAG"));
         array(
             "ACTIVE_COMPONENT" => "Y"
         )
-    );?>
-</div>
-<div class="row mt-5 mb-5">
-    <?$APPLICATION->IncludeComponent(
-        "bitrix:news.line",
-        "oshisha_news.line",
-        Array(
-            "ACTIVE_DATE_FORMAT" => "d.m.Y",
-            "CACHE_GROUPS" => "Y",
-            "CACHE_TIME" => "300",
-            "CACHE_TYPE" => "A",
-            "DETAIL_URL" => "",
-            "FIELD_CODE" => array("NAME","TAGS","PREVIEW_TEXT","PREVIEW_PICTURE","DATE_CREATE",""),
-            "IBLOCKS" => array("1"),
-            "IBLOCK_TYPE" => "news",
-            "NEWS_COUNT" => "4",
-            "SORT_BY1" => "ACTIVE_FROM",
-            "SORT_BY2" => "SORT",
-            "SORT_ORDER1" => "DESC",
-            "SORT_ORDER2" => "ASC"
-        )
-    );?>
-</div>
-<div class="row mb-4">
-    <div class="col text-center" data-pagination-num="1">
-        <div class="bx-pagination">
-            <div class="bx-pagination-container">
-                <ul>
-                    <li class="bx-pag-prev"><span>Назад</span></li>
-                    <li class="bx-active"><span>1</span></li>
-                    <li class=""><a href="#"><span>2</span></a></li>
-                    <li class=""><a href="#"><span>3</span></a></li>
-                    <li class=""><a href="#"><span>4</span></a></li>
-                    <li class=""><a href="#"><span>17</span></a></li>
-                    <li class="bx-pag-next"><a href="#"><span>Вперед</span></a></li>
-                </ul>
-                <div style="clear:both"></div>
-            </div>
-        </div>
-    </div>
+    ); ?>
 </div>
 <h2 class="mt-4 mb-3"><b>Последние новости</b></h2>
 <div class="mt-5 box_with_news_list mb-5">
-    <?$APPLICATION->IncludeComponent(
+    <?php $APPLICATION->IncludeComponent(
         "bitrix:news.list",
         "oshisha_news.list",
-        Array(
+        array(
             "ACTIVE_DATE_FORMAT" => "d.m.Y",
             "ADD_SECTIONS_CHAIN" => "Y",
             "AJAX_MODE" => "N",
@@ -175,7 +123,7 @@ $res = CIBlockPropertyEnum::GetList(Array("SORT"=>"ASC"),Array( "CODE"=>"TAG"));
             "FIELD_CODE" => array(
                 0 => "DATE_ACTIVE_FROM",
                 1 => "TAGS",
-                   ),
+            ),
             "FILTER_NAME" => "",
             "HIDE_LINK_WHEN_NO_DETAIL" => "N",
             "IBLOCK_ID" => "1",
@@ -208,5 +156,5 @@ $res = CIBlockPropertyEnum::GetList(Array("SORT"=>"ASC"),Array( "CODE"=>"TAG"));
             "SORT_ORDER2" => "ASC",
             "STRICT_SECTION_CHECK" => "N"
         )
-    );?>
+    ); ?>
 </div>
