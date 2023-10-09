@@ -231,7 +231,7 @@ class FivePostDelivery extends CommonPVZ
                         'clusterCaption' => '5Post',
                     ];
                     $features_obj['options'] = [
-                        'preset' => 'islands#grayIcon'
+                        'color' => 'grey'
                     ];
 
                     $result_array[] = $features_obj;

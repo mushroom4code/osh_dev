@@ -721,6 +721,44 @@ h4.checkout-block-title > i.fa {
     z-index: 999999;
 }
 
+.circle {
+    display: inline-block;
+    border-radius: 50%;
+    min-width: 20px;
+    min-height: 20px;
+    padding: 7px;
+    background: white;
+    text-align: center;
+    line-height: 1;
+    box-sizing: content-box;
+    white-space: nowrap;
+}
+
+.circle.outer-circle {
+    background: #0f9eff;
+}
+
+.circle:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    padding-top: 100%;
+    height: 0;
+}
+
+.circle:after {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    padding-top: 100%;
+    height: 0;
+}
+
+.inner-circle .circle-text {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 @media screen and (max-width: 1110px) {
     #osh-map-action {
         flex-wrap: wrap;
