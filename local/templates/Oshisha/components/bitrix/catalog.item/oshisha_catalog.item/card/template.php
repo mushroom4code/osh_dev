@@ -105,7 +105,7 @@ if (!$show_price) {
 
 $subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"] ?? [], 'ITEM_ID');
 $found_key = array_search((string)$item['ID'], $subscription_item_ids);
-$is_key_found = (isset($found_key) && ($found_key !== false)) ? true : false;
+$is_key_found = isset($found_key) && ($found_key !== false);
 
 if (empty($morePhoto[0])) {
     $morePhoto[0]['SRC'] = '/local/templates/Oshisha/images/no-photo.gif';
@@ -177,7 +177,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
         }
 
         ?>
-        <div class="item-product-info">
+        <div class="item-product-info h-full flex flex-col justify-between">
             <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> mb-2 z-9">
                 <div class="variation_taste flex flex-wrap flex-row <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php if ($taste['VALUE']) {

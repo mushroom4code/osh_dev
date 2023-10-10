@@ -13,7 +13,7 @@ $(document).ready(function () {
         let newCount = 0;
         let value;
         let box_fav = $(that).closest('.box_with_like').find('a.product-item__favorite-star');
-        let fav = $(box_fav).find('i');
+        let fav = $(box_fav).find('svg path');
         let product_id = $(that).closest('.box_with_like').attr('data-product-id');
         let user_id = $(that).closest('.box_with_like').attr('data-user-id');
         let fuser_id = $(that).closest('.box_with_like').attr('data-fuser-id');
@@ -55,6 +55,8 @@ $(document).ready(function () {
             url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/osh.like_favorites/ajax.php',
             data: 'product_array=' + JSON.stringify(product_array),
             success: function (result) {
+                console.log(product_array)
+                console.log(result)
                 if (result === 'success') {
                     if (method === 'like') {
                         if (product_array.value === 1) {

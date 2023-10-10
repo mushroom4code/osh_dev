@@ -161,7 +161,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         <div class=" box_filter_catalog w-80 xl:flex hidden flex-col
         <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
-            <div class="catalog-section-list-tile-list w-full bg-textDarkLightGray dark:bg-darkBox p-5 rounded-xl
+            <div class="catalog-section-list-tile-list w-full bg-filterGray dark:bg-darkBox p-5 rounded-xl
              flex flex-col mb-4">
                 <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                     <div class="catalog-section-list-item-l">
@@ -201,7 +201,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
             //region Filter
             if ($isFilter): ?>
-                <div class="bx-sidebar-block bg-textDarkLightGray dark:bg-darkBox p-5 rounded-xl <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
+                <div class="bx-sidebar-block bg-filterGray dark:bg-darkBox p-5 rounded-xl <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
                     <?php
 
                     $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
@@ -277,15 +277,15 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             <a href="?page=24"
                                class="page_num p-2.5 rounded-full text-sm font-medium mr-1
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24) { ?>
-                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-textDarkLightGray dark:bg-darkBox<?php } ?>">24</a>
+                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">24</a>
                             <a href="?page=36"
                                class="page_num p-2.5 rounded-full text-sm font-medium mr-1
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36) { ?>
-                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-textDarkLightGray dark:bg-darkBox<?php } ?>">36</a>
+                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">36</a>
                             <a href="?page=72"
                                class="page_num p-2.5 rounded-full text-sm font-medium
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72) { ?>
-                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-textDarkLightGray dark:bg-darkBox<?php } ?>">72</a>
+                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">72</a>
                         </div>
                     </div>
                     <div class="flex flex-row">
@@ -293,7 +293,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                                 <div class="sort_panel_wrap">
                                     <div class="sort_panel" id="">
-                                        <a class="sort_order sort_tool bg-textDarkLightGray dark:bg-darkBox p-3 rounded-lg"
+                                        <a class="sort_order sort_tool bg-filterGray dark:bg-darkBox p-3 rounded-lg"
                                            href="#">
                                             <span class="sort_orders_by sort_caption text-sm text-textLight font-medium
                                             dark:text-textDarkLightGray"
@@ -303,7 +303,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                                aria-hidden="true"></i>
                                         </a>
                                         <div class="sort_orders_element js__sort_orders_element hidden absolute
-                                        bg-textDarkLightGray dark:bg-darkBox">
+                                        bg-filterGray dark:bg-darkBox">
                                             <ul>
                                                 <li class="catalog_sort_item js__catalog-sort-item"
                                                     data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"
