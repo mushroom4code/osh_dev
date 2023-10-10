@@ -40,7 +40,7 @@ if (!empty($arResult['ITEMS'])) {
             break;
         case 'SLIDER':
             if ($arParams['SHOW_TITLE_IN_TEMPLATE'] == 'Y' && !empty($arParams['VALUE_TITLE_IN_TEMPLATE'])) { ?>
-                <div class="h1 mb-3"><?= $arParams['VALUE_TITLE_IN_TEMPLATE'] ?></div>
+                <h2 class="mb-5"><b><?= $arParams['VALUE_TITLE_IN_TEMPLATE'] ?></b></h2>
                 <?php
             }
             $APPLICATION->IncludeComponent(
