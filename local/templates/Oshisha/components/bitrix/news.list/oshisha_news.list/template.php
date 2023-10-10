@@ -149,7 +149,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
                     <?php }
                     } ?>
                 <?php endif; ?>
-                <div class="card-body">
+                <div class="card-body mt-3 news">
                     <div class="box_with_properties">
                         <div>
                             <?php if ($arParams["DISPLAY_NAME"] != "N" && $arItem["NAME"]): ?>
@@ -196,7 +196,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
                                     array('HIDE_ICONS' => 'Y')
                                 ); ?>
                                 <span title="Поделиться" class="shared" data-element-id="<?= $arItem['ID'] ?>">
-                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                    <i class="fa fa-paper-plane-o font-20" aria-hidden="true"></i>
                                     <div class="shared_block">
                                         <?php $APPLICATION->IncludeComponent(
                                             "arturgolubev:yandex.share",
@@ -242,26 +242,5 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
             </div>
         </div>
     <?php endforeach; ?>
-    <?php if ($arParams["DISPLAY_BOTTOM_PAGER"]): ?>
         <?= $arResult["NAV_STRING"] ?>
-    <?php endif; ?>
 </div>
-<script>
-
-    $(function () {
-        if (window.screen.width <= 480) {
-            let count = 2;
-            let slidesToScroll = 1;
-            $('.box_with_news').slick({
-                arrows: true,
-                prevArrow: '<span class="new_custom_button_slick_left" aria-hidden="true">' +
-                    '<i class="fa fa-angle-left" aria-hidden="true"></i></span>',
-                nextArrow: '<span class="new_custom_button_slick_right" aria-hidden="true">' +
-                    '<i class="fa fa-angle-right" aria-hidden="true"></i></span>',
-                slidesToShow: count,
-                slidesToScroll: slidesToScroll,
-                variableWidth: true,
-            });
-        }
-    });
-</script>

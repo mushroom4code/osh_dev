@@ -78,7 +78,7 @@ foreach ($count_likes['USER'] as $keyFAV => $count) {
                         </div>
                     </div>
                     <div class="box_news">
-                        <div class="box_with_net detail">
+                        <div class="box_with_net detail flex flex-col align-items-center">
                             <?php $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                                 'templates',
                                 array(
@@ -94,7 +94,7 @@ foreach ($count_likes['USER'] as $keyFAV => $count) {
                                 array('HIDE_ICONS' => 'Y')
                             ); ?>
                             <span title="Поделиться" class="shared" data-element-id="<?= $arResult['ID'] ?>">
-                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                <i class="fa fa-paper-plane-o font-20" aria-hidden="true"></i>
                                 <div class="shared_block">
                                     <?php $APPLICATION->IncludeComponent(
                                         "arturgolubev:yandex.share",
@@ -134,7 +134,7 @@ foreach ($count_likes['USER'] as $keyFAV => $count) {
                 </p>
             </div>
 
-            <div class="comments_box_news mt-3 mb-5">
+            <div class="comments_box_news mt-5 mb-5">
                 <h2 class="mt-4 mb-3 text-left"><b>Комментарии</b></h2>
                 <?php $componentCommentsParams = array(
                     'ELEMENT_ID' => $arResult['ID'],

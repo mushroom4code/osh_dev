@@ -1235,7 +1235,7 @@ a.color_white, a.color_white:hover, .btn_company, .btn_company:hover, .btn_red, 
     line-height: 1.9;
 }
 
-div > div.card-body {
+div > div.card-body:not(.news) {
     margin: 2rem 0;
     line-height: 2;
 }
@@ -2137,18 +2137,9 @@ a.bx_catalog_item_title {
     margin-bottom: 5rem;
 }
 
-.box_news .box_with_net a, .box_news .box_with_net span.shared {
-    margin-bottom: 13px;
-    margin-left: 25px;
-    font-size: 22px;
-    align-items: center;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-}
-
-.box_with_net a {
-    margin-bottom: 30px;
+.box_news .box_with_net .box_with_like, .box_news .box_with_net span.shared {
+    margin-bottom: 10px;
+    margin-left: 10px;
 }
 
 .form-control:focus {
@@ -2197,6 +2188,10 @@ input.check_input {
 @media screen and (max-width: 768px) {
     .form-check .form-check-input {
         flex: none;
+    }
+
+    .box_news {
+        display: none;
     }
 }
 
@@ -5319,17 +5314,6 @@ li, ul {
         line-height: 110% !important;
         padding: 3px 7px !important;
         max-width: 110px;
-    }
-
-    .box_news {
-        display: none;
-    }
-
-    .box_with_properties .news_val_data {
-        margin-left: 0px !important;
-        font-weight: 500 !important;
-        font-size: 8px !important;
-        line-height: 110% !important;
     }
 
     .card-title {

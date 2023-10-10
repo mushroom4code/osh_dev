@@ -77,7 +77,7 @@ $this->setFrameMode(true);
 	$component
 );?>
 <h2 class="mt-4 mb-3"><b>Последние новости</b></h2>
-<div class="mt-2 box_with_news_list mb-5">
+<div class="box_with_news_list mb-5">
     <?php $APPLICATION->IncludeComponent(
         "bitrix:news.list",
         "oshisha_news.list",
@@ -199,3 +199,21 @@ $this->setFrameMode(true);
 		<?php endforeach?>
 	<?php endif?>
 <?php endif?>
+<script>
+    $(function () {
+        if (window.screen.width <= 480) {
+            let count = 1;
+            let slidesToScroll = 1;
+            $('.box_with_news_list .box_with_news').slick({
+                arrows: true,
+                prevArrow: '<span class="new_custom_button_slick_left" aria-hidden="true">' +
+                    '<i class="fa fa-angle-left" aria-hidden="true"></i></span>',
+                nextArrow: '<span class="new_custom_button_slick_right" aria-hidden="true">' +
+                    '<i class="fa fa-angle-right" aria-hidden="true"></i></span>',
+                slidesToShow: count,
+                slidesToScroll: slidesToScroll,
+                variableWidth: true,
+            });
+        }
+    });
+</script>
