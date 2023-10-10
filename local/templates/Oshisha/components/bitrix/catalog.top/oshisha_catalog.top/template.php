@@ -39,6 +39,10 @@ if (!empty($arResult['ITEMS'])) {
             include($fullPath . '/banner/template.php');
             break;
         case 'SLIDER':
+            if ($arParams['SHOW_TITLE_IN_TEMPLATE'] == 'Y' && !empty($arParams['VALUE_TITLE_IN_TEMPLATE'])) { ?>
+                <div class="h1 mb-3"><?= $arParams['VALUE_TITLE_IN_TEMPLATE'] ?></div>
+                <?php
+            }
             $APPLICATION->IncludeComponent(
                 "bitrix:enterego.slider",
                 ".default",

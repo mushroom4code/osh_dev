@@ -171,8 +171,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
 									$count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 
 									foreach ($arResult['BASKET'] as $basketItem) {
-
-										foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
+                                        foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
 											$basketItem['COUNT_LIKES'] = $count;
 										}
 
@@ -264,7 +263,7 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
 													<div>
 														<div class="sale-order-detail-order-item-properties text-right">
 															<strong class="bx-price"><?= $basketItem['FORMATED_SUM'] ?>
-																x <?= $basketItem['QUANTITY'] ?> шт.</strong>
+																x <?= $basketItem['QUANTITY_WITH_RATIO'] ?> <?= $basketItem['ACTIVE_UNIT'] ?>.</strong>
 														</div>
 													</div>
 												</div>

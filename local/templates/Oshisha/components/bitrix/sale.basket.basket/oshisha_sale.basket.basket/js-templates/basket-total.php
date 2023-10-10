@@ -63,7 +63,7 @@ use Bitrix\Main\Localization\Loc;
                     if ($USER->IsAuthorized()) {
                         $canOrder = empty($arResult['ITEMS']['nAnCanBuy']);
                         ?>
-                        <button class="btn_basket  basket-btn-checkout" {{#DISABLE_CHECKOUT}} disabled{{/DISABLE_CHECKOUT}}
+                        <button class="btn_basket  basket-btn-checkout"
                                 data-entity="basket-checkout-button">
                             <?= Loc::getMessage('SBB_ORDER') ?>
                         </button>

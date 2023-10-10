@@ -58,6 +58,7 @@ Thumbs.db
 .viminfo
 *.ignore*
 ._*
+bitrix/php_interface/enterego_class/Subsidiary/conf.php
 /bitrix/.settings_extra.php
 /bitrix/catalog_export/
 /bitrix/js/ipol.sdek/list.json

@@ -317,6 +317,19 @@ if ($iblockExists)
 		}
 	}
 }
+$arTemplateParameters['SHOW_TITLE_IN_TEMPLATE'] = array(
+    'PARENT' => 'VISUAL',
+    'NAME' =>'Заголовок внутри',
+    'TYPE' => 'CHECKBOX',
+    'DEFAULT' => 'N'
+);
+
+$arTemplateParameters['VALUE_TITLE_IN_TEMPLATE'] = array(
+    'PARENT' => 'VISUAL',
+    'NAME' =>'Содержимое заголовка',
+    'TYPE' => 'STRING',
+    'DEFAULT' => ''
+);
 
 if ($boolCatalog)
 {

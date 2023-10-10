@@ -8,7 +8,6 @@
  * @var array $minOffer
  * @var array $itemIds
  * @var array $price
- * @var array $measureRatio
  * @var bool $haveOffers
  * @var bool $showSubscribe
  * @var array $morePhoto
@@ -71,7 +70,7 @@ $jsonForModal = [];
 
 $specialPrice = 0;
 if (!empty($price['USER_PRICE'])) {
-    $specialPrice = $price['USER_PRICE']['PRICE'];
+    $specialPrice = $price['USER_PRICE']['RATIO_PRICE'];
 }
 
 if ( !empty($price['SALE_PRICE']['PRICE']) &&
@@ -240,7 +239,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                 <p class="price-row mb-1">
                                     <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
                                     <span class="dash"> - </span><br>
-                                    <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                    <span class="font-12 font-11-md"><b><?= $items['PRINT_RATIO_PRICE'] ?></b></span>
                                 </p>
                             <?php } ?>
                         </div>
@@ -310,7 +309,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                             <p class="price-row mb-1">
                                 <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
                                 <span class="dash"> - </span><br>
-                                <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                                <span class="font-12 font-11-md"><b><?= $items['PRINT_RATIO_PRICE'] ?></b></span>
                             </p>
                         <?php } ?>
                     </div>
@@ -409,7 +408,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
                                         } else {
-                                            echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
+                                            echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['RATIO_PRICE']));
                                         } ?>₽
                                     </div>
 
@@ -444,7 +443,9 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                     <div class="btn red_button_cart btn-plus add2basket"
                                          data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                          data-product_id="<?= $item['ID']; ?>"
-                                         data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                         data-active-unit="<?= $item['ACTIVE_UNIT'] ?>"
+                                         data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                         data-measure-ratio="<?= $item['MEASURE_RATIO'] ?>"
                                          id="<?= $arItemIDs['BUY_LINK']; ?>"
                                          <? if ($priceBasket > 0): ?>style="display:none;"<? endif; ?>>
                                         <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>
@@ -456,21 +457,29 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                             <a class="btn-minus  minus_icon no-select add2basket"
                                                id="<?= $arItemIDs['BUY_LINK']; ?>"
                                                href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                               data-active-unit="<?= $item['ACTIVE_UNIT'] ?>"
+                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                               data-measure-ratio="<?= $item['MEASURE_RATIO'] ?>"
                                                data-product_id="<?= $item['ID']; ?>">
                                             </a>
                                             <div class="product-item-amount-field-block">
                                                 <input class="product-item-amount card_element"
                                                        id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                                        type="number"
-                                                       max="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                                       value="<?= $priceBasket ?>">
+                                                       max="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                                       data-active-unit="<?= $item['ACTIVE_UNIT'] ?>"
+                                                       data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                                       data-measure-ratio="<?= $item['MEASURE_RATIO'] ?>"
+                                                       value="<?= $priceBasket / $item['MEASURE_RATIO'] ?>">
                                             </div>
                                             <a class="btn-plus plus_icon no-select add2basket"
-                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?>"
+                                               data-measure-ratio="<?= $item['MEASURE_RATIO'] ?>"
+                                               data-active-unit="<?= $item['ACTIVE_UNIT'] ?>"
                                                id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
                                                data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                                data-product_id="<?= $item['ID']; ?>"
-                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар"></a>
+                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] / $item['MEASURE_RATIO'] ?> <?= $item['ACTIVE_UNIT'] ?>."></a>
                                         </div>
                                         <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
                                     </div>
@@ -558,7 +567,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                         <p class="mb-1">
                             <span class="font-11 font-10-md mb-2"><?= $items['NAME'] ?></span>
                             <span class="dash"> - </span><br>
-                            <span class="font-12 font-11-md"><b><?= $items['PRINT_PRICE'] ?></b></span>
+                            <span class="font-12 font-11-md"><b><?= $items['PRINT_RATIO_PRICE'] ?></b></span>
                         </p>
                     <?php } ?>
                 </div>
