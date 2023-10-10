@@ -27,9 +27,6 @@ foreach ($arResult["ITEMS"] as $arItem) {
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
 <div class="box_with_news news-list<?= $themeClass ?> d-flex flex-md-row flex-lg-row flex-wrap flex-col">
-    <?php if ($arParams["DISPLAY_TOP_PAGER"]): ?>
-        <?= $arResult["NAV_STRING"] ?>
-    <?php endif; ?>
     <?php foreach ($arResult["ITEMS"] as $arItem): ?>
         <?php $this->AddEditAction(
             $arItem['ID'],
@@ -241,6 +238,9 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
                 </div>
             </div>
         </div>
-    <?php endforeach; ?>
-        <?= $arResult["NAV_STRING"] ?>
+    <?php endforeach;
+ ?>
+</div>
+<div class="width-100">
+<?= $arResult['NAV_STRING'] ?>
 </div>
