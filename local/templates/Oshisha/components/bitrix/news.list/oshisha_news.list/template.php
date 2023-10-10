@@ -26,7 +26,7 @@ foreach ($arResult["ITEMS"] as $arItem) {
 }
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
-<div class="box_with_news news-list<?= $themeClass ?> d-flex flex-row flex-wrap">
+<div class="box_with_news news-list<?= $themeClass ?> d-flex flex-md-row flex-lg-row flex-wrap flex-col">
     <?php if ($arParams["DISPLAY_TOP_PAGER"]): ?>
         <?= $arResult["NAV_STRING"] ?>
     <?php endif; ?>
@@ -149,13 +149,13 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
                     <?php }
                     } ?>
                 <?php endif; ?>
-                <div class="card-body mt-3 news">
+                <div class="card-body mt-1 news">
                     <div class="box_with_properties">
                         <div>
                             <?php if ($arParams["DISPLAY_NAME"] != "N" && $arItem["NAME"]): ?>
-                                <h4 class="card-title">
+                                <h4 class="card-title mb-1">
                                     <?php if (!$arParams["HIDE_LINK_WHEN_NO_DETAIL"] || ($arItem["DETAIL_TEXT"] && $arResult["USER_HAVE_ACCESS"])): ?>
-                                        <a href="<?= $arItem["DETAIL_PAGE_URL"] ?>"><?= $arItem["NAME"] ?></a>
+                                        <a href="<?= $arItem["DETAIL_PAGE_URL"] ?>" class="font-20"><?= $arItem["NAME"] ?></a>
                                     <?php else: ?>
                                         <?= $arItem["NAME"] ?>
                                     <?php endif; ?>
