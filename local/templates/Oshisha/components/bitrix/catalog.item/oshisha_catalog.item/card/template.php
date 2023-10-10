@@ -310,19 +310,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                 </div>
             <?php } ?>
             <div class="box_with_title_like d-flex align-items-center">
-                <?php if ($GLOBALS['UserTypeOpt'] === true) { ?>
-                    <div class="codeProduct font-10 mr-4">
-                        <?php
-                        foreach ($codeProp['DESCRIPTION'] as $key => $code) {
-                            if ($code === 'Код') {
-                                echo $codeProp['VALUE'][$key];
-                            }
-                        } ?>
-                    </div>
-                <?php }
-                ?>
                 <div class="box_with_text mb-3">
-                    <a class="bx_catalog_item_title line-clamp-1 text-sm font-normal text-textLight dark:text-textDarkLightGray
+                    <a class="bx_catalog_item_title line-clamp-1 text-md font-normal text-textLight dark:text-textDarkLightGray
                         <?= $styleForNo . ' ' . $not_auth ?>"
                        href="<?= $item['DETAIL_PAGE_URL']; ?>"
                        data-href="<?= $href ?>"
@@ -336,11 +325,11 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
             <div class="bx_catalog_item_controls">
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
-                    <div class="box_with_fav_bask flex flex-row justify-between">
+                    <div class="box_with_fav_bask flex flex-row justify-between items-center">
                         <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                             <div class="box_with_price card-price font_weight_600  min-height-auto">
                                 <div class="flex flex-col">
-                                    <div class="bx_price text-lg font-medium <?= $styleForNo ?> position-relative">
+                                    <div class="bx_price text-2xl font-medium <?= $styleForNo ?> position-relative">
                                         <?php
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
@@ -348,7 +337,6 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                             echo(round($price['PRICE_DATA']['PRICE']));
                                         } ?>₽
                                     </div>
-
                                     <?php if (!empty($specialPrice)) { ?>
                                         <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
                                             <span class="line-through font-light decoration-red text-textLight
@@ -361,7 +349,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                     <?php } ?>
                                 </div>
                             </div>
-                            <? if ($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'): ?>
+                            <?php if ($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'): ?>
                                 <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                             <?= $is_key_found ? 'subscribed' : '' ?> min_card">
                                     <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
@@ -399,9 +387,9 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                     </svg>
                                                 </a>
                                                 <div class="product-item-amount-field-block">
-                                                    <input class="product-item-amount dark:bg-grayButton bg-white
-                                                dark:border-none border-borderColor focus:border-borderColor text-center
-                                                 shadow-none py-3 px-4 outline-none rounded-md w-16 card_element"
+                                                    <input class="product-item-amount dark:bg-grayButton bg-textDarkLightGray
+                                                focus:border-none text-center border-none
+                                                 shadow-none py-2.5 px-3 mx-2 outline-none rounded-md w-14 card_element"
                                                            id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                                            type="number"
                                                            max="<?= $item['PRODUCT']['QUANTITY'] ?>"
