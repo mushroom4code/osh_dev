@@ -146,19 +146,21 @@ if ($show_price) {
     ];
 }
 $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
-?>
-<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-5 h-full
+if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
+    <span class="taste bg-greenLight dark:bg-greenButton text-white absolute -left-4 -top-4 py-3.5 px-2 rounded-full
+     text-xs z-10 font-medium">NEW</span>
+<?php }
+if ($hitProduct['VALUE'] === 'Да') { ?>
+    <span class="taste bg-yellowSt text-black absolute font-semibold -left-4 -top-4 py-3.5 px-2.5 rounded-full
+    text-xs z-10">ХИТ</span>
+<?php } ?>
+<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-5 h-full relative
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
-    <div class="bx_catalog_item_container product-item position-relative <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
-        <?php if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
-            <span class="taste new-product" data-background="#F55F5C">NEW</span>
-        <?php }
-
-        if ($hitProduct['VALUE'] === 'Да') { ?>
-            <span class="taste new-product" style="padding: 8px 6px;" data-background="#F55F5C">ХИТ</span>
-        <?php }
+    <div class="bx_catalog_item_container product-item position-relative h-full
+            <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
+        <?php
 
         $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
         $togglerState = 'd-none';
@@ -175,9 +177,8 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
         }
 
         ?>
-
         <div class="item-product-info">
-            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
+            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> mb-2 z-9">
                 <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php if ($taste['VALUE']) {
                         foreach ($taste['VALUE'] as $key => $name) {
@@ -197,7 +198,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                     $propId = $taste['ID'];
                                     $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
                                     ?>
-                                    <span class="taste js__taste <?= $tasteSize ?>"
+                                    <span class="taste js__taste px-2.5 py-1.5 text-xs rounded-full <?= $tasteSize ?>"
                                           data-prop-id="<?= "ArFilter_{$propId}" ?>"
                                           data-background="<?= '#' . $color[1] ?>"
                                           id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
@@ -212,7 +213,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
             <div class="bx_catalog_item_overlay"></div>
 
             <div class="image_cart h-40 position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
-                <a class="h-auto <?= $styleForTaste ?>"
+                <a class="flex justify-center <?= $styleForTaste ?>"
                    href="<?= $item['DETAIL_PAGE_URL']; ?>">
                     <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
                         <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" class="h-40" alt="<?= $productTitle ?>"/>
