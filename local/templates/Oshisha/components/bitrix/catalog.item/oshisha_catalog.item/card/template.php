@@ -179,7 +179,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
         ?>
         <div class="item-product-info">
             <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> mb-2 z-9">
-                <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
+                <div class="variation_taste flex flex-wrap flex-row <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php if ($taste['VALUE']) {
                         foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
@@ -198,7 +198,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                     $propId = $taste['ID'];
                                     $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
                                     ?>
-                                    <span class="taste js__taste px-2.5 py-1.5 text-xs rounded-full <?= $tasteSize ?>"
+                                    <span class="taste js__taste px-2.5 mr-1 py-1.5 mb-1 text-xs rounded-full <?= $tasteSize ?>"
                                           data-prop-id="<?= "ArFilter_{$propId}" ?>"
                                           data-background="<?= '#' . $color[1] ?>"
                                           id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
