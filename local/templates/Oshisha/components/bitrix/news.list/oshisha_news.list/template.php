@@ -49,7 +49,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
         );
         $props = CIBlockElement::GetProperty($arParams["IBLOCK_ID"], $arItem['ID'], array(), array('CODE' => 'TAG'));
         $propVal = $props->Fetch(); ?>
-        <div class="news-list-item col-12 col-lg-4 col-md-6 p-3" id="<?= $this->GetEditAreaId($arItem['ID']); ?>">
+        <div class="news-list-item col-12 col-lg-4 col-md-6 pb-3 pt-3 pr-4" id="<?= $this->GetEditAreaId($arItem['ID']); ?>">
             <div class="card">
                 <?php if ($arParams["DISPLAY_PICTURE"] != "N"):
                     if ($arItem["VIDEO"]) { ?>
@@ -165,7 +165,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
                                 <span class="news_val_data"><?= explode(' ', $arItem["DATE_CREATE"])[0]; ?></span>
                             </div>
                         </div>
-                        <div class="box_news">
+                        <div class="box_news mt-2">
                             <div class="box_with_net">
                                 <?php foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
                                     if ($keyLike == $arItem['ID']) {
