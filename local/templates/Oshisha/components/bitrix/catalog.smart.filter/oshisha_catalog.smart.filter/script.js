@@ -539,17 +539,18 @@ JCSmartFilter.prototype.hideFilterProps = function(element)
 	{
 		filterBlock.style.overflow = "hidden";
 		new BX.easing({
-			duration : 300,
+			duration : 100,
 			start : { opacity: 100,  height: filterBlock.offsetHeight },
 			finish : { opacity: 0, height:0 },
 			transition : BX.easing.transitions.quart,
 			step : function(state){
 				filterBlock.style.opacity = state.opacity / 100;
-				filterBlock.style.height = state.height + "px";
+				// filterBlock.style.height = state.height + "px";
 			},
 			complete : function() {
 				filterBlock.setAttribute("style", "");
 				BX.removeClass(obj, "bx-active");
+				BX.addClass(obj.querySelector('.smart-filter-input-group-checkbox-list'), "hidden");
 				BX.addClass(propAngle, "smart-filter-angle-down");
 				BX.removeClass(propAngle, "smart-filter-angle-up");
 			}
@@ -560,24 +561,28 @@ JCSmartFilter.prototype.hideFilterProps = function(element)
 	{
 		filterBlock.style.display = "block";
 		filterBlock.style.opacity = 0;
-		filterBlock.style.height = "auto";
+		// filterBlock.style.height = "auto";
 		filterBlock.style.overflow = "hidden";
 
 		var obj_children_height = filterBlock.offsetHeight;
 		filterBlock.style.height = 0;
 
 		new BX.easing({
-			duration : 300,
+			duration : 100,
 			start : { opacity: 0,  height: 0 },
 			finish : { opacity: 100, height: obj_children_height },
 			transition : BX.easing.transitions.quart,
 			step : function(state){
 				filterBlock.style.opacity = state.opacity / 100;
-				filterBlock.style.height = state.height + "px";
+				filterBlock.style.height = "auto";
+				// console.log(state.height)
+				// console.log(state)
+				// console.log(filterBlock)
 			},
 			complete : function() {
 				filterBlock.style.overflow = "";
 				BX.addClass(obj, "bx-active");
+				BX.removeClass(obj.querySelector('.smart-filter-input-group-checkbox-list'), "hidden");
 				BX.removeClass(propAngle, "smart-filter-angle-down");
 				BX.addClass(propAngle, "smart-filter-angle-up");
 			}
