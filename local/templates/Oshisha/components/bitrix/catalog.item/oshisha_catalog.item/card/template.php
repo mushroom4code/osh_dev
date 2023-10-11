@@ -147,14 +147,14 @@ if ($show_price) {
 }
 $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
-    <span class="taste bg-greenLight dark:bg-greenButton text-white absolute -left-4 -top-4 py-3.5 px-2 rounded-full
+    <span class="taste bg-greenLight dark:bg-greenButton text-white absolute -left-4 -top-3 py-2.5 px-1 rounded-full
      text-xs z-10 font-medium">NEW</span>
 <?php }
 if ($hitProduct['VALUE'] === 'Да') { ?>
-    <span class="taste bg-yellowSt text-black absolute font-semibold -left-4 -top-4 py-3.5 px-2.5 rounded-full
+    <span class="taste bg-yellowSt text-black absolute font-semibold -left-4 -top-3 py-2.5 px-1.5 rounded-full
     text-xs z-10">ХИТ</span>
 <?php } ?>
-<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-5 h-full relative
+<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-4 h-full relative
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
@@ -178,8 +178,9 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
 
         ?>
         <div class="item-product-info h-full flex flex-col justify-between">
-            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> mb-2 z-9">
-                <div class="variation_taste flex flex-wrap flex-row <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
+            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> z-9 h-7">
+                <div class="variation_taste flex flex-wrap flex-row overflow-auto h-7
+                <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php if ($taste['VALUE']) {
                         foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
@@ -198,7 +199,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                     $propId = $taste['ID'];
                                     $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
                                     ?>
-                                    <span class="taste js__taste px-2.5 mr-1 py-1.5 mb-1 text-xs rounded-full <?= $tasteSize ?>"
+                                    <span class="taste js__taste px-2.5 mr-1 py-1 mb-1 text-xs rounded-full <?= $tasteSize ?>"
                                           data-prop-id="<?= "ArFilter_{$propId}" ?>"
                                           data-background="<?= '#' . $color[1] ?>"
                                           id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
@@ -210,38 +211,77 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                 </div>
                 <div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
             </div>
-            <div class="bx_catalog_item_overlay"></div>
+            <div>
+                <div class="bx_catalog_item_overlay"></div>
+                <div class="image_cart h-40 position-relative mb-3 <?= $not_auth ?>" data-href="<?= $href ?>">
+                    <a class="flex justify-center rounded-xl bg-white <?= $styleForTaste ?>"
+                       href="<?= $item['DETAIL_PAGE_URL']; ?>">
+                        <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
+                            <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" class="h-40" alt="<?= $productTitle ?>"/>
+                        <?php } else { ?>
+                            <img src="/local/templates/Oshisha/images/no-photo.gif" class="h-40" alt="no photo"/>
+                        <?php } ?>
+                    </a>
+                    <i class="open-fast-window mb-2" data-item-id="<?= $item['ID'] ?>"></i>
+                    <?php if (!empty($listGroupedProduct)) {
+                        if (count($listGroupedProduct) > 1 && (int)$item['PRODUCT']['QUANTITY'] > 0) { ?>
+                            <i class="fa fa-pencil js__open-grouped-product-window"
+                               aria-hidden="true"
+                               id="<?= 'grouped_' . $item['ID'] ?>"
+                               data-item-id="<?= $item['ID'] ?>"
+                               data-quantity-id="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                               data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct)) ?>"></i>
+                        <?php }
+                    } ?>
+                </div>
 
-            <div class="image_cart h-40 position-relative <?= $not_auth ?>" data-href="<?= $href ?>">
-                <a class="flex justify-center <?= $styleForTaste ?>"
-                   href="<?= $item['DETAIL_PAGE_URL']; ?>">
-                    <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
-                        <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" class="h-40" alt="<?= $productTitle ?>"/>
-                    <?php } else { ?>
-                        <img src="/local/templates/Oshisha/images/no-photo.gif" class="h-40" alt="no photo"/>
-                    <?php } ?>
-                </a>
-                <i class="open-fast-window mb-2" data-item-id="<?= $item['ID'] ?>"></i>
-                <?php if (!empty($listGroupedProduct)) {
-                    if (count($listGroupedProduct) > 1 && (int)$item['PRODUCT']['QUANTITY'] > 0) { ?>
-                        <i class="fa fa-pencil js__open-grouped-product-window"
-                           aria-hidden="true"
-                           id="<?= 'grouped_' . $item['ID'] ?>"
-                           data-item-id="<?= $item['ID'] ?>"
-                           data-quantity-id="<?= $arItemIDs['QUANTITY_ID'] ?>"
-                           data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct)) ?>"></i>
-                    <?php }
-                } ?>
-            </div>
+                <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
+                    <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
 
-            <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
-                <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
-
-                    <div class="box_with_titles flex flex-row text-xs text-textLight justify-between dark:text-textDarkLightGray">
+                        <div class="box_with_titles flex flex-row text-xs text-textLight justify-between dark:text-textDarkLightGray">
+                            <?php
+                            $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                                'templates',
+                                [
+                                    'ID_PROD' => $item['ID_PROD'],
+                                    'F_USER_ID' => $item['F_USER_ID'],
+                                    'LOOK_LIKE' => false,
+                                    'LOOK_FAVORITE' => true,
+                                    'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                    'COUNT_FAV' => $item['COUNT_FAV'],
+                                    'COUNT_LIKES' => $item['COUNT_LIKES'],
+                                ],
+                                $component,
+                                [
+                                    'HIDE_ICONS' => 'Y'
+                                ]
+                            );
+                            $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                                'templates',
+                                array(
+                                    'ID_PROD' => $item['ID_PROD'],
+                                    'F_USER_ID' => $item['F_USER_ID'],
+                                    'LOOK_LIKE' => true,
+                                    'LOOK_FAVORITE' => false,
+                                    'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                    'COUNT_FAV' => $item['COUNT_FAV'],
+                                    'COUNT_LIKES' => $item['COUNT_LIKES'],
+                                ),
+                                $component,
+                                array('HIDE_ICONS' => 'Y'),
+                            );
+                            ?>
+                        </div>
+                    </div>
+                <?php } else { ?>
+                    <div class="box_with_titles flex flex-row text-xs text-textLight dark:text-textDarkLightGray">
+                        <div class="not_product">
+                            Товара нет в наличии
+                        </div>
                         <?php
                         $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                             'templates',
-                            [
+                            array(
                                 'ID_PROD' => $item['ID_PROD'],
                                 'F_USER_ID' => $item['F_USER_ID'],
                                 'LOOK_LIKE' => false,
@@ -249,16 +289,15 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
-                            ],
+                            )
+                            ,
                             $component,
-                            [
-                                'HIDE_ICONS' => 'Y'
-                            ]
+                            array('HIDE_ICONS' => 'Y')
                         );
                         $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                             'templates',
                             array(
-                                'ID_PROD' => $item['ID_PROD'],
+                                'ID' => $item['ID_PROD'],
                                 'F_USER_ID' => $item['F_USER_ID'],
                                 'LOOK_LIKE' => true,
                                 'LOOK_FAVORITE' => false,
@@ -267,57 +306,21 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
                             ),
                             $component,
-                            array('HIDE_ICONS' => 'Y'),
-                        );
-                        ?>
+                            array('HIDE_ICONS' => 'Y')
+                        ); ?>
                     </div>
-                </div>
-            <?php } else { ?>
-                <div class="box_with_titles flex flex-row text-xs text-textLight dark:text-textDarkLightGray">
-                    <div class="not_product">
-                        Товара нет в наличии
-                    </div>
-                    <?php
-                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                        'templates',
-                        array(
-                            'ID_PROD' => $item['ID_PROD'],
-                            'F_USER_ID' => $item['F_USER_ID'],
-                            'LOOK_LIKE' => false,
-                            'LOOK_FAVORITE' => true,
-                            'COUNT_LIKE' => $item['COUNT_LIKE'],
-                            'COUNT_FAV' => $item['COUNT_FAV'],
-                            'COUNT_LIKES' => $item['COUNT_LIKES'],
-                        )
-                        ,
-                        $component,
-                        array('HIDE_ICONS' => 'Y')
-                    );
-                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                        'templates',
-                        array(
-                            'ID' => $item['ID_PROD'],
-                            'F_USER_ID' => $item['F_USER_ID'],
-                            'LOOK_LIKE' => true,
-                            'LOOK_FAVORITE' => false,
-                            'COUNT_LIKE' => $item['COUNT_LIKE'],
-                            'COUNT_FAV' => $item['COUNT_FAV'],
-                            'COUNT_LIKES' => $item['COUNT_LIKES'],
-                        ),
-                        $component,
-                        array('HIDE_ICONS' => 'Y')
-                    ); ?>
-                </div>
-            <?php } ?>
-            <div class="box_with_title_like d-flex align-items-center">
-                <div class="box_with_text mb-3">
-                    <a class="bx_catalog_item_title line-clamp-1 text-md font-normal text-textLight dark:text-textDarkLightGray
+                <?php } ?>
+                <div class="box_with_title_like d-flex align-items-center h-10">
+                    <div class="box_with_text mb-3">
+                        <a class="bx_catalog_item_title line-clamp-2 text-sm font-medium mb-2 text-textLight dark:font-normal
+                    dark:text-textDarkLightGray
                         <?= $styleForNo . ' ' . $not_auth ?>"
-                       href="<?= $item['DETAIL_PAGE_URL']; ?>"
-                       data-href="<?= $href ?>"
-                       title="<?= $productTitle; ?>">
-                        <?= $productTitle; ?>
-                    </a>
+                           href="<?= $item['DETAIL_PAGE_URL']; ?>"
+                           data-href="<?= $href ?>"
+                           title="<?= $productTitle; ?>">
+                            <?= $productTitle; ?>
+                        </a>
+                    </div>
                 </div>
             </div>
             <?php
@@ -329,7 +332,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                         <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                             <div class="box_with_price card-price font_weight_600  min-height-auto">
                                 <div class="flex flex-col">
-                                    <div class="bx_price text-2xl font-medium <?= $styleForNo ?> position-relative">
+                                    <div class="bx_price text-xl font-semibold dark:font-medium <?= $styleForNo ?> position-relative">
                                         <?php
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
@@ -415,7 +418,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                         </div>
                                     <?php } ?>
                                 </div>
-                            <?endif; ?>
+                            <? endif; ?>
                         <?php }
                         if (!$USER->IsAuthorized() && !$show_price) { ?>
                             <div class="btn-plus <?= $not_auth ?>"

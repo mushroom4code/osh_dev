@@ -333,7 +333,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             <?php } ?>
             <!-- items-container -->
         </div>
-        <div class="flex flex-row items-center md:w-3/5 w-full justify-between">
+        <div class="flex flex-row items-center md:w-3/5 w-full justify-between mb-5">
             <?php
             //region LazyLoad Button
             if ($showLazyLoad) { ?>

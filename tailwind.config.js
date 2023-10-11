@@ -54,7 +54,9 @@ module.exports = {
             },
             minWidth: {
                 '164': '164px',
-                
+            },
+            height: {
+                '98': '26rem'
             },
             width: {
                 'inherit': 'inherit'
