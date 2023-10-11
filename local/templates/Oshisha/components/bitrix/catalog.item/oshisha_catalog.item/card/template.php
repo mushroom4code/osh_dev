@@ -312,8 +312,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                 <?php } ?>
                 <div class="box_with_title_like mb-3 d-flex align-items-center h-10">
                     <div class="box_with_text mb-3">
-                        <a class="bx_catalog_item_title line-clamp-2 text-sm font-medium mb-2 text-textLight dark:font-normal
-                    dark:text-textDarkLightGray
+                        <a class="bx_catalog_item_title line-clamp-2 text-sm font-medium mb-2 text-textLight
+                        dark:font-normal dark:text-textDarkLightGray hover:text-hover-red
                         <?= $styleForNo . ' ' . $not_auth ?>"
                            href="<?= $item['DETAIL_PAGE_URL']; ?>"
                            data-href="<?= $href ?>"
