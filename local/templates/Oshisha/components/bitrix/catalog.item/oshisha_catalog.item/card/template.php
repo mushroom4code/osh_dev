@@ -364,7 +364,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                 </div>
                             <? else: ?>
                                 <div class="d-flex row-line-reverse justify-content-between box-basket">
-                                    <?php if ($show_price) { ?>
+                                    <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
                                         <!--                                    <div class="btn red_button_cart btn-plus add2basket"-->
                                         <!--                                         data-url="--><?php //= $item['DETAIL_PAGE_URL'] ?><!--"-->
                                         <!--                                         data-product_id="--><?php //= $item['ID']; ?><!--"-->
@@ -392,7 +392,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                 <div class="product-item-amount-field-block">
                                                     <input class="product-item-amount dark:bg-grayButton bg-textDarkLightGray
                                                 focus:border-none text-center border-none text-sm
-                                                 shadow-none py-2 px-3 mx-2 outline-none rounded-md w-14 card_element"
+                                                 shadow-none py-2.5 px-3 mx-2 outline-none rounded-md w-14 card_element"
                                                            id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                                            type="number"
                                                            max="<?= $item['PRODUCT']['QUANTITY'] ?>"

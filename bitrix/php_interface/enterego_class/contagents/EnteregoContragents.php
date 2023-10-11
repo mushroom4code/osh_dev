@@ -66,6 +66,13 @@ class EnteregoContragents
         return $result;
     }
 
+    /**
+     * @param int $user_id
+     * @return array
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
     public static function getContragentsByUserId(int $user_id = 0): array
     {
         $result = [];
@@ -143,7 +150,7 @@ class EnteregoContragents
 
     /**
      * @param array $filter
-     * @return bool
+     * @return bool|array
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
@@ -160,6 +167,51 @@ class EnteregoContragents
             )->fetch();
 
             $result = empty($resultSelect) ? true : $resultSelect;
+        }
+        return $result;
+    }
+
+
+    /**
+     * @param int $user_id
+     * @return array
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function getActiveContragentForUser(int $user_id = 0): array
+    {
+        $result = [];
+        $ids_new = [];
+        $resultUserRelationships = EnteregoORMRelationshipUserContragentsTable::getList(
+            array(
+                'select' => array(
+                    'ID_CONTRAGENT',
+                ),
+                'filter' => array(
+                    'USER_ID' => $user_id
+                ),
+            )
+        );
+
+        while ($ids_str = $resultUserRelationships->fetch()) {
+            $ids_new[] = $ids_str['ID_CONTRAGENT'];
+        }
+        if (!empty($ids_new)) {
+            $resultSelect = EnteregoORMContragentsTable::getList(
+                array(
+                    'select' => array('ID_CONTRAGENT'),
+                    'filter' => array(
+                        "@ID_CONTRAGENT" => $ids_new,
+                        'STATUS_CONTRAGENT' => 1
+                    ),
+                )
+            );
+            if (!empty($resultSelect)) {
+                while ($contargent = $resultSelect->fetch()) {
+                    $result[] = $contargent;
+                }
+            }
         }
         return $result;
     }

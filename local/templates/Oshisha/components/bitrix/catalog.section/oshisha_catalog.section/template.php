@@ -7,6 +7,7 @@ use Bitrix\Main\Security\Sign\Signer;
 use Bitrix\Sale\Fuser;
 use Bitrix\Catalog;
 use DataBase_like;
+use Enterego\contagents\EnteregoContragents;
 
 
 /**
@@ -211,7 +212,8 @@ if (!empty($resQuery)) {
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
-
+//Есть ли контрагент у пользователя или нет - зависит возможность покупки
+$userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID());
 
 ?>
 <div class="row<?= $themeClass ?> max-w-full">
@@ -302,6 +304,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                         'BIG_BUTTONS' => 'Y',
                                         'SCALABLE' => 'N',
                                         'AR_BASKET' => $arBasketItems,
+                                        'ADD_TO_BASKET' => !empty($userViewPrice),
                                         'F_USER_ID' => $FUser_id,
                                         'ID_PROD' => $item['ID'],
                                         'COUNT_LIKE' => $item['COUNT_LIKE'],

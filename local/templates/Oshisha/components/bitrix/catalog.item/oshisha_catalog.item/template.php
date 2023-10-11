@@ -19,6 +19,7 @@ $this->setFrameMode(true);
 
 if (isset($arResult['ITEM'])) {
     $item = $arResult['ITEM'];
+    $item['ADD_TO_BASKET'] = $arResult['ADD_TO_BASKET'];
     $item['ACTUAL_BASKET'] = $arResult['AR_BASKET'];
     $item['F_USER_ID'] = $arResult['F_USER_ID'];
     $item['ID_PROD'] = $arResult['ID_PROD'];
