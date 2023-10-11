@@ -310,7 +310,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                         ); ?>
                     </div>
                 <?php } ?>
-                <div class="box_with_title_like d-flex align-items-center h-10">
+                <div class="box_with_title_like mb-3 d-flex align-items-center h-10">
                     <div class="box_with_text mb-3">
                         <a class="bx_catalog_item_title line-clamp-2 text-sm font-medium mb-2 text-textLight dark:font-normal
                     dark:text-textDarkLightGray
@@ -391,8 +391,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                 </a>
                                                 <div class="product-item-amount-field-block">
                                                     <input class="product-item-amount dark:bg-grayButton bg-textDarkLightGray
-                                                focus:border-none text-center border-none
-                                                 shadow-none py-2.5 px-3 mx-2 outline-none rounded-md w-14 card_element"
+                                                focus:border-none text-center border-none text-sm
+                                                 shadow-none py-2 px-3 mx-2 outline-none rounded-md w-14 card_element"
                                                            id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                                            type="number"
                                                            max="<?= $item['PRODUCT']['QUANTITY'] ?>"

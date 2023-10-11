@@ -364,9 +364,9 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
         //endregion
         //region Description
         if (($arParams['HIDE_SECTION_DESCRIPTION'] !== 'Y') && !empty($arResult['DESCRIPTION'])) { ?>
-            <div class="row mb-4">
+            <div class="row mb-4 md:mt-8 mt-5">
                 <div class="col catalog-section-description">
-                    <p><?= $arResult['DESCRIPTION'] ?></p>
+                    <p class="text-dark dark:text-textDarkLightGray font-medium dark:font-light text-md"><?= $arResult['DESCRIPTION'] ?></p>
                 </div>
             </div>
             <?php
