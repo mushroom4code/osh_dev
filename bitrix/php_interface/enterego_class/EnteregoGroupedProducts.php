@@ -5,6 +5,7 @@ namespace Enterego;
 use CFile;
 use CIBlockElement;
 use CIBlockProperty;
+use Enterego\EnteregoHelper;
 
 class EnteregoGroupedProducts
 {
@@ -88,6 +89,11 @@ class EnteregoGroupedProducts
                 )->Fetch();
 
                 $elem = &$item['GROUPED_PRODUCTS'][$elemProp];
+                $elem['MEASURE_RATIO'] = \Bitrix\Catalog\MeasureRatioTable::getList(array(
+                    'select' => array('RATIO'),
+                    'filter' => array('=PRODUCT_ID' => $elemProp)
+                ))->fetch()['RATIO'] ?? 1;
+                EnteregoHelper::setProductsActiveUnit($elem, true);
                 $refPropsCode[] = 'USE_DISCOUNT';
                 $elemProp === $prodId ? $elem['SELECTED'] = 'selected' : $elem['SELECTED'] = '';
                 $elem['ACTUAL_BASKET'] = 0;

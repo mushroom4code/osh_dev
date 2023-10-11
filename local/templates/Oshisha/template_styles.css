@@ -956,6 +956,7 @@ h3.ctweb-title {
 
 .alert_quantity {
     color: red;
+    z-index: 1;
 }
 
 .product-item-amount-field-contain {

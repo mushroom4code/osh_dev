@@ -3302,6 +3302,7 @@ b.decoration-color-red {
 }
 
 .sale-percent {
+    text-wrap: nowrap;
     padding: 3px;
     border: 1px solid #F55F5C;
     border-radius: 5px;
