@@ -55,7 +55,7 @@ $this->addExternalJs($templateFolder . "/js/script.js");
                     <path d="M13.1765 19.9412L5.05882 24L7.08823 15.8824L1 9.11765L9.79412 8.44118L13.1765 1M13.1765 1L16.5588 8.44118L25.3529 9.11765L19.2647 15.8824L21.2941 24L13.1765 19.9412"
                           stroke-linecap="round"
                           stroke-linejoin="round"
-                          class="<?php if ($arParams['COUNT_LIKE'] == 1 || $arParams['COUNT_LIKE'] == '1') { ?>
+                          class="<?php if ($arParams['COUNT_FAV'] == 1 || $arParams['COUNT_FAV'] == '1') { ?>
                       fill-light-red stroke-light-red dark:fill-white dark:stroke-white
                       <?php } else { ?> stroke-black dark:stroke-white <?php } ?>"></path>
                 </svg>

@@ -19,7 +19,7 @@ $(document).ready(function () {
         let fuser_id = $(that).closest('.box_with_like').attr('data-fuser-id');
 
         let method = $(that).attr('data-method');
-        let color = $(that).find('i');
+        let color = $(that).find('svg path');
         let like = $(that).closest('.box_with_like').find('#likes');
         let text_like = $(like).text();
         let numberLike;
@@ -63,7 +63,7 @@ $(document).ready(function () {
                             numberLike = (number + 1);
                             newCount = $(like).text(numberLike);
                             window.stop(newCount);
-                            $(color).attr('style', 'color:red');
+                            $(color).addClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white').removeClass('stroke-black dark:stroke-white');
                             $(that).attr('data-like-controls', 'true');
                         } else {
                             if (number > 0) {
@@ -74,15 +74,15 @@ $(document).ready(function () {
                                 newCount = $(like).text(0);
                                 window.stop(newCount);
                             }
-                            $(color).attr('style', 'color:black');
+                            $(color).addClass('stroke-black dark:stroke-white').removeClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white');
                             $(that).attr('data-like-controls', 'false');
                         }
                     } else if (method === 'favorite') {
                         if (product_array.value === 1) {
-                            $(fav).attr('style', 'color:red');
+                            $(fav).addClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white').removeClass('stroke-black dark:stroke-white');
                             $(that).attr('data-fav-controls', 'true');
                         } else {
-                            $(fav).attr('style', 'color:black');
+                            $(fav).addClass('stroke-black dark:stroke-white').removeClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white');
                             $(that).attr('data-fav-controls', 'false');
                         }
                     }
