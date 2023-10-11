@@ -414,7 +414,7 @@
 })();
 
 function HeightTaste() {
-    const breakpointCheck = window.matchMedia('(min-width:481px)');
+    const breakpointCheck = window.matchMedia('(min-width:384px)');
     if (breakpointCheck.matches === true) {
         if ($('.catalog-section').hasClass('by-card')) {
             var max_height = 0;
@@ -423,7 +423,7 @@ function HeightTaste() {
                 if ($(this).height() > max_height)
                     max_height = $(this).height();
             });
-            $(".toggle_taste").css({'height': max_height});
+            $(".toggle_taste").css({'height': '28px'});
 
 
         } else {

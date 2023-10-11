@@ -414,7 +414,7 @@
 })();
 
 function HeightTaste() {
-    const breakpointCheck = window.matchMedia('(min-width:481px)');
+    const breakpointCheck = window.matchMedia('(min-width:384px)');
     if (breakpointCheck.matches === true) {
         if ($('.catalog-section').hasClass('by-card')) {
             var max_height = 0;

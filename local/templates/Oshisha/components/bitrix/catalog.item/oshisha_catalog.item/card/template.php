@@ -178,8 +178,9 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
 
         ?>
         <div class="item-product-info h-full flex flex-col justify-between">
-            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> z-9">
-                <div class="variation_taste flex flex-wrap flex-row <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
+            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> z-9 h-7">
+                <div class="variation_taste flex flex-wrap flex-row overflow-auto h-7
+                <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php if ($taste['VALUE']) {
                         foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
