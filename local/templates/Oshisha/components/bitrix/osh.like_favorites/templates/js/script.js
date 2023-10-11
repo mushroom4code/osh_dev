@@ -55,15 +55,13 @@ $(document).ready(function () {
             url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/osh.like_favorites/ajax.php',
             data: 'product_array=' + JSON.stringify(product_array),
             success: function (result) {
-                console.log(product_array)
-                console.log(result)
                 if (result === 'success') {
                     if (method === 'like') {
                         if (product_array.value === 1) {
                             numberLike = (number + 1);
                             newCount = $(like).text(numberLike);
                             window.stop(newCount);
-                            $(color).addClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white').removeClass('stroke-black dark:stroke-white');
+                            $(color).addClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white').removeClass('stroke-black');
                             $(that).attr('data-like-controls', 'true');
                         } else {
                             if (number > 0) {
@@ -74,15 +72,15 @@ $(document).ready(function () {
                                 newCount = $(like).text(0);
                                 window.stop(newCount);
                             }
-                            $(color).addClass('stroke-black dark:stroke-white').removeClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white');
+                            $(color).addClass('stroke-black').removeClass('fill-light-red stroke-light-red dark:fill-white');
                             $(that).attr('data-like-controls', 'false');
                         }
                     } else if (method === 'favorite') {
                         if (product_array.value === 1) {
-                            $(fav).addClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white').removeClass('stroke-black dark:stroke-white');
+                            $(fav).addClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white').removeClass('stroke-black');
                             $(that).attr('data-fav-controls', 'true');
                         } else {
-                            $(fav).addClass('stroke-black dark:stroke-white').removeClass('fill-light-red stroke-light-red dark:fill-white dark:stroke-white');
+                            $(fav).addClass('stroke-black').removeClass('fill-light-red stroke-light-red dark:fill-white');
                             $(that).attr('data-fav-controls', 'false');
                         }
                     }
