@@ -374,7 +374,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                         <!--                                    >-->
                                         <!--                                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>-->
                                         <!--                                    </div>-->
-                                        <div class="product-item-amount-field-contain-wrap"
+                                        <div class="product-item-amount-field-contain-wrap relative"
                                              <?php if ($priceBasket > 0): ?>style="display:flex;"<?php endif; ?>
                                              data-product_id="<?= $item['ID']; ?>">
                                             <div class="product-item-amount-field-contain flex flex-row items-center">
@@ -412,7 +412,9 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                     </svg>
                                                 </a>
                                             </div>
-                                            <div class="alert_quantity" data-id="<?= $item['ID'] ?>"></div>
+                                            <div class="alert_quantity hidden absolute p-3 text-xs bg-filterGray
+                                            dark:bg-dark-box w-full shadow-lg rounded-bl-xl"
+                                                 data-id="<?= $item['ID'] ?>"></div>
                                         </div>
                                     <?php } ?>
                                 </div>
