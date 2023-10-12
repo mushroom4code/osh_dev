@@ -69,20 +69,30 @@
             <!--endregion-->
 
             <!-- region Controls -->
-            <? if ($arParams['BS_ARROW_NAV'] == 'Y' || $arParams['PREVIEW'] == 'Y'): ?>
+            <?php if ($arParams['BS_ARROW_NAV'] == 'Y' || $arParams['PREVIEW'] == 'Y'): ?>
                 <a href="#carousel-<?= $arResult['ID'] ?>"
                    class="carousel-nav-<?= $arParams['TYPE'] ?>-prev
-                   carousel_custom absolute inset-y-0 left-0 flex items-center z-10" role="button" data-slide="prev">
-                    <span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-2 px-5 text-3xl rounded-full hover:text-dark">
-                        <i class="fa fa-angle-left" aria-hidden="true"></i></span>
+                   carousel_custom absolute inset-y-0 -left-4 flex items-center z-5" role="button" data-slide="prev">
+                    <span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-3 px-4 text-3xl rounded-full hover:text-dark">
+                        <svg width="18" height="25" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 14.3333L1.33333 7.66667L8 1" stroke="white" stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+                        </svg>
+                    </span>
                 </a>
                 <a href="#carousel-<?= $arResult['ID'] ?>"
-                   class="carousel-nav-<?= $arParams['TYPE'] ?>-next carousel_custom_next  absolute inset-y-0 right-0 z-10
+                   class="carousel-nav-<?= $arParams['TYPE'] ?>-next carousel_custom_next  absolute inset-y-0 -right-4 z-5
                    flex items-center" role="button" data-slide="next">
-                    <span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-2 px-5 text-3xl rounded-full hover:text-dark">
-                        <i class="fa fa-angle-right" aria-hidden="true"></i></span>
+                    <span class="text-white hover:bg-white bg-light-red dark:bg-dark-red py-3 px-4 text-3xl rounded-full hover:text-dark">
+                         <svg width="18" height="25" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 14.3333L7.66667 7.66667L1 1" stroke="white" stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+                         </svg>
+                    </span>
                 </a>
-            <? endif; ?>
+            <?php endif; ?>
             <!--endregion-->
 
             <!--region Indicators-->
