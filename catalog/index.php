@@ -21,7 +21,7 @@ $APPLICATION->IncludeComponent(
 	"oshisha_catalog.catalog", 
 	array(
 		"IBLOCK_TYPE" => "1c_catalog",
-		"IBLOCK_ID" => "$iblock_id",
+		"IBLOCK_ID" => $iblock_id,
 		"TEMPLATE_THEME" => "site",
 		"DETAIL_SHOW_MAX_QUANTITY" => "Y",
 		"HIDE_NOT_AVAILABLE" => "L",
@@ -58,9 +58,6 @@ $APPLICATION->IncludeComponent(
 		"PRICE_VAT_INCLUDE" => "Y",
 		"PRICE_VAT_SHOW_VALUE" => "N",
 		"PRODUCT_PROPERTIES" => array(
-			0 => "VKUS",
-			1 => "DISKONT",
-			2 => "KHIT",
 		),
 		"USE_PRODUCT_QUANTITY" => "Y",
 		"CONVERT_CURRENCY" => "N",
@@ -311,8 +308,8 @@ $APPLICATION->IncludeComponent(
 		"FILE_404" => "",
 		"SEF_URL_TEMPLATES" => array(
 			"sections" => "",
-            "element" => "product/#ELEMENT_CODE#/",
 			"section" => "#SECTION_CODE#/",
+			"element" => "product/#ELEMENT_CODE#/",
 			"compare" => "compare/",
 			"smart_filter" => "#SECTION_CODE#/filter/#SMART_FILTER_PATH#/apply/",
 		)

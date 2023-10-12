@@ -40,13 +40,13 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                 foreach ($arResult["ITEMS"] as $key => $arItem)//prices
                 {
 
-                    if (((int)$arItem['ID'] !== RETAIL_PRICE) && (($arItem['PROPERTY_TYPE'] != "N") || ($arItem['DISPLAY_TYPE'] != "A"))) {
+                    if (((int)$arItem['ID'] !== B2B_PRICE) && (($arItem['PROPERTY_TYPE'] != "N") || ($arItem['DISPLAY_TYPE'] != "A"))) {
                         continue;
                     }
                     if ($arItem["VALUES"]["MAX"]["VALUE"] - $arItem["VALUES"]["MIN"]["VALUE"] <= 0)
                         continue;
 
-                    if ((($arItem['PROPERTY_TYPE'] == "N") && ($arItem['DISPLAY_TYPE'] == "A")) && ((int)$arItem['ID'] !== RETAIL_PRICE)) {
+                    if ((($arItem['PROPERTY_TYPE'] == "N") && ($arItem['DISPLAY_TYPE'] == "A")) && ((int)$arItem['ID'] !== B2B_PRICE)) {
                         $key = md5($arItem['ID']);
                     } else {
                         $key = $arItem["ENCODED_ID"];
@@ -76,23 +76,25 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                         <div class="smart-filter-parameters-box-title mb-2"
                              onclick="smartFilter.hideFilterProps(this)">
-                                <span class="smart-filter-parameters-box-title-text text-md font-medium text-dark
-                                dark:text-textDarkLightGray">
-                                    <?= (int)$arItem['ID'] === RETAIL_PRICE ? 'Цена' : $arItem['NAME'] ?>
+                                <span class="smart-filter-parameters-box-title-text  text-sm font-medium text-dark
+                                dark:text-textDarkLightGray"><?= (int)$arItem['ID'] === B2B_PRICE ? 'Цена' : $arItem['NAME'] ?>
                                 </span>
-                            <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
-									<i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
-								</span>
+                                <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
+                                        <i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
+                                </span>
                         </div>
                         <div class="smart-filter-block filter_id" data-role="bx_filter_block"
                              id="<?= $arItem['CODE'] ?>">
                             <div class="smart-filter-parameters-box-container">
                                 <div class="smart-filter-input-group-number">
-                                    <div class="d-flex justify-content-between  align-items-center">
-                                        <div class="form-group" style="width: calc(50% - 10px);">
-                                            <div class="smart-filter-input-container">
+                                    <div class="flex flex-row items-center justify-between mb-4">
+                                        <div class="form-group w-24">
+                                            <div class="smart-filter-input-container w-full">
                                                 <input
-                                                        class="min-price form-control form-control-sm"
+                                                        class="min-price px-3.5 py-3 mr-3 text-center dark:bg-grayButton
+                                                         checked:hover:bg-grayButton border-iconGray dark:border-none
+                                                        dark:text-white cursor-pointer font-normal rounded-lg
+                                                        text-light-red checked:focus:bg-grayButton w-full"
                                                         type="number"
                                                         name="<?php echo $arItem["VALUES"]["MIN"]["CONTROL_NAME"] ?>"
                                                         id="<?php echo $arItem["VALUES"]["MIN"]["CONTROL_ID"] ?>"
@@ -104,10 +106,13 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                             </div>
                                         </div>
                                         -
-                                        <div class="form-group" style="width: calc(50% - 10px);">
-                                            <div class="smart-filter-input-container">
+                                        <div class="form-group w-24">
+                                            <div class="smart-filter-input-container w-full">
                                                 <input
-                                                        class="max-price form-control form-control-sm"
+                                                        class="max-price px-3.5 text-center py-3 mr-3 w-full dark:bg-grayButton
+                                                         checked:hover:bg-grayButton border-iconGray dark:border-none
+                                                        dark:text-white cursor-pointer font-normal rounded-lg
+                                                        text-light-red checked:focus:bg-grayButton"
                                                         type="number"
                                                         name="<?php echo $arItem["VALUES"]["MAX"]["CONTROL_NAME"] ?>"
                                                         id="<?php echo $arItem["VALUES"]["MAX"]["CONTROL_ID"] ?>"
@@ -145,23 +150,27 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                         </div>
                     </div>
                     <div class="<?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<?php else: ?><?php endif ?> hide_not_available_container
-                 smart-filter-parameters-box bx-active mb-4">
+                 smart-filter-parameters-box bx-active mb-5">
                         <span class="smart-filter-container-modef"></span>
                         <div class="smart-filter-block filter_id" data-role="bx_filter_block"
                              id="hide_not_available_container_id">
                             <div class="smart-filter-parameters-box-container">
-                                <div class="form-group form-check hide_not_available">
+                                <div class="form-group form-check hide_not_available flex flex-row items-center">
                                     <input
                                             type="checkbox"
                                             value="<?php echo $arParams["HIDE_NOT_AVAILABLE"] ?>"
                                             name="hide_not_available"
                                             id="hide_not_available_id"
-                                            class="check_input form-check-input"
+                                            class="check_input form-check-input xs:p-5 p-3.5 mr-3 dark:bg-grayButton
+                                                         checked:hover:bg-grayButton border-iconGray dark:border-none
+                                                        dark:text-white cursor-pointer font-normal rounded-lg
+                                                        text-light-red checked:focus:bg-grayButton"
                                         <?php echo $arParams["HIDE_NOT_AVAILABLE"] == 'Y' ? 'checked="checked"' : '' ?>
                                             onclick="smartFilter.click(this)"
                                     />
                                     <label data-role="label_in_stoсk"
-                                           class="smart-filter-checkbox-text form-check-label hide_not_available"
+                                           class="smart-filter-checkbox-text text-sm font-medium text-dark
+                                           dark:text-textDarkLightGray hide_not_available"
                                            id="hide_not_available_label" for="<?php echo $ar["CONTROL_ID"] ?>">
                                         В наличии
                                     </label>
@@ -211,7 +220,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                     <div class="<?= $arItem['CODE'] == 'MODEL_KALYANA' ? 'model_kalyana hidden' : '' ?>
                     <?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?> col-sm-6 col-md-4 <?php else: ?>
                     <?php endif ?> mb-4 smart-filter-parameters-box
-                    <?php if ($arItem["DISPLAY_EXPANDED"] == "Y") { ?>bx-active<?php }?>">
+                    <?php if ($arItem["DISPLAY_EXPANDED"] == "Y") { ?>bx-active<?php } ?>">
                         <span class="smart-filter-container-modef"></span>
                         <div class="smart-filter-parameters-box-title mb-2 flex flex-row items-center cursor-pointer"
                              onclick="smartFilter.hideFilterProps(this)">

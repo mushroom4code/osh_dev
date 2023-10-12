@@ -107,7 +107,6 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
     let menu_items = $('.menu_items');
     let class_active = '';
     let hrefs = window.location.pathname;
-    console.log(menu_items_array)
     $('.overlay_top').on('click', function () {
         $(icon_bar).removeAttr('style');
         $(icon_bar).find('.span_bar').removeClass('open_menu');
