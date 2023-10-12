@@ -92,7 +92,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                             <div class="smart-filter-input-container w-full">
                                                 <input
                                                         class="min-price px-3.5 py-3 mr-3 text-center dark:bg-grayButton
-                                                         checked:hover:bg-grayButton border-iconGray dark:border-none
+                                                         checked:hover:bg-grayButton border-none dark:border-none
                                                         dark:text-white cursor-pointer font-normal rounded-lg
                                                         text-light-red checked:focus:bg-grayButton w-full"
                                                         type="number"
@@ -110,7 +110,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                             <div class="smart-filter-input-container w-full">
                                                 <input
                                                         class="max-price px-3.5 text-center py-3 mr-3 w-full dark:bg-grayButton
-                                                         checked:hover:bg-grayButton border-iconGray dark:border-none
+                                                         checked:hover:bg-grayButton border-none dark:border-none
                                                         dark:text-white cursor-pointer font-normal rounded-lg
                                                         text-light-red checked:focus:bg-grayButton"
                                                         type="number"
@@ -162,7 +162,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                             name="hide_not_available"
                                             id="hide_not_available_id"
                                             class="check_input form-check-input xs:p-5 p-3.5 mr-3 dark:bg-grayButton
-                                                         checked:hover:bg-grayButton border-iconGray dark:border-none
+                                                         checked:hover:bg-grayButton border-none dark:border-none
                                                         dark:text-white cursor-pointer font-normal rounded-lg
                                                         text-light-red checked:focus:bg-grayButton"
                                         <?php echo $arParams["HIDE_NOT_AVAILABLE"] == 'Y' ? 'checked="checked"' : '' ?>
@@ -741,7 +741,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                                         name="<?= $ar["CONTROL_NAME"] ?>"
                                                         id="<?= $ar["CONTROL_ID"] ?>"
                                                         class="check_input xs:p-5 p-3.5 dark:bg-grayButton
-                                                         checked:hover:bg-grayButton border-iconGray dark:border-none
+                                                         checked:hover:bg-grayButton border-none dark:border-none
                                                         dark:text-white cursor-pointer font-normal rounded-lg
                                                         text-light-red checked:focus:bg-grayButton
                                                         <?= $arItem['CODE'] == 'BREND' ? 'brends_checkbox' : '' ?>
