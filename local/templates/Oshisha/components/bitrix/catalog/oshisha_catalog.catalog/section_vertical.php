@@ -281,21 +281,21 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-5"></p>
         <div id="osh-filter-horizontal2"></div>
         <div class="osh-block-panel <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
-            <div id="osh-filter-horizontal" class="flex flex-col mb-8 mt-5">
-                <div class="flex flex-row justify-between items-center">
+            <div id="osh-filter-horizontal" class="flex flex-col mb-10 mt-5">
+                <div class="flex flex-row justify-between items-center mb-6">
                     <div class="col_navigation mr-4">
-                        <div class="count-per-page">
+                        <div class="count-per-page flex flex-row items-center">
                             <span class="font-semibold dark:font-normal text-md mr-3 text-textLight dark:text-textDarkLightGray">Показать</span>
                             <a href="?page=24"
-                               class="page_num p-2.5 rounded-full text-sm font-medium mr-1
+                               class="page_num py-2.5 px-3 rounded-full text-sm font-medium mr-1
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24) { ?>
                                dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">24</a>
                             <a href="?page=36"
-                               class="page_num p-2.5 rounded-full text-sm font-medium mr-1
+                               class="page_num py-2.5 px-3 rounded-full text-sm font-medium mr-1
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36) { ?>
                                dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">36</a>
                             <a href="?page=72"
-                               class="page_num p-2.5 rounded-full text-sm font-medium
+                               class="page_num py-2.5 px-3 rounded-full text-sm font-medium
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72) { ?>
                                dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">72</a>
                         </div>
@@ -357,15 +357,16 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                         <div>Переключатели-></div>
                     </div>
                 </div>
-                <div>
+                <div class="flex flex-row items-center">
                     <div id="osh-filter-horizontal-item" class="flex flex-row flex-wrap"
                          data-osh-filter-state="hide"></div>
-                    <div id="osh-filter-horizontal-item-count" class="osh-filter-item"
+                    <div id="osh-filter-horizontal-item-count" class="osh-filter-item mx-3 bg-filterGray
+                     hidden flex-row items-center px-4 py-2 font-medium text-center text-sm rounded-md dark:bg-darkBox"
                          onclick="smartFilter.allFilterShowHide()">
                     </div>
-                    <div id="osh-filter-horizontal-item-remove" class="osh-filter-item"
+                    <div id="osh-filter-horizontal-item-remove" class="osh-filter-item hidden"
                          onclick="smartFilter.removeHorizontalFilterAll()">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 23.9531C18.5273 23.9531 23.9532 18.5273 23.9532 12C23.9532 5.46093 18.5156 0.046875 11.9883 0.046875C5.44918 0.046875 0.046875 5.46093 0.046875 12C0.046875 18.5273 5.46093 23.9531 12 23.9531ZM9.10548 18.9609C8.27343 18.9609 7.79293 18.5039 7.75778 17.6719L7.32418 8.10933H6.62108C6.30468 8.10933 6.03513 7.83983 6.03513 7.52343C6.03513 7.19528 6.30468 6.93748 6.62108 6.93748H9.28123V5.98828C9.28123 5.07418 9.87888 4.49998 10.7461 4.49998H13.1953C14.0625 4.49998 14.6601 5.07418 14.6601 5.98828V6.93748H17.3203C17.6367 6.93748 17.8945 7.19528 17.8945 7.52343C17.8945 7.83983 17.6367 8.10933 17.3203 8.10933H16.6406L16.207 17.6719C16.1601 18.5039 15.6797 18.9609 14.8476 18.9609H9.10548ZM10.4648 6.93748H13.4765V6.21093C13.4765 5.89453 13.2539 5.68358 12.9257 5.68358H11.0039C10.6875 5.68358 10.4648 5.89453 10.4648 6.21093V6.93748ZM9.82028 17.6719C10.1133 17.6719 10.289 17.4726 10.2773 17.1914L9.99608 9.33983C9.97263 9.05858 9.79683 8.87108 9.52733 8.87108C9.23438 8.87108 9.04683 9.07028 9.05858 9.33983L9.37498 17.2031C9.38668 17.4843 9.56248 17.6719 9.82028 17.6719ZM11.9765 17.6601C12.2695 17.6601 12.457 17.4726 12.457 17.1914V9.33983C12.457 9.07028 12.2695 8.87108 11.9765 8.87108C11.6836 8.87108 11.4961 9.07028 11.4961 9.33983V17.1914C11.4961 17.4726 11.6953 17.6601 11.9765 17.6601ZM14.1445 17.6719C14.4023 17.6719 14.5781 17.4843 14.5898 17.2031L14.9062 9.33983C14.9179 9.07028 14.7187 8.87108 14.4257 8.87108C14.1679 8.87108 13.9805 9.05858 13.9687 9.33983L13.6875 17.1914C13.6757 17.4726 13.8515 17.6719 14.1445 17.6719Z"
                                   class="fill-lightGrayBg dark:fill-white"/>
                         </svg>

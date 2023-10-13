@@ -8,9 +8,7 @@ function JCSmartFilter(ajaxURL, viewMode, params) {
     this.viewMode = viewMode;
     this.countCheckboxFilter = 0;
     this.sectionCode = null;
-    this.allFilterShowHideContent = '<div class="osh-circle d-inline-block"></div>' +
-        ' <div class="osh-circle d-inline-block"></div>' +
-        ' <div class="osh-circle d-inline-block"></div>';
+    this.allFilterShowHideContent = '. . .';
     if (params && params.SEF_SET_FILTER_URL) {
         this.sef = true;
     }
@@ -35,9 +33,9 @@ JCSmartFilter.prototype.click = function (checkbox) {
     } else {
         if ($(checkbox).hasClass('brends_checkbox')) {
             if ($('input.check_input.brends_checkbox:checked').length > 0) {
-                $('div.model_kalyana.smart-filter-parameters-box').removeClass('d-none');
+                $('div.model_kalyana.smart-filter-parameters-box').removeClass('hidden');
             } else {
-                $('div.model_kalyana.smart-filter-parameters-box').removeClass('d-none');
+                $('div.model_kalyana.smart-filter-parameters-box').removeClass('hidden');
             }
         }
         if (BX(checkbox).checked) {
@@ -129,22 +127,22 @@ JCSmartFilter.prototype.allFilterShowHide = function () {
 JCSmartFilter.prototype.updateHorizontalFilter = function () {
     const allFilter = $('#osh-filter-horizontal-item div'),
         stateFilter = $('#osh-filter-horizontal-item').data('osh-filter-state'),
-        filterRemoveAllOne = this.countCheckboxFilter == 0 ? 'd-none' : 'd-inline-block',
-        filterRemoveAllTwo = this.countCheckboxFilter == 0 ? 'd-inline-block' : 'd-none',
+        filterRemoveAllOne = this.countCheckboxFilter === 0 ? 'hidden' : 'flex',
+        filterRemoveAllTwo = this.countCheckboxFilter === 0 ? 'flex' : 'hidden',
         filterCount = this.countCheckboxFilter > 3 ? this.countCheckboxFilter - 3 : 0,
-        filterCountAddClass = this.countCheckboxFilter > 3 ? 'd-inline-block' : 'd-none',
-        filterCountRemoveClass = this.countCheckboxFilter > 3 ? 'd-none' : 'd-inline-block'
+        filterCountAddClass = this.countCheckboxFilter > 3 ? 'flex' : 'hidden',
+        filterCountRemoveClass = this.countCheckboxFilter > 3 ? 'hidden' : 'flex'
 
     if (stateFilter == 'show') {
         for (let i = 0; i < allFilter.length; i++) {
-            $(allFilter[i]).removeClass('d-none').addClass('d-inline-block')
+            $(allFilter[i]).removeClass('hidden').addClass('flex')
         }
     } else {
         for (let i = 0; i < allFilter.length; i++) {
             if (i > 2) {
-                $(allFilter[i]).removeClass('d-inline-block').addClass('d-none')
+                $(allFilter[i]).removeClass('flex').addClass('hidden')
             } else {
-                $(allFilter[i]).removeClass('d-none').addClass('d-inline-block')
+                $(allFilter[i]).removeClass('hidden').addClass('flex')
             }
         }
         $('#osh-filter-horizontal-item-count').html(
@@ -210,12 +208,12 @@ JCSmartFilter.prototype.addHorizontalFilter = function (checkbox) {
             props: {
                 id: idFilterItem,
                 className: `osh-filter-item border-lightGrayBg border flex flex-row items-center 
-				dark:border-textDarkLightGray px-3 py-2 text-center text-xs rounded-md mr-3 ${labelsPropClass[0]}`
+				dark:border-tagFilterGray px-4 py-2 text-center text-xs rounded-md mr-3 ${labelsPropClass[0]}`
             },
-            html: nameFilter + `<span class='d-inline-block osh-filter-horizontal-remove ml-3'>
-			<svg width="18" height="17" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M4.8313 9.59672L10.3154 4.0083" stroke="#3C3C3C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M4.8313 3.95166L10.3154 9.54008" stroke="#3C3C3C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            html: nameFilter + `<span class='d-inline-block osh-filter-horizontal-remove ml-1 cursor-pointer'
+            title="Удалить"><svg width="18" height="17" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M4.8313 9.59672L10.3154 4.0083"  class="stroke-dark dark:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M4.8313 3.95166L10.3154 9.54008" class="stroke-dark dark:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg></span>`
         }),
         mainBlock
@@ -284,28 +282,28 @@ JCSmartFilter.prototype.updateItem = function (PID, arItem, result) {
                         if (label) {
                             if (arItem['CODE'] == 'MODEL_KALYANA') {
                                 if (brend_checked == true) {
-                                    $(control).closest('.smart-filter-parameters-box').removeClass('d-none');
-                                    BX.removeClass(control.parentNode, 'd-none');
-                                    BX.removeClass(label, 'd-none');
+                                    $(control).closest('.smart-filter-parameters-box').removeClass('hidden');
+                                    BX.removeClass(control.parentNode, 'hidden');
+                                    BX.removeClass(label, 'hidden');
                                 } else {
-                                    $(control).closest('.smart-filter-parameters-box').addClass('d-none');
-                                    BX.addClass(control.parentNode, 'd-none');
-                                    BX.addClass(label, 'd-none');
+                                    $(control).closest('.smart-filter-parameters-box').addClass('hidden');
+                                    BX.addClass(control.parentNode, 'hidden');
+                                    BX.addClass(label, 'hidden');
                                 }
                             } else {
-                                $(control).closest('.smart-filter-parameters-box').removeClass('d-none');
-                                BX.removeClass(control.parentNode, 'd-none');
-                                BX.removeClass(label, 'd-none');
+                                $(control).closest('.smart-filter-parameters-box').removeClass('hidden');
+                                BX.removeClass(control.parentNode, 'hidden');
+                                BX.removeClass(label, 'hidden');
                             }
                         } else {
                             if (arItem['CODE'] == 'MODEL_KALYANA') {
                                 if (brend_checked == true) {
-                                    $(control).closest('.smart-filter-parameters-box').removeClass('d-none');
-                                    BX.removeClass(control.parentNode, 'd-none');
+                                    $(control).closest('.smart-filter-parameters-box').removeClass('hidden');
+                                    BX.removeClass(control.parentNode, 'hidden');
                                 }
                             } else {
-                                $(control).closest('.smart-filter-parameters-box').removeClass('d-none');
-                                BX.removeClass(control.parentNode, 'd-none');
+                                $(control).closest('.smart-filter-parameters-box').removeClass('hidden');
+                                BX.removeClass(control.parentNode, 'hidden');
                             }
                         }
                     }
