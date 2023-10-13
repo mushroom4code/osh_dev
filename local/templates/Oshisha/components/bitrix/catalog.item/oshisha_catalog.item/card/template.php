@@ -426,6 +426,24 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
                                 dark:bg-dark-red bg-light-red py-2 px-4 rounded-5">Подробнее</span>
                             </div>
+                        <?php } else if (!$item['ADD_TO_BASKET']) { ?>
+                            <div>
+                                <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup"
+                                      onclick="showHidePopupPrice(this)">Подробнее</span>
+                                <div class="text-black font-light hidden absolute p-5 shadow-lg popup-window-price
+                                bg-filterGray dark:text-textDarkLightGray text-xs dark:bg-grayButton rounded-lg w-72
+                                 z-20 left-0">
+                                    У вас нет активных контрагентов для совершения покупок на этом сайте!<br>
+                                    Вы можете
+                                    <a href="/personal/contragents/"
+                                       class="text-light-red dark:text-white font-semibold">Создать контрагента</a>
+                                    и обратиться к менеджеру <br>
+                                    или перейти на наш <a href="https://oshisha.net"
+                                                          class="text-light-red dark:text-white font-semibold">Розничный
+                                        сайт</a>
+                                </div>
+                            </div>
                         <?php } ?>
                     </div>
                     <div style="clear: both;"></div>
