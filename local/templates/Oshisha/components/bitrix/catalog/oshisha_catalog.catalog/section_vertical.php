@@ -361,7 +361,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                     <div id="osh-filter-horizontal-item" class="flex flex-row flex-wrap"
                          data-osh-filter-state="hide"></div>
                     <div id="osh-filter-horizontal-item-count" class="osh-filter-item mx-3 bg-filterGray
-                     hidden flex-row items-center px-4 py-2 font-medium text-center text-sm rounded-md dark:bg-darkBox"
+                     hidden flex-row items-center px-4 py-2 font-semibold text-center text-sm rounded-md dark:bg-darkBox"
                          onclick="smartFilter.allFilterShowHide()">
                     </div>
                     <div id="osh-filter-horizontal-item-remove" class="osh-filter-item hidden"
