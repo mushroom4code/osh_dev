@@ -313,7 +313,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                 <div class="box_with_title_like mb-3 d-flex align-items-center h-10">
                     <div class="box_with_text mb-3">
                         <a class="bx_catalog_item_title line-clamp-2 text-sm font-medium mb-2 text-textLight
-                        dark:font-normal dark:text-textDarkLightGray hover:text-hover-red
+                        dark:font-light dark:text-textDarkLightGray hover:text-hover-red
                         <?= $styleForNo . ' ' . $not_auth ?>"
                            href="<?= $item['DETAIL_PAGE_URL']; ?>"
                            data-href="<?= $href ?>"
@@ -423,9 +423,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                         if (!$USER->IsAuthorized() && !$show_price) { ?>
                             <div class="btn-plus <?= $not_auth ?>"
                                  data-href="<?= $href ?>">
-                                <span class="btn red_button_cart d-lg-block d-md-block d-none">Подробнее</span>
-                                <i class="fa fa-question d-lg-none d-md-none d-block red_button_cart font-16 p-4-8"
-                                   aria-hidden="true"></i>
+                                <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5">Подробнее</span>
                             </div>
                         <?php } ?>
                     </div>

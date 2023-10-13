@@ -71,13 +71,14 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                     endif; ?>
 
-                    <div class="<?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<?php else: ?><?php endif ?>  mb-4 smart-filter-parameters-box bx-active">
+                    <div class="<?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<?php else: ?><?php endif ?>  mb-5 smart-filter-parameters-box bx-active">
                         <span class="smart-filter-container-modef"></span>
 
                         <div class="smart-filter-parameters-box-title mb-2"
                              onclick="smartFilter.hideFilterProps(this)">
-                                <span class="smart-filter-parameters-box-title-text  text-sm font-medium text-dark
-                                dark:text-textDarkLightGray"><?= (int)$arItem['ID'] === B2B_PRICE ? 'Цена' : $arItem['NAME'] ?>
+                                <span class="smart-filter-parameters-box-title-text text-sm  text-dark
+                                dark:text-textDarkLightGray font-semibold dark:text-medium">
+                                    <?= (int)$arItem['ID'] === B2B_PRICE ? 'Цена' : $arItem['NAME'] ?>
                                 </span>
                                 <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
                                         <i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
@@ -169,8 +170,8 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                             onclick="smartFilter.click(this)"
                                     />
                                     <label data-role="label_in_stoсk"
-                                           class="smart-filter-checkbox-text text-sm font-medium text-dark
-                                           dark:text-textDarkLightGray hide_not_available"
+                                           class="smart-filter-checkbox-text text-sm font-semibold dark:text-medium
+                                            text-dark dark:text-textDarkLightGray hide_not_available"
                                            id="hide_not_available_label" for="<?php echo $ar["CONTROL_ID"] ?>">
                                         В наличии
                                     </label>
@@ -232,7 +233,8 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 </svg>
                             </span>
                             <span class="smart-filter-parameters-box-title-text
-                            text-sm font-medium text-dark  dark:text-textDarkLightGray"><?= $arItem["NAME"] ?></span>
+                            text-sm font-semibold dark:text-medium text-dark dark:text-textDarkLightGray">
+                                <?= $arItem["NAME"] ?></span>
                             <?php if ($arItem["FILTER_HINT"] <> ""): ?>
                                 <span class="smart-filter-hint">
 									<span class="smart-filter-hint-icon">?</span>

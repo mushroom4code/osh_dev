@@ -169,7 +169,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                              data-role="prop_angle"
                              data-code-vis="<?= $arSection['ID'] ?>">
                             <a href="javascript:void(0)"
-                               class="text-sm font-medium text-darkdark:text-textDarkLightGray"><?= $arSection['NAME'] ?>
+                               class="text-sm font-semibold dark:font-medium text-dark dark:text-textDarkLightGray"><?= $arSection['NAME'] ?>
                             </a>
                             <?php if ($arSection['CHILDS']): ?>
                                 <span data-role="prop_angle"
