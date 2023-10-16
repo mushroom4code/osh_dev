@@ -52,6 +52,7 @@ input[type='number'] {
 .inner {
     box-sizing: border-box;
     border-radius: 50%;
+    position: absolute;
 }
 
 .inner.three, .inner.two {
