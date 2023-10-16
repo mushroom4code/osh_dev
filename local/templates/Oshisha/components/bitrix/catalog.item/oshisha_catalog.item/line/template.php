@@ -117,7 +117,7 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
     }
 }
 ?>
-<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-4 h-full relative
+<div class="catalog-item-product dark:bg-darkBox border-t border-b dark:border-tagFilterGray border-gray-product p-3 h-full relative
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container product-item position-relative h-full">
@@ -126,7 +126,7 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
             <div class="box_with_title_like mr-3 w-5/12">
                 <div class="box_with_text">
                     <a class="bx_catalog_item_title text-sm font-medium mb-2 text-textLight
-                        dark:font-light dark:text-textDarkLightGray hover:text-hover-red
+                        dark:font-light dark:text-textDarkLightGray hover:text-hover-red dark:hover:text-white
                         <?= $styleForNo . ' ' . $not_auth ?>"
                        href="<?= $item['DETAIL_PAGE_URL']; ?>"
                        data-href="<?= $href ?>"
