@@ -98,7 +98,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     <?php $APPLICATION->ShowPanel(); ?>
 </div>
 <div>
-    <header class="bg-white dark:bg-dark sticky top-0 z-20">
+    <header class="bg-white dark:bg-dark sticky top-0 z-30">
         <?php if (CHECKED_INFO) {
             $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
             <div class="alert-info-setting">
@@ -432,6 +432,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     </header>
 
     <div class="section_wrapper min-h-550 flex flex-col justify-center items-center">
-        <div class="xl:container container md:mb-8 mb-0">
+        <div class="container md:mb-8 mb-0">
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
             <div class="bx-content <?= STATIC_P ?>">

@@ -214,7 +214,6 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 //Есть ли контрагент у пользователя или нет - зависит возможность покупки
 $userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID());
-
 ?>
 <div class="row<?= $themeClass ?> max-w-full">
     <div class="p-0 max-w-full flex flex-col justify-center items-end">
@@ -234,18 +233,9 @@ $userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID()
             <?php
         }
         //endregion
+        ?>
 
-        $col_orientation = $_COOKIE['orientation'] === 'line' ? 'by-line' : 'by-card';
-        $classPosition = '';
-        $classOpt = '';
-        if ($GLOBALS['UserTypeOpt'] === true) {
-            $classPosition = 'justify-content-between';
-            $classOpt = 'opt';
-        } else {
-            $classPosition = 'justify-content-end';
-        } ?>
-
-        <div class="mb-4 catalog-section max-w-full <?= $col_orientation . ' ' . $classOpt ?>"
+        <div class="mb-4 catalog-section max-w-full"
              data-entity="<?= $containerName ?>">
             <!-- items-container -->
             <?php if (!empty($arResult['ITEMS'])) {
@@ -298,7 +288,7 @@ $userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID()
                                     'RESULT' => array(
                                         'ITEM' => $item,
                                         'AREA_ID' => $areaIds[$item['ID']],
-                                        'TYPE' => 'card',
+                                        'TYPE' => !empty($_COOKIE['orientation']) ? $_COOKIE['orientation'] : 'card',
                                         'BIG_LABEL' => 'N',
                                         'BIG_DISCOUNT_PERCENT' => 'N',
                                         'BIG_BUTTONS' => 'Y',

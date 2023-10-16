@@ -165,7 +165,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
              flex flex-col mb-4">
                 <?php foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                     <div class="catalog-section-list-item-l">
-                        <div class="catalog-section-list-item-wrap smart-filter-tog flex flex-row justify-between"
+                        <div class="catalog-section-list-item-wrap smart-filter-tog flex flex-row cursor-pointer justify-between"
                              data-role="prop_angle"
                              data-code-vis="<?= $arSection['ID'] ?>">
                             <a href="javascript:void(0)"
@@ -315,7 +315,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                                aria-hidden="true"></i>
                                         </a>
                                         <div class="sort_orders_element js__sort_orders_element hidden absolute
-                                        bg-filterGray dark:bg-darkBox">
+                                        bg-filterGray dark:bg-darkBox z-20">
                                             <ul>
                                                 <li class="catalog_sort_item js__catalog-sort-item"
                                                     data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"
@@ -354,7 +354,23 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                 </div>
                             </div>
                         </div>
-                        <div>Переключатели-></div>
+                        <div class="flex flex-row">
+                            <a href="javascript:void(0)" class="ml-3" onclick="BX.setCookie('orientation','card'); window.location.reload()">
+                                <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="1" y="1" width="11.6418" height="11.6418" rx="1.5" stroke="#393939"/>
+                                    <rect x="1" y="15.3582" width="11.6418" height="11.6418" rx="1.5" stroke="#393939"/>
+                                    <rect x="15.3584" y="1" width="11.6418" height="11.6418" rx="1.5" stroke="#393939"/>
+                                    <rect x="15.3584" y="15.3582" width="11.6418" height="11.6418" rx="1.5" stroke="#393939"/>
+                                </svg>
+                            </a>
+                            <a href="javascript:void(0)" class="ml-2" onclick="BX.setCookie('orientation','line'); window.location.reload()">
+                                <svg width="30" height="30" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="26" height="6.84211" rx="1.5" fill="#393939"/>
+                                    <rect y="9.57898" width="26" height="6.84211" rx="1.5" fill="#393939"/>
+                                    <rect y="19.1578" width="26" height="6.84211" rx="1.5" fill="#393939"/>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="flex flex-row items-center">
