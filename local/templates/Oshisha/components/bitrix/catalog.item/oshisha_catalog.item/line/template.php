@@ -121,7 +121,7 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container product-item position-relative h-full">
-        <div class="item-product-info h-full flex flex-row justify-between">
+        <div class="item-product-info h-full flex flex-row justify-between items-center">
             <div class="w-1/12">код</div>
             <div class="box_with_title_like mr-3 w-5/12">
                 <div class="box_with_text">
@@ -139,7 +139,7 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
             <?php
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
-            <div class="bx_catalog_item_controls mr-2 ml-2 w-4/12 flex flex-row justify-between">
+            <div class="bx_catalog_item_controls mr-2 ml-2 w-4/12 flex flex-row items-center justify-between">
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
                     <div class="box_with_fav_bask flex flex-row justify-between items-center">
                         <?php
@@ -285,7 +285,7 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
             </div>
             <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                 <div class="bx_catalog_item_price w-1/12">
-                    <div class="box_with_titles flex flex-row text-xs text-textLight justify-between dark:text-textDarkLightGray">
+                    <div class="box_with_titles flex flex-row text-xs text-textLight items-center justify-between dark:text-textDarkLightGray">
                         <?php
                         $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                             'templates',
