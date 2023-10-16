@@ -123,7 +123,7 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
     <div class="bx_catalog_item_container product-item position-relative h-full">
         <div class="item-product-info h-full flex flex-row justify-between items-center">
             <div class="w-1/12">код</div>
-            <div class="box_with_title_like mr-3 w-5/12">
+            <div class="box_with_title_like mr-3 w-4/12">
                 <div class="box_with_text">
                     <a class="bx_catalog_item_title text-sm font-medium mb-2 text-textLight
                         dark:font-light dark:text-textDarkLightGray hover:text-hover-red dark:hover:text-white
@@ -135,7 +135,7 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
                     </a>
                 </div>
             </div>
-            <div class="w-1/12"><?= $item['PRODUCT']['QUANTITY']?></div>
+            <div class="w-2/12 text-center"><?= $item['PRODUCT']['QUANTITY']?></div>
             <?php
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>

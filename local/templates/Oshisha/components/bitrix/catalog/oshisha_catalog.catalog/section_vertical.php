@@ -161,10 +161,15 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
  */
 function setActiveColor(string $itemType = 'card'): string
 {
-   return  $_COOKIE['orientation'] === $itemType
-       ? 'fill-lightGrayBg dark:fill-gray-slider-arrow' :
+    $type = 'card';
+    if (!empty($_COOKIE['orientation'])) {
+        $type = $_COOKIE['orientation'];
+    }
+    return $type === $itemType
+        ? 'fill-lightGrayBg dark:fill-gray-slider-arrow' :
         'stroke-lightGrayBg dark:fill-darkBox';
 }
+
 ?>
 <div class="flex mb-4 box_with_prod md:flex-row flex-col mt-5 w-auto">
     <?php if ($isFilter) : ?>
@@ -357,7 +362,7 @@ function setActiveColor(string $itemType = 'card'): string
                                         </div>
                                     </div>
                                 </div>
-<!--                                TODO - убрать этот мусор на моб версии -->
+                                <!--                                TODO - убрать этот мусор на моб версии -->
                                 <div class="button_panel_wrap">
                                     <div class="sort_mobile"></div>
                                     <div class="icon_sort_bar xs-d-none" id="card_catalog"></div>
@@ -368,9 +373,9 @@ function setActiveColor(string $itemType = 'card'): string
                         <div class="flex flex-row">
                             <a href="javascript:void(0)"
                                onclick="BX.setCookie('orientation','card'); window.location.reload()"
-                             class="ml-3">
+                               class="ml-3">
                                 <svg width="32" height="32" viewBox="0 0 28 28" fill="none"
-                                     class="<?=setActiveColor('card')?>"
+                                     class="<?= setActiveColor('card') ?>"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <rect x="1" y="1" width="11.6418" height="11.6418" rx="1.5"/>
                                     <rect x="1" y="15.3582" width="11.6418" height="11.6418" rx="1.5"/>
@@ -382,7 +387,7 @@ function setActiveColor(string $itemType = 'card'): string
                                onclick="BX.setCookie('orientation','line'); window.location.reload()"
                                class="ml-2">
                                 <svg width="32" height="32" viewBox="0 0 28 28" fill="none"
-                                     class="<?=setActiveColor('line')?>"
+                                     class="<?= setActiveColor('line') ?>"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <rect x="1" y="1" width="26" height="6.84211" rx="1.5"/>
                                     <rect x="1" y="10.579" width="26" height="6.84211" rx="1.5"/>

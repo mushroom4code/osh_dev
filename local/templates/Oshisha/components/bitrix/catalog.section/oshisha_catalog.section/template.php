@@ -216,6 +216,7 @@ $isAjax = Context::getCurrent()->getRequest();
 $itemWidth = 'lg:w-72 md:w-1/3 w-1/2 h-96 pr-4 mb-8';
 $positionItem = 'flex flex-row flex-wrap justify-between';
 $type = 'card';
+$showLine = false;
 if ($isAjax->isAjaxRequest()) {
     if (!empty($_POST['orientation'])) {
         $type = $_POST['orientation'];
@@ -229,6 +230,7 @@ if ($isAjax->isAjaxRequest()) {
 if ($type === 'line') {
     $itemWidth = 'w-full';
     $positionItem = 'flex flex-col';
+    $showLine = true;
 } ?>
 <div class="row<?= $themeClass ?> max-w-full">
     <div class="p-0 max-w-full flex flex-col justify-center items-end">
@@ -273,6 +275,15 @@ if ($type === 'line') {
             $rowData['CLASS'] = '';
 
             ?>
+            <?php if ($showLine) { ?>
+                <div class="flex flex-row p-3">
+                    <div class="w-1/12">Код</div>
+                    <div class="w-4/12">Наименование</div>
+                    <div class="w-2/12 text-center">Склад</div>
+                    <div class="w-4/12">Цена + добавить</div>
+                    <div class="w-1/12">Прочее</div>
+                </div>
+            <?php } ?>
                 <div class="<?= $positionItem ?> products_box" data-entity="items-row">
                     <?php
                     foreach ($arResult['ITEMS'] as $item) {
