@@ -195,6 +195,8 @@
                     defaultData.AJAX_ID = this.ajaxId;
                 }
 
+                loaderForSite('appendLoader')
+
                 BX.ajax({
                     url: this.componentPath + '/ajax.php' + (document.location.href.indexOf('clear_cache=Y') !== -1 ? '?clear_cache=Y' : ''),
                     method: 'POST',
@@ -212,6 +214,8 @@
                                 this.showAction(result, data);
                             }, this)
                         );
+
+                        loaderForSite()
                     }, this)
                 });
             },

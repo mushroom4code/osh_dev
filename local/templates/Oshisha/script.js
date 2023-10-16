@@ -1777,15 +1777,14 @@ function loaderForSite(initParam, itemParent = false) {
                         'items-center',
                     style: 'background: rgba(60, 60, 60, 0.81); z-index:1000'
                 },
-                html: '<div class="loader" style="width: 107px;height: 107px;">' +
-                    '<div class="inner one" style="border-bottom: 4px solid #ffffff"></div>' +
-                    '<div class="inner two" style="border-bottom: 4px solid #ffffff"></div>' +
-                    '<div class="inner three" style="border-bottom: 4px solid #ffffff"></div>' +
+                html: '<div class="loader absolute rounded-full" style="width: 107px;height: 107px;">' +
+                    '<div class="inner one h-full w-full absolute" style="border-bottom: 4px solid #ffffff"></div>' +
+                    '<div class="inner two h-full w-full absolute" style="border-bottom: 4px solid #ffffff"></div>' +
+                    '<div class="inner three h-full w-full absolute" style="border-bottom: 4px solid #ffffff"></div>' +
                     '</div>'
             }));
         }
     } else {
-        console.log(body.querySelector('.remove-class'))
-        // body.querySelector('.remove-class').remove();
+        body.querySelector('.remove-class').remove();
     }
 }

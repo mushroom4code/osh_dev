@@ -20,6 +20,8 @@ input:focus, button:focus, [type='text']:focus, [type="password"]:focus, [type="
     background-color: transparent;
 }
 
+/* SCROLL */
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -39,20 +41,18 @@ input[type='number'] {
     background-color: #464646;
 }
 
+/* LOADER */
+
 .loader {
-    position: absolute;
     top: calc(50% - 8px);
     left: calc(50% - 8px);
     width: 17px;
     height: 17px;
-    border-radius: 100%;
     perspective: 800px;
 }
 
 .inner {
-    box-sizing: border-box;
     border-radius: 50%;
-    position: absolute;
 }
 
 .inner.three, .inner.two {
