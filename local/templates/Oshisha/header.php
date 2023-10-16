@@ -97,7 +97,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
 <div id="panel">
     <?php $APPLICATION->ShowPanel(); ?>
 </div>
-<div class="remove-class"></div>
 <div>
     <header class="bg-white dark:bg-dark sticky top-0 z-20">
         <?php if (CHECKED_INFO) {

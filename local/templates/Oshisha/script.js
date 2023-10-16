@@ -20,6 +20,7 @@ function tasteInit() {
         );
     });
 }
+
 $(document).ready(function () {
     let div = $('div'),
         body = $('body'),
@@ -148,8 +149,9 @@ $(document).ready(function () {
             altField: inputPicker,
         });
     }
-    function setPriceGenerate(elem,value){
-        if($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0){
+
+    function setPriceGenerate(elem, value) {
+        if ($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0) {
             $('.ganerate_price').text(getPriceForProduct(elem) * value + ' ₽');
         }
     }
@@ -169,11 +171,11 @@ $(document).ready(function () {
                 priceBox = cardWrapper.find('.info-prices-box-hover');
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
-                tasteOverlay.css({height:'100%'});
-                priceBox.css({zIndex:'791'});
+                tasteOverlay.css({height: '100%'});
+                priceBox.css({zIndex: '791'});
             } else {
-                tasteOverlay.css({height:'0'});
-                priceBox.css({zIndex:'791'});
+                tasteOverlay.css({height: '0'});
+                priceBox.css({zIndex: '791'});
             }
         })
         tasteInit();
@@ -268,7 +270,7 @@ $(document).ready(function () {
         if (value > 0) {
             $('.ganerate_price_wrap').show();
         }
-        setPriceGenerate(this,value)
+        setPriceGenerate(this, value)
     }
 
     $(document).on('keypress', '.card_element', function (e) {
@@ -349,7 +351,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal);
+                    setPriceGenerate(this, beforeVal);
 
                     product_data = {
                         'ID': product_id,
@@ -366,7 +368,7 @@ $(document).ready(function () {
                     } else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,max_QUANTITY);
+                    setPriceGenerate(this, max_QUANTITY);
 
                     product_data = {
                         'ID': product_id,
@@ -390,7 +392,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal)
+                    setPriceGenerate(this, beforeVal)
 
                     product_data = {
                         'ID': product_id,
@@ -447,8 +449,8 @@ $(document).ready(function () {
 
             // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
             let basketItem = $(boxInput).val();
-            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="'+product_id+'"]');
-            let parseUpdate= [], boxUpdate;
+            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="' + product_id + '"]');
+            let parseUpdate = [], boxUpdate;
             let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
 
             if (!boxUpdateAfterAppend.hasClass('catalog-fast-window')) {
@@ -596,7 +598,7 @@ $(document).ready(function () {
             var popup_mess = $(this).closest('div#popup_mess');
             var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
             var product_name = $(this).closest('div.item-product-info').find('a.bx_catalog_item_title').text().trim();
-            if ($(this).closest('div#popup_mess').hasClass('subscribed')){
+            if ($(this).closest('div#popup_mess').hasClass('subscribed')) {
                 var subscribe = "N";
                 var subscription_id = popup_mess.attr('data-subscription_id');
             } else {
@@ -606,16 +608,21 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/local/templates/Oshisha/components/bitrix/catalog.product.subscribe/oshisha_catalog.product.subscribe/ajax.php',
-                data: {subscribe: subscribe, item_id: product_id, product_name: product_name, subscription_id: subscription_id},
+                data: {
+                    subscribe: subscribe,
+                    item_id: product_id,
+                    product_name: product_name,
+                    subscription_id: subscription_id
+                },
                 success: function (result_jsn) {
                     var result = JSON.parse(result_jsn);
-                    if(result.success === true){
+                    if (result.success === true) {
                         var item_controls = popup_mess.parent();
-                        if(result.clickDbError != 'false') {
+                        if (result.clickDbError != 'false') {
                             console.log('error while updating productsSubscriptionsTable');
                             console.log(result.clickDbError);
                         }
-                        if(result.message === "subscribed") {
+                        if (result.message === "subscribed") {
                             popup_mess.addClass('subscribed');
                             popup_mess.attr('data-subscription_id', result.subscribeId);
                             item_controls.find('.detail_popup').addClass('subscribed');
@@ -1115,7 +1122,7 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
                 '<a href="#" id="no_mess" class="d-flex basket-empty link_message_box_product ' +
@@ -1127,10 +1134,10 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
-                '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="no_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Нет</a></div>';
         }
@@ -1627,20 +1634,20 @@ jQuery(function () {
 $(document).ready(function () {
     $(document).on('click', '.close_header_box', function () {
         $('.overlay').hide();
-        if(!$('.overlay-box').hasClass('hidden')){
+        if (!$('.overlay-box').hasClass('hidden')) {
             $('.overlay-box').toggle('hidden')
         }
     });
 
-    $(document).on('click', '.js__taste ', function() {
+    $(document).on('click', '.js__taste ', function () {
         let tasteCheckId = $(this).attr('data-filter-get'),
-            taste =  $(this).closest('.js__tastes');
+            taste = $(this).closest('.js__tastes');
         // Сбрасываем повторную фильтрацию по уже выбранному вкусу
 
         if (BX(tasteCheckId).checked) {
             $(taste).append('<span class="taste-errors">Вкус уже выбран</span>');
             setTimeout(BX.delegate(
-                    function() {
+                    function () {
                         $(taste).find('.taste-errors').fadeOut(
                             'slow',
                             function () {
@@ -1652,15 +1659,15 @@ $(document).ready(function () {
             return;
         }
 
-        $('#'+tasteCheckId).prop('checked', true);
+        $('#' + tasteCheckId).prop('checked', true);
         window.smartFilter.addHorizontalFilter(BX(tasteCheckId));
-        window.smartFilter.timer = setTimeout(BX.delegate(function(){
+        window.smartFilter.timer = setTimeout(BX.delegate(function () {
             this.reload(BX(tasteCheckId));
         }, window.smartFilter), 500);
     })
 });
 
-$(document).on('click', '.js__close-count-alert', function() {
+$(document).on('click', '.js__close-count-alert', function () {
     $(this).parents('.alert_quantity').html('').removeClass('show_block');
 })
 
@@ -1672,7 +1679,7 @@ $(document).on('click', '.js__close-count-alert', function() {
  * @param propCodePriority
  * @returns {*[]}
  */
-function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = ''){
+function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority = '') {
     const selectedPropData = {};
     const productsSuccess = [];
 
@@ -1745,6 +1752,7 @@ function ToggleThemeLocalStorages() {
         document.documentElement.classList.remove('dark')
     }
 }
+
 function toggleTheme(item) {
     item.classList.toggle('bg-indigo-600');
     item.classList.toggle('bg-gray-200');
@@ -1762,17 +1770,22 @@ function toggleTheme(item) {
 function loaderForSite(initParam, itemParent = false) {
     const body = itemParent !== false ? itemParent : document.querySelector('body');
     if (initParam === 'appendLoader') {
-        body.querySelector('div.remove-class')
-        if (body.querySelector('div.remove-class').length === 0) {
-            body.append('<div class="position-fixed width-100 height-100 top-0 left-0 remove-class d-flex justify-content-center ' +
-                'align-items-center" style="background: rgba(60, 60, 60, 0.81); z-index:1000">' +
-                '<div class="loader" style="width: 107px;height: 107px;">' +
-                '<div class="inner one" style="border-bottom: 4px solid #ffffff"></div>' +
-                '<div class="inner two" style="border-bottom: 4px solid #ffffff"></div>' +
-                '<div class="inner three" style="border-bottom: 4px solid #ffffff"></div>' +
-                '</div></div>');
+        if (body.querySelector('div.remove-class')?.length === 0 || body.querySelector('div.remove-class') === null) {
+            body.appendChild(BX.create('DIV', {
+                props: {
+                    className: 'fixed w-screen h-screen z-50 top-0 left-0 remove-class flex justify-center ' +
+                        'items-center',
+                    style: 'background: rgba(60, 60, 60, 0.81); z-index:1000'
+                },
+                html: '<div class="loader" style="width: 107px;height: 107px;">' +
+                    '<div class="inner one" style="border-bottom: 4px solid #ffffff"></div>' +
+                    '<div class="inner two" style="border-bottom: 4px solid #ffffff"></div>' +
+                    '<div class="inner three" style="border-bottom: 4px solid #ffffff"></div>' +
+                    '</div>'
+            }));
         }
     } else {
-        body.querySelector('.remove-class').remove();
+        console.log(body.querySelector('.remove-class'))
+        // body.querySelector('.remove-class').remove();
     }
 }

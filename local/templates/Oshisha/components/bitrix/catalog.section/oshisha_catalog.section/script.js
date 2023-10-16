@@ -262,7 +262,7 @@
                                 this.showAction(result, data);
                             }, this)
                         );
-                        loaderForSite('remove')
+                        loaderForSite()
                         this.processPagination(result.pagination);
                     }, this)
                 });

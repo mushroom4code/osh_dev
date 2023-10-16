@@ -38,3 +38,71 @@ input[type='number'] {
 ::-webkit-scrollbar-thumb {
     background-color: #464646;
 }
+
+.loader {
+    position: absolute;
+    top: calc(50% - 8px);
+    left: calc(50% - 8px);
+    width: 17px;
+    height: 17px;
+    border-radius: 100%;
+    perspective: 800px;
+}
+
+.inner {
+    box-sizing: border-box;
+    border-radius: 50%;
+}
+
+.inner.three, .inner.two {
+    right: 0;
+}
+
+.inner.three, .inner.two, .inner.one {
+    border-bottom: 2px solid #ffffff;
+}
+
+.inner.one, .inner.two {
+    top: 0;
+}
+
+.inner.one {
+    left: 0;
+    animation: rotate-one 1s linear infinite;
+}
+
+.inner.two {
+    animation: rotate-two 1.3s linear infinite;
+}
+
+.inner.three {
+    bottom: 0;
+    animation: rotate-three 1.5s linear infinite;
+}
+
+@keyframes rotate-one {
+    0% {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+    }
+    100% {
+        transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+    }
+}
+
+@keyframes rotate-two {
+    0% {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+    }
+    100% {
+        transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+    }
+}
+
+@keyframes rotate-three {
+    0% {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+    }
+    100% {
+        transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+    }
+}
