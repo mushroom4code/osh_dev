@@ -116,32 +116,24 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
         $prop_see_in_window[] = $props_val;
     }
 }
-
-if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
-    <span class="taste bg-greenLight dark:bg-greenButton text-white absolute -left-4 -top-3 py-2.5 px-1 rounded-full
-     text-xs z-10 font-medium">NEW</span>
-<?php }
-if ($hitProduct['VALUE'] === 'Да') { ?>
-    <span class="taste bg-yellowSt text-black absolute font-semibold -left-4 -top-3 py-2.5 px-1.5 rounded-full
-    text-xs z-10">ХИТ</span>
-<?php } ?>
+?>
 <div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-4 h-full relative
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container product-item position-relative h-full">
         <div class="item-product-info h-full flex flex-row justify-between">
-                <div class="box_with_title_like mr-3">
-                    <div class="box_with_text">
-                        <a class="bx_catalog_item_title text-sm font-medium mb-2 text-textLight
+            <div class="box_with_title_like mr-3">
+                <div class="box_with_text">
+                    <a class="bx_catalog_item_title text-sm font-medium mb-2 text-textLight
                         dark:font-light dark:text-textDarkLightGray hover:text-hover-red
                         <?= $styleForNo . ' ' . $not_auth ?>"
-                           href="<?= $item['DETAIL_PAGE_URL']; ?>"
-                           data-href="<?= $href ?>"
-                           title="<?= $productTitle; ?>">
-                            <?= $productTitle; ?>
-                        </a>
-                    </div>
+                       href="<?= $item['DETAIL_PAGE_URL']; ?>"
+                       data-href="<?= $href ?>"
+                       title="<?= $productTitle; ?>">
+                        <?= $productTitle; ?>
+                    </a>
                 </div>
+            </div>
             <?php
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
@@ -237,7 +229,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                         </div>
                                     <?php } ?>
                                 </div>
-                            <? endif; ?>
+                            <?php endif; ?>
                         <?php }
                         if (!$USER->IsAuthorized() && !$show_price) { ?>
                             <div class="btn-plus <?= $not_auth ?>"
@@ -298,6 +290,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                 'F_USER_ID' => $item['F_USER_ID'],
                                 'LOOK_LIKE' => false,
                                 'LOOK_FAVORITE' => true,
+                                'HIDE_LIKE_COUNT' => true,
                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
@@ -314,6 +307,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                 'F_USER_ID' => $item['F_USER_ID'],
                                 'LOOK_LIKE' => true,
                                 'LOOK_FAVORITE' => false,
+                                'HIDE_LIKE_COUNT' => true,
                                 'COUNT_LIKE' => $item['COUNT_LIKE'],
                                 'COUNT_FAV' => $item['COUNT_FAV'],
                                 'COUNT_LIKES' => $item['COUNT_LIKES'],
@@ -337,6 +331,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                             'F_USER_ID' => $item['F_USER_ID'],
                             'LOOK_LIKE' => false,
                             'LOOK_FAVORITE' => true,
+                            'HIDE_LIKE_COUNT' => true,
                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                             'COUNT_FAV' => $item['COUNT_FAV'],
                             'COUNT_LIKES' => $item['COUNT_LIKES'],
@@ -352,6 +347,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                             'F_USER_ID' => $item['F_USER_ID'],
                             'LOOK_LIKE' => true,
                             'LOOK_FAVORITE' => false,
+                            'HIDE_LIKE_COUNT' => true,
                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                             'COUNT_FAV' => $item['COUNT_FAV'],
                             'COUNT_LIKES' => $item['COUNT_LIKES'],
