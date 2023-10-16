@@ -1,12 +1,10 @@
 <?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
-use Bitrix\Catalog\PriceTable;
+use Bitrix\Main\Context;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Security\Sign\Signer;
 use Bitrix\Sale\Fuser;
-use Bitrix\Catalog;
-use DataBase_like;
 use Enterego\contagents\EnteregoContragents;
 
 
@@ -213,23 +211,27 @@ if (!empty($resQuery)) {
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 //Есть ли контрагент у пользователя или нет - зависит возможность покупки
-$userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID());
-// ORIENTATION TODO - проверить на альтернативные способы решение дабы убрать проверку поста
+$userViewPrice = EnteregoContragents::getActiveContragentForUser($USER->GetID());
+$isAjax = Context::getCurrent()->getRequest();
 $itemWidth = 'lg:w-72 md:w-1/3 w-1/2 h-96 pr-4 mb-8';
 $positionItem = 'flex flex-row flex-wrap justify-between';
 $type = 'card';
-if (!empty($_POST['orientation'])) {
-    $_COOKIE['orientation'] = $_POST['orientation'];
+if ($isAjax->isAjaxRequest()) {
+    if (!empty($_POST['orientation'])) {
+        $type = $_POST['orientation'];
+    }
+} else {
+    if (!empty($_COOKIE['orientation']) && $_COOKIE['orientation'] === 'line') {
+        $type = 'line';
+    }
 }
 
-if (!empty($_COOKIE['orientation']) && $_COOKIE['orientation'] === 'line') {
+if ($type === 'line') {
     $itemWidth = 'w-full';
-    $type = 'line';
     $positionItem = 'flex flex-col';
 } ?>
 <div class="row<?= $themeClass ?> max-w-full">
     <div class="p-0 max-w-full flex flex-col justify-center items-end">
-
         <?php //region Pagination
         if ($showTopPager) { ?>
             <div class="row mb-4">
@@ -270,8 +272,8 @@ if (!empty($_COOKIE['orientation']) && $_COOKIE['orientation'] === 'line') {
             }
             $rowData['CLASS'] = '';
 
-           ?>
-                <div class="<?=$positionItem?> products_box" data-entity="items-row">
+            ?>
+                <div class="<?= $positionItem ?> products_box" data-entity="items-row">
                     <?php
                     foreach ($arResult['ITEMS'] as $item) {
                         foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
@@ -286,7 +288,7 @@ if (!empty($_COOKIE['orientation']) && $_COOKIE['orientation'] === 'line') {
                             }
                         }
                         ?>
-                        <div class="product-item-small-card <?=$itemWidth?>">
+                        <div class="product-item-small-card <?= $itemWidth ?>">
                             <?php $APPLICATION->IncludeComponent(
                                 'bitrix:catalog.item',
                                 'oshisha_catalog.item',
