@@ -36,11 +36,9 @@ $this->addExternalJs($templateFolder . "/js/script.js");
                       <?php } else { ?> stroke-black dark:stroke-white <?php } ?>"
                       stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <?php if (empty($arParams['HIDE_LIKE_COUNT'])) { ?>
-                <article class="like_span mt-1" id="likes">
+                <article class="like_span mt-1 <?= empty($arParams['HIDE_LIKE_COUNT']) ? "" : "hidden" ?>" id="likes">
                     <?= !empty($arParams['COUNT_LIKES']) ? $arParams['COUNT_LIKES'] : '0'; ?>
                 </article>
-            <?php } ?>
         </a>
     <?php }
     if ($arParams['LOOK_FAVORITE'] === true) {
