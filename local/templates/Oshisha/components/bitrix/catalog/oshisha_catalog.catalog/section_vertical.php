@@ -155,6 +155,17 @@ if ($_GET['page'] != '') {
 }
 $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
 
+//ORIENTATION
+/**
+ * @param string $itemType
+ * @return string
+ */
+function setActiveColor(string $itemType = 'card'): string
+{
+   return  $_COOKIE['orientation'] === $itemType
+       ? 'fill-lightGrayBg dark:fill-gray-slider-arrow' :
+        'stroke-lightGrayBg dark:fill-darkBox';
+}
 ?>
 <div class="flex mb-4 box_with_prod md:flex-row flex-col mt-5 w-auto">
     <?php if ($isFilter) : ?>
@@ -281,7 +292,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-5"></p>
         <div id="osh-filter-horizontal2"></div>
         <div class="osh-block-panel <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
-            <div id="osh-filter-horizontal" class="flex flex-col mb-10 mt-5">
+            <div id="osh-filter-horizontal" class="flex flex-col mb-5 mt-5">
                 <div class="flex flex-row justify-between items-center mb-6">
                     <div class="col_navigation mr-4">
                         <div class="count-per-page flex flex-row items-center">
@@ -347,6 +358,7 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                         </div>
                                     </div>
                                 </div>
+<!--                                TODO - убрать этот мусор на моб версии -->
                                 <div class="button_panel_wrap">
                                     <div class="sort_mobile"></div>
                                     <div class="icon_sort_bar xs-d-none" id="card_catalog"></div>
@@ -355,19 +367,27 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                             </div>
                         </div>
                         <div class="flex flex-row">
-                            <a href="javascript:void(0)" class="ml-3" onclick="BX.setCookie('orientation','card'); window.location.reload()">
-                                <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="1" y="1" width="11.6418" height="11.6418" rx="1.5" stroke="#393939"/>
-                                    <rect x="1" y="15.3582" width="11.6418" height="11.6418" rx="1.5" stroke="#393939"/>
-                                    <rect x="15.3584" y="1" width="11.6418" height="11.6418" rx="1.5" stroke="#393939"/>
-                                    <rect x="15.3584" y="15.3582" width="11.6418" height="11.6418" rx="1.5" stroke="#393939"/>
+                            <a href="javascript:void(0)"
+                               onclick="BX.setCookie('orientation','card'); window.location.reload()"
+                             class="ml-3">
+                                <svg width="32" height="32" viewBox="0 0 28 28" fill="none"
+                                     class="<?=setActiveColor('card')?>"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="1" y="1" width="11.6418" height="11.6418" rx="1.5"/>
+                                    <rect x="1" y="15.3582" width="11.6418" height="11.6418" rx="1.5"/>
+                                    <rect x="15.3584" y="1" width="11.6418" height="11.6418" rx="1.5"/>
+                                    <rect x="15.3584" y="15.3582" width="11.6418" height="11.6418" rx="1.5"/>
                                 </svg>
                             </a>
-                            <a href="javascript:void(0)" class="ml-2" onclick="BX.setCookie('orientation','line'); window.location.reload()">
-                                <svg width="30" height="30" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="26" height="6.84211" rx="1.5" fill="#393939"/>
-                                    <rect y="9.57898" width="26" height="6.84211" rx="1.5" fill="#393939"/>
-                                    <rect y="19.1578" width="26" height="6.84211" rx="1.5" fill="#393939"/>
+                            <a href="javascript:void(0)"
+                               onclick="BX.setCookie('orientation','line'); window.location.reload()"
+                               class="ml-2">
+                                <svg width="32" height="32" viewBox="0 0 28 28" fill="none"
+                                     class="<?=setActiveColor('line')?>"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="1" y="1" width="26" height="6.84211" rx="1.5"/>
+                                    <rect x="1" y="10.579" width="26" height="6.84211" rx="1.5"/>
+                                    <rect x="1" y="20.1578" width="26" height="6.84211" rx="1.5"/>
                                 </svg>
                             </a>
                         </div>

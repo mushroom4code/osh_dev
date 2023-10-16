@@ -214,6 +214,14 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 //Есть ли контрагент у пользователя или нет - зависит возможность покупки
 $userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID());
+
+
+$itemWidth = 'lg:w-72 md:w-1/3 w-1/2 h-96 pr-4 mb-8';
+$positionItem = 'flex flex-row flex-wrap justify-between';
+if (!empty($_COOKIE['orientation']) && $_COOKIE['orientation'] === 'line') {
+    $itemWidth = 'w-full';
+    $positionItem = 'flex flex-col';
+}
 ?>
 <div class="row<?= $themeClass ?> max-w-full">
     <div class="p-0 max-w-full flex flex-col justify-center items-end">
@@ -235,7 +243,7 @@ $userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID()
         //endregion
         ?>
 
-        <div class="mb-4 catalog-section max-w-full"
+        <div class="mb-4 catalog-section max-w-full w-full"
              data-entity="<?= $containerName ?>">
             <!-- items-container -->
             <?php if (!empty($arResult['ITEMS'])) {
@@ -260,12 +268,9 @@ $userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID()
             $this->AddDeleteAction($uniqueId, $elem['DELETE_LINK'], $elementDelete, $elementDeleteParams);
             }
             $rowData['CLASS'] = '';
-            if ($_COOKIE['items'] === 'line') {
-                $cols = 'col-md-12 col-lg-12';
-            } else {
-                $cols = 'col-md-5 col-lg-3';
-            } ?>
-                <div class="flex flex-row flex-wrap justify-between products_box" data-entity="items-row">
+
+           ?>
+                <div class="<?=$positionItem?> products_box" data-entity="items-row">
                     <?php
                     foreach ($arResult['ITEMS'] as $item) {
                         foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
@@ -280,7 +285,7 @@ $userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID()
                             }
                         }
                         ?>
-                        <div class="product-item-small-card lg:w-72 md:w-1/3 w-1/2 h-96 pr-4 mb-8">
+                        <div class="product-item-small-card <?=$itemWidth?>">
                             <?php $APPLICATION->IncludeComponent(
                                 'bitrix:catalog.item',
                                 'oshisha_catalog.item',

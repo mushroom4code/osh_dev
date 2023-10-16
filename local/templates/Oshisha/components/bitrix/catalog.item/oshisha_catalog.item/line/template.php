@@ -130,84 +130,9 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container product-item position-relative h-full">
         <div class="item-product-info h-full flex flex-row justify-between">
-            <div>
-                <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
-                    <div class="bx_catalog_item_price mt-2 mb-2">
-                        <div class="box_with_titles flex flex-row text-xs text-textLight justify-between dark:text-textDarkLightGray">
-                            <?php
-                            $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                                'templates',
-                                [
-                                    'ID_PROD' => $item['ID_PROD'],
-                                    'F_USER_ID' => $item['F_USER_ID'],
-                                    'LOOK_LIKE' => false,
-                                    'LOOK_FAVORITE' => true,
-                                    'COUNT_LIKE' => $item['COUNT_LIKE'],
-                                    'COUNT_FAV' => $item['COUNT_FAV'],
-                                    'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                ],
-                                $component,
-                                [
-                                    'HIDE_ICONS' => 'Y'
-                                ]
-                            );
-                            $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                                'templates',
-                                array(
-                                    'ID_PROD' => $item['ID_PROD'],
-                                    'F_USER_ID' => $item['F_USER_ID'],
-                                    'LOOK_LIKE' => true,
-                                    'LOOK_FAVORITE' => false,
-                                    'COUNT_LIKE' => $item['COUNT_LIKE'],
-                                    'COUNT_FAV' => $item['COUNT_FAV'],
-                                    'COUNT_LIKES' => $item['COUNT_LIKES'],
-                                ),
-                                $component,
-                                array('HIDE_ICONS' => 'Y'),
-                            );
-                            ?>
-                        </div>
-                    </div>
-                <?php } else { ?>
-                    <div class="box_with_titles flex flex-row text-xs text-textLight dark:text-textDarkLightGray">
-                        <div class="not_product">
-                            Товара нет в наличии
-                        </div>
-                        <?php
-                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                            'templates',
-                            array(
-                                'ID_PROD' => $item['ID_PROD'],
-                                'F_USER_ID' => $item['F_USER_ID'],
-                                'LOOK_LIKE' => false,
-                                'LOOK_FAVORITE' => true,
-                                'COUNT_LIKE' => $item['COUNT_LIKE'],
-                                'COUNT_FAV' => $item['COUNT_FAV'],
-                                'COUNT_LIKES' => $item['COUNT_LIKES'],
-                            )
-                            ,
-                            $component,
-                            array('HIDE_ICONS' => 'Y')
-                        );
-                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                            'templates',
-                            array(
-                                'ID' => $item['ID_PROD'],
-                                'F_USER_ID' => $item['F_USER_ID'],
-                                'LOOK_LIKE' => true,
-                                'LOOK_FAVORITE' => false,
-                                'COUNT_LIKE' => $item['COUNT_LIKE'],
-                                'COUNT_FAV' => $item['COUNT_FAV'],
-                                'COUNT_LIKES' => $item['COUNT_LIKES'],
-                            ),
-                            $component,
-                            array('HIDE_ICONS' => 'Y')
-                        ); ?>
-                    </div>
-                <?php } ?>
-                <div class="box_with_title_like mb-3 d-flex align-items-center h-10">
-                    <div class="box_with_text mb-3">
-                        <a class="bx_catalog_item_title line-clamp-2 text-sm font-medium mb-2 text-textLight
+                <div class="box_with_title_like mr-3">
+                    <div class="box_with_text">
+                        <a class="bx_catalog_item_title text-sm font-medium mb-2 text-textLight
                         dark:font-light dark:text-textDarkLightGray hover:text-hover-red
                         <?= $styleForNo . ' ' . $not_auth ?>"
                            href="<?= $item['DETAIL_PAGE_URL']; ?>"
@@ -217,7 +142,6 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                         </a>
                     </div>
                 </div>
-            </div>
             <?php
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
@@ -363,6 +287,80 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                     </div>
                 <?php } ?>
             </div>
+            <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
+                <div class="bx_catalog_item_price mt-2 mb-2">
+                    <div class="box_with_titles flex flex-row text-xs text-textLight justify-between dark:text-textDarkLightGray">
+                        <?php
+                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                            'templates',
+                            [
+                                'ID_PROD' => $item['ID_PROD'],
+                                'F_USER_ID' => $item['F_USER_ID'],
+                                'LOOK_LIKE' => false,
+                                'LOOK_FAVORITE' => true,
+                                'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                'COUNT_FAV' => $item['COUNT_FAV'],
+                                'COUNT_LIKES' => $item['COUNT_LIKES'],
+                            ],
+                            $component,
+                            [
+                                'HIDE_ICONS' => 'Y'
+                            ]
+                        );
+                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                            'templates',
+                            array(
+                                'ID_PROD' => $item['ID_PROD'],
+                                'F_USER_ID' => $item['F_USER_ID'],
+                                'LOOK_LIKE' => true,
+                                'LOOK_FAVORITE' => false,
+                                'COUNT_LIKE' => $item['COUNT_LIKE'],
+                                'COUNT_FAV' => $item['COUNT_FAV'],
+                                'COUNT_LIKES' => $item['COUNT_LIKES'],
+                            ),
+                            $component,
+                            array('HIDE_ICONS' => 'Y'),
+                        );
+                        ?>
+                    </div>
+                </div>
+            <?php } else { ?>
+                <div class="box_with_titles flex flex-row text-xs text-textLight dark:text-textDarkLightGray">
+                    <div class="not_product">
+                        Товара нет в наличии
+                    </div>
+                    <?php
+                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                        'templates',
+                        array(
+                            'ID_PROD' => $item['ID_PROD'],
+                            'F_USER_ID' => $item['F_USER_ID'],
+                            'LOOK_LIKE' => false,
+                            'LOOK_FAVORITE' => true,
+                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                            'COUNT_FAV' => $item['COUNT_FAV'],
+                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                        )
+                        ,
+                        $component,
+                        array('HIDE_ICONS' => 'Y')
+                    );
+                    $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                        'templates',
+                        array(
+                            'ID' => $item['ID_PROD'],
+                            'F_USER_ID' => $item['F_USER_ID'],
+                            'LOOK_LIKE' => true,
+                            'LOOK_FAVORITE' => false,
+                            'COUNT_LIKE' => $item['COUNT_LIKE'],
+                            'COUNT_FAV' => $item['COUNT_FAV'],
+                            'COUNT_LIKES' => $item['COUNT_LIKES'],
+                        ),
+                        $component,
+                        array('HIDE_ICONS' => 'Y')
+                    ); ?>
+                </div>
+            <?php } ?>
         </div>
         <?php
         $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
