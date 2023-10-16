@@ -214,23 +214,24 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
 //Есть ли контрагент у пользователя или нет - зависит возможность покупки
 $userViewPrice =  EnteregoContragents::getActiveContragentForUser($USER->GetID());
-
-
+// ORIENTATION TODO - проверить на альтернативные способы решение дабы убрать проверку поста
 $itemWidth = 'lg:w-72 md:w-1/3 w-1/2 h-96 pr-4 mb-8';
 $positionItem = 'flex flex-row flex-wrap justify-between';
+$type = 'card';
+if (!empty($_POST['orientation'])) {
+    $_COOKIE['orientation'] = $_POST['orientation'];
+}
+
 if (!empty($_COOKIE['orientation']) && $_COOKIE['orientation'] === 'line') {
     $itemWidth = 'w-full';
+    $type = 'line';
     $positionItem = 'flex flex-col';
-}
-?>
+} ?>
 <div class="row<?= $themeClass ?> max-w-full">
     <div class="p-0 max-w-full flex flex-col justify-center items-end">
 
-        <?php
-
-        //region Pagination
-        if ($showTopPager) {
-            ?>
+        <?php //region Pagination
+        if ($showTopPager) { ?>
             <div class="row mb-4">
                 <div class="col text-center" data-pagination-num="<?= $navParams['NavNum'] ?>">
                     <!-- pagination-container -->
@@ -293,7 +294,7 @@ if (!empty($_COOKIE['orientation']) && $_COOKIE['orientation'] === 'line') {
                                     'RESULT' => array(
                                         'ITEM' => $item,
                                         'AREA_ID' => $areaIds[$item['ID']],
-                                        'TYPE' => !empty($_COOKIE['orientation']) ? $_COOKIE['orientation'] : 'card',
+                                        'TYPE' => $type,
                                         'BIG_LABEL' => 'N',
                                         'BIG_DISCOUNT_PERCENT' => 'N',
                                         'BIG_BUTTONS' => 'Y',

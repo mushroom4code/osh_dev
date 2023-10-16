@@ -190,6 +190,7 @@
                     template: this.template,
                     parameters: this.parameters
                 };
+                defaultData.orientation = BX.getCookie('orientation');
 
                 if (this.ajaxId) {
                     defaultData.AJAX_ID = this.ajaxId;
@@ -225,6 +226,7 @@
                     template: this.template,
                     parameters: this.parameters,
                     //enterego filter for special group category
+                    orientation: BX.getCookie('orientation'),
                     staticFilter: this.staticFilter
                 };
                 if (this.ajaxId) {
@@ -423,7 +425,7 @@
 function HeightTaste() {
     const breakpointCheck = window.matchMedia('(min-width:384px)');
     if (breakpointCheck.matches === true) {
-        if ($('.catalog-section').hasClass('by-card')) {
+        if ($('.catalog-section').hasClass('card')) {
             var max_height = 0;
             $(".toggle_taste").each(function (index, el) {
                 //console.log($(this).height());
@@ -437,7 +439,7 @@ function HeightTaste() {
             $(".toggle_taste").removeAttr('style');
         }
     } else {
-        if ($('.catalog-section').hasClass('by-card')) {
+        if ($('.catalog-section').hasClass('card')) {
             var max_height = 0;
             var k = 0;
             $(".by-card .toggle_taste").each(function (index, el) {
@@ -450,8 +452,8 @@ function HeightTaste() {
                     else
                         var resHeight = left;
                     if (resHeight > 0) {
-                        var left = $(".by-card .toggle_taste").eq(index).css({'height': resHeight});
-                        var right = $(".by-card .toggle_taste").eq(l).css({'height': resHeight});
+                        var left = $(".card .toggle_taste").eq(index).css({'height': resHeight});
+                        var right = $(".card .toggle_taste").eq(l).css({'height': resHeight});
                     }
                 }
             });

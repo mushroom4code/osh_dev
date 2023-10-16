@@ -138,7 +138,6 @@ if (!isset($sort['by']['order']) || empty($sort['by']['order']))
     $sort['by']['order'] = $sortOrder[(array_search($defSortBy, $sortBy) !== false ? array_search($defSortBy, $sortBy) : 'asc')];
 
 $contentBlockClass = "col";
-$sort_active = $_COOKIE['orientation'] === 'line' ? "icon_sort_line_active" : "icon_sort_bar_active";
 
 function sort_by_name($a, $b)
 {
@@ -148,7 +147,7 @@ function sort_by_name($a, $b)
     return ($a["NAME"] < $b["NAME"]) ? -1 : 1;
 }
 
-$catalogElementField = $APPLICATION->get_cookie("PAGE_ELEMENT_COUNT") ? $APPLICATION->get_cookie("PAGE_ELEMENT_COUNT") : "36";
+$catalogElementField = $APPLICATION->get_cookie("PAGE_ELEMENT_COUNT") ? $APPLICATION->get_cookie("PAGE_ELEMENT_COUNT") : "24";
 if ($_GET['page'] != '') {
     $APPLICATION->set_cookie("PAGE_ELEMENT_COUNT", $_GET['page'], false, "/", SITE_SERVER_NAME);
     $catalogElementField = intval($_GET['page']);
