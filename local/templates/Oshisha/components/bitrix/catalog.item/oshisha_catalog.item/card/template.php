@@ -460,7 +460,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                 <?php } else { ?>
                     <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail">
                         <div class="box_with_fav_bask">
-                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                            <div class="not_product detail_popup text-xs dark:text-textDark text-white font-medium
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 text-center w-auto <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                 <?= $is_key_found ? 'subscribed' : '' ?>">
                                 Нет в наличии
                             </div>
