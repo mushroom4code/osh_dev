@@ -461,17 +461,17 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                     <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail">
                         <div class="box_with_fav_bask">
                             <div class="not_product detail_popup text-xs dark:text-textDark text-white font-medium
-                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 text-center w-auto <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-full text-center w-auto <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                 <?= $is_key_found ? 'subscribed' : '' ?>">
                                 Нет в наличии
                             </div>
-                            <div class="detail_popup absolute z-20 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                            <div class="detail_popup absolute z-20 w-full left-0 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                 <?= $is_key_found ? 'subscribed' : '' ?> min_card">
                                 <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
                             </div>
                         </div>
                         <div style="clear: both;"></div>
-                        <div id="popup_mess" class="catalog_popup absolute z-20 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                        <div id="popup_mess" class="catalog_popup absolute z-20 w-full left-0 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                          <?= $is_key_found ? 'subscribed' : '' ?>"
                              data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
                              data-product_id="<?= $item['ID']; ?>">
