@@ -174,7 +174,7 @@ function setActiveColor(string $itemType = 'card'): string
 
 ?>
 <div class="flex mb-4 flex-col mt-5 w-auto">
-    <div class="flex mb-4 box_with_prod md:flex-row flex-col mt-5 w-auto">
+    <div class="flex mb-4 box_with_prod md:flex-row flex-col w-auto">
         <?php if ($isFilter) : ?>
             <div class=" box_filter_catalog w-80 xl:flex hidden flex-col  <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
             $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
