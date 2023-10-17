@@ -365,17 +365,27 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                             <? else: ?>
                                 <div class="d-flex row-line-reverse justify-content-between box-basket">
                                     <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
-                                        <!--                                    <div class="btn red_button_cart btn-plus add2basket"-->
-                                        <!--                                         data-url="--><?php //= $item['DETAIL_PAGE_URL'] ?><!--"-->
-                                        <!--                                         data-product_id="--><?php //= $item['ID']; ?><!--"-->
-                                        <!--                                         data-max-quantity="--><?php //= $item['PRODUCT']['QUANTITY'] ?><!--"-->
-                                        <!--                                         id="--><?php //= $arItemIDs['BUY_LINK']; ?><!--"-->
-                                        <!--                                         --><? // if ($priceBasket > 0): ?><!--style="display:none;"--><? // endif; ?>
-                                        <!--                                    >-->
-                                        <!--                                        <img class="image-cart" src="/local/templates/Oshisha/images/cart-white.png"/>-->
-                                        <!--                                    </div>-->
+                                        <div class="btn red_button_cart btn-plus add2basket
+                                       dark:bg-dark-red bg-light-red py-2 px-3.5 rounded-5"
+                                             data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                             data-product_id="<?= $item['ID']; ?>"
+                                             data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                             id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                             <?php if ($priceBasket > 0): ?>style="display:none;"<?php endif; ?>
+                                        >
+                                            <svg width="22" height="26" viewBox="0 0 18 22" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.6017 18.9561V15.8498M13.6017 15.8498H16.4364M13.6017 15.8498H10.767M13.6017 15.8498V14.1413V12.5881"
+                                                      stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                                <path d="M12.9978 7.09848H14.1597C15.2019 7.09848 16.0701 7.97388 16.1567 9.11199M12.9978 7.09848H4.98235M12.9978 7.09848V6.00055C12.9978 4.83579 12.5756 3.71874 11.8239 2.89513C11.0724 2.07153 10.053 1.60883 8.99007 1.60883C7.92712 1.60883 6.90778 2.07153 6.15618 2.89513C5.4046 3.71874 4.98235 4.83579 4.98235 6.00055V7.09848M12.9978 7.09848V9.51393M9.76502 20.2737H3.15243C1.98009 20.2737 1.05814 19.1756 1.1555 17.8954L1.82345 9.11199C1.91 7.97388 2.7782 7.09848 3.82039 7.09848H4.98235M4.98235 7.09848V9.51393"
+                                                      stroke="white" stroke-width="2" stroke-linecap="round"
+                                                      stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
                                         <div class="product-item-amount-field-contain-wrap relative"
-                                             <?php if ($priceBasket > 0): ?>style="display:flex;"<?php endif; ?>
+                                             <?php if ($priceBasket > 0){ ?>style="display:flex;"<?php } else { ?>
+                                            style="display:none;"
+                                        <?php } ?>
                                              data-product_id="<?= $item['ID']; ?>">
                                             <div class="product-item-amount-field-contain flex flex-row items-center">
                                                 <a class="btn-minus no-select add2basket cursor-pointer"
