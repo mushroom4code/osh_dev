@@ -465,13 +465,13 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                 <?= $is_key_found ? 'subscribed' : '' ?>">
                                 Нет в наличии
                             </div>
-                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                            <div class="detail_popup absolute z-20 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                 <?= $is_key_found ? 'subscribed' : '' ?> min_card">
                                 <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
                             </div>
                         </div>
                         <div style="clear: both;"></div>
-                        <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                        <div id="popup_mess" class="catalog_popup absolute z-20 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                          <?= $is_key_found ? 'subscribed' : '' ?>"
                              data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
                              data-product_id="<?= $item['ID']; ?>">

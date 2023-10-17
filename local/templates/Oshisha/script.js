@@ -570,25 +570,37 @@ $(document).ready(function () {
         let popup_mess = $(this).closest('.bx_catalog_item_controls').find('div#popup_mess');
         $(".box_with_message_prodNot").hide(500).remove();
         if ($(this).hasClass('subscribed')) {
-            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+            $(popup_mess).append('<div class=" box_with_message_prodNot  ' +
+                'bg-textDarkLightGray dark:bg-grayButton rounded-lg p-3 ' +
+                'shadow-lg text-dark text-xs font-normal dark:text-textDarkLightGray " > ' +
                 '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                'К сожалению, товара нет в наличии. Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.</p>' +
+                'К сожалению, товара нет в наличии.<br> ' +
+                'Вы уже подписаны на товар, вас уведомят когда товар появится в наличии.<br></p>' +
                 '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
-                '<i class="fa fa-bell-o" aria-hidden="true"></i>Отменить подписку</a>' +
+                '<svg width="32" height="36" viewBox="0 0 32 36" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+                '<path d="M26 11.3334C26 8.68121 24.9464 6.13767 23.0711 4.26231C21.1957 2.38694 18.6522 1.33337 16 1.33337C13.3478 1.33337 10.8043 2.38694 8.92893 4.26231C7.05357 6.13767 6 8.68121 6 11.3334C6 23 1 26.3334 1 26.3334H31C31 26.3334 26 23 26 11.3334Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<path d="M18.8834 33C18.5903 33.5051 18.1698 33.9244 17.6637 34.2159C17.1577 34.5073 16.584 34.6608 16 34.6608C15.4161 34.6608 14.8423 34.5073 14.3363 34.2159C13.8303 33.9244 13.4097 33.5051 13.1167 33" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '</svg>Отменить подписку</a>' +
                 '<span class="close_photo" id="close_photo"></span></div>').show();
         } else if ($(this).hasClass('noauth')) {
-            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+            $(popup_mess).append('<div class="bg-textDarkLightGray dark:bg-grayButton rounded-lg p-3 ' +
+                'shadow-lg text-dark text-xs font-normal dark:text-textDarkLightGray box_with_message_prodNot" > ' +
                 '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться. Авторизуйтесь для подписки на товар</p>' +
+                'К сожалению, товара нет в наличии. <br>Мы можем уведомить вас, когда он снова появиться.<br>' +
+                'Авторизуйтесь для подписки на товар</p>' +
                 '<span class="close_photo" id="close_photo"></span></div>').show();
         } else {
-            $(popup_mess).append('<div class="d-flex flex-column align-items-center box_with_message_prodNot" > ' +
+            $(popup_mess).append('<div class="bg-textDarkLightGray dark:bg-grayButton rounded-lg p-3 ' +
+                'shadow-lg text-dark text-xs font-normal dark:text-textDarkLightGray box_with_message_prodNot" > ' +
                 '<i class="fa fa-info-circle" aria-hidden="true"></i><p>' +
-                'К сожалению, товара нет в наличии. Мы можем уведомить вас, когда он снова появиться.</p>' +
+                'К сожалению, товара нет в наличии. <br>Мы можем уведомить вас, когда он снова появиться.<br></p>' +
                 '<a href="javascript:void(0);" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
-                '<i class="fa fa-bell-o" aria-hidden="true"></i>Уведомить меня</a>' +
+                '<svg width="32" height="36" viewBox="0 0 32 36" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+                '<path d="M26 11.3334C26 8.68121 24.9464 6.13767 23.0711 4.26231C21.1957 2.38694 18.6522 1.33337 16 1.33337C13.3478 1.33337 10.8043 2.38694 8.92893 4.26231C7.05357 6.13767 6 8.68121 6 11.3334C6 23 1 26.3334 1 26.3334H31C31 26.3334 26 23 26 11.3334Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<path d="M18.8834 33C18.5903 33.5051 18.1698 33.9244 17.6637 34.2159C17.1577 34.5073 16.584 34.6608 16 34.6608C15.4161 34.6608 14.8423 34.5073 14.3363 34.2159C13.8303 33.9244 13.4097 33.5051 13.1167 33" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '</svg>Уведомить меня</a>' +
                 '<span class="close_photo" id="close_photo"></span></div>').show();
         }
         $('#close_photo').on('click', function () {
