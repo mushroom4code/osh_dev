@@ -751,3 +751,7 @@ h4.checkout-block-title > i.fa {
         display: unset !important;
     }
 }
+
+div.suggestions-suggestion span.suggestions-value {
+    pointer-events: none;
+}

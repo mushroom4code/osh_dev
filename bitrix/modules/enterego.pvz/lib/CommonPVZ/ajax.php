@@ -36,10 +36,11 @@ if ($USER->IsAuthorized() && check_bitrix_sessid()) {
             exit(json_encode(DeliveryHelper::SaveOshishaDelivery($request->get('params'))));
         case 'getDaData':
             $address = $request->get('address');
-            $daData = DeliveryHelper::getDaDataAddressInfo($address);
-            if (!empty($daData['value'])) {
-                $daData['status'] = 'success';
-                exit(json_encode($daData));
+            $constraint = $request->get('constraint');
+            $daData = DeliveryHelper::getDaDataAddressInfo($address, $constraint, $request->get('all') ? true : false);
+            if (!empty($daData[0]['value'])) {
+                $result = ['results' => $daData, 'status' => 'success'];
+                exit(json_encode($result));
             } else {
                 exit(json_encode(['status' => 'not find address']));
             }
