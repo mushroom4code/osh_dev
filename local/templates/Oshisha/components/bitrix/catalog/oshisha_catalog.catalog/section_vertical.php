@@ -321,7 +321,7 @@ function setActiveColor(string $itemType = 'card'): string
                             <div class="sort-panel">
                                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                                     <div class="sort_panel_wrap">
-                                        <div class="sort_panel" id="">
+                                        <div class="sort_panel relative" id="">
                                             <a class="sort_order sort_tool bg-filterGray dark:bg-darkBox p-3 rounded-lg"
                                                href="#">
                                             <span class="sort_orders_by sort_caption text-sm text-textLight font-medium
@@ -332,31 +332,37 @@ function setActiveColor(string $itemType = 'card'): string
                                                    aria-hidden="true"></i>
                                             </a>
                                             <div class="sort_orders_element js__sort_orders_element hidden absolute
-                                        bg-filterGray dark:bg-darkBox z-20">
+                                        bg-filterGray dark:bg-darkBox z-20 p-3 w-full">
                                                 <ul>
-                                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                                    <li class="catalog_sort_item mb-2 cursor-pointer
+                                                    hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"
                                                         data-sort="<?= 'PROPERTY_' . SORT_POPULARITY ?>"
                                                         data-order="DESC">По популярности
                                                     </li>
-                                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                                    <li class="catalog_sort_item mb-2 cursor-pointer
+                                                    hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"
                                                         data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
                                                         data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
                                                         data-order="ASC">По возрастанию цены
                                                     </li>
-                                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                                    <li class="catalog_sort_item mb-2 cursor-pointer
+                                                    hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"
                                                         data-price-id="<?= $GLOBALS['PRICE_TYPE_ID'] ?>"
                                                         data-sort="<?= 'PROPERTY_' . SORT_PRICE ?>"
                                                         data-order="DESC">По убыванию цены
                                                     </li>
-                                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                                    <li class="catalog_sort_item mb-2 cursor-pointer
+                                                    hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"
                                                         data-sort="NAME"
                                                         data-order="ASC">По названию
                                                     </li>
-                                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                                    <li class="catalog_sort_item mb-2 cursor-pointer
+                                                     hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"
                                                         data-sort="CREATED_DATE"
                                                         data-order="DESC">По новизне
                                                     </li>
-                                                    <li class="catalog_sort_item js__catalog-sort-item"
+                                                    <li class="catalog_sort_item cursor-pointer
+                                                    hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"
                                                         data-sort="<?= 'PROPERTY_' . SORT_BREND ?>"
                                                         data-order="DESC">По бренду
                                                     </li>
