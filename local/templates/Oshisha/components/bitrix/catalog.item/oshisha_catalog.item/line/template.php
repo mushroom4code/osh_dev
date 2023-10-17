@@ -126,7 +126,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
         <div class="item-product-info h-full flex flex-row justify-between items-center">
             <div class="box_with_title_like mr-3 w-5/12">
                 <div class="box_with_text">
-                    <a class="bx_catalog_item_title text-sm font-medium mb-2 text-textLight
+                    <a class="bx_catalog_item_title text-sm font-bold mb-2 text-textLight
                         dark:font-light dark:text-textDarkLightGray hover:text-hover-red dark:hover:text-white
                         <?= $styleForNo . ' ' . $not_auth ?>"
                        href="<?= $item['DETAIL_PAGE_URL']; ?>"
