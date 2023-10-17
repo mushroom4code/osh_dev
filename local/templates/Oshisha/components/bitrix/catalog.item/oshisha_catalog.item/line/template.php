@@ -116,6 +116,8 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
         $prop_see_in_window[] = $props_val;
     }
 }
+
+$priceForSum = $price['PRICE_DATA']['PRICE'];
 ?>
 <div class="catalog-item-product dark:bg-darkBox border-t border-b dark:border-tagFilterGray border-gray-product p-3 h-full relative
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
@@ -238,10 +240,11 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
                         <?php endif; ?>
                         <div class="box_with_price card-price font_weight_600  min-height-auto">
                             <div class="flex flex-row">
-                                <div class="bx_price text-xl font-semibold dark:font-medium mr-2 <?= $styleForNo ?> position-relative">
+                                <div class="bx_price text-md font-semibold dark:font-medium mr-2 <?= $styleForNo ?> position-relative">
                                     <?php
                                     if (!empty($specialPrice)) {
                                         echo(round($specialPrice));
+                                        $priceForSum = $specialPrice;
                                     } else {
                                         echo(round($price['PRICE_DATA']['PRICE']));
                                     } ?>₽
@@ -260,7 +263,9 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
                         </div>
                         <?php } ?>
                     </div>
-                    <div class="mx-3 font-semibold">сумма</div>
+                    <div class="mx-3 font-semibold dark:font-medium text-md">
+                        <?=round($priceForSum * $priceBasket) ?? 0?>₽
+                    </div>
                     <div style="clear: both;"></div>
                 <?php } else { ?>
                     <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail">
