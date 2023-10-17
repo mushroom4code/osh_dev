@@ -124,8 +124,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
 <?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container product-item position-relative h-full">
         <div class="item-product-info h-full flex flex-row justify-between items-center">
-            <div class="w-1/12">код</div>
-            <div class="box_with_title_like mr-3 w-4/12">
+            <div class="box_with_title_like mr-3 w-5/12">
                 <div class="box_with_text">
                     <a class="bx_catalog_item_title text-sm font-medium mb-2 text-textLight
                         dark:font-light dark:text-textDarkLightGray hover:text-hover-red dark:hover:text-white
