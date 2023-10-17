@@ -570,7 +570,7 @@ $(document).ready(function () {
         let popup_mess = $(this).closest('.bx_catalog_item_controls').find('div#popup_mess');
         $(".box_with_message_prodNot").hide(500).remove();
         if ($(this).hasClass('subscribed')) {
-            $(popup_mess).append('<div class=" box_with_message_prodNot bg-textDarkLightGray w-full dark:bg-grayButton ' +
+            $(popup_mess).append('<div class=" box_with_message_prodNot relative bg-textDarkLightGray w-full dark:bg-grayButton ' +
                 ' rounded-lg px-4 py-5 shadow-lg text-dark text-xs text-center dark:text-textDarkLightGray' +
                 ' flex flex-col items-center" > ' +
                 '<svg width="20" height="20" viewBox="0 0 24 24" class="mb-3 stroke-light-red dark:stroke-white" ' +
@@ -591,7 +591,12 @@ $(document).ready(function () {
                 '<path d="M18.8834 33C18.5903 33.5051 18.1698 33.9244 17.6637 34.2159C17.1577 34.5073 16.584 34.6608 16 34.6608C15.4161 34.6608 14.8423 34.5073 14.3363 34.2159C13.8303 33.9244 13.4097 33.5051 13.1167 33" ' +
                 'stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
                 '</svg>Отменить подписку</a>' +
-                '<span class="close_photo" id="close_photo"></span></div>').show();
+                '<span class="close_photo absolute right-1 top-1 cursor-pointer" id="close_photo">' +
+                '<svg width="25" height="25" viewBox="0 0 30 30" ' +
+                'fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke-dark dark:stroke-white">' +
+                '<path d="M8.75 21.25L21.1244 8.87561"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<path d="M8.75 8.75L21.1244 21.1244"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '</svg></span></div>').show();
         } else if ($(this).hasClass('noauth')) {
             $(popup_mess).append('<div class="bg-textDarkLightGray dark:bg-grayButton rounded-lg p-4 ' +
                 'shadow-lg text-dark text-xs font-normal dark:text-textDarkLightGray box_with_message_prodNot" > ' +
@@ -600,7 +605,7 @@ $(document).ready(function () {
                 'Авторизуйтесь для подписки на товар</p>' +
                 '<span class="close_photo" id="close_photo"></span></div>').show();
         } else {
-            $(popup_mess).append('<div class="bg-textDarkLightGray w-full dark:bg-grayButton rounded-lg px-4 py-5 ' +
+            $(popup_mess).append('<div class="bg-textDarkLightGray w-full relative dark:bg-grayButton rounded-lg px-4 py-5 ' +
                 'shadow-lg text-dark text-xs text-center dark:text-textDarkLightGray flex flex-col items-center box_with_message_prodNot" > ' +
                 '<svg width="20" height="20" viewBox="0 0 24 24" class="mb-3 stroke-light-red dark:stroke-white" ' +
                 'fill="none" xmlns="http://www.w3.org/2000/svg">' +
@@ -620,7 +625,11 @@ $(document).ready(function () {
                 '<path d="M18.8834 33C18.5903 33.5051 18.1698 33.9244 17.6637 34.2159C17.1577 34.5073 16.584 34.6608 16 34.6608C15.4161 34.6608 14.8423 34.5073 14.3363 34.2159C13.8303 33.9244 13.4097 33.5051 13.1167 33" ' +
                 'stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
                 '</svg>Уведомить меня</a>' +
-                '<span class="close_photo" id="close_photo"></span></div>').show();
+                '<span class="close_photo absolute right-1 top-1 cursor-pointer" id="close_photo"><svg width="25" height="25" viewBox="0 0 30 30" ' +
+                'fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke-dark dark:stroke-white">' +
+                '<path d="M8.75 21.25L21.1244 8.87561"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<path d="M8.75 8.75L21.1244 21.1244"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '</svg></span></div>').show();
         }
         $('#close_photo').on('click', function () {
             $(".box_with_message_prodNot").hide(500).remove()
