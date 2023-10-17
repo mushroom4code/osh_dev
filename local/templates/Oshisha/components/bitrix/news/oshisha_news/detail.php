@@ -76,70 +76,6 @@ $this->setFrameMode(true);
 	),
 	$component
 );?>
-<h2 class="mt-4 mb-3"><b>Последние новости</b></h2>
-<div class="box_with_news_list mb-5">
-    <?php $APPLICATION->IncludeComponent(
-        "bitrix:news.list",
-        "oshisha_news.list",
-        Array(
-            "ACTIVE_DATE_FORMAT" => "d.m.Y",
-            "ADD_SECTIONS_CHAIN" => "Y",
-            "AJAX_MODE" => "N",
-            "AJAX_OPTION_ADDITIONAL" => "",
-            "AJAX_OPTION_HISTORY" => "N",
-            "AJAX_OPTION_JUMP" => "N",
-            "AJAX_OPTION_STYLE" => "Y",
-            "CACHE_FILTER" => "N",
-            "CACHE_GROUPS" => "Y",
-            "COMPONENT_TEMPLATE" => "oshisha_news.list",
-            "CACHE_TIME" => "36000000",
-            "CACHE_TYPE" => "A",
-            "CHECK_DATES" => "Y",
-            "DETAIL_URL" => "",
-            "DISPLAY_BOTTOM_PAGER" => "N",
-            "DISPLAY_DATE" => "Y",
-            "DISPLAY_NAME" => "Y",
-            "DISPLAY_PICTURE" => "Y",
-            "DISPLAY_PREVIEW_TEXT" => "Y",
-            "DISPLAY_TOP_PAGER" => "N",
-            "FIELD_CODE" => array(
-                0 => "DATE_CREATE",
-                1 => "TAGS",
-            ),
-            "FILTER_NAME" => "",
-            "HIDE_LINK_WHEN_NO_DETAIL" => "N",
-            "IBLOCK_ID" => "1",
-            "IBLOCK_TYPE" => "news",
-            "INCLUDE_IBLOCK_INTO_CHAIN" => "Y",
-            "INCLUDE_SUBSECTIONS" => "Y",
-            "MESSAGE_404" => "",
-            "NEWS_COUNT" => "3",
-            "PAGER_BASE_LINK_ENABLE" => "N",
-            "PAGER_DESC_NUMBERING" => "N",
-            "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
-            "PAGER_SHOW_ALL" => "N",
-            "PAGER_SHOW_ALWAYS" => "N",
-            "PAGER_TEMPLATE" => "",
-            "PAGER_TITLE" => "Новости",
-            "PARENT_SECTION" => "",
-            "PARENT_SECTION_CODE" => "",
-            "PREVIEW_TRUNCATE_LEN" => "",
-            "PROPERTY_CODE" => array("", ""),
-            "SET_BROWSER_TITLE" => "Y",
-            "SET_LAST_MODIFIED" => "N",
-            "SET_META_DESCRIPTION" => "Y",
-            "SET_META_KEYWORDS" => "Y",
-            "SET_STATUS_404" => "N",
-            "SET_TITLE" => "Y",
-            "SHOW_404" => "N",
-            "SORT_BY1" => "ACTIVE_FROM",
-            "SORT_BY2" => "ACTIVE_FROM",
-            "SORT_ORDER1" => "ASC",
-            "SORT_ORDER2" => "DESC",
-            "STRICT_SECTION_CHECK" => "N"
-        )
-    );?>
-</div>
 <?php if($arParams["USE_CATEGORIES"]=="Y" && $ElementID):
 	global $arCategoryFilter;
 	$obCache = new CPHPCache;
@@ -199,21 +135,3 @@ $this->setFrameMode(true);
 		<?php endforeach?>
 	<?php endif?>
 <?php endif?>
-<script>
-    $(function () {
-        if (window.screen.width <= 480) {
-            let count = 1;
-            let slidesToScroll = 1;
-            $('.box_with_news_list .box_with_news').slick({
-                arrows: true,
-                prevArrow: '<span class="new_custom_button_slick_left" aria-hidden="true">' +
-                    '<i class="fa fa-angle-left" aria-hidden="true"></i></span>',
-                nextArrow: '<span class="new_custom_button_slick_right" aria-hidden="true">' +
-                    '<i class="fa fa-angle-right" aria-hidden="true"></i></span>',
-                slidesToShow: count,
-                slidesToScroll: slidesToScroll,
-                variableWidth: true,
-            });
-        }
-    });
-</script>
