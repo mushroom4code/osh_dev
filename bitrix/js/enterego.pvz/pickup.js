@@ -193,7 +193,7 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
         };
 
         opts['boundedBy'] = msk_250km_boundedBy;
-
+        opts['noSuggestPanel'] = true;
         var d = new ymaps.control.SearchControl({options: opts});
         searchControl = d;
         myMap.controls.add(d);
