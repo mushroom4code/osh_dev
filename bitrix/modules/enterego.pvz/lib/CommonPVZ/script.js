@@ -40,6 +40,7 @@ BX.SaleCommonPVZ = {
         'displayPVZ': typeDisplayPVZ.map,
         'filterDelivery': null,
     },
+    lastDaDataAddressesArr: null,
 
     init: function (params) {
         this.curDeliveryId = params.params?.curDeliveryId;
@@ -421,7 +422,6 @@ BX.SaleCommonPVZ = {
         address.value = this.getValueProp(this.propAddressId);
             // .value.val(this.getValueProp(this.propAddressId))
 
-        console.log(address);
         var location_restriction = BX.create('ul',
             {
                 props: {
@@ -443,19 +443,13 @@ BX.SaleCommonPVZ = {
                     }),
                 ]
             });
-        console.log(location_restriction);
-        console.log(address.outerHTML);
-        console.log(location_restriction.outerHTML);
         address.parentNode.insertBefore(location_restriction, address.nextSibling);
 
 
 
 
 
-        // address.outerHTML = address.outerHTML + location_restriction.outerHTML;
-        // address.innerHTML = this.getValueProp(this.propAddressId);
-        // address.outerHTML  =
-        console.log(this.getValueProp((this.propAddressId)));
+
 
         var suggestions_node = BX.create('div',
             {
@@ -472,81 +466,52 @@ BX.SaleCommonPVZ = {
 
         ['focusin', 'focusout', 'input'].forEach(function (e) {
             address.addEventListener(e, function (event) {
-                console.log('sus');
-                console.log(event);
-                console.log(address.value);
                 if(event.type === 'focusout') {
-                    suggestions_node.style.display = 'none';
+                    if(!event.relatedTarget || !event.relatedTarget.classList.contains('suggestions-suggestion')) {
+                        suggestions_node.style.display = 'none';
+                    }
                 } else {
                     if (event.type === 'focusin') {
                         suggestions_node.style.display = 'block';
                     }
-
-                    BX.ajax({
-                        url: __this.ajaxUrlPVZ,
-                        method: 'POST',
-                        dataType: 'json',
-                        data: {
-                            sessid: BX.bitrix_sessid(),
-                            address: address.value,
-                            all: true,
-                            constraint: 'Москва',
-                            'action': 'getDaData'
-                        },
-                        onsuccess: function (response) {
-                            console.log(response);
-                            if (response['status'] === 'success') {
-                                suggestions_node.innerHTML = '';
-                                for (const [key, value] of Object.entries(response.results)) {
-                                    var location_value = value.value;
-                                    var address_numbers_arr = address.value.match(/\d+/);
-                                    var address_value_arr = address.value.split(/[ ,]+/).filter(Boolean);
-
-                                    address_value_arr.forEach(function (element) {
-                                        location_value = location_value.replaceAll(new RegExp(element, 'ig'), function (match) {
-                                            return '<strong>'+match+'</strong>';
-                                        });
-                                    });
-                                    if (address_numbers_arr) {
-                                        address_numbers_arr.forEach(function (element) {
-                                            location_value = location_value.replaceAll(new RegExp(element, 'ig'), function (match) {
-                                                return '<strong>'+match+'</strong>';
-                                            });
-                                            console.log(location_value);
-                                        });
-                                    }
-                                    suggestions_node.innerHTML +=
-                                        '<div class="suggestions-suggestion ' + (key === '0' ? 'suggestions-selected' : '') + '" data-index="' + key + '">' +
-                                        '<span class="suggestions-value">' +
-                                        location_value +
-                                        '</span>' +
-                                        '</div>';
-                                    var location_elements = suggestions_node.querySelectorAll('.suggestions-suggestion');
-                                    [...location_elements].forEach(function (location_element) {
-                                        ['click', 'keypress'].forEach(function (e) {
-                                            location_element.addEventListener(e, function (event) {
-                                                var suggestion = response.results[event.target.getAttribute('data-index')];
-                                                // suggestions_node.style.display = 'none';
-                                                console.log(event);
-                                                console.log(suggestion);
-                                                console.log(response);
-                                                __this.updatePropsFromDaData(suggestion);
-                                                if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                                                    if (__this.curDeliveryId == __this.doorDeliveryId) {
-                                                        __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                                                        __this.getSavedOshishaDelivery(Number('' + suggestion.data.geo_lat).toPrecision(6),
-                                                            Number('' + suggestion.data.geo_lon).toPrecision(6));
-                                                    }
-                                                }
-                                            })
-                                        });
-                                    })
-                                }
-                            }
-                        }.bind(this)
-                    })
+                    __this.getDaDataRequest(address, __this.buildDaDataAddressesList, suggestions_node, true);
+                    __this.buildDaDataAddressesList(suggestions_node, address);
                 }
             });
+        });
+
+        document.addEventListener("keydown", function (event) {
+            var len = suggestions_node.querySelectorAll('div.suggestions-suggestion').length;
+            if (len != 0) {
+                var activeElement = suggestions_node.querySelector('div.suggestions-suggestion.suggestions-selected');
+                var index = activeElement.getAttribute('data-index');
+                var newActiveElement;
+                console.log(__this.lastDaDataAddressesArr);
+
+                if (event.key === 'ArrowDown') {
+                    index++;
+                    if (index > len - 1) {
+                        index = 0;
+                    }
+
+                    newActiveElement = suggestions_node.querySelector('div.suggestions-suggestion[data-index="'+index+'"]');
+                    newActiveElement.classList.add('suggestions-selected');
+                    address.value = __this.lastDaDataAddressesArr[index].value;
+                    activeElement.classList.remove('suggestions-selected');
+                } else if (event.key === 'ArrowUp') {
+                    index--;
+                    if (index < 0) {
+                        index = len - 1;
+                    }
+                    newActiveElement = suggestions_node.querySelector('div.suggestions-suggestion[data-index="'+index+'"]');
+                    newActiveElement.classList.add('suggestions-selected');
+                    address.value = __this.lastDaDataAddressesArr[index].value;
+                    activeElement.classList.remove('suggestions-selected');
+                } else if (event.key === "Enter") {
+                    activeElement.dispatchEvent(new Event('click'));
+                    console.log("Enter key was pressed");
+                }
+            }
         });
 
 
@@ -616,6 +581,76 @@ BX.SaleCommonPVZ = {
         // }
     },
 
+    buildDaDataAddressesList: function (response, address, suggestions_node) {
+        const __this = this;
+
+        if (response['status'] === 'success') {
+            this.lastDaDataAddressesArr = response.results;
+            suggestions_node.innerHTML = '';
+            for (const [key, value] of Object.entries(response.results)) {
+                var location_value = value.value;
+                var address_numbers_arr = address.value.match(/\d+/);
+                var address_value_arr = address.value.split(/[ ,]+/).filter(Boolean);
+
+                address_value_arr.forEach(function (element) {
+                    location_value = location_value.replaceAll(new RegExp(element, 'ig'), function (match) {
+                        return '<strong>' + match + '</strong>';
+                    });
+                });
+                if (address_numbers_arr) {
+                    address_numbers_arr.forEach(function (element) {
+                        location_value = location_value.replaceAll(new RegExp(element, 'ig'), function (match) {
+                            return '<strong>' + match + '</strong>';
+                        });
+                    });
+                }
+                suggestions_node.innerHTML +=
+                    '<div class="suggestions-suggestion ' + (key === '0' ? 'suggestions-selected' : '') + '"' +
+                    'data-index="' + key + '" tabindex="0">' +
+                    '<span class="suggestions-value">' +
+                    location_value +
+                    '</span>' +
+                    '</div>';
+                var location_elements = suggestions_node.querySelectorAll('.suggestions-suggestion');
+                [...location_elements].forEach(function (location_element) {
+                    ['click', 'keypress'].forEach(function (e) {
+                        location_element.addEventListener(e, function (event) {
+                            var suggestion = response.results[event.target.getAttribute('data-index')];
+                            __this.updatePropsFromDaData(suggestion);
+                            if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+                                if (__this.curDeliveryId == __this.doorDeliveryId) {
+                                    __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                                    __this.getSavedOshishaDelivery(Number('' + suggestion.data.geo_lat).toPrecision(6),
+                                        Number('' + suggestion.data.geo_lon).toPrecision(6));
+                                }
+                            }
+                            suggestions_node.style.display = 'none';
+                            address.value = suggestion.value;
+                        }, true);
+                    });
+                });
+            }
+        }
+    },
+
+    getDaDataRequest: function (address, onSuccessCallback, suggestions_node, all = false) {
+        BX.ajax({
+            url: this.ajaxUrlPVZ,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                sessid: BX.bitrix_sessid(),
+                address: address.value,
+                'action': 'getDaData',
+                constraint: 'Москва',
+                all: all
+            },
+            onsuccess: function (response) {
+                onSuccessCallback(response, address, suggestions_node);
+            }
+        })
+    },
+
     updateOshishaDelivery: function (parentBlock) {
         var __this = this;
 
@@ -653,7 +688,8 @@ BX.SaleCommonPVZ = {
                 data: {
                     sessid: BX.bitrix_sessid(),
                     address: address,
-                    'action': 'getDaData'
+                    'action': 'getDaData',
+                    constraint: 'Москва'
                 },
                 onsuccess: function (response) {
                     if (response.status === 'success') {
