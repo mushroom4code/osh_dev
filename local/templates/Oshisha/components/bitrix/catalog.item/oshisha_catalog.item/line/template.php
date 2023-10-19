@@ -120,8 +120,7 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
 $priceForSum = $price['PRICE_DATA']['PRICE'];
 ?>
 <div class="catalog-item-product dark:bg-darkBox border-t border-b dark:border-tagFilterGray border-gray-product p-3 h-full relative
-<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
-<?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
+<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>" data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container product-item position-relative h-full">
         <div class="item-product-info h-full flex flex-row items-center">
             <div class="box_with_title_like w-5/12">
@@ -143,7 +142,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
             <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
                 <?php
                 if (!$USER->IsAuthorized() && !$show_price) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12">
+                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 flex justify-center">
                         <div class="btn-plus <?= $not_auth ?>"
                              data-href="<?= $href ?>">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
@@ -151,13 +150,13 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                         </div>
                     </div>
                 <?php } else if (!$item['ADD_TO_BASKET']) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12">
+                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 text-center flex justify-center relative">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
                                 dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup"
                                       onclick="showHidePopupPrice(this)">Подробнее</span>
                         <div class="text-black font-extralight text-center hidden absolute p-5 shadow-lg popup-window-price
                                 bg-filterGray dark:text-textDarkLightGray text-xs dark:bg-grayButton rounded-lg w-72
-                                 z-20 left-0">
+                                 z-20 left-0 top-5">
                             <p class="flex justify-center">
                                 <svg width="20" height="20" viewBox="0 0 24 24"
                                      class="mb-3 stroke-light-red dark:stroke-white"
@@ -203,9 +202,9 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                              data-product_id="<?= $item['ID']; ?>">
                         </div>
                     <?php else: ?>
-                        <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 flex justify-center">
-                            <div class="flex row-line-reverse justify-between box-basket">
-                                <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
+                        <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
+                            <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 flex justify-center">
+                                <div class="flex row-line-reverse justify-between box-basket">
                                     <div class="btn red_button_cart btn-plus add2basket
                                        dark:bg-dark-red bg-light-red py-2 px-3.5 rounded-5"
                                          data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
@@ -267,12 +266,12 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                                             dark:bg-dark-box w-full shadow-lg rounded-bl-xl"
                                              data-id="<?= $item['ID'] ?>"></div>
                                     </div>
-                                <?php } ?>
+                                </div>
                             </div>
-                        </div>
+                        <?php } ?>
                     <?php endif; ?>
                     <div class="box_with_price card-price font_weight_600 min-height-auto w-1/12">
-                        <div class="flex flex-row justify-center">
+                        <div class="flex flex-col justify-center items-center">
                             <div class="bx_price text-md font-semibold dark:font-medium <?= $styleForNo ?> position-relative">
                                 <?php
                                 if (!empty($specialPrice)) {
@@ -285,9 +284,9 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                             <?php if (!empty($specialPrice)) { ?>
                                 <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
                                             <span class="line-through font-light decoration-red text-textLight
-                                             dark:text-grayIconLights mx-1">
+                                             dark:text-grayIconLights mx-1 text-xs">
                                                 <?= $price['PRICE_DATA']['PRICE'] ?>₽</span>
-                                    <span class="sale-percent text-light-red font-medium">
+                                    <span class="sale-percent text-light-red font-medium text-xs">
                                                 - <?= (round($price['PRICE_DATA']['PRICE']) - round($specialPrice)) ?>₽
                                             </span>
                                 </div>
@@ -300,10 +299,10 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                     <?= round($priceForSum * $priceBasket) ?? 0 ?>₽
                 </div>
             <?php } else { ?>
-                <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail bx_catalog_item_controls">
-                    <div class="box_with_fav_bask">
+                <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail bx_catalog_item_controls w-5/12">
+                    <div class="box_with_fav_bask flex justify-center items-center">
                         <div class="not_product detail_popup text-xs dark:text-textDark text-white font-medium
-                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-full text-center w-auto
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-full text-center w-fit
                                 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                 <?= $is_key_found ? 'subscribed' : '' ?>">
                             Нет в наличии
@@ -314,7 +313,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                         </div>
                     </div>
                     <div style="clear: both;"></div>
-                    <div id="popup_mess"
+                    <div id="popup_mess w-auto"
                          class="catalog_popup absolute z-20
                                <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                          <?= $is_key_found ? 'subscribed' : '' ?>"
