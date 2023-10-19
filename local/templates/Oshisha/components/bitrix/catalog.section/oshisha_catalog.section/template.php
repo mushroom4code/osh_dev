@@ -278,10 +278,10 @@ if ($type === 'line') {
             <?php if ($showLine) { ?>
                 <div class="flex flex-row p-3">
                     <div class="w-5/12">Наименование</div>
-                    <div class="w-1/12">Склад</div>
-                    <div class="w-2/12">Добавить</div>
-                    <div class="w-1/12">Цена</div>
-                    <div class="w-2/12">Сумма</div>
+                    <div class="w-1/12 text-center">Склад</div>
+                    <div class="w-2/12 text-center">Добавить</div>
+                    <div class="w-1/12 text-center">Цена</div>
+                    <div class="w-2/12 text-center">Сумма</div>
                     <div class="w-1/12">Прочее</div>
                 </div>
             <?php } ?>
