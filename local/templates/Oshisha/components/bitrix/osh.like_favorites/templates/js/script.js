@@ -49,7 +49,6 @@ $(document).ready(function () {
             'value': value,
         }
 
-        console.log(product_array);
         $.ajax({
             type: 'POST',
             url: BX.message('SITE_DIR') + 'local/templates/Oshisha/components/bitrix/osh.like_favorites/ajax.php',
