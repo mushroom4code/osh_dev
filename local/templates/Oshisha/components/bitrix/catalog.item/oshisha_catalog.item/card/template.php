@@ -155,8 +155,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
     text-xs z-10">ХИТ</span>
 <?php } ?>
 <div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-4 h-full relative
-<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
-<?php if (!$show_price) { ?> blur_photo <?php } ?>" data-product_id="<?= $item['ID'] ?>">
+<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>" data-product_id="<?= $item['ID'] ?>">
     <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative h-full
             <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
@@ -178,7 +177,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
 
         ?>
         <div class="item-product-info h-full flex flex-col justify-between">
-            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> z-9 h-7">
+            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> z-9 h-7 <?php if (!$show_price) { ?> blur-2xl <?php } ?>">
                 <div class="variation_taste flex flex-wrap flex-row overflow-auto h-7
                 <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php if ($taste['VALUE']) {
@@ -213,7 +212,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
             </div>
             <div>
                 <div class="bx_catalog_item_overlay"></div>
-                <div class="image_cart h-40 position-relative mb-3 <?= $not_auth ?>" data-href="<?= $href ?>">
+                <div class="image_cart h-40 position-relative mb-3 <?php if (!$show_price) { ?> blur-xl <?php } ?>
+                    <?= $not_auth ?>" data-href="<?= $href ?>">
                     <a class="flex justify-center rounded-xl bg-white <?= $styleForTaste ?>"
                        href="<?= $item['DETAIL_PAGE_URL']; ?>">
                         <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
@@ -471,7 +471,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                             </div>
                         </div>
                         <div style="clear: both;"></div>
-                        <div id="popup_mess" class="catalog_popup absolute z-20 w-full left-0 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                        <div id="popup_mess"
+                             class="catalog_popup absolute z-20 w-full left-0 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                          <?= $is_key_found ? 'subscribed' : '' ?>"
                              data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
                              data-product_id="<?= $item['ID']; ?>">
