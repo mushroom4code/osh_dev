@@ -203,7 +203,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                         </div>
                     <?php else: ?>
                         <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
-                            <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 flex justify-center">
+                            <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 flex justify-center relative">
                                 <div class="flex row-line-reverse justify-between box-basket">
                                     <div class="btn red_button_cart btn-plus add2basket
                                        dark:bg-dark-red bg-light-red py-2 px-3.5 rounded-5"
@@ -222,7 +222,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                                                   stroke-linejoin="round"/>
                                         </svg>
                                     </div>
-                                    <div class="product-item-amount-field-contain-wrap relative"
+                                    <div class="product-item-amount-field-contain-wrap"
                                          <?php if ($priceBasket > 0){ ?>style="display:flex;"<?php } else { ?>
                                         style="display:none;"
                                     <?php } ?>
@@ -262,8 +262,8 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                                                 </svg>
                                             </a>
                                         </div>
-                                        <div class="alert_quantity hidden absolute p-3 text-xs bg-filterGray
-                                            dark:bg-dark-box w-full shadow-lg rounded-bl-xl"
+                                        <div class="alert_quantity hidden absolute p-4 text-xs left-0 top-12 bg-filterGray
+                                            dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20"
                                              data-id="<?= $item['ID'] ?>"></div>
                                     </div>
                                 </div>

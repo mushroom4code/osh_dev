@@ -326,7 +326,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
             <?php
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
-            <div class="bx_catalog_item_controls">
+            <div class="bx_catalog_item_controls relative">
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
                     <div class="box_with_fav_bask flex flex-row justify-between items-center">
                         <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
@@ -382,7 +382,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                       stroke-linejoin="round"/>
                                             </svg>
                                         </div>
-                                        <div class="product-item-amount-field-contain-wrap relative"
+                                        <div class="product-item-amount-field-contain-wrap"
                                              <?php if ($priceBasket > 0){ ?>style="display:flex;"<?php } else { ?>
                                             style="display:none;"
                                         <?php } ?>
@@ -422,8 +422,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                     </svg>
                                                 </a>
                                             </div>
-                                            <div class="alert_quantity hidden absolute p-3 text-xs bg-filterGray
-                                            dark:bg-dark-box w-full shadow-lg rounded-bl-xl"
+                                            <div class="alert_quantity hidden absolute p-4 text-xs left-0 top-12 bg-filterGray
+                                            dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20"
                                                  data-id="<?= $item['ID'] ?>"></div>
                                         </div>
                                     <?php } ?>
