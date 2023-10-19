@@ -260,7 +260,6 @@ if ($request->get('ORDER_ID') <> '') {
     if ($USER->IsAuthorized()) {
         $user_object = new EnteregoUserExchange();
         $user_object->USER_ID = $USER->GetID();
-        $user_object->GetCompanyForUser();
         $user_object->GetActiveContrAgentForUserForOrder();
         $savedDeliveryProfiles = \CommonPVZ\SavedDeliveryProfiles::getAll($user_object->USER_ID);
     } else {
