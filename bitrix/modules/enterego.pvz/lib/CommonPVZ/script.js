@@ -770,7 +770,9 @@ BX.SaleCommonPVZ = {
 
             }.bind(this),
             onfailure: function () {
+                console.log('error saveOshishaDelivery');
                 BX.Sale.OrderAjaxComponent.endLoader();
+                BX.Sale.OrderAjaxComponent.showError(BX('bx-soa-delivery'), 'Ошибка сохранения курьерской доставки Oshisha. Попробуйте позже.');
             }
         });
     },
@@ -802,7 +804,12 @@ BX.SaleCommonPVZ = {
                             this.getValueProp(this.propAddressId), true);
                     })
                 }
-            }.bind(this)
+            }.bind(this),
+            onfailure: function () {
+                console.log('error reverseGeocodeAddress');
+                BX.Sale.OrderAjaxComponent.endLoader();
+                BX.Sale.OrderAjaxComponent.showError(BX('bx-soa-delivery'), 'Ошибка геокодирования адреса. Попробуйте позже.');
+            }
         });
     },
 
