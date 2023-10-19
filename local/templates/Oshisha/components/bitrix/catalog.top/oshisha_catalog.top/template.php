@@ -40,7 +40,24 @@ if (!empty($arResult['ITEMS'])) {
             break;
         case 'SLIDER':
             if ($arParams['SHOW_TITLE_IN_TEMPLATE'] == 'Y' && !empty($arParams['VALUE_TITLE_IN_TEMPLATE'])) { ?>
-                <h2 class="mb-5"><b><?= $arParams['VALUE_TITLE_IN_TEMPLATE'] ?></b></h2>
+                <h2 class="mb-5 d-flex flex-ld-row flex-md-row flex-col justify-content-between align-items-center">
+                    <b><?= $arParams['VALUE_TITLE_IN_TEMPLATE'] ?></b>
+                    <?php if (isset($arParams['SLIDER_INIT_COUNT']) && $arParams['SLIDER_INIT_COUNT'] > 4) { ?>
+                        <div class="d-flex flex-lg-row flex-md-row flex-col">
+                            <span id="openWindow"
+                                  class="d-block font-20 color-redLight text-decoration-underline font-weight-600"
+                                  onclick="destroySlick(this)
+                                  $('#openWindow').toggleClass('d-block').toggleClass('d-none');
+                                  $('#closeWindow').toggleClass('d-none').toggleClass('d-block');
+                               ">Смотреть все</span>
+                            <span id="closeWindow"
+                                  class="d-none font-20 text-decoration-underline color-redLight font-weight-600"
+                                  onclick="initSlider();
+                                  $('#closeWindow').toggleClass('d-block').toggleClass('d-none');
+                                  $('#openWindow').toggleClass('d-none').toggleClass('d-block');">Закрыть</span>
+                        </div>
+                    <?php } ?>
+                </h2>
                 <?php
             }
             $APPLICATION->IncludeComponent(

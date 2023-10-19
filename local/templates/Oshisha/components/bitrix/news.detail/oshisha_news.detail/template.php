@@ -233,12 +233,14 @@ foreach ($count_likes['USER'] as $keyFAV => $count) {
         </div>
     </div>
     <div class="mb-5 mt-5">
-        <div class="by-card">
+        <div class="by-card parent-slider">
             <?php if (!empty($listRecommendProd['ITEMS'])) {
                 $GLOBALS['FILTER_PROD_NEWS'] = [
                     "ID" => $arResult["PROPERTIES"]['FILTER_PROD_NEWS']['VALUE'],
                     "IBLOCK_ID" => IBLOCK_CATALOG
                 ];
+
+                $sliderInit = count($arResult["PROPERTIES"]['FILTER_PROD_NEWS']['VALUE']) ?? 0;
                 $APPLICATION->IncludeComponent(
                     "bitrix:catalog.top",
                     "oshisha_catalog.top",
@@ -325,6 +327,7 @@ foreach ($count_likes['USER'] as $keyFAV => $count) {
                             0 => "USE_DISCOUNT",
                             1 => "",
                         ),
+                        'SLIDER_INIT_COUNT' => $sliderInit,
                         "PRODUCT_PROPERTIES" => array(
                             "USE_DISCOUNT"
                         )
@@ -343,4 +346,8 @@ foreach ($count_likes['USER'] as $keyFAV => $count) {
                 controlContainerClassName: 'news-detail-slider-control'
             });
         });
+        function destroySlick(that){
+            $(that).closest('.parent-slider').find('.bx_catalog_tile_section').slick('unslick');
+            $(that).closest('.parent-slider').find('.bx_catalog_tile_section').addClass('d-flex flex-row flex-wrap')
+        }
     </script>
