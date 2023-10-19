@@ -299,22 +299,22 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                     <?= round($priceForSum * $priceBasket) ?? 0 ?>₽
                 </div>
             <?php } else { ?>
-                <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail bx_catalog_item_controls w-5/12">
+                <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail bx_catalog_item_controls w-5/12 relative">
                     <div class="box_with_fav_bask flex justify-center items-center">
                         <div class="not_product detail_popup text-xs dark:text-textDark text-white font-medium
-                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-full text-center w-fit
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-full text-center w-fit cursor-pointer
                                 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                 <?= $is_key_found ? 'subscribed' : '' ?>">
                             Нет в наличии
                         </div>
-                        <div class="detail_popup absolute z-20<?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                        <div class="detail_popup absolute z-20 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                 <?= $is_key_found ? 'subscribed' : '' ?> min_card">
                             <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
                         </div>
                     </div>
                     <div style="clear: both;"></div>
-                    <div id="popup_mess w-auto"
-                         class="catalog_popup absolute z-20
+                    <div id="popup_mess"
+                         class="catalog_popup absolute z-20 w-full left-0
                                <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                          <?= $is_key_found ? 'subscribed' : '' ?>"
                          data-subscription_id="
