@@ -362,7 +362,6 @@ $(document).ready(function () {
                         'URL': product_url,
                     };
 
-
                 } else {
                     $(boxInput).val(max_QUANTITY);
                     if (max_QUANTITY > 0) {
@@ -481,6 +480,11 @@ $(document).ready(function () {
             $(box_with_product).empty();
             $(box_with_products_order).empty();
 
+            const price = $(document).find('.sum-box[data-product-id="' + product_data.ID + '"]').attr('data-price') || 0;
+            if (price !== null && max_QUANTITY <= product_data.QUANTITY) {
+                $(document).find('.sum-box[data-product-id="' + product_data.ID + '"]')
+                    .text((parseInt(product_data.QUANTITY) * parseInt(price)) + '₽');
+            }
             addItemArrayANDSend(product_data);
         }
 

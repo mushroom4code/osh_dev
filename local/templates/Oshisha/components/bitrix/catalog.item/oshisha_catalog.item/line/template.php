@@ -273,7 +273,8 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                         </div>
                     </div>
                 <?php } ?>
-                <div class="font-semibold dark:font-medium text-md w-2/12 bx_catalog_item_controls text-center">
+                <div class="font-semibold dark:font-medium text-md sum-box w-2/12 bx_catalog_item_controls text-center"
+                     data-price="<?= $priceForSum ?? 0 ?>" data-product-id="<?=$item['ID']?>">
                     <?= round($priceForSum * $priceBasket) ?? 0 ?>₽
                 </div>
             <?php } else { ?>
