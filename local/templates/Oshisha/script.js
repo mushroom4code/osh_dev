@@ -508,7 +508,7 @@ $(document).ready(function () {
             $(box_with_products_order).empty();
 
             const price = $(document).find('.sum-box[data-product-id="' + product_data.ID + '"]').attr('data-price') || 0;
-            if (price !== null && max_QUANTITY <= product_data.QUANTITY) {
+            if (price !== null) {
                 $(document).find('.sum-box[data-product-id="' + product_data.ID + '"]')
                     .text((parseInt(product_data.QUANTITY) * parseInt(price)) + '₽');
             }
