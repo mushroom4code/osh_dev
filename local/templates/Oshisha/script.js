@@ -322,12 +322,15 @@ $(document).ready(function () {
         function addToBasketEvent() {
             function appendLoader() {
                 $('.spanBasketTop').text('').attr('style', 'padding: 6px;top:0;left:0;').append('' +
-                    '<div class="loader"><div class="inner one"></div><div class="inner two">' +
-                    '</div> <div class="inner three"></div></div>');
+                    '<div class="p-3 bg-light-red rounded-full">' +
+                    '<div class="loader h-full rounded-full absolute">' +
+                    '<div class="inner one h-full rounded-full absolute w-full"></div>' +
+                    '<div class="inner two h-full rounded-full absolute w-full">' +
+                    '</div> <div class="inner three h-full rounded-full absolute w-full"></div></div></div>');
             }
 
             if (!$('span').is('.spanBasketTop')) {
-                $('.basket_top').append('<span class="spanBasketTop"></span>' +
+                $('.basket_top').append('<span class="spanBasketTop relative"></span>' +
                     '<span class="font-12 font-weight-bold price_basket_top"></span>');
             }
             appendLoader();

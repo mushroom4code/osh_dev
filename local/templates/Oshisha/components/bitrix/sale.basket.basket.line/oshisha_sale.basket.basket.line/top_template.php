@@ -131,7 +131,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
     </div>
     <div class="box_with_basket_login w-max">
         <a class="link_header" href="<?= $arParams['PATH_TO_BASKET'] ?>">
-            <div class="basket_top position-relative flex-col flex items-center">
+            <div class="basket_top relative flex-col flex items-center">
                 <div >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                          class="stroke-light-red dark:stroke-white stroke-2"
