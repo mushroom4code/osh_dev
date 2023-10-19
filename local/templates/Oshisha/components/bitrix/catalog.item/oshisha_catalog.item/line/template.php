@@ -136,7 +136,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                     </a>
                 </div>
             </div>
-            <div class="w-2/12 text-center"><?= $item['PRODUCT']['QUANTITY'] ?></div>
+            <div class="w-1/12"><?= $item['PRODUCT']['QUANTITY'] ?></div>
             <?php
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
