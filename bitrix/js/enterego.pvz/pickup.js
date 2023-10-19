@@ -206,6 +206,7 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
 
             d.getResult(a).then(function (e) {
                 const coordinates = e.geometry.getCoordinates()
+                BX.Sale.OrderAjaxComponent.startLoader();
                 BX.SaleCommonPVZ.reverseGeocodeAddress(coordinates)
             });
         }).add("submit", function () {
@@ -520,9 +521,9 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
                 c.options.set("preset", "islands#redStretchyIcon");
 
                 let iconContent = selfObj.date_delivery + ', ' + distKm.toFixed(1) + ' км, '
-                    + delivery_price.toFixed() + ' руб';
+                    + delivery_price.toFixed() + ' руб.';
                 if (noMarkupMessage!=='') {
-                    iconContent += ' руб. Без наценки в этом регионе в следующие дни: ' + noMarkupMessage
+                    iconContent += ' Без наценки в этом регионе в следующие дни: ' + noMarkupMessage
                 }
 
                 c.properties.set("iconContent", iconContent);

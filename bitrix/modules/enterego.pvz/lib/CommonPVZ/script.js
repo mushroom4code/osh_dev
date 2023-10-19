@@ -764,8 +764,14 @@ BX.SaleCommonPVZ = {
                     console.log('error while saving oshisha delivery to db');
                 }
                 __this.unlockSubmitButton();
+                BX.Sale.OrderAjaxComponent.endLoader();
                 BX.onCustomEvent('onDeliveryExtraServiceValueChange');
-            }.bind(this)
+
+
+            }.bind(this),
+            onfailure: function () {
+                BX.Sale.OrderAjaxComponent.endLoader();
+            }
         });
     },
 
