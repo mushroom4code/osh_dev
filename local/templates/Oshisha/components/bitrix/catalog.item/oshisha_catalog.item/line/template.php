@@ -120,8 +120,7 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
 $priceForSum = $price['PRICE_DATA']['PRICE'];
 ?>
 <div class="catalog-item-product dark:bg-darkBox border-t border-b dark:border-tagFilterGray border-gray-product p-3 h-full relative
-<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>
-<?php if (!$show_price) { ?> blur-2xl <?php } ?>" data-product_id="<?= $item['ID'] ?>">
+<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>" data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container product-item position-relative h-full">
         <div class="item-product-info h-full flex flex-row items-center">
             <div class="box_with_title_like w-5/12">
