@@ -143,7 +143,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
             <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
                 <?php
                 if (!$USER->IsAuthorized() && !$show_price) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12">
+                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 flex justify-center">
                         <div class="btn-plus <?= $not_auth ?>"
                              data-href="<?= $href ?>">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
@@ -151,7 +151,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                         </div>
                     </div>
                 <?php } else if (!$item['ADD_TO_BASKET']) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 text-center">
+                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 text-center flex justify-center">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
                                 dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup"
                                       onclick="showHidePopupPrice(this)">Подробнее</span>
@@ -181,9 +181,9 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                              data-product_id="<?= $item['ID']; ?>">
                         </div>
                     <?php else: ?>
-                        <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 flex justify-center">
-                            <div class="flex row-line-reverse justify-between box-basket">
-                                <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
+                        <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
+                            <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 flex justify-center">
+                                <div class="flex row-line-reverse justify-between box-basket">
                                     <div class="btn red_button_cart btn-plus add2basket
                                        dark:bg-dark-red bg-light-red py-2 px-3.5 rounded-5"
                                          data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
@@ -245,9 +245,9 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                                             dark:bg-dark-box w-full shadow-lg rounded-bl-xl"
                                              data-id="<?= $item['ID'] ?>"></div>
                                     </div>
-                                <?php } ?>
+                                </div>
                             </div>
-                        </div>
+                        <?php } ?>
                     <?php endif; ?>
                     <div class="box_with_price card-price font_weight_600 min-height-auto w-1/12">
                         <div class="flex flex-row justify-center">
@@ -274,7 +274,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                     </div>
                 <?php } ?>
                 <div class="font-semibold dark:font-medium text-md sum-box w-2/12 bx_catalog_item_controls text-center"
-                     data-price="<?= $priceForSum ?? 0 ?>" data-product-id="<?=$item['ID']?>">
+                     data-price="<?= $priceForSum ?? 0 ?>" data-product-id="<?= $item['ID'] ?>">
                     <?= round($priceForSum * $priceBasket) ?? 0 ?>₽
                 </div>
             <?php } else { ?>
