@@ -313,7 +313,20 @@ $arrFilterTop['ID'] = $ids;
 
                 $obCache->EndDataCache($recommendedData);
             }
-            if ($USER->IsAuthorized()) {
+
+            $productRes = CIBlockElement::GetList([],['CODE' => $arResult['VARIABLES']['ELEMENT_CODE']]);
+            $arBuyWithThisProductProductsIds = [];
+            if ($product = $productRes->fetch()) {
+                $buyWithThisProductProductsProperty = CIBlockElement::GetProperty(IBLOCK_CATALOG, $product['ID'], [],
+                    ['CODE'=>defined('BUY_WITH_THIS_PRODUCT_PROPERTY') ? BUY_WITH_THIS_PRODUCT_PROPERTY : 'BUY_WITH_THIS_PRODUCT']);
+                while ($buyWithThisProductProductsPropertyValue = $buyWithThisProductProductsProperty->fetch()) {
+                    if ($buyWithThisProductProductsPropertyValue['VALUE']) {
+                        $arBuyWithThisProductProductsIds[] = $buyWithThisProductProductsPropertyValue['VALUE'];
+                    }
+                }
+                $GLOBALS['arrBuyWithThisProductProductsProductsFilter'] = ['ID' => $arBuyWithThisProductProductsIds];
+            }
+            if ($USER->IsAuthorized() && $arBuyWithThisProductProductsIds) {
                     if (!isset($arParams['DETAIL_SHOW_POPULAR']) || $arParams['DETAIL_SHOW_POPULAR'] != 'N') { ?>
                         <div class="mb-5 mt-5">
                             <div data-entity="parent-container">
@@ -348,8 +361,8 @@ $arrFilterTop['ID'] = $ids;
                                             "ELEMENT_SORT_ORDER2" => "desc",
                                             "ENLARGE_PRODUCT" => "PROP",
                                             "ENLARGE_PROP" => "-",
-                                            "FILTER_NAME" => "",
-                                            "HIDE_NOT_AVAILABLE" => "Y",
+                                            "FILTER_NAME" => "arrBuyWithThisProductProductsProductsFilter",
+                                            "HIDE_NOT_AVAILABLE" => "N",
                                             "HIDE_NOT_AVAILABLE_OFFERS" => "N",
                                             "IBLOCK_ID" => IBLOCK_CATALOG,
                                             "IBLOCK_TYPE" => "1c_catalog",
