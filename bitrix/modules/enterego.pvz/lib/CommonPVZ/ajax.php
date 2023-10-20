@@ -37,7 +37,8 @@ if ($USER->IsAuthorized() && check_bitrix_sessid()) {
         case 'getDaData':
             $address = $request->get('address');
             $constraint = $request->get('constraint');
-            $daData = DeliveryHelper::getDaDataAddressInfo($address, $constraint, $request->get('all') ? true : false);
+            $all = $request->get('all');
+            $daData = DeliveryHelper::getDaDataAddressInfo($address, $constraint ?? false, $all ?? false);
             if (!empty($daData[0]['value'])) {
                 $result = ['results' => $daData, 'status' => 'success'];
                 exit(json_encode($result));

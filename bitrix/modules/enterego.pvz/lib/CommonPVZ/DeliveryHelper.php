@@ -462,14 +462,18 @@ class DeliveryHelper
      * @param string $address
      * @return mixed
      */
-    public static function getDaDataAddressInfo(string $address, string $constraint, bool $all = false): array
+    public static function getDaDataAddressInfo(string $address, $constraint = false, bool $all = false): array
     {
         $token = OshishaDelivery::getOshishaDaDataToken();
         $secret = OshishaDelivery::getOshishaDaDataSecret();
 
         $daData = new DadataClient($token, $secret);
-        $res = $daData->suggest('address', $address, 5, ["locations" => [['city' => $constraint]]]);
-        if (count($res) !== 0 ) {
+        if ($constraint) {
+            $res = $daData->suggest('address', $address, 5, ["locations" => $constraint]);
+        } else {
+            $res = $daData->suggest('address', $address, 5);
+        }
+        if (count($res) !== 0) {
             if ($all) {
                 return $res;
             } else {
@@ -478,7 +482,6 @@ class DeliveryHelper
         } else {
             return [];
         }
-
     }
 
     public static function getDaDataAddressByGeolocation($latitude, $longitude) {

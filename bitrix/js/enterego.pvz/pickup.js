@@ -963,25 +963,27 @@ window.commonDelivery.bxPopup = {
 
         this.instance = nodeOshOverlay;
 
-        $('#osh_delivery_ya_map_address').suggestions({
-            token: BX.SaleCommonPVZ.oshishaDeliveryOptions.DA_DATA_TOKEN,
-            type: "ADDRESS",
-            hint: false,
-            floating: false,
-            triggerSelectOnEnter: true,
-            autoSelectFirst: true,
-            onSelect: function (suggestion) {
-                if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                    document.querySelector(`input#user-address`).value = suggestion?.value ?? '';
-                    BX.SaleCommonPVZ.updatePropsFromDaData(suggestion);
-                    var latitude = Number('' + suggestion.data.geo_lat).toPrecision(6),
-                        longitude = Number('' + suggestion.data.geo_lon).toPrecision(6)
-                    this.oshMkadDelivery.getDistance([latitude, longitude], ((BX.SaleCommonPVZ.propDateDelivery)
-                        ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propDateDelivery + '"]').value)
-                        : ''), suggestion.value, true);
-                }
-            }.bind(this),
-        })
+        BX.SaleCommonPVZ.buildDaDataField(document.getElementById('osh_delivery_ya_map_address'), 'osh');
+
+        // $('#osh_delivery_ya_map_address').suggestions({
+        //     token: BX.SaleCommonPVZ.oshishaDeliveryOptions.DA_DATA_TOKEN,
+        //     type: "ADDRESS",
+        //     hint: false,
+        //     floating: false,
+        //     triggerSelectOnEnter: true,
+        //     autoSelectFirst: true,
+        //     onSelect: function (suggestion) {
+        //         if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+        //             document.querySelector(`input#user-address`).value = suggestion?.value ?? '';
+        //             BX.SaleCommonPVZ.updatePropsFromDaData(suggestion);
+        //             var latitude = Number('' + suggestion.data.geo_lat).toPrecision(6),
+        //                 longitude = Number('' + suggestion.data.geo_lon).toPrecision(6)
+        //             this.oshMkadDelivery.getDistance([latitude, longitude], ((BX.SaleCommonPVZ.propDateDelivery)
+        //                 ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propDateDelivery + '"]').value)
+        //                 : ''), suggestion.value, true);
+        //         }
+        //     }.bind(this),
+        // })
     },
 
     showNoMarkupBlock: function () {
@@ -1042,11 +1044,21 @@ window.commonDelivery.bxPopup = {
         BX('osh_map_overlay').style.display = "flex";
         window.commonDelivery.oshMkadDistance.getInstance().then(oshMkadDelivery => {
             if (oshMkadDelivery.regionSettings.locations){
-                $('#osh_delivery_ya_map_address').suggestions().setOptions({
-                    constraints: {
-                        locations: oshMkadDelivery.regionSettings.locations
-                    }
-                });
+                console.log(oshMkadDelivery.regionSettings.locations);
+                var location_restriction_element = document.querySelector('#location-restrictions-container-osh span');
+                // console.log(location_restriction_element);
+                // if (BX.SaleCommonPVZ.curCityName == 'Москва') {
+                    location_restriction_element.textContent = 'Московская, Москва';
+                    BX.SaleCommonPVZ.locationRestrictionsListArr = [{region: "Московская"}, {region: "Москва"}];
+                // } else {
+                //     if (Number(BX.SaleCommonPVZ.curCityType) === 6) {
+                //         location_restriction_element.textContent = BX.SaleCommonPVZ.curCityArea + ', ' + BX.SaleCommonPVZ.curParentCityName
+                //         BX.SaleCommonPVZ.locationRestrictionsListArr = [{region: BX.SaleCommonPVZ.curCityArea}, {area: BX.SaleCommonPVZ.curParentCityName}];
+                //     } else {
+                //         location_restriction_element.textContent = BX.SaleCommonPVZ.curCityName
+                //         BX.SaleCommonPVZ.locationRestrictionsListArr = [{city: BX.SaleCommonPVZ.curCityName}];
+                //     }
+                // }
             }
 
             this.oshMkadDelivery = oshMkadDelivery

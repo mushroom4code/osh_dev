@@ -41,6 +41,7 @@ BX.SaleCommonPVZ = {
         'filterDelivery': null,
     },
     lastDaDataAddressesArr: null,
+    locationRestrictionsListArr: null,
 
     init: function (params) {
         this.curDeliveryId = params.params?.curDeliveryId;
@@ -87,9 +88,6 @@ BX.SaleCommonPVZ = {
         this.hidePropField(this.propStreetKladrId)
 
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
-        if (this.propAddressId) {
-            window.commonDelivery.bxPopup.init();
-        }
 
         if (this.propCommonPVZId) {
             const commonPVZ = document.querySelector('[name="ORDER_PROP_' + this.propCommonPVZId + '"]');
@@ -415,41 +413,62 @@ BX.SaleCommonPVZ = {
         this.buildSuccessButtonDelivery()
     },
 
-    buildDaDataField: function () {
+    buildDaDataField: function (address, postfix) {
         const __this=this
 
-        const address = document.getElementById('user-address');
-        address.value = this.getValueProp(this.propAddressId);
-            // .value.val(this.getValueProp(this.propAddressId))
 
-        var location_restriction = BX.create('ul',
+        address.value = this.getValueProp(this.propAddressId);
+        var restrictions_list_element;
+        if (this.curCityName) {
+            if (this.curCityName == 'Москва') {
+                restrictions_list_element = [
+                    BX.create({
+                        tag: 'span',
+                        text: 'Московская, Москва'
+                    })
+                ];
+                this.locationRestrictionsListArr = [{region: "Московская"}, {region: "Москва"}];
+            } else if (this.curCityType == 6) {
+                restrictions_list_element = [
+                    BX.create({
+                        tag: 'span',
+                        text: this.curCityArea + ', ' + this.curParentCityName
+                    })
+                ];
+                this.locationRestrictionsListArr = [{region: this.curCityArea}, {area: this.curParentCityName}];
+            } else {
+                restrictions_list_element = [
+                    BX.create({
+                        tag: 'span',
+                        text: this.curCityName
+                    })
+                ];
+                this.locationRestrictionsListArr = [{city: this.curCityName}];
+            }
+        }
+        console.log(this.curCityName);
+        console.log(restrictions_list_element);
+        var location_restrictions = BX.create('div',
             {
                 props: {
-                    style: 'position: absolute; left: 48px; top: 55px;'
+                    className: 'location-restrictions-container',
+                    id: 'location-restrictions-container-' + postfix
                 },
                 children: [
-                    BX.create({
-                        tag: 'li',
-                        props: {
-                            style: 'background: #f8f8f8; border: 1px solid #ccc; border-radius: 3px; cursor: default;' +
-                                'display: inline-block; 0 4px 0 0; padding: 0 0.5em;'
-                        },
-                        children: [
-                            BX.create({
-                                tag: 'span',
-                                text: 'Москва'
-                            })
-                        ]
-                    }),
+                    BX.create('ul',
+                        {
+                            children: [
+                                BX.create({
+                                    tag: 'li',
+                                    children: restrictions_list_element
+                                }),
+                            ]
+                        })
                 ]
             });
-        address.parentNode.insertBefore(location_restriction, address.nextSibling);
 
-
-
-
-
-
+        address.parentNode.insertBefore(location_restrictions, address.nextSibling);
+        address.style.paddingLeft = (location_restrictions.querySelector('ul').offsetWidth + 25 + 9) + 'px';
 
         var suggestions_node = BX.create('div',
             {
@@ -462,130 +481,74 @@ BX.SaleCommonPVZ = {
                 ]
             });
 
-        address.parentNode.insertBefore(suggestions_node, location_restriction.nextSibling);
+        address.parentNode.insertBefore(suggestions_node, location_restrictions.nextSibling);
 
         ['focusin', 'focusout', 'input'].forEach(function (e) {
             address.addEventListener(e, function (event) {
                 if(event.type === 'focusout') {
                     if(!event.relatedTarget || !event.relatedTarget.classList.contains('suggestions-suggestion')) {
+                        var selected_suggestion = suggestions_node.querySelector('.suggestions-selected');
+                        if (selected_suggestion) {
+                            var selected_suggestion_arr = __this.lastDaDataAddressesArr[selected_suggestion.getAttribute('data-index')];
+                            if (selected_suggestion_arr.value !== address.value) {
+                                selected_suggestion.dispatchEvent(new Event('click'));
+                            }
+                        }
                         suggestions_node.style.display = 'none';
                     }
                 } else {
                     if (event.type === 'focusin') {
                         suggestions_node.style.display = 'block';
                     }
-                    __this.getDaDataRequest(address, __this.buildDaDataAddressesList, suggestions_node, true);
-                    __this.buildDaDataAddressesList(suggestions_node, address);
+                    __this.getDaDataRequest(address, __this.buildDaDataAddressesList, suggestions_node, __this.locationRestrictionsListArr, true);
                 }
             });
         });
 
-        document.addEventListener("keydown", function (event) {
+        address.addEventListener("keydown", function (event) {
+            if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp' && event.key !== 'Enter') {
+                return;
+            }
+
             var len = suggestions_node.querySelectorAll('div.suggestions-suggestion').length;
-            if (len != 0) {
-                var activeElement = suggestions_node.querySelector('div.suggestions-suggestion.suggestions-selected');
-                var index = activeElement.getAttribute('data-index');
-                var newActiveElement;
-                console.log(__this.lastDaDataAddressesArr);
 
-                if (event.key === 'ArrowDown') {
-                    index++;
-                    if (index > len - 1) {
-                        index = 0;
-                    }
+            if (len === 0) {
+                return;
+            }
+            var activeElement = suggestions_node.querySelector('div.suggestions-suggestion.suggestions-selected');
+            var index = activeElement.getAttribute('data-index');
+            var newActiveElement;
 
-                    newActiveElement = suggestions_node.querySelector('div.suggestions-suggestion[data-index="'+index+'"]');
-                    newActiveElement.classList.add('suggestions-selected');
-                    address.value = __this.lastDaDataAddressesArr[index].value;
-                    activeElement.classList.remove('suggestions-selected');
-                } else if (event.key === 'ArrowUp') {
-                    index--;
-                    if (index < 0) {
-                        index = len - 1;
-                    }
-                    newActiveElement = suggestions_node.querySelector('div.suggestions-suggestion[data-index="'+index+'"]');
-                    newActiveElement.classList.add('suggestions-selected');
-                    address.value = __this.lastDaDataAddressesArr[index].value;
-                    activeElement.classList.remove('suggestions-selected');
-                } else if (event.key === "Enter") {
-                    activeElement.dispatchEvent(new Event('click'));
-                    console.log("Enter key was pressed");
+            if (event.key === 'ArrowDown') {
+                index++;
+                if (index > len - 1) {
+                    index = 0;
                 }
+
+                newActiveElement = suggestions_node.querySelector('div.suggestions-suggestion[data-index="' + index + '"]');
+                newActiveElement.classList.add('suggestions-selected');
+                address.value = __this.lastDaDataAddressesArr[index].value;
+                activeElement.classList.remove('suggestions-selected');
+            } else if (event.key === 'ArrowUp') {
+                index--;
+                if (index < 0) {
+                    index = len - 1;
+                }
+                newActiveElement = suggestions_node.querySelector('div.suggestions-suggestion[data-index="' + index + '"]');
+                newActiveElement.classList.add('suggestions-selected');
+                address.value = __this.lastDaDataAddressesArr[index].value;
+                activeElement.classList.remove('suggestions-selected');
+            } else if (event.key === "Enter") {
+                activeElement.dispatchEvent(new Event('click'));
             }
         });
-
-
-
-        // address.value = this.getValueProp(this.propAddressId);
-
-    //         < div
-    //     className = "order-6 col-12 wrap_filter_block mr-2"
-    //     id = "user-address-wrap" > < div
-    //     className = "d-flex flex-lg-row flex-md-row flex-column " > < div
-    //     className = "width-100" > < label
-    //     className = "title" > Введите
-    //     адрес:</
-    // label>
-    //     <input id="user-address"
-    //            className="form-control bx-soa-customer-input bx-ios-fix min-width-700 suggestions-input"
-    //            autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false"
-    //            style="box-sizing: border-box; padding-left: 192.797px; padding-right: 23px;">
-    //         <div className="suggestions-wrapper"><span className="suggestions-addon" data-addon-type="spinner"
-    //                                                    style="left: 1240.19px; top: -39px; height: 38px; width: 38px; display: none; opacity: 0;"></span>
-    //             <ul className="suggestions-constraints" style="left: 24px; top: -32px;">
-    //                 <li data-constraint-id="c3"><span>Московская, Москва</span></li>
-    //             </ul>
-    //         </div>
-    //     </div>
-    // </div></div>
-        // address.suggestions({
-        //     token: this.oshishaDeliveryOptions.DA_DATA_TOKEN,
-        //     type: "ADDRESS",
-        //     hint: false,
-        //     floating: true,
-        //     triggerSelectOnEnter: true,
-        //     autoSelectFirst: true,
-        //     onSelect: function (suggestion) {
-        //         this.updatePropsFromDaData(suggestion)
-        //
-        //         if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-        //             if (__this.curDeliveryId == __this.doorDeliveryId) {
-        //                 __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-        //                 __this.getSavedOshishaDelivery(Number('' + suggestion.data.geo_lat).toPrecision(6),
-        //                     Number('' + suggestion.data.geo_lon).toPrecision(6));
-        //             }
-        //         }
-        //     }.bind(this),
-        // })
-
-        // if (this.curCityName) {
-        //     if (this.curCityName == 'Москва') {
-        //         address.suggestions().setOptions({
-        //             constraints: {
-        //                 locations: [{region: "Московская"}, {region: "Москва"}]
-        //             }
-        //         });
-        //     } else if (this.curCityType == 6) {
-        //         address.suggestions().setOptions({
-        //             constraints: {
-        //                 locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
-        //             }
-        //         });
-        //     } else {
-        //         address.suggestions().setOptions({
-        //             constraints: {
-        //                 locations: [{city: this.curCityName}]
-        //             }
-        //         });
-        //     }
-        // }
     },
 
     buildDaDataAddressesList: function (response, address, suggestions_node) {
-        const __this = this;
+        const __this = BX.SaleCommonPVZ;
 
         if (response['status'] === 'success') {
-            this.lastDaDataAddressesArr = response.results;
+            __this.lastDaDataAddressesArr = response.results;
             suggestions_node.innerHTML = '';
             for (const [key, value] of Object.entries(response.results)) {
                 var location_value = value.value;
@@ -633,7 +596,7 @@ BX.SaleCommonPVZ = {
         }
     },
 
-    getDaDataRequest: function (address, onSuccessCallback, suggestions_node, all = false) {
+    getDaDataRequest: function (address, onSuccessCallback, suggestions_node, locationRestrictionsListArr = false, all = false) {
         BX.ajax({
             url: this.ajaxUrlPVZ,
             method: 'POST',
@@ -642,7 +605,7 @@ BX.SaleCommonPVZ = {
                 sessid: BX.bitrix_sessid(),
                 address: address.value,
                 'action': 'getDaData',
-                constraint: 'Москва',
+                constraint: locationRestrictionsListArr,
                 all: all
             },
             onsuccess: function (response) {
@@ -689,7 +652,6 @@ BX.SaleCommonPVZ = {
                     sessid: BX.bitrix_sessid(),
                     address: address,
                     'action': 'getDaData',
-                    constraint: 'Москва'
                 },
                 onsuccess: function (response) {
                     if (response.status === 'success') {
@@ -880,29 +842,23 @@ BX.SaleCommonPVZ = {
                 if (__this.propAddressId) {
                     const userAddress = $(document).find('#user-address');
                     if (userAddress.length) {
+                        var location_restriction_element = document.querySelector('#location-restrictions-container-general span');
                         if (__this.curCityName == 'Москва') {
-                            userAddress.suggestions().setOptions({
-                                constraints: {
-                                    locations: [{region: "Московская"}, {region: "Москва"}]
-                                }
-                            });
+                            location_restriction_element.textContent = 'Московская, Москва';
+                            __this.locationRestrictionsListArr = [{region: "Московская"}, {region: "Москва"}];
                         } else {
                             if (Number(__this.curCityType) === 6) {
-                                userAddress.suggestions().setOptions({
-                                    constraints: {
-                                        locations: [{region: __this.curCityArea}, {area: __this.curParentCityName}]
-                                    }
-                                });
+                                location_restriction_element.textContent = __this.curCityArea + ', ' + __this.curParentCityName
+                                __this.locationRestrictionsListArr = [{region: __this.curCityArea}, {area: __this.curParentCityName}];
                             } else {
-                                // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
-                                userAddress.suggestions().setOptions({
-                                    constraints: {
-                                        locations: [{city: __this.curCityName}]
-                                    }
-                                });
+                                location_restriction_element.textContent = __this.curCityName
+                                __this.locationRestrictionsListArr = [{city: __this.curCityName}];
                             }
                         }
                     }
+                }
+                if (__this.propAddressId) {
+                    window.commonDelivery.bxPopup.init();
                 }
             },
             onfailure: function (res) {
@@ -1335,7 +1291,7 @@ BX.SaleCommonPVZ = {
             }),
             BX('pvz_user_data')
         )
-        this.buildDaDataField()
+        this.buildDaDataField(document.getElementById('user-address') , 'general');
         this.buildSuccessButtonDelivery()
         return this
     },

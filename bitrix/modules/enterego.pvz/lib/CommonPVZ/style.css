@@ -752,6 +752,36 @@ h4.checkout-block-title > i.fa {
     }
 }
 
+div.location-restrictions-container {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+    -webkit-text-size-adjust: 100%;
+}
+
+div.location-restrictions-container ul {
+    position: absolute;
+    left: 25px;
+    top: -32px;
+}
+
+div.location-restrictions-container ul {
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: default;
+    display: inline-block;
+    margin: 0 4px 0 0;
+    padding: 0 0.5em;
+}
+
+div.suggestions-suggestion span.suggestions-value {
+    pointer-events: none;
+}
+
+
+
 div.suggestions-suggestion span.suggestions-value {
     pointer-events: none;
 }
