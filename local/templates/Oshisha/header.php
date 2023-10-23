@@ -61,11 +61,35 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     <title><?php $APPLICATION->ShowTitle() ?></title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
-
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo SITE_TEMPLATE_PATH; ?>/images/favicon.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
+<!--    PWA -->
+    <link rel="manifest" href="/www/html/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="OSHISHA">
+    <meta name="apple-mobile-web-app-title" content="OSHISHA">
+    <meta name="msapplication-starturl" content="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="icon" type="ico" sizes="192" href="https://oshisha.net/local/templates/Oshisha/images/favicon.ico">
+    <link rel="apple-touch-icon" type="ico" sizes="192" href="https://oshisha.net/local/templates/Oshisha/images/favicon.ico">
+<!--    PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(
+                function(registration) {
+                    // Registration was successful
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope); },
+                function(err) {
+                    // registration failed :(
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
     <?php
     Asset::getInstance()->addJs('/local/templates/Oshisha/assets/js/subsidiary.js');
 
