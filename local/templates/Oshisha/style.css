@@ -7347,3 +7347,9 @@ ul#select2-subsidiary_link-results {
     width: 160px;
     height: 25px;
 }
+
+body #panel {
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+}
