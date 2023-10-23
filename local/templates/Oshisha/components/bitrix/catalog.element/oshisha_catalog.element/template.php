@@ -218,14 +218,14 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             </div>
         </div>
         <?php if ($rowResHidePrice == 'Нет' && !empty($option_site->text_rospetrebnadzor_product)) { ?>
-            <p class="font-14 dark:text-textDark text-textLight  mb-lg-4  mb-md-4 mb-2"><?= $option_site->text_rospetrebnadzor_product; ?></p>
+            <p class="font-14 dark:text-textDark text-textLight mb-4"><?= $option_site->text_rospetrebnadzor_product; ?></p>
         <?php } ?>
-        <div class="box_with_photo_product row">
+        <div class="box_with_photo_product flex md:flex-row flex-col mb-7">
             <?php $count = count($actualItem['PICTURE']);
             $arraySlider = $actualItem['PICTURE'];
             require_once(__DIR__ . '/slider/template.php'); ?>
             <div
-                    class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product
+                    class="md:w-1/2 w-full mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product
 				not-input-parse justify-content-between">
                 <h1 class="head-title dark:text-textDark text-textLight"><?= $name ?></h1>
                 <?php if ($isGift) { ?>
