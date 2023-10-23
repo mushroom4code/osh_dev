@@ -446,8 +446,6 @@ BX.SaleCommonPVZ = {
                 this.locationRestrictionsListArr = [{city: this.curCityName}];
             }
         }
-        console.log(this.curCityName);
-        console.log(restrictions_list_element);
         var location_restrictions = BX.create('div',
             {
                 props: {
@@ -468,13 +466,17 @@ BX.SaleCommonPVZ = {
             });
 
         address.parentNode.insertBefore(location_restrictions, address.nextSibling);
+        var address_position_arr = address.getBoundingClientRect();
+        var location_restrictions_ul = location_restrictions.querySelector('ul');
+        location_restrictions_ul.style.left = (Math.floor(address_position_arr['left']) + (postfix === 'general' ? 22 : 11)) + 'px';
+        location_restrictions_ul.style.top = (Math.floor(address_position_arr['top']) + (postfix === 'general' ? 9 : 6)) + 'px';
         address.style.paddingLeft = (location_restrictions.querySelector('ul').offsetWidth + 25 + 9) + 'px';
 
         var suggestions_node = BX.create('div',
             {
                 props: {
                     className: 'suggestions-suggestions',
-                    id: 'suggestions-container'
+                    id: 'suggestions-container-'+postfix
                 },
                 children: [
 
@@ -482,12 +484,20 @@ BX.SaleCommonPVZ = {
             });
 
         address.parentNode.insertBefore(suggestions_node, location_restrictions.nextSibling);
+        suggestions_node.style.left = Math.floor(address_position_arr['left']) + 'px';
+        suggestions_node.style.top = (Math.floor(address_position_arr['top']) + 38) + 'px';
+        suggestions_node.style.width = Math.floor(address_position_arr['width']) + 'px';
 
         ['focusin', 'focusout', 'input'].forEach(function (e) {
             address.addEventListener(e, function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 if(event.type === 'focusout') {
                     if(!event.relatedTarget || !event.relatedTarget.classList.contains('suggestions-suggestion')) {
                         var selected_suggestion = suggestions_node.querySelector('.suggestions-selected');
+                        if (__this.lastDaDataAddressesArr.length === 1) {
+                            selected_suggestion.dispatchEvent(new Event('click'));
+                        }
                         if (selected_suggestion) {
                             var selected_suggestion_arr = __this.lastDaDataAddressesArr[selected_suggestion.getAttribute('data-index')];
                             if (selected_suggestion_arr.value !== address.value) {
@@ -500,7 +510,7 @@ BX.SaleCommonPVZ = {
                     if (event.type === 'focusin') {
                         suggestions_node.style.display = 'block';
                     }
-                    __this.getDaDataRequest(address, __this.buildDaDataAddressesList, suggestions_node, __this.locationRestrictionsListArr, true);
+                    __this.getDaDataRequest(address, __this.buildDaDataAddressesList, suggestions_node, __this.locationRestrictionsListArr, postfix, true);
                 }
             });
         });
@@ -518,6 +528,11 @@ BX.SaleCommonPVZ = {
             var activeElement = suggestions_node.querySelector('div.suggestions-suggestion.suggestions-selected');
             var index = activeElement.getAttribute('data-index');
             var newActiveElement;
+
+            if (len === 1) {
+                address.value = __this.lastDaDataAddressesArr[index].value;
+                return;
+            }
 
             if (event.key === 'ArrowDown') {
                 index++;
@@ -542,9 +557,41 @@ BX.SaleCommonPVZ = {
                 activeElement.dispatchEvent(new Event('click'));
             }
         });
+
+        window.onresize = function() {
+            var restriction_locations_general_ul = document.querySelector('#location-restrictions-container-general ul');
+            var restriction_locations_osh_ul = document.querySelector('#location-restrictions-container-osh ul');
+            var general_address_field = document.querySelector('#user-address');
+            var osh_address_field = document.querySelector('#osh_delivery_ya_map_address');
+            var general_suggestions_node = document.querySelector('#suggestions-container-general');
+            var osh_suggestions_node = document.querySelector('#suggestions-container-osh')
+
+            if (general_address_field || osh_address_field) {
+                var general_address_position_arr = general_address_field.getBoundingClientRect();
+                var osh_address_position_arr = osh_address_field.getBoundingClientRect();
+                if (restriction_locations_general_ul) {
+                    restriction_locations_general_ul.style.left = (Math.floor(general_address_position_arr['left']) + 22) + 'px';
+                    restriction_locations_general_ul.style.top = (Math.floor(general_address_position_arr['top']) + 9) + 'px';
+                }
+                if (restriction_locations_osh_ul) {
+                    restriction_locations_osh_ul.style.left = (Math.floor(osh_address_position_arr['left']) + 11) + 'px';
+                    restriction_locations_osh_ul.style.top = (Math.floor(osh_address_position_arr['top']) + 6) + 'px';
+                }
+                if (general_suggestions_node){
+                    general_suggestions_node.style.left = Math.floor(general_address_position_arr['left']) + 'px';
+                    general_suggestions_node.style.top = (Math.floor(general_address_position_arr['top']) + 38) + 'px';
+                    general_suggestions_node.style.width = Math.floor(general_address_position_arr['width']) + 'px';
+                }
+                if (osh_suggestions_node) {
+                    osh_suggestions_node.style.left = Math.floor(osh_address_position_arr['left']) + 'px';
+                    osh_suggestions_node.style.top = (Math.floor(osh_address_position_arr['top']) + 38) + 'px';
+                    osh_suggestions_node.style.width = Math.floor(osh_address_position_arr['width']) + 'px';
+                }
+            }
+        };
     },
 
-    buildDaDataAddressesList: function (response, address, suggestions_node) {
+    buildDaDataAddressesList: function (response, address, suggestions_node, postfix) {
         const __this = BX.SaleCommonPVZ;
 
         if (response['status'] === 'success') {
@@ -582,13 +629,22 @@ BX.SaleCommonPVZ = {
                             __this.updatePropsFromDaData(suggestion);
                             if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
                                 if (__this.curDeliveryId == __this.doorDeliveryId) {
-                                    __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                                    __this.getSavedOshishaDelivery(Number('' + suggestion.data.geo_lat).toPrecision(6),
-                                        Number('' + suggestion.data.geo_lon).toPrecision(6));
+                                    if (postfix === 'general') {
+                                        __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                                        __this.getSavedOshishaDelivery(Number('' + suggestion.data.geo_lat).toPrecision(6),
+                                            Number('' + suggestion.data.geo_lon).toPrecision(6));
+                                    } else if (postfix === 'osh') {
+                                        document.querySelector(`input#user-address`).value = suggestion?.value ?? '';
+                                        var latitude = Number('' + suggestion.data.geo_lat).toPrecision(6),
+                                            longitude = Number('' + suggestion.data.geo_lon).toPrecision(6)
+                                        window.commonDelivery.bxPopup.oshMkadDelivery.getDistance([latitude, longitude], ((__this.propDateDelivery)
+                                            ? (document.querySelector('input[name="ORDER_PROP_' + __this.propDateDelivery + '"]').value)
+                                            : ''), suggestion.value, true);
+                                    }
                                 }
                             }
                             suggestions_node.style.display = 'none';
-                            address.value = suggestion.value;
+                            address.value = suggestion?.value ?? '';
                         }, true);
                     });
                 });
@@ -596,7 +652,7 @@ BX.SaleCommonPVZ = {
         }
     },
 
-    getDaDataRequest: function (address, onSuccessCallback, suggestions_node, locationRestrictionsListArr = false, all = false) {
+    getDaDataRequest: function (address, onSuccessCallback, suggestions_node, locationRestrictionsListArr = false, postfix = 'general', all = false) {
         BX.ajax({
             url: this.ajaxUrlPVZ,
             method: 'POST',
@@ -609,7 +665,7 @@ BX.SaleCommonPVZ = {
                 all: all
             },
             onsuccess: function (response) {
-                onSuccessCallback(response, address, suggestions_node);
+                onSuccessCallback(response, address, suggestions_node, postfix);
             }
         })
     },

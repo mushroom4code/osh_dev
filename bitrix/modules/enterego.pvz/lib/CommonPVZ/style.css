@@ -761,7 +761,7 @@ div.location-restrictions-container {
 }
 
 div.location-restrictions-container ul {
-    position: absolute;
+    position: fixed;
     left: 25px;
     top: -32px;
 }
@@ -780,8 +780,7 @@ div.suggestions-suggestion span.suggestions-value {
     pointer-events: none;
 }
 
-
-
-div.suggestions-suggestion span.suggestions-value {
-    pointer-events: none;
+div.suggestions-suggestions {
+    position: fixed;
 }
+

@@ -964,26 +964,6 @@ window.commonDelivery.bxPopup = {
         this.instance = nodeOshOverlay;
 
         BX.SaleCommonPVZ.buildDaDataField(document.getElementById('osh_delivery_ya_map_address'), 'osh');
-
-        // $('#osh_delivery_ya_map_address').suggestions({
-        //     token: BX.SaleCommonPVZ.oshishaDeliveryOptions.DA_DATA_TOKEN,
-        //     type: "ADDRESS",
-        //     hint: false,
-        //     floating: false,
-        //     triggerSelectOnEnter: true,
-        //     autoSelectFirst: true,
-        //     onSelect: function (suggestion) {
-        //         if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-        //             document.querySelector(`input#user-address`).value = suggestion?.value ?? '';
-        //             BX.SaleCommonPVZ.updatePropsFromDaData(suggestion);
-        //             var latitude = Number('' + suggestion.data.geo_lat).toPrecision(6),
-        //                 longitude = Number('' + suggestion.data.geo_lon).toPrecision(6)
-        //             this.oshMkadDelivery.getDistance([latitude, longitude], ((BX.SaleCommonPVZ.propDateDelivery)
-        //                 ? (document.querySelector('input[name="ORDER_PROP_' + BX.SaleCommonPVZ.propDateDelivery + '"]').value)
-        //                 : ''), suggestion.value, true);
-        //         }
-        //     }.bind(this),
-        // })
     },
 
     showNoMarkupBlock: function () {
@@ -1042,23 +1022,31 @@ window.commonDelivery.bxPopup = {
         this.init();
         document.body.style.overflow = "hidden";
         BX('osh_map_overlay').style.display = "flex";
+
         window.commonDelivery.oshMkadDistance.getInstance().then(oshMkadDelivery => {
-            if (oshMkadDelivery.regionSettings.locations){
-                console.log(oshMkadDelivery.regionSettings.locations);
+            const osh_address_field = document.querySelector('#osh_delivery_ya_map_address');
+            const osh_address_position_arr = osh_address_field.getBoundingClientRect();
+            const restriction_locations_osh_ul = document.querySelector('#location-restrictions-container-osh ul');
+            const suggestions_node_osh = document.querySelector('#suggestions-container-osh');
+            restriction_locations_osh_ul.style.left = (Math.floor(osh_address_position_arr['left']) + 11) + 'px';
+            restriction_locations_osh_ul.style.top = (Math.floor(osh_address_position_arr['top']) + 6) + 'px';
+            osh_address_field.style.paddingLeft = (restriction_locations_osh_ul.offsetWidth + 25) + 'px';
+            suggestions_node_osh.style.left = Math.floor(osh_address_position_arr['left']) + 'px';
+            suggestions_node_osh.style.top = (Math.floor(osh_address_position_arr['top']) + 38) + 'px';
+            suggestions_node_osh.style.width = Math.floor(osh_address_position_arr['width']) + 'px';
+            if (oshMkadDelivery.regionSettings.locations) {
                 var location_restriction_element = document.querySelector('#location-restrictions-container-osh span');
-                // console.log(location_restriction_element);
-                // if (BX.SaleCommonPVZ.curCityName == 'Москва') {
-                    location_restriction_element.textContent = 'Московская, Москва';
-                    BX.SaleCommonPVZ.locationRestrictionsListArr = [{region: "Московская"}, {region: "Москва"}];
-                // } else {
-                //     if (Number(BX.SaleCommonPVZ.curCityType) === 6) {
-                //         location_restriction_element.textContent = BX.SaleCommonPVZ.curCityArea + ', ' + BX.SaleCommonPVZ.curParentCityName
-                //         BX.SaleCommonPVZ.locationRestrictionsListArr = [{region: BX.SaleCommonPVZ.curCityArea}, {area: BX.SaleCommonPVZ.curParentCityName}];
-                //     } else {
-                //         location_restriction_element.textContent = BX.SaleCommonPVZ.curCityName
-                //         BX.SaleCommonPVZ.locationRestrictionsListArr = [{city: BX.SaleCommonPVZ.curCityName}];
-                //     }
-                // }
+
+                var address_text = '';
+                oshMkadDelivery.regionSettings.locations.forEach(function (element, key) {
+                    if (!address_text) {
+                        address_text = element['region'];
+                        return;
+                    }
+                    address_text += (', ' + element['region']);
+                });
+                location_restriction_element.textContent = address_text;
+                BX.SaleCommonPVZ.locationRestrictionsListArr = oshMkadDelivery.regionSettings.locations;
             }
 
             this.oshMkadDelivery = oshMkadDelivery
