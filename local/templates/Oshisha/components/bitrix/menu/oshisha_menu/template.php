@@ -97,7 +97,6 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         </div>
     </ul>
 </nav>
-<div class="overlay_top"></div>
 <script type="text/javascript">
     let menu_items_array = <?= json_encode($menu_for_JS);?>;
     let icon_bar = $('#main_menus');

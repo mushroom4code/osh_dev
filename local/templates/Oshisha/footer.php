@@ -23,6 +23,7 @@ $option = $option_site; ?>
         <div class="row">
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
                 <a class="logo" href="<?= SITE_DIR ?>">
+                    <div class="logo_footer">
                     <?php
                     $APPLICATION->IncludeComponent(
                         'bitrix:main.include',
@@ -34,6 +35,7 @@ $option = $option_site; ?>
                         false
                     );
                     ?>
+                    </div>
                 </a>
 
                 <div class='company-info'>
