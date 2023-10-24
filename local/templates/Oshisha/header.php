@@ -65,21 +65,25 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
 <!--    PWA -->
-    <link rel="manifest" href="/www/html/manifest.json">
+    <link rel="manifest" href="/manifest.json">
+
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="OSHISHA">
     <meta name="apple-mobile-web-app-title" content="OSHISHA">
+    <meta name="theme-color" content="#393939">
+    <meta name="msapplication-navbutton-color" content="#393939">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="msapplication-starturl" content="/">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="icon" type="ico" sizes="192" href="https://oshisha.net/local/templates/Oshisha/images/favicon.ico">
-    <link rel="apple-touch-icon" type="ico" sizes="192" href="https://oshisha.net/local/templates/Oshisha/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="144x144" href="/images/maskable_icon_x144.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="144x144" href="/images/maskable_icon_x144.png">
 <!--    PWA -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(
+                navigator.serviceWorker.register('/serviceworker.js').then(
                 function(registration) {
                     // Registration was successful
                     console.log('ServiceWorker registration successful with scope: ', registration.scope); },
@@ -89,6 +93,19 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                 });
             });
         }
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevents the default mini-infobar or install dialog from appearing on mobile
+            e.preventDefault();
+            // Save the event because you'll need to trigger it later.
+            deferredPrompt = e;
+            // Show your customized install prompt for your PWA
+            // Your own UI doesn't have to be a single element, you
+            // can have buttons in different locations, or wait to prompt
+            // as part of a critical journey.
+            showInAppInstallPromotion();
+        });
     </script>
     <?php
     Asset::getInstance()->addJs('/local/templates/Oshisha/assets/js/subsidiary.js');
