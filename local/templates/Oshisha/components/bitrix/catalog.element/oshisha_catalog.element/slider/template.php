@@ -1,4 +1,4 @@
-<div class="col-md-6 col-sm-6 col-lg-6 product_left col-12">
+<div class="md:w-1/2 md:mr-10 mr-0 rounded-xl w-full product_left">
 	<div class="product-item-detail-slider-container <?php if (!empty($taste['VALUE'])) { ?> p-lg-md-25
                     <?php } ?>" id="<?= $itemIds['BIG_SLIDER_ID'] ?>">
 		<div class="variation_taste" style="max-width: 10%; height: 90%">
@@ -24,13 +24,13 @@
 				<span class="product-item-detail-slider-right carousel_elem_custom"
 				      data-entity="slider-control-right"
 				      style="display: none;"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
-				<div class="product-item-detail-slider-images-container" data-entity="images-container">
+				<div class="product-item-detail-slider-images-container rounded-xl" data-entity="images-container">
 					<?php if (!empty($actualItem['PICTURE'][0]['SRC'])) {
 						foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
-							<div class="product-item-detail-slider-image<?= ($key == 0 ? ' active' : '') ?>"
+							<div class="product-item-detail-slider-image rounded-xl <?= ($key == 0 ? ' active' : '') ?>"
 							     data-entity="image" data-id="<?= $photo['ID'] ?>">
 								<img src="<?= $photo['SRC'] ?>" alt="<?= $alt ?>"
-								     title="<?= $title ?>"<?= ($key == 0 ? ' itemprop="image"' : '') ?>>
+								     title="<?= $title ?>" class="rounded-xl" <?= ($key == 0 ? ' itemprop="image"' : '') ?>>
 							</div>
 							<?php
 						}

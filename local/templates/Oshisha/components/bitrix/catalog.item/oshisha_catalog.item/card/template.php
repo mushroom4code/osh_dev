@@ -107,45 +107,6 @@ $subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["S
 $found_key = array_search((string)$item['ID'], $subscription_item_ids);
 $is_key_found = isset($found_key) && ($found_key !== false);
 
-if (empty($morePhoto[0])) {
-    $morePhoto[0]['SRC'] = '/local/templates/Oshisha/images/no-photo.gif';
-}
-
-$prop_see_in_window = [];
-foreach ($item['PROPERTIES'] as $key => $props_val) {
-    if ($item['POPUP_PROPS'][$key]['SEE_POPUP_WINDOW'] == 'Y' && !empty($props_val['VALUE'])) {
-        $prop_see_in_window[] = $props_val;
-    }
-}
-
-if ($show_price) {
-    $jsonForModal = [
-        'ID' => $item['ID'],
-        'BUY_LINK' => $arItemIDs['BUY_LINK'],
-        'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
-        'TYPE_PRODUCT' => 'PRODUCT',
-        'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
-        'MORE_PHOTO' => $morePhoto,
-        'PRODUCT' => $item['PRODUCT'],
-        'USE_DISCOUNT' => $useDiscount['VALUE'],
-        'ACTUAL_BASKET' => $priceBasket,
-        'PRICE' => $price['PRICE_DATA'],
-        'SALE_PRICE' => round($specialPrice),
-        'POPUP_PROPS' => $prop_see_in_window ?? 0,
-        'NAME' => $productTitle,
-        'LIKE' => [
-            'ID_PROD' => $item['ID_PROD'],
-            'F_USER_ID' => $item['F_USER_ID'],
-            'COUNT_LIKE' => $item['COUNT_LIKE'] ?? 0,
-            'COUNT_LIKES' => $item['COUNT_LIKES'] ?? 0,
-            'COUNT_FAV' => $item['COUNT_FAV'] ?? 0,
-        ],
-        'USE_CUSTOM_SALE_PRICE' => USE_CUSTOM_SALE_PRICE,
-        'BASE_PRICE' => BASIC_PRICE,
-        'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE'] ?? []
-    ];
-}
-$listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
     <span class="taste bg-greenLight dark:bg-greenButton text-white absolute -left-4 -top-3 py-2.5 px-1 rounded-full
      text-xs z-10 font-medium">NEW</span>
@@ -156,7 +117,6 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
 <?php } ?>
 <div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-4 h-full relative
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>" data-product_id="<?= $item['ID'] ?>">
-    <input type="hidden" class="product-values" value="<?= htmlspecialchars(json_encode($jsonForModal)); ?>"/>
     <div class="bx_catalog_item_container product-item position-relative h-full
             <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
         <?php
@@ -222,29 +182,14 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                             <img src="/local/templates/Oshisha/images/no-photo.gif" class="h-40" alt="no photo"/>
                         <?php } ?>
                     </a>
-                    <div class="open-fast-window absolute mb-2 top-20 right-4 z-20 p-3 cursor-pointer" data-item-id="<?= $item['ID'] ?>">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.972 13.4274C14.2256 12.1625 15 10.4216 15 8.5C15 4.63401 11.866 1.5 8 1.5C4.13401 1.5 1 4.63401 1 8.5C1 12.366 4.13401 15.5 8 15.5C9.94437 15.5 11.7035 14.7072 12.972 13.4274ZM12.972 13.4274L18.5 19" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <div class="absolute mb-2 top-20 right-4 z-20 p-3 cursor-pointer"
+                         data-item-id="<?= $item['ID'] ?>" id="<?='fastProduct_' . $item['ID']?>">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.972 13.4274C14.2256 12.1625 15 10.4216 15 8.5C15 4.63401 11.866 1.5 8 1.5C4.13401 1.5 1 4.63401 1 8.5C1 12.366 4.13401 15.5 8 15.5C9.94437 15.5 11.7035 14.7072 12.972 13.4274ZM12.972 13.4274L18.5 19"
+                                  stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <?php if (!empty($listGroupedProduct)) {
-                        if (count($listGroupedProduct) > 1 && (int)$item['PRODUCT']['QUANTITY'] > 0) { ?>
-                            <div class="absolute top-28 right-4 js__open-grouped-product-window p-3 cursor-pointer"
-                               aria-hidden="true"
-                               id="<?= 'grouped_' . $item['ID'] ?>"
-                               data-item-id="<?= $item['ID'] ?>"
-                               data-quantity-id="<?= $arItemIDs['QUANTITY_ID'] ?>"
-                               data-item-productIds="<?= htmlspecialchars(json_encode($listGroupedProduct)) ?>">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12.972 13.4274C14.2256 12.1625 15 10.4216 15 8.5C15 4.63401 11.866 1.5 8 1.5C4.13401 1.5 1 4.63401 1 8.5C1 12.366 4.13401 15.5 8 15.5C9.94437 15.5 11.7035 14.7072 12.972 13.4274ZM12.972 13.4274L18.5 19" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                        <?php }
-                    } ?>
                 </div>
-
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                     <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
 
