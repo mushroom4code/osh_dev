@@ -49,6 +49,7 @@ BX.SaleCommonPVZ = {
         this.shipmentCost = params.params?.shipmentCost;
         this.orderPackages = params.params?.packages;
         this.oshishaDeliveryOptions = params.params?.deliveryOptions;
+        this.dateTimeIntervalOptions = params.params?.dateTimeIntervalOptions;
         this.curSiteId = params.params?.curSiteId;
 
         this.refresh()
@@ -1358,17 +1359,16 @@ BX.SaleCommonPVZ = {
         let __this = this;
         let datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
 
-        if (this.curSiteId == 'RZ') {
-            datetime_interval_order.find('option').not('option[value=""]').not('option[value="10:00-18:00"]').remove();
-        } else {
-            datetime_interval_order.find('option[value="10:00-18:00"]').remove();
+        var deliveryTimeIntervalOptionsNode = '<option value>Не выбрано</option>';
+        for (const [key, value] of Object.entries(this.dateTimeIntervalOptions)) {
+            deliveryTimeIntervalOptionsNode += '<option value="' + value['VALUE'] + '">' + value['VALUE'] + '</option>';
         }
 
         const TimeDeliveryNode = BX.create({
             tag: 'div',
             html: '<select style="background-color: unset; height: 40px; padding: 0 23px;"' +
                 ' class="form-control bx-soa-customer-input bx-ios-fix" id="datetime_interval_popup">' +
-                datetime_interval_order.html()+'</select>',
+                deliveryTimeIntervalOptionsNode +'</select>',
             dataset: {name: 'DELIVERYTIME_INTERVAL'},
         })
 
