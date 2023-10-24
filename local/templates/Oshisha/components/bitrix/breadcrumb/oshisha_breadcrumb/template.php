@@ -21,7 +21,8 @@ itemtype="http://schema.org/BreadcrumbList">';
 $itemSize = count($arResult);
 for ($index = 0; $index < $itemSize; $index++) {
     $title = htmlspecialcharsex($arResult[$index]["TITLE"]);
-    $arrow = ($index > 0 ? '<span class="bx-breadcrumb-item-angle mx-1.5 text-grayIconLights text-md">/</span>' : '');
+    $arrow = ($index > 0 ?
+        '<span class="bx-breadcrumb-item-angle mx-1.5 text-grayIconLights dark:text-gray-slider-arrow text-md">/</span>' : '');
 
     if ($arResult[$index]["LINK"] <> "" && $index != $itemSize - 1) {
         if ($arResult[$index]["LINK"] === '/catalog/') {
@@ -38,7 +39,7 @@ for ($index = 0; $index < $itemSize; $index++) {
 				<a class="bx-breadcrumb-item-link" href="' . $arResult[$index]["LINK"] . '" title="' . $title . '" 
 				itemprop="item">
 					<span class="bx-breadcrumb-item-text text-iconLune dark:hover:text-white hover:text-light-red
-					 text-xs font-normal dark:text-grayIconLights" 
+					 text-xs font-normal dark:text-gray-slider-arrow" 
 					itemprop="name">' . $title . '</span>
 				</a>
 				<meta itemprop="position" content="' . ($index + 1) . '" />
@@ -47,8 +48,8 @@ for ($index = 0; $index < $itemSize; $index++) {
     } else {
         $strReturn .= $arrow . '
 			<div class="bx-breadcrumb-item">
-				<span class="bx-breadcrumb-item-text text-textLight dark:text-white text-xs font-normal">
-				' . $title . '</span>
+				<span class="bx-breadcrumb-item-text text-textLight dark:text-textDarkLightGray text-xs
+				 dark:font-normal font-medium">' . $title . '</span>
 			</div>';
     }
 }

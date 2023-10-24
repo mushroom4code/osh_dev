@@ -137,7 +137,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
 
         ?>
         <div class="item-product-info h-full flex flex-col justify-between">
-            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> z-9 h-7 <?php if (!$show_price) { ?> blur-2xl <?php } ?>">
+            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> z-9 h-7
+            <?php if (!$show_price) { ?> blur-2xl <?php } ?>">
                 <div class="variation_taste flex flex-wrap flex-row overflow-auto h-7
                 <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php if ($taste['VALUE']) {
@@ -192,7 +193,6 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                 </div>
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                     <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
-
                         <div class="box_with_titles flex flex-row text-xs text-textLight justify-between dark:text-textDarkLightGray">
                             <?php
                             $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',

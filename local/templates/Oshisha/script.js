@@ -639,7 +639,6 @@ $(document).ready(function () {
                 'Авторизуйтесь для подписки на товар</p>' +
                 '<span class="close_photo" id="close_photo"></span></div>').show();
         } else {
-            console.log('yes')
             $(popup_mess).append('<div class="bg-textDarkLightGray w-full relative dark:bg-grayButton rounded-lg px-4 py-5 ' +
                 'shadow-lg text-dark text-xs text-center dark:text-textDarkLightGray flex flex-col items-center box_with_message_prodNot" > ' +
                 '<svg width="20" height="20" viewBox="0 0 24 24" class="mb-3 stroke-light-red dark:stroke-white" ' +
