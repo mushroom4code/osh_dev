@@ -7353,3 +7353,9 @@ body #panel {
     top: 0;
     z-index: 10000;
 }
+
+/* GROUPED PRODUCT */
+
+.max-h-300{
+    max-height:300px;
+}
