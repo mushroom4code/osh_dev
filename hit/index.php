@@ -19,7 +19,7 @@ if (SITE_ID !== SITE_EXHIBITION) {
 
     if (defined('IS_MERCH_PROPERTY')) {
         $GLOBALS['ArrFilter'] = array_merge($GLOBALS['ArrFilter'], array(
-            '!=PROPERTY_'.IS_MERCH_PROPERTY => 'Да'
+            '!=PROPERTY_'.IS_MERCH_PROPERTY.'_VALUE' => 'Да'
         ));
     }
 

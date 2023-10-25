@@ -188,7 +188,7 @@ class EnteregoHelper
      */
     public static function productIsGift(int $productId): bool
     {
-        $rsRes = CIBlockElement::GetList([], ['ID' => $productId, 'PROPERTY_'.IS_MERCH_PROPERTY => 'Да']);
+        $rsRes = CIBlockElement::GetList([], ['ID' => $productId, 'PROPERTY_'.IS_MERCH_PROPERTY.'_VALUE' => 'Да']);
         return $rsRes->SelectedRowsCount() > 0;
     }
 

@@ -23,7 +23,7 @@ global $searchFilter;
 
 if (defined('IS_MERCH_PROPERTY')) {
     $GLOBALS['searchFilter'] = $GLOBALS['searchFilter']
-        ? array_merge($GLOBALS['searchFilter'], ['!=PROPERTY_'.IS_MERCH_PROPERTY => 'Да'])
+        ? array_merge($GLOBALS['searchFilter'], ['!=PROPERTY_'.IS_MERCH_PROPERTY.'_VALUE' => 'Да'])
         : ['!=PROPERTY_'.IS_MERCH_PROPERTY.'_VALUE' => 'Да'];
 }
 

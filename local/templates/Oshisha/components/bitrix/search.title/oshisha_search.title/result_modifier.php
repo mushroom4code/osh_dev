@@ -131,7 +131,7 @@ if (!empty($arResult["ELEMENTS"]) && CModule::IncludeModule("iblock"))
 if (defined('IS_MERCH_PROPERTY')) {
     if (!empty($arResult["ELEMENTS"])) {
         foreach ($arResult['ELEMENTS'] as $key => $arElement) {
-            if ($arElement['PROPERTY_'.IS_MERCH_PROPERTY] == 'Да') {
+            if ($arElement['PROPERTY_'.IS_MERCH_PROPERTY.'_VALUE'] == 'Да') {
                 if (count($arResult['ELEMENTS']) < 2) {
                     unset($arResult['SEARCH']);
                     unset($arResult['CATEGORIES']);
