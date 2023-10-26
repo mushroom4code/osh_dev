@@ -200,7 +200,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
 }
 
 ?>
-    <div class="bx-catalog-element cat-det mb-8"
+    <div class="bx-catalog-element cat-det mb-20"
          id="<?= $itemIds['ID'] ?>">
         <div class="mb-3" id="navigation">
             <?php $APPLICATION->IncludeComponent(
@@ -216,7 +216,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             ); ?>
         </div>
         <?php if ($rowResHidePrice == 'Нет' && !empty($option_site->text_rospetrebnadzor_product)) { ?>
-            <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-7">
+            <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-8">
                 <?= $option_site->text_rospetrebnadzor_product; ?></p>
         <?php } ?>
         <div class="box_with_photo_product flex md:flex-row flex-col mb-20">
@@ -225,7 +225,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             require_once(__DIR__ . '/slider/template.php'); ?>
             <div class="md:w-1/2 w-full md:mt-0 mt-7 flex flex-col catalog-item-product
 				not-input-parse justify-content-between">
-                <p class="head-title text-3xl mb-2 font-semibold dark:font-medium"><?= $name ?></p>
+                <p class="head-title text-3xl mb-10 font-semibold dark:font-medium"><?= $name ?></p>
                 <?php if ($isGift) { ?>
                     <div>
                         <h4 class="bx-title dark:text-textDark text-textLight">Данная продукция не продается
@@ -436,15 +436,13 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 }
                             }
                         }
-                    }
-                    ?>
-                    <div class="mb-4 d-flex flex-column dark:text-textDark text-textLight">
+                    } ?>
+                    <div class="mb-4 flex flex-col dark:text-textDark text-textLight">
                         <div class="mb-3 d-flex flex-row align-items-center">
-                            <div class="product-item-detail-price-current text-textLight text-3xl mb-2 font-semibold dark:font-medium"
+                            <div class="product-item-detail-price-current text-textLight text-3xl mb-2 font-semibold
+                            dark:font-medium dark:text-textDarkLightGray"
                                  id="<?= $itemIds['PRICE_ID'] ?>">
-                                <?=
-                                    $specialPrice['PRINT_PRICE'] ?? $price['PRICE_DATA']['PRINT_PRICE'];
-                                ?>
+                                <?= $specialPrice['PRINT_PRICE'] ?? $price['PRICE_DATA']['PRINT_PRICE']; ?>
                             </div>
                             <?php if (isset($specialPrice)) {
                                 $styles = 'price-discount';
@@ -456,14 +454,30 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                             <?php } ?>
                         </div>
                     </div>
-                    <div class="p-5 border-textDarkLightGray rounded-xl border">
-                        <div class="new_box d-flex flex-row align-items-center mb-lg-0 mb-md-0 mb-5">
-                            <span></span>
-                            <p>Наличие товара, варианты и стоимость доставки будут указаны далее при
-                                оформлении
-                                заказа. </p>
+                    <div class="dark:border-darkBox rounded-xl border-2 border-textDarkLightGray">
+                        <div class="new_box mb-3 p-5 dark:bg-darkBox rounded-t-xl bg-textDarkLightGray">
+                            <p class="flex flex-row items-center dark:text-grayIconLights text-dark">
+                                <svg width="45" height="48" class="mr-3 w-fit" viewBox="0 0 39 42" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                          d="M36.6667 12.3835L20 3.8418L3.33337 12.3835V29.4668L20 38.0085L36.6667 29.4668V12.3835Z"
+                                          stroke="#BFBFBF" stroke-width="1.5" stroke-linejoin="round"/>
+                                    <path d="M3.33337 12.3828L20 20.9245" stroke="#BFBFBF" stroke-width="1.5"
+                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M20 38.0081V20.9248" stroke="#BFBFBF" stroke-width="1.5"
+                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M36.6667 12.3828L20 20.9245" stroke="#BFBFBF" stroke-width="1.5"
+                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M28.3333 8.1123L11.6666 16.654" stroke="#BFBFBF" stroke-width="1.5"
+                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="text-sm">
+                                    Наличие товара, варианты и стоимость доставки будут указаны далее при оформлении
+                                    заказа.
+                                </span>
+                            </p>
                         </div>
-                        <div class="flex flex-row items-center">
+                        <div class="flex flex-row items-center p-5">
                             <?php if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price) { ?>
                                 <div>
                                     <div class="mb-lg-3 mb-md-3 mb-4 flex flex-row items-center bx_catalog_item bx_catalog_item_controls"
@@ -646,9 +660,9 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 </div>
             <?php }
         } ?>
-        <ul class="nav nav-fill mb-3 mt-5" role="tablist">
+        <ul class="nav nav-fill flex flex-row flex-wrap justify-content-between mb-3 mt-5" role="tablist">
             <?php if ($showDescription) { ?>
-                <li class="nav-item link">
+                <li class="nav-item link w-1/3">
                     <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home"
                        role="tab" aria-controls="pills-home" aria-selected="true">
                         <span><?= $arParams['MESS_DESCRIPTION_TAB'] ?></span></a>
@@ -656,7 +670,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 <?php
             }
             if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
-                <li class="nav-item">
+                <li class="nav-item  w-1/3">
                     <a class="nav-link <? if (!$showDescription): ?>active<? endif; ?>" id="pills-profile-tab"
                        data-toggle="pill" href="#pills-profile"
                        role="tab" aria-controls="pills-profile" aria-selected="false">
@@ -666,7 +680,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 <?php
             }
             if ($arParams['USE_COMMENTS'] === 'Y') { ?>
-                <li class="nav-item">
+                <li class="nav-item  w-1/3">
                     <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact"
                        role="tab" aria-controls="pills-contact" aria-selected="false">
                         <i class="fa fa-comment-o" aria-hidden="true"></i>
@@ -677,7 +691,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
         </ul>
         <div class="tab-content mt-5">
             <?php if ($showDescription) { ?>
-                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                <div class="tab-pane block active" id="pills-home">
                     <?php if ($arResult['DETAIL_TEXT'] != '') {
                         echo $arResult['DETAIL_TEXT_TYPE'] === 'html' ? $arResult['DETAIL_TEXT'] : '<p>' . $arResult['DETAIL_TEXT'] . '</p>';
                     } ?>
@@ -689,7 +703,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 include(__DIR__ . '/props/template.php');
             }
             if ($arParams['USE_COMMENTS'] === 'Y') { ?>
-                <div class="tab-pane fade " id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                <div class="tab-pane hidden" id="pills-contact">
                     <?php $componentCommentsParams = array(
                         'ELEMENT_ID' => $arResult['ID'],
                         'ELEMENT_CODE' => '',

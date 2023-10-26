@@ -1,5 +1,5 @@
-<div class="md:w-1/2 md:mr-10 mr-0 rounded-xl w-full product_left relative border-borderColor border dark:border-0 p-5
-<?php if (!$show_price) { ?> blur-2xl <?php } ?>">
+<div class="md:w-1/2 md:mr-10 mr-0 rounded-xl w-full product_left relative border-borderColor border dark:border-0
+<?php if (!$show_price) { ?> blur-lg <?php } ?>">
     <div class="product-item-detail-slider-container h-48-vh <?php if (!empty($taste['VALUE'])) { ?> p-lg-md-25
     <?php } ?>" id="<?= $itemIds['BIG_SLIDER_ID'] ?>">
         <div class="variation_taste absolute top-5 left-5 flex flex-row flex-wrap">
