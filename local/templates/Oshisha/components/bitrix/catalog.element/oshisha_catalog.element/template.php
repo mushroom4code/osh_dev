@@ -28,7 +28,7 @@ $this->setFrameMode(true);
 global $SETTINGS;
 global $option_site;
 $arIskCode = explode(",", $SETTINGS['arIskCode']);
-$templateLibrary = array('popup', 'fx');
+
 $currencyList = '';
 $article = $arResult['PROPERTIES']['CML2_TRAITS'];
 

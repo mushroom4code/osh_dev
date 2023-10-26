@@ -117,7 +117,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
 <?php } ?>
 <div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-4 h-full relative
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>" data-product_id="<?= $item['ID'] ?>">
-    <div class="bx_catalog_item_container product-item position-relative h-full
+    <div class="bx_catalog_item_container position-relative h-full
             <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
         <?php
 
