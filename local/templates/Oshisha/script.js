@@ -2939,8 +2939,105 @@ jQuery(function () {
     })
 });
 
-
+const webPush = require("web-push");
 $(document).ready(function () {
+
+
+
+
+
+
+    $('span#notifications').on('click', function() {
+        console.log('test')
+        Notification.requestPermission().then((result) => {
+            if (result === 'granted') {
+                randomNotification();
+            }
+        });
+    });
+
+// VAPID keys should be generated only once.
+    const vapidKeys = webPush.generateVAPIDKeys();
+
+    webPush.setGCMAPIKey('<Your GCM API Key Here>');
+    webPush.setVapidDetails(
+        'mailto:example@yourdomain.org',
+        vapidKeys.publicKey,
+        vapidKeys.privateKey
+    );
+
+// This is the same output of calling JSON.stringify on a PushSubscription
+    const pushSubscription = {
+        endpoint: '.....',
+        keys: {
+            auth: '.....',
+            p256dh: '.....'
+        }
+    };
+
+    webPush.sendNotification(pushSubscription, 'Your Push Payload Text')
+// Setting up random Notification
+    function randomNotification() {
+
+        const notifTitle = 'Тест отправки ';
+        const notifBody = `создано Oshisha`;
+        const notifImg = `./images/maskable_icon.png`;
+        const options = {
+            body: notifBody,
+            icon: notifImg,
+        };
+        new Notification(notifTitle, options);
+        setTimeout(randomNotification, 10000);
+    }
+    // randomNotification()
+    if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+        console.log(
+            "You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY " +
+            "environment variables. You can use the following ones:",
+        );
+        console.log(webPush.generateVAPIDKeys());
+        return;
+    }
+
+    webPush.setVapidDetails(
+        "https://er.docker.oblako-1c.ru",
+        process.env.VAPID_PUBLIC_KEY,
+        process.env.VAPID_PRIVATE_KEY,
+    );
+    module.exports = (app, route) => {
+        app.get(`${route}vapidPublicKey`, (req, res) => {
+            res.send(process.env.VAPID_PUBLIC_KEY);
+        });
+
+        app.post(`${route}register`, (req, res) => {
+            res.sendStatus(201);
+        });
+
+        app.post(`${route}sendNotification`, (req, res) => {
+            const subscription = req.body.subscription;
+            const payload = req.body.payload;
+            const options = {
+                TTL: req.body.ttl,
+            };
+
+            setTimeout(() => {
+                webPush
+                    .sendNotification(subscription, payload, options)
+                    .then(() => {
+                        res.sendStatus(201);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        res.sendStatus(500);
+                    });
+            }, req.body.delay * 1000);
+        });
+    };
+
+
+
+
+
     $(document).on('click', '.close_header_box', function () {
         $('.overlay').hide();
     });

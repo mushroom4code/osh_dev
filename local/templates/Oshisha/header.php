@@ -64,7 +64,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo SITE_TEMPLATE_PATH; ?>/images/favicon.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
-<!--    PWA -->
+    <!--    PWA -->
     <link rel="manifest" href="/manifest.json">
 
     <meta name="mobile-web-app-capable" content="yes">
@@ -79,19 +79,35 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
 
     <link rel="icon" type="image/png" sizes="144x144" href="/images/maskable_icon_x144.png">
     <link rel="apple-touch-icon" type="image/png" sizes="144x144" href="/images/maskable_icon_x144.png">
-<!--    PWA -->
+    <!--    PWA -->
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/serviceworker.js').then(
-                function(registration) {
-                    // Registration was successful
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope); },
-                function(err) {
-                    // registration failed :(
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
+            window.addEventListener('load', function () {
+                    navigator.serviceWorker.register('/serviceworker.js').then(
+                        function (registration) {
+                            // Registration was successful
+                            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                            registration.pushManager.getSubscription()
+                                .then(async (subscription) => {
+                                    if (subscription) {
+                                        return subscription;
+                                    } else {
+                                        const response = await fetch("./vapidPublicKey");
+                                        const vapidPublicKey = await response.text();
+                                        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+                                        registration.pushManager.subscribe({
+                                            userVisibleOnly: true,
+                                            applicationServerKey: convertedVapidKey,
+                                        });
+                                    }
+                                });
+                        },
+                        function (err) {
+                            // registration failed :(
+                            console.log('ServiceWorker registration failed: ', err);
+                        });
+                }
+            );
         }
 
         let deferredPrompt;
@@ -252,7 +268,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                     </select>
                                 </div>
                                 <div class="filial-popup"></div>
-                                </div>
+                            </div>
                         <?php } else { ?>
                             <a href="/about/feedback_new_site/"
                                class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать отзыв</a>
@@ -380,7 +396,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                     })</script>
                             <?php } else { ?>
                                 <a href="/about/feedback_new_site/"
-                                   class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать-->
+                                   class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
                                     отзыв</a>
                             <?php } ?>
                             <a href="/about/feedback_new_site/" class="link_menu_top">
@@ -393,6 +409,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
             <div class="filial-popup"></div>
         <?php } ?>
         <div class="container_header z-870">
+            <span id="notifications" class="p-2 bg-danger color-black">Уведомления</span>
             <!--        header menu search/login/basket/like     -->
             <div class="header_box_logo">
                 <div class="box_left_header">
