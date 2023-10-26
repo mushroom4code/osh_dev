@@ -314,6 +314,7 @@ $arrFilterTop['ID'] = $ids;
                 $obCache->EndDataCache($recommendedData);
             }
 
+            $isAnyActiveBuyWithThisProductProducts = false;
             $productRes = CIBlockElement::GetList([],['CODE' => $arResult['VARIABLES']['ELEMENT_CODE']]);
             $arBuyWithThisProductProductsIds = [];
             if ($product = $productRes->fetch()) {
@@ -324,9 +325,18 @@ $arrFilterTop['ID'] = $ids;
                         $arBuyWithThisProductProductsIds[] = $buyWithThisProductProductsPropertyValue['VALUE'];
                     }
                 }
+                if ($arBuyWithThisProductProductsIds) {
+                    $arBuyWithThisProductProductsRes = CIBlockElement::GetList([], ['ID' => $arBuyWithThisProductProductsIds], false, false, ['ACTIVE']);
+                    while ($buyWithThisProductProduct = $arBuyWithThisProductProductsRes->fetch()) {
+                        if ($buyWithThisProductProduct['ACTIVE'] === 'Y') {
+                            $isAnyActiveBuyWithThisProductProducts = true;
+                            break;
+                        }
+                    }
+                }
                 $GLOBALS['arrBuyWithThisProductProductsProductsFilter'] = ['ID' => $arBuyWithThisProductProductsIds];
             }
-            if ($USER->IsAuthorized() && $arBuyWithThisProductProductsIds) {
+            if ($USER->IsAuthorized() && $arBuyWithThisProductProductsIds && $isAnyActiveBuyWithThisProductProducts) {
                     if (!isset($arParams['DETAIL_SHOW_POPULAR']) || $arParams['DETAIL_SHOW_POPULAR'] != 'N') { ?>
                         <div class="mb-5 mt-5">
                             <div data-entity="parent-container">
