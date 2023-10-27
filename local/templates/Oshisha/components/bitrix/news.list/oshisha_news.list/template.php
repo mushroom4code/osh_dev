@@ -26,7 +26,7 @@ foreach ($arResult["ITEMS"] as $arItem) {
 }
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id); ?>
-<div class="box_with_news news-list<?= $themeClass ?> d-flex flex-md-row flex-lg-row flex-wrap flex-col">
+<div class="box_with_news news-list<?= $themeClass ?> d-flex flex-md-row flex-lg-row flex-wrap flex-col width-100">
     <?php foreach ($arResult["ITEMS"] as $arItem): ?>
         <?php $this->AddEditAction(
             $arItem['ID'],
