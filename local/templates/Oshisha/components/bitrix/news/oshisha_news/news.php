@@ -22,7 +22,7 @@ if ($arParams["USE_RSS"] == "Y"):?>
         "oshisha_news.list",
         array(
             "IBLOCK_TYPE" => "news",
-            "IBLOCK_ID" => NEWS_IBLOCK_ID,
+            "IBLOCK_ID" => NEWS_IBLOCK_ID ?? 1,
             "SORT_BY1" => "ACTIVE_FROM",
             "SORT_ORDER1" => "DESC",
             "SORT_BY2" => "SORT",

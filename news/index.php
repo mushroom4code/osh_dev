@@ -1,8 +1,7 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 global $APPLICATION;
-$APPLICATION->SetTitle('Блог OSHISHA');
-const NEWS_IBLOCK_ID = 1;?>
+$APPLICATION->SetTitle('Блог OSHISHA'); ?>
 <?php
 $APPLICATION->IncludeComponent(
 	"bitrix:news", 
@@ -69,7 +68,7 @@ $APPLICATION->IncludeComponent(
 		"FONT_MAX" => "50",
 		"FONT_MIN" => "10",
 		"HIDE_LINK_WHEN_NO_DETAIL" => "N",
-		"IBLOCK_ID" => NEWS_IBLOCK_ID,
+		"IBLOCK_ID" => NEWS_IBLOCK_ID ?? 1,
 		"IBLOCK_TYPE" => "news",
 		"INCLUDE_IBLOCK_INTO_CHAIN" => "Y",
 		"LIST_ACTIVE_DATE_FORMAT" => "d.m.Y",
