@@ -1,11 +1,10 @@
-<?
-require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-$APPLICATION->SetTitle("Новости");
-//TODO временно скрыть
-$protocolType = explode('/',$_SERVER['SERVER_PROTOCOL']);
-header('Location: '.mb_strtolower($protocolType[0]).'://'.$_SERVER['HTTP_HOST'].'/');
-exit;
-?><?$APPLICATION->IncludeComponent(
+<?php
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+global $APPLICATION;
+$APPLICATION->SetTitle('Блог OSHISHA');
+const NEWS_IBLOCK_ID = 1;?>
+<?php
+$APPLICATION->IncludeComponent(
 	"bitrix:news", 
 	"oshisha_news", 
 	array(
@@ -23,10 +22,7 @@ exit;
 		"CACHE_TIME" => "36000000",
 		"CACHE_TYPE" => "A",
 		"CATEGORY_CODE" => "TAGS",
-		"CATEGORY_IBLOCK" => array(
-			0 => "1",
-		),
-		"CATEGORY_ITEMS_COUNT" => "5",
+		"CATEGORY_ITEMS_COUNT" => "18",
 		"CATEGORY_THEME_1" => "list",
 		"CHECK_DATES" => "Y",
 		"COLOR_NEW" => "3E74E6",
@@ -44,12 +40,13 @@ exit;
 			5 => "",
 		),
 		"DETAIL_PAGER_SHOW_ALL" => "Y",
-		"DETAIL_PAGER_TEMPLATE" => "arrows",
-		"DETAIL_PAGER_TITLE" => "Страница",
+		"DETAIL_PAGER_TEMPLATE" => "round",
+		"DETAIL_PAGER_TITLE" => "Блок",
 		"DETAIL_PROPERTY_CODE" => array(
-			0 => "TAG",
-			1 => "TAGS",
-			2 => "",
+			0 => "",
+			1 => "TAG",
+			2 => "TAGS",
+			3 => "",
 		),
 		"DETAIL_SET_CANONICAL_URL" => "N",
 		"DISPLAY_AS_RATING" => "rating",
@@ -72,7 +69,7 @@ exit;
 		"FONT_MAX" => "50",
 		"FONT_MIN" => "10",
 		"HIDE_LINK_WHEN_NO_DETAIL" => "N",
-		"IBLOCK_ID" => "1",
+		"IBLOCK_ID" => NEWS_IBLOCK_ID,
 		"IBLOCK_TYPE" => "news",
 		"INCLUDE_IBLOCK_INTO_CHAIN" => "Y",
 		"LIST_ACTIVE_DATE_FORMAT" => "d.m.Y",
@@ -82,24 +79,24 @@ exit;
 			2 => "",
 		),
 		"LIST_PROPERTY_CODE" => array(
-			0 => "TAG",
-			1 => "TAGS",
-			2 => "",
+			0 => "",
+			1 => "TAG",
+			2 => "TAGS",
+			3 => "",
 		),
 		"MEDIA_PROPERTY" => "",
 		"MESSAGE_404" => "",
 		"META_DESCRIPTION" => "-",
-		"META_KEYWORDS" => "TAG",
-		"NEWS_COUNT" => "10",
+		"META_KEYWORDS" => "-",
+		"NEWS_COUNT" => "18",
 		"NUM_DAYS" => "180",
-		"NUM_NEWS" => "20",
+		"NUM_NEWS" => "18",
 		"PAGER_BASE_LINK_ENABLE" => "N",
 		"PAGER_DESC_NUMBERING" => "N",
 		"PAGER_DESC_NUMBERING_CACHE_TIME" => "36000000",
 		"PAGER_SHOW_ALL" => "N",
-		"PAGER_SHOW_ALWAYS" => "Y",
-		"PAGER_TEMPLATE" => "bootstrap_v4",
-		"PAGER_TITLE" => "Новости",
+		"PAGER_SHOW_ALWAYS" => "N",
+		"PAGER_TEMPLATE" => "round",
 		"PERIOD_NEW_TAGS" => "",
 		"PREVIEW_TRUNCATE_LEN" => "100",
 		"SEF_FOLDER" => "/news/",
@@ -108,7 +105,7 @@ exit;
 		"SET_STATUS_404" => "Y",
 		"SET_TITLE" => "Y",
 		"SHOW_404" => "N",
-		"SLIDER_PROPERTY" => "PICS_NEWS",
+		"SLIDER_PROPERTY" => "",
 		"SORT_BY1" => "TAG",
 		"SORT_BY2" => "ACTIVE_FROM",
 		"SORT_ORDER1" => "DESC",
@@ -142,6 +139,9 @@ exit;
 		"FORUM_ID" => "",
 		"URL_TEMPLATES_READ" => "",
 		"SHOW_LINK_TO_FORUM" => "Y",
+		"CATEGORY_IBLOCK" => array(
+		),
+		"PAGER_TITLE" => "Новости",
 		"SEF_URL_TEMPLATES" => array(
 			"news" => "",
 			"section" => "",
@@ -151,4 +151,5 @@ exit;
 		)
 	),
 	false
-);?><br><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
+); ?>
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
