@@ -144,7 +144,7 @@
 }
 
 .news-detail-content img {
-    max-width: 300px;
+    max-width: 1355px;
     width: auto;
     height: auto;
 }
@@ -236,7 +236,7 @@
 
     .news-detail-content img {
         width: 100%;
-        max-width: 100%;
+        max-width: 320px;
         margin-bottom: 0.5rem;
     }
 }
