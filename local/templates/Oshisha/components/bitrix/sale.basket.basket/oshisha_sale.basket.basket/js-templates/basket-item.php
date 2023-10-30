@@ -46,13 +46,12 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
  * @var  CUser $USER
  */ ?>
 <script id="basket-item-template" type="text/html">
-    <div class="d-flex justify-content-center basket-items-list-item-container{{#SHOW_RESTORE}}
+    <div class="flex justify-between rounded-lg p-5 dark:bg-darkBox bg-white mb-4 basket-items-list-item-container{{#SHOW_RESTORE}}
      basket-items-list-item-container-expend{{/SHOW_RESTORE}}"
          id="basket-item-{{ID}}" data-gift="{{GIFT}}" data-entity="basket-item" data-id="{{ID}}">
         {{^SHOW_RESTORE}}
-        <div class="basket-items-list-item-descriptions d-flex row_section justify-content-between">
-            <div class="basket-items-list-item-descriptions-inner col-lg-7 col-md-12 col-12 p-0"
-            <div class="basket-items-list-item-descriptions-inner col-lg-7 col-md-12 col-12 p-0"
+        <div class="basket-items-list-item-descriptions flex flex-row flex-wrap justify-between">
+            <div class="basket-items-list-item-descriptions-inner col-lg-7 flex flex-row col-md-12 col-12 p-0"
                  id="basket-item-height-aligner-{{ID}}">
                 <?php if (in_array('PREVIEW_PICTURE', $arParams['COLUMNS_LIST'])){ ?>
                 <div class="basket-item-block-image col-lg-3 col-md-3 p-3
@@ -61,7 +60,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     <a href="{{DETAIL_PAGE_URL}}" class="basket-item-image-link">
                         {{/DETAIL_PAGE_URL}}
 
-                        <img class="basket-item-image" alt="{{NAME}}"
+                        <img class="basket-item-image w-40" alt="{{NAME}}"
                              src="{{{IMAGE_URL}}}{{^IMAGE_URL}}/local/templates/Oshisha/images/no-photo.gif{{/IMAGE_URL}}">
 
                         {{#SHOW_LABEL}}
@@ -93,7 +92,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             {{#SHOW_LOADING}}
             <div class="basket-items-list-item-overlay"></div>
             {{/SHOW_LOADING}}
-            <div class="basket-item-block-info d-flex flex-column justify-content-between width-inherit">
+            <div class="basket-item-block-info flex flex-col justify-between w-inherit">
                 <div>
                     <?php if (isset($mobileColumns['DELETE'])) { ?>
                         <span class="basket-item-actions-remove d-block d-md-none"
@@ -286,11 +285,11 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         <div class="d-flex flex-row">
                             <?php if ($mobile->isMobile() || $mobile->isTablet()) { ?>
                                 <div class="mobile_price mr-md-4">
-                                    <div class="basket-items-list-item-price d-flex flex-row <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
-                                        <div class="basket-item-block-price d-flex flex-column align-items-end">
+                                    <div class="basket-items-list-item-price flex flex-row <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
+                                        <div class="basket-item-block-price flex flex-col align-items-end">
                                             {{#GIFT}}
                                             {{/GIFT}}
-                                                <div class="basket-item-price-current d-flex justify-content-end">
+                                                <div class="basket-item-price-current flex justify-content-end">
                                                     <span class="basket-item-price-current-text" id="basket-item-sum-price-{{ID}}">
                                                         {{{SUM_PRICE_FORMATED}}}
                                                     </span>
@@ -318,7 +317,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                            aria-hidden="true"></i>
                                     </div>
 
-                                    <div class="position-relative d-flex flex-row">
+                                    <div class="position-relative flex flex-row">
                                         {{#SHOW_SALE_PRICE}}
                                             <div class="text-right font-11">
                                                 <b class="decoration-color-red mr-2 font-16">{{{SUM_OLD}}}₽</b>
@@ -392,10 +391,10 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                 <div class="d-flex flex-row width_100 justify-content-between">
                     <div class="d-flex flex-column price-column ml-2">
                         <div class="basket-items-list-item-price mb-1 <?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
-                            <div class="basket-item-block-price d-flex flex-column align-items-end">
+                            <div class="basket-item-block-price flex flex-column align-items-end">
                                 {{^GIFT}}
                                 {{/GIFT}}
-                                    <div class="basket-item-price-current d-flex justify-content-end">
+                                    <div class="basket-item-price-current flex justify-content-end">
                                         <span class="basket-item-price-current-text" id="basket-item-sum-price-{{ID}}">
                                             {{{SUM_PRICE_FORMATED}}}
                                         </span>
@@ -442,8 +441,8 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
      basket-items-list-item-container-expend{{/SHOW_RESTORE}}"
          id="basket-item-{{ID}}" data-gift="{{GIFT}}" data-entity="basket-item" data-id="{{ID}}">
         {{^SHOW_RESTORE}}
-        <div class="basket-items-list-item-descriptions d-flex column_section style_custom_sort justify-content-between">
-            <div class="basket-items-list-item-descriptions-inner width_100 d-flex flex-column"
+        <div class="basket-items-list-item-descriptions flex column_section style_custom_sort justify-between">
+            <div class="basket-items-list-item-descriptions-inner w-full flex flex-col"
                  id="basket-item-height-aligner-{{ID}}">
                 <div class="basket-item-block-properties">
                     <?php if (!empty($arParams['PRODUCT_BLOCKS_ORDER'])) {
@@ -476,7 +475,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     <a href="{{DETAIL_PAGE_URL}}" class="basket-item-image-link">
                         {{/DETAIL_PAGE_URL}}
 
-                        <img class="basket-item-image" alt="{{NAME}}"
+                        <img class="basket-item-image w-40" alt="{{NAME}}"
                              src="{{{IMAGE_URL}}}{{^IMAGE_URL}}/local/templates/Oshisha/images/no-photo.gif{{/IMAGE_URL}}">
 
                         {{#SHOW_LABEL}}
@@ -504,7 +503,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             {{#SHOW_LOADING}}
             <div class="basket-items-list-item-overlay"></div>
             {{/SHOW_LOADING}}
-            <div class="basket-item-block-info d-flex flex-column justify-content-between width-inherit">
+            <div class="basket-item-block-info flex flex-col justify-between w-inherit">
                 <div>
                     <?php if (isset($mobileColumns['DELETE'])) { ?>
                         <span class="basket-item-actions-remove d-block d-md-none"
@@ -673,7 +672,7 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                     </div>
                 </div>
                 <div>
-                    <div class="basket-items-list-item-amount mb-2 d-flex justify-content-center">
+                    <div class="basket-items-list-item-amount mb-2 flex justify-center">
                         <div class="basket-item-block-amount{{#NOT_AVAILABLE}} disabled{{/NOT_AVAILABLE}}"
                              data-entity="basket-item-quantity-block">
                             {{^GIFT}}
@@ -700,10 +699,10 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             <?php if ($useSumColumn) { ?>
                 <div class="d-flex flex-column">
                     <div class="basket-items-list-item-price<?= (!isset($mobileColumns['SUM']) ? ' d-none d-sm-block' : '') ?>">
-                        <div class="basket-item-block-price d-flex flex-column align-items-end">
+                        <div class="basket-item-block-price flex flex-col items-end">
                             {{^GIFT}}
                             {{/GIFT}}
-                            <div class="basket-item-price-current d-flex">
+                            <div class="basket-item-price-current flex">
                                 <span class="basket-item-price-current-text font_18" id="basket-item-sum-price-{{ID}}">
                                     {{{SUM_PRICE_FORMATED}}}
                                 </span>
