@@ -1,19 +1,21 @@
-importScripts('sw-toolbox.js');
-toolbox.precache(['style/style.css']);
-toolbox.router.get('/images/*', toolbox.cacheFirst);
-toolbox.router.get('/*', toolbox.networkFirst, { networkTimeoutSeconds: 5});
-self.addEventListener("install", event => {
-    console.log("Service worker installed");
-});
-self.addEventListener("activate", event => {
-    console.log("Service worker activated");
-});
+self.addEventListener('push', function (event) {
+    if (!(self.Notification && self.Notification.permission === 'granted')) {
+        return;
+    }
 
-self.addEventListener("push", (event) => {
-    const payload = event.data?.text() ?? "no payload";
-    event.waitUntil(
-        self.registration.showNotification("ServiceWorker Cookbook", {
-            body: payload,
-        }),
-    );
+    const sendNotification = body => {
+        // you could refresh a notification badge here with postMessage API
+        const title = "ЗАГОЛООООООВОК";
+
+        return self.registration.showNotification(title, {
+            body,
+        });
+    };
+
+    if (event.data) {
+        console.log(event)
+        const message = event.data.text();
+        // const payload = event.data.json() || { message:'test push!!'};
+        event.waitUntil(sendNotification(message));
+    }
 });

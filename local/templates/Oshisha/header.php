@@ -79,50 +79,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
 
     <link rel="icon" type="image/png" sizes="144x144" href="/images/maskable_icon_x144.png">
     <link rel="apple-touch-icon" type="image/png" sizes="144x144" href="/images/maskable_icon_x144.png">
-    <!--    PWA -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
-                    navigator.serviceWorker.register('/serviceworker.js').then(
-                        function (registration) {
-                            // Registration was successful
-                            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                            registration.pushManager.getSubscription()
-                                .then(async (subscription) => {
-                                    if (subscription) {
-                                        return subscription;
-                                    } else {
-                                        const response = await fetch("./vapidPublicKey");
-                                        const vapidPublicKey = await response.text();
-                                        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-                                        registration.pushManager.subscribe({
-                                            userVisibleOnly: true,
-                                            applicationServerKey: convertedVapidKey,
-                                        });
-                                    }
-                                });
-                        },
-                        function (err) {
-                            // registration failed :(
-                            console.log('ServiceWorker registration failed: ', err);
-                        });
-                }
-            );
-        }
-
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevents the default mini-infobar or install dialog from appearing on mobile
-            e.preventDefault();
-            // Save the event because you'll need to trigger it later.
-            deferredPrompt = e;
-            // Show your customized install prompt for your PWA
-            // Your own UI doesn't have to be a single element, you
-            // can have buttons in different locations, or wait to prompt
-            // as part of a critical journey.
-            showInAppInstallPromotion();
-        });
-    </script>
     <?php
     Asset::getInstance()->addJs('/local/templates/Oshisha/assets/js/subsidiary.js');
 
@@ -155,6 +111,8 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     Asset::getInstance()->addJs("/local/assets/js/flags-mask/phonecode.js");
     Asset::getInstance()->addJs("/local/assets/js/flags-mask/counties.js");
     Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
+//    PWA
+    Asset::getInstance()->addJs("/local/templates/Oshisha/pwa/pwa.js");
     $APPLICATION->ShowHead(); ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
@@ -409,7 +367,9 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
             <div class="filial-popup"></div>
         <?php } ?>
         <div class="container_header z-870">
-            <span id="notifications" class="p-2 bg-danger color-black">Уведомления</span>
+            <button id="push-subscription-button">Push notifications !</button>
+            <button id="send-push-button">Send a push notification</button>
+            <button id="send-push-all">Send </button>
             <!--        header menu search/login/basket/like     -->
             <div class="header_box_logo">
                 <div class="box_left_header">
