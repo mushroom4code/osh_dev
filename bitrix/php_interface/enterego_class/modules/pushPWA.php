@@ -3,7 +3,7 @@ IncludeModuleLangFile(__FILE__);
 
 $adminPage->Init();
 $adminMenu->Init($adminPage->aModules);
-
+global $USER;
 if (empty($adminMenu->aGlobalMenu)) /**
  * @var CMain|CAllMain $APPLICATION
  */ {
@@ -17,12 +17,12 @@ $MESS ['admin_index_title'] = "Строка информатора для пол
 $APPLICATION->SetTitle(GetMessage("admin_index_title"));
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_after.php");
-
-$resOption = COption::GetOptionString('activation_info_admin', 'CHECKED_INFO');
-$dateOption = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
-  <script src="/local/templates/Oshisha/pwa/pwa.js" type="text/javascript"></script>
-    <div>
-      <button id="push-subscription-button">Push notifications !</button>
-      <button id="send-push-button">Send a push notification</button>
-    </div>
+ ?>
+<script src="/local/templates/Oshisha/pwa/pwa.js" type="text/javascript"></script>
+<div>
+    <button id="push-subscription-button">Push notifications !</button>
+    <button id="send-push-button">Send a push notification</button>
+    <input id="user-id" name="user_id" type="hidden" value="<?=$USER->GetID()?>">
+    <button id="send-push-all" data-user-id="<?=$USER->GetID()?>">Send all</button>
+</div>
 <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/epilog_admin.php");

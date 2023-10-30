@@ -367,9 +367,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
             <div class="filial-popup"></div>
         <?php } ?>
         <div class="container_header z-870">
-            <button id="push-subscription-button">Push notifications !</button>
-            <button id="send-push-button">Send a push notification</button>
-            <button id="send-push-all">Send </button>
             <!--        header menu search/login/basket/like     -->
             <div class="header_box_logo">
                 <div class="box_left_header">

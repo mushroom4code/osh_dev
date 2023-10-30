@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    pushButton.addEventListener('click', function() {
+    pushButton.addEventListener('click', function () {
         if (isPushEnabled) {
             push_unsubscribe();
         } else {
@@ -214,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }),
         }).then(() => subscription);
     }
+
     function getCookie(name) {
         let matches = document.cookie.match(new RegExp(
             "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
@@ -251,17 +252,26 @@ document.addEventListener('DOMContentLoaded', () => {
             })
     );
 
+    const send = document.querySelector('#send-push-all');
+    send.addEventListener('click', function (e) {
+        navigator.serviceWorker.ready
+            .then(serviceWorkerRegistration => serviceWorkerRegistration.pushManager.getSubscription())
+            .then(subscription => {
+                if (!subscription) {
+                    alert('Please enable push notifications');
+                    return;
+                }
 
-    const send  = document.querySelector('#send-push-all');
-    send.addEventListener('click',function(){
-        $.ajax({
-            type: 'POST',
-            url: '/local/ajax/sendPWA.php',
-            data: 'action=sendPWA',
-            success: function (result) {
-                console.log(result);
-            }
-        });
+                const jsonSubscription = JSON.stringify(Object.assign(subscription.toJSON()));
+                BX.ajax({
+                    method: 'POST',
+                    url: '/local/ajax/sendPWA.php',
+                    data: {action: 'sendPWA', jsonSubscription, 'userId': e.target.getAttribute('data-user-id')},
+                    onsuccess: function (result) {
+                        console.log(result);
+                    }
+                });
+            });
     })
     /**
      * END send_push_notification
