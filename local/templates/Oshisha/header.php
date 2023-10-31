@@ -72,6 +72,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     <meta name="application-name" content="OSHISHA">
     <meta name="apple-mobile-web-app-title" content="OSHISHA">
     <meta name="theme-color" content="#393939">
+    <meta name="background-color" content="#393939">
     <meta name="msapplication-navbutton-color" content="#393939">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="msapplication-starturl" content="/">
@@ -113,6 +114,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
 //    PWA
     Asset::getInstance()->addJs("/local/templates/Oshisha/pwa/pwa.js");
+//    Asset::getInstance()->addCss("/local/templates/Oshisha/pwa/pwa.css");
     $APPLICATION->ShowHead(); ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
