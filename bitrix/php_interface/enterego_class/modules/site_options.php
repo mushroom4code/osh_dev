@@ -27,10 +27,10 @@ if ($REQUEST_METHOD == "POST" && ($save != "" || $apply != "") && $POST_RIGHT ==
     // (в целях защиты от повторной отправки формы нажатием кнопки "Обновить" в браузере)
     if ($apply != "")
         // если была нажата кнопка "Применить" - отправляем обратно на форму.
-        LocalRedirect("/bitrix/php_interface/enterego_class/site_options.php?ID=" . $ID . "&mess=ok&lang=" . LANG);
+        LocalRedirect("/bitrix/admin/enterego_admin.php?category=site_options&ID=" . $ID . "&mess=ok&lang=" . LANG);
     else
         // если была нажата кнопка "Сохранить" - отправляем к списку элементов.
-        LocalRedirect("/bitrix/php_interface/enterego_class/site_options.php?lang=" . LANG);
+        LocalRedirect("/bitrix/admin/enterego_admin.php?category=site_options&lang=" . LANG);
 }
 
 
