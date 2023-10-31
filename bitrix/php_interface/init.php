@@ -156,7 +156,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
         'sort' => 9,
         'items_id' => 'global_menu_osh',
         'icon' => 'imi_corp',
-        'url' => '/bitrix/php_interface/enterego_class/site_options.php?lang=' . LANG,
+        'url' => '/bitrix/admin/enterego_admin.php?category=site_options&lang=' . LANG,
 
     );
 
