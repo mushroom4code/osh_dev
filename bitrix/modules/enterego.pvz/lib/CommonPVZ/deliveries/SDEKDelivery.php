@@ -285,7 +285,7 @@ class SDEKDelivery extends CommonPVZ
     public function getPrice($array)
     {
         try {
-            $hashed_values = array($array['name_city']);
+            $hashed_values = array($array['name_city'], $array['name_country']);
             foreach ($array['packages'] as $package) {
                 $hashed_values[] = $package['weight'];
             }
@@ -310,7 +310,7 @@ class SDEKDelivery extends CommonPVZ
 
             $tariffPriority = self::getSdekTarifList(array(
                 'type' => $array['type_pvz'] === "POSTAMAT" ? 'postamat' : 'pickup', 'answer' => 'array'));
-            $location_to = $this->getSDEKCityCode($array['name_city'], $array['code_city']);
+            $location_to = $this->getSDEKCityCode($array['name_city'], $array['code_city'], $array['name_country']);
             $location_to = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($location_to);
             $location_to->setAddress($array['to']);
             $location_from = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($this->configs['from']);
@@ -372,18 +372,18 @@ class SDEKDelivery extends CommonPVZ
             $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
 
             $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-//            if ($cache->initCache(3600, $this->cdek_cache_id)) { // проверяем кеш и задаём настройки
-//                if ($is_cache_on == 'Y') {
-//                    $cached_vars = $cache->getVars();
-//                    if (!empty($cached_vars)) {
-//                        foreach ($cached_vars as $varKey => $var) {
-//                            if ($varKey === $hash_string) {
-//                                return $var;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            if ($cache->initCache(3600, $this->cdek_cache_id)) { // проверяем кеш и задаём настройки
+                if ($is_cache_on == 'Y') {
+                    $cached_vars = $cache->getVars();
+                    if (!empty($cached_vars)) {
+                        foreach ($cached_vars as $varKey => $var) {
+                            if ($varKey === $hash_string) {
+                                return $var;
+                            }
+                        }
+                    }
+                }
+            }
 
             $location_to = $this->getSDEKCityCode($params['location_name']['LOCATION_NAME'], $params['location'], $params['location_name']['COUNTRY_NAME']);
             $location_to = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($location_to);

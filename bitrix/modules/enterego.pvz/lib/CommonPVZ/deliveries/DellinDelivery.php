@@ -203,18 +203,18 @@ class DellinDelivery extends CommonPVZ
             $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
 
             $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-//            if ($cache->initCache(3600, $this->dellin_cache_id)) { // проверяем кеш и задаём настройки
-//                if ($is_cache_on == 'Y') {
-//                    $cached_vars = $cache->getVars();
-//                    if (!empty($cached_vars)) {
-//                        foreach ($cached_vars as $varKey => $var) {
-//                            if ($varKey === $hash_string) {
-//                                return $var;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            if ($cache->initCache(3600, $this->dellin_cache_id)) { // проверяем кеш и задаём настройки
+                if ($is_cache_on == 'Y') {
+                    $cached_vars = $cache->getVars();
+                    if (!empty($cached_vars)) {
+                        foreach ($cached_vars as $varKey => $var) {
+                            if ($varKey === $hash_string) {
+                                return $var;
+                            }
+                        }
+                    }
+                }
+            }
 
             $derivalDate = date('Y-m-d', strtotime(date('Y-m-d').' +1 days'));
             $data = ['appkey' => $this->api_key,
@@ -336,7 +336,7 @@ class DellinDelivery extends CommonPVZ
                 $params['weight'] = $params['default_weight'];
             $hashed_values = array($params['width'], $params['length'], $params['height'],
                 $params['weight'], $params['totalVolume'], $params['shipment_weight'],
-                $params['street_kladr_to'], count($params['packages']), 'address');
+                $params['street_kladr_to'], count($params['packages']), $params['location_name']['COUNTRY_NAME'], 'address');
             $hash_string = md5(implode('', $hashed_values));
 
             $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
@@ -394,7 +394,14 @@ class DellinDelivery extends CommonPVZ
             ];
 
             if ($params['location_name']['COUNTRY_NAME'] !== 'Россия') {
-                $data['delivery']['arrival']['address']['street'] = DellindeliveryApicore::SearchCity($params['location_name']['LOCATION_NAME'])[0]->code;
+                $citiesByCityName = DellindeliveryApicore::SearchCity($params['location_name']['LOCATION_NAME']);
+                foreach ($citiesByCityName as $key => $city) {
+                    if (($city->city === $params['location_name']['LOCATION_NAME'])
+                        && ($city->country_code === (int)DeliveryHelper::searchInCountries($params['location_name']['COUNTRY_NAME'], 'iso'))) {
+                        $data['delivery']['arrival']['address']['street'] = $city->code;
+                        break;
+                    }
+                }
             } else {
                 $data['delivery']['arrival']['address']['street'] = $params['street_kladr_to'];
             }

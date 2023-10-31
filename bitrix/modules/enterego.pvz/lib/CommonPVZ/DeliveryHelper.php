@@ -302,12 +302,12 @@ class DeliveryHelper
             $city['AREA_NAME'] = '';
         }
 
-
         return json_encode(array('LOCATION_NAME' => $city['LOCATION_NAME'],
             'PARENT_LOCATION_NAME' => $city['PARENT_LOCATION_NAME'],
             'AREA_NAME' => $city['AREA_NAME'],
             'TYPE' => $city['TYPE_ID'],
-            'COUNTRY_NAME' => $city['COUNTRY_NAME']));
+            'COUNTRY_NAME' => $city['COUNTRY_NAME']
+        ));
     }
 
     /** Обновляет ПВЗ для службы доставки PickPoint

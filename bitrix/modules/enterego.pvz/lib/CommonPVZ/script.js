@@ -9,6 +9,7 @@ BX.SaleCommonPVZ = {
     curCityArea: null,
     curParentCityName: null,
     curCountry: null,
+    curCountryIso: null,
     isGetPVZ: false,
     ajaxUrlPVZ: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
     propsMap: null,
@@ -429,7 +430,6 @@ BX.SaleCommonPVZ = {
             onSelect: function (suggestion) {
                 this.updateValueProp(this.propLatitudeId, suggestion?.data?.geo_lat ? Number('' + suggestion.data.geo_lat).toPrecision(6) : '');
                 this.updateValueProp(this.propLongitudeId, suggestion?.data?.geo_lon ? Number('' + suggestion.data.geo_lon).toPrecision(6) : '');
-                console.log(suggestion);
                 this.updatePropsFromDaData(suggestion)
                 BX.onCustomEvent('onDeliveryExtraServiceValueChange');
                 // if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
@@ -446,19 +446,19 @@ BX.SaleCommonPVZ = {
             if (this.curCityName == 'Москва') {
                 address.suggestions().setOptions({
                     constraints: {
-                        locations: [{country: "*"}, {region: "Московская"}, {region: "Москва"}]
+                        locations: [{country: "Россия", region: "Московская"}, {country: "Россия", region: "Москва"}]
                     }
                 });
             } else if (this.curCityType == 6) {
                 address.suggestions().setOptions({
                     constraints: {
-                        locations: [{country: "*"}, {region: this.curCityArea}, {area: this.curParentCityName}]
+                        locations: [{country: this.curCountry, region: this.curCityArea, area: this.curParentCityName}]
                     }
                 });
             } else {
                 address.suggestions().setOptions({
                     constraints: {
-                        locations: [{country: "*"}, {city: this.curCityName}]
+                        locations: [{country: this.curCountry, city: this.curCityName}]
                     }
                 });
             }
@@ -541,19 +541,14 @@ BX.SaleCommonPVZ = {
      * @param suggestion
      */
     updatePropsFromDaData: function (suggestion) {
-        console.log(suggestion);
         this.updateValueProp(this.propAddressId, suggestion?.value ?? '')
         this.updateValueProp(this.propZipId, suggestion?.data?.postal_code ?? '')
         this.updateValueProp(this.propCityId, suggestion?.data?.city ?? '')
         this.updateValueProp(this.propFiasId, suggestion?.data?.fias_id ?? '')
         this.updateValueProp(this.propKladrId, suggestion?.data?.kladr_id ?? '')
         this.updateValueProp(this.propStreetKladrId, suggestion?.data?.street_kladr_id ?? '')
-        console.log(this.getValueProp(this.propLatitudeId));
-        console.log(this.getValueProp(this.propLatitudeId));
         this.updateValueProp(this.propLatitudeId, suggestion?.data?.geo_lat ? Number('' + suggestion.data.geo_lat).toPrecision(6) : '');
         this.updateValueProp(this.propLongitudeId, suggestion?.data?.geo_lon ? Number('' + suggestion.data.geo_lon).toPrecision(6) : '');
-        console.log(this.getValueProp(this.propLatitudeId));
-        console.log(this.getValueProp(this.propLatitudeId));
     },
 
     /**
@@ -702,21 +697,21 @@ BX.SaleCommonPVZ = {
                         if (__this.curCityName == 'Москва') {
                             userAddress.suggestions().setOptions({
                                 constraints: {
-                                    locations: [{country: "*"}, {region: "Московская"}, {region: "Москва"}]
+                                    locations: [{country: "Россия", region: "Московская"}, {country: "Россия", region: "Москва"}]
                                 }
                             });
                         } else {
                             if (Number(__this.curCityType) === 6) {
                                 userAddress.suggestions().setOptions({
                                     constraints: {
-                                        locations: [{country: "*"}, {region: __this.curCityArea}, {area: __this.curParentCityName}]
+                                        locations: [{country: __this.curCountry, region: __this.curCityArea, area: __this.curParentCityName}]
                                     }
                                 });
                             } else {
                                 // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
                                 userAddress.suggestions().setOptions({
                                     constraints: {
-                                        locations: [{country: "*"}, {city: __this.curCityName}]
+                                        locations: [{country: __this.curCountry, city: __this.curCityName}]
                                     }
                                 });
                             }
@@ -876,6 +871,7 @@ BX.SaleCommonPVZ = {
             longitude: point.geometry.coordinates[1],
             hubregion: point.properties.hubregion,
             name_city: this.curCityName,
+            name_country: this.curCountry,
             postindex: point.properties.postindex,
             code_pvz: point.properties.code_pvz,
             type_pvz: point.properties.type ?? ''

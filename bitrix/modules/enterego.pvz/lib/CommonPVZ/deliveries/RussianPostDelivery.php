@@ -320,19 +320,19 @@ class RussianPostDelivery extends CommonPVZ
                     $objectId = false;
                     switch ($this->delivery_code) {
                         case 'RussianPostEms':
-                            $objectId = 7020;
+                            $objectId = 7030;
                             break;
                         case 'RussianPostFirstClass':
-                            $objectId = 47020;
+                            $objectId = 47030;
                             break;
                         case 'RussianPostRegular':
-                            $objectId = 4020;
+                            $objectId = 4030;
                             break;
                         case 'RussianPostForeignRegular':
-                            $objectId = 4021;
+                            $objectId = 4031;
                             break;
                         case 'RussianPostForeignEms':
-                            $objectId = 7021;
+                            $objectId = 7031;
                             break;
                     }
 
@@ -356,20 +356,20 @@ class RussianPostDelivery extends CommonPVZ
                     $hashed_values[] = 'courier';
                     $hash_string = md5(implode('', $hashed_values));
 
-//                    $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
-//                    $cache = \Bitrix\Main\Data\Cache::createInstance();
-//                    if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
-//                        if ($is_cache_on == 'Y') {
-//                            $cached_vars = $cache->getVars();
-//                            if (!empty($cached_vars)) {
-//                                foreach ($cached_vars as $varKey => $var) {
-//                                    if ($varKey === $hash_string) {
-//                                        return $var;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
+                    $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
+                    $cache = \Bitrix\Main\Data\Cache::createInstance();
+                    if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
+                        if ($is_cache_on == 'Y') {
+                            $cached_vars = $cache->getVars();
+                            if (!empty($cached_vars)) {
+                                foreach ($cached_vars as $varKey => $var) {
+                                    if ($varKey === $hash_string) {
+                                        return $var;
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     if ($this->delivery_code === 'RussianPostEms') {
                         $params['group'] = 0;
@@ -377,14 +377,14 @@ class RussianPostDelivery extends CommonPVZ
 
                     $TariffCalculation = new \LapayGroup\RussianPost\TariffCalculation();
                     $calcInfo = $TariffCalculation->calculate($objectId, $params);
-                    $finalPrice = $calcInfo->getGroundNds();
+                    $finalPrice = $calcInfo->getPayNds();
 
-//                    $cache->forceRewriting(true);
-//                    if ($cache->startDataCache()) {
-//                        $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-//                            ? array_merge($cached_vars, array($hash_string => $finalPrice))
-//                            : array($hash_string => $finalPrice));
-//                    }
+                    $cache->forceRewriting(true);
+                    if ($cache->startDataCache()) {
+                        $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+                            ? array_merge($cached_vars, array($hash_string => $finalPrice))
+                            : array($hash_string => $finalPrice));
+                    }
 
                     return $finalPrice;
             } catch (\Throwable $e) {
