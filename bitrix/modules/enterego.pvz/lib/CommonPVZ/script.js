@@ -9,7 +9,6 @@ BX.SaleCommonPVZ = {
     curCityArea: null,
     curParentCityName: null,
     curCountry: null,
-    curCountryIso: null,
     isGetPVZ: false,
     ajaxUrlPVZ: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
     propsMap: null,
