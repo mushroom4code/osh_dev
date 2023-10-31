@@ -21,18 +21,24 @@ class RussianPostDelivery extends CommonPVZ
         $this->delivery_code = $delivery_type;
 
         switch ($delivery_type) {
-                case 'RussianPost':
-                    $this->delivery_name = 'Почта России';
-                    break;
-                case 'RussianPostEms':
-                    $this->delivery_name = 'Почта России (EMS)';
-                    break;
-                case 'RussianPostFirstClass':
-                    $this->delivery_name = 'Почта России (Посылка 1 класса)';
-                    break;
-                case 'RussianPostRegular':
-                    $this->delivery_name = 'Почта России (Посылка обычная)';
-                    break;
+            case 'RussianPost':
+                $this->delivery_name = 'Почта России';
+                break;
+            case 'RussianPostEms':
+                $this->delivery_name = 'Почта России (EMS)';
+                break;
+            case 'RussianPostFirstClass':
+                $this->delivery_name = 'Почта России (Посылка 1 класса)';
+                break;
+            case 'RussianPostRegular':
+                $this->delivery_name = 'Почта России (Посылка обычная)';
+                break;
+            case 'RussianPostForeignRegular':
+                $this->delivery_name = 'Почта России (Посылка международная обычная)';
+                break;
+            case 'RussianPostForeignEms':
+                $this->delivery_name = 'Почта России (Посылка международная EMS)';
+                break;
         }
     }
 
@@ -44,13 +50,20 @@ class RussianPostDelivery extends CommonPVZ
         }
 
         if (Option::get(DeliveryHelper::$MODULE_ID, 'RussianPost_door_active') === 'Y') {
+            if ($deliveryParams['location_name']['COUNTRY_NAME'] === 'Россия') {
                 return [
                     new RussianPostDelivery('RussianPostEms'),
                     new RussianPostDelivery('RussianPostFirstClass'),
                     new RussianPostDelivery('RussianPostRegular'),
                 ];
+            } else {
+                return [
+                    new RussianPostDelivery('RussianPostForeignRegular'),
+                    new RussianPostDelivery('RussianPostForeignEms')
+                ];
             }
-            return [];
+        }
+        return [];
     }
 
     public static function getInstanceForPVZ($deliveryParams): array
@@ -188,7 +201,7 @@ class RussianPostDelivery extends CommonPVZ
             }
     }
 
-    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
+    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions, string $country_name)
     {
         try {
             $sumDimensionsSingle = 0;
@@ -301,10 +314,9 @@ class RussianPostDelivery extends CommonPVZ
             }
     }
 
-    public function getPriceDoorDelivery($params)
+    public function getPriceDoorDelivery($deliveryParams)
     {
             try {
-                if (!empty($params['fias'])) {
                     $objectId = false;
                     switch ($this->delivery_code) {
                         case 'RussianPostEms':
@@ -316,33 +328,48 @@ class RussianPostDelivery extends CommonPVZ
                         case 'RussianPostRegular':
                             $objectId = 4020;
                             break;
+                        case 'RussianPostForeignRegular':
+                            $objectId = 4021;
+                            break;
+                        case 'RussianPostForeignEms':
+                            $objectId = 7021;
+                            break;
                     }
 
                     $params = [
-                        'weight' => $params['shipment_weight'],
-                        'sumoc' => intval($params['shipment_cost'].'00'),
-                        'from' => $this->configs['fromzip'],
-                        'to' => $params['zip_to']
+                        'weight' => $deliveryParams['shipment_weight'],
+                        'sumoc' => intval($deliveryParams['shipment_cost'].'00')
                     ];
 
-                    $hashed_values = array($params['weight'], $params['sumoc'], $params['from'], $params['to'], 'courier');
-                    $hash_string = md5(implode('', $hashed_values));
-
-                    $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
-                    $cache = \Bitrix\Main\Data\Cache::createInstance();
-                    if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
-                        if ($is_cache_on == 'Y') {
-                            $cached_vars = $cache->getVars();
-                            if (!empty($cached_vars)) {
-                                foreach ($cached_vars as $varKey => $var) {
-                                    if ($varKey === $hash_string) {
-                                        return $var;
-                                    }
-                                }
-                            }
-                        }
+                    if ($deliveryParams['location_name']['COUNTRY_NAME'] === 'Россия') {
+                        $params['from'] = $this->configs['fromzip'];
+                        $params['to'] = $deliveryParams['zip_to'];
+                    } else {
+                        $params['country-to'] = DeliveryHelper::searchInCountries($deliveryParams['location_name']['COUNTRY_NAME'], 'iso');
+                        $params['isavia'] = 0;
                     }
 
+                    $hashed_values = [];
+                    foreach ($params as $value) {
+                        $hashed_values[] = $value;
+                    }
+                    $hashed_values[] = 'courier';
+                    $hash_string = md5(implode('', $hashed_values));
+
+//                    $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
+//                    $cache = \Bitrix\Main\Data\Cache::createInstance();
+//                    if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
+//                        if ($is_cache_on == 'Y') {
+//                            $cached_vars = $cache->getVars();
+//                            if (!empty($cached_vars)) {
+//                                foreach ($cached_vars as $varKey => $var) {
+//                                    if ($varKey === $hash_string) {
+//                                        return $var;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
 
                     if ($this->delivery_code === 'RussianPostEms') {
                         $params['group'] = 0;
@@ -352,18 +379,14 @@ class RussianPostDelivery extends CommonPVZ
                     $calcInfo = $TariffCalculation->calculate($objectId, $params);
                     $finalPrice = $calcInfo->getGroundNds();
 
-                    $cache->forceRewriting(true);
-                    if ($cache->startDataCache()) {
-                        $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
-                            ? array_merge($cached_vars, array($hash_string => $finalPrice))
-                            : array($hash_string => $finalPrice));
-                    }
+//                    $cache->forceRewriting(true);
+//                    if ($cache->startDataCache()) {
+//                        $cache->endDataCache((isset($cached_vars) && !empty($cached_vars))
+//                            ? array_merge($cached_vars, array($hash_string => $finalPrice))
+//                            : array($hash_string => $finalPrice));
+//                    }
 
                     return $finalPrice;
-                } else {
-                    $this->errors[] = 'empty fias';
-                    return array('errors' => $this->errors);
-                }
             } catch (\Throwable $e) {
                 $this->errors[] = $e->getMessage();
                 return array('errors' => $this->errors);

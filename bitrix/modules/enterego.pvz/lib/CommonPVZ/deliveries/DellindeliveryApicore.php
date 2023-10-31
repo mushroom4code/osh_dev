@@ -33,9 +33,10 @@ class DellindeliveryApicore
         'streetKladr' => 'http://api.dellin.stage/v1/public/kladr_street.json',
         'cityInfo' => 'http://api.dellin.stage/v2/public/kladr.json',
         'opfList' => 'http://api.dellin.stage/v1/public/opf_list.json',
-        'countriesList' => 'http://api.dellin.stage/v1/public/countries.json',
+        'countriesList' => 'https://api.dellin.ru/v1/references/countries.json',
         'terminalsList' => 'https://api.dellin.ru/v3/public/terminals.json',
-        'cities' => 'http://api.dellin.stage/v1/public/cities.json',
+        'cities' => 'https://api.dellin.ru/v1/public/cities.json',
+        'places' => 'https://api.dellin.ru/v1/public/places.json,'
     );
 
     /**

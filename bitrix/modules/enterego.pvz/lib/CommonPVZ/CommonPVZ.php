@@ -85,7 +85,7 @@ abstract class CommonPVZ
      * @param $code_city string
      * @return mixed
      */
-    abstract public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions);
+    abstract public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions, string $country_name);
 
     /** Return calculate price delivery
      * @param $array

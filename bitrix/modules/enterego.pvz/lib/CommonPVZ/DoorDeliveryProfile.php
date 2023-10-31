@@ -72,7 +72,7 @@ class DoorDeliveryProfile extends Base
             }
             if ($prop['CODE'] === 'LOCATION') {
                 $deliveryParams['location'] = $propertyItem->getValue();
-                $deliveryParams['location_name'] = DeliveryHelper::getCityName($deliveryParams['location']);
+                $deliveryParams['location_name'] = json_decode(DeliveryHelper::getCityName($deliveryParams['location']), true);
             }
             if ($prop['CODE'] === 'ADDRESS') {
                 $deliveryParams['address'] = $propertyItem->getValue();

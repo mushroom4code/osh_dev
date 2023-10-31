@@ -29,14 +29,37 @@ class DeliveryHelper
         return $CONFIG_DELIVERIES;
     }
 
+    public static function getDeliveryTimeIntervals() {
+        $deliveryTimeIntervalPropId = \Bitrix\Sale\Property::getList([
+            'select' => ['ID'],
+            'filter' => ['CODE' => 'DELIVERYTIME_INTERVAL']
+        ])->fetch()['ID'];
+        $propVariants = [];
+        $propVariantsRes = \CSaleOrderPropsVariant::GetList(
+            array("SORT" => "ASC"),
+            array("ORDER_PROPS_ID" => $deliveryTimeIntervalPropId),
+            false,
+            false,
+            array("ID", "VALUE", "DESCRIPTION")
+        );
+        while ($propVariant = $propVariantsRes->fetch()) {
+            if($propVariant['DESCRIPTION'] === SITE_ID) {
+                $propVariants[$propVariant['ID']] = $propVariant;
+            }
+        }
+        return $propVariants;
+    }
+
     public static function makeDimensionsHash($a, $b, $c)
     {
         $arr = [$a, $b, $c];
 
-        array_walk($arr, function (&$val, $key) {$val = (int)floor($val / 10);});
+        array_walk($arr, function (&$val, $key) {
+            $val = (int)floor($val / 10);
+        });
         sort($arr);
 
-        return ($arr[0] + $arr[1]*1000 + $arr[2]*1000000);
+        return ($arr[0] + $arr[1] * 1000 + $arr[2] * 1000000);
     }
 
     /**
@@ -45,13 +68,13 @@ class DeliveryHelper
      */
     public static function getSumDimensions($arGoods)
     {
-        if(!is_array($arGoods) || !count($arGoods))
-            return array('L'=>0,'W'=>0,'H'=>0);
+        if (!is_array($arGoods) || !count($arGoods))
+            return array('L' => 0, 'W' => 0, 'H' => 0);
 
         $arWork = array();
-        foreach($arGoods as $good) {
+        foreach ($arGoods as $good) {
             $good = array_values($good);
-            $arWork []= self::sumSizeOneGoods($good[0], $good[1], $good[2], $good[3]);
+            $arWork [] = self::sumSizeOneGoods($good[0], $good[1], $good[2], $good[3]);
         }
 
         return self::sumSize($arWork);
@@ -61,7 +84,7 @@ class DeliveryHelper
     {
         $ar = array($xi, $yi, $zi);
         sort($ar);
-        if ($qty<=1) return (array('X'=>$ar[0],'Y'=>$ar[1],'Z'=>$ar[2]));
+        if ($qty <= 1) return (array('X' => $ar[0], 'Y' => $ar[1], 'Z' => $ar[2]));
 
         $x1 = 0;
         $y1 = 0;
@@ -69,13 +92,13 @@ class DeliveryHelper
         $l = 0;
 
         $max1 = floor(Sqrt($qty));
-        for($y=1;$y<=$max1;$y++){
-            $i = ceil($qty/$y);
+        for ($y = 1; $y <= $max1; $y++) {
+            $i = ceil($qty / $y);
             $max2 = floor(Sqrt($i));
-            for($z=1;$z<=$max2;$z++){
-                $x = ceil($i/$z);
-                $l2 = $x*$ar[0] + $y*$ar[1] + $z*$ar[2];
-                if(($l==0)||($l2<$l)){
+            for ($z = 1; $z <= $max2; $z++) {
+                $x = ceil($i / $z);
+                $l2 = $x * $ar[0] + $y * $ar[1] + $z * $ar[2];
+                if (($l == 0) || ($l2 < $l)) {
                     $l = $l2;
                     $x1 = $x;
                     $y1 = $y;
@@ -83,23 +106,23 @@ class DeliveryHelper
                 }
             }
         }
-        return (array('X'=>$x1*$ar[0],'Y'=>$y1*$ar[1],'Z'=>$z1*$ar[2]));
+        return (array('X' => $x1 * $ar[0], 'Y' => $y1 * $ar[1], 'Z' => $z1 * $ar[2]));
     }
 
     protected static function sumSize($a)
     {
         $n = count($a);
-        if (!($n>0)) return(array('L'=>'0','W'=>'0','H'=>'0'));
-        for($i3=1;$i3<$n;$i3++){
+        if (!($n > 0)) return (array('L' => '0', 'W' => '0', 'H' => '0'));
+        for ($i3 = 1; $i3 < $n; $i3++) {
             // sort sizes big to small
-            for($i2=$i3-1;$i2<$n;$i2++){
-                for($i=0;$i<=1;$i++){
-                    if($a[$i2]['X']<$a[$i2]['Y']){
+            for ($i2 = $i3 - 1; $i2 < $n; $i2++) {
+                for ($i = 0; $i <= 1; $i++) {
+                    if ($a[$i2]['X'] < $a[$i2]['Y']) {
                         $a1 = $a[$i2]['X'];
                         $a[$i2]['X'] = $a[$i2]['Y'];
                         $a[$i2]['Y'] = $a1;
                     }
-                    if(($i==0) && ($a[$i2]['Y']<$a[$i2]['Z'])){
+                    if (($i == 0) && ($a[$i2]['Y'] < $a[$i2]['Z'])) {
                         $a1 = $a[$i2]['Y'];
                         $a[$i2]['Y'] = $a[$i2]['Z'];
                         $a[$i2]['Z'] = $a1;
@@ -108,24 +131,24 @@ class DeliveryHelper
                 $a[$i2]['Sum'] = $a[$i2]['X'] + $a[$i2]['Y'] + $a[$i2]['Z']; // sum of sides
             }
             // sort cargo from small to big
-            for($i2=$i3;$i2<$n;$i2++)
-                for($i=$i3;$i<$n;$i++)
-                    if($a[$i-1]['Sum']>$a[$i]['Sum']){
+            for ($i2 = $i3; $i2 < $n; $i2++)
+                for ($i = $i3; $i < $n; $i++)
+                    if ($a[$i - 1]['Sum'] > $a[$i]['Sum']) {
                         $a2 = $a[$i];
-                        $a[$i] = $a[$i-1];
-                        $a[$i-1] = $a2;
+                        $a[$i] = $a[$i - 1];
+                        $a[$i - 1] = $a2;
                     }
             // calculate sum dimensions of two smallest cargoes
-            if($a[$i3-1]['X']>$a[$i3]['X']) $a[$i3]['X'] = $a[$i3-1]['X'];
-            if($a[$i3-1]['Y']>$a[$i3]['Y']) $a[$i3]['Y'] = $a[$i3-1]['Y'];
-            $a[$i3]['Z'] = $a[$i3]['Z'] + $a[$i3-1]['Z'];
+            if ($a[$i3 - 1]['X'] > $a[$i3]['X']) $a[$i3]['X'] = $a[$i3 - 1]['X'];
+            if ($a[$i3 - 1]['Y'] > $a[$i3]['Y']) $a[$i3]['Y'] = $a[$i3 - 1]['Y'];
+            $a[$i3]['Z'] = $a[$i3]['Z'] + $a[$i3 - 1]['Z'];
             $a[$i3]['Sum'] = $a[$i3]['X'] + $a[$i3]['Y'] + $a[$i3]['Z']; // sum of sides
         }
 
         $a = array(
-            Round($a[$n-1]['X'],2),
-            Round($a[$n-1]['Y'],2),
-            Round($a[$n-1]['Z'],2)
+            Round($a[$n - 1]['X'], 2),
+            Round($a[$n - 1]['Y'], 2),
+            Round($a[$n - 1]['Z'], 2)
         );
         rsort($a);
 
@@ -147,7 +170,8 @@ class DeliveryHelper
         );
     }
 
-    public static function getActiveDoorDeliveryInstance($deliveryParams){
+    public static function getActiveDoorDeliveryInstance($deliveryParams)
+    {
 
         return array_merge(
             OshishaDelivery::getInstanceForDoor($deliveryParams),
@@ -157,12 +181,13 @@ class DeliveryHelper
         );
     }
 
-    public static function getPackagesFromOrderBasket($orderBasket) {
+    public static function getPackagesFromOrderBasket($orderBasket)
+    {
         $packages = [];
         foreach ($orderBasket as $orderBasketItem) {
             $packageParams = array();
             $basketItemFields = $orderBasketItem->getFields();
-            $productDimensions =  unserialize($basketItemFields['DIMENSIONS']);
+            $productDimensions = unserialize($basketItemFields['DIMENSIONS']);
             $packageParams['length'] = (int)$productDimensions['LENGTH']
                 ? (int)$productDimensions['LENGTH']
                 : (int)Option::get(self::$MODULE_ID, 'Common_defaultlength');
@@ -182,7 +207,8 @@ class DeliveryHelper
         return $packages;
     }
 
-    public static function getSavedOshishaDelivery($latitude, $longitude) {
+    public static function getSavedOshishaDelivery($latitude, $longitude)
+    {
         $point = OshishaSavedDeliveriesTable::getRow(array('filter' => array(
             'LATITUDE' => number_format($latitude, 4, '.', ''),
             'LONGITUDE' => number_format($longitude, 4, '.', ''))));
@@ -192,7 +218,8 @@ class DeliveryHelper
             return false;
     }
 
-    public static function saveOshishaDelivery($params) {
+    public static function saveOshishaDelivery($params)
+    {
         $dbResultError = false;
         if (!OshishaSavedDeliveriesTable::getRow(array('filter' => array('LATITUDE' => number_format($params['latitude'], 4, '.', ''),
             'LONGITUDE' => number_format($params['longitude'], 4, '.', ''))))) {
@@ -224,8 +251,9 @@ class DeliveryHelper
         return $content;
     }
 
-    public static function getDayOfTheWeekString($dayIndex) {
-        return ["sunday", "monday","tuesday","wednesday","thursday","friday","saturday"][$dayIndex];
+    public static function getDayOfTheWeekString($dayIndex)
+    {
+        return ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][$dayIndex];
     }
 
     public static function getCityName($locationCode)
@@ -235,24 +263,29 @@ class DeliveryHelper
             'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID)
         ));
         $types = [];
-        while ($item = $res->fetch()){
+        while ($item = $res->fetch()) {
             $types[] = $item;
         }
         $city = LocationTable::getByCode(
             $locationCode,
             [
                 'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID),
-                'select' => ['ID', 'TYPE_ID', 'LOCATION_NAME' => 'NAME.NAME',
+                'select' => ['ID', 'TYPE_ID', 'COUNTRY_ID', 'LOCATION_NAME' => 'NAME.NAME',
                     'PARENT_LOCATION_NAME' => 'PARENT.NAME.NAME']
             ]
         )->fetch();
+
+        $city['COUNTRY_NAME'] = LocationTable::getList([
+                'filter' => array('ID' => $city['COUNTRY_ID'], '=NAME.LANGUAGE_ID' => LANGUAGE_ID),
+                'select' => array('LOCATION_NAME' => 'NAME.NAME')]
+        )->fetch()['LOCATION_NAME'];
 
         if ((int)$city['TYPE_ID'] === 6) {
             $areaNameArray = LocationTable::getByCode(
                 $locationCode,
                 [
                     'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=PARENT.PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID),
-                    'select' => ['ID','AREA_NAME' => 'PARENT.PARENT.NAME.NAME']
+                    'select' => ['ID', 'AREA_NAME' => 'PARENT.PARENT.NAME.NAME']
                 ]
             )->fetch();
             $city["AREA_NAME"] = $areaNameArray['AREA_NAME'];
@@ -273,7 +306,8 @@ class DeliveryHelper
         return json_encode(array('LOCATION_NAME' => $city['LOCATION_NAME'],
             'PARENT_LOCATION_NAME' => $city['PARENT_LOCATION_NAME'],
             'AREA_NAME' => $city['AREA_NAME'],
-            'TYPE' => $city['TYPE_ID']));
+            'TYPE' => $city['TYPE_ID'],
+            'COUNTRY_NAME' => $city['COUNTRY_NAME']));
     }
 
     /** Обновляет ПВЗ для службы доставки PickPoint
@@ -285,9 +319,9 @@ class DeliveryHelper
             $pickPoint = new PickPointDelivery();
             $pickPoint->updatePointsForPickPoint();
         } catch (\Exception $e) {
-            return ['status'=>'failed', 'error' => $e->getMessage()];
+            return ['status' => 'failed', 'error' => $e->getMessage()];
         }
-        return ['status'=>'success'];
+        return ['status' => 'success'];
     }
 
     /** Обновляет ПВЗ для службы доставки Деловых линий
@@ -299,9 +333,9 @@ class DeliveryHelper
             $dellin = new DellinDelivery();
             $dellin->updatePointsForDellin();
         } catch (\Exception $e) {
-            return ['status'=>'failed', 'error' => $e->getMessage()];
+            return ['status' => 'failed', 'error' => $e->getMessage()];
         }
-        return ['status'=>'success'];
+        return ['status' => 'success'];
     }
 
     /** Обновляет ПВЗ для службы доставки Почты России
@@ -313,9 +347,9 @@ class DeliveryHelper
             $russianPost = new RussianPostDelivery();
             $russianPost->updatePointsForRussianPost();
         } catch (\Exception $e) {
-            return ['status'=>'failed', 'error' => $e->getMessage()];
+            return ['status' => 'failed', 'error' => $e->getMessage()];
         }
-        return ['status'=>'success'];
+        return ['status' => 'success'];
     }
 
     /** Обновляет ПВЗ для службы доставки 5post
@@ -327,12 +361,12 @@ class DeliveryHelper
             $fivePost = new FivePostDelivery();
             $fivePost->updatePointsForFivePost();
         } catch (\Exception $e) {
-            return ['status'=>'failed', 'error' => $e->getMessage()];
+            return ['status' => 'failed', 'error' => $e->getMessage()];
         }
-        return ['status'=>'success'];
+        return ['status' => 'success'];
     }
 
-    public static function getAllPVZ($deliveries, $city_name, $codeCity, $packages)
+    public static function getAllPVZ($deliveries, $city_name, $codeCity, $packages, $countryName='Россия')
     {
         $id_feature = 0;
         $result_array = [];
@@ -341,13 +375,13 @@ class DeliveryHelper
         $cachePath = '/getAllPVZPoints';
         $delName = '0';
 
-        $uniqueCacheString = 'pvz_'.$city_name;
+        $uniqueCacheString = 'pvz_' . $city_name;
         foreach ($deliveries as $delivery) {
-            $uniqueCacheString .= $uniqueCacheString.'_'.$delivery->delivery_name;
+            $uniqueCacheString .= $uniqueCacheString . '_' . $delivery->delivery_name;
         }
 
         $sumDimensions = self::getSumDimensions($packages);
-        $dimensionsHash =  self::makeDimensionsHash($sumDimensions['W'], $sumDimensions['H'], $sumDimensions['L']);
+        $dimensionsHash = self::makeDimensionsHash($sumDimensions['W'], $sumDimensions['H'], $sumDimensions['L']);
 
         $uniqueCacheString .= $dimensionsHash;
         $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
@@ -355,9 +389,9 @@ class DeliveryHelper
             $points_Array = $cache->getVars();
         } elseif ($cache->startDataCache()) {
             foreach ($deliveries as $delivery) {
-                if ($delivery!=null) {
+                if ($delivery != null) {
                     try {
-                        $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity, $packages, $dimensionsHash, $sumDimensions);
+                        $delivery->getPVZ($city_name, $points_Array, $id_feature, $codeCity, $packages, $dimensionsHash, $sumDimensions, $countryName);
                         if ($deliveries->errors) {
                             $result_array['errors'][$delName] = $delivery->errors;
                         }
@@ -380,15 +414,16 @@ class DeliveryHelper
     {
         $params = [];
         foreach ($arDeliveryServiceAll as $deliveryService) {
-            if ($deliveryService instanceof  PVZDeliveryProfile) {
+            if ($deliveryService instanceof PVZDeliveryProfile) {
                 $params['pvzDeliveryId'] = $deliveryService->getId();
             }
-            if ($deliveryService instanceof  DoorDeliveryProfile) {
+            if ($deliveryService instanceof DoorDeliveryProfile) {
                 $params['doorDeliveryId'] = $deliveryService->getId();
             }
         }
 
         $params['curDeliveryId'] = $order->getField('DELIVERY_ID');
+        $params['curSiteId'] = SITE_ID;
 
         $PeriodDelivery = [];
         $start_json_day = Option::get(self::$MODULE_ID, 'Oshisha_timeDeliveryStartDay');
@@ -419,6 +454,8 @@ class DeliveryHelper
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
+        $params['dateTimeIntervalOptions'] = self::getDeliveryTimeIntervals();
+
         if ($order->getField('PRICE_DELIVERY')) {
             $params['shipmentCost'] = $order->getDeliveryPrice();
         }
@@ -428,7 +465,7 @@ class DeliveryHelper
         ksort($params['packages']);
         $cAsset = Asset::getInstance();
 
-        $apiKey = htmlspecialcharsbx(Option::get('enterego.pvz','Oshisha_ymapskey', ''));
+        $apiKey = htmlspecialcharsbx(Option::get('enterego.pvz', 'Oshisha_ymapskey', ''));
         $locale = 'ru-RU';
         if (empty($apiKey)) {
             Asset::getInstance()->addJs('//api-maps.yandex.ru/2.1.79/?load=package.standard&mode=release&lang=' . $locale);
@@ -469,7 +506,7 @@ class DeliveryHelper
 
         $daData = new DadataClient($token, $secret);
         $res = $daData->suggest('address', $address);
-        if (count($res) !== 0 ) {
+        if (count($res) !== 0) {
             return $res[0];
         } else {
             return [];
@@ -477,18 +514,25 @@ class DeliveryHelper
 
     }
 
-    public static function getDaDataAddressByGeolocation($latitude, $longitude) {
+    public static function getDaDataAddressByGeolocation($latitude, $longitude)
+    {
         $token = OshishaDelivery::getOshishaDaDataToken();
         $secret = OshishaDelivery::getOshishaDaDataSecret();
 
         $daData = new DadataClient($token, $secret);
         $res = $daData->geolocate('address', $latitude, $longitude);
         if ($res) {
-            if (count($res) !== 0 ) {
+            if (count($res) !== 0) {
                 return $res[0];
             } else {
                 return [];
             }
         }
+    }
+
+    public static function searchInCountries(string $country, string $searchingValue)
+    {
+        $countries = require('countriesData.php');
+        return $countries[$country][$searchingValue];
     }
 }

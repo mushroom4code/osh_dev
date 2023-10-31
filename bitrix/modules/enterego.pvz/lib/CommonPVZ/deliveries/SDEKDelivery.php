@@ -179,10 +179,10 @@ class SDEKDelivery extends CommonPVZ
 
     }
 
-    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
+    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions, string $country_name)
     {
         try {
-            $sdek_city_code = $this->getSDEKCityCode($city_name, $code_city);
+            $sdek_city_code = $this->getSDEKCityCode($city_name, $code_city, $country_name);
             $requestPvz = (new \AntistressStore\CdekSDK2\Entity\Requests\DeliveryPoints())
                 ->setCityCode($sdek_city_code);
             $sdek_result = $this->cdek_client->getDeliveryPoints($requestPvz);
@@ -229,12 +229,15 @@ class SDEKDelivery extends CommonPVZ
      * @param $cityName
      * @return false|string
      */
-    private function getSDEKCityCode($cityName, $cityCode)
+    private function getSDEKCityCode($cityName, $cityCode, $countryName)
     {
         try {
             $location = (new \AntistressStore\CdekSDK2\Entity\Requests\Location())
-                ->setCountryCodes('RU')
                 ->setCity($cityName);
+            $countryShortcode = DeliveryHelper::searchInCountries($countryName, 'alpha2');
+            if ($countryShortcode) {
+                $location->setCountryCodes($countryShortcode);
+            }
             $locationList = $this->cdek_client->getCities($location);
             $res = LocationTable::getList(array(
                 'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID,
@@ -359,8 +362,7 @@ class SDEKDelivery extends CommonPVZ
     public function getPriceDoorDelivery($params)
     {
         try {
-            $location_name = json_decode($params['location_name'], true)['LOCATION_NAME'];
-            $hashed_values = array($location_name);
+            $hashed_values = array($params['location_name']['COUNTRY_NAME'], $params['location_name']['LOCATION_NAME']);
             foreach ($params['packages'] as $package) {
                 $hashed_values[] = $package['weight'];
             }
@@ -370,20 +372,20 @@ class SDEKDelivery extends CommonPVZ
             $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
 
             $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-            if ($cache->initCache(3600, $this->cdek_cache_id)) { // проверяем кеш и задаём настройки
-                if ($is_cache_on == 'Y') {
-                    $cached_vars = $cache->getVars();
-                    if (!empty($cached_vars)) {
-                        foreach ($cached_vars as $varKey => $var) {
-                            if ($varKey === $hash_string) {
-                                return $var;
-                            }
-                        }
-                    }
-                }
-            }
+//            if ($cache->initCache(3600, $this->cdek_cache_id)) { // проверяем кеш и задаём настройки
+//                if ($is_cache_on == 'Y') {
+//                    $cached_vars = $cache->getVars();
+//                    if (!empty($cached_vars)) {
+//                        foreach ($cached_vars as $varKey => $var) {
+//                            if ($varKey === $hash_string) {
+//                                return $var;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
-            $location_to = $this->getSDEKCityCode($location_name, $params['location']);
+            $location_to = $this->getSDEKCityCode($params['location_name']['LOCATION_NAME'], $params['location'], $params['location_name']['COUNTRY_NAME']);
             $location_to = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($location_to);
             $location_to->setAddress($params['address']);
             $location_from = \AntistressStore\CdekSDK2\Entity\Requests\Location::withCode($this->configs['from']);

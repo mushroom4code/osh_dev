@@ -8,6 +8,7 @@ BX.SaleCommonPVZ = {
     curCityType: null,
     curCityArea: null,
     curParentCityName: null,
+    curCountry: null,
     isGetPVZ: false,
     ajaxUrlPVZ: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
     propsMap: null,
@@ -201,7 +202,7 @@ BX.SaleCommonPVZ = {
         BX.cleanNode(propsNode)
         this.clearDeliveryBlock()
 
-       let pvzBox = BX.create({
+        let pvzBox = BX.create({
             tag: 'div',
             props: {
                 className: 'container-fluid d-flex flex-column overflow-auto my-2'
@@ -426,15 +427,18 @@ BX.SaleCommonPVZ = {
             triggerSelectOnEnter: true,
             autoSelectFirst: true,
             onSelect: function (suggestion) {
+                this.updateValueProp(this.propLatitudeId, suggestion?.data?.geo_lat ? Number('' + suggestion.data.geo_lat).toPrecision(6) : '');
+                this.updateValueProp(this.propLongitudeId, suggestion?.data?.geo_lon ? Number('' + suggestion.data.geo_lon).toPrecision(6) : '');
+                console.log(suggestion);
                 this.updatePropsFromDaData(suggestion)
-
-                if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
-                    if (__this.curDeliveryId == __this.doorDeliveryId) {
-                        __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
-                        __this.getSavedOshishaDelivery(Number('' + suggestion.data.geo_lat).toPrecision(6),
-                            Number('' + suggestion.data.geo_lon).toPrecision(6));
-                    }
-                }
+                BX.onCustomEvent('onDeliveryExtraServiceValueChange');
+                // if (suggestion.data.geo_lat !== undefined && suggestion.data.geo_lon !== undefined) {
+                //     if (__this.curDeliveryId == __this.doorDeliveryId) {
+                //         __this.oshishaDeliveryOptions.DA_DATA_ADDRESS = suggestion.value;
+                //         __this.getSavedOshishaDelivery(Number('' + suggestion.data.geo_lat).toPrecision(6),
+                //             Number('' + suggestion.data.geo_lon).toPrecision(6));
+                //     }
+                // }
             }.bind(this),
         })
 
@@ -442,19 +446,19 @@ BX.SaleCommonPVZ = {
             if (this.curCityName == 'Москва') {
                 address.suggestions().setOptions({
                     constraints: {
-                        locations: [{region: "Московская"}, {region: "Москва"}]
+                        locations: [{country: "*"}, {region: "Московская"}, {region: "Москва"}]
                     }
                 });
             } else if (this.curCityType == 6) {
                 address.suggestions().setOptions({
                     constraints: {
-                        locations: [{region: this.curCityArea}, {area: this.curParentCityName}]
+                        locations: [{country: "*"}, {region: this.curCityArea}, {area: this.curParentCityName}]
                     }
                 });
             } else {
                 address.suggestions().setOptions({
                     constraints: {
-                        locations: [{city: this.curCityName}]
+                        locations: [{country: "*"}, {city: this.curCityName}]
                     }
                 });
             }
@@ -537,15 +541,20 @@ BX.SaleCommonPVZ = {
      * @param suggestion
      */
     updatePropsFromDaData: function (suggestion) {
+        console.log(suggestion);
         this.updateValueProp(this.propAddressId, suggestion?.value ?? '')
         this.updateValueProp(this.propZipId, suggestion?.data?.postal_code ?? '')
         this.updateValueProp(this.propCityId, suggestion?.data?.city ?? '')
         this.updateValueProp(this.propFiasId, suggestion?.data?.fias_id ?? '')
         this.updateValueProp(this.propKladrId, suggestion?.data?.kladr_id ?? '')
         this.updateValueProp(this.propStreetKladrId, suggestion?.data?.street_kladr_id ?? '')
+        console.log(this.getValueProp(this.propLatitudeId));
+        console.log(this.getValueProp(this.propLatitudeId));
         this.updateValueProp(this.propLatitudeId, suggestion?.data?.geo_lat ? Number('' + suggestion.data.geo_lat).toPrecision(6) : '');
         this.updateValueProp(this.propLongitudeId, suggestion?.data?.geo_lon ? Number('' + suggestion.data.geo_lon).toPrecision(6) : '');
-        },
+        console.log(this.getValueProp(this.propLatitudeId));
+        console.log(this.getValueProp(this.propLatitudeId));
+    },
 
     /**
      *
@@ -649,7 +658,7 @@ BX.SaleCommonPVZ = {
             .buildDataView()
             .buildSortService()
             .buildDeliverySelect()
-            // .buildMobileControls()
+        // .buildMobileControls()
 
         BX.adjust(this.pvzOverlay, {style: {display: 'flex'}})
     },
@@ -686,27 +695,28 @@ BX.SaleCommonPVZ = {
                 __this.curParentCityName = res.PARENT_LOCATION_NAME;
                 __this.curCityArea = res.AREA_NAME;
                 __this.curCityType = res.TYPE;
+                __this.curCountry = res.COUNTRY_NAME;
                 if (__this.propAddressId) {
                     const userAddress = $(document).find('#user-address');
                     if (userAddress.length) {
                         if (__this.curCityName == 'Москва') {
                             userAddress.suggestions().setOptions({
                                 constraints: {
-                                    locations: [{region: "Московская"}, {region: "Москва"}]
+                                    locations: [{country: "*"}, {region: "Московская"}, {region: "Москва"}]
                                 }
                             });
                         } else {
                             if (Number(__this.curCityType) === 6) {
                                 userAddress.suggestions().setOptions({
                                     constraints: {
-                                        locations: [{region: __this.curCityArea}, {area: __this.curParentCityName}]
+                                        locations: [{country: "*"}, {region: __this.curCityArea}, {area: __this.curParentCityName}]
                                     }
                                 });
                             } else {
                                 // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
                                 userAddress.suggestions().setOptions({
                                     constraints: {
-                                        locations: [{city: __this.curCityName}]
+                                        locations: [{country: "*"}, {city: __this.curCityName}]
                                     }
                                 });
                             }
@@ -811,6 +821,7 @@ BX.SaleCommonPVZ = {
                 sessid: BX.bitrix_sessid(),
                 'cityName': __this.curCityName,
                 'codeCity': __this.curCityCode,
+                'countryName': __this.curCountry,
                 'orderPackages': __this.orderPackages,
                 'action': 'getPVZList'
             },
@@ -888,9 +899,9 @@ BX.SaleCommonPVZ = {
         __this.updateValueProp(__this.propAddressPvzId, point.properties.fullAddress)
         __this.updateValueProp(__this.propTypePvzId, point.properties.type)
         BX.adjust(BX('DELIVERY_SELECT_FOR_ORDER'), {
-                html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" aria-hidden="true"></i>' +
-                    '<b class="font-15">' + point.properties?.deliveryName + '</b> ' +
-                    '<br> <span class="font-13">' + point.properties?.fullAddress+'</span>'
+            html: '<i class="fa fa-map-marker color-redLight font-20 mr-2" aria-hidden="true"></i>' +
+                '<b class="font-15">' + point.properties?.deliveryName + '</b> ' +
+                '<br> <span class="font-13">' + point.properties?.fullAddress+'</span>'
         })
         BX.Sale.OrderAjaxComponent.sendRequest()
 
@@ -1154,7 +1165,7 @@ BX.SaleCommonPVZ = {
 
         const propPvzDelivery =  {
             id: 'delivery-self',
-                className: 'radio-field form-check-input',
+            className: 'radio-field form-check-input',
             type: 'radio',
             value: 'Самовывоз',
             name: 'delivery_type',
@@ -1267,9 +1278,9 @@ BX.SaleCommonPVZ = {
     },
 
     removeDeliveryDate: function () {
-      if (BX('wrap_delivery_date')){
-          BX.remove(BX('wrap_delivery_date'));
-      }
+        if (BX('wrap_delivery_date')){
+            BX.remove(BX('wrap_delivery_date'));
+        }
     },
 
     removeDeliveryTime: function () {
@@ -1682,23 +1693,23 @@ BX.SaleCommonPVZ = {
                                         className: 'sort_services_list',
                                     },
                                     children: ['Все', '5Post', 'OSHISHA', 'СДЭК', 'Почта России','Деловые линии'].map(item => {
-                                            return BX.create({
-                                                tag: 'li',
-                                                props: {className: 'sort_service'},
-                                                text: item,
-                                                events: {
-                                                    click: BX.proxy(function (e) {
-                                                        BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
-                                                        BX.removeClass(BX('sort_service_select'), 'active')
+                                        return BX.create({
+                                            tag: 'li',
+                                            props: {className: 'sort_service'},
+                                            text: item,
+                                            events: {
+                                                click: BX.proxy(function (e) {
+                                                    BX.adjust(BX('active_sort_service'), {text: e.target.innerHTML})
+                                                    BX.removeClass(BX('sort_service_select'), 'active')
 
-                                                        this.filterPvzList(e.target.getAttribute('data-target'))
-                                                    }, this)
-                                                },
-                                                dataset: {
-                                                    target: item
-                                                }
-                                            })
-                                        }),
+                                                    this.filterPvzList(e.target.getAttribute('data-target'))
+                                                }, this)
+                                            },
+                                            dataset: {
+                                                target: item
+                                            }
+                                        })
+                                    }),
                                 })
                             ]
 

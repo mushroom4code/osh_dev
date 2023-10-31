@@ -21,6 +21,7 @@ if ($USER->IsAuthorized() && check_bitrix_sessid()) {
     $action = $request->get('action');
     $codeCity = $request->get('codeCity');
     $cityName = $request->get('cityName');
+    $countryName = $request->get('countryName');
     $packages = $request->get('orderPackages');
 
     switch ($action) {
@@ -61,7 +62,7 @@ if ($USER->IsAuthorized() && check_bitrix_sessid()) {
             exit(json_encode(DeliveryHelper::updateFivePostPVZ()));
         case 'getPVZList':
             $deliveries = DeliveryHelper::getActivePvzDeliveryInstance(array('codeCity' => $codeCity));
-            $response = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity, $packages));
+            $response = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity, $packages, $countryName));
             exit($response);
         case 'getPVZPrice':
             $dataToHandler = $request->get('dataToHandler');

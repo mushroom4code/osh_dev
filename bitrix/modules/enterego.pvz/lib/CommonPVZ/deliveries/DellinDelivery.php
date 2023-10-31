@@ -102,7 +102,7 @@ class DellinDelivery extends CommonPVZ
         }
     }
 
-    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
+    public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions, string $country_name)
     {
         $arParams = ['filter'=>['BITRIX_CODE'=>$code_city]];
         $res = DellinPointsTable::getList($arParams);
@@ -203,18 +203,18 @@ class DellinDelivery extends CommonPVZ
             $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
 
             $cache = \Bitrix\Main\Data\Cache::createInstance(); // получаем экземпляр класса
-            if ($cache->initCache(3600, $this->dellin_cache_id)) { // проверяем кеш и задаём настройки
-                if ($is_cache_on == 'Y') {
-                    $cached_vars = $cache->getVars();
-                    if (!empty($cached_vars)) {
-                        foreach ($cached_vars as $varKey => $var) {
-                            if ($varKey === $hash_string) {
-                                return $var;
-                            }
-                        }
-                    }
-                }
-            }
+//            if ($cache->initCache(3600, $this->dellin_cache_id)) { // проверяем кеш и задаём настройки
+//                if ($is_cache_on == 'Y') {
+//                    $cached_vars = $cache->getVars();
+//                    if (!empty($cached_vars)) {
+//                        foreach ($cached_vars as $varKey => $var) {
+//                            if ($varKey === $hash_string) {
+//                                return $var;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
             $derivalDate = date('Y-m-d', strtotime(date('Y-m-d').' +1 days'));
             $data = ['appkey' => $this->api_key,
@@ -246,7 +246,9 @@ class DellinDelivery extends CommonPVZ
                     'height' => ($params['height'] / 1000),
                     'weight' => ($params['weight'] / 1000),
                     'totalVolume' => $params['totalVolume'],
+                    'oversizedVolume' => $params['totalVolume'],
                     'totalWeight' => ($params['shipment_weight'] / 1000),
+                    'oversizedWeight' => ($params['shipment_weight'] / 1000),
                 ]
             ];
             $result = DellindeliveryApicore::SendApiRequest('calculator', $data);
@@ -281,6 +283,9 @@ class DellinDelivery extends CommonPVZ
             while (strlen($this->configs['derivalkladr']) < 25) {
                 $this->configs['derivalkladr'] = $this->configs['derivalkladr'] . '0';
             }
+
+            $tests = DellindeliveryApicore::sendApiRequest('cities', ['appkey' => $this->api_key]);
+            $ups = DellindeliveryApicore::SearchCity('Витебск');
 
             if (empty($params['shipment_weight']))
                 $noGeneralWeight = true;
@@ -358,9 +363,7 @@ class DellinDelivery extends CommonPVZ
                     ],
                     'arrival' => [
                         'variant' => 'address',
-                        'address' => [
-                            'street' => $params['street_kladr_to']
-                        ],
+                        'address' => [],
                         'time' => [
                             'worktimeStart' => '10:00',
                             'worktimeEnd' => '18:00'
@@ -389,6 +392,13 @@ class DellinDelivery extends CommonPVZ
                     'totalWeight' => ($params['shipment_weight'] / 1000),
                 ]
             ];
+
+            if ($params['location_name']['COUNTRY_NAME'] !== 'Россия') {
+                $data['delivery']['arrival']['address']['street'] = DellindeliveryApicore::SearchCity($params['location_name']['LOCATION_NAME'])[0]->code;
+            } else {
+                $data['delivery']['arrival']['address']['street'] = $params['street_kladr_to'];
+            }
+
             $result = DellindeliveryApicore::SendApiRequest('calculator', $data);
 
             if (!empty($result->errors)) {
