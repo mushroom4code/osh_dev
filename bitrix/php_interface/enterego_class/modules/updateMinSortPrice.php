@@ -9,8 +9,8 @@ function updateMinSortPrice()
         false,
         [
             'ID',
-            'CATALOG_PRICE_' . CATALOG_BASE_PRICE,
-            'CATALOG_PRICE_' . CATALOG_STOCK_PRICE,
+            'PRICE_' . CATALOG_BASE_PRICE,
+            'PRICE_' . CATALOG_STOCK_PRICE,
             'PROPERTY_' . SORT_PRICE,
             'PROPERTY_' . IS_DISCOUNT
         ]
@@ -18,8 +18,8 @@ function updateMinSortPrice()
 
     while ($product = $products->Fetch()) {
         $id = (int)$product['ID'];
-        $basePrice = (int)$product['CATALOG_PRICE_' . CATALOG_BASE_PRICE] ?? 0;
-        $stockPrice = (int)$product['CATALOG_PRICE_' . CATALOG_STOCK_PRICE] ?? 0;
+        $basePrice = (int)$product['PRICE_' . CATALOG_BASE_PRICE] ?? 0;
+        $stockPrice = (int)$product['PRICE_' . CATALOG_STOCK_PRICE] ?? 0;
         $currSortPrice = (int)$product['PROPERTY_' . SORT_PRICE . '_VALUE'] ?? 0;
         $sortPrice = $basePrice;
 

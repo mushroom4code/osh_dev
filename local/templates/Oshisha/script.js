@@ -20,6 +20,7 @@ function tasteInit() {
         );
     });
 }
+
 $(document).ready(function () {
     let div = $('div'),
         body = $('body'),
@@ -157,8 +158,9 @@ $(document).ready(function () {
             altField: inputPicker,
         });
     }
-    function setPriceGenerate(elem,value){
-        if($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0){
+
+    function setPriceGenerate(elem, value) {
+        if ($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0) {
             $('.ganerate_price').text(getPriceForProduct(elem) * value + ' ₽');
         }
     }
@@ -178,11 +180,11 @@ $(document).ready(function () {
                 priceBox = cardWrapper.find('.info-prices-box-hover');
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
-                tasteOverlay.css({height:'100%'});
-                priceBox.css({zIndex:'791'});
+                tasteOverlay.css({height: '100%'});
+                priceBox.css({zIndex: '791'});
             } else {
-                tasteOverlay.css({height:'0'});
-                priceBox.css({zIndex:'791'});
+                tasteOverlay.css({height: '0'});
+                priceBox.css({zIndex: '791'});
             }
         })
         tasteInit();
@@ -486,8 +488,8 @@ $(document).ready(function () {
 
             // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
             let basketItem = $(boxInput).val();
-            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="'+product_id+'"]');
-            let parseUpdate= [], boxUpdate;
+            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="' + product_id + '"]');
+            let parseUpdate = [], boxUpdate;
             let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
 
             if (!boxUpdateAfterAppend.hasClass('catalog-fast-window')) {
@@ -514,6 +516,7 @@ $(document).ready(function () {
 
             $(box_with_product).empty();
             $(box_with_products_order).empty();
+
             addItemArrayANDSend(product_data);
         }
 
@@ -553,6 +556,7 @@ $(document).ready(function () {
 
         function sendArrayItems(ItemArray) {
             let product_data = [], new_time, time;
+
             if (ItemArray.length !== 0) {
                 $(ItemArray).each(function (key, itemVal) {
                     if (itemVal.TIME === 0) {
@@ -633,7 +637,7 @@ $(document).ready(function () {
             var popup_mess = $(this).closest('div#popup_mess');
             var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
             var product_name = $(this).closest('div.item-product-info').find('a.bx_catalog_item_title').text().trim();
-            if ($(this).closest('div#popup_mess').hasClass('subscribed')){
+            if ($(this).closest('div#popup_mess').hasClass('subscribed')) {
                 var subscribe = "N";
                 var subscription_id = popup_mess.attr('data-subscription_id');
             } else {
@@ -643,14 +647,21 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/local/templates/Oshisha/components/bitrix/catalog.product.subscribe/oshisha_catalog.product.subscribe/ajax.php',
-                data: {subscribe: subscribe, item_id: product_id, product_name: product_name, subscription_id: subscription_id},
+                data: {
+                    subscribe: subscribe,
+                    item_id: product_id,
+                    product_name: product_name,
+                    subscription_id: subscription_id
+                },
                 success: function (result_jsn) {
                     var result = JSON.parse(result_jsn);
-                    if(result.success === true){
+                    if (result.success === true) {
                         var item_controls = popup_mess.parent();
-                        if(result.clickDbError != 'false') {
+                        if (result.clickDbError != 'false') {
+                            console.log('error while updating productsSubscriptionsTable');
+                            console.log(result.clickDbError);
                         }
-                        if(result.message === "subscribed") {
+                        if (result.message === "subscribed") {
                             popup_mess.addClass('subscribed');
                             popup_mess.attr('data-subscription_id', result.subscribeId);
                             item_controls.find('.detail_popup').addClass('subscribed');
@@ -2040,38 +2051,6 @@ $(document).ready(function () {
         )
     })
 
-// LOCATIONS LIST START
-// Список городов для выбора местоположения
-    let all_cities = $('#cities-list'),
-        big_cities = $('#big-cities-list');
-    $("#city-search").keyup(function () {
-        all_cities.show();
-        big_cities.hide();
-        let length = $(this).val();
-        if (length.length === 0) {
-            all_cities.hide();
-            big_cities.show();
-        }
-        if (all_cities.is(':empty')) {
-            $('#choose-city-btn').attr('disabled', 'disabled');
-            big_cities.show();
-        }
-    });
-    $('.city-item').each(function () {
-        $(this).click(function () {
-            let city_selected = $(this).text();
-            $('#city-search').val(city_selected);
-            $('#choose-city-btn').removeAttr('disabled');
-            all_cities.hide();
-        });
-    });
-
-// list.js init
-
-    new List('locations', {
-        valueNames: ['city-item']
-    })
-
     $('.sort').on('click', function () {
         let basketItems = BX.namespace('BX.Sale.BasketComponent'),
             classes = $(this).attr('data-sort'),
@@ -2182,6 +2161,7 @@ $(document).ready(function () {
     })
 
     $(document).on('click', '.retail_orders', function () {
+        console.log('entry', '');
         $(this).closest('div').find('.wholesale_orders').css({
             'background': '#F0F0F0',
             'borderRadius': '10px'
@@ -2863,7 +2843,6 @@ $(document).on('submit', '.callback_form', function (e) {
             data: $(this).serialize(),
         }).done(function (dataRes) {
             if (dataRes == 1) {
-                //location.reload();
                 $('.callback_form').hide();
                 $('.result-callback').show();
             } else {
@@ -2908,14 +2887,18 @@ document.addEventListener('keyup', (e) => {
 
 if ($(window).width() > 1024) {
     $(window).scroll(function () {
-        var appended = false;
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        let appended = false;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         if (scrollTop > 0) {
             if (!appended) {
-                $(document).find('header').addClass('header-scroll').show(500);
+                if ($('#bx-panel').length > 0) {
+                    $(document).find('header').css('top', $('#bx-panel').height())
+                }
+                $(document).find('header').addClass('header-scroll');
                 appended = true;
             }
         } else {
+            $(document).find('header').css('top', '0')
             $(document).find('header').removeClass('header-scroll');
         }
     });
@@ -3064,4 +3047,22 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
         productsSuccess.sort((a, b) => a.pr < b.pr ? 1 : -1)
     }
     return productsSuccess;
+}
+
+// LOADER
+function loaderForSite(initParam, itemParent = false) {
+    const body = itemParent !== false ? itemParent : $('body');
+    if (initParam === 'appendLoader') {
+        if ($(body).find('div.remove-class').length === 0) {
+            $(body).append('<div class="position-fixed width-100 height-100 top-0 left-0 remove-class d-flex justify-content-center ' +
+                'align-items-center" style="background: rgba(60, 60, 60, 0.81); z-index:1000">' +
+                '<div class="loader" style="width: 107px;height: 107px;">' +
+                '<div class="inner one" style="border-bottom: 4px solid #ffffff"></div>' +
+                '<div class="inner two" style="border-bottom: 4px solid #ffffff"></div>' +
+                '<div class="inner three" style="border-bottom: 4px solid #ffffff"></div>' +
+                '</div></div>');
+        }
+    } else {
+        $(body).find('.remove-class').remove();
+    }
 }

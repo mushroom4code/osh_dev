@@ -17,14 +17,24 @@ class FivePostDelivery extends CommonPVZ
 
     public static function getInstanceForDoor($deliveryParams): array
     {
+        //TODO site id in seetings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
+
         if (Option::get(DeliveryHelper::$MODULE_ID, 'FivePost_door_active') === 'Y') {
             return [new FivePostDelivery()];
         }
         return [];
     }
 
-    public static function getInstanceForPvz(): array
+    public static function getInstanceForPvz($deliveryParams): array
     {
+        //TODO site id in seetings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
+
         if (Option::get(DeliveryHelper::$MODULE_ID, 'FivePost_pvz_active') === 'Y') {
             return [new FivePostDelivery()];
         }

@@ -19,11 +19,13 @@ $userData = EnteregoUser::getInstance();
                         <h5 class="mb-3">Режим работы</h5>
                         <div class="d-flex flex-column justify-content-between align-content-between">
                         <span class="mb-3">
-                           Мы работаем ежедневно<br>
-                           с 10:00 до 20:00.
+                         <span class="font-weight-500">Мы работаем ежедневно</span>
+                            <br>с 10:00 до 20:00.
                        </span>
-                            <span class="mb-3">  Самовывоз со склада доступен<br>
-                        с 11:00 до 19:00.
+                            <span class="mb-3">  <span class="font-weight-500"> Самовывоз со склада<br></span>
+                                пн-пт:  с 11:00 до 19:00 <br class="mb-2">
+                                сб:  с 11:00 до 14:00 <br>
+                                     вс: доставка и самовывоз не осуществляется
                             </span>
                         </div>
                     </div>
@@ -208,4 +210,4 @@ $userData = EnteregoUser::getInstance();
     </div>
     </div>
     <br></div>
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
