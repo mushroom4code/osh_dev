@@ -246,20 +246,23 @@ $option = $option_site; ?>
                 <div class="flex_block">
                     <div class="age-access-inner">
                         <div class="age-access__text">
-                            <h1 class="text-light-red font-medium text-xl  mb-4 text-center">Уведомляем вас!</h1>
-                            <div class="age-access__text-part1 mb-4 text-xs font-extralight text-textLight dark:text-textDarkLightGray">
+                            <h1 class="text-light-red font-medium dark:normal text-xl dark:text-textDarkLightGray mb-4 text-center">
+                                Уведомляем вас!</h1>
+                            <div class="age-access__text-part1 mb-4 text-xs dark:font-thin font-extralight text-textLight dark:text-borderColor">
                                 <?= $option->ATTENT_TEXT ?>
                             </div>
-                            <div class="age-access__text-part2 mb-5 text-xs font-extralight text-textLight dark:text-textDarkLightGray">
+                            <div class="age-access__text-part2 mb-5 text-xs dark:font-thin font-extralight text-textLight dark:text-borderColor">
                                 <?= $option->ATTENT_TEXT2 ?>
                             </div>
                         </div>
                         <div class="age-access__buttons flex flex-row justify-between">
                             <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close
-                             border-greenButton border-2 px-3.5 py-2 rounded-lg block w-fit mr-3 font-medium text-greenButton"
+                             border-greenButton border-2 px-3.5 py-2 rounded-md block w-fit mr-3 font-medium text-sm
+                             text-greenButton dark:border-none dark:bg-grayButton dark:font-light shadow-lg dark:text-white"
                                data-option="1" data-auth="false">Да, мне больше 18 лет</a>
                             <a href="<?= $option->ATTENT_NOT ?>" class="age-access__button link_red_button
-                            border-light-red border-2 px-9 py-2 rounded-lg block w-fit text-light-red font-medium"
+                            border-light-red border-2 px-9 py-2 rounded-lg block w-fit text-light-red font-medium
+                            dark:border-none dark:bg-dark dark:font-light dark:text-white shadow-lg text-sm"
                                data-option="2" rel="nofollow">Нет</a>
                         </div>
                     </div>
