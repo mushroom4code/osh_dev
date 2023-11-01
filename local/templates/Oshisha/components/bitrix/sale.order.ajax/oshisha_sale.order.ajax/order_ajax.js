@@ -6806,7 +6806,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                                 BX.create('A', {
                                     props: {
                                         href: 'javascript:void(0)',
-                                        className: 'btn btn_basket btn-order-save'
+                                        className: 'btn btn_basket btn-order-save dark:text-textDark shadow-md ' +
+                                            ' text-textLight dark:bg-dark-red bg-light-red py-2 px-4 rounded-5'
                                     },
                                     html: 'Зарезервировать',
                                     events: {
