@@ -2887,14 +2887,18 @@ document.addEventListener('keyup', (e) => {
 
 if ($(window).width() > 1024) {
     $(window).scroll(function () {
-        var appended = false;
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        let appended = false;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         if (scrollTop > 0) {
             if (!appended) {
-                $(document).find('header').addClass('header-scroll').show(500);
+                if ($('#bx-panel').length > 0) {
+                    $(document).find('header').css('top', $('#bx-panel').height())
+                }
+                $(document).find('header').addClass('header-scroll');
                 appended = true;
             }
         } else {
+            $(document).find('header').css('top', '0')
             $(document).find('header').removeClass('header-scroll');
         }
     });

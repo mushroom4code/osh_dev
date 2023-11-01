@@ -125,7 +125,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
                             }
                         }
                         ?>
-                        <div class="product-item-small-card">
+                        <div class="product-item-small-card mb-4">
                             <?php $APPLICATION->IncludeComponent(
                                 'bitrix:catalog.item',
                                 'oshisha_catalog.item',
@@ -165,28 +165,31 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
     }
 }?>
 <script>
-    if ($('#hits_slider_<?=$strRand?>').is('.bx_catalog_tile_section')) {
-        let count = 4,
-            variableWidth = false;
+    function initSlider(){
+        if ($('#hits_slider_<?=$strRand?>').is('.bx_catalog_tile_section')) {
+            let count = 4,
+                variableWidth = false;
             screenWidth = window.screen.width;
-        if (screenWidth <= 1380) {
-            count = 4;
+            if (screenWidth <= 1380) {
+                count = 4;
+            }
+            if (screenWidth <= 1080) {
+                count = 3;
+            }
+            if (screenWidth <= 746) {
+                count = 2;
+            }
+            $('#hits_slider_<?=$strRand?>').slick({
+                slidesToShow: count,
+                arrows: true,
+                infinite: false,
+                variableWidth: variableWidth,
+                prevArrow: '<span class="new_custom_button_slick_left_cat"  aria-hidden="true"><i class="fa fa-angle-left"'
+                    + ' aria-hidden="true"></i></span>',
+                nextArrow: '<span class="new_custom_button_slick_right_cat" aria-hidden="true"><i class="fa fa-angle-right"'
+                    + ' aria-hidden="true"></i></span>',
+            })
         }
-        if (screenWidth <= 1080) {
-            count = 3;
-        }
-        if (screenWidth <= 746) {
-            count = 2;
-        }
-        $('#hits_slider_<?=$strRand?>').slick({
-            slidesToShow: count,
-            arrows: true,
-            infinite: false,
-            variableWidth: variableWidth,
-            prevArrow: '<span class="new_custom_button_slick_left_cat"  aria-hidden="true"><i class="fa fa-angle-left"'
-                + ' aria-hidden="true"></i></span>',
-            nextArrow: '<span class="new_custom_button_slick_right_cat" aria-hidden="true"><i class="fa fa-angle-right"'
-                + ' aria-hidden="true"></i></span>',
-        })
     }
+    initSlider()
 </script>

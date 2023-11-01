@@ -23,6 +23,7 @@ $option = $option_site; ?>
         <div class="row">
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
                 <a class="logo" href="<?= SITE_DIR ?>">
+                    <div class="logo_footer">
                     <?php
                     $APPLICATION->IncludeComponent(
                         'bitrix:main.include',
@@ -34,6 +35,7 @@ $option = $option_site; ?>
                         false
                     );
                     ?>
+                    </div>
                 </a>
 
                 <div class='company-info'>
@@ -155,8 +157,10 @@ $option = $option_site; ?>
                     <li class="col-menu-item">
                         <a href="/about/vacancy/" class="col-menu-link">Вакансии</a>
                     </li>
+                    <li class="col-menu-item">
+                        <a href="/news/" class="col-menu-link">Блог</a>
+                    </li>
                 </ul>
-
 
                 <div class="socials">
                     <span class="col-title">Социальные сети</span>
