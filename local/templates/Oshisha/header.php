@@ -102,6 +102,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
 <body class="bx-background-image">
+<div class="overlay_top"></div>
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
 </div>
 <div id="bx_eshop_wrap">
@@ -143,8 +144,22 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                     </div>
                 </a>
             </div>
-            <div class="container_header flex_header">
-                <div class="box_with_city flex_header col-5 pl-0">
+            <div class="container_header flex_header py-2">
+                <div class="box_with_city flex_header col-5 pl-0 align-items-center">
+                    <div class="box_left_header">
+                        <div class="header_logo_desktop logo-header mr-4">
+                            <a href="<?= SITE_DIR ?>" class="d-block height-100">
+                                <?php $APPLICATION->IncludeComponent(
+                                    "bitrix:main.include",
+                                    "",
+                                    array(
+                                        "AREA_FILE_SHOW" => "file",
+                                        "PATH" => SITE_DIR . "include/logo_footer.php"),
+                                    false
+                                ); ?>
+                            </a>
+                        </div>
+                    </div>
                     <span class="d-flex flex-row align-items-center">
                         <img src="/local/assets/images/icon_location.svg" class="icon_location">
                         <a href="#" class="text_header">
@@ -192,7 +207,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                         if (defined('SUBSIDIARY_ENABLE') && SUBSIDIARY_ENABLE) {
                             $siteList = Storage::getSubsidiaryList(); ?>
                             <div class="position-relative">
-                                <div class="select-filial-box ml-5 flex align-center">
+                                <div class="select-filial-box ml-4 flex align-center">
                                     <svg width="25" height="25" viewBox="0 0 20 20" fill="none" class="mr-2"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <path opacity="0.9"
@@ -339,7 +354,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                     })</script>
                             <?php } else { ?>
                                 <a href="/about/feedback_new_site/"
-                                   class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать-->
+                                   class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
                                     отзыв</a>
                             <?php } ?>
                             <a href="/about/feedback_new_site/" class="link_menu_top">
@@ -351,23 +366,39 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
             </div>
             <div class="filial-popup"></div>
         <?php } ?>
-        <div class="container_header z-870">
+        <div class="container_header m-0 z-870">
             <!--        header menu search/login/basket/like     -->
-            <div class="header_box_logo">
-                <div class="box_left_header">
-                    <div class="header_logo_desktop">
-                        <a href="<?= SITE_DIR ?>">
+            <div class="header_box_logo d-flex flex-row justify-content-between align-items-center position-relative">
+                <?php if (!$mobile->isMobile()) { ?>
+                    <div class="box_with_menu">
+                        <div class="menu_header">
                             <?php $APPLICATION->IncludeComponent(
-                                "bitrix:main.include",
-                                "",
+                                "bitrix:menu",
+                                "oshisha_menu",
                                 array(
-                                    "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_DIR . "include/company_logo.php"),
+                                    "ROOT_MENU_TYPE" => "left",
+                                    "MENU_CACHE_TYPE" => "A",
+                                    "MENU_CACHE_TIME" => "36000000",
+                                    "MENU_CACHE_USE_GROUPS" => "Y",
+                                    "MENU_THEME" => "site",
+                                    "CACHE_SELECTED_ITEMS" => "N",
+                                    "MENU_CACHE_GET_VARS" => array(),
+                                    "MAX_LEVEL" => "4",
+                                    "CHILD_MENU_TYPE" => "left",
+                                    "USE_EXT" => "Y",
+                                    "DELAY" => "N",
+                                    "IBLOCK_ID" => IBLOCK_CATALOG,
+                                    "TYPE" => "1c_catalog",
+                                    "ALLOW_MULTI_SELECT" => "N",
+                                    "COMPONENT_TEMPLATE" => "bootstrap_v4",
+                                    "SECTION_PAGE_URL" => "#SECTION_ID#/",
+                                    "DETAIL_PAGE_URL" => "#SECTION_ID#/#ELEMENT_ID#",
+                                ),
                                 false
                             ); ?>
-                        </a>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
                 <div class="box_right_header">
                     <div class="box_with_search">
                         <?php $APPLICATION->IncludeComponent(
@@ -423,36 +454,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                     </div>
                 </div>
             </div>
-            <?php if (!$mobile->isMobile()) { ?>
-                <div class="box_with_menu">
-                    <div class="menu_header">
-                        <?php $APPLICATION->IncludeComponent(
-                            "bitrix:menu",
-                            "oshisha_menu",
-                            array(
-                                "ROOT_MENU_TYPE" => "left",
-                                "MENU_CACHE_TYPE" => "A",
-                                "MENU_CACHE_TIME" => "36000000",
-                                "MENU_CACHE_USE_GROUPS" => "Y",
-                                "MENU_THEME" => "site",
-                                "CACHE_SELECTED_ITEMS" => "N",
-                                "MENU_CACHE_GET_VARS" => array(),
-                                "MAX_LEVEL" => "4",
-                                "CHILD_MENU_TYPE" => "left",
-                                "USE_EXT" => "Y",
-                                "DELAY" => "N",
-                                "IBLOCK_ID" => IBLOCK_CATALOG,
-                                "TYPE" => "1c_catalog",
-                                "ALLOW_MULTI_SELECT" => "N",
-                                "COMPONENT_TEMPLATE" => "bootstrap_v4",
-                                "SECTION_PAGE_URL" => "#SECTION_ID#/",
-                                "DETAIL_PAGE_URL" => "#SECTION_ID#/#ELEMENT_ID#",
-                            ),
-                            false
-                        ); ?>
-                    </div>
-                </div>
-            <?php } ?>
         </div>
     </header>
     <div class="section_wrapper">

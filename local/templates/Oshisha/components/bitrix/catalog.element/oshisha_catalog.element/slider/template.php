@@ -63,7 +63,7 @@
 					$component,
 					array('HIDE_ICONS' => 'Y')
 				); ?>
-				<a href="#" class="delligate shared" title="Поделиться"
+				<a href="#" class="delligate shared mt-3 mb-3" title="Поделиться"
 				   data-element-id="<?= $arResult['ID'] ?>">
 					<i class="fa fa-paper-plane-o" aria-hidden="true"></i>
 					<div class="shared_block">
