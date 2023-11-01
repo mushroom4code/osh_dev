@@ -246,7 +246,7 @@ $option = $option_site; ?>
                 <div class="flex_block">
                     <div class="age-access-inner">
                         <div class="age-access__text">
-                            <h1 class="text-light-red font-medium dark:normal text-xl dark:text-textDarkLightGray mb-4 text-center">
+                            <h1 class="text-light-red font-medium dark:font-light text-xl dark:text-textDarkLightGray mb-4 text-center">
                                 Уведомляем вас!</h1>
                             <div class="age-access__text-part1 mb-4 text-xs dark:font-thin font-extralight text-textLight dark:text-borderColor">
                                 <?= $option->ATTENT_TEXT ?>
