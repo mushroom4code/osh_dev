@@ -1,15 +1,20 @@
 <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
 use Bitrix\Catalog\PriceTable;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Context;
 use Bitrix\Main\DB\SqlQueryException;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
+use Bitrix\Sale\Fuser;
 use Enterego\EnteregoBasket;
 use Enterego\EnteregoGroupedProducts;
 
 CModule::IncludeModule("iblock");
 Loader::includeModule('main');
+CModule::IncludeModule("sale");
 
 $request = Context::getCurrent()->getRequest();
 $action = $request->get('action');
@@ -18,9 +23,9 @@ $action = $request->get('action');
  * @param $prodId
  * @param $listGroupedProduct
  * @return array
- * @throws \Bitrix\Main\ArgumentException
- * @throws \Bitrix\Main\ObjectPropertyException
- * @throws \Bitrix\Main\SystemException
+ * @throws ArgumentException
+ * @throws ObjectPropertyException
+ * @throws SystemException
  */
 function getGroupedProduct($prodId, $listGroupedProduct)
 {
@@ -36,7 +41,7 @@ function getGroupedProduct($prodId, $listGroupedProduct)
             'select' => ['PRODUCT_ID', 'PRICE', 'CATALOG_GROUP_ID', 'CATALOG_GROUP'],
             'filter' => [
                 'PRODUCT_ID' => $listGroupedProduct,
-                'CATALOG_GROUP_ID' => [SALE_PRICE_TYPE_ID, BASIC_PRICE, B2B_PRICE, RETAIL_PRICE],
+                'CATALOG_GROUP_ID' => [SALE_PRICE_TYPE_ID, B2B_PRICE],
             ],
         ])->fetchAll();
 
@@ -56,9 +61,9 @@ function getGroupedProduct($prodId, $listGroupedProduct)
             }
         }
 
-        $dbBasketItems = CSaleBasket::GetList(
-            array("NAME" => "ASC", "ID" => "ASC"),
-            array("FUSER_ID" => CSaleBasket::GetBasketUserID(), "LID" => SITE_ID, "ORDER_ID" => "NULL"),
+        $dbBasketItems =  \CSaleBasket::GetList(
+            array(),
+            array("FUSER_ID" => Fuser::getId(), "LID" => SITE_ID, "ORDER_ID" => "NULL"),
             false,
             false,
             array("ID", "PRODUCT_ID", "QUANTITY",)
@@ -71,13 +76,13 @@ function getGroupedProduct($prodId, $listGroupedProduct)
     }
     return $arResult;
 }
-
+$jsonForModal = [];
 if ($action === 'fastProduct') {
 
     $specialPrice = 0;
     $prop_see_in_window = [];
     $item = CIBlockElement::GetList([], ['ID' => $request->get('prodId')], false, false,
-        ['ID', 'PRODUCT', 'MORE_PHOTO', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE'])->Fetch();
+        ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE'])->Fetch();
 
     $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $request->get('prodId'), []);
     while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
@@ -127,9 +132,9 @@ if ($action === 'fastProduct') {
 
     try {
         $item['GROUPED_PRODUCT'] = getGroupedProduct($request->get('prodId'), $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'],);
-    } catch (\Bitrix\Main\ObjectPropertyException $e) {
-    } catch (\Bitrix\Main\ArgumentException $e) {
-    } catch (\Bitrix\Main\SystemException $e) {
+    } catch (ObjectPropertyException $e) {
+    } catch (ArgumentException $e) {
+    } catch (SystemException $e) {
     }
 // TODO - допилить получение переменных - все-таки подумать брать ли некоторые из шиблона
 // TODO - или вырезать кусок из получения данных по связ товарам
@@ -159,8 +164,8 @@ if ($action === 'fastProduct') {
         'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE'] ?? [],
         'GROUPED_PRODUCT' => $item['GROUPED_PRODUCT']
     ];
-    echo 'true';
+    echo json_encode($jsonForModal);
 } else {
-    echo '';
+    echo json_encode(['errors'=>'yes']);
 }
 exit();

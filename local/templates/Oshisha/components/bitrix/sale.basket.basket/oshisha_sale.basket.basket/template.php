@@ -149,9 +149,9 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             <?= Loc::getMessage('SBB_BASKET_ITEM_MAX_COUNT_EXCEEDED', array('#PATH#' => $arParams['PATH_TO_BASKET'])) ?>
         </div>
     <?php } ?>
-    <div id="basket-root" class="bx-basket bx-<?= $arParams['TEMPLATE_THEME'] ?> bx-step-opacity row"
+    <div id="basket-root" class="bx-basket bx-<?= $arParams['TEMPLATE_THEME'] ?> bx-step-opacity flex flex-row flew-wrap"
          style="opacity: 0;">
-        <div class="col col-lg-8 col-md-12 col-12">
+        <div class="md:w-2/3 w-full">
             <div class="row">
                 <div class="alert alert-warning alert-dismissable" id="basket-warning" style="display: none;">
                     <span class="close" data-entity="basket-items-warning-notification-close">&times;</span>
@@ -166,7 +166,9 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                 <div class="basket-items-list-header mb-4" data-entity="basket-items-list-header">
                     <div class="d-flex flex-row justify-content-between align-items-center basket-items-search-field"
                          data-entity="basket-filter">
-                        <input type="text" class="form-control basket_input search_input"
+                        <input type="text" class="form-control text-sm basket_input search_input dark:bg-gray-box-dark
+                        bg-white  border border-textDarkLightGray dark:border-gray-box-dark outline-none
+                   dark:text-grayIconLights py-3 px-4 rounded-7 text-textLight"
                                data-entity="basket-filter-input" placeholder="Искать в корзине"/>
                         <div class="d-flex flex-row box_select">
                             <?/* <select class="select_sort_basket">
@@ -174,7 +176,6 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 <option value="price_min">Цене: самые дешевые</option>
                                 <option value="price_max">Цене: самые дорогие</option>
                             </select>*/ ?>
-                            <h4 class="mb-lg-4 mb-md-4 mb-0 d-block d-lg-none d-md-none font-m-21"><b>Корзина</b></h4>
                             <div class="d-flex flex-row">
                                 <div class="icon_sort_bar sort" id="basket-card" data-sort="grid"
                                      style="display:none;"></div>
@@ -281,14 +282,6 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                     </div>
                 </div>
             </div>
-            <div class="d-lg-flex d-md-flex d-none row_section justify-content-between align-items-center block_with_action_basket mb-3"
-                 style="display:none !important;">
-                <div class="d-flex row_section align-items-center mb-1">
-                    <span class="circle_black_basket"></span>
-                    <span>Акция! 2+1 на табак Шпаковский!</span>
-                </div>
-                <div><a href="#" class="btn btn_action">Применить</a></div>
-            </div>
         </div>
         <?php if ($arParams['BASKET_WITH_ORDER_INTEGRATION'] !== 'Y' && in_array('bottom', $arParams['TOTAL_BLOCK_DISPLAY'])) { ?>
             <div class="row">
@@ -296,7 +289,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             </div>
         <?php }
         if ($arParams['BASKET_WITH_ORDER_INTEGRATION'] !== 'Y' && in_array('top', $arParams['TOTAL_BLOCK_DISPLAY'])) { ?>
-            <div class="col-md-12 col-lg-4 col-12 pl-lg-4 pl-md-4  basket-items-list-wrapper">
+            <div class="md:w-1/3 w-full p-5 rounded-xl bg-textDark dark:bg-boxDark basket-items-list-wrapper h-fit">
                 <h4 class="mb-4 d-none d-lg-block d-md-block"><b>Корзина</b></h4>
                 <div data-entity="basket-total-block" class="mb-lg-0 mb-md-0 mb-5">
                 </div>
