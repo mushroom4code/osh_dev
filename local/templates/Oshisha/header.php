@@ -473,6 +473,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
         </div>
     </header>
     <div class="section_wrapper">
+        <button class="android-id">install</button>
         <div class="container_header">
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
             <div class="bx-content <?= STATIC_P ?>">

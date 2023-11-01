@@ -3061,3 +3061,15 @@ function loaderForSite(initParam, itemParent = false) {
         $(body).find('.remove-class').remove();
     }
 }
+
+window.addEventListener('beforeinstallprompt', event => {
+    event.preventDefault();
+    if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        //alert('Android');
+        //Запуск установки по кнопке:
+        var buttonAnd = document.querySelector('.android-btn');
+        buttonAnd.addEventListener('click', () => {
+            event.prompt();
+        });
+    }
+});
