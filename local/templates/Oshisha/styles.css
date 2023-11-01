@@ -107,3 +107,9 @@ input[type='number'] {
         transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
     }
 }
+
+/* MODALS */
+
+.box-modal {
+    box-shadow: 0 1px 8px 0 rgba(85, 85, 85, 0.02);
+}

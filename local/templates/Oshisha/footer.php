@@ -167,49 +167,25 @@ $option = $option_site; ?>
                             <form id="formofcity" name="formofcity" method="POST" class="form-inline">
                                 <div class="w-100" id="locations">
                                     <input id="city-search" class="form-control search" type="text" name="cityother"
-                                           placeholder="
-    <?= GetMessage('CITY_CHOOSE_PLACEHOLDER') ?>" value=""
+                                           placeholder="<?= GetMessage('CITY_CHOOSE_PLACEHOLDER') ?>" value=""
                                            autocomplete="off" required>
                                     <div class="cities-list-wrap mb-3">
                                         <ul id="big-cities-list">
-                                            <li>
-                                                    <span class="city-item">
-    <?= $runames[$moskow] ?></span>
-                                            </li>
-                                            <li>
-                                                    <span class="city-item">
-    <?= $runames[$st_petersburg] ?></span>
-                                            </li>
-                                            <li>
-                                                    <span class="city-item">
-    <?= $runames[$nizhny_novgorod] ?></span>
-                                            </li>
-                                            <li>
-                                                    <span class="city-item">
-    <?= $runames[$yekaterinburg] ?></span>
-                                            </li>
-                                            <li>
-                                                    <span class="city-item">
-    <?= $runames[$permian] ?></span>
-                                            </li>
-                                            <li>
-                                                    <span class="city-item">
-    <?= $runames[$novosibirsk] ?></span>
-                                            </li>
-                                            <li>
-                                                    <span class="city-item">
-    <?= $runames[$kazan] ?></span>
-                                            </li>
+                                            <li><span class="city-item"><?= $runames[$moskow] ?></span></li>
+                                            <li><span class="city-item"><?= $runames[$st_petersburg] ?></span></li>
+                                            <li><span class="city-item"><?= $runames[$nizhny_novgorod] ?></span></li>
+                                            <li><span class="city-item"><?= $runames[$yekaterinburg] ?></span></li>
+                                            <li><span class="city-item"><?= $runames[$permian] ?></span></li>
+                                            <li><span class="city-item"><?= $runames[$novosibirsk] ?></span></li>
+                                            <li><span class="city-item"><?= $runames[$kazan] ?></span></li>
                                         </ul>
                                         <ul id="cities-list" class="list" style="display: none">
-                                            <? //
-                                            $i = 0;
+                                            <?php $i = 0;
                                             foreach ($runames as $name) { ?>
                                                 <li>
                                                     <span class="city-item"><?= $name ?></span>
                                                 </li>
-                                                <? // $i++;
-                                            } ?>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </div>
@@ -225,7 +201,6 @@ $option = $option_site; ?>
     <div style="display:none;">
         <div id="callbackModal" class="box-modal-white">
             <div class="box-modal_close arcticmodal-close"></div>
-
             <div class="flex_block_cols">
                 <h4>Заказать обратный звонок</h4>
                 <div class="block_text">Оставьте ваш номер и мы перезвоним вам в ближайшее рабочее время</div>
@@ -266,22 +241,25 @@ $option = $option_site; ?>
     </div>
     <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
         <div style="display:none;">
-            <div id="trueModal" class="box-modal">
+            <div id="trueModal" class="box-modal p-5">
                 <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
                 <div class="flex_block">
                     <div class="age-access-inner">
                         <div class="age-access__text">
-                            <div class="age-access__text-part1">
+                            <h1 class="text-light-red font-medium text-xl  mb-4 text-center">Уведомляем вас!</h1>
+                            <div class="age-access__text-part1 mb-4 text-xs font-extralight text-textLight dark:text-textDarkLightGray">
                                 <?= $option->ATTENT_TEXT ?>
                             </div>
-                            <div class="age-access__text-part2">
+                            <div class="age-access__text-part2 mb-5 text-xs font-extralight text-textLight dark:text-textDarkLightGray">
                                 <?= $option->ATTENT_TEXT2 ?>
                             </div>
                         </div>
-                        <div class="age-access__buttons">
-                            <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close"
+                        <div class="age-access__buttons flex flex-row justify-between">
+                            <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close
+                             border-greenButton border-2 px-3.5 py-2 rounded-lg block w-fit mr-3 font-medium text-greenButton"
                                data-option="1" data-auth="false">Да, мне больше 18 лет</a>
-                            <a href="<?= $option->ATTENT_NOT ?>" class="age-access__button link_red_button"
+                            <a href="<?= $option->ATTENT_NOT ?>" class="age-access__button link_red_button
+                            border-light-red border-2 px-9 py-2 rounded-lg block w-fit text-light-red font-medium"
                                data-option="2" rel="nofollow">Нет</a>
                         </div>
                     </div>
@@ -307,7 +285,7 @@ $option = $option_site; ?>
         </script>
     <? } ?>
 
-    <?php require($_SERVER['DOCUMENT_ROOT'].'/local/templates/Oshisha/include/cookie.php')?>
+    <?php require($_SERVER['DOCUMENT_ROOT'] . '/local/templates/Oshisha/include/cookie.php') ?>
 </footer>
 </div>
 </div>
