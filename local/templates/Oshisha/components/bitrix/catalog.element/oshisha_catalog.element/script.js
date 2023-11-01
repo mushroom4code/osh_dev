@@ -1272,6 +1272,8 @@
 			var targetTabValue = BX.proxy_context && BX.proxy_context.getAttribute('data-value'),
 				containers, tabs, panelTabs;
 
+			console.log(targetTabValue)
+			console.log(BX.hasClass(BX.proxy_context, 'active'))
 			if (!BX.hasClass(BX.proxy_context, 'active') && targetTabValue)
 			{
 				containers = this.getEntities(this.obTabContainers, 'tab-container');
@@ -1300,12 +1302,14 @@
 						if (tabs[i].getAttribute('data-value') === targetTabValue)
 						{
 							BX.addClass(tabs[i], 'active');
-							BX.addClass(panelTabs[i], 'active');
+							BX.addClass(panelTabs[i], 'active block');
+							BX.removeClass(panelTabs[i], 'hidden');
 						}
 						else
 						{
 							BX.removeClass(tabs[i], 'active');
-							BX.removeClass(panelTabs[i], 'active');
+							BX.removeClass(panelTabs[i], 'active block');
+							BX.addClass(panelTabs[i], 'hidden');
 						}
 					}
 				}

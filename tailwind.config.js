@@ -56,7 +56,8 @@ module.exports = {
                 '164': '164px',
             },
             height: {
-                '98': '26rem'
+                '98': '26rem',
+                '48-vh': '48vh'
             },
             width: {
                 'inherit': 'inherit'

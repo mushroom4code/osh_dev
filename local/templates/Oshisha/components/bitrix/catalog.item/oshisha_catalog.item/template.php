@@ -1,6 +1,5 @@
-<? if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
+<?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
-use Bitrix\Catalog\PriceTable;
 use \Bitrix\Main;
 
 /**
@@ -73,8 +72,7 @@ if (isset($arResult['ITEM'])) {
 
     $haveOffers = !empty($item['OFFERS']);
     if ($haveOffers) {
-        $actualItem = isset($item['OFFERS'][$item['OFFERS_SELECTED']])
-            ? $item['OFFERS'][$item['OFFERS_SELECTED']]
+        $actualItem = isset($item['OFFERS'][$item['OFFERS_SELECTED']]) ? $item['OFFERS'][$item['OFFERS_SELECTED']]
             : reset($item['OFFERS']);
     } else {
         $actualItem = $item;
@@ -109,10 +107,10 @@ if (isset($arResult['ITEM'])) {
     $itemHasDetailUrl = isset($item['DETAIL_PAGE_URL']) && $item['DETAIL_PAGE_URL'] != '';
     ?>
 
-    <div class="product-item-container h-full relative <?= (isset($arResult['SCALABLE']) && $arResult['SCALABLE'] === 'Y' ? ' product-item-scalable-card' : '') ?>"
+    <div class="product-item-container h-full relative
+    <?= (isset($arResult['SCALABLE']) && $arResult['SCALABLE'] === 'Y' ? ' product-item-scalable-card' : '') ?>"
          id="<?= $areaId ?>" data-entity="item">
-
-        <?
+        <?php
         $documentRoot = Main\Application::getDocumentRoot();
         $templatePath = mb_strtolower($arResult['TYPE']) . '/template.php';
         $file = new Main\IO\File($documentRoot . $templateFolder . '/' . $templatePath);
@@ -303,6 +301,6 @@ if (isset($arResult['ITEM'])) {
                 var <?=$obName?> = new JCCatalogItem(<?=CUtil::PhpToJSObject($jsParams, false, true)?>);
         </script>
     </div>
-    <?
+    <?php
     unset($item, $actualItem, $minOffer, $itemIds, $jsParams);
 }

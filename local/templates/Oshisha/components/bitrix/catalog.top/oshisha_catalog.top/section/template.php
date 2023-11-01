@@ -134,7 +134,7 @@ $containerName = 'catalog-top-container';
 											$item = reset($rowItems);
 											$APPLICATION->IncludeComponent(
 												'bitrix:catalog.item',
-												'',
+												'oshisha_catalog.item',
 												array(
 													'RESULT' => array(
 														'ITEM' => $item,
@@ -174,7 +174,7 @@ $containerName = 'catalog-top-container';
 												<?
 												$APPLICATION->IncludeComponent(
 													'bitrix:catalog.item',
-													'',
+													'oshisha_catalog.item',
 													array(
 														'RESULT' => array(
 															'ITEM' => $item,
@@ -217,7 +217,7 @@ $containerName = 'catalog-top-container';
 												<?
 												$APPLICATION->IncludeComponent(
 													'bitrix:catalog.item',
-													'',
+													'oshisha_catalog.item',
 													array(
 														'RESULT' => array(
 															'ITEM' => $item,
@@ -258,7 +258,7 @@ $containerName = 'catalog-top-container';
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'',
+											'oshisha_catalog.item',
 											array(
 												'RESULT' => array(
 													'ITEM' => $item,
@@ -295,7 +295,7 @@ $containerName = 'catalog-top-container';
 									$item = array_shift($rowItems);
 									$APPLICATION->IncludeComponent(
 										'bitrix:catalog.item',
-										'',
+										'oshisha_catalog.item',
 										array(
 											'RESULT' => array(
 												'ITEM' => $item,
@@ -327,7 +327,7 @@ $containerName = 'catalog-top-container';
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'',
+											'oshisha_catalog.item',
 											array(
 												'RESULT' => array(
 													'ITEM' => $rowItems[$i],
@@ -367,7 +367,7 @@ $containerName = 'catalog-top-container';
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'',
+											'oshisha_catalog.item',
 											array(
 												'RESULT' => array(
 													'ITEM' => $rowItems[$i],
@@ -398,7 +398,7 @@ $containerName = 'catalog-top-container';
 									$item = end($rowItems);
 									$APPLICATION->IncludeComponent(
 										'bitrix:catalog.item',
-										'',
+										'oshisha_catalog.item',
 										array(
 											'RESULT' => array(
 												'ITEM' => $item,
@@ -435,7 +435,7 @@ $containerName = 'catalog-top-container';
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'',
+											'oshisha_catalog.item',
 											array(
 												'RESULT' => array(
 													'ITEM' => $item,
@@ -472,7 +472,7 @@ $containerName = 'catalog-top-container';
 									$item = array_shift($rowItems);
 									$APPLICATION->IncludeComponent(
 										'bitrix:catalog.item',
-										'',
+										'oshisha_catalog.item',
 										array(
 											'RESULT' => array(
 												'ITEM' => $item,
@@ -504,7 +504,7 @@ $containerName = 'catalog-top-container';
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'',
+											'oshisha_catalog.item',
 											array(
 												'RESULT' => array(
 													'ITEM' => $rowItems[$i],
@@ -544,7 +544,7 @@ $containerName = 'catalog-top-container';
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'',
+											'oshisha_catalog.item',
 											array(
 												'RESULT' => array(
 													'ITEM' => $rowItems[$i],
@@ -575,7 +575,7 @@ $containerName = 'catalog-top-container';
 									$item = end($rowItems);
 									$APPLICATION->IncludeComponent(
 										'bitrix:catalog.item',
-										'',
+										'oshisha_catalog.item',
 										array(
 											'RESULT' => array(
 												'ITEM' => $item,
@@ -612,7 +612,7 @@ $containerName = 'catalog-top-container';
 										<?
 										$APPLICATION->IncludeComponent(
 											'bitrix:catalog.item',
-											'',
+											'oshisha_catalog.item',
 											array(
 												'RESULT' => array(
 													'ITEM' => $item,
@@ -653,7 +653,7 @@ $containerName = 'catalog-top-container';
 		// load css for bigData/deferred load
 		$APPLICATION->IncludeComponent(
 			'bitrix:catalog.item',
-			'',
+			'oshisha_catalog.item',
 			array(),
 			$component,
 			array('HIDE_ICONS' => 'Y')

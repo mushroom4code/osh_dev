@@ -29,9 +29,9 @@
                 }
                 ?>
                 <li class="product-item-detail-properties-item  <?= $property['CODE'] ?>">
-                                    <span class="product-item-detail-properties-value"> - &nbsp<b>
-                                            <?= $property['NAME'] ?> </b> &nbsp&nbsp-&nbsp&nbsp </span>
-                    <span class="product-item-detail-properties-value"> <?php
+                                    <span class="product-item-detail-properties-value font-light dark:text-grayIconLights text-textLight"> - &nbsp
+                                        <span class="font-medium dark:text-grayIconLights text-textLight"> <?= $property['NAME'] ?> </span>&nbsp&nbsp-&nbsp&nbsp </span>
+                    <span class="product-item-detail-properties-value font-light dark:text-grayIconLights text-textLight"> <?php
                         if (is_array($property['VALUE'])) {
                             echo implode(", ", $property['VALUE']);
                         } else {

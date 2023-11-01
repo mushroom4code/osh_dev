@@ -394,7 +394,6 @@ $arrFilterTop['ID'] = $ids;
                                             "SHOW_SLIDER" => "Y",
                                             "SLIDER_INTERVAL" => "3000",
                                             "SLIDER_PROGRESS" => "N",
-                                            "TEMPLATE_THEME" => "blue",
                                             "USE_ENHANCED_ECOMMERCE" => "N",
                                             "USE_PRICE_COUNT" => "N",
                                             "USE_PRODUCT_QUANTITY" => "N",

@@ -792,7 +792,7 @@ function setActiveColor(string $itemType = 'card'): string
         ));
 
         $arrFilterTop['ID'] = $ids;
-        if (!empty($arrFilterTop['ID'])) { ?>
+        if (false) { ?>
             <div class="mb-5 mt-5 max-w-full">
                 <div data-entity="parent-container">
                     <div data-entity="header" data-showed="false">
