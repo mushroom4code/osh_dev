@@ -242,10 +242,15 @@ class DeliveryHelper
             $locationCode,
             [
                 'filter' => array('=NAME.LANGUAGE_ID' => LANGUAGE_ID, '=PARENT.NAME.LANGUAGE_ID' => LANGUAGE_ID),
-                'select' => ['ID', 'TYPE_ID', 'LOCATION_NAME' => 'NAME.NAME',
+                'select' => ['ID', 'TYPE_ID', 'COUNTRY_ID', 'LOCATION_NAME' => 'NAME.NAME',
                     'PARENT_LOCATION_NAME' => 'PARENT.NAME.NAME']
             ]
         )->fetch();
+
+        $city['COUNTRY_NAME'] = LocationTable::getList([
+                'filter' => array('ID' => $city['COUNTRY_ID'], '=NAME.LANGUAGE_ID' => LANGUAGE_ID),
+                'select' => array('LOCATION_NAME' => 'NAME.NAME')]
+        )->fetch()['LOCATION_NAME'];
 
         if ((int)$city['TYPE_ID'] === 6) {
             $areaNameArray = LocationTable::getByCode(
@@ -273,7 +278,9 @@ class DeliveryHelper
         return json_encode(array('LOCATION_NAME' => $city['LOCATION_NAME'],
             'PARENT_LOCATION_NAME' => $city['PARENT_LOCATION_NAME'],
             'AREA_NAME' => $city['AREA_NAME'],
-            'TYPE' => $city['TYPE_ID']));
+            'TYPE' => $city['TYPE_ID'],
+            'COUNTRY_NAME' => $city['COUNTRY_NAME']
+        ));
     }
 
     /** Обновляет ПВЗ для службы доставки PickPoint

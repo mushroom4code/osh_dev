@@ -8,6 +8,7 @@ BX.SaleCommonPVZ = {
     curCityType: null,
     curCityArea: null,
     curParentCityName: null,
+    curCountry: null,
     isGetPVZ: false,
     ajaxUrlPVZ: '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php',
     propsMap: null,
@@ -427,7 +428,7 @@ BX.SaleCommonPVZ = {
                         text: 'Московская, Москва'
                     })
                 ];
-                this.locationRestrictionsListArr = [{region: "Московская"}, {region: "Москва"}];
+                this.locationRestrictionsListArr = [{country: 'Россия', region: "Московская"}, {country: 'Россия', region: "Москва"}];
             } else if (this.curCityType == 6) {
                 restrictions_list_element = [
                     BX.create({
@@ -435,7 +436,7 @@ BX.SaleCommonPVZ = {
                         text: this.curCityArea + ', ' + this.curParentCityName
                     })
                 ];
-                this.locationRestrictionsListArr = [{region: this.curCityArea}, {area: this.curParentCityName}];
+                this.locationRestrictionsListArr = [{country: this.curCountry, region: this.curCityArea, area: this.curParentCityName}];
             } else {
                 restrictions_list_element = [
                     BX.create({
@@ -443,7 +444,7 @@ BX.SaleCommonPVZ = {
                         text: this.curCityName
                     })
                 ];
-                this.locationRestrictionsListArr = [{city: this.curCityName}];
+                this.locationRestrictionsListArr = [{country: this.curCountry, city: this.curCityName}];
             }
         }
         var location_restrictions = BX.create('div',
@@ -495,12 +496,9 @@ BX.SaleCommonPVZ = {
                 if(event.type === 'focusout') {
                     if(!event.relatedTarget || !event.relatedTarget.classList.contains('suggestions-suggestion')) {
                         var selected_suggestion = suggestions_node.querySelector('.suggestions-selected');
-                        if (__this.lastDaDataAddressesArr.length === 1) {
-                            selected_suggestion.dispatchEvent(new Event('click'));
-                        }
+
                         if (selected_suggestion) {
-                            var selected_suggestion_arr = __this.lastDaDataAddressesArr[selected_suggestion.getAttribute('data-index')];
-                            if (selected_suggestion_arr.value !== address.value) {
+                            if (address.value) {
                                 selected_suggestion.dispatchEvent(new Event('click'));
                             }
                         }
@@ -895,20 +893,21 @@ BX.SaleCommonPVZ = {
                 __this.curParentCityName = res.PARENT_LOCATION_NAME;
                 __this.curCityArea = res.AREA_NAME;
                 __this.curCityType = res.TYPE;
+                __this.curCountry = res.COUNTRY_NAME;
                 if (__this.propAddressId) {
                     const userAddress = $(document).find('#user-address');
                     if (userAddress.length) {
                         var location_restriction_element = document.querySelector('#location-restrictions-container-general span');
                         if (__this.curCityName == 'Москва') {
                             location_restriction_element.textContent = 'Московская, Москва';
-                            __this.locationRestrictionsListArr = [{region: "Московская"}, {region: "Москва"}];
+                            __this.locationRestrictionsListArr = [{country: 'Россия', region: "Московская"}, {country: 'Россия', region: "Москва"}];
                         } else {
                             if (Number(__this.curCityType) === 6) {
                                 location_restriction_element.textContent = __this.curCityArea + ', ' + __this.curParentCityName
-                                __this.locationRestrictionsListArr = [{region: __this.curCityArea}, {area: __this.curParentCityName}];
+                                __this.locationRestrictionsListArr = [{country: __this.curCountry, region: __this.curCityArea, area: __this.curParentCityName}];
                             } else {
                                 location_restriction_element.textContent = __this.curCityName
-                                __this.locationRestrictionsListArr = [{city: __this.curCityName}];
+                                __this.locationRestrictionsListArr = [{country: __this.curCountry, city: __this.curCityName}];
                             }
                         }
                     }
