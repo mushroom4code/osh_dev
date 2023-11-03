@@ -131,7 +131,7 @@ class DellinDelivery extends CommonPVZ
                 "street_kladr" => $point['STREET_KLADR']
             ];
             $features_obj['options'] = [
-                'preset' => 'islands#yellowIcon'
+                'color' => 'yellow'
             ];
 
             $result_array[] = $features_obj;

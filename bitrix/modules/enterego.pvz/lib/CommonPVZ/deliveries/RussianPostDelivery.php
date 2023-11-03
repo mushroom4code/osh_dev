@@ -229,7 +229,7 @@ class RussianPostDelivery extends CommonPVZ
                         "clusterCaption" => 'Почта России',
                     ];
                     $features_obj['options'] = [
-                        'preset' => 'islands#darkBlueIcon'
+                        'preset' => 'blue'
                     ];
 
                     $result_array[] = $features_obj;

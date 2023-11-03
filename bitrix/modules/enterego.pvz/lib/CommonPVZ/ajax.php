@@ -64,23 +64,20 @@ if ($USER->IsAuthorized() && check_bitrix_sessid()) {
             $response = json_encode(DeliveryHelper::getAllPVZ($deliveries, $cityName, $codeCity, $packages));
             exit($response);
         case 'getPVZPrice':
-            $dataToHandler = $request->get('dataToHandler');
-            $data = [];
-            foreach ($dataToHandler as $pointData) {
-                if ($pointData['code_pvz'] === 'undefined') {
-                    $adr = $pointData['delivery'] . ': ' . $pointData['to'];
-                } else {
-                    $adr = $pointData['delivery'] . ': ' . $pointData['to'] . ' #' . $pointData['code_pvz'];
-                }
-                $delivery = CommonPVZ::getInstanceObject($pointData['delivery']);
+            $pointData = $request->get('dataToHandler');
+            if ($pointData['code_pvz'] === 'undefined') {
+                $adr = $pointData['delivery'] . ': ' . $pointData['to'];
+            } else {
+                $adr = $pointData['delivery'] . ': ' . $pointData['to'] . ' #' . $pointData['code_pvz'];
+            }
+            $delivery = CommonPVZ::getInstanceObject($pointData['delivery']);
 
-                $price = $delivery->getPrice($pointData);
+            $price = $delivery->getPrice($pointData);
 
-                if (empty($price['errors'])) {
-                    $data[] = ['id' => $pointData['id'], 'price' => $price];
-                } else {
-                    $data[] = ['id' => $pointData['id'], 'error' => $price['errors']];
-                }
+            if (empty($price['errors'])) {
+                $data = ['id' => $pointData['id'], 'price' => $price];
+            } else {
+                $data = ['id' => $pointData['id'], 'error' => $price['errors']];
             }
             exit(json_encode(['status' => 'success', 'data' => $data]));
         default:

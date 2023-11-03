@@ -865,7 +865,7 @@ BX.SaleCommonPVZ = {
      */
     getPointData: function (point) {
         return {
-            id: point.id,
+            id: point.featureId,
             action: 'getPrice',
             code_city: this.curCityCode,
             delivery: point.properties.deliveryName,
@@ -874,8 +874,8 @@ BX.SaleCommonPVZ = {
             cost: this.shipmentCost,
             packages: this.orderPackages,
             street_kladr: point.properties.street_kladr ?? '',
-            latitude: point.geometry.coordinates[0],
-            longitude: point.geometry.coordinates[1],
+            latitude: point.coordinates[0],
+            longitude: point.coordinates[1],
             hubregion: point.properties.hubregion,
             name_city: this.curCityName,
             postindex: point.properties.postindex,
@@ -884,11 +884,11 @@ BX.SaleCommonPVZ = {
         };
     },
 
-    selectPvz: function (objectId) {
+    selectPvz: function (point) {
         const __this = this
-
+        console.log(point);
         __this.closePvzPopup();
-        const point = this.objectManager.objects.getById(objectId);
+        // const point = this.objectManager.objects.getById(objectId);
         BX.Sale.OrderAjaxComponent.result.DELIVERY.forEach((delivery) => {
             if (delivery['CHECKED'])
                 delete delivery['CHECKED']
@@ -934,22 +934,32 @@ BX.SaleCommonPVZ = {
             __this.objectManager.clusters.balloon.setData(__this.objectManager.clusters.balloon.getData());
         }
 
-        const afterSuccess = function (data) {
-            if (clusterId !== undefined && __this.objectManager.clusters.balloon.isOpen(clusterId)) {
-                __this.objectManager.clusters.balloon.setData(__this.objectManager.clusters.balloon.getData());
-            }
-        }
+        // const afterSuccess = function (data) {
+        //     if (clusterId !== undefined && __this.objectManager.clusters.balloon.isOpen(clusterId)) {
+        //         __this.objectManager.clusters.balloon.setData(__this.objectManager.clusters.balloon.getData());
+        //     }
+        // }
 
         this.getRequestGetPvzPrice(data, afterSuccess)
     },
 
     /**
      * Отправка запроса на получение и вызов соответствующего обработчика
-     * @param data
-     * @param afterSuccess
+     * @param entity
      */
-    getRequestGetPvzPrice: function (data, afterSuccess=undefined) {
+    getRequestGetPvzPrice: function (entity) {
         const __this = this
+        entity.update({
+            price: entity.price,
+            zIndex: 3,
+            popup: {
+                content: entity._popupProps.content
+            }
+        });
+        entity._togglePopup(true);
+        let data = __this.getPointData(entity._props);
+        console.log(entity);
+        console.log(data);
 
         BX.ajax({
             url: __this.ajaxUrlPVZ,
@@ -962,10 +972,7 @@ BX.SaleCommonPVZ = {
             dataType: 'json',
             onsuccess: function (res) {
                 if (res?.status === 'success') {
-                    res.data.forEach(__this.afterGetPvzItemPrice())
-                    if (afterSuccess !== undefined) {
-                        afterSuccess(res.data)
-                    }
+                    __this.afterGetPvzItemPrice(entity._props, res.data, entity);
                 }
             },
             onfailure: function (res) {
@@ -977,29 +984,42 @@ BX.SaleCommonPVZ = {
         })
     },
 
-    afterGetPvzItemPrice: (clusterId=undefined) => function (item) {
-        const point = BX.SaleCommonPVZ.pvzObj.features.find(feature => feature.id == item.id)
-        // const point = BX.SaleCommonPVZ.objectManager.objects.getById(item.id)
-
+    afterGetPvzItemPrice: function (point, item, entity) {
+        const __this = this;
+        console.log(point);
         const balloonContent = "".concat(
+            `<div class="popup__container" style="max-width: 415px; width: max-content; white-space: break-spaces">`,
+            '<div class="popup__close" id="popup_point_'+item.id+'_close">✖</div>',
             `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ'}${item.price ? ' - ' + item.price : ''} руб.</b></div>`,
             `<div>${point.properties.fullAddress}</div>`,
             point.properties.phone ? `<div>${point.properties.phone}</div>` : '',
-            point.properties.workTime ? `<div>${point.properties.workTime}</div>` : '',
-            point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
+            point.properties.workTime ? `<div><p>${point.properties.workTime}</p></div>` : '',
+            point.properties.comment ? `<div>${point.properties.comment}</div>` : '',
             point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
             item['error'] ? `<div>При расчете стоимости произошла ошибка, пожалуйста выберите другой ПВЗ или вид доставки</div>` :
-                `<a class="btn btn_basket mt-2" href="javascript:void(0)" 
-                    onclick="BX.SaleCommonPVZ.selectPvz(${item.id});" >Выбрать</a>`)
+                '<a class="btn btn_basket mt-2" id="popup_point_'+item.id+'_button" href="javascript:void(0)">Выбрать</a></div>'
+        );
 
-        point.properties = {
-            ...point.properties,
+        entity.update({
             price: item.price,
-            balloonContent: balloonContent,
-        };
-        if (clusterId === undefined && BX.SaleCommonPVZ.componentParams.displayPVZ === typeDisplayPVZ.map) {
-            BX.SaleCommonPVZ.objectManager.objects.balloon.setData(point);
-        }
+            popup: {
+                content: (close) => {
+                    console.log(close);
+                    const content = document.createElement('div');
+                    content.innerHTML = balloonContent;
+                    return content;
+                },
+            }
+        });
+
+        entity._togglePopup(true);
+
+        document.getElementById('popup_point_'+item.id+'_close').addEventListener('click', function() {
+            entity._togglePopup(true);
+        });
+        document.getElementById('popup_point_'+item.id+'_button').addEventListener('click', function() {
+            __this.selectPvz(point);
+        });
     },
 
     /**
@@ -1008,69 +1028,97 @@ BX.SaleCommonPVZ = {
     setPVZOnMap: function (pvzList) {
         const oshDelivery = this
 
-        ymaps.ready(function () {
-            const myGeocoder = ymaps.geocode(oshDelivery.curCityName, {results: 1});
-            myGeocoder.then(function (res) { // получаем координаты
-                const firstGeoObject = res.geoObjects.get(0),
-                    coords = firstGeoObject.geometry.getCoordinates();
+        ymaps3.ready.then(async function () {
 
-                oshDelivery.propsMap = new ymaps.Map('map_for_delivery', {
-                    center: [coords[0], coords[1]],
+            const {YMap, YMapDefaultSchemeLayer, YMapMarker, YMapLayer, YMapFeatureDataSource} = ymaps3;
+            oshDelivery.propsMap = new ymaps3.YMap(document.getElementById('map_for_delivery'), {
+                location: {
+                    center: [37.6156 , 55.7522],
                     zoom: 12,
-                    controls: ['fullscreenControl']
-                });
-
-                const objectManager = new ymaps.ObjectManager({
-                    clusterize: true,
-                    clusterHasBalloon: true
-                });
-                objectManager.add({type: 'FeatureCollection', features: pvzList});
-                oshDelivery.objectManager = objectManager;
-
-                oshDelivery.propsMap.geoObjects.add(objectManager);
-                const osh_pvz = objectManager.objects.getAll()
-                    .find((item) => item?.properties?.deliveryName === 'OSHISHA');
-
-                if (osh_pvz) {
-                    const button = new ymaps.control.Button({
-                        data: {
-                            image: 'images/button.jpg',
-                            content: 'Пункт выдачи OSHISHA',
-                            title: 'Показать на карте пункт выдачи'
-                        },
-                        options: {
-                            selectOnClick: false,
-                            maxWidth: [230, 230, 230]
-                        }
-                    });
-                    button.events.add('click', () => {
-                        oshDelivery.propsMap.setZoom(15)
-                        objectManager.objects.balloon.open(osh_pvz.id);
-                    })
-                    oshDelivery.propsMap.controls.add(button, {float: 'right', floatIndex: 100});
                 }
-
-                objectManager.clusters.events.add(['balloonopen'], function (e) {
-                    const clusterId = e.get('objectId');
-                    const cluster = objectManager.clusters.getById(clusterId);
-                    if (objectManager.clusters.balloon.isOpen(clusterId)) {
-                        oshDelivery.getSelectPvzPrice(cluster.properties.geoObjects, clusterId);
-                    }
-                });
-
-                objectManager.objects.events.add('click', function (e) {
-                    const objectId = e.get('objectId')
-                    objectManager.objects.balloon.open(objectId);
-                });
-
-                objectManager.objects.events.add('balloonopen', function (e) {
-                    const objectId = e.get('objectId'),
-                        obj = objectManager.objects.getById(objectId);
-
-                    oshDelivery.getSelectPvzPrice([obj]);
-                });
             });
+            const {YMapClusterer, clusterByGrid} = await ymaps3.import('@yandex/ymaps3-clusterer@0.0.1');
+            const {YMapDefaultMarker} = await ymaps3.import('@yandex/ymaps3-markers@0.0.1');
+            oshDelivery.propsMap
+                .addChild(new YMapDefaultSchemeLayer())
+                .addChild(new YMapFeatureDataSource({id: 'my-source'}))
+                .addChild(new YMapLayer({source: 'my-source', type: 'markers', zIndex: 1800}));
+            const contentPin = document.createElement('div');
+            contentPin.innerHTML = '<img class="js-ymaps-marker-opener" style="width: 20px" src="'+window.location.origin+'/Yandex_Maps_icon.svg" />';
+            const marker = (feature) =>
+                new YMapDefaultMarker(
+                    {
+                        featureId: feature.id,
+                        coordinates: feature.geometry.coordinates,
+                        options: feature.options,
+                        properties: feature.properties,
+                        price: false,
+                        color: feature.options.color,
+                        title: feature.properties.clusterCaption,
+                        popup: {
+                            content: "Идет загрузка данных...",
+                            zIndex: 3,
+                        },
+                        zIndex: 2,
+                        type: 'marker',
+                        markerType: 'object',
+                        source: 'my-source'
+                    },
+                );
+            const cluster = (coordinates, features) =>
+                new ymaps3.YMapMarker(
+                    {
+                        coordinates,
+                        type: 'marker',
+                        markerType: 'cluster',
+                        source: 'my-source'
+                    },
+                    circle(features.length).cloneNode(true)
+                );
+
+            function circle(count) {
+                const circle = document.createElement('div');
+                circle.classList.add('circle');
+                circle.classList.add('outer-circle');
+                circle.innerHTML = `
+                    <div class="circle inner-circle">
+                        <span class="circle-text">${count}</span>
+                    </div>
+                `;
+                return circle;
+            }
+
+            pvzList.forEach((element) => {
+                [element.geometry.coordinates[0], element.geometry.coordinates[1]] = [element.geometry.coordinates[1], element.geometry.coordinates[0]];
+            });
+
+            const clusterer = new YMapClusterer({
+                method: clusterByGrid({gridSize: 64}),
+                features: pvzList,
+                marker,
+                cluster
+            });
+
+            oshDelivery.propsMap.addChild(clusterer);
+            console.log(oshDelivery.propsMap);
+            console.log(clusterer);
+            const mapListener = new ymaps3.YMapListener({
+                onFastClick: (object, coords, entity) => {
+                    if (object && object.type == 'marker') {
+                        if (object.entity._props.markerType == 'object' && !object.entity.parent._props.price) {
+                            // object.entity.parent.update({
+                            //     zIndex:9999999,
+                            // });
+                            // object.entity.parent._togglePopup(true);
+                            oshDelivery.getRequestGetPvzPrice(object.entity.parent);
+                        }
+                    }
+                }
+            });
+
+            oshDelivery.propsMap.addChild(mapListener);
         }).catch(function (e) {
+            console.log(e);
             oshDelivery.showError(oshDelivery.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
             console.warn(e);
         });

@@ -214,7 +214,7 @@ class SDEKDelivery extends CommonPVZ
                     $features_obj['properties']['phone'] = $value->getPhones()[0]->getNumber();
                 }
                 $features_obj['options'] = [
-                    'preset' => 'islands#darkGreenIcon'
+                    'color' => 'green'
                 ];
 
                 $result_array[] = $features_obj;

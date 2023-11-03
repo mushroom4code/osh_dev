@@ -721,6 +721,64 @@ h4.checkout-block-title > i.fa {
     z-index: 999999;
 }
 
+.circle {
+    display: inline-block;
+    border-radius: 50%;
+    min-width: 20px;
+    min-height: 20px;
+    padding: 7px;
+    background: white;
+    text-align: center;
+    line-height: 1;
+    box-sizing: content-box;
+    white-space: nowrap;
+}
+
+.circle.outer-circle {
+    background: #0f9eff;
+}
+
+.circle:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    padding-top: 100%;
+    height: 0;
+}
+
+.circle:after {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    padding-top: 100%;
+    height: 0;
+}
+
+.inner-circle .circle-text {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.popup__container {
+    display: flex;
+    flex-direction: column;
+    color: #000;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow: 0 6px 18px -5px #fddf7f;
+    padding: 15px 15px 30px;
+}
+
+.popup__close {
+    align-self: flex-end;
+    width: 30px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #c0c5cb;
+    border: none;
+    background-color: transparent;
+}
+
 @media screen and (max-width: 1110px) {
     #osh-map-action {
         flex-wrap: wrap;
