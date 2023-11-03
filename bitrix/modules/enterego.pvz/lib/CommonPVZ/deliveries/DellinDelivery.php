@@ -390,6 +390,8 @@ class DellinDelivery extends CommonPVZ
                     'weight' => ($params['weight'] / 1000),
                     'totalVolume' => $params['totalVolume'],
                     'totalWeight' => ($params['shipment_weight'] / 1000),
+                    'oversizedVolume' => $params['totalVolume'],
+                    'oversizedWeight' => ($params['shipment_weight'] / 1000),
                 ]
             ];
 
