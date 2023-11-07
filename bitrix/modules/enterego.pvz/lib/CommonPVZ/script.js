@@ -703,7 +703,6 @@ BX.SaleCommonPVZ = {
                                     }
                                 });
                             } else {
-                                // $(document).find('[name="ORDER_PROP_' + __this.propAddressId + '"]').suggestions().setOptions({
                                 userAddress.suggestions().setOptions({
                                     constraints: {
                                         locations: [{city: __this.curCityName}]
@@ -906,7 +905,6 @@ BX.SaleCommonPVZ = {
                     '<br> <span class="font-13">' + point.properties?.fullAddress+'</span>'
         })
         BX.Sale.OrderAjaxComponent.sendRequest()
-
     },
 
     /**
@@ -948,13 +946,31 @@ BX.SaleCommonPVZ = {
      * @param entity
      */
     getRequestGetPvzPrice: function (entity) {
-        const __this = this
+        const __this = this;
+        console.log(document.activeElement);
+        const balloonContent = "".concat(
+            `<div class="popup__container" style="max-width: 415px; width: max-content; white-space: break-spaces">`,
+            '<div class="popup__close" id="popup_point_default_close">✖</div>',
+            `<div>Идет загрузка данных...</div>`,
+            `</div>`
+        );
         entity.update({
             price: entity.price,
             zIndex: 3,
             popup: {
-                content: entity._popupProps.content
-            }
+                content: (close) => {
+                    const content = document.createElement('div');
+                    content.innerHTML = balloonContent;
+                    content.querySelector('.popup__close').addEventListener('click', function() {
+                        event.stopPropagation();
+                        // entity.update({price: entity.price, zIndex: 2});
+                        entity._props['zIndex'] = 2;
+                        entity._marker.element.closest('.ymaps3x0--marker').style.zIndex = 2;
+                        entity._togglePopup(false);
+                    });
+                    return content;
+                },
+            },
         });
         entity._togglePopup(true);
         let data = __this.getPointData(entity._props);
@@ -987,6 +1003,8 @@ BX.SaleCommonPVZ = {
     afterGetPvzItemPrice: function (point, item, entity) {
         const __this = this;
         console.log(point);
+        console.log(entity);
+        console.log(document.activeElement);
         const balloonContent = "".concat(
             `<div class="popup__container" style="max-width: 415px; width: max-content; white-space: break-spaces">`,
             '<div class="popup__close" id="popup_point_'+item.id+'_close">✖</div>',
@@ -1005,8 +1023,15 @@ BX.SaleCommonPVZ = {
             popup: {
                 content: (close) => {
                     console.log(close);
+                    console.log(this);
                     const content = document.createElement('div');
                     content.innerHTML = balloonContent;
+                    content.querySelector('.popup__close').addEventListener('click', function() {
+                        event.stopPropagation();
+                        entity._props['zIndex'] = 2;
+                        entity._marker.element.closest('.ymaps3x0--marker').style.zIndex = 2;
+                        entity._togglePopup(false);
+                    });
                     return content;
                 },
             }
@@ -1014,12 +1039,13 @@ BX.SaleCommonPVZ = {
 
         entity._togglePopup(true);
 
-        document.getElementById('popup_point_'+item.id+'_close').addEventListener('click', function() {
-            entity._togglePopup(true);
-        });
-        document.getElementById('popup_point_'+item.id+'_button').addEventListener('click', function() {
-            __this.selectPvz(point);
-        });
+        // document.getElementById('popup_point_'+item.id+'_close').addEventListener('click', function() {
+        //     entity._togglePopup(false);
+        // });
+        console.log(entity);
+        // document.getElementById('popup_point_'+item.id+'_button').addEventListener('click', function() {
+        //     __this.selectPvz(point);
+        // });
     },
 
     /**
@@ -1056,8 +1082,7 @@ BX.SaleCommonPVZ = {
                         color: feature.options.color,
                         title: feature.properties.clusterCaption,
                         popup: {
-                            content: "Идет загрузка данных...",
-                            zIndex: 3,
+                            content: 'Идет загрузка данных...',
                         },
                         zIndex: 2,
                         type: 'marker',
@@ -1104,13 +1129,18 @@ BX.SaleCommonPVZ = {
             console.log(clusterer);
             const mapListener = new ymaps3.YMapListener({
                 onFastClick: (object, coords, entity) => {
-                    if (object && object.type == 'marker') {
-                        if (object.entity._props.markerType == 'object' && !object.entity.parent._props.price) {
-                            // object.entity.parent.update({
-                            //     zIndex:9999999,
-                            // });
-                            // object.entity.parent._togglePopup(true);
+                    console.log('eeee');
+                    console.log(object);
+                    console.log(entity);
+                    console.log('aaaa');
+                    if (object && object.type == 'marker' && object.entity._props.markerType == 'object') {
+                        if (!object.entity.parent._props.price) {
+                            object.entity.parent._marker.element.focus();
+                            console.log(object.entity.parent._marker.element);
                             oshDelivery.getRequestGetPvzPrice(object.entity.parent);
+                        } else {
+                            object.entity.parent._props['zIndex'] = 3;
+                            object.entity.parent._marker.element.closest('.ymaps3x0--marker').style.zIndex = 3;
                         }
                     }
                 }
