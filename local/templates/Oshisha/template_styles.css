@@ -656,7 +656,8 @@ h3.ctweb-title {
     pointer-events: none;
 }
 
-.blur_photo .product-item-amount-field-contain {
+.blur_photo .product-item-amount-field-contain,
+.blur_photo .product-item-detail-price-current {
     display: none !important;
 }
 
