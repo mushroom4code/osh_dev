@@ -97,23 +97,23 @@ class EnteregoBasket
 
             foreach ($product_prices as $product_id => $price_data) {
 
-                $typePriceIds = ["CATALOG_PRICE_$price_id"];
+                $typePriceIds = ["PRICE_$price_id"];
                 if ($useUserPrice) {
                     $userPriceType = UserPriceHelperOsh::GetPriceIdFromRule($product_id);
                     if ($userPriceType) {
-                        $typePriceIds[] = "CATALOG_PRICE_$userPriceType";
+                        $typePriceIds[] = "PRICE_$userPriceType";
                     }
                 }
 
                 $propsUseSale = CIBlockElement::GetProperty(
                     IBLOCK_CATALOG,
-	                $product_id,
+                    $product_id,
                     array(),
                     array('CODE' => 'USE_DISCOUNT'));
                 $newProp = $propsUseSale->Fetch();
 
-                if ((USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') && SITE_ID !== 'V3' ) {
-                    $typePriceIds[] = "CATALOG_PRICE_" . SALE_PRICE_TYPE_ID;
+                if ((USE_CUSTOM_SALE_PRICE || $newProp['VALUE_XML_ID'] == 'true') && SITE_ID !== 'V3') {
+                    $typePriceIds[] = "PRICE_" . SALE_PRICE_TYPE_ID;
                 }
 
                 $result = CIBlockElement::GetList(
@@ -128,7 +128,7 @@ class EnteregoBasket
                     foreach ($typePriceIds as $typePriceId) {
                         if (!empty($ar_res["$typePriceId"]) && (is_null($minPrice) || $minPrice > $ar_res["$typePriceId"])) {
                             $minPrice = $product_prices[$product_id]['PRICE'] = $ar_res[$typePriceId];
-                            $product_prices[$product_id]['PRICE_ID'] = str_replace('CATALOG_PRICE_', '', $typePriceId);
+                            $product_prices[$product_id]['PRICE_ID'] = str_replace('PRICE_', '', $typePriceId);
                         }
                     }
                 }
@@ -162,10 +162,10 @@ class EnteregoBasket
             array("ID" => $product_id),
             false,
             false,
-            ["CATALOG_PRICE_$price_type_id"]);
+            ["PRICE_$price_type_id"]);
 
         if ($ar_res = $res->Fetch()) {
-            return $ar_res["CATALOG_PRICE_$price_type_id"];
+            return $ar_res["PRICE_$price_type_id"];
         }
         return null;
     }
@@ -210,6 +210,20 @@ class EnteregoBasket
             $price['PRICE_DATA'][2]['NAME'] = 'b2b (от 30к)';
         }
 
+
+        foreach ($price['PRICE_DATA'] as &$priceRow) {
+            $priceRow['PRINT_RATIO_BASE_PRICE'] = \CCurrencyLang::CurrencyFormat(
+                $priceRow['RATIO_BASE_PRICE'],
+                $priceRow['CURRENCY'],
+                true
+            );
+            $priceRow['PRINT_RATIO_PRICE'] = \CCurrencyLang::CurrencyFormat(
+                $priceRow['RATIO_PRICE'],
+                $priceRow['CURRENCY'],
+                true
+            );
+        }
+
         return $price;
     }
 
@@ -220,22 +234,22 @@ class EnteregoBasket
      * @param array $order
      * @param array $action
      * @param callable|null $filter Filter for basket items.
-     *@return void
+     * @return void
      * @throws Main\LoaderException
      * @throws Main\ObjectPropertyException
      * @throws Main\SystemException
-          * @throws Main\ArgumentException
+     * @throws Main\ArgumentException
      */
-    public static function SetSpecialPriceType(array &$order, array $action, callable $filter=null)
+    public static function SetSpecialPriceType(array &$order, array $action, callable $filter = null)
     {
-        if (empty($action['VALUE'])){
+        if (empty($action['VALUE'])) {
             return;
         }
 
         if (empty($order['BASKET_ITEMS']) || !is_array($order['BASKET_ITEMS']))
             return;
 
-        if (!Main\Loader::includeModule('catalog')){
+        if (!Main\Loader::includeModule('catalog')) {
             return;
         }
 
@@ -245,11 +259,11 @@ class EnteregoBasket
             return;
         }
 
-        $arProductId = array_column($filterBasket, 'PRODUCT_ID' );
+        $arProductId = array_column($filterBasket, 'PRODUCT_ID');
         $rsPrice = \Bitrix\Catalog\PriceTable::getList([
-            'select' => ['PRODUCT_ID','PRICE'],
+            'select' => ['PRODUCT_ID', 'PRICE'],
             'filter' => [
-                'PRODUCT_ID'=>$arProductId,
+                'PRODUCT_ID' => $arProductId,
                 'CATALOG_GROUP.NAME' => $action['VALUE'],
             ]
         ])->fetchAll();
@@ -259,15 +273,15 @@ class EnteregoBasket
 
         $basketPrice = [];
         foreach ($rsPrice as $item) {
-            $basketPrice[$item['PRODUCT_ID']] = (float) $item['PRICE'];
+            $basketPrice[$item['PRODUCT_ID']] = (float)$item['PRICE'];
         }
 
         foreach ($order['BASKET_ITEMS'] as $basketCode => $basketRow) {
-            if (empty($basketPrice[$basketRow['PRODUCT_ID']])){
+            if (empty($basketPrice[$basketRow['PRODUCT_ID']])) {
                 continue;
             }
             $discountPrice = $basketPrice[$basketRow['PRODUCT_ID']];
-            if ($basketRow['PRICE'] > $discountPrice){
+            if ($basketRow['PRICE'] > $discountPrice) {
 
                 $oldPrice = $basketRow['PRICE'];
                 $basketRow['PRICE'] = $discountPrice;

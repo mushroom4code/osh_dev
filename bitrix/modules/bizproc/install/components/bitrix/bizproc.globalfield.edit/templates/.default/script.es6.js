@@ -1,7 +1,7 @@
-import {Reflection, Type, Loc, Event, Tag, Runtime, Dom} from 'main.core';
+import { Reflection, Type, Loc, Event, Tag, Runtime, Dom } from 'main.core';
 import { MessageBox } from 'ui.dialogs.messagebox';
 import 'bp_field_type';
-import {Globals} from 'bizproc.globals';
+import { Globals } from 'bizproc.globals';
 
 const namespace = Reflection.namespace('BX.Bizproc.Component');
 
@@ -11,7 +11,7 @@ class GlobalFieldEditComponent
 	documentType;
 	signedDocumentType: string;
 	mode: string;
-	availableTypes: object;
+	availableTypes: {};
 
 	inputValueId: string;
 
@@ -23,38 +23,38 @@ class GlobalFieldEditComponent
 
 	sliderDict: BX.SidePanel.Dictionary | null;
 
-	correspondenceModeToIdName: object;
+	correspondenceModeToIdName = {
+		constant: 'Constant',
+		variable: 'Variable'
+	};
 
 	constructor(options)
 	{
-		if (Type.isPlainObject(options))
+		if (!Type.isPlainObject(options))
 		{
-			this.oldProperty = options.property;
-			this.documentType = options.documentType;
-			this.signedDocumentType = options.signedDocumentType;
-			this.mode = options.mode;
-			this.availableTypes = options.types;
-
-			this.inputValueId = options.inputValueId;
-
-			this.multipleNode = options.multipleNode;
-			this.saveButtonNode = options.saveButtonNode;
-			this.form = options.form;
-
-			this.slider = options.slider;
+			return;
 		}
+
+		this.oldProperty = options.property;
+		this.documentType = options.documentType;
+		this.signedDocumentType = options.signedDocumentType;
+		this.mode = options.mode;
+		this.availableTypes = options.types;
+		this.visibilityNames = options.visibilityNames;
+
+		this.inputValueId = options.inputValueId;
+
+		this.multipleNode = options.multipleNode;
+		this.saveButtonNode = options.saveButtonNode;
+		this.form = options.form;
+
+		this.slider = options.slider;
 	}
 
 	init()
 	{
 		this.sliderDict = this.slider ? this.slider.getData() : null;
-		this.correspondenceModeToIdName =  {
-			constant: 'Constant',
-			variable: 'Variable',
-		};
-
 		this.editInputValue(this.oldProperty['Type'], this.oldProperty);
-
 
 		Event.bind(this.saveButtonNode, 'click', this.saveHandler.bind(this));
 	}
@@ -171,7 +171,8 @@ class GlobalFieldEditComponent
 	saveHandler(): boolean
 	{
 		const formElements = this.form.elements;
-		let id = formElements['ID'].value;
+
+		let id: string = Type.isStringFilled(this.oldProperty['id']) ? this.oldProperty['id'] : '';
 		const property = {
 			Name: formElements['NAME'].value,
 			Description: formElements['DESCRIPTION'].value,
@@ -181,8 +182,6 @@ class GlobalFieldEditComponent
 			Visibility: formElements['VISIBILITY'].value,
 			Multiple: formElements['MULTIPLE'].value,
 			Required: 'N',
-			CreatedBy: this.oldProperty['CreatedBy'] ? this.oldProperty['CreatedBy'] : null,
-			CreatedDate: this.oldProperty['CreatedDate'] ? this.oldProperty['CreatedDate'] : null
 		};
 
 		if (!this.validateName(property.Name))
@@ -190,7 +189,7 @@ class GlobalFieldEditComponent
 			return true;
 		}
 
-		if (!id)
+		if (!Type.isStringFilled(id))
 		{
 			const date = new Date();
 			id = this.correspondenceModeToIdName[this.mode] + date.getTime().toString();
@@ -215,7 +214,7 @@ class GlobalFieldEditComponent
 			}
 			else
 			{
-				me.sliderDict.set(id, property);
+				me.sliderDict.set(id, {...property, VisibilityName: this.visibilityNames[property.Visibility]});
 				me.slider.close();
 			}
 		});

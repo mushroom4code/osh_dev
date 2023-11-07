@@ -264,8 +264,10 @@ abstract class PrototypeItemDataManager extends ORM\Data\DataManager
 
 	public static function onBeforeDelete(Event $event): ORM\EventResult
 	{
-		$oldData = static::getByPrimary($event->getParameter('id'))->fetch();
-		static::getTemporaryStorage()->saveData($event->getParameter('id'), $oldData);
+		if ($oldData = static::getByPrimary($event->getParameter('id'))->fetch())
+		{
+			static::getTemporaryStorage()->saveData($event->getParameter('id'), $oldData);
+		}
 
 		return new Main\ORM\EventResult();
 	}
@@ -393,12 +395,32 @@ abstract class PrototypeItemDataManager extends ORM\Data\DataManager
 		elseif (
 			isset($userField['USER_TYPE']['BASE_TYPE'])
 			&& $userField['USER_TYPE']['BASE_TYPE'] === 'datetime'
-			&& $value instanceof Main\Type\DateTime
-			&& isset($userField['SETTINGS']['USE_TIMEZONE'])
-			&& $userField['SETTINGS']['USE_TIMEZONE'] === 'Y'
 		)
 		{
-			$value = $value::createFromUserTime($value->format(Main\Type\DateTime::getFormat()));
+			$useTimezone = isset($userField['SETTINGS']['USE_TIMEZONE']) && $userField['SETTINGS']['USE_TIMEZONE'] === 'Y';
+
+			if ($useTimezone)
+			{
+				if ($value instanceof Main\Type\DateTime)
+				{
+					$value = $value::createFromUserTime($value->format(Main\Type\DateTime::getFormat()));
+				}
+				elseif (is_string($value) && Main\Type\DateTime::isCorrect($value))
+				{
+					$value = Main\Type\DateTime::createFromUserTime($value);
+				}
+			}
+			else
+			{
+				if (is_string($value) && Main\Type\DateTime::isCorrect($value))
+				{
+					$value = new Main\Type\DateTime($value);
+				}
+				if ($value instanceof Main\Type\DateTime)
+				{
+					$value->disableUserTime();
+				}
+			}
 		}
 
 		if (

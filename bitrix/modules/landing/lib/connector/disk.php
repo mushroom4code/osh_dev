@@ -4,8 +4,7 @@ namespace Bitrix\Landing\Connector;
 class Disk
 {
 	public const FILE_PREFIX_HREF = '#diskFile';
-	public const FILE_NEW_PREFIX_HREF = 'file:#diskFile';
-	public const FILE_MASK_HREF = '"(file:)?#diskFile([\d]+)"';
+	public const FILE_MASK_HREF = '(file:)?#diskFile([\d]+)';
 
 	/**
 	 * Check disk's files within content for read access. If not, remove file's marks.

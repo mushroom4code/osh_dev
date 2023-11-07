@@ -4,6 +4,7 @@ $MESS["BX_IM_COMPONENT_CONFERENCE_CREATE_BROADCAST_MODE"] = "Übertragungsmodus"
 $MESS["BX_IM_COMPONENT_CONFERENCE_CREATE_BROADCAST_MODE_HINT"] = "Der Übertragungsmodus ermöglicht es Ihnen, bestimmte Moderatoren auszuwählen, die das Video und den Ton übertragen werden. Andere Teilnehmer können sich den Stream anschauen und im Chat kommunizieren.";
 $MESS["BX_IM_COMPONENT_CONFERENCE_CREATE_BUTTON_CANCEL"] = "Abbrechen";
 $MESS["BX_IM_COMPONENT_CONFERENCE_CREATE_BUTTON_CLOSE"] = "Schließen";
+$MESS["BX_IM_COMPONENT_CONFERENCE_CREATE_BUTTON_OPEN_CHAT"] = "Chat öffnen";
 $MESS["BX_IM_COMPONENT_CONFERENCE_CREATE_BUTTON_SAVE"] = "Link speichern und kopieren";
 $MESS["BX_IM_COMPONENT_CONFERENCE_CREATE_BUTTON_START"] = "Konferenz beginnen";
 $MESS["BX_IM_COMPONENT_CONFERENCE_CREATE_COPY_CONFIRMATION"] = "Link kopiert";

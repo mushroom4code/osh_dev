@@ -12,7 +12,15 @@ if (SITE_ID === SITE_EXHIBITION) {
 }
 
 CModule::IncludeModule("iblock");
+
 define("PROP_STRONG_CODE", 'KREPOST_KALYANNOY_SMESI'); //Свойство для отображения крепости
+
+if (defined('SUBSIDIARY_ENABLE') && SUBSIDIARY_ENABLE) {
+    require(__DIR__ . '/catalog/general/querybuilder.php');
+    CModule::AddAutoloadClasses('', [
+        '\Enterego\Subsidiary\Storage' => '/bitrix/php_interface/enterego_class/Subsidiary/Storage.php',
+    ]);
+}
 
 CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoHelper' => '/bitrix/php_interface/enterego_class/EnteregoHelper.php',
@@ -105,18 +113,18 @@ function onSalePaySystemRestrictionsClassNamesBuildListHandler()
 
 function PriceTypeANDStatusUser()
 {
-    global $USER;
-    $user_object = new EnteregoUserExchange();
-    $user_object->USER_ID = $USER->GetID() ?? 0;
-    $user_object->GetActiveContrAgentForUserPrice();
+//    global $USER;
+//    $user_object = new EnteregoUserExchange();
+//    $user_object->USER_ID = $USER->GetID() ?? 0;
+//    $user_object->GetActiveContrAgentForUserPrice();
 
-    if (!empty($user_object->contragents_user)) {
-        $GLOBALS['UserTypeOpt'] = false; //здесь поставить true для оптовиков
-        $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE; //Здесь переключение типов цен - сейчас включили розничную = 2
-    } else {
+//    if (!empty($user_object->contragents_user)) {
+//        $GLOBALS['UserTypeOpt'] = false; //здесь поставить true для оптовиков
+//        $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE; //Здесь переключение типов цен - сейчас включили розничную = 2
+//    } else {
         $GLOBALS['UserTypeOpt'] = false;
         $GLOBALS['PRICE_TYPE_ID'] = BASIC_PRICE;
-    }
+//    }
 
 }
 
@@ -172,7 +180,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "100",
                     "text" => "Черная пятница/Распродажа",
                     "title" => "Черная пятница/Распродажа",
-                    "url" => "/bitrix/php_interface/enterego_class/init_sale.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=init_sale",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "init_sale.php",
@@ -187,7 +195,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "100",
                     "text" => "Свойства товара",
                     "title" => "Свойства товара",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/product_prop_setting.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=product_prop_setting",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "product_prop_setting.php",
@@ -201,7 +209,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "200",
                     "text" => "Прайс-лист",
                     "title" => "Прайс-лист",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/priceList.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=priceList",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "priceList.php",
@@ -215,7 +223,7 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
 		              "sort" => "200",
 		              "text" => "Строка Информатор",
 		              "title" => "Строка Информатор",
-		              "url" => "/bitrix/php_interface/enterego_class/modules/informator.php",
+		              "url" => "/bitrix/admin/enterego_admin.php?category=informator",
 		              "parent_page" => "global_menu_enterego",
 		              "more_url" => array(
 			              "informator.php",
@@ -229,13 +237,13 @@ function DoBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
                     "sort" => "200",
                     "text" => "Выставка",
                     "title" => "Выставка",
-                    "url" => "/bitrix/php_interface/enterego_class/modules/exhibition.php",
+                    "url" => "/bitrix/admin/enterego_admin.php?category=exhibition",
                     "parent_page" => "global_menu_enterego",
                     "more_url" => array(
                         "exhibition.php",
                     ),
                     "items" => array(),
-                )
+                ),
             )
         ),
     );
@@ -248,6 +256,7 @@ class BXConstants
 {
 
     private static $_listPriceType;
+
     /**
      * @return array|string[]
      * @throws \Bitrix\Main\Db\SqlQueryException
@@ -259,7 +268,7 @@ class BXConstants
             return self::$_listPriceType;
         }
 
-        $priceTypes =  array(
+        $priceTypes = array(
             SALE_PRICE_TYPE_ID => "Сайт скидка",
             BASIC_PRICE => "Основная",
             B2B_PRICE => "b2b",

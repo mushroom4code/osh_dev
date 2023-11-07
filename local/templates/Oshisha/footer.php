@@ -1,5 +1,6 @@
 <?php use enterego\EnteregoUser;
 use Bitrix\Conversion\Internals\MobileDetect;
+use Bitrix\Main\Page\Asset;
 
 $mobile = new MobileDetect();
 
@@ -22,6 +23,7 @@ $option = $option_site; ?>
         <div class="row">
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
                 <a class="logo" href="<?= SITE_DIR ?>">
+                    <div class="logo_footer">
                     <?php
                     $APPLICATION->IncludeComponent(
                         'bitrix:main.include',
@@ -33,6 +35,7 @@ $option = $option_site; ?>
                         false
                     );
                     ?>
+                    </div>
                 </a>
 
                 <div class='company-info'>
@@ -154,8 +157,10 @@ $option = $option_site; ?>
                     <li class="col-menu-item">
                         <a href="/about/vacancy/" class="col-menu-link">Вакансии</a>
                     </li>
+                    <li class="col-menu-item">
+                        <a href="/news/" class="col-menu-link">Блог</a>
+                    </li>
                 </ul>
-
 
                 <div class="socials">
                     <span class="col-title">Социальные сети</span>
@@ -211,46 +216,7 @@ $option = $option_site; ?>
                              data-param-url="<?= urlencode($APPLICATION->GetCurUri()); ?>"
                              data-param-form_id="city_chooser">
                             <form id="formofcity" name="formofcity" method="POST" class="form-inline">
-                                <div class="w-100" id="locations">
-                                    <input id="city-search" class="form-control search" type="text" name="cityother"
-                                           placeholder="<?= GetMessage('CITY_CHOOSE_PLACEHOLDER') ?>" value=""
-                                           autocomplete="off" required>
-                                    <div class="cities-list-wrap mb-3">
-                                        <ul id="big-cities-list">
-                                            <li>
-                                                <span class="city-item"><?= $runames[$moskow] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$st_petersburg] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$nizhny_novgorod] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$yekaterinburg] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$permian] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$novosibirsk] ?></span>
-                                            </li>
-                                            <li>
-                                                <span class="city-item"><?= $runames[$kazan] ?></span>
-                                            </li>
-                                        </ul>
-                                        <ul id="cities-list" class="list" style="display: none">
-                                            <?
-                                            $i = 0;
-                                            foreach ($runames as $name) { ?>
-                                                <li>
-                                                    <span class="city-item"><?= $name ?></span>
-                                                </li>
-                                                <? $i++;
-                                            } ?>
-                                        </ul>
-                                    </div>
-                                </div>
+                                <div class="w-100" id="locations"></div>
                                 <input id="choose-city-btn" name="submitcity" class="btn btnok btn-region" type="submit"
                                        value="Выбрать" disabled/>
                             </form>
@@ -361,8 +327,7 @@ $option = $option_site; ?>
         </div>
     <?php endif; ?>
 </footer>
-
-
+<?php Asset::getInstance()->addJs("/local/templates/Oshisha/assets/js/locations_list_modal.js");?>
 </div>
 </div>
 <!-- //bx-wrapper -->

@@ -24,6 +24,7 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'b
 	'bizproc.local-settings',
 	'bizproc.automation',
 	'bizproc.automation.robot-selector',
+	'bizproc.automation.guide',
 	'bizproc.globals',
 	'bizproc.debugger',
 	'sidepanel',
@@ -75,7 +76,7 @@ $getMessage = function ($messageCode) use ($messages)
 	return isset($messages[$messageCode]) ? $messages[$messageCode] : GetMessage($messageCode);
 };
 
-if ($arParams['HIDE_TOOLBAR'] !== 'Y'):
+if (!isset($arParams['HIDE_TOOLBAR']) || $arParams['HIDE_TOOLBAR'] !== 'Y'):
 	$this->SetViewTarget('pagetitle') ?>
 	<div class="ui-btn-container">
 		<?php
@@ -126,17 +127,15 @@ $menuTabs[] = [
 	'IS_ACTIVE' => true,
 ];
 
-$docType = CUtil::JSEscape(CBPDocument::signDocumentType($arResult['DOCUMENT_TYPE']));
-
 $menuTabs[] = [
 	'ID' => 'global_variables',
 	'TEXT' => \Bitrix\Main\Localization\Loc::getMessage('BIZPROC_AUTOMATION_CMP_GLOB_VAR_MENU'),
-	'ON_CLICK' => "BX.Bizproc.Automation.showGlobals.showVariables('{$docType}')",
+	'ON_CLICK' => 'BX.Bizproc.Automation.showGlobals.showVariables()',
 ];
 $menuTabs[] = [
 	'ID' => 'global_constants',
 	'TEXT' => \Bitrix\Main\Localization\Loc::getMessage('BIZPROC_AUTOMATION_CMP_GLOB_CONST_MENU'),
-	'ON_CLICK' => "BX.Bizproc.Automation.showGlobals.showConstants('{$docType}')",
+	'ON_CLICK' => 'BX.Bizproc.Automation.showGlobals.showConstants()',
 ];
 if ($arResult['CAN_DEBUG'])
 {
@@ -160,7 +159,7 @@ endif;
 ?>
 
 <div class="automation-base<?=(count($arResult['TEMPLATES']) <= 1 ?'automation-base-script-mode':'')?>" data-role="automation-base-node">
-		<?php if ($arParams['HIDE_TOOLBAR'] !== 'Y'):?>
+		<?php if (!isset($arParams['HIDE_TOOLBAR']) || $arParams['HIDE_TOOLBAR'] !== 'Y'):?>
 		<div class="automation-base-node-top" data-role="automation-actionpanel">
 			<div class="automation-base-node-title">
 				<?=GetMessage('BIZPROC_AUTOMATION_CMP_SUBTITLE')?>
@@ -201,9 +200,9 @@ endif;
 				<div class="bizproc-automation-status-list-item">
 					<div class="bizproc-automation-status-title" data-role="automation-status-title" data-bgcolor="<?=$color?>">
 						<?=htmlspecialcharsbx(isset($status['NAME']) ? $status['NAME'] : $status['TITLE'])?>
-					</div>
-					<div class="bizproc-automation-status-bg" style="background-color: <?='#'.$color?>">
-						<span class="bizproc-automation-status-title-right" style="background-image: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2213%22%20height%3D%2232%22%20viewBox%3D%220%200%2013%2032%22%3E%3Cpath%20fill%3D%22%23<?=$color?>%22%20fill-rule%3D%22evenodd%22%20d%3D%22M0%200h3c2.8%200%204%203%204%203l6%2013-6%2013s-1.06%203-4%203H0V0z%22/%3E%3C/svg%3E); background-color: transparent !important;"></span>
+						<div class="bizproc-automation__status--bg" style="background-color: <?='#'.$color?>; border-color: <?='#'.$color?>;">
+							<span class="bizproc-automation__status--bg-arrow"></span>
+						</div>
 					</div>
 					<div style="padding-top: 12px">
 						<div class="bizproc-automation-robot-btn-block" data-role="add-button-container" data-status-id="<?=htmlspecialcharsbx($statusId)?>"></div>
@@ -261,7 +260,7 @@ endif;
 			</div>
 		</div>
 	</div>
-	<?php if ($arParams['HIDE_SAVE_CONTROLS'] !== 'Y'):?>
+	<?php if (!isset($arParams['HIDE_SAVE_CONTROLS']) || $arParams['HIDE_SAVE_CONTROLS'] !== 'Y'):?>
 	<div class="bizproc-automation-buttons" data-role="automation-buttons" style="display: none">
 		<?php $APPLICATION->IncludeComponent('bitrix:ui.button.panel', '', [
 			'BUTTONS' =>
@@ -281,7 +280,9 @@ endif;
 	{
 		BX.namespace('BX.Bizproc.Automation');
 		if (typeof BX.Bizproc.Automation.Component === 'undefined')
+		{
 			return;
+		}
 
 		var baseNode = document.querySelector('[data-role="automation-base-node"]');
 		if (baseNode)
@@ -298,7 +299,7 @@ endif;
 			var viewMode = BX.Bizproc.Automation.Component.ViewMode.Edit;
 
 			(new BX.Bizproc.Automation.Component(baseNode))
-				.init(<?=\Bitrix\Main\Web\Json::encode(array(
+				.init(<?=\Bitrix\Main\Web\Json::encode([
 					'AJAX_URL' => '/bitrix/components/bitrix/bizproc.automation/ajax.php',
 					'WORKFLOW_EDIT_URL' => $arResult['WORKFLOW_EDIT_URL'],
 					'CONSTANTS_EDIT_URL' => $arResult['CONSTANTS_EDIT_URL'],
@@ -324,22 +325,21 @@ endif;
 					'TRIGGER_CAN_SET_EXECUTE_BY' => $arResult['TRIGGER_CAN_SET_EXECUTE_BY'],
 					'GLOBAL_CONSTANTS' => $arResult['GLOBAL_CONSTANTS'],
 					'GLOBAL_VARIABLES' => $arResult['GLOBAL_VARIABLES'],
-					'G_CONSTANTS_VISIBILITY' => $arResult['G_CONSTANTS_VISIBILITY'],
-					'G_VARIABLES_VISIBILITY' => $arResult['G_VARIABLES_VISIBILITY'],
 					'LOG' => $arResult['LOG'],
 
-					'B24_TARIF_ZONE' => $arResult['B24_TARIF_ZONE'],
+					'B24_TARIF_ZONE' => $arResult['B24_TARIF_ZONE'] ?? '',
 					'USER_OPTIONS' => $arResult['USER_OPTIONS'],
 					'FRAME_MODE' => $arResult['FRAME_MODE'],
 					'IS_EMBEDDED' => $arResult['IS_EMBEDDED'],
 					'SHOW_TEMPLATE_PROPERTIES_MENU_ON_SELECTING' => $arResult['SHOW_TEMPLATE_PROPERTIES_MENU_ON_SELECTING'],
 
 					'MARKETPLACE_ROBOT_CATEGORY' => 'crm_bots', //$arParams['MARKETPLACE_ROBOT_CATEGORY'],
-					'MARKETPLACE_TRIGGER_PLACEMENT' => $arParams['MARKETPLACE_TRIGGER_PLACEMENT'],
+					'MARKETPLACE_TRIGGER_PLACEMENT' => $arParams['MARKETPLACE_TRIGGER_PLACEMENT'] ?? '',
 					'ROBOTS_LIMIT' => $robotsLimit,
 
-					'DELAY_MIN_LIMIT_M' => $arResult['DELAY_MIN_LIMIT_M']
-				))?>, viewMode);
+					'DELAY_MIN_LIMIT_M' => $arResult['DELAY_MIN_LIMIT_M'],
+					'IS_WORKTIME_AVAILABLE' => $arResult['IS_WORKTIME_AVAILABLE'],
+				])?>, viewMode);
 		}
 	});
 </script>

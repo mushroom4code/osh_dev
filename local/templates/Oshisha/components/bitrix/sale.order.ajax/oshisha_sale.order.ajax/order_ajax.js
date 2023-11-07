@@ -378,9 +378,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         onAfterPopupShow: BX.delegate(function () {
                             BX.cleanNode(this.loadingScreen.popupContainer);
                             BX.removeClass(this.loadingScreen.popupContainer, 'popup-window');
-                            this.loadingScreen.popupContainer.appendChild(
-                                BX.create('DIV', {props: {className: 'lds-dual-ring'}})
-                            );
+                            loaderForSite('appendLoader',this.loadingScreen.popupContainer)
                             this.loadingScreen.popupContainer.removeAttribute('style');
                             this.loadingScreen.popupContainer.style.display = 'block';
                         }, this)
@@ -3837,8 +3835,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         label = BX.create('LABEL', {
                             children: [
                                 BX.create('INPUT', {
-                                    attrs: {checked: currentType.CHECKED == 'Y'},
-                                    props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID,classname:'form-check-input'}
+                                    attrs: {checked: currentType.CHECKED == 'Y', classname: ' form-check-input'},
+                                    props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID}
                                 }),
                                 BX.util.htmlspecialchars(currentType.NAME)
                             ],
@@ -3864,6 +3862,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                             props: {
                                 type: 'hidden',
                                 name: 'PERSON_TYPE',
+                                classname:'form-check-input',
                                 value: this.result.PERSON_TYPE[i].ID
                             }
                         }));
@@ -3875,8 +3874,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         props: {
                             type: 'hidden',
                             name: 'PERSON_TYPE_OLD',
-                            value: oldPersonTypeId
-
+                            value: oldPersonTypeId,
+                            classname:'form-check-input'
                         }
                     })
                 );
@@ -3932,12 +3931,12 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         children: [
                             BX.create('INPUT', {
                                 attrs: {
-                                    className: "form-check-input m-0",
                                     id: "radio" + currentType.ID,
                                     data_id: 'PERSON_TYPE_' + currentType.CODE,
                                     checked: currentType.CHECKED === 'Y'
                                 },
-                                props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID}
+                                props: {type: 'radio', name: 'PERSON_TYPE', value: currentType.ID,
+                                    className: "form-check-input  mr-1 check_custom m-0",}
                             }),
                             BX.create('LABEL', {
                                 attrs: {
@@ -3966,7 +3965,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                             props: {
                                 type: 'hidden',
                                 name: 'PERSON_TYPE',
-                                value: this.result.PERSON_TYPE[i].ID
+                                value: this.result.PERSON_TYPE[i].ID,
+                                classname:'form-check-input'
                             }
                         }));
             }
@@ -3977,8 +3977,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         props: {
                             type: 'hidden',
                             name: 'PERSON_TYPE_OLD',
-                            value: oldPersonTypeId
-
+                            value: oldPersonTypeId,
+                            classname:'form-check-input'
                         }
                     })
                 );
@@ -5640,7 +5640,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 if (property.getSettings().CODE === 'DELIVERYTIME_INTERVAL' || property.getSettings().CODE === 'DATE_DELIVERY') {
                     className += " col-12";
                 }
-            } else {
+            } else if(property.getSettings().CODE === 'MESSAGE_TYPE') {
+                className += " form-check mt-4";
+            }else {
                 className += " col-md-6 col-lg-6 col-12";
             }
             BX.addClass(propsItemNode, className);
@@ -5673,6 +5675,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     break;
                 case 'ENUM':
                     this.insertEnumProperty(property, propsItemNode, disabled);
+                    propsItemNode.querySelectorAll('input[type="radio"]').forEach(function(item){
+                        item.classList = 'form-check-input mr-2'
+                    })
                     break;
                 case 'Y/N':
                     this.insertYNProperty(property, propsItemNode, disabled);
@@ -5879,7 +5884,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     propsItemNode.innerHTML += this.valuesToString(values);
                 }
             } else {
-                propContainer = BX.create('DIV', {props: {className: 'soa-property-container'}});
+                propContainer = BX.create('DIV', {props: {
+                    className: 'soa-property-container d-flex flex-row justify-content-between'}
+                });
                 property.appendTo(propContainer);
                 propsItemNode.appendChild(propContainer);
                 this.bindValidation(property.getId(), propContainer);

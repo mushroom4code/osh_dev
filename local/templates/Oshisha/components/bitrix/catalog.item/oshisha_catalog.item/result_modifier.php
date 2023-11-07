@@ -1,4 +1,5 @@
 <?php
+
 use Enterego\EnteregoBasket;
 use Enterego\EnteregoHelper;
 
@@ -6,11 +7,14 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/sale/handlers/discountpreset/simpleproduct.php");
 
 $item = &$arResult['ITEM'];
-
-if ($item["PREVIEW_PICTURE"]["ID"]) {
+$idPick = $item["PREVIEW_PICTURE"]["ID"] ?? false;
+if (empty($idPick)) {
+    $idPick = $item["PREVIEW_PICTURE"];
+}
+if ($idPick) {
     $item["PREVIEW_PICTURE"] = array_change_key_case(
         CFile::ResizeImageGet(
-            $item["PREVIEW_PICTURE"]["ID"],
+            $idPick,
             array(
                 'width' => 160,
                 'height' => 160
@@ -46,3 +50,13 @@ if (!empty($arParams['DISCOUNTS'])) {
         }
     }
 }
+
+
+$measureRatio = \Bitrix\Catalog\MeasureRatioTable::getList(array(
+    'select' => array('RATIO'),
+    'filter' => array('=PRODUCT_ID' => $item['ID'])
+))->fetch()['RATIO'];
+
+$item['MEASURE_RATIO'] = $item['ITEM_MEASURE_RATIOS'][$item['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
+
+EnteregoHelper::setProductsActiveUnit($item);

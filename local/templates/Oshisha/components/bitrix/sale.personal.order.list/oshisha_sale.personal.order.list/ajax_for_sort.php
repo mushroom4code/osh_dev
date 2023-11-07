@@ -9,18 +9,25 @@ if (!CModule::IncludeModule('sale')) {
 
 $listStatuses = [];
 $listStatusNames = Bitrix\Sale\OrderStatus::getAllStatusesNames(LANGUAGE_ID);
-foreach($listStatusNames as $key => $data)
-{
-    $listStatuses['STATUS'][$key] = array('ID'=>$key,'NAME'=>$data);
+
+foreach ($listStatusNames as $key => $data) {
+    $listStatuses['STATUS'][$key] = array('ID' => $key, 'NAME' => $data);
 }
 
-function sortByField(string $field, string $params, ?string $element = null, ?string $index = null): array
+function sortByField(string $field, string $params, ?string $element = null, ?string $index = null, array $dateIntervalArray): array
 {
     global $USER;
     $listOrders = [];
 
-
-    $products = CSaleOrder::GetList(array($field => $params), array($element => $index, "USER_ID" => $USER->GetID()));
+    $filter = [
+        $element => $index,
+        "USER_ID" => $USER->GetID()
+    ];
+    if (!empty($dateIntervalArray)) {
+        $filter['>=DATE_INSERT'] = $dateIntervalArray[0];
+        $filter['<=DATE_INSERT'] = $dateIntervalArray[1];
+    }
+    $products = CSaleOrder::GetList(array($field => $params), $filter);
 
     while ($res = $products->Fetch()) {
         $listOrders[] = $res;
@@ -51,7 +58,7 @@ function sortByField(string $field, string $params, ?string $element = null, ?st
 
 require('show_order_block.php');
 
-if($_POST['sortStatus'] === 'show_canceled') {
+if ($_POST['sortStatus'] === 'show_canceled') {
     $element = 'STATUS_ID';
     $index = 'F';
 } else if ($_POST['sortStatus'] === 'show_delivery') {
@@ -62,18 +69,23 @@ if($_POST['sortStatus'] === 'show_canceled') {
     $index = null;
 }
 
+if (isset($_POST['dateInterval'])) {
+    $dateIntervalArray = explode(' - ', $_POST['dateInterval']);
+} else {
+    $dateIntervalArray = [];
+}
 switch ($_POST['typeSort']) {
     case "cheap":
-        $listOrders = sortByField("PRICE", 'ASC', $element, $index);
+        $listOrders = sortByField("PRICE", 'ASC', $element, $index, $dateIntervalArray);
         break;
     case "expensive":
-        $listOrders = sortByField("PRICE", 'DESC', $element, $index);
+        $listOrders = sortByField("PRICE", 'DESC', $element, $index, $dateIntervalArray);
         break;
     case "old":
-        $listOrders = sortByField("DATE_INSERT", 'ASC', $element, $index);
+        $listOrders = sortByField("DATE_INSERT", 'ASC', $element, $index, $dateIntervalArray);
         break;
     case "new":
-        $listOrders = sortByField("DATE_INSERT", 'DESC', $element, $index);
+        $listOrders = sortByField("DATE_INSERT", 'DESC', $element, $index, $dateIntervalArray);
         break;
 }
 

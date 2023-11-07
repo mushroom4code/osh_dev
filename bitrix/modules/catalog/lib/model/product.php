@@ -149,7 +149,11 @@ class Product extends Entity
 				'BUNDLE' => Catalog\ProductTable::STATUS_NO,
 				'PURCHASING_PRICE' => null,
 				'PURCHASING_CURRENCY' => null,
-				'TMP_ID' => null
+				'TMP_ID' => null,
+				'MEASURE' => null,
+				'WIDTH' => null,
+				'LENGTH' => null,
+				'HEIGHT' => null,
 			];
 
 			$blackList = [
@@ -228,6 +232,14 @@ class Product extends Entity
 			));
 		}
 		$fields['QUANTITY_RESERVED'] = (float)$fields['QUANTITY_RESERVED'];
+
+		if ($fields['QUANTITY_RESERVED'] < 0)
+		{
+			$result->addError(new ORM\EntityError(
+				Loc::getMessage('BX_CATALOG_MODEL_PRODUCT_ERR_QUANTITY_RESERVE_LESS_ZERO'),
+				'BX_CATALOG_MODEL_PRODUCT_ERR_QUANTITY_RESERVE_LESS_ZERO'
+			));
+		}
 
 		foreach ($tripleFields as $fieldName)
 		{
@@ -315,15 +327,15 @@ class Product extends Entity
 			{
 				if (!$isSpecialType)
 				{
-					$data['actions'][self::ACTION_CHANGE_PARENT_AVAILABLE] = true;
-				}
-				else
-				{
-					//TODO: remove this hack after reservation resource
-					$fields['QUANTITY'] = $fields['AVAILABLE'] !== Catalog\ProductTable::STATUS_YES
-						? 0
-						: 1
-					;
+					if ($isService)
+					{
+						//TODO: remove this hack after reservation resource
+						$fields['QUANTITY'] = $fields['AVAILABLE'] !== Catalog\ProductTable::STATUS_YES ? 0 : 1;
+					}
+					else
+					{
+						$data['actions'][self::ACTION_CHANGE_PARENT_AVAILABLE] = true;
+					}
 				}
 			}
 		}
@@ -477,23 +489,24 @@ class Product extends Entity
 		}
 		foreach ($nullFields as $fieldName)
 		{
-			if (array_key_exists($fieldName, $fields))
+			if (isset($fields[$fieldName]))
 			{
-				if ($fields[$fieldName] !== null)
+				$fields[$fieldName] = (int)$fields[$fieldName];
+				if ($fields[$fieldName] <= 0)
 				{
-					$fields[$fieldName] = (int)$fields[$fieldName];
-					if ($fields[$fieldName] <= 0)
-						$fields[$fieldName] = null;
+					$fields[$fieldName] = null;
 				}
 			}
 		}
 		foreach ($sizeFields as $fieldName)
 		{
-			if ($fields[$fieldName] !== null)
+			if (isset($fields[$fieldName]))
 			{
 				$fields[$fieldName] = (float)$fields[$fieldName];
 				if ($fields[$fieldName] <= 0)
+				{
 					$fields[$fieldName] = null;
+				}
 			}
 		}
 		unset($fieldName);
@@ -526,7 +539,17 @@ class Product extends Entity
 			}
 		}
 		if (isset($fields['TMP_ID']))
+		{
 			$fields['TMP_ID'] = mb_substr($fields['TMP_ID'], 0, 40);
+		}
+
+		if (array_key_exists('QUANTITY_RESERVED', $fields) && (float)$fields['QUANTITY_RESERVED'] < 0)
+		{
+			$result->addError(new ORM\EntityError(
+				Loc::getMessage('BX_CATALOG_MODEL_PRODUCT_ERR_QUANTITY_RESERVE_LESS_ZERO'),
+				'BX_CATALOG_MODEL_PRODUCT_ERR_QUANTITY_RESERVE_LESS_ZERO'
+			));
+		}
 
 		/* purchasing price */
 		$existPurchasingPrice = array_key_exists('PURCHASING_PRICE', $fields);
@@ -560,7 +583,22 @@ class Product extends Entity
 
 			if (isset($fields['AVAILABLE']))
 			{
-				$data['actions'][self::ACTION_CHANGE_PARENT_AVAILABLE] = true;
+				$copyFields =
+					isset($fields['TYPE'])
+						? $fields
+						: array_merge(static::getCacheItem($id, true), $fields)
+				;
+				$copyFields['TYPE'] = (int)$copyFields['TYPE'];
+				$isService = $copyFields['TYPE'] === Catalog\ProductTable::TYPE_SERVICE;
+				if ($isService)
+				{
+					//TODO: remove this hack after reservation resource
+					$fields['QUANTITY'] = $fields['AVAILABLE'] !== Catalog\ProductTable::STATUS_YES ? 0 : 1;
+				}
+				if (!$isService)
+				{
+					$data['actions'][self::ACTION_CHANGE_PARENT_AVAILABLE] = true;
+				}
 				$data['actions'][self::ACTION_RECALCULATE_SETS] = true;
 				$data['actions'][self::ACTION_SEND_NOTIFICATIONS] = true;
 			}
@@ -583,7 +621,7 @@ class Product extends Entity
 						? array_merge(static::getCacheItem($id, true), $fields)
 						: $fields
 					);
-
+					$copyFields['TYPE'] = (int)$copyFields['TYPE'];
 					self::calculateAvailable($copyFields, $data['actions']);
 					if ($copyFields['AVAILABLE'] !== null)
 						$fields['AVAILABLE'] = $copyFields['AVAILABLE'];

@@ -128,26 +128,17 @@
 				.then(function() {
 					if (value.url)
 					{
-						if (value.url.href === 'selectActions:')
+						const url = this.preparePseudoUrl(value.url);
+						if (url !== null)
 						{
-							value.url.href = '';
-							value.url.enabled = false;
+							attr(this.node, "data-pseudo-url", url);
 						}
-						attr(this.node, "data-pseudo-url", value.url);
 					}
-					this.onChange();
+					this.onChange(preventHistory);
 
 					if (!preventHistory)
 					{
-						BX.Landing.History.getInstance().push(
-							new BX.Landing.History.Entry({
-								block: this.getBlock().id,
-								selector: this.selector,
-								command: "editIcon",
-								undo: this.lastValue,
-								redo: this.getValue()
-							})
-						);
+						BX.Landing.History.getInstance().push();
 					}
 
 					this.lastValue = this.getValue();

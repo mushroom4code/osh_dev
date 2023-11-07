@@ -9,7 +9,7 @@ abstract class CBPActivityCondition
 
 	public $condition = null;
 
-	public abstract function evaluate(CBPActivity $ownerActivity);
+	abstract public function evaluate(CBPActivity $ownerActivity);
 
 	public static function createInstance($code, $data)
 	{
@@ -48,19 +48,70 @@ abstract class CBPActivityCondition
 		return call_user_func_array(array($classname, $method), $arParameters);
 	}
 
-	protected function getFieldTypeObject(CBPActivity $rootActivity, $property): ?\Bitrix\Bizproc\FieldType
+	protected static function getConditionFieldInputValue(string $operator, $parameterDocumentType, $property, $fieldName, $request): Bitrix\Main\Result
 	{
-		$fieldType = $rootActivity->workflow
-			->GetService('DocumentService')
-			->getFieldTypeObject($rootActivity->GetDocumentType(), $property)
+		$documentService = CBPRuntime::getRuntime()->getDocumentService();
+
+		$result = new Bitrix\Main\Result();
+		$isBetweenOperator = $operator === \Bitrix\Bizproc\Activity\Operator\BetweenOperator::getCode();
+
+		$errors = [];
+		$value =
+			$isBetweenOperator
+				? []
+				: $documentService->getFieldInputValue($parameterDocumentType, $property, $fieldName, $request, $errors)
 		;
 
+		if ($isBetweenOperator)
+		{
+			$property['Multiple'] = false;
+
+			$value1 = $documentService->getFieldInputValue(
+				$parameterDocumentType,
+				$property,
+				$fieldName . '_greater_then',
+				$request,
+				$errors
+			);
+
+			$value2 = $documentService->getFieldInputValue(
+				$parameterDocumentType,
+				$property,
+				$fieldName . '_less_then',
+				$request,
+				$errors
+			);
+
+			$value = [$value1 ?? '', $value2 ?? ''];
+		}
+
+		if (!empty($errors))
+		{
+			foreach ($errors as $error)
+			{
+				$result->addError(new \Bitrix\Main\Error((string)$error['message'], (string)$error['code']));
+			}
+		}
+
+		$result->setData(['value' => $value]);
+
+		return $result;
+	}
+
+	protected function getFieldTypeObject(CBPActivity $rootActivity, $property): \Bitrix\Bizproc\FieldType
+	{
+		$documentService = $rootActivity->workflow->getRuntime()->getDocumentService();
+		$documentType = $rootActivity->getDocumentType();
+
+		if (!is_array($property))
+		{
+			return $documentService->getFieldTypeObject($documentType, ['Type' => 'string']);
+		}
+
+		$fieldType = $documentService->getFieldTypeObject($documentType, $property);
 		if (!$fieldType)
 		{
-			$fieldType = $rootActivity->workflow
-				->GetService('DocumentService')
-				->getFieldTypeObject($rootActivity->GetDocumentType(), ['Type' => 'string'])
-			;
+			$fieldType = $documentService->getFieldTypeObject($documentType, ['Type' => 'string']);
 		}
 
 		return $fieldType;
@@ -78,7 +129,7 @@ abstract class CBPActivityCondition
 
 	protected function conditionGroupToArray()
 	{
-		if (!is_array($this->condition[0]))
+		if (!isset($this->condition[0]) || !is_array($this->condition[0]))
 		{
 			$this->condition = [$this->condition];
 		}

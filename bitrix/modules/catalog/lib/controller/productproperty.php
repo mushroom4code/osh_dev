@@ -2,8 +2,7 @@
 
 namespace Bitrix\Catalog\Controller;
 
-use Bitrix\Catalog\CatalogIblockTable;
-use Bitrix\Iblock\PropertyEnumerationTable;
+use Bitrix\Catalog;
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\Engine\Response\DataType\Page;
 use Bitrix\Main\Error;
@@ -30,9 +29,8 @@ final class ProductProperty extends ProductPropertyBase
 	 * @param array $order
 	 * @param PageNavigation $pageNavigation
 	 * @return Page
-	 * @noinspection PhpOptionalBeforeRequiredParametersInspection
 	 */
-	public function listAction(array $select = [], array $filter = [], array $order = [], PageNavigation $pageNavigation): Page
+	public function listAction(PageNavigation $pageNavigation, array $select = [], array $filter = [], array $order = []): Page
 	{
 		if (!isset($filter['IBLOCK_ID']))
 		{
@@ -264,7 +262,7 @@ final class ProductProperty extends ProductPropertyBase
 		{
 			\CIBlockPropertyEnum::Add([
 				'PROPERTY_ID' => $id,
-				'VALUE' => 'Y',
+				'VALUE' => Catalog\RestView\Product::BOOLEAN_VALUE_YES,
 			]);
 		}
 	}

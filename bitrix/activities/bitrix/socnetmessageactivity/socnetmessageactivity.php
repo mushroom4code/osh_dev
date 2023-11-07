@@ -1,29 +1,40 @@
-<?
-if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php
 
-class CBPSocNetMessageActivity
-	extends CBPActivity
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
+{
+	die();
+}
+
+class CBPSocNetMessageActivity extends CBPActivity
 {
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->arProperties = array(
+		$this->arProperties = [
 			"Title" => "",
 			"MessageUserFrom" => "",
 			"MessageUserTo" => "",
 			"MessageText" => "",
 			"MessageFormat" => "",
-		);
+		];
 	}
 
 	public function Execute()
 	{
 		if (!CModule::IncludeModule("socialnetwork"))
+		{
 			return CBPActivityExecutionStatus::Closed;
+		}
+
+		if ($this->workflow->isDebug())
+		{
+			$this->writeDebugInfo($this->getDebugInfo(['MessageText' => $this->MessageText]));
+		}
 
 		if ($this->MessageFormat == 'robot' && CModule::IncludeModule('im'))
 		{
 			$this->sendRobotMessage();
+
 			return CBPActivityExecutionStatus::Closed;
 		}
 
@@ -41,13 +52,15 @@ class CBPSocNetMessageActivity
 			"MESSAGE" => $messageText,
 			'NOTIFY_MODULE' => 'bizproc',
 			'NOTIFY_EVENT' => 'activity',
-			'PUSH_MESSAGE' => $messageText,
+			'PUSH_MESSAGE' => $this->getPushText($messageText),
 		);
 		$ar = array();
 		foreach ($arMessageUserTo as $userTo)
 		{
 			if (in_array($userTo, $ar))
+			{
 				continue;
+			}
 
 			$ar[] = $userTo;
 			$arMessageFields["TO_USER_ID"] = $userTo;
@@ -72,7 +85,19 @@ class CBPSocNetMessageActivity
 			$messageText = strip_tags($messageText);
 			$messageText = CBPHelper::convertBBtoText($messageText);
 		}
+
 		return $messageText;
+	}
+
+	private function getPushText(string $htmlMessage): string
+	{
+		$text = mb_substr(HTMLToTxt($htmlMessage, '', [], 0), 0, 200);
+		if (mb_strlen($text) === 200)
+		{
+			$text .= '...';
+		}
+
+		return $text;
 	}
 
 	private function sendRobotMessage()
@@ -84,7 +109,13 @@ class CBPSocNetMessageActivity
 
 		$messageText = $this->getMessageText();
 
+		$attachDescription = ''
+			. GetMessage('BPSNMA_FORMAT_ROBOT') . '. '
+			. $messageText
+		;
+
 		$attach = new CIMMessageParamAttach(1, '#468EE5');
+		$attach->SetDescription($attachDescription);
 		$attach->AddUser(Array(
 			'NAME' => GetMessage('BPSNMA_FORMAT_ROBOT'),
 			'AVATAR' => '/bitrix/images/bizproc/message_robot.png'
@@ -98,10 +129,7 @@ class CBPSocNetMessageActivity
 		]]);
 
 		$attach->AddDelimiter();
-		$attach->AddHtml('<span style="color: #6E6E6E">'.
-			$messageText
-			.'</span>'
-		);
+		$attach->AddHtml($messageText);
 
 		$arMessageUserFrom = CBPHelper::ExtractUsers($this->MessageUserFrom, $documentId, true);
 		$arMessageUserTo = CBPHelper::ExtractUsers($this->MessageUserTo, $documentId, false);
@@ -115,7 +143,7 @@ class CBPSocNetMessageActivity
 			'NOTIFY_TAG' => 'ROBOT|'.implode('|', array_map('mb_strtoupper', $documentId))	.'|'.$tagSalt,
 			'NOTIFY_MODULE' => 'bizproc',
 			'NOTIFY_EVENT' => 'activity',
-			'PUSH_MESSAGE' => $messageText,
+			'PUSH_MESSAGE' => $this->getPushText($messageText),
 		);
 
 		if ($arMessageUserFrom)
@@ -127,7 +155,9 @@ class CBPSocNetMessageActivity
 		foreach ($arMessageUserTo as $userTo)
 		{
 			if (in_array($userTo, $ar))
+			{
 				continue;
+			}
 
 			$ar[] = $userTo;
 			$arMessageFields["TO_USER_ID"] = $userTo;
@@ -171,29 +201,7 @@ class CBPSocNetMessageActivity
 		$user = new CBPWorkflowTemplateUser(CBPWorkflowTemplateUser::CurrentUser);
 		$fromDefault = $user->isAdmin() ? null : $user->getBizprocId();
 
-		$dialog->setMap(array(
-			'MessageUserFrom' => array(
-				'Name' => GetMessage('BPSNMA_FROM'),
-				'FieldName' => 'message_user_from',
-				'Type' => 'user',
-				'Default' => $fromDefault
-			),
-			'MessageUserTo' => array(
-				'Name' => GetMessage('BPSNMA_TO'),
-				'FieldName' => 'message_user_to',
-				'Type' => 'user',
-				'Required' => true,
-				'Multiple' => true,
-				'Default' => \Bitrix\Bizproc\Automation\Helper::getResponsibleUserExpression($documentType)
-			),
-			'MessageText' => array(
-				'Name' => GetMessage('BPSNMA_MESSAGE'),
-				'Description' => GetMessage('BPSNMA_MESSAGE'),
-				'FieldName' => 'message_text',
-				'Type' => 'text',
-				'Required' => true
-			)
-		));
+		$dialog->setMap(static::getPropertiesMap($documentType, ['fromDefault' => $fromDefault]));
 
 		$dialog->setRuntimeData(array(
 			'user' => $user
@@ -250,5 +258,34 @@ class CBPSocNetMessageActivity
 		$arCurrentActivity["Properties"] = $arProperties;
 
 		return true;
+	}
+
+	protected static function getPropertiesMap(array $documentType, array $context = []): array
+	{
+		$fromDefault = $context['fromDefault'] ?? null;
+
+		return [
+			'MessageUserFrom' => [
+				'Name' => \Bitrix\Main\Localization\Loc::getMessage('BPSNMA_FROM'),
+				'FieldName' => 'message_user_from',
+				'Type' => 'user',
+				'Default' => $fromDefault
+			],
+			'MessageUserTo' => [
+				'Name' => \Bitrix\Main\Localization\Loc::getMessage('BPSNMA_TO'),
+				'FieldName' => 'message_user_to',
+				'Type' => 'user',
+				'Required' => true,
+				'Multiple' => true,
+				'Default' => \Bitrix\Bizproc\Automation\Helper::getResponsibleUserExpression($documentType)
+			],
+			'MessageText' => [
+				'Name' => \Bitrix\Main\Localization\Loc::getMessage('BPSNMA_MESSAGE'),
+				'Description' => \Bitrix\Main\Localization\Loc::getMessage('BPSNMA_MESSAGE'),
+				'FieldName' => 'message_text',
+				'Type' => 'text',
+				'Required' => true
+			]
+		];
 	}
 }

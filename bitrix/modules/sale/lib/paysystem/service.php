@@ -17,6 +17,8 @@ use Bitrix\Sale\Registry;
 use Bitrix\Sale\Result;
 use Bitrix\Sale\ResultError;
 use Bitrix\Sale\Cashbox;
+use Bitrix\Sale\Services\Base\RestrictionInfoCollection;
+use Bitrix\Sale\Services\Base\RestrictableService;
 
 Loc::loadMessages(__FILE__);
 
@@ -24,7 +26,7 @@ Loc::loadMessages(__FILE__);
  * Class Service
  * @package Bitrix\Sale\PaySystem
  */
-class Service
+class Service implements RestrictableService
 {
 	public const EVENT_ON_BEFORE_PAYMENT_PAID = 'OnSalePsServiceProcessRequestBeforePaid';
 	public const EVENT_ON_AFTER_PROCESS_REQUEST = 'OnSaleAfterPsServiceProcessRequest';
@@ -55,7 +57,7 @@ class Service
 	 */
 	public function __construct($fields)
 	{
-		[$className, $handlerType] = Manager::includeHandler($fields["ACTION_FILE"]);
+		[$className, $handlerType] = Manager::includeHandler($fields['ACTION_FILE']);
 
 		$this->fields = $fields;
 		$this->handler = new $className($handlerType, $this);
@@ -116,6 +118,11 @@ class Service
 		{
 			$error = implode("\n", $initResult->getErrorMessages());
 			Logger::addError(get_class($this->handler).". InitiatePay: ".$error);
+
+			(new PaymentMarker($this, $payment))
+				->mark($initResult)
+				->save()
+			;
 
 			$this->callEventOnInitiatePayError($payment, $initResult);
 		}
@@ -373,22 +380,23 @@ class Service
 
 				$serviceResult->setResultApplied(false);
 			}
+
+			PullManager::onSuccessfulPayment($payment);
 		}
 		else
 		{
 			$serviceResult->setResultApplied(false);
 			$processResult->addErrors($serviceResult->getErrors());
 
-			$markerClassName = $registry->getEntityMarkerClassName();
-			$markerResult = new Result();
-			$markerResult->addWarnings($serviceResult->getErrors());
-			$markerClassName::addMarker($order, $payment, $markerResult);
-			$payment->setField('MARKED', 'Y');
-
-			$order->save();
-
 			$error = implode("\n", $serviceResult->getErrorMessages());
 			Logger::addError(get_class($this->handler).'. ProcessRequest Error: '.$error);
+
+			(new PaymentMarker($this, $payment))
+				->mark($serviceResult)
+				->save()
+			;
+
+			PullManager::onFailurePayment($payment);
 		}
 
 		$event = new Event(
@@ -412,7 +420,9 @@ class Service
 	 */
 	public function getConsumerName()
 	{
-		return static::PAY_SYSTEM_PREFIX.$this->fields['ID'];
+		$id = $this->fields['ID'] ?? 0;
+
+		return static::PAY_SYSTEM_PREFIX.$id;
 	}
 
 	/**
@@ -477,7 +487,7 @@ class Service
 	 */
 	public function getField($name)
 	{
-		return $this->fields[$name];
+		return $this->fields[$name] ?? null;
 	}
 
 	/**
@@ -499,7 +509,7 @@ class Service
 			$this->fields['PS_MODE'] ?? null
 		);
 	}
-	
+
 	/**
 	 * The type of client that the payment system can work with
 	 *
@@ -533,23 +543,21 @@ class Service
 	public function canPrintCheckSelf(Payment $payment): bool
 	{
 		$service = $payment->getPaySystem();
-		if (!$this->isSupportPrintCheck() || !$this->canPrintCheck())
+		if (!$service || !$this->isSupportPrintCheck() || !$this->canPrintCheck())
 		{
 			return false;
 		}
 
 		/** @var Cashbox\CashboxPaySystem $cashboxClass */
 		$cashboxClass = $this->getCashboxClass();
-
-		$paySystemParams = $service->getParamsBusValue($payment);
-		$paySystemCodeForKkm = $cashboxClass::getPaySystemCodeForKkm();
+		$kkm = $cashboxClass::getKkmValue($service);
 
 		return (bool)Cashbox\Manager::getList([
 			'select' => ['ID'],
 			'filter' => [
 				'=ACTIVE' => 'Y',
 				'=HANDLER' => $cashboxClass,
-				'=KKM_ID' => $paySystemParams[$paySystemCodeForKkm],
+				'=KKM_ID' => $kkm,
 			],
 		])->fetch();
 	}
@@ -1021,5 +1029,20 @@ class Service
 		throw new NotSupportedException(
 			'Handler is not implemented interface '.Sale\PaySystem\Cashbox\ISupportPrintCheck::class
 		);
+	}
+
+	public function getStartupRestrictions(): RestrictionInfoCollection
+	{
+		if ($this->handler instanceof Sale\Services\PaySystem\Restrictions\RestrictableServiceHandler)
+		{
+			return $this->handler->getRestrictionList();
+		}
+
+		return (new RestrictionInfoCollection());
+	}
+
+	public function getServiceId(): int
+	{
+		return (int)($this->getField('ID') ?? 0);
 	}
 }

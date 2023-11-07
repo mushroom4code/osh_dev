@@ -11,6 +11,8 @@ Loc::loadMessages(__FILE__);
 
 class CAllAgent
 {
+	protected const LOCK_TIME = 600;
+
 	public static function AddAgent(
 		$name, // PHP function name
 		$module = "", // module
@@ -200,9 +202,11 @@ class CAllAgent
 		for($i = 0, $n = count($filter_keys); $i < $n; $i++)
 		{
 			$val = $arFilter[$filter_keys[$i]];
-			$key = mb_strtoupper($filter_keys[$i]);
-			if((string)$val == '' || ($key=="USER_ID" && $val!==false && $val!==null))
+			$key = strtoupper($filter_keys[$i]);
+			if ((string)$val == '' && $key !== "USER_ID")
+			{
 				continue;
+			}
 
 			switch($key)
 			{
@@ -257,9 +261,9 @@ class CAllAgent
 			if (isset($arOFields[$by]))
 			{
 				if ($order != "ASC")
+				{
 					$order = "DESC";
-				else
-					$order = "ASC";
+				}
 				$arSqlOrder[] = $arOFields[$by]." ".$order;
 			}
 		}
@@ -271,8 +275,8 @@ class CAllAgent
 			$DB->DateToCharFunction("A.DATE_CHECK")." as DATE_CHECK, ".
 			"A.AGENT_INTERVAL, A.IS_PERIOD, A.RETRY_COUNT ".
 			"FROM b_agent A LEFT JOIN b_user B ON(A.USER_ID = B.ID)";
-		$strSql .= (count($arSqlSearch)>0) ? " WHERE ".implode(" AND ", $arSqlSearch) : "";
-		$strSql .= (count($arSqlOrder)>0) ? " ORDER BY ".implode(", ", $arSqlOrder) : "";
+		$strSql .= !empty($arSqlSearch) ? " WHERE ".implode(" AND ", $arSqlSearch) : "";
+		$strSql .= !empty($arSqlOrder) ? " ORDER BY ".implode(", ", $arSqlOrder) : "";
 
 		$res = $DB->Query($strSql, false, $err_mess.__LINE__);
 

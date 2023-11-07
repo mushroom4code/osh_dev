@@ -1,8 +1,9 @@
-import { Util } from 'calendar.util';
-import { Event, Loc, Type, Runtime } from 'main.core';
-import { CalendarSection } from './calendarsection';
-import { CalendarTaskSection } from './calendartasksection';
-import { EventEmitter } from 'main.core.events';
+import {Util} from 'calendar.util';
+import {Event, Loc, Runtime, Type} from 'main.core';
+import {CalendarSection} from './calendarsection';
+import {CalendarTaskSection} from './calendartasksection';
+import {EventEmitter} from 'main.core.events';
+
 export { CalendarSection };
 
 export class SectionManager
@@ -17,7 +18,9 @@ export class SectionManager
 		this.setConfig(config);
 		this.addTaskSection();
 		this.sortSections();
-		EventEmitter.subscribeOnce('BX.Calendar.Section:delete', this.deleteSectionHandler.bind(this));
+		EventEmitter.subscribeOnce('BX.Calendar.Section:delete', (event) => {
+			this.deleteSectionHandler(event.data.sectionId);
+		});
 
 		this.reloadDataDebounce = Runtime.debounce(this.reloadData, SectionManager.RELOAD_DELAY, this);
 	}
@@ -69,6 +72,7 @@ export class SectionManager
 		this.sectionAccessTasks = config.sectionAccessTasks;
 		this.showTasks = config.showTasks;
 		this.customizationData = config.sectionCustomization || {};
+		this.meetSectionId = parseInt(config.meetSectionId, 10);
 	}
 
 	addTaskSection()
@@ -174,7 +178,7 @@ export class SectionManager
 		for (let i = 0; i < this.sections.length; i++)
 		{
 			if (
-				this.sections[i].canDo('add')
+				this.sections[i].canDo('edit')
 				&& !this.sections[i].isPseudo()
 				&& this.sections[i].isActive()
 				&& !this.sections[i].isLocationRoom()
@@ -374,13 +378,18 @@ export class SectionManager
 					'user',
 					calendarContext.util.userId
 				);
-				return parseInt(section.id, 10);
+				return parseInt(section?.id, 10);
 			}
 			else
 			{
 				const section = calendarContext.sectionManager.getDefaultSection(calendarType, ownerId);
-				return parseInt(section.id, 10);
+				return parseInt(section?.id, 10);
 			}
+		}
+
+		if (SectionManager.newEntrySectionId)
+		{
+			return SectionManager.newEntrySectionId;
 		}
 
 		return null;
@@ -497,25 +506,33 @@ export class SectionManager
 
 	getDefaultSection(calendarType = null, ownerId = null)
 	{
+		let sections = this.getSectionListForEdit();
+
 		calendarType = Type.isString(calendarType) ? calendarType : this.calendarType;
 		ownerId = Type.isNumber(ownerId) ? ownerId : this.ownerId;
 
-		const userSettings = Util.getUserSettings();
-		const key = calendarType + ownerId;
-		const defaultSectionId = userSettings.defaultSections[key] || userSettings.lastUsedSection;
-		const sections = this.getSectionListForEdit();
+		let section;
 
-		let section = sections.find((item) => {
-			return item.type === calendarType
-				&& item.ownerId === ownerId
-				&& item.id === defaultSectionId;
-		});
+		if (calendarType === 'user')
+		{
+			const defaultSectionId = this.meetSectionId;
+			section = sections.find((item) => {
+				return item.type === calendarType
+					&& item.ownerId === ownerId
+					&& item.id === defaultSectionId;
+			});
+		}
+		else
+		{
+			sections = sections.sort((section1, section2) => section1.id - section2.id);
+		}
 
 		if (!section)
 		{
 			section = sections.find((item) => {
 				return item.type === calendarType
 					&& item.ownerId === ownerId
+					&& item.canDo('edit')
 			});
 		}
 

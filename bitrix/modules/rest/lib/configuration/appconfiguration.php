@@ -120,7 +120,8 @@ class AppConfiguration
 	{
 		$code = $event->getParameter('CODE');
 		if (
-			!static::$entityList[$code]
+			!isset(static::$entityList[$code])
+			|| !static::$entityList[$code]
 			|| !Manifest::isEntityAvailable($code, $event->getParameters(), static::$accessManifest)
 		)
 		{
@@ -157,6 +158,8 @@ class AppConfiguration
 					],
 				];
 			}
+
+			Application::setContextUserId((int)$item['USER_ID']);
 			$result = Application::install($code);
 			if ($result['success'])
 			{

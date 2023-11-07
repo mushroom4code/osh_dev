@@ -437,10 +437,10 @@ class OrderBasket
 			if(!$defTails)
 			{
 				$result .= '
-					obParams.productsOrder = '.\CUtil::phpToJSObject($data["ITEMS_ORDER"]).';
-					obParams.products = '.\CUtil::phpToJSObject($data["ITEMS"]).';
-					obParams.iblocksSkuParams = '.\CUtil::phpToJSObject($data["IBLOCKS_SKU_PARAMS"]).';
-					obParams.iblocksSkuParamsOrder = '.\CUtil::phpToJSObject($data["IBLOCKS_SKU_PARAMS_ORDER"]).';';
+					obParams.productsOrder = '.\CUtil::phpToJSObject($data["ITEMS_ORDER"] ?? []).';
+					obParams.products = '.\CUtil::phpToJSObject($data["ITEMS"] ?? []).';
+					obParams.iblocksSkuParams = '.\CUtil::phpToJSObject($data["IBLOCKS_SKU_PARAMS"] ?? []).';
+					obParams.iblocksSkuParamsOrder = '.\CUtil::phpToJSObject($data["IBLOCKS_SKU_PARAMS_ORDER"] ?? []).';';
 			}
 
 			$result .=
@@ -660,7 +660,7 @@ class OrderBasket
 				if($params['MODULE'] != 'catalog')
 					continue;
 
-				if(!isset(self::$productsOffersSkuParams[$params["PRODUCT_ID"]]) || !isset(self::$productsOffersSkuParams[$params["PRODUCT_ID"]]))
+				if (!isset(self::$productsOffersSkuParams[$params["PRODUCT_ID"]]))
 				{
 					if(isset($tmpPropsOff[$params["PRODUCT_ID"]]))
 					{
@@ -691,39 +691,6 @@ class OrderBasket
 							}
 						}
 					}
-					else
-					{
-						$res = \CIBlockElement::GetPropertyValues($params["IBLOCK_ID"], array('ID' => $params['PRODUCT_ID']));
-						$tmpProps = $res->Fetch();
-
-						if(is_array($tmpProps))
-						{
-							foreach($tmpProps as $id => $val)
-							{
-								if(!empty($val))
-								{
-									if(!isset($iblockPropsUsed[$id]))
-										$iblockPropsUsed[$id] = array();
-
-									if(is_array($val))
-									{
-										$iblockPropsUsed[$id] = array_merge(
-											$iblockPropsUsed[$id],
-											array_diff(
-												$val,
-												$iblockPropsUsed[$id]
-											)
-										);
-									}
-									else
-									{
-										if(!in_array($val, $iblockPropsUsed[$id]))
-											$iblockPropsUsed[$id][] = $val;
-									}
-								}
-							}
-						}
-					}
 				}
 			}
 
@@ -746,19 +713,15 @@ class OrderBasket
 					);
 				}
 
-				if(intval($params["IBLOCK_ID"]) > 0 && !isset(self::$iblockPropsParams[$params["IBLOCK_ID"]]))
+				if (!empty(self::$productsOffersSkuParams[$params["PRODUCT_ID"]][$params["OFFER_ID"]]))
 				{
-					self::$iblockPropsParams[$params["IBLOCK_ID"]] = static::getPropsParams(
-						$params["IBLOCK_ID"],
-						$visibleColumns,
-						$iblockPropsUsed
-					);
+					$params["SKU_PROPS"] = self::$productsOffersSkuParams[$params["PRODUCT_ID"]][$params["OFFER_ID"]];
 				}
 
-				if(self::$productsOffersSkuParams[$params["PRODUCT_ID"]][$params["OFFER_ID"]])
-					$params["SKU_PROPS"] = self::$productsOffersSkuParams[$params["PRODUCT_ID"]][$params["OFFER_ID"]];
-
-				if (is_array($params["SKU_PROPS"]))
+				if (
+					isset($params["SKU_PROPS"])
+					&& is_array($params["SKU_PROPS"])
+				)
 				{
 					foreach ($params["SKU_PROPS"] as $id => $skuProps)
 					{
@@ -809,7 +772,7 @@ class OrderBasket
 						if($params['MODULE'] != 'catalog')
 							continue;
 
-						$productsParams["ITEMS"][$key]["SKU_PROPS_POSSIBLE_VALUES"] = $possibleSkuProps[$params['OFFER_ID']];
+						$productsParams["ITEMS"][$key]["SKU_PROPS_POSSIBLE_VALUES"] = $possibleSkuProps[$params['OFFER_ID']] ?? [];
 					}
 
 					unset($possibleSkuParams);
@@ -989,7 +952,11 @@ class OrderBasket
 			if(!empty($iblockPropsUsed) && !array_key_exists($arProp['ID'], $iblockPropsUsed))
 				continue;
 
-			if ($arProp['PROPERTY_TYPE'] == 'L' || $arProp['PROPERTY_TYPE'] == 'E' || ($arProp['PROPERTY_TYPE'] == 'S' && $arProp['USER_TYPE'] == 'directory'))
+			if (
+				$arProp['PROPERTY_TYPE'] == 'L'
+				|| $arProp['PROPERTY_TYPE'] == 'E'
+				|| ($arProp['PROPERTY_TYPE'] == 'S' && $arProp['USER_TYPE'] == 'directory')
+			)
 			{
 				if ($arProp['XML_ID'] == 'CML2_LINK')
 					continue;
@@ -1079,8 +1046,12 @@ class OrderBasket
 					}
 				}
 
-
-				if (is_array($iblockPropsUsed[$arProp['ID']]) && !empty($arValues) && is_array($arValues))
+				if (
+					isset($iblockPropsUsed[$arProp['ID']])
+					&& is_array($iblockPropsUsed[$arProp['ID']])
+					&& !empty($arValues)
+					&& is_array($arValues)
+				)
 				{
 					//if property value deleted or inactive
 					$notFound = array_diff($iblockPropsUsed[$arProp['ID']], array_keys($arValues));
@@ -1106,13 +1077,30 @@ class OrderBasket
 				}
 			}
 
-			if ($arProp['PROPERTY_TYPE'] == "S" && is_array($arRes[$arProp['ID']]['VALUES']))
+			if (
+				$arProp['PROPERTY_TYPE'] == "S"
+				&& $arProp['USER_TYPE'] == 'directory'
+				&& isset($arRes[$arProp['ID']]['VALUES'])
+				&& is_array($arRes[$arProp['ID']]['VALUES'])
+			)
 			{
 				foreach($arRes[$arProp['ID']]['VALUES'] as $id => $value)
 				{
-					$arTmpFile = \CFile::getFileArray($value["FILE"]);
-					$tmpImg = \CFile::resizeImageGet($arTmpFile, array('width'=>20, 'height'=>20), BX_RESIZE_IMAGE_PROPORTIONAL, false, false);
-					$arRes[$arProp['ID']]['VALUES'][$id]['PICT'] = $tmpImg['src'];
+					if (isset($value["FILE"]))
+					{
+						$arTmpFile = \CFile::getFileArray($value["FILE"]);
+						$tmpImg = \CFile::resizeImageGet(
+							$arTmpFile,
+							[
+								'width' => 20,
+								'height' => 20,
+							],
+							BX_RESIZE_IMAGE_PROPORTIONAL,
+							false,
+							false
+						);
+						$arRes[$arProp['ID']]['VALUES'][$id]['PICT'] = $tmpImg['src'];
+					}
 				}
 			}
 		}
@@ -1196,9 +1184,9 @@ class OrderBasket
 		return $props;
 	}
 
-	protected static function getSkuProps($flagAll = false, $iblockId)
+	protected static function getSkuProps($flagAll, $iblockId)
 	{
-		if (static::$arSkuProps[$iblockId] === null)
+		if (!isset(static::$arSkuProps[$iblockId]))
 		{
 			$arCatalog = static::getOffersCatalog($iblockId);
 			static::$arSkuProps[$iblockId] = $arCatalog? static::getPropsList($arCatalog["IBLOCK_ID"], $arCatalog['SKU_PROPERTY_ID']) : array();
@@ -1588,8 +1576,18 @@ class OrderBasket
 		}
 
 		$arSelect = array_merge(
-				array("ID", "NAME", "IBLOCK_ID", "IBLOCK_SECTION_ID", "DETAIL_PICTURE", "PREVIEW_PICTURE", "XML_ID", "IBLOCK_EXTERNAL_ID"),
-				$arUserColumns
+			[
+				"ID",
+				"NAME",
+				"IBLOCK_ID",
+				"IBLOCK_SECTION_ID",
+				"DETAIL_PICTURE",
+				"PREVIEW_PICTURE",
+				"XML_ID",
+				"IBLOCK_EXTERNAL_ID",
+				"DETAIL_PAGE_URL",
+			],
+			$arUserColumns
 		);
 
 		$proxyProductDataKey = md5(join('|', $arElementId)."_".join('|', $arSelect));
@@ -1950,6 +1948,9 @@ class OrderBasket
 	{
 		if($this->data === null)
 		{
+			$inParams['ADDED_PRODUCTS'] ??= null;
+			$isArrayAddedProducts = is_array($inParams['ADDED_PRODUCTS']);
+
 			$result = array(
 				"ITEMS" => array(),
 				"WEIGHT" => 0
@@ -2025,19 +2026,18 @@ class OrderBasket
 				$params["PRICE_BASE"] = $params["BASE_PRICE"] = $item->getField("BASE_PRICE");
 				$params["CUSTOM_PRICE"] = $item->isCustomPrice() ? "Y" : "N";
 
-				if(
-					!is_array($inParams["ADDED_PRODUCTS"])
+				if (
+					!$isArrayAddedProducts
 					||
 					(
 						!empty($inParams["ADDED_PRODUCTS"])
-						&& is_array($inParams["ADDED_PRODUCTS"])
 						&& in_array($productId, $inParams["ADDED_PRODUCTS"])
 					)
 				)
 				{
 					$params = $params + self::getPropsForBasketItem($item, $catalogPreparedData);
 
-					if(is_array($inParams["ADDED_PRODUCTS"]) && in_array($productId, $inParams["ADDED_PRODUCTS"]))
+					if ($isArrayAddedProducts && in_array($productId, $inParams["ADDED_PRODUCTS"]))
 					{
 						$result["ADDED_PRODUCTS"][] = $basketCode;
 					}
@@ -2066,7 +2066,7 @@ class OrderBasket
 					}
 				}
 
-				if(is_array($params["SET_ITEMS"]) && !empty($params["SET_ITEMS"]))
+				if (!empty($params["SET_ITEMS"]) && is_array($params["SET_ITEMS"]))
 				{
 					$offerToIdx = array();
 
@@ -2125,7 +2125,7 @@ class OrderBasket
 					}
 				}
 
-				$params["IS_ENABLED"] = ($params['CAN_BUY'] === 'N') ? 'N' : 'Y';
+				$params["IS_ENABLED"] = (($params['CAN_BUY'] ?? null) === 'N') ? 'N' : 'Y';
 
 				$result["ITEMS"][$basketCode] = $params;
 			}
@@ -2136,7 +2136,7 @@ class OrderBasket
 
 			$result["ITEMS_ORDER"] = array_keys($result["ITEMS"]);
 
-			if(!$inParams["SKIP_SKU_INFO"])
+			if (empty($inParams["SKIP_SKU_INFO"]))
 			{
 				$result = $this->getOffersSkuParams($result, $this->visibleColumns);
 			}
@@ -2214,7 +2214,7 @@ class OrderBasket
 			$params["OFFER_ID"] = $productId;
 
 		$params["PRODUCT_PROVIDER_CLASS"] = $item->getProvider();
-		$id = $params["PRODUCT_ID"];
+		$id = $params["PRODUCT_ID"] ?? 0;
 		$params = array_merge($params, $item->getFieldValues(), array("PRODUCT_ID" => $id));
 
 		//If product became bundle, but in saved order it is a simple product.
@@ -2254,7 +2254,7 @@ class OrderBasket
 				$params["PROVIDER_DATA"] = serialize($providerData);
 		}
 
-		if(is_array($params["SET_ITEMS"]) && !empty($params["SET_ITEMS"]))
+		if (!empty($params["SET_ITEMS"]) && is_array($params["SET_ITEMS"]))
 		{
 			$offerToIdx = array();
 			$items = [];

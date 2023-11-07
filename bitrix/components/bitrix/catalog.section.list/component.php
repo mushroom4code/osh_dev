@@ -243,6 +243,17 @@ if ($this->startResultCache(
 			}
 			$arResult["SECTION"]["PATH"][]=$arPath;
 		}
+		unset($rsPath);
+
+		$buttons = CIBlock::GetPanelButtons(
+			$arResult["SECTION"]["IBLOCK_ID"],
+			0,
+			$arResult["SECTION"]["ID"],
+			array("SESSID"=>false, "CATALOG"=>true)
+		);
+		$arResult["SECTION"]["EDIT_LINK"] = $buttons["edit"]["edit_section"]["ACTION_URL"] ?? '';
+		$arResult["SECTION"]["DELETE_LINK"] = $buttons["edit"]["delete_section"]["ACTION_URL"] ?? '';
+		unset($buttons);
 	}
 	else
 	{
@@ -388,8 +399,8 @@ if ($this->startResultCache(
 			$arSection["ID"],
 			array("SESSID"=>false, "CATALOG"=>true)
 		);
-		$arSection["EDIT_LINK"] = $arButtons["edit"]["edit_section"]["ACTION_URL"];
-		$arSection["DELETE_LINK"] = $arButtons["edit"]["delete_section"]["ACTION_URL"];
+		$arSection["EDIT_LINK"] = $arButtons["edit"]["edit_section"]["ACTION_URL"] ?? '';
+		$arSection["DELETE_LINK"] = $arButtons["edit"]["delete_section"]["ACTION_URL"] ?? '';
 
 		$arSection["~ELEMENT_CNT"] = null;
 		$arSection["ELEMENT_CNT"] = null;
@@ -580,7 +591,7 @@ if ($arResult["SECTIONS_COUNT"] > 0 || isset($arResult["SECTION"]))
 		$this->addIncludeAreaIcons(CIBlock::GetComponentMenu($APPLICATION->GetPublicShowMode(), $arButtons));
 	}
 
-	if($arParams["ADD_SECTIONS_CHAIN"] && isset($arResult["SECTION"]) && is_array($arResult["SECTION"]["PATH"]))
+	if ($arParams["ADD_SECTIONS_CHAIN"] && isset($arResult["SECTION"]["PATH"]) && is_array($arResult["SECTION"]["PATH"]))
 	{
 		foreach($arResult["SECTION"]["PATH"] as $arPath)
 		{

@@ -10,5 +10,6 @@ $MESS["UI_SIGN_UP_TAB_TOUCH_TITLE"] = "Handunterschrift";
 $MESS["UI_SIGN_UP_TAKE_SIGN_PHOTO"] = "Ein Foto mit dem Telefon machen";
 $MESS["UI_SIGN_UP_TOUCH_CLEAR_BUTTON"] = "löschen";
 $MESS["UI_SIGN_UP_TOUCH_LAYOUT_LABEL"] = "Nutzen Sie die Maus, um weiter unten zu unterschreiben &darr;";
+$MESS["UI_SIGN_UP_TOUCH_LAYOUT_MOBILE_LABEL"] = "Unterschreiben Sie handschriftlich im Feld unten &darr;";
 $MESS["UI_SIGN_UP_UPLOAD_NEW"] = "Neues Bild hochladen";
 $MESS["UI_SIGN_UP_UPLOAD_SIGN_PHOTO"] = "Bild hochladen";

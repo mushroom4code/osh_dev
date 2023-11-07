@@ -294,11 +294,6 @@ header, .section_wrapper, .box_with_fav_bask, .link_menu_top, .header_box_logo, 
     width: 100%;
 }
 
-.header_logo_desktop a img {
-    width: 160px;
-    max-width: 170px;
-}
-
 .search_header {
     width: 30%;
 }

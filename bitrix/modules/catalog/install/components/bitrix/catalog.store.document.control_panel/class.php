@@ -6,19 +6,27 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 }
 
 use Bitrix\Catalog\Access\ActionDictionary;
-use Bitrix\Catalog\Url\InventoryManagementSourceBuilder;
+use Bitrix\Catalog\Integration\Report\Dashboard\DashboardManager;
+use Bitrix\Catalog\Integration\Report\Dashboard\StoreStockDashboard;
 use Bitrix\Main;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Iblock;
 use Bitrix\Catalog;
 use Bitrix\Catalog\Access\AccessController;
-use Bitrix\Catalog\Access\Model\StoreDocument;
-use Bitrix\Catalog\StoreDocumentTable;
+use Bitrix\Catalog\v2\Contractor;
 
-\Bitrix\Main\Loader::includeModule('catalog');
+Main\Loader::includeModule('catalog');
 
 class CatalogStoreDocumentControlPanelComponent extends \CBitrixComponent
 {
+	public const PATH_TO = [
+		'LIST' => '/shop/documents/#DOCUMENT_TYPE#/',
+		'STORES' => '/shop/documents-stores/',
+		'CATALOG' => '/shop/documents-catalog/',
+		'CONTRACTORS' => '/shop/documents/contractors/',
+		'CONTRACTORS_CONTACTS' => '/shop/documents/contractors_contacts/',
+	];
+
 	private $isIframe = false;
 	private $analyticsSource = '';
 	private AccessController $accessController;
@@ -37,12 +45,7 @@ class CatalogStoreDocumentControlPanelComponent extends \CBitrixComponent
 			$arParams['PATH_TO'] = [];
 		}
 
-		$arParams['PATH_TO'] += [
-			'LIST' => '/shop/documents/#DOCUMENT_TYPE#/',
-			'STORES' => '/shop/documents-stores/',
-			'CATALOG' => '/shop/documents-catalog/',
-			'CONTRACTORS' => '/shop/documents/contractors/',
-		];
+		$arParams['PATH_TO'] += self::PATH_TO;
 
 		return parent::onPrepareComponentParams($arParams);
 	}
@@ -98,14 +101,10 @@ class CatalogStoreDocumentControlPanelComponent extends \CBitrixComponent
 	public function executeComponent()
 	{
 		$this->isIframe = $this->request->get('IFRAME') === 'Y' && $this->request->get('IFRAME_TYPE') === 'SIDE_SLIDER';
-		$this->analyticsSource = InventoryManagementSourceBuilder::getInstance()->getInventoryManagementSource();
+		$this->analyticsSource = $this->request->get('inventoryManagementSource') ?? '';
 		$this->arResult['IS_IFRAME_MODE'] = $this->isIframe;
 		$this->arResult['ITEMS'] = $this->getPanelButtons();
-
-		if (count($this->arResult['ITEMS']))
-		{
-			$this->includeComponentTemplate();
-		}
+		$this->includeComponentTemplate();
 	}
 
 	private function getPanelButtons(): array
@@ -185,6 +184,15 @@ class CatalogStoreDocumentControlPanelComponent extends \CBitrixComponent
 			$buttons[] = $item;
 		}
 
+		if (Contractor\Provider\Manager::isActiveProviderByModule('crm'))
+		{
+			$clientsMenuItem = $this->getCrmClientsMenuItem();
+			if ($clientsMenuItem)
+			{
+				$buttons[] = $clientsMenuItem;
+			}
+		}
+
 		return $buttons;
 	}
 
@@ -211,10 +219,10 @@ class CatalogStoreDocumentControlPanelComponent extends \CBitrixComponent
 				'URL' => $url,
 				'SORT' => 50,
 				'IS_ACTIVE' => strncmp(
-					$rawUrl,
-					$this->request->getRequestedPage(),
-					strlen($rawUrl)
-				) === 0,
+						$rawUrl,
+						$this->request->getRequestedPage(),
+						strlen($rawUrl)
+					) === 0,
 			];
 		}
 
@@ -237,7 +245,23 @@ class CatalogStoreDocumentControlPanelComponent extends \CBitrixComponent
 		{
 			if (\Bitrix\Catalog\Component\UseStore::isUsed())
 			{
-				$url = '/report/analytics/?analyticBoardKey=catalog_warehouse_stock';
+				$allowedDashboards = DashboardManager::getManager()->getAllowedDashboards();
+				if (!$allowedDashboards)
+				{
+					return null;
+				}
+
+				$linkKey = '';
+				foreach ($allowedDashboards as $board)
+				{
+					$linkKey = $board->getBoardKey();
+					if ($linkKey === StoreStockDashboard::BOARD_KEY)
+					{
+						break;
+					}
+				}
+
+				$url = '/report/analytics/?analyticBoardKey=' . $linkKey;
 				return [
 					'ID' => 'analytics',
 					'TEXT' => Loc::getMessage('STORE_DOCUMENTS_ANALYTICS_BUTTON_TITLE'),
@@ -351,15 +375,18 @@ class CatalogStoreDocumentControlPanelComponent extends \CBitrixComponent
 			'IS_DISABLED' => true,
 		];
 
-		$url = $this->getUrlWithParams($this->arParams['PATH_TO']['CONTRACTORS']);
-		$buttons[] = [
-			'ID' => 'contractors_settings',
-			'TEXT' => Loc::getMessage('STORE_DOCUMENTS_SETTINGS_CONTRACTORS_TITLE'),
-			'URL' => $url,
-			'SORT' => 90,
-			'IS_ACTIVE' => $this->isActiveUrl($url),
-			'IS_DISABLED' => true,
-		];
+		if (!Contractor\Provider\Manager::isActiveProviderByModule('crm'))
+		{
+			$url = $this->getUrlWithParams($this->arParams['PATH_TO']['CONTRACTORS']);
+			$buttons[] = [
+				'ID' => 'contractors_settings',
+				'TEXT' => Loc::getMessage('STORE_DOCUMENTS_SETTINGS_CONTRACTORS_TITLE'),
+				'URL' => $url,
+				'SORT' => 90,
+				'IS_ACTIVE' => $this->isActiveUrl($url),
+				'IS_DISABLED' => true,
+			];
+		}
 
 		if (
 			Main\Loader::includeModule('rest')
@@ -378,5 +405,100 @@ class CatalogStoreDocumentControlPanelComponent extends \CBitrixComponent
 		}
 
 		return $buttons;
+	}
+
+	/**
+	 * @return array|null
+	 */
+	private function getCrmClientsMenuItem(): ?array
+	{
+		$crmControlPanelResult = $GLOBALS['APPLICATION']->includeComponent(
+			'bitrix:crm.control_panel',
+			'',
+			[
+				'GET_RESULT' => 'Y',
+			]
+		);
+
+		if (
+			!isset($crmControlPanelResult['ITEMS'])
+			|| !is_array($crmControlPanelResult['ITEMS'])
+		)
+		{
+			return null;
+		}
+
+		$clientsItem = array_filter(
+			$crmControlPanelResult['ITEMS'],
+			static function ($item)
+			{
+				return $item['ID'] === CrmControlPanel::MENU_ID_CRM_CLIENT;
+			}
+		);
+		if (!$clientsItem)
+		{
+			return null;
+		}
+		$clientsItem = current($clientsItem);
+
+		$clientsItem['ITEMS'] = array_filter(
+			$clientsItem['ITEMS'],
+			static function ($item)
+			{
+				return in_array(
+					$item['ID'],
+					[
+						CrmControlPanel::MENU_ID_CRM_CONTACT,
+						CrmControlPanel::MENU_ID_CRM_COMPANY,
+						CrmControlPanel::MENU_ID_CRM_STORE_CONTRACTORS,
+						CrmControlPanel::MENU_ID_CRM_CONTACT_CENTER,
+					],
+					true
+				);
+			}
+		);
+		$clientsItem['ITEMS'] = array_values($clientsItem['ITEMS']);
+
+		$clientsItem['ITEMS'] = array_map(
+			function ($item)
+			{
+				$isCrmItem = in_array(
+					$item['ID'],
+					[
+						CrmControlPanel::MENU_ID_CRM_CONTACT,
+						CrmControlPanel::MENU_ID_CRM_COMPANY,
+					],
+					true
+				);
+				$isCatalogItem = $item['ID'] === CrmControlPanel::MENU_ID_CRM_STORE_CONTRACTORS;
+
+				if ($isCrmItem)
+				{
+					$item['ON_CLICK'] = 'event.preventDefault();BX.SidePanel.Instance.open("' . CUtil::JSescape($item['URL']) . '", {cacheable: false});';
+				}
+				elseif ($isCatalogItem)
+				{
+					$item['ITEMS'] = array_map(
+						function($item)
+						{
+							unset($item['ON_CLICK']);
+
+							$item['IS_ACTIVE'] = $this->isActiveUrl(
+								$item['URL']
+							);
+							$item['URL'] = $this->getUrlWithParams($item['URL']);
+
+							return $item;
+						},
+						$item['ITEMS']
+					);
+				}
+
+				return $item;
+			},
+			$clientsItem['ITEMS']
+		);
+
+		return $clientsItem;
 	}
 }

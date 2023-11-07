@@ -9,6 +9,7 @@ $id = $arParams['id'];
 $event = $arParams['event'];
 $isSocialnetworkEnabled = $arParams['bSocNet'];
 $isCrmEnabled = \Bitrix\Main\ModuleManager::isModuleInstalled('crm');
+$hiddenFields = $arParams['hiddenFields'] ?? [];
 
 $fieldsList = [
 	'description' => ['title' => Loc::getMessage('EC_EDIT_SLIDER_DESCRIPTION_COLUMN')],
@@ -37,17 +38,18 @@ $showAdditionalBlock = false;
 foreach ($fieldsList as $k => $field)
 {
 	$fieldsList[$k]['pinned'] = in_array($k, $arResult['FORM_USER_SETTINGS']['pinnedFields']);
-	if(!$fieldsList[$k]['pinned'])
+	$fieldsList[$k]['hidden'] = in_array($k, $hiddenFields);
+	if(!$fieldsList[$k]['pinned'] && !$fieldsList[$k]['hidden'])
 	{
 		$showAdditionalBlock = true;
 	}
 }
 
-$event['UF_CRM_CAL_EVENT'] = $UF['UF_CRM_CAL_EVENT'];
+$event['UF_CRM_CAL_EVENT'] = $UF['UF_CRM_CAL_EVENT'] ?? null;
 if (empty($event['UF_CRM_CAL_EVENT']['VALUE']))
 	$event['UF_CRM_CAL_EVENT'] = false;
 
-$event['UF_WEBDAV_CAL_EVENT'] = $UF['UF_WEBDAV_CAL_EVENT'];
+$event['UF_WEBDAV_CAL_EVENT'] = $UF['UF_WEBDAV_CAL_EVENT'] ?? null;
 if (empty($event['UF_WEBDAV_CAL_EVENT']['VALUE']))
 	$event['UF_WEBDAV_CAL_EVENT'] = false;
 
@@ -67,7 +69,7 @@ $arParams['UF'] = $UF;
 		<div class="calendar-head-area">
 			<div class="calendar-head-area-inner">
 				<div class="calendar-head-area-title">
-					<span id="<?=$id?>_title" class="calendar-head-area-title-name"><?= $event['ID'] ? Loc::getMessage('EC_EDIT_SLIDER_EDIT_TITLE') : Loc::getMessage('EC_EDIT_SLIDER_NEW_TITLE')?></span>
+					<span id="<?=$id?>_title" class="calendar-head-area-title-name"><?= !empty($event['ID']) ? Loc::getMessage('EC_EDIT_SLIDER_EDIT_TITLE') : Loc::getMessage('EC_EDIT_SLIDER_NEW_TITLE')?></span>
 				</div>
 			</div>
 		</div>
@@ -132,7 +134,7 @@ $arParams['UF'] = $UF;
 										"TEXT" => Array(
 											"ID" => $id.'_edit_ed_desc',
 											"NAME" => "desc",
-											"VALUE" => $event['DESCRIPTION'],
+											"VALUE" => $event['DESCRIPTION'] ?? null,
 											"HEIGHT" => "160px"
 										),
 										"UPLOAD_WEBDAV_ELEMENT" => $arParams['UF']['UF_WEBDAV_CAL_EVENT'],
@@ -339,7 +341,7 @@ $arParams['UF'] = $UF;
 						<!--region RRule-->
 						<?$field = "rrule";?>
 						<div data-bx-block-placeholer="<?= $field?>" class="calendar-field-placeholder">
-						<?if (!$fieldsList[$field]["pinned"])
+						<?if (!$fieldsList[$field]["pinned"] || $fieldsList[$field]['hidden'])
 						{
 							ob_start();
 						}?>
@@ -466,9 +468,12 @@ $arParams['UF'] = $UF;
 							</div>
 							<span data-bx-fixfield="<?= $field?>" class="calendar-option-fixedbtn" title="<?= Loc::getMessage('EC_EDIT_SLIDER_FIX_FIELD')?>"></span>
 						</div>
-						<?if (!$fieldsList[$field]["pinned"])
+						<?if (!$fieldsList[$field]["pinned"] || $fieldsList[$field]['hidden'])
 						{
-							$fieldsList[$field]["html"] = ob_get_contents();
+							if (!$fieldsList[$field]['hidden'])
+							{
+								$fieldsList[$field]["html"] = ob_get_contents();
+							}
 							ob_end_clean();
 						}?>
 						</div>
@@ -486,7 +491,7 @@ $arParams['UF'] = $UF;
 								<div class="calendar-options-item-name js-calendar-field-name"><?= Loc::getMessage('EC_EDIT_SLIDER_LOCATION_COLUMN')?></div>
 							</div>
 							<div class="calendar-options-item-column-right">
-								<div class="calendar-options-item-column-one">
+								<div class="calendar-options-item-column-one calendar-options-item-column-location">
 									<div class="calendar-field-container calendar-field-container-select" id="<?=$id?>_location_wrap"></div>
 								</div>
 							</div>
@@ -567,7 +572,7 @@ $arParams['UF'] = $UF;
 												</label>
 											</div>
 										</div>
-										<?if ($event['ID']):?>
+										<?if (!empty($event['ID'])):?>
 										<div class="calendar-field-container calendar-field-container-checkbox">
 											<div class="calendar-field-block">
 												<label type="text" class="calendar-field-checkbox-label">
@@ -663,7 +668,7 @@ $arParams['UF'] = $UF;
 
 						<!--region accessibility-->
 						<? $field = "accessibility";
-							if (isset($fieldsList[$field]))
+							if (isset($fieldsList[$field]) && !$fieldsList[$field]['hidden'])
 							{
 							?>
 							<div data-bx-block-placeholer="<?= $field?>" class="calendar-field-placeholder">
@@ -711,7 +716,7 @@ $arParams['UF'] = $UF;
 							$crmUF = $UF['UF_CRM_CAL_EVENT'];
 						?>
 						<div data-bx-block-placeholer="<?= $field?>" class="calendar-field-placeholder">
-							<?if (!$fieldsList[$field]["pinned"])
+							<?if (!$fieldsList[$field]["pinned"] || $fieldsList[$field]['hidden'])
 							{
 								ob_start();
 							}?>
@@ -736,9 +741,12 @@ $arParams['UF'] = $UF;
 								</div>
 								<span data-bx-fixfield="<?= $field?>" class="calendar-option-fixedbtn" title="<?= Loc::getMessage('EC_EDIT_SLIDER_FIX_FIELD')?>"></span>
 							</div>
-							<?if (!$fieldsList[$field]["pinned"])
+							<?if (!$fieldsList[$field]["pinned"] || $fieldsList[$field]['hidden'])
 							{
-								$fieldsList[$field]["html"] = ob_get_contents();
+								if (!$fieldsList[$field]['hidden'])
+								{
+									$fieldsList[$field]["html"] = ob_get_contents();
+								}
 								ob_end_clean();
 							}?>
 						</div>
@@ -752,7 +760,7 @@ $arParams['UF'] = $UF;
 							<div id="<?=$id?>_additional_pinned_names" class="calendar-additional-alt-promo">
 								<?foreach ($fieldsList as $fieldId => $field)
 								{
-									if(!$field["pinned"])
+									if(!$field["pinned"] && !$field['hidden'])
 									{
 										?>
 										<span class="calendar-additional-alt-promo-text"><?= $field["title"]?></span>
@@ -804,7 +812,7 @@ $arParams['UF'] = $UF;
 																"TEXT" => Array(
 																	"ID" => $id.'_edit_ed_desc',
 																	"NAME" => "desc",
-																	"VALUE" => $event['DESCRIPTION'],
+																	"VALUE" => $event['DESCRIPTION'] ?? null,
 																	"HEIGHT" => "160px"
 																),
 																"UPLOAD_WEBDAV_ELEMENT" => $arParams['UF']['UF_WEBDAV_CAL_EVENT'],
@@ -848,7 +856,7 @@ $arParams['UF'] = $UF;
 									?>
 									<div data-bx-block-placeholer="<?= $fieldId ?>"
 										 class="calendar-field-additional-placeholder"><?
-									if(!$field["pinned"] && $field["html"])
+									if(!$field["pinned"] && !$field['hidden'] && ($field["html"] ?? null))
 									{
 										echo $field["html"];
 									}

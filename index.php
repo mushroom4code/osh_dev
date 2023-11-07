@@ -189,12 +189,10 @@ if (SITE_ID !== SITE_EXHIBITION) {
         false,
         array('HIDE_ICONS' => 'Y')
     );
-    ?>
-    <div class="h1">Распродажа</div>
-    <div class="by-card">
-        <?php
+
+    if (defined('PROPERTY_USE_ON_MAIN_PAGE')) {
         $GLOBALS['FILTER_SALE'] = array(
-            'PROPERTY_USE_DISCOUNT_VALUE' => 'Да',
+            'PROPERTY_' . PROPERTY_USE_ON_MAIN_PAGE . '_VALUE' => 'Да'
         );
         $APPLICATION->IncludeComponent(
             "bitrix:catalog.top",
@@ -211,15 +209,16 @@ if (SITE_ID !== SITE_EXHIBITION) {
                 "CACHE_TYPE" => "A",
                 "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
                 "COMPATIBLE_MODE" => "Y",
+                "VALUE_TITLE_IN_TEMPLATE" => 'Распродажа',
                 "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
                 "CONVERT_CURRENCY" => "N",
                 "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
                 "DETAIL_URL" => "",
                 "DISPLAY_COMPARE" => "N",
                 "ELEMENT_COUNT" => "16",
-                "ELEMENT_SORT_FIELD" => "timestamp_x",
-                "ELEMENT_SORT_FIELD2" => "id",
-                "ELEMENT_SORT_ORDER" => "asc",
+                "ELEMENT_SORT_FIELD" => "PROPERTY_" . SORT_POPULARITY,
+                "ELEMENT_SORT_FIELD2" => "ID",
+                "ELEMENT_SORT_ORDER" => "desc",
                 "ELEMENT_SORT_ORDER2" => "desc",
                 "ENLARGE_PRODUCT" => "PROP",
                 "ENLARGE_PROP" => "-",
@@ -276,6 +275,7 @@ if (SITE_ID !== SITE_EXHIBITION) {
                 "USE_PRICE_COUNT" => "N",
                 "USE_PRODUCT_QUANTITY" => "N",
                 "VIEW_MODE" => "SLIDER",
+                "SHOW_TITLE_IN_TEMPLATE" => "Y",
                 "PROPERTY_CODE" => array(
                     0 => "USE_DISCOUNT",
                     1 => "",
@@ -284,10 +284,9 @@ if (SITE_ID !== SITE_EXHIBITION) {
                     "USE_DISCOUNT"
                 )
             ),
-            false
-        ); ?>
-    </div>
-    <?php
+            false,
+        );
+    }
 }
 // TODO - обработка лайки
 //$update = new Enterego\EnteregoProcessing();

@@ -1648,10 +1648,15 @@ class CAllMailMessage
 		else
 		{
 			$bodyPart = CMailMessage::decodeMessageBody($header, $body, $charset);
+			$contentType = mb_strtolower($bodyPart['CONTENT-TYPE']);
 
-			if (!$bodyPart['FILENAME'] && mb_strpos(mb_strtolower($bodyPart['CONTENT-TYPE']), 'text/') === 0 && mb_strtolower($bodyPart['CONTENT-TYPE']) !== 'text/calendar')
+			if (
+				!$bodyPart['FILENAME']
+				&& (mb_strpos($contentType, 'text/') === 0)
+				&& ($contentType !== 'text/calendar')
+			)
 			{
-				if (mb_strtolower($bodyPart['CONTENT-TYPE']) == 'text/html')
+				if ($contentType == 'text/html')
 				{
 					$htmlBody = $bodyPart['BODY'];
 					$textBody = html_entity_decode(htmlToTxt($bodyPart['BODY']), ENT_QUOTES | ENT_HTML401, $charset);
@@ -1687,9 +1692,20 @@ class CAllMailMessage
 		$message_body = &$bodyText;
 		$arMessageParts = &$attachments;
 
+		$isStrippedTagsToBody = false;
+
 		if (self::isLongMessageBody($message_body))
 		{
 			[$message_body, $message_body_html] = self::prepareLongMessage($message_body, $message_body_html);
+		}
+
+		if (
+			(mb_strlen($message_body_html) > 0)
+			&& empty(trim(strip_tags($message_body_html)))
+		)
+		{
+			$message_body_html = '';
+			$isStrippedTagsToBody = true;
 		}
 
 		$arFields = array(
@@ -1709,10 +1725,14 @@ class CAllMailMessage
 			"BODY" => rtrim($message_body),
 			'OPTIONS' => array(
 				'attachments' => count($arMessageParts),
+				'isStrippedTags' => $isStrippedTagsToBody,
 			),
 		);
 
-		if (empty($message_body) || empty($message_body_html))
+		if (
+			($arFields['OPTIONS']['attachments'] <= 0)
+			&& (empty($message_body) || empty($message_body_html))
+		)
 		{
 			$arFields['OPTIONS']['isEmptyBody'] = 'Y';
 		}
@@ -1786,7 +1806,8 @@ class CAllMailMessage
 			if (!(isset($params['replaces']) && $params['replaces'] > 0))
 			{
 				/**
-				 * Create a chain of communication between the message and itself
+				 * By default, a chain is created for each new message that links the message to itself.
+				 * If the parents are not found for the message in the future, then the chain will remain like this.
 				 * */
 				$DB->query(sprintf(
 					'INSERT IGNORE INTO b_mail_message_closure (MESSAGE_ID, PARENT_ID) VALUES (%1$u, %1$u)',
@@ -1794,8 +1815,9 @@ class CAllMailMessage
 				));
 
 				/**
-				 * Create chains of links to parent messages based on the fact
-				 * that the given message is a response
+				 * We find the parents(in the standard case there should be one) of this message and create a chain.
+				 * If the id of the parent (IN_REPLY_TO) matches the id of the message itself(MSG_ID),
+				 * then nothing will happen(INSERT IGNORE), since such a chain was created in the step above.
 				 * */
 				if ($arFields['IN_REPLY_TO'])
 				{
@@ -1809,26 +1831,6 @@ class CAllMailMessage
 						$message_id,
 						$mailbox_id,
 						$DB->forSql($arFields['IN_REPLY_TO'])
-					));
-				}
-
-				/**
-				 * Finding and creating (if any) a chain of links to child messages based on that fact
-				 * */
-				if ($arFields['MSG_ID'])
-				{
-					$DB->query(sprintf(
-						"INSERT IGNORE INTO b_mail_message_closure (MESSAGE_ID, PARENT_ID)
-						(
-							SELECT DISTINCT C.MESSAGE_ID, P.PARENT_ID
-							FROM b_mail_message M
-								INNER JOIN b_mail_message_closure C ON M.ID = C.PARENT_ID
-								INNER JOIN b_mail_message_closure P ON P.MESSAGE_ID = %u
-							WHERE M.MAILBOX_ID = %u AND M.IN_REPLY_TO = '%s'
-						)",
-						$message_id,
-						$mailbox_id,
-						$DB->forSql($arFields['MSG_ID'])
 					));
 				}
 
@@ -1878,7 +1880,7 @@ class CAllMailMessage
 			if ($message_body_html)
 			{
 				Ini::adjustPcreBacktrackLimit(strlen($message_body_html)*2);
-				
+
 				$msg = array(
 					'html'        => $message_body_html,
 					'attachments' => array(),
@@ -2044,7 +2046,13 @@ class CAllMailMessage
 
 	private static function saveForDeferredDownload($ID, $arFields, $mailboxID)
 	{
-		if ($mailboxID !== false && is_set($arFields, 'BODY_HTML') && $arFields['BODY_HTML'] === '' && (!is_set($arFields, 'BODY') || $arFields['BODY'] === ''))
+		if (
+			$mailboxID !== false
+			&& is_set($arFields, 'BODY_HTML')
+			&& $arFields['BODY_HTML'] === ''
+			&& (!is_set($arFields, 'BODY') || $arFields['BODY'] === '')
+			&& !$arFields['OPTIONS']['isStrippedTags']
+		)
 		{
 			\Bitrix\Mail\Internals\MailEntityOptionsTable::add([
 				'MAILBOX_ID' => $mailboxID,
@@ -2351,6 +2359,7 @@ class CAllMailMessage
 	 */
 	private static function getClearBody(string $body): string
 	{
+		//todo merge with \Bitrix\Main\Mail\Mail::convertBodyHtmlToText
 		// get <body> inner html if exists
 		$innerBody = trim(preg_replace('/(.*?<body[^>]*>)(.*?)(<\/body>.*)/is', '$2', $body));
 		$body = $innerBody ?: $body;
@@ -2542,7 +2551,16 @@ class _CMailAttachmentDBRes extends CDBResult
 		if (($res = parent::fetch()) && $res['FILE_ID'] > 0)
 		{
 			if ($file = \CFile::makeFileArray($res['FILE_ID']))
-				$res['FILE_DATA'] = file_get_contents($file['tmp_name']);
+			{
+				if (!empty($file['tmp_name']) && \Bitrix\Main\IO\File::isFileExists($file['tmp_name']))
+				{
+					$res['FILE_DATA'] = \Bitrix\Main\IO\File::getFileContents($file['tmp_name']);
+				}
+				else
+				{
+					$res['FILE_DATA'] = false;
+				}
+			}
 		}
 
 		return $res;
@@ -2699,7 +2717,12 @@ class CMailAttachment
 			if ($attachment['FILE_ID'] > 0)
 			{
 				if ($file = \CFile::makeFileArray($attachment['FILE_ID']))
-					return file_get_contents($file['tmp_name']);
+				{
+					return (!empty($file['tmp_name'])
+						&& \Bitrix\Main\IO\File::isFileExists($file['tmp_name']))
+							? \Bitrix\Main\IO\File::getFileContents($file['tmp_name'])
+							: false;
+				}
 			}
 		}
 
@@ -2736,7 +2759,7 @@ class CAllMailUtil
 				/x', $escape, $str);
 			}
 
-			if ($result = Bitrix\Main\Text\Encoding::convertEncoding($str, $from, $to, $error))
+			if ($result = Bitrix\Main\Text\Encoding::convertEncoding($str, $from, $to))
 				$str = $result;
 			else
 				addMessage2Log(sprintf('Failed to convert email part. (%s -> %s : %s)', $from, $to, $error));

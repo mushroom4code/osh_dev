@@ -4,6 +4,7 @@ namespace Bitrix\Catalog\Controller;
 
 use Bitrix\Catalog\Component\UseStore;
 use Bitrix\Catalog\Access\ActionDictionary;
+use Bitrix\Catalog\Controller\Product\SkuDeferredCalculations;
 use Bitrix\Catalog\Model\Event;
 use Bitrix\Main\Engine;
 use Bitrix\Main\Engine\Response\DataType\Page;
@@ -17,8 +18,7 @@ use Bitrix\Rest\RestException;
 
 class Product extends Controller implements EventBindInterface
 {
-	protected const ITEM = 'PRODUCT';
-	protected const LIST = 'PRODUCTS';
+	use SkuDeferredCalculations;
 
 	/**
 	 * @inheritDoc
@@ -42,20 +42,46 @@ class Product extends Controller implements EventBindInterface
 	{
 		$r = new Result();
 
-		if($action->getName() === 'update')
+		if ($action->getName() === 'add')
+		{
+			$r = $this->processBeforeAdd($action);
+		}
+		else if ($action->getName() === 'update')
 		{
 			$r = $this->processBeforeUpdate($action);
 		}
 
-		if(!$r->isSuccess())
+		if (!$r->isSuccess())
 		{
 			$this->addErrors($r->getErrors());
+
 			return null;
 		}
-		else
+
+		if ($this->isActionWithDefferedCalculation($action))
 		{
-			return parent::processBeforeAction($action);
+			$this->processBeforeDeferredCalculationAction();
 		}
+
+		return parent::processBeforeAction($action);
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @param Engine\Action $action
+	 * @param mixed $result
+	 *
+	 * @return void
+	 */
+	protected function processAfterAction(Engine\Action $action, $result)
+	{
+		if ($this->isActionWithDefferedCalculation($action))
+		{
+			$this->processAfterDeferredCalculationAction();
+		}
+
+		return parent::processAfterAction($action, $result);
 	}
 
 	/**
@@ -73,10 +99,14 @@ class Product extends Controller implements EventBindInterface
 		$fields = $arguments['fields'];
 		$productId = $arguments['id'];
 
-		$iblockId = $this->get($productId)['IBLOCK_ID'];
+		$iblockId = $this->getProductIblockId($productId);
 		$iblockIdOrigin = $fields['iblockId'] ?? null;
+		if ($iblockIdOrigin !== null)
+		{
+			$iblockIdOrigin = (int)$iblockIdOrigin;
+		}
 
-		if($iblockIdOrigin && $iblockIdOrigin !== $iblockId)
+		if ($iblockIdOrigin && $iblockIdOrigin !== $iblockId)
 		{
 			$r->addError(
 				new Error(
@@ -86,15 +116,13 @@ class Product extends Controller implements EventBindInterface
 				)
 			);
 		}
-		else
-		{
-			$fields['iblockId'] = $iblockId;
-			$arguments['fields'] = $fields;
-
-			$action->setArguments($arguments);
-		}
 
 		return $r;
+	}
+
+	protected function processBeforeAdd(Engine\Action $action): Result
+	{
+		return new Result();
 	}
 
 	//region Actions
@@ -112,13 +140,13 @@ class Product extends Controller implements EventBindInterface
 		}
 		else
 		{
-			return [static::ITEM =>$view->prepareFieldInfos(
+			return [$this->getServiceItemName() =>$view->prepareFieldInfos(
 				$r->getData()
 			)];
 		}
 	}
 
-	static protected function perfGetList(array $select, array $filter, array $order, $pageNavigation): array
+	static protected function perfGetList(array $select, array $filter, array $order, $pageNavigation = null): array
 	{
 		$rawRows = [];
 		$elementIds = [];
@@ -127,7 +155,7 @@ class Product extends Controller implements EventBindInterface
 			$order,
 			$filter,
 			false,
-			$pageNavigation,
+			$pageNavigation ?? false,
 			array('ID', 'IBLOCK_ID')
 		);
 		while($row = $rsData->Fetch())
@@ -152,7 +180,14 @@ class Product extends Controller implements EventBindInterface
 		return $rawRows;
 	}
 
-	public function listAction($select=[], $filter=[], $order=[], PageNavigation $pageNavigation): ?Page
+	/**
+	 * @param $select
+	 * @param $filter
+	 * @param $order
+	 * @param PageNavigation $pageNavigation
+	 * @return Page|null
+	 */
+	public function listAction(PageNavigation $pageNavigation, array $select = [], array $filter = [], array $order = []): ?Page
 	{
 		$r = $this->checkPermissionIBlockElementList($filter['IBLOCK_ID']);
 		if($r->isSuccess())
@@ -162,15 +197,37 @@ class Product extends Controller implements EventBindInterface
 			$select = empty($select)? array_merge(['*'], $this->getAllowedFieldsProduct()):$select;
 			$order = empty($order)? ['ID'=>'ASC']:$order;
 
-			$list = self::perfGetList($select, $filter, $order, self::getNavData($pageNavigation->getOffset()));
-			$this->attachPropertyValues($list, (int)$filter['IBLOCK_ID']);
-
-			foreach ($list as $row)
+			$groupFields = $this->splitFieldsByEntity(
+				array_flip($select)
+			);
+			$allProperties = isset($groupFields['elementFields']['PROPERTY_*']);
+			if ($allProperties)
 			{
-				$result[] = $row;
+				unset($groupFields['elementFields']['PROPERTY_*']);
 			}
 
-			return new Page(static::LIST, $result, function() use ($filter)
+			$productFields = array_keys($groupFields['productFields']);
+			$elementFields = array_keys($groupFields['elementFields']);
+			$propertyFields = $groupFields['propertyFields'];
+
+			$propertyFields = $this->preparePropertyFields($propertyFields);
+			$propertyIds = array_keys($propertyFields);
+			$list = self::perfGetList(array_merge($productFields, $elementFields), $filter, $order, self::getNavData($pageNavigation->getOffset()));
+
+			if (!empty($list))
+			{
+				if ($allProperties || !empty($propertyIds))
+				{
+					$this->attachPropertyValues($list, (int)$filter['IBLOCK_ID'], $propertyIds);
+				}
+
+				foreach ($list as $row)
+				{
+					$result[] = $row;
+				}
+			}
+
+			return new Page($this->getServiceListName(), $result, function() use ($filter)
 			{
 				return (int)\CIBlockElement::GetList([], $filter, []);
 			});
@@ -190,7 +247,7 @@ class Product extends Controller implements EventBindInterface
 			$r = $this->exists($id);
 			if($r->isSuccess())
 			{
-				return [static::ITEM => $this->get($id)];
+				return [$this->getServiceItemName() => $this->get($id)];
 			}
 		}
 
@@ -201,12 +258,12 @@ class Product extends Controller implements EventBindInterface
 		}
 	}
 
-	public function addAction($fields): ?array
+	public function addAction(array $fields): ?array
 	{
-		$r = $this->checkPermissionIBlockElementAdd($fields['IBLOCK_ID']);
+		$r = $this->checkPermissionAdd($fields['IBLOCK_ID']);
 		if($r->isSuccess())
 		{
-			if(isset($fields['IBLOCK_SECTION_ID']) && intval($fields['IBLOCK_SECTION_ID']>0))
+			if (isset($fields['IBLOCK_SECTION_ID']) && (int)$fields['IBLOCK_SECTION_ID'] > 0)
 			{
 				$r = $this->checkPermissionIBlockElementSectionBindUpdate($fields['IBLOCK_SECTION_ID']);
 			}
@@ -259,12 +316,13 @@ class Product extends Controller implements EventBindInterface
 		}
 	}
 
-	public function updateAction($id, array $fields): ?array
+	public function updateAction(int $id, array $fields): ?array
 	{
-		$r = $this->checkPermissionIBlockElementUpdate($id);
+		$fields['IBLOCK_ID'] ??= $this->getProductIblockId($id);
+		$r = $this->checkPermissionUpdate($id);
 		if($r->isSuccess())
 		{
-			if(isset($fields['IBLOCK_SECTION_ID']) && intval($fields['IBLOCK_SECTION_ID']>0))
+			if (isset($fields['IBLOCK_SECTION_ID']) && (int)$fields['IBLOCK_SECTION_ID'] > 0)
 			{
 				$r = $this->checkPermissionIBlockElementSectionBindUpdate($fields['IBLOCK_SECTION_ID']);
 			}
@@ -318,25 +376,21 @@ class Product extends Controller implements EventBindInterface
 		}
 	}
 
-	public function deleteAction($id): ?bool
+	public function deleteAction(int $id): ?bool
 	{
-		$r = $this->checkPermissionIBlockElementDelete($id);
+		$r = $this->checkPermissionDelete($id);
 		if($r->isSuccess())
 		{
 			$r = $this->exists($id);
 		}
 		if($r->isSuccess())
 		{
-			$r = \Bitrix\Catalog\Model\Product::delete($id);
-			if($r->isSuccess())
+			if (!\CIBlockElement::Delete($id))
 			{
-				if (!\CIBlockElement::Delete($id))
-				{
-					if ($ex = self::getApplication()->GetException())
-						$r->addError(new Error($ex->GetString(), $ex->GetId()));
-					else
-						$r->addError(new Error('delete iBlockElement error'));
-				}
+				if ($ex = self::getApplication()->GetException())
+					$r->addError(new Error($ex->GetString(), $ex->GetId()));
+				else
+					$r->addError(new Error('delete iBlockElement error'));
 			}
 		}
 
@@ -572,8 +626,10 @@ class Product extends Controller implements EventBindInterface
 				{
 					if($property['PROPERTY_TYPE'] !== 'F' && !array_key_exists($property['ID'], $propertyValues))
 					{
-						if(!array_key_exists($property['ID'], $fields['PROPERTY_VALUES']))
+						if (!array_key_exists($property['ID'], $fields))
+						{
 							$fields[$property['ID']] = [];
+						}
 
 						$fields[$property['ID']][] = [
 							'VALUE_ID' => $property['PROPERTY_VALUE_ID'],
@@ -584,6 +640,7 @@ class Product extends Controller implements EventBindInterface
 				}
 			}
 		}
+
 		return $fields;
 	}
 
@@ -674,22 +731,26 @@ class Product extends Controller implements EventBindInterface
 	}
 
 	/**
-	 * @param array $result
+	 * @param array &$result
 	 * @param int $iblockId
+	 * @param array $propertyIds
+	 * @return void
 	 */
-	protected function attachPropertyValues(array &$result, int $iblockId): void
+	protected function attachPropertyValues(array &$result, int $iblockId, array $propertyIds = []): void
 	{
 		if ($iblockId <= 0)
 		{
 			return;
 		}
 
+		$propertyFilter = !empty($propertyIds) ? ['ID' => $propertyIds] : [];
+
 		$propertyValues = [];
 		\CIBlockElement::getPropertyValuesArray(
 			$propertyValues,
 			$iblockId,
 			['ID' => array_keys($result)],
-			[],
+			$propertyFilter,
 			['USE_PROPERTY_ID' => 'Y']
 		);
 
@@ -754,6 +815,17 @@ class Product extends Controller implements EventBindInterface
 					$result[$k]['PROPERTY_' . $propId] = $value;
 				}
 			}
+			elseif (!empty($propertyIds))
+			{
+				/**
+				 * if property values are empty $propertyValues is empty
+				 */
+
+				foreach ($propertyIds as $propId)
+				{
+					$result[$k]['PROPERTY_' . $propId] = null;
+				}
+			}
 		}
 	}
 
@@ -780,7 +852,7 @@ class Product extends Controller implements EventBindInterface
 	 */
 	protected function getAllowedFieldsProduct(): array
 	{
-		return [
+		$result = [
 			'TYPE',
 			'AVAILABLE',
 			'BUNDLE',
@@ -791,8 +863,6 @@ class Product extends Controller implements EventBindInterface
 			'SUBSCRIBE',
 			'VAT_ID',
 			'VAT_INCLUDED',
-			'PURCHASING_PRICE',
-			'PURCHASING_CURRENCY',
 			'BARCODE_MULTI',
 			'WEIGHT',
 			'LENGTH',
@@ -808,6 +878,13 @@ class Product extends Controller implements EventBindInterface
 			'SUBSCRIBE_RAW',
 			'CAN_BUY_ZERO_RAW'
 		];
+
+		if ($this->accessController->check(ActionDictionary::ACTION_PRODUCT_PURCHASE_INFO_VIEW))
+		{
+			array_push($result, 'PURCHASING_PRICE', 'PURCHASING_CURRENCY');
+		}
+
+		return $result;
 	}
 
 	protected function checkFieldsDownload($fields)
@@ -890,13 +967,66 @@ class Product extends Controller implements EventBindInterface
 	//endregion checkPermissionController
 
 	//region checkPermissionIBlock
-	protected function checkPermissionIBlockElementAdd($iblockId)
+	protected function checkPermissionAdd(int $iblockId): Result
+	{
+		$result = new Result();
+
+		$result->addErrors(
+			$this->checkPermissionIBlockElementAdd($iblockId)->getErrors()
+		);
+		$result->addErrors(
+			$this->checkPermissionCatalogProductAdd()->getErrors()
+		);
+
+		return $result;
+	}
+
+	protected function checkPermissionCatalogProductAdd(): Result
+	{
+		$result = new Result();
+
+		if (!$this->accessController->check(ActionDictionary::ACTION_PRODUCT_ADD))
+		{
+			$result->addError(new Error('Access Denied', 200040300040));
+		}
+
+		return $result;
+	}
+
+	protected function checkPermissionIBlockElementAdd(int $iblockId): Result
 	{
 		//return $this->checkPermissionIBlockElementList($iblockId);
 		return $this->checkPermissionIBlockElementModify($iblockId, 0);
 	}
 
-	protected function checkPermissionIBlockElementUpdate($elementId)
+	protected function checkPermissionUpdate(int $elementId): Result
+	{
+		$result = new Result();
+
+		$result->addErrors(
+			$this->checkPermissionIBlockElementUpdate($elementId)->getErrors()
+		);
+		$result->addErrors(
+			$this->checkPermissionCatalogProductUpdate($elementId)->getErrors()
+		);
+
+		return $result;
+	}
+
+	protected function checkPermissionCatalogProductUpdate(int $elementId): Result
+	{
+		$result = new Result();
+
+		if (!$this->accessController->check(ActionDictionary::ACTION_PRODUCT_EDIT))
+		{
+			$result->addError(new Error('Access Denied', 200040300040));
+		}
+
+		return $result;
+	}
+
+
+	protected function checkPermissionIBlockElementUpdate(int $elementId)
 	{
 		$iblockId = \CIBlockElement::GetIBlockByID($elementId);
 		return $this->checkPermissionIBlockElementModify($iblockId, $elementId);
@@ -947,7 +1077,33 @@ class Product extends Controller implements EventBindInterface
 		return $r;
 	}
 
-	protected function checkPermissionIBlockElementDelete($elementId)
+	protected function checkPermissionDelete(int $elementId): Result
+	{
+		$result = new Result();
+
+		$result->addErrors(
+			$this->checkPermissionIBlockElementDelete($elementId)->getErrors()
+		);
+		$result->addErrors(
+			$this->checkPermissionCatalogProductDelete($elementId)->getErrors()
+		);
+
+		return $result;
+	}
+
+	protected function checkPermissionCatalogProductDelete(int $elementId): Result
+	{
+		$result = new Result();
+
+		if (!$this->accessController->check(ActionDictionary::ACTION_PRODUCT_DELETE))
+		{
+			$result->addError(new Error('Access Denied', 200040300040));
+		}
+
+		return $result;
+	}
+
+	protected function checkPermissionIBlockElementDelete(int $elementId): Result
 	{
 		$r = new Result();
 
@@ -1056,11 +1212,11 @@ class Product extends Controller implements EventBindInterface
 			throw new RestException('event object not found trying to process event');
 		}
 
-		if($event instanceof Event)
+		if($event instanceof Event) // update, add
 		{
 			$id = $event->getParameter('id');
 		}
-		else if($event instanceof \Bitrix\Main\ORM\Event)
+		else if($event instanceof \Bitrix\Main\ORM\Event) // delete
 		{
 			$item = $event->getParameter('id');
 			$id = is_array($item) ? $item['ID']: $item;
@@ -1071,9 +1227,19 @@ class Product extends Controller implements EventBindInterface
 			throw new RestException('id not found trying to process event');
 		}
 
+		$product = \Bitrix\Catalog\Model\Product::getCacheItem($id);
+
+		$type = $product['TYPE']  ?? null;
+
+		if (!$type)
+		{
+			throw new RestException('type is not specified trying to process event');
+		}
+
 		return [
 			'FIELDS' => [
-				'ID' => $id
+				'ID' => $id,
+				'TYPE' => $type
 			],
 		];
 	}
@@ -1091,4 +1257,25 @@ class Product extends Controller implements EventBindInterface
 		];
 	}
 	// endregion
+
+	// region Internal tools
+
+	/**
+	 * Returns iblock id for product, if exists.
+	 *
+	 * @param int $productId
+	 * @return int|null
+	 */
+	protected static function getProductIblockId(int $productId): ?int
+	{
+		$iblockId = \CIBlockElement::GetIBlockByID($productId);
+
+		return
+			$iblockId === false
+				? null
+				: $iblockId
+		;
+	}
+
+	// endRegion
 }

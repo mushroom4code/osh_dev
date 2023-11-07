@@ -1,4 +1,5 @@
 <?php
+
 namespace Bitrix\Catalog\Grid\Panel;
 
 use Bitrix\Main;
@@ -161,7 +162,8 @@ class ProductGroupAction extends Iblock\Grid\Panel\GroupAction
 			if ($this->isUiGrid())
 			{
 				$data[] = $this->getApplyButtonWithConfirm([
-					'APPLY_BUTTON_ID' => 'send_product'
+					'APPLY_BUTTON_ID' => 'send_product',
+					'CONFIRM_MESSAGE' => Loc::getMessage('IBLOCK_GRID_PANEL_ACTION_SET_PRODUCT_FIELD_CONFIRM'),
 				]);
 			}
 
@@ -265,7 +267,11 @@ class ProductGroupAction extends Iblock\Grid\Panel\GroupAction
 		}
 
 		$params['APPLY_BUTTON_ID'] = 'convert_product_to_service_confirm';
-		$params['DEFAULT_CONFIRM_MESSAGE'] = Loc::getMessage('IBLOCK_GRID_PANEL_ACTION_CONVERT_PRODUCT_TO_SERVICE_CONFIRM');
+		$params['CONFIRM_MESSAGE'] =
+			Catalog\Config\State::isUsedInventoryManagement()
+				? Loc::getMessage('IBLOCK_GRID_PANEL_ACTION_CONVERT_PRODUCT_TO_SERVICE_CONFIRM_WITH_INVENTORY')
+				: Loc::getMessage('IBLOCK_GRID_PANEL_ACTION_CONVERT_PRODUCT_TO_SERVICE_CONFIRM_WITHOUT_INVENTORY')
+		;
 
 		return [
 			'name' => (string)($params['NAME'] ?? Loc::getMessage('IBLOCK_GRID_PANEL_ACTION_CONVERT_PRODUCT_TO_SERVICE')),
@@ -294,7 +300,7 @@ class ProductGroupAction extends Iblock\Grid\Panel\GroupAction
 		}
 
 		$params['APPLY_BUTTON_ID'] = 'convert_service_to_product_confirm';
-		$params['DEFAULT_CONFIRM_MESSAGE'] = Loc::getMessage('IBLOCK_GRID_PANEL_ACTION_CONVERT_SERVICE_TO_PRODUCT_CONFIRM');
+		$params['CONFIRM_MESSAGE'] = Loc::getMessage('IBLOCK_GRID_PANEL_ACTION_CONVERT_SERVICE_TO_PRODUCT_CONFIRM_MESSAGE_MSGVER_1');
 
 		return [
 			'name' => (string)($params['NAME'] ?? Loc::getMessage('IBLOCK_GRID_PANEL_ACTION_CONVERT_SERVICE_TO_PRODUCT')),

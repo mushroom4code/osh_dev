@@ -1,10 +1,26 @@
 export const DialogType = Object.freeze({
-	private: 'private',
+	user: 'user',
 	chat: 'chat',
 	open: 'open',
-	call: 'call',
-	crm: 'crm',
+	general: 'general',
+	videoconf: 'videoconf',
 	announcement: 'announcement',
+	call: 'call',
+	support24Notifier: 'support24Notifier',
+	support24Question: 'support24Question',
+	crm: 'crm',
+	sonetGroup: 'sonetGroup',
+	calendar: 'calendar',
+	tasks: 'tasks',
+	thread: 'thread',
+	mail: 'mail',
+	lines: 'lines',
+});
+
+export const DialogScrollThreshold = Object.freeze({
+	none: 'none',
+	nearTheBottom: 'nearTheBottom',
+	halfScreenUp: 'halfScreenUp'
 });
 
 export const DialogCrmType = Object.freeze({
@@ -37,4 +53,11 @@ export const DialogState = Object.freeze({
 	loading: 'loading',
 	empty: 'empty',
 	show: 'show'
+});
+
+export const DialogBlockType = Object.freeze({
+	dateGroup: 'dateGroup',
+	authorGroup: 'authorGroup',
+	newMessages: 'newMessages',
+	markedMessages: 'markedMessages'
 });

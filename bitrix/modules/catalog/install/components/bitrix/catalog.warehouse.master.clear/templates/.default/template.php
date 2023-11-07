@@ -25,7 +25,10 @@ $messages = Loc::loadLanguageFile(__FILE__);
 ]);
 
 CJSCore::Init(array('marketplace'));
-$APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'catalog-warehouse-master-clear');
+$APPLICATION->SetPageProperty(
+	'BodyClass',
+	$APPLICATION->GetPageProperty('BodyClass') . ' catalog-warehouse-master-clear'
+);
 ?>
 
 <div class="catalog-warehouse__master-clear--content">
@@ -65,6 +68,7 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 	isWithOrdersMode = <?= CUtil::PhpToJSObject((bool)$arResult['IS_WITH_ORDERS_MODE']) ?>;
 	isLeadEnabled = <?= CUtil::PhpToJSObject((bool)$arResult['IS_LEAD_ENABLED']) ?>;
 	isPlanRestricted = <?= CUtil::PhpToJSObject((bool)$arResult['IS_PLAN_RESTRICTED']) ?>;
+	isRestrictedAccess = <?= CUtil::PhpToJSObject((bool)$arResult['IS_RESTRICTED_ACCESS']) ?>;
 	isUsed = <?= CUtil::PhpToJSObject((bool)$arResult['IS_USED']) ?>;
 	isEmpty = <?= CUtil::PhpToJSObject((bool)$arResult['IS_EMPTY']) ?>;
 	presetList = <?= CUtil::PhpToJSObject($arResult['PRESET_LIST']) ?>;
@@ -76,6 +80,7 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 		data: () => ({
 			isEmpty: isEmpty,
 			isPlanRestricted: isPlanRestricted,
+			isRestrictedAccess: isRestrictedAccess,
 			isUsedOneC: isUsedOneC,
 			mode: mode,
 			isWithOrdersMode: isWithOrdersMode,
@@ -126,6 +131,10 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 					{
 						classes.push('ui-btn-wait');
 					}
+					if (this.isRestrictedAccess === true)
+					{
+						classes.push('ui-btn-disabled');
+					}
 					return classes;
 				},
 				getObjectClassMP()
@@ -140,6 +149,10 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 					if (this.showLoaderMP === true)
 					{
 						classes.push('ui-btn-wait');
+					}
+					if (this.isRestrictedAccess === true)
+					{
+						classes.push('ui-btn-disabled');
 					}
 					return classes;
 				},
@@ -180,6 +193,13 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 				},
 				handleInstallPresetClick()
 				{
+					if (this.isPlanRestricted)
+					{
+						this.showRestrictionSlider();
+
+						return;
+					}
+
 					this.showLoader = true;
 					var controller = new BX.Catalog.StoreUse.Controller();
 					controller
@@ -195,6 +215,13 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 				},
 				handleEnableClick(sliderType)
 				{
+					if (this.isRestrictedAccess)
+					{
+						this.showRestrictedRightsErrorPopup();
+
+						return;
+					}
+
 					this.setSliderType(sliderType);
 					var storeControlHelpArticleId = 15718276;
 
@@ -227,6 +254,13 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 				},
 				handleDisableClick()
 				{
+					if (this.isRestrictedAccess)
+					{
+						this.showRestrictedRightsErrorPopup();
+
+						return;
+					}
+
 					this.showConfirmDisablePopup();
 				},
 				isGridAlreadyOpened()
@@ -246,17 +280,15 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 				{
 					var list = [];
 					var preset = [];
-					list = BX.UI.Switcher.getList()
-					.filter(function (item) {
-						return item.checked === true;
-					});
-					if (list.length>0)
+					list = BX.UI.Switcher.getList().filter((item) => item.isChecked());
+					if (list.length > 0)
 					{
-						list.forEach((item)=>{
+						list.forEach((item) => {
 							preset.push(item.id)
 						})
 					}
-					return preset.length>0 ? preset : ['empty'];
+
+					return preset.length > 0 ? preset : ['empty'];
 				},
 				_processEnableResponse(promise)
 				{
@@ -409,6 +441,15 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 				{
 					(new BX.Catalog.StoreUse.DialogError(options)).popup();
 				},
+				showRestrictedRightsErrorPopup()
+				{
+					var storeControlHelpArticleId = 16556596;
+
+					this.showErrorPopup({
+						text: this.loc.CAT_WAREHOUSE_MASTER_CLEAR_RIGHTS_RESTRICTED,
+						helpArticleId: storeControlHelpArticleId
+					});
+				},
 				showEnablePopup()
 				{
 					(new BX.Catalog.StoreUse.DialogEnable()).popup();
@@ -464,7 +505,7 @@ $APPLICATION->SetPageProperty('BodyClass', ($bodyClass ? $bodyClass.' ' : '').'c
 						<div class="catalog-warehouse__master-clear--selection-block">
 							<div class="catalog-warehouse__master-clear--item" :class="{'--disable': item.available === 'N'}"  v-for="(item, index) in this.presetList">
 								<div class="catalog-warehouse__master-clear--switcher">
-									<span class="ui-switcher-color-green ui-switcher ui-switcher-size-sm" :data-switcher="getDataSwitcher(item, index)">
+									<span class="ui-switcher ui-switcher-color-green ui-switcher-size-sm" :data-switcher="getDataSwitcher(item, index)">
 										<span class="ui-switcher-cursor"></span>
 										<span class="ui-switcher-enabled"><?=Loc::getMessage('CAT_WAREHOUSE_MASTER_CLEAR_7')?></span>
 										<span class="ui-switcher-disabled"><?=Loc::getMessage('CAT_WAREHOUSE_MASTER_CLEAR_8')?></span>

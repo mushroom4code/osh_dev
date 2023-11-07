@@ -23,7 +23,7 @@ class CAllSocNetLogComments
 		if (
 			!$arSiteWorkgroupsPage
 			&& IsModuleInstalled("extranet")
-			&& $arFields["ENTITY_TYPE"] == SONET_ENTITY_GROUP
+			&& ($arFields["ENTITY_TYPE"] ?? null) == SONET_ENTITY_GROUP
 		)
 		{
 			$rsSite = CSite::GetList("sort", "desc", Array("ACTIVE" => "Y"));
@@ -624,7 +624,7 @@ class CAllSocNetLogComments
 		}
 
 		if (!(
-			$arLogComment["EVENT_ID"] == "tasks_comment"
+			$arLogComment["EVENT_ID"] === "tasks_comment"
 			&& !\Bitrix\Socialnetwork\ComponentHelper::checkLivefeedTasksAllowed()
 		))
 		{
@@ -637,7 +637,12 @@ class CAllSocNetLogComments
 							"TYPE" => "LC",
 							"FOR_ALL_ACCESS" => $bHasAccessAll
 						)
-					)
+					),
+					true,
+					[
+						'SET_ENTITY' => 'Y',
+						'SET_ENTRY' => 'Y',
+					]
 				);
 			}
 			else // for all, mysql only
@@ -654,7 +659,9 @@ class CAllSocNetLogComments
 					),
 					false, // sendpull
 					array(
-						"TAG_SET" => $tag
+						"TAG_SET" => $tag,
+						'SET_ENTITY' => 'Y',
+						'SET_ENTRY' => 'Y',
 					)
 				);
 
@@ -668,7 +675,9 @@ class CAllSocNetLogComments
 					),
 					true, // sendpull
 					array(
-						"TAG_CHECK" => $tag
+						"TAG_CHECK" => $tag,
+						'SET_ENTITY' => 'Y',
+						'SET_ENTRY' => 'Y',
 					)
 				);
 			}
@@ -824,7 +833,7 @@ class CAllSocNetLogComments
 				foreach ($arMention as $mentionUserID)
 				{
 					$bHaveRights = (
-						$arTitleRes["IS_CRM"] != "Y"
+						($arTitleRes["IS_CRM"] ?? null) != "Y"
 						|| COption::GetOptionString("crm", "enable_livefeed_merge", "N") == "Y"
 							? CSocNetLogRights::CheckForUserOnly($arCommentFields["LOG_ID"], $mentionUserID)
 							: false
@@ -857,7 +866,7 @@ class CAllSocNetLogComments
 
 					if (
 						!$bHaveRights
-						&& $arTitleRes["IS_CRM"] == "Y"
+						&& ($arTitleRes["IS_CRM"] ?? null) == "Y"
 					)
 					{
 						$dbLog = CSocNetLog::GetList(

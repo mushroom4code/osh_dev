@@ -1,5 +1,7 @@
 <?php
 
+use Bitrix\Main\Web\Uri;
+
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 {
 	die();
@@ -38,7 +40,7 @@ class BizprocGlobalFieldListComponent extends CBitrixComponent implements \Bitri
 		}
 
 		$arParams['MODE'] = in_array($arParams['MODE'], [self::VAR_MODE, self::CONST_MODE]) ? $arParams['MODE'] : null;
-		$arParams['SET_TITLE'] = ($arParams['SET_TITLE'] === 'N' ? 'N' : 'Y');
+		$arParams['SET_TITLE'] = (isset($arParams['SET_TITLE']) && $arParams['SET_TITLE'] === 'N' ? 'N' : 'Y');
 
 		return $arParams;
 	}
@@ -80,21 +82,7 @@ class BizprocGlobalFieldListComponent extends CBitrixComponent implements \Bitri
 		}
 	}
 
-	private function getTitleCreateButton(): ?string
-	{
-		if ($this->mode === self::VAR_MODE)
-		{
-			return \Bitrix\Main\Localization\Loc::getMessage('BIZPROC_GLOBALFIELDS_LIST_CREATE_VARIABLE');
-		}
-		elseif ($this->mode === self::CONST_MODE)
-		{
-			return \Bitrix\Main\Localization\Loc::getMessage('BIZPROC_GLOBALFIELDS_LIST_CREATE_CONSTANT');
-		}
-		else
-		{
-			return '';
-		}
-	}
+
 
 	private function getGridColumnNameTitle(): ?string
 	{
@@ -273,7 +261,7 @@ HTML;
 		\Bitrix\UI\Toolbar\Facade\Toolbar::addFilter($filterParams);
 
 		$createButton = \Bitrix\UI\Buttons\CreateButton::create([
-			'text' => $this->getTitleCreateButton(),
+			'text' => \Bitrix\Main\Localization\Loc::getMessage('BIZPROC_GLOBALFIELDS_LIST_CREATE_BUTTON'),
 			'color' => \Bitrix\UI\Buttons\Color::SUCCESS,
 			'dataset' => [
 				'toolbar-collapsed-icon' => \Bitrix\UI\Buttons\Icon::ADD,
@@ -799,7 +787,7 @@ HTML;
 		$userEmptyAvatarHTMLClass = ' bizproc-grid-avatar-empty';
 		if ($userInfo['AVATAR'])
 		{
-			$userAvatar =" style='background-image: url(\"{$userInfo['AVATAR']}\")'";
+			$userAvatar =' style="background-image: url(\'' . Uri::urnEncode($userInfo['AVATAR']) .'\')"';
 			$userEmptyAvatarHTMLClass = '';
 		}
 
@@ -824,7 +812,7 @@ HTML;
 			'URL' => null,
 		];
 
-		$usersInfo =  \Bitrix\Bizproc\Automation\Helper::prepareUserSelectorEntities(
+		$usersInfo = \Bitrix\Bizproc\Automation\Helper::prepareUserSelectorEntities(
 			$this->arParams['DOCUMENT_TYPE'],
 			'user_' . $userId
 		);
@@ -833,7 +821,7 @@ HTML;
 		{
 			return $user;
 		}
-		if ($this->usersInfo[$userId])
+		if (isset($this->usersInfo[$userId]))
 		{
 			return $this->usersInfo[$userId];
 		}

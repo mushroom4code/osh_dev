@@ -3,6 +3,7 @@
 namespace Bitrix\Im\Configuration;
 
 use Bitrix\Im\Common;
+use Bitrix\Im\V2\Settings\CacheManager;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Error;
 use Bitrix\Main\ObjectPropertyException;
@@ -63,29 +64,34 @@ class Manager
 
 		self::disableUserSearch($userId, $settings['general']);
 
+		if (isset($settings['general']['notifyScheme']) && $settings['general']['notifyScheme'] === 'simple')
+		{
+			$settings['notify'] = Notification::getSimpleNotifySettings($settings['general']);
+		}
+
 		$userPresetId =
 			\Bitrix\Im\Model\OptionGroupTable::query()
 				->addSelect('ID')
 				->where('USER_ID', $userId)
-				->fetch()['ID']
+				->fetch()
 		;
-
-		if (isset($settings['general']['notifyScheme']) && $settings['general']['notifyScheme'] === 'simple')
-		{
-			$settings['notify'] = self::getSimpleNotifySettings($settings['general']);
-		}
 
 		if (!$userPresetId)
 		{
-			$userPresetId = Configuration::createUserPreset($userId, $settings);
-		}
-		else
-		{
-			Configuration::updatePresetSettings($userPresetId, $userId, $settings);
-			Configuration::chooseExistingPreset($userPresetId, $userId);
+			Configuration::createUserPreset($userId, $settings);
+
+			CacheManager::getUserCache($userId)->clearCache();
+			self::enableUserSearch($userId, $settings['general']);
+
+			return $result;
 		}
 
-		Configuration::cleanUserCache($userId);
+		$userPresetId = $userPresetId['ID'];
+		Configuration::updatePresetSettings($userPresetId, $userId, $settings);
+		Configuration::chooseExistingPreset($userPresetId, $userId);
+
+		CacheManager::getPresetCache($userPresetId)->clearCache();
+
 		self::enableUserSearch($userId, $settings['general']);
 
 		return $result;
@@ -104,8 +110,9 @@ class Manager
 			\Bitrix\Im\Model\OptionGroupTable::query()
 				->addSelect('ID')
 				->where('USER_ID', $userId)
-				->fetch()['ID']
+				->fetch()
 		;
+		$userPresetId = $userPresetId['ID'] ?? null;
 
 		if ($type === self::NOTIFY)
 		{
@@ -141,14 +148,18 @@ class Manager
 			self::enableUserSearch($userId, $settings);
 		}
 
-		Configuration::cleanUserCache($userId);
+		CacheManager::getPresetCache($userPresetId)->clearCache();
+		CacheManager::getUserCache($userId)->clearCache();
 
 		return $result;
 	}
 
 	public static function isSettingsMigrated(): bool
 	{
-		return COption::GetOptionString('im', 'migration_to_new_settings') === 'Y';
+		return
+			COption::GetOptionString('im', 'migration_to_new_settings') === 'Y'
+			|| COption::GetOptionString('im', \Bitrix\Im\Configuration\Configuration::DEFAULT_PRESET_SETTING_NAME, null) !== null
+		;
 	}
 
 	public static function isUserMigrated(int $userId): bool
@@ -236,41 +247,6 @@ class Manager
 		{
 			\CIMStatus::Set($userId, ['STATUS' => $generalSettings[self::STATUS]]);
 		}
-	}
-
-
-	public static function getSimpleNotifySettings(array $generalSettings): array
-	{
-		$defaultGeneralSettings = General::getDefaultSettings();
-
-		$send['SITE'] = $generalSettings['notifySchemeSendSite'] ?? $defaultGeneralSettings['notifySchemeSendSite'];
-		$send['MAIL'] = $generalSettings['notifySchemeSendEmail'] ?? $defaultGeneralSettings['notifySchemeSendEmail'];
-		$send['XMPP'] = $generalSettings['notifySchemeSendXmpp'] ?? $defaultGeneralSettings['notifySchemeSendXmpp'];
-		$send['PUSH'] = $generalSettings['notifySchemeSendPush'] ?? $defaultGeneralSettings['notifySchemeSendPush'];
-
-		$notifySettings = Notification::getDefaultSettings();
-
-		foreach ($notifySettings as $moduleId => $moduleSchema)
-		{
-			foreach ($moduleSchema['NOTIFY'] as $eventName => $eventSchema)
-			{
-				foreach (['SITE', 'MAIL', 'XMPP', 'PUSH'] as $type)
-				{
-					if ($eventSchema['DISABLED'][$type])
-					{
-						continue;
-					}
-
-					$notifySettings[$moduleId]['NOTIFY'][$eventName][$type] =
-						!$send[$type]
-							? false
-							: $eventSchema[$type]
-					;
-				}
-			}
-		}
-
-		return $notifySettings;
 	}
 
 }

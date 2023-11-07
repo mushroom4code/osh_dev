@@ -238,7 +238,10 @@ if(!$errorMessage && $USER->IsAuthorized() && $arResult["PERMISSION"] > "R")
 	{
 		CUtil::JSPostUnescape();		
 
-		if (intval($_REQUEST["max_items"]) > 0)
+		if (
+			isset($_REQUEST["max_items"])
+			&& intval($_REQUEST["max_items"]) > 0
+		)
 		{
 			$arUserOptions = CUserOptions::GetOption("socialnetwork", "~menu_".$arParams["ENTITY_TYPE"]."_".$arParams["ENTITY_ID"], false, 0);
 
@@ -927,17 +930,18 @@ if ($arParams["USE_MAIN_MENU"] == "Y")
 {
 	$arResult["PAGE_ID"] = $page_id;
 
+	$customMenu = CMenuCustom::getInstance();
+
 	foreach ($arResult["FEATURES"] as $arFeature)
 	{
-		$GLOBALS["BX_MENU_CUSTOM"]->AddItem($arParams["MAIN_MENU_TYPE"], array( 
-				"TEXT" => $arFeature["FeatureName"],
-				"LINK" => $arFeature["Url"],
-				"SELECTED" => ($arResult["PAGE_ID"] == $arFeature["feature"]),
-				"PERMISSION" => "R",
-				"DEPTH_LEVEL" => 1,
-				"IS_PARENT" => false,
-			)
-		);
+		$customMenu->AddItem($arParams["MAIN_MENU_TYPE"], array(
+			"TEXT" => $arFeature["FeatureName"],
+			"LINK" => $arFeature["Url"],
+			"SELECTED" => ($arResult["PAGE_ID"] == $arFeature["feature"]),
+			"PERMISSION" => "R",
+			"DEPTH_LEVEL" => 1,
+			"IS_PARENT" => false,
+		));
 	}
 }
 else

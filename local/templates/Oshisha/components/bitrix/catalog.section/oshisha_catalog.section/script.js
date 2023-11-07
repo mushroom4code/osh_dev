@@ -195,6 +195,8 @@
                     defaultData.AJAX_ID = this.ajaxId;
                 }
 
+                loaderForSite('appendLoader');
+
                 BX.ajax({
                     url: this.componentPath + '/ajax.php' + (document.location.href.indexOf('clear_cache=Y') !== -1 ? '?clear_cache=Y' : ''),
                     method: 'POST',
@@ -205,6 +207,7 @@
                         if (!result || !result.JS)
                             return;
 
+                        loaderForSite('remove');
                         BX.ajax.processScripts(
                             BX.processHTML(result.JS).SCRIPT,
                             false,
@@ -215,6 +218,7 @@
                     }, this)
                 });
             },
+
             sendRequestRefreshCatalog: function (data, url) {
                 var defaultData = {
                     siteId: this.siteId,
@@ -228,6 +232,7 @@
                 }
 
                 $('.js__filter-close.disabled_class').removeClass('disabled_class');
+                loaderForSite('appendLoader')
                 BX.ajax({
                     url: '/local/templates/Oshisha/components/bitrix/catalog.section/oshisha_catalog.section/ajax.php' +
                         (document.location.href.indexOf('clear_cache=Y') !== -1 ? '?clear_cache=Y' : ''),
@@ -252,7 +257,7 @@
                                 NavPageCount: parseInt(navParams.NavPageCount) || 1
                             };
                         }
-
+                        loaderForSite('remove')
                         BX.ajax.processScripts(
                             BX.processHTML(result.JS).SCRIPT,
                             false,

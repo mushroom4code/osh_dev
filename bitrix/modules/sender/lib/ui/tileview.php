@@ -18,14 +18,14 @@ Loc::loadMessages(__FILE__);
  */
 class TileView
 {
-	const MAX_COUNT = 4;
-	const COLOR_GREY = '#eef2f4';
+	public const MAX_COUNT = 4;
+	public const COLOR_GREY = '#eef2f4';
 
-	const SECTION_ALL = 'all';
-	const SECTION_LAST = 'last';
-	const SECTION_FREQ = 'freq';
-	const SECTION_SYS = 'system';
-	const SECTION_MY = 'my';
+	public const SECTION_ALL = 'all';
+	public const SECTION_LAST = 'last';
+	public const SECTION_FREQ = 'freq';
+	public const SECTION_SYS = 'system';
+	public const SECTION_MY = 'my';
 
 	/** @var array $tiles List of tiles. */
 	protected $tiles = [];
@@ -62,7 +62,7 @@ class TileView
 	 *
 	 * @return $this
 	 */
-	public function addTile($id = null, $name, $data = [], $bgColor = null, $color = null)
+	public function addTile($id, $name, $data = [], $bgColor = null, $color = null)
 	{
 		$this->tiles[] = $this->getTile($id, $name, $data, $bgColor, $color);
 		return $this;
@@ -79,7 +79,7 @@ class TileView
 	 *
 	 * @return array
 	 */
-	public function getTile($id = null, $name, $data = [], $bgColor = null, $color = null)
+	public function getTile($id, $name, $data = [], $bgColor = null, $color = null)
 	{
 		return [
 			'id' => $id,

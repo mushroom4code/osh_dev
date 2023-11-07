@@ -1,4 +1,5 @@
-<?
+<?php
+
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 /** @global CMain $APPLICATION */
 /** @global CUser $USER */
@@ -28,8 +29,9 @@ if(isset($_REQUEST["list_section_id"]))
 else
 	$section_id = intval($arParams["~SECTION_ID"]);
 
+$arResult['IS_SOCNET_GROUP_CLOSED'] = false;
 if (
-	intval($arParams["~SOCNET_GROUP_ID"]) > 0
+	intval($arParams["~SOCNET_GROUP_ID"] ?? null) > 0
 	&& CModule::IncludeModule("socialnetwork")
 )
 {
@@ -52,7 +54,7 @@ $lists_perm = CListPermissions::CheckAccess(
 	$USER,
 	$arParams["~IBLOCK_TYPE_ID"],
 	$IBLOCK_ID,
-	$arParams["~SOCNET_GROUP_ID"]
+	$arParams["~SOCNET_GROUP_ID"] ?? null
 );
 if($lists_perm < 0)
 {
@@ -324,7 +326,7 @@ if(
 		"CHECK_PERMISSIONS" => ($arParams["CAN_EDIT"] || $arParams["SOCNET_GROUP_ID"]? "N": "Y"), //This cancels iblock permissions for trusted users
 	);
 
-	if($_POST["action_all_rows_".$arResult["GRID_ID"]] == "Y")
+	if (isset($_POST["action_all_rows_".$arResult["GRID_ID"]]) && $_POST["action_all_rows_".$arResult["GRID_ID"]] === "Y")
 	{
 		if(!$arResult["ANY_SECTION"])
 			$arFilter["SECTION_ID"] = $arResult["SECTION_ID"];
@@ -554,7 +556,7 @@ foreach($listFields as $fieldId => $field)
 	{
 		$customFilter[$preparedField["id"]] = $preparedField["customFilter"];
 	}
-	if($preparedField["type"] == "custom_entity")
+	if(isset($preparedField['type']) && $preparedField["type"] === "custom_entity")
 	{
 		if(!empty($field["PROPERTY_USER_TYPE"]["USER_TYPE"]))
 			$fieldType = $field["PROPERTY_USER_TYPE"]["USER_TYPE"];
@@ -562,8 +564,10 @@ foreach($listFields as $fieldId => $field)
 			$fieldType = $field["TYPE"];
 		$field["IBLOCK_ID"] = $arResult["IBLOCK_ID"];
 		$field["IBLOCK_TYPE_ID"] = $arParams["IBLOCK_TYPE_ID"];
-		if(!is_array($arResult["FILTER_CUSTOM_ENTITY"][$fieldType]))
-			$arResult["FILTER_CUSTOM_ENTITY"][$fieldType] = array();
+		if (!isset($arResult["FILTER_CUSTOM_ENTITY"][$fieldType]) || !is_array($arResult["FILTER_CUSTOM_ENTITY"][$fieldType]))
+		{
+			$arResult["FILTER_CUSTOM_ENTITY"][$fieldType] = [];
+		}
 		$arResult["FILTER_CUSTOM_ENTITY"][$fieldType][] = $field;
 	}
 
@@ -678,8 +682,10 @@ if ($arResult["SHOW_SECTION_GRID"] == "Y" && !array_key_exists("*SEARCHABLE_CONT
 	{
 		if ($arResult["ANY_SECTION"])
 		{
-			if($section["DEPTH_LEVEL"] != 1)
+			if (($section["DEPTH_LEVEL"] ?? 0) != 1)
+			{
 				continue;
+			}
 		}
 		else
 		{
@@ -829,6 +835,7 @@ if ($arResult["PROCESSES"])
 }
 
 $isBizprocActive = $arResult["BIZPROC"] == "Y";
+$isBizprocVisible = empty($grid_columns) || in_array('BIZPROC', $grid_columns);
 $userId = $USER->GetID();
 
 $n = 0;
@@ -858,35 +865,24 @@ while ($obElement = $rsElements->GetNextElement())
 			$documentComplexId,
 			[
 				"IBlockId" => $arIBlock["ID"],
-				"AllUserGroups" => $arUserGroupsForBPTmp,
+				"AllUserGroups" => $arUserGroupsForBPTmp ?? null,
 				"DocumentStates" => $arDocumentStatesForBP,
-				"WorkflowId" => $arWorkflowTemplate["ID"]
+				"WorkflowId" => isset($arWorkflowTemplate, $arWorkflowTemplate['ID']) ? $arWorkflowTemplate["ID"] : null,
 			]
 		);
 
-		if (method_exists('CBPDocument', 'getActiveStates'))
+		$documentStates = CBPDocument::getActiveStates($documentComplexId, 5);
+		if (empty($documentStates))
 		{
-			$documentStates = CBPDocument::getActiveStates($documentComplexId, 5);
-			if (empty($documentStates))
+			$workflowIds = CBPStateService::getIdsByDocument($documentComplexId, 1);
+			if ($workflowIds)
 			{
-				$workflowIds = CBPStateService::getIdsByDocument($documentComplexId);
-				if ($workflowIds)
-				{
-					if (count($workflowIds) > 1)
-					{
-						$workflowIds = array_slice($workflowIds, 0, 1);
-					}
-					$documentStates = CBPStateService::getDocumentStates($documentComplexId, $workflowIds);
-				}
+				$documentStates = CBPStateService::getDocumentStates($documentComplexId, $workflowIds);
 			}
-		}
-		else
-		{
-			$documentStates = CBPDocument::getDocumentStates($documentComplexType, $documentComplexId);
 		}
 	}
 
-	if(!is_array($listValues[$data["ID"]]))
+	if(!is_array($listValues[$data["ID"]] ?? null))
 		$listValues[$data["ID"]] = array();
 
 	foreach($data as $fieldId => $fieldValue)
@@ -972,8 +968,10 @@ while ($obElement = $rsElements->GetNextElement())
 		$backUrl = $APPLICATION->GetCurPageParam(
 			"", array("bxajaxid", "grid_action", "grid_id", "internal", "sessid"));
 		$arUserGroupsForBPTmp = $arUserGroupsForBP;
-		if ($USER->GetID() == $data["CREATED_BY"])
+		if ($USER->GetID() == ($data["CREATED_BY"] ?? 0))
+		{
 			$arUserGroupsForBPTmp[] = "Author";
+		}
 		foreach($arDocumentTemplates as $arWorkflowTemplate)
 		{
 			if ($canStartBizproc)
@@ -1195,7 +1193,7 @@ while ($obElement = $rsElements->GetNextElement())
 					}
 				}
 				/* Tasks workflow */
-				if($documentState["ID"] <> '' && $documentState['WORKFLOW_STATUS'])
+				if($isBizprocVisible && $documentState["ID"] && $documentState['WORKFLOW_STATUS'])
 				{
 					$tasks = CBPDocument::getUserTasksForWorkflow($GLOBALS["USER"]->GetID(), $documentState["ID"]);
 					if(!empty($tasks))

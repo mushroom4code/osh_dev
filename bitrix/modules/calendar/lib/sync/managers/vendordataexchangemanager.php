@@ -37,6 +37,8 @@ class VendorDataExchangeManager
 {
 	use HandleStatusTrait;
 
+	private static array $outgoingManagersCache = [];
+
 	protected Sync\Entities\SyncEventMap $syncEventMap;
 	protected SyncEventMergeHandler $handlerMerge;
 	/**
@@ -351,7 +353,6 @@ class VendorDataExchangeManager
 	 */
 	public function handleDeleteInstance(Sync\Entities\SyncEvent $syncEvent): void
 	{
-		// $event = $syncEvent->getEvent();
 		$masterSyncEvent = $this->getMasterSyncEvent($syncEvent);
 		if (!$masterSyncEvent)
 		{
@@ -365,8 +366,6 @@ class VendorDataExchangeManager
 
 		if ($masterSyncEvent->getId() === null)
 		{
-			//todo look log and check scenario
-			AddMessage2Log('Master event has not id. instance id = ' . $syncEvent->getVendorEventId());
 			return;
 		}
 
@@ -454,19 +453,22 @@ class VendorDataExchangeManager
 			])
 		;
 
-		$syncEvent->setEvent($event);
-		$eventConnection = $syncEvent->getEventConnection();
-		if ($eventConnection)
+		if ($event)
 		{
-			$eventConnection
-				->setEvent($event)
-				->setVersion($event->getVersion())
-			;
+			$syncEvent->setEvent($event);
+			$eventConnection = $syncEvent->getEventConnection();
+			if ($eventConnection)
+			{
+				$eventConnection
+					->setEvent($event)
+					->setVersion($event->getVersion())
+				;
 
-			$eventConnection->getId()
-				? $this->eventConnectionMapper->update($eventConnection)
-				: $this->eventConnectionMapper->create($eventConnection)
-			;
+				$eventConnection->getId()
+					? $this->eventConnectionMapper->update($eventConnection)
+					: $this->eventConnectionMapper->create($eventConnection)
+				;
+			}
 		}
 	}
 
@@ -549,7 +551,6 @@ class VendorDataExchangeManager
 	 */
 	private function exchangeEvents(): void
 	{
-		// $syncSectionForImport = $this->isFullSync ? $this->syncSectionMap : $this->importedSyncSectionMap;
 		$eventImporter = (new ImportEventManager($this->factory, $this->syncSectionMap))->import();
 		$this->handleImportedEvents($eventImporter->getEvents());
 
@@ -561,7 +562,6 @@ class VendorDataExchangeManager
 			$this->updateExportedEvents($savedSyncEventMap);
 		}
 
-		// update tokens for sections
 		$this->handleSectionsToLocalStorage($this->syncSectionMap);
 	}
 
@@ -875,10 +875,13 @@ class VendorDataExchangeManager
 			}
 
 			/** @var Sync\Entities\SyncSection $savedSyncSection */
-			if ($savedSyncSection = $this->syncSectionMap->getItem(
+			if ($savedSyncSection = $this->syncSectionMap->has(
 				$externalSyncSection->getSectionConnection()->getVendorSectionId()
 			))
 			{
+				$savedSyncSection = $this->syncSectionMap->getItem(
+					$externalSyncSection->getSectionConnection()->getVendorSectionId()
+				);
 				$externalSyncSection
 					->getSectionConnection()
 						->setId($savedSyncSection->getSectionConnection()->getId())
@@ -1104,22 +1107,19 @@ class VendorDataExchangeManager
 			/** @var Sync\Entities\SyncEvent $existsExternalSyncEvent */
 			$existsExternalSyncEvent = $this->syncEventMap->getItem($key);
 
-			// TODO: implement logic of saving attendees events
 			if (!$this->validateSyncEventChange($syncEvent, $existsExternalSyncEvent))
 			{
 				continue;
 			}
 
-			$masterSyncEvent = null;
+			$masterSyncEvent = $this->getMasterSyncEvent($syncEvent);
 			if (
-				($syncEvent->isInstance() || $syncEvent->getVendorRecurrenceId())
-				&& $masterSyncEvent = $this->getMasterSyncEvent($syncEvent)
+				$masterSyncEvent
+				&& ($syncEvent->isInstance() || $syncEvent->getVendorRecurrenceId())
+				&& $masterSyncEvent->getId() !== $masterSyncEvent->getParentId()
 			)
 			{
-				if ($masterSyncEvent->getId() !== $masterSyncEvent->getParentId())
-				{
-					continue;
-				}
+				continue;
 			}
 
 			$this->handleSyncEvent($syncEvent, $syncEvent->getVendorEventId(), $masterSyncEvent);
@@ -1307,6 +1307,7 @@ class VendorDataExchangeManager
 				{
 					if (
 						$existsSyncEvent->hasInstances()
+						&& $instanceSyncEvent->getEvent()->getOriginalDateFrom()
 						&& $existsInstanceSyncEvent = $existsSyncEvent->getInstanceMap()->getItem(
 							Sync\Entities\InstanceMap::getKeyByDate(
 								$instanceSyncEvent->getEvent()->getOriginalDateFrom()
@@ -1336,6 +1337,7 @@ class VendorDataExchangeManager
 		{
 			if (
 				$existsMasterSyncEvent->hasInstances()
+				&& $syncEvent->getEvent()->getOriginalDateFrom()
 				&& $existsInstanceSyncEvent = $existsMasterSyncEvent->getInstanceMap()->getItem(
 					Sync\Entities\InstanceMap::getKeyByDate(
 						$syncEvent->getEvent()->getOriginalDateFrom()
@@ -1807,7 +1809,7 @@ class VendorDataExchangeManager
 	{
 		$mapperFactory = ServiceLocator::getInstance()->get('calendar.service.mappers.factory');
 		$links = $mapperFactory->getSectionConnection()->getMap([
-			'CONNECTION_ID' => $connection->getId(),
+			'=CONNECTION_ID' => $connection->getId(),
 			'=ACTIVE' => 'Y'
 		]);
 
@@ -1829,12 +1831,11 @@ class VendorDataExchangeManager
 	 */
 	private function getOutgoingManager(Connection $connection)
 	{
-		static $managers = [];
-		if (empty($managers[$connection->getId()]))
+		if (empty(static::$outgoingManagersCache[$connection->getId()]))
 		{
-			$managers[$connection->getId()] = new OutgoingManager($connection);
+			static::$outgoingManagersCache[$connection->getId()] = new OutgoingManager($connection);
 		}
 
-		return $managers[$connection->getId()];
+		return static::$outgoingManagersCache[$connection->getId()];
 	}
 }

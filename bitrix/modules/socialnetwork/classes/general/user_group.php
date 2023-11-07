@@ -12,6 +12,7 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Loader;
 use Bitrix\Socialnetwork\WorkgroupTable;
 use Bitrix\Socialnetwork\Internals\Counter;
+use Bitrix\Socialnetwork\Internals\EventService;
 
 Loc::loadMessages(__FILE__);
 
@@ -211,6 +212,11 @@ class CAllSocNetUserToGroup
 		{
 			ExecuteModuleEventEx($eventFields, [ $id, $relationFields ]);
 		}
+
+		EventService\Service::addEvent(EventService\EventDictionary::EVENT_WORKGROUP_USER_DELETE, [
+			'GROUP_ID' => $relationFields['GROUP_ID'],
+			'USER_ID' => $relationFields['USER_ID'],
+		]);
 
 		if (Loader::includeModule('im'))
 		{
@@ -964,7 +970,7 @@ class CAllSocNetUserToGroup
 		if (
 			(
 				!is_array($arInvitedUser["UF_DEPARTMENT"])
-				|| (int)$arInvitedUser["UF_DEPARTMENT"][0] <= 0
+				|| (int) ($arInvitedUser["UF_DEPARTMENT"][0] ?? null) <= 0
 			) // extranet
 			&& ($arInvitedUser["LAST_LOGIN"] <= 0)
 			&& $arInvitedUser["LAST_ACTIVITY_DATE"] == ''
@@ -2555,7 +2561,7 @@ class CAllSocNetUserToGroup
 
 		$notificationParams = array(
 			"TYPE" => "owner",
-			"RELATION_ID" => $existingRelationFields["ID"],
+			"RELATION_ID" => $existingRelationFields["ID"] ?? null,
 			"USER_ID" => $userId,
 			"GROUP_ID" => $groupId,
 			"GROUP_NAME" => htmlspecialcharsbx($groupFields["NAME"]),
@@ -2682,7 +2688,7 @@ class CAllSocNetUserToGroup
 		$groupInitiatePerms = Trim($groupFields["INITIATE_PERMS"]);
 		$groupVisible = Trim($groupFields["VISIBLE"]);
 		$groupOpened = Trim($groupFields["OPENED"]);
-		$groupSpamPerms = Trim($groupFields["SPAM_PERMS"]);
+		$groupSpamPerms = Trim(($groupFields["SPAM_PERMS"] ?? ''));
 
 		if ($groupId <= 0 || $groupOwnerId <= 0 || !in_array($groupInitiatePerms, $arSocNetAllowedInitiatePerms))
 		{
@@ -3140,7 +3146,7 @@ class CAllSocNetUserToGroup
 			if (
 				$to_user_id === (int)$fromUserId
 				|| (
-					is_array($arNotifyParams["EXCLUDE_USERS"])
+					is_array($arNotifyParams["EXCLUDE_USERS"] ?? null)
 					&& in_array($to_user_id, $arNotifyParams["EXCLUDE_USERS"])
 				)
 			)

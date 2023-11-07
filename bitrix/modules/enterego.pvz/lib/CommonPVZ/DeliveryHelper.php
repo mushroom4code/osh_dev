@@ -136,26 +136,25 @@ class DeliveryHelper
         );
     }
 
-    public static function getActivePvzDeliveryInstance($deliveryParams)
+    public static function getActivePvzDeliveryInstance($deliveryParams): array
     {
-        $deliveryInstance = array_merge(
+        return array_merge(
             OshishaDelivery::getInstanceForPvz($deliveryParams),
-            DellinDelivery::getInstanceForPvz(),
-            RussianPostDelivery::getInstanceForPvz(),
-            SDEKDelivery::getInstanceForPvz(),
-            FivePostDelivery::getInstanceForPvz()
+            DellinDelivery::getInstanceForPvz($deliveryParams),
+            RussianPostDelivery::getInstanceForPvz($deliveryParams),
+            SDEKDelivery::getInstanceForPvz($deliveryParams),
+            FivePostDelivery::getInstanceForPvz($deliveryParams)
         );
-        return $deliveryInstance;
     }
 
     public static function getActiveDoorDeliveryInstance($deliveryParams){
-        $deliveryInstance = array_merge(
+
+        return array_merge(
             OshishaDelivery::getInstanceForDoor($deliveryParams),
             DellinDelivery::getInstanceForDoor($deliveryParams),
             RussianPostDelivery::getInstanceForDoor($deliveryParams),
             SDEKDelivery::getInstanceForDoor($deliveryParams),
         );
-        return $deliveryInstance;
     }
 
     public static function getPackagesFromOrderBasket($orderBasket) {
@@ -414,11 +413,8 @@ class DeliveryHelper
         }
 
         $params['deliveryOptions']['DA_DATA_TOKEN'] = OshishaDelivery::getOshishaDaDataToken();
-
         $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
         $params['deliveryOptions']['YA_API_KEY'] = OshishaDelivery::getOshishaYMapsKey();
-        $params['deliveryOptions']['DELIVERY_COST'] = OshishaDelivery::getOshishaCost();
-        $params['deliveryOptions']['START_COST'] = OshishaDelivery::getOshishaStartCost();
         $params['deliveryOptions']['LIMIT_BASKET'] = OshishaDelivery::getOshishaLimitBasket();
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';

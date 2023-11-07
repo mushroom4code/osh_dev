@@ -186,6 +186,11 @@ class Call extends Engine\Controller
 		$currentUserId = $this->getCurrentUser()->getId();
 
 		$call = Registry::getCallWithId($callId);
+		if (!$call)
+		{
+			$this->addError(new Error(Loc::getMessage("IM_REST_CALL_ERROR_CALL_NOT_FOUND"), "call_not_found"));
+			return null;
+		}
 		if(!$this->checkCallAccess($call, $currentUserId))
 		{
 			$this->errorCollection[] = new Error("You do not have access to the parent call", "access_denied");
@@ -671,36 +676,12 @@ class Call extends Engine\Controller
 		return $callUser->toArray();
 	}
 
-	public function getBackgroundAction()
-	{
-		$diskFolder = \Bitrix\Im\Call\Background::getUploadFolder();
-		$diskFolderId = $diskFolder? (int)$diskFolder->getId(): 0;
-		$infoHelperParams = \Bitrix\Main\Loader::includeModule('ui')? InfoHelper::getInitParams(): [];
-
-		return [
-			'list' => [
-				'default' => \Bitrix\Im\Call\Background::get(),
-				'custom' => \Bitrix\Im\Call\Background::getCustom(),
-			],
-			'diskFolderId' => $diskFolderId,
-			'limit' => \Bitrix\Im\Call\Background::getLimitForJs(),
-			'infohelper' => $infoHelperParams
-		];
-	}
-
 	public function getCallLimitsAction()
 	{
 		return [
 			'callServerEnabled' => (bool)\Bitrix\Im\Call\Call::isCallServerEnabled(),
 			'maxParticipants' => (int)\Bitrix\Im\Call\Call::getMaxParticipants(),
 		];
-	}
-
-	public function commitBackgroundAction(int $fileId)
-	{
-		\CIMDisk::CommitBackgroundFile($this->getCurrentUser()->getId(), $fileId);
-
-		return true;
 	}
 
 	public function reportConnectionStatusAction(int $callId, bool $connectionStatus)
@@ -733,9 +714,15 @@ class Call extends Engine\Controller
 		return "call_entity_{$entityType}_{$entityId}";
 	}
 
-	protected static function getLockNameWithCallId(int $callId)
+	protected static function getLockNameWithCallId($callId): string
 	{
-		return "im_call_{$callId}";
+		//TODO: int|string after switching to php 8
+		if (is_string($callId) || is_numeric($callId))
+		{
+			return "im_call_{$callId}";
+		}
+
+		return '';
 	}
 
 	public function configureActions()

@@ -1,10 +1,33 @@
 import { BaseError, Type, Loc } from 'main.core';
 
+/**
+ * @namespace BX.UI.Uploader
+ */
 export default class UploaderError extends BaseError
 {
-	description: string = '';
-	origin: string = 'client';
+	static Origin = {
+		SERVER: 'server',
+		CLIENT: 'client',
+	};
 
+	static Type = {
+		USER: 'user',
+		SYSTEM: 'system',
+		UNKNOWN: 'unknown',
+	};
+
+	description: string = '';
+	origin: $Values<UploaderError.Origin> = UploaderError.Origin.CLIENT;
+	type: $Values<UploaderError.Type> = UploaderError.Type.USER;
+
+	/**
+	 * new UploaderError(code)
+	 * new UploaderError(code, customData)
+	 * new UploaderError(code, message)
+	 * new UploaderError(code, message, description)
+	 * new UploaderError(code, message, customData)
+	 * new UploaderError(code, message, description, customData)
+	 */
 	constructor(code: string, ...args)
 	{
 		let message = Type.isString(args[0]) ? args[0] : null;
@@ -45,14 +68,17 @@ export default class UploaderError extends BaseError
 		{
 			// Take the First Uploader User Error
 			const { code, message, description, customData } = uploaderError;
-			const error = new this(code, message, description, customData);
-			error.setOrigin('server');
+			const error: UploaderError = new this(code, message, description, customData);
+			error.setOrigin(UploaderError.Origin.SERVER);
+			error.setType(UploaderError.Type.USER);
 
 			return error;
 		}
 		else
 		{
-			let { code, message, description, customData } = errors[0];
+			let { code, message, description } = errors[0];
+			const { customData, system, type } = errors[0];
+
 			if (code === 'NETWORK_ERROR')
 			{
 				message = Loc.getMessage('UPLOADER_NETWORK_ERROR');
@@ -69,11 +95,25 @@ export default class UploaderError extends BaseError
 
 			console.error('Uploader', errors);
 
-			const error = new this(code, message, description, customData);
-			error.setOrigin('server');
+			const error: UploaderError = new this(code, message, description, customData);
+			error.setOrigin(UploaderError.Origin.SERVER);
+
+			if (type === 'file-uploader')
+			{
+				error.setType(system ? UploaderError.Type.SYSTEM : UploaderError.Type.USER);
+			}
+			else
+			{
+				error.setType(UploaderError.Type.UNKNOWN);
+			}
 
 			return error;
 		}
+	}
+
+	static createFromError(error: Error): UploaderError
+	{
+		return new this(error.name, error.message);
 	}
 
 	getDescription(): string
@@ -91,16 +131,31 @@ export default class UploaderError extends BaseError
 		return this;
 	}
 
-	getOrigin(): string
+	getOrigin(): $Values<UploaderError.Origin>
 	{
 		return this.origin;
 	}
 
-	setOrigin(origin: string): this
+	setOrigin(origin: $Values<UploaderError.Origin>): this
 	{
-		if (Type.isStringFilled(origin))
+		if (Object.values(UploaderError.Origin).includes(origin))
 		{
 			this.origin = origin;
+		}
+
+		return this;
+	}
+
+	getType(): $Values<UploaderError.Type>
+	{
+		return this.type;
+	}
+
+	setType(type: $Values<UploaderError.Type>): this
+	{
+		if (Type.isStringFilled(type))
+		{
+			this.type = type;
 		}
 
 		return this;
@@ -117,8 +172,14 @@ export default class UploaderError extends BaseError
 		);
 
 		error.setOrigin(options.origin);
+		error.setType(options.type);
 
 		return error;
+	}
+
+	toString(): string
+	{
+		return `Uploader Error (${this.getCode()}): ${this.getMessage()} (${this.getOrigin()})`;
 	}
 
 	toJSON(): { [key: string]: any }
@@ -128,6 +189,7 @@ export default class UploaderError extends BaseError
 			message: this.getMessage(),
 			description: this.getDescription(),
 			origin: this.getOrigin(),
+			type: this.getType(),
 			customData: this.getCustomData(),
 		};
 	}

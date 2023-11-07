@@ -41,6 +41,7 @@ $APPLICATION->IncludeComponent(
             6 => "PROPERTY_VKUS",
             7 => "PROPERTY_GRAMMOVKA_VES_NETTO",
             9 => "PROPERTY_USE_DISCOUNT",
+            10 => "PROPERTY_".PROPERTY_ACTIVE_UNIT,
         ),
         "COLUMNS_LIST_MOBILE" => array(
             0 => "PREVIEW_PICTURE",
@@ -52,6 +53,7 @@ $APPLICATION->IncludeComponent(
             7 => "PROPERTY_GRAMMOVKA_VES_NETTO",
             8 => "PROPERTY_GRAMMOVKA",
             9 => "PROPERTY_USE_DISCOUNT",
+            10 => "PROPERTY_".PROPERTY_ACTIVE_UNIT,
         ),
         "COMPATIBLE_MODE" => "Y",
         "CORRECT_RATIO" => "Y",
@@ -95,7 +97,7 @@ $APPLICATION->IncludeComponent(
         "TOTAL_BLOCK_DISPLAY" => array(
             0 => "top",
         ),
-        "USE_DYNAMIC_SCROLL" => "Y",
+        "USE_DYNAMIC_SCROLL" => "N",
         "USE_ENHANCED_ECOMMERCE" => "N",
         "USE_GIFTS" => "Y",
         "USE_PREPAYMENT" => "N",

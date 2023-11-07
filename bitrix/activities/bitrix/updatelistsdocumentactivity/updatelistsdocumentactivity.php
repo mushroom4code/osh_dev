@@ -5,6 +5,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 	die();
 }
 
+/** @property-write string|null ErrorMessage */
 class CBPUpdateListsDocumentActivity extends CBPActivity
 {
 	public function __construct($name)
@@ -15,7 +16,13 @@ class CBPUpdateListsDocumentActivity extends CBPActivity
 			"DocumentType" => null,
 			"Fields" => null,
 			'ElementId' => null,
+			//return
+			'ErrorMessage' => null,
 		);
+
+		$this->setPropertiesTypes([
+			'ErrorMessage' => ['Type' => 'string'],
+		]);
 	}
 
 	public function Execute()
@@ -50,13 +57,31 @@ class CBPUpdateListsDocumentActivity extends CBPActivity
 		if (!$realDocumentType || $realDocumentType !== $documentType)
 		{
 			$this->WriteToTrackingService(GetMessage('BPULDA_ERROR_DT'), 0, CBPTrackingType::Error);
+			$this->ErrorMessage = GetMessage('BPULDA_ERROR_DT');
+
 			return CBPActivityExecutionStatus::Closed;
 		}
 
-		$this->logDebugFields($documentType, $fields);
-		$documentService->UpdateDocument($documentId, $fields);
+		$fields = $this->prepareFieldsValues($documentId, $documentType, $fields);
+
+		try
+		{
+			$this->logDebugFields($documentType, $fields);
+			$documentService->UpdateDocument($documentId, $fields);
+		}
+		catch (Exception $e)
+		{
+			$this->writeToTrackingService($e->getMessage(), 0, CBPTrackingType::Error);
+			$this->ErrorMessage = $e->getMessage();
+		}
 
 		return CBPActivityExecutionStatus::Closed;
+	}
+
+	protected function reInitialize()
+	{
+		parent::reInitialize();
+		$this->ErrorMessage = null;
 	}
 
 	public static function ValidateProperties($testProperties = array(), CBPWorkflowTemplateUser $user = null)
@@ -267,7 +292,7 @@ class CBPUpdateListsDocumentActivity extends CBPActivity
 				);
 			}
 
-			if ($r != null)
+			if (!CBPHelper::isEmptyValue($r))
 			{
 				$arProperties["Fields"][$fieldKey] = $r;
 			}
@@ -435,5 +460,46 @@ class CBPUpdateListsDocumentActivity extends CBPActivity
 
 		$debugInfo = $this->getDebugInfo($values, $fields);
 		$this->writeDebugInfo($debugInfo);
+	}
+
+	protected function prepareFieldsValues(
+		array $documentId,
+		array $documentType,
+		array $fields
+	): array
+	{
+		$documentService = $this->workflow->GetService('DocumentService');
+
+		$documentFields = $documentService->GetDocumentFields($documentType);
+		$documentFieldsAliasesMap = CBPDocument::getDocumentFieldsAliasesMap($documentFields);
+
+		$resultFields = [];
+		foreach ($fields as $key => $value)
+		{
+			if (!isset($documentFields[$key]) && isset($documentFieldsAliasesMap[$key]))
+			{
+				$key = $documentFieldsAliasesMap[$key];
+			}
+
+			if (($property = $documentFields[$key]) && $value)
+			{
+				$fieldTypeObject = $documentService->getFieldTypeObject($documentType, $property);
+				if ($fieldTypeObject)
+				{
+					$fieldTypeObject->setDocumentId($documentId);
+					$fieldTypeObject->setValue($value);
+					$value = $fieldTypeObject->externalizeValue('Document', $fieldTypeObject->getValue());
+				}
+			}
+
+			if (is_null($value))
+			{
+				$value = '';
+			}
+
+			$resultFields[$key] = $value;
+		}
+
+		return $resultFields;
 	}
 }
