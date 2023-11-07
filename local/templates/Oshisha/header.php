@@ -290,6 +290,9 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                     <a href="/local/templates/Oshisha/images/presentation.pdf" download
                                        class="text_header link_menu_top"> <span class="text_catalog_link not_weight"> Презентация</span></a>
                                 <?php } ?>
+                                <a href="/news/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight">Блог</span>
+                                </a>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
                                 </a>

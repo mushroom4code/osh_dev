@@ -157,11 +157,13 @@ $option = $option_site; ?>
                     <li class="col-menu-item">
                         <a href="/about/vacancy/" class="col-menu-link">Вакансии</a>
                     </li>
-                    <li class="col-menu-item">
+                    <li class="col-menu-item d-lg-block d-md-block d-none">
                         <a href="/news/" class="col-menu-link">Блог</a>
                     </li>
                 </ul>
-
+                <div class="d-lg-none d-md-none d-block footer-col mt-5 mb-3">
+                    <div class="col-menu-item"><a href="/news/" class="color-white font-weight-bold d-block">Блог</a></div>
+                </div>
                 <div class="socials">
                     <span class="col-title">Социальные сети</span>
                     <nav class="col-menu">
