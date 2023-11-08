@@ -3,7 +3,7 @@
 use Bitrix\Conversion\Internals\MobileDetect;
 use Bitrix\Main\Application;
 use Bitrix\Main\Page\Asset;
-use Bitrix\Main\UI\Extension;use Enterego\Subsidiary\Storage;
+use Bitrix\Main\UI\Extension;use Enterego\EnteregoSettings;use Enterego\Subsidiary\Storage;
 
 /** @var  CAllMain|CMain $APPLICATION
  ** @var  CAllUser $USER
@@ -112,9 +112,9 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     Asset::getInstance()->addJs("/local/assets/js/flags-mask/phonecode.js");
     Asset::getInstance()->addJs("/local/assets/js/flags-mask/counties.js");
     Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
-//    PWA
+    //    PWA
     Asset::getInstance()->addJs("/local/templates/Oshisha/pwa/pwa.js");
-//    Asset::getInstance()->addCss("/local/templates/Oshisha/pwa/pwa.css");
+    $browserInfo = EnteregoSettings::getInfoBrowser();
     $APPLICATION->ShowHead(); ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
@@ -161,7 +161,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                 </a>
             </div>
             <div class="container_header flex_header">
-                <div class="box_with_city flex_header col-5 pl-0">
+                <div class="box_with_city flex_header col-4 pl-0">
                     <span class="d-flex flex-row align-items-center">
                         <img src="/local/assets/images/icon_location.svg" class="icon_location">
                         <a href="#" class="text_header">
@@ -235,7 +235,10 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                         <?php }
                     } ?>
                 </div>
-                <div class="box_with_menu_header flex_header flex_header_right col-7 pr-0">
+                <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
+                    <div class="color-white app_install PC text_header"
+                         data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Установить приложение <i class="fa fa-download" aria-hidden="true"></i>
+                    </div>
                     <a href="/about/o-nas/" class="text_header">О нас</a>
 
                     <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
@@ -300,7 +303,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                         <span class="text_catalog_link not_weight">Доставка и оплата</span>
                                     </a>
                                 <?php } ?>
-
                                 <a href="/about/FAQ/" class="link_menu_top ">
                                     <span class="text_catalog_link not_weight">FAQ</span>
                                 </a>
@@ -473,7 +475,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
         </div>
     </header>
     <div class="section_wrapper">
-        <button class="android-id">install</button>
         <div class="container_header">
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
             <div class="bx-content <?= STATIC_P ?>">
