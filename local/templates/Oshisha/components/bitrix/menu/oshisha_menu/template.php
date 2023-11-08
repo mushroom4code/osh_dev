@@ -86,6 +86,11 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
                 <span class="text_catalog_link">Хиты</span>
             </a>
         </li>
+        <li class="li_menu_header none_mobile" data-role="bx-menu-item">
+            <a class="link_menu_header" href="/news/">
+                <span class="text_catalog_link">Блог</span>
+            </a>
+        </li>
         <!--		<li class="li_menu_header  none_mobile" data-role="bx-menu-item">-->
         <!--            <a class="link_menu_header" href="/promotions/">-->
         <!--                <span class="text_catalog_link">Акции</span>-->
@@ -97,7 +102,6 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
         </div>
     </ul>
 </nav>
-<div class="overlay_top"></div>
 <script type="text/javascript">
     let menu_items_array = <?= json_encode($menu_for_JS);?>;
     let icon_bar = $('#main_menus');

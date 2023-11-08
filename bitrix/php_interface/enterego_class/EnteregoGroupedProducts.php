@@ -103,7 +103,7 @@ class EnteregoGroupedProducts
                                 $elem['PROPERTIES'][$props['CODE']] = $props;
                             }
 
-                            $groupProperty[$props['VALUE_ENUM']] = $elem['PROPERTIES'][$props['CODE']]['JS_PROP'][$props['VALUE_ENUM']] = [
+                            $groupProperty[$props['VALUE_ENUM'] ?? $props['VALUE']] = $elem['PROPERTIES'][$props['CODE']]['JS_PROP'][$props['VALUE_ENUM'] ?? $props['VALUE']] = [
                                 'VALUE_ENUM' => $props['VALUE_ENUM'] ?? $props['VALUE'],
                                 'VALUE_XML_ID' => $props['VALUE_XML_ID'],
                                 'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],
