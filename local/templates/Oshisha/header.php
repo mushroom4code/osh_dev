@@ -162,7 +162,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                 </a>
             </div>
             <div class="container_header flex_header py-2">
-                <div class="box_with_city flex_header col-4 pl-0 align-items-center">
+                <div class="box_with_city flex_header col-5 pl-0 align-items-center">
                     <div class="box_left_header">
                         <div class="header_logo_desktop logo-header mr-4">
                             <a href="<?= SITE_DIR ?>" class="d-block height-100">
@@ -250,9 +250,9 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                         <?php }
                     } ?>
                 </div>
-                <div class="box_with_menu_header flex_header flex_header_right col-8 pr-0">
-                    <div class="color-white app_install PC text_header"
-                         data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Установить приложение <i class="fa fa-download" aria-hidden="true"></i>
+                <div class="box_with_menu_header flex_header flex_header_right col-7 p-0">
+                    <div class="color-white app_install PC text_header cursor-pointer"
+                         data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Приложение <i class="fa fa-download" aria-hidden="true"></i>
                     </div>
                     <a href="/about/o-nas/" class="text_header">О нас</a>
 
