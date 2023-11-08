@@ -3096,7 +3096,7 @@ $(document).ready(function () {
                     '<img class="bg-white max-height-500 mt-3" ' +
                     'src="/images/screenInMessage.png" alt="oshisha"/>' +
                     '</div>' +
-                    '<div> Нажмите <img src="/images/shareapple.png" style="width:25px;" alt="oshisha"/> ' +
+                    '<div class="d-block d-md-none d-lg-none"> Нажмите <img src="/images/shareapple.png" style="width:25px;" alt="oshisha"/> ' +
                     'в браузерe,<br>затем коснитесь <b>"На экран «Домой»"</b>.</div></div></div></div>');
                 $('.close-window').on('click', function () {
                     $(this).closest(".box-message-install").remove()
