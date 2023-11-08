@@ -1,0 +1,69 @@
+{
+  "name": "OSHISHA",
+  "short_name": "OSHISHA",
+  "description": "Сайт кальянной продукции",
+  "start_url": "/",
+  "lang": "ru-RU",
+  "theme_color": "#393939",
+  "background_color": "#393939",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "screenshots": [
+    {
+      "src": "images/scrinshoot.png",
+      "sizes": "1373x1162",
+      "type": "image/png",
+      "form_factor": "wide"
+    }, {
+      "src": "images/screenshot_mobile.png",
+      "sizes": "393x848",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "icons": [
+    {
+      "src": "images/maskable_icon_x192.png",
+      "sizes": "192x192",
+      "type": "image\/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/maskable_icon_x128.png",
+      "sizes": "128x128",
+      "type": "image\/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/maskable_icon_x48.png",
+      "sizes": "48x48",
+      "type": "image\/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/maskable_icon_x72.png",
+      "sizes": "72x72",
+      "type": "image\/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/maskable_icon_x384.png",
+      "sizes": "384x384",
+      "type": "image\/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/maskable_icon_x512.png",
+      "sizes": "512x512",
+      "type": "image\/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/maskable_icon_x144.png",
+      "sizes": "144x144",
+      "type": "image\/png"
+    }
+  ]
+}
