@@ -885,7 +885,6 @@ BX.SaleCommonPVZ = {
 
     selectPvz: function (point) {
         const __this = this
-        console.log(point);
         __this.closePvzPopup();
         // const point = this.objectManager.objects.getById(objectId);
         BX.Sale.OrderAjaxComponent.result.DELIVERY.forEach((delivery) => {
@@ -945,9 +944,8 @@ BX.SaleCommonPVZ = {
      * Отправка запроса на получение и вызов соответствующего обработчика
      * @param entity
      */
-    getRequestGetPvzPrice: function (entity) {
+    getRequestGetPvzPrice: function (entity, object) {
         const __this = this;
-        console.log(document.activeElement);
         const balloonContent = "".concat(
             `<div class="popup__container" style="max-width: 415px; width: max-content; white-space: break-spaces">`,
             '<div class="popup__close" id="popup_point_default_close">✖</div>',
@@ -956,26 +954,22 @@ BX.SaleCommonPVZ = {
         );
         entity.update({
             price: entity.price,
-            zIndex: 3,
             popup: {
                 content: (close) => {
                     const content = document.createElement('div');
                     content.innerHTML = balloonContent;
                     content.querySelector('.popup__close').addEventListener('click', function() {
                         event.stopPropagation();
-                        // entity.update({price: entity.price, zIndex: 2});
-                        entity._props['zIndex'] = 2;
-                        entity._marker.element.closest('.ymaps3x0--marker').style.zIndex = 2;
+                        entity._marker.element.closest('.ymaps3x0--marker').classList.remove('zIndex3');
                         entity._togglePopup(false);
                     });
                     return content;
                 },
             },
         });
+        entity._marker.element.closest('.ymaps3x0--marker').classList.add('zIndex3');
         entity._togglePopup(true);
         let data = __this.getPointData(entity._props);
-        console.log(entity);
-        console.log(data);
 
         BX.ajax({
             url: __this.ajaxUrlPVZ,
@@ -988,7 +982,7 @@ BX.SaleCommonPVZ = {
             dataType: 'json',
             onsuccess: function (res) {
                 if (res?.status === 'success') {
-                    __this.afterGetPvzItemPrice(entity._props, res.data, entity);
+                    __this.afterGetPvzItemPrice(entity._props, res.data, entity, object);
                 }
             },
             onfailure: function (res) {
@@ -1000,13 +994,10 @@ BX.SaleCommonPVZ = {
         })
     },
 
-    afterGetPvzItemPrice: function (point, item, entity) {
+    afterGetPvzItemPrice: function (point, item, entity, object) {
         const __this = this;
-        console.log(point);
-        console.log(entity);
-        console.log(document.activeElement);
         const balloonContent = "".concat(
-            `<div class="popup__container" style="max-width: 415px; width: max-content; white-space: break-spaces">`,
+            `<div class="popup__container">`,
             '<div class="popup__close" id="popup_point_'+item.id+'_close">✖</div>',
             `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ'}${item.price ? ' - ' + item.price : ''} руб.</b></div>`,
             `<div>${point.properties.fullAddress}</div>`,
@@ -1022,14 +1013,11 @@ BX.SaleCommonPVZ = {
             price: item.price,
             popup: {
                 content: (close) => {
-                    console.log(close);
-                    console.log(this);
                     const content = document.createElement('div');
                     content.innerHTML = balloonContent;
                     content.querySelector('.popup__close').addEventListener('click', function() {
                         event.stopPropagation();
-                        entity._props['zIndex'] = 2;
-                        entity._marker.element.closest('.ymaps3x0--marker').style.zIndex = 2;
+                        entity._marker.element.closest('.ymaps3x0--marker').classList.remove('zIndex3');
                         entity._togglePopup(false);
                     });
                     return content;
@@ -1037,15 +1025,12 @@ BX.SaleCommonPVZ = {
             }
         });
 
+        entity._marker.element.closest('.ymaps3x0--marker').classList.add('zIndex3');
         entity._togglePopup(true);
 
-        // document.getElementById('popup_point_'+item.id+'_close').addEventListener('click', function() {
-        //     entity._togglePopup(false);
-        // });
-        console.log(entity);
-        // document.getElementById('popup_point_'+item.id+'_button').addEventListener('click', function() {
-        //     __this.selectPvz(point);
-        // });
+        document.getElementById('popup_point_'+item.id+'_button').addEventListener('click', function() {
+            __this.selectPvz(point);
+        });
     },
 
     /**
@@ -1125,28 +1110,21 @@ BX.SaleCommonPVZ = {
             });
 
             oshDelivery.propsMap.addChild(clusterer);
-            console.log(oshDelivery.propsMap);
-            console.log(clusterer);
             const mapListener = new ymaps3.YMapListener({
                 onFastClick: (object, coords, entity) => {
-                    console.log('eeee');
-                    console.log(object);
-                    console.log(entity);
-                    console.log('aaaa');
                     if (object && object.type == 'marker' && object.entity._props.markerType == 'object') {
+                        object.entity.parent._popup.classList.remove('ymaps3x0--default-marker__hider');
                         if (!object.entity.parent._props.price) {
-                            object.entity.parent._marker.element.focus();
-                            console.log(object.entity.parent._marker.element);
-                            oshDelivery.getRequestGetPvzPrice(object.entity.parent);
+                            oshDelivery.getRequestGetPvzPrice(object.entity.parent, object);
                         } else {
-                            object.entity.parent._props['zIndex'] = 3;
-                            object.entity.parent._marker.element.closest('.ymaps3x0--marker').style.zIndex = 3;
+                            object.entity.parent._marker.element.closest('.ymaps3x0--marker').classList.add('zIndex3');
                         }
                     }
-                }
+                },
             });
 
             oshDelivery.propsMap.addChild(mapListener);
+
         }).catch(function (e) {
             console.log(e);
             oshDelivery.showError(oshDelivery.mainErrorsNode, 'Ошибка построения карты ПВЗ!');

@@ -779,6 +779,22 @@ h4.checkout-block-title > i.fa {
     background-color: transparent;
 }
 
+.zIndex3 {
+    z-index: 3 !important;
+}
+
+div.popup__container {
+    max-width: 415px;
+    width: max-content;
+    white-space: break-spaces;
+}
+
+@media screen and (max-width: 450px) {
+    div.popup__container {
+        width: 300px;
+    }
+}
+
 @media screen and (max-width: 1110px) {
     #osh-map-action {
         flex-wrap: wrap;
