@@ -71,15 +71,15 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="OSHISHA">
     <meta name="apple-mobile-web-app-title" content="OSHISHA">
-    <meta name="theme-color" content="#393939">
-    <meta name="background-color" content="#393939">
-    <meta name="msapplication-navbutton-color" content="#393939">
+    <meta name="theme-color" content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
+    <meta name="background-color" content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
+    <meta name="msapplication-navbutton-color" content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="msapplication-starturl" content="/">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="icon" type="image/png" sizes="144x144" href="/images/maskable_icon_x144.png">
-    <link rel="apple-touch-icon" type="image/png" sizes="144x144" href="/images/maskable_icon_x144.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="/images/OSHISHA_MOBILE.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="144x144" href="/images/OSHISHA_MOBILE.png">
     <?php
     Asset::getInstance()->addJs('/local/templates/Oshisha/assets/js/subsidiary.js');
 
