@@ -12,7 +12,7 @@ $curDateTime = new \Bitrix\Main\Type\DateTime();
         осуществляется.
         Сайт предназначен для потребителей старше 18 лет.</p>
     <div class="d-flex flex-column mt-4 mb-5" id="box_discounts">
-        <div class="box_with_discounts_parents <?= count($arResult['DISCOUNTS']) <= 2 ? 'discounts_flex' : 'discounts_grid'?>
+        <div class="box_with_discounts_parents discounts_grid
          justify-content-between" id="click_discount_s">
             <?php foreach ($arResult['DISCOUNTS'] as $iblock_key => $discount) {
                 $discount_iblock = $discount['DISCOUNT_IBLOCK'];

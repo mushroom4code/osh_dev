@@ -13,7 +13,7 @@
     max-height: 260px;
 }
 
-#box_discounts  .box_with_discounts:last-child:nth-child(3n - 2) {
+#box_discounts  .box_with_discounts:last-child:nth-child(3n - 2):not(:first-child) {
     grid-column-end: 3;
 }
 
@@ -27,7 +27,7 @@
 
 .box_with_discounts_parents.discounts_grid {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .box_with_discounts_parents.discounts_flex {
@@ -76,24 +76,20 @@
 }
 
 @media (max-width: 1060px) {
-    .box_with_discounts_parents.g {
-        grid-template-columns: repeat(2, auto);
+    div.box_with_discounts_parents {
+        grid-template-columns: repeat(2, 1fr) !important;
     }
 
-    #box_discounts  .box_with_discounts:last-child:nth-child(3n - 2) {
+    #box_discounts  .box_with_discounts:last-child:nth-child(3n - 2):not(:first-child) {
         grid-column-end: unset;
-    }
-
-    #box_discounts  .box_with_discounts:last-child:nth-child(2n - 1) {
-        grid-column-start: 1;
-        grid-column-end: 3;
-        max-height: 450px;
     }
 }
 
 @media (max-width: 694px) {
-    .box_with_discounts_parents {
-        grid-template-columns: repeat(1, auto);
+    div.box_with_discounts_parents {
+        margin-right: auto;
+        margin-left: auto;
+        grid-template-columns: repeat(1, auto) !important;
     }
     #box_discounts  .box_with_discounts:last-child:nth-child(2n - 1) {
         grid-column-start: unset;
