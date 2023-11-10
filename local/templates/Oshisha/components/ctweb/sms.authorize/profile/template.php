@@ -781,12 +781,12 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                                 w-full text-textLight rounded-md
                                                     dark:text-white border-0 text-xl auth-by-email mb-4"
                                                    id="<?= $mainID . "email" ?>"/>
-                                            <div class="flex flex-row justify-between">
-                                                <label class="text-xs dark:font-normal font-medium text-textLight
-                                            text-textLight dark:text-textDarkLightGray"><?= GetMessage("SMS_AUTH_PASSWORD") ?></label>
+                                            <div class="flex flex-row justify-between items-center">
+                                                <label class="text-xs dark:font-normal font-normal text-textLight
+                                             dark:text-textDarkLightGray"><?= GetMessage("SMS_AUTH_PASSWORD") ?></label>
                                                 <span style="float: right">
                                         <a href="/auth/?forgot_password=yes"
-                                           class="ctweb-link ctweb-link-fargot  font-normal text-xs text-textLight
+                                           class="ctweb-link ctweb-link-fargot font-medium text-xs text-light-red
                                            hover:underline dark:text-textDarkLightGray"
                                            idk="<?= $jsParams['TEMPLATE']['FORGOT_PASSWORD'] ?>">Забыли пароль?</a>
                                     </span>

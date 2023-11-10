@@ -22,7 +22,7 @@
     <div class="form-group row">
         <div class="dark:text-textDarkLightGray font-semibold dark:font-medium text-dark mb-2 text-md">
             <?= GetMessage("sys_forgot_pass_login1") ?></div>
-        <div class="flex md:flex-row flex-col mb-5 mr-5 ">
+        <div class="flex md:flex-row flex-col mb-5 mr-5">
             <input type="text" class="dark:bg-grayButton bg-white dark:border-none border-borderColor
                          focus:border-borderColor shadow-none py-2 px-4 outline-none rounded-md md:w-2/5 w-full"
                    name="USER_LOGIN" value="<?= $arResult["USER_LOGIN"] ?>"/>
