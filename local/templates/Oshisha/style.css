@@ -7449,3 +7449,10 @@ body #panel {
         top: 0;
     }
 }
+
+/*TODO добавить стили*/
+/*@media all and (display-mode: fullscreen) {*/
+/*    body {*/
+/*       background-color: red!important;*/
+/*    }*/
+/*}*/
