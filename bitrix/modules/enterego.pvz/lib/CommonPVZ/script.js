@@ -886,7 +886,6 @@ BX.SaleCommonPVZ = {
     selectPvz: function (point) {
         const __this = this
         __this.closePvzPopup();
-        // const point = this.objectManager.objects.getById(objectId);
         BX.Sale.OrderAjaxComponent.result.DELIVERY.forEach((delivery) => {
             if (delivery['CHECKED'])
                 delete delivery['CHECKED']
@@ -930,12 +929,6 @@ BX.SaleCommonPVZ = {
         if (clusterId !== undefined && __this.objectManager.clusters.balloon.isOpen(clusterId)) {
             __this.objectManager.clusters.balloon.setData(__this.objectManager.clusters.balloon.getData());
         }
-
-        // const afterSuccess = function (data) {
-        //     if (clusterId !== undefined && __this.objectManager.clusters.balloon.isOpen(clusterId)) {
-        //         __this.objectManager.clusters.balloon.setData(__this.objectManager.clusters.balloon.getData());
-        //     }
-        // }
 
         this.getRequestGetPvzPrice(data, afterSuccess)
     },
@@ -1037,136 +1030,102 @@ BX.SaleCommonPVZ = {
      *  Установка маркеров на карту PVZ
      */
     setPVZOnMap: function (pvzList) {
-        const oshDelivery = this
-
-        ymaps3.ready.then(async function () {
-
-            const {YMap, YMapDefaultSchemeLayer, YMapMarker, YMapLayer, YMapFeatureDataSource} = ymaps3;
-            oshDelivery.propsMap = new ymaps3.YMap(document.getElementById('map_for_delivery'), {
-                location: {
-                    center: [37.6156 , 55.7522],
-                    zoom: 12,
-                }
-            });
-            const {YMapClusterer, clusterByGrid} = await ymaps3.import('@yandex/ymaps3-clusterer@0.0.1');
-            const {YMapDefaultMarker} = await ymaps3.import('@yandex/ymaps3-markers@0.0.1');
-            oshDelivery.propsMap
-                .addChild(new YMapDefaultSchemeLayer())
-                .addChild(new YMapFeatureDataSource({id: 'my-source'}))
-                .addChild(new YMapLayer({source: 'my-source', type: 'markers', zIndex: 1800}));
-            const contentPin = document.createElement('div');
-            contentPin.innerHTML = '<img class="js-ymaps-marker-opener" style="width: 20px" src="'+window.location.origin+'/Yandex_Maps_icon.svg" />';
-            const marker = (feature) =>
-                new YMapDefaultMarker(
-                    {
-                        featureId: feature.id,
-                        coordinates: feature.geometry.coordinates,
-                        options: feature.options,
-                        properties: feature.properties,
-                        price: false,
-                        color: feature.options.color,
-                        title: feature.properties.clusterCaption,
-                        popup: {
-                            content: 'Идет загрузка данных...',
+        const oshDelivery = this;
+        const myGeocoder = ymaps.geocode(oshDelivery.curCityName, {results: 1});
+        myGeocoder.then(function (res) { // получаем координаты
+            const firstGeoObject = res.geoObjects.get(0),
+                city_coords = firstGeoObject.geometry.getCoordinates();
+            ymaps3.ready.then(async function () {
+                const {YMap, YMapDefaultSchemeLayer, YMapMarker, YMapLayer, YMapFeatureDataSource} = ymaps3;
+                oshDelivery.propsMap = new ymaps3.YMap(document.getElementById('map_for_delivery'), {
+                    location: {
+                        center: [city_coords[1], city_coords[0]],
+                        zoom: 12,
+                    }
+                });
+                const {YMapClusterer, clusterByGrid} = await ymaps3.import('@yandex/ymaps3-clusterer@0.0.1');
+                const {YMapDefaultMarker} = await ymaps3.import('@yandex/ymaps3-markers@0.0.1');
+                oshDelivery.propsMap
+                    .addChild(new YMapDefaultSchemeLayer())
+                    .addChild(new YMapFeatureDataSource({id: 'my-source'}))
+                    .addChild(new YMapLayer({source: 'my-source', type: 'markers', zIndex: 1800}));
+                const contentPin = document.createElement('div');
+                contentPin.innerHTML = '<img class="js-ymaps-marker-opener" style="width: 20px" src="' + window.location.origin + '/Yandex_Maps_icon.svg" />';
+                const marker = (feature) =>
+                    new YMapDefaultMarker(
+                        {
+                            featureId: feature.id,
+                            coordinates: feature.geometry.coordinates,
+                            options: feature.options,
+                            properties: feature.properties,
+                            price: false,
+                            color: feature.options.color,
+                            title: feature.properties.clusterCaption,
+                            popup: {
+                                content: 'Идет загрузка данных...',
+                            },
+                            zIndex: 2,
+                            type: 'marker',
+                            markerType: 'object',
+                            source: 'my-source'
                         },
-                        zIndex: 2,
-                        type: 'marker',
-                        markerType: 'object',
-                        source: 'my-source'
-                    },
-                );
-            const cluster = (coordinates, features) =>
-                new ymaps3.YMapMarker(
-                    {
-                        coordinates,
-                        type: 'marker',
-                        markerType: 'cluster',
-                        source: 'my-source'
-                    },
-                    circle(features.length).cloneNode(true)
-                );
+                    );
+                const cluster = (coordinates, features) =>
+                    new ymaps3.YMapMarker(
+                        {
+                            coordinates,
+                            type: 'marker',
+                            markerType: 'cluster',
+                            source: 'my-source'
+                        },
+                        circle(features.length).cloneNode(true)
+                    );
 
-            function circle(count) {
-                const circle = document.createElement('div');
-                circle.classList.add('circle');
-                circle.classList.add('outer-circle');
-                circle.innerHTML = `
+                function circle(count) {
+                    const circle = document.createElement('div');
+                    circle.classList.add('circle');
+                    circle.classList.add('outer-circle');
+                    circle.innerHTML = `
                     <div class="circle inner-circle">
                         <span class="circle-text">${count}</span>
                     </div>
                 `;
-                return circle;
-            }
-
-            pvzList.forEach((element) => {
-                [element.geometry.coordinates[0], element.geometry.coordinates[1]] = [element.geometry.coordinates[1], element.geometry.coordinates[0]];
-            });
-
-            const clusterer = new YMapClusterer({
-                method: clusterByGrid({gridSize: 64}),
-                features: pvzList,
-                marker,
-                cluster
-            });
-
-            oshDelivery.propsMap.addChild(clusterer);
-            const mapListener = new ymaps3.YMapListener({
-                onFastClick: (object, coords, entity) => {
-                    if (object && object.type == 'marker' && object.entity._props.markerType == 'object') {
-                        object.entity.parent._popup.classList.remove('ymaps3x0--default-marker__hider');
-                        if (!object.entity.parent._props.price) {
-                            oshDelivery.getRequestGetPvzPrice(object.entity.parent, object);
-                        } else {
-                            object.entity.parent._marker.element.closest('.ymaps3x0--marker').classList.add('zIndex3');
-                        }
-                    }
-                },
-            });
-
-            oshDelivery.propsMap.addChild(mapListener);
-
-        }).catch(function (e) {
-            console.log(e);
-            oshDelivery.showError(oshDelivery.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
-            console.warn(e);
-        });
-    },
-
-    sendRequestToComponent: function (action, actionData) {
-        BX.ajax({
-            method: 'POST',
-            dataType: 'json',
-            url: BX.Sale.OrderAjaxComponent.ajaxUrl,
-            data: this.getDataForPVZ(action, actionData),
-            onsuccess: BX.delegate(function (result) {
-                if (action === 'refreshOrderAjax') {
-                    if (actionData.error) {
-                        result.error = actionData.error;
-                    }
-                    BX.Sale.OrderAjaxComponent.refreshOrder(result);
+                    return circle;
                 }
-                BX.Sale.OrderAjaxComponent.endLoader();
-            }, this),
-            onfailure: BX.delegate(function () {
-                console.warn('error sendRequestToComponent');
-                BX.Sale.OrderAjaxComponent.endLoader();
-            }, this)
+
+                pvzList.forEach((element) => {
+                    [element.geometry.coordinates[0], element.geometry.coordinates[1]] = [element.geometry.coordinates[1], element.geometry.coordinates[0]];
+                });
+
+                const clusterer = new YMapClusterer({
+                    method: clusterByGrid({gridSize: 64}),
+                    features: pvzList,
+                    marker,
+                    cluster
+                });
+
+                oshDelivery.propsMap.addChild(clusterer);
+                const mapListener = new ymaps3.YMapListener({
+                    onFastClick: (object, coords, entity) => {
+                        if (object && object.type == 'marker' && object.entity._props.markerType == 'object') {
+                            object.entity.parent._popup.classList.remove('ymaps3x0--default-marker__hider');
+                            if (!object.entity.parent._props.price) {
+                                oshDelivery.getRequestGetPvzPrice(object.entity.parent, object);
+                            } else {
+                                object.entity.parent._marker.element.closest('.ymaps3x0--marker').classList.add('zIndex3');
+                            }
+                        }
+                    },
+                });
+
+                oshDelivery.propsMap.addChild(mapListener);
+
+            }).catch(function (e) {
+                console.log(e);
+                oshDelivery.showError(oshDelivery.mainErrorsNode, 'Ошибка построения карты ПВЗ!');
+                console.warn(e);
+            });
         });
-    },
-
-    getDataForPVZ: function (action, actionData) {
-        var data = {
-            order: BX.Sale.OrderAjaxComponent.getAllFormData(),
-            sessid: BX.bitrix_sessid(),
-            via_ajax: 'Y',
-            SITE_ID: BX.Sale.OrderAjaxComponent.siteId,
-            signedParamsString: BX.Sale.OrderAjaxComponent.signedParamsString,
-            dataToHandler: actionData
-        };
-
-        data[BX.Sale.OrderAjaxComponent.params.ACTION_VARIABLE] = action;
-
-        return data;
     },
 
     buildAddressField: function () {
