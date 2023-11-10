@@ -134,7 +134,7 @@
         BX.bind(this.obReuse, 'click', function () {
             event.preventDefault();
 
-            BX.style(this.obReuse, 'visibility', 'hidden');
+            BX.style(this.obReuse, 'display', 'none');
 
             let form = $(this.obFormId);
             let url = form.attr('action');
@@ -231,7 +231,7 @@
                 let step = objResponse['STEP'];
 
                 if (objResponse['ERROR_TYPE'] === 'LOGIN') {
-                    this.errorAlert.style.visibility = "visible";
+                    this.errorAlert.style.display = "block";
                     BX.adjust(this.errorAlert, {text: BX.message('ERROR_ALERT_NOT_CORRECT')});
                 }
 
@@ -332,7 +332,7 @@
             case STATE_USER_WAITING:
                 break;
             case STATE_CODE_WAITING:
-                BX.style(this.obReuse, 'visibility', 'hidden');
+                BX.style(this.obReuse, 'display', 'none');
                 BX.toggleClass(BX(`ctweb_form_step_${state}`), 'hidden');
                 BX.show(this.obReuse.closest('div'));
                 BX.show(this.obTimer);
@@ -353,7 +353,7 @@
                     this.renderTime(seconds_left);
                     if (seconds_left <= 0) {
                         this.setState(STATE_CODE_REUSED);
-                        BX.style(this.obReuse, 'visibility', 'visible');
+                        BX.style(this.obReuse, 'display', 'block');
                     }
                 }.bind(this), 100);
 

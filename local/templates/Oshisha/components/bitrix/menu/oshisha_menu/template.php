@@ -53,7 +53,7 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
     <ul class="ul_menu flex items-center flex-row relative">
         <li class="li_menu_header mr-7">
             <div class="dark:text-textDark shadow-md flex flex-row justify-center items-center text-textLight
-            dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 w-48"
+            dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 w-40"
                  title="Просмотреть меню"
                  id="open_menu">
                 <div class="mr-4 span_bar">
@@ -77,17 +77,22 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 
         $result = json_encode($menu_for_JS) ?>
         <li class="mr-7" data-role="bx-menu-item">
-            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight" href="/diskont/">
+            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight dark:hover:text-white
+             hover:text-hover-red"
+               href="/diskont/">
                 Дисконт</a>
         </li>
         <li class="mr-7" data-role="bx-menu-item">
-            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight" href="/catalog_new/">Новинки</a>
+            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight dark:hover:text-white
+             hover:text-hover-red" href="/catalog_new/">Новинки</a>
         </li>
         <li class="mr-7" data-role="bx-menu-item">
-            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight" href="/hit/">Хиты</a>
+            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight dark:hover:text-white
+             hover:text-hover-red" href="/hit/">Хиты</a>
         </li>
         <li class="mr-7" data-role="bx-menu-item">
-            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight" href="/brands/">Бренды</a>
+            <a class="font-medium dark:font-light dark:text-textDarkLightGray text-textLight dark:hover:text-white
+             hover:text-hover-red" href="/brands/">Бренды</a>
         </li>
         <div class="open_menu absolute top-10 flex-row bg-filterGray rounded-xl p-8 dark:bg-darkBox max-w-6xl w-full shadow-md"
              style="display: none"

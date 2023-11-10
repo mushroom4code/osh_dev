@@ -62,6 +62,9 @@ module.exports = {
             width: {
                 'inherit': 'inherit'
             },
+            fontSize:{
+                '13': '13px',
+            }
         }
     },
     plugins: [

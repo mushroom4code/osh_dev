@@ -15,7 +15,7 @@ $option = $option_site; ?>
 </div>
 <!--end .container.bx-content-section-->
 </div><!--end .workarea-->
-
+</div>
 <?php $userData = EnteregoUser::getInstance(); ?>
 <footer class="flex flew-row justify-center dark:bg-dark bg-lightGrayBg dark:text-textDark text-white w-full border-t border-white">
     <div class="xl:container container ls:lg:md:p-0 p-4 foot_container mt-10 mb-4">

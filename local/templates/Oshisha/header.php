@@ -93,11 +93,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     $APPLICATION->ShowHead(); ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
-<body class="bg-white dark:bg-dark dark:text-textDark min-h-screen relative">
+<body class="bg-white dark:bg-dark dark:text-textDark relative">
 <div id="panel">
     <?php $APPLICATION->ShowPanel(); ?>
 </div>
-<div>
+<div class="min-h-screen">
     <header class="bg-white dark:bg-dark sticky top-0 z-30">
         <?php if (CHECKED_INFO) {
             $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
@@ -112,7 +112,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
             </div>
         <?php } ?>
-        <div class="flex flex-row border-b border-white-100 justify-center width-100 py-3 dark:bg-dark bg-lightGrayBg">
+        <div class="flex flex-row border-0 md:border-b border-white-100 justify-center width-100 dark:bg-dark
+        bg-lightGrayBg py-3 px-4 md:px-0">
             <div class="xs:flex hidden">
                 <a href="<?= SITE_DIR ?>">
                     <?php $APPLICATION->IncludeComponent(
@@ -172,7 +173,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                     $code_region = $result->fetch()['VALUE'];
                                 }
                             } ?>
-                            <span id="city-title" class="dark:text-textDarkLightGray text-white text-sm font-medium"
+                            <span id="city-title" class="dark:text-textDarkLightGray text-white text-13 font-medium"
                                   data-city="<?= $code_region ?>">
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_select.php") ?>
@@ -183,36 +184,42 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         </a>
                     </span>
                     <a href="https://oshisha.net"
-                       class="dark:text-textDarkLightGray text-white text-sm ml-5 mr-2 font-normal">
+                       class="dark:text-textDarkLightGray text-white text-13 ml-5 mr-2 font-normal dark:hover:text-white
+             hover:text-hover-red">
                         Розничный сайт</a>
                 </div>
                 <div class="flex flex-row">
                     <div class="hidden md:flex flex-row">
                         <a href="/about/o-nas/"
-                           class="text-sm text-textDarkLightGray mr-5 dark:font-light font-normal hover:text-hover-red">О
-                            нас</a>
+                           class="text-13 text-textDarkLightGray mr-5 dark:font-light font-normal dark:hover:text-white
+                            hover:text-hover-red">О нас</a>
                         <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
                             <a href="/local/templates/Oshisha/images/presentation.pdf"
                                download
-                               class="text-sm mr-5 dark:text-textDarkLightGray text-white font-light hover:text-hover-red">Презентация</a>
+                               class="text-13 mr-5 dark:text-textDarkLightGray text-white font-light dark:hover:text-white
+                                hover:text-hover-red">Презентация</a>
                         <?php }
                         if ($USER->IsAuthorized()) { ?>
                             <a href="<?= $option->price_list_link; ?>"
-                               class="text-sm dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5 hover:text-hover-red">Прайс-лист</a>
+                               class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
+                               dark:hover:text-white hover:text-hover-red">Прайс-лист</a>
                         <?php } else { ?>
                             <a href="/login/"
-                               class="text-sm dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5 hover:text-hover-red">Прайс-лист</a>
+                               class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
+                                dark:hover:text-white hover:text-hover-redd">Прайс-лист</a>
                         <?php } ?>
                         <a href="/about/contacts/"
-                           class="text-sm dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5 hover:text-hover-red">Контакты</a>
+                           class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
+                           dark:hover:text-white hover:text-hover-red">Контакты</a>
                         <?php if ($USER->IsAuthorized()) { ?>
                             <a href="/about/delivery/"
-                               class="text-sm dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5 hover:text-hover-red">Доставка
+                               class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
+                                dark:hover:text-white hover:text-hover-red">Доставка
                                 и оплата</a>
                         <?php } ?>
                         <a href="javascript:void(0)"
-                           class="text-sm dark:text-textDarkLightGray text-white dark:font-light font-normal callback js__callback hover:text-hover-red">Обратный
-                            звонок</a>
+                           class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal
+                           callback js__callback dark:hover:text-white hover:text-hover-red">Обратный звонок</a>
                     </div>
                     <button type="button"
                             class="bg-gray-200 ml-3 flex w-8 flex-none cursor-pointer rounded-full p-px ring-1 ring-inset
@@ -311,11 +318,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             strripos($APPLICATION->GetCurPage(), '/personal/') !== false && !$mobile->isMobile()): ?>
             <div class="flex xs:hidden flex-col justify-center width-100 md:py-5 py-3 items-center flex-wrap">
                 <!--        header menu search/login/basket/like     -->
-                <div class="xl:container container flex md:flex-row flex-col justify-between items-center mb-4">
+                <div class="xl:container container md:px-0 px-4 flex flex-row justify-between items-center md:mb-4 mb-2">
                     <div class="flex flex-row">
-                        <div class="w-44 mr-8">
+                        <div class="md:w-40 w-auto md:mr-7 mr-5">
                             <a href="<?= SITE_DIR ?>">
-                                <svg width="180" height="40" viewBox="0 0 255 55" fill="none"
+                                <svg height="35" viewBox="0 0 255 55" class="w-28 md:w-40" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path d="M19.3259 46.6073C11.79 46.6073 8.10247 44.4464 8.10247 37.6771C8.10247 30.845 11.8 28.6802 19.3259 28.6802C26.8518 28.6802 30.5058 30.845 30.5058 37.6771C30.5058 44.4464 26.8183 46.6073 19.3259 46.6073ZM19.3259 54.5395C30.8377 54.5395 38.6518 49.6599 38.6518 37.6771C38.6518 25.6315 30.8377 20.7559 19.3259 20.7559C7.76389 20.7559 0 25.6315 0 37.6771C0 49.6599 7.76389 54.5395 19.3259 54.5395Z"
                                           fill="#FF0500"/>
@@ -431,7 +438,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         <?php endif; ?>
     </header>
 
-    <div class="section_wrapper min-h-550 flex flex-col justify-center items-center">
-        <div class="container md:mb-8 mb-0">
+    <div class="section_wrapper min-h-550 flex flex-col items-center">
+        <div class="container md:mb-8 mb-0 px-4 md:px-0">
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
             <div class="bx-content <?= STATIC_P ?>">

@@ -131,7 +131,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                     </div>
 
                     <div <?= $arResult['REUSE_TIME'] <= 0 ? 'style="display: none"' : 0 ?>
-                            id="<?= $jsParams['TEMPLATE']['TIMER'] ?>" class="ctweb-timer"></div>
+                            id="<?= $jsParams['TEMPLATE']['TIMER'] ?>"
+                            class="ctweb-timer font-light mb-4 text-textLight dark:text-textDarkLightGray text-xs "></div>
                     <input type="submit" id="submit_code" class="hidden">
                 </div>
 
@@ -204,8 +205,18 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
 
                     <div style="display:none">
-                        <a class="ctweb-link" href="/about/FAQ/"
-                           id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>"><?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
+                        <a class="ctweb-link hover:underline flex flex-row items-center text-sm dark:font-normal
+                        font-medium" href="/about/FAQ/"
+                           id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>">
+                            <svg width="10" height="16" viewBox="0 0 10 16" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 class="dark:stroke-white stroke-light-red">
+                                <path d="M2.125 5.08925C2.125 1.15171 8.3125 1.15175 8.3125 5.08925C8.3125 7.90175 5.5 7.33913 5.5 10.7141"
+                                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M5.5 14.2662L5.51458 14.25"
+                                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
                     </div>
 
                 </div>
@@ -421,7 +432,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         <div id="ctweb_form_step_3"
                              class="ctweb-smsauth-menu-step col-md-6 col-lg-6 col-12 p-0
                              <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'hidden' ?> ">
-                            <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
+                            <h3 class="ctweb-title text-center font-medium mb-4 text-textLight dark:text-textDarkLightGray
+                            text-lg"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
 
                             <div class="form-group mb-3 d-flex flex-column">
                                 <label class="ctweb-label mb-3" for="sms-auth-code"></label>
@@ -431,7 +443,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                             </div>
 
                             <div <?= $arResult['REUSE_TIME'] <= 0 ? 'style="display: none"' : 0 ?>
-                                    id="<?= $jsParams['TEMPLATE']['TIMER'] ?>" class="ctweb-timer"></div>
+                                    id="<?= $jsParams['TEMPLATE']['TIMER'] ?>" class="ctweb-timer text-sm
+                                               dark:font-normal font-light"></div>
                             <input type="submit" id="submit_code" class="hidden">
                         </div>
                         <!-- ERROR STEP -->
@@ -452,26 +465,31 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                    onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
 
                             <div style="display: none" class="ctweb-button-back">
-                                <a class="ctweb-link font-14"
+                                <a class="ctweb-link font-14 hover:underline flex flex-row items-center text-sm dark:font-normal
+                        font-medium"
                                    id="<?= $jsParams['TEMPLATE']['BACK'] ?>"><?= GetMessage("SMS_AUTH_BACK") ?></a>
                             </div>
 
                             <div style="display: none" class="ctweb-button-send-code-again">
-                                <a class="ctweb-link font-14"
+                                <a class="ctweb-link font-14 hover:underline flex flex-row items-center text-sm dark:font-normal
+                        font-medium"
                                    id="<?= $jsParams['TEMPLATE']['RESEND'] ?>"><?= GetMessage("SMS_AUTH_SEND_CODE_AGAIN") ?></a>
                             </div>
 
                             <div class="ctweb-button-new-code" id="new_code_block">
-                                <a class="ctweb-link glowing-text font-14"
+                                <a class="ctweb-link glowing-text font-14 hover:underline flex flex-row items-center text-sm dark:font-normal
+                        font-medium"
                                    id="<?= $mainID . 'REUSE' ?>"><?= GetMessage('SMS_AUTH_REUSE_CODE') ?></a>
                             </div>
 
                             <div>
-                                <a class="ctweb-link font-14"
+                                <a class="ctweb-link font-14 hover:underline flex flex-row items-center text-sm dark:font-normal
+                        font-medium"
                                    id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>"><?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
                             </div>
                             <div>
-                                <a class="ctweb-link font-14" href="/about/FAQ/"
+                                <a class="ctweb-link hover:underline flex flex-row items-center text-sm dark:font-normal
+                        font-medium" href="/about/FAQ/"
                                    id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>"><?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
                             </div>
                         </div>
@@ -611,24 +629,35 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                                 <!-- STEP CODE WAITING -->
                                 <div id="ctweb_form_step_3"
-                                     class="ctweb-smsauth-menu-step <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'hidden' ?> ">
-                                    <h3 class="ctweb-title"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
+                                     class="ctweb-smsauth-menu-step flex-col justify-center items-center mb-3 <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING)
+                                         ? 'flex' : 'hidden' ?> ">
+                                    <div class="max-w-xs flex flex-col items-center justify-center">
+                                        <h3 class="ctweb-title text-center font-medium mb-4 text-textLight
+                                    dark:text-textDarkLightGray text-lg"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
 
-                                    <div class="form-group flex flex-col">
-                                        <label class="ctweb-label" for="sms-auth-code"></label>
-                                        <div>
-                                            <a class="ctweb-link"><?= GetMessage("SMS_AUTH_CHANGE_NUMBER_PHONE") ?></a>
+                                        <div class="form-group flex flex-col">
+                                            <label class="ctweb-label font-light mb-4 text-textLight
+                                        dark:text-textDarkLightGray text-xs" for="sms-auth-code"></label>
+                                            <div class="flex flex-row justify-between">
+                                                <label class="ctweb-label font-normal mb-2 text-textLight
+                                        dark:text-white text-md"
+                                                       for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
+                                                <a class="ctweb-link font-medium mb-2 text-textLight
+                                        dark:text-white underline text-xs" id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>">
+                                                    <?= GetMessage("SMS_AUTH_CHANGE_NUMBER_PHONE") ?></a>
+                                            </div>
+                                            <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
+                                                   class="form-control bg-textDark p-3 mb-2 dark:bg-grayButton cursor-pointer
+                                                    w-full text-textLight rounded-md
+                                                    dark:text-white border-0 text-xl auth_code" autocomplete="off">
+                                            <span id="result"></span>
                                         </div>
-                                        <label class="ctweb-label"
-                                               for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
-                                        <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
-                                               class="form-control dark:bg-grayButton auth_code" autocomplete="off">
-                                        <span id="result"></span>
-                                    </div>
 
-                                    <div <?= $arResult['REUSE_TIME'] <= 0 ? 'style="display: none"' : 0 ?>
-                                            id="<?= $jsParams['TEMPLATE']['TIMER'] ?>" class="ctweb-timer"></div>
-                                    <input type="submit" id="submit_code" class="hidden">
+                                        <div <?= $arResult['REUSE_TIME'] <= 0 ? 'style="display: none"' : 0 ?>
+                                                id="<?= $jsParams['TEMPLATE']['TIMER'] ?>" class="ctweb-timer text-sm
+                                               dark:font-normal font-light"></div>
+                                        <input type="submit" id="submit_code" class="hidden">
+                                    </div>
                                 </div>
 
                                 <!-- ERROR STEP -->
@@ -643,7 +672,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                 <!--Навигация по форме авторизации-->
                                 <div class="ctweb-button-block flex items-center justify-center flex-col">
                                     <input class="btn link_menu_catalog get_code_button p-3 rounded-lg w-full max-w-xs text-white
-                                    cursor-pointer text-textLight font-normal bg-light-red  text-lg dark:bg-dark-red mb-4"
+                                    cursor-pointer font-normal bg-light-red  text-lg dark:bg-dark-red mb-4"
                                            id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                                            type="submit"
                                            value="<?= GetMessage("SMS_AUTH_GET_CODE") ?>"
@@ -653,8 +682,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                             <a class="ctweb-link"
                                                id="<?= $jsParams['TEMPLATE']['BACK'] ?>"><?= GetMessage("SMS_AUTH_BACK") ?></a>
                                         </div>
-
-                                        <div class="ctweb-button-send-code-again mb-2">
+                                        <div class="ctweb-button-send-code-again mb-2 hidden">
                                             <a class="ctweb-link flex flex-row items-center text-sm
                                                dark:font-normal font-medium"
                                                id="<?= $jsParams['TEMPLATE']['RESEND'] ?>">
@@ -669,43 +697,52 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                 </span>
                                                 <?= GetMessage("SMS_AUTH_SEND_CODE_AGAIN") ?></a>
                                         </div>
-
-                                        <div class="ctweb-button-new-code mb-2" id="new_code_block">
-                                            <a class="ctweb-link glowing-text"
+                                        <div class="ctweb-button-new-code mb-2 flex items-center justify-center flex-col"
+                                             id="new_code_block">
+                                            <a class="ctweb-link glowing-text
+                                            p-3 rounded-lg w-full max-w-xs text-white text-center font-normal bg-light-red
+                                             text-lg dark:bg-dark-red mb-4"
                                                id="<?= $mainID . 'REUSE' ?>"><?= GetMessage('SMS_AUTH_REUSE_CODE') ?></a>
                                         </div>
-
-                                        <div class="mb-2">
-                                            <a class="ctweb-link"
-                                               id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>">
-                                                <?= GetMessage("SMS_AUTH_CHANGE_PHONE") ?></a>
-                                        </div>
-
                                         <div class="mb-2">
                                             <a class="ctweb-link email-login flex flex-row items-center text-sm
-                                               dark:font-normal font-medium"
+                                               dark:font-normal font-medium hover:underline"
                                                id="<?= $jsParams['TEMPLATE']['AUTH_EMAIL_LOGIN'] ?>">
                                                  <span class="mr-2.5 p-2 dark:bg-grayButton border
                                                  border-textDarkLightGray dark:border-grayButton rounded-full">
-                                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                                                     xmlns="http://www.w3.org/2000/svg"
-                                                     class="dark:fill-white fill-light-red">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                                          d="M24 5.35328V20.2225L18.198 12.9707L17.0955 13.853L22.954 21.1768H1.04605L6.90454 13.853L5.80201 12.9707L0 20.2225V5.35326L11.9993 15.7588L24 5.35328ZM23.9992 2.82495V3.48279L11.9999 13.8883L0.0005625 3.4828V2.82495H23.9992Z"
-                                                    />
-                                                </svg>
+                                                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg"
+                                                         class="dark:fill-white fill-light-red">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M24 5.35328V20.2225L18.198 12.9707L17.0955 13.853L22.954 21.1768H1.04605L6.90454 13.853L5.80201 12.9707L0 20.2225V5.35326L11.9993 15.7588L24 5.35328ZM23.9992 2.82495V3.48279L11.9999 13.8883L0.0005625 3.4828V2.82495H23.9992Z"
+                                                        />
+                                                    </svg>
                                                  </span>
                                                 <?= GetMessage("SMS_AUTH_EMAIL_LOGIN") ?></a>
                                         </div>
 
                                         <div class="mb-2">
-                                            <a class="ctweb-link" href="<? SITE_DIR ?>about/FAQ/"
+                                            <a class="ctweb-link hover:underline flex flex-row items-center
+                                              text-sm dark:font-normal font-medium" href="<? SITE_DIR ?>about/FAQ/"
                                                id="<?= $jsParams['TEMPLATE']['MSG_NOT_COME'] ?>">
+                                                <span class="mr-2.5 p-2 dark:bg-grayButton border
+                                                 border-textDarkLightGray dark:border-grayButton rounded-full">
+                                                <svg width="17" height="17" viewBox="0 0 10 16" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg"
+                                                     class="dark:stroke-white stroke-light-red">
+                                                    <path d="M2.125 5.08925C2.125 1.15171 8.3125 1.15175 8.3125 5.08925C8.3125 7.90175 5.5 7.33913 5.5 10.7141"
+                                                          stroke-width="2.5" stroke-linecap="round"
+                                                          stroke-linejoin="round"/>
+                                                    <path d="M5.5 14.2662L5.51458 14.25"
+                                                          stroke-width="2.5" stroke-linecap="round"
+                                                          stroke-linejoin="round"/>
+                                                </svg>
+                                                </span>
                                                 <?= GetMessage("SMS_AUTH_CODE_NOT_RESPONSE") ?></a>
                                         </div>
                                         <div class="mb-2">
-                                            <a class="ctweb-link email-login flex flex-row items-center text-sm
-                                            dark:font-normal font-medium"
+                                            <a class="ctweb-link email-login hover:underline flex flex-row items-center
+                                              text-sm dark:font-normal font-medium"
                                                href="/auth/?register=yes">
                                             <span class="mr-2.5 p-2 dark:bg-grayButton border
                                                  border-textDarkLightGray dark:border-grayButton rounded-full">
@@ -749,7 +786,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                             text-textLight dark:text-textDarkLightGray"><?= GetMessage("SMS_AUTH_PASSWORD") ?></label>
                                                 <span style="float: right">
                                         <a href="/auth/?forgot_password=yes"
-                                           class="ctweb-link ctweb-link-fargot font-normal text-xs text-textLight dark:text-textDarkLightGray"
+                                           class="ctweb-link ctweb-link-fargot  font-normal text-xs text-textLight
+                                           hover:underline dark:text-textDarkLightGray"
                                            idk="<?= $jsParams['TEMPLATE']['FORGOT_PASSWORD'] ?>">Забыли пароль?</a>
                                     </span>
                                             </div>
@@ -782,14 +820,14 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                 </div>
                                 <div class="ctweb-button-block flex items-center justify-center flex-col">
                                     <input class="btn link_menu_catalog get_code_button p-3 rounded-lg w-full max-w-xs text-white
-                                    cursor-pointer text-textLight font-normal bg-light-red  text-lg dark:bg-dark-red mb-4"
+                                    cursor-pointer font-normal bg-light-red text-lg dark:bg-dark-red mb-4"
                                            id="<?= $jsParams['TEMPLATE']['LOGIN'] ?>"
                                            type="button"
                                            value="<?= GetMessage("SMS_AUTH_LOG_IN") ?>">
                                     <div class="flex flex-col w-full">
                                         <div class="my-3">
                                             <a class="ctweb-link flex flex-row items-center text-sm
-                                            dark:font-normal font-medium"
+                                            dark:font-normal font-medium hover:underline"
                                                id="<?= $jsParams['TEMPLATE']['AUTH_PHONE_LOGIN'] ?>">
                                                 <span class="mr-2.5 p-2 dark:bg-grayButton border
                                                  border-textDarkLightGray dark:border-grayButton rounded-full">
@@ -803,7 +841,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                 <?= GetMessage("AUTH_PHONE_LOGIN") ?></a>
                                         </div>
                                         <a class="ctweb-link email-login flex flex-row items-center text-sm
-                                            dark:font-normal font-medium"
+                                            dark:font-normal font-medium hover:underline"
                                            href="/auth/?register=yes">
                                             <span class="mr-2.5 p-2 dark:bg-grayButton border
                                                  border-textDarkLightGray dark:border-grayButton rounded-full">
