@@ -29,8 +29,9 @@ var countryRequesting = false;
             var selector = $('<div class="country-phone-selector">' +
                 '<div class="country-phone-selected h-full flex items-center"></div>' +
                 '<div class="country-phone-options bg-white dark:bg-grayButton">' +
-                '<input type="text" class="country-phone-search input-search-in-box form-control input_lk bx-auth-input" ' +
-                'placeholder="Введите страну" value=""><div class="options-list mt-2"></div></div></div>');
+                '<input type="text" class="country-phone-search input-search-in-box bg-textDark p-3 dark:bg-tagFilterGray' +
+                ' w-full text-textLight rounded-lg dark:text-white border-0" placeholder="Введите страну" value=""> ' +
+                '<div class="options-list mt-2"></div></div></div>');
             $(selector).prependTo(container);
 
             var prefixName = this.options.prefix ?
