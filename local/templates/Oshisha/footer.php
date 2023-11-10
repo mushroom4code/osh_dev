@@ -271,7 +271,6 @@ $option = $option_site; ?>
         </div>
         <script>
             $(document).ready(function () {
-
                 let ageAccess = sessionStorage.getItem("age_access");
                 if (!ageAccess) {
                     $("#trueModal").arcticmodal(
@@ -283,11 +282,9 @@ $option = $option_site; ?>
                         });
                 }
             });
-
             // age access
         </script>
-    <? } ?>
-
+    <?php } ?>
     <?php require($_SERVER['DOCUMENT_ROOT'] . '/local/templates/Oshisha/include/cookie.php') ?>
 </footer>
 </div>

@@ -110,7 +110,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                 <!-- STEP CODE WAITING -->
                 <div id="ctweb_form_step_3"
                      class="profile ctweb-smsauth-menu-step w-full
-                     <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'hidden' ?> ">
+                     <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? 'flex' : 'hidden' ?> ">
                     <h3 class="text-xs mb-3 font-normal dark:text-iconGray text-textLight">
                         <?= GetMessage("SMS_AUTH_ENTER_CODE") ?>
                     </h3>
@@ -431,7 +431,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                         <!-- STEP CODE WAITING -->
                         <div id="ctweb_form_step_3"
                              class="ctweb-smsauth-menu-step col-md-6 col-lg-6 col-12 p-0
-                             <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? '' : 'hidden' ?> ">
+                             <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? 'flex' : 'hidden' ?> ">
                             <h3 class="ctweb-title text-center font-medium mb-4 text-textLight dark:text-textDarkLightGray
                             text-lg"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
 
@@ -536,7 +536,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
     </div>
 <?php else:
     if (strripos($_SERVER['REQUEST_URI'], '/?register=yes') === false) { ?>
-        <div class="ctweb-smsauth-menu-block z-50 p-8 fixed md:top-1/3 top-0 left-0 right-0 m-auto md:max-w-md
+        <div class="ctweb-smsauth-menu-block z-50 p-8 fixed md:top-1/4 top-0 left-0 right-0 m-auto md:max-w-md
          md:w-full w-screen md:h-auto h-screen hidden md:rounded-xl dark:bg-darkBox bg-white rounded-0"
              data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
             <div class="close_login_menu absolute top-1.5 right-1.5">
@@ -589,8 +589,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                                 <!--STEP PNONE WAITING-->
                                 <div id="ctweb_form_step_1"
-                                     class="ctweb-smsauth-menu-step hidden mb-4 flex justify-center">
-                                    <div class=" max-w-xs">
+                                     class="ctweb-smsauth-menu-step mb-4 hidden justify-center">
+                                    <div class="max-w-xs">
                                         <h3 class="text-center font-medium mb-4 text-textLight dark:text-textDarkLightGray text-lg">
                                             <?= GetMessage("SMS_AUTH_OR_REGISTER_TITLE") ?></h3>
                                         <div>
@@ -629,8 +629,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
 
                                 <!-- STEP CODE WAITING -->
                                 <div id="ctweb_form_step_3"
-                                     class="ctweb-smsauth-menu-step flex-col justify-center items-center mb-3 <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING)
-                                         ? 'flex' : 'hidden' ?> ">
+                                     class="ctweb-smsauth-menu-step flex-col justify-center items-center mb-3
+                                     <?= ($arResult['STEP'] === Manager::STEP_CODE_WAITING) ? 'flex' : 'hidden' ?> ">
                                     <div class="max-w-xs flex flex-col items-center justify-center">
                                         <h3 class="ctweb-title text-center font-medium mb-4 text-textLight
                                     dark:text-textDarkLightGray text-lg"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
