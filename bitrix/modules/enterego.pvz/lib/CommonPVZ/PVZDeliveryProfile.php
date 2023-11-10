@@ -96,7 +96,9 @@ class PVZDeliveryProfile extends Base
                 }
                 if ($prop['CODE'] === 'LOCATION') {
                     $deliveryParams['code_city'] = $propertyItem->getValue();
-                    $deliveryParams['name_city'] = json_decode(DeliveryHelper::getCityName($deliveryParams['code_city']), true)['LOCATION_NAME'];
+                    $deliveryParams['location_name'] = json_decode(DeliveryHelper::getCityName($deliveryParams['code_city']), true);
+                    $deliveryParams['name_city'] = $deliveryParams['location_name']['LOCATION_NAME'];
+                    $deliveryParams['name_country'] = $deliveryParams['location_name']['COUNTRY_NAME'];
                 }
                 if($prop['CODE'] === 'ADDRESS_PVZ') {
                     $deliveryParams['to'] = $propertyItem->getValue();
@@ -138,7 +140,6 @@ class PVZDeliveryProfile extends Base
                         'DELIVERY_CALCULATION'
                     ));
             }
-
         return $result;
     }
 
