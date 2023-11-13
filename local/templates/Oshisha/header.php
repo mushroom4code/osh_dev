@@ -71,9 +71,12 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="OSHISHA">
     <meta name="apple-mobile-web-app-title" content="OSHISHA">
-    <meta name="theme-color" content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
-    <meta name="background-color" content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
-    <meta name="msapplication-navbutton-color" content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
+    <meta name="theme-color"
+          content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
+    <meta name="background-color"
+          content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
+    <meta name="msapplication-navbutton-color"
+          content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="msapplication-starturl" content="/">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -243,7 +246,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                     </select>
                                 </div>
                                 <div class="filial-popup"></div>
-                                </div>
+                            </div>
                         <?php } else { ?>
                             <a href="/about/feedback_new_site/"
                                class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать отзыв</a>
@@ -252,28 +255,35 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-7 p-0">
                     <div class="color-white app_install PC text_header cursor-pointer"
-                         data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Приложение <i class="fa fa-download" aria-hidden="true"></i>
+                         data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Приложение <i
+                                class="fa fa-download" aria-hidden="true"></i>
                     </div>
-                    <a href="/about/o-nas/" class="text_header">О нас</a>
-
-                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                        <a href="/local/templates/Oshisha/images/presentation.pdf" download class="text_header ">Презентация</a>
-                    <?php }
-                    if ($USER->IsAuthorized()) { ?>
+                    <?php if ($USER->IsAuthorized()) { ?>
                         <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
                     <?php } else { ?>
                         <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
-                    <a href="/about/contacts/" class="text_header">Контакты</a>
-                    <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
-                    <?php } ?>
+                    <a href="javascript:void(0)" class="text_header js--open-top-menu" onclick="()=>{
+
+                   $('#top_menu_header').hasClass('d-none')
+                   ">Контакты
+                        <i class="fa fa-angle-right" aria-hidden="true"></i></a>
+                    <div class="d-none" id="top_menu_header">
+                        <a href="/about/contacts/" class="text_header">Контакты</a>
+                        <a href="/about/o-nas/" class="text_header">О нас</a>
+                        <?php if ($USER->IsAuthorized()) { ?>
+                            <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
+                        <?php }
+//                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                            <a href="/local/templates/Oshisha/images/presentation.pdf" download class="text_header ">Презентация</a>
+<!--                        --><?php //}
+                        if ($USER->IsAuthorized()) { ?>
+                            <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
+                        <?php } else { ?>
+                            <a href="/about/FAQ/#support" class="text_header">Поддержка</a>
+                        <?php } ?>
+                    </div>
                     <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
-                    <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
-                    <?php } else { ?>
-                        <a href="/about/FAQ/#support" class="text_header">Поддержка</a>
-                    <?php } ?>
                 </div>
             </div>
         </div>
