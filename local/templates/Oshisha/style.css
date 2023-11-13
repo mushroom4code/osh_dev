@@ -7450,9 +7450,8 @@ body #panel {
     }
 }
 
-/*TODO добавить стили*/
-/*@media all and (display-mode: fullscreen) {*/
-/*    body {*/
-/*       background-color: red!important;*/
-/*    }*/
-/*}*/
+@media all and (display-mode: standalone) {
+    .app_install.PC, .app_install.mob {
+        display: none !important;
+    }
+}
