@@ -263,25 +263,26 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                     <?php } else { ?>
                         <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
-                    <a href="javascript:void(0)" class="text_header js--open-top-menu" onclick="()=>{
-
-                   $('#top_menu_header').hasClass('d-none')
-                   ">Контакты
-                        <i class="fa fa-angle-right" aria-hidden="true"></i></a>
-                    <div class="d-none" id="top_menu_header">
-                        <a href="/about/contacts/" class="text_header">Контакты</a>
-                        <a href="/about/o-nas/" class="text_header">О нас</a>
-                        <?php if ($USER->IsAuthorized()) { ?>
-                            <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
-                        <?php }
-//                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                            <a href="/local/templates/Oshisha/images/presentation.pdf" download class="text_header ">Презентация</a>
-<!--                        --><?php //}
-                        if ($USER->IsAuthorized()) { ?>
-                            <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
-                        <?php } else { ?>
-                            <a href="/about/FAQ/#support" class="text_header">Поддержка</a>
-                        <?php } ?>
+                    <div class="position-relative">
+                        <a href="javascript:void(0)" class="text_header js--open-top-menu"
+                           onclick="$('#top_menu_header').toggleClass('d-none').toggleClass('d-flex')">Контакты
+                            <i class="fa fa-angle-down ml-1" style="font-size: 17px;" aria-hidden="true"></i></a>
+                        <div class="d-none position-absolute top-1 flex-column bg-white br-10" id="top_menu_header">
+                            <a href="/about/contacts/" class="py-2 px-3 font-13">Контакты</a>
+                            <a href="/about/o-nas/" class="py-2 px-3 font-13">О нас</a>
+                            <?php if ($USER->IsAuthorized()) { ?>
+                                <a href="/about/delivery/" class="text_header py-2 px-3 font-13">Доставка и оплата</a>
+                            <?php }
+                            //                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                            <a href="/local/templates/Oshisha/images/presentation.pdf"
+                               download class="py-2 px-3 font-13">Презентация</a>
+                            <!--                        --><?php //}
+                            if ($USER->IsAuthorized()) { ?>
+                                <a href="/personal/support/" class="font-13 py-2 px-3" style="display:none">Поддержка</a>
+                            <?php } else { ?>
+                                <a href="/about/FAQ/#support" class="font-13 py-2 px-3">Поддержка</a>
+                            <?php } ?>
+                        </div>
                     </div>
                     <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
                 </div>
