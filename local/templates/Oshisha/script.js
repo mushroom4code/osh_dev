@@ -3120,3 +3120,9 @@ $(document).ready(function () {
         });
     }
 });
+$(document).on('click', function(e) {
+    if ($(e.target).closest(".top-dop-menu-hides").length === 0) {
+        $('#top_menu_header').addClass('d-none').removeClass('d-flex');
+    }
+    e.stopPropagation();
+});
