@@ -273,14 +273,9 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                             <?php if ($USER->IsAuthorized()) { ?>
                                 <a href="/about/delivery/" class="text_header py-2 px-3 font-13">Доставка и оплата</a>
                             <?php }
-                            //                        if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                            <a href="/local/templates/Oshisha/images/presentation.pdf"
-                               download class="py-2 px-3 font-13">Презентация</a>
-                            <!--                        --><?php //}
-                            if ($USER->IsAuthorized()) { ?>
-                                <a href="/personal/support/" class="font-13 py-2 px-3" style="display:none">Поддержка</a>
-                            <?php } else { ?>
-                                <a href="/about/FAQ/#support" class="font-13 py-2 px-3">Поддержка</a>
+                            if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                                <a href="/local/templates/Oshisha/images/presentation.pdf"
+                                   download class="py-2 px-3 font-13">Презентация</a>
                             <?php } ?>
                         </div>
                     </div>
