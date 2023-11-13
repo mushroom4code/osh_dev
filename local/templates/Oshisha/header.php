@@ -313,6 +313,12 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                 <a href="/news/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Блог</span>
                                 </a>
+                                <a href="/hit/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight color-redLight">Хиты</span>
+                                </a>
+                                <a href="/catalog_new/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight color-redLight">Новинки</span>
+                                </a>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
                                 </a>

@@ -24,17 +24,17 @@ $option = $option_site; ?>
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
                 <a class="logo" href="<?= SITE_DIR ?>">
                     <div class="logo_footer">
-                    <?php
-                    $APPLICATION->IncludeComponent(
-                        'bitrix:main.include',
-                        '',
-                        [
-                            'AREA_FILE_SHOW' => 'file',
-                            'PATH' => SITE_DIR . 'include/logo_footer.php'
-                        ],
-                        false
-                    );
-                    ?>
+                        <?php
+                        $APPLICATION->IncludeComponent(
+                            'bitrix:main.include',
+                            '',
+                            [
+                                'AREA_FILE_SHOW' => 'file',
+                                'PATH' => SITE_DIR . 'include/logo_footer.php'
+                            ],
+                            false
+                        );
+                        ?>
                     </div>
                 </a>
 
@@ -161,8 +161,18 @@ $option = $option_site; ?>
                         <a href="/news/" class="col-menu-link">Блог</a>
                     </li>
                 </ul>
-                <div class="d-lg-none d-md-none d-block footer-col mt-5 mb-3">
-                    <div class="col-menu-item"><a href="/news/" class="color-white font-weight-bold d-block">Блог</a></div>
+                <div class="d-lg-none d-md-none d-block footer-col mt-5 mb-3 text-decoration-underline">
+                    <div class="col-menu-item">
+                        <a href="/news/" class="color-white d-block">Блог</a></div>
+                </div>
+                <div class="d-lg-none d-md-none d-block footer-col mb-3 text-decoration-underline">
+                    <div class="col-menu-item">
+                        <a href="/hit/" class="color-white d-block">Хиты</a></div>
+                </div>
+                <div class="d-lg-none d-md-none d-block footer-col mb-3 text-decoration-underline">
+                    <div class="col-menu-item">
+                        <a href="/catalog_new/" class="color-white d-block">Новинки</a>
+                    </div>
                 </div>
                 <div class="socials">
                     <span class="col-title">Социальные сети</span>
@@ -331,7 +341,7 @@ $option = $option_site; ?>
         </div>
     <?php endif; ?>
 </footer>
-<?php Asset::getInstance()->addJs("/local/templates/Oshisha/assets/js/locations_list_modal.js");?>
+<?php Asset::getInstance()->addJs("/local/templates/Oshisha/assets/js/locations_list_modal.js"); ?>
 </div>
 </div>
 <!-- //bx-wrapper -->
