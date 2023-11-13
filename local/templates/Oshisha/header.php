@@ -264,7 +264,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                         <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
                     <div class="position-relative">
-                        <a href="javascript:void(0)" class="text_header js--open-top-menu"
+                        <a href="javascript:void(0)" class="text_header js--open-top-menu d-flex align-items-center flex-row"
                            onclick="$('#top_menu_header').toggleClass('d-none').toggleClass('d-flex')">Контакты
                             <i class="fa fa-angle-down ml-1" style="font-size: 17px;" aria-hidden="true"></i></a>
                         <div class="d-none position-absolute top-1 flex-column bg-white br-10" id="top_menu_header">
