@@ -468,9 +468,6 @@ BX.SaleCommonPVZ = {
 
         address.parentNode.insertBefore(location_restrictions, address.nextSibling);
         var address_position_arr = address.getBoundingClientRect();
-        var location_restrictions_ul = location_restrictions.querySelector('ul');
-        location_restrictions_ul.style.left = (Math.floor(address_position_arr['left']) + (postfix === 'general' ? 22 : 11)) + 'px';
-        location_restrictions_ul.style.top = (Math.floor(address_position_arr['top']) + (postfix === 'general' ? 9 : 6)) + 'px';
         address.style.paddingLeft = (location_restrictions.querySelector('ul').offsetWidth + 25 + 9) + 'px';
 
         var suggestions_node = BX.create('div',
@@ -485,8 +482,6 @@ BX.SaleCommonPVZ = {
             });
 
         address.parentNode.insertBefore(suggestions_node, location_restrictions.nextSibling);
-        suggestions_node.style.left = Math.floor(address_position_arr['left']) + 'px';
-        suggestions_node.style.top = (Math.floor(address_position_arr['top']) + 38) + 'px';
         suggestions_node.style.width = Math.floor(address_position_arr['width']) + 'px';
 
         ['focusin', 'focusout', 'input'].forEach(function (e) {
@@ -557,7 +552,6 @@ BX.SaleCommonPVZ = {
         });
 
         window.onresize = function() {
-            var restriction_locations_general_ul = document.querySelector('#location-restrictions-container-general ul');
             var restriction_locations_osh_ul = document.querySelector('#location-restrictions-container-osh ul');
             var general_address_field = document.querySelector('#user-address');
             var osh_address_field = document.querySelector('#osh_delivery_ya_map_address');
@@ -567,23 +561,18 @@ BX.SaleCommonPVZ = {
             if (general_address_field || osh_address_field) {
                 var general_address_position_arr = general_address_field.getBoundingClientRect();
                 var osh_address_position_arr = osh_address_field.getBoundingClientRect();
-                if (restriction_locations_general_ul) {
-                    restriction_locations_general_ul.style.left = (Math.floor(general_address_position_arr['left']) + 22) + 'px';
-                    restriction_locations_general_ul.style.top = (Math.floor(general_address_position_arr['top']) + 9) + 'px';
-                }
                 if (restriction_locations_osh_ul) {
                     restriction_locations_osh_ul.style.left = (Math.floor(osh_address_position_arr['left']) + 11) + 'px';
                     restriction_locations_osh_ul.style.top = (Math.floor(osh_address_position_arr['top']) + 6) + 'px';
                 }
                 if (general_suggestions_node){
-                    general_suggestions_node.style.left = Math.floor(general_address_position_arr['left']) + 'px';
-                    general_suggestions_node.style.top = (Math.floor(general_address_position_arr['top']) + 38) + 'px';
                     general_suggestions_node.style.width = Math.floor(general_address_position_arr['width']) + 'px';
                 }
                 if (osh_suggestions_node) {
                     osh_suggestions_node.style.left = Math.floor(osh_address_position_arr['left']) + 'px';
                     osh_suggestions_node.style.top = (Math.floor(osh_address_position_arr['top']) + 38) + 'px';
                     osh_suggestions_node.style.width = Math.floor(osh_address_position_arr['width']) + 'px';
+
                 }
             }
         };

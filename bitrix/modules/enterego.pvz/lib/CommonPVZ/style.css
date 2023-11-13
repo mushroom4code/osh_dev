@@ -760,11 +760,16 @@ div.location-restrictions-container {
     -webkit-text-size-adjust: 100%;
 }
 
-div.location-restrictions-container ul {
-    position: fixed;
-    left: 25px;
+div#location-restrictions-container-general ul {
+    position: absolute;
+    left: 15px;
     top: -32px;
 }
+
+div#location-restrictions-container-osh ul {
+    position: fixed;
+}
+
 
 div.location-restrictions-container ul {
     background: #f8f8f8;
@@ -780,7 +785,7 @@ div.suggestions-suggestion span.suggestions-value {
     pointer-events: none;
 }
 
-div.suggestions-suggestions {
+div#suggestions-container-osh {
     position: fixed;
 }
 
