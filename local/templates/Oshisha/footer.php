@@ -180,7 +180,6 @@ $option = $option_site; ?>
                         <a href="<?= $option->TG; ?>" target="_blank">
                             <img class="tg" src="<?= SITE_TEMPLATE_PATH . '/images/tg.svg' ?>">
                         </a>
-
                         <a href="<?= 'https://api.whatsapp.com/send?phone=' . $option->PHONE_WTS ?>" target="_blank">
                             <img class="ws" src="<?= SITE_TEMPLATE_PATH . '/images/ws.svg' ?>">
                         </a>
@@ -188,11 +187,14 @@ $option = $option_site; ?>
                         <a href="<?= $option->VK_LINK; ?>" target="_blank">
                             <img class="vk" src="<?= SITE_TEMPLATE_PATH . '/images/vk.svg' ?>">
                         </a>
-
                         <a href="<?= $option->DZEN; ?>" target="_blank">
                             <img class="dzen" src="<?= SITE_TEMPLATE_PATH . '/images/dzen.svg' ?>">
                         </a>
                     </nav>
+                </div>
+                <div class="app_install mob mt-5 color-white d-lg-none d-md-none d-block text-decoration-underline"
+                     data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Установить приложение
+                    <i class="fa fa-download ml-2 font-20" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
