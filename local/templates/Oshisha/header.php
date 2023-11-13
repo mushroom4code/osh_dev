@@ -271,7 +271,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                             <a href="/about/contacts/" class="py-2 px-3 font-13">Контакты</a>
                             <a href="/about/o-nas/" class="py-2 px-3 font-13">О нас</a>
                             <?php if ($USER->IsAuthorized()) { ?>
-                                <a href="/about/delivery/" class="text_header py-2 px-3 font-13">Доставка и оплата</a>
+                                <a href="/about/delivery/" class="py-2 px-3 font-13">Доставка и оплата</a>
                             <?php }
                             if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
                                 <a href="/local/templates/Oshisha/images/presentation.pdf"
