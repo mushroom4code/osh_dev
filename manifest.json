@@ -2,11 +2,18 @@
   "name": "OSHISHA",
   "short_name": "OSHISHA",
   "description": "Сайт кальянной продукции",
-  "start_url": "/",
+  "start_url": "https://oshisha.net/",
+  "id": "https://oshisha.net/",
   "lang": "ru-RU",
   "theme_color": "#393939",
   "background_color": "#393939",
   "display": "standalone",
+  "orientation": "any",
+  "categories": ["shopping"],
+  "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": "auto"
+  },
   "display_override": [
     "window-controls-overlay"
   ],
@@ -16,7 +23,8 @@
       "sizes": "1373x1162",
       "type": "image/png",
       "form_factor": "wide"
-    }, {
+    },
+    {
       "src": "images/screenshot_mobile.png",
       "sizes": "393x848",
       "type": "image/png",
@@ -118,6 +126,10 @@
       "src": "images/OSHISHA_144.png",
       "sizes": "144x144",
       "type": "image\/png"
+    },
+    {
+      "src": "images/OSHISHA_512.png",
+      "sizes": "any"
     }
   ]
 }
