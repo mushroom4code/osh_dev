@@ -4,8 +4,8 @@
   "description": "Сайт кальянной продукции",
   "start_url": "/",
   "lang": "ru-RU",
-  "theme_color": "linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%);",
-  "background_color": "linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%);",
+  "theme_color": "#393939",
+  "background_color": "#393939",
   "display": "standalone",
   "display_override": [
     "window-controls-overlay"
