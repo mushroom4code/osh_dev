@@ -410,11 +410,16 @@ $arrFilterTop['ID'] = $ids;
                         <?
                     }
             }
-            if (defined('SUITABLE_PRODUCTS_PROPERTY')) {
+            if (defined('SUITABLE_PRODUCTS_PROPERTY') && $USER->IsAuthorized()) {
                 $isAnyActiveSuitableProducts = false;
-                $productRes = CIBlockElement::GetList([], ['CODE' => $arResult['VARIABLES']['ELEMENT_CODE']]);
-                if ($product = $productRes->fetch()) {
-                    $suitableProductsProperty = CIBlockElement::GetProperty(IBLOCK_CATALOG, $product['ID'], [], ['CODE' => SUITABLE_PRODUCTS_PROPERTY]);
+                $product = CIBlockElement::GetByID($elementId)->fetch();
+                if ($product) {
+                    $suitableProductsProperty = CIBlockElement::GetProperty(
+                            IBLOCK_CATALOG,
+                            $product['ID'],
+                            [],
+                            ['CODE' => SUITABLE_PRODUCTS_PROPERTY]
+                    );
                     $arSuitableProductsIds = [];
                     while ($suitableProductsPropertyValue = $suitableProductsProperty->fetch()) {
                         if ($suitableProductsPropertyValue['VALUE']) {
@@ -422,17 +427,24 @@ $arrFilterTop['ID'] = $ids;
                         }
                     }
                     if ($arSuitableProductsIds) {
-                        $arSuitableProductsRes = CIBlockElement::GetList([], ['ID' => $arSuitableProductsIds], false, false, ['ACTIVE']);
+                        $arSuitableProductsRes = CIBlockElement::GetList(
+                                [],
+                                ['ID' => $arSuitableProductsIds],
+                                false,
+                                false,
+                                ['ID', 'ACTIVE']
+                        );
+                        $arSuitableProductsIds = [];
                         while ($suitableProduct = $arSuitableProductsRes->fetch()) {
                             if ($suitableProduct['ACTIVE'] === 'Y') {
                                 $isAnyActiveSuitableProducts = true;
-                                break;
+                                $arSuitableProductsIds[] = $suitableProduct['ID'];
                             }
                         }
                     }
                     $GLOBALS['arrSuitableProductsFilter'] = ['ID' => $arSuitableProductsIds];
                 }
-                if ($USER->IsAuthorized() && $arSuitableProductsIds && $isAnyActiveSuitableProducts) { ?>
+                if ($arSuitableProductsIds && $isAnyActiveSuitableProducts) { ?>
                     <div class="mb-5 mt-5">
                         <div data-entity="parent-container">
                             <div data-entity="header" data-showed="false">
