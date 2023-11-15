@@ -828,6 +828,11 @@ BX.SaleCommonPVZ = {
             },
             onsuccess: function (res) {
                 __this.pvzObj = JSON.parse(res) || [];
+                if(__this.pvzObj.features) {
+                    __this.pvzObj.features.forEach((element) => {
+                        [element.geometry.coordinates[0], element.geometry.coordinates[1]] = [element.geometry.coordinates[1], element.geometry.coordinates[0]];
+                    });
+                }
                 __this.showPVZ();
                 BX.Sale.OrderAjaxComponent.endLoader();
             },
@@ -860,11 +865,12 @@ BX.SaleCommonPVZ = {
     /**
      *
      * @param point
+     * @param displayList булева переменная отвечающая за то будут ли получатся данные для пвз с типом списка
      * @returns {{delivery: *, fivepost_zone: *, code_city: null, hubregion, action: string, weight: *, code_pvz, id, to: *, name_city: null}}
      */
-    getPointData: function (point) {
+    getPointData: function (point, displayList = false) {
         return {
-            id: point.featureId,
+            id: displayList ? point.id : point.featureId,
             action: 'getPrice',
             code_city: this.curCityCode,
             delivery: point.properties.deliveryName,
@@ -873,8 +879,8 @@ BX.SaleCommonPVZ = {
             cost: this.shipmentCost,
             packages: this.orderPackages,
             street_kladr: point.properties.street_kladr ?? '',
-            latitude: point.coordinates[0],
-            longitude: point.coordinates[1],
+            latitude:  displayList ? point.geometry.coordinates[1] : point.coordinates[1],
+            longitude: displayList ? point.geometry.coordinates[0] : point.coordinates[0],
             hubregion: point.properties.hubregion,
             name_city: this.curCityName,
             postindex: point.properties.postindex,
@@ -906,76 +912,67 @@ BX.SaleCommonPVZ = {
     },
 
     /**
-     *
-     * @param points
-     * @param clusterId
-     */
-    getSelectPvzPrice: function (points, clusterId = undefined) {
-        const __this = this;
-        const data = points.reduce((result, point) => {
-            if (!point.properties.balloonContent) {
-                point.properties.balloonContent = "Идет загрузка данных...";
-                if (clusterId === undefined) {
-                    __this.objectManager.objects.balloon.setData(point);
-                }
-                return result.concat(this.getPointData(point))
-            }
-            return result;
-        }, [])
-
-        if (data.length === 0)
-            return;
-
-        if (clusterId !== undefined && __this.objectManager.clusters.balloon.isOpen(clusterId)) {
-            __this.objectManager.clusters.balloon.setData(__this.objectManager.clusters.balloon.getData());
-        }
-
-        this.getRequestGetPvzPrice(data, afterSuccess)
-    },
-
-    /**
      * Отправка запроса на получение и вызов соответствующего обработчика
-     * @param entity
+     * @param entity объект маркера яндекс карт
+     * @param pvzData данные точки пвз в случае расчета для пвз в виде списка
+     * @param afterSuccess функция которая будет выполнена после получения цена в случае расчета для пвз в виде списка
+     * @param displayList булева переменная отвечающая за то будет ли выполнятся функционал для пвз в виде списка или нет
      */
-    getRequestGetPvzPrice: function (entity, object) {
+    getRequestGetPvzPrice: function (entity, pvzData, afterSuccess, displayList = false) {
         const __this = this;
-        const balloonContent = "".concat(
-            `<div class="popup__container" style="max-width: 415px; width: max-content; white-space: break-spaces">`,
-            '<div class="popup__close" id="popup_point_default_close">✖</div>',
-            `<div>Идет загрузка данных...</div>`,
-            `</div>`
-        );
-        entity.update({
-            price: entity.price,
-            popup: {
-                content: (close) => {
-                    const content = document.createElement('div');
-                    content.innerHTML = balloonContent;
-                    content.querySelector('.popup__close').addEventListener('click', function() {
-                        event.stopPropagation();
-                        entity._marker.element.closest('.ymaps3x0--marker').classList.remove('zIndex3');
-                        entity._togglePopup(false);
-                    });
-                    return content;
+        let data = pvzData;
+        if (!displayList) {
+            const balloonContent = "".concat(
+                `<div class="popup__container" style="max-width: 415px; width: max-content; white-space: break-spaces">`,
+                '<div class="popup__close" id="popup_point_default_close">✖</div>',
+                `<div>Идет загрузка данных...</div>`,
+                `</div>`
+            );
+            entity.update({
+                price: entity.price,
+                popup: {
+                    content: (close) => {
+                        const content = document.createElement('div');
+                        content.innerHTML = balloonContent;
+                        content.querySelector('.popup__close').addEventListener('click', function () {
+                            event.stopPropagation();
+                            entity._marker.element.closest('.ymaps3x0--marker').classList.remove('zIndex3');
+                            entity._togglePopup(false);
+                        });
+                        return content;
+                    },
                 },
-            },
-        });
-        entity._marker.element.closest('.ymaps3x0--marker').classList.add('zIndex3');
-        entity._togglePopup(true);
-        let data = __this.getPointData(entity._props);
-
+            });
+            entity._marker.element.closest('.ymaps3x0--marker').classList.add('zIndex3');
+            entity._togglePopup(true);
+            data = __this.getPointData(entity._props);
+        }
         BX.ajax({
             url: __this.ajaxUrlPVZ,
             method: 'POST',
             data: {
                 sessid: BX.bitrix_sessid(),
-                'dataToHandler': data,
+                'dataToHandler': displayList ? pvzData : data,
                 'action': 'getPVZPrice'
             },
             dataType: 'json',
             onsuccess: function (res) {
                 if (res?.status === 'success') {
-                    __this.afterGetPvzItemPrice(entity._props, res.data, entity, object);
+                    if (!displayList) {
+                        __this.afterGetPvzItemPrice(entity._props, res.data, entity);
+                    } else if (displayList && afterSuccess) {
+                        afterSuccess(res.data);
+                    } else {
+                        console.log('Error: no proper display list of pvz is selected');
+                        BX.Sale.OrderAjaxComponent.endLoader();
+                        BX.Sale.OrderAjaxComponent.showError(BX('bx-soa-delivery'), 'Ошибка запроса ПВЗ. Попробуйте позже.');
+                        __this.closePvzPopup();
+                    }
+                } else {
+                    console.log('Error: getPVZPrice returned false');
+                    BX.Sale.OrderAjaxComponent.endLoader();
+                    BX.Sale.OrderAjaxComponent.showError(BX('bx-soa-delivery'), 'Ошибка запроса ПВЗ. Попробуйте позже.');
+                    __this.closePvzPopup();
                 }
             },
             onfailure: function (res) {
@@ -987,7 +984,7 @@ BX.SaleCommonPVZ = {
         })
     },
 
-    afterGetPvzItemPrice: function (point, item, entity, object) {
+    afterGetPvzItemPrice: function (point, item, entity) {
         const __this = this;
         const balloonContent = "".concat(
             `<div class="popup__container">`,
@@ -1032,6 +1029,7 @@ BX.SaleCommonPVZ = {
     setPVZOnMap: function (pvzList) {
         const oshDelivery = this;
         const myGeocoder = ymaps.geocode(oshDelivery.curCityName, {results: 1});
+        oshDelivery.propsMap = '';
         myGeocoder.then(function (res) { // получаем координаты
             const firstGeoObject = res.geoObjects.get(0),
                 city_coords = firstGeoObject.geometry.getCoordinates();
@@ -1051,7 +1049,7 @@ BX.SaleCommonPVZ = {
                     .addChild(new YMapLayer({source: 'my-source', type: 'markers', zIndex: 1800}));
                 const contentPin = document.createElement('div');
                 contentPin.innerHTML = '<img class="js-ymaps-marker-opener" style="width: 20px" src="' + window.location.origin + '/Yandex_Maps_icon.svg" />';
-                const marker = (feature) =>
+                var marker = (feature) =>
                     new YMapDefaultMarker(
                         {
                             featureId: feature.id,
@@ -1070,7 +1068,7 @@ BX.SaleCommonPVZ = {
                             source: 'my-source'
                         },
                     );
-                const cluster = (coordinates, features) =>
+                var cluster = (coordinates, features) =>
                     new ymaps3.YMapMarker(
                         {
                             coordinates,
@@ -1093,11 +1091,7 @@ BX.SaleCommonPVZ = {
                     return circle;
                 }
 
-                pvzList.forEach((element) => {
-                    [element.geometry.coordinates[0], element.geometry.coordinates[1]] = [element.geometry.coordinates[1], element.geometry.coordinates[0]];
-                });
-
-                const clusterer = new YMapClusterer({
+                var clusterer = new YMapClusterer({
                     method: clusterByGrid({gridSize: 64}),
                     features: pvzList,
                     marker,
@@ -1105,12 +1099,20 @@ BX.SaleCommonPVZ = {
                 });
 
                 oshDelivery.propsMap.addChild(clusterer);
+                
                 const mapListener = new ymaps3.YMapListener({
                     onFastClick: (object, coords, entity) => {
                         if (object && object.type == 'marker' && object.entity._props.markerType == 'object') {
                             object.entity.parent._popup.classList.remove('ymaps3x0--default-marker__hider');
+                            let markers_opened_popups = document.querySelectorAll('.ymaps3x0--default-marker__popup_undefined:not(.ymaps3x0--default-marker__hider)');
+                            for (i = 0; i < markers_opened_popups.length; ++i) {
+                                if(!(markers_opened_popups[i] == object.entity.parent._popup)) {
+                                    markers_opened_popups[i].classList.add('ymaps3x0--default-marker__hider');
+                                    markers_opened_popups[i].closest('.ymaps3x0--marker').classList.remove('zIndex3');
+                                }
+                            }
                             if (!object.entity.parent._props.price) {
-                                oshDelivery.getRequestGetPvzPrice(object.entity.parent, object);
+                                oshDelivery.getRequestGetPvzPrice(object.entity.parent);
                             } else {
                                 object.entity.parent._marker.element.closest('.ymaps3x0--marker').classList.add('zIndex3');
                             }
@@ -1997,15 +1999,16 @@ BX.SaleCommonPVZ = {
                     events: {
                         click: BX.proxy(function (e) {
                             BX.Sale.OrderAjaxComponent.startLoader()
-                            const data = [this.getPointData(el)]
+                            const data = this.getPointData(el, true)
                             const afterSuccess = function (res) {
-                                const curPoint = BX.SaleCommonPVZ.pvzObj.features.find(feature => feature.id == res[0].id)
+                                const curPoint = BX.SaleCommonPVZ.pvzObj.features.find(feature => feature.id == res.id)
+                                curPoint.properties.price = res.price;
                                 const parentNode = BX.findParent(e.target, {tag: 'div'})
                                 BX.remove(e.target)
                                 this.buildPvzItemPrice(curPoint, parentNode)
                                 BX.Sale.OrderAjaxComponent.endLoader()
                             }.bind(this)
-                            this.getRequestGetPvzPrice(data, afterSuccess)
+                            this.getRequestGetPvzPrice(false, data, afterSuccess, true)
                         }.bind(this))
 
                     }
