@@ -22,12 +22,13 @@ $arUrlRewrite=array (
     'PATH' => '/diskont/index.php',
     'SORT' => 10,
   ),
-    199 => array (
-            'CONDITION' => '#^/hit/#',
-            'RULE' => '',
-            'PATH' => '/hit/index.php',
-            'SORT' => 10,
-        ),
+  199 => 
+  array (
+    'CONDITION' => '#^/hit/#',
+    'RULE' => '',
+    'PATH' => '/hit/index.php',
+    'SORT' => 10,
+  ),
   4 => 
   array (
     'CONDITION' => '#^\\/?\\/mobileapp/jn\\/(.*)\\/.*#',
@@ -156,20 +157,20 @@ $arUrlRewrite=array (
     'PATH' => '/catalog/index.php',
     'SORT' => 100,
   ),
-    111 =>
-  array (
-    'CONDITION' => '#^/news/#',
-    'RULE' => '',
-    'ID' => 'bitrix:news',
-    'PATH' => '/news/index.php',
-    'SORT' => 100,
-  ),
   17 => 
   array (
     'CONDITION' => '#^/brands/#',
     'RULE' => '',
     'ID' => '',
     'PATH' => '/brands/index.php',
+    'SORT' => 100,
+  ),
+  111 => 
+  array (
+    'CONDITION' => '#^/news/#',
+    'RULE' => '',
+    'ID' => 'bitrix:news',
+    'PATH' => '/news/index.php',
     'SORT' => 100,
   ),
   5 => 
