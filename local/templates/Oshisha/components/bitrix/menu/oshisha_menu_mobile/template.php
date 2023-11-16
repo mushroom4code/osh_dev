@@ -16,6 +16,9 @@ $this->setFrameMode(true);
 if (empty($arResult["ALL_ITEMS"]))
     return;
 
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
+
 CUtil::InitJSCore();
 $menuBlockId = "catalog_menu_" . $this->randString(); ?>
 <div class="header_top_panel">
@@ -47,7 +50,10 @@ $menuBlockId = "catalog_menu_" . $this->randString(); ?>
 
             if (is_array($arColumns) && count($arColumns) > 0) {
                 $class .= " bx-nav-parent";
-            } ?>
+            }
+
+        if ($showUserContent || !$showUserContent && $arResult["ALL_ITEMS"][$itemID]['TEXT'] === 'Чай'
+            || !$showUserContent && $arResult["ALL_ITEMS"][$itemID]['TEXT'] === 'Уголь') {?>
             <li class="li_menu_top " data-role="bx-menu-item">
                 <?php $active = '';
                 if ($arResult["ALL_ITEMS"][$itemID]["LINK"] == '/catalog/diskont/') {
@@ -108,7 +114,8 @@ $menuBlockId = "catalog_menu_" . $this->randString(); ?>
                     <?php } ?>
                 <?php endif; ?>
             </li>
-            <?
+            <?php
+        }
         }
         ?>
     </ul>

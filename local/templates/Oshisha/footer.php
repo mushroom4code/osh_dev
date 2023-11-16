@@ -3,7 +3,8 @@ use Bitrix\Conversion\Internals\MobileDetect;
 use Bitrix\Main\Page\Asset;
 
 $mobile = new MobileDetect();
-
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var  CAllMain|CMain $APPLICATION
  ** @var  CAllUser $USER
@@ -40,7 +41,8 @@ $option = $option_site; ?>
 
                 <div class='company-info'>
                     <span class='about'>
-                        <span class="info-row info-row--about">
+                        <?php if ($showUserContent) { ?>
+                            <span class="info-row info-row--about">
                         <?php $APPLICATION->IncludeComponent(
                             'bitrix:main.include',
                             '',
@@ -51,7 +53,7 @@ $option = $option_site; ?>
                             false
                         ); ?>
                         </span>
-
+                        <?php } ?>
                         <span class="info-row info-row--phone">
                             <a class="link" href="tel:<?= $option->PHONE ?>"><?= $option->PHONE ?></a>
                         </span>
@@ -133,47 +135,49 @@ $option = $option_site; ?>
 
 
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
-                <span class="col-title js__collapse-list">О компании</span>
-                <ul class="col-menu">
-                    <?php $APPLICATION->IncludeComponent(
-                        "bitrix:menu",
-                        "bottom_menu",
-                        [
-                            "ROOT_MENU_TYPE" => "bottom",
-                            "MAX_LEVEL" => "1",
-                            "MENU_CACHE_TYPE" => "A",
-                            "CACHE_SELECTED_ITEMS" => "N",
-                            "MENU_CACHE_TIME" => "36000000",
-                            "MENU_CACHE_USE_GROUPS" => "Y",
-                            "MENU_CACHE_GET_VARS" => [],
-                        ],
-                        false
-                    ); ?>
+                <?php if ($showUserContent) { ?>
+                    <span class="col-title js__collapse-list">О компании</span>
+                    <ul class="col-menu">
+                        <?php $APPLICATION->IncludeComponent(
+                            "bitrix:menu",
+                            "bottom_menu",
+                            [
+                                "ROOT_MENU_TYPE" => "bottom",
+                                "MAX_LEVEL" => "1",
+                                "MENU_CACHE_TYPE" => "A",
+                                "CACHE_SELECTED_ITEMS" => "N",
+                                "MENU_CACHE_TIME" => "36000000",
+                                "MENU_CACHE_USE_GROUPS" => "Y",
+                                "MENU_CACHE_GET_VARS" => [],
+                            ],
+                            false
+                        ); ?>
 
-                    <li class="col-menu-item">
-                        <?php $href = $USER->IsAuthorized() ? $option->price_list_link : '/login/' ?>
-                        <a class="col-menu-link" href="<?= $href ?>">Прайс-лист</a>
-                    </li>
-                    <li class="col-menu-item">
-                        <a href="/about/vacancy/" class="col-menu-link">Вакансии</a>
-                    </li>
-                    <li class="col-menu-item d-lg-block d-md-block d-none">
-                        <a href="/news/" class="col-menu-link">Блог</a>
-                    </li>
-                </ul>
-                <div class="d-lg-none d-md-none d-block footer-col mt-5 mb-3 text-decoration-underline">
-                    <div class="col-menu-item">
-                        <a href="/news/" class="color-white d-block">Блог</a></div>
-                </div>
-                <div class="d-lg-none d-md-none d-block footer-col mb-3 text-decoration-underline">
-                    <div class="col-menu-item">
-                        <a href="/hit/" class="color-white d-block">Хиты</a></div>
-                </div>
-                <div class="d-lg-none d-md-none d-block footer-col mb-3 text-decoration-underline">
-                    <div class="col-menu-item">
-                        <a href="/catalog_new/" class="color-white d-block">Новинки</a>
+                        <li class="col-menu-item">
+                            <?php $href = $USER->IsAuthorized() ? $option->price_list_link : '/login/' ?>
+                            <a class="col-menu-link" href="<?= $href ?>">Прайс-лист</a>
+                        </li>
+                        <li class="col-menu-item">
+                            <a href="/about/vacancy/" class="col-menu-link">Вакансии</a>
+                        </li>
+                        <li class="col-menu-item d-lg-block d-md-block d-none">
+                            <a href="/news/" class="col-menu-link">Блог</a>
+                        </li>
+                    </ul>
+                    <div class="d-lg-none d-md-none d-block footer-col mt-5 mb-3 text-decoration-underline">
+                        <div class="col-menu-item">
+                            <a href="/news/" class="color-white d-block">Блог</a></div>
                     </div>
-                </div>
+                    <div class="d-lg-none d-md-none d-block footer-col mb-3 text-decoration-underline">
+                        <div class="col-menu-item">
+                            <a href="/hit/" class="color-white d-block">Хиты</a></div>
+                    </div>
+                    <div class="d-lg-none d-md-none d-block footer-col mb-3 text-decoration-underline">
+                        <div class="col-menu-item">
+                            <a href="/catalog_new/" class="color-white d-block">Новинки</a>
+                        </div>
+                    </div>
+                <?php } ?>
                 <div class="socials">
                     <span class="col-title">Социальные сети</span>
                     <nav class="col-menu">
@@ -192,10 +196,12 @@ $option = $option_site; ?>
                         </a>
                     </nav>
                 </div>
+                <?php if ($showUserContent) { ?>
                 <div class="app_install mob mt-5 color-white d-lg-none d-md-none d-block text-decoration-underline"
                      data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Установить приложение
                     <i class="fa fa-download ml-2 font-20" aria-hidden="true"></i>
                 </div>
+                <?php } ?>
             </div>
         </div>
 
@@ -346,7 +352,8 @@ $option = $option_site; ?>
 </div>
 <!-- //bx-wrapper -->
 <div class="overlay"></div>
-<div class="page-scroller">
+
+<div class="page-scroller d-lg-block d-md-block d-none">
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20"
          height="20" viewBox="0 0 20 20" class="page-scroller__ctrl">
         <path d="M2.582 13.891c-0.272 0.268-0.709 0.268-0.979 0s-0.271-0.701 0-0.969l7.908-7.83c0.27-0.268 0.707-0.268 0.979 0l7.908 7.83c0.27 0.268 0.27 0.701 0 0.969s-0.709 0.268-0.978 0l-7.42-7.141-7.418 7.141z"></path>

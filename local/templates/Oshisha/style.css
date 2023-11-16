@@ -5805,6 +5805,10 @@ li, ul {
         display: none;
     }
 
+    .index-ugol {
+        background-size: 85%;
+    }
+
     #MenuHeader .box_with_contact {
         background: #F0F0F0;
         margin: 5px 0px;
@@ -5870,6 +5874,10 @@ li, ul {
         margin-top: 10px
     }
 
+    .index-ugol {
+        background-size: 100%;
+    }
+
     .right_mobile_top {
         display: flex;
         align-items: center;
@@ -5897,7 +5905,7 @@ li, ul {
     }
 
     .bg-image-ugol {
-        background-size: contain;
+        background-size: 70%;
     }
 
     .box_with_search .btn_search {
@@ -6789,6 +6797,7 @@ div.carousel-item-elems > div > div {
 footer.footer .container .row .footer-col .socials {
     margin: 50px 0 10px 0;
 }
+
 footer.footer .container .row .footer-col .socials .col-menu a {
     margin-right: 15px;
 }

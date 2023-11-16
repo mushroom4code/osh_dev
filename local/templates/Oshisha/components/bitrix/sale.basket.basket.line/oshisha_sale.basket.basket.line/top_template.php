@@ -33,9 +33,9 @@ $cntBasketItems = CSaleBasket::GetList(
 $arBasket = [];
 while ($arItems = $cntBasketItems->Fetch()) {
     $measureRatio = \Bitrix\Catalog\MeasureRatioTable::getList(array(
-            'select' => array('RATIO'),
-            'filter' => array('=PRODUCT_ID' => $arItems['PRODUCT_ID'])
-        ))->fetch();
+        'select' => array('RATIO'),
+        'filter' => array('=PRODUCT_ID' => $arItems['PRODUCT_ID'])
+    ))->fetch();
     if (empty($measureRatio)) {
         $arBasket['QUANTITY'] = (int)round($arBasket['QUANTITY']) + (int)round($arItems['QUANTITY']);
     } else {
@@ -44,7 +44,8 @@ while ($arItems = $cntBasketItems->Fetch()) {
     $arBasket['SUM_PRICE'] = (int)round($arBasket['SUM_PRICE']) + (int)round($arItems['SUM_PRICE']);
 }
 
-
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
 ?>
 <div class="box_with_loginBasket">
     <?php if (!$compositeStub && $arParams['SHOW_AUTHOR'] == 'Y'): ?>
@@ -114,11 +115,13 @@ while ($arItems = $cntBasketItems->Fetch()) {
             <div class="span_bar icon_header"></div>
         </a>
     </div>
-    <div class="box_with_basket_login d-flex align-items-center d-lg-none font-20">
-        <a href="/diskont/" class="link_header">
-            <div class="icon_header font-20"><i class="fa fa-percent" aria-hidden="true"></i></div>
-        </a>
-    </div>
+    <?php if ($showUserContent) { ?>
+        <div class="box_with_basket_login d-flex align-items-center d-lg-none font-20">
+            <a href="/diskont/" class="link_header">
+                <div class="icon_header font-20"><i class="fa fa-percent" aria-hidden="true"></i></div>
+            </a>
+        </div>
+    <?php } ?>
     <div class="box_with_basket_login">
         <a href="/personal/subscribe/" id="personal_subscribe" class="link_header link_lk">
             <i class="fa fa-star-o icon_header" aria-hidden="true"></i>

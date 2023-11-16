@@ -1,6 +1,12 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var CMain $APPLICATION */
 /** @var $arResult array */
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
+$href = '/';
+if ($showUserContent) {
+    $href = '/catalog/';
+}
 ?>
 <div id="basket-empty" class="bx-sbb-empty-cart-container <?= $arResult['EMPTY_BASKET'] ? '' : 'd-none'; ?>">
     <div class="mb-lg-5 mb-md-5 mb-2"><h4 class="font-m-21"><b>В вашей корзине нет товаров</b></h4></div>
@@ -13,7 +19,7 @@
                             товарами или вернуться в каталог</b>
                     </p>
                     <div class="box-image-empty-basket-mobile"></div>
-                    <a href="/catalog/kalyany/" class="bx-advertisingbanner-btn btn font-w-m-400">
+                    <a href="<?= $href ?>" class="bx-advertisingbanner-btn btn font-w-m-400">
                         Вернуться к покупкам</a>
                 </div>
 
@@ -44,7 +50,7 @@
             </div>
         </div>
     </div>
-	<?/*
+    <? /*
     <h3 class="mb-lg-5 mb-md-5 mb-0 mt-5 font-m-20"><b>Рекомендуемые товары </b></h3>
     <?php $APPLICATION->IncludeComponent(
         "bitrix:catalog.top",
@@ -129,6 +135,6 @@
         ),
         false
     );?>
-	*/?>
+	*/ ?>
 </div>
 
