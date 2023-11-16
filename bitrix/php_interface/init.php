@@ -48,7 +48,7 @@ CModule::AddAutoloadClasses("", array(
         '/bitrix/php_interface/enterego_class/EnteregoActionDiscountPriceType.php',
     '\Enterego\EnteregoGroupedProducts' => '/bitrix/php_interface/enterego_class/EnteregoGroupedProducts.php',
     '\Enterego\PWA\EnteregoDBPushNotificationPWATable' => '/bitrix/php_interface/enterego_class/PWA/EnteregoDBPushNotificationPWATable.php',
-
+    '\Enterego\PWA\EnteregoMobileAppEvents' => '/bitrix/php_interface/enterego_class/PWA/EnteregoMobileAppEvents.php',
 ));
 
 //redefine sale  basket condition
