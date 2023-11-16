@@ -296,6 +296,11 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                             <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][0]['PRINT_RATIO_PRICE']; ?></b>
                                             <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
                                         </span>
+                                        <?php } elseif (!empty($price['PRICE_DATA'][1]['DISCOUNT'])) {?>
+                                            <span class="font-14 ml-3">
+                                                <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][1]['PRINT_RATIO_BASE_PRICE']; ?></b>
+                                                <b class="sale-percent"> - <?= $price['PRICE_DATA'][1]['RATIO_DISCOUNT'] ?> руб.</b>
+                                            </span>
                                         <?php } ?>
                                         <div class="product-item-detail-price-current-unit" style="margin-left: 10px;">
                                             <span class="font-14 card-price-text"><?= $actualItem['ACTIVE_UNIT_FULL'] ?></span>

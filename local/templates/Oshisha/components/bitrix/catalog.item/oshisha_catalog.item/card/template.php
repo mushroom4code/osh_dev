@@ -250,7 +250,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                     <?php } else { ?>
                         <img src="/local/templates/Oshisha/images/no-photo.gif" alt="no photo"/>
                     <?php }
-                    if (str_contains($APPLICATION->GetCurPage(), '/akcii/') && !empty($arResult['USED_DISCOUNTS'])) { ?>
+                    if (!empty($arResult['USED_DISCOUNTS']) && !empty($price['PRICE_DATA'][1]['DISCOUNT'])) { ?>
                         <div class="item-discount-percent">
                             -<?= round($price['PRICE_DATA'][1]['PERCENT'])?>%
                         </div>
@@ -411,7 +411,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                         <?php
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
-                                        } elseif (str_contains($APPLICATION->GetCurPage(), '/akcii/') && !empty($arResult['USED_DISCOUNTS'])) {
+                                        } elseif (!empty($arResult['USED_DISCOUNTS']) && !empty($price['PRICE_DATA'][1]['DISCOUNT'])) {
                                             echo(round($price['PRICE_DATA'][1]['PRICE']));
                                         } else {
                                             echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['RATIO_PRICE']));
@@ -427,11 +427,11 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                                 ₽
                                             </b>
                                         </div>
-                                    <?php } elseif (str_contains($APPLICATION->GetCurPage(), '/akcii/') && !empty($arResult['USED_DISCOUNTS'])) { ?>
+                                    <?php } elseif (!empty($arResult['USED_DISCOUNTS']) && !empty($price['PRICE_DATA'][1]['DISCOUNT'])) { ?>
                                         <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center prices-main-block">
-                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][1]['BASE_PRICE'] ?>₽</b>
+                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][1]['PRINT_RATIO_BASE_PRICE'] ?>₽</b>
                                             <b class="sale-percent">
-                                                - <?= (round($price['PRICE_DATA'][1]['BASE_PRICE']) - round($price['PRICE_DATA'][1]['PRICE'])) ?>₽
+                                                - <?= $price['PRICE_DATA'][1]['PRINT_DISCOUNT'] ?>₽
                                             </b>
                                         </div>
                                     <?php } ?>
