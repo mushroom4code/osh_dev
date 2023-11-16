@@ -411,7 +411,7 @@ $arrFilterTop['ID'] = $ids;
                     }
             }
             if (defined('SUITABLE_PRODUCTS_PROPERTY') && $USER->IsAuthorized()) {
-                $isAnyActiveSuitableProducts = false;
+                $arSuitableProductsIds = [];
                 $product = CIBlockElement::GetByID($elementId)->fetch();
                 if ($product) {
                     $suitableProductsProperty = CIBlockElement::GetProperty(
@@ -420,7 +420,6 @@ $arrFilterTop['ID'] = $ids;
                             [],
                             ['CODE' => SUITABLE_PRODUCTS_PROPERTY]
                     );
-                    $arSuitableProductsIds = [];
                     while ($suitableProductsPropertyValue = $suitableProductsProperty->fetch()) {
                         if ($suitableProductsPropertyValue['VALUE']) {
                             $arSuitableProductsIds[] = $suitableProductsPropertyValue['VALUE'];
@@ -444,7 +443,7 @@ $arrFilterTop['ID'] = $ids;
                     }
                     $GLOBALS['arrSuitableProductsFilter'] = ['ID' => $arSuitableProductsIds];
                 }
-                if ($arSuitableProductsIds && $isAnyActiveSuitableProducts) { ?>
+                if ($arSuitableProductsIds) { ?>
                     <div class="mb-5 mt-5">
                         <div data-entity="parent-container">
                             <div data-entity="header" data-showed="false">
