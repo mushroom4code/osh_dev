@@ -314,7 +314,7 @@ $arrFilterTop['ID'] = $ids;
                 $obCache->EndDataCache($recommendedData);
             }
 
-            if ($USER->IsAuthorized()) {
+            if (defined('BUY_WITH_THIS_PRODUCT_PROPERTY') && $USER->IsAuthorized()) {
                 $arBuyWithThisProductProductsIds = [];
                 $product = CIBlockElement::GetByID($elementId)->fetch();
                 if ($product) {
@@ -322,9 +322,7 @@ $arrFilterTop['ID'] = $ids;
                             IBLOCK_CATALOG,
                             $product['ID'],
                             [],
-                            ['CODE' => defined('BUY_WITH_THIS_PRODUCT_PROPERTY')
-                                ? BUY_WITH_THIS_PRODUCT_PROPERTY
-                                : 'BUY_WITH_THIS_PRODUCT']
+                            ['CODE' => BUY_WITH_THIS_PRODUCT_PROPERTY]
                     );
                     while ($buyWithThisProductProductsPropertyValue = $buyWithThisProductProductsProperty->fetch()) {
                         if ($buyWithThisProductProductsPropertyValue['VALUE']) {
