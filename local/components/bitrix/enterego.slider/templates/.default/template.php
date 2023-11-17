@@ -163,7 +163,10 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
         </div>
         <?php
     }
-}?>
+}
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
+?>
 <script>
     function initSlider(){
         if ($('#hits_slider_<?=$strRand?>').is('.bx_catalog_tile_section')) {
@@ -176,8 +179,13 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             if (screenWidth <= 1080) {
                 count = 3;
             }
+            <?php if($showUserContent){ ?>
             if (screenWidth <= 746) {
                 count = 2;
+            }
+            <?php } ?>
+            if (screenWidth <= 746) {
+                count = 1;
             }
             $('#hits_slider_<?=$strRand?>').slick({
                 slidesToShow: count,

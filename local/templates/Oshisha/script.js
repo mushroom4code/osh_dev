@@ -309,7 +309,7 @@ $(document).ready(function () {
         if (value >= measureRatio) {
             $('.ganerate_price_wrap').show();
         }
-        setPriceGenerate(this,value / measureRatio)
+        setPriceGenerate(this, value / measureRatio)
     }
 
     $(document).on('keypress', '.card_element', function (e) {
@@ -392,7 +392,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal / measure_ratio);
+                    setPriceGenerate(this, beforeVal / measure_ratio);
                     product_data = {
                         'ID': product_id,
                         'QUANTITY': beforeVal,
@@ -408,7 +408,7 @@ $(document).ready(function () {
                     } else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,max_QUANTITY);
+                    setPriceGenerate(this, max_QUANTITY);
 
                     product_data = {
                         'ID': product_id,
@@ -432,7 +432,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal / measure_ratio)
+                    setPriceGenerate(this, beforeVal / measure_ratio)
 
                     product_data = {
                         'ID': product_id,
@@ -2359,7 +2359,7 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
                 '<a href="#" id="no_mess" class="d-flex basket-empty link_message_box_product ' +
@@ -2371,10 +2371,10 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
-                '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="no_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Нет</a></div>';
         }
@@ -2942,22 +2942,21 @@ jQuery(function () {
         }
     })
 });
-
-
 $(document).ready(function () {
+
     $(document).on('click', '.close_header_box', function () {
         $('.overlay').hide();
     });
 
-    $(document).on('click', '.js__taste ', function() {
+    $(document).on('click', '.js__taste ', function () {
         let tasteCheckId = $(this).attr('data-filter-get'),
-            taste =  $(this).closest('.js__tastes');
+            taste = $(this).closest('.js__tastes');
         // Сбрасываем повторную фильтрацию по уже выбранному вкусу
 
         if (BX(tasteCheckId).checked) {
             $(taste).append('<span class="taste-errors">Вкус уже выбран</span>');
             setTimeout(BX.delegate(
-                    function() {
+                    function () {
                         $(taste).find('.taste-errors').fadeOut(
                             'slow',
                             function () {
@@ -2969,15 +2968,15 @@ $(document).ready(function () {
             return;
         }
 
-        $('#'+tasteCheckId).prop('checked', true);
+        $('#' + tasteCheckId).prop('checked', true);
         window.smartFilter.addHorizontalFilter(BX(tasteCheckId));
-        window.smartFilter.timer = setTimeout(BX.delegate(function(){
+        window.smartFilter.timer = setTimeout(BX.delegate(function () {
             this.reload(BX(tasteCheckId));
         }, window.smartFilter), 500);
     })
 });
 
-$(document).on('click', '.js__close-count-alert', function() {
+$(document).on('click', '.js__close-count-alert', function () {
     $(this).parents('.alert_quantity').html('').removeClass('show_block');
 })
 
@@ -2989,7 +2988,7 @@ $(document).on('click', '.js__close-count-alert', function() {
  * @param propCodePriority
  * @returns {*[]}
  */
-function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = ''){
+function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority = '') {
     const selectedPropData = {};
     const productsSuccess = [];
 
@@ -3066,3 +3065,67 @@ function loaderForSite(initParam, itemParent = false) {
         $(body).find('.remove-class').remove();
     }
 }
+
+
+$(document).ready(function () {
+    let deferredPrompt;
+    const btnInstallPC = document.querySelector('.app_install.PC')
+    const btnInstallMob = document.querySelector('.app_install.mob')
+    let btnInstall = btnInstallPC;
+    if ($(window).width() <= 768) {
+        btnInstall = btnInstallMob;
+    }
+    window.addEventListener('beforeinstallprompt', function (event) {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        event.preventDefault();
+        // Stash the event so it can be triggered later.
+        deferredPrompt = event;
+    });
+    if ($(btnInstall).length !== 0) {
+        if ($(btnInstallPC).attr('data-name-browser') === 'Safari' || $(btnInstallMob).attr('data-name-browser') === 'Safari') {
+            $(btnInstall).on('click', (e) => {
+                if ($('.box-message-install').length == 0) {
+                    $('.section_wrapper').append('<div class="position-fixed z-index-1000 box-message-install bg-white p-4 br-10">' +
+                        '<div class="position-relative d-flex justify-content-center align-items-center flex-column">' +
+                        '<span class="position-absolute close-window" style="right: -21px; top: -21px; left: auto;"></span>' +
+                        '<img class="position-absolute p-2 br-100 bg-white logo" src="/images/osh_message.png" alt="oshisha"/>' +
+                        '<div><p class="mb-1 mt-2 font-weight-500">Для установки приложения следуйте инструкции : </p>' +
+                        '<div class="d-none d-md-block d-lg-block">' +
+                        'В верхнем меню выберите Файл <br>' +
+                        'Найдите пункт Добавить в Dock и нажмите на него</br>' +
+                        'У вас на панели появится иконка с приложением.</br>' +
+                        '<img class="bg-white max-height-500 mt-3" ' +
+                        'src="/images/screenInMessage.png" alt="oshisha"/>' +
+                        '</div>' +
+                        '<div class="d-block d-md-none d-lg-none"> Нажмите <img src="/images/shareapple.png" style="width:25px;" alt="oshisha"/> ' +
+                        'в браузерe,<br>затем коснитесь <b>"На экран «Домой»"</b>.</div></div></div></div>');
+                    $('.close-window').on('click', function () {
+                        $(this).closest(".box-message-install").remove()
+                    });
+                }
+            });
+        } else {
+            btnInstall.addEventListener('click', (e) => {
+                // Show the prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice
+                    .then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the A2HS prompt');
+                        } else {
+                            console.log('User dismissed the A2HS prompt');
+                        }
+                        deferredPrompt = null;
+                    });
+            });
+        }
+    }
+});
+
+$(document).on('click', function (e) {
+    if ($(e.target).closest(".top-dop-menu-hides").length === 0 && $('#top_menu_header').hasClass('d-flex')) {
+        $('#top_menu_header').addClass('d-none').removeClass('d-flex');
+    }
+    e.stopPropagation();
+});
