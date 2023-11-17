@@ -12,27 +12,30 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
 
 if (empty($arResult)) {
     return;
 }
-?>
-<?php
-foreach ($arResult as $itemIdex => $arItem):
-    if (in_array($arItem["TEXT"], ['Новинки', 'Дисконт', 'Акции'])):
+
+foreach ($arResult as $itemIdex => $arItem) {
+    if (in_array($arItem["TEXT"], ['Новинки', 'Дисконт', 'Акции']) || $arItem['DEPTH_LEVEL'] > 1):
         continue;
     endif;
 
-    $download = '';
-    if (strripos($arItem['LINK'], '.pdf') !== false || strripos($arItem['LINK'], '.xls') !== false) {
-        $download = 'download';
-    } ?>
+    if ($showUserContent || !$showUserContent && $arItem["TEXT"] === 'Чай' || !$showUserContent && $arItem["TEXT"] === 'Уголь') {
+        $download = '';
+        if (strripos($arItem['LINK'], '.pdf') !== false || strripos($arItem['LINK'], '.xls') !== false) {
+            $download = 'download';
+        } ?>
 
-    <?php if ($arItem["DEPTH_LEVEL"] == "1" && !empty(htmlspecialcharsbx($arItem["LINK"]))): ?>
-    <li class="col-menu-item">
-        <a class="col-menu-link" <?=$download?>
-           href="<?= htmlspecialcharsbx($arItem["LINK"]) ?>"><?= htmlspecialcharsbx($arItem["TEXT"]) ?>
-        </a>
-    </li>
-<?php endif ?>
-<?php endforeach; ?>
+        <?php if ($arItem["DEPTH_LEVEL"] == "1" && !empty(htmlspecialcharsbx($arItem["LINK"]))) { ?>
+            <li class="col-menu-item">
+                <a class="col-menu-link" <?= $download ?>
+                   href="<?= htmlspecialcharsbx($arItem["LINK"]) ?>"><?= htmlspecialcharsbx($arItem["TEXT"]) ?>
+                </a>
+            </li>
+        <?php } ?>
+    <?php }
+}

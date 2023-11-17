@@ -378,9 +378,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         onAfterPopupShow: BX.delegate(function () {
                             BX.cleanNode(this.loadingScreen.popupContainer);
                             BX.removeClass(this.loadingScreen.popupContainer, 'popup-window');
-                            this.loadingScreen.popupContainer.appendChild(
-                                BX.create('DIV', {props: {className: 'lds-dual-ring'}})
-                            );
+                            loaderForSite('appendLoader',this.loadingScreen.popupContainer)
                             this.loadingScreen.popupContainer.removeAttribute('style');
                             this.loadingScreen.popupContainer.style.display = 'block';
                         }, this)

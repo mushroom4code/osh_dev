@@ -137,13 +137,6 @@
 
 /*endregion*/
 
-.news-list .card-title,
-.news-list .card-title a {
-	margin: 0;
-	padding: 0 0 15px;
-
-}
-
 .news-list .card-title a:hover {
 	border-bottom-color: transparent;
 	text-decoration: none;
