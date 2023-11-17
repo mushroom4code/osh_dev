@@ -966,7 +966,9 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                                     "USE_PRICE_COUNT" => "N",
                                     "USE_PRODUCT_QUANTITY" => "N",
                                     "VIEW_MODE" => "SLIDER",
-                                    "BASKET_ITEMS" => $arBasketItems
+                                    "BASKET_ITEMS" => $arBasketItems,
+                                    'DISCOUNTS' => $arResult['DISCOUNTS'],
+                                    'IBLOCKS_DISCOUNTS' => $arResult['IBLOCKS_DISCOUNTS']
                                 ),
                                 false
                             ); ?>

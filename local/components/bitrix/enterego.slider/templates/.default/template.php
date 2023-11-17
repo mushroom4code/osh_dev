@@ -87,7 +87,10 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
         'MESS_BTN_ADD_TO_BASKET' => $arParams['~MESS_BTN_ADD_TO_BASKET'],
         'MESS_NOT_AVAILABLE' => $arParams['~MESS_NOT_AVAILABLE'],
         'PRICE_CODE' => $arParams['PRICE_CODE'],
-        'FILL_ITEM_ALL_PRICES' => 'Y'
+        'FILL_ITEM_ALL_PRICES' => 'Y',
+        'DISCOUNTS' => $arParams['DISCOUNTS'],
+        'IBLOCKS_DISCOUNTS' => $arParams['IBLOCKS_DISCOUNTS'],
+        'INSIDE_SLIDER' => 'Y'
     );
 
     foreach ($arParams['SECTIONS_ITEMS'] as $sectionId => $section) { ?>

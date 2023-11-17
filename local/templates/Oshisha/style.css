@@ -6632,6 +6632,10 @@ div.carousel-item-elems > div > div {
     transform: translate(0, -87px);
 }
 
+.item-product-info.inside-slider {
+    height: 380px;
+}
+
 @media screen and (max-width: 768px) {
     .by-line .alert_quantity.show_block {
         transform: translate(-4%, -120%);

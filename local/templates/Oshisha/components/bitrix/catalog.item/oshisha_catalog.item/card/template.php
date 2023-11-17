@@ -207,7 +207,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 
 ?>
 
-        <div class="item-product-info">
+        <div class="item-product-info <?= $arParams['INSIDE_SLIDER'] ? 'inside-slider' : ''?>">
             <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?>">
                 <div class="variation_taste <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
                     <?php if ($taste['VALUE']) {
@@ -429,9 +429,9 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                         </div>
                                     <?php } elseif (!empty($arResult['USED_DISCOUNTS']) && !empty($price['PRICE_DATA'][1]['DISCOUNT'])) { ?>
                                         <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center prices-main-block">
-                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][1]['PRINT_RATIO_BASE_PRICE'] ?>₽</b>
+                                            <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA'][1]['RATIO_BASE_PRICE'] ?>₽</b>
                                             <b class="sale-percent">
-                                                - <?= $price['PRICE_DATA'][1]['PRINT_DISCOUNT'] ?>₽
+                                                - <?= $price['PRICE_DATA'][1]['DISCOUNT'] ?>₽
                                             </b>
                                         </div>
                                     <?php } ?>
