@@ -353,7 +353,7 @@ $option = $option_site; ?>
 <!-- //bx-wrapper -->
 <div class="overlay"></div>
 
-<div class="page-scroller d-lg-block d-md-block d-none">
+<div class="page-scroller">
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20"
          height="20" viewBox="0 0 20 20" class="page-scroller__ctrl">
         <path d="M2.582 13.891c-0.272 0.268-0.709 0.268-0.979 0s-0.271-0.701 0-0.969l7.908-7.83c0.27-0.268 0.707-0.268 0.979 0l7.908 7.83c0.27 0.268 0.27 0.701 0 0.969s-0.709 0.268-0.978 0l-7.42-7.141-7.418 7.141z"></path>
