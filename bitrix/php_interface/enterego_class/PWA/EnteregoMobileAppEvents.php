@@ -10,7 +10,7 @@ class EnteregoMobileAppEvents
     public static function getUserRulesForContent(): bool
     {
         $showContent = false;
-        $cordovaMobile = getallheaders()['X-Script-Name'] ?? '';
+        $cordovaMobile = getallheaders()['X-Mobile-App'] ?? '';
 
         global $USER;
         if (($cordovaMobile === 'Cordova' && $USER->IsAuthorized()) ||
