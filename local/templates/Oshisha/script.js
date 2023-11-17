@@ -1862,3 +1862,11 @@ function loaderForSite(initParam, itemParent = false) {
         body.querySelector('.remove-class').remove();
     }
 }
+
+function showHidePasswd(item) {
+    const parentBox = item.closest('div');
+    const inputBox = parentBox.querySelector('input');
+    inputBox.type === 'password' ? inputBox.type = 'text' : inputBox.type = 'password'
+    parentBox.querySelector('[data-type="text"]').classList.toggle('hidden')
+    parentBox.querySelector('[data-type="password"]').classList.toggle('hidden')
+}

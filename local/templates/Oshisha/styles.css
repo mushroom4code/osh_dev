@@ -7,7 +7,7 @@
     font-weight: normal;
 }
 
-a, input, button {
+a, input, button, svg {
     cursor: pointer;
 }
 
@@ -118,6 +118,30 @@ input[type='number'] {
     box-shadow: 0 1px 8px 0 rgba(85, 85, 85, 0.02);
 }
 
-html.dark .box-modal{
+html.dark .box-modal {
     background-color: #313131;
+}
+
+html.dark input:-webkit-autofill, html.dark input:-webkit-autofill:hover, html.dark input:-webkit-autofill:focus,
+html.dark textarea:-webkit-autofill, html.dark textarea:-webkit-autofill:hover, html.dark textarea:-webkit-autofill:focus,
+html.dark select:-webkit-autofill, html.dark select:-webkit-autofill:hover, html.dark select:-webkit-autofill:focus {
+    border: 2px solid #464646;
+    -webkit-text-fill-color: white;
+    -webkit-box-shadow: 0 0 0 1000px #464646 inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    border: 1px solid #f0f0f0;
+    -webkit-text-fill-color: black;
+    -webkit-box-shadow: 0 0 0 1000px #f0f0f0 inset;
+    transition: background-color 5000s ease-in-out 0s;
 }

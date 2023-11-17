@@ -643,7 +643,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                         dark:text-white text-md"
                                                        for="sms-auth-code"><?= GetMessage("SMS_AUTH_CODE") ?></label>
                                                 <a class="ctweb-link font-medium mb-2 text-textLight
-                                        dark:text-white underline text-xs" id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>">
+                                        dark:text-white underline text-xs"
+                                                   id="<?= $jsParams['TEMPLATE']['CHANGE_PHONE'] ?>">
                                                     <?= GetMessage("SMS_AUTH_CHANGE_NUMBER_PHONE") ?></a>
                                             </div>
                                             <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
@@ -794,12 +795,25 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                             <div class="relative">
                                                 <input type="password" name="PASSWORD" placeholder=""
                                                        value="<?= $arResult['USER_VALUES']['PASSWORD'] ?? '' ?>"
+                                                       autocomplete="off"
                                                        class="auth-by-email bg-textDark p-3 dark:bg-grayButton cursor-pointer
                                                                 w-full text-textLight rounded-md
-                                                    dark:text-white border-0 text-xl js__show-pass mb-4"
+                                                    dark:text-white border-0 text-xl mb-4"
                                                        id="<?= $mainID . "password" ?>"/>
-                                                <svg width="29" height="18" viewBox="0 0 29 18" class="absolute mr-4 right-0 top-0 mt-4" onclick="showHidePasswd(this)" data-type="password" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M14.5831 5.75639C17.7625 5.75639 20.3399 8.29345 20.3399 11.4231C20.3399 14.5527 17.7625 17.0897 14.5831 17.0897C11.4036 17.0897 8.82621 14.5527 8.82621 11.4231C8.82621 8.29345 11.4036 5.75639 14.5831 5.75639ZM14.5831 0.791504C21.2229 0.791504 26.9546 5.25401 28.545 11.5077C28.6898 12.077 28.3383 12.6539 27.76 12.7964C27.1817 12.9389 26.5956 12.593 26.4508 12.0237C25.0996 6.71028 20.2267 2.9165 14.5831 2.9165C8.93693 2.9165 4.06256 6.71355 2.71367 12.0301C2.56923 12.5995 1.98327 12.9457 1.40489 12.8035C0.826511 12.6614 0.474738 12.0846 0.619181 11.5153C2.20676 5.25786 7.94035 0.791504 14.5831 0.791504Z" class="fill-light-red dark:fill-white"></path>
+                                                <svg width="29" height="18" viewBox="0 0 29 18"
+                                                     class="absolute mr-4 right-0 top-0 mt-4"
+                                                     onclick="showHidePasswd(this)" data-type="password"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M14.5831 5.75639C17.7625 5.75639 20.3399 8.29345 20.3399 11.4231C20.3399 14.5527 17.7625 17.0897 14.5831 17.0897C11.4036 17.0897 8.82621 14.5527 8.82621 11.4231C8.82621 8.29345 11.4036 5.75639 14.5831 5.75639ZM14.5831 0.791504C21.2229 0.791504 26.9546 5.25401 28.545 11.5077C28.6898 12.077 28.3383 12.6539 27.76 12.7964C27.1817 12.9389 26.5956 12.593 26.4508 12.0237C25.0996 6.71028 20.2267 2.9165 14.5831 2.9165C8.93693 2.9165 4.06256 6.71355 2.71367 12.0301C2.56923 12.5995 1.98327 12.9457 1.40489 12.8035C0.826511 12.6614 0.474738 12.0846 0.619181 11.5153C2.20676 5.25786 7.94035 0.791504 14.5831 0.791504Z"
+                                                          class="fill-light-red dark:fill-white"/>
+                                                </svg>
+                                                <svg width="28" height="18" viewBox="0 0 28 18" fill="none"
+                                                     data-type="text"
+                                                     class="absolute mr-4 right-0 top-0 mt-4 hidden"
+                                                     xmlns="http://www.w3.org/2000/svg"
+                                                     onclick="showHidePasswd(this)">
+                                                    <path d="M14 5.75654C17.1296 5.75654 19.6667 8.2936 19.6667 11.4232C19.6667 14.5528 17.1296 17.0899 14 17.0899C10.8704 17.0899 8.33333 14.5528 8.33333 11.4232C8.33333 8.2936 10.8704 5.75654 14 5.75654ZM14 7.88154C12.044 7.88154 10.4583 9.4672 10.4583 11.4232C10.4583 13.3792 12.044 14.9649 14 14.9649C15.956 14.9649 17.5417 13.3792 17.5417 11.4232C17.5417 9.4672 15.956 7.88154 14 7.88154ZM14 0.791656C20.5358 0.791656 26.1778 5.25417 27.7432 11.5079C27.8857 12.0771 27.5398 12.6541 26.9706 12.7966C26.4013 12.9391 25.8243 12.5931 25.6819 12.0239C24.3518 6.71043 19.5553 2.91666 14 2.91666C8.44232 2.91666 3.64431 6.7137 2.31655 12.0303C2.17437 12.5996 1.59759 12.9459 1.02827 12.8037C0.458955 12.6615 0.112692 12.0847 0.254873 11.5154C1.81758 5.25801 7.46135 0.791656 14 0.791656Z"
+                                                          class="fill-light-red dark:fill-white"/>
                                                 </svg>
                                             </div>
                                             <div class="ctweb-error-alert" style="display: none"
