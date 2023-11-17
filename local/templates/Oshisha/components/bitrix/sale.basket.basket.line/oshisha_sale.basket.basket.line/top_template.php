@@ -121,9 +121,13 @@ $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(
                 <div class="icon_header font-20"><i class="fa fa-percent" aria-hidden="true"></i></div>
             </a>
         </div>
-    <?php } ?>
+    <?php }
+    $subscribe = '/login/';
+    if ($USER->IsAuthorized()) {
+        $subscribe = '/personal/subscribe/';
+    } ?>
     <div class="box_with_basket_login">
-        <a href="/personal/subscribe/" id="personal_subscribe" class="link_header link_lk">
+        <a href="<?= $subscribe ?>" id="personal_subscribe" class="link_header link_lk">
             <i class="fa fa-star-o icon_header" aria-hidden="true"></i>
             <?php if (!$mobile->isMobile() && $USER->IsAuthorized()) { ?>
                 <span class="font-11">Избранное</span>
