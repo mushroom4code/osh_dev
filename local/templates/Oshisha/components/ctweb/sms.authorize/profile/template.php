@@ -791,12 +791,17 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                            idk="<?= $jsParams['TEMPLATE']['FORGOT_PASSWORD'] ?>">Забыли пароль?</a>
                                     </span>
                                             </div>
-                                            <input type="password" name="PASSWORD" placeholder=""
-                                                   value="<?= $arResult['USER_VALUES']['PASSWORD'] ?? '' ?>"
-                                                   class="auth-by-email bg-textDark p-3 dark:bg-grayButton cursor-pointer
+                                            <div class="relative">
+                                                <input type="password" name="PASSWORD" placeholder=""
+                                                       value="<?= $arResult['USER_VALUES']['PASSWORD'] ?? '' ?>"
+                                                       class="auth-by-email bg-textDark p-3 dark:bg-grayButton cursor-pointer
                                                                 w-full text-textLight rounded-md
                                                     dark:text-white border-0 text-xl js__show-pass mb-4"
-                                                   id="<?= $mainID . "password" ?>"/>
+                                                       id="<?= $mainID . "password" ?>"/>
+                                                <svg width="29" height="18" viewBox="0 0 29 18" class="absolute mr-4 right-0 top-0 mt-4" onclick="showHidePasswd(this)" data-type="password" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M14.5831 5.75639C17.7625 5.75639 20.3399 8.29345 20.3399 11.4231C20.3399 14.5527 17.7625 17.0897 14.5831 17.0897C11.4036 17.0897 8.82621 14.5527 8.82621 11.4231C8.82621 8.29345 11.4036 5.75639 14.5831 5.75639ZM14.5831 0.791504C21.2229 0.791504 26.9546 5.25401 28.545 11.5077C28.6898 12.077 28.3383 12.6539 27.76 12.7964C27.1817 12.9389 26.5956 12.593 26.4508 12.0237C25.0996 6.71028 20.2267 2.9165 14.5831 2.9165C8.93693 2.9165 4.06256 6.71355 2.71367 12.0301C2.56923 12.5995 1.98327 12.9457 1.40489 12.8035C0.826511 12.6614 0.474738 12.0846 0.619181 11.5153C2.20676 5.25786 7.94035 0.791504 14.5831 0.791504Z" class="fill-light-red dark:fill-white"></path>
+                                                </svg>
+                                            </div>
                                             <div class="ctweb-error-alert" style="display: none"
                                                  id="<?= $jsParams['TEMPLATE']['ERROR_ALERT'] ?>">
                                                 <?= GetMessage("SMS_AUTH_ERROR_EMPTY_FIELD") ?>
