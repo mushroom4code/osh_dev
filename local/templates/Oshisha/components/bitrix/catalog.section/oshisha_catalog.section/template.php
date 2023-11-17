@@ -213,7 +213,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 //Есть ли контрагент у пользователя или нет - зависит возможность покупки
 $userViewPrice = EnteregoContragents::getActiveContragentForUser($USER->GetID());
 $isAjax = Context::getCurrent()->getRequest();
-$itemWidth = 'lg:w-72 md:w-1/3 w-1/2 h-96 pr-4 mb-8';
+$itemWidth = 'lg:w-72 md:w-1/3 w-1/2 md:h-96 h-80 md:pr-4 pr-2 mb-8';
 $positionItem = 'flex flex-row flex-wrap justify-between';
 $type = 'card';
 $showLine = false;
@@ -276,13 +276,13 @@ if ($type === 'line') {
 
             ?>
             <?php if ($showLine) { ?>
-                <div class="flex flex-row p-3">
-                    <div class="w-5/12">Наименование</div>
-                    <div class="w-1/12 text-center">Склад</div>
-                    <div class="w-2/12 text-center">Добавить</div>
-                    <div class="w-1/12 text-center">Цена</div>
-                    <div class="w-2/12 text-center">Сумма</div>
-                    <div class="w-1/12">Прочее</div>
+                <div class="flex flex-row flex-wrap p-3">
+                    <div class="md:w-5/12 w-1/2">Наименование</div>
+                    <div class="md:w-1/12 w-1/3 text-center">Склад</div>
+                    <div class="md:w-2/12 w-1/2 text-center">Добавить</div>
+                    <div class="md:w-1/12 w-1/2 text-center">Цена</div>
+                    <div class="md:w-2/12 w-2/3 text-center">Сумма</div>
+                    <div class="md:w-1/12 w-1/3">Прочее</div>
                 </div>
             <?php } ?>
                 <div class="<?= $positionItem ?> products_box" data-entity="items-row">
@@ -346,7 +346,7 @@ if ($type === 'line') {
             <?php } ?>
             <!-- items-container -->
         </div>
-        <div class="flex flex-row items-center md:w-3/5 w-full justify-between mb-5">
+        <div class="flex md:flex-row  flex-col items-center md:w-3/5 w-full justify-between mb-5">
             <?php
             //region LazyLoad Button
             if ($showLazyLoad) { ?>

@@ -278,7 +278,7 @@ function setActiveColor(string $itemType = 'card'): string
             </div>
         <?php endif ?>
         <?php global $GLOBAL_SECTION; ?>
-        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full w-fit ml-11">
+        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full w-fit md:ml-11 ml-0">
             <div class="row navigation-wrap mb-5">
                 <div class="col" id="navigation">
                     <?php $APPLICATION->IncludeComponent(
@@ -294,25 +294,27 @@ function setActiveColor(string $itemType = 'card'): string
                     ); ?>
                 </div>
             </div>
-            <h1 class="text-3xl mb-2 font-semibold dark:font-medium"><?php $APPLICATION->ShowTitle(false); ?></h1>
-            <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-5"></p>
+            <h1 class="md:text-3xl text-2xl mb-2 font-semibold dark:font-medium"><?php $APPLICATION->ShowTitle(false); ?></h1>
+            <p class="message_for_user_minzdrav md:text-sm text-xs text-textLight dark:text-iconGray dark:font-light mb-5"></p>
             <div id="osh-filter-horizontal2"></div>
             <div class="osh-block-panel <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
                 <div id="osh-filter-horizontal" class="flex flex-col mb-5 mt-5">
                     <div class="flex flex-row justify-between items-center mb-6">
                         <div class="col_navigation mr-4">
                             <div class="count-per-page flex flex-row items-center">
-                                <span class="font-semibold dark:font-normal text-md mr-3 text-textLight dark:text-textDarkLightGray">Показать</span>
+                                <span class="font-semibold dark:font-normal md:text-md text-xs md:mr-3 text-textLight
+                                dark:text-textDarkLightGray mr-2">Показать</span>
                                 <a href="?page=24"
-                                   class="page_num py-2.5 px-3 rounded-full text-sm font-medium mr-1
+                                   class="page_num py-2 px-2.5 rounded-full md:text-sm text-xs font-medium mr-1
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24) { ?>
-                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">24</a>
+                               dark:bg-grayButton bg-lightGrayBg active text-white
+                               <?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">24</a>
                                 <a href="?page=36"
-                                   class="page_num py-2.5 px-3 rounded-full text-sm font-medium mr-1
+                                   class="page_num py-2 px-2.5 rounded-full md:text-sm text-xs font-medium mr-1
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36) { ?>
                                dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">36</a>
                                 <a href="?page=72"
-                                   class="page_num py-2.5 px-3 rounded-full text-sm font-medium
+                                   class="page_num py-2 px-2.5 rounded-full md:text-sm text-xs font-medium
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72) { ?>
                                dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">72</a>
                             </div>
@@ -322,17 +324,29 @@ function setActiveColor(string $itemType = 'card'): string
                                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                                     <div class="sort_panel_wrap">
                                         <div class="sort_panel relative" id="">
-                                            <a class="sort_order sort_tool bg-filterGray dark:bg-darkBox p-3 rounded-lg"
+                                            <a class="sort_order sort_tool md:bg-filterGray bg-none dark:bg-none
+                                            md:dark:bg-darkBox md:p-3 rounded-lg p-0"
                                                href="#">
-                                            <span class="sort_orders_by sort_caption text-sm text-textLight font-medium
-                                            dark:text-textDarkLightGray"
-                                                  style="min-width: 150px;">
-                                                Сортировать по</span>
-                                                <i class="fa fa-angle-down text-light-red dark:text-white text-xl font-semibold"
-                                                   aria-hidden="true"></i>
+                                                <p class="sort_orders_by sort_caption text-sm text-textLight font-medium
+                                                dark:text-textDarkLightGray">
+                                                    <span class="md:block hidden">Сортировать</span>
+                                                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M45.5 14C45.5 14.8284 44.8284 15.5 44 15.5H4C3.17158 15.5 2.5 14.8284 2.5 14C2.5 13.1716 3.17158 12.5 4 12.5H44C44.8284 12.5 45.5 13.1716 45.5 14Z"
+                                                             class=""
+                                                              />
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M39.5 24C39.5 24.8284 38.8284 25.5 38 25.5H10C9.17158 25.5 8.5 24.8284 8.5 24C8.5 23.1716 9.17158 22.5 10 22.5H38C38.8284 22.5 39.5 23.1716 39.5 24Z"
+                                                              fill="#3C3C3C"/>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M33.5 34C33.5 34.8284 32.8284 35.5 32 35.5H16C15.1716 35.5 14.5 34.8284 14.5 34C14.5 33.1716 15.1716 32.5 16 32.5H32C32.8284 32.5 33.5 33.1716 33.5 34Z"
+                                                              fill="#3C3C3C"/>
+                                                    </svg>
+                                                </p>
                                             </a>
                                             <div class="sort_orders_element js__sort_orders_element hidden absolute
-                                        bg-filterGray dark:bg-darkBox z-20 p-3 w-full">
+                                        bg-filterGray dark:bg-darkBox z-20 p-3 w-max">
                                                 <ul>
                                                     <li class="catalog_sort_item mb-2 cursor-pointer
                                                     hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"

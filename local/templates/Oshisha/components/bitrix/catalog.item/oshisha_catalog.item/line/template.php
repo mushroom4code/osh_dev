@@ -122,8 +122,8 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
 <div class="catalog-item-product dark:bg-darkBox border-t border-b dark:border-tagFilterGray border-gray-product p-3 h-full relative
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>" data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container product-item position-relative h-full">
-        <div class="item-product-info h-full flex flex-row items-center">
-            <div class="box_with_title_like w-5/12">
+        <div class="item-product-info h-full flex flex-row flex-wrap items-center">
+            <div class="box_with_title_like md:w-5/12 w-1/2">
                 <div class="box_with_text">
                     <a class="bx_catalog_item_title text-sm font-bold mb-2 text-textLight
                         dark:font-light dark:text-textDarkLightGray hover:text-hover-red dark:hover:text-white
@@ -135,14 +135,14 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                     </a>
                 </div>
             </div>
-            <div class="w-1/12 text-center"><?= $item['PRODUCT']['QUANTITY'] ?></div>
+            <div class="md:w-1/12 w-1/3 text-center"><?= $item['PRODUCT']['QUANTITY'] ?></div>
             <?php
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
             <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
                 <?php
                 if (!$USER->IsAuthorized() && !$show_price) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 flex justify-center">
+                    <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/2 flex justify-center">
                         <div class="btn-plus <?= $not_auth ?>"
                              data-href="<?= $href ?>">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
@@ -150,7 +150,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                         </div>
                     </div>
                 <?php } else if (!$item['ADD_TO_BASKET']) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask w-2/12 text-center flex justify-center relative">
+                    <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/2 text-center flex justify-center relative">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
                                 dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup"
                                       onclick="showHidePopupPrice(this)">Подробнее</span>
@@ -270,7 +270,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                             </div>
                         <?php } ?>
                     <?php endif; ?>
-                    <div class="box_with_price card-price font_weight_600 min-height-auto w-1/12">
+                    <div class="box_with_price card-price font_weight_600 min-height-auto md:w-1/12 w-1/2">
                         <div class="flex flex-col justify-center items-center">
                             <div class="bx_price text-md font-semibold dark:font-medium <?= $styleForNo ?> position-relative">
                                 <?php
@@ -294,7 +294,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                         </div>
                     </div>
                 <?php } ?>
-                <div class="font-semibold dark:font-medium text-md sum-box w-2/12 bx_catalog_item_controls text-center"
+                <div class="font-semibold dark:font-medium text-md sum-box md:w-2/12 w-2/3 bx_catalog_item_controls text-center"
                      data-price="<?= $priceForSum ?? 0 ?>" data-product-id="<?= $item['ID'] ?>">
                     <?= round($priceForSum * $priceBasket) ?? 0 ?>₽
                 </div>
@@ -324,7 +324,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                 </div>
             <?php } ?>
             <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
-                <div class="bx_catalog_item_price w-1/12">
+                <div class="bx_catalog_item_price md:w-1/12 w-1/3">
                     <div class="box_with_titles flex flex-row text-xs text-textLight items-center justify-between dark:text-textDarkLightGray">
                         <?php
                         $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',

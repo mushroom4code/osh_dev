@@ -112,8 +112,8 @@ if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
      text-xs z-10 font-medium">NEW</span>
 <?php }
 if ($hitProduct['VALUE'] === 'Да') { ?>
-    <span class="taste bg-yellowSt text-black absolute font-semibold -left-4 -top-3 py-2.5 px-1.5 rounded-full
-    text-xs z-10">ХИТ</span>
+    <span class="taste bg-yellowSt text-black absolute font-semibold md:-left-4 -left-3 -top-3 md:py-2.5 py-2 px-1
+     md:px-1.5 rounded-full text-xs z-10">ХИТ</span>
 <?php } ?>
 <div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-4 h-full relative
 <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>" data-product_id="<?= $item['ID'] ?>">
@@ -173,14 +173,14 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
             </div>
             <div>
                 <div class="bx_catalog_item_overlay"></div>
-                <div class="image_cart h-40 position-relative mb-3 <?php if (!$show_price) { ?> blur-xl <?php } ?>
+                <div class="image_cart md:h-40 h-28 position-relative mb-3 <?php if (!$show_price) { ?> blur-xl <?php } ?>
                     <?= $not_auth ?>" data-href="<?= $href ?>">
                     <a class="flex justify-center rounded-xl bg-white <?= $styleForTaste ?>"
                        href="<?= $item['DETAIL_PAGE_URL']; ?>">
                         <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
-                            <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" class="h-40" alt="<?= $productTitle ?>"/>
+                            <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" class="md:h-40 h-28" alt="<?= $productTitle ?>"/>
                         <?php } else { ?>
-                            <img src="/local/templates/Oshisha/images/no-photo.gif" class="h-40" alt="no photo"/>
+                            <img src="/local/templates/Oshisha/images/no-photo.gif" class="md:h-40 h-28" alt="no photo"/>
                         <?php } ?>
                     </a>
                     <div class="absolute mb-2 top-20 right-4 z-20 p-3 cursor-pointer"
