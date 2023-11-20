@@ -108,15 +108,16 @@ $found_key = array_search((string)$item['ID'], $subscription_item_ids);
 $is_key_found = isset($found_key) && ($found_key !== false);
 
 if (($newProduct['VALUE'] == 'Да') && ($hitProduct['VALUE'] != 'Да')) { ?>
-    <span class="taste bg-greenLight dark:bg-greenButton text-white absolute -left-4 -top-3 py-2.5 px-1 rounded-full
-     text-xs z-10 font-medium">NEW</span>
+    <span class="taste bg-greenLight dark:bg-greenButton text-white absolute md:-left-4 -left-2 md:-top-3 -top-2 md:py-2.5
+     py-2 px-0.5 md:px-1 rounded-full md:text-xs text-10 z-10 font-medium">NEW</span>
 <?php }
 if ($hitProduct['VALUE'] === 'Да') { ?>
-    <span class="taste bg-yellowSt text-black absolute font-semibold md:-left-4 -left-3 -top-3 md:py-2.5 py-2 px-1
-     md:px-1.5 rounded-full text-xs z-10">ХИТ</span>
+    <span class="taste bg-yellowSt text-black absolute font-semibold md:-left-4 -left-2 md:-top-3 -top-2 md:py-2.5
+     py-1.5 px-1 md:px-1.5 rounded-full md:text-xs text-10 z-10">ХИТ</span>
 <?php } ?>
-<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl p-4 h-full relative
-<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>" data-product_id="<?= $item['ID'] ?>">
+<div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl md:px-4 py-4 px-3
+ h-full relative <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>"
+     data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container position-relative h-full
             <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
         <?php
@@ -159,7 +160,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                     $propId = $taste['ID'];
                                     $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
                                     ?>
-                                    <span class="taste js__taste px-2.5 mr-1 py-1 mb-1 text-xs rounded-full <?= $tasteSize ?>"
+                                    <span class="taste cursor-pointer js__taste h-fit md:px-2.5 px-1.5 mr-1 md:py-1 py-0.5
+                                    mb-1 md:text-xs text-10 rounded-full <?= $tasteSize ?>"
                                           data-prop-id="<?= "ArFilter_{$propId}" ?>"
                                           data-background="<?= '#' . $color[1] ?>"
                                           id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
@@ -173,18 +175,21 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
             </div>
             <div>
                 <div class="bx_catalog_item_overlay"></div>
-                <div class="image_cart md:h-40 h-28 position-relative mb-3 <?php if (!$show_price) { ?> blur-xl <?php } ?>
+                <div class="image_cart md:h-40 h-28 position-relative md:mb-3 mb-2 <?php if (!$show_price) { ?> blur-xl <?php } ?>
                     <?= $not_auth ?>" data-href="<?= $href ?>">
                     <a class="flex justify-center rounded-xl bg-white <?= $styleForTaste ?>"
                        href="<?= $item['DETAIL_PAGE_URL']; ?>">
                         <?php if (!empty($item['PREVIEW_PICTURE']['SRC'])) { ?>
-                            <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" class="md:h-40 h-28" alt="<?= $productTitle ?>"/>
+                            <img src="<?= $item['PREVIEW_PICTURE']['SRC']; ?>" class="md:h-40 h-28"
+                                 alt="<?= $productTitle ?>"/>
                         <?php } else { ?>
-                            <img src="/local/templates/Oshisha/images/no-photo.gif" class="md:h-40 h-28" alt="no photo"/>
+                            <img src="/local/templates/Oshisha/images/no-photo.gif" class="md:h-40 h-28"
+                                 alt="no photo"/>
                         <?php } ?>
                     </a>
-                    <div class="absolute mb-2 top-20 right-4 z-20 p-3 cursor-pointer"
-                         data-item-id="<?= $item['ID'] ?>" onclick="JCCatalogItem.prototype.openFastWindow(this)" id="<?='fastProduct_' . $item['ID']?>">
+                    <div class="absolute mb-2 top-20 right-4 z-20 p-2 bg-whiteOpacity rounded-full cursor-pointer"
+                         data-item-id="<?= $item['ID'] ?>" onclick="JCCatalogItem.prototype.openFastWindow(this)"
+                         id="<?= 'fastProduct_' . $item['ID'] ?>">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.972 13.4274C14.2256 12.1625 15 10.4216 15 8.5C15 4.63401 11.866 1.5 8 1.5C4.13401 1.5 1 4.63401 1 8.5C1 12.366 4.13401 15.5 8 15.5C9.94437 15.5 11.7035 14.7072 12.972 13.4274ZM12.972 13.4274L18.5 19"
                                   stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -192,7 +197,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                     </div>
                 </div>
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
-                    <div class="bx_catalog_item_price mt-2 mb-2 d-flex  justify-content-end">
+                    <div class="bx_catalog_item_price md:mt-2 mb-2 mt-1 d-flex justify-content-end">
                         <div class="box_with_titles flex flex-row text-xs text-textLight justify-between dark:text-textDarkLightGray">
                             <?php
                             $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
@@ -265,9 +270,9 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                         ); ?>
                     </div>
                 <?php } ?>
-                <div class="box_with_title_like mb-3 d-flex align-items-center h-10">
+                <div class="box_with_title_like md:mb-3 mb-2 d-flex align-items-center h-9">
                     <div class="box_with_text mb-3">
-                        <a class="bx_catalog_item_title line-clamp-2 text-sm font-medium mb-2 text-textLight
+                        <a class="bx_catalog_item_title line-clamp-2 md:text-sm text-xs font-medium text-textLight
                         dark:font-light dark:text-textDarkLightGray hover:text-hover-red
                         <?= $styleForNo . ' ' . $not_auth ?>"
                            href="<?= $item['DETAIL_PAGE_URL']; ?>"
@@ -283,11 +288,11 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
             <div class="bx_catalog_item_controls relative">
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
-                    <div class="box_with_fav_bask flex flex-row justify-between items-center">
+                    <div class="box_with_fav_bask flex md:flex-row flex-col md:justify-between md:items-center">
                         <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                             <div class="box_with_price card-price font_weight_600  min-height-auto">
                                 <div class="flex flex-col">
-                                    <div class="bx_price text-xl font-semibold dark:font-medium <?= $styleForNo ?> position-relative">
+                                    <div class="bx_price md:text-xl text-lg font-semibold dark:font-medium md:mb-0 mb-1 <?= $styleForNo ?> position-relative">
                                         <?php
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
@@ -320,15 +325,17 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                             <? else: ?>
                                 <div class="d-flex row-line-reverse justify-content-between box-basket">
                                     <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
-                                        <div class="btn red_button_cart btn-plus add2basket
-                                       dark:bg-dark-red bg-light-red py-2 px-3.5 rounded-5"
+                                        <div class="btn red_button_cart btn-plus add2basket flex justify-center
+                                       dark:bg-dark-red bg-light-red py-2 px-3.5 rounded-5 items-center"
                                              data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                              data-product_id="<?= $item['ID']; ?>"
                                              data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                                              id="<?= $arItemIDs['BUY_LINK']; ?>"
                                              <?php if ($priceBasket > 0): ?>style="display:none;"<?php endif; ?>
                                         >
+                                            <span class="text-sm text-white md:hidden block">Добавить </span>
                                             <svg width="22" height="26" viewBox="0 0 18 22" fill="none"
+                                                 class="md:block hidden"
                                                  xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M13.6017 18.9561V15.8498M13.6017 15.8498H16.4364M13.6017 15.8498H10.767M13.6017 15.8498V14.1413V12.5881"
                                                       stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -337,17 +344,20 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                       stroke-linejoin="round"/>
                                             </svg>
                                         </div>
-                                        <div class="product-item-amount-field-contain-wrap"
+                                        <div class="product-item-amount-field-contain-wrap justify-center"
                                              <?php if ($priceBasket > 0){ ?>style="display:flex;"<?php } else { ?>
                                             style="display:none;"
                                         <?php } ?>
                                              data-product_id="<?= $item['ID']; ?>">
-                                            <div class="product-item-amount-field-contain flex flex-row items-center">
-                                                <a class="btn-minus no-select add2basket cursor-pointer"
+                                            <div class="product-item-amount-field-contain flex flex-row items-center
+                                            justify-between w-full">
+                                                <a class="btn-minus rounded-full md:py-0 md:px-0 py-3.5 px-1.5
+                                                dark:bg-dark md:dark:bg-darkBox bg-none no-select add2basket
+                                                cursor-pointer flex items-center justify-center md:h-full h-auto md:w-full w-auto"
                                                    id="<?= $arItemIDs['BUY_LINK']; ?>"
                                                    href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
                                                    data-product_id="<?= $item['ID']; ?>">
-                                                    <svg width="22" height="2" viewBox="0 0 22 2" fill="none"
+                                                    <svg width="20" height="2" viewBox="0 0 22 2" fill="none"
                                                          class="stroke-dark dark:stroke-white stroke-[1.5px]"
                                                          xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M1 1H21" stroke-linecap="round"
@@ -357,13 +367,15 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                 <div class="product-item-amount-field-block">
                                                     <input class="product-item-amount dark:bg-grayButton bg-textDarkLightGray
                                                 focus:border-none text-center border-none text-sm
-                                                 shadow-none py-2.5 px-3 mx-2 outline-none rounded-md w-14 card_element"
+                                                 shadow-none py-2.5 px-3 md:mx-2 mx-1 outline-none rounded-md md:w-14 w-16 card_element"
                                                            id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                                            type="number"
                                                            max="<?= $item['PRODUCT']['QUANTITY'] ?>"
                                                            value="<?= $priceBasket ?>">
                                                 </div>
-                                                <a class="btn-plus no-select add2basket cursor-pointer"
+                                                <a class="btn-plus no-select add2basket cursor-pointer flex items-center
+                                                 justify-center rounded-full md:p-0 p-1.5 dark:bg-dark md:dark:bg-darkBox
+                                                  bg-none md:h-full h-auto md:w-full w-auto"
                                                    data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                                                    id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
                                                    data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
@@ -377,7 +389,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                     </svg>
                                                 </a>
                                             </div>
-                                            <div class="alert_quantity hidden absolute p-4 text-xs left-0 top-12 bg-filterGray
+                                            <div class="alert_quantity hidden absolute md:p-4 p-2 text-xs left-0 top-12 bg-filterGray
                                             dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20"
                                                  data-id="<?= $item['ID'] ?>"></div>
                                         </div>
@@ -389,23 +401,26 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                             <div class="btn-plus <?= $not_auth ?>"
                                  data-href="<?= $href ?>">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
-                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5">Подробнее</span>
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 md:w-auto w-full">Подробнее</span>
                             </div>
                         <?php } else if (!$item['ADD_TO_BASKET']) { ?>
                             <div>
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
-                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup"
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup md:w-auto w-full"
                                       onclick="showHidePopupPrice(this)">Подробнее</span>
                                 <div class="text-black font-extralight text-center hidden absolute p-5 shadow-lg popup-window-price
                                 bg-filterGray dark:text-textDarkLightGray text-xs dark:bg-grayButton rounded-lg w-72
                                  z-20 left-0">
                                     <p class="flex justify-center">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" class="mb-3 stroke-light-red dark:stroke-white"
-                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="11" stroke-width="2"/>
-                                    <line x1="12" y1="11" x2="12" y2="18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <line x1="12" y1="7" x2="12" y2="6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
+                                        <svg width="20" height="20" viewBox="0 0 24 24"
+                                             class="mb-3 stroke-light-red dark:stroke-white"
+                                             fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="11" stroke-width="2"/>
+                                            <line x1="12" y1="11" x2="12" y2="18" stroke-width="2"
+                                                  stroke-linecap="round" stroke-linejoin="round"/>
+                                            <line x1="12" y1="7" x2="12" y2="6" stroke-width="2" stroke-linecap="round"
+                                                  stroke-linejoin="round"/>
+                                        </svg>
                                     </p>
                                     У вас нет активных контрагентов для совершения покупок на этом сайте!<br>
                                     Вы можете
@@ -415,10 +430,15 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                     или перейти на наш
                                     <a href="https://oshisha.net"
                                        class="text-light-red dark:text-white font-medium">Розничный сайт</a>
-                                    <span class="absolute -right-2 -top-2 cursor-pointer" onclick="$(this).closest('div').toggleClass('hidden')">
-                                        <svg width="25" height="25" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path opacity="0.7" d="M55 30C55 43.807 43.807 55 30 55C16.1929 55 5 43.807 5 30C5 16.1929 16.1929 5 30 5C43.807 5 55 16.1929 55 30Z" fill="#676767"></path>
-                                            <path d="M22.4242 22.4242C23.1564 21.6919 24.3436 21.6919 25.0757 22.4242L30 27.3485L34.9242 22.4242C35.6565 21.692 36.8435 21.692 37.5757 22.4242C38.308 23.1564 38.308 24.3436 37.5757 25.076L32.6517 30L37.5757 34.924C38.308 35.6562 38.308 36.8435 37.5757 37.5757C36.8435 38.308 35.6562 38.308 34.924 37.5757L30 32.6517L25.076 37.5757C24.3436 38.308 23.1564 38.308 22.4242 37.5757C21.692 36.8435 21.692 35.6565 22.4242 34.9242L27.3485 30L22.4242 25.0757C21.6919 24.3436 21.6919 23.1564 22.4242 22.4242Z" fill="white"></path>
+                                    <span class="absolute -right-2 -top-2 cursor-pointer"
+                                          onclick="$(this).closest('div').toggleClass('hidden')">
+                                        <svg width="25" height="25" viewBox="0 0 60 60" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path opacity="0.7"
+                                                  d="M55 30C55 43.807 43.807 55 30 55C16.1929 55 5 43.807 5 30C5 16.1929 16.1929 5 30 5C43.807 5 55 16.1929 55 30Z"
+                                                  fill="#676767"></path>
+                                            <path d="M22.4242 22.4242C23.1564 21.6919 24.3436 21.6919 25.0757 22.4242L30 27.3485L34.9242 22.4242C35.6565 21.692 36.8435 21.692 37.5757 22.4242C38.308 23.1564 38.308 24.3436 37.5757 25.076L32.6517 30L37.5757 34.924C38.308 35.6562 38.308 36.8435 37.5757 37.5757C36.8435 38.308 35.6562 38.308 34.924 37.5757L30 32.6517L25.076 37.5757C24.3436 38.308 23.1564 38.308 22.4242 37.5757C21.692 36.8435 21.692 35.6565 22.4242 34.9242L27.3485 30L22.4242 25.0757C21.6919 24.3436 21.6919 23.1564 22.4242 22.4242Z"
+                                                  fill="white"></path>
                                         </svg>
                                     </span>
                                 </div>

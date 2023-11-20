@@ -176,7 +176,7 @@ function setActiveColor(string $itemType = 'card'): string
 <div class="flex mb-4 flex-col mt-5 w-auto">
     <div class="flex mb-4 box_with_prod md:flex-row flex-col w-auto">
         <?php if ($isFilter) : ?>
-            <div class=" box_filter_catalog w-80 xl:flex hidden flex-col  <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
+            <div class=" box_filter_catalog lg:w-96 w-80 xl:flex hidden flex-col <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
             $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
                 <div class="catalog-section-list-tile-list w-full bg-filterGray dark:bg-darkBox p-5 rounded-xl
              flex flex-col mb-4">
@@ -278,7 +278,7 @@ function setActiveColor(string $itemType = 'card'): string
             </div>
         <?php endif ?>
         <?php global $GLOBAL_SECTION; ?>
-        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full w-fit md:ml-11 ml-0">
+        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full w-fit xl:ml-11 lg:ml-7 ml-0">
             <div class="row navigation-wrap mb-5">
                 <div class="col" id="navigation">
                     <?php $APPLICATION->IncludeComponent(
@@ -343,8 +343,8 @@ function setActiveColor(string $itemType = 'card'): string
                                                     </svg>
                                                 </p>
                                             </a>
-                                            <div class="sort_orders_element js__sort_orders_element hidden absolute
-                                        bg-filterGray dark:bg-darkBox z-20 p-3 w-max">
+                                            <div class="sort_orders_element md:-left-1 -left-14 js__sort_orders_element
+                                             hidden absolute bg-filterGray dark:bg-darkBox z-20 p-3 w-max rounded-lg">
                                                 <ul>
                                                     <li class="catalog_sort_item mb-2 cursor-pointer
                                                     hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"

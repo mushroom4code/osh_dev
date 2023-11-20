@@ -148,7 +148,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
                 </div>
                 <?php if (!empty($arBasket['QUANTITY']) && $arBasket['QUANTITY'] !== 0) { ?>
 
-                    <span class="text-textLight dark:text-textDarkLightGray font-semibold text-xs mt-1">
+                    <span class="text-textLight dark:text-textDarkLightGray font-semibold text-xs mt-1 price_basket_top">
                             <?= $arBasket['SUM_PRICE'] ?> ₽</span>
                     <?php } else { ?>
                     <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs mt-1">Корзина</span>
