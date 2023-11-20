@@ -319,29 +319,27 @@ function setActiveColor(string $itemType = 'card'): string
                                dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">72</a>
                             </div>
                         </div>
-                        <div class="flex flex-row">
+                        <div class="flex flex-row items-center">
                             <div class="sort-panel">
                                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                                     <div class="sort_panel_wrap">
                                         <div class="sort_panel relative" id="">
-                                            <a class="sort_order sort_tool md:bg-filterGray bg-none dark:bg-none
-                                            md:dark:bg-darkBox md:p-3 rounded-lg p-0"
+                                            <a class="sort_order sort_tool"
                                                href="#">
-                                                <p class="sort_orders_by sort_caption text-sm text-textLight font-medium
-                                                dark:text-textDarkLightGray">
-                                                    <span class="md:block hidden">Сортировать</span>
-                                                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none"
+                                                <p class="sort_orders_by items-center flex flex-row sort_caption ">
+                                                    <span class="md:block hidden text-sm text-textLight font-light
+                                                    dark:text-textDarkLightGray mr-2">Сортировать</span>
+                                                    <svg class="w-8" viewBox="0 0 48 48" fill="none"
                                                          xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd" clip-rule="evenodd"
                                                               d="M45.5 14C45.5 14.8284 44.8284 15.5 44 15.5H4C3.17158 15.5 2.5 14.8284 2.5 14C2.5 13.1716 3.17158 12.5 4 12.5H44C44.8284 12.5 45.5 13.1716 45.5 14Z"
-                                                             class=""
-                                                              />
+                                                             class="dark:fill-grayIconLights fill-dark"/>
                                                         <path fill-rule="evenodd" clip-rule="evenodd"
                                                               d="M39.5 24C39.5 24.8284 38.8284 25.5 38 25.5H10C9.17158 25.5 8.5 24.8284 8.5 24C8.5 23.1716 9.17158 22.5 10 22.5H38C38.8284 22.5 39.5 23.1716 39.5 24Z"
-                                                              fill="#3C3C3C"/>
+                                                              class="dark:fill-grayIconLights fill-dark"/>
                                                         <path fill-rule="evenodd" clip-rule="evenodd"
                                                               d="M33.5 34C33.5 34.8284 32.8284 35.5 32 35.5H16C15.1716 35.5 14.5 34.8284 14.5 34C14.5 33.1716 15.1716 32.5 16 32.5H32C32.8284 32.5 33.5 33.1716 33.5 34Z"
-                                                              fill="#3C3C3C"/>
+                                                              class="dark:fill-grayIconLights fill-dark"/>
                                                     </svg>
                                                 </p>
                                             </a>
