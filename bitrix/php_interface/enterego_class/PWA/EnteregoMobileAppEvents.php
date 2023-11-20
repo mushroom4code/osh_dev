@@ -13,7 +13,7 @@ class EnteregoMobileAppEvents
         $cordovaMobile = getallheaders()['X-Mobile-App'] ?? '';
 
         global $USER;
-        if (($cordovaMobile === 'Cordova' && $USER->IsAuthorized()) ||
+        if (($cordovaMobile === 'Cordova' && $USER->IsAuthorized() && $USER->getLogin() !== 'appleTestUser') ||
             $USER->IsAuthorized() && $USER->getLogin() !== 'appleTestUser' || empty($cordovaMobile) ) {
             $showContent = true;
         }
