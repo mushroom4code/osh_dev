@@ -24,7 +24,7 @@ $option = $option_site; ?>
         <div class="row">
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
                 <a class="logo" href="<?= SITE_DIR ?>">
-                    <div class="logo_footer">
+                    <div class="logo_footer position-relative">
                         <?php
                         $APPLICATION->IncludeComponent(
                             'bitrix:main.include',
@@ -36,6 +36,9 @@ $option = $option_site; ?>
                             false
                         );
                         ?>
+                        <?php if (!$showUserContent) { ?>
+                            <i class="fa fa-leaf" style="right: -9%; top:6px; position: absolute; color:white;" aria-hidden="true"></i>
+                        <?php } ?>
                     </div>
                 </a>
 
@@ -118,11 +121,11 @@ $option = $option_site; ?>
                             <a class="col-menu-link" href="/about/FAQ/">FAQ</a>
                         </li>
                     <?php endif; ?>
-
-                    <li class="col-menu-item">
-                        <a class="col-menu-link" href="/about/users_rules/">Пользовательское соглашение</a>
-                    </li>
-
+                    <?php if ($showUserContent) { ?>
+                        <li class="col-menu-item">
+                            <a class="col-menu-link" href="/about/users_rules/">Пользовательское соглашение</a>
+                        </li>
+                    <?php } ?>
                     <li class="col-menu-item">
                         <a class="col-menu-link" href="/about/politics/">Политика конфиденциальности</a>
                     </li>
@@ -197,20 +200,22 @@ $option = $option_site; ?>
                     </nav>
                 </div>
                 <?php if ($showUserContent) { ?>
-                <div class="app_install mob mt-5 color-white d-lg-none d-md-none d-block text-decoration-underline"
-                     data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Установить приложение
-                    <i class="fa fa-download ml-2 font-20" aria-hidden="true"></i>
-                </div>
+                    <div class="app_install mob mt-5 color-white d-lg-none d-md-none d-block text-decoration-underline"
+                         data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Установить приложение
+                        <i class="fa fa-download ml-2 font-20" aria-hidden="true"></i>
+                    </div>
                 <?php } ?>
             </div>
         </div>
 
-        <?php if (!empty($option->text_rospetrebnadzor_row)): ?>
-            <div class="medical-warning">
-                <p class=""><?= $option->text_rospetrebnadzor_row; ?></p>
-                <p class=""><?= $option->text_rospetrebnadzor_column; ?></p>
-            </div>
-        <?php endif; ?>
+        <?php if ($showUserContent) {
+            if (!empty($option->text_rospetrebnadzor_row)): ?>
+                <div class="medical-warning">
+                    <p class=""><?= $option->text_rospetrebnadzor_row; ?></p>
+                    <p class=""><?= $option->text_rospetrebnadzor_column; ?></p>
+                </div>
+            <?php endif;
+        } ?>
 
         <div class="copyrights">
             <span class="year">© 2014-<?= date('Y'); ?> <?= $option->COMPANY ?>.</span>
@@ -288,64 +293,67 @@ $option = $option_site; ?>
             </div>
         </div>
     </div>
-    <?php if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
-        <div style="display:none;">
-            <div id="trueModal" class="box-modal">
-                <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
-                <div class="flex_block">
-                    <div class="age-access-inner">
-                        <div class="age-access__text">
-                            <div class="age-access__text-part1">
-                                <?= $option->ATTENT_TEXT ?>
+    <?php if ($showUserContent) {
+        if (!$USER->IsAuthorized() && !$_SESSION['age_access']) { ?>
+            <div style="display:none;">
+                <div id="trueModal" class="box-modal">
+                    <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
+                    <div class="flex_block">
+                        <div class="age-access-inner">
+                            <div class="age-access__text">
+                                <div class="age-access__text-part1">
+                                    <?= $option->ATTENT_TEXT ?>
+                                </div>
+                                <div class="age-access__text-part2">
+                                    <?= $option->ATTENT_TEXT2 ?>
+                                </div>
                             </div>
-                            <div class="age-access__text-part2">
-                                <?= $option->ATTENT_TEXT2 ?>
+                            <div class="age-access__buttons">
+                                <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close"
+                                   data-option="1" data-auth="false">Да, мне больше 18 лет</a>
+                                <a href="<?= $option->ATTENT_NOT ?>" class="age-access__button link_red_button"
+                                   data-option="2" rel="nofollow">Нет</a>
                             </div>
-                        </div>
-                        <div class="age-access__buttons">
-                            <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close"
-                               data-option="1" data-auth="false">Да, мне больше 18 лет</a>
-                            <a href="<?= $option->ATTENT_NOT ?>" class="age-access__button link_red_button"
-                               data-option="2" rel="nofollow">Нет</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <script>
-            $(document).ready(function () {
+            <script>
+                $(document).ready(function () {
 
-                let ageAccess = sessionStorage.getItem("age_access");
-                if (!ageAccess) {
-                    $("#trueModal").arcticmodal(
-                        {
-                            closeOnOverlayClick: false,
-                            afterClose: function (data, el) {
-                                sessionStorage.setItem("age_access", "1");
-                            }
-                        });
-                }
-            });
+                    let ageAccess = sessionStorage.getItem("age_access");
+                    if (!ageAccess) {
+                        $("#trueModal").arcticmodal(
+                            {
+                                closeOnOverlayClick: false,
+                                afterClose: function (data, el) {
+                                    sessionStorage.setItem("age_access", "1");
+                                }
+                            });
+                    }
+                });
 
-            // age access
-        </script>
-    <? } ?>
+                // age access
+            </script>
+        <? }
+    } ?>
 
     <?php
 
     $user_consent = $USER->IsAuthorized() ? (new Cuser)->GetById($USER->GetID())->Fetch()[USER_CONSENT_PROPERTY] : false;
-
-    if (!$USER->IsAuthorized() || $user_consent != '1'): ?>
-        <div id="consent-cookie-popup" class="hidden <?= $USER->IsAuthorized() ? 'js-auth' : 'js-noauth' ?>">
-            <p>Мы используем файлы Cookie, чтобы улучшить сайт для вас</p>
-            <div id="cookie-popup-controls">
-                <a id="cookie-popup-about" class="mobile" href="/about/cookie/"><i class="fa fa-question-circle"
-                                                                                   aria-hidden="true"></i></a>
-                <a id="cookie-popup-about" class="desktop" href="/about/cookie/">Подробнее</a>
-                <a id="cookie-popup-accept" href="#">Принять</a>
+    if ($showUserContent) {
+        if (!$USER->IsAuthorized() || $user_consent != '1'): ?>
+            <div id="consent-cookie-popup" class="hidden <?= $USER->IsAuthorized() ? 'js-auth' : 'js-noauth' ?>">
+                <p>Мы используем файлы Cookie, чтобы улучшить сайт для вас</p>
+                <div id="cookie-popup-controls">
+                    <a id="cookie-popup-about" class="mobile" href="/about/cookie/"><i class="fa fa-question-circle"
+                                                                                       aria-hidden="true"></i></a>
+                    <a id="cookie-popup-about" class="desktop" href="/about/cookie/">Подробнее</a>
+                    <a id="cookie-popup-accept" href="#">Принять</a>
+                </div>
             </div>
-        </div>
-    <?php endif; ?>
+        <?php endif;
+    } ?>
 </footer>
 <?php Asset::getInstance()->addJs("/local/templates/Oshisha/assets/js/locations_list_modal.js"); ?>
 </div>

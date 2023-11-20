@@ -24,7 +24,7 @@ foreach ($arResult as $itemIdex => $arItem) {
         continue;
     endif;
 
-    if ($showUserContent || !$showUserContent && $arItem["TEXT"] === 'Чай' || !$showUserContent && $arItem["TEXT"] === 'Уголь') {
+    if ($showUserContent || !$showUserContent && $arItem["TEXT"] === 'Чай') {
         $download = '';
         if (strripos($arItem['LINK'], '.pdf') !== false || strripos($arItem['LINK'], '.xls') !== false) {
             $download = 'download';

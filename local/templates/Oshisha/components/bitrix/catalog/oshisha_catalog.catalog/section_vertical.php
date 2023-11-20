@@ -143,8 +143,7 @@ $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(
             <div class="row">
                 <div class="catalog-section-list-tile-list">
                     <?php foreach ($arResult['SECTION_LIST'] as $arSection){
-                    if ($showUserContent || !$showUserContent && $arSection['NAME'] === 'Чай'
-                    || !$showUserContent && $arSection['NAME'] === 'Уголь') {?>
+                    if ($showUserContent || !$showUserContent && $arSection['NAME'] === 'Чай') {?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap smart-filter-tog" data-role="prop_angle"
                                  data-code-vis="<?= $arSection['ID'] ?>">

@@ -143,7 +143,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
             </div>
         <?php } ?>
         <div class="header_top_panel z-880">
-            <div class="header_logo_mobile">
+            <div class="header_logo_mobile position-relative">
                 <a href="<?= SITE_DIR ?>">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:main.include",
@@ -154,6 +154,9 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                         false
                     ); ?>
                 </a>
+                <?php if (!$showUserContent) { ?>
+                    <i class="fa fa-leaf " style="right: -9%; position: absolute;" aria-hidden="true"></i>
+                <?php } ?>
             </div>
             <div class="right_mobile_top">
                 <?php if ($showUserContent) { ?>

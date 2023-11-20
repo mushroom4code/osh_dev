@@ -52,8 +52,7 @@ $menuBlockId = "catalog_menu_" . $this->randString(); ?>
                 $class .= " bx-nav-parent";
             }
 
-        if ($showUserContent || !$showUserContent && $arResult["ALL_ITEMS"][$itemID]['TEXT'] === 'Чай'
-            || !$showUserContent && $arResult["ALL_ITEMS"][$itemID]['TEXT'] === 'Уголь') {?>
+        if ($showUserContent || !$showUserContent && $arResult["ALL_ITEMS"][$itemID]['TEXT'] === 'Чай') { ?>
             <li class="li_menu_top " data-role="bx-menu-item">
                 <?php $active = '';
                 if ($arResult["ALL_ITEMS"][$itemID]["LINK"] == '/catalog/diskont/') {
