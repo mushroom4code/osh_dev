@@ -208,7 +208,7 @@ JCSmartFilter.prototype.addHorizontalFilter = function (checkbox) {
             props: {
                 id: idFilterItem,
                 className: `osh-filter-item border-lightGrayBg border flex flex-row items-center 
-				dark:border-tagFilterGray px-4 py-2 text-center text-xs font-medium dark:font-light rounded-md mr-3 
+				dark:border-tagFilterGray md:px-4 px-3 md:py-2 py-1.5 text-center text-xs font-medium dark:font-light rounded-md mr-3 
 				${labelsPropClass[0]}`
             },
             html: nameFilter + `<span class='d-inline-block osh-filter-horizontal-remove ml-1 cursor-pointer'

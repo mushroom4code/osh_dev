@@ -243,10 +243,7 @@ if ($type === 'line') {
                     <!-- pagination-container -->
                 </div>
             </div>
-            <?php
-        }
-        //endregion
-        ?>
+        <?php } //endregion ?>
 
         <div class="mb-4 catalog-section max-w-full w-full"
              data-entity="<?= $containerName ?>">
@@ -272,22 +269,32 @@ if ($type === 'line') {
             $this->AddEditAction($uniqueId, $elem['EDIT_LINK'], $elementEdit);
             $this->AddDeleteAction($uniqueId, $elem['DELETE_LINK'], $elementDelete, $elementDeleteParams);
             }
-            $rowData['CLASS'] = '';
-
-            ?>
+            $rowData['CLASS'] = ''; ?>
             <?php if ($showLine) { ?>
-                <div class="flex flex-row flex-wrap p-3">
-                    <div class="md:w-5/12 w-1/2">Наименование</div>
-                    <div class="md:w-1/12 w-1/3 text-center">Склад</div>
-                    <div class="md:w-2/12 w-1/2 text-center">Добавить</div>
-                    <div class="md:w-1/12 w-1/2 text-center">Цена</div>
-                    <div class="md:w-2/12 w-2/3 text-center">Сумма</div>
-                    <div class="md:w-1/12 w-1/3">Прочее</div>
+                <div class="flex flex-row flex-wrap md:px-3 py-3 px-0">
+                    <div class="md:w-5/12 w-1/2 order-1 md:pb-0 pb-3 text-sm font-medium dark:font-extralight
+                    dark:text-textDarkLightGray border-b md:border-0 border-tagFilterGray">Наименование
+                    </div>
+                    <div class="md:w-1/12 w-1/4 md:text-center md:order-2 md:pt-0 pt-3 order-3 text-sm font-medium
+                                 dark:font-extralight dark:text-textDarkLightGray">Склад
+                    </div>
+                    <div class="md:w-2/12 w-1/2 md:text-center text-end md:order-3 order-2 md:pb-0 pb-3 text-sm
+                    font-medium dark:font-extralight dark:text-textDarkLightGray border-b md:border-0 border-tagFilterGray">
+                        Добавить
+                    </div>
+                    <div class="md:w-1/12 w-1/4 md:text-center order-4 md:pt-0 pt-3 text-sm font-medium dark:font-extralight
+                                dark:text-textDarkLightGray">Цена
+                    </div>
+                    <div class="md:w-2/12 w-1/4 md:text-center order-5 md:pt-0 pt-3 text-sm font-medium dark:font-extralight
+                                 dark:text-textDarkLightGray">Сумма
+                    </div>
+                    <div class="md:w-1/12 w-1/4 order-6 text-end text-sm md:pt-0 pt-3 font-medium dark:font-extralight
+                                dark:text-textDarkLightGray">Прочее
+                    </div>
                 </div>
             <?php } ?>
                 <div class="<?= $positionItem ?> products_box" data-entity="items-row">
-                    <?php
-                    foreach ($arResult['ITEMS'] as $item) {
+                    <?php foreach ($arResult['ITEMS'] as $item) {
                         foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
                             if ($keyLike == $item['ID']) {
                                 $item['COUNT_LIKES'] = $count;
@@ -298,8 +305,7 @@ if ($type === 'line') {
                                 $item['COUNT_LIKE'] = $count['Like'][0];
                                 $item['COUNT_FAV'] = $count['Fav'][0];
                             }
-                        }
-                        ?>
+                        } ?>
                         <div class="product-item-small-card <?= $itemWidth ?>">
                             <?php $APPLICATION->IncludeComponent(
                                 'bitrix:catalog.item',
@@ -329,18 +335,12 @@ if ($type === 'line') {
                                 ),
                                 $component,
                                 array('HIDE_ICONS' => 'Y')
-                            );
-                            ?>
+                            ); ?>
                             <div id="result_box"></div>
                         </div>
-                        <?php
-                    }
-                    ?>
+                    <?php } ?>
                 </div>
-            <?php
-
-            unset($generalParams, $arResult['ITEMS']);
-
+            <?php unset($generalParams, $arResult['ITEMS']);
             } else { ?>
                 <p> В этой категроии сейчас нет товаров</p>
             <?php } ?>
@@ -353,8 +353,8 @@ if ($type === 'line') {
                 <div data-entity="lazy-<?= $containerName ?>">
                     <button type="button"
                             class="btn text_catalog_button text-lightGrayBg dark:text-white link_red_button
-                            bg-textDarkLightGray dark:bg-grayButton dark:font-normal
-                            px-7 py-3.5 text-sm rounded-lg font-semibold shadow-md shadow-shadowDark"
+                            bg-textDarkLightGray dark:bg-grayButton dark:font-normal md:mb-0 mb-8
+                            px-7 md:py-3.5 py-3 text-sm md:rounded-lg rounded-md font-semibold md:shadow-md shadow-sm shadow-shadowDark"
                             data-use="show-more-<?= $navParams['NavNum'] ?>">
                         <?= $arParams['MESS_BTN_LAZY_LOAD'] ?>
                     </button>

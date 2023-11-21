@@ -175,7 +175,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
             </div>
             <div>
                 <div class="bx_catalog_item_overlay"></div>
-                <div class="image_cart md:h-40 h-28 position-relative md:mb-3 mb-2 <?php if (!$show_price) { ?> blur-xl <?php } ?>
+                <div class="image_cart md:h-40 h-28 position-relative md:mb-3 mb-2 <?php if (!$show_price) { ?> blur-lg <?php } ?>
                     <?= $not_auth ?>" data-href="<?= $href ?>">
                     <a class="flex justify-center rounded-xl bg-white <?= $styleForTaste ?>"
                        href="<?= $item['DETAIL_PAGE_URL']; ?>">
@@ -401,7 +401,8 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                             <div class="btn-plus <?= $not_auth ?>"
                                  data-href="<?= $href ?>">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
-                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 md:w-auto w-full">Подробнее</span>
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 md:w-auto w-full flex justify-center">
+                                    Подробнее</span>
                             </div>
                         <?php } else if (!$item['ADD_TO_BASKET']) { ?>
                             <div>
