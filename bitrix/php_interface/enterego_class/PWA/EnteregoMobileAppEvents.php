@@ -3,6 +3,7 @@
 namespace Enterego\PWA;
 
 use Bitrix\Bizproc\BaseType\User;
+use Bitrix\Main\UserPhoneAuthTable;
 use CUser;
 
 class EnteregoMobileAppEvents
@@ -45,6 +46,12 @@ class EnteregoMobileAppEvents
             "PERSONAL_NOTES" => $user->getParam('EMAIL'),
             "ACTIVE" => "N",
         );
+
+        $phoneUser = UserPhoneAuthTable::getList(array('filter' => ['USER_ID' => $user_id]))->fetchCollection();
+
+        foreach ($phoneUser as $item) {
+            $item->delete();
+        }
 
         $user->Update($user_id, $fields);
         if (empty($user->LAST_ERROR)) {
