@@ -121,7 +121,9 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     $APPLICATION->ShowHead();
     // Переменная для убора функционала под мобильное приложение
     $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(); ?>
+    <?php if ($showUserContent) { ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
+    <?php } ?>
 </head>
 <body class="bx-background-image">
 <div class="overlay_top"></div>

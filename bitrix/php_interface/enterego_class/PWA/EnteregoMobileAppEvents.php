@@ -2,6 +2,9 @@
 
 namespace Enterego\PWA;
 
+use Bitrix\Bizproc\BaseType\User;
+use CUser;
+
 class EnteregoMobileAppEvents
 {
     /**
@@ -13,11 +16,40 @@ class EnteregoMobileAppEvents
         $cordovaMobile = getallheaders()['X-Mobile-App'] ?? '';
 
         global $USER;
-        if (($cordovaMobile === 'Cordova' && $USER->IsAuthorized() && $USER->getLogin() !== 'appleTestUser') ||
-            $USER->IsAuthorized() && $USER->getLogin() !== 'appleTestUser' || empty($cordovaMobile) ) {
+//        TODO - убрать после модерации
+//        if (($cordovaMobile === 'Cordova' && $USER->IsAuthorized() && $USER->getLogin() !== 'appleTestUser') ||
+//            $USER->IsAuthorized() && $USER->getLogin() !== 'appleTestUser' || empty($cordovaMobile) ) {
+//            $showContent = true;
+//        }
+
+        if ($cordovaMobile !== 'Cordova' || empty($cordovaMobile)) {
             $showContent = true;
         }
 
         return $showContent;
+    }
+
+    /**
+     * @param int $user_id
+     * @return bool
+     */
+    public static function setDeactiveUserForCordova(int $user_id = 0): bool
+    {
+        $result = false;
+        $user = new CUser;
+        $fields = array(
+            "EMAIL" => "$user_id@gmail.com",
+            "LOGIN" => "$user_id@gmail.com",
+            "PHONE_NUMBER" => "",
+            "PERSONAL_PHONE" => $user->getParam('PHONE_NUMBER'),
+            "PERSONAL_NOTES" => $user->getParam('EMAIL'),
+            "ACTIVE" => "N",
+        );
+
+        $user->Update($user_id, $fields);
+        if (empty($user->LAST_ERROR)) {
+            $result = true;
+        }
+        return $result;
     }
 }

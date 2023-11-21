@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Загружаем все файлы, которые потребуются для offline-режима
         const loadDependencies = self.caches.open('myApp')
-            .then(cache => cache.addAll(['/']).then(function() {
+            .then(cache => cache.addAll(['/']).then(function () {
                 //запросы были добавлены в кеш
             }))
 
