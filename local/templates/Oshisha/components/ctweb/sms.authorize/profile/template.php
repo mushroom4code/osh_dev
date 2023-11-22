@@ -224,11 +224,6 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                     во избежание таких ситуаций мы ориентируемся на аудиторию 18+ и
                                     более.<br>
                                     Сайт предназначен для потребителей старше 18 лет. <br>
-                                    Для подтверждения этого необходимо указать вашу дату рождения
-                                    принимая во внимание
-                                    выше указанные условия использования.<br>
-                                    В дальнейшем ваша дата рождения не будет использована и будет
-                                    отображена только в личном кабинете.
                                 </p>
                             <?php } ?>
                             <div class="d-flex flex-lg-row flex-md-row flex-column justify-content-between mb-3">
@@ -271,48 +266,33 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                            placeholder="_@_._"
                                            value="<?= $arResult["EMAIL"] ?>"/>
                                 </div>
-                                <div class="form-group mb-3 col-md-6 col-lg-6 col-12 p-0">
-                                    <div class="d-flex flex-row align-items-center mb-2 position-relative">
-                                        <label class="col-form-label main-profile-form-label p-0"
-                                               for="main-profile-name">
-                                            <span class="starrequired color-redLight">* </span>
-                                            <?= GetMessage("PERSONAL_BIRTHDAY") ?>
-                                        </label>
-                                        <i class="fa fa-question-circle-o font-20 color-redLight ml-2 block-icon-text"
-                                           aria-hidden="true"></i>
-                                        <div class="d-none block-text br-10 p-3">
-                                            <?php if ($showUserContent) { ?>
+                                <?php if ($showUserContent) { ?>
+                                    <div class="form-group mb-3 col-md-6 col-lg-6 col-12 p-0">
+                                        <div class="d-flex flex-row align-items-center mb-2 position-relative">
+                                            <label class="col-form-label main-profile-form-label p-0"
+                                                   for="main-profile-name">
+                                                <span class="starrequired color-redLight">* </span>
+                                                <?= GetMessage("PERSONAL_BIRTHDAY") ?>
+                                            </label>
+                                            <i class="fa fa-question-circle-o font-20 color-redLight ml-2 block-icon-text"
+                                               aria-hidden="true"></i>
+                                            <div class="d-none block-text br-10 p-3">
                                                 <p class="m-0">
                                                     Возраст необходимо указать для открытия информации не доступной к
                                                     просмотру
                                                     лицам не достигшим 18 лет.</p>
-                                            <?php } else { ?>
-                                                <p class="message_for_user_minzdrav font-14 mb-4">
-                                                    Человеческий организм формируется в основной массе к 20 годам,
-                                                    и не обо всех его особенностях молодой формирующийся человек может
-                                                    знать - аллергия,
-                                                    непереносимость некоторых продуктов и компонентов,
-                                                    во избежание таких ситуаций мы ориентируемся на аудиторию 18+ и
-                                                    более.<br>
-                                                    Сайт предназначен для потребителей старше 18 лет. <br>
-                                                    Для подтверждения этого необходимо указать вашу дату рождения
-                                                    принимая во внимание
-                                                    выше указанные условия использования.<br>
-                                                    В дальнейшем ваша дата рождения не будет использована и будет
-                                                    отображена только в личном кабинете.
-                                                </p>
-                                            <?php } ?>
+                                            </div>
                                         </div>
+                                        <input type="text" name="PERSONAL_BIRTHDAY" required
+                                               class="form-control input_lk bx-auth-input user-birthday readonly"
+                                               inputmode="none"
+                                               id="main-profile-brd"
+                                               autocomplete="Off"
+                                               value=""
+                                               minlength="8"
+                                               placeholder="dd/mm/yyyy"/>
                                     </div>
-                                    <input type="text" name="PERSONAL_BIRTHDAY" required
-                                           class="form-control input_lk bx-auth-input user-birthday readonly"
-                                           inputmode="none"
-                                           id="main-profile-brd"
-                                           autocomplete="Off"
-                                           value=""
-                                           minlength="8"
-                                           placeholder="dd/mm/yyyy"/>
-                                </div>
+                                <?php } ?>
                             </div>
                             <div class="form-group mb-1">
                                 <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
