@@ -64,13 +64,22 @@ $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(
             сертификаты</a>
         <a href="/?logout=yes&<?= bitrix_sessid_get() ?>" class="link_lk close_session mt-4 red_text" title="Выйти"
            id="logoutUser">Выйти</a>
-        <?php if (!$showUserContent) { ?>
+        <?php
+        /**
+         * Enterego
+         * Если пользователь зашел с мобильной версии приложения app.oshisha.net
+         */
+        if (!$showUserContent) { ?>
             <a class="delete-profile red_text" href="javascript:void(0)">Удалить профиль</a>
             <script>
                 $('.delete-profile').on('click', function () {
-                    $('body').append('<div class="position-fixed top-0 margin-auto bg-light d-flex flex-column">' +
-                        '<h5>Уверены что хотите удалить свой профиль?</h5>' +
-                        '<div><span class="send-remove">Удалить</span><span>Отмена</span></div></div>');
+                    $('body').append('<div class="position-fixed overlay_top top-0 height-100 width-100 left-0 ' +
+                        'd-flex justify-content-center align-items-center">' +
+                        '<div class="bg-light p-5 d-flex flex-column br-10">' +
+                        '<h5 class="mb-5">Уверены что хотите удалить свой профиль?</h5>' +
+                        '<div class="d-flex flex-row justify-content-between">' +
+                        '<span class="send-remove link_red_button color-white font-weight-500 br-10 font-14 p-2 width_50 text-center">Удалить</span>' +
+                        '<span class=" font-weight-500 btn_black color-white br-10 font-14 p-2 width_50 text-center">Отмена</span></div></div></div>');
 
                     $('.send-remove').on('click', function () {
                         BX.ajax({
@@ -78,7 +87,10 @@ $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(
                             url: '/local/ajax/sendPWA.php',
                             data: {action: 'sendMobileRemoveUser'},
                             onsuccess: function (result) {
-                                console.log(result);
+                                if (result === 'true') {
+                                    console.log('https://' + window.location.hostname + '/');
+                                    window.location.href = 'https://' + window.location.host + '/'
+                                }
                             }
                         });
                     });

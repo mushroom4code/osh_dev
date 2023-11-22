@@ -3,6 +3,9 @@
 namespace Enterego\PWA;
 
 use Bitrix\Bizproc\BaseType\User;
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
 use Bitrix\Main\UserPhoneAuthTable;
 use CUser;
 
@@ -33,30 +36,36 @@ class EnteregoMobileAppEvents
     /**
      * @param int $user_id
      * @return bool
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
      */
     public static function setDeactiveUserForCordova(int $user_id = 0): bool
     {
         $result = false;
-        $user = new CUser;
-        $fields = array(
-            "EMAIL" => "$user_id@gmail.com",
-            "LOGIN" => "$user_id@gmail.com",
-            "PHONE_NUMBER" => "",
-            "PERSONAL_PHONE" => $user->getParam('PHONE_NUMBER'),
-            "PERSONAL_NOTES" => $user->getParam('EMAIL'),
-            "ACTIVE" => "N",
-        );
+        $cordovaMobile = getallheaders()['X-Mobile-App'] ?? '';
+        if ($cordovaMobile === 'Cordova') {
+            $user = new CUser;
+            $fields = array(
+                "EMAIL" => "user_id_$user_id@gmail.com",
+                "LOGIN" => "user_id_$user_id@gmail.com",
+                "PERSONAL_PHONE" => $user->getParam('PHONE_NUMBER'),
+                "PERSONAL_NOTES" => $user->getParam('EMAIL'),
+                "ACTIVE" => "N",
+            );
 
-        $phoneUser = UserPhoneAuthTable::getList(array('filter' => ['USER_ID' => $user_id]))->fetchCollection();
+            $phoneUser = UserPhoneAuthTable::getList(array('filter' => ['USER_ID' => $user_id]))->fetchCollection();
 
-        foreach ($phoneUser as $item) {
-            $item->delete();
+            foreach ($phoneUser as $item) {
+                $item->delete();
+            }
+
+            $user->Update($user_id, $fields);
+            if (empty($user->LAST_ERROR)) {
+                $result = true;
+            }
         }
 
-        $user->Update($user_id, $fields);
-        if (empty($user->LAST_ERROR)) {
-            $result = true;
-        }
         return $result;
     }
 }

@@ -85,6 +85,7 @@ if ($action === 'sendMobileRemoveUser') {
         $result = EnteregoMobileAppEvents::setDeactiveUserForCordova($USER->GetID());
         if ($result) {
             $USER->Logout();
+            echo 'true';
         }
     }
 }
