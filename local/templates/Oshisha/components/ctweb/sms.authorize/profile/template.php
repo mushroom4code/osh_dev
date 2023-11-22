@@ -361,10 +361,17 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                id="soa-property-USER_RULES" checked name="USER_RULES"/>
                                         <label class="bx-soa-custom-label mb-0 ml-3">
                                             Я принимаю условия
-                                            <a class="color-redLight text-decoration-underline"
-                                               href="/about/users_rules/">
-                                                Пользовательского соглашения
-                                            </a>
+                                            <?php if ($showUserContent) { ?>
+                                                <a class="color-redLight text-decoration-underline"
+                                                   href="/about/users_rules/">
+                                                    Пользовательского соглашения
+                                                </a>
+                                            <?php } else { ?>
+                                                <a class="color-redLight text-decoration-underline"
+                                                   href="/about/cookie/">
+                                                    Политики обработки Cookie
+                                                </a>
+                                            <?php } ?>
                                         </label>
                                     </div>
                                     <div class="d-flex flex-row align-items-center font-14 mb-4">
