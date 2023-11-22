@@ -143,7 +143,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
             <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
                 <?php
                 if (!$USER->IsAuthorized() && !$show_price) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/4 flex justify-center order-6">
+                    <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/4 flex justify-center md:order-3 order-2">
                         <div class="btn-plus <?= $not_auth ?>"
                              data-href="<?= $href ?>">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
@@ -151,7 +151,7 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                         </div>
                     </div>
                 <?php } else if (!$item['ADD_TO_BASKET']) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/4 order-6 text-center flex justify-center relative">
+                    <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/4 md:order-3 order-2 text-center flex justify-center relative">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
                                 dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup"
                                       onclick="showHidePopupPrice(this)">Подробнее</span>
