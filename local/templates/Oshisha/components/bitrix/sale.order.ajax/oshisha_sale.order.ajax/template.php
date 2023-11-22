@@ -281,12 +281,12 @@ if ($request->get('ORDER_ID') <> '') {
         <input type="hidden" name="location_type" value="code">
         <input type="hidden" name="BUYER_STORE" id="BUYER_STORE" value="<?= $arResult['BUYER_STORE'] ?>">
         <!--	BUYER PROPS BLOCK	-->
-        <div id="bx-soa-order" class="row" style="opacity: 0">
-            <div id="bx-soa-main-notifications">
+        <div id="bx-soa-order" class="container grid-cols-3 grid row" style="opacity: 0">
+            <div id="bx-soa-main-notifications" class="col-span-2">
                 <div class="alert alert-danger" style="display:none"></div>
                 <div data-type="informer" style="display:none"></div>
             </div>
-            <div class="col-lg-8 col-md-7">
+            <div class="col-span-2 col-lg-8 col-md-7">
                 <h5 class="mb-4"><b>Покупатель</b><i class="fa fa-pencil" aria-hidden="true"></i></h5>
                 <div class="bx-soa">
                     <div id="bx-soa-properties" data-visited="true" class="bx-soa-section mb-4 bx-active">
@@ -333,7 +333,7 @@ if ($request->get('ORDER_ID') <> '') {
                                 </div>
                             <?php } ?>
                         </div>
-                        <div class="bx-soa-section-content"></div>
+                        <div id="user-properties-block" class="bx-soa-section-content"></div>
                     </div>
                     <!--	AUTH BLOCK	-->
                     <div id="bx-soa-auth" class="bx-soa-section mb-4  bx-soa-auth" style="display: none;">
@@ -528,7 +528,7 @@ if ($request->get('ORDER_ID') <> '') {
                 </div>
             </div>
             <!--	SIDEBAR BLOCK	-->
-            <div class="col-lg-4 col-md-5 ">
+            <div class="col-start-3 col-lg-4 col-md-5 ">
                 <h5 class="order_text"><b>Оформление заказа</b></h5>
                 <div class="d-flex flex-lg-row flex-md-row flex-column align-items-center mb-3">
                     <p class="font-13 m-0 mr-1">
@@ -624,6 +624,27 @@ if ($request->get('ORDER_ID') <> '') {
 
     $arParams['AR_DELIVERY_PICKUP'] = AR_DELIVERY_PICKUP;
     ?>
+        <script src="/dist/app.generated.js"
+                data-result='<?= json_encode($arResult['JS_DATA']);?>'
+                data-delivery-options='<?=json_encode($arResult['DELIVERY_OPTIONS'])?>'
+                data-locations='<?=json_encode($arResult['LOCATIONS'], JSON_HEX_APOS)?>'
+                data-saved-delivery-profiles='<?=json_encode($savedDeliveryProfiles)?>'
+                data-params="<?=htmlspecialchars(json_encode($arParams), ENT_QUOTES, 'UTF-8')?>"
+                data-signed-params-string='<?=CUtil::JSEscape($signedParams)?>'
+                data-site-id='<?=CUtil::JSEscape($component->getSiteId())?>'
+                data-ajax-url='<?=CUtil::JSEscape($component->getPath() . '/ajax.php')?>'
+                data-template-folder='<?=CUtil::JSEscape($templateFolder)?>'
+                data-order-block-id='bx-soa-order'
+                data-auth-block-id='bx-soa-auth'
+                data-region-block-id='bx-soa-region'
+                data-pay-system-block-id='bx-soa-paysystem'
+                data-delivery-block-id='bx-soa-delivery'
+                data-pick-up-block-id='bx-soa-pickup'
+                data-props-block-id='bx-soa-properties'
+                data-new-block-id='new_block_with_comments'
+                data-total-block-id='bx-soa-total'
+                data-user-check='userCheck'
+        ></script>
     <script>
         <?php if ($USER->IsAuthorized()) {?>
         let bool_contrs = $('input').is('#connection_company_contragent');

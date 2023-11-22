@@ -24,6 +24,19 @@ input:focus, button:focus, [type='text']:focus, [type="password"]:focus, [type="
     background-color: transparent;
 }
 
+/* OSHISHA_BUTTONS */
+
+.form-check-input:checked[type="radio"] {
+    background-image: url('/local/templates/Oshisha/images/radio.png');
+    background-color: white;
+}
+
+.form-check-input[type="radio"] {
+    background-image: url('/local/templates/Oshisha/images/radio_not_active.png');
+    background-size: contain;
+    border: none;
+}
+
 /* SCROLL */
 
 input::-webkit-outer-spin-button,
