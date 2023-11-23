@@ -79,8 +79,11 @@ $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(
                         '<h5 class="mb-5">Уверены что хотите удалить свой профиль?</h5>' +
                         '<div class="d-flex flex-row justify-content-between">' +
                         '<span class="send-remove link_red_button color-white font-weight-500 br-10 font-14 p-2 width_50 text-center">Удалить</span>' +
-                        '<span class=" font-weight-500 btn_black color-white br-10 font-14 p-2 width_50 text-center">Отмена</span></div></div></div>');
+                        '<span class="font-weight-500 btn_black color-white br-10 font-14 p-2 width_50 text-center remove-window">Отмена</span></div></div></div>');
 
+                    $('.remove-window').on('click', function () {
+                        $(this).closest('.overlay_top').remove();
+                    })
                     $('.send-remove').on('click', function () {
                         BX.ajax({
                             method: 'POST',
