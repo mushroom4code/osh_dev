@@ -119,12 +119,12 @@ foreach ($item['PROPERTIES'] as $key => $props_val) {
 
 $priceForSum = $price['PRICE_DATA']['PRICE'];
 ?>
-<div class="catalog-item-product dark:bg-darkBox border-t border-b dark:border-tagFilterGray border-gray-product md:px-3 py-3
- px-0 h-full relative
-<?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>" data-product_id="<?= $item['ID'] ?>">
+<div class="catalog-item-product dark:bg-darkBox border-t border-b dark:border-tagFilterGray border-gray-product md:px-3 md:py-3
+ px-0 py-0 h-full relative <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>"
+     data-product_id="<?= $item['ID'] ?>">
     <div class="bx_catalog_item_container product-item position-relative h-full">
         <div class="item-product-info h-full flex flex-row flex-wrap items-center justify-between">
-            <div class="box_with_title_like md:w-5/12 w-2/3 md:order-1 order-1 md:mb-0 mb-5">
+            <div class="box_with_title_like md:w-5/12 w-2/3 order-1 md:mb-0 mb-5 md:block hidden">
                 <div class="box_with_text">
                     <a class="bx_catalog_item_title text-sm font-bold mb-2 text-textLight
                         dark:font-light dark:text-textDarkLightGray hover:text-hover-red dark:hover:text-white
@@ -141,44 +141,56 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
             <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
-                <?php
-                if (!$USER->IsAuthorized() && !$show_price) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/4 flex justify-center md:order-3 order-2">
-                        <div class="btn-plus <?= $not_auth ?>"
-                             data-href="<?= $href ?>">
-                                <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
-                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5">Подробнее</span>
+                <div class="flex flex-row md:dark:bg-none dark:bg-lightGrayBg md:w-auto w-full items-center justify-between p-3">
+                    <div class="box_with_title_like md:w-5/12 w-2/3 order-1 md:hidden block">
+                        <div class="box_with_text">
+                            <a class="bx_catalog_item_title text-sm font-bold mb-2 text-textLight
+                        dark:font-light dark:text-textDarkLightGray hover:text-hover-red dark:hover:text-white
+                        <?= $styleForNo . ' ' . $not_auth ?>"
+                               href="<?= $item['DETAIL_PAGE_URL']; ?>"
+                               data-href="<?= $href ?>"
+                               title="<?= $productTitle; ?>">
+                                <?= $productTitle; ?>
+                            </a>
                         </div>
                     </div>
-                <?php } else if (!$item['ADD_TO_BASKET']) { ?>
-                    <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/4 md:order-3 order-2 text-center flex justify-center relative">
+                    <?php if (!$USER->IsAuthorized() && !$show_price) { ?>
+                        <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/4 flex justify-center md:order-3 order-2">
+                            <div class="btn-plus <?= $not_auth ?>"
+                                 data-href="<?= $href ?>">
+                                <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
+                                dark:bg-dark-red bg-light-red py-2 px-4 rounded-5">Подробнее</span>
+                            </div>
+                        </div>
+                    <?php } else if (!$item['ADD_TO_BASKET']) { ?>
+                        <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 w-1/4 md:order-3 order-2 text-center flex justify-center relative">
                                 <span class="btn red_button_cart text-xs dark:text-textDark text-white font-medium
                                 dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 open-popup"
                                       onclick="showHidePopupPrice(this)">Подробнее</span>
-                        <div class="text-black font-extralight text-center hidden absolute p-5 shadow-lg popup-window-price
+                            <div class="text-black font-extralight text-center hidden absolute p-5 shadow-lg popup-window-price
                                 bg-filterGray dark:text-textDarkLightGray text-xs dark:bg-grayButton rounded-lg w-72
                                  z-20 left-0 top-5">
-                            <p class="flex justify-center">
-                                <svg width="20" height="20" viewBox="0 0 24 24"
-                                     class="mb-3 stroke-light-red dark:stroke-white"
-                                     fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="11" stroke-width="2"/>
-                                    <line x1="12" y1="11" x2="12" y2="18" stroke-width="2" stroke-linecap="round"
-                                          stroke-linejoin="round"/>
-                                    <line x1="12" y1="7" x2="12" y2="6" stroke-width="2" stroke-linecap="round"
-                                          stroke-linejoin="round"/>
-                                </svg>
-                            </p>
-                            У вас нет активных контрагентов для совершения покупок на этом сайте!<br>
-                            Вы можете
-                            <a href="/personal/contragents/"
-                               class="text-light-red dark:text-white font-medium">Создать контрагента</a>
-                            и обратиться к менеджеру <br>
-                            или перейти на наш
-                            <a href="https://oshisha.net"
-                               class="text-light-red dark:text-white font-medium">Розничный сайт</a>
-                            <span class="absolute -right-2 -top-2 cursor-pointer"
-                                  onclick="$(this).closest('div').toggleClass('hidden')">
+                                <p class="flex justify-center">
+                                    <svg width="20" height="20" viewBox="0 0 24 24"
+                                         class="mb-3 stroke-light-red dark:stroke-white"
+                                         fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="11" stroke-width="2"/>
+                                        <line x1="12" y1="11" x2="12" y2="18" stroke-width="2" stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                        <line x1="12" y1="7" x2="12" y2="6" stroke-width="2" stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                </p>
+                                У вас нет активных контрагентов для совершения покупок на этом сайте!<br>
+                                Вы можете
+                                <a href="/personal/contragents/"
+                                   class="text-light-red dark:text-white font-medium">Создать контрагента</a>
+                                и обратиться к менеджеру <br>
+                                или перейти на наш
+                                <a href="https://oshisha.net"
+                                   class="text-light-red dark:text-white font-medium">Розничный сайт</a>
+                                <span class="absolute -right-2 -top-2 cursor-pointer"
+                                      onclick="$(this).closest('div').toggleClass('hidden')">
                                 <svg width="25" height="25" viewBox="0 0 60 60" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path opacity="0.7"
@@ -188,191 +200,167 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                                           fill="white"></path>
                                 </svg>
                             </span>
+                            </div>
                         </div>
-                    </div>
-                <?php } ?>
-                <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
-                    <?php if ($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'): ?>
-                        <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                    <?php } ?>
+                    <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
+                        <?php if ($arResult['IS_SUBSCRIPTION_PAGE'] == 'Y'): ?>
+                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                             <?= $is_key_found ? 'subscribed' : '' ?> min_card">
-                            <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
-                        </div>
-                        <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
+                            </div>
+                            <div id="popup_mess" class="catalog_popup<?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                              <?= $is_key_found ? 'subscribed' : '' ?>"
-                             data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
-                             data-product_id="<?= $item['ID']; ?>">
-                        </div>
-                    <?php else: ?>
-                        <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
-                            <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 md:w-1/3 md:order-3
+                                 data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
+                                 data-product_id="<?= $item['ID']; ?>">
+                            </div>
+                        <?php else: ?>
+                            <?php if ($show_price && $item['ADD_TO_BASKET']) { ?>
+                                <div class="bx_catalog_item_controls box_with_fav_bask md:w-2/12 md:w-1/3 md:order-3
                              order-2 flex justify-center relative md:mb-0 mb-5">
-                                <div class="flex row-line-reverse justify-between box-basket">
-                                    <div class="btn red_button_cart btn-plus add2basket
+                                    <div class="flex row-line-reverse justify-between box-basket">
+                                        <div class="btn red_button_cart btn-plus add2basket
                                        dark:bg-dark-red bg-light-red py-2 px-3.5 rounded-5"
-                                         data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                         data-product_id="<?= $item['ID']; ?>"
-                                         data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                         id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                         <?php if ($priceBasket > 0): ?>style="display:none;"<?php endif; ?>
-                                    >
-                                        <svg width="22" height="26" viewBox="0 0 18 22" fill="none"
-                                             xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M13.6017 18.9561V15.8498M13.6017 15.8498H16.4364M13.6017 15.8498H10.767M13.6017 15.8498V14.1413V12.5881"
-                                                  stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                            <path d="M12.9978 7.09848H14.1597C15.2019 7.09848 16.0701 7.97388 16.1567 9.11199M12.9978 7.09848H4.98235M12.9978 7.09848V6.00055C12.9978 4.83579 12.5756 3.71874 11.8239 2.89513C11.0724 2.07153 10.053 1.60883 8.99007 1.60883C7.92712 1.60883 6.90778 2.07153 6.15618 2.89513C5.4046 3.71874 4.98235 4.83579 4.98235 6.00055V7.09848M12.9978 7.09848V9.51393M9.76502 20.2737H3.15243C1.98009 20.2737 1.05814 19.1756 1.1555 17.8954L1.82345 9.11199C1.91 7.97388 2.7782 7.09848 3.82039 7.09848H4.98235M4.98235 7.09848V9.51393"
-                                                  stroke="white" stroke-width="2" stroke-linecap="round"
-                                                  stroke-linejoin="round"/>
-                                        </svg>
-                                    </div>
-                                    <div class="product-item-amount-field-contain-wrap"
-                                         <?php if ($priceBasket > 0){ ?>style="display:flex;"<?php } else { ?>
-                                        style="display:none;"
-                                    <?php } ?>
-                                         data-product_id="<?= $item['ID']; ?>">
-                                        <div class="product-item-amount-field-contain flex flex-row items-center">
-                                            <a class="btn-minus no-select add2basket cursor-pointer h-full flex items-center"
-                                               id="<?= $arItemIDs['BUY_LINK']; ?>"
-                                               href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                               data-product_id="<?= $item['ID']; ?>">
-                                                <svg width="22" height="2" viewBox="0 0 22 2" fill="none"
-                                                     class="stroke-dark dark:stroke-white stroke-[1.5px]"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M1 1H21" stroke-linecap="round"
-                                                          stroke-linejoin="round"/>
-                                                </svg>
-                                            </a>
-                                            <div class="product-item-amount-field-block">
-                                                <input class="product-item-amount dark:bg-grayButton bg-textDarkLightGray
+                                             data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                             data-product_id="<?= $item['ID']; ?>"
+                                             data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                             id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                             <?php if ($priceBasket > 0): ?>style="display:none;"<?php endif; ?>
+                                        >
+                                            <svg width="22" height="26" viewBox="0 0 18 22" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.6017 18.9561V15.8498M13.6017 15.8498H16.4364M13.6017 15.8498H10.767M13.6017 15.8498V14.1413V12.5881"
+                                                      stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                                <path d="M12.9978 7.09848H14.1597C15.2019 7.09848 16.0701 7.97388 16.1567 9.11199M12.9978 7.09848H4.98235M12.9978 7.09848V6.00055C12.9978 4.83579 12.5756 3.71874 11.8239 2.89513C11.0724 2.07153 10.053 1.60883 8.99007 1.60883C7.92712 1.60883 6.90778 2.07153 6.15618 2.89513C5.4046 3.71874 4.98235 4.83579 4.98235 6.00055V7.09848M12.9978 7.09848V9.51393M9.76502 20.2737H3.15243C1.98009 20.2737 1.05814 19.1756 1.1555 17.8954L1.82345 9.11199C1.91 7.97388 2.7782 7.09848 3.82039 7.09848H4.98235M4.98235 7.09848V9.51393"
+                                                      stroke="white" stroke-width="2" stroke-linecap="round"
+                                                      stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <div class="product-item-amount-field-contain-wrap"
+                                             <?php if ($priceBasket > 0){ ?>style="display:flex;"<?php } else { ?>
+                                            style="display:none;"
+                                        <?php } ?>
+                                             data-product_id="<?= $item['ID']; ?>">
+                                            <div class="product-item-amount-field-contain flex flex-row items-center">
+                                                <a class="btn-minus no-select add2basket cursor-pointer h-full flex items-center"
+                                                   id="<?= $arItemIDs['BUY_LINK']; ?>"
+                                                   href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $item['ID']; ?>">
+                                                    <svg width="22" height="2" viewBox="0 0 22 2" fill="none"
+                                                         class="stroke-dark dark:stroke-white stroke-[1.5px]"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M1 1H21" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                    </svg>
+                                                </a>
+                                                <div class="product-item-amount-field-block">
+                                                    <input class="product-item-amount dark:bg-grayButton bg-textDarkLightGray
                                                 focus:border-none text-center border-none text-sm line-product
                                                  shadow-none py-2.5 px-3 mx-2 outline-none rounded-md w-14 card_element"
-                                                       id="<?= $arItemIDs['QUANTITY_ID'] ?>"
-                                                       type="number"
-                                                       max="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                                       value="<?= $priceBasket ?>">
+                                                           id="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                                                           type="number"
+                                                           max="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                                           value="<?= $priceBasket ?>">
+                                                </div>
+                                                <a class="btn-plus no-select add2basket cursor-pointer h-full flex items-center"
+                                                   data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                                   id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
+                                                   data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $item['ID']; ?>"
+                                                   title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар">
+                                                    <svg width="20" height="20" viewBox="0 0 20 20"
+                                                         class="fill-light-red dark:fill-white"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M18.8889 11.111H1.11111C0.503704 11.111 0 10.6073 0 9.9999C0 9.3925 0.503704 8.88879 1.11111 8.88879H18.8889C19.4963 8.88879 20 9.3925 20 9.9999C20 10.6073 19.4963 11.111 18.8889 11.111Z"/>
+                                                        <path d="M10 20C9.39262 20 8.88892 19.4963 8.88892 18.8889V1.11111C8.88892 0.503704 9.39262 0 10 0C10.6074 0 11.1111 0.503704 11.1111 1.11111V18.8889C11.1111 19.4963 10.6074 20 10 20Z"/>
+                                                    </svg>
+                                                </a>
                                             </div>
-                                            <a class="btn-plus no-select add2basket cursor-pointer h-full flex items-center"
-                                               data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
-                                               id="<?= $arItemIDs['BUY_LINK']; ?>" href="javascript:void(0)"
-                                               data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
-                                               data-product_id="<?= $item['ID']; ?>"
-                                               title="Доступно <?= $item['PRODUCT']['QUANTITY'] ?> товар">
-                                                <svg width="20" height="20" viewBox="0 0 20 20"
-                                                     class="fill-light-red dark:fill-white"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M18.8889 11.111H1.11111C0.503704 11.111 0 10.6073 0 9.9999C0 9.3925 0.503704 8.88879 1.11111 8.88879H18.8889C19.4963 8.88879 20 9.3925 20 9.9999C20 10.6073 19.4963 11.111 18.8889 11.111Z"/>
-                                                    <path d="M10 20C9.39262 20 8.88892 19.4963 8.88892 18.8889V1.11111C8.88892 0.503704 9.39262 0 10 0C10.6074 0 11.1111 0.503704 11.1111 1.11111V18.8889C11.1111 19.4963 10.6074 20 10 20Z"/>
-                                                </svg>
-                                            </a>
-                                        </div>
-                                        <div class="alert_quantity hidden absolute p-4 text-xs left-0 top-12 bg-filterGray
+                                            <div class="alert_quantity hidden absolute p-4 text-xs left-0 top-12 bg-filterGray
                                             dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20"
-                                             data-id="<?= $item['ID'] ?>"></div>
+                                                 data-id="<?= $item['ID'] ?>"></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php } ?>
-                    <?php endif; ?>
-                    <div class="box_with_price card-price font_weight_600 min-height-auto md:w-1/12 w-1/4 md:order-4 order-4">
-                        <div class="flex flex-col justify-center items-center">
-                            <div class="bx_price text-md font-semibold dark:font-medium <?= $styleForNo ?> position-relative">
-                                <?php
-                                if (!empty($specialPrice)) {
-                                    echo(round($specialPrice));
-                                    $priceForSum = $specialPrice;
-                                } else {
-                                    echo(round($price['PRICE_DATA']['PRICE']));
-                                } ?>₽
-                            </div>
-                            <?php if (!empty($specialPrice)) { ?>
-                                <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
+                            <?php } ?>
+                        <?php endif; ?>
+                    <?php } ?>
+                </div>
+                <div class="box_with_price card-price font_weight_600 min-height-auto md:w-1/12 w-1/4 md:order-4 order-4">
+                    <div class="flex flex-col justify-center items-center">
+                        <div class="bx_price text-md font-semibold dark:font-medium <?= $styleForNo ?> position-relative">
+                            <?php
+                            if (!empty($specialPrice)) {
+                                echo(round($specialPrice));
+                                $priceForSum = $specialPrice;
+                            } else {
+                                echo(round($price['PRICE_DATA']['PRICE']));
+                            } ?>₽
+                        </div>
+                        <?php if (!empty($specialPrice)) { ?>
+                            <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
                                             <span class="line-through font-light decoration-red text-textLight
                                              dark:text-grayIconLights mx-1 text-xs">
                                                 <?= $price['PRICE_DATA']['PRICE'] ?>₽</span>
-                                    <span class="sale-percent text-light-red font-medium text-xs">
+                                <span class="sale-percent text-light-red font-medium text-xs">
                                                 - <?= (round($price['PRICE_DATA']['PRICE']) - round($specialPrice)) ?>₽
                                             </span>
-                                </div>
-                            <?php } ?>
-                        </div>
+                            </div>
+                        <?php } ?>
                     </div>
-                <?php } ?>
+                </div>
                 <div class="font-semibold dark:font-medium text-md sum-box md:w-2/12 w-1/4 md:order-5 order-5 bx_catalog_item_controls text-center"
                      data-price="<?= $priceForSum ?? 0 ?>" data-product-id="<?= $item['ID'] ?>">
                     <?= round($priceForSum * $priceBasket) ?? 0 ?>₽
                 </div>
             <?php } else { ?>
-                <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>" class="not_avail bx_catalog_item_controls w-5/12 order-4 relative">
-                    <div class="box_with_fav_bask flex justify-center items-center">
-                        <div class="not_product detail_popup text-xs dark:text-textDark text-white font-medium
+                <div class="flex flex-row md:dark:bg-none dark:bg-lightGrayBg md:w-auto w-full items-center justify-between p-3">
+                    <div class="box_with_title_like md:w-5/12 w-2/3 order-1 md:hidden block">
+                        <div class="box_with_text">
+                            <a class="bx_catalog_item_title text-sm font-bold mb-2 text-textLight
+                        dark:font-light dark:text-textDarkLightGray hover:text-hover-red dark:hover:text-white
+                        <?= $styleForNo . ' ' . $not_auth ?>"
+                               href="<?= $item['DETAIL_PAGE_URL']; ?>"
+                               data-href="<?= $href ?>"
+                               title="<?= $productTitle; ?>">
+                                <?= $productTitle; ?>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="<?= $arItemIDs['NOT_AVAILABLE_MESS']; ?>"
+                         class="not_avail bx_catalog_item_controls w-5/12 order-4 relative">
+                        <div class="box_with_fav_bask flex justify-center items-center">
+                            <div class="not_product detail_popup text-xs dark:text-textDark text-white font-medium
                                 dark:bg-dark-red bg-light-red py-2 px-4 rounded-full text-center w-fit cursor-pointer
                                 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                 <?= $is_key_found ? 'subscribed' : '' ?>">
-                            Нет в наличии
-                        </div>
-                        <div class="detail_popup absolute z-20 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                Нет в наличии
+                            </div>
+                            <div class="detail_popup absolute z-20 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                 <?= $is_key_found ? 'subscribed' : '' ?> min_card">
-                            <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
+                                <i class="fa fa-bell-o <?= $is_key_found ? 'filled' : '' ?>" aria-hidden="true"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div style="clear: both;"></div>
-                    <div id="popup_mess"
-                         class="catalog_popup absolute z-20 w-full left-0
+                        <div style="clear: both;"></div>
+                        <div id="popup_mess"
+                             class="catalog_popup absolute z-20 w-full left-0
                                <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                          <?= $is_key_found ? 'subscribed' : '' ?>"
-                         data-subscription_id="
+                             data-subscription_id="
                              <?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
-                         data-product_id="<?= $item['ID']; ?>">
+                             data-product_id="<?= $item['ID']; ?>">
+                        </div>
                     </div>
                 </div>
             <?php } ?>
-            <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
-                <div class="bx_catalog_item_price md:w-1/12 w-1/4 md:order-6 order-6">
-                    <div class="box_with_titles flex flex-row text-xs text-textLight items-center justify-between dark:text-textDarkLightGray">
-                        <?php
-                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                            'templates',
-                            [
-                                'ID_PROD' => $item['ID_PROD'],
-                                'F_USER_ID' => $item['F_USER_ID'],
-                                'LOOK_LIKE' => false,
-                                'LOOK_FAVORITE' => true,
-                                'HIDE_LIKE_COUNT' => true,
-                                'COUNT_LIKE' => $item['COUNT_LIKE'],
-                                'COUNT_FAV' => $item['COUNT_FAV'],
-                                'COUNT_LIKES' => $item['COUNT_LIKES'],
-                            ],
-                            $component,
-                            [
-                                'HIDE_ICONS' => 'Y'
-                            ]
-                        );
-                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                            'templates',
-                            array(
-                                'ID_PROD' => $item['ID_PROD'],
-                                'F_USER_ID' => $item['F_USER_ID'],
-                                'LOOK_LIKE' => true,
-                                'LOOK_FAVORITE' => false,
-                                'HIDE_LIKE_COUNT' => true,
-                                'COUNT_LIKE' => $item['COUNT_LIKE'],
-                                'COUNT_FAV' => $item['COUNT_FAV'],
-                                'COUNT_LIKES' => $item['COUNT_LIKES'],
-                            ),
-                            $component,
-                            array('HIDE_ICONS' => 'Y'),
-                        );
-                        ?>
-                    </div>
-                </div>
-            <?php } else { ?>
-                <div class="box_with_titles flex flex-row text-xs text-textLight dark:text-textDarkLightGray w-1/12">
-                    <div class="not_product">
-                        Товара нет в наличии
-                    </div>
+        </div>
+        <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
+            <div class="bx_catalog_item_price md:w-1/12 w-1/4 md:order-6 order-6">
+                <div class="box_with_titles flex flex-row text-xs text-textLight items-center justify-between dark:text-textDarkLightGray">
                     <?php
                     $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                         'templates',
-                        array(
+                        [
                             'ID_PROD' => $item['ID_PROD'],
                             'F_USER_ID' => $item['F_USER_ID'],
                             'LOOK_LIKE' => false,
@@ -381,15 +369,16 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                             'COUNT_LIKE' => $item['COUNT_LIKE'],
                             'COUNT_FAV' => $item['COUNT_FAV'],
                             'COUNT_LIKES' => $item['COUNT_LIKES'],
-                        )
-                        ,
+                        ],
                         $component,
-                        array('HIDE_ICONS' => 'Y')
+                        [
+                            'HIDE_ICONS' => 'Y'
+                        ]
                     );
                     $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                         'templates',
                         array(
-                            'ID' => $item['ID_PROD'],
+                            'ID_PROD' => $item['ID_PROD'],
                             'F_USER_ID' => $item['F_USER_ID'],
                             'LOOK_LIKE' => true,
                             'LOOK_FAVORITE' => false,
@@ -399,11 +388,50 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                             'COUNT_LIKES' => $item['COUNT_LIKES'],
                         ),
                         $component,
-                        array('HIDE_ICONS' => 'Y')
-                    ); ?>
+                        array('HIDE_ICONS' => 'Y'),
+                    );
+                    ?>
                 </div>
-            <?php } ?>
-        </div>
+            </div>
+        <?php } else { ?>
+            <div class="box_with_titles flex flex-row text-xs text-textLight dark:text-textDarkLightGray w-1/12">
+                <div class="not_product">
+                    Товара нет в наличии
+                </div>
+                <?php
+                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                    'templates',
+                    array(
+                        'ID_PROD' => $item['ID_PROD'],
+                        'F_USER_ID' => $item['F_USER_ID'],
+                        'LOOK_LIKE' => false,
+                        'LOOK_FAVORITE' => true,
+                        'HIDE_LIKE_COUNT' => true,
+                        'COUNT_LIKE' => $item['COUNT_LIKE'],
+                        'COUNT_FAV' => $item['COUNT_FAV'],
+                        'COUNT_LIKES' => $item['COUNT_LIKES'],
+                    )
+                    ,
+                    $component,
+                    array('HIDE_ICONS' => 'Y')
+                );
+                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                    'templates',
+                    array(
+                        'ID' => $item['ID_PROD'],
+                        'F_USER_ID' => $item['F_USER_ID'],
+                        'LOOK_LIKE' => true,
+                        'LOOK_FAVORITE' => false,
+                        'HIDE_LIKE_COUNT' => true,
+                        'COUNT_LIKE' => $item['COUNT_LIKE'],
+                        'COUNT_FAV' => $item['COUNT_FAV'],
+                        'COUNT_LIKES' => $item['COUNT_LIKES'],
+                    ),
+                    $component,
+                    array('HIDE_ICONS' => 'Y')
+                ); ?>
+            </div>
+        <?php } ?>
         <?php
         $emptyProductProperties = empty($item['PRODUCT_PROPERTIES']);
         if ('Y' == $arParams['ADD_PROPERTIES_TO_BASKET'] && !$emptyProductProperties) { ?>
