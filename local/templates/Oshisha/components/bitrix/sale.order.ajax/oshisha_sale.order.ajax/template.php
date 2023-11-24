@@ -290,7 +290,7 @@ if ($request->get('ORDER_ID') <> '') {
                 <h5 class="mb-4"><b>Покупатель</b><i class="fa fa-pencil" aria-hidden="true"></i></h5>
                 <div class="bx-soa">
                     <div id="bx-soa-properties" data-visited="true" class="bx-soa-section mb-4 bx-active">
-                        <div class="bx-soa-section-title-container">
+                        <div id="user-properties-title-block" class="bx-soa-section-title-container">
                             <div class="width_100 mb-4 d-flex align-items-center userCheck" id="userCheck"></div>
                             <?php if ($USER->IsAuthorized() && !empty($user_object->company_user) && !empty($user_object->contragents_user)) { ?>
                                 <input value='<?= json_encode($user_object->contragents_user) ?>' type="hidden"
@@ -461,30 +461,7 @@ if ($request->get('ORDER_ID') <> '') {
                             </div>
                             <div class="bx-soa-section-content"></div>
                         </div>
-                        <div class="p-3">
-                            <p class="d-flex flex-row align-items-center font-14">
-                                <input type="checkbox" required
-                                       class="check_input form-check-input mr-2 mt-0 checked_active_button"
-                                       id="soa-property-USER_RULES" checked name="USER_RULES"/>
-                                <label class="bx-soa-custom-label m-0">
-                                    Я принимаю условия
-                                    <a class="color-redLight text-decoration-underline" href="/about/users_rules/">
-                                        Пользовательского соглашения
-                                    </a>
-                                </label>
-                            </p>
-                            <p class="d-flex flex-row align-items-center font-14">
-                                <input type="checkbox" required checked
-                                       class="check_input form-check-input mr-2 mt-0 checked_active_button"
-                                       name="USER_POLITICS"/>
-                                <label class="bx-soa-custom-label m-0">
-                                    Я принимаю условия
-                                    <a class="color-redLight text-decoration-underline" href="/about/politics/">
-                                        Политики конфиденциальности
-                                    </a>
-                                </label>
-                            </p>
-                        </div>
+                        <div id="user-agreements" class="p-3"></div>
                         <div class="new_block_with_comments mt-0" id="new_block_with_comments">
                             <div id="new_block_with_comment_box"></div>
                         </div>
@@ -624,7 +601,7 @@ if ($request->get('ORDER_ID') <> '') {
 
     $arParams['AR_DELIVERY_PICKUP'] = AR_DELIVERY_PICKUP;
     ?>
-        <script src="/dist/app.generated.js"
+        <script id="react-order-js" src="/dist/order_page.generated.js"
                 data-result='<?= json_encode($arResult['JS_DATA']);?>'
                 data-delivery-options='<?=json_encode($arResult['DELIVERY_OPTIONS'])?>'
                 data-locations='<?=json_encode($arResult['LOCATIONS'], JSON_HEX_APOS)?>'
@@ -640,10 +617,11 @@ if ($request->get('ORDER_ID') <> '') {
                 data-pay-system-block-id='bx-soa-paysystem'
                 data-delivery-block-id='bx-soa-delivery'
                 data-pick-up-block-id='bx-soa-pickup'
-                data-props-block-id='bx-soa-properties'
-                data-new-block-id='new_block_with_comments'
+                data-user-props-block-id='user-properties-block'
+                data-new-block-with-comment-id='new_block_with_comment_box'
                 data-total-block-id='bx-soa-total'
-                data-user-check='userCheck'
+                data-user-agreements-block-id='user-agreements'
+                data-user-check-block-id='userCheck'
         ></script>
     <script>
         <?php if ($USER->IsAuthorized()) {?>

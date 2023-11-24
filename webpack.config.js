@@ -5,11 +5,11 @@ const templatePath = 'local/templates/Oshisha';
 module.exports = {
     mode: 'development',
     entry: {
-        app: './'+templatePath+'/assets/app/app.js'
+        app: {import:'./'+templatePath+'/assets/app/app.js', filename: 'app.generated.js'},
+        order_page: {import:'./'+templatePath+'/assets/app/order_page.js', filename: 'order_page.generated.js'}
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'app.generated.js',
     },
     module:{
         rules:[   //загрузчик для jsx

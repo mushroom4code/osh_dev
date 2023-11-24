@@ -77,3 +77,4 @@ bitrix/tmp/
 /node_modules/
 /!package.json
 /dist/app.generated.js
+/dist/order_page.generated.js
