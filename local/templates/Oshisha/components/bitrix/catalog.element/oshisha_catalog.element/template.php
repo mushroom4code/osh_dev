@@ -119,7 +119,7 @@ $rowResHidePrice = $arResult['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $price = $actualItem['PRICES_CUSTOM'];
 
 $priceCalculate = $price['PRICE_DATA'][1]['PRICE'];
-$price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
+$price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][2]['PRINT_PRICE'];
 
 if (!empty($price['USER_PRICE']['PRICE'])) {
     $specialPrice = $price['USER_PRICE'];
@@ -286,7 +286,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         <div class="product-item-detail-price-current"
                                              id="<?= $itemIds['PRICE_ID'] ?>">
                                             <?=
-                                                $specialPrice['PRINT_RATIO_PRICE'] ?? '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_RATIO_PRICE'];
+                                                $specialPrice['PRINT_RATIO_PRICE'] ?? '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][2]['PRINT_RATIO_PRICE'];
                                             ?>
                                         </div>
                                         <?php if (isset($specialPrice)) {
