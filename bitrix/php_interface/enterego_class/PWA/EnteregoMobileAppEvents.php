@@ -17,16 +17,20 @@ class EnteregoMobileAppEvents
     public static function getUserRulesForContent(): bool
     {
         $showContent = false;
+        $userAccept = false;
         $cordovaMobile = getallheaders()['X-Mobile-App'] ?? '';
-
         global $USER;
-//        TODO - убрать после модерации
-//        if (($cordovaMobile === 'Cordova' && $USER->IsAuthorized() && $USER->getLogin() !== 'appleTestUser') ||
-//            $USER->IsAuthorized() && $USER->getLogin() !== 'appleTestUser' || empty($cordovaMobile) ) {
-//            $showContent = true;
-//        }
 
-        if ($cordovaMobile !== 'Cordova' || empty($cordovaMobile)) {
+        $arFilter = array("ID" => $USER->GetID());
+        $arParams["SELECT"] = array("UF_MOBILE_ACCEPT");
+        $arRes = CUser::GetList('','', $arFilter, $arParams);
+        if ($res = $arRes->Fetch()) {
+            if($res["UF_MOBILE_ACCEPT"] == '1' || $res["UF_MOBILE_ACCEPT"] || $res["UF_MOBILE_ACCEPT"] == 'да'){
+                $userAccept = true;
+            }
+        }
+
+        if ($cordovaMobile !== 'Cordova' || empty($cordovaMobile) || $userAccept && $USER->IsAuthorized()) {
             $showContent = true;
         }
 
