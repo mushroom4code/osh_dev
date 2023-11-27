@@ -225,7 +225,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             require_once(__DIR__ . '/slider/template.php'); ?>
             <div class="md:w-1/2 w-full md:mt-0 mt-7 flex flex-col catalog-item-product
 				not-input-parse">
-                <p class="head-title text-2xl mb-10 font-semibold dark:font-light dark:text-textDarkLightGray"><?= $name ?></p>
+                <p class="head-title text-3xl mb-4 text-lightGrayBg font-semibold dark:font-light dark:text-textDarkLightGray"><?= $name ?></p>
                 <?php if ($isGift) { ?>
                     <div>
                         <h4 class="bx-title dark:text-textDark text-textLight">Данная продукция не продается
@@ -276,57 +276,6 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 </div>
                             </div>
                         <?php }
-                        if ($show_price) {
-                            $arParams['SHOW_MAX_QUANTITY'] = 'N';
-                            if ($arParams['SHOW_MAX_QUANTITY'] !== 'N') {
-                                if ($haveOffers) { ?>
-                                    <div class="mb-3" id="<?= $itemIds['QUANTITY_LIMIT'] ?>"
-                                         style="display: none;">
-                                        <span class="product-item-quantity" data-entity="quantity-limit-value"></span>
-                                    </div>
-                                <?php } else {
-                                    if ($measureRatio && (float)$actualItem['PRODUCT']['QUANTITY'] > 0
-                                        && $actualItem['CHECK_QUANTITY']) { ?>
-                                        <div class="mb-3 text-center"
-                                             id="<?= $itemIds['QUANTITY_LIMIT'] ?>">
-                                        <span class="product-item-detail-info-container-title">
-                                            <?= $arParams['MESS_SHOW_MAX_QUANTITY'] ?>:</span>
-                                            <span class="product-item-quantity"
-                                                  data-entity="quantity-limit-value">
-                                            <?php if ($arParams['SHOW_MAX_QUANTITY'] === 'M') {
-                                                if ((float)$actualItem['PRODUCT']['QUANTITY'] / $measureRatio >= $arParams['RELATIVE_QUANTITY_FACTOR']) {
-                                                    echo $arParams['MESS_RELATIVE_QUANTITY_MANY'];
-                                                } else {
-                                                    echo $arParams['MESS_RELATIVE_QUANTITY_FEW'];
-                                                }
-                                            } else {
-                                                echo $actualItem['PRODUCT']['QUANTITY'] . ' ' . $actualItem['ITEM_MEASURE']['TITLE'];
-                                            } ?>
-                                        </span>
-                                        </div>
-                                        <?php
-                                    }
-                                }
-                            }
-                        } ?>
-                        <div class="mb-4 flex flex-col dark:text-textDark text-textLight">
-                            <div class="mb-3 d-flex flex-row align-items-center">
-                                <div class="product-item-detail-price-current text-textLight text-3xl mb-2 font-semibold
-                            dark:font-medium dark:text-textDarkLightGray"
-                                     id="<?= $itemIds['PRICE_ID'] ?>">
-                                    <?= $specialPrice['PRINT_PRICE'] ?? $price['PRICE_DATA']['PRINT_PRICE']; ?>
-                                </div>
-                                <?php if (isset($specialPrice)) {
-                                    $styles = 'price-discount';
-                                    $old_sum = (int)$price['PRICE_DATA']['PRICE'] - (int)$specialPrice['PRICE'] ?? 0; ?>
-                                    <span class="font-14 ml-3">
-                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA']['PRINT_PRICE']; ?></b>
-                                    <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
-                                </span>
-                                <?php } ?>
-                            </div>
-                        </div>
-                        <?php
                         /** Enterego grouped product */
                         if (!empty($arResult['GROUPED_PROPS_DATA']) && count($arResult['GROUPED_PRODUCTS']) > 1 &&
                             (int)$actualItem['PRODUCT']['QUANTITY'] > 0) { ?>
@@ -399,7 +348,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                                 bg-white border-2 <?= !empty($select)
                                                                     ? 'border-light-red text-light-red dark:bg-grayButton dark:text-white' :
                                                                     'border-textDarkLightGray text-dark dark:text-textDarkLightGray dark:bg-darkBox' ?>
-                                                                     min-w-20 m-1 offer-box cursor-pointer
+                                                                     min-w-20 m-1 offer-box cursor-pointer font-medium
                                                                      dark:border-0 dark:font-normal text-sm font-bolder"
                                                                      title="<?= $offer['NAME'] ?>"
                                                                      data-active="<?= !empty($select) ? 'true' : 'false' ?>"
@@ -421,7 +370,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                                 <img src="<?= $prop['PREVIEW_PICTURE'] ?>"
                                                                      class="w-20 h-20 rounded-md dark:border-0 border-2
                                                                      <?= $select ? 'dark:opacity-50 border-textDarkLightGray'
-                                                                         : 'border-light-red'?>"
+                                                                         : 'border-light-red' ?>"
                                                                      alt="<?= $title ?>"
                                                                      loading="lazy"/>
                                                             </div>
@@ -430,10 +379,10 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                         if (!empty($tasted)) { ?>
                                                             <a href="<?= $link ?>" class="offer-link <?= $select ?>">
                                                                 <div class="red_button_cart taste variation_taste
-                                                                 w-fit p-3 m-1 offer-box cursor-pointer rounded-md flex flex-row
+                                                                 w-fit p-3 mb-2 mr-1 offer-box cursor-pointer rounded-md flex flex-row
                                                                     border-2 <?= !empty($select) ? 'border-light-red
                                                                      dark:border-grayButton dark:border dark:bg-grayButton' :
-                                                                    'border-textDarkLightGray dark:border-0' ?> min-w-20 m-1 offer-box
+                                                                    'border-textDarkLightGray dark:border-0' ?> min-w-20 offer-box
                                                                     cursor-pointer dark:bg-darkBox"
                                                                      title="<?= $title ?>"
                                                                      data-active="<?= !empty($select) ? 'true' : 'false' ?>"
@@ -462,6 +411,56 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                    id="product_prop_data"/>
                             <?php /** Enterego grouped product */
                         } ?>
+                        <?php if ($show_price) {
+                            $arParams['SHOW_MAX_QUANTITY'] = 'N';
+                            if ($arParams['SHOW_MAX_QUANTITY'] !== 'N') {
+                                if ($haveOffers) { ?>
+                                    <div class="mb-3" id="<?= $itemIds['QUANTITY_LIMIT'] ?>"
+                                         style="display: none;">
+                                        <span class="product-item-quantity" data-entity="quantity-limit-value"></span>
+                                    </div>
+                                <?php } else {
+                                    if ($measureRatio && (float)$actualItem['PRODUCT']['QUANTITY'] > 0
+                                        && $actualItem['CHECK_QUANTITY']) { ?>
+                                        <div class="mb-3 text-center"
+                                             id="<?= $itemIds['QUANTITY_LIMIT'] ?>">
+                                        <span class="product-item-detail-info-container-title">
+                                            <?= $arParams['MESS_SHOW_MAX_QUANTITY'] ?>:</span>
+                                            <span class="product-item-quantity"
+                                                  data-entity="quantity-limit-value">
+                                            <?php if ($arParams['SHOW_MAX_QUANTITY'] === 'M') {
+                                                if ((float)$actualItem['PRODUCT']['QUANTITY'] / $measureRatio >= $arParams['RELATIVE_QUANTITY_FACTOR']) {
+                                                    echo $arParams['MESS_RELATIVE_QUANTITY_MANY'];
+                                                } else {
+                                                    echo $arParams['MESS_RELATIVE_QUANTITY_FEW'];
+                                                }
+                                            } else {
+                                                echo $actualItem['PRODUCT']['QUANTITY'] . ' ' . $actualItem['ITEM_MEASURE']['TITLE'];
+                                            } ?>
+                                        </span>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                            }
+                        } ?>
+                        <div class="mb-4 flex flex-col dark:text-textDark text-textLight">
+                            <div class="mb-3 d-flex flex-row align-items-center">
+                                <div class="product-item-detail-price-current text-3xl mb-2 font-semibold
+                            dark:font-medium text-lightGrayBg dark:text-textDarkLightGray"
+                                     id="<?= $itemIds['PRICE_ID'] ?>">
+                                    <?= $specialPrice['PRINT_PRICE'] ?? $price['PRICE_DATA']['PRINT_PRICE']; ?>
+                                </div>
+                                <?php if (isset($specialPrice)) {
+                                    $styles = 'price-discount';
+                                    $old_sum = (int)$price['PRICE_DATA']['PRICE'] - (int)$specialPrice['PRICE'] ?? 0; ?>
+                                    <span class="font-14 ml-3">
+                                    <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA']['PRINT_PRICE']; ?></b>
+                                    <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
+                                </span>
+                                <?php } ?>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex flex-col">
                         <div class="dark:border-darkBox rounded-xl border-2 border-textDark">
@@ -481,13 +480,13 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         <path d="M28.3333 8.1123L11.6666 16.654" stroke="#BFBFBF" stroke-width="1.5"
                                               stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
-                                    <span class="text-sm">
+                                    <span class="text-sm font-medium dark:font-light">
                                     Наличие товара, варианты и стоимость доставки будут указаны далее при оформлении
                                     заказа.
                                 </span>
                                 </p>
                             </div>
-                            <div class="flex flex-row items-center p-5">
+                            <div class="flex flex-row items-center p-5 justify-between">
                                 <?php if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price) { ?>
                                     <div>
                                         <div class="mb-lg-3 mb-md-3 mb-4 flex flex-row items-center bx_catalog_item bx_catalog_item_controls"
@@ -552,11 +551,14 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         </div>
                                         <div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
                                     </div>
-                                    <div class="ganerate_price_wrap ml-auto mt-3 mb-0 w-75 font-weight-bold h5"
-                                         <?php if ($priceBasket > 0): ?><?php else: ?>style="display:none;"<?php endif; ?>>
-                                        Итого:
-                                        <div class="inline-block float-right ganerate_price">
-                                            <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
+                                    <div class="ganerate_price_wrap mb-0 <?= ($priceBasket > 0) ? 'flex flex-row' : 'hidden' ?>">
+                                        <div class="flex flex-row">
+                                            <span class="text-2xl font-semibold text-dark dark:font-normal
+                                             dark:text-textDarkLightGray mr-4">Итого:</span>
+                                            <div class="text-2xl font-semibold text-dark dark:font-normal
+                                            dark:text-textDarkLightGray ganerate_price">
+                                                <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
+                                            </div>
                                         </div>
                                     </div>
                                 <?php } else { ?>

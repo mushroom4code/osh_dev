@@ -54,10 +54,13 @@ input[type='number'] {
     background-color: transparent;
 }
 
+html:not(.dark) ::-webkit-scrollbar-thumb {
+    background-color: #f0f0f0;
+}
+
 ::-webkit-scrollbar-thumb {
     background-color: #464646;
 }
-
 /* LOADER */
 
 .loader {
