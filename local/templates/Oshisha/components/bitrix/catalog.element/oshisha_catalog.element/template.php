@@ -464,7 +464,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     </div>
                     <div class="flex flex-col">
                         <div class="dark:border-darkBox rounded-xl border-2 border-textDark">
-                            <div class="new_box mb-3 p-5 dark:bg-darkBox rounded-t-xl bg-textDark">
+                            <div class="new_box p-5 dark:bg-darkBox rounded-t-xl bg-textDark">
                                 <p class="flex flex-row items-center dark:text-grayIconLights text-dark">
                                     <svg width="45" height="48" class="mr-3 w-fit" viewBox="0 0 39 42" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
@@ -487,12 +487,13 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 </p>
                             </div>
                             <div class="flex flex-row items-center p-5 justify-between">
-                                <?php if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price) { ?>
-                                    <div>
-                                        <div class="mb-lg-3 mb-md-3 mb-4 flex flex-row items-center bx_catalog_item bx_catalog_item_controls"
-                                            <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
-                                             data-entity="quantity-block">
-                                            <div class="product-item-amount-field-contain mr-3 flex flex-row items-center">
+                                <?php if ($USER->IsAuthorized()) {
+                                    if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price) { ?>
+                                        <div>
+                                            <div class="mb-lg-3 mb-md-3 mb-4 flex flex-row items-center bx_catalog_item bx_catalog_item_controls"
+                                                <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
+                                                 data-entity="quantity-block">
+                                                <div class="product-item-amount-field-contain mr-3 flex flex-row items-center">
                                     <span class="btn-minus no-select minus_icon add2basket basket_prod_detail cursor-pointer h-full"
                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                           data-product_id="<?= $arResult['ID']; ?>"
@@ -505,23 +506,23 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                   stroke-linejoin="round"/>
                                         </svg>
                                     </span>
-                                                <div class="product-item-amount-field-block">
-                                                    <input class="product-item-amount card_element cat-det
+                                                    <div class="product-item-amount-field-block">
+                                                        <input class="product-item-amount card_element cat-det
                                          dark:bg-grayButton bg-textDarkLightGray cursor-pointer
                                     focus:border-none text-center border-none text-md
                                      shadow-none py-3.5 px-3 mx-2 outline-none rounded-md w-16"
-                                                           id="<?= $itemIds['QUANTITY_ID'] ?>"
-                                                           type="number" value="<?= $priceBasket ?>"
-                                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                           max="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
-                                                           data-product_id="<?= $arResult['ID']; ?>"
-                                                           data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
-                                                </div>
-                                                <span class="btn-plus no-select plus_icon add2basket basket_prod_detail cursor-pointer"
-                                                      data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                      data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
-                                                      data-product_id="<?= $arResult['ID']; ?>"
-                                                      id="<?= $itemIds['QUANTITY_UP_ID'] ?>">
+                                                               id="<?= $itemIds['QUANTITY_ID'] ?>"
+                                                               type="number" value="<?= $priceBasket ?>"
+                                                               data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                               max="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
+                                                               data-product_id="<?= $arResult['ID']; ?>"
+                                                               data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
+                                                    </div>
+                                                    <span class="btn-plus no-select plus_icon add2basket basket_prod_detail cursor-pointer"
+                                                          data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                          data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
+                                                          data-product_id="<?= $arResult['ID']; ?>"
+                                                          id="<?= $itemIds['QUANTITY_UP_ID'] ?>">
                                          <svg width="20" height="20" viewBox="0 0 20 20"
                                               class="fill-light-red dark:fill-white"
                                               xmlns="http://www.w3.org/2000/svg">
@@ -529,80 +530,90 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                             <path d="M10 20C9.39262 20 8.88892 19.4963 8.88892 18.8889V1.11111C8.88892 0.503704 9.39262 0 10 0C10.6074 0 11.1111 0.503704 11.1111 1.11111V18.8889C11.1111 19.4963 10.6074 20 10 20Z"/>
                                         </svg>
                                     </span>
-                                            </div>
-                                            <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
-                                               rel="nofollow"
-                                               class="add2basket basket_prod_detail btn red_button_cart
+                                                </div>
+                                                <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
+                                                   rel="nofollow"
+                                                   class="add2basket basket_prod_detail btn red_button_cart
                                    dark:bg-dark-red bg-light-red py-3 px-4 rounded-5"
-                                               data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                               data-product_id="<?= $arResult['ID']; ?>"
-                                               title="Добавить в корзину">
-                                                <svg width="24" height="28" viewBox="0 0 18 22" fill="none"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M13.6017 18.9561V15.8498M13.6017 15.8498H16.4364M13.6017 15.8498H10.767M13.6017 15.8498V14.1413V12.5881"
-                                                          stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                                    <path d="M12.9978 7.09848H14.1597C15.2019 7.09848 16.0701 7.97388 16.1567 9.11199M12.9978 7.09848H4.98235M12.9978 7.09848V6.00055C12.9978 4.83579 12.5756 3.71874 11.8239 2.89513C11.0724 2.07153 10.053 1.60883 8.99007 1.60883C7.92712 1.60883 6.90778 2.07153 6.15618 2.89513C5.4046 3.71874 4.98235 4.83579 4.98235 6.00055V7.09848M12.9978 7.09848V9.51393M9.76502 20.2737H3.15243C1.98009 20.2737 1.05814 19.1756 1.1555 17.8954L1.82345 9.11199C1.91 7.97388 2.7782 7.09848 3.82039 7.09848H4.98235M4.98235 7.09848V9.51393"
-                                                          stroke="white" stroke-width="2" stroke-linecap="round"
-                                                          stroke-linejoin="round"/>
-                                                </svg>
-                                            </a>
-                                            <div id="result_box"></div>
-                                            <div id="popup_mess"></div>
+                                                   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $arResult['ID']; ?>"
+                                                   title="Добавить в корзину">
+                                                    <svg width="24" height="28" viewBox="0 0 18 22" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M13.6017 18.9561V15.8498M13.6017 15.8498H16.4364M13.6017 15.8498H10.767M13.6017 15.8498V14.1413V12.5881"
+                                                              stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                                        <path d="M12.9978 7.09848H14.1597C15.2019 7.09848 16.0701 7.97388 16.1567 9.11199M12.9978 7.09848H4.98235M12.9978 7.09848V6.00055C12.9978 4.83579 12.5756 3.71874 11.8239 2.89513C11.0724 2.07153 10.053 1.60883 8.99007 1.60883C7.92712 1.60883 6.90778 2.07153 6.15618 2.89513C5.4046 3.71874 4.98235 4.83579 4.98235 6.00055V7.09848M12.9978 7.09848V9.51393M9.76502 20.2737H3.15243C1.98009 20.2737 1.05814 19.1756 1.1555 17.8954L1.82345 9.11199C1.91 7.97388 2.7782 7.09848 3.82039 7.09848H4.98235M4.98235 7.09848V9.51393"
+                                                              stroke="white" stroke-width="2" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                    </svg>
+                                                </a>
+                                                <div id="result_box"></div>
+                                                <div id="popup_mess"></div>
+                                            </div>
+                                            <div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
                                         </div>
-                                        <div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
-                                    </div>
-                                    <div class="ganerate_price_wrap mb-0 <?= ($priceBasket > 0) ? 'flex flex-row' : 'hidden' ?>">
-                                        <div class="flex flex-row">
+                                        <div class="ganerate_price_wrap mb-0 <?= ($priceBasket > 0) ? 'flex flex-row' : 'hidden' ?>">
+                                            <div class="flex flex-row">
                                             <span class="text-2xl font-semibold text-dark dark:font-normal
                                              dark:text-textDarkLightGray mr-4">Итого:</span>
-                                            <div class="text-2xl font-semibold text-dark dark:font-normal
+                                                <div class="text-2xl font-semibold text-dark dark:font-normal
                                             dark:text-textDarkLightGray ganerate_price">
-                                                <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
+                                                    <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                <?php } else { ?>
-                                    <div class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center bx_catalog_item"
-                                        <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
-                                         data-entity="quantity-block">
-                                        <div class="d-flex flex-row align-items-center mr-3">
-                                            <div class="product-item-amount-field-contain">
+                                    <?php } else { ?>
+                                        <div class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center bx_catalog_item"
+                                            <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
+                                             data-entity="quantity-block">
+                                            <div class="d-flex flex-row align-items-center mr-3">
+                                                <div class="product-item-amount-field-contain">
                                                                                             <span class=" no-select minus_icon add2basket basket_prod_detail mr-3"
                                                                                                   style="pointer-events: none;">
                                                                                             </span>
-                                                <div class="product-item-amount-field-block">
-                                                    <input class="product-item-amount"
-                                                           id="<?= $itemIds['QUANTITY_ID'] ?>"
-                                                           disabled="disabled" type="number" value="0">
-                                                </div>
-                                                <span class="no-select plus_icon add2basket basket_prod_detail ml-3"
-                                                      style="pointer-events: none;">
+                                                    <div class="product-item-amount-field-block">
+                                                        <input class="product-item-amount"
+                                                               id="<?= $itemIds['QUANTITY_ID'] ?>"
+                                                               disabled="disabled" type="number" value="0">
+                                                    </div>
+                                                    <span class="no-select plus_icon add2basket basket_prod_detail ml-3"
+                                                          style="pointer-events: none;">
                                                                                             </span>
-                                            </div>
-                                            <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
-                                               rel="nofollow"
-                                               class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                                </div>
+                                                <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
+                                                   rel="nofollow"
+                                                   class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?> detail_disabled"
-                                               data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                               data-product_id="<?= $arResult['ID']; ?>"
-                                               title="Добавить в корзину">Забронировать</a>
-                                        </div>
-                                        <div id="result_box" style="width: 100%;position: absolute;"></div>
-                                        <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                                   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $arResult['ID']; ?>"
+                                                   title="Добавить в корзину">Забронировать</a>
+                                            </div>
+                                            <div id="result_box" style="width: 100%;position: absolute;"></div>
+                                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                                             <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
-                                            <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : '' ?>"
-                                               aria-hidden="true"></i>
+                                                <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : '' ?>"
+                                                   aria-hidden="true"></i>
+                                            </div>
+                                            <div id="popup_mess"
+                                                 class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
+                                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
+                                                 data-product_id="<?= $arResult['ID']; ?>"></div>
                                         </div>
-                                        <div id="popup_mess"
-                                             class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
-                                             data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
-                                             data-product_id="<?= $arResult['ID']; ?>"></div>
-                                    </div>
-                                    <div class="mb-4 d-flex justify-content-between align-items-center">
-                                        <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                        <div class="mb-4 d-flex justify-content-between align-items-center">
+                                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                                             <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
-                                            Нет в наличии
+                                                Нет в наличии
+                                            </div>
                                         </div>
+                                    <?php }
+                                } else { ?>
+                                    <div class="text-center text-md font-medium text-lightGrayBg dark:text-textDarkLightGray
+                                    dark:font-normal w-full">
+                                        Для покупки товара вам необходимо
+                                        <a href="/auth/"
+                                           class="text-light-red underline font-semibold dark:text-white">
+                                            Авторизоваться
+                                        </a>
                                     </div>
                                 <?php } ?>
                             </div>
