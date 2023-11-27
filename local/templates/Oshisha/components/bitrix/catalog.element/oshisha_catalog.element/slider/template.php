@@ -68,8 +68,8 @@
                 ); ?>
                 <a href="#" class="delligate shared" title="Поделиться"
                    data-element-id="<?= $arResult['ID'] ?>">
-                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                    <div class="shared_block">
+                    ~
+                    <div class="shared_block hidden">
                         <?php $APPLICATION->IncludeComponent(
                             "arturgolubev:yandex.share",
                             "",

@@ -216,7 +216,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             ); ?>
         </div>
         <?php if ($rowResHidePrice == 'Нет' && !empty($option_site->text_rospetrebnadzor_product)) { ?>
-            <p class="message_for_user_minzdrav text-sm text-textLight dark:text-grayIconLights dark:font-light mb-8">
+            <p class="message_for_user_minzdrav text-sm text-grayButton dark:text-grayIconLights font-light mb-8">
                 <?= $option_site->text_rospetrebnadzor_product; ?></p>
         <?php } ?>
         <div class="box_with_photo_product flex md:flex-row flex-col mb-20">
@@ -225,7 +225,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             require_once(__DIR__ . '/slider/template.php'); ?>
             <div class="md:w-1/2 w-full md:mt-0 mt-7 flex flex-col catalog-item-product
 				not-input-parse">
-                <p class="head-title text-3xl mb-10 font-semibold dark:font-medium"><?= $name ?></p>
+                <p class="head-title text-2xl mb-10 font-semibold dark:font-light dark:text-textDarkLightGray"><?= $name ?></p>
                 <?php if ($isGift) { ?>
                     <div>
                         <h4 class="bx-title dark:text-textDark text-textLight">Данная продукция не продается
@@ -412,17 +412,17 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                         <?php }
                                                     } elseif ($type === 'color') { ?>
                                                         <a href="<?= $link ?>" class="offer-link <?= $select ?>">
-                                                            <div title="<?= $offer['NAME'] ?>"
+                                                            <div title="<?= $title ?>"
                                                                  data-active="<?= !empty($select) ? 'true' : 'false' ?>"
                                                                  data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
                                                                  data-prop_code="<?= $keyCODE ?>"
                                                                  data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
-                                                                 class="mr-1 offer-box color-hookah br-10 mb-1 <?= $select ?>">
+                                                                 class="mr-2 offer-box color-hookah br-10 mb-1 <?= $select ?>">
                                                                 <img src="<?= $prop['PREVIEW_PICTURE'] ?>"
-                                                                     class="br-10"
-                                                                     width="50"
-                                                                     height="50"
-                                                                     alt="<?= $offer['NAME'] ?>"
+                                                                     class="w-20 h-20 rounded-md dark:border-0 border-2
+                                                                     <?= $select ? 'dark:opacity-50 border-textDarkLightGray'
+                                                                         : 'border-light-red'?>"
+                                                                     alt="<?= $title ?>"
                                                                      loading="lazy"/>
                                                             </div>
                                                         </a>
@@ -435,7 +435,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                                      dark:border-grayButton dark:border dark:bg-grayButton' :
                                                                     'border-textDarkLightGray dark:border-0' ?> min-w-20 m-1 offer-box
                                                                     cursor-pointer dark:bg-darkBox"
-                                                                     title="<?= $offer['NAME'] ?>"
+                                                                     title="<?= $title ?>"
                                                                      data-active="<?= !empty($select) ? 'true' : 'false' ?>"
                                                                      data-prop_code="<?= $keyCODE ?>"
                                                                      data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>">
@@ -464,8 +464,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                         } ?>
                     </div>
                     <div class="flex flex-col">
-                        <div class="dark:border-darkBox rounded-xl border-2 border-textDarkLightGray">
-                            <div class="new_box mb-3 p-5 dark:bg-darkBox rounded-t-xl bg-textDarkLightGray">
+                        <div class="dark:border-darkBox rounded-xl border-2 border-textDark">
+                            <div class="new_box mb-3 p-5 dark:bg-darkBox rounded-t-xl bg-textDark">
                                 <p class="flex flex-row items-center dark:text-grayIconLights text-dark">
                                     <svg width="45" height="48" class="mr-3 w-fit" viewBox="0 0 39 42" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
