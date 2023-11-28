@@ -182,7 +182,7 @@ if ($sliderProperty)
 /* THEME */
 $arParams["TEMPLATE_THEME"] = trim($arParams["TEMPLATE_THEME"]);
 $arResult["NAV_PARAM"]["TEMPLATE_THEME"] = $arParams["TEMPLATE_THEME"];
-
+/** @var CBitrixComponent $navComponentObject */
 $arResult["NAV_STRING"] = $arResult["NAV_RESULT"]->GetPageNavStringEx(
 	$navComponentObject,
 	$arParams["PAGER_TITLE"],

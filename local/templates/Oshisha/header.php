@@ -3,7 +3,7 @@
 use Bitrix\Conversion\Internals\MobileDetect;
 use Bitrix\Main\Application;
 use Bitrix\Main\Page\Asset;
-use Bitrix\Main\UI\Extension;use Enterego\Subsidiary\Storage;
+use Bitrix\Main\UI\Extension;use Enterego\EnteregoSettings;use Enterego\Subsidiary\Storage;
 
 /** @var  CAllMain|CMain $APPLICATION
  ** @var  CAllUser $USER
@@ -61,11 +61,28 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     <title><?php $APPLICATION->ShowTitle() ?></title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
-
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo SITE_TEMPLATE_PATH; ?>/images/favicon.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
+    <!--    PWA -->
+    <link rel="manifest" href="/manifest.json">
 
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="OSHISHA">
+    <meta name="apple-mobile-web-app-title" content="OSHISHA">
+    <meta name="theme-color"
+          content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
+    <meta name="background-color"
+          content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
+    <meta name="msapplication-navbutton-color"
+          content="linear-gradient(308deg, rgba(0,0,0,1) 0%, rgba(93,93,93,1) 61%, rgba(255,255,255,1) 100%)">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-starturl" content="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" type="image/png" sizes="144x144" href="/images/OSHISHA_MOBILE.png">
+    <link rel="apple-touch-icon" type="image/png" sizes="144x144" href="/images/OSHISHA_MOBILE.png">
     <?php
     Asset::getInstance()->addJs('/local/templates/Oshisha/assets/js/subsidiary.js');
 
@@ -98,10 +115,14 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     Asset::getInstance()->addJs("/local/assets/js/flags-mask/phonecode.js");
     Asset::getInstance()->addJs("/local/assets/js/flags-mask/counties.js");
     Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
+    //    PWA
+    Asset::getInstance()->addJs("/local/templates/Oshisha/pwa/pwa.js");
+    $browserInfo = EnteregoSettings::getInfoBrowser();
     $APPLICATION->ShowHead(); ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
 </head>
 <body class="bx-background-image">
+<div class="overlay_top"></div>
 <div id="panel"><?php $APPLICATION->ShowPanel(); ?>
 </div>
 <div id="bx_eshop_wrap">
@@ -143,8 +164,22 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                     </div>
                 </a>
             </div>
-            <div class="container_header flex_header">
-                <div class="box_with_city flex_header col-5 pl-0">
+            <div class="container_header flex_header py-2">
+                <div class="box_with_city flex_header col-5 pl-0 align-items-center">
+                    <div class="box_left_header">
+                        <div class="header_logo_desktop logo-header mr-4">
+                            <a href="<?= SITE_DIR ?>" class="d-block height-100">
+                                <?php $APPLICATION->IncludeComponent(
+                                    "bitrix:main.include",
+                                    "",
+                                    array(
+                                        "AREA_FILE_SHOW" => "file",
+                                        "PATH" => SITE_DIR . "include/logo_footer.php"),
+                                    false
+                                ); ?>
+                            </a>
+                        </div>
+                    </div>
                     <span class="d-flex flex-row align-items-center">
                         <img src="/local/assets/images/icon_location.svg" class="icon_location">
                         <a href="#" class="text_header">
@@ -192,7 +227,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                         if (defined('SUBSIDIARY_ENABLE') && SUBSIDIARY_ENABLE) {
                             $siteList = Storage::getSubsidiaryList(); ?>
                             <div class="position-relative">
-                                <div class="select-filial-box ml-5 flex align-center">
+                                <div class="select-filial-box ml-4 flex align-center">
                                     <svg width="25" height="25" viewBox="0 0 20 20" fill="none" class="mr-2"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <path opacity="0.9"
@@ -211,34 +246,40 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                     </select>
                                 </div>
                                 <div class="filial-popup"></div>
-                                </div>
+                            </div>
                         <?php } else { ?>
                             <a href="/about/feedback_new_site/"
                                class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать отзыв</a>
                         <?php }
                     } ?>
                 </div>
-                <div class="box_with_menu_header flex_header flex_header_right col-7 pr-0">
-                    <a href="/about/o-nas/" class="text_header">О нас</a>
-
-                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                        <a href="/local/templates/Oshisha/images/presentation.pdf" download class="text_header ">Презентация</a>
-                    <?php }
-                    if ($USER->IsAuthorized()) { ?>
+                <div class="box_with_menu_header flex_header flex_header_right col-7 p-0">
+                    <div class="color-white app_install PC text_header cursor-pointer"
+                         data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Приложение <i
+                                class="fa fa-download" aria-hidden="true"></i>
+                    </div>
+                    <?php if ($USER->IsAuthorized()) { ?>
                         <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
                     <?php } else { ?>
                         <a href="/login/" class="text_header ">Прайс-лист</a>
                     <?php } ?>
-                    <a href="/about/contacts/" class="text_header">Контакты</a>
-                    <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="/about/delivery/" class="text_header">Доставка и оплата</a>
-                    <?php } ?>
+                    <div class="position-relative top-dop-menu-hides">
+                        <a href="javascript:void(0)" class="text_header js--open-top-menu d-flex align-items-center flex-row"
+                           onclick="$('#top_menu_header').toggleClass('d-none').toggleClass('d-flex')">Контакты
+                            <i class="fa fa-angle-down ml-1" style="font-size: 17px;" aria-hidden="true"></i></a>
+                        <div class="d-none position-absolute top-1 flex-column bg-white br-10" id="top_menu_header">
+                            <a href="/about/contacts/" class="py-2 px-3 font-13">Контакты</a>
+                            <a href="/about/o-nas/" class="py-2 px-3 font-13">О нас</a>
+                            <?php if ($USER->IsAuthorized()) { ?>
+                                <a href="/about/delivery/" class="py-2 px-3 font-13">Доставка и оплата</a>
+                            <?php }
+                            if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                                <a href="/local/templates/Oshisha/images/presentation.pdf"
+                                   download class="py-2 px-3 font-13">Презентация</a>
+                            <?php } ?>
+                        </div>
+                    </div>
                     <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
-                    <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="/personal/support/" class="text_header" style="display:none">Поддержка</a>
-                    <?php } else { ?>
-                        <a href="/about/FAQ/#support" class="text_header">Поддержка</a>
-                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -275,6 +316,15 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                     <a href="/local/templates/Oshisha/images/presentation.pdf" download
                                        class="text_header link_menu_top"> <span class="text_catalog_link not_weight"> Презентация</span></a>
                                 <?php } ?>
+                                <a href="/news/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight">Блог</span>
+                                </a>
+                                <a href="/hit/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight color-redLight">Хиты</span>
+                                </a>
+                                <a href="/catalog_new/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight color-redLight">Новинки</span>
+                                </a>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
                                 </a>
@@ -283,7 +333,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                         <span class="text_catalog_link not_weight">Доставка и оплата</span>
                                     </a>
                                 <?php } ?>
-
                                 <a href="/about/FAQ/" class="link_menu_top ">
                                     <span class="text_catalog_link not_weight">FAQ</span>
                                 </a>
@@ -339,7 +388,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                                     })</script>
                             <?php } else { ?>
                                 <a href="/about/feedback_new_site/"
-                                   class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать-->
+                                   class="red_text text_font_13 ml-2 mr-2 font-weight-bold">Написать
                                     отзыв</a>
                             <?php } ?>
                             <a href="/about/feedback_new_site/" class="link_menu_top">
@@ -351,23 +400,39 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
             </div>
             <div class="filial-popup"></div>
         <?php } ?>
-        <div class="container_header z-870">
+        <div class="container_header m-0 z-870">
             <!--        header menu search/login/basket/like     -->
-            <div class="header_box_logo">
-                <div class="box_left_header">
-                    <div class="header_logo_desktop">
-                        <a href="<?= SITE_DIR ?>">
+            <div class="header_box_logo d-flex flex-row justify-content-between align-items-center position-relative">
+                <?php if (!$mobile->isMobile()) { ?>
+                    <div class="box_with_menu">
+                        <div class="menu_header">
                             <?php $APPLICATION->IncludeComponent(
-                                "bitrix:main.include",
-                                "",
+                                "bitrix:menu",
+                                "oshisha_menu",
                                 array(
-                                    "AREA_FILE_SHOW" => "file",
-                                    "PATH" => SITE_DIR . "include/company_logo.php"),
+                                    "ROOT_MENU_TYPE" => "left",
+                                    "MENU_CACHE_TYPE" => "A",
+                                    "MENU_CACHE_TIME" => "36000000",
+                                    "MENU_CACHE_USE_GROUPS" => "Y",
+                                    "MENU_THEME" => "site",
+                                    "CACHE_SELECTED_ITEMS" => "N",
+                                    "MENU_CACHE_GET_VARS" => array(),
+                                    "MAX_LEVEL" => "4",
+                                    "CHILD_MENU_TYPE" => "left",
+                                    "USE_EXT" => "Y",
+                                    "DELAY" => "N",
+                                    "IBLOCK_ID" => IBLOCK_CATALOG,
+                                    "TYPE" => "1c_catalog",
+                                    "ALLOW_MULTI_SELECT" => "N",
+                                    "COMPONENT_TEMPLATE" => "bootstrap_v4",
+                                    "SECTION_PAGE_URL" => "#SECTION_ID#/",
+                                    "DETAIL_PAGE_URL" => "#SECTION_ID#/#ELEMENT_ID#",
+                                ),
                                 false
                             ); ?>
-                        </a>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
                 <div class="box_right_header">
                     <div class="box_with_search">
                         <?php $APPLICATION->IncludeComponent(
@@ -423,36 +488,6 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                     </div>
                 </div>
             </div>
-            <?php if (!$mobile->isMobile()) { ?>
-                <div class="box_with_menu">
-                    <div class="menu_header">
-                        <?php $APPLICATION->IncludeComponent(
-                            "bitrix:menu",
-                            "oshisha_menu",
-                            array(
-                                "ROOT_MENU_TYPE" => "left",
-                                "MENU_CACHE_TYPE" => "A",
-                                "MENU_CACHE_TIME" => "36000000",
-                                "MENU_CACHE_USE_GROUPS" => "Y",
-                                "MENU_THEME" => "site",
-                                "CACHE_SELECTED_ITEMS" => "N",
-                                "MENU_CACHE_GET_VARS" => array(),
-                                "MAX_LEVEL" => "4",
-                                "CHILD_MENU_TYPE" => "left",
-                                "USE_EXT" => "Y",
-                                "DELAY" => "N",
-                                "IBLOCK_ID" => IBLOCK_CATALOG,
-                                "TYPE" => "1c_catalog",
-                                "ALLOW_MULTI_SELECT" => "N",
-                                "COMPONENT_TEMPLATE" => "bootstrap_v4",
-                                "SECTION_PAGE_URL" => "#SECTION_ID#/",
-                                "DETAIL_PAGE_URL" => "#SECTION_ID#/#ELEMENT_ID#",
-                            ),
-                            false
-                        ); ?>
-                    </div>
-                </div>
-            <?php } ?>
         </div>
     </header>
     <div class="section_wrapper">

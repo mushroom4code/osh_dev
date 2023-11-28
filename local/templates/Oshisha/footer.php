@@ -23,17 +23,19 @@ $option = $option_site; ?>
         <div class="row">
             <div class="footer-col col-xs-12 col-sm-6 col-lg-3">
                 <a class="logo" href="<?= SITE_DIR ?>">
-                    <?php
-                    $APPLICATION->IncludeComponent(
-                        'bitrix:main.include',
-                        '',
-                        [
-                            'AREA_FILE_SHOW' => 'file',
-                            'PATH' => SITE_DIR . 'include/logo_footer.php'
-                        ],
-                        false
-                    );
-                    ?>
+                    <div class="logo_footer">
+                        <?php
+                        $APPLICATION->IncludeComponent(
+                            'bitrix:main.include',
+                            '',
+                            [
+                                'AREA_FILE_SHOW' => 'file',
+                                'PATH' => SITE_DIR . 'include/logo_footer.php'
+                            ],
+                            false
+                        );
+                        ?>
+                    </div>
                 </a>
 
                 <div class='company-info'>
@@ -155,16 +157,29 @@ $option = $option_site; ?>
                     <li class="col-menu-item">
                         <a href="/about/vacancy/" class="col-menu-link">Вакансии</a>
                     </li>
+                    <li class="col-menu-item d-lg-block d-md-block d-none">
+                        <a href="/news/" class="col-menu-link">Блог</a>
+                    </li>
                 </ul>
-
-
+                <div class="d-lg-none d-md-none d-block footer-col mt-5 mb-3 text-decoration-underline">
+                    <div class="col-menu-item">
+                        <a href="/news/" class="color-white d-block">Блог</a></div>
+                </div>
+                <div class="d-lg-none d-md-none d-block footer-col mb-3 text-decoration-underline">
+                    <div class="col-menu-item">
+                        <a href="/hit/" class="color-white d-block">Хиты</a></div>
+                </div>
+                <div class="d-lg-none d-md-none d-block footer-col mb-3 text-decoration-underline">
+                    <div class="col-menu-item">
+                        <a href="/catalog_new/" class="color-white d-block">Новинки</a>
+                    </div>
+                </div>
                 <div class="socials">
                     <span class="col-title">Социальные сети</span>
                     <nav class="col-menu">
                         <a href="<?= $option->TG; ?>" target="_blank">
                             <img class="tg" src="<?= SITE_TEMPLATE_PATH . '/images/tg.svg' ?>">
                         </a>
-
                         <a href="<?= 'https://api.whatsapp.com/send?phone=' . $option->PHONE_WTS ?>" target="_blank">
                             <img class="ws" src="<?= SITE_TEMPLATE_PATH . '/images/ws.svg' ?>">
                         </a>
@@ -172,11 +187,14 @@ $option = $option_site; ?>
                         <a href="<?= $option->VK_LINK; ?>" target="_blank">
                             <img class="vk" src="<?= SITE_TEMPLATE_PATH . '/images/vk.svg' ?>">
                         </a>
-
                         <a href="<?= $option->DZEN; ?>" target="_blank">
                             <img class="dzen" src="<?= SITE_TEMPLATE_PATH . '/images/dzen.svg' ?>">
                         </a>
                     </nav>
+                </div>
+                <div class="app_install mob mt-5 color-white d-lg-none d-md-none d-block text-decoration-underline"
+                     data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Установить приложение
+                    <i class="fa fa-download ml-2 font-20" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
@@ -323,7 +341,7 @@ $option = $option_site; ?>
         </div>
     <?php endif; ?>
 </footer>
-<?php Asset::getInstance()->addJs("/local/templates/Oshisha/assets/js/locations_list_modal.js");?>
+<?php Asset::getInstance()->addJs("/local/templates/Oshisha/assets/js/locations_list_modal.js"); ?>
 </div>
 </div>
 <!-- //bx-wrapper -->
