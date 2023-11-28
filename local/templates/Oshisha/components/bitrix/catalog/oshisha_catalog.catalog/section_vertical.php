@@ -132,7 +132,8 @@ if ($_GET['page'] != '') {
     $catalogElementField = intval($_GET['page']);
 }
 $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
-
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
 ?>
 <div class="row mb-4 box_with_prod">
     <?php if ($isFilter) : ?>
@@ -141,19 +142,20 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
         $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
             <div class="row">
                 <div class="catalog-section-list-tile-list">
-                    <? foreach ($arResult['SECTION_LIST'] as $arSection): ?>
+                    <?php foreach ($arResult['SECTION_LIST'] as $arSection){
+                    if ($showUserContent || !$showUserContent && $arSection['NAME'] === 'Чай') {?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap smart-filter-tog" data-role="prop_angle"
                                  data-code-vis="<?= $arSection['ID'] ?>">
                                 <a href="javascript:void(0)"><?= $arSection['NAME'] ?></a>
-                                <? if ($arSection['CHILDS']): ?>
+                                <?php if ($arSection['CHILDS']): ?>
                                     <span data-role="prop_angle"
                                           class="smart-filter-tog smart-filter-angle">
 					                    <i class="fa fa-angle-right smart-filter-angles" aria-hidden="true"></i>
                                     </span>
-                                <? endif; ?>
+                                <?php endif; ?>
                             </div>
-                            <div class="catalog-section-list-item-sub <? if ($smartFil != ''): ?>active<? endif; ?>"
+                            <div class="catalog-section-list-item-sub <?php if ($smartFil != ''): ?>active<?php endif; ?>"
                                  data-code="<?= $arSection['ID'] ?>">
                                 <a class="mt-2 color-redLight"
                                    href="<?= $arSection['SECTION_PAGE_URL'] ?>">Все</a>
@@ -171,8 +173,8 @@ $arParams["PAGE_ELEMENT_COUNT"] = $catalogElementField;
                                 endforeach; ?>
                             <?php endif; ?>
                         </div>
-                    <?php endforeach; ?>
-
+                    <?php }
+                    } ?>
                 </div>
             </div>
             <?php

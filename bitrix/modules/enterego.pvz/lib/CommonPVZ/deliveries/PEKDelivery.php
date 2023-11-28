@@ -11,6 +11,8 @@ class PEKDelivery extends CommonPVZ
 
     public string $delivery_name = 'PEK';
 
+    public static string $code = 'PEK';
+
     public static function getDeliveryStatus() {
         return array('PEK' => Option::get(DeliveryHelper::$MODULE_ID, 'PEK_active'));
     }
@@ -62,7 +64,7 @@ class PEKDelivery extends CommonPVZ
             $features_obj['properties'] = [
                 'type' => 'PVZ',
                 'fullAddress' => $value['warehouses'][0]['addressDivision'],
-                'deliveryName' => 'ПЭК',
+                'deliveryName' => $this::$code,
                 'iconCaption' => 'ПЭК',
                 'hintContent' => $value['warehouses'][0]['address'],
                 'phone' => $value['warehouses'][0]['telephone'],
@@ -110,8 +112,18 @@ class PEKDelivery extends CommonPVZ
 
     public function getPriceDoorDelivery($params)
     {
-        // TODO: Implement getPriceDoorDelivery() method.
+        $this->errors[] = 'ПЭК не имеет доставки до двери';
+        return array('errors' => $this->errors);
     }
 
 
+    public static function getInstanceForPvz($deliveryParams): array
+    {
+        return [];
+    }
+
+    public static function getInstanceForDoor($deliveryParams): array
+    {
+        return [];
+    }
 }

@@ -17,6 +17,8 @@ class PickPointDelivery extends CommonPVZ
 
     public string $delivery_name = 'PickPoint';
 
+    public static string $code = 'PickPoint';
+
     public static function getDeliveryStatus() {
         return array('PickPoint' => Option::get(DeliveryHelper::$MODULE_ID, 'PickPoint_active'));
     }
@@ -98,7 +100,7 @@ class PickPointDelivery extends CommonPVZ
                 'code_pvz' => $point['CODE'],
                 'type' => 'POSTAMAT',
                 'fullAddress' => $point['FULL_ADDRESS'],
-                'deliveryName' => 'PickPoint',
+                'deliveryName' => $this::$code,
                 'iconCaption' => 'PickPoint',
                 'hintContent' => $point['FULL_ADDRESS'],
                 "hubregion" => $point['ADDRESS_REGION'],
@@ -132,4 +134,13 @@ class PickPointDelivery extends CommonPVZ
     }
 
 
+    public static function getInstanceForPvz($deliveryParams): array
+    {
+        return  [];
+    }
+
+    public static function getInstanceForDoor($deliveryParams): array
+    {
+        return  [];
+    }
 }

@@ -410,7 +410,6 @@ class DeliveryHelper
         }
 
         $params['curDeliveryId'] = $order->getField('DELIVERY_ID');
-        $params['curSiteId'] = SITE_ID;
 
         $PeriodDelivery = [];
         $start_json_day = Option::get(self::$MODULE_ID, 'Oshisha_timeDeliveryStartDay');
@@ -440,8 +439,6 @@ class DeliveryHelper
         $params['deliveryOptions']['LIMIT_BASKET'] = OshishaDelivery::getOshishaLimitBasket();
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
-
-        $params['dateTimeIntervalOptions'] = self::getDeliveryTimeIntervals();
 
         if ($order->getField('PRICE_DELIVERY')) {
             $params['shipmentCost'] = $order->getDeliveryPrice();

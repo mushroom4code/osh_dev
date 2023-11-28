@@ -1,15 +1,19 @@
 <?php
+
 use Enterego\EnteregoBasket;
 use Enterego\EnteregoHelper;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 $item = &$arResult['ITEM'];
-
-if ($item["PREVIEW_PICTURE"]["ID"]) {
+$idPick = $item["PREVIEW_PICTURE"]["ID"] ?? false;
+if (empty($idPick)) {
+    $idPick = $item["PREVIEW_PICTURE"];
+}
+if ($idPick) {
     $item["PREVIEW_PICTURE"] = array_change_key_case(
         CFile::ResizeImageGet(
-            $item["PREVIEW_PICTURE"]["ID"],
+            $idPick,
             array(
                 'width' => 160,
                 'height' => 160
@@ -33,7 +37,7 @@ if ($item["PREVIEW_PICTURE"]["ID"]) {
     );
 }
 
-$useDiscount = ($item['PROPERTIES']['USE_DISCOUNT']['VALUE'] ?? 'Нет') === 'Да' ;
+$useDiscount = ($item['PROPERTIES']['USE_DISCOUNT']['VALUE'] ?? 'Нет') === 'Да';
 $item['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($item['ITEM_ALL_PRICES'][0],
     $useDiscount, $item['ID']);
 

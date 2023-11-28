@@ -35,8 +35,8 @@ BX.SaleCommonPVZ = {
     shipmentCost: undefined,
     orderPackages: null,
     oshishaDeliveryOptions: null,
+    oshishaDeliveryCode: null,
     propTypePvzId: null,
-    curSiteId: null,
     componentParams: {
         'displayPVZ': typeDisplayPVZ.map,
         'filterDelivery': null,
@@ -49,8 +49,8 @@ BX.SaleCommonPVZ = {
         this.shipmentCost = params.params?.shipmentCost;
         this.orderPackages = params.params?.packages;
         this.oshishaDeliveryOptions = params.params?.deliveryOptions;
+        this.oshishaDeliveryCode = params.params?.oshishaDeliveryCode;
         this.dateTimeIntervalOptions = params.params?.dateTimeIntervalOptions;
-        this.curSiteId = params.params?.curSiteId;
 
         this.refresh()
         this.updateFromDaData()
@@ -132,11 +132,14 @@ BX.SaleCommonPVZ = {
 
         this.drawInterface()
         let deliveryName = this.getValueProp(this.propTypeDeliveryId);
-
         if (curDelivery.CALCULATE_DESCRIPTION !== '') {
-            const deliveryBox = JSON.parse(curDelivery.CALCULATE_DESCRIPTION ?? []).find(name => name.checked === true ||
-                name.code === deliveryName )
-            deliveryName = deliveryBox?.name;
+            try {
+                const deliveryBox = JSON.parse(curDelivery.CALCULATE_DESCRIPTION ?? []).find(name => name.checked === true ||
+                    name.code === deliveryName )
+                deliveryName = deliveryBox?.name;
+            } catch (e) {
+                console.log(JSON.parse(curDelivery.CALCULATE_DESCRIPTION ?? []));
+            }
         }
 
         let date = BX.Sale.OrderAjaxComponent.result.ORDER_PROP
@@ -1358,12 +1361,6 @@ BX.SaleCommonPVZ = {
     buildDeliveryTime: function () {
         let __this = this;
         let datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
-
-        var deliveryTimeIntervalOptionsNode = '<option value>Не выбрано</option>';
-        for (const [key, value] of Object.entries(this.dateTimeIntervalOptions)) {
-            deliveryTimeIntervalOptionsNode += '<option value="' + value['VALUE'] + '">' + value['VALUE'] + '</option>';
-        }
-
         const TimeDeliveryNode = BX.create({
             tag: 'div',
             html: '<select style="background-color: unset; height: 40px; padding: 0 23px;"' +
