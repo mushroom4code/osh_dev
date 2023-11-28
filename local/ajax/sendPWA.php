@@ -1,12 +1,18 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . '/vendor/autoload.php';
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
+
 use Bitrix\Main\Loader;
+use Bitrix\Main\Context;
+use Enterego\PWA\EnteregoMobileAppEvents;
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
+
 CModule::IncludeModule("iblock");
 Loader::includeModule('main');
 
+$request = Context::getCurrent()->getRequest();
+$action = $request->get('action');
 
 if (!empty($_POST['action']) && $_POST['action'] === 'sendPWA') {
     /**
@@ -71,4 +77,15 @@ if (!empty($_POST['action']) && $_POST['action'] === 'sendPWA') {
     }
 
     exit($result);
-};
+}
+
+if ($action === 'sendMobileRemoveUser') {
+    global $USER;
+    if ($USER->IsAuthorized()) {
+        $result = EnteregoMobileAppEvents::setDeactiveUserForCordova($USER->GetID());
+        if ($result) {
+            $USER->Logout();
+            echo 'true';
+        }
+    }
+}

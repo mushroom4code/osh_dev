@@ -256,7 +256,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                 if (!empty($specialPrice)) {
                                     echo(round($specialPrice));
                                 } else {
-                                    echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['PRICE']));
+                                    echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][2]['PRICE']));
                                 } ?>₽
                             </div>
 
@@ -412,7 +412,7 @@ $listGroupedProduct = $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
                                         } else {
-                                            echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][1]['RATIO_PRICE']));
+                                            echo '<span class="font-10 card-price-text">от </span> ' . (round($price['PRICE_DATA'][2]['RATIO_PRICE']));
                                         } ?>₽
                                     </div>
 

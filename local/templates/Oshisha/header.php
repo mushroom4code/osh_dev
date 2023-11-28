@@ -118,8 +118,12 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
     //    PWA
     Asset::getInstance()->addJs("/local/templates/Oshisha/pwa/pwa.js");
     $browserInfo = EnteregoSettings::getInfoBrowser();
-    $APPLICATION->ShowHead(); ?>
+    $APPLICATION->ShowHead();
+    // Переменная для убора функционала под мобильное приложение
+    $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(); ?>
+    <?php if ($showUserContent) { ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
+    <?php } ?>
 </head>
 <body class="bx-background-image">
 <div class="overlay_top"></div>
@@ -141,7 +145,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
             </div>
         <?php } ?>
         <div class="header_top_panel z-880">
-            <div class="header_logo_mobile">
+            <div class="header_logo_mobile position-relative">
                 <a href="<?= SITE_DIR ?>">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:main.include",
@@ -152,9 +156,14 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                         false
                     ); ?>
                 </a>
+                <?php if (!$showUserContent) { ?>
+                    <i class="fa fa-leaf " style="right: -9%; position: absolute;" aria-hidden="true"></i>
+                <?php } ?>
             </div>
             <div class="right_mobile_top">
-                <div class="search_mobile"></div>
+                <?php if ($showUserContent) { ?>
+                    <div class="search_mobile"></div>
+                <?php } ?>
                 <a class="box_for_menu" data-toggle="collapse" href="#MenuHeader" aria-controls="MenuHeader"
                    aria-expanded="false">
                     <div id="icon" class="Icon open">
@@ -254,36 +263,41 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                     } ?>
                 </div>
                 <div class="box_with_menu_header flex_header flex_header_right col-7 p-0">
-                    <div class="color-white app_install PC text_header cursor-pointer"
-                         data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Приложение <i
-                                class="fa fa-download" aria-hidden="true"></i>
-                    </div>
-                    <?php if ($USER->IsAuthorized()) { ?>
-                        <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
-                    <?php } else { ?>
-                        <a href="/login/" class="text_header ">Прайс-лист</a>
-                    <?php } ?>
+                    <?php if ($showUserContent) { ?>
+                        <div class="color-white app_install PC text_header cursor-pointer"
+                             data-name-browser="<?= $browserInfo['name'] ?? 'Chrome' ?>">Приложение <i
+                                    class="fa fa-download" aria-hidden="true"></i>
+                        </div>
+                        <?php if ($USER->IsAuthorized()) { ?>
+                            <a href="<?= $option->price_list_link; ?>" class="text_header ">Прайс-лист</a>
+                        <?php } else { ?>
+                            <a href="/login/" class="text_header ">Прайс-лист</a>
+                        <?php }
+                    } ?>
                     <div class="position-relative top-dop-menu-hides">
-                        <a href="javascript:void(0)" class="text_header js--open-top-menu d-flex align-items-center flex-row"
+                        <a href="javascript:void(0)"
+                           class="text_header js--open-top-menu d-flex align-items-center flex-row"
                            onclick="$('#top_menu_header').toggleClass('d-none').toggleClass('d-flex')">Контакты
                             <i class="fa fa-angle-down ml-1" style="font-size: 17px;" aria-hidden="true"></i></a>
                         <div class="d-none position-absolute top-1 flex-column bg-white br-10" id="top_menu_header">
                             <a href="/about/contacts/" class="py-2 px-3 font-13">Контакты</a>
-                            <a href="/about/o-nas/" class="py-2 px-3 font-13">О нас</a>
-                            <?php if ($USER->IsAuthorized()) { ?>
-                                <a href="/about/delivery/" class="py-2 px-3 font-13">Доставка и оплата</a>
-                            <?php }
-                            if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                                <a href="/local/templates/Oshisha/images/presentation.pdf"
-                                   download class="py-2 px-3 font-13">Презентация</a>
-                            <?php } ?>
+                            <?php if ($showUserContent) { ?>
+                                <a href="/about/o-nas/" class="py-2 px-3 font-13">О нас</a>
+                                <?php if ($USER->IsAuthorized()) { ?>
+                                    <a href="/about/delivery/" class="py-2 px-3 font-13">Доставка и оплата</a>
+                                <?php }
+                                if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                                    <a href="/local/templates/Oshisha/images/presentation.pdf"
+                                       download class="py-2 px-3 font-13">Презентация</a>
+                                <?php }
+                            } ?>
                         </div>
                     </div>
                     <a href="javascript:void(0)" class="text_header callback js__callback">Обратный звонок</a>
                 </div>
             </div>
         </div>
-        <?php if ($mobile->isMobile()) { ?>
+        <?php if ($mobile->isMobile() || $mobile->isTablet()) { ?>
             <div class="header_top collapse" id="MenuHeader">
                 <div class="mobile top_menu">
                     <div>
@@ -309,22 +323,25 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
                         ); ?>
                         <div class="ul_menu ul_menu_2">
                             <div class="box_top_panel">
-                                <a href="/about/o-nas/" class="link_menu_top">
-                                    <span class="text_catalog_link not_weight">О нас</span>
-                                </a>
-                                <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                                    <a href="/local/templates/Oshisha/images/presentation.pdf" download
-                                       class="text_header link_menu_top"> <span class="text_catalog_link not_weight"> Презентация</span></a>
+                                <?php if ($showUserContent) { ?>
+                                    <a href="/about/o-nas/" class="link_menu_top">
+                                        <span class="text_catalog_link not_weight">О нас</span>
+                                    </a>
+                                    <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                                        <a href="/local/templates/Oshisha/images/presentation.pdf" download
+                                           class="text_header link_menu_top"> <span
+                                                    class="text_catalog_link not_weight"> Презентация</span></a>
+                                    <?php } ?>
+                                    <a href="/news/" class="link_menu_top">
+                                        <span class="text_catalog_link not_weight">Блог</span>
+                                    </a>
+                                    <a href="/hit/" class="link_menu_top">
+                                        <span class="text_catalog_link not_weight color-redLight">Хиты</span>
+                                    </a>
+                                    <a href="/catalog_new/" class="link_menu_top">
+                                        <span class="text_catalog_link not_weight color-redLight">Новинки</span>
+                                    </a>
                                 <?php } ?>
-                                <a href="/news/" class="link_menu_top">
-                                    <span class="text_catalog_link not_weight">Блог</span>
-                                </a>
-                                <a href="/hit/" class="link_menu_top">
-                                    <span class="text_catalog_link not_weight color-redLight">Хиты</span>
-                                </a>
-                                <a href="/catalog_new/" class="link_menu_top">
-                                    <span class="text_catalog_link not_weight color-redLight">Новинки</span>
-                                </a>
                                 <a href="/about/contacts/" class="link_menu_top">
                                     <span class="text_catalog_link not_weight">Контакты</span>
                                 </a>
@@ -403,7 +420,7 @@ include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_
         <div class="container_header m-0 z-870">
             <!--        header menu search/login/basket/like     -->
             <div class="header_box_logo d-flex flex-row justify-content-between align-items-center position-relative">
-                <?php if (!$mobile->isMobile()) { ?>
+                <?php if (!$mobile->isMobile() && !$mobile->isTablet()) { ?>
                     <div class="box_with_menu">
                         <div class="menu_header">
                             <?php $APPLICATION->IncludeComponent(

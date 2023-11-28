@@ -3081,43 +3081,45 @@ $(document).ready(function () {
         // Stash the event so it can be triggered later.
         deferredPrompt = event;
     });
-    if ($(btnInstallPC).attr('data-name-browser') === 'Safari' || $(btnInstallMob).attr('data-name-browser') === 'Safari') {
-        $(btnInstall).on('click', (e) => {
-            if ($('.box-message-install').length == 0) {
-                $('.section_wrapper').append('<div class="position-fixed z-index-1000 box-message-install bg-white p-4 br-10">' +
-                    '<div class="position-relative d-flex justify-content-center align-items-center flex-column">' +
-                    '<span class="position-absolute close-window" style="right: -21px; top: -21px; left: auto;"></span>' +
-                    '<img class="position-absolute p-2 br-100 bg-white logo" src="/images/osh_message.png" alt="oshisha"/>' +
-                    '<div><p class="mb-1 mt-2 font-weight-500">Для установки приложения следуйте инструкции : </p>' +
-                    '<div class="d-none d-md-block d-lg-block">' +
-                    'В верхнем меню выберите Файл <br>' +
-                    'Найдите пункт Добавить в Dock и нажмите на него</br>' +
-                    'У вас на панели появится иконка с приложением.</br>' +
-                    '<img class="bg-white max-height-500 mt-3" ' +
-                    'src="/images/screenInMessage.png" alt="oshisha"/>' +
-                    '</div>' +
-                    '<div class="d-block d-md-none d-lg-none"> Нажмите <img src="/images/shareapple.png" style="width:25px;" alt="oshisha"/> ' +
-                    'в браузерe,<br>затем коснитесь <b>"На экран «Домой»"</b>.</div></div></div></div>');
-                $('.close-window').on('click', function () {
-                    $(this).closest(".box-message-install").remove()
-                });
-            }
-        });
-    } else {
-        btnInstall.addEventListener('click', (e) => {
-            // Show the prompt
-            deferredPrompt.prompt();
-            // Wait for the user to respond to the prompt
-            deferredPrompt.userChoice
-                .then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the A2HS prompt');
-                    } else {
-                        console.log('User dismissed the A2HS prompt');
-                    }
-                    deferredPrompt = null;
-                });
-        });
+    if ($(btnInstall).length !== 0) {
+        if ($(btnInstallPC).attr('data-name-browser') === 'Safari' || $(btnInstallMob).attr('data-name-browser') === 'Safari') {
+            $(btnInstall).on('click', (e) => {
+                if ($('.box-message-install').length == 0) {
+                    $('.section_wrapper').append('<div class="position-fixed z-index-1000 box-message-install bg-white p-4 br-10">' +
+                        '<div class="position-relative d-flex justify-content-center align-items-center flex-column">' +
+                        '<span class="position-absolute close-window" style="right: -21px; top: -21px; left: auto;"></span>' +
+                        '<img class="position-absolute p-2 br-100 bg-white logo" src="/images/osh_message.png" alt="oshisha"/>' +
+                        '<div><p class="mb-1 mt-2 font-weight-500">Для установки приложения следуйте инструкции : </p>' +
+                        '<div class="d-none d-md-block d-lg-block">' +
+                        'В верхнем меню выберите Файл <br>' +
+                        'Найдите пункт Добавить в Dock и нажмите на него</br>' +
+                        'У вас на панели появится иконка с приложением.</br>' +
+                        '<img class="bg-white max-height-500 mt-3" ' +
+                        'src="/images/screenInMessage.png" alt="oshisha"/>' +
+                        '</div>' +
+                        '<div class="d-block d-md-none d-lg-none"> Нажмите <img src="/images/shareapple.png" style="width:25px;" alt="oshisha"/> ' +
+                        'в браузерe,<br>затем коснитесь <b>"На экран «Домой»"</b>.</div></div></div></div>');
+                    $('.close-window').on('click', function () {
+                        $(this).closest(".box-message-install").remove()
+                    });
+                }
+            });
+        } else {
+            btnInstall.addEventListener('click', (e) => {
+                // Show the prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice
+                    .then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the A2HS prompt');
+                        } else {
+                            console.log('User dismissed the A2HS prompt');
+                        }
+                        deferredPrompt = null;
+                    });
+            });
+        }
     }
 });
 

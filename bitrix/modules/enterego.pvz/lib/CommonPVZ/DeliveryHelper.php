@@ -419,6 +419,8 @@ class DeliveryHelper
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
+        $params['oshishaDeliveryCode'] = OshishaDelivery::$code;
+
         if ($order->getField('PRICE_DELIVERY')) {
             $params['shipmentCost'] = $order->getDeliveryPrice();
         }
