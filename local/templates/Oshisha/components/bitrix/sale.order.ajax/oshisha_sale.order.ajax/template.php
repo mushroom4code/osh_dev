@@ -281,13 +281,13 @@ if ($request->get('ORDER_ID') <> '') {
         <input type="hidden" name="location_type" value="code">
         <input type="hidden" name="BUYER_STORE" id="BUYER_STORE" value="<?= $arResult['BUYER_STORE'] ?>">
         <!--	BUYER PROPS BLOCK	-->
-        <div id="bx-soa-order" class="container grid-cols-3 grid row" style="opacity: 0">
+        <div id="bx-soa-order" class="container lg:grid-cols-3 lg:grid row" style="opacity: 0">
             <div id="bx-soa-main-notifications" class="col-span-2">
                 <div class="alert alert-danger" style="display:none"></div>
                 <div data-type="informer" style="display:none"></div>
             </div>
             <div class="col-span-2 col-lg-8 col-md-7">
-                <h5 class="mb-4"><b>Покупатель</b><i class="fa fa-pencil" aria-hidden="true"></i></h5>
+                <h5 class="mb-4 text-[22px] font-semibold">Покупатель<i class="fa fa-pencil" aria-hidden="true"></i></h5>
                 <div class="bx-soa">
                     <div id="bx-soa-properties" data-visited="true" class="bx-soa-section mb-4 bx-active">
                         <div id="user-properties-title-block" class="bx-soa-section-title-container overflow-hidden">
@@ -372,7 +372,7 @@ if ($request->get('ORDER_ID') <> '') {
                         <div id="bx-soa-delivery" data-visited="true"
                              class="bx-soa-section mb-4  bx-active" <?= ($hideDelivery ? 'style="display:none"' : '') ?>>
                             <div class="bx-soa-section-title-container mt-8 mb-4 overflow-hidden d-flex justify-content-between align-items-center flex-nowrap">
-                                <div class="bx-soa-section-title text-[22px]" data-entity="section-title">
+                                <div class="bx-soa-section-title text-[22px] font-semibold" data-entity="section-title">
                                     <?= $arParams['MESS_DELIVERY_BLOCK_NAME'] ?>
                                 </div>
                             </div>
@@ -399,7 +399,7 @@ if ($request->get('ORDER_ID') <> '') {
                         <div id="bx-soa-delivery" data-visited="false"
                              class="bx-soa-section mb-4  bx-active" <?= ($hideDelivery ? 'style="display:none"' : '') ?>>
                             <div class="bx-soa-section-title-container mt-8 mb-4 overflow-hidden d-flex justify-content-between align-items-center flex-nowrap">
-                                <div class="bx-soa-section-title text-[22px] font-normal my-4"
+                                <div class="bx-soa-section-title text-[22px] font-semibold my-4"
                                      data-entity="section-title">
                                     <?= $arParams['MESS_DELIVERY_BLOCK_NAME'] ?>
                                 </div>
@@ -456,15 +456,15 @@ if ($request->get('ORDER_ID') <> '') {
                         <!--	PAY SYSTEMS BLOCK	-->
                         <div id="bx-soa-paysystem" data-visited="false" class="bx-soa-section mb-4  bx-active">
                             <div class="bx-soa-section-title-container overflow-hidden flex justify-content-between align-items-center flex-nowrap">
-                                <div class="bx-soa-section-title text-[22px] my-4 pt-[3px] font-weight"
+                                <div class="bx-soa-section-title text-[22px] font-semibold my-4 pt-[3px] font-weight"
                                      data-entity="section-title">
                                     <?= $arParams['MESS_PAYMENT_BLOCK_NAME'] ?>
                                 </div>
                             </div>
-                            <div class="bx-soa-section-content py-2.5 px-[15px]"></div>
+                            <div class="bx-soa-section-content py-2.5"></div>
                         </div>
                         <div id="user-agreements" class="p-4"></div>
-                        <div class="new_block_with_comments mt-0" id="new_block_with_comments">
+                        <div class="new_block_with_comments mt-0 mb-8" id="new_block_with_comments">
                             <div id="new_block_with_comment_box"></div>
                         </div>
                     <?php endif ?>
@@ -507,10 +507,10 @@ if ($request->get('ORDER_ID') <> '') {
                 </div>
             </div>
             <!--	SIDEBAR BLOCK	-->
-            <div class="col-start-3 col-lg-4 col-md-5 ml-4">
-                <h5 class="order_text mb-4"><b>Оформление заказа</b></h5>
-                <div class="flex align-items-center mb-3">
-                    <p class="text-[13px] m-0 mr-1">
+            <div class="col-start-3 col-lg-4 col-md-5 lg:ml-4">
+                <h5 class="order_text mb-4 text-[22px] font-semibold">Оформление заказа</h5>
+                <div class="flex align-items-center justify-between mb-3">
+                    <p class="text-[13px] m-0 mr-1 flex items-center">
                         При получении заказа, возможно, потребуется предъявить документ, подтверждающий ваш возраст.
                     </p>
                     <span class="confidintial bg-light-red py-[7px] px-2 whitespace-nowrap text-white font-semibold

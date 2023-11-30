@@ -4098,7 +4098,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     BX.cleanNode(paySystemContent);
 
                 this.getErrorContainer(paySystemContent);
-                paySystemNode = BX.create('DIV', {props: {className: 'bx-soa-pp row flex flex-wrap mx-[-15px]'}});
+                paySystemNode = BX.create('DIV', {props: {className: 'bx-soa-pp'}});
                 this.editPaySystemItems(paySystemNode);
                 paySystemContent.appendChild(paySystemNode);
 
@@ -4132,8 +4132,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             if (!this.result.PAY_SYSTEM || this.result.PAY_SYSTEM.length <= 0)
                 return;
 
-            var paySystemItemsContainer = BX.create('DIV', {props: {className: 'bx-soa-pp-item-container order-1 w-full'}}),
-                paySystemItemsContainerRow = BX.create('DIV', {props: {className: 'row flex flex-wrap mx-[-15px]'}}),
+            var paySystemItemsContainer = BX.create('DIV', {props: {className: 'bx-soa-pp-item-container order-1'}}),
+                paySystemItemsContainerRow = BX.create('DIV', {props: {className: 'row flex flex-wrap space-x-6'}}),
                 paySystemItemNode, i;
 
             for (i = 0; i < this.paySystemPagination.currentPage.length; i++) {
@@ -4154,8 +4154,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 label, itemNode;
 
             label = BX.create('DIV', {
-                props: {className: 'bx-soa-pp-company-graf-container pay_system border-2 border-solid border-light-red' +
-                        ' bg-white p-[30px] flex items-center w-full rounded-[10px] cursor-pointer'},
+                props: {className: 'bx-soa-pp-company-graf-container pay_system rounded-[10px]' +
+                        ' p-[30px] flex w-full cursor-pointer'},
                 children: [
                     BX.create('INPUT', {
                         props: {
@@ -4168,19 +4168,20 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         }
                     }),
                     BX.create('DIV', {
-                        props: {className: 'bx-soa-pp-company-title text-base'},
+                        props: {className: 'bx-soa-pp-company-title text-base w-full'},
                         children: [BX.create('P', {
-                            props: {className: 'bx-soa-pp-company-title text-light-red font-medium my-2'},
+                            props: {className: 'bx-soa-pp-company-title text-light-red font-medium mt-2 mb-2.5'},
                             text: item.NAME
                         }), BX.create('DIV', {
-                            props: {className: 'bx-soa-pp-company-smalltitle'},
+                            props: {className: 'bx-soa-pp-company-smalltitle text-stone-600 text-sm'},
                             text: item.DESCRIPTION
                         })]
                     }),
                 ]
             });
             itemNode = BX.create('DIV', {
-                props: {className: 'bx-soa-pp-company relative z-[100] mt-5 w-full px-[15px] flex flex-inital basis-1/2'},
+                props: {className: 'bx-soa-pp-company relative mt-5 w-full bg-textDark rounded-[10px] flex flex-auto' +
+                        'basis-1/2 max-w-[48.2%] min-h-[170px]'},
                 children: [label],
                 events: {
                     click: BX.proxy(this.selectPaySystem, this)
@@ -4188,7 +4189,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             });
 
             if (checked)
-                BX.addClass(itemNode, 'bx-selected');
+                BX.addClass(itemNode, 'bx-selected border-2 border-solid border-light-red bg-white');
 
             return itemNode;
         },
@@ -4739,7 +4740,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
 
             itemNode = BX.create('DIV', {
-                props: {className: 'delivery bx-soa-pp-company relative mt-5 z-[100]'},
+                props: {className: 'delivery bx-soa-pp-company relative mt-5'},
                 children: [label],
             });
 
@@ -6831,9 +6832,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     if (!document.querySelector('#second-save-order-js')) {
                         this.newBlockId.append(BX.create('DIV', {
                             props: {
-                                id: 'second-save-order-js hidden',
+                                id: 'second-save-order-js',
                                 style: 'margin-top: 2rem;',
-                                className: 'bx-soa-cart-total-button-container'
+                                className: 'bx-soa-cart-total-button-container hidden'
                             },
                             children: [
                                 BX.create('A', {
