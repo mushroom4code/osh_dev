@@ -842,7 +842,7 @@ $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(
                 unset($generalParams, $rowItems);
 
             } else { ?>
-                <p> В этой категроии сейчас нет товаров</p>
+                <p> В этой категории сейчас нет товаров</p>
             <?php } ?>
             <!-- items-container -->
         </div>

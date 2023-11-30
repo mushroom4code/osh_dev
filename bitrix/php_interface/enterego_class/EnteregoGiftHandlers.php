@@ -87,6 +87,8 @@ class EnteregoGiftHandlers
                     case 'GifterCondIBElement':
                         if ($gifterChild['DATA']['Type'] === 'all') {
                             $elementIds = array_merge($elementIds, (array)$gifterChild['DATA']['Value']);
+                        } else if($gifterChild['DATA']['Type'] === 'one') {
+                            $elementIds = array_merge($elementIds, $gifterChild['DATA']['Value']);
                         }
                         break;
                     case 'GifterCondIBSection':
