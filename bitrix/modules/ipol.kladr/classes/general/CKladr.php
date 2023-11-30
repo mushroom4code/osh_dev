@@ -669,7 +669,7 @@ class CKladr
 		// ���� �� ������, � ���� ���� ������ �� 15 ����� ?
 		$errAnswerdate = self::GetErrorConnectDate();
 		if($errAnswerdate>0) {
-			if(mktime()-$errAnswerdate<900){//���� ������ 15 ����� � ������
+			if(time()-$errAnswerdate<900){//���� ������ 15 ����� � ������
 				$errors=true;//��� ����
 			}
 			else
