@@ -398,7 +398,7 @@ class CKladr
 								
 								if(strripos($out, 'token')=== false) { // ���������, ���� ��� �� ������� � ��������
 									if($code!==false){
-										self::SetErrorConnect(mktime(),$code);
+										self::SetErrorConnect(time(),$code);
 									}
 								}
 								
