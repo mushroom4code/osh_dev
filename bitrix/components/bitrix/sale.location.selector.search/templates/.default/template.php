@@ -49,7 +49,8 @@ else:
 		endif;
 
 		$dropDownBlock = $uiFilter ? "dropdown-block-ui" : "dropdown-block"; ?>
-		<div class="<?=$dropDownBlock?> bx-ui-sls-input-block">
+		<div class="<?=$dropDownBlock?> bx-ui-sls-input-block border-solid relative bg-white shadow-none border-[1px]
+		    pl-[30px] pr-[22px] pt-[2px] min-h-[38px] rounded-lg border-stone-300">
 
 			<span class="dropdown-icon"></span>
 			<input type="text" autocomplete="off" name="<?=$arParams['INPUT_NAME']?>" value="<?=$arResult['VALUE']?>" class="dropdown-field" placeholder="<?=Loc::getMessage('SALE_SLS_INPUT_SOME')?> ..." />

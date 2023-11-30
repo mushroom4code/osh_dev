@@ -9,7 +9,8 @@ module.exports = {
         "./personal/*.php", "./personal/contragents/*.php",
         "./local/components/bitrix/enterego.slider/templates/.default/template.php",
         "./images/icon_header/*.svg",
-        "./local/assets/js/flags-mask/phonecode.js"
+        "./local/assets/js/flags-mask/phonecode.js",
+        "./bitrix/components/bitrix/sale.location.selector.search/templates/.default/template.php"
     ],
     darkMode: 'class',
     theme: {
@@ -46,6 +47,7 @@ module.exports = {
                 'light-red': '#CD1D1D',
                 'hover-red': '#FE3431',
                 'gray-box-dark': '#3C3C3C',
+                'grey-line-order': '#E5E5E5',
                 darkOpacityWindow: 'rgba(0, 0, 0, 0.73)',
                 lightOpacityWindow: 'rgba(60, 60, 60, 0.53)',
             },

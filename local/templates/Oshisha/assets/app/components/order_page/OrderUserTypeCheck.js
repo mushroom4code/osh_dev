@@ -13,32 +13,36 @@ function getPersonTypeSortedArray(objPersonType) {
         return parseInt(a.SORT) - parseInt(b.SORT)
     });
 }
-function OrderUserTypeCheck({result, params}) {
-    const [propertyCollection, setPropertyCollection] = useState(new BX.Sale.PropertyCollection(BX.merge({publicMode: true}, result.ORDER_PROP)));
-    const [resultData, setResultData] = useState(result);
-    const [paramsData, setParamsData] = useState(params);
+class OrderUserTypeCheck extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            result: this.props.result,
+            params: this.props.params
+        }
+        this.propertyCollection = new BX.Sale.PropertyCollection(BX.merge({publicMode: true}, this.props.result.ORDER_PROP));
+    }
 
-    const renderUserTypeCheck = () => {
-        if (!resultData.PERSON_TYPE)
+    render() {
+        if (!this.state.result.PERSON_TYPE)
             return;
 
-        resultData.PERSON_TYPE = getPersonTypeSortedArray(resultData.PERSON_TYPE);
-        var personTypesCount = resultData.PERSON_TYPE.length,
+        this.state.result.PERSON_TYPE = getPersonTypeSortedArray(this.state.result.PERSON_TYPE);
+        var personTypesCount = this.state.result.PERSON_TYPE.length,
             currentType, oldPersonTypeId, i,
             options = [], delimiter = false, resultTypeCheckJsx = [];
         if (personTypesCount > 1) {
             resultTypeCheckJsx.push(<React.Fragment key={'person_type_group_initial'}>
-                <label className="bx-soa-custom-label" key={'person_type_group_label'}
-                       dangerouslySetInnerHTML={{__html: paramsData.MESS_PERSON_TYPE}}>
+                <label className="bx-soa-custom-label pb-[2px] relative text-black font-semibold text-sm" key={'person_type_group_label'}
+                       dangerouslySetInnerHTML={{__html: this.state.params.MESS_PERSON_TYPE}}>
                 </label>
                 <br key={'person_type_br_initial'}/>
             </React.Fragment>);
         }
-        console.log('second step');
         if (personTypesCount > 2) {
-            for (i in resultData.PERSON_TYPE) {
-                if (resultData.PERSON_TYPE.hasOwnProperty(i)) {
-                    currentType = resultData.PERSON_TYPE[i];
+            for (i in this.state.result.PERSON_TYPE) {
+                if (this.state.result.PERSON_TYPE.hasOwnProperty(i)) {
+                    currentType = this.state.result.PERSON_TYPE[i];
                     options.push(<option key={'person_type_option_'+currentType.ID} value={currentType.ID}
                                          selected={currentType.CHECKED === 'Y'}>
                         {currentType.NAME}
@@ -57,9 +61,9 @@ function OrderUserTypeCheck({result, params}) {
 
             this.regionBlockNotEmpty = true;
         } else if (personTypesCount === 2) {
-            for (i in resultData.PERSON_TYPE) {
-                if (resultData.PERSON_TYPE.hasOwnProperty(i)) {
-                    currentType = resultData.PERSON_TYPE[i];
+            for (i in this.state.result.PERSON_TYPE) {
+                if (this.state.result.PERSON_TYPE.hasOwnProperty(i)) {
+                    currentType = this.state.result.PERSON_TYPE[i];
 
 
                     if (delimiter)
@@ -67,7 +71,7 @@ function OrderUserTypeCheck({result, params}) {
 
                     resultTypeCheckJsx.push(<div className="radio-inline" key={'person_type_div_'+currentType.ID}>
                         <label onChange={BX.proxy(BX.Sale.OrderAjaxComponent.sendRequest, BX.Sale.OrderAjaxComponent)}>
-                            <input className="form-check-input" type="radio" name='PERSON_TYPE'
+                            <input className="form-check-input focus:ring-transparent focus:shadow-none focus:outline-none" type="radio" name='PERSON_TYPE'
                                    defaultChecked={currentType.CHECKED === 'Y'} value={currentType.ID}/>
                             {BX.util.htmlspecialchars(currentType.NAME)}
                         </label>
@@ -79,14 +83,13 @@ function OrderUserTypeCheck({result, params}) {
                         oldPersonTypeId = currentType.ID;
                 }
             }
-
-            // this.regionBlockNotEmpty = true;
+            this.regionBlockNotEmpty = true;
         } else {
-            for (i in resultData.PERSON_TYPE)
-                if (resultData.PERSON_TYPE.hasOwnProperty(i))
+            for (i in this.state.result.PERSON_TYPE)
+                if (this.state.result.PERSON_TYPE.hasOwnProperty(i))
                     resultTypeCheckJsx.push(<input className="form-check-input" type="hidden"
-                                                   key={'person_type_input_'+resultData.PERSON_TYPE[i].ID}
-                                                   name='PERSON_TYPE' value={resultData.PERSON_TYPE[i].ID}/>
+                                                   key={'person_type_input_'+this.state.result.PERSON_TYPE[i].ID}
+                                                   name='PERSON_TYPE' value={this.state.result.PERSON_TYPE[i].ID}/>
                     );
         }
 
@@ -105,10 +108,8 @@ function OrderUserTypeCheck({result, params}) {
         } else {
             resultTypeCheckJsxReturn = resultTypeCheckJsx;
         }
-        return(resultTypeCheckJsxReturn);
+        return(<div>{resultTypeCheckJsxReturn}</div>);
     }
-
-    return(<div>{renderUserTypeCheck()}</div>);
 }
 
 export default OrderUserTypeCheck;

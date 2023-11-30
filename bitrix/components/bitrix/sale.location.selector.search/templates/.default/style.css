@@ -1,16 +1,5 @@
 /* absolute path to images is required to make crm-sale proxy work */
 
-.bx-sls .dropdown-block {
-	border: 1px solid #bdbdbd;
-	border-radius: 2px;
-	-webkit-box-shadow: inset 0 1px 2px #ebebeb;
-	box-shadow: inset 0 1px 2px #ebebeb;
-	font-size: 14px;
-	padding: 0 22px 0 30px;
-	position: relative;
-	background-color: #fff;
-}
-
 .bx-sls .dropdown-block-ui {
 	font-size: 14px;
 	padding: 0 22px 0 30px;
@@ -105,7 +94,7 @@
 	height: 14px;
 	left: 10px;
 	position: absolute;
-	top: 10px;
+	top: 11px;
 	width: 14px;
 }
 
@@ -155,7 +144,7 @@
 	margin-top: 2px;
 
 	position: absolute;
-	top: 0px;
+	top: 2px;
 	right: 0px;
 	display: block;
 }

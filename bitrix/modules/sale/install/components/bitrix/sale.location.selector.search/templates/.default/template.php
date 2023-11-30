@@ -48,7 +48,7 @@ else:
 		<?php
 		endif;
 
-		$dropDownBlock = $uiFilter ? "dropdown-block-ui" : "dropdown-block"; ?>
+		$dropDownBlock = $uiFilter ? "dropdown-block-ui" : ""; ?>
 		<div class="<?=$dropDownBlock?> bx-ui-sls-input-block">
 
 			<span class="dropdown-icon"></span>

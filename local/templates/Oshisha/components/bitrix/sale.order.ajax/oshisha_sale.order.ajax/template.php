@@ -269,7 +269,7 @@ if ($request->get('ORDER_ID') <> '') {
     ?>
 
     <form action="<?= POST_FORM_ACTION_URI ?>" method="POST" name="ORDER_FORM"
-          class="bx-soa-wrapper mb-4<?= $themeClass ?>" id="bx-soa-order-form" enctype="multipart/form-data">
+          class="bx-soa-wrapper text-sm mb-4<?= $themeClass ?>" id="bx-soa-order-form" enctype="multipart/form-data">
         <?php
         echo bitrix_sessid_post();
 
@@ -290,7 +290,7 @@ if ($request->get('ORDER_ID') <> '') {
                 <h5 class="mb-4"><b>Покупатель</b><i class="fa fa-pencil" aria-hidden="true"></i></h5>
                 <div class="bx-soa">
                     <div id="bx-soa-properties" data-visited="true" class="bx-soa-section mb-4 bx-active">
-                        <div id="user-properties-title-block" class="bx-soa-section-title-container">
+                        <div id="user-properties-title-block" class="bx-soa-section-title-container overflow-hidden">
                             <div class="width_100 mb-4 d-flex align-items-center userCheck" id="userCheck"></div>
                             <?php if ($USER->IsAuthorized() && !empty($user_object->company_user) && !empty($user_object->contragents_user)) { ?>
                                 <input value='<?= json_encode($user_object->contragents_user) ?>' type="hidden"
@@ -337,7 +337,7 @@ if ($request->get('ORDER_ID') <> '') {
                     </div>
                     <!--	AUTH BLOCK	-->
                     <div id="bx-soa-auth" class="bx-soa-section mb-4  bx-soa-auth" style="display: none;">
-                        <div class="bx-soa-section-title-container">
+                        <div class="bx-soa-section-title-container overflow-hidden">
                             <div class="bx-soa-section-title" data-entity="section-title">
                                 <?= $arParams['MESS_AUTH_BLOCK_NAME'] ?>
                             </div>
@@ -346,9 +346,9 @@ if ($request->get('ORDER_ID') <> '') {
                     </div>
 
                     <!--	REGION BLOCK	-->
-                    <div id="bx-soa-region" data-visited="false" class="bx-soa-section bx-active">
-                        <div class="bx-soa-section-title-container">
-                            <h2 class="bx-soa-section-title col-sm-9">
+                    <div id="bx-soa-region hidden" data-visited="false" class="bx-soa-section bx-active">
+                        <div class="bx-soa-section-title-container overflow-hidden">
+                            <h2 class="bx-soa-section-title text-[22px] col-sm-9">
                                 <span class="bx-soa-section-title-count"></span><?= $arParams['MESS_REGION_BLOCK_NAME'] ?>
                             </h2>
                             <div class="col-xs-12 col-sm-3 text-right"><a href=""
@@ -361,7 +361,7 @@ if ($request->get('ORDER_ID') <> '') {
                     <?php if ($arParams['DELIVERY_TO_PAYSYSTEM'] === 'p2d'): ?>
                         <!--	PAY SYSTEMS BLOCK	-->
                         <div id="bx-soa-paysystem" data-visited="false" class="bx-soa-section mb-4  bx-active">
-                            <div class="bx-soa-section-title-container d-flex justify-content-between align-items-center flex-nowrap">
+                            <div class="bx-soa-section-title-container overflow-hidden d-flex justify-content-between align-items-center flex-nowrap">
                                 <div class="bx-soa-section-title" data-entity="section-title">
                                     <?= $arParams['MESS_PAYMENT_BLOCK_NAME'] ?>
                                 </div>
@@ -371,15 +371,15 @@ if ($request->get('ORDER_ID') <> '') {
                         <!--	DELIVERY BLOCK	-->
                         <div id="bx-soa-delivery" data-visited="true"
                              class="bx-soa-section mb-4  bx-active" <?= ($hideDelivery ? 'style="display:none"' : '') ?>>
-                            <div class="bx-soa-section-title-container d-flex justify-content-between align-items-center flex-nowrap">
-                                <div class="bx-soa-section-title" data-entity="section-title">
+                            <div class="bx-soa-section-title-container mt-8 mb-4 overflow-hidden d-flex justify-content-between align-items-center flex-nowrap">
+                                <div class="bx-soa-section-title text-[22px]" data-entity="section-title">
                                     <?= $arParams['MESS_DELIVERY_BLOCK_NAME'] ?>
                                 </div>
                             </div>
                             <div class="bx-soa-section-content"></div>
                         </div>
                         <div id="bx-soa-region" data-visited="false" class="bx-soa-section mb-4 d-none">
-                            <div class="bx-soa-section-title-container d-flex justify-content-between align-items-center flex-nowrap">
+                            <div class="bx-soa-section-title-container overflow-hidden d-flex justify-content-between align-items-center flex-nowrap">
                                 <div class="bx-soa-section-title" data-entity="section-title">
                                     <?= $arParams['MESS_REGION_BLOCK_NAME'] ?>
                                 </div>
@@ -388,7 +388,7 @@ if ($request->get('ORDER_ID') <> '') {
                         </div>
                         <!--	PICKUP BLOCK	-->
                         <div id="bx-soa-pickup" data-visited="false" class="bx-soa-section mb-4 " style="display:none">
-                            <div class="bx-soa-section-title-container d-flex justify-content-between align-items-center flex-nowrap">
+                            <div class="bx-soa-section-title-container overflow-hidden d-flex justify-content-between align-items-center flex-nowrap">
                                 <div class="bx-soa-section-title" data-entity="section-title">
                                 </div>
                             </div>
@@ -398,15 +398,16 @@ if ($request->get('ORDER_ID') <> '') {
                         <!--	DELIVERY BLOCK	-->
                         <div id="bx-soa-delivery" data-visited="false"
                              class="bx-soa-section mb-4  bx-active" <?= ($hideDelivery ? 'style="display:none"' : '') ?>>
-                            <div class="bx-soa-section-title-container d-flex justify-content-between align-items-center flex-nowrap">
-                                <div class="bx-soa-section-title" data-entity="section-title">
+                            <div class="bx-soa-section-title-container mt-8 mb-4 overflow-hidden d-flex justify-content-between align-items-center flex-nowrap">
+                                <div class="bx-soa-section-title text-[22px] font-normal my-4"
+                                     data-entity="section-title">
                                     <?= $arParams['MESS_DELIVERY_BLOCK_NAME'] ?>
                                 </div>
                             </div>
                             <div class="box_with_delivery_type">
                                 <div class="bx-soa-section-content"></div>
                                 <div id="bx-soa-region" data-visited="false"
-                                     class="bx-soa-section mb-4 d-none">
+                                     class="bx-soa-section mb-4 hidden">
                                     <div class="bx-soa-section-title-container d-flex justify-content-between align-items-center flex-nowrap">
                                         <div class="bx-soa-section-title" data-entity="section-title">
                                             <?= $arParams['MESS_REGION_BLOCK_NAME'] ?>
@@ -446,7 +447,7 @@ if ($request->get('ORDER_ID') <> '') {
 
                         <!--	PICKUP BLOCK	-->
                         <div id="bx-soa-pickup" data-visited="false" class="bx-soa-section mb-4 " style="display:none">
-                            <div class="bx-soa-section-title-container d-flex justify-content-between align-items-center flex-nowrap">
+                            <div class="bx-soa-section-title-container overflow-hidden d-flex justify-content-between align-items-center flex-nowrap">
                                 <div class="bx-soa-section-title" data-entity="section-title">
                                 </div>
                             </div>
@@ -454,14 +455,15 @@ if ($request->get('ORDER_ID') <> '') {
                         </div>
                         <!--	PAY SYSTEMS BLOCK	-->
                         <div id="bx-soa-paysystem" data-visited="false" class="bx-soa-section mb-4  bx-active">
-                            <div class="bx-soa-section-title-container d-flex justify-content-between align-items-center flex-nowrap">
-                                <div class="bx-soa-section-title" data-entity="section-title">
+                            <div class="bx-soa-section-title-container overflow-hidden flex justify-content-between align-items-center flex-nowrap">
+                                <div class="bx-soa-section-title text-[22px] my-4 pt-[3px] font-weight"
+                                     data-entity="section-title">
                                     <?= $arParams['MESS_PAYMENT_BLOCK_NAME'] ?>
                                 </div>
                             </div>
-                            <div class="bx-soa-section-content"></div>
+                            <div class="bx-soa-section-content py-2.5 px-[15px]"></div>
                         </div>
-                        <div id="user-agreements" class="p-3"></div>
+                        <div id="user-agreements" class="p-4"></div>
                         <div class="new_block_with_comments mt-0" id="new_block_with_comments">
                             <div id="new_block_with_comment_box"></div>
                         </div>
@@ -505,17 +507,18 @@ if ($request->get('ORDER_ID') <> '') {
                 </div>
             </div>
             <!--	SIDEBAR BLOCK	-->
-            <div class="col-start-3 col-lg-4 col-md-5 ">
-                <h5 class="order_text"><b>Оформление заказа</b></h5>
-                <div class="d-flex flex-lg-row flex-md-row flex-column align-items-center mb-3">
-                    <p class="font-13 m-0 mr-1">
+            <div class="col-start-3 col-lg-4 col-md-5 ml-4">
+                <h5 class="order_text mb-4"><b>Оформление заказа</b></h5>
+                <div class="flex align-items-center mb-3">
+                    <p class="text-[13px] m-0 mr-1">
                         При получении заказа, возможно, потребуется предъявить документ, подтверждающий ваш возраст.
                     </p>
-                    <span class="confidintial font-15">18+</span>
+                    <span class="confidintial bg-light-red py-[7px] px-2 whitespace-nowrap text-white font-semibold
+                    rounded-[100px] leading-[26px] h-fit self-center">18+</span>
                 </div>
                 <div id="bx-soa-total" class="mb-5 bx-soa-sidebar">
                     <div class="bx-soa-cart-total-ghost"></div>
-                    <div class="bx-soa-cart-total"></div>
+                    <div class="bx-soa-cart-total p-5 border-[1px] flex flex-col rounded-lg border-solid border-textDark bg-textDark"></div>
                 </div>
             </div>
         </div>
@@ -601,28 +604,28 @@ if ($request->get('ORDER_ID') <> '') {
 
     $arParams['AR_DELIVERY_PICKUP'] = AR_DELIVERY_PICKUP;
     ?>
-        <script id="react-order-js" src="/dist/order_page.generated.js"
-                data-result='<?= json_encode($arResult['JS_DATA']);?>'
-                data-delivery-options='<?=json_encode($arResult['DELIVERY_OPTIONS'])?>'
-                data-locations='<?=json_encode($arResult['LOCATIONS'], JSON_HEX_APOS)?>'
-                data-saved-delivery-profiles='<?=json_encode($savedDeliveryProfiles)?>'
-                data-params="<?=htmlspecialchars(json_encode($arParams), ENT_QUOTES, 'UTF-8')?>"
-                data-signed-params-string='<?=CUtil::JSEscape($signedParams)?>'
-                data-site-id='<?=CUtil::JSEscape($component->getSiteId())?>'
-                data-ajax-url='<?=CUtil::JSEscape($component->getPath() . '/ajax.php')?>'
-                data-template-folder='<?=CUtil::JSEscape($templateFolder)?>'
-                data-order-block-id='bx-soa-order'
-                data-auth-block-id='bx-soa-auth'
-                data-region-block-id='bx-soa-region'
-                data-pay-system-block-id='bx-soa-paysystem'
-                data-delivery-block-id='bx-soa-delivery'
-                data-pick-up-block-id='bx-soa-pickup'
-                data-user-props-block-id='user-properties-block'
-                data-new-block-with-comment-id='new_block_with_comment_box'
-                data-total-block-id='bx-soa-total'
-                data-user-agreements-block-id='user-agreements'
-                data-user-check-block-id='userCheck'
-        ></script>
+    <script id="react-order-js" src="/dist/order_page.generated.js"
+            data-result='<?= json_encode($arResult['JS_DATA']); ?>'
+            data-delivery-options='<?= json_encode($arResult['DELIVERY_OPTIONS']) ?>'
+            data-locations='<?= json_encode($arResult['LOCATIONS'], JSON_HEX_APOS) ?>'
+            data-saved-delivery-profiles='<?= json_encode($savedDeliveryProfiles) ?>'
+            data-params="<?= htmlspecialchars(json_encode($arParams), ENT_QUOTES, 'UTF-8') ?>"
+            data-signed-params-string='<?= CUtil::JSEscape($signedParams) ?>'
+            data-site-id='<?= CUtil::JSEscape($component->getSiteId()) ?>'
+            data-ajax-url='<?= CUtil::JSEscape($component->getPath() . '/ajax.php') ?>'
+            data-template-folder='<?= CUtil::JSEscape($templateFolder) ?>'
+            data-order-block-id='bx-soa-order'
+            data-auth-block-id='bx-soa-auth'
+            data-region-block-id='bx-soa-region'
+            data-pay-system-block-id='bx-soa-paysystem'
+            data-delivery-block-id='bx-soa-delivery'
+            data-pick-up-block-id='bx-soa-pickup'
+            data-user-props-block-id='user-properties-block'
+            data-new-block-with-comment-id='new_block_with_comment_box'
+            data-total-block-id='bx-soa-total'
+            data-user-agreements-block-id='user-agreements'
+            data-user-check-block-id='userCheck'
+    ></script>
     <script>
         <?php if ($USER->IsAuthorized()) {?>
         let bool_contrs = $('input').is('#connection_company_contragent');
@@ -659,6 +662,7 @@ if ($request->get('ORDER_ID') <> '') {
             }
         }
         <?php }?>
+        console.log(BX.Sale.OrderAjaxComponent);
         // END Enterego
         BX.message(<?=CUtil::PhpToJSObject($messages)?>);
         BX.Sale.OrderAjaxComponent.init({
@@ -713,7 +717,7 @@ if ($request->get('ORDER_ID') <> '') {
                 && $('input[name="USER_POLITICS"]').prop('checked') === true) {
                 $(document).find('.btn-order-save').removeAttr('style');
             } else {
-                $(document).find('.btn-order-save').attr('style','opacity: 0.65');
+                $(document).find('.btn-order-save').attr('style', 'opacity: 0.65');
             }
         });
     </script>

@@ -1,7 +1,7 @@
 import OrderUserProp from './OrderUserProp';
 import React, {useEffect, useState} from "react";
 
-function OrderUserProps({result, locations}) {
+function OrderUserProps({result, locations, are_locations_prepared}) {
     const [propertyCollection, setPropertyCollection] = useState(new BX.Sale.PropertyCollection(BX.merge({publicMode: true}, result.ORDER_PROP)));
     const [resultData, setResultData] = useState(result);
     const [groupBuyerProps, setGroupBuyerProps] = useState(["Личные данные"]);
@@ -69,7 +69,11 @@ function OrderUserProps({result, locations}) {
                 // } else {
                     if (groupBuyerProps.find(item => item === group.getName()) !== undefined) {
                         a.push(property.getId());
-                        div.push(<OrderUserProp key={property.getId()} property={property} locations={locations} disabled={disabled} result={resultData}/>);
+                        div.push(
+                            <OrderUserProp key={property.getId()} property={property} locations={locations}
+                                           disabled={disabled} result={resultData}
+                                           are_locations_prepared={are_locations_prepared}/>
+                        );
                         // getPropertyRowNode(property, disabled);
                     }
                     // continue;
@@ -78,6 +82,8 @@ function OrderUserProps({result, locations}) {
         }
         return div;
     }
+
+
 
     return(<div className="row">
         <div className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0">

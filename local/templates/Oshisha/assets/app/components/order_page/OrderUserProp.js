@@ -3,7 +3,7 @@ import OrderUserPropString from './order_page_properties/OrderUserPropString';
 import OrderUserPropEnum from "./order_page_properties/OrderUserPropEnum";
 import React, {useEffect, useState} from "react";
 
-function OrderUserProp({property, locations, disabled, result}) {
+function OrderUserProp({property, locations, disabled, result, are_locations_prepared}) {
     var propertyType = property.getType() || '';
 
     let classNames = "form-group bx-soa-customer-field pr-2 py-2";
@@ -38,7 +38,8 @@ function OrderUserProp({property, locations, disabled, result}) {
     const renderProperty = () => {
         switch (propertyType) {
             case 'LOCATION':
-                return(<OrderUserPropLocation property={property} locations={locations} disabled={disabled}/>);
+                return(<OrderUserPropLocation property={property} locations={locations} disabled={disabled}
+                                              are_locations_prepared={are_locations_prepared}/>);
             // case 'DATE':
             //     return dateProperty(property, disabled);
             // case 'FILE':
@@ -55,7 +56,7 @@ function OrderUserProp({property, locations, disabled, result}) {
     }
 
     return(<div className={classNames} data-property-id-row={property.getId()}>
-        <label className="bx-soa-custom-label" htmlFor={labelFor}>
+        <label className="bx-soa-custom-label pb-[2px] relative text-black font-semibold text-sm" htmlFor={labelFor}>
             {textLabel}
         </label>
         {renderProperty()}

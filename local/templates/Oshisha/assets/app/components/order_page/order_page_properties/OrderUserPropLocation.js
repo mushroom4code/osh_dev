@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 
-function OrderUserPropLocation({property, locations, disabled}) {
-    const [preparedLocations, setPreparedLocations] = useState([]);
-    const [cleanLocations, setCleanLocations] = useState([]);
-    const [locationsTemplate, setLocationsTemplate] = useState('');
+function OrderUserPropLocation({property, locations, disabled, are_locations_prepared}) {
+    var preparedLocations, cleanLocations, locationsTemplate, a;
+    // const [preparedLocations, setPreparedLocations] = useState([]);
+    // const [cleanLocations, setCleanLocations] = useState([]);
+    // const [locationsTemplate, setLocationsTemplate] = useState('');
 
     function prepareLocations(locations) {
         var temporaryLocations, i, k, output, allTemporaryLocations = [], allCleanLocations = [];
@@ -13,10 +14,10 @@ function OrderUserPropLocation({property, locations, disabled}) {
                 if (!locations.hasOwnProperty(i))
                     continue;
 
-                setLocationsTemplate(locations[i].template || '');
+                locationsTemplate = locations[i].template || '';
+                // setLocationsTemplate(locations[i].template || '');
                 temporaryLocations = [];
                 output = locations[i].output;
-
                 if (output.clean) {
                     allCleanLocations[i] = BX.processHTML(output.clean, false);
                     delete output.clean;
@@ -35,8 +36,10 @@ function OrderUserPropLocation({property, locations, disabled}) {
 
                 allTemporaryLocations[i] = temporaryLocations;
             }
-            setCleanLocations(allCleanLocations);
-            setPreparedLocations(allTemporaryLocations);
+            cleanLocations = allCleanLocations;
+            preparedLocations = allTemporaryLocations
+            // setCleanLocations(allCleanLocations);
+            // setPreparedLocations(allTemporaryLocations);
         }
     }
 
@@ -88,11 +91,13 @@ function OrderUserPropLocation({property, locations, disabled}) {
         // }
     }
 
-    var propRow, propNodes, locationString, currentLocation, i, k, values = [];
+    var propRow,  currentLocation, i, k;
 
-    useEffect(() => {
+    if (are_locations_prepared) {
+        preparedLocations = locations;
+    } else {
         prepareLocations(locations);
-    }, []);
+    }
 
     if (property.getId() in preparedLocations) {
         if (disabled) {
@@ -108,7 +113,6 @@ function OrderUserPropLocation({property, locations, disabled}) {
         } else {
             let locationsJsx = [];
             propRow = preparedLocations[property.getId()];
-
             for (i = 0; i < propRow.length; i++) {
                 currentLocation = propRow[i] ? propRow[i].output : {};
                 if (property.isMultiple())
@@ -126,7 +130,6 @@ function OrderUserPropLocation({property, locations, disabled}) {
                         </div>
                     );
                 }
-
                 for (k in currentLocation.SCRIPT) {
                     if (currentLocation.SCRIPT.hasOwnProperty(k))
                         BX.evalGlobal(currentLocation.SCRIPT[k].JS);
@@ -137,13 +140,15 @@ function OrderUserPropLocation({property, locations, disabled}) {
                 locationsJsx.push(
                     <div key={property.getId()+'_is_multiple'} data-prop-id={property.getId()}
                          className="btn btn-sm btn-primary"
-                         onClick={addLocationProperty}
+                         onClick={BX.proxy(BX.Sale.OrderAjaxComponent.addLocationProperty, BX.Sale.OrderAjaxComponent)}
                     >
                         {BX.message('ADD_DEFAULT')}
                     </div>
                 )
             }
-
+            useEffect(() => {
+                    BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
+            })
             return (<div className="soa-property-container">
                 {locationsJsx}
             </div>);
