@@ -25,6 +25,7 @@ module.exports = {
                 darkBox: '#313131',
                 grayButton: '#464646',
                 grayLight: '#8B8B8B',
+                whiteOpacity:'#FFFFFF99',
                 filterGray:'#F3F3F3',
                 textDarkLightGray: '#E8E8E8',
                 textDark: '#F0F0F0',
@@ -66,6 +67,7 @@ module.exports = {
             },
             fontSize:{
                 '13': '13px',
+                '10': '10px',
             }
         }
     },

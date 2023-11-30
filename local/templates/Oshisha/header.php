@@ -98,7 +98,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     <?php $APPLICATION->ShowPanel(); ?>
 </div>
 <div class="min-h-screen">
-    <header class="bg-white dark:bg-dark sticky top-0 z-30">
+    <header class="bg-white dark:bg-dark sticky top-0 z-30 border-b md:border-0 border-white dark:border-grayIconLights">
         <?php if (CHECKED_INFO) {
             $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
             <div class="alert-info-setting">

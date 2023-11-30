@@ -331,9 +331,10 @@ $(document).ready(function () {
             }
 
             if (!$('span').is('.spanBasketTop')) {
-                $('.basket_top').append('<span class="spanBasketTop relative"></span>' +
-                    '<span class="font-12 font-weight-bold price_basket_top"></span>');
+                $('.basket_top').append('<span class="spanBasketTop absolute text-white top-0 right-0 rounded-full ' +
+                    'bg-light-red text-10 font-medium"></span>');
             }
+
             appendLoader();
             let product_id = $(this).attr('data-product_id'),
                 product_url = $(this).attr('data-url'),
@@ -1861,4 +1862,12 @@ function loaderForSite(initParam, itemParent = false) {
     } else {
         body.querySelector('.remove-class').remove();
     }
+}
+
+function showHidePasswd(item) {
+    const parentBox = item.closest('div');
+    const inputBox = parentBox.querySelector('input');
+    inputBox.type === 'password' ? inputBox.type = 'text' : inputBox.type = 'password'
+    parentBox.querySelector('[data-type="text"]').classList.toggle('hidden')
+    parentBox.querySelector('[data-type="password"]').classList.toggle('hidden')
 }

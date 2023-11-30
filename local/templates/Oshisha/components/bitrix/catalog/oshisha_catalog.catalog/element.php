@@ -317,7 +317,7 @@ $arrFilterTop['ID'] = $ids;
                         <div class="mb-5 mt-5">
                             <div data-entity="parent-container">
                                 <div data-entity="header" data-showed="false">
-                                    <h4 class="font-19"><b>С этим товаром покупают</b></h4>
+                                    <h4 class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-3xl mb-4">С этим товаром покупают</h4>
                                 </div>
                                 <div class="by-card">
                                     <?php $APPLICATION->IncludeComponent(
@@ -413,7 +413,7 @@ $arrFilterTop['ID'] = $ids;
                     <div class="mb-5 mt-5">
                         <div data-entity="parent-container">
                             <div data-entity="header" data-showed="false">
-                                <h4 class="font-19"><b>Вы смотрели</b></h4>
+                                <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-3xl mb-4">Вы смотрели</div>
                             </div>
                             <div class="by-card">
                                 <?php $APPLICATION->IncludeComponent(

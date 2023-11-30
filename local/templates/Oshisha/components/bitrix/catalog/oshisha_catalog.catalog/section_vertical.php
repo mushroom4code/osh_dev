@@ -176,7 +176,7 @@ function setActiveColor(string $itemType = 'card'): string
 <div class="flex mb-4 flex-col mt-5 w-auto">
     <div class="flex mb-4 box_with_prod md:flex-row flex-col w-auto">
         <?php if ($isFilter) : ?>
-            <div class=" box_filter_catalog w-80 xl:flex hidden flex-col  <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
+            <div class=" box_filter_catalog lg:w-96 w-80 xl:flex hidden flex-col <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
             $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
                 <div class="catalog-section-list-tile-list w-full bg-filterGray dark:bg-darkBox p-5 rounded-xl
              flex flex-col mb-4">
@@ -278,7 +278,7 @@ function setActiveColor(string $itemType = 'card'): string
             </div>
         <?php endif ?>
         <?php global $GLOBAL_SECTION; ?>
-        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full w-fit ml-11">
+        <div class="pb-4 <?= (($isFilter) ? "" : "col") ?> max-w-full w-fit xl:ml-11 lg:ml-7 ml-0">
             <div class="row navigation-wrap mb-5">
                 <div class="col" id="navigation">
                     <?php $APPLICATION->IncludeComponent(
@@ -294,45 +294,57 @@ function setActiveColor(string $itemType = 'card'): string
                     ); ?>
                 </div>
             </div>
-            <h1 class="text-3xl mb-2 font-semibold dark:font-medium"><?php $APPLICATION->ShowTitle(false); ?></h1>
-            <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-5"></p>
+            <h1 class="md:text-3xl text-2xl mb-2 font-semibold dark:font-medium"><?php $APPLICATION->ShowTitle(false); ?></h1>
+            <p class="message_for_user_minzdrav md:text-sm text-xs text-textLight dark:text-iconGray dark:font-light mb-5"></p>
             <div id="osh-filter-horizontal2"></div>
-            <div class="osh-block-panel <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
-                <div id="osh-filter-horizontal" class="flex flex-col mb-5 mt-5">
-                    <div class="flex flex-row justify-between items-center mb-6">
+            <div class="osh-block-panel mb-4 <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
+                <div id="osh-filter-horizontal" class="flex flex-col mb-7 mt-5">
+                    <div class="flex flex-row justify-between items-center mb-5">
                         <div class="col_navigation mr-4">
                             <div class="count-per-page flex flex-row items-center">
-                                <span class="font-semibold dark:font-normal text-md mr-3 text-textLight dark:text-textDarkLightGray">Показать</span>
+                                <span class="font-semibold dark:font-normal md:text-md text-xs md:mr-3 text-textLight
+                                dark:text-textDarkLightGray mr-2">Показать</span>
                                 <a href="?page=24"
-                                   class="page_num py-2.5 px-3 rounded-full text-sm font-medium mr-1
+                                   class="page_num py-2 px-2.5 rounded-full md:text-sm text-xs font-medium mr-1
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24) { ?>
-                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">24</a>
+                               dark:bg-grayButton bg-lightGrayBg active text-white
+                               <?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">24</a>
                                 <a href="?page=36"
-                                   class="page_num py-2.5 px-3 rounded-full text-sm font-medium mr-1
+                                   class="page_num py-2 px-2.5 rounded-full md:text-sm text-xs font-medium mr-1
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36) { ?>
                                dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">36</a>
                                 <a href="?page=72"
-                                   class="page_num py-2.5 px-3 rounded-full text-sm font-medium
+                                   class="page_num py-2 px-2.5 rounded-full md:text-sm text-xs font-medium
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72) { ?>
                                dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">72</a>
                             </div>
                         </div>
-                        <div class="flex flex-row">
+                        <div class="flex flex-row items-center">
                             <div class="sort-panel">
                                 <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
                                     <div class="sort_panel_wrap">
                                         <div class="sort_panel relative" id="">
-                                            <a class="sort_order sort_tool bg-filterGray dark:bg-darkBox p-3 rounded-lg"
+                                            <a class="sort_order sort_tool"
                                                href="#">
-                                            <span class="sort_orders_by sort_caption text-sm text-textLight font-medium
-                                            dark:text-textDarkLightGray"
-                                                  style="min-width: 150px;">
-                                                Сортировать по</span>
-                                                <i class="fa fa-angle-down text-light-red dark:text-white text-xl font-semibold"
-                                                   aria-hidden="true"></i>
+                                                <p class="sort_orders_by items-center flex flex-row sort_caption ">
+                                                    <span class="md:block hidden text-sm text-textLight font-light
+                                                    dark:text-textDarkLightGray mr-2">Сортировать</span>
+                                                    <svg class="w-8" viewBox="0 0 48 48" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M45.5 14C45.5 14.8284 44.8284 15.5 44 15.5H4C3.17158 15.5 2.5 14.8284 2.5 14C2.5 13.1716 3.17158 12.5 4 12.5H44C44.8284 12.5 45.5 13.1716 45.5 14Z"
+                                                             class="dark:fill-grayIconLights fill-dark"/>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M39.5 24C39.5 24.8284 38.8284 25.5 38 25.5H10C9.17158 25.5 8.5 24.8284 8.5 24C8.5 23.1716 9.17158 22.5 10 22.5H38C38.8284 22.5 39.5 23.1716 39.5 24Z"
+                                                              class="dark:fill-grayIconLights fill-dark"/>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M33.5 34C33.5 34.8284 32.8284 35.5 32 35.5H16C15.1716 35.5 14.5 34.8284 14.5 34C14.5 33.1716 15.1716 32.5 16 32.5H32C32.8284 32.5 33.5 33.1716 33.5 34Z"
+                                                              class="dark:fill-grayIconLights fill-dark"/>
+                                                    </svg>
+                                                </p>
                                             </a>
-                                            <div class="sort_orders_element js__sort_orders_element hidden absolute
-                                        bg-filterGray dark:bg-darkBox z-20 p-3 w-full">
+                                            <div class="sort_orders_element md:-left-1 -left-14 js__sort_orders_element
+                                             hidden absolute bg-filterGray dark:bg-darkBox z-20 p-3 w-max rounded-lg">
                                                 <ul>
                                                     <li class="catalog_sort_item mb-2 cursor-pointer
                                                     hover:text-light-red dark:hover:text-white js__catalog-sort-item text-xs"
@@ -414,7 +426,7 @@ function setActiveColor(string $itemType = 'card'): string
                         </div>
                         <div id="osh-filter-horizontal-item-remove" class="osh-filter-item hidden"
                              onclick="smartFilter.removeHorizontalFilterAll()">
-                            <svg width="35" height="35" viewBox="0 0 24 24" fill="none"
+                            <svg  class="md:w-9 w-8 md:h-9 h-9" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 23.9531C18.5273 23.9531 23.9532 18.5273 23.9532 12C23.9532 5.46093 18.5156 0.046875 11.9883 0.046875C5.44918 0.046875 0.046875 5.46093 0.046875 12C0.046875 18.5273 5.46093 23.9531 12 23.9531ZM9.10548 18.9609C8.27343 18.9609 7.79293 18.5039 7.75778 17.6719L7.32418 8.10933H6.62108C6.30468 8.10933 6.03513 7.83983 6.03513 7.52343C6.03513 7.19528 6.30468 6.93748 6.62108 6.93748H9.28123V5.98828C9.28123 5.07418 9.87888 4.49998 10.7461 4.49998H13.1953C14.0625 4.49998 14.6601 5.07418 14.6601 5.98828V6.93748H17.3203C17.6367 6.93748 17.8945 7.19528 17.8945 7.52343C17.8945 7.83983 17.6367 8.10933 17.3203 8.10933H16.6406L16.207 17.6719C16.1601 18.5039 15.6797 18.9609 14.8476 18.9609H9.10548ZM10.4648 6.93748H13.4765V6.21093C13.4765 5.89453 13.2539 5.68358 12.9257 5.68358H11.0039C10.6875 5.68358 10.4648 5.89453 10.4648 6.21093V6.93748ZM9.82028 17.6719C10.1133 17.6719 10.289 17.4726 10.2773 17.1914L9.99608 9.33983C9.97263 9.05858 9.79683 8.87108 9.52733 8.87108C9.23438 8.87108 9.04683 9.07028 9.05858 9.33983L9.37498 17.2031C9.38668 17.4843 9.56248 17.6719 9.82028 17.6719ZM11.9765 17.6601C12.2695 17.6601 12.457 17.4726 12.457 17.1914V9.33983C12.457 9.07028 12.2695 8.87108 11.9765 8.87108C11.6836 8.87108 11.4961 9.07028 11.4961 9.33983V17.1914C11.4961 17.4726 11.6953 17.6601 11.9765 17.6601ZM14.1445 17.6719C14.4023 17.6719 14.5781 17.4843 14.5898 17.2031L14.9062 9.33983C14.9179 9.07028 14.7187 8.87108 14.4257 8.87108C14.1679 8.87108 13.9805 9.05858 13.9687 9.33983L13.6875 17.1914C13.6757 17.4726 13.8515 17.6719 14.1445 17.6719Z"
                                       class="fill-lightGrayBg dark:fill-white"/>

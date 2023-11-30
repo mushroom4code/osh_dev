@@ -307,14 +307,6 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
         let year_now = date_now.getFullYear();
         let date_datipicker = date_now.setFullYear(year_now - 18);
 
-        function showHidePasswd(item) {
-            const parentBox = item.closest('div');
-            const inputBox = parentBox.querySelector('input');
-            inputBox.type === 'password' ? inputBox.type = 'text' : inputBox.type = 'password'
-            parentBox.querySelector('[data-type="text"]').classList.toggle('hidden')
-            parentBox.querySelector('[data-type="password"]').classList.toggle('hidden')
-        }
-
         $('#main-profile-email').inputmask('email');
         $('input[name="PERSONAL_BIRTHDAY"]').datepicker({
             dateFormat: 'dd/mm/yyyy',

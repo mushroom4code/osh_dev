@@ -216,7 +216,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             ); ?>
         </div>
         <?php if ($rowResHidePrice == 'Нет' && !empty($option_site->text_rospetrebnadzor_product)) { ?>
-            <p class="message_for_user_minzdrav text-sm text-textLight dark:text-iconGray dark:font-light mb-8">
+            <p class="message_for_user_minzdrav text-sm text-grayButton dark:text-grayIconLights font-light mb-8">
                 <?= $option_site->text_rospetrebnadzor_product; ?></p>
         <?php } ?>
         <div class="box_with_photo_product flex md:flex-row flex-col mb-20">
@@ -224,8 +224,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             $arraySlider = $actualItem['PICTURE'];
             require_once(__DIR__ . '/slider/template.php'); ?>
             <div class="md:w-1/2 w-full md:mt-0 mt-7 flex flex-col catalog-item-product
-				not-input-parse justify-content-between">
-                <p class="head-title text-3xl mb-10 font-semibold dark:font-medium"><?= $name ?></p>
+				not-input-parse">
+                <p class="head-title text-3xl mb-4 text-lightGrayBg font-semibold dark:font-light dark:text-textDarkLightGray"><?= $name ?></p>
                 <?php if ($isGift) { ?>
                     <div>
                         <h4 class="bx-title dark:text-textDark text-textLight">Данная продукция не продается
@@ -233,194 +233,201 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     </div>
                     <?php
                 } else { ?>
-                <div class="flex flex-col">
-                    <?php
-                    $height = 10;
-                    $strong = 0;
-                    if (isset($arResult['PROPERTIES'][PROP_STRONG_CODE]) && !empty($arResult['PROPERTIES'][PROP_STRONG_CODE]['VALUE'])) {
-                        switch ($arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE_SORT']) {
-                            case "1":
-                                $strong = 0.5;
-                                $color = "#07AB66";
-                                break;
-                            case "2":
-                                $strong = 1.5;
-                                $color = "#FFC700";
-                                break;
-                            case "3":
-                                $strong = 2.5;
-                                $color = "#FF7A00";
-                                break;
-                        } ?>
-                        <div style="color: <?= $color ?>" class="column mt-1 mb-4">
-                            <p class="condensation_text">
-                                Крепость: <?= $arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE'] ?> </p>
-                            <div class="d-flex flex-row">
-                                <?php for ($i = 0; $i < 3; $i++) { ?>
-                                    <div style="border-color: <?= $color ?>;
-                                    <?= ($strong - $i) >= 1 ? "background-color: $color" : ''; ?>"
-                                         class="condensation">
-                                        <?php if ($strong - $i == 0.5) { ?>
-                                        <svg style="position: absolute; left: -5px; top: -1px" width="42"
-                                             height="<?= $height ?>" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="
+                    <div class="flex flex-col">
+                        <?php
+                        $height = 10;
+                        $strong = 0;
+                        $color = '';
+                        if (isset($arResult['PROPERTIES'][PROP_STRONG_CODE]) && !empty($arResult['PROPERTIES'][PROP_STRONG_CODE]['VALUE'])) {
+                            switch ($arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE_SORT']) {
+                                case "1":
+                                    $strong = 1;
+                                    $color = "#07AB66";
+                                    break;
+                                case "2":
+                                    $strong = 2;
+                                    $color = "#FFC700";
+                                    break;
+                                case "3":
+                                    $strong = 3;
+                                    $color = "#FF7A00";
+                                    break;
+                            } ?>
+                            <div style="color: <?= $color ?>" class="column mt-1 mb-7">
+                                <p class="condensation_text mb-2">
+                                    Крепость : <?= $arResult['PROPERTIES']['KREPOST_KALYANNOY_SMESI']['VALUE'] ?> </p>
+                                <div class="flex flex-row">
+                                    <?php for ($i = 0; $i < 3; $i++) { ?>
+                                        <div style="border-color: <?= $color ?>;
+                                        <?= ($strong - $i) >= 1 ? "background-color: $color" : ''; ?>"
+                                             class="condensation w-20 h-4 rounded-full border mr-2">
+                                            <?php if ($strong - $i == 1) { ?>
+                                            <svg style="position: absolute; left: -5px; top: -1px" width="42"
+                                                 height="<?= $height ?>" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="
                                                                 M 20 <?= $height ?>
                                                                 L 10 <?= $height ?>
                                                                 Q 0 <?= $height / 2 ?> 10 0
                                                                 L 30 0" stroke="<?= $color ?>" fill="<?= $color ?>"
-                                            />
-                                            <?php } ?>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                        </div>
-                    <?php }
-
-                    /** Enterego grouped product */
-                    if (!empty($arResult['GROUPED_PROPS_DATA']) && count($arResult['GROUPED_PRODUCTS']) > 1 &&
-                        (int)$actualItem['PRODUCT']['QUANTITY'] > 0) { ?>
-                        <div class="flex flex-col mb-2 box-offers-auto" data-entity="sku-line-block">
-                            <?php $propsForOffers = EnteregoGroupedProducts::getDataPropOffers();
-                            $productSelect = $arResult['GROUPED_PRODUCTS'][$arResult['ID']]['PROPERTIES'];
-                            foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) {
-                                if ($keyCODE !== 'USE_DISCOUNT') { ?>
-                                    <div class="flex flex-row overflow-auto mb-2 width-100 overflow-custom">
-                                        <?php foreach ($productGrouped as $group) {
-                                            $link = 'javascript:void(0)';
-                                            $prop_value = 'Пустое значение';
-                                            $tasted = $grouped = [];
-                                            $type = $propsForOffers[$keyCODE]['TYPE'] ?? 'text';
-                                            $title = 'Товар';
-                                            $select = 'selected';
-                                            $arrayEl = $productSelect[$keyCODE]['JS_PROP'] ?? [];
-                                            $count = array_diff_assoc($arrayEl, $group);
-                                            if (!empty($count) && (count($count) > 0 || count($arrayEl) !== count($group))) {
-                                                $select = '';
-                                            }
-
-
-                                            foreach ($group as $name => $prop) {
-                                                if (empty($prop['VALUE_ENUM'])) {
-                                                    continue;
-                                                }
-
-                                                $prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$keyCODE]['PREF'];
-
-                                                if (count($arResult['GROUPED_PROPS_DATA']) === 1) {
-                                                    $link = $prop['CODE'];
-                                                }
-
-                                                if ($type === 'colorWithText') {
-                                                    $tasted[$name] = [
-                                                        'color' => '#' . explode('#',
-                                                                $prop['VALUE_XML_ID'])[1],
-                                                        'name' => $prop['VALUE_ENUM'],
-                                                    ];
-                                                } else {
-                                                    $grouped[$name] = [
-                                                        'xml_id' => $prop['VALUE_XML_ID'],
-                                                        'name' => $prop['VALUE_ENUM']
-                                                    ];
-                                                }
-                                                $title = $prop['NAME'];
-                                            }
-
-                                            if (!empty($prop_value)) {
-                                                if ($type === 'text') {
-                                                    if (count($grouped) > 1) { ?>
-                                                        <a href="<?= $link ?>" class="offer-link">
-                                                            <div class="red_button_cart font-14 p-10
-                                                                             width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
-                                                                         <?= $select ?>"
-                                                                 title="<?= $offer['NAME'] ?>"
-                                                                 data-active="<?= !empty($select) ? 'true' : 'false' ?>"
-                                                                 data-prop_code="<?= $keyCODE ?>"
-                                                                 data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
-                                                                 data-product_id="<?= '' ?>">
-                                                                <?php foreach ($grouped as $elemProp) { ?>
-                                                                    <span class="br-100"><?= $elemProp['name'] ?></span>
-                                                                <?php } ?>
-                                                            </div>
-                                                        </a>
-                                                    <?php } else { ?>
-                                                        <a href="<?= $link ?>" class="offer-link <?= $select ?>">
-                                                            <div class="red_button_cart font-13 width-fit-content br-100 mb-lg-2
-                                                                                m-md-2 m-1 offer-box cursor-pointer"
-                                                                 title="<?= $offer['NAME'] ?>"
-                                                                 data-active="<?= !empty($select) ? 'true' : 'false' ?>"
-                                                                 data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
-                                                                 data-prop_code="<?= $keyCODE ?>"
-                                                                 data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
-                                                                <?= $prop_value ?>
-                                                            </div>
-                                                        </a>
-                                                    <?php }
-                                                } elseif ($type === 'color') { ?>
-                                                    <a href="<?= $link ?>" class="offer-link <?= $select ?>">
-                                                        <div title="<?= $offer['NAME'] ?>"
-                                                             data-active="<?= !empty($select) ? 'true' : 'false' ?>"
-                                                             data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
-                                                             data-prop_code="<?= $keyCODE ?>"
-                                                             data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
-                                                             class="mr-1 offer-box color-hookah br-10 mb-1 <?= $select ?>">
-                                                            <img src="<?= $prop['PREVIEW_PICTURE'] ?>"
-                                                                 class="br-10"
-                                                                 width="50"
-                                                                 height="50"
-                                                                 alt="<?= $offer['NAME'] ?>"
-                                                                 loading="lazy"/>
-                                                        </div>
-                                                    </a>
-                                                <?php } elseif ($type === 'colorWithText') {
-                                                    if (!empty($tasted)) { ?>
-                                                        <a href="<?= $link ?>" class="offer-link <?= $select ?>">
-                                                            <div class="red_button_cart taste variation_taste
-                                                                 w-fit mb-lg-2 m-md-2 p-3 m-1 offer-box cursor-pointer"
-                                                                 title="<?= $offer['NAME'] ?>"
-                                                                 data-active="<?= !empty($select) ? 'true' : 'false' ?>"
-                                                                 data-prop_code="<?= $keyCODE ?>"
-                                                                 data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>">
-                                                                <?php foreach ($tasted as $elem_taste) { ?>
-                                                                    <span class="taste px-2.5 mr-1 py-1 mb-1 text-sm rounded-full"
-                                                                          data-background="<?= $elem_taste['color'] ?>"
-                                                                          style="background-color: <?= $elem_taste['color'] ?>;
-                                                                                  border-color: <?= $elem_taste['color'] ?>;
-                                                                                  font-size: 13px;">
-                                                                                        <?= $elem_taste['name'] ?>
-                                                                                </span>
-                                                                <?php } ?>
-                                                            </div>
-                                                        </a>
-                                                    <?php }
-                                                }
-                                            }
-                                        } ?>
-                                    </div>
-                                <?php }
-                            } ?>
-                        </div>
-                        <input type="hidden" value="<?= htmlspecialchars(json_encode($arResult['GROUPED_PRODUCTS'])) ?>"
-                               id="product_prop_data"/>
-                        <?php /** Enterego grouped product */
-                    }
-
-                    if ($show_price) {
-                        $arParams['SHOW_MAX_QUANTITY'] = 'N';
-                        if ($arParams['SHOW_MAX_QUANTITY'] !== 'N') {
-                            if ($haveOffers) { ?>
-                                <div class="mb-3" id="<?= $itemIds['QUANTITY_LIMIT'] ?>"
-                                     style="display: none;">
-                                    <span class="product-item-quantity" data-entity="quantity-limit-value"></span>
+                                                />
+                                                <?php } ?>
+                                        </div>
+                                    <?php } ?>
                                 </div>
-                            <?php } else {
-                                if ($measureRatio && (float)$actualItem['PRODUCT']['QUANTITY'] > 0
-                                    && $actualItem['CHECK_QUANTITY']) { ?>
-                                    <div class="mb-3 text-center"
-                                         id="<?= $itemIds['QUANTITY_LIMIT'] ?>">
+                            </div>
+                        <?php }
+                        /** Enterego grouped product */
+                        if (!empty($arResult['GROUPED_PROPS_DATA']) && count($arResult['GROUPED_PRODUCTS']) > 1 &&
+                            (int)$actualItem['PRODUCT']['QUANTITY'] > 0) { ?>
+                            <div class="flex flex-col mb-7 box-offers-auto" data-entity="sku-line-block">
+                                <?php $propsForOffers = EnteregoGroupedProducts::getDataPropOffers();
+                                $productSelect = $arResult['GROUPED_PRODUCTS'][$arResult['ID']]['PROPERTIES'];
+                                foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) {
+                                    if ($keyCODE !== 'USE_DISCOUNT') { ?>
+                                        <div class="flex flex-row overflow-auto mb-5 w-full">
+                                            <?php foreach ($productGrouped as $group) {
+                                                $link = 'javascript:void(0)';
+                                                $prop_value = 'Пустое значение';
+                                                $tasted = $grouped = [];
+                                                $type = $propsForOffers[$keyCODE]['TYPE'] ?? 'text';
+                                                $title = 'Товар';
+                                                $select = 'selected';
+                                                $arrayEl = $productSelect[$keyCODE]['JS_PROP'] ?? [];
+                                                $count = array_diff_assoc($arrayEl, $group);
+                                                if (!empty($count) && (count($count) > 0 || count($arrayEl) !== count($group))) {
+                                                    $select = '';
+                                                }
+
+
+                                                foreach ($group as $name => $prop) {
+                                                    if (empty($prop['VALUE_ENUM'])) {
+                                                        continue;
+                                                    }
+
+                                                    $prop_value = $prop['VALUE_ENUM'] . $propsForOffers[$keyCODE]['PREF'];
+
+                                                    if (count($arResult['GROUPED_PROPS_DATA']) === 1) {
+                                                        $link = $prop['CODE'];
+                                                    }
+
+                                                    if ($type === 'colorWithText') {
+                                                        $tasted[$name] = [
+                                                            'color' => '#' . explode('#',
+                                                                    $prop['VALUE_XML_ID'])[1],
+                                                            'name' => $prop['VALUE_ENUM'],
+                                                        ];
+                                                    } else {
+                                                        $grouped[$name] = [
+                                                            'xml_id' => $prop['VALUE_XML_ID'],
+                                                            'name' => $prop['VALUE_ENUM']
+                                                        ];
+                                                    }
+                                                    $title = $prop['NAME'];
+                                                }
+
+                                                if (!empty($prop_value)) {
+                                                    if ($type === 'text') {
+                                                        if (count($grouped) > 1) { ?>
+                                                            <a href="<?= $link ?>" class="offer-link">
+                                                                <div class="red_button_cart p-10
+                                                                 width-fit-content mb-lg-2 m-md-2 m-1 offer-box
+                                                                 cursor-pointer <?= $select ?>"
+                                                                     title="<?= $offer['NAME'] ?>"
+                                                                     data-active="<?= !empty($select) ? 'true' : 'false' ?>"
+                                                                     data-prop_code="<?= $keyCODE ?>"
+                                                                     data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
+                                                                     data-product_id="<?= '' ?>">
+                                                                    <?php foreach ($grouped as $elemProp) { ?>
+                                                                        <span class="br-100"><?= $elemProp['name'] ?></span>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </a>
+                                                        <?php } else { ?>
+                                                            <a href="<?= $link ?>" class="offer-link <?= $select ?>">
+                                                                <div class="red_button_cart w-fit rounded-full px-5 py-2
+                                                                bg-white border-2 <?= !empty($select)
+                                                                    ? 'border-light-red text-light-red dark:bg-grayButton dark:text-white' :
+                                                                    'border-textDarkLightGray text-dark dark:text-textDarkLightGray dark:bg-darkBox' ?>
+                                                                     min-w-20 m-1 offer-box cursor-pointer font-medium
+                                                                     dark:border-0 dark:font-normal text-sm font-bolder"
+                                                                     title="<?= $offer['NAME'] ?>"
+                                                                     data-active="<?= !empty($select) ? 'true' : 'false' ?>"
+                                                                     data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
+                                                                     data-prop_code="<?= $keyCODE ?>"
+                                                                     data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>">
+                                                                    <?= $prop_value ?>
+                                                                </div>
+                                                            </a>
+                                                        <?php }
+                                                    } elseif ($type === 'color') { ?>
+                                                        <a href="<?= $link ?>" class="offer-link <?= $select ?>">
+                                                            <div title="<?= $title ?>"
+                                                                 data-active="<?= !empty($select) ? 'true' : 'false' ?>"
+                                                                 data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
+                                                                 data-prop_code="<?= $keyCODE ?>"
+                                                                 data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
+                                                                 class="mr-2 offer-box color-hookah br-10 mb-1 <?= $select ?>">
+                                                                <img src="<?= $prop['PREVIEW_PICTURE'] ?>"
+                                                                     class="w-20 h-20 rounded-md dark:border-0 border-2
+                                                                     <?= $select ? 'dark:opacity-50 border-textDarkLightGray'
+                                                                         : 'border-light-red' ?>"
+                                                                     alt="<?= $title ?>"
+                                                                     loading="lazy"/>
+                                                            </div>
+                                                        </a>
+                                                    <?php } elseif ($type === 'colorWithText') {
+                                                        if (!empty($tasted)) { ?>
+                                                            <a href="<?= $link ?>" class="offer-link <?= $select ?>">
+                                                                <div class="red_button_cart taste variation_taste
+                                                                 w-fit p-3 mb-2 mr-1 offer-box cursor-pointer rounded-md flex flex-row
+                                                                    border-2 <?= !empty($select) ? 'border-light-red
+                                                                     dark:border-grayButton dark:border dark:bg-grayButton' :
+                                                                    'border-textDarkLightGray dark:border-0' ?> min-w-20 offer-box
+                                                                    cursor-pointer dark:bg-darkBox"
+                                                                     title="<?= $title ?>"
+                                                                     data-active="<?= !empty($select) ? 'true' : 'false' ?>"
+                                                                     data-prop_code="<?= $keyCODE ?>"
+                                                                     data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>">
+                                                                    <?php foreach ($tasted as $elem_taste) { ?>
+                                                                        <span class="taste px-2.5 mr-1 py-1 text-xs rounded-full"
+                                                                              data-background="<?= $elem_taste['color'] ?>"
+                                                                              style="background-color: <?= $elem_taste['color'] ?>;
+                                                                                      border-color: <?= $elem_taste['color'] ?>;">
+                                                                            <?= $elem_taste['name'] ?>
+                                                                        </span>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </a>
+                                                        <?php }
+                                                    }
+                                                }
+                                            } ?>
+                                        </div>
+                                    <?php }
+                                } ?>
+                            </div>
+                            <input type="hidden"
+                                   value="<?= htmlspecialchars(json_encode($arResult['GROUPED_PRODUCTS'])) ?>"
+                                   id="product_prop_data"/>
+                            <?php /** Enterego grouped product */
+                        } ?>
+                        <?php if ($show_price) {
+                            $arParams['SHOW_MAX_QUANTITY'] = 'N';
+                            if ($arParams['SHOW_MAX_QUANTITY'] !== 'N') {
+                                if ($haveOffers) { ?>
+                                    <div class="mb-3" id="<?= $itemIds['QUANTITY_LIMIT'] ?>"
+                                         style="display: none;">
+                                        <span class="product-item-quantity" data-entity="quantity-limit-value"></span>
+                                    </div>
+                                <?php } else {
+                                    if ($measureRatio && (float)$actualItem['PRODUCT']['QUANTITY'] > 0
+                                        && $actualItem['CHECK_QUANTITY']) { ?>
+                                        <div class="mb-3 text-center"
+                                             id="<?= $itemIds['QUANTITY_LIMIT'] ?>">
                                         <span class="product-item-detail-info-container-title">
                                             <?= $arParams['MESS_SHOW_MAX_QUANTITY'] ?>:</span>
-                                        <span class="product-item-quantity"
-                                              data-entity="quantity-limit-value">
+                                            <span class="product-item-quantity"
+                                                  data-entity="quantity-limit-value">
                                             <?php if ($arParams['SHOW_MAX_QUANTITY'] === 'M') {
                                                 if ((float)$actualItem['PRODUCT']['QUANTITY'] / $measureRatio >= $arParams['RELATIVE_QUANTITY_FACTOR']) {
                                                     echo $arParams['MESS_RELATIVE_QUANTITY_MANY'];
@@ -431,59 +438,62 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                 echo $actualItem['PRODUCT']['QUANTITY'] . ' ' . $actualItem['ITEM_MEASURE']['TITLE'];
                                             } ?>
                                         </span>
-                                    </div>
-                                    <?php
+                                        </div>
+                                        <?php
+                                    }
                                 }
                             }
-                        }
-                    } ?>
-                    <div class="mb-4 flex flex-col dark:text-textDark text-textLight">
-                        <div class="mb-3 d-flex flex-row align-items-center">
-                            <div class="product-item-detail-price-current text-textLight text-3xl mb-2 font-semibold
-                            dark:font-medium dark:text-textDarkLightGray"
-                                 id="<?= $itemIds['PRICE_ID'] ?>">
-                                <?= $specialPrice['PRINT_PRICE'] ?? $price['PRICE_DATA']['PRINT_PRICE']; ?>
-                            </div>
-                            <?php if (isset($specialPrice)) {
-                                $styles = 'price-discount';
-                                $old_sum = (int)$price['PRICE_DATA']['PRICE'] - (int)$specialPrice['PRICE'] ?? 0; ?>
-                                <span class="font-14 ml-3">
+                        } ?>
+                        <div class="mb-4 flex flex-col dark:text-textDark text-textLight">
+                            <div class="mb-3 d-flex flex-row align-items-center">
+                                <div class="product-item-detail-price-current text-3xl mb-2 font-semibold
+                            dark:font-medium text-lightGrayBg dark:text-textDarkLightGray"
+                                     id="<?= $itemIds['PRICE_ID'] ?>">
+                                    <?= $specialPrice['PRINT_PRICE'] ?? $price['PRICE_DATA']['PRINT_PRICE']; ?>
+                                </div>
+                                <?php if (isset($specialPrice)) {
+                                    $styles = 'price-discount';
+                                    $old_sum = (int)$price['PRICE_DATA']['PRICE'] - (int)$specialPrice['PRICE'] ?? 0; ?>
+                                    <span class="font-14 ml-3">
                                     <b class="decoration-color-red mr-2"><?= $price['PRICE_DATA']['PRINT_PRICE']; ?></b>
                                     <b class="sale-percent"> - <?= $old_sum ?> руб.</b>
                                 </span>
-                            <?php } ?>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
-                    <div class="dark:border-darkBox rounded-xl border-2 border-textDarkLightGray">
-                        <div class="new_box mb-3 p-5 dark:bg-darkBox rounded-t-xl bg-textDarkLightGray">
-                            <p class="flex flex-row items-center dark:text-grayIconLights text-dark">
-                                <svg width="45" height="48" class="mr-3 w-fit" viewBox="0 0 39 42" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M36.6667 12.3835L20 3.8418L3.33337 12.3835V29.4668L20 38.0085L36.6667 29.4668V12.3835Z"
-                                          stroke="#BFBFBF" stroke-width="1.5" stroke-linejoin="round"/>
-                                    <path d="M3.33337 12.3828L20 20.9245" stroke="#BFBFBF" stroke-width="1.5"
-                                          stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M20 38.0081V20.9248" stroke="#BFBFBF" stroke-width="1.5"
-                                          stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M36.6667 12.3828L20 20.9245" stroke="#BFBFBF" stroke-width="1.5"
-                                          stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M28.3333 8.1123L11.6666 16.654" stroke="#BFBFBF" stroke-width="1.5"
-                                          stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                <span class="text-sm">
+                    <div class="flex flex-col">
+                        <div class="dark:border-darkBox rounded-xl border-2 border-textDark">
+                            <div class="new_box p-5 dark:bg-darkBox rounded-t-xl bg-textDark">
+                                <p class="flex flex-row items-center dark:text-grayIconLights text-dark">
+                                    <svg width="45" height="48" class="mr-3 w-fit" viewBox="0 0 39 42" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                              d="M36.6667 12.3835L20 3.8418L3.33337 12.3835V29.4668L20 38.0085L36.6667 29.4668V12.3835Z"
+                                              stroke="#BFBFBF" stroke-width="1.5" stroke-linejoin="round"/>
+                                        <path d="M3.33337 12.3828L20 20.9245" stroke="#BFBFBF" stroke-width="1.5"
+                                              stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M20 38.0081V20.9248" stroke="#BFBFBF" stroke-width="1.5"
+                                              stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M36.6667 12.3828L20 20.9245" stroke="#BFBFBF" stroke-width="1.5"
+                                              stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M28.3333 8.1123L11.6666 16.654" stroke="#BFBFBF" stroke-width="1.5"
+                                              stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span class="text-sm font-medium dark:font-light">
                                     Наличие товара, варианты и стоимость доставки будут указаны далее при оформлении
                                     заказа.
                                 </span>
-                            </p>
-                        </div>
-                        <div class="flex flex-row items-center p-5">
-                            <?php if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price) { ?>
-                                <div>
-                                    <div class="mb-lg-3 mb-md-3 mb-4 flex flex-row items-center bx_catalog_item bx_catalog_item_controls"
-                                        <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
-                                         data-entity="quantity-block">
-                                        <div class="product-item-amount-field-contain mr-3 flex flex-row items-center">
+                                </p>
+                            </div>
+                            <div class="flex flex-row items-center p-5 justify-between">
+                                <?php if ($USER->IsAuthorized()) {
+                                    if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price) { ?>
+                                        <div>
+                                            <div class="mb-lg-3 mb-md-3 mb-4 flex flex-row items-center bx_catalog_item bx_catalog_item_controls"
+                                                <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
+                                                 data-entity="quantity-block">
+                                                <div class="product-item-amount-field-contain mr-3 flex flex-row items-center">
                                     <span class="btn-minus no-select minus_icon add2basket basket_prod_detail cursor-pointer h-full"
                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
                                           data-product_id="<?= $arResult['ID']; ?>"
@@ -496,23 +506,23 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                   stroke-linejoin="round"/>
                                         </svg>
                                     </span>
-                                            <div class="product-item-amount-field-block">
-                                                <input class="product-item-amount card_element cat-det
+                                                    <div class="product-item-amount-field-block">
+                                                        <input class="product-item-amount card_element cat-det
                                          dark:bg-grayButton bg-textDarkLightGray cursor-pointer
                                     focus:border-none text-center border-none text-md
                                      shadow-none py-3.5 px-3 mx-2 outline-none rounded-md w-16"
-                                                       id="<?= $itemIds['QUANTITY_ID'] ?>"
-                                                       type="number" value="<?= $priceBasket ?>"
-                                                       data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                       max="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
-                                                       data-product_id="<?= $arResult['ID']; ?>"
-                                                       data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
-                                            </div>
-                                            <span class="btn-plus no-select plus_icon add2basket basket_prod_detail cursor-pointer"
-                                                  data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                                  data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
-                                                  data-product_id="<?= $arResult['ID']; ?>"
-                                                  id="<?= $itemIds['QUANTITY_UP_ID'] ?>">
+                                                               id="<?= $itemIds['QUANTITY_ID'] ?>"
+                                                               type="number" value="<?= $priceBasket ?>"
+                                                               data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                               max="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
+                                                               data-product_id="<?= $arResult['ID']; ?>"
+                                                               data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"/>
+                                                    </div>
+                                                    <span class="btn-plus no-select plus_icon add2basket basket_prod_detail cursor-pointer"
+                                                          data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                          data-max-quantity="<?= $actualItem['PRODUCT']['QUANTITY'] ?>"
+                                                          data-product_id="<?= $arResult['ID']; ?>"
+                                                          id="<?= $itemIds['QUANTITY_UP_ID'] ?>">
                                          <svg width="20" height="20" viewBox="0 0 20 20"
                                               class="fill-light-red dark:fill-white"
                                               xmlns="http://www.w3.org/2000/svg">
@@ -520,86 +530,96 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                             <path d="M10 20C9.39262 20 8.88892 19.4963 8.88892 18.8889V1.11111C8.88892 0.503704 9.39262 0 10 0C10.6074 0 11.1111 0.503704 11.1111 1.11111V18.8889C11.1111 19.4963 10.6074 20 10 20Z"/>
                                         </svg>
                                     </span>
-                                        </div>
-                                        <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
-                                           rel="nofollow"
-                                           class="add2basket basket_prod_detail btn red_button_cart
+                                                </div>
+                                                <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
+                                                   rel="nofollow"
+                                                   class="add2basket basket_prod_detail btn red_button_cart
                                    dark:bg-dark-red bg-light-red py-3 px-4 rounded-5"
-                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                           data-product_id="<?= $arResult['ID']; ?>"
-                                           title="Добавить в корзину">
-                                            <svg width="24" height="28" viewBox="0 0 18 22" fill="none"
-                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M13.6017 18.9561V15.8498M13.6017 15.8498H16.4364M13.6017 15.8498H10.767M13.6017 15.8498V14.1413V12.5881"
-                                                      stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                                <path d="M12.9978 7.09848H14.1597C15.2019 7.09848 16.0701 7.97388 16.1567 9.11199M12.9978 7.09848H4.98235M12.9978 7.09848V6.00055C12.9978 4.83579 12.5756 3.71874 11.8239 2.89513C11.0724 2.07153 10.053 1.60883 8.99007 1.60883C7.92712 1.60883 6.90778 2.07153 6.15618 2.89513C5.4046 3.71874 4.98235 4.83579 4.98235 6.00055V7.09848M12.9978 7.09848V9.51393M9.76502 20.2737H3.15243C1.98009 20.2737 1.05814 19.1756 1.1555 17.8954L1.82345 9.11199C1.91 7.97388 2.7782 7.09848 3.82039 7.09848H4.98235M4.98235 7.09848V9.51393"
-                                                      stroke="white" stroke-width="2" stroke-linecap="round"
-                                                      stroke-linejoin="round"/>
-                                            </svg>
-                                        </a>
-                                        <div id="result_box"></div>
-                                        <div id="popup_mess"></div>
-                                    </div>
-                                    <div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
-                                </div>
-                                <div class="ganerate_price_wrap ml-auto mt-3 mb-0 w-75 font-weight-bold h5"
-                                     <?php if ($priceBasket > 0): ?><?php else: ?>style="display:none;"<?php endif; ?>>
-                                    Итого:
-                                    <div class="inline-block float-right ganerate_price">
-                                        <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
-                                    </div>
-                                </div>
-                            <?php } else { ?>
-                                <div class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center bx_catalog_item"
-                                    <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
-                                     data-entity="quantity-block">
-                                    <div class="d-flex flex-row align-items-center mr-3">
-                                        <div class="product-item-amount-field-contain">
+                                                   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $arResult['ID']; ?>"
+                                                   title="Добавить в корзину">
+                                                    <svg width="24" height="28" viewBox="0 0 18 22" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M13.6017 18.9561V15.8498M13.6017 15.8498H16.4364M13.6017 15.8498H10.767M13.6017 15.8498V14.1413V12.5881"
+                                                              stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                                        <path d="M12.9978 7.09848H14.1597C15.2019 7.09848 16.0701 7.97388 16.1567 9.11199M12.9978 7.09848H4.98235M12.9978 7.09848V6.00055C12.9978 4.83579 12.5756 3.71874 11.8239 2.89513C11.0724 2.07153 10.053 1.60883 8.99007 1.60883C7.92712 1.60883 6.90778 2.07153 6.15618 2.89513C5.4046 3.71874 4.98235 4.83579 4.98235 6.00055V7.09848M12.9978 7.09848V9.51393M9.76502 20.2737H3.15243C1.98009 20.2737 1.05814 19.1756 1.1555 17.8954L1.82345 9.11199C1.91 7.97388 2.7782 7.09848 3.82039 7.09848H4.98235M4.98235 7.09848V9.51393"
+                                                              stroke="white" stroke-width="2" stroke-linecap="round"
+                                                              stroke-linejoin="round"/>
+                                                    </svg>
+                                                </a>
+                                                <div id="result_box"></div>
+                                                <div id="popup_mess"></div>
+                                            </div>
+                                            <div class="alert_quantity" data-id="<?= $arResult['ID'] ?>"></div>
+                                        </div>
+                                        <div class="ganerate_price_wrap mb-0 <?= ($priceBasket > 0) ? 'flex flex-row' : 'hidden' ?>">
+                                            <div class="flex flex-row">
+                                            <span class="text-2xl font-semibold text-dark dark:font-normal
+                                             dark:text-textDarkLightGray mr-4">Итого:</span>
+                                                <div class="text-2xl font-semibold text-dark dark:font-normal
+                                            dark:text-textDarkLightGray ganerate_price">
+                                                    <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } else { ?>
+                                        <div class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center bx_catalog_item"
+                                            <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
+                                             data-entity="quantity-block">
+                                            <div class="d-flex flex-row align-items-center mr-3">
+                                                <div class="product-item-amount-field-contain">
                                                                                             <span class=" no-select minus_icon add2basket basket_prod_detail mr-3"
                                                                                                   style="pointer-events: none;">
                                                                                             </span>
-                                            <div class="product-item-amount-field-block">
-                                                <input class="product-item-amount"
-                                                       id="<?= $itemIds['QUANTITY_ID'] ?>"
-                                                       disabled="disabled" type="number" value="0">
-                                            </div>
-                                            <span class="no-select plus_icon add2basket basket_prod_detail ml-3"
-                                                  style="pointer-events: none;">
+                                                    <div class="product-item-amount-field-block">
+                                                        <input class="product-item-amount"
+                                                               id="<?= $itemIds['QUANTITY_ID'] ?>"
+                                                               disabled="disabled" type="number" value="0">
+                                                    </div>
+                                                    <span class="no-select plus_icon add2basket basket_prod_detail ml-3"
+                                                          style="pointer-events: none;">
                                                                                             </span>
-                                        </div>
-                                        <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
-                                           rel="nofollow"
-                                           class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                                </div>
+                                                <a id="<?= $arResult['BUY_LINK']; ?>" href="javascript:void(0)"
+                                                   rel="nofollow"
+                                                   class="basket_prod_detail detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                                                <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?> detail_disabled"
-                                           data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
-                                           data-product_id="<?= $arResult['ID']; ?>"
-                                           title="Добавить в корзину">Забронировать</a>
-                                    </div>
-                                    <div id="result_box" style="width: 100%;position: absolute;"></div>
-                                    <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                                   data-url="<?= $arResult['DETAIL_PAGE_URL'] ?>"
+                                                   data-product_id="<?= $arResult['ID']; ?>"
+                                                   title="Добавить в корзину">Забронировать</a>
+                                            </div>
+                                            <div id="result_box" style="width: 100%;position: absolute;"></div>
+                                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                                             <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
-                                        <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : '' ?>"
-                                           aria-hidden="true"></i>
-                                    </div>
-                                    <div id="popup_mess"
-                                         class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
-                                         data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
-                                         data-product_id="<?= $arResult['ID']; ?>"></div>
-                                </div>
-                                <div class="mb-4 d-flex justify-content-between align-items-center">
-                                    <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                                <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : '' ?>"
+                                                   aria-hidden="true"></i>
+                                            </div>
+                                            <div id="popup_mess"
+                                                 class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
+                                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
+                                                 data-product_id="<?= $arResult['ID']; ?>"></div>
+                                        </div>
+                                        <div class="mb-4 d-flex justify-content-between align-items-center">
+                                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                                             <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
-                                        Нет в наличии
+                                                Нет в наличии
+                                            </div>
+                                        </div>
+                                    <?php }
+                                } else { ?>
+                                    <div class="text-center text-md font-medium text-lightGrayBg dark:text-textDarkLightGray
+                                    dark:font-normal w-full">
+                                        Для покупки товара вам необходимо
+                                        <a href="/auth/"
+                                           class="text-light-red underline font-semibold dark:text-white">
+                                            Авторизоваться
+                                        </a>
                                     </div>
-                                </div>
-                            <?php } ?>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
-                    <?php
-                    //                                }
-                    ?>
-                    <?php } ?>
-                </div>
+                <?php } ?>
             </div>
         </div>
         <?php if ($haveOffers) {
