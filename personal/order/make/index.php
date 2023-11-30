@@ -141,4 +141,4 @@ $APPLICATION->IncludeComponent(
 		"COMPONENT_TEMPLATE" => "oshisha_sale.order.ajax"
 	),
 	false
-);?><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
+); require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
