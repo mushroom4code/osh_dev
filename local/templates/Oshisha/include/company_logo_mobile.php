@@ -1,1 +1,0 @@
-<img src="<?=SITE_DIR?>/include/logo_mobil.png"  srcset="<?=SITE_DIR?>/include/logo_mobil.png" />

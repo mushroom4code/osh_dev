@@ -19,15 +19,12 @@ if (empty($arResult["ALL_ITEMS"]))
 CUtil::InitJSCore();
 $menuBlockId = "catalog_menu_" . $this->randString(); ?>
 <div class="header_top_panel">
-    <div class="header_logo_mobile">
-        <a href="/">
-            <img src="/local/assets/images/logo.svg" srcset="/local/assets/images/logo.svg"> </a>
-    </div>
     <a class="box_for_menu" data-toggle="collapse" href="#MenuHeader" aria-controls="MenuHeader" aria-expanded="true">
         <div id="icon" class="Icon">
-            <span></span>
-            <span></span>
-            <span></span>
+            <svg width="48" height="37" viewBox="0 0 48 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.68994 34.4987H21.2093M2.68994 2.75122H45.0199H2.68994ZM2.68994 18.625H45.0199H2.68994Z"
+                      stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </div>
     </a>
 </div>
@@ -53,7 +50,7 @@ $menuBlockId = "catalog_menu_" . $this->randString(); ?>
                 if ($arResult["ALL_ITEMS"][$itemID]["LINK"] == '/catalog/diskont/') {
                     continue;
                 } ?>
-                <div class="wrap_block_menu <?= $class ?> openMenuMobile closed" >
+                <div class="wrap_block_menu <?= $class ?> openMenuMobile closed">
                     <a class="link_menu_top <?= $active ?>" href="javascript:void(0)">
                         <span class="text_catalog_link">
                             <?= htmlspecialcharsbx($arResult["ALL_ITEMS"][$itemID]["TEXT"], ENT_COMPAT, false) ?>

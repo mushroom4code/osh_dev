@@ -112,10 +112,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                        class="text-decoration-underline font-14 font-weight-bold color-white"> подробнее</a>.</p>
             </div>
         <?php } ?>
-        <div class="flex flex-row border-0 md:border-b border-white-100 justify-center width-100 dark:bg-dark
+        <div class="flex flex-row border-0 md:border-b border-white-100 md:justify-center justify-between width-100 dark:bg-dark
         bg-lightGrayBg py-3 px-4">
-            <div class="xs:flex hidden">
-                <a href="<?= SITE_DIR ?>">
+            <div class="md:hidden flex">
+                <div class="md:w-40 w-auto md:mr-7 mr-5">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:main.include",
                         "",
@@ -124,23 +124,15 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             "PATH" => SITE_DIR . "include/company_logo_mobile.php"),
                         false
                     ); ?>
-                </a>
+                </div>
             </div>
             <!--            TODO -->
             <div class="right_mobile_top">
                 <div class="search_mobile"></div>
-                <a class="box_for_menu" data-toggle="collapse" href="#MenuHeader" aria-controls="MenuHeader"
-                   aria-expanded="false">
-                    <div id="icon" class="Icon open">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </a>
             </div>
             <!--            TODO -->
-            <div class="xl:container container flex flex-row justify-between items-center">
-                <div class="flex flex-row items-center">
+            <div class="md:container flex flex-row justify-between items-center">
+                <div class="flex-row items-center md:flex hidden">
                     <span class="flex flex-row items-center">
                         <div class="dark:bg-dark-red bg-light-red p-1 w-2 h-2 mr-0.5 rounded-full"></div>
                          <div class="dark:bg-dark-red bg-light-red p-1 w-2 h-2 mr-1.5 rounded-full"></div>
@@ -150,7 +142,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 if (strripos($_SERVER['REQUEST_URI'], '/personal/order/make') !== false) {
                                     $styleNone = 'style="display:none;"';
                                 } ?>
-                        <button type="button" data-toggle="modal" data-target="#placeModal"  <?= $styleNone ?>>
+                                 <button type="button" data-toggle="modal" data-target="#placeModal"  <?= $styleNone ?>>
                             <?php
                             // отключение композитного кеша вне компонента
                             Bitrix\Main\Page\Frame::getInstance()->startDynamicWithID("city-title");
@@ -180,7 +172,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             </span>
                             <?php Bitrix\Main\Page\Frame::getInstance()->finishDynamicWithID("city-title", ""); ?>
                         </button>
-                    </div>
+                            </div>
                         </a>
                     </span>
                     <a href="https://oshisha.net"
@@ -237,97 +229,107 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             />
                         </svg>
                     </div>
+                    <a class="box_for_menu md:hidden block ml-3" data-toggle="collapse" href="#MenuHeader" aria-controls="MenuHeader"
+                       aria-expanded="false">
+                        <div id="icon" class="Icon open">
+                            <svg width="38" height="27" viewBox="0 0 48 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.68994 34.4987H21.2093M2.68994 2.75122H45.0199H2.68994ZM2.68994 18.625H45.0199H2.68994Z"
+                                      stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
         <?php if ($mobile->isMobile()) { ?>
-            <!--            <div class="header_top collapse" id="MenuHeader">-->
-            <!--                <div class="mobile top_menu">-->
-            <!--                    <div>-->
-            <!--                        --><?php //$APPLICATION->IncludeComponent(
-            //                            "bitrix:menu",
-            //                            "oshisha_menu_mobile",
-            //                            array(
-            //                                "ROOT_MENU_TYPE" => "left",
-            //                                "MENU_CACHE_TYPE" => "A",
-            //                                "MENU_CACHE_TIME" => "36000000",
-            //                                "MENU_CACHE_USE_GROUPS" => "Y",
-            //                                "MENU_THEME" => "site",
-            //                                "CACHE_SELECTED_ITEMS" => "N",
-            //                                "MENU_CACHE_GET_VARS" => array(),
-            //                                "MAX_LEVEL" => "3",
-            //                                "CHILD_MENU_TYPE" => "left",
-            //                                "USE_EXT" => "Y",
-            //                                "DELAY" => "N",
-            //                                "ALLOW_MULTI_SELECT" => "N",
-            //                                "COMPONENT_TEMPLATE" => "bootstrap_v4"
-            //                            ),
-            //                            false
-            //                        ); ?>
-            <!--                        <div class="ul_menu ul_menu_2">-->
-            <!--                            <div class="box_top_panel">-->
-            <!--                                <a href="/about/o-nas/" class="link_menu_top">-->
-            <!--                                    <span class="text_catalog_link not_weight">О нас</span>-->
-            <!--                                </a>-->
-            <!--                                --><?php //if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-            <!--                                    <a href="/local/templates/Oshisha/images/presentation.pdf" download-->
-            <!--                                       class="text_header "> <span-->
-            <!--                                                class="text_catalog_link not_weight"> Презентация</span></a>-->
-            <!--                                --><?php //} ?>
-            <!--                                <a href="/about/contacts/" class="link_menu_top">-->
-            <!--                                    <span class="text_catalog_link not_weight">Контакты</span>-->
-            <!--                                </a>-->
-            <!--                                --><?php //if ($USER->IsAuthorized()) { ?>
-            <!--                                    <a href="/about/delivery/" class="link_menu_top ">-->
-            <!--                                        <span class="text_catalog_link not_weight">Доставка и оплата</span>-->
-            <!--                                    </a>-->
-            <!--                                --><?php //} ?>
-            <!---->
-            <!--                                <a href="/about/FAQ/" class="link_menu_top ">-->
-            <!--                                    <span class="text_catalog_link not_weight">FAQ</span>-->
-            <!--                                </a>-->
-            <!--                            </div>-->
-            <!--                            <span class="bx-header-phone-number">-->
-            <!--									--><?php //$APPLICATION->IncludeComponent(
-            //                                        "bitrix:main.include",
-            //                                        "",
-            //                                        array(
-            //                                            "AREA_FILE_SHOW" => "file",
-            //                                            "PATH" => SITE_DIR . "include/telephone.php"
-            //                                        ),
-            //                                        false
-            //                                    ); ?>
-            <!--								</span>-->
-            <!--                            <div class="box_with_contact">-->
-            <!--                                <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>-->
-            <!--                                <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>-->
-            <!---->
-            <!--                                <a href="#" class=" ">-->
-            <!--                                    <div class="place">-->
-            <!--                                        <button type="button" class="place__button" data-toggle="modal"-->
-            <!--                                                data-target="#placeModal">-->
-            <!--                                    <span class="text_catalog_link not_weight">-->
-            <!--                                        --><?php //include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
-            <!--                                    </span>-->
-            <!--                                        </button>-->
-            <!--                                    </div>-->
-            <!--                                </a>-->
-            <!--                            </div>-->
-            <!--                            <a href="/about/feedback_new_site/" class="link_menu_top">-->
-            <!--                                <span class="red_text text_font_13 font-weight-bold ">Написать отзыв</span>-->
-            <!--                            </a>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </div>-->
+                        <div class="header_top overflow-auto" style="display:none;" id="MenuHeader">
+                            <div class="top_menu">
+                                <div>
+                                    <?php $APPLICATION->IncludeComponent(
+                                        "bitrix:menu",
+                                        "oshisha_menu_mobile",
+                                        array(
+                                            "ROOT_MENU_TYPE" => "left",
+                                            "MENU_CACHE_TYPE" => "A",
+                                            "MENU_CACHE_TIME" => "36000000",
+                                            "MENU_CACHE_USE_GROUPS" => "Y",
+                                            "MENU_THEME" => "site",
+                                            "CACHE_SELECTED_ITEMS" => "N",
+                                            "MENU_CACHE_GET_VARS" => array(),
+                                            "MAX_LEVEL" => "3",
+                                            "CHILD_MENU_TYPE" => "left",
+                                            "USE_EXT" => "Y",
+                                            "DELAY" => "N",
+                                            "ALLOW_MULTI_SELECT" => "N",
+                                            "COMPONENT_TEMPLATE" => "bootstrap_v4"
+                                        ),
+                                        false
+                                    ); ?>
+                                    <div class="ul_menu ul_menu_2">
+                                        <div class="box_top_panel">
+                                            <a href="/about/o-nas/" class="link_menu_top">
+                                                <span class="text_catalog_link not_weight">О нас</span>
+                                            </a>
+                                            <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                                                <a href="/local/templates/Oshisha/images/presentation.pdf" download
+                                                   class="text_header "> <span
+                                                            class="text_catalog_link not_weight"> Презентация</span></a>
+                                            <?php } ?>
+                                            <a href="/about/contacts/" class="link_menu_top">
+                                                <span class="text_catalog_link not_weight">Контакты</span>
+                                            </a>
+                                            <?php if ($USER->IsAuthorized()) { ?>
+                                                <a href="/about/delivery/" class="link_menu_top ">
+                                                    <span class="text_catalog_link not_weight">Доставка и оплата</span>
+                                                </a>
+                                            <?php } ?>
+
+                                            <a href="/about/FAQ/" class="link_menu_top ">
+                                                <span class="text_catalog_link not_weight">FAQ</span>
+                                            </a>
+                                        </div>
+                                        <span class="bx-header-phone-number">
+            									<?php $APPLICATION->IncludeComponent(
+                                                    "bitrix:main.include",
+                                                    "",
+                                                    array(
+                                                        "AREA_FILE_SHOW" => "file",
+                                                        "PATH" => SITE_DIR . "include/telephone.php"
+                                                    ),
+                                                    false
+                                                ); ?>
+            								</span>
+                                        <div class="box_with_contact">
+                                            <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                                            <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+
+                                            <a href="#" class=" ">
+                                                <div class="place">
+                                                    <button type="button" class="place__button" data-toggle="modal"
+                                                            data-target="#placeModal">
+                                                <span class="text_catalog_link not_weight">
+                                                    <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
+                                                </span>
+                                                    </button>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <a href="/about/feedback_new_site/" class="link_menu_top">
+                                            <span class="red_text text_font_13 font-weight-bold ">Написать отзыв</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
         <?php }
         if (strripos($APPLICATION->GetCurPage(), '/personal/') === false ||
             strripos($APPLICATION->GetCurPage(), '/personal/') !== false && !$mobile->isMobile()): ?>
-            <div class="flex xs:hidden flex-col justify-center width-100 md:py-5 py-3 items-center flex-wrap">
+            <div class="flex md:relative fixed md:bottom-auto bottom-0 flex-col md:bg-transparent bg-white md:dark:bg-transparent
+            dark:bg-darkBox md:shadow-none shadow-xl shadow-t justify-center md:w-auto w-full md:py-5 py-3 items-center flex-wrap">
                 <!--        header menu search/login/basket/like     -->
-                <div class="xl:container container md:px-0 px-4 flex flex-row justify-between items-center md:mb-4 mb-2">
+                <div class="xl:container container md:px-0 px-4 flex flex-row justify-between items-center md:mb-4 mb-0">
                     <div class="flex flex-row">
-                        <div class="md:w-40 w-auto md:mr-7 mr-5">
+                        <div class="md:w-40 w-auto md:mr-7 mr-5 md:block hidden">
                             <a href="<?= SITE_DIR ?>">
                                 <svg height="35" viewBox="0 0 255 55" class="w-28 md:w-40" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">

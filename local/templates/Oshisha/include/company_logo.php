@@ -1,1 +1,0 @@
-<img src="/local/templates/Oshisha/images/logo/osh.svg"  srcset="/local/templates/Oshisha/images/logo/osh.svg" />

@@ -220,7 +220,7 @@ $(document).ready(function () {
     $('.Icon').on('click', function () {
         if ($('.header_top').hasClass('show')) {
             $('header').removeAttr('style');
-            $('.Icon').addClass('open');
+            $('.Icon').show();
             $('body').css('overflow', 'initial');
         } else {
             $('body').css('overflow', 'hidden');
