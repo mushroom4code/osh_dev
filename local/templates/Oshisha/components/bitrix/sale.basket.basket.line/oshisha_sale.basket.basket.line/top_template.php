@@ -102,14 +102,6 @@ while ($arItems = $cntBasketItems->Fetch()) {
                     </div>
                     <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs md:mt-1 mt-0 md:block hidden">Профиль</span>
                 </a>
-                <?php $APPLICATION->IncludeComponent(
-                    "ctweb:sms.authorize",
-                    "profile",
-                    array(
-                        "ALLOW_MULTIPLE_USERS" => "Y",
-                        "PROFILE_AUTH" => "N"
-                    )
-                ); ?>
             <?php endif ?>
         </div>
     <?php endif ?>

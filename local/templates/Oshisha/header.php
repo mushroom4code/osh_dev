@@ -452,6 +452,14 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                 <?php } ?>
             </div>
         <?php endif; ?>
+        <?php $APPLICATION->IncludeComponent(
+            "ctweb:sms.authorize",
+            "profile",
+            array(
+                "ALLOW_MULTIPLE_USERS" => "Y",
+                "PROFILE_AUTH" => "N"
+            )
+        ); ?>
     </header>
 
     <div class="section_wrapper min-h-550 flex flex-col items-center">
