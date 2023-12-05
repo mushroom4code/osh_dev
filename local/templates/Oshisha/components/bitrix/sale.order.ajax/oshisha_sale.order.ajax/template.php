@@ -662,7 +662,6 @@ if ($request->get('ORDER_ID') <> '') {
             }
         }
         <?php }?>
-        console.log(BX.Sale.OrderAjaxComponent);
         // END Enterego
         BX.message(<?=CUtil::PhpToJSObject($messages)?>);
         BX.Sale.OrderAjaxComponent.init({

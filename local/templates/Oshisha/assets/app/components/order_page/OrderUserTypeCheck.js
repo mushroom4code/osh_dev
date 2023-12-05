@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 
 function getPersonTypeSortedArray(objPersonType) {
     var personTypes = [], k;
@@ -33,7 +33,7 @@ class OrderUserTypeCheck extends React.Component {
             options = [], delimiter = false, resultTypeCheckJsx = [];
         if (personTypesCount > 1) {
             resultTypeCheckJsx.push(<React.Fragment key={'person_type_group_initial'}>
-                <label className="bx-soa-custom-label pb-[2px] relative text-black font-semibold text-sm" key={'person_type_group_label'}
+                <label className="bx-soa-custom-label pb-[2px] relative text-black dark:text-white font-semibold text-sm" key={'person_type_group_label'}
                        dangerouslySetInnerHTML={{__html: this.state.params.MESS_PERSON_TYPE}}>
                 </label>
                 <br key={'person_type_br_initial'}/>
@@ -71,8 +71,10 @@ class OrderUserTypeCheck extends React.Component {
 
                     resultTypeCheckJsx.push(<div className="radio-inline" key={'person_type_div_'+currentType.ID}>
                         <label onChange={BX.proxy(BX.Sale.OrderAjaxComponent.sendRequest, BX.Sale.OrderAjaxComponent)}>
-                            <input className="form-check-input focus:ring-transparent focus:shadow-none focus:outline-none" type="radio" name='PERSON_TYPE'
-                                   defaultChecked={currentType.CHECKED === 'Y'} value={currentType.ID}/>
+                            <input className="form-check-input ring-0 focus:ring-0 focus:ring-transparent
+                                   focus:ring-offset-transparent focus:shadow-none focus:outline-none" type="radio"
+                                   name='PERSON_TYPE' defaultChecked={currentType.CHECKED === 'Y'}
+                                   value={currentType.ID}/>
                             {BX.util.htmlspecialchars(currentType.NAME)}
                         </label>
                     </div>)

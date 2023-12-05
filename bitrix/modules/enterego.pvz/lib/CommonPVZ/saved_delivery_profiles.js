@@ -2,11 +2,14 @@ BX.namespace('BX.SavedDeliveryProfiles');
 
 BX.SavedDeliveryProfiles = {
     drawSavedProfiles: function(commonPvzObject) {
-        commonPvzObject.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator'}, text: 'Или'})
+        commonPvzObject.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator dark:text-white'}, text: 'Или'})
         commonPvzObject.checkout.delivery.recentWrap = {}
-        commonPvzObject.checkout.delivery.recentWrap.rootEl = BX.create('div', {attrs: {className: 'recent-deliveries-wrap'}})
-        commonPvzObject.checkout.delivery.recentWrap.title = BX.create('div', {attrs: {className: 'recent-deliveries-title'},
-            html: '<span class="recent-title-accent">Выберите настройки</span> доставки из прошлых заказов'})
+        commonPvzObject.checkout.delivery.recentWrap.rootEl = BX.create('div',
+            {attrs: {className: 'recent-deliveries-wrap dark:bg-darkBox'}}
+        )
+        commonPvzObject.checkout.delivery.recentWrap.title = BX.create('div',
+            {attrs: {className: 'recent-deliveries-title dark:text-white'},
+            html: 'Выберите настройки доставки из прошлых заказов'})
 
         BX.insertAfter(commonPvzObject.checkout.delivery.separator, commonPvzObject.checkout.delivery.variants.rootEl)
         BX.insertAfter(commonPvzObject.checkout.delivery.recentWrap.rootEl, commonPvzObject.checkout.delivery.separator)
@@ -19,7 +22,7 @@ BX.SavedDeliveryProfiles = {
                     tag: 'div',
                     props: {
                         id: element['ID'],
-                        className: 'recent-profile'
+                        className: 'recent-profile bg-white dark:bg-grayButton dark:text-white'
                     },
                     events: {click: () => this.applySavedProfile(element)},
                     children: [

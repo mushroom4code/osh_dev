@@ -4133,7 +4133,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 return;
 
             var paySystemItemsContainer = BX.create('DIV', {props: {className: 'bx-soa-pp-item-container order-1'}}),
-                paySystemItemsContainerRow = BX.create('DIV', {props: {className: 'row flex flex-wrap space-x-6'}}),
+                paySystemItemsContainerRow = BX.create('DIV', {props: {className: 'row flex flex-wrap gap-4'}}),
                 paySystemItemNode, i;
 
             for (i = 0; i < this.paySystemPagination.currentPage.length; i++) {
@@ -4170,18 +4170,20 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     BX.create('DIV', {
                         props: {className: 'bx-soa-pp-company-title text-base w-full'},
                         children: [BX.create('P', {
-                            props: {className: 'bx-soa-pp-company-title text-light-red font-medium mt-2 mb-2.5'},
+                            props: {className: 'bx-soa-pp-company-title text-light-red font-medium mt-2 mb-2.5' +
+                                    ' dark:text-white'},
                             text: item.NAME
                         }), BX.create('DIV', {
-                            props: {className: 'bx-soa-pp-company-smalltitle text-stone-600 text-sm'},
+                            props: {className: 'bx-soa-pp-company-smalltitle text-stone-600 text-sm' +
+                                    ' dark:text-gray-300'},
                             text: item.DESCRIPTION
                         })]
                     }),
                 ]
             });
             itemNode = BX.create('DIV', {
-                props: {className: 'bx-soa-pp-company relative mt-5 w-full bg-textDark rounded-[10px] flex flex-auto' +
-                        'basis-1/2 max-w-[48.2%] min-h-[170px]'},
+                props: {className: 'bx-soa-pp-company relative mt-5 w-full bg-textDark rounded-[10px] flex flex-1' +
+                        ' min-h-[170px] dark:bg-darkBox dark:border-grey-line-order'},
                 children: [label],
                 events: {
                     click: BX.proxy(this.selectPaySystem, this)
@@ -4718,7 +4720,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             if (this.params.SHOW_DELIVERY_LIST_NAMES == 'Y') {
                 title = BX.create('DIV', {
-                    props: {className: 'bx-soa-pp-company-smalltitle text-black text-bold'},
+                    props: {className: 'bx-soa-pp-company-smalltitle text-black text-bold dark:text-gray-300'},
                     text: this.params.SHOW_DELIVERY_PARENT_NAMES != 'N' ? item.NAME : item.OWN_NAME
                 });
             }
@@ -4729,8 +4731,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             label = BX.create('DIV', {
                 props: {
-                    className: 'bx-soa-pp-company-graf-container box_with_delivery mb-3 border-[1px] border-solid' +
-                        ' border-grey-line-order cursor-pointer p-8 flex items-center w-full rounded-[10px]'
+                    className: 'bx-soa-pp-company-graf-container box_with_delivery mb-3 border-grey-line-order' +
+                        ' cursor-pointer p-8 flex items-center w-full border-[1px] rounded-[10px] dark:border-darkBox' +
+                        ' dark:text-gray-300 dark:bg-darkBox'
                         + (item.CALCULATE_ERRORS || deliveryCached && deliveryCached.CALCULATE_ERRORS
                             ? ' bx-bd-waring' : '')
                 },

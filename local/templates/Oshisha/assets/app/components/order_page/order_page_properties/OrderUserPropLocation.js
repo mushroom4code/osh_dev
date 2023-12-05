@@ -1,11 +1,7 @@
 import React, {useEffect, useState} from "react";
 
 function OrderUserPropLocation({property, locations, disabled, are_locations_prepared}) {
-    var preparedLocations, cleanLocations, locationsTemplate, a;
-    // const [preparedLocations, setPreparedLocations] = useState([]);
-    // const [cleanLocations, setCleanLocations] = useState([]);
-    // const [locationsTemplate, setLocationsTemplate] = useState('');
-
+    var preparedLocations, cleanLocations, locationsTemplate;
     function prepareLocations(locations) {
         var temporaryLocations, i, k, output, allTemporaryLocations = [], allCleanLocations = [];
 
@@ -15,7 +11,6 @@ function OrderUserPropLocation({property, locations, disabled, are_locations_pre
                     continue;
 
                 locationsTemplate = locations[i].template || '';
-                // setLocationsTemplate(locations[i].template || '');
                 temporaryLocations = [];
                 output = locations[i].output;
                 if (output.clean) {
@@ -38,8 +33,6 @@ function OrderUserPropLocation({property, locations, disabled, are_locations_pre
             }
             cleanLocations = allCleanLocations;
             preparedLocations = allTemporaryLocations
-            // setCleanLocations(allCleanLocations);
-            // setPreparedLocations(allTemporaryLocations);
         }
     }
 

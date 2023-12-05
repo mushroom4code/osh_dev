@@ -4,7 +4,9 @@ function OrderUserPropString({property, disabled}) {
     const [propertySettings, setPropertySettings] = useState(property.getSettings());
 
     return (<div className="soa-property-container">
-        <input type="text" className="w-full text-sm border-stone-300 rounded-lg" size={propertySettings['SIZE']}
+        <input type="text" className="w-full text-sm cursor-text border-grey-line-order ring:grey-line-order dark:border-darkBox rounded-lg
+               dark:bg-darkBox"
+               size={propertySettings['SIZE']}
                name={'ORDER_RPOP_'+propertySettings['ID']} placeholder={propertySettings['DESCRIPTION']}
                data-name={propertySettings['CODE']} autoComplete={propertySettings['IS_EMAIL'] === 'Y'
                    ? 'email'

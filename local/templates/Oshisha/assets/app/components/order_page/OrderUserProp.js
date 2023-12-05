@@ -33,7 +33,6 @@ function OrderUserProp({property, locations, disabled, result, are_locations_pre
 
     let textLabel = BX.util.htmlspecialchars(property.getName()),
         labelFor = 'soa-property-' + property.getId();
-    // propsItemNode.setAttribute('data-property-id-row', property.getId());
 
     const renderProperty = () => {
         switch (propertyType) {
@@ -56,7 +55,7 @@ function OrderUserProp({property, locations, disabled, result, are_locations_pre
     }
 
     return(<div className={classNames} data-property-id-row={property.getId()}>
-        <label className="bx-soa-custom-label pb-[2px] relative text-black font-semibold text-sm" htmlFor={labelFor}>
+        <label className="bx-soa-custom-label pb-[2px] relative text-black dark:text-white font-semibold text-sm" htmlFor={labelFor}>
             {textLabel}
         </label>
         {renderProperty()}
