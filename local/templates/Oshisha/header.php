@@ -229,10 +229,12 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             />
                         </svg>
                     </div>
-                    <a class="box_for_menu md:hidden block ml-3" data-toggle="collapse" href="#MenuHeader" aria-controls="MenuHeader"
+                    <a class="box_for_menu md:hidden block ml-3" data-toggle="collapse" href="#MenuHeader"
+                       aria-controls="MenuHeader"
                        aria-expanded="false">
                         <div id="icon" class="Icon open">
-                            <svg width="38" height="27" viewBox="0 0 48 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="38" height="27" viewBox="0 0 48 37" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2.68994 34.4987H21.2093M2.68994 2.75122H45.0199H2.68994ZM2.68994 18.625H45.0199H2.68994Z"
                                       stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -242,53 +244,53 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             </div>
         </div>
         <?php if ($mobile->isMobile()) { ?>
-                        <div class="header_top overflow-auto" style="display:none;" id="MenuHeader">
-                            <div class="top_menu">
-                                <div>
-                                    <?php $APPLICATION->IncludeComponent(
-                                        "bitrix:menu",
-                                        "oshisha_menu_mobile",
-                                        array(
-                                            "ROOT_MENU_TYPE" => "left",
-                                            "MENU_CACHE_TYPE" => "A",
-                                            "MENU_CACHE_TIME" => "36000000",
-                                            "MENU_CACHE_USE_GROUPS" => "Y",
-                                            "MENU_THEME" => "site",
-                                            "CACHE_SELECTED_ITEMS" => "N",
-                                            "MENU_CACHE_GET_VARS" => array(),
-                                            "MAX_LEVEL" => "3",
-                                            "CHILD_MENU_TYPE" => "left",
-                                            "USE_EXT" => "Y",
-                                            "DELAY" => "N",
-                                            "ALLOW_MULTI_SELECT" => "N",
-                                            "COMPONENT_TEMPLATE" => "bootstrap_v4"
-                                        ),
-                                        false
-                                    ); ?>
-                                    <div class="ul_menu ul_menu_2">
-                                        <div class="box_top_panel">
-                                            <a href="/about/o-nas/" class="link_menu_top">
-                                                <span class="text_catalog_link not_weight">О нас</span>
-                                            </a>
-                                            <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                                                <a href="/local/templates/Oshisha/images/presentation.pdf" download
-                                                   class="text_header "> <span
-                                                            class="text_catalog_link not_weight"> Презентация</span></a>
-                                            <?php } ?>
-                                            <a href="/about/contacts/" class="link_menu_top">
-                                                <span class="text_catalog_link not_weight">Контакты</span>
-                                            </a>
-                                            <?php if ($USER->IsAuthorized()) { ?>
-                                                <a href="/about/delivery/" class="link_menu_top ">
-                                                    <span class="text_catalog_link not_weight">Доставка и оплата</span>
-                                                </a>
-                                            <?php } ?>
+            <div class="header_top overflow-auto" style="display:none;" id="MenuHeader">
+                <div class="top_menu">
+                    <div>
+                        <?php $APPLICATION->IncludeComponent(
+                            "bitrix:menu",
+                            "oshisha_menu_mobile",
+                            array(
+                                "ROOT_MENU_TYPE" => "left",
+                                "MENU_CACHE_TYPE" => "A",
+                                "MENU_CACHE_TIME" => "36000000",
+                                "MENU_CACHE_USE_GROUPS" => "Y",
+                                "MENU_THEME" => "site",
+                                "CACHE_SELECTED_ITEMS" => "N",
+                                "MENU_CACHE_GET_VARS" => array(),
+                                "MAX_LEVEL" => "3",
+                                "CHILD_MENU_TYPE" => "left",
+                                "USE_EXT" => "Y",
+                                "DELAY" => "N",
+                                "ALLOW_MULTI_SELECT" => "N",
+                                "COMPONENT_TEMPLATE" => "bootstrap_v4"
+                            ),
+                            false
+                        ); ?>
+                        <div class="ul_menu ul_menu_2">
+                            <div class="box_top_panel">
+                                <a href="/about/o-nas/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight">О нас</span>
+                                </a>
+                                <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
+                                    <a href="/local/templates/Oshisha/images/presentation.pdf" download
+                                       class="text_header "> <span
+                                                class="text_catalog_link not_weight"> Презентация</span></a>
+                                <?php } ?>
+                                <a href="/about/contacts/" class="link_menu_top">
+                                    <span class="text_catalog_link not_weight">Контакты</span>
+                                </a>
+                                <?php if ($USER->IsAuthorized()) { ?>
+                                    <a href="/about/delivery/" class="link_menu_top ">
+                                        <span class="text_catalog_link not_weight">Доставка и оплата</span>
+                                    </a>
+                                <?php } ?>
 
-                                            <a href="/about/FAQ/" class="link_menu_top ">
-                                                <span class="text_catalog_link not_weight">FAQ</span>
-                                            </a>
-                                        </div>
-                                        <span class="bx-header-phone-number">
+                                <a href="/about/FAQ/" class="link_menu_top ">
+                                    <span class="text_catalog_link not_weight">FAQ</span>
+                                </a>
+                            </div>
+                            <span class="bx-header-phone-number">
             									<?php $APPLICATION->IncludeComponent(
                                                     "bitrix:main.include",
                                                     "",
@@ -299,28 +301,28 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                                     false
                                                 ); ?>
             								</span>
-                                        <div class="box_with_contact">
-                                            <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                                            <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                            <div class="box_with_contact">
+                                <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                                <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
 
-                                            <a href="#" class=" ">
-                                                <div class="place">
-                                                    <button type="button" class="place__button" data-toggle="modal"
-                                                            data-target="#placeModal">
+                                <a href="#" class=" ">
+                                    <div class="place">
+                                        <button type="button" class="place__button" data-toggle="modal"
+                                                data-target="#placeModal">
                                                 <span class="text_catalog_link not_weight">
                                                     <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
                                                 </span>
-                                                    </button>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <a href="/about/feedback_new_site/" class="link_menu_top">
-                                            <span class="red_text text_font_13 font-weight-bold ">Написать отзыв</span>
-                                        </a>
+                                        </button>
                                     </div>
-                                </div>
+                                </a>
                             </div>
+                            <a href="/about/feedback_new_site/" class="link_menu_top">
+                                <span class="red_text text_font_13 font-weight-bold ">Написать отзыв</span>
+                            </a>
                         </div>
+                    </div>
+                </div>
+            </div>
         <?php }
         if (strripos($APPLICATION->GetCurPage(), '/personal/') === false ||
             strripos($APPLICATION->GetCurPage(), '/personal/') !== false && !$mobile->isMobile()): ?>
@@ -448,6 +450,6 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     </header>
 
     <div class="section_wrapper min-h-550 flex flex-col items-center">
-        <div class="container md:mb-8 mb-0 px-4 md:px-0">
+        <div class="container md:mb-8 mb-0 <?= strripos($APPLICATION->GetCurPage(), '/personal/') === false ? 'px-4 md:px-0' : false ?>">
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
             <div class="bx-content <?= STATIC_P ?>">
