@@ -74,6 +74,7 @@ BX.OrderPageComponents = {
         if (!this.OrderUserPropsRef.current) {
             this.OrderUserPropsRoot.render(
                 <OrderUserProps
+                    ref={this.OrderUserPropsRef}
                     result={this.result}
                     locations={this.locations}
                     are_locations_prepared={areLocationsPrepared}

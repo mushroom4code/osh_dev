@@ -139,9 +139,9 @@ function OrderUserPropLocation({property, locations, disabled, are_locations_pre
                     </div>
                 )
             }
-            // useEffect(() => {
-            //         BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
-            // })
+            useEffect(() => {
+                    BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
+            })
             return (<div className="soa-property-container">
                 {locationsJsx}
             </div>);
