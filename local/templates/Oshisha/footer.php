@@ -38,9 +38,20 @@ $option = $option_site; ?>
                        href="mailto:info@oshisha.net">info@oshisha.net </a>
                 </div>
             </div>
-            <div class="columns-3 flex flex-col dark:text-textDarkLightGray mb-7">
-                <span class="text-sm font-medium dark:text-textDarkLightGray js__collapse-list mb-3">Каталог</span>
-                <ul class="text-sm font-light">
+            <div class="columns-3 flex flex-col dark:text-textDarkLightGray md:mb-7 mb-4">
+                <p class="md:text-sm text-xl font-medium dark:text-textDarkLightGray js__collapse-list mb-3
+                 flex flex-row justify-between"
+                   onclick="()=>{this.closest('div').querySelector('ul').classList.toggle('hidden')}">Каталог
+                    <span class="md:hidden block">
+                        <svg width="30" height="28" viewBox="0 0 44 42" fill="none" xmlns="http://www.w3.org/2000/svg"
+                             class="stroke-white">
+                            <path d="M2.88664 11.9731L40.4575 2.04377C41.3691 1.80289 42.2088 2.59561 41.9536 3.45591L31.4337 38.9179C31.1264 39.9538 29.6128 40.055 29.154 39.0705L21.2685 22.155C21.1464 21.8926 20.9242 21.6832 20.6463 21.5677L2.72509 14.125C1.68195 13.6918 1.78923 12.2632 2.88664 11.9731Z"
+                                  stroke-width="3.25" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                </p>
+                <ul class="text-sm font-light md:block hidden md:p-0 p-4 rounded-lg md:bg-transparent
+                md:dark:bg-transparent bg-menuFooter dark:bg-[#353535]">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "bottom_menu",
@@ -60,9 +71,20 @@ $option = $option_site; ?>
                     ); ?>
                 </ul>
             </div>
-            <div class="columns-3 flex flex-col dark:text-textDarkLightGray mb-7">
-                <span class="text-sm font-semibold js__collapse-list mb-3">Покупателям</span>
-                <ul class="text-sm font-light">
+            <div class="columns-3 flex flex-col dark:text-textDarkLightGray md:mb-7 mb-4">
+                <p class="md:text-sm text-xl font-medium dark:text-textDarkLightGray js__collapse-list mb-3
+                 flex flex-row justify-between"
+                   onclick="()=>{ this.closest('div').querySelector('ul').classList.toggle('hidden') }">Покупателям
+                    <span class="md:hidden block">
+                        <svg width="30" height="28" viewBox="0 0 44 42" fill="none" xmlns="http://www.w3.org/2000/svg"
+                             class="stroke-white">
+                            <path d="M2.88664 11.9731L40.4575 2.04377C41.3691 1.80289 42.2088 2.59561 41.9536 3.45591L31.4337 38.9179C31.1264 39.9538 29.6128 40.055 29.154 39.0705L21.2685 22.155C21.1464 21.8926 20.9242 21.6832 20.6463 21.5677L2.72509 14.125C1.68195 13.6918 1.78923 12.2632 2.88664 11.9731Z"
+                                  stroke-width="3.25" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                </p>
+                <ul class="text-sm font-light md:block hidden md:p-0 p-4 rounded-lg md:bg-transparent
+                md:dark:bg-transparent bg-menuFooter dark:bg-[#353535]">
                     <li class="mb-2">
                         <a class="hover:text-hover-red" href="/about/contacts/">Контакты</a>
                     </li>
@@ -88,9 +110,20 @@ $option = $option_site; ?>
                     </li>
                 </ul>
             </div>
-            <div class="columns-3 flex flex-col dark:text-textDarkLightGray mb-7">
-                <span class="text-sm font-semibold js__collapse-list mb-3">О компании</span>
-                <ul class="text-sm font-light">
+            <div class="columns-3 flex flex-col dark:text-textDarkLightGray md:mb-7 mb-4">
+                <p class="md:text-sm text-xl font-medium dark:text-textDarkLightGray js__collapse-list mb-3
+                 flex flex-row justify-between"
+                   onclick="()=>{ this.closest('div').querySelector('ul').classList.toggle('hidden') }">О компании
+                    <span class="md:hidden block">
+                        <svg width="30" height="28" viewBox="0 0 44 42" fill="none" xmlns="http://www.w3.org/2000/svg"
+                             class="stroke-white">
+                            <path d="M2.88664 11.9731L40.4575 2.04377C41.3691 1.80289 42.2088 2.59561 41.9536 3.45591L31.4337 38.9179C31.1264 39.9538 29.6128 40.055 29.154 39.0705L21.2685 22.155C21.1464 21.8926 20.9242 21.6832 20.6463 21.5677L2.72509 14.125C1.68195 13.6918 1.78923 12.2632 2.88664 11.9731Z"
+                                  stroke-width="3.25" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                </p>
+                <ul class="text-sm font-light md:block hidden md:p-0 p-4 rounded-lg md:bg-transparent
+                md:dark:bg-transparent bg-menuFooter dark:bg-[#353535]">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "bottom_menu",
@@ -113,20 +146,21 @@ $option = $option_site; ?>
                         <a href="/about/vacancy/" class="col-menu-link hover:text-hover-red">Вакансии</a>
                     </li>
                 </ul>
-                <div class="mt-5">
-                    <div class="text-sm font-semibold js__collapse-list mb-3">Социальные сети</div>
-                    <nav class="flex flex-row">
-                        <a href="<?= $option->TG; ?>" target="_blank">
+                <div class="md:mt-5 mt-3">
+                    <div class="md:text-sm text-xl font-medium mb-4">Социальные сети</div>
+                    <nav class="flex flex-row w-full">
+                        <a href="<?= $option->TG; ?>" target="_blank" class="mr-4">
                             <img class="tg" src="<?= SITE_TEMPLATE_PATH . '/images/tg.svg' ?>">
                         </a>
-                        <a href="<?= 'https://api.whatsapp.com/send?phone=' . $option->PHONE_WTS ?>" target="_blank">
+                        <a href="<?= 'https://api.whatsapp.com/send?phone=' . $option->PHONE_WTS ?>" target="_blank"
+                           class="mr-4">
                             <img class="ws" src="<?= SITE_TEMPLATE_PATH . '/images/ws.svg' ?>">
                         </a>
 
-                        <a href="<?= $option->VK_LINK; ?>" target="_blank">
+                        <a href="<?= $option->VK_LINK; ?>" target="_blank" class="mr-4">
                             <img class="vk" src="<?= SITE_TEMPLATE_PATH . '/images/vk.svg' ?>">
                         </a>
-                        <a href="<?= $option->DZEN; ?>" target="_blank">
+                        <a href="<?= $option->DZEN; ?>" target="_blank" class="mr-4">
                             <img class="dzen" src="<?= SITE_TEMPLATE_PATH . '/images/dzen.svg' ?>">
                         </a>
                     </nav>

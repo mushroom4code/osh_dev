@@ -123,9 +123,9 @@ while ($arItems = $cntBasketItems->Fetch()) {
     <div class="box_with_basket_login mr-5 w-max">
         <a href="/personal/subscribe/" id="personal_subscribe" class="link_lk flex-col flex items-center">
             <svg width="26" height="25" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg"
-                 class="stroke-black stroke-2 dark:stroke-white">
+                 class="stroke-black dark:stroke-white">
                 <path d="M13.1765 19.9412L5.05882 24L7.08823 15.8824L1 9.11765L9.79412 8.44118L13.1765 1M13.1765 1L16.5588 8.44118L25.3529 9.11765L19.2647 15.8824L21.2941 24L13.1765 19.9412"
-                      stroke-linecap="round" stroke-linejoin="round"/>
+                      stroke-linecap="round" stroke-width="1.5" stroke-linejoin="round"/>
             </svg>
             <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs mt-1">Избранное</span>
         </a>
@@ -134,21 +134,19 @@ while ($arItems = $cntBasketItems->Fetch()) {
         <a class="link_header" href="<?= $arParams['PATH_TO_BASKET'] ?>">
             <div class="basket_top relative flex-col flex items-center">
                 <div>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         class="stroke-light-red dark:stroke-white stroke-2"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16.6768 7.45443H18.2401C19.6423 7.45443 20.8104 8.52925 20.9269 9.92661L21.8256 20.7109C21.9566 22.2827 20.7162 23.6309 19.1388 23.6309H3.43039C1.85308 23.6309 0.612641 22.2827 0.74363 20.7109L1.64233 9.92661C1.75877 8.52925 2.92689 7.45443 4.32909 7.45443H5.89245M16.6768 7.45443H5.89245M16.6768 7.45443V6.10639C16.6768 4.6763 16.1087 3.30479 15.0974 2.29356C14.0862 1.28234 12.7147 0.714233 11.2846 0.714233C9.85447 0.714233 8.48301 1.28234 7.47177 2.29356C6.46056 3.30479 5.89245 4.6763 5.89245 6.10639V7.45443M16.6768 7.45443V12.8466M5.89245 7.45443V12.8466"
-                              stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg width="24" height="25" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg"
+                         class="stroke-light-red dark:stroke-white">
+                        <path d="M12.3402 6.06905H13.4033C14.3568 6.06905 15.1511 6.79993 15.2303 7.75013L15.8414 15.0835C15.9305 16.1523 15.087 17.0691 14.0144 17.0691H3.33267C2.26009 17.0691 1.41659 16.1523 1.50567 15.0835L2.11678 7.75013C2.19596 6.79993 2.99028 6.06905 3.94378 6.06905H5.00686M12.3402 6.06905H5.00686M12.3402 6.06905V5.15238C12.3402 4.17992 11.9539 3.24729 11.2662 2.55966C10.5786 1.87203 9.64602 1.48572 8.67353 1.48572C7.70104 1.48572 6.76844 1.87203 6.0808 2.55966C5.39318 3.24729 5.00686 4.17992 5.00686 5.15238V6.06905M12.3402 6.06905V9.73572M5.00686 6.06905V9.73572"
+                              stroke-width="1.5"  stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <?php if (!empty($arBasket['QUANTITY']) && $arBasket['QUANTITY'] !== 0) { ?>
                         <span class="spanBasketTop absolute text-white top-0 right-0 rounded-full px-1 py-0.5
-                         bg-light-red text-10 font-medium" style="">
-                        <?= $arBasket['QUANTITY'] ?>
-                    </span>
+                            bg-light-red text-10 font-medium" style="">
+                            <?= $arBasket['QUANTITY'] ?>
+                        </span>
                     <?php } ?>
                 </div>
                 <?php if (!empty($arBasket['QUANTITY']) && $arBasket['QUANTITY'] !== 0) { ?>
-
                     <span class="text-textLight dark:text-textDarkLightGray font-semibold text-xs mt-1 price_basket_top">
                             <?= $arBasket['SUM_PRICE'] ?> ₽</span>
                 <?php } else { ?>

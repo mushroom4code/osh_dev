@@ -374,11 +374,11 @@ $(document).ready(function () {
                             .append('<div class="close-count-alert js__close-count-alert">' +
                                 '<span class="absolute -right-2 -top-2 cursor-pointer" ' +
                                 'onclick="$(this).closest(\'div.alert_quantity\').toggleClass(\'hidden\')">' +
-                            '<svg width="25" height="25" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-                            '<path opacity="0.7" d="M55 30C55 43.807 43.807 55 30 55C16.1929 55 5 43.807 5 30C5 16.1929 16.1929 5 30 5C43.807 5 55 16.1929 55 30Z" fill="#676767"></path>' +
-                            '<path d="M22.4242 22.4242C23.1564 21.6919 24.3436 21.6919 25.0757 22.4242L30 27.3485L34.9242 22.4242C35.6565 21.692 36.8435 21.692 37.5757 22.4242C38.308 23.1564 38.308 24.3436 37.5757 25.076L32.6517 30L37.5757 34.924C38.308 35.6562 38.308 36.8435 37.5757 37.5757C36.8435 38.308 35.6562 38.308 34.924 37.5757L30 32.6517L25.076 37.5757C24.3436 38.308 23.1564 38.308 22.4242 37.5757C21.692 36.8435 21.692 35.6565 22.4242 34.9242L27.3485 30L22.4242 25.0757C21.6919 24.3436 21.6919 23.1564 22.4242 22.4242Z" fill="white"></path>' +
-                            '</svg>' +
-                            '</span></div>');
+                                '<svg width="25" height="25" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+                                '<path opacity="0.7" d="M55 30C55 43.807 43.807 55 30 55C16.1929 55 5 43.807 5 30C5 16.1929 16.1929 5 30 5C43.807 5 55 16.1929 55 30Z" fill="#676767"></path>' +
+                                '<path d="M22.4242 22.4242C23.1564 21.6919 24.3436 21.6919 25.0757 22.4242L30 27.3485L34.9242 22.4242C35.6565 21.692 36.8435 21.692 37.5757 22.4242C38.308 23.1564 38.308 24.3436 37.5757 25.076L32.6517 30L37.5757 34.924C38.308 35.6562 38.308 36.8435 37.5757 37.5757C36.8435 38.308 35.6562 38.308 34.924 37.5757L30 32.6517L25.076 37.5757C24.3436 38.308 23.1564 38.308 22.4242 37.5757C21.692 36.8435 21.692 35.6565 22.4242 34.9242L27.3485 30L22.4242 25.0757C21.6919 24.3436 21.6919 23.1564 22.4242 22.4242Z" fill="white"></path>' +
+                                '</svg>' +
+                                '</span></div>');
                     } else
                         $('.ganerate_price_wrap').hide();
 
@@ -431,8 +431,7 @@ $(document).ready(function () {
                         product_data = {'QUANTITY': quantity, 'URL': product_url, 'ID': product_id};
                         $(boxInput).val(quantity);
                         if (quantity > max_QUANTITY) {
-                            $('.alert_quantity[data-id="' + product_id + '"]').
-                            html('К покупке доступно максимум: <b> ' + max_QUANTITY + '&nbsp;шт.</b>')
+                            $('.alert_quantity[data-id="' + product_id + '"]').html('К покупке доступно максимум: <b> ' + max_QUANTITY + '&nbsp;шт.</b>')
                                 .toggleClass('hidden').append('<div class="close-count-alert js__close-count-alert">' +
                                 '<span class="absolute -right-2 -top-2 cursor-pointer" ' +
                                 'onclick="$(this).closest(\'div.alert_quantity\').toggleClass(\'hidden\')">' +
@@ -1281,22 +1280,6 @@ $(document).ready(function () {
         $(this).toggleClass('smart-filter-angle-up');
     });
 
-
-    $('.js__collapse-list').on('click', function () {
-        if (!$(this).parents('.socials').length) {
-            let elem = $(this),
-                lists = $('.js__collapse-list.active');
-
-            lists.next('.col-menu').stop().slideToggle();
-
-            if (!elem.hasClass('active')) {
-                lists.toggleClass('active');
-                elem.addClass('active').next('.col-menu').stop().slideDown();
-            } else {
-                lists.toggleClass('active');
-            }
-        }
-    });
 });
 
 window.onresize = function (event) {
@@ -1740,6 +1723,22 @@ $(document).ready(function () {
             this.reload(BX(tasteCheckId));
         }, window.smartFilter), 500);
     })
+    //FOOTER mobile
+    if ($(window).width() <= 768) {
+        $('.js__collapse-list').on('click', function () {
+            const parent = this.closest('div');
+            parent.querySelector('ul').classList.toggle('hidden');
+            parent.classList.toggle('active')
+            console.log(parent.classList)
+            if (parent.classList.contains('active')) {
+                parent.querySelector('span').style = 'transform:rotate(180deg);'
+                parent.querySelector('span svg').style = 'stroke: #B11512'
+            } else {
+                parent.querySelector('span').style = ''
+                parent.querySelector('span svg').style = ''
+            }
+        });
+    }
 });
 
 $(document).on('click', '.js__close-count-alert', function () {
@@ -1814,32 +1813,46 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
     return productsSuccess;
 }
 
-// NEW DESIGN opt
-ToggleThemeLocalStorages();
-// togger themes
-
 // install theme
 function ToggleThemeLocalStorages() {
+    document.themeOld = '';
     if (localStorage.theme === 'dark' ||
         (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark')
+        document.themeOld = 'light';
     } else {
         document.documentElement.classList.remove('dark')
+        document.themeOld = 'dark';
     }
 }
 
 function toggleTheme(item) {
-    item.classList.toggle('bg-indigo-600');
-    item.classList.toggle('bg-gray-200');
-    item.querySelector('.js--togglerIcon').classList.toggle('translate-x-0')
-    item.querySelector('.js--togglerIcon').classList.toggle('translate-x-3.5')
     if (localStorage.theme === 'dark') {
         localStorage.theme = 'light'
+        document.themeOld = 'dark';
     } else {
         localStorage.theme = 'dark'
+        document.themeOld = 'light';
     }
+    switchHeader(item);
     ToggleThemeLocalStorages();
 }
+
+function switchHeader(item) {
+    const theme = item.querySelector('[data-theme="' + localStorage.theme + '"]').classList;
+    const themeOldItem = item.querySelector('[data-theme="' + document.themeOld + '"]').classList;
+    theme.remove('fill-iconLune')
+    theme.add('fill-white')
+    themeOldItem.remove('fill-white')
+    themeOldItem.add('fill-iconLune')
+}
+
+//
+$(document).ready(function () {
+    const item = document.querySelector('.header-switch');
+    switchHeader(item)
+})
+ToggleThemeLocalStorages();
 
 // LOADER
 function loaderForSite(initParam, itemParent = false) {

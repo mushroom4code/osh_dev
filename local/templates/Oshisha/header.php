@@ -113,7 +113,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             </div>
         <?php } ?>
         <div class="flex flex-row border-0 md:border-b border-white-100 justify-center width-100 dark:bg-dark
-        bg-lightGrayBg py-3 px-4 md:px-0">
+        bg-lightGrayBg py-3 px-4">
             <div class="xs:flex hidden">
                 <a href="<?= SITE_DIR ?>">
                     <?php $APPLICATION->IncludeComponent(
@@ -188,8 +188,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
              hover:text-hover-red">
                         Розничный сайт</a>
                 </div>
-                <div class="flex flex-row">
-                    <div class="hidden md:flex flex-row">
+                <div class="flex flex-row items-center">
+                    <div class="hidden md:flex flex-row mr-3">
                         <a href="/about/o-nas/"
                            class="text-13 text-textDarkLightGray mr-5 dark:font-light font-normal dark:hover:text-white
                             hover:text-hover-red">О нас</a>
@@ -221,15 +221,22 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                            class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal
                            callback js__callback dark:hover:text-white hover:text-hover-red">Обратный звонок</a>
                     </div>
-                    <button type="button"
-                            class="bg-gray-200 ml-3 flex w-8 flex-none cursor-pointer rounded-full p-px ring-1 ring-inset
-                            ring-gray-900/5 transition-colors duration-200 ease-in-out" onclick="toggleTheme(this)"
-                            role="switch" aria-checked="true" aria-labelledby="switch-1-label">
-                        <!-- Enabled: "translate-x-3.5", Not Enabled: "translate-x-0" -->
-                        <span aria-hidden="true"
-                              class="translate-x-0 h-4 w-4 transform rounded-full bg-white shadow-sm ring-1
-                              ring-gray-900/5 transition duration-200 ease-in-out js--togglerIcon"></span>
-                    </button>
+                    <div class="w-14 h-7 bg-gray-slider-arrow flex flex-row justify-between items-center px-1
+                     rounded-full dark:bg-gray-box-dark header-switch"
+                         onclick="toggleTheme(this)">
+                        <svg width="20" height="20" viewBox="0 0 17 17" fill="none" data-theme="dark"
+                             class="js--togglerIcon fill-iconLune" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.0973 11.3699C15.965 11.1534 15.593 10.8168 14.6671 10.9771C14.1545 11.0653 13.6337 11.1053 13.1129 11.0813C11.1866 11.0011 9.44225 10.1435 8.22698 8.8209C7.15226 7.65863 6.49091 6.14367 6.48265 4.50848C6.48265 3.5947 6.6645 2.71298 7.03652 1.87936C7.40027 1.06978 7.14399 0.644955 6.96211 0.468612C6.77197 0.284252 6.32557 0.0277526 5.44926 0.38044C2.068 1.75913 -0.0235767 5.04553 0.224437 8.5644C0.472451 11.8748 2.86991 14.7044 6.04449 15.7704C6.80504 16.0269 7.60695 16.1792 8.43366 16.2113C8.56594 16.2193 8.69821 16.2273 8.83048 16.2273C11.6 16.2273 14.1958 14.9609 15.8327 12.8047C16.3866 12.0592 16.2378 11.5863 16.0973 11.3699Z"/>
+                        </svg>
+                        <svg width="22" height="22" viewBox="0 0 19 19" data-theme="light" fill="none"
+                             class="js--togglerIcon fill-white"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.77571 15.0981C12.9725 15.1255 15.5861 12.5562 15.6135 9.35945C15.6408 6.16271 13.0715 3.54906 9.87478 3.5217C6.67805 3.49435 4.0644 6.06364 4.03704 9.26038C4.00969 12.4571 6.57898 15.0708 9.77571 15.0981Z"
+                            />
+                            <path d="M9.74767 18.3725C9.29288 18.3686 8.92368 18.0264 8.92757 17.5716L8.92814 17.5055C8.93203 17.0507 9.30731 16.6818 9.7621 16.6857C10.2169 16.6896 10.5858 17.0648 10.5819 17.5196C10.578 17.9744 10.2025 18.3764 9.74767 18.3725ZM15.6716 16.0912C15.4566 16.0894 15.2506 16.0049 15.0866 15.8464L14.98 15.738C14.6603 15.4127 14.6647 14.8918 14.99 14.5721C15.3152 14.2523 15.8361 14.2568 16.1559 14.582L16.2624 14.6905C16.5822 15.0157 16.5777 15.5366 16.2525 15.8564C16.094 16.0121 15.8866 16.0931 15.6716 16.0912ZM3.86365 15.9902C3.64866 15.9883 3.44265 15.9039 3.27861 15.7453C2.95889 15.4201 2.96335 14.8992 3.28859 14.5794L3.39701 14.4729C3.72225 14.1531 4.24319 14.1576 4.56292 14.4828C4.88264 14.8081 4.87819 15.329 4.55294 15.6487L4.44452 15.7553C4.28607 15.9111 4.07037 15.9919 3.86365 15.9902ZM18.087 10.2075L18.0209 10.2069C17.5661 10.203 17.1972 9.82774 17.201 9.37295C17.2049 8.91816 17.5802 8.54925 18.035 8.55314C18.4898 8.55703 18.8918 8.9326 18.8879 9.38738C18.884 9.84217 18.5418 10.2114 18.087 10.2075ZM1.61543 10.0665L1.54928 10.066C1.09449 10.0621 0.72558 9.68677 0.729472 9.23199C0.733364 8.7772 1.10865 8.40828 1.56343 8.41218C2.01822 8.41607 2.42021 8.79164 2.41632 9.24642C2.41243 9.70121 2.07022 10.0704 1.61543 10.0665ZM15.6642 4.38984C15.4492 4.388 15.2432 4.30354 15.0792 4.14502C14.7595 3.81977 14.7639 3.29884 15.0892 2.97911L15.1976 2.87253C15.5228 2.55281 16.0438 2.55727 16.3635 2.88251C16.6832 3.20776 16.6788 3.7287 16.3535 4.04842L16.2451 4.155C16.0866 4.31076 15.8792 4.39168 15.6642 4.38984ZM4.07128 4.29063C3.85629 4.28879 3.65027 4.20433 3.48624 4.04581L3.37974 3.92913C3.06001 3.60388 3.06447 3.08294 3.38971 2.76322C3.71496 2.44349 4.2359 2.44795 4.55562 2.77319L4.6622 2.88161C4.98192 3.20685 4.97747 3.72779 4.65222 4.04752C4.4937 4.21155 4.278 4.2924 4.07128 4.29063ZM9.88863 1.90092C9.43384 1.89703 9.06464 1.55482 9.06853 1.10003L9.0691 1.03388C9.07299 0.579093 9.44827 0.210178 9.90306 0.21407C10.3578 0.217962 10.7268 0.593246 10.7229 1.04803C10.719 1.50282 10.3434 1.90481 9.88863 1.90092Z"
+                            />
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
@@ -345,12 +352,12 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 </svg>
                             </a>
                         </div>
-                        <div class="dark:text-textDarkLightGray text-sm font-extralight md:block hidden">
+                        <div class="dark:text-textDarkLightGray text-sm font-extralight xl:block hidden">
                             Вся продукция <br>для кальяна
                         </div>
                     </div>
-                    <div class="flex-row items-center justify-between flex">
-                        <div class="w-3/4 mr-5 md:block hidden">
+                    <div class="flex-row items-center justify-between flex max-w-4xl w-full">
+                        <div class="w-full mr-5 md:block hidden">
                             <?php $APPLICATION->IncludeComponent(
                                 "bitrix:search.title",
                                 "oshisha_search.title",
