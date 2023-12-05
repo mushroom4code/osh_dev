@@ -229,9 +229,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             />
                         </svg>
                     </div>
-                    <a class="box_for_menu md:hidden block ml-3" data-toggle="collapse" href="#MenuHeader"
-                       aria-controls="MenuHeader"
-                       aria-expanded="false">
+                    <a class="box_for_menu md:hidden block ml-3 MenuHeader" href="javascript:void(0)"
+                       data-open="false">
                         <div id="icon" class="Icon open">
                             <svg width="35" height="23" viewBox="0 0 48 37" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -244,7 +243,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             </div>
         </div>
         <?php if ($mobile->isMobile()) { ?>
-            <div class="header_top overflow-auto hidden" id="MenuHeader">
+            <div class="header_top overflow-auto hidden fixed h-screen w-screen bg-white dark:bg-darkBox py-5 px-4"
+                 id="MenuHeader">
                 <div class="top_menu">
                     <div>
                         <?php $APPLICATION->IncludeComponent(
@@ -267,57 +267,60 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             ),
                             false
                         ); ?>
-                        <div class="ul_menu ul_menu_2">
-                            <div class="box_top_panel">
-                                <a href="/about/o-nas/" class="link_menu_top">
-                                    <span class="text_catalog_link not_weight">О нас</span>
+                        <div class="ul_menu ul_menu_2 mt-5">
+                            <div class="box_top_panel flex flex-col">
+                                <div class="box_with_contact py-4 w-full dark:bg-grayButton bg-textDarkLightGray">
+                                    <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                                    <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                                    <a href="#" class="">
+                                        <div class="place">
+                                            <button type="button" class="place__button" data-toggle="modal"
+                                                    data-target="#placeModal">
+                                                <span class="text_catalog_link text-dark dark:text-white font-medium">
+                                                    <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </a>
+                                </div>
+                                <span class="bx-header-phone-number font-medium dark:text-textDarkLightGray text-lightGrayBg mb-3">
+                                    <?php $APPLICATION->IncludeComponent(
+                                        "bitrix:main.include",
+                                        "",
+                                        array(
+                                            "AREA_FILE_SHOW" => "file",
+                                            "PATH" => SITE_DIR . "include/telephone.php"
+                                        ),
+                                        false
+                                    ); ?>
+                                </span>
+                                <a href="/about/o-nas/" class="mb-3">
+                                    <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg mb-3 text-sm">
+                                        О нас</span>
                                 </a>
                                 <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
-                                    <a href="/local/templates/Oshisha/images/presentation.pdf" download
-                                       class="text_header "> <span
-                                                class="text_catalog_link not_weight"> Презентация</span></a>
+                                    <a href="/local/templates/Oshisha/images/presentation.pdf" class="mb-3" download>
+                                        <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg mb-3 text-sm">
+                                            Презентация</span></a>
                                 <?php } ?>
-                                <a href="/about/contacts/" class="link_menu_top">
-                                    <span class="text_catalog_link not_weight">Контакты</span>
+                                <a href="/about/contacts/" class="mb-3">
+                                    <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg mb-3 text-sm">
+                                        Контакты</span>
                                 </a>
                                 <?php if ($USER->IsAuthorized()) { ?>
-                                    <a href="/about/delivery/" class="link_menu_top ">
-                                        <span class="text_catalog_link not_weight">Доставка и оплата</span>
+                                    <a href="/about/delivery/" class="mb-3">
+                                        <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg mb- text-sm">
+                                            Доставка и оплата</span>
                                     </a>
                                 <?php } ?>
 
-                                <a href="/about/FAQ/" class="link_menu_top ">
-                                    <span class="text_catalog_link not_weight">FAQ</span>
-                                </a>
-                            </div>
-                            <span class="bx-header-phone-number">
-            									<?php $APPLICATION->IncludeComponent(
-                                                    "bitrix:main.include",
-                                                    "",
-                                                    array(
-                                                        "AREA_FILE_SHOW" => "file",
-                                                        "PATH" => SITE_DIR . "include/telephone.php"
-                                                    ),
-                                                    false
-                                                ); ?>
-            								</span>
-                            <div class="box_with_contact">
-                                <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                                <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-
-                                <a href="#" class=" ">
-                                    <div class="place">
-                                        <button type="button" class="place__button" data-toggle="modal"
-                                                data-target="#placeModal">
-                                                <span class="text_catalog_link not_weight">
-                                                    <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
-                                                </span>
-                                        </button>
-                                    </div>
+                                <a href="/about/FAQ/" class="mb-3">
+                                    <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg text-sm">
+                                        FAQ</span>
                                 </a>
                             </div>
                             <a href="/about/feedback_new_site/" class="link_menu_top">
-                                <span class="red_text text_font_13 font-weight-bold ">Написать отзыв</span>
+                                <span class="text-light-red font-semibold">Написать отзыв</span>
                             </a>
                         </div>
                     </div>
