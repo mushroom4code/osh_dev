@@ -233,7 +233,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                        aria-controls="MenuHeader"
                        aria-expanded="false">
                         <div id="icon" class="Icon open">
-                            <svg width="38" height="27" viewBox="0 0 48 37" fill="none"
+                            <svg width="35" height="23" viewBox="0 0 48 37" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2.68994 34.4987H21.2093M2.68994 2.75122H45.0199H2.68994ZM2.68994 18.625H45.0199H2.68994Z"
                                       stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -244,7 +244,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             </div>
         </div>
         <?php if ($mobile->isMobile()) { ?>
-            <div class="header_top overflow-auto" style="display:none;" id="MenuHeader">
+            <div class="header_top overflow-auto hidden" id="MenuHeader">
                 <div class="top_menu">
                     <div>
                         <?php $APPLICATION->IncludeComponent(
@@ -326,8 +326,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         <?php }
         if (strripos($APPLICATION->GetCurPage(), '/personal/') === false ||
             strripos($APPLICATION->GetCurPage(), '/personal/') !== false && !$mobile->isMobile()): ?>
-            <div class="flex md:relative fixed md:bottom-auto bottom-0 flex-col md:bg-transparent bg-white md:dark:bg-transparent
-            dark:bg-darkBox md:shadow-none shadow-xl shadow-t justify-center md:w-auto w-full md:py-5 py-3 items-center flex-wrap">
+            <div class="flex md:relative fixed md:bottom-auto bottom-0 flex-col md:bg-transparent bg-white
+            md:dark:bg-transparent dark:bg-darkBox md:drop-shadow-none md:dark:drop-shadow-none
+            drop-shadow-[0_15px_15px_rgba(0,0,0,0.55)] dark:drop-shadow-[0_15px_15px_rgba(0,0,0,0) justify-center
+             md:w-auto w-full md:py-5 py-2 items-center flex-wrap">
                 <!--        header menu search/login/basket/like     -->
                 <div class="xl:container container md:px-0 px-4 flex flex-row justify-between items-center md:mb-4 mb-0">
                     <div class="flex flex-row">
@@ -393,7 +395,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                 true
                             ); ?>
                         </div>
-                        <div class="z-50 flex flex-row items-center justify-between">
+                        <div class="z-50 flex flex-row items-center justify-between md:w-auto w-full">
                             <?php $APPLICATION->IncludeComponent(
                                 "bitrix:sale.basket.basket.line",
                                 "oshisha_sale.basket.basket.line",
@@ -416,7 +418,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                     </div>
                 </div>
                 <?php if (!$mobile->isMobile()) { ?>
-                    <div class="box_with_menu xl:container container">
+                    <div class="box_with_menu md:container md:block hidden ">
                         <div class="menu_header">
                             <?php $APPLICATION->IncludeComponent(
                                 "bitrix:menu",
