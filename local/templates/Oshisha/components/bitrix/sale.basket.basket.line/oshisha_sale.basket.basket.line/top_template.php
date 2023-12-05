@@ -100,9 +100,8 @@ while ($arItems = $cntBasketItems->Fetch()) {
                                   stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs md:mt-1 mt-0">Профиль</span>
+                    <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs md:mt-1 mt-0 md:block hidden">Профиль</span>
                 </a>
-
                 <?php $APPLICATION->IncludeComponent(
                     "ctweb:sms.authorize",
                     "profile",
@@ -111,7 +110,6 @@ while ($arItems = $cntBasketItems->Fetch()) {
                         "PROFILE_AUTH" => "N"
                     )
                 ); ?>
-
             <?php endif ?>
         </div>
     <?php endif ?>
@@ -171,7 +169,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
                     <span class="text-textLight dark:text-textDarkLightGray font-medium text-xs mt-1 price_basket_top">
                             <?= $arBasket['SUM_PRICE'] ?> ₽</span>
                 <?php } else { ?>
-                    <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs mt-1">Корзина</span>
+                    <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs mt-1 md:block hidden">Корзина</span>
                 <?php } ?>
             </div>
         </a>
