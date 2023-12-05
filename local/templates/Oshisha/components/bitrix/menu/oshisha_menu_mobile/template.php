@@ -42,7 +42,7 @@ $menuBlockId = "catalog_menu_" . $this->randString(); ?>
                 } ?>
                 <div class="wrap_block_menu <?= $class ?> openMenuMobile closed flex flex-row items-center justify-between">
                     <a class="link_menu_top <?= $active ?>" href="javascript:void(0)">
-                        <span class="text_catalog_link font-semibold dark:font-normal text-dark dark:text-textDarkLightGray text-lg">
+                        <span class="text_catalog_link font-semibold dark:font-light text-dark dark:text-white text-md">
                             <?= htmlspecialcharsbx($arResult["ALL_ITEMS"][$itemID]["TEXT"], ENT_COMPAT, false) ?>
                         </span>
                     </a>

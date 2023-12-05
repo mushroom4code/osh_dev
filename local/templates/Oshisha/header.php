@@ -332,7 +332,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             <div class="flex md:relative fixed md:bottom-auto bottom-0 flex-col md:bg-transparent bg-white
             md:dark:bg-transparent dark:bg-darkBox md:drop-shadow-none md:dark:drop-shadow-none
             drop-shadow-[0_15px_15px_rgba(0,0,0,0.55)] dark:drop-shadow-[0_15px_15px_rgba(0,0,0,0) justify-center
-             md:w-auto w-full md:py-5 py-2 items-center flex-wrap">
+             md:w-auto w-full md:py-5 py-3 items-center flex-wrap">
                 <!--        header menu search/login/basket/like     -->
                 <div class="xl:container container md:px-0 px-4 flex flex-row justify-between items-center md:mb-4 mb-0">
                     <div class="flex flex-row">

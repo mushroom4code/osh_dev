@@ -116,7 +116,7 @@ while ($arItems = $cntBasketItems->Fetch()) {
         </a>
     </div>
     <div class="box_with_basket_login md:hidden block mr-0 md:w-max w-1/5">
-        <a href="/catalog/" class="link_header link_header_catalog flex justify-center">
+        <a href="/catalog/" class="link_header link_header_catalog flex justify-center MenuHeader" data-open="false">
             <div class="span_bar icon_header">
                 <svg width="28" height="18" viewBox="0 0 48 37" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path class="stroke-light-red"
