@@ -34,6 +34,7 @@ BX.OrderPageComponents = {
 
         this.OrderUserPropsBlock = document.getElementById(document.currentScript.dataset.userPropsBlockId);
         if (this.OrderUserPropsBlock) {
+            this.OrderUserPropsRef = React.createRef();
             this.OrderUserPropsRoot = createRoot(this.OrderUserPropsBlock);
         }
 
@@ -70,7 +71,7 @@ BX.OrderPageComponents = {
             this.OrderUserTypeCheckRef.current.setState({result: this.result, params: this.params});
         }
 
-        if (this.OrderUserPropsBlock) {
+        if (!this.OrderUserPropsRef.current) {
             this.OrderUserPropsRoot.render(
                 <OrderUserProps
                     result={this.result}
@@ -78,6 +79,9 @@ BX.OrderPageComponents = {
                     are_locations_prepared={areLocationsPrepared}
                 />
             );
+        } else {
+            this.OrderUserPropsRef.current.setState({result: this.result, locations: this.locations,
+                are_locations_prepared: areLocationsPrepared});
         }
 
         if (this.OrderUserAgreementsBlock) {

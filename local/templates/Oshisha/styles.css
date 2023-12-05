@@ -26,21 +26,91 @@ input:focus, button:focus, [type='text']:focus, [type="password"]:focus, [type="
 
 /* OSHISHA_BUTTONS */
 
-.form-check-input:checked[type="radio"] {
-    background-image: url('/local/templates/Oshisha/images/radio.png');
-    background-color: white;
+:is(.dark .form-check-input[type="radio"]) {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='rgb(139,139,139)' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+    border-color: #8B8B8B;
+}
+
+:is(.dark .form-check-input[type="radio"]:checked) {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+    border-color: white;
 }
 
 .form-check-input[type="radio"] {
-    background-image: url('/local/templates/Oshisha/images/radio_not_active.png');
-    background-size: contain;
-    border: none;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='rgb(229,229,229)' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+    border-color: #E5E5E5;
+    background-color: transparent;
+    color: transparent;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.form-check-input[type="radio"]:checked {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='rgb(205,29,29)' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+    border-color: #CD1D1D;
+}
+
+:is(.dark [type='checkbox'].custom-order-checkbox) {
+    border-color: rgb(229,229,229);
+    background-color: rgb(49 49 49 / var(--tw-bg-opacity));
+}
+
+:is(.dark [type='checkbox'].custom-order-checkbox:checked) {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='rgb(229,229,229)' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    border-color: rgb(49 49 49 / var(--tw-bg-opacity));
+    background-color: rgb(49 49 49 / var(--tw-bg-opacity));
 }
 
 [type='checkbox'].custom-order-checkbox:checked {
     background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='rgb(205,29,29)' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
     border-color: #E5E5E5;
     background-color: white;
+}
+
+/* ORDER PAGE LOCATION PROPERTY */
+
+:is(.dark .soa-property-container .dropdown-block) {
+    background-color: #313131;
+    border-color: #313131;
+    color: white !important;
+}
+:is(.dark .soa-property-container .dropdown-block *) {
+    background-color: #313131;
+    border-color: #313131;
+    color: white !important;
+}
+
+.bx-sls .dropdown-icon {
+    background: url("/local/templates/Oshisha/images/search_magnifier_icon.png") no-repeat center center;
+    background-size: cover;
+}
+
+:is(.dark .bx-sls .dropdown-icon) {
+    background: url("/local/templates/Oshisha/images/search_magnifier_icon_dark.png") no-repeat center center;
+    background-size: cover;
+}
+
+.bx-sls .bx-ui-sls-clear {
+    background: url("/local/templates/Oshisha/images/search_close_icon.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    top: 6px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+}
+
+:is(.dark .bx-sls .bx-ui-sls-clear) {
+    background: url("/local/templates/Oshisha/images/search_close_icon_dark.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.bx-sls .bx-ui-sls-clear:hover {
+    background-position: center;
 }
 
 /* SCROLL */

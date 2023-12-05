@@ -176,7 +176,7 @@ BX.SaleCommonPVZ = {
                     ]
                 }
             )
-            BX.addClass(BX('delivery-variants'), 'active')
+            // BX.addClass(BX('delivery-variants'), 'active')
         } else {
             BX.cleanNode(BX('delivery-description'))
             BX.append(
@@ -2088,7 +2088,7 @@ BX.SaleCommonPVZ = {
         this.checkout.delivery.variants = {}
 
         const chooseBlock = BX.create('div', {
-            attrs: {className: 'delivery-choose js__delivery-choose text-decoration-underline', id: 'delivery-choose'},
+            attrs: {className: 'delivery-choose js__delivery-choose underline dark:text-white', id: 'delivery-choose'},
             text: 'Выбрать адрес и способ доставки',
             events: {
                 click: BX.proxy(function () {
@@ -2098,11 +2098,11 @@ BX.SaleCommonPVZ = {
         })
 
         this.checkout.delivery.variants.rootEl = BX.create('div', {
-            props: {className: 'delivery-variants', id: 'delivery-variants'},
+            props: {className: 'delivery-variants dark:bg-darkBox dark:text-white dark:border-grey-line-order', id: 'delivery-variants'},
             children: [
                 BX.create('div', {
-                    attrs: {className: 'delivery-variants-title'},
-                    html: '<span class="title-accent">Укажите</span> адрес и способ доставки'
+                    attrs: {className: 'delivery-variants-title dark:text-white'},
+                    html: 'Укажите адрес и способ доставки'
                 }),
 
                 BX.create('div', {
