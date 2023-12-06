@@ -6,7 +6,7 @@ import React, {useEffect, useState} from "react";
 function OrderUserProp({property, locations, disabled, result, are_locations_prepared}) {
     var propertyType = property.getType() || '';
 
-    let classNames = "form-group bx-soa-customer-field pr-2 py-2";
+    let classNames = "form-group bx-soa-customer-field flex justify-between flex-wrap pr-2 pb-[23px]";
 
     switch (property.getSettings().CODE) {
         case 'EMAIL':
@@ -55,7 +55,7 @@ function OrderUserProp({property, locations, disabled, result, are_locations_pre
     }
 
     return(<div className={classNames} data-property-id-row={property.getId()}>
-        <label className="bx-soa-custom-label pb-[2px] relative text-black dark:text-white font-semibold text-sm" htmlFor={labelFor}>
+        <label className="bx-soa-custom-label pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm" htmlFor={labelFor}>
             {textLabel}
         </label>
         {renderProperty()}
