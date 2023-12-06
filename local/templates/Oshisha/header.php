@@ -229,7 +229,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             />
                         </svg>
                     </div>
-                    <a class="box_for_menu md:hidden block ml-3 MenuHeader" href="javascript:void(0)"
+                    <a class="box_for_menu md:hidden block ml-4 MenuHeader" href="javascript:void(0)"
                        data-open="false">
                         <div id="icon" class="Icon open">
                             <svg width="35" height="23" viewBox="0 0 48 37" fill="none"
@@ -243,10 +243,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             </div>
         </div>
         <?php if ($mobile->isMobile()) { ?>
-            <div class="header_top overflow-auto hidden fixed h-screen w-screen bg-white dark:bg-darkBox py-5 px-4"
+            <div class="header_top hidden fixed h-screen w-screen bg-white dark:bg-darkBox py-5 z-20"
                  id="MenuHeader">
-                <div class="top_menu">
-                    <div>
+                <div class="top_menu overflow-x-hidden max-h-[90%] overflow-y-auto pb-15">
+                    <div class="px-4">
                         <?php $APPLICATION->IncludeComponent(
                             "bitrix:menu",
                             "oshisha_menu_mobile",
@@ -267,11 +267,13 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                             ),
                             false
                         ); ?>
-                        <div class="ul_menu ul_menu_2 mt-5">
-                            <div class="box_top_panel flex flex-col">
-                                <div class="box_with_contact py-4 w-full dark:bg-grayButton bg-textDarkLightGray">
-                                    <span><i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
-                                    <span> <i class="fa fa-circle header_icon" aria-hidden="true"></i></span>
+                    </div>
+                    <div class="ul_menu ul_menu_2 mt-5">
+                        <div class="box_top_panel flex flex-col">
+                            <div class="box_with_contact py-4 w-screen dark:bg-grayButton bg-textDarkLightGray mb-4">
+                                <div class="px-4 flex flex-row items-center">
+                                    <span class="w-1 rounded-full bg-light-red p-1 header_icon mr-1"></span>
+                                    <span class="w-1 rounded-full bg-light-red p-1 header_icon mr-2"></span>
                                     <a href="#" class="">
                                         <div class="place">
                                             <button type="button" class="place__button" data-toggle="modal"
@@ -283,19 +285,10 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                         </div>
                                     </a>
                                 </div>
-                                <span class="bx-header-phone-number font-medium dark:text-textDarkLightGray text-lightGrayBg mb-3">
-                                    <?php $APPLICATION->IncludeComponent(
-                                        "bitrix:main.include",
-                                        "",
-                                        array(
-                                            "AREA_FILE_SHOW" => "file",
-                                            "PATH" => SITE_DIR . "include/telephone.php"
-                                        ),
-                                        false
-                                    ); ?>
-                                </span>
-                                <a href="/about/o-nas/" class="mb-3">
-                                    <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg mb-3 text-sm">
+                            </div>
+                            <div class="px-4 flex flex-col">
+                                <a href="/about/o-nas/" class="mb-4">
+                                    <span class="font-normal dark:text-textDarkLightGray text-lightGrayBg mb-3 text-sm">
                                         О нас</span>
                                 </a>
                                 <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
@@ -303,27 +296,27 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                         <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg mb-3 text-sm">
                                             Презентация</span></a>
                                 <?php } ?>
-                                <a href="/about/contacts/" class="mb-3">
-                                    <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg mb-3 text-sm">
+                                <a href="/about/contacts/" class="mb-4">
+                                    <span class="font-normal dark:text-textDarkLightGray text-lightGrayBg mb-3 text-sm">
                                         Контакты</span>
                                 </a>
                                 <?php if ($USER->IsAuthorized()) { ?>
                                     <a href="/about/delivery/" class="mb-3">
-                                        <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg mb- text-sm">
+                                        <span class="font-normal dark:text-textDarkLightGray text-lightGrayBg mb- text-sm">
                                             Доставка и оплата</span>
                                     </a>
                                 <?php } ?>
-
-                                <a href="/about/FAQ/" class="mb-3">
-                                    <span class="font-medium dark:text-textDarkLightGray text-lightGrayBg text-sm">
+                                <a href="/about/FAQ/" class="mb-4">
+                                    <span class="font-normal dark:text-textDarkLightGray text-lightGrayBg text-sm">
                                         FAQ</span>
                                 </a>
                             </div>
-                            <a href="/about/feedback_new_site/" class="link_menu_top">
-                                <span class="text-light-red font-semibold">Написать отзыв</span>
-                            </a>
                         </div>
+                        <a href="/about/feedback_new_site/" class="link_menu_top px-4">
+                            <span class="text-light-red font-semibold text-sm">Написать отзыв</span>
+                        </a>
                     </div>
+
                 </div>
             </div>
         <?php }
@@ -331,7 +324,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             strripos($APPLICATION->GetCurPage(), '/personal/') !== false && !$mobile->isMobile()): ?>
             <div class="flex md:relative fixed md:bottom-auto bottom-0 flex-col md:bg-transparent bg-white
             md:dark:bg-transparent dark:bg-darkBox md:drop-shadow-none md:dark:drop-shadow-none
-            drop-shadow-[0_15px_15px_rgba(0,0,0,0.55)] dark:drop-shadow-[0_15px_15px_rgba(0,0,0,0) justify-center
+            drop-shadow-[0_15px_15px_rgb(0,0,0,0.55)] dark:drop-shadow-[0_0_9px_rgb(0,0,0,0.4) justify-center
              md:w-auto w-full md:py-5 py-3 items-center flex-wrap">
                 <!--        header menu search/login/basket/like     -->
                 <div class="xl:container container md:px-0 px-4 flex flex-row justify-between items-center md:mb-4 mb-0">

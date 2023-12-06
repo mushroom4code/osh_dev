@@ -61,7 +61,8 @@ while ($arItems = $cntBasketItems->Fetch()) {
                                   stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs md:mt-1 mt-0"><?= htmlspecialcharsbx($newName) ?></span>
+                    <span class="text-textLight dark:text-textDarkLightGray font-normal text-xs md:mt-1 mt-0 w-max">
+                        <?= htmlspecialcharsbx($newName) ?></span>
                 </a>
             <?php else:
             $arParamsToDelete = array(
@@ -116,8 +117,8 @@ while ($arItems = $cntBasketItems->Fetch()) {
         </a>
     </div>
     <div class="box_with_basket_login md:hidden block mr-0 md:w-max w-1/5">
-        <a href="/catalog/" class="link_header link_header_catalog flex justify-center MenuHeader" data-open="false">
-            <div class="span_bar icon_header">
+        <a href="/catalog/" class="flex justify-center">
+            <div >
                 <svg width="28" height="18" viewBox="0 0 48 37" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path class="stroke-light-red"
                           d="M2.68994 34.4987H21.2093M2.68994 2.75122H45.0199H2.68994ZM2.68994 18.625H45.0199H2.68994Z"
