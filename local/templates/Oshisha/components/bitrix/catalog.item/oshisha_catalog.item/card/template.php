@@ -307,7 +307,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                              dark:text-grayIconLights mr-2 md:text-lg text-xs">
                                                 <?= $price['PRICE_DATA']['PRICE'] ?>₽</span>
                                             <span class="sale-percent text-light-red font-medium md:text-lg text-10
-                                             md:inherit absolute -top-2 w-full left-[51%]">
+                                             md:inherit absolute md:top-auto md:left-auto -top-2 w-full left-[51%]">
                                                 - <?= (round($price['PRICE_DATA']['PRICE']) - round($specialPrice)) ?>₽
                                             </span>
                                         </div>
