@@ -70,6 +70,10 @@ module.exports = {
             fontSize:{
                 '13': '13px',
                 '10': '10px',
+            },
+            backgroundImage: {
+                'order_pen': "url('/local/templates/Oshisha/images/order_pen.png')",
+                'order_pen_dark': "url('/local/templates/Oshisha/images/order_pen_dark.png')",
             }
         }
     },

@@ -377,9 +377,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         onAfterPopupShow: BX.delegate(function () {
                             BX.cleanNode(this.loadingScreen.popupContainer);
                             BX.removeClass(this.loadingScreen.popupContainer, 'popup-window');
-                            this.loadingScreen.popupContainer.appendChild(
-                                BX.create('DIV', {props: {className: 'lds-dual-ring'}})
-                            );
+                            loaderForSite('appendLoader',this.loadingScreen.popupContainer)
                             this.loadingScreen.popupContainer.removeAttribute('style');
                             this.loadingScreen.popupContainer.style.display = 'block';
                         }, this)
@@ -4720,7 +4718,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             if (this.params.SHOW_DELIVERY_LIST_NAMES == 'Y') {
                 title = BX.create('DIV', {
-                    props: {className: 'bx-soa-pp-company-smalltitle text-black text-bold dark:text-gray-300'},
+                    props: {className: 'bx-soa-pp-company-smalltitle text-black text-base font-semibold dark:font-normal' +
+                            ' dark:text-gray-300'},
                     text: this.params.SHOW_DELIVERY_PARENT_NAMES != 'N' ? item.NAME : item.OWN_NAME
                 });
             }

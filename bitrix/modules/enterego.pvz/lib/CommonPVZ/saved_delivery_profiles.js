@@ -2,13 +2,16 @@ BX.namespace('BX.SavedDeliveryProfiles');
 
 BX.SavedDeliveryProfiles = {
     drawSavedProfiles: function(commonPvzObject) {
-        commonPvzObject.checkout.delivery.separator = BX.create('div', {attrs: {className: 'delivery-separator dark:text-white'}, text: 'Или'})
+        commonPvzObject.checkout.delivery.separator = BX.create('div',
+            {attrs: {className: 'delivery-separator text-[24px] font-medium dark:font-normal ' +
+                        'dark:text-white'}, text: 'Или'}
+        )
         commonPvzObject.checkout.delivery.recentWrap = {}
         commonPvzObject.checkout.delivery.recentWrap.rootEl = BX.create('div',
             {attrs: {className: 'recent-deliveries-wrap dark:bg-darkBox'}}
         )
         commonPvzObject.checkout.delivery.recentWrap.title = BX.create('div',
-            {attrs: {className: 'recent-deliveries-title dark:text-white'},
+            {attrs: {className: 'recent-deliveries-title font-medium dark:font-normal text-xl mb-4 dark:text-white'},
             html: 'Выберите настройки доставки из прошлых заказов'})
 
         BX.insertAfter(commonPvzObject.checkout.delivery.separator, commonPvzObject.checkout.delivery.variants.rootEl)
