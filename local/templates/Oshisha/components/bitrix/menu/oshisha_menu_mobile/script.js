@@ -21,11 +21,11 @@ $(document).ready(function () {
         const boxMenu = $('.header_top#MenuHeader');
         boxMenu.toggleClass('hidden')
         if (boxMenu.hasClass('hidden')) {
-            $('body').attr('style','overflow:hidden');
+            $('body').attr('style','overflow:auto');
             $(this).find('#icon').show()
             $(this).find('svg.close-svg').remove();
         } else {
-            $('body').attr('style','overflow:auto');
+            $('body').attr('style','overflow:hidden');
             $(this).find('#icon').hide()
             $(this).append('<svg width="23" height="23" viewBox="0 0 10 10" fill="none" class="close-svg" ' +
                 ' xmlns="http://www.w3.org/2000/svg">' +
