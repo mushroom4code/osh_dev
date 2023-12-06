@@ -918,6 +918,9 @@ $(document).ready(function () {
     });
 
 // CATALOG
+    $('.openFilter').on('click',function(){
+        $(document).find('.box_filter_catalog .catalog-filter-mobile').toggleClass('hidden');
+    })
 
     let active_sort_catalog = $(div).is('.box_with_prod');
     if (active_sort_catalog) {

@@ -176,10 +176,10 @@ function setActiveColor(string $itemType = 'card'): string
 <div class="flex mb-4 flex-col mt-5 w-auto">
     <div class="flex mb-4 box_with_prod md:flex-row flex-col w-auto">
         <?php if ($isFilter) : ?>
-            <div class=" box_filter_catalog lg:w-96 w-80 xl:flex hidden flex-col <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
+            <div class=" box_filter_catalog lg:w-96 w-80 xl:flex flex-col <?= (isset($arParams['FILTER_HIDE_ON_MOBILE']) &&
             $arParams['FILTER_HIDE_ON_MOBILE'] === 'Y' ? ' d-none d-sm-block' : '') ?>">
                 <div class="catalog-section-list-tile-list w-full bg-filterGray dark:bg-darkBox p-5 rounded-xl
-             flex flex-col mb-4">
+             md:flex hidden flex-col mb-4">
                     <?php foreach ($arResult['SECTION_LIST'] as $arSection): ?>
                         <div class="catalog-section-list-item-l">
                             <div class="catalog-section-list-item-wrap smart-filter-tog flex flex-row cursor-pointer justify-between"
@@ -226,11 +226,14 @@ function setActiveColor(string $itemType = 'card'): string
                     <?php endforeach; ?>
 
                 </div>
+                <div class="catalog-filter-mobile md:flex flex-col hidden md:relative fixed md:w-auto w-screen
+                left-0 md:py-0 md:h-auto h-screen md:bg-transparent md:dark:bg-transparent bg-filterGray py:10 md:top-auto top-16
+                dark:bg-darkBox z-50">
                 <?php
-
                 //region Filter
                 if ($isFilter): ?>
-                    <div class="bx-sidebar-block bg-filterGray dark:bg-darkBox p-5 rounded-xl <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
+                    <div class="bx-sidebar-block bg-filterGray dark:bg-darkBox p-5 rounded-xl md:max-h-none max-h-[90%]
+                      overflow-x-hidden overflow-y-auto <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
                         <?php
 
                         $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
@@ -264,16 +267,10 @@ function setActiveColor(string $itemType = 'card'): string
                         ?>
                     </div>
                 <?php endif
-                //			//endregion
-                ?>
-                <div class="filter-close js__filter-close">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-                <div class="filter-view-bar hidden">
+                //			//endregion?>
+                <div class="filter-view-bar md:hidden block">
                     <div class="red_button_cart filter-view js__filter-close disabled_class">Применить</div>
+                </div>
                 </div>
             </div>
         <?php endif ?>
@@ -389,6 +386,19 @@ function setActiveColor(string $itemType = 'card'): string
                                         <div class="icon_sort_line xs-d-none" id="line_catalog"></div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="openFilter ml-2 md:hidden block" title="фильтр">
+                                <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M38.0175 24H42.24" stroke="#3C3C3C" stroke-width="1.81"/>
+                                    <path d="M5.76001 24H29.0175" stroke="#3C3C3C" stroke-width="1.81"/>
+                                    <path d="M19.905 11.9775H42.24" stroke="#3C3C3C" stroke-width="1.81"/>
+                                    <path d="M5.76001 11.9775H10.92" stroke="#3C3C3C" stroke-width="1.81"/>
+                                    <path d="M26.25 36.0225H42.24" stroke="#3C3C3C" stroke-width="1.81"/>
+                                    <path d="M5.76001 36.0225H17.25" stroke="#3C3C3C" stroke-width="1.81"/>
+                                    <path d="M15.4125 16.245C17.8978 16.245 19.9125 14.2303 19.9125 11.745C19.9125 9.25971 17.8978 7.245 15.4125 7.245C12.9272 7.245 10.9125 9.25971 10.9125 11.745C10.9125 14.2303 12.9272 16.245 15.4125 16.245Z" stroke="#3C3C3C" stroke-width="1.81"/>
+                                    <path d="M33.5175 28.5C36.0027 28.5 38.0175 26.4853 38.0175 24C38.0175 21.5147 36.0027 19.5 33.5175 19.5C31.0322 19.5 29.0175 21.5147 29.0175 24C29.0175 26.4853 31.0322 28.5 33.5175 28.5Z" stroke="#3C3C3C" stroke-width="1.81"/>
+                                    <path d="M21.75 40.5225C24.2353 40.5225 26.25 38.5077 26.25 36.0225C26.25 33.5372 24.2353 31.5225 21.75 31.5225C19.2647 31.5225 17.25 33.5372 17.25 36.0225C17.25 38.5077 19.2647 40.5225 21.75 40.5225Z" stroke="#3C3C3C" stroke-width="1.81"/>
+                                </svg>
                             </div>
                             <div class="flex flex-row">
                                 <a href="javascript:void(0)"

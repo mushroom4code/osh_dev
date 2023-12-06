@@ -291,8 +291,9 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                     <div class="box_with_fav_bask flex md:flex-row flex-col md:justify-between md:items-center">
                         <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>
                             <div class="box_with_price card-price font_weight_600  min-height-auto">
-                                <div class="flex flex-col">
-                                    <div class="bx_price md:text-xl text-lg font-semibold dark:font-medium md:mb-0 mb-1 <?= $styleForNo ?> position-relative">
+                                <div class="flex md:flex-col flex-row md:items-start items-center relative">
+                                    <div class="bx_price md:text-xl text-lg font-semibold dark:font-medium md:mb-0 mb-1
+                                        <?= $styleForNo ?> position-relative md:mr-0 mr-2">
                                         <?php
                                         if (!empty($specialPrice)) {
                                             echo(round($specialPrice));
@@ -301,11 +302,12 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                         } ?>₽
                                     </div>
                                     <?php if (!empty($specialPrice)) { ?>
-                                        <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center">
+                                        <div class="font-10 d-lg-block d-mb-block d-flex flex-wrap align-items-center relative">
                                             <span class="line-through font-light decoration-red text-textLight
-                                             dark:text-grayIconLights mr-2">
+                                             dark:text-grayIconLights mr-2 md:text-lg text-xs">
                                                 <?= $price['PRICE_DATA']['PRICE'] ?>₽</span>
-                                            <span class="sale-percent text-light-red font-medium">
+                                            <span class="sale-percent text-light-red font-medium md:text-lg text-10
+                                             md:inherit absolute -top-2 w-full left-[51%]">
                                                 - <?= (round($price['PRICE_DATA']['PRICE']) - round($specialPrice)) ?>₽
                                             </span>
                                         </div>
