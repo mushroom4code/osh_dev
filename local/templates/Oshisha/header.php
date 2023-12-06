@@ -243,7 +243,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
             </div>
         </div>
         <?php if ($mobile->isMobile()) { ?>
-            <div class="header_top hidden fixed h-screen w-screen bg-white dark:bg-darkBox py-5 z-20"
+            <div class="header_top hidden fixed top-15 h-screen w-screen bg-white dark:bg-darkBox py-5 z-20"
                  id="MenuHeader">
                 <div class="top_menu overflow-x-hidden max-h-[90%] overflow-y-auto pb-15">
                     <div class="px-4">
