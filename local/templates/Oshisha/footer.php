@@ -280,6 +280,7 @@ $option = $option_site; ?>
                 <div class="flex_block">
                     <div class="age-access-inner">
                         <div class="age-access__text">
+                            <h1 class="text-dark font-medium dark:font-light text-xl dark:text-textDarkLightGray">1 / 2</h1>
                             <h1 class="text-light-red font-medium dark:font-light text-xl dark:text-textDarkLightGray mb-4 text-center">
                                 Уведомляем вас!</h1>
                             <div class="age-access__text-part1 mb-4 text-xs dark:font-thin font-extralight text-textLight dark:text-borderColor">
@@ -291,16 +292,41 @@ $option = $option_site; ?>
                         </div>
                         <div class="age-access__buttons flex flex-row justify-between">
                             <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close
-                             border-greenButton border-2 px-3.5 py-2 rounded-md block w-fit mr-3 font-medium text-sm
+                             border-greenButton border-2 px-3.5 py-2 rounded-md block w-fit mr-3 font-medium md:text-sm text-xs
                              text-greenButton dark:border-none dark:bg-grayButton dark:font-light shadow-lg dark:text-white"
                                data-option="1" data-auth="false">Да, мне больше 18 лет</a>
                             <a href="<?= $option->ATTENT_NOT ?>" class="age-access__button link_red_button
                             border-light-red border-2 px-9 py-2 rounded-lg block w-fit text-light-red font-medium
-                            dark:border-none dark:bg-dark dark:font-light dark:text-white shadow-lg text-sm"
+                            dark:border-none dark:bg-dark dark:font-light dark:text-white shadow-lg md:text-sm text-xs"
                                data-option="2" rel="nofollow">Нет</a>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div style="display:none;">
+            <div id="2Modal" class="box-modal p-5">
+                <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
+                    <div class="age-access-inner">
+                        <div class="age-access__text">
+                            <h1 class="text-dark font-medium dark:font-light text-xl dark:text-textDarkLightGray
+                             mb-5 ">2 / 2</h1>
+                            <h1 class="text-dark font-medium dark:font-extralight text-lg dark:text-textDarkLightGray
+                             mb-4 text-center">
+                                Заказываете для <b>Себя</b> или для <b>Организации?</b></h1>
+                        </div>
+                        <div class="age-access__buttons flex flex-row justify-between">
+                            <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close
+                             border-greenButton border-2 px-3.5 py-2 rounded-md block w-3/5 mr-3 md:text-sm text-xs
+                             font-medium text-center text-greenButton dark:border-none dark:bg-grayButton
+                             dark:font-light shadow-lg dark:text-white"
+                               data-option="1" data-auth="false">Для организации</a>
+                            <a href="https://oshisha.net/" class="link_red_button text-center
+                            border-light-red border-2 md:px-9 px-4 py-2 rounded-lg block w-2/5 text-light-red font-medium
+                            dark:border-none dark:bg-dark dark:font-light dark:text-white shadow-lg md:text-sm text-xs"
+                               rel="nofollow">Для себя</a>
+                        </div>
+                    </div>
             </div>
         </div>
         <script>
@@ -312,8 +338,10 @@ $option = $option_site; ?>
                             closeOnOverlayClick: false,
                             afterClose: function (data, el) {
                                 sessionStorage.setItem("age_access", "1");
+                                $("#2Modal").arcticmodal({closeOnOverlayClick: false,});
                             }
-                        });
+                        }
+                    );
                 }
             });
             // age access
