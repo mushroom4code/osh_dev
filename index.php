@@ -8,8 +8,8 @@ if (SITE_EXHIBITION == SITE_ID) {
 }
 if (IsModuleInstalled("advertising")):?>
     <div class="mt-3 xl:container container">
-        <div class="flex xs:flex-row flex-column justify-between w-full relative mb-10">
-            <div class="banner_small flex xs:flex-row flex-col justify-between mr-8">
+        <div class="flex md:flex-row flex-col-reverse justify-between w-full relative mb-10">
+            <div class="banner_small flex md:flex-col flex-row justify-between md:mr-8 mr-0">
                 <div class="w-full mb-5 rounded-lg">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:advertising.banner",
