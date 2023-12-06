@@ -212,23 +212,6 @@ $(document).ready(function () {
         return false;
     })
 
-
-    $('.link_header_catalog').on('click', function () {
-        $('#MenuHeader .Icon').click();
-        return false;
-    });
-    $('.Icon').on('click', function () {
-        if ($('.header_top').hasClass('show')) {
-            $('header').removeAttr('style');
-            $('.Icon').show();
-            $('body').css('overflow', 'initial');
-        } else {
-            $('body').css('overflow', 'hidden');
-            $('.box_filter_catalog').hide();
-            $('.Icon').removeClass('open');
-        }
-    });
-
     // SORT ACTIVE
     function addDeleteClassSortElems() {
         let bool_bar = $('div.basket-items-list-table').hasClass('categoryColumn');
