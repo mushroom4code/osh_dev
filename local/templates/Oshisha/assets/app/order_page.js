@@ -52,6 +52,7 @@ BX.OrderPageComponents = {
     },
 
     renderComponents: function (result, locations, areLocationsPrepared = false) {
+        this.startLoader();
         if (this.result !== result) {
             this.result = result;
         }
@@ -59,6 +60,7 @@ BX.OrderPageComponents = {
         if (this.locations !== locations) {
             this.locations = locations;
         }
+
         if (!this.OrderUserTypeCheckRef.current) {
             this.OrderUserTypeCheckRoot.render(
                 <OrderUserTypeCheck
@@ -98,6 +100,43 @@ BX.OrderPageComponents = {
                     params={this.params}
                 />
             );
+        }
+    },
+
+    startLoader: function () {
+        if (this.BXFormPosting === true)
+            return false;
+
+        this.BXFormPosting = true;
+
+        if (!this.loadingScreen) {
+            this.loadingScreen = new BX.PopupWindow('loading_screen', null, {
+                overlay: {backgroundColor: 'black', opacity: 1},
+                events: {
+                    onAfterPopupShow: BX.delegate(function () {
+                        BX.cleanNode(this.loadingScreen.popupContainer);
+                        BX.removeClass(this.loadingScreen.popupContainer, 'popup-window');
+                        loaderForSite('appendLoader',this.loadingScreen.popupContainer)
+                        this.loadingScreen.popupContainer.removeAttribute('style');
+                        this.loadingScreen.popupContainer.style.display = 'block';
+                    }, this)
+                }
+            });
+            BX.addClass(this.loadingScreen.overlay.element, 'bx-step-opacity');
+        }
+
+        this.loadingScreen.overlay.element.style.opacity = '0';
+        this.loadingScreen.show();
+        this.loadingScreen.overlay.element.style.opacity = '0.6';
+
+        return true;
+    },
+
+    endLoader: function () {
+        this.BXFormPosting = false;
+
+        if (this.loadingScreen && this.loadingScreen.isShown()) {
+            this.loadingScreen.close();
         }
     }
 }

@@ -289,7 +289,18 @@ if ($request->get('ORDER_ID') <> '') {
             <div class="col-span-2 col-lg-8 col-md-7">
                 <h5 class="mb-14 text-[24px] font-medium dark:font-normal">
                     Покупатель
-                    <i class="bg-order_pen dark:bg-order_pen_dark bg-no-repeat inline-block w-[19px] h-[19px] ml-2.5"></i>
+                    <i class="inline-block w-[19px] h-[19px] ml-2.5">
+                        <svg width="19" height="19" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_2706_1834)">
+                                <path fill-rule="evenodd" class="dark:fill-white fill-black" clip-rule="evenodd" d="M0 15.0422V19H3.95778L15.6306 7.32718L11.6728 3.36939L0 15.0422ZM18.6913 4.26649C19.1029 3.85488 19.1029 3.18997 18.6913 2.77836L16.2216 0.308707C15.81 -0.102902 15.1451 -0.102902 14.7335 0.308707L12.8021 2.24011L16.7599 6.19789L18.6913 4.26649Z" fill="#393939"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_2706_1834">
+                                    <rect width="19" height="19" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </i>
                 </h5>
                 <div class="bx-soa">
                     <div id="bx-soa-properties" data-visited="true" class="bx-soa-section mb-4 bx-active">
@@ -572,7 +583,7 @@ if ($request->get('ORDER_ID') <> '') {
         );
         $APPLICATION->IncludeComponent(
             'bitrix:sale.location.selector.search',
-            '.default',
+            'oshisha_sale.location.selector.search',
             array(),
             false
         );

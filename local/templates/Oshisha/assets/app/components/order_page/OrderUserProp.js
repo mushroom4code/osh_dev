@@ -39,18 +39,10 @@ function OrderUserProp({property, locations, disabled, result, are_locations_pre
             case 'LOCATION':
                 return(<OrderUserPropLocation property={property} locations={locations} disabled={disabled}
                                               are_locations_prepared={are_locations_prepared}/>);
-            // case 'DATE':
-            //     return dateProperty(property, disabled);
-            // case 'FILE':
-            //     return fileProperty(property, disabled);
             case 'STRING':
                 return(<OrderUserPropString property={property} disabled={disabled}/>);
             case 'ENUM':
                 return(<OrderUserPropEnum property={property} disabled={disabled}/>);
-            // case 'Y/N':
-            //     return ynProperty(property, propsItemNode, disabled);
-            // case 'NUMBER':
-            //     return numberProperty(property, propsItemNode, disabled);
         }
     }
 

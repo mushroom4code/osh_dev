@@ -68,62 +68,6 @@ input:focus, button:focus, [type='text']:focus, [type="password"]:focus, [type="
     background-color: white;
 }
 
-/* ORDER PAGE LOCATION PROPERTY */
-
-:is(.dark .soa-property-container .dropdown-block), :is(.dark .soa-property-container .dropdown-block *) {
-    background-color: #313131;
-    border-color: #313131;
-    color: white !important;
-}
-
-:is(.dark .bx-sls .bx-ui-sls-variants .bx-ui-sls-variant:hover), :is(.dark .bx-sls .bx-ui-sls-variants .bx-ui-sls-variant:hover *) {
-    background-color: white;
-
-    color: black !important;
-}
-
-:is(.dark div.bx-sls div.bx-ui-sls-loader) {
-    background-image: url('/local/templates/Oshisha/images/order_waiter_dark.gif') !important;
-}
-
-div.bx-sls div.bx-ui-sls-loader {
-    background-image: url('/local/templates/Oshisha/images/order_waiter.gif') !important;
-    background-position: center !important;
-    background-size: 50px;
-}
-
-.bx-sls .dropdown-icon {
-    background: url("/local/templates/Oshisha/images/search_magnifier_icon.png") no-repeat center center;
-    background-size: cover;
-}
-
-:is(.dark .bx-sls .dropdown-icon) {
-    background: url("/local/templates/Oshisha/images/search_magnifier_icon_dark.png") no-repeat center center;
-    background-size: cover;
-}
-
-.bx-sls .bx-ui-sls-clear {
-    background: url("/local/templates/Oshisha/images/search_close_icon.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    top: 6px;
-    right: 8px;
-    width: 20px;
-    height: 20px;
-}
-
-:is(.dark .bx-sls .bx-ui-sls-clear) {
-    background: url("/local/templates/Oshisha/images/search_close_icon_dark.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
-.bx-sls .bx-ui-sls-clear:hover {
-    background-position: center;
-}
-
 /* SCROLL */
 
 input::-webkit-outer-spin-button,

@@ -13,6 +13,14 @@ class OrderUserProps extends React.Component {
         }
     }
 
+    componentDidMount() {
+        BX.OrderPageComponents.endLoader();
+    }
+
+    componentDidUpdate() {
+        BX.OrderPageComponents.endLoader();
+    }
+
     render() {
         const renderProperties = () => {
             let div = [];
@@ -27,18 +35,6 @@ class OrderUserProps extends React.Component {
                 while (property = propsIterator()) {
                     // TODO Enterego pickup
                     let disabled = false;
-                    // if (propsNode.classList.contains('delivery')) {
-                    //     if (this.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
-                    //         // TODO Enterego pickup
-                    //         const id_del = this.result.DELIVERY.find(item => item.CHECKED === 'Y').ID;
-                    //         if (arDelivery.indexOf(String(id_del)) !== -1) {
-                    //             disabled = true;
-                    //         }
-                    //         this.getPropertyRowNode(property, propsItemsContainer, disabled);
-                    //     } else {
-                    //         continue;
-                    //     }
-                    // } else {
                     if (this.state.group_buyer_props.find(item => item === group.getName()) !== undefined) {
                         a.push(property.getId());
                         div.push(
@@ -47,14 +43,10 @@ class OrderUserProps extends React.Component {
                                            are_locations_prepared={this.state.are_locations_prepared}/>
                         );
                     }
-                    // continue;
-                    // }
                 }
             }
             return div;
         }
-
-
 
         return(<div className="row">
             <div className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0">
