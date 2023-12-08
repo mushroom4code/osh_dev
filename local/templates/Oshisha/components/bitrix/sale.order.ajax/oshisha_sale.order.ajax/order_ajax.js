@@ -2058,7 +2058,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             BX.OrderPageComponents.renderComponents(this.result, this.locations, true);
             this.editActiveRegionBlock(true);
             this.editActiveDeliveryBlock(true);
-            this.editActivePaySystemBlock(true);
+            // this.editActivePaySystemBlock(true);
 
                 // if (this.activeSection !== null) {
                 //     this.editSection(this.activeSection);
