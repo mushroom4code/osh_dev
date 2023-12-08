@@ -4630,7 +4630,7 @@ class SaleOrderAjax extends \CBitrixComponent
 
                 $APPLICATION->IncludeComponent(
                     'bitrix:sale.location.selector.' . $locationTemplate,
-                    '',
+                    'oshisha_sale.location.selector.' . $locationTemplate,
                     $parameters,
                     null,
                     ['HIDE_ICONS' => 'Y']
