@@ -918,9 +918,6 @@ $(document).ready(function () {
     });
 
 // CATALOG
-    $('.openFilter').on('click',function(){
-        $(document).find('.box_filter_catalog .catalog-filter-mobile').toggleClass('hidden');
-    })
 
     let active_sort_catalog = $(div).is('.box_with_prod');
     if (active_sort_catalog) {
@@ -1242,18 +1239,6 @@ $(document).ready(function () {
         $('.box_filter_catalog').css({'top': top_page});
     }
 
-    $(document).on('click', '.js__filter-close', function () {
-        if (!$(this).hasClass('disabled_class')) {
-            $(this).parents('.box_filter_catalog').find('.filter-view-bar').css({'display': 'none'})
-
-            $(this).parents('.box_filter_catalog').slideUp(function () {
-                $('.filter-view').addClass('disabled_class');
-                $('.filter-view-bar').show();
-            });
-            $('body').removeClass('hide-jivo');
-            $(document).find('body').css({overflow: 'initial'})
-        }
-    });
 
     $('.shared i').on('click', function () {
         $(this).next().toggle();
@@ -1870,3 +1855,4 @@ function showHidePasswd(item) {
     parentBox.querySelector('[data-type="text"]').classList.toggle('hidden')
     parentBox.querySelector('[data-type="password"]').classList.toggle('hidden')
 }
+

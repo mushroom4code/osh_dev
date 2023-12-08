@@ -945,3 +945,8 @@ BX.Iblock.SmartFilter = (function () {
 
     return SmartFilter;
 })();
+
+
+$('.js__filter-close').on('click',function (){
+
+})

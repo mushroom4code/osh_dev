@@ -233,7 +233,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                 </svg>
                             </span>
                             <span class="smart-filter-parameters-box-title-text
-                            text-sm font-semibold dark:text-medium text-dark dark:text-textDarkLightGray">
+                            md:text-sm text-lg font-semibold dark:text-medium text-dark dark:text-textDarkLightGray">
                                 <?= $arItem["NAME"] ?></span>
                             <?php if ($arItem["FILTER_HINT"] <> ""): ?>
                                 <span class="smart-filter-hint">
