@@ -433,6 +433,10 @@ class DeliveryHelper
             }
         }
 
+        $params['oshDeliveryTimeIntervals'] = unserialize(
+            Option::get(self::$MODULE_ID, 'deliveryTimeIntervals', '', SITE_ID)
+        );
+
         $params['deliveryOptions']['DA_DATA_TOKEN'] = OshishaDelivery::getOshishaDaDataToken();
         $params['deliveryOptions']['PERIOD_DELIVERY'] = $PeriodDelivery;
         $params['deliveryOptions']['YA_API_KEY'] = OshishaDelivery::getOshishaYMapsKey();

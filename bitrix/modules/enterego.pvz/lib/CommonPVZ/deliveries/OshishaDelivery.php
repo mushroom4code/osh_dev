@@ -475,7 +475,7 @@ class OshishaDelivery extends CommonPVZ
 
     public static function generate($arOptions, $arConfigData)
     {
-        foreach ($arOptions as $optionName => $arOption):?>
+        foreach ($arOptions as $optionName => $arOption): ?>
             <tr>
             <?php if ($arOption['type'] === 'news') { ?>
                 <tr class="heading" dataId="<?= $arOption["id"] ?>">
@@ -501,7 +501,8 @@ class OshishaDelivery extends CommonPVZ
                 if ($arOption["type"] !== 'news') {
                     ?>
                     <td class="field-name" style="width:45%"><?= $arOption["name"] ?>:</td>
-                <?php } else { ?><td class="field-name" style="width:45%"></td><?php } ?>
+                <?php } else { ?>
+                    <td class="field-name" style="width:45%"></td><?php } ?>
                 <td>
                     <? switch ($arOption["type"]):
                         case "text":
@@ -523,38 +524,35 @@ class OshishaDelivery extends CommonPVZ
                         case "news":
                             $elem = '';
                             $id = $arOption["id"];
-                            if ($id === 'dayDelivery') {
-                                $start_json = Option::get(DeliveryHelper::$MODULE_ID, 'osh_timeDeliveryStartDay');
-                                $end_json = Option::get(DeliveryHelper::$MODULE_ID, 'osh_timeDeliveryEndDay');
-                            } else {
-                                $start_json = Option::get(DeliveryHelper::$MODULE_ID, 'osh_timeDeliveryStartNight');
-                                $end_json = Option::get(DeliveryHelper::$MODULE_ID, 'osh_timeDeliveryEndNight');
-                            }
 
-                            $start = json_decode($start_json);
-                            $end = json_decode($end_json);
+                            $data = unserialize(
+                                Option::get(
+                                    DeliveryHelper::$MODULE_ID,
+                                    'deliveryTimeIntervals',
+                                    '',
+                                    $arOption['site_id']
+                                )
+                            );
 
                             $delete = "<a href='javascript:void(0)' class='flex-align-items' 
-                                        onClick='settingsDeleteRow(this)'> 
-                                       <img src='/bitrix/themes/.default/images/actions/delete_button.gif' 
-                                        border='0' width='20' height='20'/></a>";
+                                        onClick='settingsDeleteRow(this)'>"
+                                        ."<img src='/bitrix/themes/.default/images/actions/delete_button.gif'"
+                                        ."border='0' width='20' height='20'/></a>";
 
-                            if (empty($start) || count($start) == 0) {
-                                $start[] = '';
-                                $end[] = '';
+                            if (empty($data) || count($data) == 0) {
+                                $data[] = ['', ''];
                             }
-                            $dayItem = $arOption["elems"][0];
-                            $nightItem = $arOption["elems"][1];
+                            $itemStart = $arOption['elems'][0];
+                            $itemEnd = $arOption['elems'][1];
 
-                            foreach ($start as $key => $elems_start) {
-
-                                $elem .= "<div class='flex-row d-flex padding-10'>";
-                                $dayItem['value'] = $elems_start;
-                                $elem .= self::input($dayItem, 'elems');
-
-                                $nightItem['value'] = $end[$key];
-                                $elem .= self::input($nightItem, 'elems');
-
+                            foreach ($data as $key => $item) {
+                                $elem .= "<div class='padding-10' style='display: flex; align-items: center;
+                                            margin-bottom: 5px;'>";
+                                $itemStart['value'] = $item[0];
+                                $elem .= self::input($itemStart, 'elems');
+                                $itemEnd['value'] = $item[1];
+                                $elem .= "<label style='margin-left: 5px; margin-right: 5px;'> - </label>";
+                                $elem .= self::input($itemEnd, 'elems');
                                 $elem .= $delete;
                                 $elem .= "</div>";
                             }
@@ -586,7 +584,7 @@ class OshishaDelivery extends CommonPVZ
                             >
                                 <? foreach ($arOption["options"] as $id => $text): ?>
                                     <option <? if (in_array($id, $values)) echo " selected " ?>
-                                        value="<?= $id ?>"><?= $text ?></option>
+                                            value="<?= $id ?>"><?= $text ?></option>
                                 <? endforeach ?>
 
                             </select>
@@ -609,6 +607,7 @@ class OshishaDelivery extends CommonPVZ
 
             </tr><?
         endforeach;
+
     }
 
     static function input($arParams, string $param)
