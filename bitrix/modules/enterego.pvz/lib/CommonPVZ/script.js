@@ -50,8 +50,6 @@ BX.SaleCommonPVZ = {
         this.shipmentCost = params.params?.shipmentCost;
         this.orderPackages = params.params?.packages;
         this.oshishaDeliveryOptions = params.params?.deliveryOptions;
-        this.oshishaDeliveryCode = params.params?.oshishaDeliveryCode;
-        this.dateTimeIntervalOptions = params.params?.dateTimeIntervalOptions;
         this.oshDeliveryTimeIntervals = params.params?.oshDeliveryTimeIntervals;
 
         this.refresh()
