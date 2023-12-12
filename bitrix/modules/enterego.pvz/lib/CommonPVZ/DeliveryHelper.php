@@ -29,27 +29,6 @@ class DeliveryHelper
         return $CONFIG_DELIVERIES;
     }
 
-    public static function getDeliveryTimeIntervals() {
-        $deliveryTimeIntervalPropId = \Bitrix\Sale\Property::getList([
-            'select' => ['ID'],
-            'filter' => ['CODE' => 'DELIVERYTIME_INTERVAL']
-        ])->fetch()['ID'];
-        $propVariants = [];
-        $propVariantsRes = \CSaleOrderPropsVariant::GetList(
-            array("SORT" => "ASC"),
-            array("ORDER_PROPS_ID" => $deliveryTimeIntervalPropId),
-            false,
-            false,
-            array("ID", "VALUE", "DESCRIPTION")
-        );
-        while ($propVariant = $propVariantsRes->fetch()) {
-            if($propVariant['DESCRIPTION'] === SITE_ID) {
-                $propVariants[$propVariant['ID']] = $propVariant;
-            }
-        }
-        return $propVariants;
-    }
-
     public static function makeDimensionsHash($a, $b, $c)
     {
         $arr = [$a, $b, $c];
