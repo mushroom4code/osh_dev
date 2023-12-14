@@ -6,7 +6,7 @@ import React, {useEffect, useState} from "react";
 function OrderUserProp({property, locations, disabled, result, are_locations_prepared}) {
     var propertyType = property.getType() || '';
 
-    let classNames = "form-group bx-soa-customer-field pr-2 py-2";
+    let classNames = "form-group bx-soa-customer-field flex justify-between flex-wrap pr-2 pb-[23px]";
 
     switch (property.getSettings().CODE) {
         case 'EMAIL':
@@ -39,23 +39,15 @@ function OrderUserProp({property, locations, disabled, result, are_locations_pre
             case 'LOCATION':
                 return(<OrderUserPropLocation property={property} locations={locations} disabled={disabled}
                                               are_locations_prepared={are_locations_prepared}/>);
-            // case 'DATE':
-            //     return dateProperty(property, disabled);
-            // case 'FILE':
-            //     return fileProperty(property, disabled);
             case 'STRING':
                 return(<OrderUserPropString property={property} disabled={disabled}/>);
             case 'ENUM':
                 return(<OrderUserPropEnum property={property} disabled={disabled}/>);
-            // case 'Y/N':
-            //     return ynProperty(property, propsItemNode, disabled);
-            // case 'NUMBER':
-            //     return numberProperty(property, propsItemNode, disabled);
         }
     }
 
     return(<div className={classNames} data-property-id-row={property.getId()}>
-        <label className="bx-soa-custom-label pb-[2px] relative text-black dark:text-white font-semibold text-sm" htmlFor={labelFor}>
+        <label className="bx-soa-custom-label pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm" htmlFor={labelFor}>
             {textLabel}
         </label>
         {renderProperty()}

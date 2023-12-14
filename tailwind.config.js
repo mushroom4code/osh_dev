@@ -10,7 +10,6 @@ module.exports = {
         "./local/components/bitrix/enterego.slider/templates/.default/template.php",
         "./images/icon_header/*.svg",
         "./local/assets/js/flags-mask/phonecode.js",
-        "./bitrix/components/bitrix/sale.location.selector.search/templates/.default/template.php",
         "./bitrix/modules/enterego.pvz/lib/CommonPVZ/*.js"
     ],
     darkMode: 'class',
@@ -70,6 +69,10 @@ module.exports = {
             fontSize:{
                 '13': '13px',
                 '10': '10px',
+            },
+            backgroundImage: {
+                'order_pen': "url('/local/templates/Oshisha/images/order_pen.svg')",
+                'order_pen_dark': "url('/local/templates/Oshisha/images/order_pen_dark.png')",
             }
         }
     },

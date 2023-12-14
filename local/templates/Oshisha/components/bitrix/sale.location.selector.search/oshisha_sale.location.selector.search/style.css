@@ -90,7 +90,6 @@
 }
 
 .bx-sls .dropdown-icon {
-	background: url(/bitrix/components/bitrix/sale.location.selector.search/templates/.default/images/lens.png) no-repeat center center;
 	height: 14px;
 	left: 10px;
 	position: absolute;
@@ -130,7 +129,6 @@
 }
 
 .bx-sls .bx-ui-sls-clear{
-	background: url(/bitrix/panel/main/images/bx-admin-sprite-small.png) 6px -3386px no-repeat scroll;
 	width: 30px;
 	height: 30px;
 	cursor: pointer;
@@ -147,10 +145,6 @@
 }
 
 .bx-sls .bx-ui-sls-loader{
-	background-image: url(/bitrix/panel/main/images/waiter-white.gif) !important;
-	background-repeat: no-repeat !important;
-	background-position: right -1px !important;
-
 	width: 30px;
 	height: 30px;
 
@@ -284,4 +278,16 @@
 
 .bx-admin-mode .bx-ui-sls-pane {
 	top: 27px;
+}
+
+:is(.dark .soa-property-container .dropdown-block), :is(.dark .soa-property-container .dropdown-block *) {
+	background-color: #313131;
+	border-color: #313131;
+	color: white !important;
+}
+
+:is(.dark .bx-sls .bx-ui-sls-variants .bx-ui-sls-variant:hover), :is(.dark .bx-sls .bx-ui-sls-variants .bx-ui-sls-variant:hover *) {
+	background-color: white;
+
+	color: black !important;
 }

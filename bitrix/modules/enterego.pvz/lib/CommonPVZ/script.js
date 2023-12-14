@@ -2088,7 +2088,8 @@ BX.SaleCommonPVZ = {
         this.checkout.delivery.variants = {}
 
         const chooseBlock = BX.create('div', {
-            attrs: {className: 'delivery-choose js__delivery-choose underline dark:text-white', id: 'delivery-choose'},
+            attrs: {className: 'delivery-choose js__delivery-choose underline dark:text-white font-semibold ' +
+                    'dark:font-medium', id: 'delivery-choose'},
             text: 'Выбрать адрес и способ доставки',
             events: {
                 click: BX.proxy(function () {
@@ -2098,10 +2099,10 @@ BX.SaleCommonPVZ = {
         })
 
         this.checkout.delivery.variants.rootEl = BX.create('div', {
-            props: {className: 'delivery-variants dark:bg-darkBox dark:text-white dark:border-grey-line-order', id: 'delivery-variants'},
+            props: {className: 'delivery-variants border border-light-red rounded-[10px] dark:bg-darkBox dark:text-white dark:border-grey-line-order', id: 'delivery-variants'},
             children: [
                 BX.create('div', {
-                    attrs: {className: 'delivery-variants-title dark:text-white'},
+                    attrs: {className: 'delivery-variants-title font-medium dark:font-normal text-xl mb-4 dark:text-white'},
                     html: 'Укажите адрес и способ доставки'
                 }),
 
