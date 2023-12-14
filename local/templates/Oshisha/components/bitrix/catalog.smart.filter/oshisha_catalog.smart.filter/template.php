@@ -71,7 +71,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
 
                     endif; ?>
 
-                    <div class="<?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<?php else: ?><?php endif ?>  mb-5 smart-filter-parameters-box bx-active">
+                    <div class="<?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<?php else: ?><?php endif ?>  mb-7 smart-filter-parameters-box bx-active">
                         <span class="smart-filter-container-modef"></span>
 
                         <div class="smart-filter-parameters-box-title mb-2 md:text-sm text-md font-semibold
@@ -152,7 +152,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                         </div>
                     </div>
                     <div class="<?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<?php else: ?><?php endif ?> hide_not_available_container
-                 smart-filter-parameters-box bx-active mb-5">
+                 smart-filter-parameters-box bx-active mb-7">
                         <span class="smart-filter-container-modef"></span>
                         <div class="smart-filter-block filter_id" data-role="bx_filter_block"
                              id="hide_not_available_container_id">
@@ -220,12 +220,12 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                         continue;
                     ?>
 
-                    <div class="<?= $arItem['CODE'] == 'MODEL_KALYANA' ? 'model_kalyana hidden' : '' ?>
+                    <div class="md:mb-4 mb-6 <?= $arItem['CODE'] == 'MODEL_KALYANA' ? 'model_kalyana hidden' : '' ?>
                     <?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?> col-sm-6 col-md-4 <?php else: ?>
-                    <?php endif ?> mb-4 smart-filter-parameters-box
+                    <?php endif ?> smart-filter-parameters-box
                     <?php if ($arItem["DISPLAY_EXPANDED"] == "Y") { ?>bx-active<?php } ?>">
                         <span class="smart-filter-container-modef"></span>
-                        <div class="smart-filter-parameters-box-title md:mb-2 mb-3 flex flex-row items-center cursor-pointer"
+                        <div class="smart-filter-parameters-box-title md:mb-2 mb-4 flex flex-row items-center cursor-pointer"
                              onclick="smartFilter.hideFilterProps(this)">
                             <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-down mr-3">
                                 <svg viewBox="0 0 16 16" fill="none"
@@ -773,9 +773,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                         </div>
 
                     </div>
-                    <?
-                }
-                ?>
+                    <?php } ?>
                 <!--                sus-->
                 <div class="button_box">
                     <div class="smart-filter-button-box">
