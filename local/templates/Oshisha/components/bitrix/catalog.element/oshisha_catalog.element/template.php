@@ -87,9 +87,6 @@ $itemIds = array(
     'TABS_PANEL_ID' => $mainId . '_tabs_panel'
 );
 $obName = $templateData['JS_OBJ'] = 'ob' . preg_replace('/[^a-zA-Z0-9_]/', 'x', $mainId);
-$name = !empty($arResult['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE'])
-    ? $arResult['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']
-    : $arResult['NAME'];
 $title = !empty($arResult['IPROPERTY_VALUES']['ELEMENT_DETAIL_PICTURE_FILE_TITLE'])
     ? $arResult['IPROPERTY_VALUES']['ELEMENT_DETAIL_PICTURE_FILE_TITLE']
     : $arResult['NAME'];
@@ -226,7 +223,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             <div
                     class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product
 				not-input-parse justify-content-between">
-                <h1 class="head-title"><?= $name ?></h1>
+                <h1 class="head-title"><?= $arResult['NAME']; ?></h1>
                 <?php if ($isGift) { ?>
                     <div>
                         <h4 class="bx-title">Данная продукция не продается отдельно</h4>
@@ -658,7 +655,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 </li>
                 <?php
             }
-            if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
+            if (!empty($arResult['PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
                 <li class="nav-item">
                     <a class="nav-link <? if (!$showDescription): ?>active<? endif; ?>" id="pills-profile-tab"
                        data-toggle="pill" href="#pills-profile"
@@ -1061,7 +1058,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             'SHOW_SLIDER' => $arParams['SHOW_SLIDER'],
             'SLIDER_INTERVAL' => $arParams['SLIDER_INTERVAL'],
             'ALT' => $alt,
-            'TITLE' => $title,
+            'TITLE' => $arResult['NAME'],
             'MAGNIFIER_ZOOM_PERCENT' => 200,
             'USE_ENHANCED_ECOMMERCE' => $arParams['USE_ENHANCED_ECOMMERCE'],
             'DATA_LAYER_NAME' => $arParams['DATA_LAYER_NAME'],
@@ -1162,7 +1159,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             'SHOW_SLIDER' => $arParams['SHOW_SLIDER'],
             'SLIDER_INTERVAL' => $arParams['SLIDER_INTERVAL'],
             'ALT' => $alt,
-            'TITLE' => $title,
+            'TITLE' => $arResult['NAME'],
             'MAGNIFIER_ZOOM_PERCENT' => 200,
             'USE_ENHANCED_ECOMMERCE' => $arParams['USE_ENHANCED_ECOMMERCE'],
             'DATA_LAYER_NAME' => $arParams['DATA_LAYER_NAME'],
