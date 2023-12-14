@@ -245,7 +245,9 @@ $priceForSum = $price['PRICE_DATA']['PRICE'];
                                                  shadow-none py-2.5 px-3 mx-2 outline-none rounded-md w-14 card_element"
                                                        id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                                        type="number"
+                                                       data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                                                        max="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                                       data-product_id="<?= $item['ID']; ?>"
                                                        value="<?= $priceBasket ?>">
                                             </div>
                                             <a class="btn-plus no-select add2basket cursor-pointer h-full flex items-center"

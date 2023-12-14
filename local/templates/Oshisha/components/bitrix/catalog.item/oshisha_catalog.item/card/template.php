@@ -358,6 +358,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                 cursor-pointer flex items-center justify-center md:h-full h-auto md:w-full w-auto"
                                                    id="<?= $arItemIDs['BUY_LINK']; ?>"
                                                    href="javascript:void(0)" data-url="<?= $item['DETAIL_PAGE_URL'] ?>"
+                                                   data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                                                    data-product_id="<?= $item['ID']; ?>">
                                                     <svg width="20" height="2" viewBox="0 0 22 2" fill="none"
                                                          class="stroke-dark dark:stroke-white stroke-[1.5px]"
@@ -372,7 +373,9 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                                  shadow-none py-2.5 px-3 md:mx-2 mx-1 outline-none rounded-md md:w-14 w-16 card_element"
                                                            id="<?= $arItemIDs['QUANTITY_ID'] ?>"
                                                            type="number"
+                                                           data-product_id="<?= $item['ID']; ?>"
                                                            max="<?= $item['PRODUCT']['QUANTITY'] ?>"
+                                                           data-max-quantity="<?= $item['PRODUCT']['QUANTITY'] ?>"
                                                            value="<?= $priceBasket ?>">
                                                 </div>
                                                 <a class="btn-plus no-select add2basket cursor-pointer flex items-center

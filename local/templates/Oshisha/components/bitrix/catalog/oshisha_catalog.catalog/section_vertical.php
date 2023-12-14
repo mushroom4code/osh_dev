@@ -393,7 +393,7 @@ function setActiveColor(string $itemType = 'card'): string
                                 </div>
                             </div>
                             <div class="openFilter ml-2 md:hidden block" title="фильтр" onclick="(e)=>{
-                                console.log('tesssst')
+
                                  $(document).find('.box_filter_catalog .catalog-filter-mobile').toggleClass('hidden')
                            }">
                                 <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
