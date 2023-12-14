@@ -272,9 +272,7 @@ function setActiveColor(string $itemType = 'card'): string
                     <div class="filter-view js__filter-close text-lightGrayBg dark:text-white w-auto
                             bg-textDarkLightGray dark:bg-grayButton dark:font-normal md:mb-0 mb-8
                             px-7 md:py-3.5 py-3 text-sm md:rounded-lg rounded-md font-semibold md:shadow-md shadow-sm
-                            shadow-shadowDark" onclick="()=>{
-                                 $(document).find('.box_filter_catalog .catalog-filter-mobile').toggleClass('hidden')
-                            }">Применить</div>
+                            shadow-shadowDark">Применить</div>
                 </div>
                 </div>
             </div>
@@ -392,10 +390,7 @@ function setActiveColor(string $itemType = 'card'): string
                                     </div>
                                 </div>
                             </div>
-                            <div class="openFilter ml-2 md:hidden block" title="фильтр" onclick="(e)=>{
-
-                                 $(document).find('.box_filter_catalog .catalog-filter-mobile').toggleClass('hidden')
-                           }">
+                            <div class="openFilter ml-2 md:hidden block" title="фильтр">
                                 <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M38.0175 24H42.24" stroke="#3C3C3C" stroke-width="1.81"/>
                                     <path d="M5.76001 24H29.0175" stroke="#3C3C3C" stroke-width="1.81"/>

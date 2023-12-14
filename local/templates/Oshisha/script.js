@@ -1852,3 +1852,14 @@ function showHidePasswd(item) {
     parentBox.querySelector('[data-type="password"]').classList.toggle('hidden')
 }
 
+//Filter
+document.addEventListener("DOMContentLoaded", () => {
+    const openFilter = document.querySelector('.openFilter');
+    const closeFilter = document.querySelector('.js__filter-close')
+    openFilter.addEventListener('click', ToggleFilter);
+    closeFilter.addEventListener('click', ToggleFilter);
+
+    function ToggleFilter() {
+        document.querySelector('.box_filter_catalog .catalog-filter-mobile').classList.toggle('hidden')
+    }
+});
