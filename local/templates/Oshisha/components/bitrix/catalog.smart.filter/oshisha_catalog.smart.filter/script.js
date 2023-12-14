@@ -208,11 +208,12 @@ JCSmartFilter.prototype.addHorizontalFilter = function (checkbox) {
             props: {
                 id: idFilterItem,
                 className: `osh-filter-item border-lightGrayBg border flex flex-row items-center 
-				dark:border-tagFilterGray md:px-4 px-3 md:py-2 py-1.5 text-center text-xs font-medium dark:font-light rounded-md mr-3 
+				dark:border-tagFilterGray md:px-4 px-2 md:py-2 py-1 mb-1
+				text-center md:text-xs text-10 font-medium dark:font-light rounded-md mr-1
 				${labelsPropClass[0]}`
             },
             html: nameFilter + `<span class='d-inline-block osh-filter-horizontal-remove ml-1 cursor-pointer'
-            title="Удалить"><svg width="18" height="17" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            title="Удалить"><svg width="17" height="16" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M4.8313 9.59672L10.3154 4.0083"  class="stroke-dark dark:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 			<path d="M4.8313 3.95166L10.3154 9.54008" class="stroke-dark dark:stroke-white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 			</svg></span>`
@@ -945,3 +946,18 @@ BX.Iblock.SmartFilter = (function () {
 
     return SmartFilter;
 })();
+
+
+//Filter
+document.addEventListener("DOMContentLoaded", () => {
+    const openFilter = document.querySelector('.openFilter');
+    const closeFilter = document.querySelectorAll('.js__filter-close')
+    openFilter.addEventListener('click', ToggleFilter);
+    closeFilter.forEach((e) => {
+        e.addEventListener('click', ToggleFilter);
+    })
+
+    function ToggleFilter() {
+        document.querySelector('.box_filter_catalog .catalog-filter-mobile').classList.toggle('hidden')
+    }
+});

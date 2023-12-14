@@ -229,51 +229,61 @@ function setActiveColor(string $itemType = 'card'): string
                 <div class="catalog-filter-mobile md:flex flex-col hidden md:relative fixed md:w-auto w-screen
                 left-0 md:py-0 md:h-auto h-screen md:bg-transparent md:dark:bg-transparent bg-filterGray py:16 md:top-auto top-0
                 dark:bg-darkBox md:z-0 z-50">
-                <?php
-                //region Filter
-                if ($isFilter): ?>
-                    <div class="bx-sidebar-block bg-filterGray dark:bg-darkBox p-5 rounded-xl md:max-h-none max-h-[90%]
+                    <?php
+                    //region Filter
+                    if ($isFilter): ?>
+                        <div class="bx-sidebar-block bg-filterGray dark:bg-darkBox md:p-5 p-5 rounded-xl md:max-h-none max-h-[90%]
                       overflow-x-hidden overflow-y-auto <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
-                        <?php
+                            <div class="w-full flex justify-end md:hidden">
+                            <svg width="25" height="25" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                 class="js__filter-close">
+                                <path d="M3.02588 33.9165L32.9795 3.39307" class="stroke-iconLune dark:stroke-white"
+                                      stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3.02588 3.0835L32.9795 33.6069" class="stroke-iconLune dark:stroke-white"
+                                      stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            </div>
+                            <?php
 
-                        $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
-                            "oshisha_catalog.smart.filter", array(
-                                "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
-                                "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                                "SECTION_ID" => $arCurSection['ID'],
-                                "PREFILTER_NAME" => $arParams["PREFILTER_NAME"],
-                                "FILTER_NAME" => $arParams["FILTER_NAME"],
-                                "PRICE_CODE" => $arParams["PRICE_CODE"],
-                                "CACHE_TYPE" => $arParams["CACHE_TYPE"],
-                                "CACHE_TIME" => $arParams["CACHE_TIME"],
-                                "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
-                                "SAVE_IN_SESSION" => "Y",
-                                "FILTER_VIEW_MODE" => $arParams["FILTER_VIEW_MODE"],
-                                "XML_EXPORT" => "N",
-                                "SECTION_TITLE" => "NAME",
-                                "SECTION_DESCRIPTION" => "DESCRIPTION",
-                                'HIDE_NOT_AVAILABLE' => $arParams["HIDE_NOT_AVAILABLE"],
-                                "TEMPLATE_THEME" => $arParams["TEMPLATE_THEME"],
-                                'CONVERT_CURRENCY' => $arParams['CONVERT_CURRENCY'],
-                                'CURRENCY_ID' => $arParams['CURRENCY_ID'],
-                                "SEF_MODE" => $arParams["SEF_MODE"],
-                                "SEF_RULE" => $arResult["FOLDER"] . $arResult["URL_TEMPLATES"]["smart_filter"],
-                                "SMART_FILTER_PATH" => $arResult["VARIABLES"]["SMART_FILTER_PATH"],
-                                "PAGER_PARAMS_NAME" => $arParams["PAGER_PARAMS_NAME"],
-                                "INSTANT_RELOAD" => $arParams["INSTANT_RELOAD"],
-                            ),
-                            array('HIDE_ICONS' => 'Y')
-                        );
-                        ?>
+                            $APPLICATION->IncludeComponent("bitrix:catalog.smart.filter",
+                                "oshisha_catalog.smart.filter", array(
+                                    "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
+                                    "IBLOCK_ID" => $arParams["IBLOCK_ID"],
+                                    "SECTION_ID" => $arCurSection['ID'],
+                                    "PREFILTER_NAME" => $arParams["PREFILTER_NAME"],
+                                    "FILTER_NAME" => $arParams["FILTER_NAME"],
+                                    "PRICE_CODE" => $arParams["PRICE_CODE"],
+                                    "CACHE_TYPE" => $arParams["CACHE_TYPE"],
+                                    "CACHE_TIME" => $arParams["CACHE_TIME"],
+                                    "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
+                                    "SAVE_IN_SESSION" => "Y",
+                                    "FILTER_VIEW_MODE" => $arParams["FILTER_VIEW_MODE"],
+                                    "XML_EXPORT" => "N",
+                                    "SECTION_TITLE" => "NAME",
+                                    "SECTION_DESCRIPTION" => "DESCRIPTION",
+                                    'HIDE_NOT_AVAILABLE' => $arParams["HIDE_NOT_AVAILABLE"],
+                                    "TEMPLATE_THEME" => $arParams["TEMPLATE_THEME"],
+                                    'CONVERT_CURRENCY' => $arParams['CONVERT_CURRENCY'],
+                                    'CURRENCY_ID' => $arParams['CURRENCY_ID'],
+                                    "SEF_MODE" => $arParams["SEF_MODE"],
+                                    "SEF_RULE" => $arResult["FOLDER"] . $arResult["URL_TEMPLATES"]["smart_filter"],
+                                    "SMART_FILTER_PATH" => $arResult["VARIABLES"]["SMART_FILTER_PATH"],
+                                    "PAGER_PARAMS_NAME" => $arParams["PAGER_PARAMS_NAME"],
+                                    "INSTANT_RELOAD" => $arParams["INSTANT_RELOAD"],
+                                ),
+                                array('HIDE_ICONS' => 'Y')
+                            );
+                            ?>
+                        </div>
+                    <?php endif
+                    //			//endregion?>
+                    <div class="filter-view-bar md:hidden flex justify-center">
+                        <div class="filter-view js__filter-close text-lightGrayBg dark:text-white w-auto
+                            bg-white dark:bg-grayButton dark:font-normal md:my-0 my-5
+                            px-7 md:py-3.5 py-3 text-sm md:rounded-lg rounded-md font-semibold shadow-md
+                            shadow-shadowDark">Применить
+                        </div>
                     </div>
-                <?php endif
-                //			//endregion?>
-                <div class="filter-view-bar md:hidden flex justify-center">
-                    <div class="filter-view js__filter-close text-lightGrayBg dark:text-white w-auto
-                            bg-textDarkLightGray dark:bg-grayButton dark:font-normal md:mb-0 mb-8
-                            px-7 md:py-3.5 py-3 text-sm md:rounded-lg rounded-md font-semibold md:shadow-md shadow-sm
-                            shadow-shadowDark">Применить</div>
-                </div>
                 </div>
             </div>
         <?php endif ?>
@@ -299,41 +309,45 @@ function setActiveColor(string $itemType = 'card'): string
             <div id="osh-filter-horizontal2"></div>
             <div class="osh-block-panel mb-4 <?= EnteregoHitsHelper::checkIfHits($APPLICATION) ? 'd-none' : '' ?>">
                 <div id="osh-filter-horizontal" class="flex flex-col mb-7 mt-5">
-                    <div class="flex flex-row justify-between items-center mb-5">
+                    <div class="flex flex-row justify-between md:items-center items-end mb-5">
                         <div class="col_navigation mr-4">
-                            <div class="count-per-page flex flex-row items-center">
+                            <div class="count-per-page flex md:flex-row flex-col md:items-center">
                                 <span class="font-semibold dark:font-normal md:text-md text-xs md:mr-3 text-textLight
-                                dark:text-textDarkLightGray mr-2">Показать</span>
-                                <a href="?page=24"
-                                   class="page_num py-2 px-2.5 rounded-full md:text-sm text-xs font-medium mr-1
+                                dark:text-textDarkLightGray mr-2 md:mb-0 mb-2">Товаров</span>
+                                <div class="flex flex-row items-center">
+                                    <a href="?page=24"
+                                       class="page_num md:py-2 md:px-2.5 py-1.5 px-2 rounded-full md:text-sm text-xs
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 24) { ?>
                                dark:bg-grayButton bg-lightGrayBg active text-white
-                               <?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">24</a>
-                                <a href="?page=36"
-                                   class="page_num py-2 px-2.5 rounded-full md:text-sm text-xs font-medium mr-1
+                               <?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?> font-medium mr-1">24</a>
+                                    <a href="?page=36"
+                                       class="page_num md:py-2 md:px-2.5 py-1.5 px-2 rounded-full md:text-sm text-xs
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 36) { ?>
-                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">36</a>
-                                <a href="?page=72"
-                                   class="page_num py-2 px-2.5 rounded-full md:text-sm text-xs font-medium
+                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?>
+                                bg-filterGray dark:bg-darkBox<?php } ?>  font-medium mr-1">36</a>
+                                    <a href="?page=72"
+                                       class="page_num md:py-2 md:px-2.5 py-1.5 px-2 rounded-full md:text-sm text-xs
                                <?php if ($arParams['PAGE_ELEMENT_COUNT'] == 72) { ?>
-                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?> bg-filterGray dark:bg-darkBox<?php } ?>">72</a>
+                               dark:bg-grayButton bg-lightGrayBg active text-white<?php } else { ?>
+                                bg-filterGray dark:bg-darkBox<?php } ?> font-medium">72</a>
+                                </div>
                             </div>
                         </div>
                         <div class="flex flex-row items-center">
                             <div class="sort-panel">
-                                <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center ">
+                                <div class="sort-panel-flex d-flex flex-row justify-content-end align-items-center">
                                     <div class="sort_panel_wrap">
                                         <div class="sort_panel relative" id="">
                                             <a class="sort_order sort_tool"
                                                href="#">
-                                                <p class="sort_orders_by items-center flex flex-row sort_caption ">
+                                                <p class="sort_orders_by items-center flex flex-row sort_caption">
                                                     <span class="md:block hidden text-sm text-textLight font-light
                                                     dark:text-textDarkLightGray mr-2">Сортировать</span>
-                                                    <svg class="w-8" viewBox="0 0 48 48" fill="none"
+                                                    <svg class="w-7" viewBox="0 0 48 48" fill="none"
                                                          xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd" clip-rule="evenodd"
                                                               d="M45.5 14C45.5 14.8284 44.8284 15.5 44 15.5H4C3.17158 15.5 2.5 14.8284 2.5 14C2.5 13.1716 3.17158 12.5 4 12.5H44C44.8284 12.5 45.5 13.1716 45.5 14Z"
-                                                             class="dark:fill-grayIconLights fill-dark"/>
+                                                              class="dark:fill-grayIconLights fill-dark"/>
                                                         <path fill-rule="evenodd" clip-rule="evenodd"
                                                               d="M39.5 24C39.5 24.8284 38.8284 25.5 38 25.5H10C9.17158 25.5 8.5 24.8284 8.5 24C8.5 23.1716 9.17158 22.5 10 22.5H38C38.8284 22.5 39.5 23.1716 39.5 24Z"
                                                               class="dark:fill-grayIconLights fill-dark"/>
@@ -390,24 +404,35 @@ function setActiveColor(string $itemType = 'card'): string
                                     </div>
                                 </div>
                             </div>
-                            <div class="openFilter ml-2 md:hidden block" title="фильтр">
-                                <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M38.0175 24H42.24" stroke="#3C3C3C" stroke-width="1.81"/>
-                                    <path d="M5.76001 24H29.0175" stroke="#3C3C3C" stroke-width="1.81"/>
-                                    <path d="M19.905 11.9775H42.24" stroke="#3C3C3C" stroke-width="1.81"/>
-                                    <path d="M5.76001 11.9775H10.92" stroke="#3C3C3C" stroke-width="1.81"/>
-                                    <path d="M26.25 36.0225H42.24" stroke="#3C3C3C" stroke-width="1.81"/>
-                                    <path d="M5.76001 36.0225H17.25" stroke="#3C3C3C" stroke-width="1.81"/>
-                                    <path d="M15.4125 16.245C17.8978 16.245 19.9125 14.2303 19.9125 11.745C19.9125 9.25971 17.8978 7.245 15.4125 7.245C12.9272 7.245 10.9125 9.25971 10.9125 11.745C10.9125 14.2303 12.9272 16.245 15.4125 16.245Z" stroke="#3C3C3C" stroke-width="1.81"/>
-                                    <path d="M33.5175 28.5C36.0027 28.5 38.0175 26.4853 38.0175 24C38.0175 21.5147 36.0027 19.5 33.5175 19.5C31.0322 19.5 29.0175 21.5147 29.0175 24C29.0175 26.4853 31.0322 28.5 33.5175 28.5Z" stroke="#3C3C3C" stroke-width="1.81"/>
-                                    <path d="M21.75 40.5225C24.2353 40.5225 26.25 38.5077 26.25 36.0225C26.25 33.5372 24.2353 31.5225 21.75 31.5225C19.2647 31.5225 17.25 33.5372 17.25 36.0225C17.25 38.5077 19.2647 40.5225 21.75 40.5225Z" stroke="#3C3C3C" stroke-width="1.81"/>
+                            <div class="openFilter ml-3 md:hidden block" title="фильтр">
+                                <svg width="30" height="30" viewBox="0 0 48 48" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M38.0175 24H42.24"
+                                          class="stroke-gray-box-dark dark:stroke-white"
+                                          stroke-width="1.81"/>
+                                    <path d="M5.76001 24H29.0175" class="stroke-gray-box-dark dark:stroke-white"
+                                          stroke-width="1.81"/>
+                                    <path d="M19.905 11.9775H42.24" class="stroke-gray-box-dark dark:stroke-white"
+                                          stroke-width="1.81"/>
+                                    <path d="M5.76001 11.9775H10.92" class="stroke-gray-box-dark dark:stroke-white"
+                                          stroke-width="1.81"/>
+                                    <path d="M26.25 36.0225H42.24" class="stroke-gray-box-dark dark:stroke-white"
+                                          stroke-width="1.81"/>
+                                    <path d="M5.76001 36.0225H17.25" class="stroke-gray-box-dark dark:stroke-white"
+                                          stroke-width="1.81"/>
+                                    <path d="M15.4125 16.245C17.8978 16.245 19.9125 14.2303 19.9125 11.745C19.9125 9.25971 17.8978 7.245 15.4125 7.245C12.9272 7.245 10.9125 9.25971 10.9125 11.745C10.9125 14.2303 12.9272 16.245 15.4125 16.245Z"
+                                          class="stroke-gray-box-dark dark:stroke-white" stroke-width="1.81"/>
+                                    <path d="M33.5175 28.5C36.0027 28.5 38.0175 26.4853 38.0175 24C38.0175 21.5147 36.0027 19.5 33.5175 19.5C31.0322 19.5 29.0175 21.5147 29.0175 24C29.0175 26.4853 31.0322 28.5 33.5175 28.5Z"
+                                          class="stroke-gray-box-dark dark:stroke-white" stroke-width="1.81"/>
+                                    <path d="M21.75 40.5225C24.2353 40.5225 26.25 38.5077 26.25 36.0225C26.25 33.5372 24.2353 31.5225 21.75 31.5225C19.2647 31.5225 17.25 33.5372 17.25 36.0225C17.25 38.5077 19.2647 40.5225 21.75 40.5225Z"
+                                          class="stroke-gray-box-dark dark:stroke-white" stroke-width="1.81"/>
                                 </svg>
                             </div>
                             <div class="flex flex-row">
                                 <a href="javascript:void(0)"
                                    onclick="BX.setCookie('orientation','card'); window.location.reload()"
                                    class="ml-3">
-                                    <svg width="32" height="32" viewBox="0 0 28 28" fill="none"
+                                    <svg width="27" height="27" viewBox="0 0 28 28" fill="none"
                                          class="<?= setActiveColor('card') ?>"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <rect x="1" y="1" width="11.6418" height="11.6418" rx="1.5"/>
@@ -419,7 +444,7 @@ function setActiveColor(string $itemType = 'card'): string
                                 <a href="javascript:void(0)"
                                    onclick="BX.setCookie('orientation','line'); window.location.reload()"
                                    class="ml-2">
-                                    <svg width="32" height="32" viewBox="0 0 28 28" fill="none"
+                                    <svg width="27" height="27" viewBox="0 0 28 28" fill="none"
                                          class="<?= setActiveColor('line') ?>"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <rect x="1" y="1" width="26" height="6.84211" rx="1.5"/>
@@ -430,16 +455,17 @@ function setActiveColor(string $itemType = 'card'): string
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-row items-center">
+                    <div class="flex flex-row items-start md:justify-start justify-between">
                         <div id="osh-filter-horizontal-item" class="flex flex-row flex-wrap"
                              data-osh-filter-state="hide"></div>
                         <div id="osh-filter-horizontal-item-count" class="osh-filter-item mx-3 bg-filterGray
-                     hidden flex-row items-center px-4 py-2 font-semibold text-center text-sm rounded-md dark:bg-darkBox"
+                             hidden flex-row items-center md:px-4 md:py-2 py-1 px-3 font-semibold text-center text-sm
+                             rounded-md dark:bg-darkBox"
                              onclick="smartFilter.allFilterShowHide()">
                         </div>
                         <div id="osh-filter-horizontal-item-remove" class="osh-filter-item hidden"
                              onclick="smartFilter.removeHorizontalFilterAll()">
-                            <svg  class="md:w-9 w-8 md:h-9 h-9" viewBox="0 0 24 24" fill="none"
+                            <svg class="md:w-9 w-8 md:h-9 h-9" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 23.9531C18.5273 23.9531 23.9532 18.5273 23.9532 12C23.9532 5.46093 18.5156 0.046875 11.9883 0.046875C5.44918 0.046875 0.046875 5.46093 0.046875 12C0.046875 18.5273 5.46093 23.9531 12 23.9531ZM9.10548 18.9609C8.27343 18.9609 7.79293 18.5039 7.75778 17.6719L7.32418 8.10933H6.62108C6.30468 8.10933 6.03513 7.83983 6.03513 7.52343C6.03513 7.19528 6.30468 6.93748 6.62108 6.93748H9.28123V5.98828C9.28123 5.07418 9.87888 4.49998 10.7461 4.49998H13.1953C14.0625 4.49998 14.6601 5.07418 14.6601 5.98828V6.93748H17.3203C17.6367 6.93748 17.8945 7.19528 17.8945 7.52343C17.8945 7.83983 17.6367 8.10933 17.3203 8.10933H16.6406L16.207 17.6719C16.1601 18.5039 15.6797 18.9609 14.8476 18.9609H9.10548ZM10.4648 6.93748H13.4765V6.21093C13.4765 5.89453 13.2539 5.68358 12.9257 5.68358H11.0039C10.6875 5.68358 10.4648 5.89453 10.4648 6.21093V6.93748ZM9.82028 17.6719C10.1133 17.6719 10.289 17.4726 10.2773 17.1914L9.99608 9.33983C9.97263 9.05858 9.79683 8.87108 9.52733 8.87108C9.23438 8.87108 9.04683 9.07028 9.05858 9.33983L9.37498 17.2031C9.38668 17.4843 9.56248 17.6719 9.82028 17.6719ZM11.9765 17.6601C12.2695 17.6601 12.457 17.4726 12.457 17.1914V9.33983C12.457 9.07028 12.2695 8.87108 11.9765 8.87108C11.6836 8.87108 11.4961 9.07028 11.4961 9.33983V17.1914C11.4961 17.4726 11.6953 17.6601 11.9765 17.6601ZM14.1445 17.6719C14.4023 17.6719 14.5781 17.4843 14.5898 17.2031L14.9062 9.33983C14.9179 9.07028 14.7187 8.87108 14.4257 8.87108C14.1679 8.87108 13.9805 9.05858 13.9687 9.33983L13.6875 17.1914C13.6757 17.4726 13.8515 17.6719 14.1445 17.6719Z"
                                       class="fill-lightGrayBg dark:fill-white"/>

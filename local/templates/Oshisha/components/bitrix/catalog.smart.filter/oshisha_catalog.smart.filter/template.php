@@ -74,10 +74,11 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                     <div class="<?php if ($arParams["FILTER_VIEW_MODE"] == "HORIZONTAL"): ?>col-sm-6 col-md-4<?php else: ?><?php endif ?>  mb-5 smart-filter-parameters-box bx-active">
                         <span class="smart-filter-container-modef"></span>
 
-                        <div class="smart-filter-parameters-box-title mb-2"
+                        <div class="smart-filter-parameters-box-title mb-2 md:text-sm text-md font-semibold
+                            dark:font-normal dark:text-medium text-gray-box-dark dark:text-white"
                              onclick="smartFilter.hideFilterProps(this)">
-                                <span class="smart-filter-parameters-box-title-text text-sm  text-dark
-                                dark:text-textDarkLightGray font-semibold dark:text-medium">
+                                <span class="smart-filter-parameters-box-title-text mb-2 md:text-sm text-md font-semibold
+                            dark:font-normal dark:text-medium text-gray-box-dark dark:text-white">
                                     <?= (int)$arItem['ID'] === B2B_PRICE ? 'Цена' : $arItem['NAME'] ?>
                                 </span>
                                 <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-up">
@@ -89,7 +90,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                             <div class="smart-filter-parameters-box-container">
                                 <div class="smart-filter-input-group-number">
                                     <div class="flex flex-row items-center justify-between mb-4">
-                                        <div class="form-group w-24">
+                                        <div class="form-group md:w-24 w-28">
                                             <div class="smart-filter-input-container w-full">
                                                 <input
                                                         class="min-price px-3.5 py-3 mr-3 text-center dark:bg-grayButton
@@ -106,8 +107,8 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                                 />
                                             </div>
                                         </div>
-                                        -
-                                        <div class="form-group w-24">
+                                       <b>—</b>
+                                        <div class="form-group md:w-24 w-28">
                                             <div class="smart-filter-input-container w-full">
                                                 <input
                                                         class="max-price px-3.5 text-center py-3 mr-3 w-full dark:bg-grayButton
@@ -170,8 +171,9 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                             onclick="smartFilter.click(this)"
                                     />
                                     <label data-role="label_in_stoсk"
-                                           class="smart-filter-checkbox-text text-sm font-semibold dark:text-medium
-                                            text-dark dark:text-textDarkLightGray hide_not_available"
+                                           class="smart-filter-checkbox-text hide_not_available dark:text-white
+                                            md:text-sm text-md font-semibold dark:font-normal dark:text-medium
+                                            text-gray-box-dark"
                                            id="hide_not_available_label" for="<?php echo $ar["CONTROL_ID"] ?>">
                                         В наличии
                                     </label>
@@ -223,17 +225,17 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                     <?php endif ?> mb-4 smart-filter-parameters-box
                     <?php if ($arItem["DISPLAY_EXPANDED"] == "Y") { ?>bx-active<?php } ?>">
                         <span class="smart-filter-container-modef"></span>
-                        <div class="smart-filter-parameters-box-title mb-2 flex flex-row items-center cursor-pointer"
+                        <div class="smart-filter-parameters-box-title md:mb-2 mb-3 flex flex-row items-center cursor-pointer"
                              onclick="smartFilter.hideFilterProps(this)">
                             <span data-role="prop_angle" class="smart-filter-angle smart-filter-angle-down mr-3">
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg" class="smart-filter-angles">
+                                <svg viewBox="0 0 16 16" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg" class="smart-filter-angles md:w-4 w-5 md:h-4 h-5">
                                      <path d="M1.89089 4.49273C1.50382 4.88766 1.50382 5.52803 1.89089 5.92295L6.73974 10.8657C7.51402 11.6549 8.76861 11.6546 9.54249 10.8651L14.3895 5.91931C14.7766 5.52439 14.7766 4.88402 14.3895 4.48908C14.0024 4.09413 13.3748 4.09413 12.9878 4.48908L8.83927 8.72208C8.45223 9.1171 7.82464 9.117 7.4376 8.72208L3.29257 4.49273C2.90551 4.09778 2.27795 4.09778 1.89089 4.49273Z"
-                                           fill="#838383"/>
+                                           class="fill-iconLune"/>
                                 </svg>
                             </span>
-                            <span class="smart-filter-parameters-box-title-text
-                            md:text-sm text-lg font-semibold dark:text-medium text-dark dark:text-textDarkLightGray">
+                            <span class="smart-filter-parameters-box-title-text md:text-sm text-md font-semibold
+                            dark:font-normal dark:text-medium text-gray-box-dark dark:text-white">
                                 <?= $arItem["NAME"] ?></span>
                             <?php if ($arItem["FILTER_HINT"] <> ""): ?>
                                 <span class="smart-filter-hint">
@@ -734,7 +736,9 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                     }
                                 );
                                 ?>
-                                    <div class="smart-filter-input-group-checkbox-list overflow-auto max-h-64 <?php if ($arItem["DISPLAY_EXPANDED"] !== "Y") { ?> hidden <?php } ?>">
+                                    <div class="smart-filter-input-group-checkbox-list overflow-auto max-h-64
+                                    md:border-0 border-t border-b md:pt-0 pt-2 md:pb-0 pb-2 border-white dark:border-grayButton
+                                    <?php if ($arItem["DISPLAY_EXPANDED"] !== "Y") { ?> hidden <?php } ?>">
                                         <?php foreach ($arItem["VALUES"] as $val => $ar): ?>
                                             <div class="form-group form-check mb-2">
                                                 <input
@@ -753,7 +757,7 @@ if (isset($templateData['TEMPLATE_THEME'])) {
                                                 />
                                                 <label data-role="label_<?= $ar["CONTROL_ID"] ?>"
                                                        class="smart-filter-checkbox-text form-check-label font-light
-                                                        text-dark dark:text-textDarkLightGray text-sm ml-2"
+                                                        text-dark dark:text-textDarkLightGray text-sm ml-2 dark:font-extralight"
                                                        id="<?= $ar["VALUE"]; ?>" for="<?php echo $ar["CONTROL_ID"] ?>">
                                                     <?= $ar["VALUE"]; ?>
                                                 </label>
