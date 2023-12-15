@@ -475,7 +475,7 @@ if ($request->get('ORDER_ID') <> '') {
                                     <?= $arParams['MESS_PAYMENT_BLOCK_NAME'] ?>
                                 </div>
                             </div>
-                            <div class="bx-soa-section-content py-2.5"></div>
+                            <div class="bx-soa-section-content py-2.5" id="paysystems_block"></div>
                         </div>
                         <div id="user-agreements" class="p-4"></div>
                         <div class="new_block_with_comments mt-0 mb-8" id="new_block_with_comments">
@@ -639,6 +639,9 @@ if ($request->get('ORDER_ID') <> '') {
             data-total-block-id='bx-soa-total'
             data-user-agreements-block-id='user-agreements'
             data-user-check-block-id='userCheck'
+            data-paysystems-block-id='paysystems_block'
+            data-property-validation="true"
+            data-show-warnings="true"
     ></script>
     <script>
         <?php if ($USER->IsAuthorized()) {?>
