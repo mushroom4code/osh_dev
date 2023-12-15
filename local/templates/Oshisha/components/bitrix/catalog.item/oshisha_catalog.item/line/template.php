@@ -130,7 +130,7 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
             if ($mobile->isMobile()) { ?>
             <div class="flex flex-row w-full justify-between order-1 bg-textDark dark:bg-lightGrayBg py-3 px-1">
                 <?php } //start tag mobile?>
-                <div class="box_with_title_like md:w-5/12 w-8/12 order-1">
+                <div class="box_with_title_like md:w-5/12 w-8/12 order-1 flex items-center">
                     <div class="box_with_text">
                         <a class="bx_catalog_item_title text-sm md:font-bold font-semibold text-textLight
                          md:line-clamp-none line-clamp-2 dark:font-light dark:text-textDarkLightGray
