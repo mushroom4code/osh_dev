@@ -140,7 +140,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             // this.show(this.propsBlockNode);
             this.show(this.deliveryBlockNode);
             this.show(this.regionBlockNode);
-            this.show(this.paySystemBlockNode);
+            // this.show(this.paySystemBlockNode);
             this.orderBlockNode.removeAttribute('style');
             if (!this.result.IS_AUTHORIZED || typeof this.result.LAST_ORDER_DATA.FAIL !== 'undefined')
                 this.initFirstSection();
@@ -1798,7 +1798,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     this.editActiveDeliveryBlock(true);
                     break;
                 case this.paySystemBlockNode.id:
-                    this.editActivePaySystemBlock(true);
+                    // this.editActivePaySystemBlock(true);
                     break;
                 case this.pickUpBlockNode.id:
                     this.editActivePickUpBlock(true);
@@ -4081,6 +4081,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         },
 
         editActivePaySystemBlock: function (activeNodeMode) {
+            console.log('now im watching');
             var node = activeNodeMode ? this.paySystemBlockNode : this.paySystemHiddenBlockNode,
                 paySystemContent, paySystemNode;
 

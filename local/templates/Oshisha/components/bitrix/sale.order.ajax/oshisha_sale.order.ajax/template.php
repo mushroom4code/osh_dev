@@ -640,6 +640,8 @@ if ($request->get('ORDER_ID') <> '') {
             data-user-agreements-block-id='user-agreements'
             data-user-check-block-id='userCheck'
             data-paysystems-block-id='paysystems_block'
+            data-property-validation="true"
+            data-show-warnings="true"
     ></script>
     <script>
         <?php if ($USER->IsAuthorized()) {?>

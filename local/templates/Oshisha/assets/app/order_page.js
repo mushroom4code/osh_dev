@@ -1,6 +1,6 @@
 import OrderUserTypeCheck from "./components/order_page/OrderUserTypeCheck";
 import OrderUserProps from "./components/order_page/OrderUserProps";
-import OrderPaysystems from "./components/order_page/OrderPaysystems";
+import OrderPaySystems from "./components/order_page/OrderPaySystems";
 import OrderUserAgreements from "./components/order_page/OrderUserAgreements";
 import OrderComments from "./components/order_page/OrderComments";
 import {createRoot} from 'react-dom/client';
@@ -12,14 +12,17 @@ BX.OrderPageComponents = {
     result: null,
     params: null,
     locations: null,
+    options: {},
+    propertyValidation: null,
+    showWarnings: null,
     OrderUserTypeCheckRef: null,
     OrderUserTypeCheckBlock: null,
     OrderUserTypeCheckRoot: null,
     OrderUserPropsBlock: null,
     OrderUserPropsRoot: null,
-    OrderPaysystemsBlock: null,
-    OrderPaysystemsRef: null,
-    OrderPaysystemsRoot: null,
+    OrderPaySystemsBlock: null,
+    OrderPaySystemsRef: null,
+    OrderPaySystemsRoot: null,
     OrderUserAgreementsBlock: null,
     OrderUserAgreementsRoot: null,
     OrderCommentsBlock: null,
@@ -29,6 +32,18 @@ BX.OrderPageComponents = {
         this.result = JSON.parse(currentDataset.result);
         this.params = JSON.parse(currentDataset.params);
         this.locations = JSON.parse(currentDataset.locations);
+        this.propertyValidation = currentDataset.propertyValidation;
+        this.showWarnings = currentDataset.showWarnings;
+
+        this.options.deliveriesPerPage = parseInt(this.params.DELIVERIES_PER_PAGE);
+        this.options.paySystemsPerPage = parseInt(this.params.PAY_SYSTEMS_PER_PAGE);
+        this.options.pickUpsPerPage = parseInt(this.params.PICKUPS_PER_PAGE);
+
+        this.options.showWarnings = !!this.showWarnings;
+        this.options.propertyValidation = !!this.propertyValidation;
+        this.options.priceDiffWithLastTime = false;
+
+        this.options.totalPriceChanged = false;
 
         this.OrderUserTypeCheckBlock = document.getElementById(document.currentScript.dataset.userCheckBlockId);
         if (this.OrderUserTypeCheckBlock) {
@@ -42,10 +57,10 @@ BX.OrderPageComponents = {
             this.OrderUserPropsRoot = createRoot(this.OrderUserPropsBlock);
         }
 
-        this.OrderPaysystemsBlock = document.getElementById(document.currentScript.dataset.paysystemsBlockId);
-        if (this.OrderPaysystemsBlock) {
-            this.OrderPaysystemsRef = React.createRef();
-            this.OrderPaysystemsRoot = createRoot(this.OrderPaysystemsBlock);
+        this.OrderPaySystemsBlock = document.getElementById(document.currentScript.dataset.paysystemsBlockId);
+        if (this.OrderPaySystemsBlock) {
+            this.OrderPaySystemsRef = React.createRef();
+            this.OrderPaySystemsRoot = createRoot(this.OrderPaySystemsBlock);
         }
 
         this.OrderUserAgreementsBlock = document.getElementById(document.currentScript.dataset.userAgreementsBlockId);
@@ -97,16 +112,18 @@ BX.OrderPageComponents = {
                 are_locations_prepared: areLocationsPrepared});
         }
 
-        if (!this.OrderPaysystemsRef.current) {
-            this.OrderPaysystemsRoot.render(
-                <OrderPaysystems
-                    ref={this.OrderPaysystemsRef}
+        if (!this.OrderPaySystemsRef.current) {
+            this.OrderPaySystemsRoot.render(
+                <OrderPaySystems
+                    ref={this.OrderPaySystemsRef}
+                    domNode={this.OrderPaySystemsBlock}
                     result={this.result}
                     params={this.params}
+                    options={this.options}
                 />
             );
         } else {
-            this.OrderPaysystemsRef.current.setState({result: this.result});
+            this.OrderPaySystemsRef.current.setState({result: this.result});
         }
 
         if (this.OrderUserAgreementsBlock) {
