@@ -105,6 +105,9 @@ if (isset($arResult['ITEM'])) {
 
     $buttonSizeClass = isset($arResult['BIG_BUTTONS']) && $arResult['BIG_BUTTONS'] === 'Y' ? 'btn-md' : 'btn-sm';
     $itemHasDetailUrl = isset($item['DETAIL_PAGE_URL']) && $item['DETAIL_PAGE_URL'] != '';
+    if($arResult['TYPE'] !== 'card' && $arResult['TYPE'] !== 'line'){
+        $arResult['TYPE'] = !empty($_COOKIE['orientation'])  ? $_COOKIE['orientation'] : 'card';
+    }
     ?>
 
     <div class="product-item-container h-full relative
