@@ -118,19 +118,14 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
 <div class="catalog-item-product dark:bg-darkBox border dark:border-0 border-gray-product rounded-xl md:px-4 py-4 px-3
  h-full relative <?= ($item['SECOND_PICT'] ? 'bx_catalog_item double' : 'bx_catalog_item'); ?>"
      data-product_id="<?= $item['ID'] ?>">
-    <div class="bx_catalog_item_container position-relative h-full
-            <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
+    <div class="bx_catalog_item_container position-relative h-full  <?= $taste['VALUE'] ? 'is-taste' : '' ?>">
         <?php
-
         $showToggler = false; // по умолчанию стрелки нет (случаи когда вкус 1)
-        $togglerState = 'd-none';
-        $listClass = '';
         if ($taste['VALUE']) {
-            if (count($taste['VALUE']) > 2) {
+//            // TODO - 23 - число символов которое помещается в строку
+            $boolUp = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1]) + mb_strlen($taste['VALUE'][2])) > 23;
+            if (count($taste['VALUE']) > 1 && $boolUp  || count($taste['VALUE']) > 3) {
                 $showToggler = true;
-            } elseif (count($taste['VALUE']) > 1) {
-                // поместятся на одной строке 2 вкуса или нет
-                $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18;
             }
         }
 
