@@ -427,7 +427,7 @@ if ($request->get('ORDER_ID') <> '') {
                                             <?= $arParams['MESS_REGION_BLOCK_NAME'] ?>
                                         </div>
                                     </div>
-                                    <div class="bx-soa-section-content"></div>
+                                    <div class="bx-soa-section-content" id="delivery-block"></div>
                                 </div>
                             </div>
                         </div>
@@ -632,7 +632,8 @@ if ($request->get('ORDER_ID') <> '') {
             data-auth-block-id='bx-soa-auth'
             data-region-block-id='bx-soa-region'
             data-pay-system-block-id='bx-soa-paysystem'
-            data-delivery-block-id='bx-soa-delivery'
+            data-delivery-block-id='delivery-block'
+<!--            data-delivery-block-id='bx-soa-delivery'-->
             data-pick-up-block-id='bx-soa-pickup'
             data-user-props-block-id='user-properties-block'
             data-new-block-with-comment-id='new_block_with_comment_box'

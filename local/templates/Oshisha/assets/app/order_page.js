@@ -1,5 +1,6 @@
 import OrderUserTypeCheck from "./components/order_page/OrderUserTypeCheck";
 import OrderUserProps from "./components/order_page/OrderUserProps";
+import OrderDelivery from "./components/order_page/OrderDelivery";
 import OrderPaySystems from "./components/order_page/OrderPaySystems";
 import OrderUserAgreements from "./components/order_page/OrderUserAgreements";
 import OrderComments from "./components/order_page/OrderComments";
@@ -20,6 +21,9 @@ BX.OrderPageComponents = {
     OrderUserTypeCheckRoot: null,
     OrderUserPropsBlock: null,
     OrderUserPropsRoot: null,
+    OrderDeliveryRef: null,
+    OrderDeliveryBlock: null,
+    OrderDeliveryRoot: null,
     OrderPaySystemsBlock: null,
     OrderPaySystemsRef: null,
     OrderPaySystemsRoot: null,
@@ -55,6 +59,12 @@ BX.OrderPageComponents = {
         if (this.OrderUserPropsBlock) {
             this.OrderUserPropsRef = React.createRef();
             this.OrderUserPropsRoot = createRoot(this.OrderUserPropsBlock);
+        }
+
+        this.OrderDeliveryBlock = document.getElementById(document.currentScript.dataset.deliveryBlockId);
+        if (this.OrderDeliveryBlock) {
+            this.OrderDeliveryRef = React.createRef();
+            this.OrderDeliveryRoot = createRoot(this.OrderDeliveryBlock);
         }
 
         this.OrderPaySystemsBlock = document.getElementById(document.currentScript.dataset.paysystemsBlockId);
@@ -110,6 +120,19 @@ BX.OrderPageComponents = {
         } else {
             this.OrderUserPropsRef.current.setState({result: this.result, locations: this.locations,
                 are_locations_prepared: areLocationsPrepared});
+        }
+
+        if (!this.OrderDeliveryRef.current) {
+            this.OrderDeliveryRoot.render(
+                <OrderDelivery
+                    ref={this.OrderDeliveryRef}
+                    result={this.result}
+                    params={this.params}
+                    options={this.options}
+                />
+            );
+        } else {
+            this.OrderDeliveryRef.current.setState({result: this.result});
         }
 
         if (!this.OrderPaySystemsRef.current) {
