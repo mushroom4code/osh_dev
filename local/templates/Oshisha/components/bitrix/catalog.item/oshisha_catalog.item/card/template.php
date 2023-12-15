@@ -132,36 +132,24 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                 // поместятся на одной строке 2 вкуса или нет
                 $showToggler = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1])) > 18;
             }
-            $togglerState = $showToggler ? ' many-tastes' : ' d-none many-tastes';
-            $listClass = $showToggler ? ' js__tastes-list' : '';
         }
 
         ?>
         <div class="item-product-info h-full flex flex-col justify-between">
-            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> z-9 h-7
+            <div class="toggle_taste card-price <?= $taste['VALUE'] ? 'js__tastes' : '' ?> z-20 h-7 relative
             <?php if (!$show_price) { ?> blur-2xl <?php } ?>">
-                <div class="variation_taste flex flex-wrap flex-row overflow-auto h-7
-                <?= $showToggler ? '' : 'show_padding' ?> <?= $listClass ?>">
+                <div class="variation_taste flex flex-wrap flex-row overflow-hidden md:h-7 h-5 js__tastes-list w-97">
                     <?php if ($taste['VALUE']) {
                         foreach ($taste['VALUE'] as $key => $name) {
                             foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
                                 if ($key === $keys) {
                                     $color = explode('#', $value);
-                                    $tasteSize = 'taste-small';
-
-                                    if (4 < mb_strlen($name) && mb_strlen($name) <= 8) {
-                                        $tasteSize = 'taste-normal';
-                                    } elseif (8 < mb_strlen($name) && mb_strlen($name) <= 13) {
-                                        $tasteSize = 'taste-long';
-                                    } elseif (mb_strlen($name) > 13) {
-                                        $tasteSize = 'taste-xxl';
-                                    }
 
                                     $propId = $taste['ID'];
                                     $valueKey = abs(crc32($taste["VALUE_ENUM_ID"][$keys]));
                                     ?>
-                                    <span class="taste cursor-pointer js__taste h-fit md:px-2.5 px-1.5 mr-1 md:py-1 py-0.5
-                                    mb-1 md:text-xs text-10 rounded-full <?= $tasteSize ?>"
+                                    <span class="taste cursor-pointer js__taste h-fit md:px-2 px-1.5 mr-1 md:py-1 py-0.5
+                                    mb-1 md:text-xs text-10 rounded-full"
                                           data-prop-id="<?= "ArFilter_{$propId}" ?>"
                                           data-background="<?= '#' . $color[1] ?>"
                                           id="<?= "taste-ArFilter_{$propId}_{$valueKey}" ?>"
@@ -171,9 +159,17 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                         }
                     } ?>
                 </div>
-                <div class="variation_taste_toggle <?= $togglerState ?> js__taste_toggle"></div>
+                <?php if ($showToggler) { ?>
+                    <div class="absolute top-0 right-0 z-20">
+                        <svg width="15" height="10" class="js__toggle-show rotate-0"
+                             viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.1636 -0.00231934H6.34969H1.11438C0.218505 -0.00231934 -0.229434 1.41033 0.405145 2.23844L5.23917 8.54663C6.01373 9.5574 7.27356 9.5574 8.04812 8.54663L9.88653 6.14757L12.8821 2.23844C13.5074 1.41033 13.0594 -0.00231934 12.1636 -0.00231934Z"
+                                  fill="#BFBFBF"/>
+                        </svg>
+                    </div>
+                <?php } ?>
             </div>
-            <div>
+            <div class="product-toggle">
                 <div class="bx_catalog_item_overlay"></div>
                 <div class="image_cart md:h-40 h-28 position-relative md:mb-3 mb-2 <?php if (!$show_price) { ?> blur-lg <?php } ?>
                     <?= $not_auth ?>" data-href="<?= $href ?>">
@@ -286,7 +282,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
             <?php
             $showSubscribeBtn = false;
             $compareBtnMessage = ($arParams['MESS_BTN_COMPARE'] != '' ? $arParams['MESS_BTN_COMPARE'] : GetMessage('CT_BCT_TPL_MESS_BTN_COMPARE')); ?>
-            <div class="bx_catalog_item_controls relative">
+            <div class="bx_catalog_item_controls relative product-toggle">
                 <?php if ($price['PRICE_DATA']['PRICE'] !== '0' && $item['PRODUCT']['QUANTITY'] !== '0') { ?>
                     <div class="box_with_fav_bask flex md:flex-row flex-col md:justify-between md:items-center">
                         <?php if ($price['PRICE_DATA']['PRICE'] !== '') { ?>

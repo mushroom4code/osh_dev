@@ -164,19 +164,17 @@ $(document).ready(function () {
 
 
     if (bool === true) {
-        $(document).on('click', '.js__taste_toggle', function (e) {
-            $(this).closest('.js__tastes').toggleClass('active');
-            let cardWrapper = $(e.target).closest('.bx_catalog_item_container'),
-                tasteOverlay = cardWrapper.find('.bx_catalog_item_overlay'),
-                priceBox = cardWrapper.find('.info-prices-box-hover');
-
-            if ($(this).closest('.js__tastes').hasClass('active')) {
-                tasteOverlay.css({height: '100%'});
-                priceBox.css({zIndex: '791'});
+        $(document).on('click', '.js__toggle-show', function (e) {
+            if ($(this).hasClass('rotate-0')) {
+                $(this).removeClass('rotate-0').addClass('rotate-180');
+                $(this).closest('.toggle_taste').find('.js__tastes-list').removeClass('overflow-hidden');
             } else {
-                tasteOverlay.css({height: '0'});
-                priceBox.css({zIndex: '791'});
+                $(this).removeClass('rotate-180').addClass('rotate-0');
+                $(this).closest('.toggle_taste').find('.js__tastes-list').addClass('overflow-hidden');
             }
+            $(this).closest('.bx_catalog_item_container').find('.product-toggle').each(function () {
+                $(this).toggleClass('blur-sm');
+            });
         })
         tasteInit();
     }

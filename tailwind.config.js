@@ -25,19 +25,19 @@ module.exports = {
                 darkBox: '#313131',
                 grayButton: '#464646',
                 grayLight: '#8B8B8B',
-                whiteOpacity:'#FFFFFF99',
-                filterGray:'#F3F3F3',
+                whiteOpacity: '#FFFFFF99',
+                filterGray: '#F3F3F3',
                 textDarkLightGray: '#E8E8E8',
                 textDark: '#F0F0F0',
                 greenButton: '#0FAC2B',
                 greenLight: '#0BC82D',
                 yellowSt: '#FFCB13',
-                borderColor:'#D9D9D9',
+                borderColor: '#D9D9D9',
                 grayIconLights: '#BFBFBF',
                 tagFilterGray: '#5F5F5F',
                 fancyboxDark: '#000000BA',
                 fancybox: '#3C3C3C87',
-                iconLune:'#838383',
+                iconLune: '#838383',
                 menuFooter: '#4F4F4F',
                 iconGray: '#979797',
                 'gray-product': '#CFCFCF',
@@ -64,9 +64,10 @@ module.exports = {
                 '48-vh': '48vh'
             },
             width: {
-                'inherit': 'inherit'
+                'inherit': 'inherit',
+                '97': '97%'
             },
-            fontSize:{
+            fontSize: {
                 '13': '13px',
                 '10': '10px',
             },
