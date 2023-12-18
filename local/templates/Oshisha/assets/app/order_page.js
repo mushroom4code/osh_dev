@@ -49,36 +49,36 @@ BX.OrderPageComponents = {
 
         this.options.totalPriceChanged = false;
 
-        this.OrderUserTypeCheckBlock = document.getElementById(document.currentScript.dataset.userCheckBlockId);
+        this.OrderUserTypeCheckBlock = document.getElementById(currentDataset.userCheckBlockId);
         if (this.OrderUserTypeCheckBlock) {
             this.OrderUserTypeCheckRef = React.createRef();
             this.OrderUserTypeCheckRoot = createRoot(this.OrderUserTypeCheckBlock);
         }
 
-        this.OrderUserPropsBlock = document.getElementById(document.currentScript.dataset.userPropsBlockId);
+        this.OrderUserPropsBlock = document.getElementById(currentDataset.userPropsBlockId);
         if (this.OrderUserPropsBlock) {
             this.OrderUserPropsRef = React.createRef();
             this.OrderUserPropsRoot = createRoot(this.OrderUserPropsBlock);
         }
 
-        this.OrderDeliveryBlock = document.getElementById(document.currentScript.dataset.deliveryBlockId);
+        this.OrderDeliveryBlock = document.getElementById(currentDataset.deliveryBlockId);
         if (this.OrderDeliveryBlock) {
             this.OrderDeliveryRef = React.createRef();
             this.OrderDeliveryRoot = createRoot(this.OrderDeliveryBlock);
         }
 
-        this.OrderPaySystemsBlock = document.getElementById(document.currentScript.dataset.paysystemsBlockId);
+        this.OrderPaySystemsBlock = document.getElementById(currentDataset.paysystemsBlockId);
         if (this.OrderPaySystemsBlock) {
             this.OrderPaySystemsRef = React.createRef();
             this.OrderPaySystemsRoot = createRoot(this.OrderPaySystemsBlock);
         }
 
-        this.OrderUserAgreementsBlock = document.getElementById(document.currentScript.dataset.userAgreementsBlockId);
+        this.OrderUserAgreementsBlock = document.getElementById(currentDataset.userAgreementsBlockId);
         if (this.OrderUserAgreementsBlock) {
             this.OrderUserAgreementsRoot = createRoot(this.OrderUserAgreementsBlock);
         }
 
-        this.OrderCommentsBlock = document.getElementById(document.currentScript.dataset.newBlockWithCommentId);
+        this.OrderCommentsBlock = document.getElementById(currentDataset.newBlockWithCommentId);
         if(this.OrderCommentsBlock) {
             this.OrderCommentsRoot = createRoot(this.OrderCommentsBlock);
         }
@@ -126,6 +126,7 @@ BX.OrderPageComponents = {
             this.OrderDeliveryRoot.render(
                 <OrderDelivery
                     ref={this.OrderDeliveryRef}
+                    domNode={this.OrderDeliveryBlock}
                     result={this.result}
                     params={this.params}
                     options={this.options}

@@ -1,4 +1,4 @@
-import OrderUserProp from './OrderUserProp';
+import OrderProp from './OrderProp';
 import React from "react";
 
 class OrderUserProps extends React.Component {
@@ -38,9 +38,9 @@ class OrderUserProps extends React.Component {
                     if (this.state.group_buyer_props.find(item => item === group.getName()) !== undefined) {
                         a.push(property.getId());
                         div.push(
-                            <OrderUserProp key={property.getId()} property={property} locations={this.state.locations}
-                                           disabled={disabled} result={this.state.result}
-                                           are_locations_prepared={this.state.are_locations_prepared}/>
+                            <OrderProp key={property.getId()} property={property} locations={this.state.locations}
+                                       disabled={disabled} result={this.state.result}
+                                       are_locations_prepared={this.state.are_locations_prepared}/>
                         );
                     }
                 }

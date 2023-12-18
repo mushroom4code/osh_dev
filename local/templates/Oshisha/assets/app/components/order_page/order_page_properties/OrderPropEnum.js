@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 
-function OrderUserPropEnum({property, disabled}) {
+function OrderPropEnum({property, disabled}) {
     const [propertySettings, setPropertySettings] = useState(property.getSettings());
     if (!disabled) {
         return (<div className="soa-property-container flex justify-between">
@@ -23,4 +23,4 @@ function OrderUserPropEnum({property, disabled}) {
     }
 }
 
-export default OrderUserPropEnum;
+export default OrderPropEnum;

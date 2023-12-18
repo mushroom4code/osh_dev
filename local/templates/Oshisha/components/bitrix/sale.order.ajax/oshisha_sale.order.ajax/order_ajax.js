@@ -1795,7 +1795,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     //this.editActiveRegionBlock(true);
                     break;
                 case this.deliveryBlockNode.id:
-                    this.editActiveDeliveryBlock(true);
+                    // this.editActiveDeliveryBlock(true);
                     break;
                 case this.paySystemBlockNode.id:
                     // this.editActivePaySystemBlock(true);
@@ -2057,7 +2057,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             // this.editActivePropsBlock(true);
             BX.OrderPageComponents.renderComponents(this.result, this.locations, true);
             this.editActiveRegionBlock(true);
-            this.editActiveDeliveryBlock(true);
+            // this.editActiveDeliveryBlock(true);
             // this.editActivePaySystemBlock(true);
 
                 // if (this.activeSection !== null) {
@@ -2113,7 +2113,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     this.editPaySystemBlock(active);
                     break;
                 case this.deliveryBlockNode.id:
-                    this.editDeliveryBlock('bx-soa-delivery');
+                    // this.editDeliveryBlock('bx-soa-delivery');
                     break;
                 case this.pickUpBlockNode.id:
                     this.editPickUpBlock(active);
@@ -4453,6 +4453,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         },
 
         editActiveDeliveryBlock: function (activeNodeMode) {
+            console.log('uuuuuuuuuuu');
             var node = activeNodeMode ? this.deliveryBlockNode : this.deliveryHiddenBlockNode,
                 deliveryContent, deliveryNode;
 

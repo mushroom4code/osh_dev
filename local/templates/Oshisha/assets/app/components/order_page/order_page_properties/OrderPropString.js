@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 
-function OrderUserPropString({property, disabled}) {
+function OrderPropString({property, disabled}) {
     const [propertySettings, setPropertySettings] = useState(property.getSettings());
 
     return (<div className="soa-property-container">
@@ -19,4 +19,4 @@ function OrderUserPropString({property, disabled}) {
     </div>);
 }
 
-export default OrderUserPropString;
+export default OrderPropString;
