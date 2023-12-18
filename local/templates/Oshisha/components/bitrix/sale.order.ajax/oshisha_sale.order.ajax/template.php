@@ -239,7 +239,7 @@ $scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'];
 $this->addExternalJs($templateFolder . '/order_ajax.js');
 PropertyValueCollection::initJs();
 $this->addExternalJs($templateFolder . '/script.js');
-
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
 ?>
     <NOSCRIPT>
         <div style="color:red"><?= Loc::getMessage('SOA_NO_JS') ?></div>
@@ -467,9 +467,16 @@ if ($request->get('ORDER_ID') <> '') {
                                        id="soa-property-USER_RULES" checked name="USER_RULES"/>
                                 <label class="bx-soa-custom-label m-0">
                                     Я принимаю условия
-                                    <a class="color-redLight text-decoration-underline" href="/about/users_rules/">
-                                        Пользовательского соглашения
-                                    </a>
+                                    <?php if ($showUserContent) { ?>
+                                        <a class="color-redLight text-decoration-underline" href="/about/users_rules/">
+                                            Пользовательского соглашения
+                                        </a>
+                                    <?php } else { ?>
+                                        <a class="color-redLight text-decoration-underline"
+                                           href="/about/cookie/">
+                                            Политики обработки Cookie
+                                        </a>
+                                    <?php } ?>
                                 </label>
                             </p>
                             <p class="d-flex flex-row align-items-center font-14">

@@ -19,30 +19,34 @@ if (empty($arResult["ALL_ITEMS"]))
 CUtil::InitJSCore();
 
 $menuBlockId = "catalog_menu_" . $this->randString();
-
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
 $menu_for_JS = [];
 foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
     $HAS_CHILD = 0;
     if (is_array($arColumns) && count($arColumns) > 0)
         $HAS_CHILD = 1;
-    if ($arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/diskont/'
-        && $arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/hit/' && !empty($arResult["ALL_ITEMS"][$itemID]['TEXT'])) {
-        $menu_for_JS['MAIN'][] = [
-            'LINK' => $arResult["ALL_ITEMS"][$itemID]["LINK"],
-            'TEXT' => $arResult["ALL_ITEMS"][$itemID]["TEXT"],
-            'ID' => $itemID,
-            'HAS_CHILD' => $HAS_CHILD,
-        ];
-        if (is_array($arColumns) && count($arColumns) > 0) {
-            foreach ($arColumns as $key => $arRow) {
-                foreach ($arRow as $itemIdLevel_2 => $arLevel_3) {
-                    $menu_for_JS['ELEMENT'][$itemID][] = [
-                        'LINK' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["LINK"],
-                        'TEXT' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["TEXT"],
-                    ];
+
+    if ($showUserContent || !$showUserContent && $arResult["ALL_ITEMS"][$itemID]['TEXT'] === 'Чай') {
+        if ($arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/diskont/'
+            && $arResult["ALL_ITEMS"][$itemID]["LINK"] !== '/catalog/hit/' && !empty($arResult["ALL_ITEMS"][$itemID]['TEXT'])) {
+            $menu_for_JS['MAIN'][] = [
+                'LINK' => $arResult["ALL_ITEMS"][$itemID]["LINK"],
+                'TEXT' => $arResult["ALL_ITEMS"][$itemID]["TEXT"],
+                'ID' => $itemID,
+                'HAS_CHILD' => $HAS_CHILD,
+            ];
+            if (is_array($arColumns) && count($arColumns) > 0) {
+                foreach ($arColumns as $key => $arRow) {
+                    foreach ($arRow as $itemIdLevel_2 => $arLevel_3) {
+                        $menu_for_JS['ELEMENT'][$itemID][] = [
+                            'LINK' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["LINK"],
+                            'TEXT' => $arResult["ALL_ITEMS"][$itemIdLevel_2]["TEXT"],
+                        ];
+                    }
                 }
+                usort($menu_for_JS['ELEMENT'][$itemID], 'sort_by_name_menu');
             }
-            usort($menu_for_JS['ELEMENT'][$itemID], 'sort_by_name_menu');
         }
     }
 }
@@ -70,22 +74,29 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
             return ($a["TEXT"] < $b["TEXT"]) ? -1 : 1;
         }
 
-        $result = json_encode($menu_for_JS) ?>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/diskont/">
-                <span class="text_catalog_link">Дисконт</span>
-            </a>
-        </li>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/catalog_new/">
-                <span class="text_catalog_link">Новинки</span>
-            </a>
-        </li>
-        <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
-            <a class="link_menu_header" href="/hit/">
-                <span class="text_catalog_link">Хиты</span>
-            </a>
-        </li>
+        $result = json_encode($menu_for_JS);
+        if ($showUserContent) { ?>
+            <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+                <a class="link_menu_header" href="/diskont/">
+                    <span class="text_catalog_link">Дисконт</span>
+                </a>
+            </li>
+            <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+                <a class="link_menu_header" href="/catalog_new/">
+                    <span class="text_catalog_link">Новинки</span>
+                </a>
+            </li>
+            <li class="li_menu_header  none_mobile" data-role="bx-menu-item">
+                <a class="link_menu_header" href="/hit/">
+                    <span class="text_catalog_link">Хиты</span>
+                </a>
+            </li>
+            <li class="li_menu_header none_mobile" data-role="bx-menu-item">
+                <a class="link_menu_header" href="/news/">
+                    <span class="text_catalog_link">Блог</span>
+                </a>
+            </li>
+        <?php } ?>
         <!--		<li class="li_menu_header  none_mobile" data-role="bx-menu-item">-->
         <!--            <a class="link_menu_header" href="/promotions/">-->
         <!--                <span class="text_catalog_link">Акции</span>-->
@@ -205,6 +216,4 @@ foreach ($arResult["MENU_STRUCTURE"] as $itemID => $arColumns) {
 
         });
     });
-
-
 </script>

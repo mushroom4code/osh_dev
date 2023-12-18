@@ -41,17 +41,21 @@ $jsParams = array(
     )
 );
 
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
 if ($arParams['PROFILE_AUTH'] == "Y"):?>
-    <div style="display: block" class="ctweb-smsauth-menu-block profile col-12 col-md-7" data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+    <div style="display: block" class="ctweb-smsauth-menu-block profile col-12 col-md-7"
+         data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
         <div class="ctweb-smsauth-box profile">
             <div>
                 <div class="row">
-                    <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>" class="ctweb-smsauth-menu-form profile"
+                    <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>"
+                          class="ctweb-smsauth-menu-form profile"
                           action="/bitrix/components/ctweb/sms.authorize/ajax.php"
                           method="POST" name="auth">
                         <?php echo bitrix_sessid_post(); ?>
-                        <input type="hidden" name="FORM_ID" value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE']?>">
-                        <input type="hidden" name="PROFILE_AUTH" value="<?= $arParams['PROFILE_AUTH']?>">
+                        <input type="hidden" name="FORM_ID"
+                               value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+                        <input type="hidden" name="PROFILE_AUTH" value="<?= $arParams['PROFILE_AUTH'] ?>">
                         <input type="hidden" name="recaptcha_token" value="">
                         <input id="<?= $jsParams['TEMPLATE']['STATE'] ?? Manager::STEP_PHONE_WAITING ?>" type="hidden"
                                name=""
@@ -60,13 +64,14 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                             <? ShowNote(GetMessage('SMS_PHONE_SAVED')); ?>
                         <?php elseif ($arResult['AUTH_RESULT'] === 'FAILED'): ?>
                             <? ShowError($arResult["strProfileError"]); ?>
-                        <?php endif;?>
+                        <?php endif; ?>
                         <h5 class="mt-2 mb-4"><b>Изменение номера телефона</b></h5>
 
                         <!--STEP PHONE WAITING-->
                         <div id="ctweb_form_step_1"
                              class="ctweb-smsauth-menu-step d-none">
-                            <p class="form-group mb-2 col-sm-12 col-md-12 profile-asterisk">* Будет выслан код подтверждения</p>
+                            <p class="form-group mb-2 col-sm-12 col-md-12 profile-asterisk">* Будет выслан код
+                                подтверждения</p>
                             <div class="form-group mb-2">
                                 <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label"
                                        for="smsauth-phone"><?= GetMessage("SMS_AUTH_PHONE") ?></label>
@@ -167,32 +172,33 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
         </div>
     </div>
 <?php elseif ($arParams['REGISTER'] == "Y") : ?>
-    <div class="ctweb-smsauth-menu-block profile"  data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+    <div class="ctweb-smsauth-menu-block profile" data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
         <div class="ctweb-smsauth-box profile">
             <?php if ($arResult['AUTH_RESULT'] === 'SUCCESS') : ?>
                 <?php if ($arResult['STEP'] === Manager::STEP_SUCCESS) : ?>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="error alert alert-success">
-                                <?= GetMessage("SMS_SUCCESS_AUTH"); ?>
-                            </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="error alert alert-success">
+                            <?= GetMessage("SMS_SUCCESS_AUTH"); ?>
                         </div>
                     </div>
-                <?php else: ?>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="error alert alert-success">
-                                <?= GetMessage("SMS_AUTH_ALREADY_AUTH"); ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
+                </div>
             <?php else: ?>
-                <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE']  ?>" class="ctweb-smsauth-menu-form"
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="error alert alert-success">
+                            <?= GetMessage("SMS_AUTH_ALREADY_AUTH"); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <?php else: ?>
+                <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>" class="ctweb-smsauth-menu-form"
                       action="/bitrix/components/ctweb/sms.authorize/ajax.php"
                       method="POST" name="auth">
                     <?php echo bitrix_sessid_post(); ?>
-                    <input type="hidden" name="FORM_ID" value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?> ?>">
+                    <input type="hidden" name="FORM_ID"
+                           value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?> ?>">
                     <input type="hidden" name="PROFILE_AUTH" value="<?= $arParams['PROFILE_AUTH'] ?>">
                     <input type="hidden" name="REGISTER" value="<?= $arParams['REGISTER'] ?>">
                     <input type="hidden" name="register" value="yes">
@@ -203,11 +209,23 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                     <div class="col-11 col-md-7 p-0 mb-2">
                         <!--STEP PNONE WAITING-->
                         <div id="ctweb_form_step_1" class="ctweb-smsauth-menu-step">
-                            <p class="message_for_user_minzdrav font-14 mb-4">
-                                Розничная дистанционная продажа (доставка) кальянов, табачной, никотинсодержащей
-                                продукции
-                                на
-                                сайте не осуществляется. Сайт предназначен для потребителей старше 18 лет.</p>
+                            <?php if ($showUserContent) { ?>
+                                <p class="message_for_user_minzdrav font-14 mb-4">
+                                    Розничная дистанционная продажа (доставка) кальянов, табачной, никотинсодержащей
+                                    продукции
+                                    на
+                                    сайте не осуществляется. Сайт предназначен для потребителей старше 18 лет.</p>
+                            <?php } else { ?>
+                                <p class="message_for_user_minzdrav font-14 mb-4">
+                                    Человеческий организм формируется в основной массе к 20 годам,
+                                    и не обо всех его особенностях молодой формирующийся человек может
+                                    знать - аллергия,
+                                    непереносимость некоторых продуктов и компонентов,
+                                    во избежание таких ситуаций мы ориентируемся на аудиторию 18+ и
+                                    более.<br>
+                                    Сайт предназначен для потребителей старше 18 лет. <br>
+                                </p>
+                            <?php } ?>
                             <div class="d-flex flex-lg-row flex-md-row flex-column justify-content-between mb-3">
                                 <p class="font-12 font-weight-bold">
                                     <span class="starrequired color-redLight">* </span>
@@ -248,31 +266,33 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                            placeholder="_@_._"
                                            value="<?= $arResult["EMAIL"] ?>"/>
                                 </div>
-                                <div class="form-group mb-3 col-md-6 col-lg-6 col-12 p-0">
-                                    <div class="d-flex flex-row align-items-center mb-2 position-relative">
-                                        <label class="col-form-label main-profile-form-label p-0"
-                                               for="main-profile-name">
-                                            <span class="starrequired color-redLight">* </span>
-                                            <?= GetMessage("PERSONAL_BIRTHDAY") ?>
-                                        </label>
-                                        <i class="fa fa-question-circle-o font-20 color-redLight ml-2 block-icon-text"
-                                           aria-hidden="true"></i>
-                                        <div class="d-none block-text br-10 p-3">
-                                            <p class="m-0">
-                                                Возраст необходимо указать для открытия информации не доступной к
-                                                просмотру
-                                                лицам не достигшим 18 лет.</p>
+                                <?php if ($showUserContent) { ?>
+                                    <div class="form-group mb-3 col-md-6 col-lg-6 col-12 p-0">
+                                        <div class="d-flex flex-row align-items-center mb-2 position-relative">
+                                            <label class="col-form-label main-profile-form-label p-0"
+                                                   for="main-profile-name">
+                                                <span class="starrequired color-redLight">* </span>
+                                                <?= GetMessage("PERSONAL_BIRTHDAY") ?>
+                                            </label>
+                                            <i class="fa fa-question-circle-o font-20 color-redLight ml-2 block-icon-text"
+                                               aria-hidden="true"></i>
+                                            <div class="d-none block-text br-10 p-3">
+                                                <p class="m-0">
+                                                    Возраст необходимо указать для открытия информации не доступной к
+                                                    просмотру
+                                                    лицам не достигшим 18 лет.</p>
+                                            </div>
                                         </div>
+                                        <input type="text" name="PERSONAL_BIRTHDAY" required
+                                               class="form-control input_lk bx-auth-input user-birthday readonly"
+                                               inputmode="none"
+                                               id="main-profile-brd"
+                                               autocomplete="Off"
+                                               value=""
+                                               minlength="8"
+                                               placeholder="dd/mm/yyyy"/>
                                     </div>
-                                    <input type="text" name="PERSONAL_BIRTHDAY" required
-                                           class="form-control input_lk bx-auth-input user-birthday readonly"
-                                           inputmode="none"
-                                           id="main-profile-brd"
-                                           autocomplete="Off"
-                                           value=""
-                                           minlength="8"
-                                           placeholder="dd/mm/yyyy"/>
-                                </div>
+                                <?php } ?>
                             </div>
                             <div class="form-group mb-1">
                                 <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
@@ -321,14 +341,22 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                                                id="soa-property-USER_RULES" checked name="USER_RULES"/>
                                         <label class="bx-soa-custom-label mb-0 ml-3">
                                             Я принимаю условия
-                                            <a class="color-redLight text-decoration-underline"
-                                               href="/about/users_rules/">
-                                                Пользовательского соглашения
-                                            </a>
+                                            <?php if ($showUserContent) { ?>
+                                                <a class="color-redLight text-decoration-underline"
+                                                   href="/about/users_rules/">
+                                                    Пользовательского соглашения
+                                                </a>
+                                            <?php } else { ?>
+                                                <a class="color-redLight text-decoration-underline"
+                                                   href="/about/cookie/">
+                                                    Политики обработки Cookie
+                                                </a>
+                                            <?php } ?>
                                         </label>
                                     </div>
                                     <div class="d-flex flex-row align-items-center font-14 mb-4">
-                                        <input type="checkbox" required checked class="check_input  form-check-input mt-0 ml-0"
+                                        <input type="checkbox" required checked
+                                               class="check_input  form-check-input mt-0 ml-0"
                                                name="USER_POLITICS"/>
                                         <label class="bx-soa-custom-label mb-0 ml-3">
                                             Я принимаю условия
@@ -459,7 +487,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                             && $('input[name="USER_POLITICS"]').prop('checked') === true) {
                             $('input[name="registered"]').removeAttr('style');
                         } else {
-                            $('input[name="registered"]').attr('style','opacity: 0.65');
+                            $('input[name="registered"]').attr('style', 'opacity: 0.65');
                         }
                     });
                 </script>
@@ -467,8 +495,9 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
         </div>
     </div>
 <?php else:
-    if (strripos($_SERVER['REQUEST_URI'], '/?register=yes') === false) {?>
-        <div style="display: none" class="ctweb-smsauth-menu-block radius_10 position-absolute" data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+    if (strripos($_SERVER['REQUEST_URI'], '/?register=yes') === false) { ?>
+        <div style="display: none" class="ctweb-smsauth-menu-block radius_10 position-absolute"
+             data-id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
             <div class="close_login_menu">
                 <a class="close_header_box" href="">
                     <span class="login_span_bar login_span"></span>
@@ -496,11 +525,13 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                 <?php else: ?>
                     <div>
                         <div class="row">
-                            <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>" class="ctweb-smsauth-menu-form"
+                            <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>"
+                                  class="ctweb-smsauth-menu-form"
                                   action="/bitrix/components/ctweb/sms.authorize/ajax.php"
                                   method="POST" name="auth">
                                 <?php echo bitrix_sessid_post(); ?>
-                                <input type="hidden" name="FORM_ID" value="<?=$jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
+                                <input type="hidden" name="FORM_ID"
+                                       value="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>">
                                 <input type="hidden" name="REGISTER" value="<?= $arParams['REGISTER'] ?>">
                                 <input type="hidden" name="PROFILE_AUTH" value="<?= $arParams['PROFILE_AUTH'] ?>">
                                 <input type="hidden" name="recaptcha_token" value="">
@@ -683,7 +714,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
     });
 
     $('input.auth-phone-profile').phonecode({
-        phone_val :$('input.auth-phone-profile').val(),
+        phone_val: $('input.auth-phone-profile').val(),
     });
 
 

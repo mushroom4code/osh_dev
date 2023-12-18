@@ -87,9 +87,6 @@ $itemIds = array(
     'TABS_PANEL_ID' => $mainId . '_tabs_panel'
 );
 $obName = $templateData['JS_OBJ'] = 'ob' . preg_replace('/[^a-zA-Z0-9_]/', 'x', $mainId);
-$name = !empty($arResult['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE'])
-    ? $arResult['IPROPERTY_VALUES']['ELEMENT_PAGE_TITLE']
-    : $arResult['NAME'];
 $title = !empty($arResult['IPROPERTY_VALUES']['ELEMENT_DETAIL_PICTURE_FILE_TITLE'])
     ? $arResult['IPROPERTY_VALUES']['ELEMENT_DETAIL_PICTURE_FILE_TITLE']
     : $arResult['NAME'];
@@ -119,7 +116,7 @@ $rowResHidePrice = $arResult['PROPERTIES']['SEE_PRODUCT_AUTH']['VALUE'];
 $price = $actualItem['PRICES_CUSTOM'];
 
 $priceCalculate = $price['PRICE_DATA'][1]['PRICE'];
-$price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_PRICE'];
+$price_new = '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][2]['PRINT_PRICE'];
 
 if (!empty($price['USER_PRICE']['PRICE'])) {
     $specialPrice = $price['USER_PRICE'];
@@ -226,7 +223,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             <div
                     class="col-md-5 col-sm-6 col-lg-6 col-12 mt-lg-0 mt-md-0 mt-4 d-flex flex-column catalog-item-product
 				not-input-parse justify-content-between">
-                <h1 class="head-title"><?= $name ?></h1>
+                <h1 class="head-title"><?= $arResult['NAME']; ?></h1>
                 <?php if ($isGift) { ?>
                     <div>
                         <h4 class="bx-title">Данная продукция не продается отдельно</h4>
@@ -286,7 +283,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         <div class="product-item-detail-price-current"
                                              id="<?= $itemIds['PRICE_ID'] ?>">
                                             <?=
-                                                $specialPrice['PRINT_RATIO_PRICE'] ?? '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][1]['PRINT_RATIO_PRICE'];
+                                                $specialPrice['PRINT_RATIO_PRICE'] ?? '<span class="font-14 card-price-text">от </span> ' . $price['PRICE_DATA'][2]['PRINT_RATIO_PRICE'];
                                             ?>
                                         </div>
                                         <?php if (isset($specialPrice)) {
@@ -455,7 +452,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 $productSelect = $arResult['GROUPED_PRODUCTS'][$arResult['ID']]['PROPERTIES'];
                                 foreach ($arResult['GROUPED_PROPS_DATA'] as $keyCODE => $productGrouped) {
                                     if ($keyCODE !== 'USE_DISCOUNT') { ?>
-                                        <div class="d-flex flex-row overflow-auto mb-2 width-100 overflow-custom">
+                                        <div class="d-flex flex-row flex-wrap max-h-300 overflow-auto mb-2 width-100 overflow-custom">
                                             <?php foreach ($productGrouped as $group) {
                                                 $link = 'javascript:void(0)';
                                                 $prop_value = 'Пустое значение';
@@ -501,7 +498,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                         if (count($grouped) > 1) { ?>
                                                             <a href="<?= $link ?>" class="offer-link">
                                                                 <div class="red_button_cart font-14 p-10
-                                                                     width-fit-content mb-lg-2 m-md-2 m-1 offer-box cursor-pointer
+                                                                     width-fit-content m-1 offer-box cursor-pointer
                                                                  <?= $select ?>"
                                                                      title="<?= $offer['NAME'] ?>"
                                                                      data-active="<?= !empty($select) ? 'true' : 'false' ?>"
@@ -515,8 +512,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                             </a>
                                                         <?php } else { ?>
                                                             <a href="<?= $link ?>" class="offer-link <?= $select ?>">
-                                                                <div class="red_button_cart font-13 width-fit-content br-100 mb-lg-2
-                                                                        m-md-2 m-1 offer-box cursor-pointer"
+                                                                <div class="red_button_cart font-13 width-fit-content br-100
+                                                                     m-1 offer-box cursor-pointer"
                                                                      title="<?= $offer['NAME'] ?>"
                                                                      data-active="<?= !empty($select) ? 'true' : 'false' ?>"
                                                                      data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
@@ -546,7 +543,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                         if (!empty($tasted)) { ?>
                                                             <a href="<?= $link ?>" class="offer-link <?= $select ?>">
                                                                 <div class="red_button_cart taste variation_taste font-14
-                                                                     width-fit-content mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer"
+                                                                     width-fit-content p-10 m-1 offer-box cursor-pointer"
                                                                      title="<?= $offer['NAME'] ?>"
                                                                      data-active="<?= !empty($select) ? 'true' : 'false' ?>"
                                                                      data-prop_code="<?= $keyCODE ?>"
@@ -658,7 +655,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 </li>
                 <?php
             }
-            if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
+            if (!empty($arResult['PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
                 <li class="nav-item">
                     <a class="nav-link <? if (!$showDescription): ?>active<? endif; ?>" id="pills-profile-tab"
                        data-toggle="pill" href="#pills-profile"
@@ -1061,7 +1058,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             'SHOW_SLIDER' => $arParams['SHOW_SLIDER'],
             'SLIDER_INTERVAL' => $arParams['SLIDER_INTERVAL'],
             'ALT' => $alt,
-            'TITLE' => $title,
+            'TITLE' => $arResult['NAME'],
             'MAGNIFIER_ZOOM_PERCENT' => 200,
             'USE_ENHANCED_ECOMMERCE' => $arParams['USE_ENHANCED_ECOMMERCE'],
             'DATA_LAYER_NAME' => $arParams['DATA_LAYER_NAME'],
@@ -1162,7 +1159,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             'SHOW_SLIDER' => $arParams['SHOW_SLIDER'],
             'SLIDER_INTERVAL' => $arParams['SLIDER_INTERVAL'],
             'ALT' => $alt,
-            'TITLE' => $title,
+            'TITLE' => $arResult['NAME'],
             'MAGNIFIER_ZOOM_PERCENT' => 200,
             'USE_ENHANCED_ECOMMERCE' => $arParams['USE_ENHANCED_ECOMMERCE'],
             'DATA_LAYER_NAME' => $arParams['DATA_LAYER_NAME'],

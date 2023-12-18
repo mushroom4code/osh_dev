@@ -10,6 +10,8 @@ class DellinDelivery extends CommonPVZ
     public string $delivery_code = 'Dellin';
 
     public string $delivery_name = 'Dellin';
+
+    public static string $code = 'Dellin';
     private $dellin_cache_id = 'dellin_delivery_prices';
     private string $api_key;
 
@@ -123,7 +125,7 @@ class DellinDelivery extends CommonPVZ
                 'fullAddress' => $point['FULL_ADDRESS'],
                 'phone' => $point['PHONE_NUMBER'],
                 'workTime' => $point['WORK_TIME'],
-                'deliveryName' => 'Деловые линии',
+                'deliveryName' => $this::$code,
                 'iconCaption' => 'Деловые линии',
                 'hintContent' => $point['FULL_ADDRESS'],
                 "openEmptyBalloon" => true,

@@ -228,7 +228,8 @@ if (!empty($resQuery)) {
 
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 // получение лайков и избранного для всех элементов каталога КОНЕЦ
-
+// Переменная для убора функционала под мобильное приложение
+$showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
 
     ?>
 <div class="row<?= $themeClass ?>">
@@ -841,7 +842,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
                 unset($generalParams, $rowItems);
 
             } else { ?>
-                <p> В этой категроии сейчас нет товаров</p>
+                <p> В этой категории сейчас нет товаров</p>
             <?php } ?>
             <!-- items-container -->
         </div>
@@ -974,7 +975,7 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
             <? }
         }
         //region Description
-        if (($arParams['HIDE_SECTION_DESCRIPTION'] !== 'Y') && !empty($arResult['DESCRIPTION'])) {
+        if (($arParams['HIDE_SECTION_DESCRIPTION'] !== 'Y') && !empty($arResult['DESCRIPTION']) && $showUserContent) {
             ?>
             <div class="row mb-4">
                 <div class="col catalog-section-description">

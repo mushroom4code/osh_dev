@@ -456,6 +456,8 @@ class DeliveryHelper
 
         $params['dateTimeIntervalOptions'] = self::getDeliveryTimeIntervals();
 
+        $params['oshishaDeliveryCode'] = OshishaDelivery::$code;
+
         if ($order->getField('PRICE_DELIVERY')) {
             $params['shipmentCost'] = $order->getDeliveryPrice();
         }

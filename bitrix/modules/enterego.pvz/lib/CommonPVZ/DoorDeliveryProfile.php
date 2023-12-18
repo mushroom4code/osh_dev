@@ -115,7 +115,7 @@ class DoorDeliveryProfile extends Base
                 if ($currentDelivery===$delivery->delivery_code) {
                     $result->setDeliveryPrice(
                         roundEx(
-                            $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
+                            $delivery->delivery_code == OshishaDelivery::$code ? $price['price'] : $price,
                             SALE_VALUE_PRECISION
                         )
                     );
@@ -126,7 +126,7 @@ class DoorDeliveryProfile extends Base
                             'DELIVERY_CALCULATION'
                         ));
                     } else {
-                        $order_price = $delivery->delivery_code == 'oshisha' ? $price['price'] : $price;
+                        $order_price = $delivery->delivery_code == OshishaDelivery::$code ? $price['price'] : $price;
                     }
                 } else {
                     $checked = '';
@@ -137,8 +137,8 @@ class DoorDeliveryProfile extends Base
                         'code' => $delivery->delivery_code,
                         'checked' => !empty($checked),
                         'name' => $delivery->delivery_name,
-                        'price' => $delivery->delivery_code == 'oshisha' ? $price['price'] : $price,
-                        'noMarkup' => $delivery->delivery_code == 'oshisha' ? $price['noMarkup'] : false
+                        'price' => $delivery->delivery_code == OshishaDelivery::$code ? $price['price'] : $price,
+                        'noMarkup' => $delivery->delivery_code == OshishaDelivery::$code ? $price['noMarkup'] : false
                     ];
                 } else {
                     $resDescription[] = [

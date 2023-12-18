@@ -6767,6 +6767,14 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             // if (this.result.DELIVERY.length) {
             this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_DELIVERY'), deliveryValue, params));
+            if (BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propTypeDeliveryId) !== BX.SaleCommonPVZ.oshishaDeliveryCode) {
+                this.totalInfoBlockNode.appendChild(
+                    BX.create('P', {
+                        props: {style: 'color: #ff8500; font-size: 13px; margin-top: 5px; margin-bottom: 0px;'},
+                        text: 'Точную стоимость рассчитывает транспортная компания, мы можем посчитать только приблизительно.'
+                    })
+                );
+            }
             // }
 
             if (this.options.showDiscountPrice) {
@@ -6874,7 +6882,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             name = name || '';
             value = value || '';
             params = params || {};
-
+            if (name === BX.message('SOA_SUM_DELIVERY')
+                && (BX.SaleCommonPVZ.getValueProp(BX.SaleCommonPVZ.propTypeDeliveryId) !== BX.SaleCommonPVZ.oshishaDeliveryCode)) {
+                value = 'от ' + value;
+            }
             if (params.error) {
                 totalValue = [BX.create('A', {
                     props: {className: 'bx-soa-price-not-calc'},
