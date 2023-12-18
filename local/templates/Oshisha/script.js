@@ -1605,11 +1605,11 @@ if ($(window).width() > 1024) {
         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         if (scrollTop > 0) {
             if (!appended) {
-                $(document).find('header').addClass('header-scroll').show(500);
+                $(document).find('header').addClass('header-scroll shadow-md dark:shadow-shadowDark').show(500);
                 appended = true;
             }
         } else {
-            $(document).find('header').removeClass('header-scroll');
+            $(document).find('header').removeClass('header-scroll shadow-md dark:shadow-shadowDark');
         }
     });
 }

@@ -30,7 +30,7 @@ foreach ($arResult as $itemIdex => $arItem):
 
     <?php if ($arItem["DEPTH_LEVEL"] == "1" && !empty(htmlspecialcharsbx($arItem["LINK"]))): ?>
     <li class="mb-2">
-        <a class="hover:text-hover-red" <?=$download?>
+        <a class="hover:text-hover-red font-light" <?=$download?>
            href="<?= htmlspecialcharsbx($arItem["LINK"]) ?>"><?= htmlspecialcharsbx($arItem["TEXT"]) ?>
         </a>
     </li>
