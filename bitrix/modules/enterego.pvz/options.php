@@ -545,6 +545,18 @@ $tabControl->begin();
             } else if ($aTab['DIV'] === 'oshisha') {
                     \CommonPVZ\OshishaDelivery::generate($oshishaOptions,
                         \CommonPVZ\OshishaDelivery::getOshishaOptionsData()); ?>
+
+                <tr>
+                    <td>
+                        <div style="display: none" id="oshisha_update_region_restrictions_label"
+                             class="adm-info-message-wrap">
+                        </div>
+                    </td>
+                    <td>
+                        <input type="button" id="oshisha_update_region_restrictions"
+                               value="<?= Loc::getMessage('OSH_REGION_RESTRICTIONS') ?>"/>
+                    </td>
+                </tr>
                 <?php
             }
         }
