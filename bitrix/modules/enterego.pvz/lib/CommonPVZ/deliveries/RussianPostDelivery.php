@@ -18,6 +18,8 @@ class RussianPostDelivery extends CommonPVZ
     public static string $code_ems = 'RussianPostEms';
     public static string $code_first_class = 'RussianPostFirstClass';
     public static string $code_regular = 'RussianPostRegular';
+    public static string $code_foreign_regular = 'RussianPostForeignRegular';
+    public static string $code_foreign_ems = 'RussianPostForeignEms';
     private string $russian_post_id_postfix = '_delivery_price';
 
     public function __construct(string $delivery_type = 'RussianPost')
@@ -26,22 +28,22 @@ class RussianPostDelivery extends CommonPVZ
         $this->delivery_code = $delivery_type;
 
         switch ($delivery_type) {
-            case 'RussianPost':
+            case $this::$code:
                 $this->delivery_name = 'Почта России';
                 break;
-            case 'RussianPostEms':
+            case $this::$code_ems:
                 $this->delivery_name = 'Почта России (EMS)';
                 break;
-            case 'RussianPostFirstClass':
+            case $this::$code_first_class:
                 $this->delivery_name = 'Почта России (Посылка 1 класса)';
                 break;
-            case 'RussianPostRegular':
+            case $this::$code_regular:
                 $this->delivery_name = 'Почта России (Посылка обычная)';
                 break;
-            case 'RussianPostForeignRegular':
+            case $this::$code_foreign_regular:
                 $this->delivery_name = 'Почта России (Посылка международная обычная)';
                 break;
-            case 'RussianPostForeignEms':
+            case $this::$code_foreign_ems:
                 $this->delivery_name = 'Почта России (Посылка международная EMS)';
                 break;
         }
@@ -360,20 +362,20 @@ class RussianPostDelivery extends CommonPVZ
                     $hashed_values[] = 'courier';
                     $hash_string = md5(implode('', $hashed_values));
 
-                    $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
-                    $cache = \Bitrix\Main\Data\Cache::createInstance();
-                    if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
-                        if ($is_cache_on == 'Y') {
-                            $cached_vars = $cache->getVars();
-                            if (!empty($cached_vars)) {
-                                foreach ($cached_vars as $varKey => $var) {
-                                    if ($varKey === $hash_string) {
-                                        return $var;
-                                    }
+                $is_cache_on = Option::get(DeliveryHelper::$MODULE_ID, 'Common_iscacheon');
+                $cache = \Bitrix\Main\Data\Cache::createInstance();
+                if ($cache->initCache(3600, $this->delivery_code . $this->russian_post_id_postfix)) { // проверяем кеш и задаём настройки
+                    if ($is_cache_on == 'Y') {
+                        $cached_vars = $cache->getVars();
+                        if (!empty($cached_vars)) {
+                            foreach ($cached_vars as $varKey => $var) {
+                                if ($varKey === $hash_string) {
+                                    return $var;
                                 }
                             }
                         }
                     }
+                }
 
                     if ($this->delivery_code === 'RussianPostEms') {
                         $params['group'] = 0;
