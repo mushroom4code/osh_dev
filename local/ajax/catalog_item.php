@@ -61,7 +61,7 @@ function getGroupedProduct($prodId, $listGroupedProduct)
             }
         }
 
-        $dbBasketItems =  \CSaleBasket::GetList(
+        $dbBasketItems = \CSaleBasket::GetList(
             array(),
             array("FUSER_ID" => Fuser::getId(), "LID" => SITE_ID, "ORDER_ID" => "NULL"),
             false,
@@ -76,13 +76,15 @@ function getGroupedProduct($prodId, $listGroupedProduct)
     }
     return $arResult;
 }
+
 $jsonForModal = [];
 if ($action === 'fastProduct') {
 
     $specialPrice = 0;
     $prop_see_in_window = [];
     $item = CIBlockElement::GetList([], ['ID' => $request->get('prodId')], false, false,
-        ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE'])->Fetch();
+        ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE',
+            'CATALOG_QUANTITY', 'QUANTITY'])->Fetch();
 
     $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $request->get('prodId'), []);
     while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
@@ -107,6 +109,11 @@ if ($action === 'fastProduct') {
             }
         }
     }
+
+    $item['PRODUCT'] = [
+        'CATALOG_QUANTITY' => $item['CATALOG_QUANTITY'],
+        'QUANTITY' => $item['QUANTITY'],
+    ];
 
     if (!empty($price['USER_PRICE'])) {
         $specialPrice = $price['USER_PRICE']['PRICE'];
@@ -146,12 +153,14 @@ if ($action === 'fastProduct') {
         'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
         'MORE_PHOTO' => $morePhoto,
         'PRODUCT' => $item['PRODUCT'],
+        'PREVIEW_PICTURE' => CFile::GetPath(($item['PREVIEW_PICTURE'] ?? $item['DETAIL_PICTURE']))
+            ?? '/local/templates/Oshisha/images/no-photo.gif',
 //        'USE_DISCOUNT' => $useDiscount['VALUE'],
 //        'ACTUAL_BASKET' => $priceBasket,
         'PRICE' => $price['PRICE_DATA'],
         'SALE_PRICE' => round($specialPrice),
         'POPUP_PROPS' => $prop_see_in_window ?? 0,
-//        'NAME' => $productTitle,
+        'NAME' => $item['NAME'],
         'LIKE' => [
             'ID_PROD' => $item['ID_PROD'],
             'F_USER_ID' => $item['F_USER_ID'],
@@ -166,6 +175,6 @@ if ($action === 'fastProduct') {
     ];
     echo json_encode($jsonForModal);
 } else {
-    echo json_encode(['errors'=>'yes']);
+    echo json_encode(['errors' => 'yes']);
 }
 exit();
