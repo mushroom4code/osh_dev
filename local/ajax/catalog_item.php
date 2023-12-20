@@ -86,6 +86,18 @@ if ($action === 'fastProduct') {
         ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE',
             'CATALOG_QUANTITY', 'QUANTITY'])->Fetch();
 
+    $rsPrice = PriceTable::getList([
+        'select' => ['PRODUCT_ID', 'PRICE', 'CATALOG_GROUP_ID', 'CATALOG_GROUP'],
+        'filter' => [
+            'PRODUCT_ID' => $item['ID'],
+            'CATALOG_GROUP_ID' => [SALE_PRICE_TYPE_ID, B2B_PRICE],
+        ],
+    ])->fetchAll();
+
+    foreach ($rsPrice as $price) {
+        $prices[$price['PRODUCT_ID']]['PRICES'][$price['CATALOG_GROUP_ID']] = $price;
+    }
+
     $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $request->get('prodId'), []);
     while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
         $xmlId = $arMainPropertyValue['PROPERTY_VALUE_ID'];
