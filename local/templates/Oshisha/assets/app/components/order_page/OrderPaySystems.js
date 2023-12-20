@@ -94,7 +94,7 @@ class OrderPaySystems extends React.Component {
 
                 itemsJsx.push(
                     <div key={'paysystem_block_' + paySystemId} className={'bx-soa-pp-company relative mt-5' +
-                        ' w-full bg-textDark rounded-[10px] flex flex-1 min-h-[170px] dark:bg-darkBox' +
+                        ' w-full bg-textDark rounded-[10px] flex min-h-[170px] dark:bg-darkBox' +
                         ' ' + (checked
                             ? 'bx-selected border-2 border-solid border-light-red dark:border-grey-line-order bg-white'
                             : '')}
@@ -120,7 +120,7 @@ class OrderPaySystems extends React.Component {
                 <div className="alert alert-danger hidden"></div>
                 <div className="bx-soa-pp">
                     <div className="bx-soa-pp-item-container order-1">
-                        <div className="row flex flex-wrap gap-4">
+                        <div className="row grid grid-cols-2 gap-4 auto-rows-[1fr]">
                             {itemsJsx}
                         </div>
                     </div>
