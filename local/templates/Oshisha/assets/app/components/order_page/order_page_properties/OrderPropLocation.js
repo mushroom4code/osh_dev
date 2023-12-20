@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 
-function OrderUserPropLocation({property, locations, disabled, are_locations_prepared}) {
+function OrderPropLocation({property, locations, disabled, are_locations_prepared}) {
     var preparedLocations, cleanLocations, locationsTemplate;
     function prepareLocations(locations) {
         var temporaryLocations, i, k, output, allTemporaryLocations = [], allCleanLocations = [];
@@ -91,4 +91,4 @@ function OrderUserPropLocation({property, locations, disabled, are_locations_pre
     }
 }
 
-export default OrderUserPropLocation;
+export default OrderPropLocation;

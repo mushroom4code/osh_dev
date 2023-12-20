@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
 
-function OrderUserPropString({property, disabled}) {
+function OrderPropString({property, disabled}) {
     const [propertySettings, setPropertySettings] = useState(property.getSettings());
 
     return (<div className="soa-property-container">
         <input type="text" className="w-full text-sm cursor-text border-grey-line-order ring:grey-line-order dark:border-darkBox rounded-lg
                dark:bg-darkBox"
                size={propertySettings['SIZE']}
-               name={'ORDER_RPOP_'+propertySettings['ID']} placeholder={propertySettings['DESCRIPTION']}
+               name={'ORDER_PROP_'+propertySettings['ID']} placeholder={propertySettings['DESCRIPTION']}
                data-name={propertySettings['CODE']} autoComplete={propertySettings['IS_EMAIL'] === 'Y'
                    ? 'email'
                    : (propertySettings['IS_PAYER'] === 'Y'
@@ -19,4 +19,4 @@ function OrderUserPropString({property, disabled}) {
     </div>);
 }
 
-export default OrderUserPropString;
+export default OrderPropString;

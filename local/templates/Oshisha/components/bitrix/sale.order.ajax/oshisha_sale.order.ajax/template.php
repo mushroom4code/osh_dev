@@ -419,7 +419,7 @@ if ($request->get('ORDER_ID') <> '') {
                                 </div>
                             </div>
                             <div class="box_with_delivery_type">
-                                <div class="bx-soa-section-content"></div>
+                                <div class="bx-soa-section-content" id="delivery-block"></div>
                                 <div id="bx-soa-region" data-visited="false"
                                      class="bx-soa-section mb-4 hidden">
                                     <div class="bx-soa-section-title-container d-flex justify-content-between align-items-center flex-nowrap">
@@ -632,7 +632,7 @@ if ($request->get('ORDER_ID') <> '') {
             data-auth-block-id='bx-soa-auth'
             data-region-block-id='bx-soa-region'
             data-pay-system-block-id='bx-soa-paysystem'
-            data-delivery-block-id='bx-soa-delivery'
+            data-delivery-block-id='delivery-block'
             data-pick-up-block-id='bx-soa-pickup'
             data-user-props-block-id='user-properties-block'
             data-new-block-with-comment-id='new_block_with_comment_box'
