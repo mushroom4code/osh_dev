@@ -120,7 +120,7 @@ class OrderPaySystems extends React.Component {
                 <div className="alert alert-danger hidden"></div>
                 <div className="bx-soa-pp">
                     <div className="bx-soa-pp-item-container order-1">
-                        <div className="row grid grid-cols-2 gap-4 auto-rows-[1fr]">
+                        <div className="row grid grid-cols-2 gap-x-4 auto-rows-[1fr]">
                             {itemsJsx}
                         </div>
                     </div>
