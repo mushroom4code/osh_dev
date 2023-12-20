@@ -19,43 +19,6 @@ class OrderDelivery extends React.Component {
     }
 
     selectDelivery(event) {
-        // var target = event.target || event.srcElement,
-        //     innerPaySystemSection = this.state.paySystemBlockNode.querySelector('div.bx-soa-pp-inner-ps'),
-        //     innerPaySystemCheckbox = this.state.paySystemBlockNode.querySelector('input[type=checkbox][name=PAY_CURRENT_ACCOUNT]'),
-        //     fullPayFromInnerPaySystem = this.state.result.TOTAL && parseFloat(this.state.result.TOTAL.ORDER_TOTAL_LEFT_TO_PAY) === 0;
-        //
-        // var actionSection = BX.hasClass(target, 'bx-soa-pp-company') ? target : BX.findParent(target, {className: 'bx-soa-pp-company'}),
-        //     actionInput, selectedSection;
-        //
-        // if (actionSection) {
-        //     if (BX.hasClass(actionSection, 'bx-selected'))
-        //         return BX.PreventDefault(event);
-        //
-        //     if (innerPaySystemCheckbox && innerPaySystemCheckbox.checked && fullPayFromInnerPaySystem) {
-        //         BX.addClass(actionSection, 'bx-selected');
-        //         actionInput = actionSection.querySelector('input[type=checkbox]');
-        //         actionInput.checked = true;
-        //         BX.removeClass(innerPaySystemSection, 'bx-selected');
-        //         innerPaySystemCheckbox.checked = false;
-        //     } else {
-        //         selectedSection = this.state.paySystemBlockNode.querySelector('.bx-soa-pp-company.bx-selected');
-        //         BX.addClass(actionSection, 'bx-selected');
-        //         actionInput = actionSection.querySelector('input[type=checkbox]');
-        //         actionInput.checked = true;
-        //
-        //         if (selectedSection) {
-        //             BX.removeClass(selectedSection, 'bx-selected');
-        //             selectedSection.querySelector('input[type=checkbox]').checked = false;
-        //         }
-        //     }
-        // }
-        //
-        // BX.Sale.OrderAjaxComponent.sendRequest();
-
-
-
-
-        var activeSection = BX.findParent(event.target, {class: "bx-soa-section"});
         var target = event.target || event.srcElement,
             actionSection = BX.hasClass(target, 'bx-soa-pp-company') ? target : BX.findParent(target, {className: 'bx-soa-pp-company'}),
             selectedSection = this.state.deliveryBlockNode.querySelector('.bx-selected'),
@@ -149,264 +112,198 @@ class OrderDelivery extends React.Component {
         return state;
     }
 
-    render() {
-        var itemsJsx = [];
-        // for (k = 0; k < this.state.deliveryPagination.currentPage.length; k++) {
-        //     let item_edit = this.state.deliveryPagination.currentPage[k];
-        //     deliveryItemNode = this.createDeliveryItem(item_edit);
-        //
-        //     var checked = item.CHECKED,
-        //         deliveryId = parseInt(item.ID),
-        //         labelNodes = [
-        //             BX.create('INPUT', {
-        //                 props: {
-        //                     id: 'ID_DELIVERY_ID_' + deliveryId,
-        //                     name: 'DELIVERY_ID',
-        //                     type: 'radio',
-        //                     className: 'bx-soa-pp-company-checkbox form-check-input check_custom mr-2 m-0',
-        //                     value: deliveryId,
-        //                     checked: checked
-        //                 }
-        //             })
-        //         ],
-        //         deliveryCached = this.deliveryCachedInfo[deliveryId], label, title, itemNode, logoNode;
-        //
-        //     if (this.params.SHOW_DELIVERY_LIST_NAMES == 'Y') {
-        //         title = BX.create('DIV', {
-        //             props: {className: 'bx-soa-pp-company-smalltitle text-black text-base font-semibold dark:font-normal' +
-        //                     ' dark:text-gray-300'},
-        //             text: this.params.SHOW_DELIVERY_PARENT_NAMES != 'N' ? item.NAME : item.OWN_NAME
-        //         });
-        //     }
-        //     logoNode = BX.create('DIV', {props: {className: 'bx-soa-pp-company-curs'}});
-        //
-        //     labelNodes.push(logoNode);
-        //     labelNodes.push(title);
-        //
-        //     label = BX.create('DIV', {
-        //         props: {
-        //             className: 'bx-soa-pp-company-graf-container box_with_delivery mb-3 border-grey-line-order' +
-        //                 ' cursor-pointer p-8 flex items-center w-full border-[1px] rounded-[10px] dark:border-darkBox' +
-        //                 ' dark:text-gray-300 dark:bg-darkBox'
-        //                 + (item.CALCULATE_ERRORS || deliveryCached && deliveryCached.CALCULATE_ERRORS
-        //                     ? ' bx-bd-waring' : '')
-        //         },
-        //         children: labelNodes,
-        //         events: {click: BX.proxy(this.selectDelivery, this)},
-        //     });
-        //
-        //
-        //     itemNode = BX.create('DIV', {
-        //         props: {className: 'delivery bx-soa-pp-company relative mt-5'},
-        //         children: [label],
-        //     });
-        //
-        //     checked && BX.addClass(itemNode, 'bx-selected');
-        //
-        //     //enterego
-        //     if (checked)
-        //         //--if (checked && this.result.LAST_ORDER_DATA.PICK_UP)
-        //         this.lastSelectedDelivery = deliveryId;
-        //     if (BX.hasClass(itemNode, 'bx-selected')) {
-        //         this.editPropsItems(itemNode);
-        //     }
-        //
-        //     return itemNode;
+    getDeliveryExtraServices(delivery) {
+        var extraServices = [], brake = false,
+            i, currentService, serviceNode, serviceName, input, serviceNodeInnerHtml;
+        for (i in delivery.EXTRA_SERVICES) {
+            if (!delivery.EXTRA_SERVICES.hasOwnProperty(i))
+                continue;
 
+            currentService = delivery.EXTRA_SERVICES[i];
 
+            if (!currentService.canUserEditValue)
+                continue;
 
+            if (currentService.editControl.indexOf('this.checked') == -1) {
+                if (i == 0)
+                    brake = true;
 
-
-
-
-
-
-
-        //     let check = '';
-        //     if (item_edit.CHECKED === "Y") {
-        //         this.editDeliveryInfo(deliveryItemNode, item_edit)
-        //         check = 'active_box';
-        //     }
-        //
-        //     if (item_edit.GROUP_ID !== '0') {
-        //         let box_with_deliveries = deliveryItemsContainerRow.querySelector('div.parent_type_' + item_edit.GROUP_ID);
-        //         let box_type_id = deliveryItemsContainerRow.querySelector('div.box_' + item_edit.GROUP_ID);
-        //
-        //
-        //         if (box_with_deliveries !== null && box_type_id !== null) {
-        //             box_type_id.appendChild(deliveryItemNode);
-        //         } else {
-        //             deliveryItemsContainerRow.appendChild(BX.create('DIV', {
-        //                         props: {
-        //                             className: 'd-flex flex-column bx-soa-pp-company hidden box_with_del_js parent_type_'
-        //                                 + item_edit.GROUP_ID + ' ' + check
-        //                         },
-        //                         children: [
-        //                             BX.create('DIV', {
-        //                                 props: {
-        //                                     className: 'bx-soa-pp-company-smalltitle color_black text-bold flex justify-content-between' +
-        //                                         ' mb-2 box_with_delivery bx-soa-pp-company-graf-container'
-        //                                 },
-        //                                 html:
-        //                                     '<div>' + item_edit.PARENT_NAME + '<i class="fa fa-chevron-down ml-3" aria-hidden="true"></i></div>' +
-        //                                     '<div><img height="50" class="img_logo_delivery" src="' + item_edit.LOGOTIP_SRC_2X + '"/></div>'
-        //                             }),
-        //                             BX.create('DIV', {
-        //                                     props: {
-        //                                         className: 'p-1 box-none container-with-profile-delivery box_' + item_edit.GROUP_ID
-        //                                     },
-        //                                 }
-        //                             )
-        //                         ]
-        //                     }
-        //                 )
-        //             );
-        //             deliveryItemsContainerRow.querySelector('.box_' + item_edit.GROUP_ID).appendChild(deliveryItemNode)
-        //         }
-        //     } else {
-        //         deliveryItemsContainerRow.appendChild(deliveryItemNode);
-        //     }
-        //
-        // }
-        // deliveryItemsContainer.appendChild(deliveryItemsContainerRow);
-        //
-        //
-        // if (this.deliveryPagination.show)
-        //     this.showPagination('delivery', deliveryItemsContainer);
-        //
-        // deliveryNode.appendChild(deliveryItemsContainer);
-
-
-
-
-
-
-
-
-
-
-
-        // if (!this.result.ORDER_PROP || !this.propertyCollection)
-        //     return;
-        //
-        // let propsItemsContainer = BX.create('DIV', {props: {className: 'grid grid-cols-2 gap-x-2 bx-soa-customer p-0'}}),
-        //     group, property, groupIterator = this.propertyCollection.getGroupIterator(), propsIterator;
-        //
-        // if (!propsItemsContainer)
-        //     propsItemsContainer = this.propsBlockNode.querySelector('.col-sm-12.bx-soa-customer');
-        //
-        // const arDelivery = this.params.AR_DELIVERY_PICKUP;
-        // while (group = groupIterator()) {
-        //     propsIterator = group.getIterator();
-        //     while (property = propsIterator()) {
-        //         // TODO Enterego pickup
-        //         let disabled = false;
-        //         if (propsNode.classList.contains('delivery')) {
-        //             if (this.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
-        //                 // TODO Enterego pickup
-        //                 const id_del = this.result.DELIVERY.find(item => item.CHECKED === 'Y').ID;
-        //                 if (arDelivery.indexOf(String(id_del)) !== -1) {
-        //                     disabled = true;
-        //                 }
-        //                 this.getPropertyRowNode(property, propsItemsContainer, disabled);
-        //             } else {
-        //                 continue;
-        //             }
-        //
-        //         } else {
-        //             if (this.groupBuyerProps.find(item => item === group.getName()) !== undefined) {
-        //                 this.getPropertyRowNode(property, propsItemsContainer, disabled);
-        //             }
-        //             continue;
-        //         }
-        //     }
-        // }
-        // propsNode.appendChild(propsItemsContainer);
-
-
-
-
-
-
-
-        var k;
-        for (k = 0; k < this.state.deliveryPagination.currentPage.length; k++) {
-            let item = this.state.deliveryPagination.currentPage[k];
-            var checked = item.CHECKED,
-                deliveryId = parseInt(item.ID),
-                deliveryCached = this.state.deliveryCachedInfo[deliveryId], label, title, itemNode, logoNode;
-
-            var itemInnerJsx = [];
-
-            itemInnerJsx.push(
-                <input key={'delivery_radio_' + deliveryId} type="radio" name="DELIVERY_ID"
-                       id={'ID_DELIVERY_ID_' + deliveryId} value={deliveryId}
-                       defaultChecked={checked} className="bx-soa-pp-company-checkbox form-check-input
-                       check_custom mr-2 m-0"
-                />
-            )
-            itemInnerJsx.push(<div key={'delivery_logo_node' + deliveryId} className="bx-soa-pp-company-curs"></div>);
-            if (this.state.params.SHOW_DELIVERY_LIST_NAMES === 'Y') {
-                itemInnerJsx.push(
-                    <div key={'delivery_name_block_' + deliveryId} className="bx-soa-pp-company-smalltitle text-black
-                    text-base font-semibold dark:font-normal dark:text-gray-300">
-                        {this.state.params.SHOW_DELIVERY_PARENT_NAMES != 'N' ? item.NAME : item.OWN_NAME}
+                serviceNodeInnerHtml = currentService.editControl
+                    + (currentService.description && currentService.description.length
+                        ? '<div class="bx-soa-service-small">' + BX.util.htmlspecialchars(currentService.description) + '</div>'
+                        : '');
+                extraServices.push(
+                  <div key={'delivery_' + delivery.ID + '_extra_service_' + i} className="form-group bx-soa-pp-field" dangerouslySetInnerHTML={{__html: serviceNodeInnerHtml}}>
+                      <label dangerouslySetInnerHTML={{__html: BX.util.htmlspecialchars(currentService.name)
+                              + (currentService.price ? ' (' + currentService.priceFormatted + ')' : '')}}></label>
+                  </div>
+                );
+            } else {
+                serviceNodeInnerHtml = currentService.editControl + BX.util.htmlspecialchars(currentService.name)
+                    + (currentService.price ? ' (' + currentService.priceFormatted + ')' : '')
+                    + (currentService.description && currentService.description.length
+                        ? '<div class="bx-soa-service-small">' + BX.util.htmlspecialchars(currentService.description) + '</div>'
+                        : '');
+                extraServices.push(
+                    <div key={'delivery_' + delivery.ID + '_extra_service_' + i} className="checkbox">
+                        <label dangerouslySetInnerHTML={{ __html: serviceNodeInnerHtml}}></label>
                     </div>
                 );
             }
-            console.log(checked);
-            var deliveryItemPropsJsx = [];
-            if (checked && this.state.result.ORDER_PROP && this.state.propertyCollection) {
-                console.log('it works');
+        }
 
-                // deliveryItemPropsJsx.push(
-                //     <div className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0"></div>
-                // );
-                // let propsItemsContainer = BX.create('DIV', {props: {className: 'grid grid-cols-2 gap-x-2 bx-soa-customer p-0'}}),
-                let group, property, groupIterator = this.state.propertyCollection.getGroupIterator(), propsIterator;
+        return extraServices;
+    }
 
-                const arDelivery = this.state.params.AR_DELIVERY_PICKUP;
-                while (group = groupIterator()) {
-                    propsIterator = group.getIterator();
-                    while (property = propsIterator()) {
-                        let disabled = false;
-                        if (this.state.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
-                            const id_del = this.state.result.DELIVERY.find(item => item.CHECKED === 'Y').ID;
-                            if (arDelivery.indexOf(String(id_del)) !== -1) {
-                                disabled = true;
-                            }
-                            deliveryItemPropsJsx.push(
-                                <OrderProp key={property.getId()} property={property} disabled={disabled}
-                                           result={this.state.result}/>
-                            );
+    getDeliveryItemPropsJsx(item, checked) {
+        var deliveryItemPropsJsx = [];
+        if (checked && this.state.result.ORDER_PROP && this.state.propertyCollection) {
+            let group, property, groupIterator = this.state.propertyCollection.getGroupIterator(),
+                propsIterator;
+
+            const arDelivery = this.state.params.AR_DELIVERY_PICKUP;
+            while (group = groupIterator()) {
+                propsIterator = group.getIterator();
+                while (property = propsIterator()) {
+                    let disabled = false;
+                    if (this.state.groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
+                        const id_del = this.state.result.DELIVERY.find(item => item.CHECKED === 'Y').ID;
+                        if (arDelivery.indexOf(String(id_del)) !== -1) {
+                            disabled = true;
                         }
+                        deliveryItemPropsJsx.push(
+                            <OrderProp key={property.getId()} property={property} disabled={disabled}
+                                       result={this.state.result}/>
+                        );
                     }
                 }
             }
+        }
+        return deliveryItemPropsJsx;
+    }
 
-            itemsJsx.push(
-                <div key={'delivery_item_' + deliveryId} className={'delivery bx-soa-pp-company relative mt-5' +
-                    (checked ? ' bx-selected' : '')}>
-                    <div className={'bx-soa-pp-company-graf-container box_with_delivery mb-3 border-grey-line-order' +
-                        ' cursor-pointer p-8 flex items-center w-full border-[1px] rounded-[10px] dark:border-darkBox' +
-                        ' dark:text-gray-300 dark:bg-darkBox'
-                        + (item.CALCULATE_ERRORS || deliveryCached && deliveryCached.CALCULATE_ERRORS
-                            ? ' bx-bd-waring' : '')} onClick={this.selectDelivery}>
-                        {itemInnerJsx}
+    getDeliveryItemInfoJsx(item, deliveryId, checked) {
+        var deliveryItemInfoJsx = [];
+        if (checked === 'Y') {
+            var extraServices = this.getDeliveryExtraServices(item);
+            deliveryItemInfoJsx.push(
+                <div key={'delivery_info_item_' + deliveryId} className="bx-soa-pp-desc-container">
+                    <div className="bx-soa-pp-company d-flex flex-column">
+                        <div className="bx-soa-pp-company-block">
+                            <div className="bx-soa-pp-company-desc">{item.DESCRIPTION}</div>
+                            {item.CALCULATE_DESCRIPTION
+                                ? <div className="bx-soa-pp-company-desc">
+                                    item.CALCULATE_DESCRIPTION</div>
+                                : null}
+                        </div>
+                        <div style={{clear: "both"}}></div>
+                        {extraServices.length ?
+                            <div className="bx-soa-pp-company-block">extraServices</div> : null}
                     </div>
-                    <div className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0">{deliveryItemPropsJsx}</div>
                 </div>
             );
+        }
+        return deliveryItemInfoJsx;
+    }
 
-            // if (BX.hasClass(itemNode, 'bx-selected')) {
-            //     this.editPropsItems(itemNode);
-            // }
+    render() {
+        var itemsJsx = [], itemsJsxByGroup = {}, deliveriesByGroup = {}, t;
+
+        for (t = 0; t < this.state.deliveryPagination.currentPage.length; t++) {
+            if (!deliveriesByGroup[this.state.deliveryPagination.currentPage[t].GROUP_ID])
+                deliveriesByGroup[this.state.deliveryPagination.currentPage[t].GROUP_ID] = [];
+            deliveriesByGroup[this.state.deliveryPagination.currentPage[t].GROUP_ID]
+                .push(this.state.deliveryPagination.currentPage[t]);
         }
 
+        for (const [groupId, groupItems] of Object.entries(deliveriesByGroup)) {
+            var k;
+            for (k = 0; k < groupItems.length; k++) {
+                let item = groupItems[k];
+                var checked = item.CHECKED,
+                    deliveryId = parseInt(item.ID),
+                    deliveryCached = this.state.deliveryCachedInfo[deliveryId];
 
+                var itemInnerJsx = [];
 
+                itemInnerJsx.push(
+                    <input key={'delivery_radio_' + deliveryId} type="radio" name="DELIVERY_ID"
+                           id={'ID_DELIVERY_ID_' + deliveryId} value={deliveryId}
+                           defaultChecked={checked} className="bx-soa-pp-company-checkbox form-check-input
+                       check_custom mr-2 m-0"
+                    />
+                )
+                itemInnerJsx.push(<div key={'delivery_logo_node' + deliveryId}
+                                       className="bx-soa-pp-company-curs"></div>);
+                if (this.state.params.SHOW_DELIVERY_LIST_NAMES === 'Y') {
+                    itemInnerJsx.push(
+                        <div key={'delivery_name_block_' + deliveryId} className="bx-soa-pp-company-smalltitle text-black
+                    text-base font-semibold dark:font-normal dark:text-gray-300">
+                            {this.state.params.SHOW_DELIVERY_PARENT_NAMES != 'N' ? item.NAME : item.OWN_NAME}
+                        </div>
+                    );
+                }
 
-        console.log(itemsJsx);
+                var deliveryItemPropsJsx = this.getDeliveryItemPropsJsx(item, checked);
+
+                var deliveryItemInfoJsx = this.getDeliveryItemInfoJsx(item, deliveryId, checked);
+
+                var itemJsx = <div key={'delivery_item_' + deliveryId}
+                                   className={'delivery bx-soa-pp-company relative mt-5' +
+                                       (checked ? ' bx-selected' : '')}>
+                    <div
+                        className={'bx-soa-pp-company-graf-container box_with_delivery mb-3 border-grey-line-order' +
+                            ' cursor-pointer p-8 flex items-center w-full border-[1px] rounded-[10px] dark:border-darkBox' +
+                            ' dark:text-gray-300 dark:bg-darkBox'
+                            + (item.CALCULATE_ERRORS || deliveryCached && deliveryCached.CALCULATE_ERRORS
+                                ? ' bx-bd-waring' : '')} onClick={this.selectDelivery}>
+                        {itemInnerJsx}
+                    </div>
+                    <div
+                        className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0">{deliveryItemPropsJsx}{deliveryItemInfoJsx}</div>
+                </div>;
+
+                if (groupId === '0') {
+                    itemsJsx.push(
+                        itemJsx
+                    );
+                } else {
+                    if (!itemsJsxByGroup[groupId])
+                        itemsJsxByGroup[groupId] = [];
+                    itemsJsxByGroup[groupId].push(itemJsx);
+                }
+            }
+        }
+
+        for (const [groupId, groupItems] of Object.entries(itemsJsxByGroup)) {
+            var item = deliveriesByGroup[groupId][0], i, check = false;
+            for (i = 0; i < deliveriesByGroup[groupId].length; i++) {
+                if (deliveriesByGroup[groupId][i].CHECKED === 'Y') {
+                    check = true;
+                    break;
+                }
+            }
+            var groupJsx =
+                <div key={'delivery_items_group' + groupId}
+                     className={'d-flex flex-column bx-soa-pp-company box_with_del_js hidden parent_type_'
+                         + groupId + ' ' + (check ? 'active_box' : '')}>
+                    <div className={'bx-soa-pp-company-smalltitle color_black text-bold flex justify-content-between' +
+                        ' mb-2 box_with_delivery bx-soa-pp-company-graf-container'}>
+                        <div>{item.PARENT_NAME}<i className="fa fa-chevron-down ml-3" aria-hidden="true"></i></div>
+                        <div>
+                            <img height="50" className="img_logo_delivery" src={item.LOGOTIP_SRC_2X}/>
+                        </div>
+                    </div>
+                    <div className={'p-1 box-none container-with-profile-delivery box_' + groupId}>{groupItems}</div>
+                </div>;
+
+            if (check) {
+                itemsJsx.unshift(groupJsx);
+            } else {
+                itemsJsx.push(groupJsx);
+            }
+        }
+
         return (
             <div className="bx-soa-section-content">
                 <div className="bx-soa-pp">

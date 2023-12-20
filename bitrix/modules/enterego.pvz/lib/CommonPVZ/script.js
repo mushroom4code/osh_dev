@@ -151,26 +151,26 @@ BX.SaleCommonPVZ = {
                     children: [
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-md-6 col-lg-6 col-12', id: 'selected-delivery-type'},
-                            html: `<span class="font-weight-600 font-lg-13"> Способ доставки: </span>
+                            props: {className: 'col-md-6 col-lg-6 col-12 basis-1/2', id: 'selected-delivery-type'},
+                            html: `<span class="font-bold font-lg-13"> Способ доставки: </span>
                                    <span class="ml-2 font-lg-13">${deliveryName}</span>`
                         }),
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-md-6 col-lg-6 col-12', id: 'selected-delivery-price'},
-                            html: ` <span class="font-weight-600 font-lg-13">Стоимость:</span>
+                            props: {className: 'basis-1/2', id: 'selected-delivery-price'},
+                            html: ` <span class="font-bold font-lg-13">Стоимость:</span>
                                     <span class="ml-2 font-lg-13"> ${curDelivery?.PRICE_FORMATED ?? 'необходимо выбрать другую доставку'}</span>`
                         }),
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-md-6 col-lg-6 col-12', id: 'selected-delivery-address'},
-                            html: `<span class="font-weight-600 font-lg-13">Адрес</span>: 
+                            props: {className: 'basis-1/2', id: 'selected-delivery-address'},
+                            html: `<span class="font-bold font-lg-13">Адрес</span>: 
                                    <span class="ml-2 font-lg-13">${address}</span>`
                         }),
                         BX.create({
                             tag: 'div',
-                            props: {className: 'col-md-6 col-lg-6 col-12', id: 'selected-delivery-date'},
-                            html: `<span class="font-weight-600 font-lg-13">Предпочтительная дата получения: </span>
+                            props: {className: 'basis-1/2', id: 'selected-delivery-date'},
+                            html: `<span class="font-bold font-lg-13">Предпочтительная дата получения: </span>
                                    <span class="ml-2 font-lg-13">${date}</span>`
                         })
                     ]
@@ -2084,13 +2084,14 @@ BX.SaleCommonPVZ = {
             tag: 'div',
             props: {id: 'common-delivery-section'},
         })
+        BX.remove(BX('common-delivery-section'));
         BX.insertBefore(rootDelivery, listBox)
         this.checkout.delivery.variants = {}
 
         const chooseBlock = BX.create('div', {
             attrs: {className: 'delivery-choose js__delivery-choose underline dark:text-white font-semibold ' +
                     'dark:font-medium', id: 'delivery-choose'},
-            text: 'Выбрать адрес и способ доставки',
+            text: 'Выбрать адрес',
             events: {
                 click: BX.proxy(function () {
                     __this.openMap()
@@ -2107,15 +2108,13 @@ BX.SaleCommonPVZ = {
                 }),
 
                 BX.create('div', {
-                    props: {className: 'delivery-description row mb-3', id: 'delivery-description'},
+                    props: {className: 'delivery-description row mb-3 flex flex-wrap', id: 'delivery-description'},
                 }), // адрес
 
                 chooseBlock,
             ]
         })
-
         BX.append(this.checkout.delivery.variants.rootEl, rootDelivery)
-
         // предыдущие доставки
         // this.checkout.recentWrap
         if (BX.Sale.OrderAjaxComponent.savedDeliveryProfiles.length) {
