@@ -17,7 +17,7 @@ Loader::includeModule('main');
 CModule::IncludeModule("sale");
 
 $request = Context::getCurrent()->getRequest();
-$action = $request->get('action');
+$action = $request->getJsonList()->get('action');
 
 /**
  * @param $prodId
@@ -80,25 +80,15 @@ function getGroupedProduct($prodId, $listGroupedProduct)
 $jsonForModal = [];
 if ($action === 'fastProduct') {
 
+    $prodId = $request->getJsonList()->get('prodId');
     $specialPrice = 0;
     $prop_see_in_window = [];
-    $item = CIBlockElement::GetList([], ['ID' => $request->get('prodId')], false, false,
+    $item = CIBlockElement::GetList([], ['ID' => $prodId], false, false,
         ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE',
-            'CATALOG_QUANTITY', 'QUANTITY'])->Fetch();
+            'CATALOG_QUANTITY', 'QUANTITY', 'CATALOG_PRICE_' . B2B_PRICE,
+            'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID])->Fetch();
 
-    $rsPrice = PriceTable::getList([
-        'select' => ['PRODUCT_ID', 'PRICE', 'CATALOG_GROUP_ID', 'CATALOG_GROUP'],
-        'filter' => [
-            'PRODUCT_ID' => $item['ID'],
-            'CATALOG_GROUP_ID' => [SALE_PRICE_TYPE_ID, B2B_PRICE],
-        ],
-    ])->fetchAll();
-
-    foreach ($rsPrice as $price) {
-        $prices[$price['PRODUCT_ID']]['PRICES'][$price['CATALOG_GROUP_ID']] = $price;
-    }
-
-    $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $request->get('prodId'), []);
+    $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $prodId, []);
     while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
         $xmlId = $arMainPropertyValue['PROPERTY_VALUE_ID'];
         if (!empty($arMainPropertyValue['VALUE'])) {
@@ -125,6 +115,8 @@ if ($action === 'fastProduct') {
     $item['PRODUCT'] = [
         'CATALOG_QUANTITY' => $item['CATALOG_QUANTITY'],
         'QUANTITY' => $item['QUANTITY'],
+        'PRICE' => round($item['CATALOG_PRICE_' . B2B_PRICE]),
+        'SALE_PRICE' => round($item['CATALOG_PRICE_' . SALE_PRICE_TYPE_ID]),
     ];
 
     if (!empty($price['USER_PRICE'])) {
@@ -150,7 +142,7 @@ if ($action === 'fastProduct') {
     }
 
     try {
-        $item['GROUPED_PRODUCT'] = getGroupedProduct($request->get('prodId'), $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'],);
+        $item['GROUPED_PRODUCT'] = getGroupedProduct($prodId, $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'],);
     } catch (ObjectPropertyException $e) {
     } catch (ArgumentException $e) {
     } catch (SystemException $e) {
@@ -158,7 +150,7 @@ if ($action === 'fastProduct') {
 // TODO - допилить получение переменных - все-таки подумать брать ли некоторые из шиблона
 // TODO - или вырезать кусок из получения данных по связ товарам
     $jsonForModal = [
-        'ID' => $request->get('prodId'),
+        'ID' => $prodId,
 //        'BUY_LINK' => $arItemIDs['BUY_LINK'] ,
 //        'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
         'TYPE_PRODUCT' => 'PRODUCT',
