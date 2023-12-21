@@ -1822,8 +1822,9 @@ ToggleThemeLocalStorages();
 // LOADER
 function loaderForSite(initParam, itemParent = false) {
     const body = itemParent !== false ? itemParent : document.querySelector('body');
+    const bodyLoader = body.querySelector('div.remove-class');
     if (initParam === 'appendLoader') {
-        if (body.querySelector('div.remove-class')?.length === 0 || body.querySelector('div.remove-class') === null) {
+        if (bodyLoader?.length === 0 || bodyLoader === null) {
             body.appendChild(BX.create('DIV', {
                 props: {
                     className: 'fixed w-screen h-screen z-50 top-0 left-0 remove-class flex justify-center ' +
@@ -1838,7 +1839,9 @@ function loaderForSite(initParam, itemParent = false) {
             }));
         }
     } else {
-        body.querySelector('.remove-class').remove();
+        if (bodyLoader) {
+            bodyLoader.remove();
+        }
     }
 }
 

@@ -3,9 +3,6 @@ import axios from "axios";
 
 function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
 
-    useEffect(() => {
-        getProductData({prodId: productId, action: 'fastProduct'})
-    }, [productId]);
     const [name, setName] = useState('Товар')
     const [srcProduct, setSrcProduct] = useState('Товар')
     const [countLike, setCountLike] = useState('Товар')
@@ -14,13 +11,19 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
     const [maxQuantity, setMaxQuantity] = useState(0)
     const [price, setPrice] = useState(0)
 
+    useEffect(() => {
+        if (name === 'Товар') {
+            getProductData({prodId: productId, action: 'fastProduct'})
+        }
+    }, [name]);
+
+
     function getProductData(data) {
-        console.log(data)
-        loaderForSite('appendLoader',document.querySelector('.catalog-fast-window'))
+        loaderForSite('appendLoader', document.querySelector('.catalog-fast-window'))
         axios.post('/local/ajax/catalog_item.php', data).then(res => {
                 console.log(res)
-                if (res.data) {
-                    const productData = res.data;
+                const productData = res.data;
+                if (productData?.NAME !== '') {
                     setName(productData.NAME)
                     setSrcProduct(productData.PREVIEW_PICTURE)
                     setCountLike(productData.LIKE.COUNT_LIKES)
@@ -28,10 +31,10 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
                     setQuantityProduct(productData.ACTUAL_BASKET ?? 0)
                     setMaxQuantity(productData.PRODUCT.QUANTITY ?? 0)
                     setPrice(productData.PRODUCT.PRICE ?? 0)
-                    loaderForSite('',document.querySelector('.catalog-fast-window'))
-                } else if (res.data?.error) {
-                    if (res.data?.error?.code) {
-
+                    loaderForSite('', document.querySelector('.catalog-fast-window'))
+                } else if (productData?.error) {
+                    if (productData?.error?.code) {
+                        alert('Ошибка запроса данных по товару')
                     }
                 } else {
                 }
@@ -43,8 +46,8 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
             className="fixed w-screen left-0 top-0 bg-lightOpacityWindow dark:bg-darkOpacityWindow flex
              justify-center h-screen z-50 box-popup-product">
             <div
-                className="open-modal-product m-auto h-fit catalog-item-product bg-white p-6 max-w-4xl
-                 w-full rounded-lg catalog-fast-window dark:bg-darkBox">
+                className="open-modal-product md:m-auto m-0 md:h-fit  h-full catalog-item-product bg-white p-6 max-w-4xl
+                 w-full md:rounded-lg rounded-0 catalog-fast-window dark:bg-darkBox">
                 <div className="mb-2 flex flex-row justify-between">
                     <span className="font-medium dark:font-light text-2xl mb-2 p-0 w-4/5">
                        {name}
@@ -62,13 +65,14 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
                     <div className="product-image-sliders-box md:mr-7 mr-0 md:w-1/2 w-full">
                         <div className="flex lg:flex-row product-image-main-slider">
                             <div className="box-with-image-prod p-10 bg-white rounded-xl mb-4 md:mb-0 relative border
-                            border-borderColor dark:border-white">
-                                <div className="flex-class box-with-image-one">
-                                    <img className="w-80 h-80 js-one-img" src={srcProduct} alt="oshisha"/>
+                            border-borderColor dark:border-white md:w-auto w-full">
+                                <div className="flex items-center justify-center box-with-image-one">
+                                    <img className="md:w-80 md:h-80 h-64 w-64 js-one-img" src={srcProduct}
+                                         alt="oshisha"/>
                                 </div>
                                 <div className="absolute like-with-fav right-3 top-3">
                                     <div className="box_with_like like-modal flex flex-col items-center">
-                                        <a className="icon_like method mb-3" href="javascript:void(0)"
+                                        <a className="icon_like method mb-3"
                                            data-method="like">
                                             <svg width="23" height="22" viewBox="0 0 20 19"
                                                  className="md:w-6 md:h-6 h-5 w-5"
@@ -83,7 +87,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
                                                 {countLike}
                                             </article>
                                         </a>
-                                        <a className="product-item__favorite-star method" href="javascript:void(0)"
+                                        <a className="product-item__favorite-star method"
                                            data-method="favorite" title="Добавить в избранное">
                                             <svg width="23" height="22" viewBox="0 0 25 26"
                                                  fill="none"
@@ -118,9 +122,6 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
                                            data-url={srcProduct}
                                            data-product_id={productId}
                                            data-max-quantity={maxQuantity}
-                                           onClick={() => {
-                                               setQuantityProduct(quantityProduct - 1)
-                                           }}
                                            id={areaBuy}>
                                             <svg width="20" height="2" viewBox="0 0 22 2" fill="none"
                                                  className="stroke-dark dark:stroke-white stroke-[1.5px]"
@@ -135,13 +136,10 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
                                               rounded-md md:w-14 w-16"
                                                    type="number"
                                                    max={maxQuantity}
-                                                   defaultValue={0}
                                                    data-max-quantity={maxQuantity}
                                                    id={areaBuyQuantity}
                                                    onChange={(e) => {
                                                        setQuantityProduct(e.target.value)
-                                                       console.log(e.target.value)
-                                                       console.log(e)
                                                    }}
                                                    data-url={srcProduct}
                                                    data-product_id={productId}
@@ -154,9 +152,6 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
                                            data-url={srcProduct}
                                            data-product_id={productId}
                                            data-max-quantity={maxQuantity}
-                                           onClick={() => {
-                                               setQuantityProduct(quantityProduct + 1)
-                                           }}
                                            title={'Доступно: ' + maxQuantity}
                                            id={areaBuy}>
                                             <svg width="20" height="20" viewBox="0 0 20 20"
