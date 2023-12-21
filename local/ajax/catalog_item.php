@@ -86,7 +86,7 @@ if ($action === 'fastProduct') {
     $item = CIBlockElement::GetList([], ['ID' => $prodId], false, false,
         ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE',
             'CATALOG_QUANTITY', 'QUANTITY', 'CATALOG_PRICE_' . B2B_PRICE,
-            'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID])->Fetch();
+            'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID])->GetNext();
 
     $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $prodId, []);
     while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
