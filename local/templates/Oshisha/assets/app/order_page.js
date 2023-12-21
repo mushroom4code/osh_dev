@@ -4,6 +4,7 @@ import OrderDelivery from "./components/order_page/OrderDelivery";
 import OrderPaySystems from "./components/order_page/OrderPaySystems";
 import OrderUserAgreements from "./components/order_page/OrderUserAgreements";
 import OrderComments from "./components/order_page/OrderComments";
+import OrderTotal from "./components/order_page/OrderTotal";
 import {createRoot} from 'react-dom/client';
 import React from "react";
 
@@ -31,6 +32,9 @@ BX.OrderPageComponents = {
     OrderUserAgreementsRoot: null,
     OrderCommentsBlock: null,
     OrderCommentsRoot: null,
+    OrderTotalBlock: null,
+    OrderTotalRef: null,
+    OrderTotalRoot: null,
 
     init: function(currentDataset) {
         this.result = JSON.parse(currentDataset.result);
@@ -81,6 +85,12 @@ BX.OrderPageComponents = {
         this.OrderCommentsBlock = document.getElementById(currentDataset.newBlockWithCommentId);
         if(this.OrderCommentsBlock) {
             this.OrderCommentsRoot = createRoot(this.OrderCommentsBlock);
+        }
+
+        this.OrderTotalBlock = document.getElementById(currentDataset.totalBlockId);
+        if (this.OrderTotalBlock) {
+            this.OrderTotalRef = React.createRef();
+            this.OrderTotalRoot = createRoot(this.OrderTotaBlock);
         }
 
         this.renderComponents(this.result, this.locations);
@@ -163,6 +173,20 @@ BX.OrderPageComponents = {
                     params={this.params}
                 />
             );
+        }
+
+        if (!this.OrderTotalRef.current) {
+            this.OrderTotalRoot.render(
+                <OrderTotal
+                    ref={this.OrderTotalRef}
+                    domNode={this.OrderTotalBlock}
+                    result={this.result}
+                    params={this.params}
+                    options={this.options}
+                />
+            );
+        } else {
+            this.OrderTotalRef.current.setState({result: this.result});
         }
     },
 
