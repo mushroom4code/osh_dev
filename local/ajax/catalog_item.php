@@ -27,7 +27,7 @@ $action = $request->getJsonList()->get('action');
  * @throws ObjectPropertyException
  * @throws SystemException
  */
-function getGroupedProduct($prodId, $listGroupedProduct)
+function getGroupedProduct($prodId, $listGroupedProduct,$arItems)
 {
     $prices = $rsPrice = [];
     $arItems['GROUPED_PRODUCTS'] = $arItems['GROUPED_PROPS_DATA'] = $arResult = [];
@@ -85,8 +85,8 @@ if ($action === 'fastProduct') {
     $prop_see_in_window = [];
     $item = CIBlockElement::GetList([], ['ID' => $prodId], false, false,
         ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE',
-            'CATALOG_QUANTITY', 'QUANTITY', 'CATALOG_PRICE_' . B2B_PRICE,
-            'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID])->GetNext();
+            'CATALOG_QUANTITY', 'QUANTITY', 'CATALOG_PRICE_' . B2B_PRICE, IS_DISCOUNT_VALUE,
+            'PROPERTY_PRODUCTS_LIST_ON_PROP', 'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID])->GetNext();
 
     $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $prodId, []);
     while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
@@ -117,6 +117,7 @@ if ($action === 'fastProduct') {
         'QUANTITY' => $item['QUANTITY'],
         'PRICE' => round($item['CATALOG_PRICE_' . B2B_PRICE]),
         'SALE_PRICE' => round($item['CATALOG_PRICE_' . SALE_PRICE_TYPE_ID]),
+        'SALE_BOOL' => $item['PROPERTY_USE_DISCOUNT_VALUE_VALUE'] === 'Да',
     ];
 
     if (!empty($price['USER_PRICE'])) {
@@ -142,7 +143,7 @@ if ($action === 'fastProduct') {
     }
 
     try {
-        $item['GROUPED_PRODUCT'] = getGroupedProduct($prodId, $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'],);
+        $item['GROUPED_PRODUCT'] = getGroupedProduct($prodId, $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'],$item);
     } catch (ObjectPropertyException $e) {
     } catch (ArgumentException $e) {
     } catch (SystemException $e) {
