@@ -17,8 +17,7 @@ if (contragentForm) {
  * CATALOG POPUP
  * @type {HTMLCollectionOf<Element>}
  */
-const popupProduct = document.getElementsByClassName('initialPopup');
-
+const popupProduct = document.querySelectorAll('.initialPopup');
 if (popupProduct.length > 0) {
     for (let i = 0; i < popupProduct.length; i++) {
         let item = popupProduct[i];
