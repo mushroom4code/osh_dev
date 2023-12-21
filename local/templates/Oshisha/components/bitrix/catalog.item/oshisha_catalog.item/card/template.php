@@ -124,7 +124,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
         if ($taste['VALUE']) {
 //            // TODO - 23 - число символов которое помещается в строку
             $boolUp = (mb_strlen($taste['VALUE'][0]) + mb_strlen($taste['VALUE'][1]) + mb_strlen($taste['VALUE'][2])) > 23;
-            if (count($taste['VALUE']) > 1 && $boolUp  || count($taste['VALUE']) > 3) {
+            if (count($taste['VALUE']) > 1 && $boolUp || count($taste['VALUE']) > 3) {
                 $showToggler = true;
             }
         }
@@ -178,12 +178,15 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                  alt="no photo"/>
                         <?php } ?>
                     </a>
-                    <div class="absolute mb-2 top-20 right-4 z-20 p-2 bg-whiteOpacity rounded-full cursor-pointer"
-                         data-item-id="<?= $item['ID'] ?>" onclick="JCCatalogItem.prototype.openFastWindow(this)"
-                         id="<?= 'fastProduct_' . $item['ID'] ?>">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="boxInitialPopup" data-product-id="<?= $item['ID'] ?>"></div>
+                    <div class="initialPopup absolute mb-2 top-20 right-4 z-20 p-2 bg-whiteOpacity rounded-full cursor-pointer"
+                         data-product-id="<?= $item['ID'] ?>" data-area-quantity="<?= $arItemIDs['QUANTITY_ID'] ?>"
+                         data-area-buy="<?= $arItemIDs['BUY_LINK'] ?>">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.972 13.4274C14.2256 12.1625 15 10.4216 15 8.5C15 4.63401 11.866 1.5 8 1.5C4.13401 1.5 1 4.63401 1 8.5C1 12.366 4.13401 15.5 8 15.5C9.94437 15.5 11.7035 14.7072 12.972 13.4274ZM12.972 13.4274L18.5 19"
-                                  stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                  stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"
+                                  stroke-linejoin="round"/>
                         </svg>
                     </div>
                 </div>

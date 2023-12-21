@@ -118,8 +118,6 @@ if ($USER->IsAuthorized()) {
             <div id="createContragent"></div>
         </div>
     </div>
-    <script src="/dist/app.generated.js?<?= hash_file('md5', $_SERVER['DOCUMENT_ROOT'] . '/dist/app.generated.js') ?>"
-            defer></script>
     <?php
 } else {
     LocalRedirect('/login/?login=yes');

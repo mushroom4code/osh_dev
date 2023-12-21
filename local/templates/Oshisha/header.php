@@ -92,6 +92,8 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     Asset::getInstance()->addCss("/local/assets/css/flags-mask/phonecode.css");
     $APPLICATION->ShowHead(); ?>
     <script src="//code-ya.jivosite.com/widget/VtGssOZJEq" async></script>
+    <script src="/dist/app.generated.js?<?= hash_file('md5', $_SERVER['DOCUMENT_ROOT'] . '/dist/app.generated.js') ?>"
+            defer></script>
 </head>
 <body class="bg-white dark:bg-dark dark:text-textDark relative">
 <div id="panel">
