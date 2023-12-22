@@ -273,23 +273,23 @@ if ($type === 'line') {
             <?php if ($showLine) { ?>
                 <div class="flex flex-row flex-wrap md:px-3 py-3 px-0">
                     <div class="md:w-5/12 w-1/2 order-1 md:pb-0 pb-3 text-sm font-medium dark:font-extralight
-                    dark:text-textDarkLightGray border-b md:border-0 border-tagFilterGray">Наименование
+                    dark:text-textDarkLightGray border-b md:border-0 border-tagFilterGray md:px-0 px-1">Наименование
                     </div>
                     <div class="md:w-1/12 w-1/4 md:text-center md:order-2 md:pt-0 pt-3 order-3 text-sm font-medium
-                                 dark:font-extralight dark:text-textDarkLightGray">Склад
+                                 dark:font-extralight dark:text-textDarkLightGray md:px-0 px-1">Склад
                     </div>
-                    <div class="md:w-2/12 w-1/2 md:text-center text-end md:order-3 order-2 md:pb-0 pb-3 text-sm
+                    <div class="md:w-2/12 w-1/2 md:text-center text-end md:order-3 order-2 md:pb-0 pb-3 text-sm md:px-0 px-1
                     font-medium dark:font-extralight dark:text-textDarkLightGray border-b md:border-0 border-tagFilterGray">
                         Добавить
                     </div>
-                    <div class="md:w-1/12 w-1/4 md:text-center order-4 md:pt-0 pt-3 text-sm font-medium dark:font-extralight
-                                dark:text-textDarkLightGray">Цена
+                    <div class="md:w-1/12 w-1/4 text-center order-4 md:pt-0 pt-3 text-sm font-medium dark:font-extralight
+                     md:px-0 px-1 dark:text-textDarkLightGray">Цена
                     </div>
-                    <div class="md:w-2/12 w-1/4 md:text-center order-5 md:pt-0 pt-3 text-sm font-medium dark:font-extralight
-                                 dark:text-textDarkLightGray">Сумма
+                    <div class="md:w-2/12 w-1/4 text-center order-5 md:pt-0 pt-3 text-sm font-medium dark:font-extralight
+                     md:px-0 px-1 dark:text-textDarkLightGray">Сумма
                     </div>
                     <div class="md:w-1/12 w-1/4 order-6 text-end text-sm md:pt-0 pt-3 font-medium dark:font-extralight
-                                dark:text-textDarkLightGray">Прочее
+                      md:px-0 px-1 dark:text-textDarkLightGray">Прочее
                     </div>
                 </div>
             <?php } ?>

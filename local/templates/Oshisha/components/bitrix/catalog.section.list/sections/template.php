@@ -36,14 +36,15 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
     }
 
     ?>
-    <h1 class="title-heading">Каталог товаров</h1>
+    <h1 class="mb-8 text-3xl font-semibold dark:font-light text-lightGrayBg dark:text-textDarkLightGray">Каталог
+        товаров</h1>
     <div id="<?= $visual['ID']; ?>" class="catalog-sections-list">
         <?php
         if ($arParams['SHOW_TITLE'] && !empty($arParams['TITLE_MESSAGE'])) {
             ?><h3 class="catalog-sections-list-title"><?= $arParams['TITLE_MESSAGE'] ?></h3><?php
         }
         ?>
-        <ul class="catalog-sections-list-container d-flex flex-row flex-wrap" data-items-container="Y">
+        <ul class="catalog-sections-list-container flex flex-row flex-wrap justify-between" data-items-container="Y">
             <?php
             $sectionEdit = CIBlock::GetArrayByID($arParams['IBLOCK_ID'], 'SECTION_EDIT');
             $sectionDelete = CIBlock::GetArrayByID($arParams['IBLOCK_ID'], 'SECTION_DELETE');
@@ -57,7 +58,7 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                 $this->addDeleteAction($section['ID'], $section['DELETE_LINK'], $sectionDelete, $sectionDeleteParams);
 
                 if (!empty($section['PICTURE'])) {
-                    $style = "background-image: url('{$section['PICTURE']['SRC']}');";
+                    $style = "background-image: url('{$section['PICTURE']['SRC']}');background-size: 85%;";
                 } else {
                     $section['PICTURE'] = [
                         'SRC' => $emptyImagePath,
@@ -69,22 +70,27 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                             : $section['NAME'],
                     ];
 
-                    $style = "background-image: url(" . $section['PICTURE']['SRC'] . ");";
+                    $style = "background-image: url(" . $section['PICTURE']['SRC'] . "); background-size: 85%;";
                 }
                 if (strripos($style, 'empty.svg') !== false) {
-                    $style = "background-image: url('/local/assets/images/osh.png'); background-size: 75%;";
+                    $style = "background-image: url('/local/assets/images/osh.png'); background-size: 85%;";
                 } ?>
                 <li id="<?= $this->getEditAreaId($section['ID']) ?>"
-                    class="catalog-section-list-item col-lg-4 col-md-4 col-12 p-3"
+                    class="catalog-section-list-item lg:w-[31%] md:w-[48%] w-full p-6 pb-0 rounded-xl h-72 md:mr-3 mb-4
+                    bg-textDark dark:bg-darkBox mr-0"
                     data-item-number="<?= $sectionNumber; ?>">
-                    <a class="catalog-section-list-tile-img-container p-4 br-10 bg-gray-white" style="<?= $style ?> "
+                    <a class="catalog-section-list-tile-img-container bg-bottom w-full h-full block bg-no-repeat"
+                       style="<?= $style ?> "
                        href="<?= $section['SECTION_PAGE_URL'] ?>">
                         <span class="catalog-section-list-item-inner">
-                                <h3 class="catalog-section-list-item-title"
-                                    style="color:<?=$section['UF_COLOR_TEXT'] ?? '#393939'?>"><?= $section['NAME'] ?></h3>
+                                <h3 class="catalog-section-list-item-title hover:text-hover-red dark:hover:text-hover-red
+                                text-lightGrayBg dark:text-textDarkLightGray font-medium dark:font-normal text-2xl"
+                                    style="color:<?= $section['UF_COLOR_TEXT'] ?? '' ?>"><?= $section['NAME'] ?></h3>
                             <?php if ($arParams['COUNT_ELEMENTS'] && $section['ELEMENT_CNT'] !== null) { ?>
-                                <span class="catalog-section-list-item-counter font-14"
-                                      style="color:<?=$section['UF_COLOR_TEXT'] ?? '#393939'?>">
+                                <span class="catalog-section-list-item-counter hover:text-hover-red
+                                  text-md dark:font-light text-lightGrayBg dark:hover:text-hover-red
+                                 dark:text-textDarkLightGray text-medium"
+                                      style="color:<?= $section['UF_COLOR_TEXT'] ?? '' ?>">
 										<?= $section['ELEMENT_CNT_TITLE'] ?>
                             </span>
                             <?php } ?>
@@ -94,8 +100,7 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                 <?php
                 $sectionNumber++;
             }
-            unset($section);
-            ?>
+            unset($section); ?>
         </ul>
     </div>
     <?php

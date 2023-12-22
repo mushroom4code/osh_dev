@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 
 function OrderPropLocation({property, locations, disabled, are_locations_prepared}) {
     var preparedLocations, cleanLocations, locationsTemplate;
@@ -81,9 +81,14 @@ function OrderPropLocation({property, locations, disabled, are_locations_prepare
                     </div>
                 )
             }
+            const mounted = useRef();
             useEffect(() => {
+                if (!mounted.current) {
+                    mounted.current = true;
+                } else {
                     BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
-            })
+                }
+            });
             return (<div className="soa-property-container">
                 {locationsJsx}
             </div>);

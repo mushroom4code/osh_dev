@@ -17,7 +17,7 @@ Loader::includeModule('main');
 CModule::IncludeModule("sale");
 
 $request = Context::getCurrent()->getRequest();
-$action = $request->get('action');
+$action = $request->getJsonList()->get('action');
 
 /**
  * @param $prodId
@@ -27,7 +27,7 @@ $action = $request->get('action');
  * @throws ObjectPropertyException
  * @throws SystemException
  */
-function getGroupedProduct($prodId, $listGroupedProduct)
+function getGroupedProduct($prodId, $listGroupedProduct,$arItems)
 {
     $prices = $rsPrice = [];
     $arItems['GROUPED_PRODUCTS'] = $arItems['GROUPED_PROPS_DATA'] = $arResult = [];
@@ -61,7 +61,7 @@ function getGroupedProduct($prodId, $listGroupedProduct)
             }
         }
 
-        $dbBasketItems =  \CSaleBasket::GetList(
+        $dbBasketItems = \CSaleBasket::GetList(
             array(),
             array("FUSER_ID" => Fuser::getId(), "LID" => SITE_ID, "ORDER_ID" => "NULL"),
             false,
@@ -76,15 +76,19 @@ function getGroupedProduct($prodId, $listGroupedProduct)
     }
     return $arResult;
 }
+
 $jsonForModal = [];
 if ($action === 'fastProduct') {
 
+    $prodId = $request->getJsonList()->get('prodId');
     $specialPrice = 0;
     $prop_see_in_window = [];
-    $item = CIBlockElement::GetList([], ['ID' => $request->get('prodId')], false, false,
-        ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE'])->Fetch();
+    $item = CIBlockElement::GetList([], ['ID' => $prodId], false, false,
+        ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE',
+            'CATALOG_QUANTITY', 'QUANTITY', 'CATALOG_PRICE_' . B2B_PRICE, IS_DISCOUNT_VALUE,
+            'PROPERTY_PRODUCTS_LIST_ON_PROP', 'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID])->GetNext();
 
-    $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $request->get('prodId'), []);
+    $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $prodId, []);
     while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
         $xmlId = $arMainPropertyValue['PROPERTY_VALUE_ID'];
         if (!empty($arMainPropertyValue['VALUE'])) {
@@ -107,6 +111,14 @@ if ($action === 'fastProduct') {
             }
         }
     }
+
+    $item['PRODUCT'] = [
+        'CATALOG_QUANTITY' => $item['CATALOG_QUANTITY'],
+        'QUANTITY' => $item['QUANTITY'],
+        'PRICE' => round($item['CATALOG_PRICE_' . B2B_PRICE]),
+        'SALE_PRICE' => round($item['CATALOG_PRICE_' . SALE_PRICE_TYPE_ID]),
+        'SALE_BOOL' => $item['PROPERTY_USE_DISCOUNT_VALUE_VALUE'] === 'Да',
+    ];
 
     if (!empty($price['USER_PRICE'])) {
         $specialPrice = $price['USER_PRICE']['PRICE'];
@@ -131,7 +143,7 @@ if ($action === 'fastProduct') {
     }
 
     try {
-        $item['GROUPED_PRODUCT'] = getGroupedProduct($request->get('prodId'), $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'],);
+        $item['GROUPED_PRODUCT'] = getGroupedProduct($prodId, $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'],$item);
     } catch (ObjectPropertyException $e) {
     } catch (ArgumentException $e) {
     } catch (SystemException $e) {
@@ -139,19 +151,21 @@ if ($action === 'fastProduct') {
 // TODO - допилить получение переменных - все-таки подумать брать ли некоторые из шиблона
 // TODO - или вырезать кусок из получения данных по связ товарам
     $jsonForModal = [
-        'ID' => $request->get('prodId'),
+        'ID' => $prodId,
 //        'BUY_LINK' => $arItemIDs['BUY_LINK'] ,
 //        'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
         'TYPE_PRODUCT' => 'PRODUCT',
         'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
         'MORE_PHOTO' => $morePhoto,
         'PRODUCT' => $item['PRODUCT'],
+        'PREVIEW_PICTURE' => CFile::GetPath(($item['PREVIEW_PICTURE'] ?? $item['DETAIL_PICTURE']))
+            ?? '/local/templates/Oshisha/images/no-photo.gif',
 //        'USE_DISCOUNT' => $useDiscount['VALUE'],
 //        'ACTUAL_BASKET' => $priceBasket,
         'PRICE' => $price['PRICE_DATA'],
         'SALE_PRICE' => round($specialPrice),
         'POPUP_PROPS' => $prop_see_in_window ?? 0,
-//        'NAME' => $productTitle,
+        'NAME' => $item['NAME'],
         'LIKE' => [
             'ID_PROD' => $item['ID_PROD'],
             'F_USER_ID' => $item['F_USER_ID'],
@@ -166,6 +180,6 @@ if ($action === 'fastProduct') {
     ];
     echo json_encode($jsonForModal);
 } else {
-    echo json_encode(['errors'=>'yes']);
+    echo json_encode(['errors' => 'yes']);
 }
 exit();

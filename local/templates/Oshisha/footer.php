@@ -52,6 +52,9 @@ $option = $option_site; ?>
                 </p>
                 <ul class="text-sm font-light md:block hidden md:p-0 p-4 rounded-lg md:bg-transparent
                 md:dark:bg-transparent bg-menuFooter dark:bg-[#353535]">
+                    <li class="mb-2">
+                        <a class="text-hover-red font-medium" href="/catalog/">Перейти в каталог</a>
+                    </li>
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "bottom_menu",
@@ -86,27 +89,27 @@ $option = $option_site; ?>
                 <ul class="text-sm font-light md:block hidden md:p-0 p-4 rounded-lg md:bg-transparent
                 md:dark:bg-transparent bg-menuFooter dark:bg-[#353535]">
                     <li class="mb-2">
-                        <a class="hover:text-hover-red" href="/about/contacts/">Контакты</a>
+                        <a class="hover:text-hover-red font-light" href="/about/contacts/">Контакты</a>
                     </li>
                     <li class="mb-2">
-                        <a class="hover:text-hover-red" href="/about/feedback/">Обратная связь</a>
+                        <a class="hover:text-hover-red font-light" href="/about/feedback/">Обратная связь</a>
                     </li>
                     <li class="mb-2">
-                        <a class="hover:text-hover-red js__callback" href="javascript:void(0)">Обратный звонок</a>
+                        <a class="hover:text-hover-red js__callback font-light" href="javascript:void(0)">Обратный звонок</a>
                     </li>
                     <?php if ($USER->IsAuthorized()): ?>
                         <li class="mb-2">
-                            <a class="hover:text-hover-red" href="/about/FAQ/">FAQ</a>
+                            <a class="hover:text-hover-red font-light" href="/about/FAQ/">FAQ</a>
                         </li>
                     <?php endif; ?>
                     <li class="mb-2">
-                        <a class="hover:text-hover-red" href="/about/users_rules/">Пользовательское соглашение</a>
+                        <a class="hover:text-hover-red font-light" href="/about/users_rules/">Пользовательское соглашение</a>
                     </li>
                     <li class="mb-2">
-                        <a class="hover:text-hover-red" href="/about/politics/">Политика конфиденциальности</a>
+                        <a class="hover:text-hover-red font-light" href="/about/politics/">Политика конфиденциальности</a>
                     </li>
                     <li class="mb-2">
-                        <a class="hover:text-hover-red" href="/about/cookie/">Политика обработки Cookie</a>
+                        <a class="hover:text-hover-red font-light" href="/about/cookie/">Политика обработки Cookie</a>
                     </li>
                 </ul>
             </div>
@@ -172,12 +175,13 @@ $option = $option_site; ?>
             <p class="text-xs mb-7 font-thin dark:text-textDarkLightGray"><?= $option->text_rospetrebnadzor_column; ?></p>
         <?php endif; ?>
         <div class="text-xs font-light dark:text-textDarkLightGray flex flex-col mb-2">
-            <span class="year">© 2014-<?= date('Y'); ?> <?= $option->COMPANY ?>.</span>
-            <span>Все права защищены</span>
+            <span class="year font-extralight">© 2014-<?= date('Y'); ?> <?= $option->COMPANY ?>.</span>
+            <span class="font-extralight">Все права защищены</span>
         </div>
         <div class="text-sm flex font-medium dark:text-textDarkLightGray mb-3">
-            <p class="text-xs text-white">powered by
-                <a href="https://enterego.ru" class="text-hover-red text-sm underline">ENTEREGO</a>
+            <p class="text-xs text-white font-light">powered by
+                <a href="https://enterego.ru"
+                   class="text-hover-red text-sm underline font-normal ml-2 hover:text-white transition-1">ENTEREGO</a>
             </p>
         </div>
     </div>
