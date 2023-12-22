@@ -88,7 +88,8 @@ if ($action === 'fastProduct') {
     $specialPrice = 0;
     $prop_see_in_window = [];
     $item = CIBlockElement::GetList([], ['ID' => $prodId], false, false,
-        ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE', 'PROPERTY_LINEYKA',
+        ['ID', 'PROPERTY_MORE_PHOTO','PROPERTY_CML2_PICTURES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE',
+            'PROPERTY_LINEYKA',
             'CATALOG_QUANTITY', 'QUANTITY', 'CATALOG_PRICE_' . B2B_PRICE, IS_DISCOUNT_VALUE, 'PREVIEW_TEXT',
             'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID, 'PROPERTY_ADVANTAGES_PRODUCT'])->GetNext();
 
@@ -147,9 +148,9 @@ if ($action === 'fastProduct') {
         'DESCRIPTION' => html_entity_decode($item['PREVIEW_TEXT']) ?? 'Линейка - '.$item['PROPERTY_LINEYKA_VALUE'],
         'GROUPED_PRODUCT' =>
             [
-                'GROUPED_PROPS_DATA' => $item['GROUPED_PRODUCTS']['GROUPED_PROPS_DATA'],
-                'GROUPED_PRODUCTS' => $item['GROUPED_PRODUCTS']['GROUPED_PRODUCTS'],
-                'SETTING' => $item['GROUPED_PRODUCTS']['SETTING']
+                'GROUPED_PROPS_DATA' => $item['GROUPED_PRODUCT']['GROUPED_PROPS_DATA'],
+                'GROUPED_PRODUCTS' => $item['GROUPED_PRODUCT']['GROUPED_PRODUCTS'],
+                'SETTING' => $item['GROUPED_PRODUCT']['SETTING']
             ]
     ];
     echo json_encode($jsonForModal);
