@@ -24,13 +24,15 @@ if (popupProduct.length > 0) {
         const productId = item.getAttribute('data-product-id');
         const areaBuy = item.getAttribute('data-area-buy');
         const areaBuyQuantity = item.getAttribute('data-area-quantity');
+        const groupedProduct = item.getAttribute('data-grouped-product');
 
         item.addEventListener("click", () => {
             const boxForComponent = document.querySelector('.boxInitialPopup[data-product-id="' + productId + '"]');
             if (boxForComponent && !boxForComponent.querySelector('.box-popup-product')) {
                 createRoot(boxForComponent).render(
                     <StrictMode>
-                        <CatalogProductPopup productId={productId} areaBuyQuantity={areaBuyQuantity} areaBuy={areaBuy}/>
+                        <CatalogProductPopup productId={productId} areaBuyQuantity={areaBuyQuantity} areaBuy={areaBuy}
+                                             groupedProduct={groupedProduct}/>
                     </StrictMode>);
             }
         });

@@ -17,17 +17,19 @@ Loader::includeModule('main');
 CModule::IncludeModule("sale");
 
 $request = Context::getCurrent()->getRequest();
-$action = $request->getJsonList()->get('action');
+$jsonList = $request->getJsonList();
+$action = $jsonList->get('action');
 
 /**
  * @param $prodId
  * @param $listGroupedProduct
+ * @param $arItems
  * @return array
  * @throws ArgumentException
  * @throws ObjectPropertyException
  * @throws SystemException
  */
-function getGroupedProduct($prodId, $listGroupedProduct,$arItems)
+function getGroupedProduct($prodId, $listGroupedProduct, $arItems)
 {
     $prices = $rsPrice = [];
     $arItems['GROUPED_PRODUCTS'] = $arItems['GROUPED_PROPS_DATA'] = $arResult = [];
@@ -80,37 +82,15 @@ function getGroupedProduct($prodId, $listGroupedProduct,$arItems)
 $jsonForModal = [];
 if ($action === 'fastProduct') {
 
-    $prodId = $request->getJsonList()->get('prodId');
+    $prodId = $jsonList->get('prodId');
+    $groupedProduct = $jsonList->get('groupedProduct');
+
     $specialPrice = 0;
     $prop_see_in_window = [];
     $item = CIBlockElement::GetList([], ['ID' => $prodId], false, false,
-        ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'PROPERTIES', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE',
-            'CATALOG_QUANTITY', 'QUANTITY', 'CATALOG_PRICE_' . B2B_PRICE, IS_DISCOUNT_VALUE,
-            'PROPERTY_PRODUCTS_LIST_ON_PROP', 'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID])->GetNext();
-
-    $rsMainPropertyValues = CIBlockElement::GetProperty(IBLOCK_CATALOG, $prodId, []);
-    while ($arMainPropertyValue = $rsMainPropertyValues->GetNext()) {
-        $xmlId = $arMainPropertyValue['PROPERTY_VALUE_ID'];
-        if (!empty($arMainPropertyValue['VALUE'])) {
-            // TODO - переформировать в массив с перебором по ключу
-            $item['PROPERTIES'][$arMainPropertyValue['CODE']]['ID'] = $arMainPropertyValue['ID'];
-            $item['PROPERTIES'][$arMainPropertyValue['CODE']]['NAME'] = $arMainPropertyValue['NAME'];
-            $item['PROPERTIES'][$arMainPropertyValue['CODE']]['CODE'] = $arMainPropertyValue['CODE'];
-            $item['PROPERTIES'][$arMainPropertyValue['CODE']]['SORT'] = $arMainPropertyValue['SORT'];
-            $item['PROPERTIES'][$arMainPropertyValue['CODE']]['PROPERTY_VALUE_ID'] = $arMainPropertyValue['PROPERTY_VALUE_ID'];
-            $item['PROPERTIES'][$arMainPropertyValue['CODE']]['VALUE'] = $arMainPropertyValue['VALUE'];
-            $item['PROPERTIES'][$arMainPropertyValue['CODE']]['VALUE_XML_ID'] = $arMainPropertyValue['VALUE_XML_ID'];
-            $item['PROPERTIES'][$arMainPropertyValue['CODE']]['VALUE_ENUM'] = $arMainPropertyValue['VALUE_ENUM'];
-            if (!empty($xmlId)) {
-                // TODO - сделать нормлаьно получение значений вариаций свой-ва если свой-во список
-                $rsRefProperty = CIBlockElement::GetProperty(IBLOCK_CATALOG, $arMainPropertyValue['ID'],
-                    [], ['EMPTY' => 'N', 'ACTIVE' => "Y", 'CODE' => $arMainPropertyValue['CODE']]);
-                if ($arRefProperty = $rsRefProperty->Fetch()) {
-                    $item['PROPERTIES'][$arMainPropertyValue['CODE']]['VALUES'][] = $arRefProperty;
-                }
-            }
-        }
-    }
+        ['ID', 'PRODUCT', 'MORE_PHOTO_VALUE', 'DETAIL_PAGE_URL', 'NAME', 'DETAIL_PICTURE', 'PROPERTY_LINEYKA',
+            'CATALOG_QUANTITY', 'QUANTITY', 'CATALOG_PRICE_' . B2B_PRICE, IS_DISCOUNT_VALUE, 'PREVIEW_TEXT',
+            'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID, 'PROPERTY_ADVANTAGES_PRODUCT'])->GetNext();
 
     $item['PRODUCT'] = [
         'CATALOG_QUANTITY' => $item['CATALOG_QUANTITY'],
@@ -136,14 +116,8 @@ if ($action === 'fastProduct') {
         $morePhoto[0]['SRC'] = '/local/templates/Oshisha/images/no-photo.gif';
     }
 
-    foreach ($item['PROPERTIES'] as $key => $props_val) {
-        if ($item['POPUP_PROPS'][$key]['SEE_POPUP_WINDOW'] == 'Y' && !empty($props_val['VALUE'])) {
-            $prop_see_in_window[] = $props_val;
-        }
-    }
-
     try {
-        $item['GROUPED_PRODUCT'] = getGroupedProduct($prodId, $item['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'],$item);
+        $item['GROUPED_PRODUCT'] = getGroupedProduct($prodId, json_decode($groupedProduct), $item);
     } catch (ObjectPropertyException $e) {
     } catch (ArgumentException $e) {
     } catch (SystemException $e) {
@@ -152,8 +126,6 @@ if ($action === 'fastProduct') {
 // TODO - или вырезать кусок из получения данных по связ товарам
     $jsonForModal = [
         'ID' => $prodId,
-//        'BUY_LINK' => $arItemIDs['BUY_LINK'] ,
-//        'QUANTITY_ID' => $arItemIDs['QUANTITY_ID'],
         'TYPE_PRODUCT' => 'PRODUCT',
         'DETAIL_PAGE_URL' => $item['DETAIL_PAGE_URL'],
         'MORE_PHOTO' => $morePhoto,
@@ -162,9 +134,7 @@ if ($action === 'fastProduct') {
             ?? '/local/templates/Oshisha/images/no-photo.gif',
 //        'USE_DISCOUNT' => $useDiscount['VALUE'],
 //        'ACTUAL_BASKET' => $priceBasket,
-        'PRICE' => $price['PRICE_DATA'],
         'SALE_PRICE' => round($specialPrice),
-        'POPUP_PROPS' => $prop_see_in_window ?? 0,
         'NAME' => $item['NAME'],
         'LIKE' => [
             'ID_PROD' => $item['ID_PROD'],
@@ -174,9 +144,13 @@ if ($action === 'fastProduct') {
             'COUNT_FAV' => $item['COUNT_FAV'] ?? 0,
         ],
         'USE_CUSTOM_SALE_PRICE' => USE_CUSTOM_SALE_PRICE,
-        'BASE_PRICE' => BASIC_PRICE,
-        'ADVANTAGES_PRODUCT' => $item['PROPERTIES']['ADVANTAGES_PRODUCT']['VALUE'] ?? [],
-        'GROUPED_PRODUCT' => $item['GROUPED_PRODUCT']
+        'DESCRIPTION' => html_entity_decode($item['PREVIEW_TEXT']) ?? 'Линейка - '.$item['PROPERTY_LINEYKA_VALUE'],
+        'GROUPED_PRODUCT' =>
+            [
+                'GROUPED_PROPS_DATA' => $item['GROUPED_PRODUCTS']['GROUPED_PROPS_DATA'],
+                'GROUPED_PRODUCTS' => $item['GROUPED_PRODUCTS']['GROUPED_PRODUCTS'],
+                'SETTING' => $item['GROUPED_PRODUCTS']['SETTING']
+            ]
     ];
     echo json_encode($jsonForModal);
 } else {
