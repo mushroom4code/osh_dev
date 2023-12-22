@@ -187,13 +187,6 @@ h4.checkout-block-title > i.fa {
     margin-bottom: 1.5em;
 }
 
-.delivery-choose {
-    color: #F55F5C;
-    cursor: pointer;
-    font-size: 0.875rem;
-    display: inline-block;
-}
-
 #bx-soa-properties,
 #bx-soa-delivery {
     margin-bottom: 2em !important;
