@@ -5798,7 +5798,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     if (this.cleanLocations[propId].SCRIPT.hasOwnProperty(k))
                         BX.evalGlobal(this.cleanLocations[propId].SCRIPT[k].JS.split('_key__').join('_' + index).replace(/sls-\d{5}/g, prefix + randomStr));
 
-                BX.saleOrderAjax.initDeferredControl();
+                // BX.saleOrderAjax.initDeferredControl();
             }
         },
 
