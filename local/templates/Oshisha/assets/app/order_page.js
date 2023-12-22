@@ -35,6 +35,7 @@ BX.OrderPageComponents = {
     OrderTotalBlock: null,
     OrderTotalRef: null,
     OrderTotalRoot: null,
+    orderBlockId: null,
 
     init: function(currentDataset) {
         this.result = JSON.parse(currentDataset.result);
@@ -92,6 +93,8 @@ BX.OrderPageComponents = {
             this.OrderTotalRef = React.createRef();
             this.OrderTotalRoot = createRoot(this.OrderTotaBlock);
         }
+
+        this.orderBlockId = currentDataset.orderBlockId;
 
         this.renderComponents(this.result, this.locations);
     },
@@ -180,9 +183,11 @@ BX.OrderPageComponents = {
                 <OrderTotal
                     ref={this.OrderTotalRef}
                     domNode={this.OrderTotalBlock}
+                    deliveryBlockNode={this.OrderDeliveryBlock}
                     result={this.result}
                     params={this.params}
                     options={this.options}
+                    orderBlockId={this.orderBlockId}
                 />
             );
         } else {

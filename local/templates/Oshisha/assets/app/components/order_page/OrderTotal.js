@@ -5,11 +5,11 @@ class OrderTotal extends React.Component {
         super(props);
         this.state = {
             result: this.props.result,
-            locations: this.props.locations,
-            are_locations_prepared: this.props.are_locations_prepared,
-            group_buyer_props: ["Личные данные"],
-            group_delivery_props: ["Данные для доставки"]
+            params: this.props.params,
+            deliveryBlockNode: this.props.deliveryBlockNode,
+            orderBlockId: this.props.orderBlockId
         }
+        this.animateScrollTo = this.animateScrollTo.bind(this);
     }
 
     componentDidMount() {
@@ -19,7 +19,6 @@ class OrderTotal extends React.Component {
     componentDidUpdate() {
         BX.OrderPageComponents.endLoader();
     }
-
 
     editTotalBlock() {
         if (!this.totalInfoBlockNode || !this.result.TOTAL)
@@ -183,8 +182,116 @@ class OrderTotal extends React.Component {
         this.editMobileTotalBlock();
     }
 
+    animateScrollTo(node, duration, shiftToTop) {
+        if (!node)
+            return;
+
+        var scrollTop = BX.GetWindowScrollPos().scrollTop,
+            orderBlockPos = BX.pos(this.state.orderBlockNode),
+            ghostTop = BX.pos(node).top - (BX.browser.IsMobile() ? 50 : 0);
+
+        if (shiftToTop)
+            ghostTop -= parseInt(shiftToTop);
+
+        if (ghostTop + window.innerHeight > orderBlockPos.bottom)
+            ghostTop = orderBlockPos.bottom - window.innerHeight + 17;
+
+        new BX.easing({
+            duration: duration || 800,
+            start: {scroll: scrollTop},
+            finish: {scroll: ghostTop},
+            transition: BX.easing.makeEaseOut(BX.easing.transitions.quad),
+            step: BX.delegate(function (state) {
+                window.scrollTo(0, state.scroll);
+            }, this)
+        }).animate();
+    }
+
+    createTotalUnit(name, value, params) {
+        var totalValue, totalUnit = [], className = 'bx-soa-cart-total-line leading-[35px] overflow-hidden';
+        name = name || '';
+        value = value || '';
+        params = params || {};
+
+        if (params.error) {
+            totalValue = (<a className="bx-soa-price-not-calc" dangerouslySetInnerHTML={{__html: value}} onClick={this.animateScrollTo}></a>);
+            totalValue = [BX.create('A', {
+                props: {className: 'bx-soa-price-not-calc'},
+                html: value,
+                events: {
+                    click: BX.delegate(function () {
+                        this.animateScrollTo(this.state.deliveryBlockNode);
+                    }, this)
+                }
+            })];
+        } else if (params.free) {
+            totalValue = [BX.create('SPAN', {
+                props: {className: 'bx-soa-price-free'},
+                html: value
+            })];
+        } else {
+            totalValue = [value];
+        }
+        if (params.total) {
+            className += ' bx-soa-cart-total-line-total mt-2.5 border-t-[1px] border-grey-line-order pt-[25px] mb-[13px]';
+        }
+
+        if (params.highlighted) {
+            className += ' bx-soa-cart-total-line-highlighted';
+        }
+        if (name === 'НДС (20%, включен в цену):') {
+            name = '';
+            totalValue = ''
+        }
+        if (name === 'Итого:') {
+            name = 'Общая стоимость';
+        }
+
+        return BX.create('DIV', {
+            props: {className: className},
+            children: [
+                BX.create('SPAN', {props: {className: 'bx-soa-cart-t float-left' + (params.total ? ' font-bold' : '')}, html: name}),
+                BX.create('SPAN', {
+                    props: {
+                        className: 'bx-soa-cart-d float-right' + (params.total ? ' font-bold' : '') + (!!params.total && this.options.totalPriceChanged ? ' bx-soa-changeCostSign' : '')
+                    },
+                    children: totalValue
+                })
+            ]
+        });
+    }
+
 
     render() {
+        if (!this.state.result.TOTAL)
+            return;
+
+        var total = this.state.result.TOTAL,
+            priceHtml, params = {},
+            discText, valFormatted, i,
+            curDelivery, deliveryError, deliveryValue;
+
+
+        if (parseFloat(total.ORDER_PRICE) === 0) {
+            priceHtml = this.state.params.MESS_PRICE_FREE;
+            params.free = true;
+        } else {
+            priceHtml = total.ORDER_PRICE_FORMATED;
+        }
+
+        if (this.state.options.showPriceWithoutDiscount) {
+            priceHtml += '<br><span class="bx-price-old">' + total.PRICE_WITHOUT_DISCOUNT + '</span>';
+        }
+        let product = this.state.result.GRID.ROWS;
+        let quantity = Object.keys(product).length;
+        let textQuantity = '<span>Товары &nbsp(' + quantity + ')</span>';
+        this.totalInfoBlockNode.appendChild(this.createTotalUnit(textQuantity, priceHtml, params));
+
+        // if (this.options.showOrderWeight) {
+        this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED));
+        // }
+
+
         const renderProperties = () => {
             let div = [];
             let group, property,
