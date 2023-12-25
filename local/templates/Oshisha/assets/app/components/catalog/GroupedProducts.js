@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-function GroupedProducts({groupedSettings, groupedProducts, groupedProps}) {
+function GroupedProducts({groupedSettings, groupedProducts, groupedProps, setPrice, setID}) {
 
     console.log(groupedSettings)
     console.log(groupedProducts)
@@ -19,10 +19,12 @@ function GroupedProducts({groupedSettings, groupedProducts, groupedProps}) {
                         <div className="flex flex-row" key={pr_key}>
                             {
                                 groupedProducts.map((product, p_key) => {
-
+                                    const productData = product[1];
+                                    const productID = product[0];
                                     let classType = 'lg:mb-2 md:m-2 m-1 offer-box cursor-pointer'
-                                    const valuePropsProduct = product[1].PROPERTIES[code].JS_PROP
-                                    let itemChild = product[1].NAME + prefix
+                                    const valuePropsProduct = productData.PROPERTIES[code].JS_PROP
+                                    let itemChild = productData.NAME + prefix
+                                    const price = productData.PRICES.PRICE_DATA.PRICE.split('.')[0];
                                     const keys = Object.keys(valuePropsProduct);
 
                                     if (typeProduct === 'color') {
@@ -31,6 +33,10 @@ function GroupedProducts({groupedSettings, groupedProducts, groupedProps}) {
                                             <div key={p_key}
                                                  data-prop_code={code}
                                                  data-prop_group={valuePropsProduct}
+                                                 onClick={() => {
+                                                     setPrice(price)
+                                                     setID(productID)
+                                                 }}
                                                  className="offer-box text-xs border border-gray rounded-md p-3 bg-white mr-2">
                                                 <img src={srcPicture} className="w-16 h-16" alt=""/>
                                             </div>
@@ -39,6 +45,10 @@ function GroupedProducts({groupedSettings, groupedProducts, groupedProps}) {
                                         return (
                                             <div key={p_key}
                                                  data-prop_code={code}
+                                                 onClick={() => {
+                                                     setPrice(price)
+                                                     setID(productID)
+                                                 }}
                                                  data-prop_group={valuePropsProduct}
                                                  className="flex offer-box flex-row overflow-auto max-w-full text-xs
                                                   red_button_cart taste variation_taste w-fit rounded-xl dark:bg-grayButton
@@ -51,6 +61,10 @@ function GroupedProducts({groupedSettings, groupedProducts, groupedProps}) {
                                         return (
                                             <div key={p_key}
                                                  data-prop_code={code}
+                                                 onClick={() => {
+                                                     setPrice(price)
+                                                     setID(productID)
+                                                 }}
                                                  data-prop_group={valuePropsProduct}
                                                  className="flex offer-box flex-row overflow-auto max-w-full text-xs
                                                  w-fit rounded-xl dark:bg-grayButton lg:mb-2 md:m-2 p-2 m-1 offer-box
