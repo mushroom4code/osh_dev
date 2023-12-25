@@ -6,6 +6,7 @@ class OrderTotal extends React.Component {
         this.state = {
             result: this.props.result,
             params: this.props.params,
+            options: this.props.options,
             deliveryBlockNode: this.props.deliveryBlockNode,
             orderBlockId: this.props.orderBlockId
         }
@@ -38,10 +39,12 @@ class OrderTotal extends React.Component {
         } else {
             priceHtml = total.ORDER_PRICE_FORMATED;
         }
-
-        if (this.options.showPriceWithoutDiscount) {
+        console.log('a');
+        console.log(this.state.options);
+        if (this.state.options.showPriceWithoutDiscount) {
             priceHtml += '<br><span class="bx-price-old">' + total.PRICE_WITHOUT_DISCOUNT + '</span>';
         }
+        console.log('b');
         let product = this.result.GRID.ROWS;
         let quantity = Object.keys(product).length;
         let textQuantity = '<span>Товары &nbsp(' + quantity + ')</span>';
@@ -207,30 +210,20 @@ class OrderTotal extends React.Component {
         }).animate();
     }
 
-    createTotalUnit(name, value, params) {
+    createTotalUnit(name, value, params, line) {
         var totalValue, totalUnit = [], className = 'bx-soa-cart-total-line leading-[35px] overflow-hidden';
         name = name || '';
         value = value || '';
         params = params || {};
 
+        console.log(value);
         if (params.error) {
             totalValue = (<a className="bx-soa-price-not-calc" dangerouslySetInnerHTML={{__html: value}} onClick={this.animateScrollTo}></a>);
-            totalValue = [BX.create('A', {
-                props: {className: 'bx-soa-price-not-calc'},
-                html: value,
-                events: {
-                    click: BX.delegate(function () {
-                        this.animateScrollTo(this.state.deliveryBlockNode);
-                    }, this)
-                }
-            })];
         } else if (params.free) {
-            totalValue = [BX.create('SPAN', {
-                props: {className: 'bx-soa-price-free'},
-                html: value
-            })];
+            totalValue = (<span className={"bx-soa-price-free"}>{value}</span>);
+
         } else {
-            totalValue = [value];
+            totalValue = { __html: value};
         }
         if (params.total) {
             className += ' bx-soa-cart-total-line-total mt-2.5 border-t-[1px] border-grey-line-order pt-[25px] mb-[13px]';
@@ -247,24 +240,22 @@ class OrderTotal extends React.Component {
             name = 'Общая стоимость';
         }
 
-        return BX.create('DIV', {
-            props: {className: className},
-            children: [
-                BX.create('SPAN', {props: {className: 'bx-soa-cart-t float-left' + (params.total ? ' font-bold' : '')}, html: name}),
-                BX.create('SPAN', {
-                    props: {
-                        className: 'bx-soa-cart-d float-right' + (params.total ? ' font-bold' : '') + (!!params.total && this.options.totalPriceChanged ? ' bx-soa-changeCostSign' : '')
-                    },
-                    children: totalValue
-                })
-            ]
-        });
+        return(
+            <div key={'cart_total_line_' + line} className={className}>
+                <span className={'bx-soa-cart-t float-left' + (params.total ? ' font-bold' : '')}>{name}</span>
+                <span className={'bx-soa-cart-d float-right' + (params.total ? ' font-bold' : '')
+                    + (!!params.total && this.options.totalPriceChanged ? ' bx-soa-changeCostSign' : '')}>
+                    {totalValue}
+                </span>
+            </div>
+        );
     }
 
 
     render() {
+        var resultJsx = [];
         if (!this.state.result.TOTAL)
-            return;
+            return resultJsx;
 
         var total = this.state.result.TOTAL,
             priceHtml, params = {},
@@ -285,11 +276,31 @@ class OrderTotal extends React.Component {
         let product = this.state.result.GRID.ROWS;
         let quantity = Object.keys(product).length;
         let textQuantity = '<span>Товары &nbsp(' + quantity + ')</span>';
-        this.totalInfoBlockNode.appendChild(this.createTotalUnit(textQuantity, priceHtml, params));
 
-        // if (this.options.showOrderWeight) {
-        this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED));
+        resultJsx.push(this.createTotalUnit(textQuantity, priceHtml, params, 'prod_quantity'));
+        resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED), [], 'weight');
+
+        for (i = 0; i < total.TAX_LIST.length; i++) {
+            valFormatted = total.TAX_LIST[i].VALUE_MONEY_FORMATED || '';
+            resultJsx.push(
+                this.createTotalUnit(total.TAX_LIST[i].NAME +
+                    (!!total.TAX_LIST[i].VALUE_FORMATED ? ' ' + total.TAX_LIST[i].VALUE_FORMATED : '') + ':',
+                    valFormatted,
+                    [],
+                    'tax_' + i)
+            );
+        }
         // }
+
+        // params = {};
+        // curDelivery = this.getSelectedDelivery();
+        // deliveryError = curDelivery && curDelivery.CALCULATE_ERRORS && curDelivery.CALCULATE_ERRORS.length;
+
+
+
+
+
+
 
 
         const renderProperties = () => {
@@ -318,11 +329,7 @@ class OrderTotal extends React.Component {
             return div;
         }
 
-        return(<div className="row">
-            <div className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0">
-                {renderProperties()}
-            </div>
-        </div>);
+        return resultJsx;
     }
 }
 

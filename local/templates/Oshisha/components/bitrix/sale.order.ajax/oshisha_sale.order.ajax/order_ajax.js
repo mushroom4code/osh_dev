@@ -2065,7 +2065,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 //     this.activeSection = null;
                 // }
 
-                this.editTotalBlock();
+                // this.editTotalBlock();
             this.totalBlockFixFont();
 
             this.showErrors(this.result.ERROR, false);

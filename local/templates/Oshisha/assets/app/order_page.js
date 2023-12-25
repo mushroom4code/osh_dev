@@ -91,7 +91,7 @@ BX.OrderPageComponents = {
         this.OrderTotalBlock = document.getElementById(currentDataset.totalBlockId);
         if (this.OrderTotalBlock) {
             this.OrderTotalRef = React.createRef();
-            this.OrderTotalRoot = createRoot(this.OrderTotaBlock);
+            this.OrderTotalRoot = createRoot(this.OrderTotalBlock);
         }
 
         this.orderBlockId = currentDataset.orderBlockId;
