@@ -81,7 +81,7 @@ function getGroupedProduct($prodId, $listGroupedProduct, $arItems)
 
 $jsonForModal = [];
 if ($action === 'fastProduct') {
-
+    $morePhoto = [];
     $prodId = $jsonList->get('prodId');
     $groupedProduct = $jsonList->get('groupedProduct');
 
@@ -92,6 +92,11 @@ if ($action === 'fastProduct') {
             'PROPERTY_LINEYKA',
             'CATALOG_QUANTITY', 'QUANTITY', 'CATALOG_PRICE_' . B2B_PRICE, IS_DISCOUNT_VALUE, 'PREVIEW_TEXT',
             'CATALOG_PRICE_' . SALE_PRICE_TYPE_ID, 'PROPERTY_ADVANTAGES_PRODUCT'])->GetNext();
+
+    $photo = CIBlockElement::GetProperty(IBLOCK_CATALOG, $prodId,[],['CODE'=>'MORE_PHOTO']);
+    while ($morePhotoS = $photo->GetNext()) {
+        $morePhoto[] = $morePhotoS;
+    }
 
     $item['PRODUCT'] = [
         'CATALOG_QUANTITY' => $item['CATALOG_QUANTITY'],

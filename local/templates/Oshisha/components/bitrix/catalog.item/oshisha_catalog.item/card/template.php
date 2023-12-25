@@ -178,7 +178,6 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                  alt="no photo"/>
                         <?php } ?>
                     </a>
-                    <div class="boxInitialPopup" data-product-id="<?= $item['ID'] ?>"></div>
                     <div class="initialPopup absolute mb-2 top-20 right-4 z-20 p-2 bg-whiteOpacity rounded-full cursor-pointer"
                          data-product-id="<?= $item['ID'] ?>" data-area-quantity="<?= $arItemIDs['QUANTITY_ID'] ?>"
                          data-area-buy="<?= $arItemIDs['BUY_LINK'] ?>"

@@ -351,6 +351,7 @@ $option = $option_site; ?>
             // age access
         </script>
     <?php } ?>
+    <div class="boxInitialPopup" id="boxInitialPopup"></div>
     <?php require($_SERVER['DOCUMENT_ROOT'] . '/local/templates/Oshisha/include/cookie.php') ?>
 </footer>
 </div>
