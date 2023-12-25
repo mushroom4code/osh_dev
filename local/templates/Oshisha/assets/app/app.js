@@ -1,7 +1,7 @@
 import ContragentList from "./components/ContragentList";
 import {createRoot} from 'react-dom/client';
 import {StrictMode} from "react";
-import CatalogProductPopup from "./components/CatalogProductPopup";
+import CatalogProductPopup from "./components/catalog/CatalogProductPopup";
 
 /**
  * PERSONAL CONTRAGENTS
@@ -27,10 +27,18 @@ document.addEventListener('click', function (e) {
             const areaBuy = item.getAttribute('data-area-buy');
             const areaBuyQuantity = item.getAttribute('data-area-quantity');
             const groupedProduct = item.getAttribute('data-grouped-product');
+
+            const setVisible = () => {
+                root.render(
+                    <StrictMode>
+                        <CatalogProductPopup productId={productId} areaBuyQuantity={areaBuyQuantity} areaBuy={areaBuy}
+                                             seePopup={false} groupedProduct={groupedProduct} setVisible={setVisible}/>
+                    </StrictMode>);
+            }
             root.render(
                 <StrictMode>
                     <CatalogProductPopup productId={productId} areaBuyQuantity={areaBuyQuantity} areaBuy={areaBuy}
-                                         groupedProduct={groupedProduct}/>
+                                     seePopup={true} groupedProduct={groupedProduct} setVisible={setVisible}/>
                 </StrictMode>);
         }
     }
