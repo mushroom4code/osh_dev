@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
+import GroupedProducts from "./GroupedProducts";
 
-function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduct}) {
-
+function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduct, seePopup, setVisible}) {
     const [name, setName] = useState('Товар')
     const [srcProduct, setSrcProduct] = useState('Товар')
     const [countLike, setCountLike] = useState('Товар')
@@ -16,14 +16,15 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
     const [groupedProducts, setGroupedProduct] = useState([])
     const [groupedProps, setGroupedProps] = useState([])
     const [groupedSettings, setGroupedSettings] = useState([])
-    const [id, setID] = useState(false)
-    const [classBlock, setClassBlock] = useState('flex')
+    const [popupShowHide, setPopupShowHide] = useState(seePopup)
 
     useEffect(() => {
-        if (id !== productId) {
-            getProductData({prodId: productId, action: 'fastProduct', groupedProduct: groupedProduct})
-        }
-    }, [id, productId]);
+        getProductData({prodId: productId, action: 'fastProduct', groupedProduct: groupedProduct})
+    }, [productId]);
+
+    useEffect(() => {
+        setPopupShowHide(seePopup)
+    }, [seePopup, popupShowHide]);
 
 
     function getProductData(data) {
@@ -45,8 +46,6 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                 setGroupedProps(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PROPS_DATA))
                 setGroupedSettings(productData.GROUPED_PRODUCT.SETTING)
                 loaderForSite('', document.querySelector('body'))
-                setClassBlock('flex');
-                setID(productId)
             } else if (productData?.error) {
                 if (productData?.error?.code) {
                     alert('Ошибка запроса данных по товару')
@@ -56,117 +55,9 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
         })
     }
 
-
-    // $.each(arData.GROUPED_PROPS_DATA, function (groupName, group) {
-    //     if (groupName !== 'USE_DISCOUNT') {
-    //         const groupBox = box_with_prop.appendChild(BX.create('DIV', {
-    //             props: {
-    //                 className: 'flex flex-row overflow-auto mb-2 width-100 overflow-custom'
-    //             },
-    //         }));
-    //
-    //         let pref;
-    //         arData.SETTING[groupName] !== undefined ? pref = arData.SETTING[groupName].PREF : pref = ''
-    //         // перебор групп элементов
-    //         let selectedBool = false;
-    //         $.each(group, function (key, itemsGroup) {
-    //
-    //             let selected = '', type, itemWithPropValues;
-    //             arData.SETTING[groupName] !== undefined ? type = arData.SETTING[groupName].TYPE : type = 'text'
-    //             // if (selectedBool === false && currentProduct.PROPERTIES[groupName].JS_PROP !== undefined) {
-    //             //     if (arrayDiff(itemsGroup, currentProduct.PROPERTIES[groupName].JS_PROP)) {
-    //             //         selected = 'selected';
-    //             //         selectedBool = true;
-    //             //     }
-    //             // }
-    //
-    //             itemWithPropValues = BX.create('DIV', {
-    //                 dataset: {
-    //                     active: selected !== '' ? 'true' : 'false',
-    //                     prop_code: groupName,
-    //                     prop_group: JSON.stringify(itemsGroup)
-    //                 },
-    //                 events: {
-    //                     click: () => {
-    //                         const arrProductGrouped = arData.GROUPED_PRODUCTS;
-    //                         thisComponent.clickItemGrouped(thisButton, arrProductGrouped, groupName, box_popup,
-    //                             attr_val, itemWithPropValues, box_with_price);
-    //                     }
-    //                 }
-    //             })
-    //
-    //             if (type === 'color') {
-    //                 BX.addClass(itemWithPropValues, 'mr-1 offer-box color-hookah br-10 mb-1');
-    //             } else if (type === 'colorWithText') {
-    //                 BX.addClass(itemWithPropValues, 'red_button_cart taste variation_taste font-14 ' +
-    //                     'w-fit mb-lg-2 m-md-2 p-10 m-1 offer-box cursor-pointer');
-    //             } else if (type === 'text') {
-    //                 BX.addClass(itemWithPropValues, 'red_button_cart font-11 w-fit rounded-full ' +
-    //                     ' mb-lg-2 m-md-2 m-1 offer-box cursor-pointer');
-    //             }
-    //
-    //             const groupItems = groupBox.appendChild(BX.create('A', {
-    //                 props: {
-    //                     className: 'offer-link ' + selected
-    //                 },
-    //                 dataset: {
-    //                     prop_code: groupName,
-    //                     prop_group: JSON.stringify(group)
-    //                 },
-    //                 children: [
-    //                     itemWithPropValues
-    //                 ],
-    //             }));
-    //             // добавление элементов вкусов граммовок и тд - элементы группы
-    //             const elemBox = BX.findChildByClassName(groupItems, 'offer-box');
-    //             $.each(itemsGroup, function (itemKey, item) {
-    //                 if (type === 'colorWithText') {
-    //                     const colorNew = item.VALUE_XML_ID?.split('#');
-    //                     elemBox.appendChild(BX.create('SPAN', {
-    //                         props: {
-    //                             className: 'taste mb-0 br-100 font-11',
-    //                             style: "background-color:#" + colorNew[1] + "; " +
-    //                                 "border-color:#" + colorNew[1] + "; padding: 6px 11px;"
-    //                         },
-    //                         dataset: {
-    //                             background: '#' + colorNew[1],
-    //                         },
-    //                         text: item.VALUE_ENUM + pref
-    //                     }))
-    //                 } else if (type === 'color') {
-    //                     if ($(elemBox).find('img[src="' + item.PREVIEW_PICTURE + '"]').length <= 0) {
-    //                         elemBox.appendChild(
-    //                             BX.create('IMG', {
-    //                                 props: {
-    //                                     className: 'br-10',
-    //                                     src: item.PREVIEW_PICTURE,
-    //                                 },
-    //                             }))
-    //                     }
-    //                 } else {
-    //                     elemBox.appendChild(BX.create('DIV', {
-    //                         props: {
-    //                             className: ''
-    //                         },
-    //                         text: item.VALUE_ENUM + pref
-    //                     }))
-    //                 }
-    //
-    //                 if (selected !== '') {
-    //                     // вывод названия и смена ссылки
-    //                     $(BX.findChildByClassName(box_popup, ('title-product'))).text(item.NAME);
-    //                     $(BX.findChildByClassName(box_popup, ('href-product'))).attr('href', item.CODE);
-    //                 }
-    //             });
-    //
-    //         });
-    //     }
-    // });
-
-
     return (<div
         className={"fixed w-screen left-0 top-0 bg-lightOpacityWindow dark:bg-darkOpacityWindow " +
-            "justify-center h-screen z-50 box-popup-product " + classBlock}>
+            "justify-center h-screen z-50 box-popup-product " + (popupShowHide ? 'flex' : 'hidden')}>
         <div
             className="open-modal-product md:m-auto m-0 md:h-fit  h-full catalog-item-product bg-white p-6 max-w-4xl
                  w-full md:rounded-lg rounded-0 catalog-fast-window dark:bg-darkBox">
@@ -174,8 +65,8 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                     <span className="font-medium dark:font-light md:text-2xl mb-2 p-0 w-4/5 text-lightGrayBg
                     dark:text-textDarkLightGray text-lg">{name}</span>
                 <span className="text-right p-0 close-box cursor-pointer" title="Закрыть"
-                      onClick={(e) => {
-                          setClassBlock('hidden');
+                      onClick={() => {
+                          setVisible();
                       }}>
                         <svg width="25" height="25" viewBox="0 0 9 8" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
@@ -233,13 +124,12 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                             className="prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2 flex flex-row items-center relative">
                             {saleBool ? <div className="base-price group-prices product-item-detail-price-current text-3xl
                                  font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
-                                    {salePrice}₽ <span
-                                    className="mx-3 line-through decoration-hover-red text-2xl text-tagFilterGray"> {price}₽</span>
-                                </div> :
-                                <div className="base-price group-prices product-item-detail-price-current text-3xl
+                                {salePrice}₽ <span
+                                className="mx-3 line-through decoration-hover-red text-2xl text-tagFilterGray"> {price}₽</span>
+                            </div> : <div className="base-price group-prices product-item-detail-price-current text-3xl
                                  font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
-                                    {price}₽
-                                </div>}
+                                {price}₽
+                            </div>}
                             <div
                                 className="add-to-basket box-basket flex flex-row items-center
                                  bx_catalog_item_controls">
@@ -300,52 +190,13 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                 </div>
                             </div>
                         </div>
-                        <div className="flex flex-col">
-                            {
-                                groupedProps !== null ?
-                                    groupedProps.map((props, pr_key) => {
-                                        // console.log(groupedSettings)
-                                        // console.log(groupedProducts)
-                                        // console.log(groupedProps)
+                        {groupedProps.length > 0 ?
+                            <div className="flex flex-col mt-5">
+                                <GroupedProducts groupedSettings={groupedSettings} groupedProducts={groupedProducts}
+                                                 groupedProps={groupedProps}/>
 
-                                        if (groupedSettings[props[0]]) {
-                                            const typeProduct = groupedSettings[props[0]].TYPE
-                                            const code = groupedSettings[props[0]].CODE
-                                            let prefix = groupedSettings[props[0]].PREF
-                                            const dataProps = props[1];
-
-                                            return (
-                                                groupedProducts.map((product, p_key) => {
-                                                    let classType = 'lg:mb-2 md:m-2 m-1 offer-box cursor-pointer'
-                                                    const valuePropsProduct = product[1].PROPERTIES[code].JS_PROP
-                                                    let itemChild = product[1].NAME + prefix
-                                                    const keys = Object.keys(valuePropsProduct);
-
-                                                    if (typeProduct === 'color') {
-                                                        const srcPicture = valuePropsProduct[keys[0]].PREVIEW_PICTURE
-                                                        itemChild = '<img src=' + srcPicture + ' alt="" />';
-                                                        classType = 'border border-gray rounded-md p-3 bg-white'
-                                                    } else if (typeProduct === 'colorWithText') {
-                                                        classType = 'red_button_cart taste variation_taste text-sm ' +
-                                                            'w-fit lg:mb-2 md:m-2 p-10 m-1 offer-box cursor-pointer'
-                                                    }
-                                                    // const bool = arrayDiff(valuePropsProduct,dataProps)
-                                                    // console.log(product)
-                                                    return (
-                                                        <div key={p_key}
-                                                             data-prop_code={code}
-                                                             data-prop_group={valuePropsProduct}
-                                                             className={"flex offer-box flex-row overflow-auto max-w-full text-xs " + classType}>
-                                                            {itemChild}
-                                                        </div>
-                                                    )
-                                                })
-                                            )
-                                        }
-                                    })
-                                    : <></>
-                            }
-                        </div>
+                            </div>
+                            : <></>}
                         <p className="text-xs font-medium text-textLight dark:font-light dark:text-whiteOpacity mt-4 mb-4 w-full">
                             {description}
                         </p>
