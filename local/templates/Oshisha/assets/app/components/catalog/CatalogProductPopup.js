@@ -17,8 +17,10 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
     const [groupedProps, setGroupedProps] = useState([])
     const [groupedSettings, setGroupedSettings] = useState([])
     const [popupShowHide, setPopupShowHide] = useState(seePopup)
+    const [ID, setID] = useState(productId)
 
     useEffect(() => {
+        setID(productId)
         getProductData({prodId: productId, action: 'fastProduct', groupedProduct: groupedProduct})
     }, [productId]);
 
@@ -45,6 +47,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                 setGroupedProduct(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PRODUCTS))
                 setGroupedProps(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PROPS_DATA))
                 setGroupedSettings(productData.GROUPED_PRODUCT.SETTING)
+                setID(productData.ID)
                 loaderForSite('', document.querySelector('body'))
             } else if (productData?.error) {
                 if (productData?.error?.code) {
@@ -141,7 +144,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                        bg-none no-select add2basket cursor-pointer flex items-center justify-center
                                        h-auto md:w-full w-auto removeToBasketOpenWindow"
                                            data-url={srcProduct}
-                                           data-product_id={productId}
+                                           data-product_id={ID}
                                            data-max-quantity={maxQuantity}
                                            id={areaBuy}>
                                             <svg width="20" height="2" viewBox="0 0 22 2" fill="none"
@@ -163,14 +166,14 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                                        setQuantityProduct(e.target.value)
                                                    }}
                                                    data-url={srcProduct}
-                                                   data-product_id={productId}
+                                                   data-product_id={ID}
                                                    value={quantityProduct}/>
                                         </div>
                                         <a className="btn-plus plus_icon no-select add2basket addToBasketOpenWindow
                                        no-select add2basket cursor-pointer flex items-center justify-center rounded-full
                                        md:p-0 p-1.5 dark:bg-dark md:dark:bg-darkBox bg-none h-auto md:w-full w-auto"
                                            data-url={srcProduct}
-                                           data-product_id={productId}
+                                           data-product_id={ID}
                                            data-max-quantity={maxQuantity}
                                            title={'Доступно: ' + maxQuantity}
                                            id={areaBuy}>
@@ -186,17 +189,18 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                     </div>
                                     <div className="alert_quantity absolute md:p-4 p-2 text-xs left-0 top-12 bg-filterGray
                                 dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20 hidden"
-                                         data-id={productId}></div>
+                                         data-id={ID}></div>
                                 </div>
                             </div>
                         </div>
                         {groupedProps.length > 0 ?
                             <div className="flex flex-col mt-5">
                                 <GroupedProducts groupedSettings={groupedSettings} groupedProducts={groupedProducts}
-                                                 groupedProps={groupedProps}/>
+                                                 groupedProps={groupedProps} setPrice={setPrice} setID={setID}/>
 
                             </div>
-                            : <></>}
+                            : <></>
+                        }
                         <p className="text-xs font-medium text-textLight dark:font-light dark:text-whiteOpacity mt-4 mb-4 w-full">
                             {description}
                         </p>
