@@ -16,16 +16,18 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
     const [groupedProducts, setGroupedProduct] = useState([])
     const [groupedProps, setGroupedProps] = useState([])
     const [groupedSettings, setGroupedSettings] = useState([])
+    const [id, setID] = useState(false)
+    const [classBlock, setClassBlock] = useState('flex')
 
     useEffect(() => {
-        if (name === 'Товар') {
+        if (id !== productId) {
             getProductData({prodId: productId, action: 'fastProduct', groupedProduct: groupedProduct})
         }
-    }, [name]);
+    }, [id, productId]);
 
 
     function getProductData(data) {
-        loaderForSite('appendLoader', document.querySelector('.catalog-fast-window'))
+        loaderForSite('appendLoader', document.querySelector('body'))
         axios.post('/local/ajax/catalog_item.php', data).then(res => {
             const productData = res.data;
             if (productData?.NAME !== '') {
@@ -42,7 +44,9 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                 setGroupedProduct(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PRODUCTS))
                 setGroupedProps(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PROPS_DATA))
                 setGroupedSettings(productData.GROUPED_PRODUCT.SETTING)
-                loaderForSite('', document.querySelector('.catalog-fast-window'))
+                loaderForSite('', document.querySelector('body'))
+                setClassBlock('flex');
+                setID(productId)
             } else if (productData?.error) {
                 if (productData?.error?.code) {
                     alert('Ошибка запроса данных по товару')
@@ -161,15 +165,18 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
 
 
     return (<div
-        className="fixed w-screen left-0 top-0 bg-lightOpacityWindow dark:bg-darkOpacityWindow flex
-             justify-center h-screen z-50 box-popup-product">
+        className={"fixed w-screen left-0 top-0 bg-lightOpacityWindow dark:bg-darkOpacityWindow " +
+            "justify-center h-screen z-50 box-popup-product " + classBlock}>
         <div
             className="open-modal-product md:m-auto m-0 md:h-fit  h-full catalog-item-product bg-white p-6 max-w-4xl
                  w-full md:rounded-lg rounded-0 catalog-fast-window dark:bg-darkBox">
             <div className="mb-2 flex flex-row justify-between">
                     <span className="font-medium dark:font-light md:text-2xl mb-2 p-0 w-4/5 text-lightGrayBg
                     dark:text-textDarkLightGray text-lg">{name}</span>
-                <span className="text-right p-0 close-box cursor-pointer" title="Закрыть">
+                <span className="text-right p-0 close-box cursor-pointer" title="Закрыть"
+                      onClick={(e) => {
+                          setClassBlock('hidden');
+                      }}>
                         <svg width="25" height="25" viewBox="0 0 9 8" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path d="M1 7.5L8 0.5M1 0.5L8 7.5"
@@ -296,28 +303,46 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                         <div className="flex flex-col">
                             {
                                 groupedProps !== null ?
-                                    // groupedProps.map((props, pr_key) => {
-                                    //
-                                    //     if(groupedSettings[props[0]]) {
-                                    //         const typeProduct = groupedSettings[props[0]].TYPE
-                                    //         const code = groupedSettings[props[0]].CODE
-                                    //         const prefix = groupedSettings[props[0]].PREF
-                                    //         const dataProps = props[1];
-                                            groupedProducts.map((product, p_key) => {
-                                                // const valuePropsProduct = product[1].PROPERTIES[code].JS_PROP;
-                                                // console.log(product);
+                                    groupedProps.map((props, pr_key) => {
+                                        // console.log(groupedSettings)
+                                        // console.log(groupedProducts)
+                                        // console.log(groupedProps)
 
-                                          // const bool =   arrayDiff(valuePropsProduct,dataProps)
-                                          //       console.log( bool)
-                                                return (
-                                                    <div key={p_key}
-                                                         className="flex flex-row overflow-auto max-w-full text-xs">
-                                                        {product[1].NAME}
-                                                    </div>
-                                                )
-                                            })
-                                    //     }
-                                    // })
+                                        if (groupedSettings[props[0]]) {
+                                            const typeProduct = groupedSettings[props[0]].TYPE
+                                            const code = groupedSettings[props[0]].CODE
+                                            let prefix = groupedSettings[props[0]].PREF
+                                            const dataProps = props[1];
+
+                                            return (
+                                                groupedProducts.map((product, p_key) => {
+                                                    let classType = 'lg:mb-2 md:m-2 m-1 offer-box cursor-pointer'
+                                                    const valuePropsProduct = product[1].PROPERTIES[code].JS_PROP
+                                                    let itemChild = product[1].NAME + prefix
+                                                    const keys = Object.keys(valuePropsProduct);
+
+                                                    if (typeProduct === 'color') {
+                                                        const srcPicture = valuePropsProduct[keys[0]].PREVIEW_PICTURE
+                                                        itemChild = '<img src=' + srcPicture + ' alt="" />';
+                                                        classType = 'border border-gray rounded-md p-3 bg-white'
+                                                    } else if (typeProduct === 'colorWithText') {
+                                                        classType = 'red_button_cart taste variation_taste text-sm ' +
+                                                            'w-fit lg:mb-2 md:m-2 p-10 m-1 offer-box cursor-pointer'
+                                                    }
+                                                    // const bool = arrayDiff(valuePropsProduct,dataProps)
+                                                    // console.log(product)
+                                                    return (
+                                                        <div key={p_key}
+                                                             data-prop_code={code}
+                                                             data-prop_group={valuePropsProduct}
+                                                             className={"flex offer-box flex-row overflow-auto max-w-full text-xs " + classType}>
+                                                            {itemChild}
+                                                        </div>
+                                                    )
+                                                })
+                                            )
+                                        }
+                                    })
                                     : <></>
                             }
                         </div>
