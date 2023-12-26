@@ -1919,8 +1919,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
          */
         switchOrderSaveButtons: function (state) {
             var orderSaveNode = this.orderSaveBlockNode,
-                totalButton = this.totalBlockNode.querySelector('.bx-soa-cart-total-button-container'),
-                mobileButton = this.mobileTotalBlockNode.querySelector('.bx-soa-cart-total-button-container'),
+                totalButton = document.querySelector('#bx-soa-total .bx-soa-cart-total-button-container'),
+                mobileButton = document.querySelector('#bx-soa-total .bx-soa-cart-total-button-container'),
                 lastState = this.orderSaveBlockNode.style.display == '';
 
             if (lastState != state) {
@@ -2065,8 +2065,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 //     this.activeSection = null;
                 // }
 
-                this.editTotalBlock();
-            this.totalBlockFixFont();
+                // this.editTotalBlock();
+            // this.totalBlockFixFont();
 
             this.showErrors(this.result.ERROR, false);
             this.showWarnings();

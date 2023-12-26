@@ -521,19 +521,7 @@ if ($request->get('ORDER_ID') <> '') {
                 </div>
             </div>
             <!--	SIDEBAR BLOCK	-->
-            <div class="col-start-3 col-lg-4 col-md-5 lg:ml-4">
-                <h5 class="order_text mb-4 text-[22px] font-semibold dark:font-normal">Оформление заказа</h5>
-                <div class="flex align-items-center justify-between text-[9px] mb-3">
-                    <p class=" m-0 mr-1 flex items-center leading-normal font-medium dark:font-normal">
-                        При получении заказа, возможно, потребуется предъявить документ, подтверждающий ваш возраст.
-                    </p>
-                    <span class="confidintial bg-light-red py-[7px] px-2 whitespace-nowrap text-white font-semibold
-                    rounded-[100px] leading-[17px] h-fit self-center">18+</span>
-                </div>
-                <div id="bx-soa-total" class="mb-5 bx-soa-sidebar">
-                    <div class="bx-soa-cart-total-ghost"></div>
-                    <div class="bx-soa-cart-total p-5 border-[1px] flex flex-col rounded-lg border-solid border-textDark bg-textDark"></div>
-                </div>
+            <div id="order_total_block" class="col-start-3 col-lg-4 col-md-5 lg:ml-6">
             </div>
         </div>
     </form>
@@ -635,8 +623,9 @@ if ($request->get('ORDER_ID') <> '') {
             data-delivery-block-id='delivery-block'
             data-pick-up-block-id='bx-soa-pickup'
             data-user-props-block-id='user-properties-block'
+            data-general-user-props-block-id='bx-soa-properties'
             data-new-block-with-comment-id='new_block_with_comment_box'
-            data-total-block-id='bx-soa-total'
+            data-total-block-id='order_total_block'
             data-user-agreements-block-id='user-agreements'
             data-user-check-block-id='userCheck'
             data-paysystems-block-id='paysystems_block'
