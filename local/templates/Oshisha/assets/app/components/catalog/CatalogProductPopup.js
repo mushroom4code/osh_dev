@@ -196,7 +196,8 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                         {groupedProps.length > 0 ?
                             <div className="flex flex-col mt-5">
                                 <GroupedProducts groupedSettings={groupedSettings} groupedProducts={groupedProducts}
-                                                 groupedProps={groupedProps} setPrice={setPrice} setID={setID}/>
+                                                 setName={setName} groupedProps={groupedProps} setPrice={setPrice}
+                                                 setID={setID}/>
 
                             </div>
                             : <></>
