@@ -204,7 +204,7 @@ BX.SaleCommonPVZ = {
        let pvzBox = BX.create({
             tag: 'div',
             props: {
-                className: 'w-full px-[15px] mx-auto flex flex-col overflow-auto my-2'
+                className: 'w-full pl-[20px] pr-[28px] mx-auto flex flex-col overflow-auto my-2'
             },
             children: [
                 BX.create({
@@ -219,7 +219,8 @@ BX.SaleCommonPVZ = {
                                 className: 'basis-1/2'
                             },
                             html: '<svg class="inline-block mr-2" width="15" height="20" viewBox="0 0 15 20"' +
-                                ' fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4381 11.175C11.797' +
+                                ' fill="none" xmlns="http://www.w3.org/2000/svg"><path class="fill-light-red' +
+                                ' dark:fill-grayLight" d="M12.4381 11.175C11.797' +
                                 ' 12.5025 10.9283 13.825 10.04 15.0125C9.19742 16.132 8.29643 17.2044 7.341' +
                                 ' 18.225C6.38555 17.2044 5.48457 16.132 4.64196 15.0125C3.7537 13.825 2.88501' +
                                 ' 12.5025 2.2439 11.175C1.59544 9.83375 1.2235 8.5775 1.2235 7.5C1.2235 5.8424' +
@@ -229,7 +230,8 @@ BX.SaleCommonPVZ = {
                                 ' 12.8925 14.682 7.5C14.682 5.51088 13.9086 3.60322 12.5319 2.1967C11.1552 0.790176' +
                                 ' 9.28796 0 7.341 0C5.39405 0 3.52683 0.790176 2.15013 2.1967C0.773425 3.60322' +
                                 ' 2.90119e-08 5.51088 0 7.5C0 12.8925 7.341 20 7.341 20Z" fill="#CD1D1D"/><path' +
-                                ' d="M7.34116 10C6.69217 10 6.06977 9.73661 5.61086 9.26777C5.15196 8.79893' +
+                                ' class="fill-light-red dark:fill-grayLight" d="M7.34116 10C6.69217 10 6.06977' +
+                                ' 9.73661 5.61086 9.26777C5.15196 8.79893' +
                                 ' 4.89415 8.16304 4.89415 7.5C4.89415 6.83696 5.15196 6.20107 5.61086' +
                                 ' 5.73223C6.06977 5.26339 6.69217 5 7.34116 5C7.99014 5 8.61254 5.26339' +
                                 ' 9.07145 5.73223C9.53035 6.20107 9.78816 6.83696 9.78816 7.5C9.78816 8.16304' +
@@ -248,7 +250,8 @@ BX.SaleCommonPVZ = {
                                 className: 'basis-1/2'
                             },
                             html: '<svg class="inline-block mr-2" width="36" height="21" viewBox="0 0 36 21" fill="none"' +
-                                ' xmlns="http://www.w3.org/2000/svg"><path d="M11.5928 19.3313C12.3955 19.3313' +
+                                ' xmlns="http://www.w3.org/2000/svg"><path class="stroke-light-red' +
+                                ' dark:stroke-grayLight" d="M11.5928 19.3313C12.3955 19.3313' +
                                 ' 13.1653 19.0342 13.7328 18.5053C14.3004 17.9765 14.6193 17.2591 14.6193' +
                                 ' 16.5112C14.6193 15.7632 14.3004 15.0459 13.7328 14.517C13.1653 13.9882 12.3955' +
                                 ' 13.691 11.5928 13.691C10.7902 13.691 10.0204 13.9882 9.45283 14.517C8.88526' +
@@ -260,14 +263,17 @@ BX.SaleCommonPVZ = {
                                 ' 23.6986 15.7632 23.6986 16.5112C23.6986 17.2591 24.0174 17.9765 24.585' +
                                 ' 18.5053C25.1526 19.0342 25.9223 19.3313 26.725 19.3313Z" stroke="#CD1D1D"' +
                                 ' stroke-width="1.5" stroke-miterlimit="1.5" stroke-linecap="round"' +
-                                ' stroke-linejoin="round"/><path d="M14.6946 16.5108H22.185V1.84604C22.185' +
+                                ' stroke-linejoin="round"/><path class="stroke-light-red dark:stroke-grayLight"' +
+                                ' d="M14.6946 16.5108H22.185V1.84604C22.185' +
                                 ' 1.62166 22.0894 1.40647 21.9191 1.2478C21.7488 1.08914 21.5179 1 21.2771' +
                                 ' 1H1M8.03646 16.5108H4.93436C4.81513 16.5108 4.69707 16.4889' +
                                 ' 4.58691 16.4464C4.47676 16.4039 4.37667 16.3416 4.29236 16.263C4.20805' +
                                 ' 16.1845 4.14117 16.0912 4.09554 15.9885C4.04992 15.8859 4.02643 15.7759' +
                                 ' 4.02643 15.6648V8.75541" stroke="#CD1D1D" stroke-width="1.5" stroke-linecap="round"/>' +
-                                '<path d="M2.51758 5.23016H8.57044" stroke="#CD1D1D" stroke-width="1.5"' +
-                                ' stroke-linecap="round" stroke-linejoin="round"/><path d="M22.1836' +
+                                '<path class="stroke-light-red dark:stroke-grayLight" d="M2.51758 5.23016H8.57044"' +
+                                ' stroke="#CD1D1D" stroke-width="1.5"' +
+                                ' stroke-linecap="round" stroke-linejoin="round"/><path class="stroke-light-red' +
+                                ' dark:stroke-grayLight" d="M22.1836' +
                                 ' 5.23016H30.6727C30.8482 5.2302 31.02 5.27764 31.1671 5.36673C31.3143 5.45582' +
                                 ' 31.4306 5.58275 31.502 5.73215L34.2106 11.4119C34.2622 11.5198 34.289' +
                                 ' 11.6365 34.2893 11.7546V15.6647C34.2893 15.7758 34.2658 15.8858 34.2202' +
@@ -282,7 +288,8 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'w-full px-[15px] mx-auto overflow-auto my-2 table-body border-1-gray',
+                        className: 'w-full px-[15px] pt-3 mx-auto overflow-auto my-2 table-body border border-x-0' +
+                            ' border-grayLight',
                         id: 'deliveries-list'
                     },
                 }),
@@ -349,29 +356,97 @@ BX.SaleCommonPVZ = {
                                         tag: 'div',
                                         props: {
                                             className: 'flex lg:flex-row md:flex-row flex-col' +
-                                                ' mb-1 box-with-price-delivery pl-3'
+                                                ' lg:mb-1 md:mb-1 mb-0 box-with-price-delivery lg:pl-4 md:pl-4 pl-6'
                                         },
                                         children: [
                                             // deliveryName
                                             BX.create({
                                                 tag: 'div',
                                                 props: {
-                                                    className: 'font-bold text-lg mb-1'
+                                                    className: 'lg:font-bold md:font-bold font-medium lg:text-lg' +
+                                                        ' md:text-lg text-[13px] lg:mb-1 md:mb-1 mb-3 leading-4'
                                                 },
                                                 text: `${delivery.name}`
                                             }),
                                             BX.create({
                                                 tag: 'div',
                                                 props: {
-                                                    className: 'lg:pl-3 md:pl-3 pl-0 text-light-red font-medium text-lg'
+                                                    className: 'lg:pl-4 md:pl-4 pl-0 text-light-red dark:text-white'
                                                 },
                                                 html: delivery.price !== 0 ?
-                                                    '<div class="flex flex-row">' +
-                                                    '<i class="fa fa-rub color-redLight font-15 mr-2 d-lg-none d-md-none d-block"' +
-                                                    ' aria-hidden="true"></i> ' +
+                                                    '<div class="flex flex-row lg:items-start md:items-start' +
+                                                    ' lg:mb-0 md:mb-0 mb-3' +
+                                                    ' items-center text-lg font-bold leading-4">' +
+                                                    '<svg class="lg:hidden md:hidden inline-flex mr-2"' +
+                                                    ' width="25" height="25" viewBox="0 0 24 24" fill="none"' +
+                                                    ' xmlns="http://www.w3.org/2000/svg">' +
+                                                    '<g clip-path="url(#clip0_2881_7234)">' +
+                                                    '<path class="fill-light-red dark:fill-white"' +
+                                                    ' fill-rule="evenodd" clip-rule="evenodd" d="M11.7637' +
+                                                    ' 23.1953C5.41208 23.1953 0.263672 18.0469 0.263672' +
+                                                    ' 11.6953C0.263672 5.34372 5.41208 0.195312 11.7637' +
+                                                    ' 0.195312C18.1153 0.195312 23.2637 5.34372 23.2637' +
+                                                    ' 11.6953C23.2637 18.0469 18.1153 23.1953 11.7637' +
+                                                    ' 23.1953ZM7.81055 11.1476V12.4471H9.07842V14.3216H7' +
+                                                    '.81055V15.5471H9.07842V18.1641H10.5073V15.5471H13.' +
+                                                    '3823V14.3216H10.5073V12.4471H12.3106C12.86 12.4517 13.4072' +
+                                                    ' 12.3767 13.935 12.2243C14.4353 12.0755 14.8694 11.8506' +
+                                                    ' 15.2388 11.5465C15.6083 11.2439 15.9001 10.8637 16.1143' +
+                                                    ' 10.4052C16.3285 9.94731 16.4355 9.40897 16.4355' +
+                                                    ' 8.79012C16.4355 8.172 16.3349 7.64012 16.1322 7.1945C15.9295' +
+                                                    ' 6.74888 15.65 6.38016 15.2927 6.08978C14.9355 5.79941 14.5071' +
+                                                    ' 5.58234 14.0069 5.44003C13.466 5.29236 12.9072 5.22052' +
+                                                    ' 12.3466 5.22656H9.07842V11.1476H7.81055ZM12.3459' +
+                                                    ' 11.1476H10.5073V6.52606H12.3466C13.1674 6.52606 13.8135' +
+                                                    ' 6.70575 14.2836 7.06441C14.7537 7.42306 14.9894 7.99878' +
+                                                    ' 14.9894 8.79012C14.9894 9.58219 14.7537 10.173 14.2836' +
+                                                    ' 10.5633C13.8135 10.9528 13.1674 11.1476 12.3466' +
+                                                    ' 11.1476H12.3459Z" fill="white"/>'+
+                                                '</g>' +
+                                                '<defs>' +
+                                                    '<clipPath id="clip0_2881_7234">' +
+                                                        '<rect width="23" height="23" fill="white"' +
+                                                        ' transform="translate(0.263672 0.195312)"/>' +
+                                                    '</clipPath>' +
+                                                '</defs>' +
+                                                '</svg> ' +
                                                     delivery.price + ' руб.</div>' :
-                                                    '<div class="flex flex-row">' +
-                                                    '<i class="fa fa-rub color-redLight font-15 mr-2 d-lg-none d-md-none d-block"' +
+                                                    '<div class="flex flex-row lg:items-start md:items-start' +
+                                                    ' lg:mb-0 md:mb-0 mb-3' +
+                                                    ' items-center text-lg font-bold leading-4">' +
+                                                    '<svg class="lg:hidden md:hidden inline-flex mr-2"' +
+                                                    ' width="25" height="25" viewBox="0 0 24 24" fill="none"' +
+                                                    ' xmlns="http://www.w3.org/2000/svg">' +
+                                                    '<g clip-path="url(#clip0_2881_7234)">' +
+                                                    '<path class="fill-light-red dark:fill-white"' +
+                                                    ' fill-rule="evenodd" clip-rule="evenodd" d="M11.7637' +
+                                                    ' 23.1953C5.41208 23.1953 0.263672 18.0469 0.263672' +
+                                                    ' 11.6953C0.263672 5.34372 5.41208 0.195312 11.7637' +
+                                                    ' 0.195312C18.1153 0.195312 23.2637 5.34372 23.2637' +
+                                                    ' 11.6953C23.2637 18.0469 18.1153 23.1953 11.7637' +
+                                                    ' 23.1953ZM7.81055 11.1476V12.4471H9.07842V14.3216H7' +
+                                                    '.81055V15.5471H9.07842V18.1641H10.5073V15.5471H13.' +
+                                                    '3823V14.3216H10.5073V12.4471H12.3106C12.86 12.4517 13.4072' +
+                                                    ' 12.3767 13.935 12.2243C14.4353 12.0755 14.8694 11.8506' +
+                                                    ' 15.2388 11.5465C15.6083 11.2439 15.9001 10.8637 16.1143' +
+                                                    ' 10.4052C16.3285 9.94731 16.4355 9.40897 16.4355' +
+                                                    ' 8.79012C16.4355 8.172 16.3349 7.64012 16.1322 7.1945C15.9295' +
+                                                    ' 6.74888 15.65 6.38016 15.2927 6.08978C14.9355 5.79941 14.5071' +
+                                                    ' 5.58234 14.0069 5.44003C13.466 5.29236 12.9072 5.22052' +
+                                                    ' 12.3466 5.22656H9.07842V11.1476H7.81055ZM12.3459' +
+                                                    ' 11.1476H10.5073V6.52606H12.3466C13.1674 6.52606 13.8135' +
+                                                    ' 6.70575 14.2836 7.06441C14.7537 7.42306 14.9894 7.99878' +
+                                                    ' 14.9894 8.79012C14.9894 9.58219 14.7537 10.173 14.2836' +
+                                                    ' 10.5633C13.8135 10.9528 13.1674 11.1476 12.3466' +
+                                                    ' 11.1476H12.3459Z" fill="white"/>'+
+                                                    '</g>' +
+                                                    '<defs>' +
+                                                    '<clipPath id="clip0_2881_7234">' +
+                                                    '<rect width="23" height="23" fill="white"' +
+                                                    ' transform="translate(0.263672 0.195312)"/>' +
+                                                    '</clipPath>' +
+                                                    '</defs>' +
+                                                    '</svg> ' +
                                                     ' aria-hidden="true"></i> Бесплатно</div> ',
                                             }),
                                         ]
@@ -402,7 +477,8 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'div',
                             props: {
-                                className: 'column mb-3 bx-selected-delivery ',
+                                className: 'column mb-3 bx-selected-delivery p-[19px] rounded-[10px] border' +
+                                    ' border-grey-line-order dark:border-0 dark:border-light-red bg-transparent dark:bg-lightGrayBg',
                             },
                             children: [
                                 BX.create({
@@ -416,15 +492,47 @@ BX.SaleCommonPVZ = {
                                             tag: 'span',
                                             props: {
                                                 className: 'lg:basis-1/4 lg:max-w-[100%] md:basis-1/4 md:max-w-[100%]' +
-                                                    ' basis-full max-w-[100%] mb-2'
+                                                    ' basis-full max-w-[100%] mb-2 lg:pl-4 md:pl-4 pl-6'
                                             },
                                             children: [
                                                 BX.create({
                                                     tag: 'span',
                                                     props: {
-                                                        className: 'ml-lg-2 ml-md-2 ml-0 font-13'
+                                                        className: 'ml-lg-2 ml-md-2 ml-0 lg:mb-0 md:mb-0 mb-3 font-13'
                                                     },
-                                                    text: 'от 2 дней'
+                                                    html: '<svg class="lg:hidden md:hidden inline-flex mr-2"' +
+                                                        ' width="25" height="25" viewBox="0 0 36 21" fill="none"' +
+                                                        ' xmlns="http://www.w3.org/2000/svg"><path class="stroke-light-red' +
+                                                        ' dark:stroke-white" d="M11.5928 19.3313C12.3955 19.3313' +
+                                                        ' 13.1653 19.0342 13.7328 18.5053C14.3004 17.9765 14.6193 17.2591 14.6193' +
+                                                        ' 16.5112C14.6193 15.7632 14.3004 15.0459 13.7328 14.517C13.1653 13.9882 12.3955' +
+                                                        ' 13.691 11.5928 13.691C10.7902 13.691 10.0204 13.9882 9.45283 14.517C8.88526' +
+                                                        ' 15.0459 8.56641 15.7632 8.56641 16.5112C8.56641 17.2591 8.88526 17.9765 9.45283' +
+                                                        ' 18.5053C10.0204 19.0342 10.7902 19.3313 11.5928 19.3313ZM26.725 19.3313C27.5277' +
+                                                        ' 19.3313 28.2974 19.0342 28.865 18.5053C29.4326 17.9765 29.7514 17.2591 29.7514' +
+                                                        ' 16.5112C29.7514 15.7632 29.4326 15.0459 28.865 14.517C28.2974 13.9882 27.5277' +
+                                                        ' 13.691 26.725 13.691C25.9223 13.691 25.1526 13.9882 24.585 14.517C24.0174 15.0459' +
+                                                        ' 23.6986 15.7632 23.6986 16.5112C23.6986 17.2591 24.0174 17.9765 24.585' +
+                                                        ' 18.5053C25.1526 19.0342 25.9223 19.3313 26.725 19.3313Z" stroke="#CD1D1D"' +
+                                                        ' stroke-width="1.5" stroke-miterlimit="1.5" stroke-linecap="round"' +
+                                                        ' stroke-linejoin="round"/><path class="stroke-light-red dark:stroke-white"' +
+                                                        ' d="M14.6946 16.5108H22.185V1.84604C22.185' +
+                                                        ' 1.62166 22.0894 1.40647 21.9191 1.2478C21.7488 1.08914 21.5179 1 21.2771' +
+                                                        ' 1H1M8.03646 16.5108H4.93436C4.81513 16.5108 4.69707 16.4889' +
+                                                        ' 4.58691 16.4464C4.47676 16.4039 4.37667 16.3416 4.29236 16.263C4.20805' +
+                                                        ' 16.1845 4.14117 16.0912 4.09554 15.9885C4.04992 15.8859 4.02643 15.7759' +
+                                                        ' 4.02643 15.6648V8.75541" stroke="#CD1D1D" stroke-width="1.5" stroke-linecap="round"/>' +
+                                                        '<path class="stroke-light-red dark:stroke-white" d="M2.51758 5.23016H8.57044"' +
+                                                        ' stroke="#CD1D1D" stroke-width="1.5"' +
+                                                        ' stroke-linecap="round" stroke-linejoin="round"/><path class="stroke-light-red' +
+                                                        ' dark:stroke-white" d="M22.1836' +
+                                                        ' 5.23016H30.6727C30.8482 5.2302 31.02 5.27764 31.1671 5.36673C31.3143 5.45582' +
+                                                        ' 31.4306 5.58275 31.502 5.73215L34.2106 11.4119C34.2622 11.5198 34.289' +
+                                                        ' 11.6365 34.2893 11.7546V15.6647C34.2893 15.7758 34.2658 15.8858 34.2202' +
+                                                        ' 15.9885C34.1746 16.0911 34.1077 16.1844 34.0234 16.263C33.9391 16.3415' +
+                                                        ' 33.839 16.4038 33.7288 16.4464C33.6187 16.4889 33.5006 16.5108 33.3814' +
+                                                        ' 16.5108H30.5063M22.1836 16.5108H23.6968" stroke="#CD1D1D" stroke-width="1.5"' +
+                                                        ' stroke-linecap="round"/></svg> ' + 'от 2 дней'
                                                 }),
                                             ]
 
@@ -645,14 +753,16 @@ BX.SaleCommonPVZ = {
                 tag: 'div',
                 props: {
                     id: 'wrap_pvz_map',
-                    className: "wrap_pvz_map"
+                    className: "wrap_pvz_map bg-white dark:bg-darkBox dark:text-white dark:border-grey-line-order"
                 },
                 children: [
                     BX.create({
                         tag: 'div',
                         props: {
                             id: 'wrap_pvz_close',
-                            className: "wrap_pvz_close js__wrap_pvz_close"
+                            className: "wrap_pvz_close before:bg-grayLight after:bg-grayLight" +
+                                " hover:before:bg-light-red hover:after:bg-light-red" +
+                                " dark:hover:before:bg-white dark:hover:after:bg-white js__wrap_pvz_close"
                         },
                         events: {
                             click: BX.proxy(function () {
@@ -1154,7 +1264,7 @@ BX.SaleCommonPVZ = {
         BX.append(
             BX.create({
                 tag: 'div',
-                props: {className: 'order-6 col-12 wrap_filter_block mr-2 w-full', id: 'user-address-wrap'},
+                props: {className: 'order-6 col-12 px-0 py-[1em] w-full', id: 'user-address-wrap'},
                 children: [
                     BX.create({
                         tag: 'div',
@@ -1179,7 +1289,7 @@ BX.SaleCommonPVZ = {
                                             id: 'user-address',
                                             className: 'form-control bx-soa-customer-input bx-ios-fix min-width-700' +
                                                 'w-full text-sm cursor-text border-grey-line-order ' +
-                                                'ring:grey-line-order dark:border-darkBox rounded-lg dark:bg-darkBox',
+                                                'ring:grey-line-order dark:border-grayButton rounded-lg dark:bg-grayButton',
                                         }
                                     })
                                 ]
@@ -1200,7 +1310,7 @@ BX.SaleCommonPVZ = {
 
         const propPvzDelivery =  {
             id: 'delivery-self',
-                className: 'radio-field form-check-input ring-0 focus:ring-0 focus:ring-transparent' +
+                className: 'radio-field mr-[1em] form-check-input ring-0 focus:ring-0 focus:ring-transparent' +
                     ' focus:ring-offset-transparent focus:shadow-none focus:outline-none',
             type: 'radio',
             value: 'Самовывоз',
@@ -1212,7 +1322,7 @@ BX.SaleCommonPVZ = {
 
         const propDoorDelivery = {
             id: 'delivery-in-hands',
-            className: 'radio-field form-check-input ring-0 focus:ring-0 focus:ring-transparent' +
+            className: 'radio-field mr-[1em] form-check-input ring-0 focus:ring-0 focus:ring-transparent' +
                 ' focus:ring-offset-transparent focus:shadow-none focus:outline-none',
             type: 'radio',
             value: 'Доставка курьером',
@@ -1228,23 +1338,23 @@ BX.SaleCommonPVZ = {
                     tag: 'div',
                     props: {
                         id: 'wrap_delivery_types',
-                        className: "wrap_filter_block mr-2"
+                        className: "pl-0 pr-[2em] py-[1em] mr-2"
                     },
                     children: [
                         BX.create({
                             tag: 'div',
-                            props: {className: "title"},
+                            props: {className: "title font-medium mb-[0.8em] uppercase"},
                             text: 'Способ получения'
                         }),
 
                         BX.create({
                             tag: 'div',
-                            props: {className: "options-row"},
+                            props: {className: "options-row flex w-full flex-col items-start justify-start"},
                             children: [
                                 BX.create({
                                     tag: 'label',
                                     props: {
-                                        className: "option-label",
+                                        className: "option-label w-full flex leading-[1] mb-[0.5em] items-center justify-start",
                                         for: 'delivery-self',
                                     },
                                     text: 'Самовывоз',
@@ -1274,7 +1384,7 @@ BX.SaleCommonPVZ = {
                                 BX.create({
                                         tag: 'label',
                                         props: {
-                                            className: "option-label",
+                                            className: "option-label w-full flex leading-[1] mb-[0.5em] items-center justify-start",
                                             for: 'delivery-in-hands',
                                         },
                                         text: 'Доставка курьером',
@@ -1333,9 +1443,8 @@ BX.SaleCommonPVZ = {
                 type: 'text',
                 readOnly: 'readonly',
                 className: 'datepicker_order date_delivery_main readonly form-control bx-soa-customer-input bx-ios-fix' +
-                    'w-full text-sm cursor-text border-grey-line-order ring:grey-line-order dark:border-darkBox ' +
-                    'rounded-lg dark:bg-darkBox',
-                style: 'background-color: unset',
+                    'w-full text-sm cursor-text border-grey-line-order ring:grey-line-order dark:border-grayButton ' +
+                    'rounded-lg dark:bg-grayButton',
             },
             dataset: {name: 'DATE_DELIVERY'},
         })
@@ -1407,9 +1516,9 @@ BX.SaleCommonPVZ = {
         let datetime_interval_order = $('[name="ORDER_PROP_'+this.propDeliveryTimeInterval+'"]');
         const TimeDeliveryNode = BX.create({
             tag: 'div',
-            html: '<select style="background-color: unset; height: 40px; padding: 0 23px;"' +
+            html: '<select style="height: 40px; padding: 0 23px;"' +
                 ' class="form-control bx-soa-customer-input bx-ios-fix w-full text-sm cursor-text ' +
-                'border-grey-line-order ring:grey-line-order dark:border-darkBox rounded-lg dark:bg-darkBox"' +
+                'border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg dark:bg-grayButton"' +
                 ' id="datetime_interval_popup">' +
                 datetime_interval_order.html()+'</select>',
             dataset: {name: 'DELIVERYTIME_INTERVAL'},
@@ -1459,36 +1568,29 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'pl-8 hidden',
+                        className: 'lg:pl-8 md:pl-8 pl-0 flex pb-2 hidden',
                         id: 'button-success-pvz'
                     },
                     children: [
                         BX.create({
-                            tag: 'div',
+                            tag: 'a',
                             props: {
-                                className: 'flex items-end justify-center height-100',
+                                id: 'select-pvz-item',
+                                href: "javascript:void(0)",
+                                className: "link_red_button text-white text-center" +
+                                    " flex items-center justify-content-center dark:text-textDark shadow-md  " +
+                                    "text-white dark:bg-dark-red bg-light-red py-2 lg:px-16 md:px-16 px-10 rounded-5 block " +
+                                    "text-center font-bold",
+                                style: 'pointer-events: none;opacity: 0.5;'
                             },
-                            children: [
-                                BX.create({
-                                    tag: 'a',
-                                    props: {
-                                        id: 'select-pvz-item',
-                                        href: "javascript:void(0)",
-                                        className: "link_red_button text-white mb-2 align-items-center " +
-                                            "justify-content-center dark:text-textDark shadow-md  " +
-                                            "text-white dark:bg-dark-red bg-light-red py-2 px-16 rounded-5 block " +
-                                            "text-center",
-                                        style: 'pointer-events: none;opacity: 0.5;'
-                                    },
-                                    text: 'Подтвердить',
-                                    events: {
-                                        click: BX.proxy(function () {
-                                            BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
-                                        })
-                                    }
-                                }),
-                            ]
-                        })
+                            text: 'Подтвердить',
+                            events: {
+                                click: BX.proxy(function () {
+                                    BX.SaleCommonPVZ.selectPvz(this.dataset.pvzid)
+                                })
+                            }
+                        }),
+
                     ]
                 }), BX('wrap_delivery_select'))
         }
@@ -1500,7 +1602,7 @@ BX.SaleCommonPVZ = {
             BX.append(
                 BX.create({
                     tag: 'div',
-                    props: {className: 'pl-8', id: 'button-success-delivery'},
+                    props: {className: 'lg:pl-8 md:pl-8 pl-0 flex pb-2', id: 'button-success-delivery'},
                     children: [
                         BX.create({
                             tag: 'a',
@@ -1508,9 +1610,9 @@ BX.SaleCommonPVZ = {
                                 id: 'select-door-delivery-item',
                                 href: "javascript:void(0)",
                                 className: "link_red_button text-white text-center" +
-                                    " align-items-center justify-content-center dark:text-textDark shadow-md  " +
-                                    "text-white dark:bg-dark-red bg-light-red py-2 px-16 rounded-5 block " +
-                                    "text-center",
+                                    " flex items-center justify-content-center dark:text-textDark shadow-md  " +
+                                    "text-white dark:bg-dark-red bg-light-red py-2 lg:px-16 md:px-16 px-10 rounded-5 block " +
+                                    "text-center font-bold",
                                 style: 'pointer-events: none;opacity: 0.5;'
                             },
                             text: 'Подтвердить ',
@@ -1542,7 +1644,7 @@ BX.SaleCommonPVZ = {
                     tag: 'div',
                     props: {
                         id: 'wrap_delivery_select',
-                        className: "wrap_filter_block flex mr-2 col-12 order-7 w-full flex-auto"
+                        className: "px-0 py-[1em] flex col-12 order-7 w-full flex-auto"
                     },
                     children: [
                         BX.create('DIV',{
@@ -1557,7 +1659,7 @@ BX.SaleCommonPVZ = {
                                             BX.create({
                                                 tag: 'div',
                                                 props: {
-                                                    className: 'mb-2 mt-2 pb-2 border-bottom-1-red',
+                                                    className: 'mb-2 mt-2 pb-2 border-b border-light-red dark:border-grayLight flex items-center',
                                                     id: 'DELIVERY_SELECT_FOR_ORDER'
                                                 },
                                                 dataset: {name: 'DELIVERY_SELECT_FOR_ORDER'},
@@ -1583,7 +1685,7 @@ BX.SaleCommonPVZ = {
                                                     ' 5.55161 3.82715 6.50544 3.82715 7.5C3.82715 8.49456 4.21144' +
                                                     ' 9.44839 4.89548 10.1517C5.57952 10.8549 6.50727 11.25 7.47465' +
                                                     ' 11.25Z" fill="#CD1D1D"/></svg>' +
-                                                    ' <span class="font-15">' +
+                                                    ' <span class="font-15 text-grayLight">' +
                                                     'Здесь отображается выбранная вами доставка...</span>',
                                             })
                                         ]
@@ -1749,7 +1851,8 @@ BX.SaleCommonPVZ = {
                                     tag: 'div',
                                     props: {
                                         id: 'active_sort_service',
-                                        className: 'active_sort_service',
+                                        className: 'active_sort_service bg-transparent border rounded-[5px]' +
+                                            ' dark:bg-grayButton dark:border-grayButton',
                                     },
                                     text: 'Все',
                                     events: {
@@ -1848,7 +1951,8 @@ BX.SaleCommonPVZ = {
                                 className: 'basis-1/2'
                             },
                             html: '<svg class="inline-block mr-2" width="15" height="20" viewBox="0 0 15 20"' +
-                                ' fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4381 11.175C11.797' +
+                                ' fill="none" xmlns="http://www.w3.org/2000/svg"><path class="dark:fill-grayLight' +
+                                ' fill-light-red" d="M12.4381 11.175C11.797' +
                                 ' 12.5025 10.9283 13.825 10.04 15.0125C9.19742 16.132 8.29643 17.2044 7.341' +
                                 ' 18.225C6.38555 17.2044 5.48457 16.132 4.64196 15.0125C3.7537 13.825 2.88501' +
                                 ' 12.5025 2.2439 11.175C1.59544 9.83375 1.2235 8.5775 1.2235 7.5C1.2235 5.8424' +
@@ -1858,7 +1962,8 @@ BX.SaleCommonPVZ = {
                                 ' 12.8925 14.682 7.5C14.682 5.51088 13.9086 3.60322 12.5319 2.1967C11.1552 0.790176' +
                                 ' 9.28796 0 7.341 0C5.39405 0 3.52683 0.790176 2.15013 2.1967C0.773425 3.60322' +
                                 ' 2.90119e-08 5.51088 0 7.5C0 12.8925 7.341 20 7.341 20Z" fill="#CD1D1D"/><path' +
-                                ' d="M7.34116 10C6.69217 10 6.06977 9.73661 5.61086 9.26777C5.15196 8.79893' +
+                                ' class="fill-light-red dark:fill-grayLight" d="M7.34116 10C6.69217 10 6.06977' +
+                                ' 9.73661 5.61086 9.26777C5.15196 8.79893' +
                                 ' 4.89415 8.16304 4.89415 7.5C4.89415 6.83696 5.15196 6.20107 5.61086' +
                                 ' 5.73223C6.06977 5.26339 6.69217 5 7.34116 5C7.99014 5 8.61254 5.26339' +
                                 ' 9.07145 5.73223C9.53035 6.20107 9.78816 6.83696 9.78816 7.5C9.78816 8.16304' +
@@ -1877,7 +1982,8 @@ BX.SaleCommonPVZ = {
                                 className: 'basis-1/4'
                             },
                             html: '<svg class="inline-block mr-2" width="36" height="21" viewBox="0 0 36 21" fill="none"' +
-                                ' xmlns="http://www.w3.org/2000/svg"><path d="M11.5928 19.3313C12.3955 19.3313' +
+                                ' xmlns="http://www.w3.org/2000/svg"><path class="stroke-light-red' +
+                                ' dark:stroke-grayLight" d="M11.5928 19.3313C12.3955 19.3313' +
                                 ' 13.1653 19.0342 13.7328 18.5053C14.3004 17.9765 14.6193 17.2591 14.6193' +
                                 ' 16.5112C14.6193 15.7632 14.3004 15.0459 13.7328 14.517C13.1653 13.9882 12.3955' +
                                 ' 13.691 11.5928 13.691C10.7902 13.691 10.0204 13.9882 9.45283 14.517C8.88526' +
@@ -1889,14 +1995,17 @@ BX.SaleCommonPVZ = {
                                 ' 23.6986 15.7632 23.6986 16.5112C23.6986 17.2591 24.0174 17.9765 24.585' +
                                 ' 18.5053C25.1526 19.0342 25.9223 19.3313 26.725 19.3313Z" stroke="#CD1D1D"' +
                                 ' stroke-width="1.5" stroke-miterlimit="1.5" stroke-linecap="round"' +
-                                ' stroke-linejoin="round"/><path d="M14.6946 16.5108H22.185V1.84604C22.185' +
+                                ' stroke-linejoin="round"/><path class="stroke-light-red dark:stroke-grayLight"' +
+                                ' d="M14.6946 16.5108H22.185V1.84604C22.185' +
                                 ' 1.62166 22.0894 1.40647 21.9191 1.2478C21.7488 1.08914 21.5179 1 21.2771' +
                                 ' 1H1M8.03646 16.5108H4.93436C4.81513 16.5108 4.69707 16.4889' +
                                 ' 4.58691 16.4464C4.47676 16.4039 4.37667 16.3416 4.29236 16.263C4.20805' +
                                 ' 16.1845 4.14117 16.0912 4.09554 15.9885C4.04992 15.8859 4.02643 15.7759' +
                                 ' 4.02643 15.6648V8.75541" stroke="#CD1D1D" stroke-width="1.5" stroke-linecap="round"/>' +
-                                '<path d="M2.51758 5.23016H8.57044" stroke="#CD1D1D" stroke-width="1.5"' +
-                                ' stroke-linecap="round" stroke-linejoin="round"/><path d="M22.1836' +
+                                '<path class="stroke-light-red dark:stroke-grayLight" d="M2.51758 5.23016H8.57044"' +
+                                ' stroke="#CD1D1D" stroke-width="1.5"' +
+                                ' stroke-linecap="round" stroke-linejoin="round"/><path class="stroke-light-red' +
+                                ' dark:stroke-grayLight" d="M22.1836' +
                                 ' 5.23016H30.6727C30.8482 5.2302 31.02 5.27764 31.1671 5.36673C31.3143 5.45582' +
                                 ' 31.4306 5.58275 31.502 5.73215L34.2106 11.4119C34.2622 11.5198 34.289' +
                                 ' 11.6365 34.2893 11.7546V15.6647C34.2893 15.7758 34.2658 15.8858 34.2202' +
@@ -1912,7 +2021,8 @@ BX.SaleCommonPVZ = {
                                 className: 'basis-1/4'
                             },
                             html: '<svg class="inline-block mr-2" width="24" height="22" viewBox="0 0 24 22" fill="none"' +
-                                ' xmlns="http://www.w3.org/2000/svg"><path d="M11.8681 0C5.31036 0 0 4.78688' +
+                                ' xmlns="http://www.w3.org/2000/svg"><path class="fill-light-red dark:fill-grayLight"' +
+                                ' d="M11.8681 0C5.31036 0 0 4.78688' +
                                 ' 0 10.685C0 16.5831 5.31036 21.37 11.8681 21.37C18.4378 21.37 23.76 16.5831' +
                                 ' 23.76 10.685C23.76 4.78688 18.4378 0 11.8681 0ZM11.88 19.233C6.62904 19.233' +
                                 ' 2.376 15.4078 2.376 10.685C2.376 5.96223 6.62904 2.137 11.88 2.137C17.131' +
@@ -1926,8 +2036,8 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'div',
                     props: {
-                        className: 'w-full px-[15px] mx-auto flex flex-col overflow-auto my-2 table-body border-1-gray p-0 ' +
-                            'pr-lg-4 pr-md-4 pt-3'
+                        className: 'w-full px-[15px] mx-auto flex flex-col overflow-auto my-2 table-body border' +
+                            ' border-x-0 border-grayLight p-0 pr-lg-4 pr-md-4 pt-3'
                     },
                 }),
             ]
@@ -2020,14 +2130,14 @@ BX.SaleCommonPVZ = {
                             tag: 'div',
                             props: {
                                 className: 'flex lg:flex-row md:flex-row flex-col' +
-                                    ' mb-1 box-with-price-delivery pl-3'
+                                    ' lg:mb-1 md:mb-1 mb-0 box-with-price-delivery lg:pl-4 md:pl-4 pl-6'
                             },
                             children: [
                                 // deliveryName
                                 BX.create({
                                     tag: 'div',
                                     props: {
-                                        className: 'font-bold text-lg mb-1'
+                                        className: 'font-bold text-lg lg:mb-1 md:mb-1 mb-3 leading-4'
                                     },
                                     text: el.properties.deliveryName
                                 }),
@@ -2036,10 +2146,12 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'span',
                             props: {
-                                className: 'inline-flex items-center pl-3 mb-2 font-13'
+                                className: 'inline-flex items-center pl-3 mb-3 lg:pl-4 md:pl-4 pl-6 font-13'
                             },
-                            html: '<svg class="inline-block mr-2" width="15" height="20" viewBox="0 0 15 20"' +
-                                ' fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.4381 11.175C11.797' +
+                            html: '<svg class="inline-flex lg:w-[15px] md:w-[15px] lg:h-[20px] md:h-[20px] w-[25px]' +
+                                ' h-[25px] mr-2" width="15" height="20" viewBox="0 0 15 20"' +
+                                ' fill="none" xmlns="http://www.w3.org/2000/svg"><path class="fill-light-red' +
+                                ' dark:fill-white" d="M12.4381 11.175C11.797' +
                                 ' 12.5025 10.9283 13.825 10.04 15.0125C9.19742 16.132 8.29643 17.2044 7.341' +
                                 ' 18.225C6.38555 17.2044 5.48457 16.132 4.64196 15.0125C3.7537 13.825 2.88501' +
                                 ' 12.5025 2.2439 11.175C1.59544 9.83375 1.2235 8.5775 1.2235 7.5C1.2235 5.8424' +
@@ -2049,7 +2161,7 @@ BX.SaleCommonPVZ = {
                                 ' 12.8925 14.682 7.5C14.682 5.51088 13.9086 3.60322 12.5319 2.1967C11.1552 0.790176' +
                                 ' 9.28796 0 7.341 0C5.39405 0 3.52683 0.790176 2.15013 2.1967C0.773425 3.60322' +
                                 ' 2.90119e-08 5.51088 0 7.5C0 12.8925 7.341 20 7.341 20Z" fill="#CD1D1D"/><path' +
-                                ' d="M7.34116 10C6.69217 10 6.06977 9.73661 5.61086 9.26777C5.15196 8.79893' +
+                                ' class="fill-light-red dark:fill-white" d="M7.34116 10C6.69217 10 6.06977 9.73661 5.61086 9.26777C5.15196 8.79893' +
                                 ' 4.89415 8.16304 4.89415 7.5C4.89415 6.83696 5.15196 6.20107 5.61086' +
                                 ' 5.73223C6.06977 5.26339 6.69217 5 7.34116 5C7.99014 5 8.61254 5.26339' +
                                 ' 9.07145 5.73223C9.53035 6.20107 9.78816 6.83696 9.78816 7.5C9.78816 8.16304' +
@@ -2073,7 +2185,8 @@ BX.SaleCommonPVZ = {
             BX.create({
                 tag: 'div',
                 props: {
-                    className: 'column mb-3 bx-selected-delivery ',
+                    className: 'column mb-3 bx-selected-delivery p-[19px] rounded-[10px] border' +
+                        ' border-grey-line-order dark:border-0 dark:border-light-red bg-transparent dark:bg-lightGrayBg',
                 },
                 children: [
                     BX.create({
@@ -2093,9 +2206,41 @@ BX.SaleCommonPVZ = {
                                     BX.create({
                                         tag: 'span',
                                         props: {
-                                            className: 'ml-lg-2 ml-md-2 ml-0 font-13'
+                                            className: 'ml-lg-2 ml-md-2 ml-0 lg:mb-0 md:mb-0 mb-3 lg:pl-4 md:pl-4 pl-6 font-13'
                                         },
-                                        text: 'от 1 дня'
+                                        html: '<svg class="lg:hidden md:hidden inline-flex mr-2"' +
+                                            ' width="25" height="25" viewBox="0 0 36 21" fill="none"' +
+                                            ' xmlns="http://www.w3.org/2000/svg"><path class="stroke-light-red' +
+                                            ' dark:stroke-white" d="M11.5928 19.3313C12.3955 19.3313' +
+                                            ' 13.1653 19.0342 13.7328 18.5053C14.3004 17.9765 14.6193 17.2591 14.6193' +
+                                            ' 16.5112C14.6193 15.7632 14.3004 15.0459 13.7328 14.517C13.1653 13.9882 12.3955' +
+                                            ' 13.691 11.5928 13.691C10.7902 13.691 10.0204 13.9882 9.45283 14.517C8.88526' +
+                                            ' 15.0459 8.56641 15.7632 8.56641 16.5112C8.56641 17.2591 8.88526 17.9765 9.45283' +
+                                            ' 18.5053C10.0204 19.0342 10.7902 19.3313 11.5928 19.3313ZM26.725 19.3313C27.5277' +
+                                            ' 19.3313 28.2974 19.0342 28.865 18.5053C29.4326 17.9765 29.7514 17.2591 29.7514' +
+                                            ' 16.5112C29.7514 15.7632 29.4326 15.0459 28.865 14.517C28.2974 13.9882 27.5277' +
+                                            ' 13.691 26.725 13.691C25.9223 13.691 25.1526 13.9882 24.585 14.517C24.0174 15.0459' +
+                                            ' 23.6986 15.7632 23.6986 16.5112C23.6986 17.2591 24.0174 17.9765 24.585' +
+                                            ' 18.5053C25.1526 19.0342 25.9223 19.3313 26.725 19.3313Z" stroke="#CD1D1D"' +
+                                            ' stroke-width="1.5" stroke-miterlimit="1.5" stroke-linecap="round"' +
+                                            ' stroke-linejoin="round"/><path class="stroke-light-red dark:stroke-white"' +
+                                            ' d="M14.6946 16.5108H22.185V1.84604C22.185' +
+                                            ' 1.62166 22.0894 1.40647 21.9191 1.2478C21.7488 1.08914 21.5179 1 21.2771' +
+                                            ' 1H1M8.03646 16.5108H4.93436C4.81513 16.5108 4.69707 16.4889' +
+                                            ' 4.58691 16.4464C4.47676 16.4039 4.37667 16.3416 4.29236 16.263C4.20805' +
+                                            ' 16.1845 4.14117 16.0912 4.09554 15.9885C4.04992 15.8859 4.02643 15.7759' +
+                                            ' 4.02643 15.6648V8.75541" stroke="#CD1D1D" stroke-width="1.5" stroke-linecap="round"/>' +
+                                            '<path class="stroke-light-red dark:stroke-white" d="M2.51758 5.23016H8.57044"' +
+                                            ' stroke="#CD1D1D" stroke-width="1.5"' +
+                                            ' stroke-linecap="round" stroke-linejoin="round"/><path class="stroke-light-red' +
+                                            ' dark:stroke-white" d="M22.1836' +
+                                            ' 5.23016H30.6727C30.8482 5.2302 31.02 5.27764 31.1671 5.36673C31.3143 5.45582' +
+                                            ' 31.4306 5.58275 31.502 5.73215L34.2106 11.4119C34.2622 11.5198 34.289' +
+                                            ' 11.6365 34.2893 11.7546V15.6647C34.2893 15.7758 34.2658 15.8858 34.2202' +
+                                            ' 15.9885C34.1746 16.0911 34.1077 16.1844 34.0234 16.263C33.9391 16.3415' +
+                                            ' 33.839 16.4038 33.7288 16.4464C33.6187 16.4889 33.5006 16.5108 33.3814' +
+                                            ' 16.5108H30.5063M22.1836 16.5108H23.6968" stroke="#CD1D1D" stroke-width="1.5"' +
+                                            ' stroke-linecap="round"/></svg> ' + 'от 1 дня'
                                     }),
                                 ]
 
@@ -2110,9 +2255,18 @@ BX.SaleCommonPVZ = {
                                     BX.create({
                                         tag: 'span',
                                         props: {
-                                            className: 'worktime-shedule font-13'
+                                            className: 'worktime-shedule lg:pl-4 md:pl-4 pl-6 font-13'
                                         },
-                                        text: el.properties.workTime
+                                        html: '<svg class="lg:hidden md:hidden inline-flex mr-2" width="25"' +
+                                            ' height="25" viewBox="0 0 24 22" fill="none"' +
+                                            ' xmlns="http://www.w3.org/2000/svg"><path class="fill-light-red dark:fill-white"' +
+                                            ' d="M11.8681 0C5.31036 0 0 4.78688' +
+                                            ' 0 10.685C0 16.5831 5.31036 21.37 11.8681 21.37C18.4378 21.37 23.76 16.5831' +
+                                            ' 23.76 10.685C23.76 4.78688 18.4378 0 11.8681 0ZM11.88 19.233C6.62904 19.233' +
+                                            ' 2.376 15.4078 2.376 10.685C2.376 5.96223 6.62904 2.137 11.88 2.137C17.131' +
+                                            ' 2.137 21.384 5.96223 21.384 10.685C21.384 15.4078 17.131 19.233 11.88' +
+                                            ' 19.233ZM12.474 5.3425H10.692V11.7535L16.929 15.1193L17.82 13.805L12.474' +
+                                            ' 10.9521V5.3425Z" fill="#CD1D1D"/></svg>' + el.properties.workTime
                                     })
                                 ],
                             })
@@ -2131,10 +2285,44 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'span',
                     props: {
-                        className: 'text-light-red font-semibold text-[13px] leading-7 lg:ml-3 md:ml-3 ml-0',
+                        className: 'text-light-red dark:text-white lg:font-bold md:font-bold font-medium' +
+                            ' text-[13px] leading-4 lg:mb-0' +
+                            ' md:mb-0 mb-3 lg:ml-3 md:ml-3 ml-0',
                         role: 'button'
                     },
-                    text: 'Узнать цену',
+                    html: '<svg class="lg:hidden md:hidden inline-flex mr-2"' +
+                        ' width="25" height="25" viewBox="0 0 24 24" fill="none"' +
+                        ' xmlns="http://www.w3.org/2000/svg">' +
+                        '<g clip-path="url(#clip0_2881_7234)">' +
+                        '<path class="fill-light-red dark:fill-white"' +
+                        ' fill-rule="evenodd" clip-rule="evenodd" d="M11.7637' +
+                        ' 23.1953C5.41208 23.1953 0.263672 18.0469 0.263672' +
+                        ' 11.6953C0.263672 5.34372 5.41208 0.195312 11.7637' +
+                        ' 0.195312C18.1153 0.195312 23.2637 5.34372 23.2637' +
+                        ' 11.6953C23.2637 18.0469 18.1153 23.1953 11.7637' +
+                        ' 23.1953ZM7.81055 11.1476V12.4471H9.07842V14.3216H7' +
+                        '.81055V15.5471H9.07842V18.1641H10.5073V15.5471H13.' +
+                        '3823V14.3216H10.5073V12.4471H12.3106C12.86 12.4517 13.4072' +
+                        ' 12.3767 13.935 12.2243C14.4353 12.0755 14.8694 11.8506' +
+                        ' 15.2388 11.5465C15.6083 11.2439 15.9001 10.8637 16.1143' +
+                        ' 10.4052C16.3285 9.94731 16.4355 9.40897 16.4355' +
+                        ' 8.79012C16.4355 8.172 16.3349 7.64012 16.1322 7.1945C15.9295' +
+                        ' 6.74888 15.65 6.38016 15.2927 6.08978C14.9355 5.79941 14.5071' +
+                        ' 5.58234 14.0069 5.44003C13.466 5.29236 12.9072 5.22052' +
+                        ' 12.3466 5.22656H9.07842V11.1476H7.81055ZM12.3459' +
+                        ' 11.1476H10.5073V6.52606H12.3466C13.1674 6.52606 13.8135' +
+                        ' 6.70575 14.2836 7.06441C14.7537 7.42306 14.9894 7.99878' +
+                        ' 14.9894 8.79012C14.9894 9.58219 14.7537 10.173 14.2836' +
+                        ' 10.5633C13.8135 10.9528 13.1674 11.1476 12.3466' +
+                        ' 11.1476H12.3459Z" fill="white"/>'+
+                        '</g>' +
+                        '<defs>' +
+                        '<clipPath id="clip0_2881_7234">' +
+                        '<rect width="23" height="23" fill="white"' +
+                        ' transform="translate(0.263672 0.195312)"/>' +
+                        '</clipPath>' +
+                        '</defs>' +
+                        '</svg> ' + 'Узнать цену',
                     events: {
                         click: BX.proxy(function (e) {
                             BX.Sale.OrderAjaxComponent.startLoader()
@@ -2158,10 +2346,43 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'span',
                     props: {
-                        className: 'text-light-red font-bold text-lg lg:ml-3 md:ml-3 mb-2 flex flex-row'
+                        className: 'text-light-red dark:text-white lg:font-bold md:font-bold font-medium' +
+                            ' lg:text-lg md:text-lg text-[13px] lg:ml-3 md:ml-3 mb-2 flex flex-row lg:items-start md:items-start' +
+                            ' items-center leading-4'
                     },
-                    html: '<i class="fa fa-rub color-redLight font-15 mr-2 d-lg-none' +
-                        ' d-md-none d-block" aria-hidden="true"></i>' +el.properties?.price + ' руб.'
+                    html: '<svg class="lg:hidden md:hidden inline-flex mr-2"' +
+                        ' width="25" height="25" viewBox="0 0 24 24" fill="none"' +
+                        ' xmlns="http://www.w3.org/2000/svg">' +
+                        '<g clip-path="url(#clip0_2881_7234)">' +
+                        '<path class="fill-light-red dark:fill-white"' +
+                        ' fill-rule="evenodd" clip-rule="evenodd" d="M11.7637' +
+                        ' 23.1953C5.41208 23.1953 0.263672 18.0469 0.263672' +
+                        ' 11.6953C0.263672 5.34372 5.41208 0.195312 11.7637' +
+                        ' 0.195312C18.1153 0.195312 23.2637 5.34372 23.2637' +
+                        ' 11.6953C23.2637 18.0469 18.1153 23.1953 11.7637' +
+                        ' 23.1953ZM7.81055 11.1476V12.4471H9.07842V14.3216H7' +
+                        '.81055V15.5471H9.07842V18.1641H10.5073V15.5471H13.' +
+                        '3823V14.3216H10.5073V12.4471H12.3106C12.86 12.4517 13.4072' +
+                        ' 12.3767 13.935 12.2243C14.4353 12.0755 14.8694 11.8506' +
+                        ' 15.2388 11.5465C15.6083 11.2439 15.9001 10.8637 16.1143' +
+                        ' 10.4052C16.3285 9.94731 16.4355 9.40897 16.4355' +
+                        ' 8.79012C16.4355 8.172 16.3349 7.64012 16.1322 7.1945C15.9295' +
+                        ' 6.74888 15.65 6.38016 15.2927 6.08978C14.9355 5.79941 14.5071' +
+                        ' 5.58234 14.0069 5.44003C13.466 5.29236 12.9072 5.22052' +
+                        ' 12.3466 5.22656H9.07842V11.1476H7.81055ZM12.3459' +
+                        ' 11.1476H10.5073V6.52606H12.3466C13.1674 6.52606 13.8135' +
+                        ' 6.70575 14.2836 7.06441C14.7537 7.42306 14.9894 7.99878' +
+                        ' 14.9894 8.79012C14.9894 9.58219 14.7537 10.173 14.2836' +
+                        ' 10.5633C13.8135 10.9528 13.1674 11.1476 12.3466' +
+                        ' 11.1476H12.3459Z" fill="white"/>'+
+                        '</g>' +
+                        '<defs>' +
+                        '<clipPath id="clip0_2881_7234">' +
+                        '<rect width="23" height="23" fill="white"' +
+                        ' transform="translate(0.263672 0.195312)"/>' +
+                        '</clipPath>' +
+                        '</defs>' +
+                        '</svg> ' +el.properties?.price + ' руб.'
                 }), deliveryTopRowNode
             )
         }
