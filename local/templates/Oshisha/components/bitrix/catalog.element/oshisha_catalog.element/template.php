@@ -379,7 +379,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                         if (!empty($tasted)) { ?>
                                                             <a href="<?= $link ?>" class="offer-link <?= $select ?>">
                                                                 <div class="red_button_cart taste variation_taste
-                                                                 w-fit p-3 mb-2 mr-1 offer-box cursor-pointer rounded-md flex flex-row
+                                                                 w-fit p-3 mb-2 mr-1 offer-box rounded-md flex flex-row
                                                                     border-2 <?= !empty($select) ? 'border-light-red
                                                                      dark:border-grayButton dark:border dark:bg-grayButton' :
                                                                     'border-textDarkLightGray dark:border-0' ?> min-w-20 offer-box
