@@ -10,7 +10,8 @@ module.exports = {
         "./local/components/bitrix/enterego.slider/templates/.default/template.php",
         "./images/icon_header/*.svg",
         "./local/assets/js/flags-mask/phonecode.js",
-        "./bitrix/modules/enterego.pvz/lib/CommonPVZ/*.js"
+        "./bitrix/modules/enterego.pvz/lib/CommonPVZ/*.js",
+        "./bitrix/js/enterego.pvz/pickup.js"
     ],
     darkMode: 'class',
     theme: {

@@ -939,6 +939,7 @@ window.commonDelivery.bxPopup = {
         const nodeYaMapContainer = BX.create("DIV", {
             props: {
                 id: 'osh-map-container',
+                className: 'bg-white dark:bg-darkBox dark:text-white'
             },
             children: [
                 BX.create('span', {
@@ -998,7 +999,9 @@ window.commonDelivery.bxPopup = {
             props: {
                 type: 'text',
                 readOnly: 'readonly',
-                className: 'datepicker_order date_delivery_osh readonly form-control bx-soa-customer-input bx-ios-fix',
+                className: 'datepicker_order date_delivery_osh readonly form-control bx-soa-customer-input bx-ios-fix' +
+                    ' w-full text-sm cursor-text border-grey-line-order ring:grey-line-order dark:border-grayButton' +
+                    ' rounded-lg dark:bg-grayButton',
                 style: 'background-color: unset',
             },
             dataset: {name: 'DATE_DELIVERY_OSH'},
@@ -1009,12 +1012,34 @@ window.commonDelivery.bxPopup = {
                 id: 'osh-map-action',
             },
             children: [
-                BX.create("input", {
+                BX.create("div", {
                     props: {
-                        className: 'form-control',
-                        id: 'osh_delivery_ya_map_address',
-                        placeholder: 'Введите адрес доставки'
+                        className: "w-full flex gap-4 mb-3"
                     },
+                    children: [
+                        BX.create("input", {
+                            props: {
+                                className: 'form-control bx-soa-customer-input bx-ios-fix min-width-700w-full text-sm' +
+                                    ' cursor-text border-grey-line-order ring:grey-line-order dark:border-grayButton' +
+                                    ' rounded-lg dark:bg-grayButton suggestions-input basis-3/4',
+                                id: 'osh_delivery_ya_map_address',
+                                placeholder: 'Введите адрес доставки'
+                            },
+                        }),
+                        BX.create("button", {
+                            props: {
+                                className: 'btn btn_red link_red_button text-white text-center flex items-center' +
+                                    ' justify-content-center dark:text-textDark shadow-md text-white dark:bg-dark-red' +
+                                    ' bg-light-red py-2 lg:px-16 md:px-16 px-10 rounded-5 block text-center font-bold' +
+                                    ' basis-1/4',
+                                id: 'saveBTN',
+                            },
+                            text: BX.message("SAVE"),
+                            events: {
+                                click: BX.proxy(this.onPopupSave, this),
+                            }
+                        })
+                    ]
                 }),
                 BX.create({
                     tag: 'div',
@@ -1024,16 +1049,11 @@ window.commonDelivery.bxPopup = {
                     },
                     children: [
                         BX.create('DIV', {
-                            style: {
-                                display: 'flex',
-                                alignItems: 'center'
-                            },
                             children: [
                                 BX.create({
-                                    tag: 'label',
-                                    style: {
-                                      marginBottom: '0px',
-                                      width: '320px'
+                                    tag: 'div',
+                                    props: {
+                                        className: 'mb-2.5 font-medium uppercase'
                                     },
                                     text: 'Плановая дата доставки:'
                                 }),
@@ -1047,114 +1067,103 @@ window.commonDelivery.bxPopup = {
                             ]
                         })
                     ]
-                }),
-                BX.create("button", {
+                }),BX.create("DIV", {
                     props: {
-                        className: 'btn btn_red mt-2',
-                        id: 'saveBTN',
-                    },
-                    text: BX.message("SAVE"),
-                    events: {
-                        click: BX.proxy(this.onPopupSave, this),
-                    }
-                })
-            ]
-        })
-
-        const nodeYaDescription = BX.create("DIV", {
-            props: {
-                id: 'osh-map-description',
-            },
-            children: [
-                BX.create("DIV", {
-                    props: {
-                        className: 'osh-regions-container'
+                        id: 'osh-map-description',
+                        className: 'bg-white text-black p-2.5'
                     },
                     children: [
-                        BX.create('DIV', {
+                        BX.create("DIV", {
                             props: {
-                                id: 'north-block'
-                            },
-                            style: {
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: '5px'
+                                className: 'osh-regions-container text-sm'
                             },
                             children: [
                                 BX.create('DIV', {
                                     props: {
-                                        id: 'north-color'
+                                        id: 'north-block'
                                     },
                                     style: {
-                                        width: '30px',
-                                        height: '30px',
-                                        marginRight: '15px',
-                                        backgroundColor: 'rgba(154, 251, 0, 0.22)'
-                                    }
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginBottom: '5px'
+                                    },
+                                    children: [
+                                        BX.create('DIV', {
+                                            props: {
+                                                id: 'north-color'
+                                            },
+                                            style: {
+                                                width: '25px',
+                                                height: '25px',
+                                                marginRight: '15px',
+                                                backgroundColor: 'rgba(154, 251, 0, 0.22)'
+                                            }
+                                        }),
+                                        BX.create('DIV', {
+                                            props: {
+                                                id: 'north-text'
+                                            },
+                                            text: noMarkupNorthText
+                                        })
+                                    ]
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        id: 'north-text'
-                                    },
-                                    text: noMarkupNorthText
-                                })
-                            ]
-                        }),
-                        BX.create('DIV', {
-                            props: {
-                                id: 'south-east-block'
-                            },
-                            style: {
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: '5px'
-                            },
-                            children: [
-                                BX.create('DIV', {
-                                    props: {
-                                        id: 'south-west-color'
+                                        id: 'south-east-block'
                                     },
                                     style: {
-                                        width: '30px',
-                                        height: '30px',
-                                        marginRight: '15px',
-                                        backgroundColor: 'rgba(0, 195, 250, 0.22)'
-                                    }
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginBottom: '5px'
+                                    },
+                                    children: [
+                                        BX.create('DIV', {
+                                            props: {
+                                                id: 'south-west-color'
+                                            },
+                                            style: {
+                                                width: '25px',
+                                                height: '25px',
+                                                marginRight: '15px',
+                                                backgroundColor: 'rgba(0, 195, 250, 0.22)'
+                                            }
+                                        }),
+                                        BX.create('DIV', {
+                                            props: {
+                                                id: 'south-west-text'
+                                            },
+                                            text: noMarkupSouthEastText
+                                        })
+                                    ]
                                 }),
                                 BX.create('DIV', {
                                     props: {
-                                        id: 'south-west-text'
-                                    },
-                                    text: noMarkupSouthEastText
-                                })
-                            ]
-                        }),
-                        BX.create('DIV', {
-                            props: {
-                                id: 'south-west-block'
-                            },
-                            style: {
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: '5px'
-                            },
-                            children: [
-                                BX.create('DIV', {
-                                    props: {
-                                        id: 'south-west-color'
+                                        id: 'south-west-block'
                                     },
                                     style: {
-                                        width: '30px',
-                                        height: '30px',
-                                        marginRight: '15px',
-                                        backgroundColor: 'rgba(245, 20, 39, 0.22)'
-                                    }
-                                }),
-                                BX.create('DIV', {
-                                    props: {
-                                        id: 'south-west-text'
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginBottom: '5px'
                                     },
-                                    text: noMarkupSouthWestText
+                                    children: [
+                                        BX.create('DIV', {
+                                            props: {
+                                                id: 'south-west-color'
+                                            },
+                                            style: {
+                                                width: '25px',
+                                                height: '25px',
+                                                marginRight: '15px',
+                                                backgroundColor: 'rgba(245, 20, 39, 0.22)'
+                                            }
+                                        }),
+                                        BX.create('DIV', {
+                                            props: {
+                                                id: 'south-west-text'
+                                            },
+                                            text: noMarkupSouthWestText
+                                        })
+                                    ]
                                 })
                             ]
                         })
@@ -1192,7 +1201,6 @@ window.commonDelivery.bxPopup = {
         datepicker.data('datepicker').selectDate(curDate);
 
         nodeYaMapContainer.prepend(nodeYaAction);
-        nodeYaMapContainer.append(nodeYaDescription);
         this.nodeYaMapContainer = nodeYaMapContainer
 
         document.body.append(nodeOshOverlay)
