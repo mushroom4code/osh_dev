@@ -1,7 +1,7 @@
 import ContragentList from "./components/ContragentList";
 import {createRoot} from 'react-dom/client';
 import {StrictMode} from "react";
-import CatalogProductPopup from "./components/CatalogProductPopup";
+import CatalogProductPopup from "./components/catalog/CatalogProductPopup";
 
 /**
  * PERSONAL CONTRAGENTS
@@ -15,24 +15,32 @@ if (contragentForm) {
 
 /**
  * CATALOG POPUP
- * @type {HTMLCollectionOf<Element>}
+ * @type {Root}
  */
-const popupProduct = document.querySelectorAll('.initialPopup');
-if (popupProduct.length > 0) {
-    for (let i = 0; i < popupProduct.length; i++) {
-        let item = popupProduct[i];
-        const productId = item.getAttribute('data-product-id');
-        const areaBuy = item.getAttribute('data-area-buy');
-        const areaBuyQuantity = item.getAttribute('data-area-quantity');
+const root = createRoot(document.getElementById('boxInitialPopup'));
+document.addEventListener('click', function (e) {
 
-        item.addEventListener("click", () => {
-            const boxForComponent = document.querySelector('.boxInitialPopup[data-product-id="' + productId + '"]');
-            if (boxForComponent && !boxForComponent.querySelector('.box-popup-product')) {
-                createRoot(boxForComponent).render(
+    if (e.target.closest('.image_cart')) {
+        let item = e.target.closest('.image_cart').querySelector('.initialPopup');
+        if (item) {
+            const productId = item.getAttribute('data-product-id');
+            const areaBuy = item.getAttribute('data-area-buy');
+            const areaBuyQuantity = item.getAttribute('data-area-quantity');
+            const groupedProduct = item.getAttribute('data-grouped-product');
+
+            const setVisible = () => {
+                root.render(
                     <StrictMode>
-                        <CatalogProductPopup productId={productId} areaBuyQuantity={areaBuyQuantity} areaBuy={areaBuy}/>
+                        <CatalogProductPopup productId={productId} areaBuyQuantity={areaBuyQuantity} areaBuy={areaBuy}
+                                             seePopup={false} groupedProduct={groupedProduct} setVisible={setVisible}/>
                     </StrictMode>);
             }
-        });
+            root.render(
+                <StrictMode>
+                    <CatalogProductPopup productId={productId} areaBuyQuantity={areaBuyQuantity} areaBuy={areaBuy}
+                                     seePopup={true} groupedProduct={groupedProduct} setVisible={setVisible}/>
+                </StrictMode>);
+        }
     }
-}
+
+});

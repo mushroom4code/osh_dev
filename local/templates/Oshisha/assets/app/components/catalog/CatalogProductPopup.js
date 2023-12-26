@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
+import GroupedProducts from "./GroupedProducts";
 
-function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
-
+function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduct, seePopup, setVisible}) {
     const [name, setName] = useState('Товар')
     const [srcProduct, setSrcProduct] = useState('Товар')
     const [countLike, setCountLike] = useState('Товар')
@@ -12,18 +12,26 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
     const [price, setPrice] = useState(0)
     const [salePrice, setSalePrice] = useState(0)
     const [saleBool, setSaleBool] = useState(false)
+    const [description, setDescription] = useState('')
+    const [groupedProducts, setGroupedProduct] = useState([])
+    const [groupedProps, setGroupedProps] = useState([])
+    const [groupedSettings, setGroupedSettings] = useState([])
+    const [popupShowHide, setPopupShowHide] = useState(seePopup)
+    const [ID, setID] = useState(productId)
 
     useEffect(() => {
-        if (name === 'Товар') {
-            getProductData({prodId: productId, action: 'fastProduct'})
-        }
-    }, [name]);
+        setID(productId)
+        getProductData({prodId: productId, action: 'fastProduct', groupedProduct: groupedProduct})
+    }, [productId]);
+
+    useEffect(() => {
+        setPopupShowHide(seePopup)
+    }, [seePopup, popupShowHide]);
 
 
     function getProductData(data) {
-        loaderForSite('appendLoader', document.querySelector('.catalog-fast-window'))
+        loaderForSite('appendLoader', document.querySelector('body'))
         axios.post('/local/ajax/catalog_item.php', data).then(res => {
-            console.log(res)
             const productData = res.data;
             if (productData?.NAME !== '') {
                 setName(productData.NAME)
@@ -35,7 +43,12 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
                 setPrice(productData.PRODUCT.PRICE ?? 0)
                 setSaleBool(productData.PRODUCT.SALE_BOOL)
                 setSalePrice(productData.PRODUCT.SALE_PRICE)
-                loaderForSite('', document.querySelector('.catalog-fast-window'))
+                setDescription(productData.DESCRIPTION)
+                setGroupedProduct(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PRODUCTS))
+                setGroupedProps(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PROPS_DATA))
+                setGroupedSettings(productData.GROUPED_PRODUCT.SETTING)
+                setID(productData.ID)
+                loaderForSite('', document.querySelector('body'))
             } else if (productData?.error) {
                 if (productData?.error?.code) {
                     alert('Ошибка запроса данных по товару')
@@ -46,15 +59,18 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
     }
 
     return (<div
-        className="fixed w-screen left-0 top-0 bg-lightOpacityWindow dark:bg-darkOpacityWindow flex
-             justify-center h-screen z-50 box-popup-product">
+        className={"fixed w-screen left-0 top-0 bg-lightOpacityWindow dark:bg-darkOpacityWindow " +
+            "justify-center h-screen z-50 box-popup-product " + (popupShowHide ? 'flex' : 'hidden')}>
         <div
             className="open-modal-product md:m-auto m-0 md:h-fit  h-full catalog-item-product bg-white p-6 max-w-4xl
                  w-full md:rounded-lg rounded-0 catalog-fast-window dark:bg-darkBox">
             <div className="mb-2 flex flex-row justify-between">
-                    <span className="font-medium dark:font-light text-2xl mb-2 p-0 w-4/5 text-lightGrayBg
-                    dark:text-textDarkLightGray">{name}</span>
-                <span className="text-right p-0 close-box cursor-pointer" title="Закрыть">
+                    <span className="font-medium dark:font-light md:text-2xl mb-2 p-0 w-4/5 text-lightGrayBg
+                    dark:text-textDarkLightGray text-lg">{name}</span>
+                <span className="text-right p-0 close-box cursor-pointer" title="Закрыть"
+                      onClick={() => {
+                          setVisible();
+                      }}>
                         <svg width="25" height="25" viewBox="0 0 9 8" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path d="M1 7.5L8 0.5M1 0.5L8 7.5"
@@ -106,81 +122,90 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy}) {
                     </div>
                 </div>
                 <div className="flex flex-col justify-between md:w-1/2 w-full">
-                    <div
-                        className="prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2 flex flex-row items-center relative">
-                        {saleBool ? <div className="base-price group-prices product-item-detail-price-current text-3xl
-                                 font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
-                            {salePrice}₽ <span className="mx-3 line-through decoration-hover-red text-2xl text-tagFilterGray"> {price}₽</span>
-                        </div> : <div className="base-price group-prices product-item-detail-price-current text-3xl
-                                 font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
-                            {price}₽
-                        </div>}
+                    <div>
                         <div
-                            className="add-to-basket box-basket flex flex-row items-center
+                            className="prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2 flex flex-row items-center relative">
+                            {saleBool ? <div className="base-price group-prices product-item-detail-price-current text-3xl
+                                 font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
+                                {salePrice}₽ <span
+                                className="mx-3 line-through decoration-hover-red text-2xl text-tagFilterGray"> {price}₽</span>
+                            </div> : <div className="base-price group-prices product-item-detail-price-current text-3xl
+                                 font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
+                                {price}₽
+                            </div>}
+                            <div
+                                className="add-to-basket box-basket flex flex-row items-center
                                  bx_catalog_item_controls">
-                            <div className="product-item-amount-field-contain-wrap mr-4">
-                                <div
-                                    className="product-item-amount-field-contain flex flex-row h-full">
-                                    <a className="btn-minus minus_icon no-select add2basket
+                                <div className="product-item-amount-field-contain-wrap mr-4">
+                                    <div
+                                        className="product-item-amount-field-contain flex flex-row h-full">
+                                        <a className="btn-minus minus_icon no-select add2basket
                                        rounded-full md:py-0 md:px-0 py-3.5 px-1.5 dark:bg-dark md:dark:bg-darkBox
                                        bg-none no-select add2basket cursor-pointer flex items-center justify-center
                                        h-auto md:w-full w-auto removeToBasketOpenWindow"
-                                       data-url={srcProduct}
-                                       data-product_id={productId}
-                                       data-max-quantity={maxQuantity}
-                                       id={areaBuy}>
-                                        <svg width="20" height="2" viewBox="0 0 22 2" fill="none"
-                                             className="stroke-dark dark:stroke-white stroke-[1.5px]"
-                                             xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 1H21" strokeLinecap="round" strokeLinejoin="round"></path>
-                                        </svg>
-                                    </a>
-                                    <div className="product-item-amount-field-block">
-                                        <input className="product-item-amount card_element inputBasketOpenWindow
+                                           data-url={srcProduct}
+                                           data-product_id={ID}
+                                           data-max-quantity={maxQuantity}
+                                           id={areaBuy}>
+                                            <svg width="20" height="2" viewBox="0 0 22 2" fill="none"
+                                                 className="stroke-dark dark:stroke-white stroke-[1.5px]"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M1 1H21" strokeLinecap="round" strokeLinejoin="round"></path>
+                                            </svg>
+                                        </a>
+                                        <div className="product-item-amount-field-block">
+                                            <input className="product-item-amount card_element inputBasketOpenWindow
                                              dark:bg-tagFilterGray bg-textDarkLightGray focus:border-none text-center
                                               border-none text-md shadow-none py-2.5 px-3 md:mx-2 mx-1 outline-none
                                               rounded-md md:w-14 w-16"
-                                               type="number"
-                                               max={maxQuantity}
-                                               data-max-quantity={maxQuantity}
-                                               id={areaBuyQuantity}
-                                               onChange={(e) => {
-                                                   setQuantityProduct(e.target.value)
-                                               }}
-                                               data-url={srcProduct}
-                                               data-product_id={productId}
-                                               value={quantityProduct}/>
-                                    </div>
-                                    <a className="btn-plus plus_icon no-select add2basket addToBasketOpenWindow
+                                                   type="number"
+                                                   max={maxQuantity}
+                                                   data-max-quantity={maxQuantity}
+                                                   id={areaBuyQuantity}
+                                                   onChange={(e) => {
+                                                       setQuantityProduct(e.target.value)
+                                                   }}
+                                                   data-url={srcProduct}
+                                                   data-product_id={ID}
+                                                   value={quantityProduct}/>
+                                        </div>
+                                        <a className="btn-plus plus_icon no-select add2basket addToBasketOpenWindow
                                        no-select add2basket cursor-pointer flex items-center justify-center rounded-full
                                        md:p-0 p-1.5 dark:bg-dark md:dark:bg-darkBox bg-none h-auto md:w-full w-auto"
-                                       data-url={srcProduct}
-                                       data-product_id={productId}
-                                       data-max-quantity={maxQuantity}
-                                       title={'Доступно: ' + maxQuantity}
-                                       id={areaBuy}>
-                                        <svg width="20" height="20" viewBox="0 0 20 20"
-                                             className="fill-light-red dark:fill-white"
-                                             xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M18.8889 11.111H1.11111C0.503704 11.111 0 10.6073 0 9.9999C0 9.3925 0.503704 8.88879 1.11111 8.88879H18.8889C19.4963 8.88879 20 9.3925 20 9.9999C20 10.6073 19.4963 11.111 18.8889 11.111Z"></path>
-                                            <path
-                                                d="M10 20C9.39262 20 8.88892 19.4963 8.88892 18.8889V1.11111C8.88892 0.503704 9.39262 0 10 0C10.6074 0 11.1111 0.503704 11.1111 1.11111V18.8889C11.1111 19.4963 10.6074 20 10 20Z"></path>
-                                        </svg>
-                                    </a>
+                                           data-url={srcProduct}
+                                           data-product_id={ID}
+                                           data-max-quantity={maxQuantity}
+                                           title={'Доступно: ' + maxQuantity}
+                                           id={areaBuy}>
+                                            <svg width="20" height="20" viewBox="0 0 20 20"
+                                                 className="fill-light-red dark:fill-white"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M18.8889 11.111H1.11111C0.503704 11.111 0 10.6073 0 9.9999C0 9.3925 0.503704 8.88879 1.11111 8.88879H18.8889C19.4963 8.88879 20 9.3925 20 9.9999C20 10.6073 19.4963 11.111 18.8889 11.111Z"></path>
+                                                <path
+                                                    d="M10 20C9.39262 20 8.88892 19.4963 8.88892 18.8889V1.11111C8.88892 0.503704 9.39262 0 10 0C10.6074 0 11.1111 0.503704 11.1111 1.11111V18.8889C11.1111 19.4963 10.6074 20 10 20Z"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div className="alert_quantity absolute md:p-4 p-2 text-xs left-0 top-12 bg-filterGray
+                                dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20 hidden"
+                                         data-id={ID}></div>
                                 </div>
-                                <div className="alert_quantity absolute md:p-4 p-2 text-xs left-0 top-12 bg-filterGray
-                                dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20 hidden" data-id={productId}></div>
                             </div>
                         </div>
+                        {groupedProps.length > 0 ?
+                            <div className="flex flex-col mt-5">
+                                <GroupedProducts groupedSettings={groupedSettings} groupedProducts={groupedProducts}
+                                                 groupedProps={groupedProps} setPrice={setPrice} setID={setID}/>
+
+                            </div>
+                            : <></>
+                        }
+                        <p className="text-xs font-medium text-textLight dark:font-light dark:text-whiteOpacity mt-4 mb-4 w-full">
+                            {description}
+                        </p>
                     </div>
-                    <div className="props-box ml-lg-4 ml-md-4 ml-0 flex md:flex-row flex-col
-                         justify-between items-end">
-                        <div
-                            className="props-box-child col-lg-8 col-md-8 col-12 pl-0 flex flex-col justify-between">
-                            <div className="props-box-child-advanse"></div>
-                            <div className="props-box-child-popup mt-lg-3 mt-md-2 mt-3 mb-lg-0 mb-md-0 mb-3"></div>
-                        </div>
+                    <div className="props-box ml-lg-4 ml-md-4 ml-0 flex flex-col justify-between items-end">
                         <a className="text-light-red text-lg dark:text-textDarkLightGray font-medium
                             dark:font-light underline underline-offset-2"
                            href={productPage}>Подробнее</a>
