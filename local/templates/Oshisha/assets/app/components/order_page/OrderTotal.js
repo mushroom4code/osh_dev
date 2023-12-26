@@ -7,13 +7,15 @@ class OrderTotal extends React.Component {
             result: this.props.result,
             params: this.props.params,
             options: this.props.options,
-            deliveryBlockNode: this.props.deliveryBlockNode,
-            orderBlockId: this.props.orderBlockId
+            orderSaveAllowed: false,
+            propsBlockNode: this.props.propsBlockNode
         }
         this.animateScrollTo = this.animateScrollTo.bind(this);
+        this.clickOrderSaveAction = this.clickOrderSaveAction.bind(this);
     }
 
     componentDidMount() {
+        BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
         BX.OrderPageComponents.endLoader();
     }
 
@@ -21,50 +23,45 @@ class OrderTotal extends React.Component {
         BX.OrderPageComponents.endLoader();
     }
 
-    editTotalBlock() {
-        if (!this.totalInfoBlockNode || !this.result.TOTAL)
-            return;
+    getResultJsx() {
+        var resultJsx = [];
+        if (!this.state.result.TOTAL)
+            return resultJsx;
 
-        var total = this.result.TOTAL,
+        var total = this.state.result.TOTAL,
             priceHtml, params = {},
             discText, valFormatted, i,
             curDelivery, deliveryError, deliveryValue;
 
 
-        BX.cleanNode(this.totalInfoBlockNode);
-
         if (parseFloat(total.ORDER_PRICE) === 0) {
-            priceHtml = this.params.MESS_PRICE_FREE;
+            priceHtml = this.state.params.MESS_PRICE_FREE;
             params.free = true;
         } else {
             priceHtml = total.ORDER_PRICE_FORMATED;
         }
-        console.log('a');
-        console.log(this.state.options);
+
         if (this.state.options.showPriceWithoutDiscount) {
             priceHtml += '<br><span class="bx-price-old">' + total.PRICE_WITHOUT_DISCOUNT + '</span>';
         }
-        console.log('b');
-        let product = this.result.GRID.ROWS;
+        let product = this.state.result.GRID.ROWS;
         let quantity = Object.keys(product).length;
-        let textQuantity = '<span>Товары &nbsp(' + quantity + ')</span>';
-        this.totalInfoBlockNode.appendChild(this.createTotalUnit(textQuantity, priceHtml, params));
+        let textQuantity = 'Товары (' + quantity + ')';
 
-        // if (this.options.showOrderWeight) {
-        this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED));
-        // }
+        resultJsx.push(this.createTotalUnit(textQuantity, priceHtml, params, 'prod_quantity'));
+        resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED,
+            [], 'sum_weight'));
 
-        // if (this.options.showTaxList) {
         for (i = 0; i < total.TAX_LIST.length; i++) {
             valFormatted = total.TAX_LIST[i].VALUE_MONEY_FORMATED || '';
-            this.totalInfoBlockNode.appendChild(
-                this.createTotalUnit(
-                    total.TAX_LIST[i].NAME + (!!total.TAX_LIST[i].VALUE_FORMATED ? ' ' + total.TAX_LIST[i].VALUE_FORMATED : '') + ':',
-                    valFormatted
-                )
+            resultJsx.push(
+                this.createTotalUnit(total.TAX_LIST[i].NAME +
+                    (!!total.TAX_LIST[i].VALUE_FORMATED ? ' ' + total.TAX_LIST[i].VALUE_FORMATED : '') + ':',
+                    valFormatted,
+                    [],
+                    'tax_' + i)
             );
         }
-        // }
 
         params = {};
         curDelivery = this.getSelectedDelivery();
@@ -75,7 +72,7 @@ class OrderTotal extends React.Component {
             params.error = deliveryError;
         } else {
             if (parseFloat(total.DELIVERY_PRICE) === 0) {
-                deliveryValue = this.params.MESS_PRICE_FREE;
+                deliveryValue = this.state.params.MESS_PRICE_FREE;
                 params.free = true;
             } else {
                 deliveryValue = total.DELIVERY_PRICE_FORMATED;
@@ -89,100 +86,68 @@ class OrderTotal extends React.Component {
             }
         }
 
-        // if (this.result.DELIVERY.length) {
-        this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_DELIVERY'), deliveryValue, params));
-        // }
+        resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_DELIVERY'), deliveryValue,
+            params, 'sum_delivery'));
 
-        if (this.options.showDiscountPrice) {
-            discText = this.params.MESS_ECONOMY;
+        if (this.state.options.showDiscountPrice) {
+            discText = this.state.params.MESS_ECONOMY;
             if (total.DISCOUNT_PERCENT_FORMATED && parseFloat(total.DISCOUNT_PERCENT_FORMATED) > 0)
                 discText += total.DISCOUNT_PERCENT_FORMATED;
 
-            this.totalInfoBlockNode.appendChild(this.createTotalUnit(discText + ':', total.DISCOUNT_PRICE_FORMATED, {highlighted: true}));
+            resultJsx.push(this.createTotalUnit(discText + ':', total.DISCOUNT_PRICE_FORMATED,
+                {highlighted: true}, 'discount_price'));
         }
 
-
-        if (this.options.showPayedFromInnerBudget) {
-            this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED));
-            this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_PAYED'), total.PAYED_FROM_ACCOUNT_FORMATED));
-            this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_LEFT_TO_PAY'), total.ORDER_TOTAL_LEFT_TO_PAY_FORMATED, {total: true}));
+        if (this.state.options.showPayedFromInnerBudget) {
+            resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED),
+                [], 'total_price_formated');
+            resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_PAYED'), total.PAYED_FROM_ACCOUNT_FORMATED),
+                [], 'payed_from_account_formated');
+            resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_LEFT_TO_PAY'),
+                total.ORDER_TOTAL_LEFT_TO_PAY_FORMATED, {total: true}, 'total_left_to_pay_formated'));
         } else {
-            this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED, {total: true}));
+            resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED,
+                {total: true}, 'total_price_formated'));
         }
 
-        if (parseFloat(total.PAY_SYSTEM_PRICE) >= 0 && this.result.DELIVERY.length) {
-            this.totalInfoBlockNode.appendChild(this.createTotalUnit(BX.message('SOA_PAYSYSTEM_PRICE'), '~' + total.PAY_SYSTEM_PRICE_FORMATTED));
+        if (parseFloat(total.PAY_SYSTEM_PRICE) >= 0 && this.state.result.DELIVERY.length) {
+            resultJsx.push(this.createTotalUnit(BX.message('SOA_PAYSYSTEM_PRICE'),
+                '~' + total.PAY_SYSTEM_PRICE_FORMATTED), [], 'paysystems_price_formated');
         }
-        if (this.result.IS_AUTHORIZED) {
-            for (i = 0; i < this.result.DELIVERY.length; i++) {
-                if (this.result.DELIVERY[i].CHECKED == 'Y') {
-                    var checkedDelivery = this.result.DELIVERY[i];
+        if (this.state.result.IS_AUTHORIZED) {
+            for (i = 0; i < this.state.result.DELIVERY.length; i++) {
+                if (this.state.result.DELIVERY[i].CHECKED === 'Y') {
+                    var checkedDelivery = this.state.result.DELIVERY[i];
                     break;
                 }
             }
             if (!checkedDelivery?.CALCULATE_ERRORS) {
-                this.totalInfoBlockNode.appendChild(
-                    BX.create('DIV', {
-                        props: {className: 'bx-soa-cart-total-button-container'},
-                        children: [
-                            BX.create('A', {
-                                props: {
-                                    href: 'javascript:void(0)',
-                                    className: 'btn btn_basket btn-order-save dark:text-textDark shadow-md ' +
-                                        ' text-white dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 block text-center'
-                                },
-                                html: 'Зарезервировать',
-                                events: {
-                                    click: BX.proxy(this.clickOrderSaveAction, this)
-                                }
-                            })
-
-                        ]
-                    })
+                resultJsx.push(
+                    <div key={'total_action'} className="bx-soa-cart-total-button-container lg:text-[13px]
+                         text-[25px]">
+                        <a className="btn btn_basket btn-order-save dark:text-textDark
+                           shadow-md text-white dark:bg-dark-red bg-light-red lg:py-2 py-6 px-4 rounded-5 block
+                           text-center font-semibold"
+                           onClick={this.clickOrderSaveAction}>
+                            Зарезервировать
+                        </a>
+                    </div>
                 );
-                if (!document.querySelector('#second-save-order-js')) {
-                    this.newBlockId.append(BX.create('DIV', {
-                        props: {
-                            id: 'second-save-order-js',
-                            style: 'margin-top: 2rem;',
-                            className: 'bx-soa-cart-total-button-container hidden'
-                        },
-                        children: [
-                            BX.create('A', {
-                                props: {
-                                    href: 'javascript:void(0)',
-                                    className: 'btn btn_basket btn-order-save block text-center'
-                                },
-                                html: 'Зарезервировать',
-                                events: {
-                                    click: BX.proxy(this.clickOrderSaveAction, this)
-                                }
-                            })
-
-                        ]
-                    }));
-                }
             } else {
-                this.totalInfoBlockNode.appendChild(
-                    BX.create('span', {
-                        props: {className: 'btn-primary-color'},
-                        html: checkedDelivery.CALCULATE_ERRORS
-                    })
-                )
-                if (document.querySelector('#second-save-order-js')) {
-                    BX.remove(document.querySelector('#second-save-order-js'))
-                }
+                resultJsx.push(
+                    <span key={'total_action'} className="btn-primary-color font-semibold lg:text-[13px] text-[25px]">
+                        {checkedDelivery.CALCULATE_ERRORS}
+                    </span>
+                );
             }
         } else {
-            this.totalInfoBlockNode.appendChild(
-                BX.create('span', {
-                    props: {className: 'btn-primary-color'},
-                    html: 'Для оформления заказа необходимо авторизоваться'
-                })
-            )
+            resultJsx.push(
+                <span key={'total_action'} className="btn-primary-color font-semibold lg:text-[13px] text-[25px]">
+                    Для оформления заказа необходимо авторизоваться
+                </span>
+            );
         }
-
-        this.editMobileTotalBlock();
+        return resultJsx;
     }
 
     animateScrollTo(node, duration, shiftToTop) {
@@ -211,22 +176,22 @@ class OrderTotal extends React.Component {
     }
 
     createTotalUnit(name, value, params, line) {
-        var totalValue, totalUnit = [], className = 'bx-soa-cart-total-line leading-[35px] overflow-hidden';
+        var totalValue, totalUnit = [], className = 'bx-soa-cart-total-line lg:text-[13px] ' +
+            ' text-[21px] lg:leading-[35px] leading-[78px] overflow-hidden flex justify-between';
         name = name || '';
         value = value || '';
         params = params || {};
 
-        console.log(value);
         if (params.error) {
-            totalValue = (<a className="bx-soa-price-not-calc" dangerouslySetInnerHTML={{__html: value}} onClick={this.animateScrollTo}></a>);
+            totalValue = (<a className="bx-soa-price-not-calc font-bold" dangerouslySetInnerHTML={{__html: value}} onClick={this.animateScrollTo}></a>);
         } else if (params.free) {
-            totalValue = (<span className={"bx-soa-price-free"}>{value}</span>);
-
+            totalValue = (<span className={'bx-soa-price-free' + (params.total ? 'font-bold' : '')}>{value}</span>);
         } else {
-            totalValue = { __html: value};
+            totalValue = (<span className={params.total ? 'font-bold' : ''} dangerouslySetInnerHTML={{__html: value}}></span>);
         }
         if (params.total) {
-            className += ' bx-soa-cart-total-line-total mt-2.5 border-t-[1px] border-grey-line-order pt-[25px] mb-[13px]';
+            className += ' bx-soa-cart-total-line-total mt-2.5 border-t-[1px] border-grey-line-order lg:pt-[25px] ' +
+                'pt-[18px] mb-[13px] font-bold lg:text-[13px] text-[25px]';
         }
 
         if (params.highlighted) {
@@ -242,94 +207,122 @@ class OrderTotal extends React.Component {
 
         return(
             <div key={'cart_total_line_' + line} className={className}>
-                <span className={'bx-soa-cart-t float-left' + (params.total ? ' font-bold' : '')}>{name}</span>
-                <span className={'bx-soa-cart-d float-right' + (params.total ? ' font-bold' : '')
-                    + (!!params.total && this.options.totalPriceChanged ? ' bx-soa-changeCostSign' : '')}>
+                <span className={'bx-soa-cart-t' + (params.total ? ' font-bold' : '')}>{name}</span>
+                <span className={'bx-soa-cart-d'
+                    + (!!params.total && this.state.options.totalPriceChanged ? ' bx-soa-changeCostSign' : '')}>
                     {totalValue}
                 </span>
             </div>
         );
     }
 
+    getSelectedDelivery() {
+        var currentDelivery = false,
+            i = 0;
 
-    render() {
-        var resultJsx = [];
-        if (!this.state.result.TOTAL)
-            return resultJsx;
-
-        var total = this.state.result.TOTAL,
-            priceHtml, params = {},
-            discText, valFormatted, i,
-            curDelivery, deliveryError, deliveryValue;
-
-
-        if (parseFloat(total.ORDER_PRICE) === 0) {
-            priceHtml = this.state.params.MESS_PRICE_FREE;
-            params.free = true;
-        } else {
-            priceHtml = total.ORDER_PRICE_FORMATED;
+        for (i in this.state.result.DELIVERY) {
+            if (this.state.result.DELIVERY[i]['CHECKED']) {
+                currentDelivery = this.state.result.DELIVERY[i];
+                break;
+            }
         }
 
-        if (this.state.options.showPriceWithoutDiscount) {
-            priceHtml += '<br><span class="bx-price-old">' + total.PRICE_WITHOUT_DISCOUNT + '</span>';
+        return currentDelivery;
+    }
+
+    click_edit() {
+        let select_block = this.state.propsBlockNode.querySelector('.bx-soa-section-title-container');
+        let props = BX.findChildren(select_block, {className: 'user_select'}), i, option_company, option_contrs;
+        let input_block_company = document.querySelector('input[data-name="company"]');
+        let input_block_contragent = document.querySelector('input[data-name="contragent"]');
+        let input_period_delivery = document.querySelector('input[data-name="TIME"]');
+        let selection;
+        if (input_period_delivery) {
+            selection = document.querySelector('.select_period').value;
+            input_period_delivery.value = selection;
         }
-        let product = this.state.result.GRID.ROWS;
-        let quantity = Object.keys(product).length;
-        let textQuantity = '<span>Товары &nbsp(' + quantity + ')</span>';
+        for (i = 0; i < props.length; i++) {
+            option_company = BX.findChildren(props[i], {className: 'company_user_order'});
+            option_contrs = BX.findChildren(props[i], {className: 'contragent_user'});
+            let elem_company = option_company[0];
+            let elem_contrs = option_contrs[0];
 
-        resultJsx.push(this.createTotalUnit(textQuantity, priceHtml, params, 'prod_quantity'));
-        resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED), [], 'weight');
-
-        for (i = 0; i < total.TAX_LIST.length; i++) {
-            valFormatted = total.TAX_LIST[i].VALUE_MONEY_FORMATED || '';
-            resultJsx.push(
-                this.createTotalUnit(total.TAX_LIST[i].NAME +
-                    (!!total.TAX_LIST[i].VALUE_FORMATED ? ' ' + total.TAX_LIST[i].VALUE_FORMATED : '') + ':',
-                    valFormatted,
-                    [],
-                    'tax_' + i)
-            );
-        }
-        // }
-
-        // params = {};
-        // curDelivery = this.getSelectedDelivery();
-        // deliveryError = curDelivery && curDelivery.CALCULATE_ERRORS && curDelivery.CALCULATE_ERRORS.length;
-
-
-
-
-
-
-
-
-        const renderProperties = () => {
-            let div = [];
-            let group, property,
-                propsIterator,
-                groupIterator = new BX.Sale.PropertyCollection(
-                    BX.merge({publicMode: true}, this.state.result.ORDER_PROP)
-                ).getGroupIterator();
-            let a = [];
-            while(group = groupIterator()) {
-                propsIterator = group.getIterator();
-                while (property = propsIterator()) {
-                    // TODO Enterego pickup
-                    let disabled = false;
-                    if (this.state.group_buyer_props.find(item => item === group.getName()) !== undefined) {
-                        a.push(property.getId());
-                        div.push(
-                            <OrderProp key={property.getId()} property={property} locations={this.state.locations}
-                                       disabled={disabled} result={this.state.result}
-                                       are_locations_prepared={this.state.are_locations_prepared}/>
-                        );
-                    }
+            if (elem_contrs.children.length !== 0) {
+                let value_option_contragent_id = elem_contrs.options[elem_contrs.selectedIndex].value;
+                if (value_option_contragent_id && input_block_contragent !== null) {
+                    input_block_contragent.value = value_option_contragent_id;
                 }
             }
-            return div;
+            if (elem_company.children.length !== 0) {
+                let value_option_company_id = elem_company.options[elem_company.selectedIndex].value;
+                if (value_option_company_id && input_block_company !== null) {
+                    input_block_company.value = value_option_company_id;
+                }
+            }
+        }
+    }
+
+    clickOrderSaveAction(event) {
+        event.preventDefault();
+        if (this.state.result.IS_AUTHORIZED) {
+            this.click_edit();
+        }
+        if (BX.Sale.OrderAjaxComponent.isValidForm()) {
+            this.allowOrderSave();
+            if (this.state.params.USER_CONSENT === 'Y' && BX.UserConsent) {
+                BX.onCustomEvent('bx-soa-order-save', []);
+            } else {
+                this.doSaveAction();
+            }
         }
 
-        return resultJsx;
+        return BX.PreventDefault(event);
+    }
+
+    doSaveAction() {
+        if (this.isOrderSaveAllowed()) {
+            // this.reachGoal('order');
+            BX.Sale.OrderAjaxComponent.sendRequest('saveOrderAjax');
+        }
+    }
+
+    isOrderSaveAllowed() {
+        return this.state.orderSaveAllowed === true;
+    }
+
+    allowOrderSave() {
+        this.state.orderSaveAllowed = true;
+    }
+
+    disallowOrderSave() {
+        this.state.orderSaveAllowed = false;
+    }
+
+
+    render() {
+        return (
+            <>
+                <h5 className="order_text lg:block hidden mb-4 text-[22px] font-semibold dark:font-normal">
+                    Оформление заказа
+                </h5>
+                <div className="flex align-items-center justify-between lg:text-[9px] text-[21px] lg:mb-3 mb-7">
+                    <p className=" m-0 mr-1 flex items-center leading-normal font-medium dark:font-normal">
+                        При получении заказа, возможно, потребуется предъявить документ, подтверждающий ваш возраст.
+                    </p>
+                    <span className="confidintial bg-light-red lg:py-[7px] py-[9px] lg:px-2 px-3 whitespace-nowrap
+                    text-white font-semibold rounded-[100px] lg:leading-[17px] leading-[41px] self-center h-fit
+                    text-center">18+</span>
+                </div>
+                <div id="bx-soa-total" className="mb-5 bx-soa-sidebar">
+                    <div className="bx-soa-cart-total-ghost"></div>
+                    <div className="bx-soa-cart-total lg:p-5 p-8 border-[1px] flex flex-col rounded-lg border-solid
+                         border-textDark bg-textDark">
+                        {this.getResultJsx()}
+                    </div>
+
+                </div>
+            </>
+    );
     }
 }
 

@@ -20,6 +20,7 @@ BX.OrderPageComponents = {
     OrderUserTypeCheckRef: null,
     OrderUserTypeCheckBlock: null,
     OrderUserTypeCheckRoot: null,
+    OrderGeneralUserPropsBlock: null,
     OrderUserPropsBlock: null,
     OrderUserPropsRoot: null,
     OrderDeliveryRef: null,
@@ -65,6 +66,7 @@ BX.OrderPageComponents = {
             this.OrderUserPropsRef = React.createRef();
             this.OrderUserPropsRoot = createRoot(this.OrderUserPropsBlock);
         }
+        this.OrderGeneralUserPropsBlock = document.getElementById(currentDataset.generalUserPropsBlockId);
 
         this.OrderDeliveryBlock = document.getElementById(currentDataset.deliveryBlockId);
         if (this.OrderDeliveryBlock) {
@@ -182,12 +184,10 @@ BX.OrderPageComponents = {
             this.OrderTotalRoot.render(
                 <OrderTotal
                     ref={this.OrderTotalRef}
-                    domNode={this.OrderTotalBlock}
-                    deliveryBlockNode={this.OrderDeliveryBlock}
                     result={this.result}
                     params={this.params}
                     options={this.options}
-                    orderBlockId={this.orderBlockId}
+                    propsBlockNode={this.OrderGeneralUserPropsBlock}
                 />
             );
         } else {
