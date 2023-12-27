@@ -289,7 +289,7 @@ BX.SaleCommonPVZ = {
                     tag: 'div',
                     props: {
                         className: 'w-full px-[15px] pt-3 mx-auto overflow-auto my-2 table-body border border-x-0' +
-                            ' border-grayLight',
+                            ' border-grey-line-order dark:border-grayLight',
                         id: 'deliveries-list'
                     },
                 }),
@@ -363,8 +363,7 @@ BX.SaleCommonPVZ = {
                                             BX.create({
                                                 tag: 'div',
                                                 props: {
-                                                    className: 'lg:font-bold md:font-bold font-medium lg:text-lg' +
-                                                        ' md:text-lg text-[13px] lg:mb-1 md:mb-1 mb-3 leading-4'
+                                                    className: 'font-bold text-lg mb-3 !leading-4'
                                                 },
                                                 text: `${delivery.name}`
                                             }),
@@ -374,10 +373,11 @@ BX.SaleCommonPVZ = {
                                                     className: 'lg:pl-4 md:pl-4 pl-0 text-light-red dark:text-white'
                                                 },
                                                 html: delivery.price !== 0 ?
-                                                    '<div class="flex flex-row lg:items-start md:items-start' +
+                                                    '<span class="flex flex-row lg:items-start md:items-start' +
                                                     ' lg:mb-0 md:mb-0 mb-3' +
-                                                    ' items-center text-lg font-bold leading-4">' +
-                                                    '<svg class="lg:hidden md:hidden inline-flex mr-2"' +
+                                                    ' items-center lg:text-lg md:text-lg text-[13px] font-bold' +
+                                                    ' !leading-4">' +
+                                                    '<svg class="lg:hidden md:hidden inline-flex mr-3"' +
                                                     ' width="25" height="25" viewBox="0 0 24 24" fill="none"' +
                                                     ' xmlns="http://www.w3.org/2000/svg">' +
                                                     '<g clip-path="url(#clip0_2881_7234)">' +
@@ -410,11 +410,12 @@ BX.SaleCommonPVZ = {
                                                     '</clipPath>' +
                                                 '</defs>' +
                                                 '</svg> ' +
-                                                    delivery.price + ' руб.</div>' :
-                                                    '<div class="flex flex-row lg:items-start md:items-start' +
+                                                    delivery.price + ' руб.</span>' :
+                                                    '<span class="flex flex-row lg:items-start md:items-start' +
                                                     ' lg:mb-0 md:mb-0 mb-3' +
-                                                    ' items-center text-lg font-bold leading-4">' +
-                                                    '<svg class="lg:hidden md:hidden inline-flex mr-2"' +
+                                                    ' items-center lg:text-lg md:text-lg text-[13px] font-bold' +
+                                                    ' !leading-4">' +
+                                                    '<svg class="lg:hidden md:hidden inline-flex mr-3"' +
                                                     ' width="25" height="25" viewBox="0 0 24 24" fill="none"' +
                                                     ' xmlns="http://www.w3.org/2000/svg">' +
                                                     '<g clip-path="url(#clip0_2881_7234)">' +
@@ -447,7 +448,7 @@ BX.SaleCommonPVZ = {
                                                     '</clipPath>' +
                                                     '</defs>' +
                                                     '</svg> ' +
-                                                    ' aria-hidden="true"></i> Бесплатно</div> ',
+                                                    ' Бесплатно</span> ',
                                             }),
                                         ]
                                     }),
@@ -478,7 +479,8 @@ BX.SaleCommonPVZ = {
                             tag: 'div',
                             props: {
                                 className: 'column mb-3 bx-selected-delivery p-[19px] rounded-[10px] border' +
-                                    ' border-grey-line-order dark:border-0 dark:border-light-red bg-transparent dark:bg-lightGrayBg',
+                                    ' dark:border-0 border-grey-line-order dark:!border-white' +
+                                    ' bg-transparent dark:bg-lightGrayBg',
                             },
                             children: [
                                 BX.create({
@@ -621,10 +623,38 @@ BX.SaleCommonPVZ = {
         return BX.create('a',
             {
                 props: {
-                    className: 'red_text text-decoration-underline font-weight-bold ml-3',
+                    className: 'red_text underline lg:pl-4 md:pl-4 pl-6 mb-2',
                     href: "javascript:void(0)",
                 },
-                html: '<span><i class="fa fa-map-marker color-redLight font-18 mr-2" aria-hidden="true"></i> Выбрать адрес на карте</span>',
+                html: '<span class="font-bold lg:text-lg md:text-lg text-[13px] !leading-4 text-light-red' +
+                    ' dark:text-white">' +
+                    '<svg class="inline-flex lg:w-[15px] md:w-[15px] lg:h-[20px] md:h-[20px] w-[25px]' +
+                    ' h-[25px] mr-3" width="15" height="20" viewBox="0 0 15 20"' +
+                    ' fill="none" xmlns="http://www.w3.org/2000/svg"><path class="fill-light-red' +
+                    ' dark:fill-white" d="M12.4381 11.175C11.797' +
+                    ' 12.5025 10.9283 13.825 10.04 15.0125C9.19742 16.132 8.29643 17.2044 7.341' +
+                    ' 18.225C6.38555 17.2044 5.48457 16.132 4.64196 15.0125C3.7537 13.825 2.88501' +
+                    ' 12.5025 2.2439 11.175C1.59544 9.83375 1.2235 8.5775 1.2235 7.5C1.2235 5.8424' +
+                    ' 1.86802 4.25269 3.01528 3.08058C4.16253 1.90848 5.71854 1.25 7.341 1.25C8.96346' +
+                    ' 1.25 10.5195 1.90848 11.6667 3.08058C12.814 4.25269 13.4585 5.8424 13.4585' +
+                    ' 7.5C13.4585 8.5775 13.0853 9.83375 12.4381 11.175ZM7.341 20C7.341 20 14.682' +
+                    ' 12.8925 14.682 7.5C14.682 5.51088 13.9086 3.60322 12.5319 2.1967C11.1552 0.790176' +
+                    ' 9.28796 0 7.341 0C5.39405 0 3.52683 0.790176 2.15013 2.1967C0.773425 3.60322' +
+                    ' 2.90119e-08 5.51088 0 7.5C0 12.8925 7.341 20 7.341 20Z" fill="#CD1D1D"/><path' +
+                    ' class="fill-light-red dark:fill-white" d="M7.34116 10C6.69217 10 6.06977 9.73661 5.61086' +
+                    ' 9.26777C5.15196 8.79893' +
+                    ' 4.89415 8.16304 4.89415 7.5C4.89415 6.83696 5.15196 6.20107 5.61086' +
+                    ' 5.73223C6.06977 5.26339 6.69217 5 7.34116 5C7.99014 5 8.61254 5.26339' +
+                    ' 9.07145 5.73223C9.53035 6.20107 9.78816 6.83696 9.78816 7.5C9.78816 8.16304' +
+                    ' 9.53035 8.79893 9.07145 9.26777C8.61254 9.73661 7.99014 10 7.34116 10ZM7.34116' +
+                    ' 11.25C8.31463 11.25 9.24824 10.8549 9.93659 10.1517C10.6249 9.44839 11.0117' +
+                    ' 8.49456 11.0117 7.5C11.0117 6.50544 10.6249 5.55161 9.93659 4.84835C9.24824' +
+                    ' 4.14509 8.31463 3.75 7.34116 3.75C6.36768 3.75 5.43407 4.14509 4.74572' +
+                    ' 4.84835C4.05737 5.55161 3.67065 6.50544 3.67065 7.5C3.67065 8.49456 4.05737' +
+                    ' 9.44839 4.74572 10.1517C5.43407 10.8549 6.36768 11.25 7.34116 11.25Z"' +
+                    ' fill="#CD1D1D"/></svg>' +
+                    'Выбрать адрес на карте' +
+                    '</span>',
                 events: {
                     click: BX.proxy(function () {
                         oshMkad.afterSave = function (address) {
@@ -1130,7 +1160,8 @@ BX.SaleCommonPVZ = {
             point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
             point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
             item['error'] ? `<div>При расчете стоимости произошла ошибка, пожалуйста выберите другой ПВЗ или вид доставки</div>` :
-                `<a class="btn btn_basket mt-2" href="javascript:void(0)" 
+                `<a class="btn btn_basket mt-2 dark:text-textDark shadow-md text-white dark:bg-dark-red bg-light-red 
+                    lg:py-2 py-3 px-4 rounded-5 block text-center font-semibold" href="javascript:void(0)" 
                     onclick="BX.SaleCommonPVZ.selectPvz(${item.id});" >Выбрать</a>`)
 
         point.properties = {
@@ -1280,7 +1311,7 @@ BX.SaleCommonPVZ = {
                                 children: [
                                     BX.create({
                                         tag: 'div',
-                                        props: {className: 'title'},
+                                        props: {className: 'title font-medium mb-[0.8em] uppercase'},
                                         text: 'Введите адрес:'
                                     }),
                                     BX.create({
@@ -1338,7 +1369,7 @@ BX.SaleCommonPVZ = {
                     tag: 'div',
                     props: {
                         id: 'wrap_delivery_types',
-                        className: "pl-0 pr-[2em] py-[1em] mr-2"
+                        className: "pl-0 pr-[2em] lg:py-[1em] md:py-[1em] py-[0.5em] mr-2"
                     },
                     children: [
                         BX.create({
@@ -2137,7 +2168,7 @@ BX.SaleCommonPVZ = {
                                 BX.create({
                                     tag: 'div',
                                     props: {
-                                        className: 'font-bold text-lg lg:mb-1 md:mb-1 mb-3 leading-4'
+                                        className: 'font-bold text-lg mb-3 leading-4'
                                     },
                                     text: el.properties.deliveryName
                                 }),
@@ -2186,7 +2217,7 @@ BX.SaleCommonPVZ = {
                 tag: 'div',
                 props: {
                     className: 'column mb-3 bx-selected-delivery p-[19px] rounded-[10px] border' +
-                        ' border-grey-line-order dark:border-0 dark:border-light-red bg-transparent dark:bg-lightGrayBg',
+                        ' dark:border-0 border-grey-line-order dark:!border-white bg-transparent dark:bg-lightGrayBg',
                 },
                 children: [
                     BX.create({
@@ -2285,7 +2316,7 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'span',
                     props: {
-                        className: 'text-light-red dark:text-white lg:font-bold md:font-bold font-medium' +
+                        className: 'text-light-red dark:text-white font-bold' +
                             ' text-[13px] leading-4 lg:mb-0' +
                             ' md:mb-0 mb-3 lg:ml-3 md:ml-3 ml-0',
                         role: 'button'
@@ -2346,9 +2377,9 @@ BX.SaleCommonPVZ = {
                 BX.create({
                     tag: 'span',
                     props: {
-                        className: 'text-light-red dark:text-white lg:font-bold md:font-bold font-medium' +
+                        className: 'text-light-red dark:text-white font-bold' +
                             ' lg:text-lg md:text-lg text-[13px] lg:ml-3 md:ml-3 mb-2 flex flex-row lg:items-start md:items-start' +
-                            ' items-center leading-4'
+                            ' items-center !leading-4'
                     },
                     html: '<svg class="lg:hidden md:hidden inline-flex mr-2"' +
                         ' width="25" height="25" viewBox="0 0 24 24" fill="none"' +
