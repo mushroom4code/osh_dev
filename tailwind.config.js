@@ -2,6 +2,7 @@
 module.exports = {
     content: [
         "./local/templates/Oshisha/**/*.{js,php}",
+        "./about/**/*.php",
         "./local/templates/Oshisha/**/.default/*.{js,php}",
         "./local/components/bitrix/**/.default/*.{js,php}",
         "./local/components/bitrix/**/*.{js,php}",
