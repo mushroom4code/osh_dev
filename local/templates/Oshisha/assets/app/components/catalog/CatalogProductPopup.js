@@ -44,7 +44,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                 setSaleBool(productData.PRODUCT.SALE_BOOL)
                 setSalePrice(productData.PRODUCT.SALE_PRICE)
                 setDescription(productData.DESCRIPTION)
-                setGroupedProduct(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PRODUCTS))
+                setGroupedProduct(productData.GROUPED_PRODUCT.GROUPED_PRODUCTS)
                 setGroupedProps(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PROPS_DATA))
                 setGroupedSettings(productData.GROUPED_PRODUCT.SETTING)
                 setID(productData.ID)
@@ -197,7 +197,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                             <div className="flex flex-col mt-5">
                                 <GroupedProducts groupedSettings={groupedSettings} groupedProducts={groupedProducts}
                                                  setName={setName} groupedProps={groupedProps} setPrice={setPrice}
-                                                 setID={setID}/>
+                                                 setID={setID} productId={productId}/>
 
                             </div>
                             : <></>
