@@ -1,61 +1,43 @@
-import React from "react";
+import React, {useContext} from "react";
+import OrderContext from "./Context/OrderContext";
 
-class OrderTotal extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            result: this.props.result,
-            params: this.props.params,
-            options: this.props.options,
-            orderSaveAllowed: false,
-            propsBlockNode: this.props.propsBlockNode
-        }
-        this.animateScrollTo = this.animateScrollTo.bind(this);
-        this.clickOrderSaveAction = this.clickOrderSaveAction.bind(this);
-    }
+function OrderTotal() {
+    const {result, params, options, OrderGeneralUserPropsBlockId} = useContext(OrderContext);
+    var orderSaveAllowed = false;
 
-    componentDidMount() {
-        BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
-        BX.OrderPageComponents.endLoader();
-    }
-
-    componentDidUpdate() {
-        BX.OrderPageComponents.endLoader();
-    }
-
-    getResultJsx() {
+    const getResultJsx = () => {
         var resultJsx = [];
-        if (!this.state.result.TOTAL)
+        if (!result.TOTAL)
             return resultJsx;
 
-        var total = this.state.result.TOTAL,
+        var total = result.TOTAL,
             priceHtml, params = {},
             discText, valFormatted, i,
             curDelivery, deliveryError, deliveryValue;
 
 
         if (parseFloat(total.ORDER_PRICE) === 0) {
-            priceHtml = this.state.params.MESS_PRICE_FREE;
+            priceHtml = params.MESS_PRICE_FREE;
             params.free = true;
         } else {
             priceHtml = total.ORDER_PRICE_FORMATED;
         }
 
-        if (this.state.options.showPriceWithoutDiscount) {
+        if (options.showPriceWithoutDiscount) {
             priceHtml += '<br><span class="bx-price-old">' + total.PRICE_WITHOUT_DISCOUNT + '</span>';
         }
-        let product = this.state.result.GRID.ROWS;
+        let product = result.GRID.ROWS;
         let quantity = Object.keys(product).length;
         let textQuantity = 'Товары (' + quantity + ')';
 
-        resultJsx.push(this.createTotalUnit(textQuantity, priceHtml, params, 'prod_quantity'));
-        resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED,
+        resultJsx.push(createTotalUnit(textQuantity, priceHtml, params, 'prod_quantity'));
+        resultJsx.push(createTotalUnit(BX.message('SOA_SUM_WEIGHT_SUM'), total.ORDER_WEIGHT_FORMATED,
             [], 'sum_weight'));
 
         for (i = 0; i < total.TAX_LIST.length; i++) {
             valFormatted = total.TAX_LIST[i].VALUE_MONEY_FORMATED || '';
             resultJsx.push(
-                this.createTotalUnit(total.TAX_LIST[i].NAME +
+                createTotalUnit(total.TAX_LIST[i].NAME +
                     (!!total.TAX_LIST[i].VALUE_FORMATED ? ' ' + total.TAX_LIST[i].VALUE_FORMATED : '') + ':',
                     valFormatted,
                     [],
@@ -64,7 +46,7 @@ class OrderTotal extends React.Component {
         }
 
         params = {};
-        curDelivery = this.getSelectedDelivery();
+        curDelivery = getSelectedDelivery();
         deliveryError = curDelivery && curDelivery.CALCULATE_ERRORS && curDelivery.CALCULATE_ERRORS.length;
 
         if (deliveryError) {
@@ -72,7 +54,7 @@ class OrderTotal extends React.Component {
             params.error = deliveryError;
         } else {
             if (parseFloat(total.DELIVERY_PRICE) === 0) {
-                deliveryValue = this.state.params.MESS_PRICE_FREE;
+                deliveryValue = params.MESS_PRICE_FREE;
                 params.free = true;
             } else {
                 deliveryValue = total.DELIVERY_PRICE_FORMATED;
@@ -86,38 +68,38 @@ class OrderTotal extends React.Component {
             }
         }
 
-        resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_DELIVERY'), deliveryValue,
+        resultJsx.push(createTotalUnit(BX.message('SOA_SUM_DELIVERY'), deliveryValue,
             params, 'sum_delivery'));
 
-        if (this.state.options.showDiscountPrice) {
-            discText = this.state.params.MESS_ECONOMY;
+        if (options.showDiscountPrice) {
+            discText = params.MESS_ECONOMY;
             if (total.DISCOUNT_PERCENT_FORMATED && parseFloat(total.DISCOUNT_PERCENT_FORMATED) > 0)
                 discText += total.DISCOUNT_PERCENT_FORMATED;
 
-            resultJsx.push(this.createTotalUnit(discText + ':', total.DISCOUNT_PRICE_FORMATED,
+            resultJsx.push(createTotalUnit(discText + ':', total.DISCOUNT_PRICE_FORMATED,
                 {highlighted: true}, 'discount_price'));
         }
 
-        if (this.state.options.showPayedFromInnerBudget) {
-            resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED),
+        if (options.showPayedFromInnerBudget) {
+            resultJsx.push(createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED),
                 [], 'total_price_formated');
-            resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_PAYED'), total.PAYED_FROM_ACCOUNT_FORMATED),
+            resultJsx.push(createTotalUnit(BX.message('SOA_SUM_PAYED'), total.PAYED_FROM_ACCOUNT_FORMATED),
                 [], 'payed_from_account_formated');
-            resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_LEFT_TO_PAY'),
+            resultJsx.push(createTotalUnit(BX.message('SOA_SUM_LEFT_TO_PAY'),
                 total.ORDER_TOTAL_LEFT_TO_PAY_FORMATED, {total: true}, 'total_left_to_pay_formated'));
         } else {
-            resultJsx.push(this.createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED,
+            resultJsx.push(createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED,
                 {total: true}, 'total_price_formated'));
         }
 
-        if (parseFloat(total.PAY_SYSTEM_PRICE) >= 0 && this.state.result.DELIVERY.length) {
-            resultJsx.push(this.createTotalUnit(BX.message('SOA_PAYSYSTEM_PRICE'),
+        if (parseFloat(total.PAY_SYSTEM_PRICE) >= 0 && result.DELIVERY.length) {
+            resultJsx.push(createTotalUnit(BX.message('SOA_PAYSYSTEM_PRICE'),
                 '~' + total.PAY_SYSTEM_PRICE_FORMATTED), [], 'paysystems_price_formated');
         }
-        if (this.state.result.IS_AUTHORIZED) {
-            for (i = 0; i < this.state.result.DELIVERY.length; i++) {
-                if (this.state.result.DELIVERY[i].CHECKED === 'Y') {
-                    var checkedDelivery = this.state.result.DELIVERY[i];
+        if (result.IS_AUTHORIZED) {
+            for (i = 0; i < result.DELIVERY.length; i++) {
+                if (result.DELIVERY[i].CHECKED === 'Y') {
+                    var checkedDelivery = result.DELIVERY[i];
                     break;
                 }
             }
@@ -128,7 +110,7 @@ class OrderTotal extends React.Component {
                         <a className="btn btn_basket btn-order-save dark:text-textDark
                            shadow-md text-white dark:bg-dark-red bg-light-red lg:py-2 py-6 px-4 rounded-5 block
                            text-center font-semibold"
-                           onClick={this.clickOrderSaveAction}>
+                           onClick={clickOrderSaveAction}>
                             Зарезервировать
                         </a>
                     </div>
@@ -150,12 +132,12 @@ class OrderTotal extends React.Component {
         return resultJsx;
     }
 
-    animateScrollTo(node, duration, shiftToTop) {
+    const animateScrollTo = (node, duration, shiftToTop) => {
         if (!node)
             return;
 
         var scrollTop = BX.GetWindowScrollPos().scrollTop,
-            orderBlockPos = BX.pos(this.state.orderBlockNode),
+            orderBlockPos = BX.pos(orderBlockNode),
             ghostTop = BX.pos(node).top - (BX.browser.IsMobile() ? 50 : 0);
 
         if (shiftToTop)
@@ -175,7 +157,7 @@ class OrderTotal extends React.Component {
         }).animate();
     }
 
-    createTotalUnit(name, value, params, line) {
+    const createTotalUnit = (name, value, params, line) => {
         var totalValue, totalUnit = [], className = 'bx-soa-cart-total-line lg:text-[13px] ' +
             ' text-[21px] lg:leading-[35px] leading-[78px] overflow-hidden flex justify-between';
         name = name || '';
@@ -183,11 +165,13 @@ class OrderTotal extends React.Component {
         params = params || {};
 
         if (params.error) {
-            totalValue = (<a className="bx-soa-price-not-calc font-bold" dangerouslySetInnerHTML={{__html: value}} onClick={this.animateScrollTo}></a>);
+            totalValue = (<a className="bx-soa-price-not-calc font-bold" dangerouslySetInnerHTML={{__html: value}}
+                             onClick={animateScrollTo}></a>);
         } else if (params.free) {
             totalValue = (<span className={'bx-soa-price-free' + (params.total ? 'font-bold' : '')}>{value}</span>);
         } else {
-            totalValue = (<span className={params.total ? 'font-bold' : ''} dangerouslySetInnerHTML={{__html: value}}></span>);
+            totalValue = (
+                <span className={params.total ? 'font-bold' : ''} dangerouslySetInnerHTML={{__html: value}}></span>);
         }
         if (params.total) {
             className += ' bx-soa-cart-total-line-total mt-2.5 border-t-[1px] border-grey-line-order lg:pt-[25px] ' +
@@ -205,24 +189,24 @@ class OrderTotal extends React.Component {
             name = 'Общая стоимость';
         }
 
-        return(
+        return (
             <div key={'cart_total_line_' + line} className={className}>
                 <span className={'bx-soa-cart-t' + (params.total ? ' font-bold' : '')}>{name}</span>
                 <span className={'bx-soa-cart-d'
-                    + (!!params.total && this.state.options.totalPriceChanged ? ' bx-soa-changeCostSign' : '')}>
+                    + (!!params.total && options.totalPriceChanged ? ' bx-soa-changeCostSign' : '')}>
                     {totalValue}
                 </span>
             </div>
         );
     }
 
-    getSelectedDelivery() {
+    const getSelectedDelivery = () => {
         var currentDelivery = false,
             i = 0;
 
-        for (i in this.state.result.DELIVERY) {
-            if (this.state.result.DELIVERY[i]['CHECKED']) {
-                currentDelivery = this.state.result.DELIVERY[i];
+        for (i in result.DELIVERY) {
+            if (result.DELIVERY[i]['CHECKED']) {
+                currentDelivery = result.DELIVERY[i];
                 break;
             }
         }
@@ -230,8 +214,9 @@ class OrderTotal extends React.Component {
         return currentDelivery;
     }
 
-    click_edit() {
-        let select_block = this.state.propsBlockNode.querySelector('.bx-soa-section-title-container');
+    const click_edit = () => {
+        let select_block =
+            document.querySelector('#' + OrderGeneralUserPropsBlockId +' .bx-soa-section-title-container');
         let props = BX.findChildren(select_block, {className: 'user_select'}), i, option_company, option_contrs;
         let input_block_company = document.querySelector('input[data-name="company"]');
         let input_block_contragent = document.querySelector('input[data-name="contragent"]');
@@ -262,68 +247,67 @@ class OrderTotal extends React.Component {
         }
     }
 
-    clickOrderSaveAction(event) {
+    const clickOrderSaveAction = (event) => {
         event.preventDefault();
-        if (this.state.result.IS_AUTHORIZED) {
-            this.click_edit();
+        if (result.IS_AUTHORIZED) {
+            click_edit();
         }
         if (BX.Sale.OrderAjaxComponent.isValidForm()) {
-            this.allowOrderSave();
-            if (this.state.params.USER_CONSENT === 'Y' && BX.UserConsent) {
+            allowOrderSave();
+            if (params.USER_CONSENT === 'Y' && BX.UserConsent) {
                 BX.onCustomEvent('bx-soa-order-save', []);
             } else {
-                this.doSaveAction();
+                doSaveAction();
             }
         }
 
         return BX.PreventDefault(event);
     }
 
-    doSaveAction() {
-        if (this.isOrderSaveAllowed()) {
-            // this.reachGoal('order');
+    const doSaveAction = () => {
+        if (isOrderSaveAllowed()) {
+            // reachGoal('order');
             BX.Sale.OrderAjaxComponent.sendRequest('saveOrderAjax');
         }
     }
 
-    isOrderSaveAllowed() {
-        return this.state.orderSaveAllowed === true;
+    const isOrderSaveAllowed = () => {
+        return orderSaveAllowed === true;
     }
 
-    allowOrderSave() {
-        this.state.orderSaveAllowed = true;
+    const allowOrderSave = () => {
+        orderSaveAllowed = true;
     }
 
-    disallowOrderSave() {
-        this.state.orderSaveAllowed = false;
+    const disallowOrderSave = () => {
+        orderSaveAllowed = false;
     }
 
 
-    render() {
-        return (
-            <>
-                <h5 className="order_text lg:block hidden mb-4 text-[22px] font-semibold dark:font-normal">
-                    Оформление заказа
-                </h5>
-                <div className="flex align-items-center justify-between lg:text-[9px] text-[21px] lg:mb-3 mb-7">
-                    <p className=" m-0 mr-1 flex items-center leading-normal font-medium dark:font-normal">
-                        При получении заказа, возможно, потребуется предъявить документ, подтверждающий ваш возраст.
-                    </p>
-                    <span className="confidintial bg-light-red lg:py-[7px] py-[9px] lg:px-2 px-3 whitespace-nowrap
+    return (
+        <>
+            <h5 className="order_text lg:block hidden mb-4 text-[22px] font-semibold dark:font-normal">
+                Оформление заказа
+            </h5>
+            <div className="flex align-items-center justify-between lg:text-[9px] text-[21px] lg:mb-3 mb-7">
+                <p className=" m-0 mr-1 flex items-center leading-normal font-medium dark:font-normal">
+                    При получении заказа, возможно, потребуется предъявить документ, подтверждающий ваш возраст.
+                </p>
+                <span className="confidintial bg-light-red lg:py-[7px] py-[9px] lg:px-2 px-3 whitespace-nowrap
                     text-white font-semibold rounded-[100px] lg:leading-[17px] leading-[41px] self-center h-fit
                     text-center">18+</span>
-                </div>
-                <div id="bx-soa-total" className="mb-5 bx-soa-sidebar">
-                    <div className="bx-soa-cart-total-ghost"></div>
-                    <div className="bx-soa-cart-total lg:p-5 p-8 border-[1px] flex flex-col rounded-lg border-solid
+            </div>
+            <div id="bx-soa-total" className="mb-5 bx-soa-sidebar">
+                <div className="bx-soa-cart-total-ghost"></div>
+                <div className="bx-soa-cart-total lg:p-5 p-8 border-[1px] flex flex-col rounded-lg border-solid
                          border-textDark bg-textDark">
-                        {this.getResultJsx()}
-                    </div>
-
+                    {getResultJsx()}
                 </div>
-            </>
+
+            </div>
+        </>
     );
-    }
+
 }
 
 export default OrderTotal;

@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useContext} from "react";
+import OrderContext  from "./Context/OrderContext";
 
-function OrderComments({result, params}) {
+function OrderComments() {
+    const {result, params} = useContext(OrderContext);
     return(
         <div>
             <div className="form-group bx-soa-customer-field">

@@ -1,6 +1,8 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useContext, useEffect, useState, useRef} from "react";
+import OrderContext from "../Context/OrderContext";
 
-function OrderPropLocation({property, locations, disabled, are_locations_prepared}) {
+function OrderPropLocation({property, disabled}) {
+    const {locations, areLocationsPrepared} = useContext(OrderContext);
     var preparedLocations, cleanLocations, locationsTemplate;
     function prepareLocations(locations) {
         var temporaryLocations, i, k, output, allTemporaryLocations = [], allCleanLocations = [];
@@ -37,12 +39,7 @@ function OrderPropLocation({property, locations, disabled, are_locations_prepare
     }
 
     var propRow,  currentLocation, i, k;
-
-    if (are_locations_prepared) {
-        preparedLocations = locations;
-    } else {
-        prepareLocations(locations);
-    }
+    prepareLocations(locations);
 
     if (property.getId() in preparedLocations) {
         if (!disabled) {
@@ -81,14 +78,7 @@ function OrderPropLocation({property, locations, disabled, are_locations_prepare
                     </div>
                 )
             }
-            const mounted = useRef();
-            useEffect(() => {
-                if (!mounted.current) {
-                    mounted.current = true;
-                } else {
-                    BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
-                }
-            });
+
             return (<div className="soa-property-container">
                 {locationsJsx}
             </div>);

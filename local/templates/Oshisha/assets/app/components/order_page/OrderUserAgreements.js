@@ -1,6 +1,6 @@
 import React from "react";
 
-function OrderUserAgreements({}) {
+function OrderUserAgreements() {
     return(
         <>
             <p className="flex items-center font-14 h-[45px] pb-2 dark:text-white">

@@ -1,10 +1,4 @@
-import OrderUserTypeCheck from "./components/order_page/OrderUserTypeCheck";
-import OrderUserProps from "./components/order_page/OrderUserProps";
-import OrderDelivery from "./components/order_page/OrderDelivery";
-import OrderPaySystems from "./components/order_page/OrderPaySystems";
-import OrderUserAgreements from "./components/order_page/OrderUserAgreements";
-import OrderComments from "./components/order_page/OrderComments";
-import OrderTotal from "./components/order_page/OrderTotal";
+import OrderMain from "./components/order_page/OrderMain";
 import {createRoot} from 'react-dom/client';
 import React from "react";
 
@@ -17,28 +11,13 @@ BX.OrderPageComponents = {
     options: {},
     propertyValidation: null,
     showWarnings: null,
-    OrderUserTypeCheckRef: null,
-    OrderUserTypeCheckBlock: null,
-    OrderUserTypeCheckRoot: null,
     OrderGeneralUserPropsBlock: null,
-    OrderUserPropsBlock: null,
-    OrderUserPropsRoot: null,
-    OrderDeliveryRef: null,
-    OrderDeliveryBlock: null,
-    OrderDeliveryRoot: null,
-    OrderPaySystemsBlock: null,
-    OrderPaySystemsRef: null,
-    OrderPaySystemsRoot: null,
-    OrderUserAgreementsBlock: null,
-    OrderUserAgreementsRoot: null,
-    OrderCommentsBlock: null,
-    OrderCommentsRoot: null,
-    OrderTotalBlock: null,
-    OrderTotalRef: null,
-    OrderTotalRoot: null,
-    orderBlockId: null,
+    OrderMainBlockId: null,
+    OrderMainBlock: null,
+    OrderMainRoot: null,
 
     init: function(currentDataset) {
+        this.startLoader();
         this.result = JSON.parse(currentDataset.result);
         this.params = JSON.parse(currentDataset.params);
         this.locations = JSON.parse(currentDataset.locations);
@@ -55,143 +34,15 @@ BX.OrderPageComponents = {
 
         this.options.totalPriceChanged = false;
 
-        this.OrderUserTypeCheckBlock = document.getElementById(currentDataset.userCheckBlockId);
-        if (this.OrderUserTypeCheckBlock) {
-            this.OrderUserTypeCheckRef = React.createRef();
-            this.OrderUserTypeCheckRoot = createRoot(this.OrderUserTypeCheckBlock);
-        }
-
-        this.OrderUserPropsBlock = document.getElementById(currentDataset.userPropsBlockId);
-        if (this.OrderUserPropsBlock) {
-            this.OrderUserPropsRef = React.createRef();
-            this.OrderUserPropsRoot = createRoot(this.OrderUserPropsBlock);
-        }
-        this.OrderGeneralUserPropsBlock = document.getElementById(currentDataset.generalUserPropsBlockId);
-
-        this.OrderDeliveryBlock = document.getElementById(currentDataset.deliveryBlockId);
-        if (this.OrderDeliveryBlock) {
-            this.OrderDeliveryRef = React.createRef();
-            this.OrderDeliveryRoot = createRoot(this.OrderDeliveryBlock);
-        }
-
-        this.OrderPaySystemsBlock = document.getElementById(currentDataset.paysystemsBlockId);
-        if (this.OrderPaySystemsBlock) {
-            this.OrderPaySystemsRef = React.createRef();
-            this.OrderPaySystemsRoot = createRoot(this.OrderPaySystemsBlock);
-        }
-
-        this.OrderUserAgreementsBlock = document.getElementById(currentDataset.userAgreementsBlockId);
-        if (this.OrderUserAgreementsBlock) {
-            this.OrderUserAgreementsRoot = createRoot(this.OrderUserAgreementsBlock);
-        }
-
-        this.OrderCommentsBlock = document.getElementById(currentDataset.newBlockWithCommentId);
-        if(this.OrderCommentsBlock) {
-            this.OrderCommentsRoot = createRoot(this.OrderCommentsBlock);
-        }
-
-        this.OrderTotalBlock = document.getElementById(currentDataset.totalBlockId);
-        if (this.OrderTotalBlock) {
-            this.OrderTotalRef = React.createRef();
-            this.OrderTotalRoot = createRoot(this.OrderTotalBlock);
-        }
-
-        this.orderBlockId = currentDataset.orderBlockId;
-
-        this.renderComponents(this.result, this.locations);
-    },
-
-    renderComponents: function (result, locations, areLocationsPrepared = false) {
-        this.startLoader();
-        if (this.result !== result) {
-            this.result = result;
-        }
-
-        if (this.locations !== locations) {
-            this.locations = locations;
-        }
-
-        if (!this.OrderUserTypeCheckRef.current) {
-            this.OrderUserTypeCheckRoot.render(
-                <OrderUserTypeCheck
-                    ref={this.OrderUserTypeCheckRef}
-                    result={this.result}
-                    params={this.params}
+        this.OrderMainBlock = document.getElementById(currentDataset.orderBlockId);
+        if (this.OrderMainBlock) {
+            this.OrderMainRoot = createRoot(this.OrderMainBlock);
+            this.OrderMainRoot.render(
+                <OrderMain result={this.result} params={this.params} options={this.options}
+                           locations={this.locations}
+                           OrderGeneralUserPropsBlockId={currentDataset.generalUserPropsBlockId}
                 />
             );
-        } else {
-            this.OrderUserTypeCheckRef.current.setState({result: this.result, params: this.params});
-        }
-
-        if (!this.OrderUserPropsRef.current) {
-            this.OrderUserPropsRoot.render(
-                <OrderUserProps
-                    ref={this.OrderUserPropsRef}
-                    result={this.result}
-                    locations={this.locations}
-                    are_locations_prepared={areLocationsPrepared}
-                />
-            );
-        } else {
-            this.OrderUserPropsRef.current.setState({result: this.result, locations: this.locations,
-                are_locations_prepared: areLocationsPrepared});
-        }
-
-        if (!this.OrderDeliveryRef.current) {
-            this.OrderDeliveryRoot.render(
-                <OrderDelivery
-                    ref={this.OrderDeliveryRef}
-                    domNode={this.OrderDeliveryBlock}
-                    result={this.result}
-                    params={this.params}
-                    options={this.options}
-                />
-            );
-        } else {
-            this.OrderDeliveryRef.current.setState({result: this.result});
-        }
-
-        if (!this.OrderPaySystemsRef.current) {
-            this.OrderPaySystemsRoot.render(
-                <OrderPaySystems
-                    ref={this.OrderPaySystemsRef}
-                    domNode={this.OrderPaySystemsBlock}
-                    result={this.result}
-                    params={this.params}
-                    options={this.options}
-                />
-            );
-        } else {
-            this.OrderPaySystemsRef.current.setState({result: this.result});
-        }
-
-        if (this.OrderUserAgreementsBlock) {
-            this.OrderUserAgreementsRoot.render(
-                <OrderUserAgreements/>
-            );
-        }
-
-        if (this.OrderCommentsBlock) {
-            this.OrderCommentsRoot.render(
-                <OrderComments
-                    result={this.result}
-                    params={this.params}
-                />
-            );
-        }
-
-        if (!this.OrderTotalRef.current) {
-            this.OrderTotalRoot.render(
-                <OrderTotal
-                    ref={this.OrderTotalRef}
-                    result={this.result}
-                    params={this.params}
-                    options={this.options}
-                    propsBlockNode={this.OrderGeneralUserPropsBlock}
-                />
-            );
-        } else {
-            this.OrderTotalRef.current.setState({result: this.result});
         }
     },
 
