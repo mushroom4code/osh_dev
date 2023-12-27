@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import GroupedProductsProp from "./GroupedProductsProp";
 
-function GroupedProducts({groupedSettings, groupedProducts, groupedProps, setPrice, setID, setName, productId}) {
+function GroupedProducts({groupedSettings, groupedProducts, groupedProps, updateProduct, productId}) {
 
     const [selectPropValue, setSelectPropValue] = useState([])
 
@@ -9,8 +9,8 @@ function GroupedProducts({groupedSettings, groupedProducts, groupedProps, setPri
         groupedProps.length > 0 ?
             groupedProps.map((props, pr_key) =>
                 <GroupedProductsProp key={pr_key} props={props} groupedProducts={groupedProducts}
-                                     groupedSettings={groupedSettings} setPrice={setPrice} setID={setID}
-                                     setName={setName} productId={productId} setSelectPropValue={setSelectPropValue}
+                                     groupedSettings={groupedSettings} updateProduct={updateProduct}
+                                     productId={productId} setSelectPropValue={setSelectPropValue}
                                      selectPropValue={selectPropValue}/>
             )
             : <></>

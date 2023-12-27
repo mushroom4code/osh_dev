@@ -1,18 +1,7 @@
 import React from 'react';
 
-function GroupedProductsPropValue({
-                                      group,
-                                      groupedProducts,
-                                      propSetting,
-                                      setID,
-                                      setPrice,
-                                      setName,
-                                      productId,
-                                      setActiveGroup,
-                                      select
-                                  }) {
+function GroupedProductsPropValue({group, groupedProducts, propSetting, updateProduct, setActiveGroup, select}) {
     const keys = Object.keys(group);
-
     if (propSetting.TYPE === 'color') {
         const srcPicture = group[keys[0]].PREVIEW_PICTURE
         return (
@@ -22,12 +11,10 @@ function GroupedProductsPropValue({
                      data-prop_group={JSON.stringify(group)}
                      onClick={() => {
                          setActiveGroup(group)
-                         // const productsSuccess = sortOnPriorityArDataProducts(groupedProducts, code);
-                         // const productResult = groupedProducts[productsSuccess[0].id];
-                         //todo uncomment
-                         // setPrice(productResult.PRICES.PRICE_DATA.PRICE)
-                         // setID(productResult.ID)
-                         // setName(productResult.NAME)
+                         const productsSuccess = sortOnPriorityArDataProducts(groupedProducts, propSetting.CODE);
+                         const productResult = groupedProducts[productsSuccess[0].id];
+                         // console.log(productsSuccess)
+                         updateProduct(productResult)
                      }}
                      className={"offer-box offer-link bg-white mr-2 " +
                          "text-xs border rounded-md p-3 " + (!select ?
@@ -44,13 +31,10 @@ function GroupedProductsPropValue({
                 <div data-prop_code={propSetting.CODE}
                      data-active={select}
                      onClick={() => {
-                         // const productsSuccess = sortOnPriorityArDataProducts(groupedProducts, propSetting.CODE);
-                         // const productResult = groupedProducts[productsSuccess[0].id];
                          setActiveGroup(group)
-                         //todo uncomment
-                         // setPrice(productResult.PRICES.PRICE_DATA.PRICE)
-                         // setID(productResult.ID)
-                         // setName(productResult.NAME)
+                         const productsSuccess = sortOnPriorityArDataProducts(groupedProducts, propSetting.CODE);
+                         const productResult = groupedProducts[productsSuccess[0].id];
+                         updateProduct(productResult)
                      }}
                      data-prop_group={JSON.stringify(group)}
                      className={"red_button_cart taste variation_taste w-fit p-3 mb-2 " +
@@ -86,11 +70,10 @@ function GroupedProductsPropValue({
                 <div data-prop_code={propSetting.CODE}
                      data-active={select}
                      onClick={() => {
-                         // const productsSuccess = sortOnPriorityArDataProducts(groupedProducts, propSetting.CODE);
-                         // const productResult = groupedProducts[productsSuccess[0].id];
-                         // console.log(productsSuccess)
-                         // console.log(productResult)
                          setActiveGroup(group)
+                         const productsSuccess = sortOnPriorityArDataProducts(groupedProducts, propSetting.CODE);
+                         const productResult = groupedProducts[productsSuccess[0].id];
+                         updateProduct(productResult)
                      }}
                      data-prop_group={JSON.stringify(group)}
                      className="border-textDarkLightGray text-dark dark:bg-grayButton
@@ -107,14 +90,13 @@ function GroupedProductsPropValue({
 function GroupedProductsProp({
                                  groupedSettings,
                                  props,
-                                 groupedProducts,
-                                 setID,
-                                 setPrice,
-                                 setName,
                                  productId,
+                                 groupedProducts,
+                                 updateProduct,
                                  setSelectPropValue,
                                  selectPropValue
                              }) {
+
     if (groupedSettings[props[0]]) {
 
         const propSetting = groupedSettings[props[0]];
@@ -123,28 +105,31 @@ function GroupedProductsProp({
             setSelectPropValue(prev => {
                 const index = prev.findIndex(item => item.prop === props[0]);
                 if (index !== -1) {
-                    prev.splice(index, 1, {prop: props[0], group});
+                    return prev.splice(index, 1, {prop: props[0], group});
+                } else {
+                    return [...prev, {prop: props[0], group}]
                 }
-
-                return prev
             })
+        }
+
+
+        if (selectPropValue.length <= 0 && selectPropValue.findIndex(item => item.prop === props[0]) === -1) {
+            setActiveGroup(groupedProducts[productId].PROPERTIES[propSetting.CODE].JS_PROP);
         }
 
         if (propSetting.CODE === 'USE_DISCOUNT') {
             return <></>
         }
 
-        // setActiveGroup(groupedProducts[productId].PROPERTIES[propSetting.CODE].JS_PROP);
-
         return (
             <div className="flex flex-row mb-4">
                 {dataProps.map((group, g_key) => {
-                    const select = selectPropValue.find(item => item.group === group && item.prop === props[0]) !== undefined
+                    const select = selectPropValue.find(item => arrayDiff(item.group, group) && item.prop === props[0]) !== undefined
                     return <GroupedProductsPropValue
                         key={g_key} select={select} propSetting={propSetting}
                         groupedProducts={groupedProducts}
-                        group={group} setPrice={setPrice} setID={setID}
-                        setName={setName} productId={productId} setActiveGroup={setActiveGroup}/>
+                        group={group} updateProduct={updateProduct}
+                        setActiveGroup={setActiveGroup}/>
                 })}
             </div>
         )
