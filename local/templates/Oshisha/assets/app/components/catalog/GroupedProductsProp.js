@@ -103,10 +103,7 @@ function GroupedProductsProp({
         const dataProps = props[1];
         const setActiveGroup = (group) => {
             setSelectPropValue(prev => {
-                console.log(props[0])
-                console.log(prev)
                 const index = prev.findIndex(item => item.prop === props[0]);
-                console.log(index)
                 if (index !== -1) {
                     return prev.splice(index, 1, {prop: props[0], group});
                 } else {
@@ -128,10 +125,6 @@ function GroupedProductsProp({
             <div className="flex flex-row mb-4">
                 {dataProps.map((group, g_key) => {
                     const select = selectPropValue.find(item => arrayDiff(item.group, group) && item.prop === props[0]) !== undefined
-                    console.log(selectPropValue.find(item => arrayDiff(item.group, group) && item.prop === props[0]))
-                    // console.log(props[0])
-                    console.log(selectPropValue)
-                    console.log(group)
                     return <GroupedProductsPropValue
                         key={g_key} select={select} propSetting={propSetting}
                         groupedProducts={groupedProducts}
