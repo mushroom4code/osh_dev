@@ -1731,20 +1731,22 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
     });
 
     $.each(arrProductGrouped, function (prod_id, item) {
+
         $.each(item.PROPERTIES, function (k, props) {
             if (props?.JS_PROP !== undefined && k !== 'USE_DISCOUNT' &&
                 Object.keys(props?.JS_PROP).length === Object.keys(selectedPropData[k]).length) {
                 $.each(props.JS_PROP, function (key, jsProp) {
-                    let propList = selectedPropData[k][key];
+                    let propList = selectedPropData[k][key] ?? selectedPropData[k];
                     let priority = -1;
-                    if (propList !== undefined && jsProp.VALUE_ENUM === propList.VALUE_ENUM) {
+
+                    if (propList !== undefined && jsProp?.VALUE_ENUM === propList?.VALUE_ENUM) {
                         if (propCodePriority === k) {
                             priority = 1;
                         }
                         if (productsSuccess.length <= 0) {
                             let itemPush = {
                                 id: parseInt(prod_id),
-                                code: propList.CODE,
+                                code: propList?.CODE,
                                 pr: 1 + priority,
                             }
                             productsSuccess.push(itemPush)
@@ -1772,9 +1774,11 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
             }
         });
     });
+    console.log(productsSuccess)
     if (productsSuccess.length > 0) {
         productsSuccess.sort((a, b) => a.pr < b.pr ? 1 : -1)
     }
+    console.log(productsSuccess)
     return productsSuccess;
 }
 

@@ -1,23 +1,64 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useReducer} from 'react';
 import axios from "axios";
 import GroupedProducts from "./GroupedProducts";
 
+function reducer(state, action) {
+    if (action.type === 'update_product') {
+        return {
+            name: action.name,
+            srcProduct: action.srcProduct,
+            description: action.description,
+            productPage: action.productPage,
+            countLike: action.countLike ?? 0,
+            quantityProduct: action.quantityProduct ?? 0,
+            maxQuantity: action.maxQuantity ?? 0,
+            price: action.price ?? 0,
+            saleBool: action.saleBool,
+            salePrice: action.salePrice ?? 0,
+        };
+    } else if (action.type === 'update_quantity') {
+        return {
+            quantityProduct: action.quantityProduct,
+        };
+    }
+    throw Error('Unknown action.');
+}
+
 function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduct, seePopup, setVisible}) {
-    const [name, setName] = useState('Товар')
-    const [srcProduct, setSrcProduct] = useState('Товар')
-    const [countLike, setCountLike] = useState('Товар')
-    const [productPage, setProductPage] = useState('Товар')
-    const [quantityProduct, setQuantityProduct] = useState(0)
-    const [maxQuantity, setMaxQuantity] = useState(0)
-    const [price, setPrice] = useState(0)
-    const [salePrice, setSalePrice] = useState(0)
-    const [saleBool, setSaleBool] = useState(false)
-    const [description, setDescription] = useState('')
     const [groupedProducts, setGroupedProduct] = useState([])
     const [groupedProps, setGroupedProps] = useState([])
     const [groupedSettings, setGroupedSettings] = useState([])
     const [popupShowHide, setPopupShowHide] = useState(seePopup)
     const [ID, setID] = useState(productId)
+    const [state, dispatch] = useReducer(reducer, {
+        name: 'Товар',
+        srcProduct: '',
+        description: '',
+        productPage: '/',
+        countLike: 0,
+        quantityProduct: 0,
+        maxQuantity: 0,
+        price: 0,
+        saleBool: false,
+        salePrice: 0,
+    });
+
+    const updateProduct = (productData) => {
+        dispatch({
+            type: 'update_product',
+            id: productData.ID,
+            name: productData.NAME,
+            srcProduct: productData.PREVIEW_PICTURE,
+            description: productData.DESCRIPTION,
+            productPage: productData.DETAIL_PAGE_URL,
+            countLike: productData.LIKE?.COUNT_LIKES ?? 0,
+            quantityProduct: productData.ACTUAL_BASKET ?? 0,
+            maxQuantity: productData.PRODUCT?.QUANTITY ?? productData.QUANTITY,
+            price: productData.PRODUCT?.PRICE ?? productData?.PRICE,
+            saleBool: productData.PRODUCT?.SALE_BOOL ?? false,
+            salePrice: productData.PRODUCT?.SALE_PRICE ?? 0,
+        });
+    }
 
     useEffect(() => {
         setID(productId)
@@ -28,32 +69,28 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
         setPopupShowHide(seePopup)
     }, [seePopup, popupShowHide]);
 
-
     function getProductData(data) {
         loaderForSite('appendLoader', document.querySelector('body'))
         axios.post('/local/ajax/catalog_item.php', data).then(res => {
+
             const productData = res.data;
+
             if (productData?.NAME !== '') {
-                setName(productData.NAME)
-                setSrcProduct(productData.PREVIEW_PICTURE)
-                setCountLike(productData.LIKE.COUNT_LIKES)
-                setProductPage(productData.DETAIL_PAGE_URL)
-                setQuantityProduct(productData.ACTUAL_BASKET ?? 0)
-                setMaxQuantity(productData.PRODUCT.QUANTITY ?? 0)
-                setPrice(productData.PRODUCT.PRICE ?? 0)
-                setSaleBool(productData.PRODUCT.SALE_BOOL)
-                setSalePrice(productData.PRODUCT.SALE_PRICE)
-                setDescription(productData.DESCRIPTION)
+
+                updateProduct(productData)
+
                 setGroupedProduct(productData.GROUPED_PRODUCT.GROUPED_PRODUCTS)
                 setGroupedProps(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PROPS_DATA))
                 setGroupedSettings(productData.GROUPED_PRODUCT.SETTING)
                 setID(productData.ID)
+
                 loaderForSite('', document.querySelector('body'))
             } else if (productData?.error) {
                 if (productData?.error?.code) {
                     alert('Ошибка запроса данных по товару')
                 }
             } else {
+                console.log(productData)
             }
         })
     }
@@ -66,7 +103,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                  w-full md:rounded-lg rounded-0 catalog-fast-window dark:bg-darkBox">
             <div className="mb-2 flex flex-row justify-between">
                     <span className="font-medium dark:font-light md:text-2xl mb-2 p-0 w-4/5 text-lightGrayBg
-                    dark:text-textDarkLightGray text-lg">{name}</span>
+                    dark:text-textDarkLightGray text-lg">{state.name}</span>
                 <span className="text-right p-0 close-box cursor-pointer" title="Закрыть"
                       onClick={() => {
                           setVisible();
@@ -85,7 +122,8 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                         <div className="box-with-image-prod p-10 bg-white rounded-xl mb-4 md:mb-0 relative border
                             border-borderColor dark:border-white md:w-auto w-full">
                             <div className="flex items-center justify-center box-with-image-one">
-                                <img className="md:w-80 md:h-80 h-64 w-64 js-one-img object-contain" src={srcProduct}
+                                <img className="md:w-80 md:h-80 h-64 w-64 js-one-img object-contain"
+                                     src={state.srcProduct}
                                      alt="oshisha"/>
                             </div>
                             <div className="absolute like-with-fav right-3 top-3">
@@ -102,7 +140,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                                 strokeLinejoin="round"></path>
                                         </svg>
                                         <article className="like_span text-center text-xs" id="likes">
-                                            {countLike}
+                                            {state.countLike}
                                         </article>
                                     </a>
                                     <a className="product-item__favorite-star method"
@@ -125,13 +163,13 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                     <div>
                         <div
                             className="prices-box ml-lg-4 ml-md-4 ml-0 mb-lg-4 mb-md-2 mb-2 flex flex-row items-center relative">
-                            {saleBool ? <div className="base-price group-prices product-item-detail-price-current text-3xl
+                            {state.saleBool ? <div className="base-price group-prices product-item-detail-price-current text-3xl
                                  font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
-                                {salePrice}₽ <span
-                                className="mx-3 line-through decoration-hover-red text-2xl text-tagFilterGray"> {price}₽</span>
+                                {state.salePrice}₽ <span
+                                className="mx-3 line-through decoration-hover-red text-2xl text-tagFilterGray"> {state.price}₽</span>
                             </div> : <div className="base-price group-prices product-item-detail-price-current text-3xl
                                  font-medium dark:font-normal text-lightGrayBg dark:text-textDarkLightGray mr-5">
-                                {price}₽
+                                {state.price}₽
                             </div>}
                             <div
                                 className="add-to-basket box-basket flex flex-row items-center
@@ -143,9 +181,9 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                        rounded-full md:py-0 md:px-0 py-3.5 px-1.5 dark:bg-dark md:dark:bg-darkBox
                                        bg-none no-select add2basket cursor-pointer flex items-center justify-center
                                        h-auto md:w-full w-auto removeToBasketOpenWindow"
-                                           data-url={srcProduct}
-                                           data-product_id={ID}
-                                           data-max-quantity={maxQuantity}
+                                           data-url={state.srcProduct}
+                                           data-product_id={state.id}
+                                           data-max-quantity={state.maxQuantity}
                                            id={areaBuy}>
                                             <svg width="20" height="2" viewBox="0 0 22 2" fill="none"
                                                  className="stroke-dark dark:stroke-white stroke-[1.5px]"
@@ -159,23 +197,23 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                               border-none text-md shadow-none py-2.5 px-3 md:mx-2 mx-1 outline-none
                                               rounded-md md:w-14 w-16"
                                                    type="number"
-                                                   max={maxQuantity}
-                                                   data-max-quantity={maxQuantity}
+                                                   max={state.maxQuantity}
+                                                   data-max-quantity={state.maxQuantity}
                                                    id={areaBuyQuantity}
                                                    onChange={(e) => {
-                                                       setQuantityProduct(e.target.value)
+                                                       // setQuantityProduct(e.target.value)
                                                    }}
-                                                   data-url={srcProduct}
-                                                   data-product_id={ID}
-                                                   value={quantityProduct}/>
+                                                   data-url={state.srcProduct}
+                                                   data-product_id={state.id}
+                                                   value={state.quantityProduct}/>
                                         </div>
                                         <a className="btn-plus plus_icon no-select add2basket addToBasketOpenWindow
                                        no-select add2basket cursor-pointer flex items-center justify-center rounded-full
                                        md:p-0 p-1.5 dark:bg-dark md:dark:bg-darkBox bg-none h-auto md:w-full w-auto"
-                                           data-url={srcProduct}
-                                           data-product_id={ID}
-                                           data-max-quantity={maxQuantity}
-                                           title={'Доступно: ' + maxQuantity}
+                                           data-url={state.srcProduct}
+                                           data-product_id={state.id}
+                                           data-max-quantity={state.maxQuantity}
+                                           title={'Доступно: ' + state.maxQuantity}
                                            id={areaBuy}>
                                             <svg width="20" height="20" viewBox="0 0 20 20"
                                                  className="fill-light-red dark:fill-white"
@@ -189,27 +227,27 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                     </div>
                                     <div className="alert_quantity absolute md:p-4 p-2 text-xs left-0 top-12 bg-filterGray
                                 dark:bg-tagFilterGray w-full shadow-lg rounded-md z-20 hidden"
-                                         data-id={ID}></div>
+                                         data-id={state.id}></div>
                                 </div>
                             </div>
                         </div>
                         {groupedProps.length > 0 ?
                             <div className="flex flex-col mt-5">
                                 <GroupedProducts groupedSettings={groupedSettings} groupedProducts={groupedProducts}
-                                                 setName={setName} groupedProps={groupedProps} setPrice={setPrice}
-                                                 setID={setID} productId={productId}/>
+                                                 updateProduct={updateProduct} groupedProps={groupedProps}
+                                                 productId={productId}/>
 
                             </div>
                             : <></>
                         }
                         <p className="text-xs font-medium text-textLight dark:font-light dark:text-whiteOpacity mt-4 mb-4 w-full">
-                            {description}
+                            {state.description}
                         </p>
                     </div>
                     <div className="props-box ml-lg-4 ml-md-4 ml-0 flex flex-col justify-between items-end">
                         <a className="text-light-red text-lg dark:text-textDarkLightGray font-medium
                             dark:font-light underline underline-offset-2"
-                           href={productPage}>Подробнее</a>
+                           href={state.productPage}>Подробнее</a>
                     </div>
                 </div>
             </div>
