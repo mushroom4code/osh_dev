@@ -101,7 +101,7 @@ if ($action === 'fastProduct') {
     $item['PRODUCT'] = [
         'CATALOG_QUANTITY' => $item['CATALOG_QUANTITY'],
         'QUANTITY' => $item['QUANTITY'],
-        'PRICE' => round($item['CATALOG_PRICE_' . B2B_PRICE]),
+        'PRICE' => $item['CATALOG_PRICE_' . B2B_PRICE],
         'SALE_PRICE' => round($item['CATALOG_PRICE_' . SALE_PRICE_TYPE_ID]),
         'SALE_BOOL' => $item['PROPERTY_USE_DISCOUNT_VALUE_VALUE'] === 'Да',
     ];

@@ -24,12 +24,22 @@ function reducer(state, action) {
     throw Error('Unknown action.');
 }
 
+/**
+ * CatalogProductPopup
+ * @param productId
+ * @param areaBuyQuantity
+ * @param areaBuy
+ * @param groupedProduct
+ * @param seePopup
+ * @param setVisible
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduct, seePopup, setVisible}) {
     const [groupedProducts, setGroupedProduct] = useState([])
     const [groupedProps, setGroupedProps] = useState([])
     const [groupedSettings, setGroupedSettings] = useState([])
     const [popupShowHide, setPopupShowHide] = useState(seePopup)
-    const [ID, setID] = useState(productId)
     const [state, dispatch] = useReducer(reducer, {
         name: 'Товар',
         srcProduct: '',
@@ -52,16 +62,15 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
             description: productData.DESCRIPTION,
             productPage: productData.DETAIL_PAGE_URL,
             countLike: productData.LIKE?.COUNT_LIKES ?? 0,
-            quantityProduct: productData.ACTUAL_BASKET ?? 0,
-            maxQuantity: productData.PRODUCT?.QUANTITY ?? productData.QUANTITY,
-            price: productData.PRODUCT?.PRICE ?? productData?.PRICE,
+            quantityProduct: productData.PRODUCT?.ACTUAL_BASKET ?? 0,
+            maxQuantity: productData.PRODUCT?.QUANTITY ?? productData.CATALOG_QUANTITY,
+            price: productData.PRODUCT?.PRICE?.split('.')[0] ?? productData?.PRICE?.split('.')[0],
             saleBool: productData.PRODUCT?.SALE_BOOL ?? false,
             salePrice: productData.PRODUCT?.SALE_PRICE ?? 0,
         });
     }
 
     useEffect(() => {
-        setID(productId)
         getProductData({prodId: productId, action: 'fastProduct', groupedProduct: groupedProduct})
     }, [productId]);
 
@@ -82,7 +91,6 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                 setGroupedProduct(productData.GROUPED_PRODUCT.GROUPED_PRODUCTS)
                 setGroupedProps(Object.entries(productData.GROUPED_PRODUCT.GROUPED_PROPS_DATA))
                 setGroupedSettings(productData.GROUPED_PRODUCT.SETTING)
-                setID(productData.ID)
 
                 loaderForSite('', document.querySelector('body'))
             } else if (productData?.error) {
@@ -181,7 +189,6 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                        rounded-full md:py-0 md:px-0 py-3.5 px-1.5 dark:bg-dark md:dark:bg-darkBox
                                        bg-none no-select add2basket cursor-pointer flex items-center justify-center
                                        h-auto md:w-full w-auto removeToBasketOpenWindow"
-                                           data-url={state.srcProduct}
                                            data-product_id={state.id}
                                            data-max-quantity={state.maxQuantity}
                                            id={areaBuy}>
@@ -203,14 +210,12 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                                                    onChange={(e) => {
                                                        // setQuantityProduct(e.target.value)
                                                    }}
-                                                   data-url={state.srcProduct}
                                                    data-product_id={state.id}
                                                    value={state.quantityProduct}/>
                                         </div>
                                         <a className="btn-plus plus_icon no-select add2basket addToBasketOpenWindow
                                        no-select add2basket cursor-pointer flex items-center justify-center rounded-full
                                        md:p-0 p-1.5 dark:bg-dark md:dark:bg-darkBox bg-none h-auto md:w-full w-auto"
-                                           data-url={state.srcProduct}
                                            data-product_id={state.id}
                                            data-max-quantity={state.maxQuantity}
                                            title={'Доступно: ' + state.maxQuantity}
@@ -233,7 +238,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                         </div>
                         {groupedProps.length > 0 ?
                             <div className="flex flex-col mt-5">
-                                <GroupedProducts groupedSettings={groupedSettings} groupedProducts={groupedProducts}
+                                <GroupedProducts propSettings={groupedSettings} listProducts={groupedProducts}
                                                  updateProduct={updateProduct} groupedProps={groupedProps}
                                                  productId={productId}/>
 
