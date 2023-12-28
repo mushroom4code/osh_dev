@@ -2,12 +2,14 @@ import OrderPropLocation from './order_page_properties/OrderPropLocation';
 import OrderPropString from './order_page_properties/OrderPropString';
 import OrderPropEnum from "./order_page_properties/OrderPropEnum";
 import OrderPropDate from "./order_page_properties/OrderPropDate";
-import React, {useEffect, useState} from "react";
+import React, {useContext} from "react";
+import OrderContext from "./Context/OrderContext";
 
-function OrderProp({property, locations, disabled, result, are_locations_prepared}) {
+function OrderProp({property, disabled}) {
+    const {result} = useContext(OrderContext);
     var propertyType = property.getType() || '';
 
-    let classNames = "form-group bx-soa-customer-field flex justify-between flex-wrap pr-2 pb-[23px]";
+    var classNames = "form-group bx-soa-customer-field flex justify-between flex-wrap pr-2 pb-[23px]";
 
     switch (property.getSettings().CODE) {
         case 'EMAIL':
@@ -38,8 +40,7 @@ function OrderProp({property, locations, disabled, result, are_locations_prepare
     const renderProperty = () => {
         switch (propertyType) {
             case 'LOCATION':
-                return(<OrderPropLocation property={property} locations={locations} disabled={disabled}
-                                              are_locations_prepared={are_locations_prepared}/>);
+                return(<OrderPropLocation property={property} disabled={disabled}/>);
             case 'STRING':
                 return(<OrderPropString property={property} disabled={disabled}/>);
             case 'ENUM':

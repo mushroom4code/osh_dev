@@ -135,7 +135,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
 
             this.options.totalPriceChanged = false;
             this.initOptions();
-            this.editOrder();
+            // this.editOrder();
             this.bindEvents();
             // this.show(this.propsBlockNode);
             this.show(this.deliveryBlockNode);
@@ -157,9 +157,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         /**
          * Send ajax request with order data and executes callback by action
          */
-        sendRequest: function (action, actionData) {
+        sendRequest: function (action, actionData, afterUpdate = false) {
             var form;
-
             if (($('input[name="USER_RULES"]').prop('checked') === false ||
                 $('input[name="USER_POLITICS"]').prop('checked') === false) && action === 'saveOrderAjax') {
                 $('input[name="registered"]').attr('style','opacity: 0.65');
@@ -167,7 +166,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 $('#bx-soa-properties').find('.alert.alert-danger').removeAttr('style')
                     .text('Примите условия соглашений в конце страницы');
                 this.animateScrollTo($("#bx-soa-properties .alert.alert-danger"));
-
             }
 
             if (!this.startLoader())
@@ -206,7 +204,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                         this.saveFiles();
                         switch (eventArgs.action) {
                             case 'refreshOrderAjax':
-                                this.refreshOrder(result);
+                                this.refreshOrder(result, afterUpdate);
                                 break;
                             case 'confirmSmsCode':
                             case 'showAuthForm':
@@ -276,7 +274,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         /**
          * Refreshes order via json data from ajax request
          */
-        refreshOrder: function (result) {
+        refreshOrder: function (result, afterUpdate = false) {
+            if(afterUpdate) {
+                afterUpdate(result);
+            }
             if (result.error) {
                 this.showError(this.mainErrorsNode, result.error);
                 this.animateScrollTo(this.mainErrorsNode, 800, 20);
@@ -313,7 +314,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 this.deliveryLocationInfo = {};
                 this.initialized = {};
                 this.initOptions();
-                this.editOrder();
+                // this.editOrder();
                 this.mapsReady && this.initMaps();
                 // BX.saleOrderAjax && BX.saleOrderAjax.initDeferredControl();
             }
@@ -2043,10 +2044,10 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 return;
             if (this.result.DELIVERY.length > 0) {
                 BX.addClass(this.deliveryBlockNode, 'bx-active');
-                this.deliveryBlockNode.removeAttribute('style');
+                // this.deliveryBlockNode.removeAttribute('style');
             } else {
                 BX.removeClass(this.deliveryBlockNode, 'bx-active');
-                this.deliveryBlockNode.style.display = 'none';
+                // this.deliveryBlockNode.style.display = 'none';
             }
 
             // this.orderSaveBlockNode.style.display = this.result.SHOW_AUTH ? 'none' : '';
@@ -4081,7 +4082,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         },
 
         editActivePaySystemBlock: function (activeNodeMode) {
-            console.log('now im watching');
             var node = activeNodeMode ? this.paySystemBlockNode : this.paySystemHiddenBlockNode,
                 paySystemContent, paySystemNode;
 
@@ -4453,7 +4453,6 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         },
 
         editActiveDeliveryBlock: function (activeNodeMode) {
-            console.log('uuuuuuuuuuu');
             var node = activeNodeMode ? this.deliveryBlockNode : this.deliveryHiddenBlockNode,
                 deliveryContent, deliveryNode;
 
