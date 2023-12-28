@@ -1856,4 +1856,3 @@ function showHidePasswd(item) {
     parentBox.querySelector('[data-type="text"]').classList.toggle('hidden')
     parentBox.querySelector('[data-type="password"]').classList.toggle('hidden')
 }
-

@@ -9,86 +9,99 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("Для бизнеса");
 Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js"); ?>
 <div id="content_box_business " class="static">
-    <h1 class="text-3xl my-5 font-semibold dark:font-medium text-textLight dark:text-textDarkLightGray">
+    <h1 class="text-3xl my-5 font-bold dark:font-medium text-textLight dark:text-textDarkLightGray">
         Для бизнеса
     </h1>
-    <div class="flex flex-col">
-        <div class="mb-6">
-            <h4 class="mb-5 text-xl font-semibold dark:font-medium text-textLight dark:text-textDarkLightGray ">
-                Компания OSHISHA - официальный дистрибьютор табачной<br> и бестабачной
-                продукции, оборудования, аксессуаров<br>
-                и комплектующих для кальянов.
-            </h4>
-            <h4 class="flex flex-row items-center mb-5 text-lg font-semibold dark:font-medium text-textLight dark:text-textDarkLightGray">
+    <div class="flex flex-col mt-10">
+        <h4 class="mb-16 text-2xl font-semibold dark:font-medium text-textLight dark:text-textDarkLightGray">
+            Компания OSHISHA - официальный дистрибьютор табачной<br> и бестабачной
+            продукции, оборудования, аксессуаров<br>
+            и комплектующих для кальянов.
+        </h4>
+        <div class="mb-14">
+            <h4 class="flex flex-row items-center mb-8 text-2xl font-semibold dark:font-medium text-textLight
+            dark:text-textDarkLightGray">
                 <img src="/local/assets/images/icon_location.svg" class="icon_for_bussines mr-4">
                 Наши ценности
             </h4>
             <div class="flex flex-row justify-between">
                 <div class="flex w-1/3 flex-col mb-3 items-center">
-                    <img width="150" height="150" src="/local/templates/Oshisha/images/honesty.png" alt="oshisha">
-                    <span class="flex items-center justify-center mt-3">
+                    <img width="150" height="150" src="/local/templates/Oshisha/images/honesty.png"
+                         class="invert-0 dark:invert" alt="oshisha">
+                    <span class="flex items-center justify-center mt-3 text-md font-normal text-textLight
+                     dark:text-textDarkLightGray">
                         Деятельность в рамках законодательства
                     </span>
                 </div>
                 <div class="flex w-1/3 flex-col mb-3 items-center">
-                    <img width="150" height="150" src="/local/templates/Oshisha/images/automation.png" alt="oshisha">
-                    <span class="flex items-center justify-center mt-3">
+                    <img width="150" height="150" class="invert-0 dark:invert"
+                         src="/local/templates/Oshisha/images/automation.png"
+                         alt="oshisha">
+                    <span class="flex items-center justify-center mt-3 text-md text-textLight font-normal
+                    dark:text-textDarkLightGray">
                             Автоматизация бизнес-процессов</span>
                 </div>
                 <div class="flex w-1/3 flex-col mb-3 items-center">
-                    <img width="150" height="150" src="/local/templates/Oshisha/images/display.png" alt="oshisha">
-                    <span class="flex items-center justify-center mt-3">Прозрачное партнёрство</span>
+                    <img width="150" height="150" src="/local/templates/Oshisha/images/display.png"
+                         class="invert-0 dark:invert" alt="oshisha">
+                    <span class="flex items-center justify-center mt-3 text-md text-textLight font-normal
+                     dark:text-textDarkLightGray">Прозрачное партнёрство</span>
                 </div>
             </div>
         </div>
-        <div class="mb-6">
-            <h4 class="flex flex-row items-center mb-5 text-lg font-semibold dark:font-medium text-textLight dark:text-textDarkLightGray">
+        <div class="mb-14">
+            <h4 class="flex flex-row items-center mb-8 text-2xl font-semibold dark:font-medium text-textLight
+            dark:text-textDarkLightGray">
                 <img src="/local/assets/images/icon_location.svg" class="icon_for_bussines mr-4">
                 Мы обеспечиваем
             </h4>
-            <div class="flex justify-between box_text">
+            <div class="flex justify-between flex-row">
                 <div class="flex flex-col w-1/3 justify-between">
-                    <p class="box_text_business mb-4 first_for_bussiness">
-                        <strong>Активные продажи </strong>&nbsp через торговых представителей с постановкой и
+                    <p class="p-5 rounded-lg bg-textDarkLightGray dark:bg-darkBox mr-5 mb-5 h-full font-normal dark:font-light">
+                        <span class="font-semibold dark:font-medium">Активные продажи </span>
+                        &nbsp через торговых представителей с постановкой и
                         контролем задач через приложение “Мобильная торговля”.
                     </p>
-                    <div class="flex justify-center box_picture_info mb-3 items-center">
-                        <p class="box_text_business text_for_bussiness second_for_bussines">
-                            <strong> Количественную и качественную дистрибьюцию.</strong>
+                    <div class="flex justify-center items-center p-5 rounded-lg bg-textDarkLightGray
+                    dark:bg-darkBox mr-5 mb-5">
+                        <p class="text-sm font-semibold dark:font-medium">
+                            Количественную и качественную дистрибьюцию.
                         </p>
                     </div>
                 </div>
-                <div class="flex flex-col w-1/3 justify-between ">
-                    <p class="box_text_business mb-4 first_for_bussiness">
-                        <strong>Работу товаропроводящей цепочки</strong>&nbsp через каналы сбыта (кальянные заведения,
+                <div class="flex flex-col w-1/3 justify-between">
+                    <p class="p-5 rounded-lg bg-textDarkLightGray dark:bg-darkBox mr-5 mb-5 h-full font-normal dark:font-light">
+                        <span class="font-semibold dark:font-medium">Работу товаропроводящей цепочки</span>
+                        &nbsp через каналы сбыта (кальянные заведения,
                         специализированные магазины, торговые сети HoReCa и магазины, оптовые клиенты, табачный
                         retail,
                         торговая площадка для розничных клиентов).
                     </p>
-                    <div class="flex justify-center box_picture_info mb-3 items-center">
-                        <p class="box_text_business text_for_bussiness second_for_bussines">
-                            <strong> Проведение трейд-маркетинговых мероприятий.</strong>
-                        </p>
+                    <div class="flex justify-center items-center p-5 rounded-lg bg-textDarkLightGray
+                    dark:bg-darkBox mr-5 mb-5">
+                        <p class="text-sm font-semibold dark:font-medium">Проведение трейд-маркетинговых мероприятий.</p>
                     </div>
                 </div>
                 <div class="w-1/3 flex flex-col justify-between">
-                    <p class="box_text_business  first_for_bussiness mb-4">
-                        <strong>Систему мотивации</strong>&nbsp для торговых точек, продавцов, кальянных мастеров,
+                    <p class="p-5 rounded-lg bg-textDarkLightGray dark:bg-darkBox mr-5 mb-5 h-full font-normal dark:font-light">
+                        <span class="font-semibold dark:font-medium">Систему мотивации</span>
+                        &nbsp для торговых точек, продавцов, кальянных мастеров,
                         розничных
                         клиентов.
                         Масштабирование уже отлаженных бизнес-процессов.
                     </p>
-                    <div class="flex justify-center box_picture_info mb-3 items-center">
-                        <p class="box_text_business text_for_bussiness second_for_bussines">
-                            <strong> Территориальное покрытие по всей России.</strong>
-                        </p>
+                    <div class="flex justify-center items-center p-5 rounded-lg bg-textDarkLightGray
+                    dark:bg-darkBox mr-5 mb-5">
+                        <p class="text-sm font-semibold dark:font-medium"> Территориальное покрытие по всей России.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div id="delivery_payment" class="mb-6">
-        <h4 class="h4-for_bussines">Эксклюзивные партнёры</h4>
+        <h4 class="text-3xl my-5 font-semibold dark:font-medium text-textLight dark:text-textDarkLightGray">
+            Эксклюзивные партнёры
+        </h4>
         <div>
             <div class="brands_boxes">
                 <?php
@@ -96,13 +109,15 @@ Asset::getInstance()->addJS("https://www.google.com/recaptcha/api.js"); ?>
                     'select' => array('ID', 'UF_FILE', 'UF_LINK'),
                     'limit' => '50',
                 );
-
                 $resGetHLB = Enterego\EnteregoHelper::getHeadBlock('BrandReference', $arParams); ?>
-                <div class="box_with_brands_parents row">
+                <div class="box_with_brands_parents flex flex-row flex-wrap">
                     <?php foreach ($resGetHLB as $item) { ?>
-                        <div class="box_with_brands w-1/4 ">
-                            <a href="<?php echo $item['UF_LINK']; ?>" class="link_brands"><img
-                                        src="<?php echo $item['UF_FILE']; ?>" alt="Partners"/></a>
+                        <div class="box_with_brands p-5 mr-3 mb-3 w-48 h-32 rounded-lg bg-textDarkLightGray dark:bg-darkBox">
+                            <a href="<?php echo $item['UF_LINK']; ?>"
+                               class="link_brands">
+                                <img src="<?php echo $item['UF_FILE']; ?>" class="rounded-lg w-full h-full"
+                                     alt="Partners"/>
+                            </a>
                         </div>
                     <?php } ?>
                 </div>
