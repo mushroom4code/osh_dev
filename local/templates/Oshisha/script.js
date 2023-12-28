@@ -1729,47 +1729,55 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
         selectedPropData[groupKey] = JSON.parse($(elems).attr('data-prop_group'));
     });
 
+
     $.each(arrProductGrouped, function (prod_id, item) {
 
         $.each(item.PROPERTIES, function (k, props) {
-            if (k !== 'USE_DISCOUNT' && props?.JS_PROP !== undefined && selectedPropData[k] !== undefined &&
-                Object.keys(props?.JS_PROP)?.length === Object.keys(selectedPropData[k])?.length) {
-                $.each(props.JS_PROP, function (key, jsProp) {
-                    let propList = selectedPropData[k][key];
-                    let priority = -1;
+            if (k !== 'USE_DISCOUNT' && props?.JS_PROP !== undefined && selectedPropData[k] !== undefined) {
+                if (Object.keys(props?.JS_PROP)?.length === Object.keys(selectedPropData[k])?.length) {
+                    $.each(props.JS_PROP, function (key, jsProp) {
+                        let propList = selectedPropData[k][key];
+                        let priority = -1;
 
-                    if (propList !== undefined && jsProp?.VALUE_ENUM === propList?.VALUE_ENUM) {
-                        if (propCodePriority === k) {
-                            priority = 1;
-                        }
-                        if (productsSuccess.length <= 0) {
-                            let itemPush = {
-                                id: parseInt(prod_id),
-                                code: item?.CODE,
-                                pr: 1 + priority,
+                        if (propList !== undefined && jsProp?.VALUE_ENUM === propList?.VALUE_ENUM) {
+                            if (propCodePriority === k) {
+                                priority = 1;
                             }
-                            productsSuccess.push(itemPush)
-                        } else {
-                            $.each(productsSuccess, function (iProd, product) {
-                                if (parseInt(product.id) === parseInt(prod_id)) {
-                                    product.pr = product.pr + 1 + priority;
-                                } else {
-                                    let productSearch = productsSuccess.filter(item => parseInt(item.id) === parseInt(prod_id));
-                                    if (productSearch.length === 0) {
-                                        let itemPush = {
-                                            id: parseInt(prod_id),
-                                            code: item?.CODE,
-                                            pr: 1 + priority,
-                                        }
-                                        productsSuccess.push(itemPush)
-                                    } else {
-                                        product.pr = product.pr + 1 + priority;
-                                    }
+                            if (productsSuccess.length <= 0) {
+                                let itemPush = {
+                                    id: parseInt(prod_id),
+                                    code: item?.CODE,
+                                    pr: 1 + priority,
                                 }
-                            });
+                                productsSuccess.push(itemPush)
+                            } else {
+                                $.each(productsSuccess, function (iProd, product) {
+                                    if (parseInt(product.id) === parseInt(prod_id)) {
+                                        product.pr = product.pr + 1 + priority;
+                                    } else {
+                                        let productSearch = productsSuccess.filter(item => parseInt(item.id) === parseInt(prod_id));
+                                        if (productSearch.length === 0) {
+                                            let itemPush = {
+                                                id: parseInt(prod_id),
+                                                code: item?.CODE,
+                                                pr: 1 + priority,
+                                            }
+                                            productsSuccess.push(itemPush)
+                                        } else {
+                                            product.pr = product.pr + 1 + priority;
+                                        }
+                                    }
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    productsSuccess.push({
+                        id: parseInt(prod_id),
+                        code: item?.CODE,
+                        pr: 0,
+                    })
+                }
             }
         });
     });
@@ -1777,6 +1785,7 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
     if (productsSuccess.length > 0) {
         productsSuccess.sort((a, b) => a.pr < b.pr ? 1 : -1)
     }
+
     return productsSuccess;
 }
 
