@@ -369,8 +369,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                                  class="mr-2 offer-box color-hookah br-10 mb-1 <?= $select ?>">
                                                                 <img src="<?= $prop['PREVIEW_PICTURE'] ?>"
                                                                      class="w-20 h-20 rounded-md dark:border-0 border-2
-                                                                     <?= $select ? 'dark:opacity-50 border-textDarkLightGray'
-                                                                         : 'border-light-red' ?>"
+                                                                     <?= $select ? 'border-light-red'
+                                                                         : 'dark:opacity-50 border-textDarkLightGray' ?>"
                                                                      alt="<?= $title ?>"
                                                                      loading="lazy"/>
                                                             </div>

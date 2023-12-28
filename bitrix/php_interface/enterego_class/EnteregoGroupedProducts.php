@@ -53,7 +53,7 @@ class EnteregoGroupedProducts
         return $arData;
     }
 
-    public static function getListGroupedProduct($prodId, $listGroupedProduct, &$item): array
+    public static function getListGroupedProduct($prodId, $listGroupedProduct, &$item, $useDiscount = true): array
     {
 
         if (!empty($listGroupedProduct)) {
@@ -88,7 +88,9 @@ class EnteregoGroupedProducts
                 )->Fetch();
 
                 $elem = &$item['GROUPED_PRODUCTS'][$elemProp];
-                $refPropsCode[] = 'USE_DISCOUNT';
+                if ($useDiscount) {
+                    $refPropsCode[] = 'USE_DISCOUNT';
+                }
                 $elemProp === $prodId ? $elem['SELECTED'] = 'selected' : $elem['SELECTED'] = '';
                 $elem['ACTUAL_BASKET'] = 0;
                 if (!empty($elem) && (int)$elem['CATALOG_QUANTITY'] > 0 && $elem['ACTIVE'] === 'Y') {

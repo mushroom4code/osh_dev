@@ -31,10 +31,10 @@ $action = $jsonList->get('action');
  */
 function getGroupedProduct($prodId, $listGroupedProduct, $arItems)
 {
-    $prices = $rsPrice = [];
+    $prices = [];
     $arItems['GROUPED_PRODUCTS'] = $arItems['GROUPED_PROPS_DATA'] = $arResult = [];
     if (!empty($prodId)) {
-        $arResult = EnteregoGroupedProducts::getListGroupedProduct($prodId, $listGroupedProduct, $arItems);
+        $arResult = EnteregoGroupedProducts::getListGroupedProduct($prodId, $listGroupedProduct, $arItems,false);
         $arResult['SETTING'] = EnteregoGroupedProducts::getDataPropOffers();
         $arResult['PRICE_GREAT'] = BASIC_PRICE;
         $arResult['SALE'] = USE_CUSTOM_SALE_PRICE;
@@ -54,11 +54,11 @@ function getGroupedProduct($prodId, $listGroupedProduct, $arItems)
         foreach ($prices as $productId => $product) {
             if (isset($arResult['GROUPED_PRODUCTS'][$productId])) {
                 try {
-                    $useDiscount = $arResult['GROUPED_PRODUCTS'][$productId]['PROPERTIES']['USE_DISCOUNT']['VALUE_XML_ID'];
-                    $arResult['GROUPED_PRODUCTS'][$productId]['PRICES'] =
-                        EnteregoBasket::getPricesArForProductTemplate($product, $useDiscount, $productId);
+                    $useDiscount = $arResult['GROUPED_PRODUCTS'][$productId]['PROPERTIES']['USE_DISCOUNT']['VALUE_XML_ID'] ?? false;
+                    $arResult['GROUPED_PRODUCTS'][$productId]['PRODUCT']['PRICE'] =
+                        EnteregoBasket::getPricesArForProductTemplate($product, $useDiscount, $productId)['PRICE_DATA']['PRICE'];
                 } catch (SqlQueryException|LoaderException $e) {
-                    $arResult['GROUPED_PRODUCTS'][$productId]['PRICES'] = [];
+                    $arResult['GROUPED_PRODUCTS'][$productId]['PRODUCT']['PRICE'] = [];
                 }
             }
         }
@@ -72,7 +72,7 @@ function getGroupedProduct($prodId, $listGroupedProduct, $arItems)
         );
         while ($arItems = $dbBasketItems->Fetch()) {
             if (isset($arResult['GROUPED_PRODUCTS'][$arItems["PRODUCT_ID"]])) {
-                $arResult['GROUPED_PRODUCTS'][$arItems["PRODUCT_ID"]]['ACTUAL_BASKET'] = $arItems["QUANTITY"];
+                $arResult['GROUPED_PRODUCTS'][$arItems["PRODUCT_ID"]]['PRODUCT']['ACTUAL_BASKET'] = $arItems["QUANTITY"];
             }
         }
     }
