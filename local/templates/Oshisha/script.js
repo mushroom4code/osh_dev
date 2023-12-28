@@ -1721,7 +1721,6 @@ $(document).on('click', '.js__close-count-alert', function () {
 function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority = '') {
     const selectedPropData = {};
     const productsSuccess = [];
-
     /** Перебор выбранных свой-в с получением группы значений для общего поиска */
     const selectedProp = $(document).find('.offer-link.selected');
     $.each(selectedProp, function (i_prop, selectProp) {
@@ -1733,10 +1732,10 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
     $.each(arrProductGrouped, function (prod_id, item) {
 
         $.each(item.PROPERTIES, function (k, props) {
-            if (props?.JS_PROP !== undefined && k !== 'USE_DISCOUNT' &&
-                Object.keys(props?.JS_PROP).length === Object.keys(selectedPropData[k]).length) {
+            if (k !== 'USE_DISCOUNT' && props?.JS_PROP !== undefined && selectedPropData[k] !== undefined &&
+                Object.keys(props?.JS_PROP)?.length === Object.keys(selectedPropData[k])?.length) {
                 $.each(props.JS_PROP, function (key, jsProp) {
-                    let propList = selectedPropData[k][key] ?? selectedPropData[k];
+                    let propList = selectedPropData[k][key];
                     let priority = -1;
 
                     if (propList !== undefined && jsProp?.VALUE_ENUM === propList?.VALUE_ENUM) {
@@ -1746,7 +1745,7 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
                         if (productsSuccess.length <= 0) {
                             let itemPush = {
                                 id: parseInt(prod_id),
-                                code: propList?.CODE,
+                                code: item?.CODE,
                                 pr: 1 + priority,
                             }
                             productsSuccess.push(itemPush)
@@ -1759,7 +1758,7 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
                                     if (productSearch.length === 0) {
                                         let itemPush = {
                                             id: parseInt(prod_id),
-                                            code: propList.CODE,
+                                            code: item?.CODE,
                                             pr: 1 + priority,
                                         }
                                         productsSuccess.push(itemPush)
@@ -1774,11 +1773,10 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
             }
         });
     });
-    console.log(productsSuccess)
+
     if (productsSuccess.length > 0) {
         productsSuccess.sort((a, b) => a.pr < b.pr ? 1 : -1)
     }
-    console.log(productsSuccess)
     return productsSuccess;
 }
 

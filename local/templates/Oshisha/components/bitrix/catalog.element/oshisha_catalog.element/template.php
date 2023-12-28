@@ -346,10 +346,12 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                             <a href="<?= $link ?>" class="offer-link <?= $select ?>">
                                                                 <div class="red_button_cart w-fit rounded-full px-5 py-2
                                                                 bg-white border-2 <?= !empty($select)
-                                                                    ? 'border-light-red text-light-red dark:bg-grayButton dark:text-white' :
-                                                                    'border-textDarkLightGray text-dark dark:text-textDarkLightGray dark:bg-darkBox' ?>
+                                                                    ? ' border-light-red text-light-red dark:border-white
+                                                                     dark:bg-grayButton dark:text-white dark:border' :
+                                                                    ' border-textDarkLightGray text-dark
+                                                                     dark:text-textDarkLightGray dark:bg-darkBox dark:border-0' ?>
                                                                      min-w-20 m-1 offer-box cursor-pointer font-medium
-                                                                     dark:border-0 dark:font-normal text-sm font-bolder"
+                                                                     dark:font-normal text-sm font-bolder"
                                                                      title="<?= $offer['NAME'] ?>"
                                                                      data-active="<?= !empty($select) ? 'true' : 'false' ?>"
                                                                      data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
@@ -366,10 +368,10 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                                  data-prop_group="<?= htmlspecialchars(json_encode($group)) ?>"
                                                                  data-prop_code="<?= $keyCODE ?>"
                                                                  data-onevalue="<?= $prop['VALUE_ENUM_ID'] ?>"
-                                                                 class="mr-2 offer-box color-hookah br-10 mb-1 <?= $select ?>">
+                                                                 class="mr-2 offer-box color-hookah br-10 mb-1 <?= $select ?> ">
                                                                 <img src="<?= $prop['PREVIEW_PICTURE'] ?>"
                                                                      class="w-20 h-20 rounded-md dark:border-0 border-2
-                                                                     <?= $select ? 'border-light-red'
+                                                                     <?= $select ? 'border-light-red '
                                                                          : 'dark:opacity-50 border-textDarkLightGray' ?>"
                                                                      alt="<?= $title ?>"
                                                                      loading="lazy"/>
@@ -381,7 +383,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                                 <div class="red_button_cart taste variation_taste
                                                                  w-fit p-3 mb-2 mr-1 offer-box rounded-md flex flex-row
                                                                     border-2 <?= !empty($select) ? 'border-light-red
-                                                                     dark:border-grayButton dark:border dark:bg-grayButton' :
+                                                                     dark:border-white dark:border dark:bg-grayButton' :
                                                                     'border-textDarkLightGray dark:border-0' ?> min-w-20 offer-box
                                                                     cursor-pointer dark:bg-darkBox"
                                                                      title="<?= $title ?>"
