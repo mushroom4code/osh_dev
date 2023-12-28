@@ -4,18 +4,7 @@ import GroupedProducts from "./GroupedProducts";
 
 function reducer(state, action) {
     if (action.type === 'update_product') {
-        return {
-            name: action.name,
-            srcProduct: action.srcProduct,
-            description: action.description,
-            productPage: action.productPage,
-            countLike: action.countLike ?? 0,
-            quantityProduct: action.quantityProduct ?? 0,
-            maxQuantity: action.maxQuantity ?? 0,
-            price: action.price ?? 0,
-            saleBool: action.saleBool,
-            salePrice: action.salePrice ?? 0,
-        };
+        return { ...state, ...action }
     } else if (action.type === 'update_quantity') {
         return {
             quantityProduct: action.quantityProduct,
@@ -42,6 +31,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
     const [popupShowHide, setPopupShowHide] = useState(seePopup)
     const [state, dispatch] = useReducer(reducer, {
         name: 'Товар',
+        properties: {},
         srcProduct: '',
         description: '',
         productPage: '/',
@@ -56,6 +46,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
     const updateProduct = (productData) => {
         dispatch({
             type: 'update_product',
+            properties: productData.PROPERTIES,
             id: productData.ID,
             name: productData.NAME,
             srcProduct: productData.PREVIEW_PICTURE,
@@ -240,7 +231,7 @@ function CatalogProductPopup({productId, areaBuyQuantity, areaBuy, groupedProduc
                             <div className="flex flex-col mt-5">
                                 <GroupedProducts propSettings={groupedSettings} listProducts={groupedProducts}
                                                  updateProduct={updateProduct} groupedProps={groupedProps}
-                                                 productId={productId}/>
+                                                 productId={productId} selectProductProperties={state?.properties}/>
 
                             </div>
                             : <></>

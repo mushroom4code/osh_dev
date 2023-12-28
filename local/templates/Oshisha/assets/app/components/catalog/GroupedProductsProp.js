@@ -114,7 +114,7 @@ function GroupedProductsPropValue({
  * @constructor
  */
 function GroupedProductsProp({
-                                 propSettings, props, productId, listProducts, updateProduct,
+                                 propSettings, props, listProducts, updateProduct,
                                  setCode, selectPropValue, setActiveGroup,
                              }) {
 
@@ -128,14 +128,12 @@ function GroupedProductsProp({
             return <></>
         }
 
-        if (selectPropValue.findIndex(item => item.prop === props[0]) === -1) {
-            setActiveGroup(listProducts[productId].PROPERTIES[propData.CODE].JS_PROP);
-        }
         return (
             selectPropValue.length > 0 ?
                 <div className="flex flex-row mb-4">
                     {dataProps.map((group, g_key) => {
                         const select = selectPropValue.find(item => arrayDiff(item.group, group) && item.prop === props[0]) !== undefined
+
                         return <GroupedProductsPropValue
                             key={g_key} select={select} propData={propData}
                             listProducts={listProducts} selectPropValue={selectPropValue}

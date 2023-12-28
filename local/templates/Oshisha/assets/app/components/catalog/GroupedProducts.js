@@ -11,19 +11,18 @@ import GroupedProductsProp from "./GroupedProductsProp";
  * @returns {*|JSX.Element}
  * @constructor
  */
-function GroupedProducts({propSettings, listProducts, groupedProps, updateProduct, productId}) {
+function GroupedProducts({propSettings, listProducts, groupedProps, updateProduct, productId, selectProductProperties}) {
 
     const [selectPropValue, setSelectPropValue] = useState([])
     const [code, setCode] = useState('')
 
     useEffect(() => {
         if (selectPropValue.length > 0 && code !== '') {
+
             const productsSuccess = sortOnPriorityArDataProducts(listProducts, code);
-            console.log(productsSuccess)
             if(productsSuccess.length > 0){
                 const productResult = listProducts[productsSuccess[0].id];
                 updateProduct(productResult);
-                console.log(Object.entries(productResult.PROPERTIES))
             }
             // Object.entries(productResult.PROPERTIES).map((propertyData,key)=>{
             //     console.log(propertyData)
@@ -37,6 +36,10 @@ function GroupedProducts({propSettings, listProducts, groupedProps, updateProduc
 
     }, [selectPropValue]);
 
+    useEffect(() => {
+
+    }, []);
+    console.log('test rec')
     const setActiveGroup = (group) => {
             setSelectPropValue(prev => {
                 const index = prev.findIndex(item => item.prop === code);
@@ -48,12 +51,18 @@ function GroupedProducts({propSettings, listProducts, groupedProps, updateProduc
             })
     }
 
+    console.log(groupedProps)
+
+    // const propData = propSettings[props[0]];
+    // if (selectPropValue.findIndex(item => item.prop === props[0]) === -1) {
+    //     setActiveGroup(listProducts[productId].PROPERTIES[propData.CODE].JS_PROP);
+    // }
     return (
         groupedProps.length > 0 ?
             groupedProps.map((props, pr_key) =>
-                <GroupedProductsProp key={pr_key} props={props} listProducts={listProducts} setActiveGroup={setActiveGroup}
+                <GroupedProductsProp key={pr_key} props={props} listProducts={listProducts}
                                      propSettings={propSettings} updateProduct={updateProduct}
-                                     productId={productId} selectPropValue={selectPropValue} setCode={setCode}/>
+                                     selectPropValue={selectProductProperties} setCode={setCode}/>
             )
             : <></>
     )
