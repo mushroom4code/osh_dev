@@ -1,7 +1,9 @@
 <?php
 
 use Bitrix\Iblock\IblockSiteTable;
+use Bitrix\Main\Application;
 use Bitrix\Main\ArgumentException;
+use Bitrix\Main\DB\SqlQueryException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 
@@ -35,6 +37,7 @@ function addNewSubsidiary(string $mainSite, string $subSite): bool
         return false;
     }
 
+    //block
     $arMainBlock = [];
     $rsMainBlock =  IblockSiteTable::getList(['filter'=> ['SITE_ID'=>$mainSite]]);
     while ($iBlock = $rsMainBlock->fetch()) {
@@ -53,5 +56,45 @@ function addNewSubsidiary(string $mainSite, string $subSite): bool
         }
     }
 
+    //contract
+    copyRecordsForSubsidiary($mainSite, $subSite, 'b_adv_contract_2_site', 'CONTRACT_ID');
+
+    //banners
+    copyRecordsForSubsidiary($mainSite, $subSite, 'b_adv_banner_2_site', 'BANNER_ID');
+
     return true;
+}
+
+/** copy records with site id relations with native sql
+ *
+ * @param string $mainSite
+ * @param string $subSite
+ * @param string $tableName
+ * @param string $fieldName
+ * @return void
+ * @throws SqlQueryException
+ */
+function copyRecordsForSubsidiary(string $mainSite, string $subSite, string $tableName, string $fieldName): void
+{
+    $connection = Application::getConnection();
+
+    $arMain = [];
+    $result = $connection->query("SELECT * FROM $tableName WHERE SITE_ID = '$mainSite'");
+    while ($arResult = $result->fetch()) {
+        $arMain[] =$arResult[$fieldName];
+    }
+
+    $arSub = [];
+    $result = $connection->query("SELECT * FROM $tableName WHERE SITE_ID = '$subSite'");
+    while ($arResult = $result->fetch()) {
+        $arSub[] =$arResult[$fieldName];
+    }
+
+    foreach ($arMain as $item) {
+        if (!in_array($item, $arSub)) {
+
+            $connection->query("INSERT INTO $tableName ($fieldName, SITE_ID) 
+                VALUES ($item, '$subSite')");
+        }
+    }
 }
