@@ -1304,12 +1304,14 @@ function drawFileRow(fls, index) {
 
         if (Object.keys(uploadFiles).length < 10) {
             $('.file-list').append(
-                '<li class="upload-file-item" data-index="' + j + '">' +
-                '<span class="image-box">' + f.name + '</span>' +
-                '<span class="file-remove">x</span>' +
+                '<li class="upload-file-item p-2 w-24 h-24 border border-gray-900/25 dark:border-grayButton bg-white ' +
+                'dark:bg-grayButton rounded-md relative mr-2 mb-3"' +
+                ' data-index="' + j + '">' +
+                '<span class="image-box text-xs line-clamp-5 text-tagFilterGray dark:text-whiteOpacity">' + f.name + '</span>' +
+                '<span class="file-remove absolute -top-2 -right-2 py-1 px-2 rounded-full bg-white text-xs ' +
+                'cursor-pointer dark:bg-tagFilterGray" title="Удалить">x</span>' +
                 '</li>'
             );
-
             uploadFiles[j] = f;
         }
     }
