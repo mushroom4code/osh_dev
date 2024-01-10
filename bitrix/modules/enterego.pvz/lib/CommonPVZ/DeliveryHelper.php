@@ -431,11 +431,14 @@ class DeliveryHelper
         $cAsset = Asset::getInstance();
 
         $apiKey = htmlspecialcharsbx(Option::get('enterego.pvz','Oshisha_ymapskey', ''));
+        $apiSuggestKey = htmlspecialcharsbx(Option::get('enterego.pvz',
+            'Oshisha_ymaps_suggest_apikey', ''));
         $locale = 'ru-RU';
         if (empty($apiKey)) {
             Asset::getInstance()->addJs('//api-maps.yandex.ru/2.1.79/?load=package.standard&mode=release&lang=' . $locale);
         } else {
-            Asset::getInstance()->addJs('///api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey . '&lang=' . $locale);
+            Asset::getInstance()->addJs('///api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey
+                . '&suggest_apikey='. $apiSuggestKey .  '&lang=' . $locale);
         }
 
         $cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);

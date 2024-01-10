@@ -500,8 +500,8 @@ window.commonDelivery.oshMkadDistanceObject = function oshMkadDistanceObject(par
         let resultMessage = template.replace('{delivery_price}', delivery_price)
             .replace('{delivery_address}', delivery_address)
 
-        balloon = myMap.balloon.open(d, resultMessage);
-
+            balloon.setData({ content: resultMessage });
+            balloon.open(d);
     };
 
     selfObj.showResultPath = function (result, d, delivery_address = '', noMarkupMessage = '') {
