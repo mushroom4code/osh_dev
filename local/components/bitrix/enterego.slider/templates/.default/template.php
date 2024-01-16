@@ -192,6 +192,7 @@ $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent(
                 arrows: true,
                 infinite: false,
                 variableWidth: variableWidth,
+                centerMode: false,
                 prevArrow: '<span class="new_custom_button_slick_left_cat"  aria-hidden="true"><i class="fa fa-angle-left"'
                     + ' aria-hidden="true"></i></span>',
                 nextArrow: '<span class="new_custom_button_slick_right_cat" aria-hidden="true"><i class="fa fa-angle-right"'

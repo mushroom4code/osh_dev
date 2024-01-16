@@ -1,4 +1,4 @@
-<div class="col-md-6 col-sm-6 col-lg-6 product_left col-12">
+<div class="product_left d-flex flex-column col-md-6 col-sm-6 col-lg-6 col-12">
 	<div class="product-item-detail-slider-container <?php if (!empty($taste['VALUE'])) { ?> p-lg-md-25
                     <?php } ?>" id="<?= $itemIds['BIG_SLIDER_ID'] ?>">
 		<div class="variation_taste" style="max-width: 10%; height: 90%">
@@ -86,17 +86,18 @@
 				</a>
 			</div>
 		</div>
-		<div class="product-item-detail-slider-controls-block margin_block_element"
-		     id="<?= $itemIds['SLIDER_CONT_ID'] ?>">
-			<?php if (!empty($actualItem['PICTURE']) && count($actualItem['PICTURE']) > 1) {
-				foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
-					<div
-						class="product-item-detail-slider-controls-image<?= ($key == 0 ? ' active' : '') ?>"
-						data-entity="slider-control" data-value="<?= $photo['ID'] ?>">
-						<img src="<?= $photo['SRC'] ?>">
-					</div>
-				<?php }
-			} ?>
-		</div>
 	</div>
+
+    <?php if (!empty($actualItem['PICTURE']) && count($actualItem['PICTURE']) > 1) { ?>
+        <div class="mt-3" id="<?= $itemIds['SLIDER_CONT_ID'] ?>">
+            <? foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
+                <div
+                        class="product-item-detail-slider-controls-image<?= ($key == 0 ? ' active' : '') ?>"
+                        data-entity="slider-control" data-value="<?= $photo['ID'] ?>">
+                    <img src="<?= $photo['SRC'] ?>">
+                </div>
+            <?php } ?>
+        </div>
+    <? } ?>
+
 </div>

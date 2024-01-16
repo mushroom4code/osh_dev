@@ -117,11 +117,6 @@
     font-size: 14px;
 }
 
-.tab-content {
-    margin-bottom: 5rem;
-    width: 80%;
-}
-
 .nav-item .nav-link {
     z-index: 1000;
     top: 10%;
@@ -566,7 +561,7 @@
     box-sizing: border-box;
     border-radius: 15px;
     height: 100%;
-    min-height: 500px;
+    min-height: 400px;
 }
 
 .margin_block_element {

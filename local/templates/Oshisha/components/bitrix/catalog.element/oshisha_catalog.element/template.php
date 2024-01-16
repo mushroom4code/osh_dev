@@ -216,7 +216,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
         <?php if ($rowResHidePrice == 'Нет' && !empty($option_site->text_rospetrebnadzor_product)) { ?>
             <p class="font-14  mb-lg-4  mb-md-4 mb-2"><?= $option_site->text_rospetrebnadzor_product; ?></p>
         <?php } ?>
-        <div class="box_with_photo_product row">
+        <div class="row">
             <?php $count = count($actualItem['PICTURE']);
             $arraySlider = $actualItem['PICTURE'];
             require_once(__DIR__ . '/slider/template.php'); ?>
@@ -574,14 +574,14 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                             <span></span>
                             <p>Наличие товара, варианты и стоимость доставки будут указаны далее при оформлении заказа. </p>
                         </div>
-                    <?php if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?></div><?php } ?>
-                    <div class="ganerate_price_wrap ml-auto mt-3 mb-0 w-75 font-weight-bold h5"
-                         <? if ($priceBasket > 0): ?><? else: ?>style="display:none;"<? endif; ?>>
-                        Итого:
-                        <div class="inline-block float-right ganerate_price">
-                            <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
+                        <div class="ganerate_price_wrap ml-auto mt-3 w-100 font-weight-bold h5"
+                             <? if ($priceBasket > 0): ?><? else: ?>style="display:none;"<? endif; ?>>
+                            Итого:
+                            <div class="inline-block float-right ganerate_price">
+                                <?= (round($priceCalculate) * $priceBasket) . ' ₽'; ?>
+                            </div>
                         </div>
-                    </div>
+                    <?php if ($actualItem['PRODUCT']['QUANTITY'] != '0') { ?></div><?php } ?>
                 <?php } ?>
             </div>
         </div>
@@ -646,7 +646,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 <?php
             }
         } ?>
-        <ul class="nav nav-fill mb-3 mt-5" role="tablist">
+        <ul class="nav nav-fill mb-3 mt-3" role="tablist">
             <?php if ($showDescription) { ?>
                 <li class="nav-item link">
                     <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home"
@@ -675,7 +675,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 </li>
             <?php } ?>
         </ul>
-        <div class="tab-content mt-5">
+        <div class="w-75 mb-3 mt-5">
             <?php if ($showDescription) { ?>
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                     <?php if ($arResult['DETAIL_TEXT'] != '') {
