@@ -675,7 +675,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 </li>
             <?php } ?>
         </ul>
-        <div class="w-75 mb-3 mt-5">
+        <div class="tab-content w-75 mb-5 mt-5">
             <?php if ($showDescription) { ?>
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                     <?php if ($arResult['DETAIL_TEXT'] != '') {
