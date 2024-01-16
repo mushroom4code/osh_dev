@@ -23,8 +23,7 @@ class OshishaDelivery extends CommonPVZ
 
     static public string $code = 'oshisha';
     private $oshisha_cache_id = 'oshisha_delivery_prices';
-    const OSHISHA_ADDRESS_SIMPLE = "simple";
-    const OSHISHA_ADDRESS_COMPLEX = "complex";
+
     static $oshisha_fields = array(
         'active',
         'pvzStrict',
@@ -36,10 +35,40 @@ class OshishaDelivery extends CommonPVZ
         'timeDeliveryStartDay',
         'timeDeliveryEndDay',
         'cost',
-//        'deduct',
-//        'bitrix_stock',
-//        'quantity_override'
     );
+
+    private static function getLocationConnectorsForDoorDelivery() {
+        //todo site  id
+        if (SITE_ID === 'N2') {
+            //moscow
+            //moscow and moscow region
+            $locationConnectors = ["0000028025","0000073738"];
+
+        } elseif (SITE_ID === 'IA') {
+            $locationConnectors = ["0000028038"];
+        } else {
+            //ryzan
+            //ryazan region and moscow region
+            $locationConnectors = ["0000028033", "0000028025"];
+        }
+
+        return $locationConnectors;
+    }
+
+    private static function getLocationConnectorsForPVZ() {
+        //todo site  id
+        if (SITE_ID === 'N2') {
+            //moscow and moscow region
+            $locationConnectors = ["0000073738"];
+        }  elseif (SITE_ID === 'IA') {
+            $locationConnectors = ["0000028038"];
+        }else {
+            //ryazan city
+            $locationConnectors = ["0000197740"];
+        }
+
+        return $locationConnectors;
+    }
 
     /**
      * validate location delivery on moscow or moscow region
@@ -50,7 +79,7 @@ class OshishaDelivery extends CommonPVZ
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function checkMoscowOrNot(string $locationCode): bool
+    private static function checkDeliveryLocation(string $locationCode, array $locationConnectors): bool
     {
         $node = LocationTable::getList(
             array(
@@ -68,11 +97,9 @@ class OshishaDelivery extends CommonPVZ
         $node['LEFT_MARGIN'] = Assert::expectIntegerNonNegative($node['LEFT_MARGIN'], '$nodeInfo[][LEFT_MARGIN]');
         $node['RIGHT_MARGIN'] = Assert::expectIntegerPositive($node['RIGHT_MARGIN'], '$nodeInfo[][RIGHT_MARGIN]');
 
-        //moscow and moscow region
-        $moscowConnectors = ["0000028025","0000073738"];
         $connectors = LocationTable::getList(
             array(
-                'filter' => array('=CODE' => $moscowConnectors),
+                'filter' => array('=CODE' => $locationConnectors),
                 'select' => array('ID', 'LEFT_MARGIN', 'RIGHT_MARGIN'),
             )
         );
@@ -89,25 +116,31 @@ class OshishaDelivery extends CommonPVZ
         return false;
     }
 
-    public static function getDeliveryStatus() {
-        return array('Oshisha' => 'Y');
-    }
-
     public static function getInstanceForDoor($deliveryParams): array
     {
-        $res = self::checkMoscowOrNot($deliveryParams['location'] ?? '');
+        if (empty(Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_door_active'))) {
+            return [];
+        }
 
-       if ($res && Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_door_active')) {
-           return [new OshishaDelivery()];
-       }
-       return [];
+        $res = self::checkDeliveryLocation($deliveryParams['location'] ?? '',
+            self::getLocationConnectorsForDoorDelivery());
+
+        if ($res) {
+            return [new OshishaDelivery()];
+        }
+        return [];
     }
 
     public static function getInstanceForPvz($deliveryParams): array
     {
-        $res = self::checkMoscowOrNot($deliveryParams['codeCity'] ?? '');
+        if (empty(Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_pvz_active'))) {
+            return [];
+        }
 
-        if ($res || Option::get(DeliveryHelper::$MODULE_ID, 'Oshisha_pvz_active')) {
+        $res = self::checkDeliveryLocation($deliveryParams['codeCity'],
+            self::getLocationConnectorsForPVZ());
+
+        if ($res) {
             return [new OshishaDelivery()];
         }
         return [];
@@ -148,11 +181,164 @@ class OshishaDelivery extends CommonPVZ
     }
 
     public function getNoMarkupDays() {
-        $result = [];
-        $result['northdays'] = explode(',', $this->configs['northdays']);
-        $result['southeastdays'] = explode(',', $this->configs['southeastdays']);
-        $result['southwestdays'] = explode(',', $this->configs['southwestdays']);
-        return $result;
+        //todo site id and settings
+        if (SITE_ID === 'RZ') {
+            return [];
+        }
+
+        return [
+            ['days' =>explode(',', $this->configs['northdays']),     'color' => 'rgba(154, 251, 0, 0.5)' ],
+            ['days' =>explode(',', $this->configs['southeastdays']), 'color' => 'rgba(0, 195, 250, 0.5)' ],
+            ['days' =>explode(',', $this->configs['southwestdays']), 'color' => 'rgba(245, 20, 39, 0.5)' ],
+        ];
+    }
+
+    /** Получает области и способы расчета в разрее филиалов
+     * @return array
+     */
+    public function getOshishaDeliveryRegions(): array
+    {
+        $regionsContent = file_get_contents(__DIR__ . "/../../../data/regions.json");
+        $regions = json_decode($regionsContent);
+
+        //todo site id and settings
+        if (SITE_ID === 'RZ') {
+            $regionName = 'ryzan';
+            return [
+                'center_point' => $regions->{$regionName}->center_point,
+                'locations' => [['region'=> "Московская"], ['region'=> "Рязанская"]],
+                'regions' => [
+                    [
+                        'name' => $regionName,
+                        'calculation' => [
+                            'type' => 'static',
+                            'cost' => 0
+                        ],
+                        'template' => '{delivery_address} - {delivery_price} руб.',
+                        'points' => $regions->{$regionName}->points,
+                        'property' => [
+                            'fillColor' => 'rgba(255,94,89,0.12)',
+                            'strokeColo r' => 'rgba(255,94,89,0.22)',
+                            'opacity' => 1,
+                            'strokeWidt h' => 0.1,
+                            'zIndex' => -999,
+                            'zIndexActive' => -999,
+                        ]
+                    ]
+                ]
+            ];
+        } elseif (SITE_ID === 'IA') {
+            $regionName = 'yaroslavl';
+            return [
+                'center_point' => $regions->{$regionName}->center_point,
+                'locations' => [['region'=> "Ярославская"]],
+                'regions' => [
+                    [
+                        'name' => $regionName,
+                        'calculation' => [
+                            'type' => 'static',
+                            'cost' => 0
+                        ],
+                        'template' => '{delivery_address} - {delivery_price} руб.',
+                        'points' => $regions->{$regionName}->points,
+                        'property' => [
+                            'fillColor' => 'rgba(255,94,89,0.12)',
+                            'strokeColo r' => 'rgba(255,94,89,0.22)',
+                            'opacity' => 1,
+                            'strokeWidt h' => 0.1,
+                            'zIndex' => -999,
+                            'zIndexActive' => -999,
+                        ]
+                    ]
+                ]
+            ];
+        } else {
+            $regionName = 'MKAD';
+            return [
+                'center_point' => $regions->{$regionName}->center_point,
+                'locations' => [['region'=> "Московская"], ['region'=> "Москва"]],
+                'regions' => [
+                    [
+                        'name' => 'MKAD',
+                        'calculation' => [
+                            'type' => 'static',
+                            'cost' => OshishaDelivery::getOshishaStartCost(),
+                        ],
+                        'template' => 'В пределах МКАД - {delivery_price} руб.',
+                        'points' => $regions->{$regionName}->points,
+                        'property' => [
+                            'fillColor' => 'rgba(255,94,89,0.12)',
+                            'strokeColor' => 'rgba(255,94,89,0.22)',
+                            'opacity' => 1,
+                            'strokeWidth' => 0.1,
+                            'zIndex' => -999,
+                            'zIndexActive' => -999,
+                        ]
+                    ],
+                    [
+                        'name' => 'SOUTHWEST',
+                        'calculation' => [
+                            'type' => 'path',
+                            'cost' => OshishaDelivery::getOshishaStartCost(),
+                            'costKm' => OshishaDelivery::getOshishaCost()
+                        ],
+                        'no_markup_days' => explode(',', $this->configs['southwestdays']),
+                        'points' => $regions->SOUTHWEST->points,
+                        'property' => [
+                            'fillColor' => 'rgba(245, 20, 39, 0.15)',
+                            'strokeColor' => 'rgba(245,20,39,0.2)',
+                            'opacity' => 1,
+                            'strokeWidth' => 0.1,
+                            'zIndex' => -999,
+                            'zIndexActive' => -999,
+                            'cursor' => 'none',
+                        ]
+                    ],
+                    [
+                        'name' => 'SOUTHEAST',
+                        'calculation' => [
+                            'type' => 'path',
+                            'cost' => OshishaDelivery::getOshishaStartCost(),
+                            'costKm' => OshishaDelivery::getOshishaCost()
+                        ],
+                        'no_markup_days' => explode(',', $this->configs['southeastdays']),
+                        'points' => $regions->SOUTHEAST->points,
+                        'property' => [
+                            'fillColor' => 'rgba(0, 195, 250, 0.11)',
+                            'strokeColor' => 'rgba(0,195,250,0.22)',
+                            'opacity' => 1,
+                            'strokeWidth' => 0.1,
+                            'zIndex' => -999,
+                            'zIndexActive' => -999,
+                            'cursor' => 'none',
+                        ]
+                    ],
+                    [
+                        'name' => 'NORTH',
+                        'calculation' => [
+                            'type' => 'path',
+                            'cost' => OshishaDelivery::getOshishaStartCost(),
+                            'costKm' => OshishaDelivery::getOshishaCost()
+                        ],
+                        'no_markup_days' => explode(',', $this->configs['northdays']),
+                        'points' => $regions->NORTH->points,
+                        'property' => [
+                            // цвет заливки.
+                            'fillColor' => 'rgba(154, 251, 0, 0.11)',
+                            // цвет обводки.
+                            'strokeColor' => 'rgba(154,251,0,0.22)',
+                            // Прозрачность.
+                            'opacity' => 1,
+                            // ширина обводки.
+                            'strokeWidth' => 0.1,
+                            'zIndex' => -999,
+                            'zIndexActive' => -999,
+                            'cursor' => 'none',
+                        ]
+                    ]
+                ]
+            ];
+        }
     }
 
     public static function getOshishaPersonTypes(){
@@ -360,14 +546,13 @@ class OshishaDelivery extends CommonPVZ
      */
     public function getPVZ(string $city_name, array &$result_array, int &$id_feature, string $code_city, array $packages, $dimensionsHash, $sumDimensions)
     {
-        $value = [];
-
-        $params = ['filter' => ['ACTIVE'=>'Y', 'ISSUING_CENTER' => 'Y', '!=GPS_N'=>'0', '!=GPS_S'=>'0'] ];
+        $params = ['filter' => [
+            'ACTIVE' => 'Y',
+            'ISSUING_CENTER' => 'Y',
+            '!=GPS_N' => '0',
+            '!=GPS_S' => '0',
+            'SITE_ID' => SITE_ID]];
         $rsRes = StoreTable::getList($params);
-
-        if ($code_city!=='0000073738') {
-            return;
-        }
 
         while ($arStore = $rsRes->fetch()) {
             $features_obj = [];
@@ -387,7 +572,7 @@ class OshishaDelivery extends CommonPVZ
                 'type' => 'PVZ',
                 'fullAddress' => $arStore['ADDRESS'],
                 'comment' => $arStore['DESCRIPTION'],
-                'deliveryName' => 'OSHISHA',
+                'deliveryName' => $this::$code,
                 'iconCaption' => 'OSHISHA',
                 'hintContent' => $arStore['ADDRESS'],
                 'openEmptyBalloon' => true,
@@ -410,9 +595,14 @@ class OshishaDelivery extends CommonPVZ
         return 0;
     }
 
-    public function getNextNoMarkupDate($zone) {
+    /** Рассчитывает следующий день без доставки
+     * @param $noMarkUpDays
+     * @return string
+     */
+    public function getNextNoMarkupDate($noMarkUpDays): string
+    {
         $tempDate = '';
-        foreach (explode(',', $this->configs[$zone]) as $noMarkupDay) {
+        foreach ($noMarkUpDays as $noMarkupDay) {
             if ($tempDate) {
                 if ((new \DateTime('now'))->modify('next '.DeliveryHelper::getDayOfTheWeekString($noMarkupDay)) < $tempDate) {
                     $tempDate = (new \DateTime('now'))->modify('next '.DeliveryHelper::getDayOfTheWeekString($noMarkupDay));
@@ -459,60 +649,49 @@ class OshishaDelivery extends CommonPVZ
                 $point = null;
             }
             if ($point) {
-                $cost = self::getOshishaCost();
-                $startCost = self::getOshishaStartCost();
-                $distance = ceil(($point['DISTANCE'] ?? 0) - 0.8);
-                $noMarkup = false;
                 $dayDateDelivery = $params['date_delivery'] ? date('w' ,strtotime($params['date_delivery']))
                     : date('w', strtotime('+1 day'));
-                if ($point['ZONE'] == 'NORTH') {
-                    foreach (explode(',', $this->configs['northdays']) as $noMarkupDay) {
-                        if ($noMarkupDay == $dayDateDelivery) {
-                            $noMarkup = true;
-                            $noMarkupNorth = true;
-                        } else {
-                            $noMarkupNorth = false;
+                $itBigOrder = intval($params['shipment_cost']) >= $limitBasket;
+                $distance = ceil(($point['DISTANCE'] ?? 0) - 0.8);
+                $noMarkup = false;
+                $nextNoMarkup = false;
+                $typeCalculation = '';
+                $costKm = 0;
+                $cost = 0;
+
+                $deliveryRegions = self::getOshishaDeliveryRegions();
+                foreach ($deliveryRegions['regions'] as $region) {
+                    if ($point['ZONE'] === $region['name']) {
+                        $cost = $region['calculation']['cost'];
+                        $typeCalculation = $region['calculation']['type'];
+
+                        if (!empty($region['no_markup_days'])) {
+                            foreach ($region['no_markup_days'] as $noMarkupDay) {
+                                if ($noMarkupDay == $dayDateDelivery) {
+                                    $noMarkup = true;
+                                }
+                            }
+                            $nextNoMarkup = $this->getNextNoMarkupDate($region['no_markup_days']);
                         }
                     }
-                    if (!$noMarkupNorth)
-                        $nextNoMarkup = $this->getNextNoMarkupDate('northdays');
-                } else if ($point['ZONE'] == 'SOUTHEAST') {
-                    foreach (explode(',', $this->configs['southeastdays']) as $noMarkupDay) {
-                        if ($noMarkupDay == $dayDateDelivery) {
-                            $noMarkup = true;
-                            $noMarkupSouthEast = true;
-                        } else {
-                            $noMarkupSouthEast = false;
-                        }
-                    }
-                    if (!$noMarkupSouthEast)
-                        $nextNoMarkup = $this->getNextNoMarkupDate('southeastdays');
-                } else if ($point['ZONE'] == 'SOUTHWEST') {
-                    foreach (explode(',', $this->configs['southwestdays']) as $noMarkupDay) {
-                        if ($noMarkupDay == $dayDateDelivery) {
-                            $noMarkup = true;
-                            $noMarkupSouthWest = true;
-                        } else {
-                            $noMarkupSouthWest = false;
-                        }
-                    }
-                    if (!$noMarkupSouthWest)
-                        $nextNoMarkup = $this->getNextNoMarkupDate('southwestdays');
                 }
-                if (intval($params['shipment_cost']) >= $limitBasket && !$noMarkup) {
-                    $delivery_price = max($distance - 5, 0) * $cost;
-                } else if (intval($params['shipment_cost']) >= $limitBasket && $noMarkup) {
-                    $delivery_price = 0;
-                } else {
+
+                if ($typeCalculation === 'static') {
+                    $delivery_price = $itBigOrder ? 0 : $cost;
+                } elseif ($typeCalculation === 'path') {
                     if ($noMarkup) {
-                        $delivery_price = $startCost;
+                        $delivery_price = $itBigOrder ? 0 : $cost;
                     } else {
-                        $delivery_price = $startCost + $distance * $cost;
+                        $delivery_price = $itBigOrder
+                            ? max($distance - 5, 0) * $cost
+                            : $cost + $distance * $costKm;
                     }
+                } else {
+                    $this->errors[] = 'Не корректный формат расчетов';
+                    return array('errors' => $this->errors);
                 }
 
-                $priceArr = array('price' => $delivery_price, 'noMarkup' => (!$noMarkup && $point['ZONE'] != 'MKAD') ? ($nextNoMarkup ?? false) : false);
-
+                $priceArr = array('price' => $delivery_price, 'noMarkup' => $nextNoMarkup);
 
                 $cache->forceRewriting(true);
                 if ($cache->startDataCache()) {

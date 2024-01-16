@@ -313,7 +313,37 @@ $arrFilterTop['ID'] = $ids;
 
                 $obCache->EndDataCache($recommendedData);
             }
-            if ($USER->IsAuthorized()) {
+
+            if (defined('BUY_WITH_THIS_PRODUCT_PROPERTY') && $USER->IsAuthorized()) {
+                $arBuyWithThisProductProductsIds = [];
+
+                $buyWithThisProductProductsProperty = CIBlockElement::GetProperty(
+                        IBLOCK_CATALOG,
+                        $elementId,
+                        [],
+                        ['CODE' => BUY_WITH_THIS_PRODUCT_PROPERTY]
+                );
+                while ($buyWithThisProductProductsPropertyValue = $buyWithThisProductProductsProperty->fetch()) {
+                    if ($buyWithThisProductProductsPropertyValue['VALUE']) {
+                        $arBuyWithThisProductProductsIds[] = $buyWithThisProductProductsPropertyValue['VALUE'];
+                    }
+                }
+                if ($arBuyWithThisProductProductsIds) {
+                    $arBuyWithThisProductProductsRes = CIBlockElement::GetList(
+                            [],
+                            ['ID' => $arBuyWithThisProductProductsIds, 'ACTIVE'=>'Y'],
+                            false,
+                            false,
+                            ['ID', 'ACTIVE']
+                    );
+                    $arBuyWithThisProductProductsIds = [];
+                    while ($buyWithThisProductProduct = $arBuyWithThisProductProductsRes->fetch()) {
+                            $arBuyWithThisProductProductsIds[] = $buyWithThisProductProduct['ID'];
+                    }
+                }
+                $GLOBALS['arrBuyWithThisProductProductsProductsFilter'] = ['ID' => $arBuyWithThisProductProductsIds];
+
+                if ($arBuyWithThisProductProductsIds) {
                     if (!isset($arParams['DETAIL_SHOW_POPULAR']) || $arParams['DETAIL_SHOW_POPULAR'] != 'N') { ?>
                         <div class="mb-5 mt-5">
                             <div data-entity="parent-container">
@@ -325,22 +355,22 @@ $arrFilterTop['ID'] = $ids;
                                         "bitrix:catalog.top",
                                         "oshisha_catalog.top",
                                         array(
-                                            "ACTION_VARIABLE" => "action",
-                                            "ADD_PICT_PROP" => "-",
-                                            "ADD_PROPERTIES_TO_BASKET" => "Y",
+                                            "ACTION_VARIABLE" => $arParams['ACTION_VARIABLE'],
+                                            "ADD_PICT_PROP" => $arParams['ADD_PICT_PROP'],
+                                            "ADD_PROPERTIES_TO_BASKET" => $arParams['ADD_PROPERTIES_TO_BASKET'],
                                             "ADD_TO_BASKET_ACTION" => "ADD",
-                                            "BASKET_URL" => "/personal/basket.php",
+                                            "BASKET_URL" => $arParams['BASKET_URL'],
                                             "CACHE_FILTER" => "N",
                                             "CACHE_GROUPS" => "Y",
                                             "CACHE_TIME" => "36000000",
                                             "CACHE_TYPE" => "A",
-                                            "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
-                                            "COMPATIBLE_MODE" => "Y",
+                                            "COMPARE_NAME" => $arParams['COMPARE_NAME'],
+                                            "COMPATIBLE_MODE" => $arParams['COMPATIBLE_MODE'],
                                             "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
-                                            "CONVERT_CURRENCY" => "N",
+                                            "CONVERT_CURRENCY" => $arParams['CONVERT_CURRENCY'],
                                             "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
-                                            "DETAIL_URL" => "",
-                                            "DISPLAY_COMPARE" => "N",
+                                            "DETAIL_URL" => $arParams['DETAIL_URL'],
+                                            "DISPLAY_COMPARE" => $arParams['DISPLAY_COMPARE'],
                                             "ELEMENT_COUNT" => "16",
                                             "ELEMENT_SORT_FIELD" => "timestamp_x",
                                             "ELEMENT_SORT_FIELD2" => "id",
@@ -348,46 +378,46 @@ $arrFilterTop['ID'] = $ids;
                                             "ELEMENT_SORT_ORDER2" => "desc",
                                             "ENLARGE_PRODUCT" => "PROP",
                                             "ENLARGE_PROP" => "-",
-                                            "FILTER_NAME" => "",
-                                            "HIDE_NOT_AVAILABLE" => "N",
-                                            "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-                                            "IBLOCK_ID" => IBLOCK_CATALOG,
-                                            "IBLOCK_TYPE" => "1c_catalog",
+                                            "FILTER_NAME" => "arrBuyWithThisProductProductsProductsFilter",
+                                            "HIDE_NOT_AVAILABLE" => $arParams['HIDE_NOT_AVAILABLE'],
+                                            "HIDE_NOT_AVAILABLE_OFFERS" => $arParams['HIDE_NOT_AVAILABLE_OFFERS'],
+                                            "IBLOCK_ID" => $arParams['IBLOCK_ID'],
+                                            "IBLOCK_TYPE" => $arParams['IBLOCK_TYPE'],
                                             "LABEL_PROP" => array(),
                                             "LABEL_PROP_MOBILE" => "",
                                             "LABEL_PROP_POSITION" => "top-left",
                                             "LINE_ELEMENT_COUNT" => "4",
-                                            "MESS_BTN_ADD_TO_BASKET" => "Забронировать",
-                                            "MESS_BTN_BUY" => "Купить",
-                                            "MESS_BTN_COMPARE" => "Сравнить",
-                                            "MESS_BTN_DETAIL" => "Подробнее",
-                                            "MESS_NOT_AVAILABLE" => "Нет в наличии",
+                                            "MESS_BTN_ADD_TO_BASKET" => $arParams['MESS_BTN_ADD_TO_BASKET'],
+                                            "MESS_BTN_BUY" => $arParams['MESS_BTN_BUY'],
+                                            "MESS_BTN_COMPARE" => $arParams['MESS_BTN_COMPARE'],
+                                            "MESS_BTN_DETAIL" => $arParams['MESS_BTN_DETAIL'],
+                                            "MESS_NOT_AVAILABLE" => $arParams['MESS_NOT_AVAILABLE'],
                                             "OFFERS_CART_PROPERTIES" => $arParams["OFFERS_CART_PROPERTIES"],
                                             "OFFERS_FIELD_CODE" => $arParams["OFFERS_FIELD_CODE"],
                                             "OFFERS_PROPERTY_CODE" => $arParams["OFFERS_PROPERTY_CODE"],
                                             "OFFERS_LIMIT" => "20",
-                                            "OFFERS_SORT_FIELD" => "sort",
-                                            "OFFERS_SORT_FIELD2" => "id",
-                                            "OFFERS_SORT_ORDER" => "asc",
-                                            "OFFERS_SORT_ORDER2" => "desc",
-                                            "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
-                                            "PARTIAL_PRODUCT_PROPERTIES" => "N",
-                                            "PRICE_CODE" => BXConstants::PriceCode(),
-                                            "FILL_ITEM_ALL_PRICES" => "Y",
-                                            "PRICE_VAT_INCLUDE" => "Y",
+                                            "OFFERS_SORT_FIELD" => $arParams['OFFERS_SORT_FIELD'],
+                                            "OFFERS_SORT_FIELD2" => $arParams['OFFERS_SORT_FIELD2'],
+                                            "OFFERS_SORT_ORDER" => $arParams['OFFERS_SORT_ORDER'],
+                                            "OFFERS_SORT_ORDER2" => $arParams['OFFERS_SORT_ORDER2'],
+                                            "OFFER_ADD_PICT_PROP" => $arParams['OFFER_ADD_PICT_PROP'],
+                                            "PARTIAL_PRODUCT_PROPERTIES" => $arParams['PARTIAL_PRODUCT_PROPERTIES'],
+                                            "PRICE_CODE" => $arParams['PRICE_CODE'],
+                                            "FILL_ITEM_ALL_PRICES" => $arParams['FILL_ITEM_ALL_PRICES'],
+                                            "PRICE_VAT_INCLUDE" => $arParams['PRICE_VAT_INCLUDE'],
                                             "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
-                                            "PRODUCT_DISPLAY_MODE" => "Y",
-                                            "PRODUCT_ID_VARIABLE" => "id",
-                                            "PRODUCT_PROPS_VARIABLE" => "prop",
-                                            "PRODUCT_QUANTITY_VARIABLE" => "quantity",
+                                            "PRODUCT_DISPLAY_MODE" => $arParams['PRODUCT_DISPLAY_MODE'],
+                                            "PRODUCT_ID_VARIABLE" => $arParams['PRODUCT_ID_VARIABLE'],
+                                            "PRODUCT_PROPS_VARIABLE" => $arParams['PRODUCT_PROPS_VARIABLE'],
+                                            "PRODUCT_QUANTITY_VARIABLE" => $arParams['PRODUCT_QUANTITY_VARIABLE'],
                                             "PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false},{'VARIANT':'3','BIG_DATA':false}]",
-                                            "PRODUCT_SUBSCRIPTION" => "Y",
+                                            "PRODUCT_SUBSCRIPTION" => $arParams['PRODUCT_SUBSCRIPTION'],
                                             "PROPERTY_CODE_MOBILE" => "",
                                             "ROTATE_TIMER" => "30",
-                                            "SECTION_URL" => "",
-                                            "SEF_MODE" => "N",
-                                            "SHOW_CLOSE_POPUP" => "N",
-                                            "SHOW_DISCOUNT_PERCENT" => "N",
+                                            "SECTION_URL" => $arParams['SECTION_URL'],
+                                            "SEF_MODE" => $arParams['SEF_MODE'],
+                                            "SHOW_CLOSE_POPUP" => $arParams['SHOW_CLOSE_POPUP'],
+                                            "SHOW_DISCOUNT_PERCENT" => $arParams['SHOW_DISCOUNT_PERCENT'],
                                             "SHOW_MAX_QUANTITY" => "N",
                                             "SHOW_OLD_PRICE" => "N",
                                             "SHOW_PAGINATION" => "Y",
@@ -397,7 +427,7 @@ $arrFilterTop['ID'] = $ids;
                                             "SLIDER_PROGRESS" => "N",
                                             "TEMPLATE_THEME" => "blue",
                                             "USE_ENHANCED_ECOMMERCE" => "N",
-                                            "USE_PRICE_COUNT" => "N",
+                                            "USE_PRICE_COUNT" => $arParams['USE_PRICE_COUNT'],
                                             "USE_PRODUCT_QUANTITY" => "N",
                                             "VIEW_MODE" => "SLIDER",
                                             "BASKET_ITEMS" => $arBasketItems
@@ -409,16 +439,17 @@ $arrFilterTop['ID'] = $ids;
                         </div>
                         <?
                     }
+                }
             }
             if (defined('SUITABLE_PRODUCTS_PROPERTY') && $USER->IsAuthorized()) {
                 $arSuitableProductsIds = [];
                 $product = CIBlockElement::GetByID($elementId)->fetch();
                 if ($product) {
                     $suitableProductsProperty = CIBlockElement::GetProperty(
-                            IBLOCK_CATALOG,
-                            $product['ID'],
-                            [],
-                            ['CODE' => SUITABLE_PRODUCTS_PROPERTY]
+                        IBLOCK_CATALOG,
+                        $product['ID'],
+                        [],
+                        ['CODE' => SUITABLE_PRODUCTS_PROPERTY]
                     );
                     while ($suitableProductsPropertyValue = $suitableProductsProperty->fetch()) {
                         if ($suitableProductsPropertyValue['VALUE']) {
@@ -427,11 +458,11 @@ $arrFilterTop['ID'] = $ids;
                     }
                     if ($arSuitableProductsIds) {
                         $arSuitableProductsRes = CIBlockElement::GetList(
-                                [],
-                                ['ID' => $arSuitableProductsIds],
-                                false,
-                                false,
-                                ['ID', 'ACTIVE']
+                            [],
+                            ['ID' => $arSuitableProductsIds],
+                            false,
+                            false,
+                            ['ID', 'ACTIVE']
                         );
                         $arSuitableProductsIds = [];
                         while ($suitableProduct = $arSuitableProductsRes->fetch()) {
@@ -442,6 +473,7 @@ $arrFilterTop['ID'] = $ids;
                         }
                     }
                     $GLOBALS['arrSuitableProductsFilter'] = ['ID' => $arSuitableProductsIds];
+
                 }
                 if ($arSuitableProductsIds) { ?>
                     <div class="mb-5 mt-5">
@@ -576,7 +608,7 @@ $arrFilterTop['ID'] = $ids;
                                         "ENLARGE_PRODUCT" => "PROP",
                                         "ENLARGE_PROP" => "-",
                                         "FILTER_NAME" => "arrFilterTop",
-                                        "HIDE_NOT_AVAILABLE" => "N",
+                                        "HIDE_NOT_AVAILABLE" => "Y",
                                         "HIDE_NOT_AVAILABLE_OFFERS" => "N",
                                         "IBLOCK_ID" => IBLOCK_CATALOG,
                                         "IBLOCK_TYPE" => "1c_catalog",
@@ -637,7 +669,6 @@ $arrFilterTop['ID'] = $ids;
                     <?
                 }
             }
-        }
         ?>
     </div>
 </div>

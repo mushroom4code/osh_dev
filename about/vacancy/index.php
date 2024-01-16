@@ -52,10 +52,10 @@ $APPLICATION->SetTitle("Вакансии");?><div class="mt-4 mb-5">
 			 Почта :
 		</p>
 		<p>
-			<span class="red_text mb-3"><a href="mailto: ikovalenko@oshisha.net"> ikovalenko@oshisha.net</a></span>
+ <span class="red_text mb-3"><a href="mailto: ikovalenko@oshisha.net"> ikovalenko@oshisha.net</a></span>
 		</p>
 		<p>
-			<span class="red_text mb-3"><a href="mailto: ssavostianova@oshisha.net">ssavostianova@oshisha.net</a></span>
+			<br>
 		</p>
 	</div>
 	<div class="mb-5 font-14">

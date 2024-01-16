@@ -63,7 +63,7 @@ use Bitrix\Main\Localization\Loc;
                     if ($USER->IsAuthorized()) {
                         $canOrder = empty($arResult['ITEMS']['nAnCanBuy']);
                         ?>
-                        <button class="btn_basket  basket-btn-checkout" {{#DISABLE_CHECKOUT}} disabled{{/DISABLE_CHECKOUT}}
+                        <button class="btn_basket  basket-btn-checkout"
                                 data-entity="basket-checkout-button">
                             <?= Loc::getMessage('SBB_ORDER') ?>
                         </button>
@@ -128,5 +128,12 @@ use Bitrix\Main\Localization\Loc;
             ?></div>
 
     </div>
-    <a class="link_basket_after" href="/catalog/">Вернуться к покупкам</a>
+    <?php
+    // Переменная для убора функционала под мобильное приложение
+    $showUserContent = Enterego\PWA\EnteregoMobileAppEvents::getUserRulesForContent();
+    $href = '/';
+    if ($showUserContent) {
+        $href = '/catalog/';
+    } ?>
+    <a class="link_basket_after" href="<?= $href ?>">Вернуться к покупкам</a>
 </script>

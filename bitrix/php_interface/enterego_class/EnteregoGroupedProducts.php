@@ -5,6 +5,7 @@ namespace Enterego;
 use CFile;
 use CIBlockElement;
 use CIBlockProperty;
+use Enterego\EnteregoHelper;
 
 class EnteregoGroupedProducts
 {
@@ -88,6 +89,11 @@ class EnteregoGroupedProducts
                 )->Fetch();
 
                 $elem = &$item['GROUPED_PRODUCTS'][$elemProp];
+                $elem['MEASURE_RATIO'] = \Bitrix\Catalog\MeasureRatioTable::getList(array(
+                    'select' => array('RATIO'),
+                    'filter' => array('=PRODUCT_ID' => $elemProp)
+                ))->fetch()['RATIO'] ?? 1;
+                EnteregoHelper::setProductsActiveUnit($elem, true);
                 $refPropsCode[] = 'USE_DISCOUNT';
                 $elemProp === $prodId ? $elem['SELECTED'] = 'selected' : $elem['SELECTED'] = '';
                 $elem['ACTUAL_BASKET'] = 0;
@@ -103,7 +109,7 @@ class EnteregoGroupedProducts
                                 $elem['PROPERTIES'][$props['CODE']] = $props;
                             }
 
-                            $groupProperty[$props['VALUE_ENUM']] = $elem['PROPERTIES'][$props['CODE']]['JS_PROP'][$props['VALUE_ENUM']] = [
+                            $groupProperty[$props['VALUE_ENUM'] ?? $props['VALUE']] = $elem['PROPERTIES'][$props['CODE']]['JS_PROP'][$props['VALUE_ENUM'] ?? $props['VALUE']] = [
                                 'VALUE_ENUM' => $props['VALUE_ENUM'] ?? $props['VALUE'],
                                 'VALUE_XML_ID' => $props['VALUE_XML_ID'],
                                 'PROPERTY_VALUE_ID' => $props['PROPERTY_VALUE_ID'],

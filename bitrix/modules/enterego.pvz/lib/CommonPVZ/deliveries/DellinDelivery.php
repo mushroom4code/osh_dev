@@ -10,6 +10,8 @@ class DellinDelivery extends CommonPVZ
     public string $delivery_code = 'Dellin';
 
     public string $delivery_name = 'Dellin';
+
+    public static string $code = 'Dellin';
     private $dellin_cache_id = 'dellin_delivery_prices';
     private string $api_key;
 
@@ -21,14 +23,23 @@ class DellinDelivery extends CommonPVZ
 
     public static function getInstanceForDoor($deliveryParams): array
     {
+        //TODO site id in seetings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
+
         if (Option::get(DeliveryHelper::$MODULE_ID, 'Dellin_door_active') === 'Y') {
             return  [new DellinDelivery()];
         }
         return [];
     }
 
-    public static function getInstanceForPvz(): array
+    public static function getInstanceForPvz($deliveryParams): array
     {
+        //TODO site id in seetings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
         if (Option::get(DeliveryHelper::$MODULE_ID, 'Dellin_pvz_active') === 'Y') {
             return  [new DellinDelivery()];
         }
@@ -114,7 +125,7 @@ class DellinDelivery extends CommonPVZ
                 'fullAddress' => $point['FULL_ADDRESS'],
                 'phone' => $point['PHONE_NUMBER'],
                 'workTime' => $point['WORK_TIME'],
-                'deliveryName' => 'Деловые линии',
+                'deliveryName' => $this::$code,
                 'iconCaption' => 'Деловые линии',
                 'hintContent' => $point['FULL_ADDRESS'],
                 "openEmptyBalloon" => true,

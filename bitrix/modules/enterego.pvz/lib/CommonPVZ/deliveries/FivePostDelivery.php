@@ -12,19 +12,31 @@ class FivePostDelivery extends CommonPVZ
     public string $delivery_code = 'FivePost';
 
     public string $delivery_name = 'FivePost';
+
+    public static string $code = '5post';
     private $fivepost_cache_id = 'fivepost_delivery_prices';
     private $fivepost_client;
 
     public static function getInstanceForDoor($deliveryParams): array
     {
+        //TODO site id in seetings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
+
         if (Option::get(DeliveryHelper::$MODULE_ID, 'FivePost_door_active') === 'Y') {
             return [new FivePostDelivery()];
         }
         return [];
     }
 
-    public static function getInstanceForPvz(): array
+    public static function getInstanceForPvz($deliveryParams): array
     {
+        //TODO site id in seetings
+        if (SITE_ID !== 'N2') {
+            return [];
+        }
+
         if (Option::get(DeliveryHelper::$MODULE_ID, 'FivePost_pvz_active') === 'Y') {
             return [new FivePostDelivery()];
         }
@@ -214,7 +226,7 @@ class FivePostDelivery extends CommonPVZ
                         'type' => $point['TYPE'] === 'POSTAMAT' ? 'POSTAMAT' : 'PVZ',
                         'fullAddress' => $point['FULL_ADDRESS'],
                         'comment' => $point['ADDITIONAL'],
-                        'deliveryName' => '5Post',
+                        'deliveryName' => $this::$code,
                         'iconCaption' => '5Post',
                         'hintContent' => $point['FULL_ADDRESS'],
                         'openEmptyBalloon' => true,

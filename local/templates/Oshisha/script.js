@@ -20,6 +20,7 @@ function tasteInit() {
         );
     });
 }
+
 $(document).ready(function () {
     let div = $('div'),
         body = $('body'),
@@ -157,8 +158,9 @@ $(document).ready(function () {
             altField: inputPicker,
         });
     }
-    function setPriceGenerate(elem,value){
-        if($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0){
+
+    function setPriceGenerate(elem, value) {
+        if ($('.ganerate_price').length > 0 && $(elem).closest('.box_with_photo_product').length > 0) {
             $('.ganerate_price').text(getPriceForProduct(elem) * value + ' ₽');
         }
     }
@@ -178,11 +180,11 @@ $(document).ready(function () {
                 priceBox = cardWrapper.find('.info-prices-box-hover');
 
             if ($(this).closest('.js__tastes').hasClass('active')) {
-                tasteOverlay.css({height:'100%'});
-                priceBox.css({zIndex:'791'});
+                tasteOverlay.css({height: '100%'});
+                priceBox.css({zIndex: '791'});
             } else {
-                tasteOverlay.css({height:'0'});
-                priceBox.css({zIndex:'791'});
+                tasteOverlay.css({height: '0'});
+                priceBox.css({zIndex: '791'});
             }
         })
         tasteInit();
@@ -307,7 +309,7 @@ $(document).ready(function () {
         if (value >= measureRatio) {
             $('.ganerate_price_wrap').show();
         }
-        setPriceGenerate(this,value / measureRatio)
+        setPriceGenerate(this, value / measureRatio)
     }
 
     $(document).on('keypress', '.card_element', function (e) {
@@ -390,7 +392,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal / measure_ratio);
+                    setPriceGenerate(this, beforeVal / measure_ratio);
                     product_data = {
                         'ID': product_id,
                         'QUANTITY': beforeVal,
@@ -406,7 +408,7 @@ $(document).ready(function () {
                     } else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,max_QUANTITY);
+                    setPriceGenerate(this, max_QUANTITY);
 
                     product_data = {
                         'ID': product_id,
@@ -430,7 +432,7 @@ $(document).ready(function () {
                     else
                         $('.ganerate_price_wrap').hide();
 
-                    setPriceGenerate(this,beforeVal / measure_ratio)
+                    setPriceGenerate(this, beforeVal / measure_ratio)
 
                     product_data = {
                         'ID': product_id,
@@ -486,8 +488,8 @@ $(document).ready(function () {
 
             // //  OFFERS &&  UPDATE quantity product fast modal or product card in catalog
             let basketItem = $(boxInput).val();
-            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="'+product_id+'"]');
-            let parseUpdate= [], boxUpdate;
+            let boxUpdateAfterAppend = $(document).find('.catalog-item-product[data-product_id="' + product_id + '"]');
+            let parseUpdate = [], boxUpdate;
             let productDef = $(this).closest('.catalog-item-product').hasClass('not-input-parse');
 
             if (!boxUpdateAfterAppend.hasClass('catalog-fast-window')) {
@@ -514,6 +516,7 @@ $(document).ready(function () {
 
             $(box_with_product).empty();
             $(box_with_products_order).empty();
+
             addItemArrayANDSend(product_data);
         }
 
@@ -553,6 +556,7 @@ $(document).ready(function () {
 
         function sendArrayItems(ItemArray) {
             let product_data = [], new_time, time;
+
             if (ItemArray.length !== 0) {
                 $(ItemArray).each(function (key, itemVal) {
                     if (itemVal.TIME === 0) {
@@ -633,7 +637,7 @@ $(document).ready(function () {
             var popup_mess = $(this).closest('div#popup_mess');
             var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
             var product_name = $(this).closest('div.item-product-info').find('a.bx_catalog_item_title').text().trim();
-            if ($(this).closest('div#popup_mess').hasClass('subscribed')){
+            if ($(this).closest('div#popup_mess').hasClass('subscribed')) {
                 var subscribe = "N";
                 var subscription_id = popup_mess.attr('data-subscription_id');
             } else {
@@ -643,14 +647,21 @@ $(document).ready(function () {
             $.ajax({
                 type: 'POST',
                 url: '/local/templates/Oshisha/components/bitrix/catalog.product.subscribe/oshisha_catalog.product.subscribe/ajax.php',
-                data: {subscribe: subscribe, item_id: product_id, product_name: product_name, subscription_id: subscription_id},
+                data: {
+                    subscribe: subscribe,
+                    item_id: product_id,
+                    product_name: product_name,
+                    subscription_id: subscription_id
+                },
                 success: function (result_jsn) {
                     var result = JSON.parse(result_jsn);
-                    if(result.success === true){
+                    if (result.success === true) {
                         var item_controls = popup_mess.parent();
-                        if(result.clickDbError != 'false') {
+                        if (result.clickDbError != 'false') {
+                            console.log('error while updating productsSubscriptionsTable');
+                            console.log(result.clickDbError);
                         }
-                        if(result.message === "subscribed") {
+                        if (result.message === "subscribed") {
                             popup_mess.addClass('subscribed');
                             popup_mess.attr('data-subscription_id', result.subscribeId);
                             item_controls.find('.detail_popup').addClass('subscribed');
@@ -2150,6 +2161,7 @@ $(document).ready(function () {
     })
 
     $(document).on('click', '.retail_orders', function () {
+        console.log('entry', '');
         $(this).closest('div').find('.wholesale_orders').css({
             'background': '#F0F0F0',
             'borderRadius': '10px'
@@ -2347,7 +2359,7 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
                 '<a href="#" id="no_mess" class="d-flex basket-empty link_message_box_product ' +
@@ -2359,10 +2371,10 @@ $(document).ready(function () {
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
                 '<div class="confirmation_container">' +
-                '<a href="'+$(this).attr('href')+'&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '&EMPTY_BASKET=Y" id="yes_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Да</a>' +
-                '<a href="'+$(this).attr('href')+'" id="no_mess" class="d-flex  link_message_box_product ' +
+                '<a href="' + $(this).attr('href') + '" id="no_mess" class="d-flex  link_message_box_product ' +
                 'justify-content-center align-items-center">' +
                 'Нет</a></div>';
         }
@@ -2831,7 +2843,6 @@ $(document).on('submit', '.callback_form', function (e) {
             data: $(this).serialize(),
         }).done(function (dataRes) {
             if (dataRes == 1) {
-                //location.reload();
                 $('.callback_form').hide();
                 $('.result-callback').show();
             } else {
@@ -2876,14 +2887,18 @@ document.addEventListener('keyup', (e) => {
 
 if ($(window).width() > 1024) {
     $(window).scroll(function () {
-        var appended = false;
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        let appended = false;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         if (scrollTop > 0) {
             if (!appended) {
-                $(document).find('header').addClass('header-scroll').show(500);
+                if ($('#bx-panel').length > 0) {
+                    $(document).find('header').css('top', $('#bx-panel').height())
+                }
+                $(document).find('header').addClass('header-scroll');
                 appended = true;
             }
         } else {
+            $(document).find('header').css('top', '0')
             $(document).find('header').removeClass('header-scroll');
         }
     });
@@ -2927,22 +2942,21 @@ jQuery(function () {
         }
     })
 });
-
-
 $(document).ready(function () {
+
     $(document).on('click', '.close_header_box', function () {
         $('.overlay').hide();
     });
 
-    $(document).on('click', '.js__taste ', function() {
+    $(document).on('click', '.js__taste ', function () {
         let tasteCheckId = $(this).attr('data-filter-get'),
-            taste =  $(this).closest('.js__tastes');
+            taste = $(this).closest('.js__tastes');
         // Сбрасываем повторную фильтрацию по уже выбранному вкусу
 
         if (BX(tasteCheckId).checked) {
             $(taste).append('<span class="taste-errors">Вкус уже выбран</span>');
             setTimeout(BX.delegate(
-                    function() {
+                    function () {
                         $(taste).find('.taste-errors').fadeOut(
                             'slow',
                             function () {
@@ -2954,15 +2968,15 @@ $(document).ready(function () {
             return;
         }
 
-        $('#'+tasteCheckId).prop('checked', true);
+        $('#' + tasteCheckId).prop('checked', true);
         window.smartFilter.addHorizontalFilter(BX(tasteCheckId));
-        window.smartFilter.timer = setTimeout(BX.delegate(function(){
+        window.smartFilter.timer = setTimeout(BX.delegate(function () {
             this.reload(BX(tasteCheckId));
         }, window.smartFilter), 500);
     })
 });
 
-$(document).on('click', '.js__close-count-alert', function() {
+$(document).on('click', '.js__close-count-alert', function () {
     $(this).parents('.alert_quantity').html('').removeClass('show_block');
 })
 
@@ -2974,7 +2988,7 @@ $(document).on('click', '.js__close-count-alert', function() {
  * @param propCodePriority
  * @returns {*[]}
  */
-function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = ''){
+function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority = '') {
     const selectedPropData = {};
     const productsSuccess = [];
 
@@ -3033,3 +3047,85 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [],propCodePriority = 
     }
     return productsSuccess;
 }
+
+// LOADER
+function loaderForSite(initParam, itemParent = false) {
+    const body = itemParent !== false ? itemParent : $('body');
+    if (initParam === 'appendLoader') {
+        if ($(body).find('div.remove-class').length === 0) {
+            $(body).append('<div class="position-fixed width-100 height-100 top-0 left-0 remove-class d-flex justify-content-center ' +
+                'align-items-center" style="background: rgba(60, 60, 60, 0.81); z-index:1000">' +
+                '<div class="loader" style="width: 107px;height: 107px;">' +
+                '<div class="inner one" style="border-bottom: 4px solid #ffffff"></div>' +
+                '<div class="inner two" style="border-bottom: 4px solid #ffffff"></div>' +
+                '<div class="inner three" style="border-bottom: 4px solid #ffffff"></div>' +
+                '</div></div>');
+        }
+    } else {
+        $(body).find('.remove-class').remove();
+    }
+}
+
+
+$(document).ready(function () {
+    let deferredPrompt;
+    const btnInstallPC = document.querySelector('.app_install.PC')
+    const btnInstallMob = document.querySelector('.app_install.mob')
+    let btnInstall = btnInstallPC;
+    if ($(window).width() <= 768) {
+        btnInstall = btnInstallMob;
+    }
+    window.addEventListener('beforeinstallprompt', function (event) {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        event.preventDefault();
+        // Stash the event so it can be triggered later.
+        deferredPrompt = event;
+    });
+    if ($(btnInstall).length !== 0) {
+        if ($(btnInstallPC).attr('data-name-browser') === 'Safari' || $(btnInstallMob).attr('data-name-browser') === 'Safari') {
+            $(btnInstall).on('click', (e) => {
+                if ($('.box-message-install').length == 0) {
+                    $('.section_wrapper').append('<div class="position-fixed z-index-1000 box-message-install bg-white p-4 br-10">' +
+                        '<div class="position-relative d-flex justify-content-center align-items-center flex-column">' +
+                        '<span class="position-absolute close-window" style="right: -21px; top: -21px; left: auto;"></span>' +
+                        '<img class="position-absolute p-2 br-100 bg-white logo" src="/images/osh_message.png" alt="oshisha"/>' +
+                        '<div><p class="mb-1 mt-2 font-weight-500">Для установки приложения следуйте инструкции : </p>' +
+                        '<div class="d-none d-md-block d-lg-block">' +
+                        'В верхнем меню выберите Файл <br>' +
+                        'Найдите пункт Добавить в Dock и нажмите на него</br>' +
+                        'У вас на панели появится иконка с приложением.</br>' +
+                        '<img class="bg-white max-height-500 mt-3" ' +
+                        'src="/images/screenInMessage.png" alt="oshisha"/>' +
+                        '</div>' +
+                        '<div class="d-block d-md-none d-lg-none"> Нажмите <img src="/images/shareapple.png" style="width:25px;" alt="oshisha"/> ' +
+                        'в браузерe,<br>затем коснитесь <b>"На экран «Домой»"</b>.</div></div></div></div>');
+                    $('.close-window').on('click', function () {
+                        $(this).closest(".box-message-install").remove()
+                    });
+                }
+            });
+        } else {
+            btnInstall.addEventListener('click', (e) => {
+                // Show the prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice
+                    .then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the A2HS prompt');
+                        } else {
+                            console.log('User dismissed the A2HS prompt');
+                        }
+                        deferredPrompt = null;
+                    });
+            });
+        }
+    }
+});
+
+$(document).on('click', function (e) {
+    if ($(e.target).closest(".top-dop-menu-hides").length === 0 && $('#top_menu_header').hasClass('d-flex')) {
+        $('#top_menu_header').addClass('d-none').removeClass('d-flex');
+    }
+    e.stopPropagation();
+});
