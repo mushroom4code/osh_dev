@@ -419,6 +419,8 @@ class DeliveryHelper
         $params['deliveryOptions']['CURRENT_BASKET'] = $order->getBasePrice();
         $params['deliveryOptions']['DA_DATA_ADDRESS'] = $_SESSION['Osh']['delivery_address_info']['address'] ?? '';
 
+        $params['oshishaDeliveryCode'] = OshishaDelivery::$code;
+
         if ($order->getField('PRICE_DELIVERY')) {
             $params['shipmentCost'] = $order->getDeliveryPrice();
         }
@@ -429,11 +431,14 @@ class DeliveryHelper
         $cAsset = Asset::getInstance();
 
         $apiKey = htmlspecialcharsbx(Option::get('enterego.pvz','Oshisha_ymapskey', ''));
+        $apiSuggestKey = htmlspecialcharsbx(Option::get('enterego.pvz',
+            'Oshisha_ymaps_suggest_apikey', ''));
         $locale = 'ru-RU';
         if (empty($apiKey)) {
             Asset::getInstance()->addJs('//api-maps.yandex.ru/2.1.79/?load=package.standard&mode=release&lang=' . $locale);
         } else {
-            Asset::getInstance()->addJs('///api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey . '&lang=' . $locale);
+            Asset::getInstance()->addJs('///api-maps.yandex.ru/2.1.79/?apikey=' . $apiKey
+                . '&suggest_apikey='. $apiSuggestKey .  '&lang=' . $locale);
         }
 
         $cAsset->addJs('/bitrix/modules/enterego.pvz/lib/CommonPVZ/script.js', true);

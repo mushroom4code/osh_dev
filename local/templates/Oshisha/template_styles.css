@@ -661,7 +661,6 @@ h3.ctweb-title {
     display: none !important;
 }
 
-
 .product-item .image_cart {
     min-height: 160px;
 }
@@ -715,10 +714,11 @@ h3.ctweb-title {
     opacity: 0;
     position: fixed;
     z-index: 1050;
+    border-radius: 100px;
     bottom: 25px;
     right: 100px;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     background-color: rgba(0, 0, 0, 0.3);
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -754,10 +754,8 @@ h3.ctweb-title {
 
 @media (max-width: 768px) {
     .page-scroller {
-        top: 15px;
-
-        right: 15px;
-        bottom: initial;
+        left: 15px;
+        bottom: 9%;
     }
 }
 
@@ -956,6 +954,7 @@ h3.ctweb-title {
 
 .alert_quantity {
     color: red;
+    z-index: 1;
 }
 
 .product-item-amount-field-contain {

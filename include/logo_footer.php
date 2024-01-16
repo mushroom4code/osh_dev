@@ -1,1 +1,1 @@
-<div class="logo_footer"></div>
+<img src="/local/assets/images/logo-white.svg" alt="oshisha">

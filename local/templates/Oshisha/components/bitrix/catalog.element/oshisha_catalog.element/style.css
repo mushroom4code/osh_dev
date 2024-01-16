@@ -9,6 +9,10 @@
     }
 }
 
+.box_with_net .box_with_like a {
+    margin-bottom: 1rem
+}
+
 .head-title {
     font-family: 'Montserrat';
     font-style: normal;
@@ -1390,11 +1394,11 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
-.red_button_cart:not(i).font-14{
+.red_button_cart:not(i).font-14 {
     font-size: 14px;
 }
 
-.red_button_cart:not(i).font-13{
+.red_button_cart:not(i).font-13 {
     font-size: 13px;
 }
 
