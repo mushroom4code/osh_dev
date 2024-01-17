@@ -223,7 +223,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                             <?php
                             if (!empty($arResult['DELETED_ITEMS'])) {
                                 ?>
-                                <div class="box" id="deleted_products_box">
+                                <div class="box rounded-lg mb-2 border-2 border-lightGrayBg dark:border-dark-red" id="deleted_products_box">
                                     <div class="card-header basket_category" id="openDeletedProducts">
                                         <button class="btn btn-link btn-block flex justify-between
                                            btn_basket_collapse" type="button"
@@ -247,14 +247,14 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 <?php
                             }
                             if (!empty($arResult['ITEMS']['nAnCanBuy'])) { ?>
-                                <div class="box" id=NotAvailable">
+                                <div class="box border-2 border-lightGrayBg dark:border-dark-red rounded-lg mb-2" id=NotAvailable">
                                     <div class="card-header basket_category alert alert-danger py-3.5 px-5
-                                    bg-lightGrayBg rounded-lg w-full dark:bg-dark-red mb-1"
+                                    bg-lightGrayBg w-full dark:bg-dark-red"
                                          id="openDNotAvailableProducts">
                                         <button class="btn btn-link btn-block flex w-full items-center justify-between btn_basket_collapse"
                                                 type="button"
                                                 data-id-category="NotAvailable">
-                                            <span class="text-white">Нет в наличии </span>
+                                            <span class="text-white"> ( <?=count($arResult['ITEMS']['nAnCanBuy']) ?? 0?> )  Нет в наличии </span>
                                             <i class="fa fa-angle-down" aria-hidden="true"
                                                style="transform:rotate(180deg);">
                                                 <svg width="17" height="12" viewBox="0 0 14 9" fill="none"
@@ -287,14 +287,16 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 if ($newName[1] === 'NotAvailable') {
                                     continue;
                                 } ?>
-                                <div class="box w-full" id="<?= $newName[1] ?>">
-                                    <div class="card-header basket_category py-3.5 px-5 dark:bg-lightGrayBg rounded-lg w-full
-                                    bg-textDark mb-1"
+                                <div class="box w-full border-2 border-textDark dark:border-lightGrayBg rounded-lg mb-2" id="<?= $newName[1] ?>">
+                                    <div class="card-header basket_category py-3.5 px-5 dark:bg-lightGrayBg w-full
+                                    bg-textDark"
                                          id="open<?= $newName[1] ?>">
                                         <button class="btn btn-link btn-block flex justify-between flex-row items-center
                                             btn_basket_collapse w-full" type="button"
                                                 data-id-category="<?= $newName[1] ?>">
-                                            <span class="dark:text-textDarkLightGray text-textLight"><?= $newName[0] ?></span>
+                                            <span class="dark:text-textDarkLightGray text-textLight font-normal dark:font-light">
+                                                ( <?=count($item) ?? 0?> )  <?= $newName[0] ?>
+                                            </span>
                                             <i class="fa fa-angle-down" aria-hidden="true"
                                                 <?= $styleIcon ?>>
                                                 <svg width="17" height="12" viewBox="0 0 14 9" fill="none"
