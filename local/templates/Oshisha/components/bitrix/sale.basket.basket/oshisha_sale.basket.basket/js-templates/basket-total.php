@@ -8,10 +8,10 @@ use Bitrix\Main\Localization\Loc;
  */
 ?>
 <script id="basket-total-template" type="text/html">
-    <div class="basket-checkout-container" data-entity="basket-checkout-aligner">
+    <div class="basket-checkout-container p-5 rounded-xl bg-textDark dark:bg-boxDark mb-7" data-entity="basket-checkout-aligner">
         <div class="basket-checkout-section">
             <div class="basket-checkout-section-inner">
-                <div class="basket-checkout-block mb-4 d-flex justify-content-between  align-items-center flex-row"
+                <div class="basket-checkout-block mb-4 flex justify-between items-center flex-row"
                      data-entity="basket-items-list-header">
                     <span class="text_filter_basket" data-filter="all"
                           data-entity="basket-items-count">Товары   ( <span data-count="{{{BASKET_ITEMS_COUNT}}}">
@@ -23,13 +23,12 @@ use Bitrix\Main\Localization\Loc;
                     </div>
                 </div>
                 <?php if (USE_CUSTOM_SALE_PRICE) { ?>
-                    <div class="basket-checkout-block mb-4  d-flex justify-content-between  align-items-center flex-row">
+                    <div class="basket-checkout-block mb-4 flex justify-between items-center flex-row">
                         <span class="text_filter_basket">Скидка</span>
                         <span class="text_filter_basket">500₽</span>
                     </div>
                 <?php } ?>
-                <div class="basket-checkout-block pb-3 mb-4 d-flex justify-content-between  align-items-center flex-row
-                 border_color">
+                <div class="basket-checkout-block pb-3 mb-4 flex justify-between items-center flex-row border_color">
                     {{#WEIGHT_FORMATED}}
                     <span class="text_filter_basket">  <?= Loc::getMessage('SBB_WEIGHT') ?></span>
                     <span class="text_filter_basket"> {{{WEIGHT_FORMATED}}}</span>
@@ -47,8 +46,8 @@ use Bitrix\Main\Localization\Loc;
                 <!--                        <button class="btn_basket_filter" type="button">Списать</button>-->
                 <!--                    </div>-->
                 <!--                </div>-->
-                <div class="basket-checkout-block mb-4 d-flex justify-content-between flex-row align-items-center">
-                    <div class="d-flex flex-column">
+                <div class="basket-checkout-block mb-4 flex justify-between flex-row items-center">
+                    <div class="flex flex-col">
                         <span class="text_filter_basket mb-1"><b>Общая стоимость</b></span>
                         <span class="text_filter_basket link_bonus" style="display:none;"><a
                                     href="#">Бесплатная</a> доставка по г. Москва.</span>
@@ -59,35 +58,28 @@ use Bitrix\Main\Localization\Loc;
                     </div>
                 </div>
                 <div class="basket-checkout-block mb-4 basket-checkout-block-btn text-left">
-                    <?php
-                    if ($USER->IsAuthorized()) {
-                        $canOrder = empty($arResult['ITEMS']['nAnCanBuy']);
-                        ?>
+                    <?php  if ($USER->IsAuthorized()) {
+                        $canOrder = empty($arResult['ITEMS']['nAnCanBuy']); ?>
                         <button class="btn_basket  basket-btn-checkout dark:text-textDark shadow-md text-textLight
                         dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 w-48" {{#DISABLE_CHECKOUT}} disabled
                                 {{/DISABLE_CHECKOUT}} data-entity="basket-checkout-button">
-                            <?= Loc::getMessage('SBB_ORDER') ?>
+                        <?= Loc::getMessage('SBB_ORDER') ?>
                         </button>
                         {{#DISABLE_CHECKOUT}}
-                            <div id="basket_bnt_checkout_errors" class="text-center  mt-3 font-13 text-danger">
-                                Удалите или замените отсутствующие товары корзины.
-                            </div>
+                        <div id="basket_bnt_checkout_errors" class="text-center mt-3 font-13 text-danger">
+                            Удалите или замените отсутствующие товары корзины.
+                        </div>
                         {{/DISABLE_CHECKOUT}}
-                        <?php
-                    }  else {
-                        ?>
-                            <span class="btn-primary-color">Для оформления заказа необходимо авторизоваться</span>
-                        <?php
-                    }?>
+                    <?php } else { ?>
+                        <span class="btn-primary-color">Для оформления заказа необходимо авторизоваться</span>
+                    <?php } ?>
                 </div>
             </div>
         </div>
     </div>
-    <div class="basket-checkout-container" data-entity="basket-checkout-aligner">
+    <div class="basket-checkout-container p-5 rounded-xl bg-textDark dark:bg-boxDark" data-entity="basket-checkout-aligner">
         <div class="basket-checkout-section-inner">
-            <?
-            if ($arParams['HIDE_COUPON'] !== 'Y') {
-                ?>
+            <?php if ($arParams['HIDE_COUPON'] !== 'Y') { ?>
                 <div class="basket-coupon-section">
                     <div class="basket-coupon-block-field">
                         <div class="basket-coupon-block-field-description mb-4">
@@ -124,10 +116,8 @@ use Bitrix\Main\Localization\Loc;
 
                     </div>
                 </div>
-                <?
-            }
-            ?></div>
-
+            <?php } ?>
+        </div>
     </div>
     <a class="link_basket_after" href="/catalog/">Вернуться к покупкам</a>
 </script>

@@ -740,12 +740,12 @@ $(document).ready(function () {
     if ($(div).is('.bx-basket')) {
         $(document).on('click', '.btn_basket_collapse', function () {
             let box = $(this).closest('.box').find('.category'),
-                attr = $(box).hasClass('collapse_hide');
+                attr = $(box).hasClass('hidden');
             if (attr === true) {
-                $(box).hide().removeClass('collapse_hide').show(300);
+                $(box).hide().removeClass('hidden').show(300);
                 $(this).find('i').attr('style', 'transform:rotate(180deg)');
             } else {
-                $(box).hide(300).addClass('collapse_hide');
+                $(box).hide(300).addClass('hidden');
                 $(this).find('i').attr('style', 'transform:rotate(0deg)');
             }
 
