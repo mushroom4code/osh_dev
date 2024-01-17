@@ -8,76 +8,87 @@ use Bitrix\Main\Localization\Loc;
  */
 ?>
 <script id="basket-total-template" type="text/html">
-    <div class="basket-checkout-container p-5 rounded-xl bg-textDark dark:bg-boxDark mb-7" data-entity="basket-checkout-aligner">
+    <div class="basket-checkout-container p-8 rounded-xl bg-textDark dark:bg-darkBox mb-7"
+         data-entity="basket-checkout-aligner">
         <div class="basket-checkout-section">
             <div class="basket-checkout-section-inner">
-                <div class="basket-checkout-block mb-4 flex justify-between items-center flex-row"
-                     data-entity="basket-items-list-header">
-                    <span class="text_filter_basket" data-filter="all"
+                <div class="border-b border-borderColor dark:border-gray-slider-arrow mb-5">
+                    <div class="basket-checkout-block mb-5 flex justify-between items-center flex-row"
+                         data-entity="basket-items-list-header">
+                    <span class="text_filter_basket text-lg text-textLight dark:text-white font-normal dark:font-light"
+                          data-filter="all"
                           data-entity="basket-items-count">Товары   ( <span data-count="{{{BASKET_ITEMS_COUNT}}}">
                             {{{BASKET_ITEMS_COUNT}}} </span>) </span>
-                    <div class="basket-coupon-block-total-price" data-entity="basket-total-price">
-                       <span class="text_filter_basket">
+                        <div class="basket-coupon-block-total-price" data-entity="basket-total-price">
+                       <span class="text_filter_basket text-lg text-textLight dark:text-white font-normal dark:font-light">
                         {{{PRICE_FORMATED}}}
                         </span>
+                        </div>
                     </div>
-                </div>
-                <?php if (USE_CUSTOM_SALE_PRICE) { ?>
-                    <div class="basket-checkout-block mb-4 flex justify-between items-center flex-row">
-                        <span class="text_filter_basket">Скидка</span>
-                        <span class="text_filter_basket">500₽</span>
+                    <?php if (USE_CUSTOM_SALE_PRICE) { ?>
+                        <div class="basket-checkout-block mb-5 flex justify-between items-center flex-row">
+                            <span class="text_filter_basket text-lg text-textLight dark:text-white font-normal dark:font-light">Скидка</span>
+                            <span class="text_filter_basket text-lg text-textLight dark:text-white font-normal dark:font-light">500₽</span>
+                        </div>
+                    <?php } ?>
+                    <div class="basket-checkout-block pb-4 flex justify-between items-center flex-row">
+                        {{#WEIGHT_FORMATED}}
+                        <span class="text_filter_basket text-lg text-textLight dark:text-white font-normal dark:font-light">
+                        <?= Loc::getMessage('SBB_WEIGHT') ?></span>
+                        <span class="text_filter_basket text-lg text-textLight dark:text-white font-normal dark:font-light">
+                        {{{WEIGHT_FORMATED}}}</span>
+                        {{/WEIGHT_FORMATED}}
                     </div>
-                <?php } ?>
-                <div class="basket-checkout-block pb-3 mb-4 flex justify-between items-center flex-row border_color">
-                    {{#WEIGHT_FORMATED}}
-                    <span class="text_filter_basket">  <?= Loc::getMessage('SBB_WEIGHT') ?></span>
-                    <span class="text_filter_basket"> {{{WEIGHT_FORMATED}}}</span>
-                    {{/WEIGHT_FORMATED}}
+                    <!--               Бонусная система -->
+                    <!--                <div>-->
+                    <!--                    <div class="basket-checkout-block mb-4 d-flex justify-content-between flex-row align-items-center">-->
+                    <!--                        <span class="text_filter_basket"><b>У вас 500 баллов</b></span>-->
+                    <!--                        <span class="text_filter_basket link_bonus">(Вам начислится <a href="#">230</a> баллов) </span>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="basket-checkout-block mb-4 d-flex pb-3  align-items-center justify-content-between-->
+                    <!--                 flex-row border_color">-->
+                    <!--                        <input type="text" class="input-form-control input_basket" placeholder="Введите кол-во баллов"/>-->
+                    <!--                        <button class="btn_basket_filter" type="button">Списать</button>-->
+                    <!--                    </div>-->
+                    <!--                </div>-->
                 </div>
-                <!--               Бонусная система -->
-                <!--                <div>-->
-                <!--                    <div class="basket-checkout-block mb-4 d-flex justify-content-between flex-row align-items-center">-->
-                <!--                        <span class="text_filter_basket"><b>У вас 500 баллов</b></span>-->
-                <!--                        <span class="text_filter_basket link_bonus">(Вам начислится <a href="#">230</a> баллов) </span>-->
-                <!--                    </div>-->
-                <!--                    <div class="basket-checkout-block mb-4 d-flex pb-3  align-items-center justify-content-between-->
-                <!--                 flex-row border_color">-->
-                <!--                        <input type="text" class="input-form-control input_basket" placeholder="Введите кол-во баллов"/>-->
-                <!--                        <button class="btn_basket_filter" type="button">Списать</button>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-                <div class="basket-checkout-block mb-4 flex justify-between flex-row items-center">
+                <div class="basket-checkout-block mb-5 flex justify-between flex-row items-center">
                     <div class="flex flex-col">
-                        <span class="text_filter_basket mb-1"><b>Общая стоимость</b></span>
+                        <span class="text_filter_basket mb-1 text-lg text-textLight dark:text-white font-semibold dark:font-normal">
+                            Общая стоимость</span>
                         <span class="text_filter_basket link_bonus" style="display:none;"><a
                                     href="#">Бесплатная</a> доставка по г. Москва.</span>
                     </div>
                     <div>
-                        <span class="text_filter_basket"
-                              data-entity="basket-total-price"><b> {{{PRICE_FORMATED}}}</b></span>
+                        <span class="text_filter_basket text-lg text-textLight dark:text-white font-semibold dark:font-normal"
+                              data-entity="basket-total-price"> {{{PRICE_FORMATED}}}</span>
                     </div>
                 </div>
-                <div class="basket-checkout-block mb-4 basket-checkout-block-btn text-left">
-                    <?php  if ($USER->IsAuthorized()) {
+                <div class="basket-checkout-block basket-checkout-block-btn">
+                    <?php if ($USER->IsAuthorized()) {
                         $canOrder = empty($arResult['ITEMS']['nAnCanBuy']); ?>
-                        <button class="btn_basket  basket-btn-checkout dark:text-textDark shadow-md text-textLight
-                        dark:bg-dark-red bg-light-red py-2 px-4 rounded-5 w-48" {{#DISABLE_CHECKOUT}} disabled
+                        <button class="btn_basket basket-btn-checkout shadow-md text-white w-full font-normal dark:font-light text-lg
+                        dark:bg-dark-red bg-light-red py-3 px-4 rounded-5" {{#DISABLE_CHECKOUT}} disabled
                                 {{/DISABLE_CHECKOUT}} data-entity="basket-checkout-button">
                         <?= Loc::getMessage('SBB_ORDER') ?>
                         </button>
                         {{#DISABLE_CHECKOUT}}
-                        <div id="basket_bnt_checkout_errors" class="text-center mt-3 font-13 text-danger">
+                        <div id="basket_bnt_checkout_errors"
+                             class="text-center mt-4 text-xs text-hover-red font-normal dark:font-medium">
                             Удалите или замените отсутствующие товары корзины.
                         </div>
                         {{/DISABLE_CHECKOUT}}
                     <?php } else { ?>
-                        <span class="btn-primary-color">Для оформления заказа необходимо авторизоваться</span>
+                        <div class="mt-3 text-xs text-hover-red text-center font-normal dark:font-medium">
+                            Для оформления заказа необходимо авторизоваться
+                        </div>
                     <?php } ?>
                 </div>
             </div>
         </div>
     </div>
-    <div class="basket-checkout-container p-5 rounded-xl bg-textDark dark:bg-boxDark" data-entity="basket-checkout-aligner">
+    <div class="basket-checkout-container p-8 rounded-xl bg-textDark dark:bg-darkBox mb-7"
+         data-entity="basket-checkout-aligner">
         <div class="basket-checkout-section-inner">
             <?php if ($arParams['HIDE_COUPON'] !== 'Y') { ?>
                 <div class="basket-coupon-section">
