@@ -135,7 +135,9 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                 switch (trim((string)$blockName)) {
                                     case 'props':
                                         if (in_array('PROPS', $arParams['COLUMNS_LIST'])) { ?>
-                                            <div class="relative toggle_taste h-inherit">
+                                            {{#PROPS}}
+                                            {{#VKUS.length}}
+                                                <div class="relative toggle_taste h-inherit">
                                                 <div class="variation_taste flex flex-wrap flex-row mt-2 mb-2 md:h-7 h-5 js__tastes-list w-96 overflow-hidden">
                                                     {{#PROPS}}
                                                     {{#VKUS}}
@@ -155,6 +157,8 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                                     </svg>
                                                 </div>
                                             </div>
+                                            {{/VKUS.length}}
+                                            {{/PROPS}}
                                         <?php }
                                         break;
                                     case 'sku': ?>
