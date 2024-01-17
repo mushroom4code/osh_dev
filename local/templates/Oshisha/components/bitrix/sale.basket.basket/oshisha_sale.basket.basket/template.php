@@ -164,12 +164,18 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             <div class="mb-3 basket-items-list-wrapper basket-items-list-wrapper-height-fixed basket-items-list-wrapper-light<?= $displayModeClass ?>"
                  id="basket-items-list-wrapper">
                 <div class="basket-items-list-header mb-4" data-entity="basket-items-list-header">
-                    <div class="d-flex flex-row justify-content-between align-items-center basket-items-search-field"
+                    <div class="flex flex-row items-center basket-items-search-field"
                          data-entity="basket-filter">
+                        <div class="relative max-w-md w-full mr-5">
                         <input type="text" class="form-control text-sm basket_input search_input dark:bg-gray-box-dark
-                        bg-white  border border-textDarkLightGray dark:border-gray-box-dark outline-none
-                   dark:text-grayIconLights py-3 px-4 rounded-7 text-textLight"
-                               data-entity="basket-filter-input" placeholder="Искать в корзине"/>
+                        bg-white border w-full border-textDarkLightGray dark:border-gray-box-dark outline-none
+                   dark:text-grayIconLights py-3 pl-10 rounded-7 text-textLight"
+                               data-entity="basket-filter-input" placeholder="Введите название товара"/>
+                            <svg width="20" height="20" class="absolute left-3 h-full flex items-center top-0"
+                                 viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.2583 14.075L12.425 11.25C13.3392 10.0854 13.8352 8.64722 13.8333 7.16667C13.8333 5.84813 13.4423 4.5592 12.7098 3.46287C11.9773 2.36654 10.9361 1.51206 9.71789 1.00747C8.49972 0.502889 7.15927 0.370866 5.86607 0.628101C4.57286 0.885336 3.38497 1.52027 2.45262 2.45262C1.52027 3.38497 0.885336 4.57286 0.628101 5.86607C0.370866 7.15927 0.502889 8.49972 1.00747 9.71789C1.51206 10.9361 2.36654 11.9773 3.46287 12.7098C4.5592 13.4423 5.84813 13.8333 7.16667 13.8333C8.64722 13.8352 10.0854 13.3392 11.25 12.425L14.075 15.2583C14.1525 15.3364 14.2446 15.3984 14.3462 15.4407C14.4477 15.4831 14.5567 15.5048 14.6667 15.5048C14.7767 15.5048 14.8856 15.4831 14.9872 15.4407C15.0887 15.3984 15.1809 15.3364 15.2583 15.2583C15.3364 15.1809 15.3984 15.0887 15.4407 14.9872C15.4831 14.8856 15.5048 14.7767 15.5048 14.6667C15.5048 14.5567 15.4831 14.4477 15.4407 14.3462C15.3984 14.2446 15.3364 14.1525 15.2583 14.075ZM2.16667 7.16667C2.16667 6.17776 2.45991 5.21106 3.00932 4.38882C3.55873 3.56657 4.33962 2.92571 5.25325 2.54727C6.16688 2.16883 7.17222 2.06982 8.14212 2.26274C9.11203 2.45567 10.0029 2.93187 10.7022 3.63114C11.4015 4.3304 11.8777 5.22131 12.0706 6.19122C12.2635 7.16112 12.1645 8.16646 11.7861 9.08009C11.4076 9.99372 10.7668 10.7746 9.94452 11.324C9.12228 11.8734 8.15558 12.1667 7.16667 12.1667C5.84059 12.1667 4.56882 11.6399 3.63114 10.7022C2.69345 9.76452 2.16667 8.49275 2.16667 7.16667Z" fill="black" class="fill-lightGrayBg dark:fill-textDarkLightGray"></path>
+                            </svg>
+                        </div>
                         <div class="d-flex flex-row box_select">
                             <?/* <select class="select_sort_basket">
                                 <option>Сортировать по</option>
@@ -182,7 +188,14 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 <div class="icon_sort_line sort" id="basket-line" data-sort="line"
                                      style="display:none;"></div>
                                 <form action="" method="POST" class="col-xs-6 BasketClearForm">
-                                    <button type="submit" class="clear-cart" name="BasketClear">Очистить корзину
+                                    <button type="submit" class="clear-cart py-2 px-4 dark:bg-lightGrayBg rounded-lg w-fit
+                                    bg-textDark flex flex-row items-center dark:text-textDarkLightGray text-textLight" name="BasketClear">
+                                        <svg width="30" height="30" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="0.637329" y="0.416748" width="26" height="26" rx="13" fill="#393939"/>
+                                            <path d="M7.37639 6.90784L20.0664 19.5978M17.9514 9.02284L17.6694 13.2528M17.4225 16.956L17.3868 17.4919C17.3373 18.2337 17.3126 18.6046 17.1524 18.8858C17.0113 19.1334 16.7986 19.3324 16.5422 19.4567C16.2509 19.5978 15.8792 19.5978 15.1358 19.5978H12.307C11.5636 19.5978 11.1919 19.5978 10.9006 19.4567C10.6442 19.3324 10.4314 19.1334 10.2904 18.8858C10.1302 18.6046 10.1054 18.2337 10.056 17.4919L9.49139 9.02284H8.08139M16.5414 9.02284L16.1578 7.87195C15.9659 7.29619 15.4271 6.90784 14.8201 6.90784H12.6227C12.2708 6.90784 11.9418 7.0384 11.69 7.26034M13.4488 9.02284H19.3614M15.1314 14.6628V16.7778M12.3114 11.8428V16.7778"
+                                                  stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span class="ml-2 text-sm font-medium">Очистить корзину</span>
                                     </button>
                                 </form>
                                 <?

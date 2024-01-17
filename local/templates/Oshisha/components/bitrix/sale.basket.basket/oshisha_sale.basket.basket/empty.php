@@ -12,9 +12,9 @@
                             В вашей корзине нет товаров
                         </h1>
                         <div>
-                            <h2 class="mb-5 md:text-3xl text-xl font-medium dark:font-light text-textLight dark:text-textDarkLightGray">
+                            <h2 class="mb-5 md:text-2xl text-xl font-medium dark:font-light text-textLight dark:text-textDarkLightGray">
                                 Начните покупки прямой сейчас!</h2>
-                            <p class="md:text-md text-xs dark:bg-darkBox mr-5 mb-5 font-normal dark:font-light">
+                            <p class="md:text-lg text-xs dark:bg-darkBox mr-5 mb-5 font-normal dark:font-light">
                                 Можете воспользоваться поиском, рекомендуемыми<br class="md:block hidden">
                                 товарами или вернуться в каталог
                             </p>
