@@ -152,7 +152,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
     <div id="basket-root"
          class="bx-basket bx-<?= $arParams['TEMPLATE_THEME'] ?> bx-step-opacity flex lg:flex-row flex-col"
          style="opacity: 0;">
-        <div class="md:w-2/3 w-full">
+        <div class="lg:w-2/3 w-full">
             <div class="row">
                 <div class="alert alert-warning alert-dismissable" id="basket-warning" style="display: none;">
                     <span class="close" data-entity="basket-items-warning-notification-close">&times;</span>
@@ -162,7 +162,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                     </div>
                 </div>
             </div>
-            <div class="mb-3 basket-items-list-wrapper basket-items-list-wrapper-height-fixed md:pr-7 p-3 basket-items-list-wrapper-light<?= $displayModeClass ?>"
+            <div class="mb-3 basket-items-list-wrapper basket-items-list-wrapper-height-fixed lg:pr-7 p-3 basket-items-list-wrapper-light<?= $displayModeClass ?>"
                  id="basket-items-list-wrapper">
                 <div class="basket-items-list-header mb-4" data-entity="basket-items-list-header">
                     <div class="flex flex-row items-center basket-items-search-field"
@@ -326,7 +326,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             </div>
         <?php }
         if ($arParams['BASKET_WITH_ORDER_INTEGRATION'] !== 'Y' && in_array('top', $arParams['TOTAL_BLOCK_DISPLAY'])) { ?>
-            <div class="md:w-1/3 w-full basket-items-list-wrapper h-fit">
+            <div class="lg:w-1/3 w-full basket-items-list-wrapper h-fit">
                 <p class="h-14 mb-4"></p>
                 <div data-entity="basket-total-block" class="mb-lg-0 mb-md-0 mb-5">
                 </div>
