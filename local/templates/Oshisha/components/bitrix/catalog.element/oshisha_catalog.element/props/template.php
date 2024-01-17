@@ -9,7 +9,7 @@
 
 <div class="tab-pane fade <? if (!$showDescription): ?>show active<? endif; ?>" id="pills-profile"
      role="tabpanel" aria-labelledby="pills-profile-tab">
-    <h6 class="mb-3"><b><?= $name ?></b></h6>
+    <h6 class="mb-3"><b><?= $arResult['NAME'] ?></b></h6>
     <?php if (!empty($arResult['PROPERTIES'])) { ?>
         <ul class="product-item-detail-properties">
             <?php

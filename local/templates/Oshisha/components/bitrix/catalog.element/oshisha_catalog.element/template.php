@@ -684,16 +684,16 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
         } ?>
         <ul class="nav nav-fill flex flex-row flex-wrap justify-content-between mb-3 mt-5" role="tablist">
             <?php if ($showDescription) { ?>
-                <li class="nav-item link w-1/3">
-                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home"
+                <li class="nav-item link text-center w-1/3">
+                    <a class="nav-link active text-center tab-product" id="pills-home-tab" data-toggle="pill" href="#pills-home"
                        role="tab" aria-controls="pills-home" aria-selected="true">
                         <span><?= $arParams['MESS_DESCRIPTION_TAB'] ?></span></a>
                 </li>
                 <?php
             }
             if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
-                <li class="nav-item  w-1/3">
-                    <a class="nav-link <? if (!$showDescription): ?>active<? endif; ?>" id="pills-profile-tab"
+                <li class="nav-item  text-center w-1/3">
+                    <a class="nav-link text-center tab-product <? if (!$showDescription): ?>active<? endif; ?>" id="pills-profile-tab"
                        data-toggle="pill" href="#pills-profile"
                        role="tab" aria-controls="pills-profile" aria-selected="false">
                         <span><?= $arParams['MESS_PROPERTIES_TAB'] ?></span>
@@ -702,8 +702,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 <?php
             }
             if ($arParams['USE_COMMENTS'] === 'Y') { ?>
-                <li class="nav-item  w-1/3">
-                    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact"
+                <li class="nav-item text-center w-1/3">
+                    <a class="nav-link tab-product" id="pills-contact-tab" data-toggle="pill" href="#pills-contact"
                        role="tab" aria-controls="pills-contact" aria-selected="false">
                         <i class="fa fa-comment-o" aria-hidden="true"></i>
                         <span><?= $arParams['MESS_COMMENTS_TAB'] ?></span>
