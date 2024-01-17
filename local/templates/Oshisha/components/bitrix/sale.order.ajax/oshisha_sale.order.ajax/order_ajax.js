@@ -157,7 +157,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
         /**
          * Send ajax request with order data and executes callback by action
          */
-        sendRequest: function (action, actionData, afterUpdate = false) {
+        sendRequest: function (action, actionData, afterUpdate = false, additionalData = {}) {
             var form;
             if (($('input[name="USER_RULES"]').prop('checked') === false ||
                 $('input[name="USER_POLITICS"]').prop('checked') === false) && action === 'saveOrderAjax') {
@@ -186,6 +186,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                 return;
             }
 
+            let requestData = this.getData(action, actionData)
+            requestData.order = { ...requestData.order, ...additionalData }
+
             if (action === 'saveOrderAjax') {
                 form = BX('bx-soa-order-form');
                 if (form)
@@ -197,7 +200,7 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
                     method: 'POST',
                     dataType: 'json',
                     url: this.ajaxUrl,
-                    data: this.getData(action, actionData),
+                    data: requestData,
                     onsuccess: BX.delegate(function (result) {
                         if (result.redirect && result.redirect.length)
                             document.location.href = result.redirect;
@@ -2316,6 +2319,9 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             });
         },
         changeVisibleSection: function (section, state) {
+            //todo disable hide block
+            return;
+
             var titleNode, content, editStep;
 
             content = section.querySelector('.bx-soa-section-content');
