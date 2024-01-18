@@ -49,8 +49,10 @@ $is_key_found = isset($found_key) && ($found_key !== false);
  * @var  CUser $USER
  */ ?>
 <script id="basket-item-template" type="text/html">
-    <div class="justify-between rounded-lg dark:py-5 dark:px-5 px-5 py-3 dark:bg-darkBox bg-white dark:mb-4 mb-0 basket-items-list-item-container
-    {{#SHOW_RESTORE}} basket-items-list-item-container-expend hidden{{/SHOW_RESTORE}} {{^SHOW_RESTORE}}flex{{/SHOW_RESTORE}}"
+    <div class="justify-between rounded-lg md:dark:py-5 md:dark:px-5 md:px-5 md:py-3 dark:py-0 dark:px-0 px-0 py-0
+    dark:bg-darkBox bg-white dark:mb-4 mb-0 basket-items-list-item-container
+    {{#SHOW_RESTORE}} basket-items-list-item-container-expend hidden{{/SHOW_RESTORE}}
+    {{^SHOW_RESTORE}}flex{{/SHOW_RESTORE}}"
          id="basket-item-{{ID}}" data-gift="{{GIFT}}" data-entity="basket-item" data-id="{{ID}}">
         {{^SHOW_RESTORE}}
         <div class="basket-items-list-item-descriptions w-full flex flex-row flex-wrap justify-between">
@@ -100,7 +102,8 @@ $is_key_found = isset($found_key) && ($found_key !== false);
                         <a href="{{DETAIL_PAGE_URL}}" class="basket-item-info-name-link">
                             {{/DETAIL_PAGE_URL}}
                             <span data-entity="basket-item-name"
-                                  class="font-semibold dark:font-light text-lg text-textLight dark:text-textDarkLightGray">{{NAME}}</span>
+                                  class="font-semibold dark:font-light md:text-lg text-textLight text-sm
+                                  dark:text-textDarkLightGray">{{NAME}}</span>
                             {{#DETAIL_PAGE_URL}}
                         </a>
                         {{/DETAIL_PAGE_URL}}
@@ -271,13 +274,13 @@ $is_key_found = isset($found_key) && ($found_key !== false);
                     </div>
                     {{#NOT_AVAILABLE}}
                     <div class="basket-items-list-item-warning-container">
-                        <div class="my-4 text-md text-hover-red font-medium">
+                        <div class="md:my-4 my-2 md:text-md text-xs text-hover-red font-medium">
                             <?= Loc::getMessage('SBB_BASKET_ITEM_NOT_AVAILABLE') ?>.
                         </div>
                     </div>
                     {{/NOT_AVAILABLE}}
                 </div>
-                <div class="flex lg:flex-row flex-col items-center relative">
+                <div class="flex flex-row items-center relative">
                     {{^NOT_AVAILABLE}}
                     <div class="basket-items-list-item-amount justify-between items-end mr-4">
                         <div class="flex flex-row">
