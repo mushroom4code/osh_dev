@@ -375,7 +375,10 @@ $is_key_found = isset($found_key) && ($found_key !== false);
                                 {{/SHOW_LOADING}}
                             </div>
                         </div>
-                        <div class="alert_quantity" data-id="{{PRODUCT_ID}}"></div>
+                        <div class="alert_quantity hidden w-auto absolute md:p-4 p-2 text-xs left-0 top-12 bg-[#FFE2E2]
+                                    dark:bg-dark shadow-lg rounded-md z-20 text-hover-red dark:text-textDarkLightGray
+                                     font-medium dark:font-light"
+                             data-id="{{PRODUCT_ID}}"></div>
                     </div>
                     {{/NOT_AVAILABLE}}
                     {{#NOT_AVAILABLE}}
