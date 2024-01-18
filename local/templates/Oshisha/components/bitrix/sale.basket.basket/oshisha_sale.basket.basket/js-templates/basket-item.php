@@ -41,6 +41,9 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
     }
 }
 
+$subscription_item_ids = array_column($arResult["CURRENT_USER_SUBSCRIPTIONS"]["SUBSCRIPTIONS"] ?? [], 'ITEM_ID');
+$found_key = array_search((string)$arResult['ITEMS']['nAnCanBuy'][0]['PRODUCT_ID'], $subscription_item_ids);
+$is_key_found = isset($found_key) && ($found_key !== false);
 /**
  * @var CAllMain|CMain $APPLICATION
  * @var  CUser $USER
@@ -54,11 +57,11 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
             <div class="basket-items-list-item-descriptions-inner flex flex-row p-0 md:w-9/12 w-full"
                  id="basket-item-height-aligner-{{ID}}">
                 <?php if (in_array('PREVIEW_PICTURE', $arParams['COLUMNS_LIST'])){ ?>
-                <div class="basket-item-block-image p-3 bg-white rounded-lg flex justify-center align-center border mr-4">
+                <div class="basket-item-block-image h-auto p-3 bg-white rounded-lg flex justify-center align-center border mr-4">
                     {{#DETAIL_PAGE_URL}}
                     <a href="{{DETAIL_PAGE_URL}}" class="basket-item-image-link">
                         {{/DETAIL_PAGE_URL}}
-                        <img class="basket-item-image w-32" alt="{{NAME}}"
+                        <img class="basket-item-image h-32 w-32 object-contain" alt="{{NAME}}"
                              src="{{{IMAGE_URL}}}{{^IMAGE_URL}}/local/templates/Oshisha/images/no-photo.gif{{/IMAGE_URL}}">
 
                         {{#SHOW_LABEL}}
@@ -102,13 +105,6 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         </a>
                         {{/DETAIL_PAGE_URL}}
                     </h2>
-                    {{#NOT_AVAILABLE}}
-                    <div class="basket-items-list-item-warning-container">
-                        <div class="text-center border border-danger rounded">
-                            <?= Loc::getMessage('SBB_BASKET_ITEM_NOT_AVAILABLE') ?>.
-                        </div>
-                    </div>
-                    {{/NOT_AVAILABLE}}
                     {{#DELAYED}}
                     <div class="basket-items-list-item-warning-container">
                         <div class="alert alert-warning text-center">
@@ -137,8 +133,8 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                         if (in_array('PROPS', $arParams['COLUMNS_LIST'])) { ?>
                                             {{#PROPS}}
                                             {{#VKUS.length}}
-                                                <div class="relative toggle_taste h-inherit">
-                                                <div class="variation_taste flex flex-wrap flex-row mt-2 mb-2 md:h-7 h-5 js__tastes-list w-96 overflow-hidden">
+                                            <div class="relative toggle_taste h-inherit">
+                                                <div class="variation_taste flex flex-wrap flex-row mt-2 mb-2 js__tastes-list md:h-7 h-5 overflow-auto">
                                                     {{#PROPS}}
                                                     {{#VKUS}}
                                                     <span class="taste cursor-pointer js__taste h-fit md:px-2 px-1.5 mr-1 md:py-1
@@ -148,13 +144,6 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                                 </span>
                                                     {{/VKUS}}
                                                     {{/PROPS}}
-                                                </div>
-                                                <div class="absolute top-0 right-0 z-20">
-                                                    <svg width="15" height="10" class="js__toggle-show rotate-0"
-                                                         viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M12.1636 -0.00231934H6.34969H1.11438C0.218505 -0.00231934 -0.229434 1.41033 0.405145 2.23844L5.23917 8.54663C6.01373 9.5574 7.27356 9.5574 8.04812 8.54663L9.88653 6.14757L12.8821 2.23844C13.5074 1.41033 13.0594 -0.00231934 12.1636 -0.00231934Z"
-                                                              fill="#BFBFBF"></path>
-                                                    </svg>
                                                 </div>
                                             </div>
                                             {{/VKUS.length}}
@@ -280,8 +269,16 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         }
                         ?>
                     </div>
+                    {{#NOT_AVAILABLE}}
+                    <div class="basket-items-list-item-warning-container">
+                        <div class="my-4 text-md text-hover-red font-medium">
+                            <?= Loc::getMessage('SBB_BASKET_ITEM_NOT_AVAILABLE') ?>.
+                        </div>
+                    </div>
+                    {{/NOT_AVAILABLE}}
                 </div>
-                <div class="flex lg:flex-row flex-col items-center">
+                <div class="flex lg:flex-row flex-col items-center relative">
+                    {{^NOT_AVAILABLE}}
                     <div class="basket-items-list-item-amount justify-between items-end mr-4">
                         <div class="flex flex-row">
                             <?php if ($mobile->isMobile() || $mobile->isTablet()) { ?>
@@ -331,8 +328,9 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                     </div>
                                 </div>
                             <?php } ?>
-                            <div class="basket-item-block-amount{{#NOT_AVAILABLE}} disabled{{/NOT_AVAILABLE}}
-                            flex flex-row items-center justify-between w-full"
+
+                            <div class="basket-item-block-amount{{#NOT_AVAILABLE}} disabled {{/NOT_AVAILABLE}}
+                                flex flex-row items-center justify-between w-full"
                                  data-entity="basket-item-quantity-block">
                                 {{^GIFT}}
                                 <span class="basket-item-amount-btn-minus rounded-full md:py-0 md:px-0 py-3.5 px-1.5
@@ -379,6 +377,24 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                         </div>
                         <div class="alert_quantity" data-id="{{PRODUCT_ID}}"></div>
                     </div>
+                    {{/NOT_AVAILABLE}}
+                    {{#NOT_AVAILABLE}}
+                    <div class="bx_catalog_item_controls">
+                        <svg width="34" height="33" class="detail_popup <?= $is_key_found ? 'subscribed stroke-light-red' : ' stroke-black dark:stroke-white' ?>" viewBox="0 0 34 33" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M25.5762 11.0001C25.5762 8.81209 24.6884 6.71367 23.1081 5.16649C21.5279 3.61932 19.3846 2.75012 17.1498 2.75012C14.915 2.75012 12.7717 3.61932 11.1915 5.16649C9.61121 6.71367 8.72344 8.81209 8.72344 11.0001C8.72344 20.6251 4.51025 23.3751 4.51025 23.3751H29.7894C29.7894 23.3751 25.5762 20.6251 25.5762 11.0001Z"
+                                   stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19.5794 28.875C19.3325 29.2917 18.9781 29.6376 18.5517 29.8781C18.1253 30.1186 17.6419 30.2451 17.1498 30.2451C16.6577 30.2451 16.1743 30.1186 15.7479 29.8781C15.3215 29.6376 14.9671 29.2917 14.7202 28.875"
+                                  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div id="popup_mess"
+                             class="catalog_popup absolute z-20 w-full left-0 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                         <?= $is_key_found ? 'subscribed' : '' ?>"
+                             data-subscription_id="<?= $is_key_found ? $arResult['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][$found_key]['ID'] : '' ?>"
+                             data-product_id="{{PRODUCT_ID}}">
+                        </div>
+                    </div>
+                    {{/NOT_AVAILABLE}}
                     <?php if ($useActionColumn) { ?>
                         <div class="flex flex-row like-column ml-2">
                             <div class="like-block" title="Избранное">
@@ -484,8 +500,8 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                 case 'props':
                                     if (in_array('PROPS', $arParams['COLUMNS_LIST'])) {
                                         ?>
-                                        <div class="relative toggle_taste h-inherit">
-                                            <div class="variation_taste flex flex-wrap flex-row mt-2 mb-2 md:h-7 h-5 js__tastes-list w-96 overflow-hidden">
+                                        <div class="relative toggle_taste h-inherit md:w-1/2 w-full">
+                                            <div class="variation_taste flex flex-wrap flex-row mt-2 mb-2 js__tastes-list md:h-7 h-5 overflow-auto">
                                                 {{#PROPS}}
                                                 {{#VKUS}}
                                                 <span class="taste cursor-pointer js__taste h-fit md:px-2 px-1.5 mr-1 md:py-1
@@ -495,13 +511,6 @@ if (!empty($arParams['LABEL_PROP_POSITION'])) {
                                                 </span>
                                                 {{/VKUS}}
                                                 {{/PROPS}}
-                                            </div>
-                                            <div class="absolute top-0 right-0 z-20">
-                                                <svg width="15" height="10" class="js__toggle-show rotate-0"
-                                                     viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M12.1636 -0.00231934H6.34969H1.11438C0.218505 -0.00231934 -0.229434 1.41033 0.405145 2.23844L5.23917 8.54663C6.01373 9.5574 7.27356 9.5574 8.04812 8.54663L9.88653 6.14757L12.8821 2.23844C13.5074 1.41033 13.0594 -0.00231934 12.1636 -0.00231934Z"
-                                                          fill="#BFBFBF"></path>
-                                                </svg>
                                             </div>
                                         </div>
                                         <?php

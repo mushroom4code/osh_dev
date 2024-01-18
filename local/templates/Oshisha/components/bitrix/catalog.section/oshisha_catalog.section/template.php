@@ -213,10 +213,15 @@ $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
 //Есть ли контрагент у пользователя или нет - зависит возможность покупки
 $userViewPrice = EnteregoContragents::getActiveContragentForUser($USER->GetID());
 $isAjax = Context::getCurrent()->getRequest();
+
 $itemWidth = 'xl:w-72 lg:w-1/3 md:w-1/3 w-1/2 md:h-96 h-80 md:pr-3 pr-2 mb-8';
-$positionItem = 'flex flex-row flex-wrap justify-between';
+$positionItem = 'flex flex-row flex-wrap';
+if (count($arResult['ITEMS']) > 3) {
+    $positionItem .= ' justify-between';
+}
 $type = 'card';
 $showLine = false;
+
 if ($isAjax->isAjaxRequest()) {
     if (!empty($_POST['orientation'])) {
         $type = $_POST['orientation'];
