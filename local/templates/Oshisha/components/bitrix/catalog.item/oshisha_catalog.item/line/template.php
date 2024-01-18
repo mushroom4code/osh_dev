@@ -404,7 +404,7 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
             <div class="box_with_titles flex flex-row text-xs text-textLight dark:text-textDarkLightGray
                 md:w-1/12 order-6 w-1/4 md:py-0 py-3 md:px-0 px-2">
                 <div class="not_product">
-                    <svg width="18" height="17" class="mr-3 stroke-white
+                    <svg width="18" height="17" class="mr-1 stroke-white
                                 <?= $is_key_found ? 'subscribed' : ' ' ?>"
                          viewBox="0 0 34 33" fill="none"
                          xmlns="http://www.w3.org/2000/svg">

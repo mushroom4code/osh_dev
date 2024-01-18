@@ -453,7 +453,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                              flex justify-center flex-row items-center dark:bg-dark-red bg-light-red py-2 px-4
                              rounded-full text-center w-auto <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                              <?= $is_key_found ? 'subscribed' : '' ?>">
-                                <svg width="18" height="17" class="mr-3 stroke-white
+                                <svg width="18" height="17" class="mr-1 stroke-white
                                 <?= $is_key_found ? 'subscribed' : ' ' ?>"
                                      viewBox="0 0 34 33" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
