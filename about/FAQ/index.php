@@ -1,5 +1,6 @@
 <?php use Bitrix\Main\Page\Asset;
 use enterego\EnteregoUser;
+
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 /**
  * @var CMain $APPLICATION
@@ -11,9 +12,9 @@ $userData = EnteregoUser::getInstance();
 if ($USER->IsAuthorized()) {
     ?>
     <div id="faq" class="box_boxes_delivery mt-3 static">
-        <h1>FAQ</h1>
-        <div class="d-flex flex-column mb-3 mt-4" id="FAQ">
-
+        <h4 class="flex flex-row items-center mb-8 mt-5 text-3xl font-bold dark:font-medium text-textLight
+            dark:text-textDarkLightGray">FAQ</h4>
+        <div class="flex flex-col mb-3 mt-4" id="FAQ">
             <?php
             $k = 0;
             $SectionRes = CIBlockSection::GetList(array(),
@@ -22,10 +23,9 @@ if ($USER->IsAuthorized()) {
             );
             while ($arSection = $SectionRes->GetNext()) { ?>
                 <div class="mb-5">
-                    <h4 class="mb-4"><?= $arSection['NAME'] ?></h4>
-
-                    <div id="<?= $arSection['XML_ID'] ?>_faq">
-                        <div class="accordion box_with_map" id="<?= $arSection['CODE'] ?>">
+                    <h4 class="md:text-2xl text-lg mb-5 font-semibold dark:font-normal text-textLight dark:text-textDarkLightGray my-5"><?= $arSection['NAME'] ?></h4>
+                    <div id="<?= $arSection['XML_ID'] ?>_faq" data-accordion="collapse">
+                        <div id="<?= $arSection['CODE'] ?>" class="accordion box_with_map">
                             <?php
                             $arFilter = array(
                                 'IBLOCK_CODE' => 'FAQ',
@@ -36,129 +36,49 @@ if ($USER->IsAuthorized()) {
                             while ($rowFaq = $resU->Fetch()) {
                                 $k++;
                                 ?>
-                                <div class="box">
-                                    <div class="card_delivery card-header" id="questions_del_<?= $k ?>">
-                                        <h3 class="mb-0">
-                                            <button class="btn text-left btn_questions d-flex flex-row justify-content-between"
-                                                    type="button" data-toggle="collapse"
-                                                    data-target="#collapse_questions_del_<?= $k ?>"
-                                                    aria-expanded="true"
-                                                    aria-controls="collapse_questions_del_<?= $k ?>">
-                                                <div class="mr-4 faq_question"><?= $rowFaq['NAME'] ?></div>
-                                                <i class="fa fa-angle-down" style="" aria-hidden="true"></i>
-                                            </button>
-                                        </h3>
-                                    </div>
-                                    <div id="collapse_questions_del_<?= $k ?>" class="collapse "
-                                         aria-labelledby="questions_del_<?= $k ?>"
-                                         data-parent="#<?= $arSection['CODE'] ?>">
-                                        <div class="card-body d-flex row_section">
-                                            <div>
-                                                <?= $rowFaq['PREVIEW_TEXT'] ?>
-                                            </div>
-                                        </div>
+                                <h2 id="accordion-collapse-heading-<?= $k ?>" class="open-accordion"
+                                    onclick="showHideBox(this)">
+                                    <button type="button" class="flex items-center justify-between w-full p-5 font-medium
+                            rtl:text-right dark:text-textDarkLightGray border-b border-neutral-200 dark:border-neutral-700
+                             focus:ring-4 focus:ring-neutral-200 text-left dark:focus:ring-neutral-800
+                              hover:bg-neutral-100 dark:hover:bg-neutral-800 gap-3 md:text-md text-sm text-dark dark:font-normal
+                              dark:bg-darkBox bg-white"
+                                            data-accordion-target="#accordion-collapse-body-<?= $k ?>"
+                                            aria-expanded="true"
+                                            aria-controls="accordion-collapse-body-<?= $k ?>">
+                                        <?= $rowFaq['NAME'] ?>
+                                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                  stroke-width="2" d="M9 5 5 1 1 5"/>
+                                        </svg>
+                                    </button>
+                                </h2>
+                                <div id="accordion-collapse-body-<?= $k ?>" class="hidden"
+                                     aria-labelledby="accordion-collapse-heading-<?= $k ?>">
+                                    <div class="p-5 border border-b-0 border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900">
+                                        <p class="mb-2 text-dark dark:text-textDarkLightGray font-normal dark:font-light md:text-sm text-xs">
+                                            <?= $rowFaq['PREVIEW_TEXT'] ?>
+                                        </p>
                                     </div>
                                 </div>
                                 <?php
                             }
                             ?>
-
                         </div>
                     </div>
                 </div>
             <?php } ?>
         </div>
-        <h4 class="mb-4"><b> Есть вопросы, пожелания или комментарии? Напиши их здесь!</b></h4>
-        <div class="mb-5">
-            <form class="form_company form-form " id="support" enctype="multipart/form-data">
-                <div class="form-form-wrap">
-                    <input type="hidden" name="recaptcha_token" id="recaptchaResponse">
-                    <?php echo bitrix_sessid_post(); ?>
-                    <div class="form-group mb-3">
-                        <label class="label_company">Поделись с нами!</label>
-                    </div>
-                    <div class="form-group mb-3">
-                        <input type="text"
-                               class="form-control input_lk"
-                               id="Name"
-                               name="NAME"
-                               placeholder="Пожалуйста, представьтесь*"
-                               value="<?= implode(' ', $userData->getName()) ?>"
-                        >
-                        <div class="er_FORM_NAME error_field"></div>
-                    </div>
-                    <div class="form-group mb-3">
-                        <input type="text"
-                               data-name="PHONE-FORM"
-                               name="PHONE"
-                               class="form-control input_lk"
-                               id="phoneNumber"
-                               placeholder="Мобильный телефон, чтобы связаться с вами*"
-                               value="<?= $userData->getPhone()?>"
-                        >
-                        <div class="er_FORM_PHONE error_field"></div>
-                    </div>
-                    <div class="form-group mb-3">
-                        <input type="text"
-                               data-name="EMAIL"
-                               name="EMAIL"
-                               class="form-control input_lk"
-                               id="userEmail"
-                               placeholder="E-mail если хотите получить ответ на почту"
-                                value="<?= $userData->getMail() ?>"
-                        >
-                    </div>
-                    <div class="form-group mb-3">
-                                <textarea class="form-control input_lk" name="MESSAGE" id="text"
-                                          placeholder="Сообщение*"></textarea>
-                        <div class="er_FORM_MESSAGE error_field"></div>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <div class="form-control input_lk input_files drop-zone" id="drop-zone">
-                            <div class="drop-message">Перетащите файлы сюда</div>
-                            <div class="drop-message">или</div>
-                            <label class="upload-file-label">
-                                <input type="file" name="upload-files" id="upload-files" class="file-upload"
-                                       placeholder="Выберите файл или перетащите сюда" multiple="multiple"
-                                       accept=".png, .jpg, .jpeg, .gif">
-                                <span class="btn">Выберите файлы</span>
-                            </label>
-                            <div class="drop-message">Приложить можно до 10 изображений в форматах .jpg, .gif, .png
-                                объемом не более 5 Мб
-                            </div>
-                            <ul class="file-list"></ul>
-                        </div>
-                        <div class="er_FORM_FILES error_field"></div>
-                    </div>
-
-                    <div class="form-group mb-5">
-                        <label class="form-control input_lk" style="height: auto">
-                            <input name="confirm" type="checkbox" checked="checked">
-                            <span class="custom__title">Подтверждаю свое согласие с
-                                    <a href="/about/politics/"
-                                       target="_blank">положением об обработке персональных данных</a></span>
-                        </label>
-                        <div class="er_FORM_CONFIRM error_field"></div>
-                    </div>
-
-                    <div class="form-group mb-2">
-                        <div class="col-sm-10">
-                            <input class="btn link_menu_catalog get_code_button"
-                                   type="submit"
-                                   value="Отправить"
-                                   onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
-                        </div>
-                        <div class="error_form error_field"></div>
-                    </div>
-                </div>
-                <div class="form_block_ok">
-                    Сообщение отправлено.<br>
-                    Мы свяжемся с вами в самое ближайшее время!
-                </div>
-            </form>
-        </div>
-
+        <?php require_once($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/include/forms/feedback.php'); ?>
+        <script>
+            function showHideBox(item) {
+                const idHeader = item.id
+                const bodyAsk = document.querySelector('[aria-labelledby="' + idHeader + '"]').classList;
+                const boolOpen = bodyAsk.contains('hidden')
+                boolOpen ? bodyAsk.remove('hidden') : bodyAsk.add('hidden')
+            }
+        </script>
     </div>
 <?php } else { ?>
     <div id="content_box_delivery" class="box_boxes_delivery static">
@@ -168,4 +88,4 @@ if ($USER->IsAuthorized()) {
     </div>
     <?php
 }
-require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
