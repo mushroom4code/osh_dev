@@ -683,15 +683,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             <?php }
         } ?>
         <ul class="nav nav-fill flex flex-row flex-wrap justify-content-between mb-3 mt-5" role="tablist">
-            <?php if ($showDescription) { ?>
-                <li class="nav-item link text-center w-1/3">
-                    <a class="nav-link active text-center tab-product" id="pills-home-tab" data-toggle="pill" href="#pills-home"
-                       role="tab" aria-controls="pills-home" aria-selected="true">
-                        <span><?= $arParams['MESS_DESCRIPTION_TAB'] ?></span></a>
-                </li>
-                <?php
-            }
-            if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
+            <?php if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
                 <li class="nav-item  text-center w-1/3">
                     <a class="nav-link text-center tab-product <? if (!$showDescription): ?>active<? endif; ?>" id="pills-profile-tab"
                        data-toggle="pill" href="#pills-profile"
@@ -700,6 +692,14 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     </a>
                 </li>
                 <?php
+            }
+             if ($showDescription) { ?>
+            <li class="nav-item link text-center w-1/3">
+                <a class="nav-link active text-center tab-product" id="pills-home-tab" data-toggle="pill" href="#pills-home"
+                   role="tab" aria-controls="pills-home" aria-selected="true">
+                    <span><?= $arParams['MESS_DESCRIPTION_TAB'] ?></span></a>
+            </li>
+            <?php
             }
             if ($arParams['USE_COMMENTS'] === 'Y') { ?>
                 <li class="nav-item text-center w-1/3">
