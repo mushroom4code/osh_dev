@@ -7127,6 +7127,12 @@ footer.footer .container .copyrights > span {
 .color-hookah {
     border: 2px solid #eeeeee;
     width: 65px;
+    height: 65px;
+}
+
+.color-hookah img {
+    height: 100%;
+    object-fit: contain;
 }
 
 .box_with_photo_product .color-hookah {
