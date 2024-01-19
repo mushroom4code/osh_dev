@@ -7,115 +7,131 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("О нас");
 ?>
     <div id="o_nas" class="mb-5">
-        <h1 class="font-120 font-weight-bold color-black mb-7 mt-lg-5 mt-md-5 mt-3">О нас</h1>
-        <div class="d-flex flex-lg-row flex-md-row flex-column mb-7 align-items-center">
-            <div class="col-lg-6 col-md-6 col-12 mb-lg-0 mb-md-0 mb-4">
-                <img src="/about/o-nas/o-nas.png" class="o-nas-image"/>
+        <h1 class="md:text-3xl text-2xl my-5 font-bold dark:font-medium text-textLight dark:text-textDarkLightGray">О
+            нас</h1>
+        <div class="flex md:flex-row flex-col mb-7 items-center">
+            <div class="md:w-1/2 w-full mb-4">
+                <img src="/about/o-nas/o-nas.png" class="o-nas-image dark:invert invert-0"/>
             </div>
-            <div class="col-lg-6 col-md-6 col-12 p-lg-4 p-md-4">
-                <p class="mb-lg-5 mb-md-5 mb-3">
+            <div class="md:w-1/2 w-full p-4">
+                <p class="mb-5 text-textLight dark:text-textDarkLightGray text-md">
                     Oshisha – инновационная компания, вдохновленная на постоянное совершенствование и развитие
                     бизнеса.
                 </p>
-                <p class="mb-lg-5 mb-md-5 mb-3">
+                <p class="mb-5 text-textLight dark:text-textDarkLightGray text-md">
                     Уже более 9 лет мы являемся одним
                     из крупнейших оптово-розничных поставщиков на рынке кальянной продукции и вейп индустрии.
                     Мы стремимся к предоставлению исключительного качества сервиса и услуг для наших партнёров и
                     клиентов.
                 </p>
-                <p class="mb-lg-5 mb-md-5 mb-3">
+                <p class="mb-5 text-textLight dark:text-textDarkLightGray text-md">
                     Ассортимент нашего магазина состоит из самых востребованных продуктов и регулярно пополняется
                     новинками
                     рынка и под запросы потребителей.
                 </p>
             </div>
         </div>
-        <h5 class="font-40 font-weight-bold color-black mb-lg-5 mb-md-5 mb-3">Почему выбирают нас?</h5>
-        <div class="d-flex flex-lg-row flex-md-row flex-column flex-wrap mb-5 justify-content-center">
-            <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
+        <h5 class="md:text-3xl text-2xl my-10 font-bold dark:font-medium text-textLight dark:text-textDarkLightGray">
+            Почему выбирают нас?
+        </h5>
+        <div class="flex md:flex-row flex-col flex-wrap mb-5 justify-center">
+            <div class="mb-4 md:mr-5 mr-0 md:p-4 p-2 flex flex-row items-start bg-white border-2
+            border-textDark dark:border-0 dark:bg-darkBox rounded-lg">
                 <div class="mr-4">
-                    <b class="font-weight-bold font-40 color-redLight">01</b>
+                    <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">01</span>
                 </div>
-                <div class="d-flex flex-column justify-content-between align-content-between">
-                    <span class=" text_advantage">Широкий ассортимент – более
-                        <br> 6000 товаров на любой вкус</span>
-                </div>
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                        Широкий ассортимент – более <br> 6000 товаров на любой вкус
+                </span>
             </div>
-            <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
+            <div class="mb-4 md:mr-5 mr-0 md:p-4 p-2 flex flex-row items-start bg-white border-2
+            border-textDark dark:border-0 dark:bg-darkBox rounded-lg">
                 <div class="mr-4">
-                    <b class="font-weight-bold font-40 color-redLight">02</b>
+                    <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">02</span>
                 </div>
-                <div class="d-flex flex-column justify-content-between align-content-between">
-                    <span class=" text_advantage">Качественный продукт - исключительно
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                    Качественный продукт - исключительно
                         <br> оригинальные товары,
                         напрямую от
-                        <br> производителей </span>
-                </div>
+                        <br> производителей
+                </span>
             </div>
-            <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
+
+            <div class="mb-4 md:mr-5 mr-0 md:p-4 p-2 flex flex-row items-start bg-white border-2
+            border-textDark dark:border-0 dark:bg-darkBox rounded-lg">
                 <div class="mr-4">
-                    <b class="font-weight-bold font-40 color-redLight">03</b>
+                    <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">03</span>
                 </div>
-                <div class="d-flex flex-column justify-content-between align-content-between">
-                    <span class="text_advantage">Эксклюзивная дистрибьюция
-                        <br> топовых продуктов рынка</span>
-                </div>
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                    Эксклюзивная дистрибьюция
+                        <br> топовых продуктов рынка
+                </span>
             </div>
-            <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
+            <div class="mb-4 md:mr-5 mr-0 md:p-4 p-2 flex flex-row items-start bg-white border-2
+            border-textDark dark:border-0 dark:bg-darkBox rounded-lg">
                 <div class="mr-4">
-                    <b class="font-weight-bold font-40 color-redLight">04</b>
+                    <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">04</span>
                 </div>
-                <div class="d-flex flex-column justify-content-between align-content-between">
-                          <span class="text_advantage">
-                            Универсальные способы получения товара -
-                            мы работаем со множеством транспортных компаний и
-                            развозим заказы нашими курьерами по Москве\МО в
-                            любое время дня и ночи</span>
-                </div>
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                            Универсальные способы получения товара -<br>
+                            мы работаем со множеством транспортных компаний и<br>
+                            развозим заказы нашими курьерами по Москве\МО в<br>
+                            любое время дня и ночи
+                </span>
             </div>
-            <div class="mb-4 p-lg-4 p-md-4 p-2 col-lg-4 col-md-4 col-12 d-flex flex-row align-items-start">
+
+            <div class="mb-4 md:p-4 p-2 flex flex-row items-start bg-white border-2 border-textDark
+            dark:border-0 dark:bg-darkBox rounded-lg">
                 <div class="mr-4">
-                    <b class="font-weight-bold font-40 color-redLight">05</b>
+                    <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">05</span>
                 </div>
-                <div class="d-flex flex-column justify-content-between align-content-between">
-                      <span class="text_advantage">Отсутствие минимальной
-                        <br> суммы заказа </span>
-                </div>
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                    Отсутствие минимальной
+                        <br> суммы заказа
+                </span>
             </div>
         </div>
-
-        <h5 class="font-40 font-weight-bold color-black mb-lg-5 mb-md-5 mb-3">История развития компании</h5>
-        <div class="mb-5 p-lg-5 p-md-5 p-3 bg-gray-white br-10 font-14">
-            <p class="mb-4">
+        <h5 class="md:text-3xl text-2xl my-10 font-bold dark:font-medium text-textLight dark:text-textDarkLightGray">
+            История развития компании
+        </h5>
+        <div class="mb-10 md:p-10 p-3 bg-textDark dark:bg-darkBox rounded-lg">
+            <p class="mb-4 text-textLight dark:text-textDarkLightGray text-md font-normal dark:font-light">
                 История компании <b>берёт начало в далёком 2014 году</b>. Двое молодых ребят сидели в кальянной,
                 раздумывая о своем будущем и способах заработка.
                 Начался непринуждённый разговор с кальянщиком,
                 который рассказал ребятам, какой табак они курят и по какой цене его закупают в кальянную.
                 Недолго думая, один из друзей предложил кальянщику поставлять этот табак дешевле,
-                чем они закупают на данный момент. Ни связей, ни знаний в кальянной индустрии у молодых людей не было.
+                чем они закупают на данный момент. Ни связей, ни знаний в кальянной индустрии у молодых людей не
+                было.
                 Но ответ кальянщика «можно обсудить» - заставил парней всерьёз задуматься о реализации упомянутого
                 предложения.
             </p>
-            <p class="mb-4">
+            <p class="mb-4 text-textLight dark:text-textDarkLightGray text-md font-normal dark:font-light">
                 Начался настоящий мозговой штурм, поиски поставщика табака по рынкам и точкам, ребятам даже пришлось
-                помотаться по разным городам России. Наконец, поставщик нужного табака был найден. Есть поставщик, есть
-                клиент – осталось добить сделку. Но вдруг клиент срывается, а договоренность с поставщиком на полторы
-                тонны табака остаётся. Азарт не позволил бросить начатое, и парни стали ходить по кальянным, спрашивать
+                помотаться по разным городам России. Наконец, поставщик нужного табака был найден. Есть поставщик,
+                есть
+                клиент – осталось добить сделку. Но вдруг клиент срывается, а договоренность с поставщиком на
+                полторы
+                тонны табака остаётся. Азарт не позволил бросить начатое, и парни стали ходить по кальянным,
+                спрашивать
                 у друзей, знакомиться, писать и звонить людям в надежде заинтересовать предложением. Старания были
-                вознаграждены – первая продажа состоялась, что побудило ребят продолжить это дело и всерьёз задуматься о
+                вознаграждены – первая продажа состоялась, что побудило ребят продолжить это дело и всерьёз
+                задуматься о
                 бизнесе в этой сфере.
             </p>
-            <p class="mb-4">
+            <p class="mb-4 text-textLight dark:text-textDarkLightGray text-md font-normal dark:font-light">
                 Ребята поставили себе цель и усердно шли к ней. Уже в 2015 году был запущен сайт с небольшим
                 ассортиментом, начался поиск сотрудников для расширения бизнеса и улучшения качества коммуникации с
                 клиентами, партнёрами и поставщиками. К 2019 году компания уже активно участвовала на выставках,
-                кальянных мероприятиях, заключала дистрибьюторские контракты, расширяла отдел продаж. В 2020 году был
+                кальянных мероприятиях, заключала дистрибьюторские контракты, расширяла отдел продаж. В 2020 году
+                был
                 запуск 1с, что позволило навести порядок и четкий учет складского комплекса. Так же, компания уже
                 выпускала продукцию под собственной торговой маркой и открыла первые розничные магазины по Москве. К
                 середине 2021 года произошло масштабное обновление сайта.
             </p>
-            <p>
-                Что по итогу? Буквально с шуточного предложения было положено начало компании, которая в настоящее время
+            <p class="text-textLight dark:text-textDarkLightGray text-md font-normal dark:font-light">
+                Что по итогу? Буквально с шуточного предложения было положено начало компании, которая в настоящее
+                время
                 является одним из крупнейших оптово-розничных поставщиков на рынке, имея огромный ассортимент самых
                 разнообразных и топовых продуктов.
             </p>
@@ -124,74 +140,73 @@ $APPLICATION->SetTitle("О нас");
     </div>
     </div>
     </div>
-    <div class="bg-dark-osh p-lg-5 p-md-5 p-3 mb-7">
-        <h1 class="font-40 color-white font-weight-bold text-center mb-lg-5 mb-md-5 mb-3">Эксклюзивные продукты</h1>
-        <div class="d-flex flex-lg-row flex-md-row flex-wrap flex-column align-items-center justify-content-center p-lg-5 p-md-5 p-0">
-            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="<?= SITE_ID !== SITE_EXHIBITION ?  ' /catalog/burn/' : 'javascript:void(0)'?>">
-                    <img src="/about/o-nas/burn.png" class="burn"/>
+    <div class="bg-darkBox md:p-10 w-full p-3 mb-16 left-0 right-0">
+        <h1 class="md:text-3xl text-2xl my-10 font-bold dark:font-medium text-center text-textDarkLightGray">Эксклюзивные
+            продукты</h1>
+        <div class="flex md:flex-row flex-wrap flex-col items-center justify-center md:p-5 p-0">
+            <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? ' /catalog/burn/' : 'javascript:void(0)' ?>">
+                    <img src="/about/o-nas/burn.png" class="burn w-72"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/trofimov/' : 'javascript:void(0)'?>">
-                    <img src="/about/o-nas/troff.svg" class="duft"/>
+            <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/trofimov/' : 'javascript:void(0)' ?>">
+                    <img src="/about/o-nas/troff.svg" class="duft w-72"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/sebero/' : 'javascript:void(0)'?>">
-                    <img src="/about/o-nas/sebro.png" class="sebero"/>
+             <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/sebero/' : 'javascript:void(0)' ?>">
+                    <img src="/about/o-nas/sebro.png" class="sebero w-72"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/bonche/' : 'javascript:void(0)'?>">
-                    <img src="/about/o-nas/bonche.png" class="bonche"/>
+             <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/bonche/' : 'javascript:void(0)' ?>">
+                    <img src="/about/o-nas/bonche.png" class="bonche w-72"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/severnyy/' : 'javascript:void(0)'?>">
-                    <img src="/about/o-nas/severnei.png" class="severnei"/>
+            <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/severnyy/' : 'javascript:void(0)' ?>">
+                    <img src="/about/o-nas/severnei.png" class="severnei w-72"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/sarma_1/' : 'javascript:void(0)'?>">
-                    <img src="/about/o-nas/sarma.png" class="bonche"/>
+            <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/sarma_1/' : 'javascript:void(0)' ?>">
+                    <img src="/about/o-nas/sarma.png" class="bonche w-72"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/nash_1/' : 'javascript:void(0)'?>">
-                    <img src="/about/o-nas/наш.png" class="bonche"/>
+            <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/nash_1/' : 'javascript:void(0)' ?>">
+                    <img src="/about/o-nas/наш.png" class="bonche w-72"/>
                 </a>
             </div>
-            <div class="m-4 box_with_picture d-flex justify-content-center width-20">
-                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/chabacco/' : 'javascript:void(0)'?>">
-                    <img src="/about/o-nas/chabacco.png" class="severnei"/>
+            <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
+                <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/chabacco/' : 'javascript:void(0)' ?>">
+                    <img src="/about/o-nas/chabacco.png" class="severnei w-72"/>
                 </a>
             </div>
         </div>
     </div>
-    <div class="section_wrapper mb-5">
-        <div class="container_header">
-            <div class="bx-content <?= STATIC_P ?>">
-                <div class="p-lg-5 p-md-5 p-4 bg-gray-blue bg-image-ugol br-10"
-                     style="background-image: url('/about/o-nas/ugol.png');">
-                    <div class="d-flex justify-content-lg-between justify-content-md-between flex-column height_100">
-                        <div>
-                            <h5 class="font-40 font-weight-bold color-black mb-lg-5 mb-md-5 mb-3">Собственное
-                                производство</h5>
-                            <p class="mb-4 font-m-13">
-                                В 2019 году мы запустили собственный бренд<br>
-                                угля «Углище», который объединяет в себе<br>
-                                традиции, стандарты и опыт кальянной<br>
-                                индустрии.
-                            </p>
-                        </div>
-                        <a href="https://xn--c1aeil2b0b.xn--p1ai/" style="padding: 8px 39px;" target="_blank"
-                           class="link_red_button color-white width-fit-content">
-                            Перейти на сайт</a>
+    <div class="section_wrapper mb-7 flex flex-col items-center">
+        <div class="container md:mb-8 mb-0 px-4 md:px-0">
+            <div class="md:p-10 p-4 bg-ugol md:min-h-550 min-h-384 h-full bg-no-repeat rounded-lg bg-right-bottom md:bg-auto bg-contain"
+                 style="background-image: url('/about/o-nas/_.jpg');">
+                <div class="flex justify-between flex-col h-full">
+                    <div>
+                        <h5 class="md:text-3xl text-lg font-semibold text-textLight md:mb-5 mb-2">Собственное
+                            производство</h5>
+                        <p class="mb-5 md:text-lg text-xs  text-textLight">
+                            В 2019 году мы запустили собственный бренд<br>
+                            угля «Углище», который объединяет в себе<br>
+                            традиции, стандарты и опыт кальянной<br>
+                            индустрии.
+                        </p>
                     </div>
+                    <a href="https://xn--c1aeil2b0b.xn--p1ai/" target="_blank"
+                       class=" text-textDark text-center shadow-md dark:bg-dark-red text-lg bg-light-red py-2 px-7 rounded-md w-fit">
+                        Перейти на сайт
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-
-<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>

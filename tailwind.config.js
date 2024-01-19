@@ -43,6 +43,7 @@ module.exports = {
                 menuFooter: '#4F4F4F',
                 iconGray: '#979797',
                 'gray-product': '#CFCFCF',
+                ugol:'#e0e0e0',
                 'gray-slider-arrow': '#676767',
                 lightGrayBg: '#393939',
                 'dark-red': '#B11512',
@@ -57,6 +58,7 @@ module.exports = {
             },
             minHeight: {
                 '550': '550px',
+                '384': '384px'
             },
             minWidth: {
                 '164': '164px',
