@@ -6,15 +6,17 @@ $APPLICATION->AddChainItem($arResult['UF_NAME'], '/brands/' . $arResult['UF_CODE
 ?>
 
 <div class="brand_detail mt-8">
-    <div class="brand_detail_first flex md:flex-row flex-col md:items-center mb-16">
+    <div class="brand_detail_first flex md:flex-row flex-col mb-16">
         <?php if ($arResult['UF_FILE']): ?>
             <?php $UF_FILE = CFile::ResizeImageGet($arResult['UF_FILE'], array('width' => 150, 'height' => 150), BX_RESIZE_IMAGE_PROPORTIONAL, true) ?>
-            <div class="rounded-full p-8 bg-white border-2 border-textDark md:mb-0 mb-4 flex self-center justify-center">
-                <img src="<?= $UF_FILE['src'] ?>" class="md:max-w-40 w-auto h-auto max-w-[128px]"
-                     alt="<?= $arResult['UF_NAME'] ?>">
+            <div class="md:mb-0 mb-4 flex justify-center items-center max-w-40 max-h-40">
+                <div class=" rounded-full border-textDark border-2 bg-white h-full w-auto flex justify-center items-center p-7">
+                    <img src="<?= $UF_FILE['src'] ?>" class="w-28 h-28 object-contain"
+                         alt="<?= $arResult['UF_NAME'] ?>">
+                </div>
             </div>
         <?php endif; ?>
-        <div class="brand_name md:ml-4 ml-0">
+        <div class="brand_name md:ml-4 ml-0 md:w-10/12 w-auto">
             <h1 class="md:text-3xl text-2xl mb-1 font-bold dark:font-medium text-textLight dark:text-textDarkLightGray">
                 <?= $arResult['UF_NAME'] ?>
             </h1>
