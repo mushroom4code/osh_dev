@@ -146,42 +146,42 @@ $APPLICATION->SetTitle("О нас");
         <div class="flex md:flex-row flex-wrap flex-col items-center justify-center md:p-5 p-0">
             <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
                 <a href="<?= SITE_ID !== SITE_EXHIBITION ? ' /catalog/burn/' : 'javascript:void(0)' ?>">
-                    <img src="/about/o-nas/burn.png" class="burn w-72"/>
+                    <img src="/about/o-nas/burn.png" class="burn w-40"/>
                 </a>
             </div>
             <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
                 <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/trofimov/' : 'javascript:void(0)' ?>">
-                    <img src="/about/o-nas/troff.svg" class="duft w-72"/>
+                    <img src="/about/o-nas/troff.svg" class="duft w-40"/>
                 </a>
             </div>
              <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
                 <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/sebero/' : 'javascript:void(0)' ?>">
-                    <img src="/about/o-nas/sebro.png" class="sebero w-72"/>
+                    <img src="/about/o-nas/sebro.png" class="sebero w-40"/>
                 </a>
             </div>
              <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
                 <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/bonche/' : 'javascript:void(0)' ?>">
-                    <img src="/about/o-nas/bonche.png" class="bonche w-72"/>
+                    <img src="/about/o-nas/bonche.png" class="bonche w-40"/>
                 </a>
             </div>
             <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
                 <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/severnyy/' : 'javascript:void(0)' ?>">
-                    <img src="/about/o-nas/severnei.png" class="severnei w-72"/>
+                    <img src="/about/o-nas/severnei.png" class="severnei w-40"/>
                 </a>
             </div>
             <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
                 <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/sarma_1/' : 'javascript:void(0)' ?>">
-                    <img src="/about/o-nas/sarma.png" class="bonche w-72"/>
+                    <img src="/about/o-nas/sarma.png" class="bonche w-40"/>
                 </a>
             </div>
             <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
                 <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/nash_1/' : 'javascript:void(0)' ?>">
-                    <img src="/about/o-nas/наш.png" class="bonche w-72"/>
+                    <img src="/about/o-nas/наш.png" class="bonche w-40"/>
                 </a>
             </div>
             <div class="mb-7 box_with_picture flex justify-center xl:w-1/5 md:w-1/4 w-full items-end md:mr-4 mr-0">
                 <a href="<?= SITE_ID !== SITE_EXHIBITION ? '/catalog/chabacco/' : 'javascript:void(0)' ?>">
-                    <img src="/about/o-nas/chabacco.png" class="severnei w-72"/>
+                    <img src="/about/o-nas/chabacco.png" class="severnei w-40"/>
                 </a>
             </div>
         </div>

@@ -6,6 +6,8 @@ module.exports = {
         "./local/templates/Oshisha/**/.default/*.{js,php}",
         "./local/components/bitrix/**/.default/*.{js,php}",
         "./local/components/bitrix/**/*.{js,php}",
+        "./local/components/bbrain/**/*.{js,php}",
+        "./local/components/bbrain/**/.default/*.{js,php}",
         './index.php',
         "./personal/*.php", "./personal/contragents/*.php",
         "./local/components/bitrix/enterego.slider/templates/.default/template.php",
