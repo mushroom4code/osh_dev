@@ -6,6 +6,8 @@ module.exports = {
         "./local/templates/Oshisha/**/.default/*.{js,php}",
         "./local/components/bitrix/**/.default/*.{js,php}",
         "./local/components/bitrix/**/*.{js,php}",
+        "./local/components/bbrain/**/*.{js,php}",
+        "./local/components/bbrain/**/.default/*.{js,php}",
         './index.php',
         "./personal/*.php", "./personal/contragents/*.php",
         "./local/components/bitrix/enterego.slider/templates/.default/template.php",
@@ -43,6 +45,7 @@ module.exports = {
                 menuFooter: '#4F4F4F',
                 iconGray: '#979797',
                 'gray-product': '#CFCFCF',
+                ugol:'#e0e0e0',
                 'gray-slider-arrow': '#676767',
                 lightGrayBg: '#393939',
                 'dark-red': '#B11512',
@@ -57,6 +60,7 @@ module.exports = {
             },
             minHeight: {
                 '550': '550px',
+                '384': '384px'
             },
             minWidth: {
                 '164': '164px',

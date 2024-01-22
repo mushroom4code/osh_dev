@@ -207,20 +207,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 $subscribeId = \Bitrix\Catalog\SubscribeTable::delete(intval($_POST['subscription_id']));
             }
 
-            if($subscribeId->isSuccess())
-            {
-                echo Bitrix\Main\Web\Json::encode(
-                    array('success' => true, 'message' => 'unsubscribed'));
-                require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
-                die();
-            }
-            else
-            {
-                $errors = array('error' => true);
-                $errors['message'] = "Subscription does not exist";
-                echo Bitrix\Main\Web\Json::encode($errors);
-                require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
-                die();
+            if (!empty($subscribeId)) {
+                if($subscribeId->isSuccess())
+                {
+                    echo Bitrix\Main\Web\Json::encode(
+                        array('success' => true, 'message' => 'unsubscribed'));
+                    require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+                    die();
+                }
+                else
+                {
+                    $errors = array('error' => true);
+                    $errors['message'] = "Subscription does not exist";
+                    echo Bitrix\Main\Web\Json::encode($errors);
+                    require_once($_SERVER['DOCUMENT_ROOT'].BX_ROOT.'/modules/main/include/epilog_after.php');
+                    die();
+                }
             }
         }
         else

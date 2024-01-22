@@ -45,7 +45,7 @@ $FAVORITES_FILTER = array(
 //print_r($FAVORITES_FILTER);
 ?>
 <div class="hides static" id="personal_subscribe">
-    <h1 class="mb-4">Избранное</h1>
+    <h1 class="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal flex flex-row justify-between items-center font-semibold mb-5">Избранное</h1>
     <div class="ml-lg-4 ml-md-4 ml-0 box_with_prod">
         <?php
 		

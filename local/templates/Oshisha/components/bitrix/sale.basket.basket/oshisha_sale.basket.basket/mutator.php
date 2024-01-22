@@ -33,7 +33,14 @@ foreach ($item as $row) {
     $item_id[] = $row['ID'];
 }
 
+$filter['USER_ID'] = $id_USER;
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
+$queryObject = Bitrix\Catalog\SubscribeTable::getList(array('select' => array('ID', 'ITEM_ID', 'USER_CONTACT'), 'filter' => $filter));
+
+while ($subscribe = $queryObject->fetch()) {
+    $result['CURRENT_USER_SUBSCRIPTIONS']['ITEMS_IDS'][] = $subscribe['ITEM_ID'];
+    $result['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][] = $subscribe;
+}
 
 foreach ($item as $row) {
 
@@ -93,6 +100,7 @@ foreach ($item as $row) {
         'QUANTITY' => $row['QUANTITY'],
         'PROPS' => $row['PROPS'],
         'PROPS_ALL' => $row['PROPS_ALL'],
+        'CURRENT_USER_SUBSCRIPTIONS' => $result['CURRENT_USER_SUBSCRIPTIONS'],
         'HASH' => $row['HASH'],
         'PRICES_NET' => $price,
         'SORT' => $row['SORT'],
