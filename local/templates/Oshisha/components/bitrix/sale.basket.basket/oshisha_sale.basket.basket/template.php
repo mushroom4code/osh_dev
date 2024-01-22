@@ -350,8 +350,8 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             </div>
         <?php }
         if ($arParams['BASKET_WITH_ORDER_INTEGRATION'] !== 'Y' && in_array('top', $arParams['TOTAL_BLOCK_DISPLAY'])) { ?>
-            <div class="lg:w-1/3 w-full basket-items-list-wrapper h-fit">
-                <p class="h-14 mb-4"></p>
+            <div class="lg:w-1/3 w-full basket-items-list-wrapper h-fit lg:p-0 p-3">
+                <p class="h-14 mb-4 md:block hidden"></p>
                 <div data-entity="basket-total-block" class="mb-lg-0 mb-md-0 mb-5">
                 </div>
             </div>
