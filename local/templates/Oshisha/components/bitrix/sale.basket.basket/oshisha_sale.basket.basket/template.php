@@ -263,7 +263,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                     </div>
                                     <div id="openCategoryDeletedProducts" class="category"
                                          data-id-block-category="DeletedProducts">
-                                        <div class="card-body basket-items-list-table md:p-7 p-3"></div>
+                                        <div class="card-body basket-items-list-table md:p-5 p-3"></div>
                                     </div>
                                 </div>
                                 <?php
@@ -290,7 +290,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                     </div>
                                     <div id="openCategoryNotAvailableProducts" class="category"
                                          data-id-block-category="NotAvailable">
-                                        <div class="card-body basket-items-list-table md:p-7 p-3"></div>
+                                        <div class="card-body basket-items-list-table md:p-5 p-3"></div>
                                     </div>
                                 </div>
                                 <?php
@@ -333,7 +333,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                     </div>
                                     <div id="openCategory<?= $newName[1] ?>" class="category <?= $classCat ?>"
                                          data-id-block-category="<?= $newName[1] ?>">
-                                        <div class="card-body basket-items-list-table md:p-7 p-3"></div>
+                                        <div class="card-body basket-items-list-table md:p-5 p-3"></div>
                                     </div>
                                 </div>
                                 <?php ++$i;
