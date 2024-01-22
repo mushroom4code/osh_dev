@@ -326,7 +326,6 @@
 			{
 				this.errorCode = -1;
 			}
-
 			this.obBigSlider = BX(this.visual.BIG_SLIDER_ID);
 			this.node.imageContainer = this.getEntity(this.obProduct, 'images-container');
 			this.node.imageSliderBlock = this.getEntity(this.obProduct, 'images-slider-block');
@@ -1185,6 +1184,7 @@
 				next = this.getItemForDirection(type, active);
 
 			BX.removeClass(active, 'active');
+			BX.addClass(active, 'opacity-50');
 			this.selectSliderImg(next);
 
 			this.slider.interval && this.cycleSlider();
@@ -3536,12 +3536,12 @@ function showHideBlock(that, id = 0, pricesBox = false) {
 	$(that).closest('.offer-link').addClass('selected');
 	if (pricesBox) {
 		$(pricesBox).find('.prices-box').each(function (key,price) {
-			if (!$(price).hasClass('d-none')) {
-				$(price).addClass('d-none');
+			if (!$(price).hasClass('hidden')) {
+				$(price).addClass('hidden');
 				$(price).removeClass('active')
 			}
 		});
-		$(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('d-none').addClass('active');
+		$(pricesBox).find('.prices-box[data-product_id="' + id + '"]').removeClass('hidden').addClass('active');
 	}
 }
 $(document).on('click', '.offer-link .offer-box', function () {
