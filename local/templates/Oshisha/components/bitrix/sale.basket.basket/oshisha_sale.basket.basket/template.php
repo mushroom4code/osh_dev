@@ -165,9 +165,9 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             <div class="mb-3 basket-items-list-wrapper basket-items-list-wrapper-height-fixed lg:pr-7 p-3 basket-items-list-wrapper-light<?= $displayModeClass ?>"
                  id="basket-items-list-wrapper">
                 <div class="basket-items-list-header mb-4" data-entity="basket-items-list-header">
-                    <div class="flex flex-row items-center basket-items-search-field"
+                    <div class="flex md:flex-row flex-col md:items-center basket-items-search-field"
                          data-entity="basket-filter">
-                        <div class="relative max-w-md w-full mr-4">
+                        <div class="relative md:max-w-md w-full md:mr-4 mr-0 md:mb-0 mb-3">
                             <input type="text" class="form-control text-sm basket_input search_input dark:bg-gray-box-dark
                         bg-white border w-full border-textDarkLightGray dark:border-gray-box-dark outline-none
                    dark:text-grayIconLights py-3 pl-9 rounded-7 text-textLight"
@@ -178,13 +178,9 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                       fill="black" class="fill-lightGrayBg dark:fill-textDarkLightGray"></path>
                             </svg>
                         </div>
-                        <div class="d-flex flex-row box_select">
-                            <div class="d-flex flex-row">
-                                <div class="icon_sort_bar sort" id="basket-card" data-sort="grid"
-                                     style="display:none;"></div>
-                                <div class="icon_sort_line sort" id="basket-line" data-sort="line"
-                                     style="display:none;"></div>
-                                <form action="" method="POST" class="col-xs-6 BasketClearForm">
+                        <div class="flex flex-row box_select justify-between w-full">
+                            <div class="flex flex-row">
+                                <form action="" method="POST" class="BasketClearForm">
                                     <button type="submit" class="clear-cart py-2 px-3 dark:bg-lightGrayBg rounded-lg w-fit
                                     bg-textDark flex flex-row items-center dark:text-textDarkLightGray text-textLight mb-1"
                                             name="BasketClear">
@@ -196,13 +192,38 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                                   class="dark:stroke-lightGrayBg stroke-white" stroke-width="1.5"
                                                   stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
-                                        <span class="ml-2 text-sm font-medium dark:font-light">Очистить корзину</span>
+                                        <span class="md:ml-2 ml-1 md:text-sm text-xs font-medium dark:font-light">Очистить корзину</span>
                                     </button>
                                 </form>
                                 <?php if (isset($_POST["BasketClear"]) && CModule::IncludeModule("sale")) {
                                     CSaleBasket::DeleteAll(CSaleBasket::GetBasketUserID());
                                     header("Location: " . $_SERVER['REQUEST_URI']);
                                 } ?>
+                            </div>
+                            <div class="flex flex-row">
+                                <div class="icon_sort_bar sort mr-2" id="basket-card" data-sort="grid">
+                                    <svg width="42" height="43" viewBox="0 0 43 44" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2" y="2" width="17.4627" height="17.4627" rx="1.5" fill="#393939"/>
+                                        <rect x="2" y="23.5376" width="17.4627" height="17.4627" rx="1.5"
+                                              fill="#393939"/>
+                                        <rect x="23.5357" y="2" width="17.4627" height="17.4627" rx="1.5"
+                                              fill="#393939"/>
+                                        <rect x="23.5357" y="23.5376" width="17.4627" height="17.4627" rx="1.5"
+                                              fill="#393939"/>
+                                    </svg>
+                                </div>
+                                <div class="icon_sort_line sort" id="basket-line" data-sort="line">
+                                    <svg width="42" height="42" viewBox="0 0 44 44" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2.74009" y="2" width="39.0003" height="10.2632" rx="1.5"
+                                              stroke="#393939"/>
+                                        <rect x="2.74009" y="16.3687" width="39.0003" height="10.2632" rx="1.5"
+                                              stroke="#393939"/>
+                                        <rect x="2.74009" y="30.7368" width="39.0003" height="10.2632" rx="1.5"
+                                              stroke="#393939"/>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -223,7 +244,8 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                             <?php
                             if (!empty($arResult['DELETED_ITEMS'])) {
                                 ?>
-                                <div class="box rounded-lg mb-2 border-2 border-lightGrayBg dark:border-dark-red" id="deleted_products_box">
+                                <div class="box rounded-lg mb-2 border-2 border-lightGrayBg dark:border-dark-red"
+                                     id="deleted_products_box">
                                     <div class="card-header basket_category" id="openDeletedProducts">
                                         <button class="btn btn-link btn-block flex justify-between
                                            btn_basket_collapse" type="button"
@@ -247,14 +269,15 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 <?php
                             }
                             if (!empty($arResult['ITEMS']['nAnCanBuy'])) { ?>
-                                <div class="box border-2 border-lightGrayBg dark:border-dark-red rounded-lg mb-2" id=NotAvailable">
+                                <div class="box border-2 border-lightGrayBg dark:border-dark-red rounded-lg mb-2"
+                                     id=NotAvailable">
                                     <div class="card-header basket_category alert alert-danger py-3.5 px-5
                                     bg-lightGrayBg w-full dark:bg-dark-red"
                                          id="openDNotAvailableProducts">
                                         <button class="btn btn-link btn-block flex w-full items-center justify-between btn_basket_collapse"
                                                 type="button"
                                                 data-id-category="NotAvailable">
-                                            <span class="text-white"> ( <?=count($arResult['ITEMS']['nAnCanBuy']) ?? 0?> )  Нет в наличии </span>
+                                            <span class="text-white"> ( <?= count($arResult['ITEMS']['nAnCanBuy']) ?? 0 ?> )  Нет в наличии </span>
                                             <i class="fa fa-angle-down" aria-hidden="true"
                                                style="transform:rotate(180deg);">
                                                 <svg width="17" height="12" viewBox="0 0 14 9" fill="none"
@@ -287,7 +310,8 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                 if ($newName[1] === 'NotAvailable') {
                                     continue;
                                 } ?>
-                                <div class="box w-full border-2 border-textDark dark:border-lightGrayBg rounded-lg mb-2" id="<?= $newName[1] ?>">
+                                <div class="box w-full border-2 border-textDark dark:border-lightGrayBg rounded-lg mb-2"
+                                     id="<?= $newName[1] ?>">
                                     <div class="card-header basket_category py-3.5 px-5 dark:bg-lightGrayBg w-full
                                     bg-textDark"
                                          id="open<?= $newName[1] ?>">
@@ -295,7 +319,7 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                             btn_basket_collapse w-full" type="button"
                                                 data-id-category="<?= $newName[1] ?>">
                                             <span class="dark:text-textDarkLightGray text-textLight font-normal dark:font-light">
-                                                ( <?=count($item) ?? 0?> )  <?= $newName[0] ?>
+                                                ( <?= count($item) ?? 0 ?> )  <?= $newName[0] ?>
                                             </span>
                                             <i class="fa fa-angle-down" aria-hidden="true"
                                                 <?= $styleIcon ?>>
@@ -370,92 +394,6 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                 $component
             ); ?>
         </div>
-        <?/*
-        <h3 class="mb-5 mt-5 d-lg-block d-md-block d-none" ><b>Рекомендуемые товары </b></h3>
-        <div class="d-lg-block d-md-block d-none">
-            <?php $APPLICATION->IncludeComponent(
-                "bitrix:catalog.top",
-                "oshisha_catalog.top",
-                array(
-                    "ACTION_VARIABLE" => "action",
-                    "ADD_PICT_PROP" => "-",
-                    "ADD_PROPERTIES_TO_BASKET" => "Y",
-                    "ADD_TO_BASKET_ACTION" => "ADD",
-                    "BASKET_URL" => "/personal/basket.php",
-                    "CACHE_FILTER" => "N",
-                    "CACHE_GROUPS" => "Y",
-                    "CACHE_TIME" => "36000000",
-                    "CACHE_TYPE" => "N",
-                    "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
-                    "COMPATIBLE_MODE" => "Y",
-                    "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
-                    "CONVERT_CURRENCY" => "N",
-                    "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
-                    "DETAIL_URL" => "",
-                    "DISPLAY_COMPARE" => "N",
-                    "ELEMENT_COUNT" => "20",
-                    "ELEMENT_SORT_FIELD" => "sort",
-                    "ELEMENT_SORT_FIELD2" => "id",
-                    "ELEMENT_SORT_ORDER" => "asc",
-                    "ELEMENT_SORT_ORDER2" => "desc",
-                    "ENLARGE_PRODUCT" => "PROP",
-                    "ENLARGE_PROP" => "-",
-                    "FILTER_NAME" => "arrFilter",
-                    "HIDE_NOT_AVAILABLE" => "N",
-                    "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-                    "IBLOCK_ID" => IBLOCK_CATALOG,
-                    "IBLOCK_TYPE" => "1c_catalog",
-                    "LABEL_PROP" => array(),
-                    "LABEL_PROP_MOBILE" => "",
-                    "LABEL_PROP_POSITION" => "top-left",
-                    "LINE_ELEMENT_COUNT" => "20",
-                    "MESS_BTN_ADD_TO_BASKET" => "В корзину",
-                    "MESS_BTN_BUY" => "Купить",
-                    "MESS_BTN_COMPARE" => "Сравнить",
-                    "MESS_BTN_DETAIL" => "Подробнее",
-                    "MESS_NOT_AVAILABLE" => "Нет в наличии",
-                    "OFFERS_FIELD_CODE" => array(
-                        0 => "",
-                        1 => "",
-                    ),
-                    "OFFERS_LIMIT" => "1",
-                    "OFFERS_SORT_FIELD" => "sort",
-                    "OFFERS_SORT_FIELD2" => "id",
-                    "OFFERS_SORT_ORDER" => "asc",
-                    "OFFERS_SORT_ORDER2" => "desc",
-                    "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
-                    "PARTIAL_PRODUCT_PROPERTIES" => "N",
-                    "PRICE_CODE" => BXConstants::PriceCode(),
-                    "FILL_ITEM_ALL_PRICES" => "Y",
-                    "PRICE_VAT_INCLUDE" => "Y",
-                    "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
-                    "PRODUCT_DISPLAY_MODE" => "Y",
-                    "PRODUCT_ID_VARIABLE" => "id",
-                    "PRODUCT_PROPS_VARIABLE" => "prop",
-                    "PRODUCT_QUANTITY_VARIABLE" => "quantity",
-                    "PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'0','BIG_DATA':false}]",
-                    "PRODUCT_SUBSCRIPTION" => "Y",
-                    "PROPERTY_CODE_MOBILE" => array(),
-                    "ROTATE_TIMER" => "30",
-                    "SECTION_URL" => "",
-                    "SEF_MODE" => "N",
-                    "SHOW_CLOSE_POPUP" => "N",
-                    "SHOW_DISCOUNT_PERCENT" => "N",
-                    "SHOW_MAX_QUANTITY" => "N",
-                    "SHOW_OLD_PRICE" => "N",
-                    "SHOW_PAGINATION" => "Y",
-                    "SHOW_PRICE_COUNT" => "1",
-                    "SHOW_SLIDER" => "Y",
-                    "SLIDER_INTERVAL" => "3000",
-                    "SLIDER_PROGRESS" => "N",
-                    "TEMPLATE_THEME" => "blue",
-                    "USE_ENHANCED_ECOMMERCE" => "N",
-                    "USE_PRICE_COUNT" => "N",
-                    "USE_PRODUCT_QUANTITY" => "N",
-                    "VIEW_MODE" => "SLIDER"
-                ),
-                false
-            ); ?></div>*/ ?>
         <?php
     }
 }
@@ -463,8 +401,7 @@ include(Main\Application::getDocumentRoot() . $templateFolder . '/empty.php');
 
 if ($arResult['ERROR_MESSAGE'] && !$arResult['EMPTY_BASKET']) {
     ShowError($arResult['ERROR_MESSAGE']);
-}
-?>
+} ?>
 <?php if (!$USER->IsAuthorized()): ?>
     <script>
         $(document).ready(function () {
@@ -473,19 +410,14 @@ if ($arResult['ERROR_MESSAGE'] && !$arResult['EMPTY_BASKET']) {
             $('.ctweb-smsauth-menu-block').show();
         });
     </script>
-<? endif; ?>
+<?php endif; ?>
 <script>
     $(document).ready(function () {
-        <?global $rowFavData;
-        foreach( $rowFavData as $key =>$dataEl )
-        {
-        ?>
+        <?php global $rowFavData;
+        foreach( $rowFavData as $key =>$dataEl ) { ?>
         $('.box_with_like[data-product-id="<?=$key?>"] .fa-star-o').css('color', 'red');
         $('.box_with_like[data-product-id="<?=$key?>"] .product-item__favorite-star').attr('data-fav-controls', 'true');
-
-        <?
-        }
-        ?>
+        <?php } ?>
     });
 </script>
 
