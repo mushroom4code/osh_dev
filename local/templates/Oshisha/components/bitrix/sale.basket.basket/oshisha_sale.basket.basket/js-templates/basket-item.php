@@ -55,8 +55,8 @@ $is_key_found = isset($found_key) && ($found_key !== false);
 </script>
 
 <script id="basket-item-template" type="text/html">
-    <div class="justify-between rounded-lg md:dark:py-5 md:dark:px-5 md:px-5 md:py-3 dark:py-0 dark:px-0 px-0 py-0
-    dark:bg-darkBox bg-white dark:mb-4 md:mb-7 mb-4 basket-items-list-item-container md:flex-row flex-col
+    <div class="justify-between rounded-lg md:dark:py-5 md:dark:px-5 md:px-5 md:py-3 dark:py-2 dark:px-2 px-0 py-0
+    dark:bg-darkBox bg-white dark:mb-4 md:mb-2 mb-4 basket-items-list-item-container md:flex-row flex-col
     {{#SHOW_RESTORE}} basket-items-list-item-container-expend hidden{{/SHOW_RESTORE}}
     {{^SHOW_RESTORE}}flex{{/SHOW_RESTORE}}"
          id="basket-item-{{ID}}" data-gift="{{GIFT}}" data-entity="basket-item" data-id="{{ID}}">
