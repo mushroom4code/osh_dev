@@ -1380,9 +1380,11 @@
 						}
 
 						BX.addClass(images[l], 'active');
+						images[l].setAttribute('style','display:block')
 					}
 					else if (BX.hasClass(images[l], 'active'))
 					{
+						images[l].setAttribute('style','display:none')
 						BX.removeClass(images[l], 'active');
 					}
 				}
@@ -1599,10 +1601,12 @@
 						if (value === intPict)
 						{
 							BX.addClass(this.product.slider.ITEMS[i], 'active');
+							BX.removeClass(this.product.slider.ITEMS[i], 'opacity-50');
 						}
 						else if (BX.hasClass(this.product.slider.ITEMS[i], 'active'))
 						{
 							BX.removeClass(this.product.slider.ITEMS[i], 'active');
+							BX.addClass(this.product.slider.ITEMS[i], 'opacity-50');
 						}
 					}
 				}
@@ -1697,9 +1701,11 @@
 							if (value === strValue)
 							{
 								BX.addClass(this.product.slider.ITEMS[i], 'active');
+								BX.removeClass(this.product.slider.ITEMS[i], 'opacity-50');
 							}
 							else if (BX.hasClass(this.product.slider.ITEMS[i], 'active'))
 							{
+								BX.addClass(this.product.slider.ITEMS[i], 'opacity-50');
 								BX.removeClass(this.product.slider.ITEMS[i], 'active');
 							}
 						}
