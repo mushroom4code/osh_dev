@@ -50,7 +50,7 @@
                                  style="display: <?= ($key == 0 ? '  block' : ' none') ?>">
                                 <img src="<?= $photo['SRC'] ?>" alt="<?= $alt ?>"
                                      title="<?= $title ?>"
-                                     class="rounded-xl lg:max-h-96 md:max-h-[320px] max-h-[250px] h-full" <?= ($key == 0 ? ' itemprop="image"' : '') ?>>
+                                     class="rounded-xl lg:max-h-96 xl:max-h-[512px] md:max-h-[320px] max-h-[250px] h-full" <?= ($key == 0 ? ' itemprop="image"' : '') ?>>
                             </div>
                         <?php }
                     } else { ?>

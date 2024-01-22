@@ -1509,7 +1509,7 @@
             BX.addClass(this.obBigSlider, 'fixed top-0 right-0 left-0 w-full h-full p-10 bg-lightOpacityWindow' +
                 ' dark:bg-darkOpacityWindow z-50 flex justify-center items-center flex-col');
             BX.removeClass(this.getEntity(this.obBigSlider, 'close-popup'), 'hidden')
-            BX.addClass(this.node.imageSliderBlock, 'max-w-xl w-full');
+            BX.addClass(this.node.imageSliderBlock, 'max-w-2xl w-full');
             this.node.imageContainer.style.cursor = '';
             // remove double scroll bar
         },
@@ -1519,7 +1519,7 @@
             BX.removeClass(this.obBigSlider, 'popup');
             BX.removeClass(this.obBigSlider, 'fixed top-0 right-0 left-0 w-full h-full p-10 bg-lightOpacityWindow' +
                 ' dark:bg-darkOpacityWindow z-50 flex justify-center items-center flex-col');
-            BX.removeClass(this.node.imageSliderBlock, 'max-w-xl w-full');
+            BX.removeClass(this.node.imageSliderBlock, 'max-w-2xl w-full');
             BX.addClass(this.getEntity(this.obBigSlider, 'close-popup'), 'hidden')
             this.node.imageContainer.style.cursor = 'zoom-in';
             // remove double scroll bar
