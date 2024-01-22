@@ -2,25 +2,25 @@
 <?php if (!$show_price) { ?> blur-lg <?php } ?>">
     <div class="product-item-detail-slider-container <?php if(!empty($taste['VALUE'])) { ?> p-lg-md-25 <?php } ?>"
          id="<?= $itemIds['BIG_SLIDER_ID'] ?>">
-        <div class="variation_taste absolute top-5 left-5 flex flex-row flex-wrap">
-            <?php foreach ($taste['VALUE'] as $key => $nameTaste) {
-                foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
-                    if ($key === $keys) {
-                        $color = explode('#', $value); ?>
-                        <span class="taste px-2.5 mr-1 py-1 mb-1 text-sm rounded-full"
-                              data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>">
-                            <?= $nameTaste ?></span>
-                    <?php }
-                }
-            } ?>
-        </div>
         <div class="product-item-detail-slider-block relative
              <?= ($arParams['IMAGE_RESOLUTION'] === '1by1' ? 'product-item-detail-slider-block-square' : '') ?>"
              data-entity="images-slider-block">
+            <div class="variation_taste absolute top-5 left-5 flex flex-row flex-wrap z-10">
+                <?php foreach ($taste['VALUE'] as $key => $nameTaste) {
+                    foreach ($taste['VALUE_XML_ID'] as $keys => $value) {
+                        if ($key === $keys) {
+                            $color = explode('#', $value); ?>
+                            <span class="taste px-2.5 mr-1 py-1 mb-1 text-sm rounded-full"
+                                  data-background="<?= '#' . $color[1] ?>" id="<?= $color[0] ?>">
+                            <?= $nameTaste ?></span>
+                        <?php }
+                    }
+                } ?>
+            </div>
             <div class="md:max-h-[550px] md:min-h-[550px] min-h-[300px] max-h-[320px] h-full bg-white rounded-xl
              flex justify-center items-center border-borderColor border dark:border-0">
                 <span class="product-item-detail-slider-left carousel_elem_custom absolute top-1/2 md:-left-5 -left-3
-                md:py-4 md:px-5 px-3.5 py-3 rounded-full bg-lightGrayBg hover:bg-hover-red z-10 cursor-pointer"
+                md:py-4 md:px-5 px-3.5 py-3 rounded-full bg-lightGrayBg hover:bg-light-red dark:hover:bg-dark-red z-10 cursor-pointer"
                       data-entity="slider-control-left"
                       style="display: none;">
                     <svg width="10" height="17" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -29,7 +29,7 @@
                     </svg>
                 </span>
                 <span class="product-item-detail-slider-right carousel_elem_custom absolute top-1/2 md:-right-5 -right-3
-                md:py-4 md:px-5 px-3.5 py-3 rounded-full bg-lightGrayBg hover:bg-hover-red z-10 cursor-pointer"
+                md:py-4 md:px-5 px-3.5 py-3 rounded-full bg-lightGrayBg hover:bg-light-red dark:hover:bg-dark-red z-10 cursor-pointer"
                       data-entity="slider-control-right"
                       style="display: none;">
                     <svg width="10" height="17" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@
                     <?php } ?>
                 </div>
             </div>
-            <div class="box_with_net absolute top-0 right-0" <?php if (empty($taste['VALUE'])) { ?> style="padding: 20px;"<?php } ?>>
+            <div class="box_with_net absolute top-0 right-0 p-4">
                 <?php $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
                     'templates',
                     array(
