@@ -165,6 +165,7 @@ class CSaleExportEe extends CSaleExport
             $xmlResult['OrderTax'] = self::getXMLOrderTax($arOrderTax);
             self::setOrderSumTaxMoney(self::getOrderSumTaxMoney($arOrderTax));
 
+
             $xmlResult['Contragents'] = self::getXmlContragents($arOrder, $arProp, $agent, $bExportFromCrm ? array("EXPORT_FROM_CRM" => "Y") : array());
             $xmlResult['OrderDiscount'] = self::getXmlOrderDiscount($arOrder);
             $xmlResult['SaleStoreList'] = $arStore;
@@ -262,6 +263,111 @@ class CSaleExportEe extends CSaleExport
         return self::$arResultStat;
     }
 
+    static function getXmlContragents_EE($arOrder = array())
+    {
+        ob_start();
+        self::ExportContragents_EE($arOrder);
+        $ec_bufer = ob_get_clean();
+        return $ec_bufer;
+    }
+    static function ExportContragents_EE($arData = array())
+    {
+        ?>
+        <?= '<?xml version="1.0" encoding="UTF-8" ?>' ?>
+        <<?= CSaleExportEe::getTagName("SALE_EXPORT_COM_INFORMATION") ?> <?= self::getCmrXmlRootNameParams() ?>>
+        <?php if (!empty($arData['CONTRAGENTS'])) { ?>
+        <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENTS") ?>>
+        <?php foreach ($arData['CONTRAGENTS'] as $agent) { ?>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($agent["ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_FULL_NAME") ?>><?= htmlspecialcharsbx($agent["NAME"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_FULL_NAME") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_PRESENTATION") ?>><?= htmlspecialcharsbx($agent["ADDRESS"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_PRESENTATION") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_POST_CODE") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_COUNTRY") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_REGION") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_STATE") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_SMALL_CITY") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_CITY") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_STREET") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_HOUSE") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>><?= htmlspecialcharsbx($agent["F_HOUSE"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_BUILDING") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>><?= htmlspecialcharsbx($agent["F_BUILDING"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>><?= CSaleExportEe::getTagName("SALE_EXPORT_FLAT") ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_TYPE") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>></<?= CSaleExportEe::getTagName("SALE_EXPORT_VALUE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS_FIELD") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>><?= htmlspecialcharsbx($agent["INN"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ARCHIVED") ?>><?= htmlspecialcharsbx($agent["ARCHIVED"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ARCHIVED") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT_STATUS") ?>><?= htmlspecialcharsbx($agent["STATUS_PERSON"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT_STATUS") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ACTIVE") ?>><?= htmlspecialcharsbx($agent["CONTR_AGENT_ACTIVE"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ACTIVE") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT") ?>>
+        <?php } ?>
+        </<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENTS") ?>>
+    <?php }
+        if (!empty($arData['USERS_CONTR_COMP'])) { ?>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_USERS") ?>>
+            <?php foreach ($arData['USERS_CONTR_COMP'] as $user) { ?>
+                <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER") ?>>
+                <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($user["ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
+                <<?= CSaleExportEe::getTagName("SALE_EXPORT_NAME") ?>><?= htmlspecialcharsbx($user["NAME"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_NAME") ?>>
+                <<?= CSaleExportEe::getTagName("SALE_EXPORT_LOGIN") ?>><?= htmlspecialcharsbx($user["LOGIN"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_LOGIN") ?>>
+                <<?= CSaleExportEe::getTagName("SALE_EXPORT_WORK_PHONE") ?>><?= htmlspecialcharsbx($user["PERSONAL_PHONE"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_WORK_PHONE") ?>>
+                <<?= CSaleExportEe::getTagName("SALE_EXPORT_MAIL") ?>><?= htmlspecialcharsbx($user["EMAIL"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_MAIL") ?>>
+                <?php if (!empty($arData['USERS_CONTR_COMP'][$user["ID"]]['CONTRAGENTS'])) { ?>
+                    <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENTS") ?>>
+                    <?php foreach ($arData['USERS_CONTR_COMP'][$user["ID"]]['CONTRAGENTS'] as $contrUser) { ?>
+                        <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENT") ?>>
+                        <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($contrUser["CONTR_AGENT_ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
+                        <<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>><?= htmlspecialcharsbx($contrUser["INN"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>>
+                        </<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENT") ?>>
+                    <?php } ?>
+                    </<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENTS") ?>>
+                <?php } ?>
+                <?php if (!empty($arData['USERS_CONTR_COMP'][$user["ID"]]['COMPANY'])) { ?>
+                    <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_COMPANYS") ?>>
+                    <?php foreach ($arData['USERS_CONTR_COMP'][$user["ID"]]['COMPANY'] as $companyUser) { ?>
+                        <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_COMPANY") ?>>
+                        <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($companyUser["COMPANY_ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
+                        <<?= CSaleExportEe::getTagName("SALE_EXPORT_FULL_NAME") ?>><?= htmlspecialcharsbx($companyUser["COMPANY_NAME"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_FULL_NAME") ?>>
+                        </<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_COMPANY") ?>>
+                    <?php } ?>
+                    </<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_COMPANYS") ?>>
+                <?php } ?>
+                </<?= CSaleExportEe::getTagName("SALE_EXPORT_USER") ?>>
+            <?php } ?>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_USERS") ?>>
+        <?php }?>
+        </<?= CSaleExportEe::getTagName("SALE_EXPORT_COM_INFORMATION") ?>>
+        <?php
+    }
     static function getXmlBasketItems($type, $arOrder, $arFilter, $arSelect=array(), $arShipment=array(), $order=null)
     {
         $result = array();

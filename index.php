@@ -6,6 +6,11 @@ if (SITE_EXHIBITION == SITE_ID) {
 } else {
     $APPLICATION->SetTitle("OSHISHA - Главная");
 }
+//use Enterego\EnteregoExchange;
+//require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/sale/general/export_ee.php");
+//$agents = EnteregoExchange::GetInfoForXML();
+//
+//$result = CSaleExportEe::getXmlContragents_EE($agents);
 if (IsModuleInstalled("advertising")):?>
     <div class="mt-3 xl:container container">
         <div class="flex md:flex-row flex-col-reverse justify-between w-full relative mb-10">
