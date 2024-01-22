@@ -1,7 +1,12 @@
 <div class="md:w-1/2 md:mr-10 mr-0 rounded-xl w-full product_left relative
 <?php if (!$show_price) { ?> blur-lg <?php } ?>">
-    <div class="product-item-detail-slider-container <?php if(!empty($taste['VALUE'])) { ?> p-lg-md-25 <?php } ?>"
+    <div class="product-item-detail-slider-container <?php if (!empty($taste['VALUE'])) { ?> p-lg-md-25 <?php } ?>"
          id="<?= $itemIds['BIG_SLIDER_ID'] ?>">
+        <span class="product-item-detail-slider-close absolute top-16 right-10 hidden z-40" data-entity="close-popup">
+            <svg width="25" height="25" viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 7.5L8 0.5M1 0.5L8 7.5" class="stroke-textDarkLightGray"
+                      stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </span>
         <div class="product-item-detail-slider-block relative
              <?= ($arParams['IMAGE_RESOLUTION'] === '1by1' ? 'product-item-detail-slider-block-square' : '') ?>"
              data-entity="images-slider-block">
@@ -17,8 +22,8 @@
                     }
                 } ?>
             </div>
-            <div class="md:max-h-[550px] md:min-h-[550px] min-h-[300px] max-h-[320px] h-full bg-white rounded-xl
-             flex justify-center items-center border-borderColor border dark:border-0">
+            <div class="xl:max-h-[550px] md:max-h-[460px] md:min-h-[460px] xl:min-h-[550px] min-h-[300px]
+            max-h-[320px] h-full bg-white rounded-xl flex justify-center items-center border-borderColor border dark:border-0">
                 <span class="product-item-detail-slider-left carousel_elem_custom absolute top-1/2 md:-left-5 -left-3
                 md:py-4 md:px-5 px-3.5 py-3 rounded-full bg-lightGrayBg hover:bg-light-red dark:hover:bg-dark-red z-10 cursor-pointer"
                       data-entity="slider-control-left"
@@ -36,7 +41,7 @@
                         <path d="M1 14.3333L7.66667 7.66667L1 1" stroke="white" stroke-width="2" stroke-linecap="round"
                               stroke-linejoin="round"/></svg>
                 </span>
-                <div class="product-item-detail-slider-images-container rounded-xl h-full"
+                <div class="product-item-detail-slider-images-container rounded-xl h-full flex justify-center items-center"
                      data-entity="images-container">
                     <?php if (!empty($actualItem['PICTURE'][0]['SRC'])) {
                         foreach ($actualItem['PICTURE'] as $key => $photo) { ?>
@@ -45,7 +50,7 @@
                                  style="display: <?= ($key == 0 ? '  block' : ' none') ?>">
                                 <img src="<?= $photo['SRC'] ?>" alt="<?= $alt ?>"
                                      title="<?= $title ?>"
-                                     class="rounded-xl md:max-h-96 max-h-[250px] h-full" <?= ($key == 0 ? ' itemprop="image"' : '') ?>>
+                                     class="rounded-xl lg:max-h-96 md:max-h-[320px] max-h-[250px] h-full" <?= ($key == 0 ? ' itemprop="image"' : '') ?>>
                             </div>
                         <?php }
                     } else { ?>

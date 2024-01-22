@@ -225,7 +225,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             require_once(__DIR__ . '/slider/template.php'); ?>
             <div class="md:w-1/2 w-full md:mt-0 mt-7 flex flex-col catalog-item-product
 				not-input-parse">
-                <p class="head-title text-3xl mb-4 text-lightGrayBg font-semibold dark:font-light dark:text-textDarkLightGray"><?= $name ?></p>
+                <p class="head-title xl:text-3xl text-xl mb-4 text-lightGrayBg font-semibold dark:font-light dark:text-textDarkLightGray"><?= $name ?></p>
                 <?php if ($isGift) { ?>
                     <div>
                         <h4 class="bx-title dark:text-textDark text-textLight">Данная продукция не продается
@@ -466,7 +466,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                     </div>
                     <div class="flex flex-col">
                         <div class="dark:border-darkBox rounded-xl border-2 border-textDark">
-                            <div class="new_box p-5 dark:bg-darkBox rounded-t-xl bg-textDark">
+                            <div class="new_box xl:p-5 p-3 dark:bg-darkBox rounded-t-xl bg-textDark">
                                 <p class="flex flex-row items-center dark:text-grayIconLights text-dark">
                                     <svg width="45" height="48" class="mr-3 w-fit" viewBox="0 0 39 42" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
@@ -482,13 +482,13 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         <path d="M28.3333 8.1123L11.6666 16.654" stroke="#BFBFBF" stroke-width="1.5"
                                               stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
-                                    <span class="text-sm font-medium dark:font-light">
+                                    <span class="xl:text-sm text-xs font-medium dark:font-light">
                                     Наличие товара, варианты и стоимость доставки будут указаны далее при оформлении
                                     заказа.
                                 </span>
                                 </p>
                             </div>
-                            <div class="flex flex-row items-center p-5 justify-between">
+                            <div class="flex flex-row items-center xl:p-5 p-3 justify-between">
                                 <?php if ($USER->IsAuthorized()) {
                                     if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price) { ?>
                                         <div>

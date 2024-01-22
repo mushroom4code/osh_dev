@@ -74,9 +74,19 @@ $this->addExternalJs($templateFolder . "/js/script.js");
     } ?>
 </div>
 <style>
-    .bx-catalog-element .product-item__favorite-star svg path, .bx-catalog-element .icon_like svg path,
-    .bx-catalog-element .icon_like article {
+    .dark .bx-catalog-element .product-item__favorite-star svg path, .dark .bx-catalog-element .icon_like svg path,
+    .dark .bx-catalog-element .icon_like article {
         stroke: black;
+    }
+
+    .dark .bx-catalog-element .icon_like article{
+        color:black;
+    }
+
+    .dark .bx-catalog-element .product-item__favorite-star svg path.stroke-light-red,
+    .dark .bx-catalog-element .icon_like svg path.stroke-light-red{
+      fill: #CD1D1D;
+        stroke: #CD1D1D;
     }
 
     .bx-catalog-element .product-item__favorite-star, .bx-catalog-element .icon_like {
