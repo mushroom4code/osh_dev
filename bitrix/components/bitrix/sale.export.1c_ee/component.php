@@ -1,6 +1,6 @@
 <?
 
-use Enterego\contragents;
+use Enterego\contragents\EnteregoExchange;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
