@@ -11,10 +11,16 @@ import {OrderContextProvider} from "./Context/OrderContext";
 
 OrderMain.propTypes = {};
 
+export const ajaxDeliveryUrl = '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php';
+
 function OrderMain({
                        result, locations, params, options, OrderGeneralUserPropsBlockId
                    }) {
-
+                 
+                    
+    useEffect(()=>{
+        // ymap.init(()=>{console.log('ymap')})
+    }, [])                    
     const renderDependingOnDeliveryToPaysystem = () => {
         return (
             <>

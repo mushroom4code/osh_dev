@@ -31,6 +31,10 @@ if ($USER->IsAuthorized() && check_bitrix_sessid()) {
             exit(json_encode((new \CommonPVZ\OshishaDelivery())->getNoMarkupDays()));
         case 'saveOshishaDelivery':
             exit(json_encode(DeliveryHelper::SaveOshishaDelivery($request->get('params'))));
+        case 'getDaDataSuggest':
+            $address = $request->get('address');
+            $daData = DeliveryHelper::getDaDataSuggest($address, [], 5);
+            exit(json_encode($daData));    
         case 'getDaData':
             $address = $request->get('address');
             $daData = DeliveryHelper::getDaDataAddressInfo($address);

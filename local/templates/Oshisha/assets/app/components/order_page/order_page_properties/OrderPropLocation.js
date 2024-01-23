@@ -41,22 +41,22 @@ function OrderPropLocation({property, disabled}) {
     var propRow,  currentLocation, i, k;
     prepareLocations(locations);
 
-    if (property.getId() in preparedLocations) {
+    if (property.ID in preparedLocations) {
         if (!disabled) {
             let locationsJsx = [];
-            propRow = preparedLocations[property.getId()];
+            propRow = preparedLocations[property.ID];
             for (i = 0; i < propRow.length; i++) {
                 currentLocation = propRow[i] ? propRow[i].output : {};
-                if (property.isMultiple())
+                if (property.MULTIPLE === 'Y')
                     locationsJsx.push(
-                        <div key={property.getId()+'_cur_location_'+i} className="bx-soa-loc"
+                        <div key={property.ID+'_cur_location_'+i} className="bx-soa-loc"
                              style={locationsTemplate === 'search' ? 'margin-bottom: 5px' : 'margin-bottom: 20px'}
                              dangerouslySetInnerHTML={{__html: currentLocation.HTML}}>
                         </div>
                     );
                 else {
                     locationsJsx.push(
-                        <div key={property.getId()+'_cur_location_'+i} className="bx-soa-loc"
+                        <div key={property.ID + '_cur_location_'+i} className="bx-soa-loc"
                              dangerouslySetInnerHTML={{__html: currentLocation.HTML}}
                         >
                         </div>
@@ -68,9 +68,9 @@ function OrderPropLocation({property, disabled}) {
                 }
             }
 
-            if (property.isMultiple()) {
+            if (property.MULTIPLE === 'Y') {
                 locationsJsx.push(
-                    <div key={property.getId()+'_is_multiple'} data-prop-id={property.getId()}
+                    <div key={ property.ID + '_is_multiple'} data-prop-id={property.ID }
                          className="btn btn-sm btn-primary"
                          onClick={BX.proxy(BX.Sale.OrderAjaxComponent.addLocationProperty, BX.Sale.OrderAjaxComponent)}
                     >

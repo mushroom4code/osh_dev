@@ -189,6 +189,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
             let requestData = this.getData(action, actionData)
             requestData.order = { ...requestData.order, ...additionalData }
 
+            console.log(requestData);
+
             if (action === 'saveOrderAjax') {
                 form = BX('bx-soa-order-form');
                 if (form)
@@ -1191,13 +1193,13 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
          * Binds main events for scrolling/resizing
          */
         bindEvents: function () {
-            BX.bind(this.orderSaveBlockNode.querySelector('[data-save-button]'), 'click', BX.proxy(this.clickOrderSaveAction, this));
-            BX.bind(window, 'scroll', BX.proxy(this.totalBlockScrollCheck, this));
-            BX.bind(window, 'resize', BX.throttle(function () {
+            // BX.bind(this.orderSaveBlockNode.querySelector('[data-save-button]'), 'click', BX.proxy(this.clickOrderSaveAction, this));
+            // BX.bind(window, 'scroll', BX.proxy(this.totalBlockScrollCheck, this));
+            // BX.bind(window, 'resize', BX.throttle(function () {
 
-                this.mapsReady && this.resizeMapContainers();
-            }, 50, this));
-            BX.addCustomEvent('onDeliveryExtraServiceValueChange', BX.proxy(this.sendRequest, this));
+            //     this.mapsReady && this.resizeMapContainers();
+            // }, 50, this));
+            // BX.addCustomEvent('onDeliveryExtraServiceValueChange', BX.proxy(this.sendRequest, this));
         },
 
         initFirstSection: function () {
@@ -1848,6 +1850,8 @@ BX.namespace('BX.Sale.OrderAjaxComponent');
          * Checks each active block from top to bottom for errors (showing first block with errors or last block)
          */
         showActualBlock: function () {
+            return;
+
             var allSections = this.orderBlockNode.querySelectorAll('.bx-soa-section.bx-active'),
                 i = 0;
 
