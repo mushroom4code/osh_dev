@@ -7,6 +7,9 @@ export const OrderContextProvider = (props) => {
     const [params, setParams] = useState(props.params);
     const [options, setOptions] = useState(props.options);
     const [locations, setLocations] = useState(props.locations);
+    const [contragents, setContragents] = useState(props.contragents
+        ? props.contragents.filter((contragent) => contragent['STATUS_CONTRAGENT'] !== '0')
+        : props.contragents);
     const [OrderGeneralUserPropsBlockId, setOrderGeneralUserPropsBlockId] =
         useState(props.OrderGeneralUserPropsBlockId);
     const afterSendReactRequest = (response) => {
@@ -26,7 +29,8 @@ export const OrderContextProvider = (props) => {
     });
 
     return <OrderContext.Provider value={{result, setResult, params, setParams, options, setOptions, locations,
-        setLocations, OrderGeneralUserPropsBlockId, setOrderGeneralUserPropsBlockId, afterSendReactRequest}}>
+        setLocations, contragents, setContragents, OrderGeneralUserPropsBlockId, setOrderGeneralUserPropsBlockId,
+        afterSendReactRequest}}>
         {props.children}
     </OrderContext.Provider>
 }

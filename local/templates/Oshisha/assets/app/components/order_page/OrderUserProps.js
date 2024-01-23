@@ -1,6 +1,7 @@
 import OrderProp from './OrderProp';
 import React, {useContext} from "react";
 import OrderContext from "./Context/OrderContext";
+import OrderContragents from "./OrderContragents";
 
 function OrderUserProps() {
     const {result} = useContext(OrderContext);
@@ -13,17 +14,19 @@ function OrderUserProps() {
             groupIterator = new BX.Sale.PropertyCollection(
                 BX.merge({publicMode: true}, result.ORDER_PROP)
             ).getGroupIterator();
-        let a = [];
         while(group = groupIterator()) {
             propsIterator = group.getIterator();
             while (property = propsIterator()) {
                 // TODO Enterego pickup
                 let disabled = false;
                 if (group_buyer_props.find(item => item === group.getName()) !== undefined) {
-                    a.push(property.getId());
-                    div.push(
-                        <OrderProp key={property.getId()} property={property} disabled={disabled}/>
-                    );
+                    if (property.getSettings().CODE === 'CONTRAGENT_ID') {
+                        div.push(<OrderContragents property={property}/>);
+                    } else {
+                        div.push(
+                            <OrderProp key={property.getId()} property={property} disabled={disabled}/>
+                        );
+                    }
                 }
             }
         }

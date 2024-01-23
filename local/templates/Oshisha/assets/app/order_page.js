@@ -39,7 +39,7 @@ BX.OrderPageComponents = {
             this.OrderMainRoot = createRoot(this.OrderMainBlock);
             this.OrderMainRoot.render(
                 <OrderMain result={this.result} params={this.params} options={this.options}
-                           locations={this.locations}
+                           locations={this.locations} contragents={JSON.parse(currentDataset.contragents)}
                            OrderGeneralUserPropsBlockId={currentDataset.generalUserPropsBlockId}
                 />
             );

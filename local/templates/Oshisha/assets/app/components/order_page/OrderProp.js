@@ -1,3 +1,4 @@
+import OrderContragents from "./OrderContragents";
 import OrderPropLocation from './order_page_properties/OrderPropLocation';
 import OrderPropString from './order_page_properties/OrderPropString';
 import OrderPropEnum from "./order_page_properties/OrderPropEnum";
@@ -40,13 +41,13 @@ function OrderProp({property, disabled}) {
     const renderProperty = () => {
         switch (propertyType) {
             case 'LOCATION':
-                return(<OrderPropLocation property={property} disabled={disabled}/>);
+                return (<OrderPropLocation property={property} disabled={disabled}/>);
             case 'STRING':
-                return(<OrderPropString property={property} disabled={disabled}/>);
+                return (<OrderPropString property={property} disabled={disabled}/>);
             case 'ENUM':
-                return(<OrderPropEnum property={property} disabled={disabled}/>);
+                return (<OrderPropEnum property={property} disabled={disabled}/>);
             case 'DATE':
-                return(<OrderPropDate property={property} disabled={disabled}/>);
+                return (<OrderPropDate property={property} disabled={disabled}/>);
         }
     }
 

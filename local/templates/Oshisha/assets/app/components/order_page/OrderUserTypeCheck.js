@@ -124,7 +124,7 @@ function OrderUserTypeCheck() {
         resultTypeCheckJsxReturn = resultTypeCheckJsx;
     }
 
-    return(<div>{resultTypeCheckJsxReturn}</div>);
+    return(<div className="hidden">{resultTypeCheckJsxReturn}</div>);
 }
 
 export default OrderUserTypeCheck;
