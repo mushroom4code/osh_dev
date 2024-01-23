@@ -21,7 +21,7 @@ CModule::AddAutoloadClasses("", array(
     '\Bitrix\Like\ORM_like_favoritesTable' => '/bitrix/modules/osh.like_favorites/lib/ORM_like_favoritesTable.php',
     '\Enterego\UserPrice\PluginStatic' => '/bitrix/modules/osh.userprice/include.php',
     '\Enterego\UserPrice\UserPriceHelperOsh' => '/bitrix/modules/osh.userprice/include.php',
-    '\Enterego\EnteregoExchange' => '/bitrix/php_interface/enterego_class/EnteregoExchange.php',
+    '\Enterego\contragents\EnteregoExchange' => '/bitrix/php_interface/enterego_class/contragents/EnteregoExchange.php',
     '\Enterego\EnteregoBasket' => '/bitrix/php_interface/enterego_class/EnteregoBasket.php',
     '\Enterego\EnteregoProcessing' => '/local/php_interface/include/EnteregoProcessing.php',
     '\Bitrix\Sale\Exchange\EnteregoUserExchange' => '/bitrix/modules/sale/lib/exchange/enteregouserexchange.php',
@@ -39,7 +39,7 @@ CModule::AddAutoloadClasses("", array(
     '\Enterego\EnteregoGroupedProducts' => '/bitrix/php_interface/enterego_class/EnteregoGroupedProducts.php',
     '\Enterego\ORM\EnteregoORMContragentsTable' => '/bitrix/php_interface/enterego_class/ORM/EnteregoORMContragentsTable.php',
     '\Enterego\ORM\EnteregoORMRelationshipUserContragentsTable' => '/bitrix/php_interface/enterego_class/ORM/EnteregoORMRelationshipUserContragentsTable.php',
-    '\Enterego\contagents\EnteregoContragents' => '/bitrix/php_interface/enterego_class/contagents/EnteregoContragents.php',
+    '\Enterego\contragents\EnteregoContragents' => '/bitrix/php_interface/enterego_class/contragents/EnteregoContragents.php',
 ));
 
 //redefine sale  basket condition

@@ -78,8 +78,8 @@ class EnteregoUserExchange
         if ($this->USER_ID !== 0) {
             $sql = "SELECT ent_user_contr_agent_role.CONTR_AGENT_ID
                         FROM ent_user_contr_agent_role
-                                 LEFT JOIN ent_contr_agents as CONTRS
-                                           ON (CONTRS.CONTR_AGENT_ID = ent_user_contr_agent_role.CONTR_AGENT_ID)
+                                 LEFT JOIN ent_contagents as CONTRS
+                                           ON (CONTRS.ID_CONTRAGENT = ent_user_contr_agent_role.CONTR_AGENT_ID)
                         WHERE STATUS_USER = 'admin'
                           AND CONTR_AGENT_ACTIVE = 1
                           AND ARCHIVED = 0
@@ -102,7 +102,7 @@ class EnteregoUserExchange
                 $contr_agent_ids = implode(',', $this->contragents_user);
 
                 if ($contr_agent_ids) {
-                    $sql = "SELECT * FROM  ent_contr_agents WHERE CONTR_AGENT_ID IN($contr_agent_ids) AND CONTR_AGENT_ACTIVE = 1";
+                    $sql = "SELECT * FROM  ent_contagents WHERE ID_CONTRAGENT IN($contr_agent_ids) AND CONTR_AGENT_ACTIVE = 1";
                     $resQuery = $DB->Query($sql);
                     $this->contragents_user = [];
                     while ($arResult = $resQuery->Fetch()) {
@@ -129,7 +129,7 @@ class EnteregoUserExchange
                 $contr_agent_ids = implode(',', $this->contragents_user);
 
                 if ($contr_agent_ids) {
-                    $sql = "SELECT * FROM  ent_contr_agents WHERE CONTR_AGENT_ID IN($contr_agent_ids)";
+                    $sql = "SELECT * FROM  ent_contagents WHERE ID_CONTRAGENT IN($contr_agent_ids)";
                     $resQuery = $DB->Query($sql);
                     $this->contragents_user = [];
                     while ($arResult = $resQuery->Fetch()) {

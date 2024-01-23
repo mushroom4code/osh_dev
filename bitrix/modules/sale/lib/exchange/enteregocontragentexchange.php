@@ -24,11 +24,11 @@ class EnteregoContragentExchange
         global $DB;
 
         if ($this->CONTR_AGENT_ID) {
-            $sql = "SELECT * FROM ent_contr_agents WHERE `CONTR_AGENT_ID` = {$this->CONTR_AGENT_ID}";
+            $sql = "SELECT * FROM ent_contagents WHERE `ID_CONTRAGENT` = {$this->CONTR_AGENT_ID}";
             $resQuery = $DB->Query($sql);
             if ($resultQuery = $resQuery->Fetch()) {
                 $this->CONTR_AGENT_ID = $resultQuery['CONTR_AGENT_ID'];
-                $this->XML_ID = $resultQuery['XML_ID_CONTRAGENT'];
+                $this->XML_ID = $resultQuery['XML_ID'];
                 $this->INN = $resultQuery['INN'];
                 $this->ADDRESS = $resultQuery['ADDRESS'];
                 $this->STATUS_PERSON = $resultQuery['STATUS_PERSON'];
@@ -48,10 +48,10 @@ class EnteregoContragentExchange
         global $DB;
 
         if (!empty($xml_id)) {
-            $sql = "SELECT * FROM ent_contr_agents WHERE `XML_ID` = $xml_id";
+            $sql = "SELECT * FROM ent_contagents WHERE `XML_ID` = $xml_id";
             $resQuery = $DB->Query($sql);
             if ($resultQuery = $resQuery->Fetch()) {
-                $this->CONTR_AGENT_ID = (int)$resultQuery['CONTR_AGENT_ID'];
+                $this->ID_CONTRAGENT = (int)$resultQuery['ID_CONTRAGENT'];
 
             }
         }
@@ -66,10 +66,10 @@ class EnteregoContragentExchange
         global $DB;
 
         if (!empty($xml_id)) {
-            $sql = "SELECT * FROM ent_contr_agents WHERE `INN` = $inn";
+            $sql = "SELECT * FROM ent_contagents WHERE `INN` = $inn";
             $resQuery = $DB->Query($sql);
             if ($resultQuery = $resQuery->Fetch()) {
-                $this->CONTR_AGENT_ID = (int)$resultQuery['CONTR_AGENT_ID'];
+                $this->ID_CONTRAGENT = (int)$resultQuery['ID_CONTRAGENT'];
             }
         }
     }
@@ -200,19 +200,19 @@ class EnteregoContragentExchange
             if ($this->ADDRESS !== 'Не указан') {
                 $address = "ADDRESS= '{$this->ADDRESS}',";
             }
-            $sql = "UPDATE ent_contr_agents SET $inn $address
+            $sql = "UPDATE ent_contagents SET $inn $address
                     NAME_CONT= '{$this->NAME_CONT}', DATE_EDIT= '{$this->DATE_EDIT}', ARCHIVED= {$this->ARCHIVED},
-                    CONTR_AGENT_ACTIVE = $this->CONTR_AGENT_ACTIVE  WHERE CONTR_AGENT_ID = {$this->CONTR_AGENT_ID}";
+                    CONTR_AGENT_ACTIVE = $this->CONTR_AGENT_ACTIVE  WHERE ID_CONTRAGENT = {$this->ID_CONTRAGENT}";
         } else {
-            $sql_new = "INSERT INTO ent_contr_agents(`INN`,`ADDRESS`,`CONTR_AGENT_ACTIVE`,`NAME_CONT`,`DATE_EDIT`,
+            $sql_new = "INSERT INTO ent_contagents(`INN`,`ADDRESS`,`CONTR_AGENT_ACTIVE`,`NAME_CONT`,`DATE_EDIT`,
                              `ARCHIVED`,`STATUS_PERSON`)
                     VALUES ('{$this->INN}','{$this->ADDRESS}','{$this->CONTR_AGENT_ACTIVE}','{$this->NAME_CONT}',
                     '{$this->DATE_EDIT}',{$this->ARCHIVED},'{$this->STATUS_PERSON}')";
             $DB->Query($sql_new);
             $new_xml_id = (string)$DB->LastID();
             $xml_id = $this->XML_ID !== '0' ? $this->XML_ID : $new_xml_id;
-            $this->CONTR_AGENT_ID = $xml_id;
-            $sql = "UPDATE ent_contr_agents SET XML_ID= '$xml_id' WHERE CONTR_AGENT_ID = $new_xml_id";
+            $this->ID_CONTRAGENT = $xml_id;
+            $sql = "UPDATE ent_contagents SET XML_ID= '$xml_id' WHERE ID_CONTRAGENT = $new_xml_id";
         }
 
         $resQuery = $DB->Query($sql);
