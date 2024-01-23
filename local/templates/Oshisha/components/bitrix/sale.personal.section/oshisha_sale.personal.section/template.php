@@ -27,9 +27,6 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
 $theme = Bitrix\Main\Config\Option::get("main", "wizard_eshop_bootstrap_theme_id", "blue", SITE_ID);
 
 use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Page\Asset;
-use Bitrix\Sale\Exchange\EnteregoUserExchange;
-use Enterego\EnteregoCompany;
 
 global $USER;
 if ($USER->IsAuthorized()) {
@@ -70,9 +67,7 @@ if ($USER->IsAuthorized()) {
 //    $user_object->USER_ID = $user_id;
 //    $user_object->GetCompanyForUser();
 //    $user_object->GetContragentsUser();
-//    $getWorkers = EnteregoCompany::GetWorkers($user_id);
-//    $workers_admin = EnteregoCompany::GetWorkersInfo($user_id);
-//    \Enterego\EnteregoExchange::GetInfoForXML();
+//    \Enterego\contragents\EnteregoExchange::GetInfoForXML();
     ?>
     <div class="hides" id="profile_people">
         <h5 class="mb-4"><b>Личный кабинет</b></h5>

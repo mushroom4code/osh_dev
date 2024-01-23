@@ -5,7 +5,7 @@ use Bitrix\Main\Context;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Security\Sign\Signer;
 use Bitrix\Sale\Fuser;
-use Enterego\contagents\EnteregoContragents;
+use Enterego\contragents\EnteregoContragents;
 
 
 /**

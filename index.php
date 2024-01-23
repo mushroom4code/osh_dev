@@ -6,7 +6,7 @@ if (SITE_EXHIBITION == SITE_ID) {
 } else {
     $APPLICATION->SetTitle("OSHISHA - Главная");
 }
-//use Enterego\EnteregoExchange;
+//use Enterego\contragents\EnteregoExchange;
 //require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/sale/general/export_ee.php");
 //$agents = EnteregoExchange::GetInfoForXML();
 //

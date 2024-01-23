@@ -1,6 +1,6 @@
 <?php
 
-namespace Enterego\contagents;
+namespace Enterego\contragents;
 
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
