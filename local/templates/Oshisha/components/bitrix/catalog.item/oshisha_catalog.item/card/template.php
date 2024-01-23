@@ -410,7 +410,7 @@ if ($hitProduct['VALUE'] === 'Да') { ?>
                                       onclick="showHidePopupPrice(this)">Подробнее</span>
                                 <div class="text-black font-extralight text-center hidden absolute p-5 shadow-lg popup-window-price
                                 bg-filterGray dark:text-textDarkLightGray text-xs dark:bg-grayButton rounded-lg w-72
-                                 z-20 left-0">
+                                 z-50 left-0">
                                     <p class="flex justify-center">
                                         <svg width="20" height="20" viewBox="0 0 24 24"
                                              class="mb-3 stroke-light-red dark:stroke-white"
