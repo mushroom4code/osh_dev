@@ -225,7 +225,33 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
             require_once(__DIR__ . '/slider/template.php'); ?>
             <div class="md:w-1/2 w-full md:mt-0 mt-7 flex flex-col catalog-item-product
 				not-input-parse">
-                <p class="head-title xl:text-3xl text-xl mb-4 text-lightGrayBg font-semibold dark:font-light dark:text-textDarkLightGray"><?= $name ?></p>
+                <div class="head-title xl:text-3xl text-xl mb-4 text-lightGrayBg font-semibold dark:font-light
+                dark:text-textDarkLightGray flex flex-row justify-between items-start relative">
+                    <?= $name ?>
+
+                    <?php if ($actualItem['PRODUCT']['QUANTITY'] == '0') { ?>
+                        <div class="flex justify-between items-center product-toggle bx_catalog_item_controls">
+                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                  <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
+                                <svg width="34" height="33" class="ml-3 <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ?
+                                    'subscribed stroke-light-red dark:stroke-white' :
+                                    'dark:stroke-tagFilterGray stroke-black' ?>"
+                                     viewBox="0 0 34 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M25.5762 11.0001C25.5762 8.81209 24.6884 6.71367 23.1081 5.16649C21.5279 3.61932 19.3846 2.75012 17.1498 2.75012C14.915 2.75012 12.7717 3.61932 11.1915 5.16649C9.61121 6.71367 8.72344 8.81209 8.72344 11.0001C8.72344 20.6251 4.51025 23.3751 4.51025 23.3751H29.7894C29.7894 23.3751 25.5762 20.6251 25.5762 11.0001Z"
+                                          stroke-width="3" stroke-linecap="round"
+                                          stroke-linejoin="round"></path>
+                                    <path d="M19.5794 28.875C19.3325 29.2917 18.9781 29.6376 18.5517 29.8781C18.1253 30.1186 17.6419 30.2451 17.1498 30.2451C16.6577 30.2451 16.1743 30.1186 15.7479 29.8781C15.3215 29.6376 14.9671 29.2917 14.7202 28.875"
+                                          stroke-width="3" stroke-linecap="round"
+                                          stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                            <div id="popup_mess"
+                                 class="popup_mess_prods catalog_popup absolute z-20 w-auto top-full left-0 <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
+                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
+                                 data-product_id="<?= $arResult['ID']; ?>"></div>
+                        </div>
+                    <?php } ?>
+                </div>
                 <?php if ($isGift) { ?>
                     <div>
                         <h4 class="bx-title dark:text-textDark text-textLight">Данная продукция не продается
@@ -488,7 +514,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                 </span>
                                 </p>
                             </div>
-                            <div class="flex flex-row items-center xl:p-5 p-3 justify-between">
+                            <div class="flex flex-row items-center xl:p-5 p-3 justify-between relative">
                                 <?php if ($USER->IsAuthorized()) {
                                     if ($actualItem['PRODUCT']['QUANTITY'] != '0' && $show_price) { ?>
                                         <div>
@@ -565,7 +591,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                             </div>
                                         </div>
                                     <?php } else { ?>
-                                        <div class="bx_catalog_item_controls mb-5 d-flex flex-row align-items-center bx_catalog_item"
+                                        <div class="bx_catalog_item_controls mb-5 flex flex-row items-center bx_catalog_item"
                                             <?= (!$actualItem['CAN_BUY'] ? ' style="display: none;"' : '') ?>
                                              data-entity="quantity-block">
                                             <div class="d-flex flex-row align-items-center mr-3">
@@ -591,21 +617,28 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                    title="Добавить в корзину">Забронировать</a>
                                             </div>
                                             <div id="result_box" style="width: 100%;position: absolute;"></div>
-                                            <div class="detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
-                                                            <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
-                                                <i class="fa fa-bell-o <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'filled' : '' ?>"
-                                                   aria-hidden="true"></i>
-                                            </div>
-                                            <div id="popup_mess"
-                                                 class="popup_mess_prods <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
-                                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
-                                                 data-product_id="<?= $arResult['ID']; ?>"></div>
                                         </div>
-                                        <div class="mb-4 d-flex justify-content-between align-items-center">
-                                            <div class="not_product detail_popup <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
+                                        <div class="flex justify-between items-center product-toggle bx_catalog_item_controls">
+                                            <div class="not_product detail_popup text-xs dark:text-textDark text-white font-medium
+                                                flex justify-center flex-row items-center dark:bg-dark-red bg-light-red py-2 px-4
+                                                rounded-full text-center w-auto  <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                                             <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>">
+                                                <svg width="18" height="17" class="mr-1 stroke-white
+                                                    <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
+                                                     viewBox="0 0 34 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M25.5762 11.0001C25.5762 8.81209 24.6884 6.71367 23.1081 5.16649C21.5279 3.61932 19.3846 2.75012 17.1498 2.75012C14.915 2.75012 12.7717 3.61932 11.1915 5.16649C9.61121 6.71367 8.72344 8.81209 8.72344 11.0001C8.72344 20.6251 4.51025 23.3751 4.51025 23.3751H29.7894C29.7894 23.3751 25.5762 20.6251 25.5762 11.0001Z"
+                                                          stroke-width="3" stroke-linecap="round"
+                                                          stroke-linejoin="round"></path>
+                                                    <path d="M19.5794 28.875C19.3325 29.2917 18.9781 29.6376 18.5517 29.8781C18.1253 30.1186 17.6419 30.2451 17.1498 30.2451C16.6577 30.2451 16.1743 30.1186 15.7479 29.8781C15.3215 29.6376 14.9671 29.2917 14.7202 28.875"
+                                                          stroke-width="3" stroke-linecap="round"
+                                                          stroke-linejoin="round"></path>
+                                                </svg>
                                                 Нет в наличии
                                             </div>
+                                            <div id="popup_mess"
+                                                 class="popup_mess_prods catalog_popup absolute z-20 w-auto top-full left-0 <?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? 'subscribed' : '' ?>"
+                                                 data-subscription_id="<?= $arResult['IS_SUBSCRIPTION_KEY_FOUND'] ? $arResult['ITEM_SUBSCRIPTION']['ID'] : '' ?>"
+                                                 data-product_id="<?= $arResult['ID']; ?>"></div>
                                         </div>
                                     <?php }
                                 } else { ?>
@@ -685,7 +718,8 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
         <ul class="nav nav-fill flex flex-row flex-wrap justify-content-between mb-3 mt-5" role="tablist">
             <?php if (!empty($arResult['DISPLAY_PROPERTIES']) || $arResult['SHOW_OFFERS_PROPS']) { ?>
                 <li class="nav-item  text-center w-1/3">
-                    <a class="nav-link text-center tab-product <? if (!$showDescription): ?>active<? endif; ?>" id="pills-profile-tab"
+                    <a class="nav-link text-center tab-product <? if (!$showDescription): ?>active<? endif; ?>"
+                       id="pills-profile-tab"
                        data-toggle="pill" href="#pills-profile"
                        role="tab" aria-controls="pills-profile" aria-selected="false">
                         <span><?= $arParams['MESS_PROPERTIES_TAB'] ?></span>
@@ -693,13 +727,14 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                 </li>
                 <?php
             }
-             if ($showDescription) { ?>
-            <li class="nav-item link text-center w-1/3">
-                <a class="nav-link active text-center tab-product" id="pills-home-tab" data-toggle="pill" href="#pills-home"
-                   role="tab" aria-controls="pills-home" aria-selected="true">
-                    <span><?= $arParams['MESS_DESCRIPTION_TAB'] ?></span></a>
-            </li>
-            <?php
+            if ($showDescription) { ?>
+                <li class="nav-item link text-center w-1/3">
+                    <a class="nav-link active text-center tab-product" id="pills-home-tab" data-toggle="pill"
+                       href="#pills-home"
+                       role="tab" aria-controls="pills-home" aria-selected="true">
+                        <span><?= $arParams['MESS_DESCRIPTION_TAB'] ?></span></a>
+                </li>
+                <?php
             }
             if ($arParams['USE_COMMENTS'] === 'Y') { ?>
                 <li class="nav-item text-center w-1/3">

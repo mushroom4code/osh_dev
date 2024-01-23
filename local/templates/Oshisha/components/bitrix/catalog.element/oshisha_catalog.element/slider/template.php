@@ -1,5 +1,6 @@
 <div class="md:w-1/2 md:mr-10 mr-0 rounded-xl w-full product_left relative
-<?php if (!$show_price) { ?> blur-lg <?php } ?>">
+<?php if (!$show_price) { ?> blur-lg <?php } ?>
+<?php if ($actualItem['PRODUCT']['QUANTITY'] == '0') { ?> opacity-50 <?php } ?>">
     <div class="product-item-detail-slider-container <?php if (!empty($taste['VALUE'])) { ?> p-lg-md-25 <?php } ?>"
          id="<?= $itemIds['BIG_SLIDER_ID'] ?>">
         <span class="product-item-detail-slider-close absolute top-16 right-10 hidden z-40" data-entity="close-popup">
