@@ -9,6 +9,7 @@ export const OrderContextProvider = (props) => {
     const [locations, setLocations] = useState(props.locations);
     const [OrderGeneralUserPropsBlockId, setOrderGeneralUserPropsBlockId] =
         useState(props.OrderGeneralUserPropsBlockId);
+        
     const afterSendReactRequest = (response) => {
         setResult(response.order);
         setLocations(response.locations);

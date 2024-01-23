@@ -1,16 +1,37 @@
-import React, {useContext, useRef} from "react";
+import React, { useContext, useRef } from "react";
 import OrderContext from "./Context/OrderContext";
 import OrderProp from "./OrderProp";
+import OrderOshishaDelivery, { listOshDeliveryProp } from "./OshishaDelivery/OrderOshishaDelivery";
+
+
+function DeliveryItemsProps(result, param, item, checked) {
+
+    return <div>
+        {result.result.ORDER_PROP.properties.map((property) => {
+            
+            if (listOshDeliveryProp.find(item => item === property.CODE)) {
+                return
+            }
+
+            if (property.PROPS_GROUP_ID !== '2' && property.PROPS_GROUP_ID !== '9') {
+                return null
+            }
+
+            return <OrderProp key={property.ID} property={property} disabled={false}
+                result={result} />
+        })}
+    </div>
+}
 
 function OrderDelivery() {
-    const {result, params, options, afterSendReactRequest} = useContext(OrderContext);
-    const groupDeliveryProps =  ["Данные для доставки"];
+    const { result, params, options, afterSendReactRequest } = useContext(OrderContext);
+    const groupDeliveryProps = ["Данные для доставки"];
     const deliveryBlockRef = useRef(null);
 
     const selectDelivery = (event) => {
         BX.OrderPageComponents.startLoader();
         var target = event.target || event.srcElement,
-            actionSection = BX.hasClass(target, 'bx-soa-pp-company') ? target : BX.findParent(target, {className: 'bx-soa-pp-company'}),
+            actionSection = BX.hasClass(target, 'bx-soa-pp-company') ? target : BX.findParent(target, { className: 'bx-soa-pp-company' }),
             selectedSection = deliveryBlockRef.current.querySelector('.bx-selected'),
             actionInput, selectedInput, selected;
         selected = deliveryBlockRef.current.querySelector('input[type=checkbox]');
@@ -91,7 +112,7 @@ function OrderDelivery() {
                         : '');
                 extraServices.push(
                     <div key={'delivery_' + delivery.ID + '_extra_service_' + i} className="form-group bx-soa-pp-field"
-                         dangerouslySetInnerHTML={{__html: serviceNodeInnerHtml}}>
+                        dangerouslySetInnerHTML={{ __html: serviceNodeInnerHtml }}>
                         <label dangerouslySetInnerHTML={{
                             __html: BX.util.htmlspecialchars(currentService.name)
                                 + (currentService.price ? ' (' + currentService.priceFormatted + ')' : '')
@@ -106,40 +127,13 @@ function OrderDelivery() {
                         : '');
                 extraServices.push(
                     <div key={'delivery_' + delivery.ID + '_extra_service_' + i} className="checkbox">
-                        <label dangerouslySetInnerHTML={{__html: serviceNodeInnerHtml}}></label>
+                        <label dangerouslySetInnerHTML={{ __html: serviceNodeInnerHtml }}></label>
                     </div>
                 );
             }
         }
 
         return extraServices;
-    }
-
-    const getDeliveryItemPropsJsx = (item, checked) => {
-        var deliveryItemPropsJsx = [];
-        if (checked && result.ORDER_PROP && propertyCollection) {
-            let group, property, groupIterator = propertyCollection.getGroupIterator(),
-                propsIterator;
-
-            const arDelivery = params.AR_DELIVERY_PICKUP;
-            while (group = groupIterator()) {
-                propsIterator = group.getIterator();
-                while (property = propsIterator()) {
-                    let disabled = false;
-                    if (groupDeliveryProps.find(item => item === group.getName()) !== undefined) {
-                        const id_del = result.DELIVERY.find(item => item.CHECKED === 'Y').ID;
-                        if (arDelivery.indexOf(String(id_del)) !== -1) {
-                            disabled = true;
-                        }
-                        deliveryItemPropsJsx.push(
-                            <OrderProp key={property.getId()} property={property} disabled={disabled}
-                                       result={result}/>
-                        );
-                    }
-                }
-            }
-        }
-        return deliveryItemPropsJsx;
     }
 
     const getDeliveryItemInfoJsx = (item, deliveryId, checked) => {
@@ -156,7 +150,7 @@ function OrderDelivery() {
                                     item.CALCULATE_DESCRIPTION</div>
                                 : null}
                         </div>
-                        <div style={{clear: "both"}}></div>
+                        <div style={{ clear: "both" }}></div>
                         {extraServices.length ?
                             <div className="bx-soa-pp-company-block">extraServices</div> : null}
                     </div>
@@ -198,12 +192,7 @@ function OrderDelivery() {
         }
     }
 
-    var propertyCollection = new BX.Sale.PropertyCollection(BX.merge({publicMode: true}, result.ORDER_PROP));
-
-
-
-
-
+    var propertyCollection = new BX.Sale.PropertyCollection(BX.merge({ publicMode: true }, result.ORDER_PROP));
 
     var itemsJsx = [], itemsJsxByGroup = {}, deliveriesByGroup = {}, t, deliveryCachedInfo = [];
 
@@ -226,13 +215,13 @@ function OrderDelivery() {
 
             itemInnerJsx.push(
                 <input key={'delivery_radio_' + deliveryId} type="radio" name="DELIVERY_ID"
-                       id={'ID_DELIVERY_ID_' + deliveryId} value={deliveryId}
-                       defaultChecked={checked} className="bx-soa-pp-company-checkbox form-check-input
+                    id={'ID_DELIVERY_ID_' + deliveryId} value={deliveryId}
+                    defaultChecked={checked} className="bx-soa-pp-company-checkbox form-check-input
                        check_custom mr-2 m-0"
                 />
             )
             itemInnerJsx.push(<div key={'delivery_logo_node' + deliveryId}
-                                   className="bx-soa-pp-company-curs"></div>);
+                className="bx-soa-pp-company-curs"></div>);
             if (params.SHOW_DELIVERY_LIST_NAMES === 'Y') {
                 itemInnerJsx.push(
                     <div key={'delivery_name_block_' + deliveryId} className="bx-soa-pp-company-smalltitle text-black
@@ -242,13 +231,11 @@ function OrderDelivery() {
                 );
             }
 
-            var deliveryItemPropsJsx = getDeliveryItemPropsJsx(item, checked);
-
             var deliveryItemInfoJsx = getDeliveryItemInfoJsx(item, deliveryId, checked);
 
             var itemJsx = <div key={'delivery_item_' + deliveryId}
-                               className={'delivery bx-soa-pp-company relative mt-5' +
-                                   (checked ? ' bx-selected' : '')}>
+                className={'delivery bx-soa-pp-company relative mt-5' +
+                    (checked ? ' bx-selected' : '')}>
                 <div
                     className={'bx-soa-pp-company-graf-container box_with_delivery mb-3 border-grey-line-order' +
                         ' cursor-pointer p-8 flex items-center w-full border-[1px] rounded-[10px] dark:border-darkBox' +
@@ -258,7 +245,7 @@ function OrderDelivery() {
                     {itemInnerJsx}
                 </div>
                 <div
-                    className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0">{deliveryItemPropsJsx}{deliveryItemInfoJsx}</div>
+                    className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0">{deliveryItemInfoJsx}</div>
             </div>;
 
             if (groupId === '0') {
@@ -283,13 +270,13 @@ function OrderDelivery() {
         }
         var groupJsx =
             <div key={'delivery_items_group' + groupId}
-                 className={'d-flex flex-column bx-soa-pp-company box_with_del_js hidden parent_type_'
-                     + groupId + ' ' + (check ? 'active_box' : '')}>
+                className={'d-flex flex-column bx-soa-pp-company box_with_del_js hidden parent_type_'
+                    + groupId + ' ' + (check ? 'active_box' : '')}>
                 <div className={'bx-soa-pp-company-smalltitle color_black text-bold flex justify-content-between' +
                     ' mb-2 box_with_delivery bx-soa-pp-company-graf-container'}>
                     <div>{item.PARENT_NAME}<i className="fa fa-chevron-down ml-3" aria-hidden="true"></i></div>
                     <div>
-                        <img height="50" className="img_logo_delivery" src={item.LOGOTIP_SRC_2X}/>
+                        <img height="50" className="img_logo_delivery" src={item.LOGOTIP_SRC_2X} />
                     </div>
                 </div>
                 <div className={'p-1 box-none container-with-profile-delivery box_' + groupId}>{groupItems}</div>
@@ -305,11 +292,13 @@ function OrderDelivery() {
     return (
         <div ref={deliveryBlockRef} className="bx-soa-section-content">
             <div className="bx-soa-pp">
+                <OrderOshishaDelivery result={result} params={params} afterSendReactRequest={afterSendReactRequest} />
                 <div className="bx-soa-pp-item-container">
                     <div className="row">
                         {itemsJsx}
                     </div>
                 </div>
+                <DeliveryItemsProps result={result} />
             </div>
         </div>
     );

@@ -460,6 +460,8 @@ class DeliveryHelper
                 </script>",
             true
         );
+
+        $arParams['OSH_DELIVERY'] = $params;
     }
 
     /**
@@ -479,6 +481,22 @@ class DeliveryHelper
             return [];
         }
 
+    }
+
+    /**
+     * @param string $address
+     * @param array $filter
+     * @param int $count
+     * @return mixed
+     */
+    public static function getDaDataSuggest(string $address, array $filter, int $count)
+    {
+        $token = OshishaDelivery::getOshishaDaDataToken();
+        $secret = OshishaDelivery::getOshishaDaDataSecret();
+
+        $daData = new DadataClient($token, $secret);
+        $res = $daData->suggest('address', $address, $count, $filter);
+        return $res;
     }
 
     public static function getDaDataAddressByGeolocation($latitude, $longitude) {

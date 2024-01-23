@@ -2,6 +2,15 @@ BX.namespace('BX.SaleCommonPVZ');
 
 const typeDisplayPVZ = {map: 'map', list: 'list'}
 
+//FIX global handler hook
+BX.reactHandler = {
+
+    onSelectPvz: [],
+    selectPvz: function (itemId) {
+        this.onSelectPvz.forEach(item => item(itemId))
+    }
+}
+
 BX.SaleCommonPVZ = {
     curCityCode: null,
     curCityName: null,
@@ -73,17 +82,17 @@ BX.SaleCommonPVZ = {
         this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
         this.propTypePvzId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
 
-        this.hidePropField(this.propTypeDeliveryId)
-        this.hidePropField(this.propAddressPvzId)
-        this.hidePropField(this.propFiasId)
-        this.hidePropField(this.propKladrId)
-        this.hidePropField(this.propTypePvzId)
-        this.hidePropField(this.propLatitudeId)
-        this.hidePropField(this.propLongitudeId)
-        this.hidePropField(this.propCommonPVZId)
-        this.hidePropField(this.propDateDeliveryId)
-        this.hidePropField(this.propDeliveryTimeInterval)
-        this.hidePropField(this.propStreetKladrId)
+        // this.hidePropField(this.propTypeDeliveryId)
+        // this.hidePropField(this.propAddressPvzId)
+        // this.hidePropField(this.propFiasId)
+        // this.hidePropField(this.propKladrId)
+        // this.hidePropField(this.propTypePvzId)
+        // this.hidePropField(this.propLatitudeId)
+        // this.hidePropField(this.propLongitudeId)
+        // this.hidePropField(this.propCommonPVZId)
+        // this.hidePropField(this.propDateDeliveryId)
+        // this.hidePropField(this.propDeliveryTimeInterval)
+        // this.hidePropField(this.propStreetKladrId)
 
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
@@ -776,6 +785,8 @@ BX.SaleCommonPVZ = {
     },
 
     createPVZPopup: function () {
+        console.log('create pvz');
+
         if (BX('wrap_pvz_overlay')) {
             this.pvzOverlay = BX('wrap_pvz_overlay')
         } else {
