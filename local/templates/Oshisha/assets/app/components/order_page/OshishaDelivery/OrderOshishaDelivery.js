@@ -83,7 +83,7 @@ function OrderOshishaDelivery({ result, params, afterSendReactRequest }) {
                     })
                 }
             }
-        )
+            )
     }
 
     return (
@@ -133,7 +133,12 @@ function OrderOshishaDelivery({ result, params, afterSendReactRequest }) {
                     : null
                 }
                 {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
-                    ? <OshishaPvzDelivery curCityCode={propLocation.VALUE[0]} result={result} params={params} afterSendReactRequest={afterSendReactRequest} />
+                    ? <OshishaPvzDelivery
+                        cityCode={propLocation.VALUE[0]}
+                        result={result}
+                        params={params}
+                        afterSendReactRequest={afterSendReactRequest}
+                    />
                     : null
                 }
                 {listOshDeliveryProp.map(code => {
