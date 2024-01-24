@@ -155,7 +155,7 @@ class CSaleExportEe extends CSaleExport
             self::setOrderSumTaxMoney(self::getOrderSumTaxMoney($arOrderTax));
 
 
-            $xmlResult['Contragents'] = self::getXmlContragents_EE($arOrder, $arProp, $agent, $bExportFromCrm ? array("EXPORT_FROM_CRM" => "Y") : array());
+            $xmlResult['Contragents'] = self::getXmlContragents($arOrder, $arProp, $agent, $bExportFromCrm ? array("EXPORT_FROM_CRM" => "Y") : array());
             $xmlResult['OrderDiscount'] = self::getXmlOrderDiscount($arOrder);
             $xmlResult['SaleStoreList'] = $arStore;
             $xmlResult['ShipmentsStoreList'] = self::getShipmentsStoreList($order);
@@ -238,14 +238,21 @@ class CSaleExportEe extends CSaleExport
         return self::$arResultStat;
     }
 
+    /**
+     * @param $arOrder
+     * @return false|string
+     */
     static function getXmlContragents_EE($arOrder = array())
     {
         ob_start();
         self::ExportContragents_EE($arOrder);
-        $ec_bufer = ob_get_clean();
-        return $ec_bufer;
+        return ob_get_clean();
     }
 
+    /**
+     * @param $arData
+     * @return void
+     */
     static function ExportContragents_EE($arData = array())
     {
         ?><?= '<?xml version="1.0" encoding="UTF-8" ?>' ?>

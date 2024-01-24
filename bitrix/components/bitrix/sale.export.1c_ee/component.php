@@ -312,6 +312,8 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
 
     } elseif ($_GET["mode"] == "query_contragents") {
 
+       $stepContragent = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS_STEP');
+        $stepContragent = '';
         $arData = EnteregoExchange::GetInfoForXML();
 
         $result = CSaleExportEe::getXmlContragents_EE($arData);

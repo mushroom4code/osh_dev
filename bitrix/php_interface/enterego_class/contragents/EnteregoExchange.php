@@ -41,7 +41,8 @@ class EnteregoExchange
                 ),
                 'order' => array(
                     'DATE_UPDATE' => 'DESC'
-                )
+                ),
+                'limit' => '100'
             )
         );
 
@@ -70,6 +71,7 @@ class EnteregoExchange
                 'filter' => array(
                     ">=TIMESTAMP_X" => $dateImport1C,
                 ),
+                'limit' => '100',
                 'runtime' => array(
                     new Main\Entity\ReferenceField(
                         'RELATION',
