@@ -3,17 +3,20 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import { ajaxDeliveryUrl } from '../OrderMain';
 import OrderProp from '../OrderProp';
+import OrderPropLocationCustom from "../order_page_properties/OrderPropLocationCustom";
 
 function OshishaDaDataAddress({ handleSelectSuggest }) {
-
+    const [locationName, setLocationName] = useState('');
     const [address, setAddress] = useState('')
     const [listSuggest, setListSuggest] = useState([])
     const [activeSuggest, setActiveSuggest] = useState(0)
     const [openListSuggest, setOpenListSuggest] = useState(false)
+    const [timeoutId, setTimeoutId] = useState(0);
 
     const selectSuggest = () => {
 
         handleSelectSuggest(listSuggest[activeSuggest])
+        setAddress(listSuggest[activeSuggest].value);
         setActiveSuggest(0)
         setOpenListSuggest(false)
 
@@ -48,29 +51,40 @@ function OshishaDaDataAddress({ handleSelectSuggest }) {
         const curAddress = e.target.value;
         setAddress(curAddress);
 
-        axios.post(
-            ajaxDeliveryUrl,
-            {
-                sessid: BX.bitrix_sessid(),
-                address: curAddress,
-                action: 'getDaDataSuggest'
-            },
-            { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-        ).then(response => {
-            setOpenListSuggest(true);
-            setListSuggest(response.data);
-        })
+        clearTimeout(timeoutId);
+        setTimeoutId(setTimeout(() => {
+            axios.post(
+                ajaxDeliveryUrl,
+                {
+                    sessid: BX.bitrix_sessid(),
+                    address: curAddress,
+                    locations: [{city: locationName}],
+                    action: 'getDaDataSuggest'
+                },
+                { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+            ).then(response => {
+                setOpenListSuggest(true);
+                setListSuggest(response.data);
+            })
+        }, 800));
     }
 
     return (
         <div>
-            <input value={address} onKeyDown={onKeyDownDaDataAddress} onChange={onChangeDaDataString} className='form-control min-width-700 w-full text-sm cursor-text
+            <OrderPropLocationCustom locationName={locationName} setLocationName={setLocationName}/>
+            <div className='title font-medium mb-[0.8em] uppercase'>
+                Введите адрес:
+            </div>
+            <div>
+                <input value={address} onKeyDown={onKeyDownDaDataAddress} onChange={onChangeDaDataString} className='form-control min-width-700 w-full text-sm cursor-text
                  border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg dark:bg-grayButton'/>
-            <ul className= {` ${openListSuggest ? '' : 'hidden'}`}>
-                {listSuggest.map((suggest, index) => <li className={`${activeSuggest === index ? 'bg-white' : ''}`} key={index} onClick={onSelectSuggest}>
-                    {suggest.value}
-                </li>)}
-            </ul>
+                <ul className={` ${openListSuggest ? '' : 'hidden'}`}>
+                    {listSuggest.map((suggest, index) => <li className={`${activeSuggest === index ? 'bg-white' : ''}`}
+                                                             key={index} onClick={onSelectSuggest}>
+                        {suggest.value}
+                    </li>)}
+                </ul>
+            </div>
         </div>
     )
 }

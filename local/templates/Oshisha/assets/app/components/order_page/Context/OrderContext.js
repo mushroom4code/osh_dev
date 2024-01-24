@@ -7,6 +7,7 @@ export const OrderContextProvider = (props) => {
     const [params, setParams] = useState(props.params);
     const [options, setOptions] = useState(props.options);
     const [locations, setLocations] = useState(props.locations);
+    const [locationProperty, setLocationProperty] = useState(props.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION'));
     const [OrderGeneralUserPropsBlockId, setOrderGeneralUserPropsBlockId] =
         useState(props.OrderGeneralUserPropsBlockId);
         
@@ -27,7 +28,8 @@ export const OrderContextProvider = (props) => {
     });
 
     return <OrderContext.Provider value={{result, setResult, params, setParams, options, setOptions, locations,
-        setLocations, OrderGeneralUserPropsBlockId, setOrderGeneralUserPropsBlockId, afterSendReactRequest}}>
+        setLocations, locationProperty, setLocationProperty, OrderGeneralUserPropsBlockId,
+        setOrderGeneralUserPropsBlockId, afterSendReactRequest}}>
         {props.children}
     </OrderContext.Provider>
 }

@@ -12,7 +12,8 @@ function OrderUserProps() {
         <div className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0">
             {result.ORDER_PROP.properties.map(property => {
 
-                if (property.PROPS_GROUP_ID !== userGroup.ID) {
+                if ((property.PROPS_GROUP_ID !== userGroup.ID)
+                    || (property.CODE === 'LOCATION')) {
                     return null
                 }
 

@@ -281,8 +281,8 @@
 }
 
 :is(.dark .soa-property-container .dropdown-block), :is(.dark .soa-property-container .dropdown-block *) {
-	background-color: #313131;
-	border-color: #313131;
+	background-color: rgb(70 70 70 / var(--tw-bg-opacity));
+	border-color: rgb(70 70 70 / var(--tw-bg-opacity));
 	color: white !important;
 }
 

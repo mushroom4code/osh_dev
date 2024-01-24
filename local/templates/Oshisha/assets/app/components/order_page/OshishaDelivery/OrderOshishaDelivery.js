@@ -119,10 +119,6 @@ function OrderOshishaDelivery({ result, params, afterSendReactRequest }) {
                         : null
                     }
                 </div>
-
-                <div className='title font-medium mb-[0.8em] uppercase'>
-                    Введите адрес:
-                </div>
                 <OshishaDaDataAddress handleSelectSuggest={handleSelectSuggest} />
                 <a href='javascript(0)' className='link_red_button text-white text-center flex items-center 
                     justify-content-center dark:text-textDark shadow-md dark:bg-dark-red bg-light-red py-2 lg:px-16 md:px-16 px-10 rounded-5 font-bold'>
