@@ -312,8 +312,9 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
 
     } elseif ($_GET["mode"] == "query_contragents") {
 
-        $agents = EnteregoExchange::GetInfoForXML();
-        $result = CSaleExportEe::getXmlContragents_EE($agents);
+        $arData = EnteregoExchange::GetInfoForXML();
+
+        $result = CSaleExportEe::getXmlContragents_EE($arData);
         echo $result;
 
     } elseif ($_GET["mode"] == "success") {

@@ -248,22 +248,18 @@ class CSaleExportEe extends CSaleExport
 
     static function ExportContragents_EE($arData = array())
     {
-        ?>
-        <?= '<?xml version="1.0" encoding="UTF-8" ?>' ?>
+        ?><?= '<?xml version="1.0" encoding="UTF-8" ?>' ?>
         <<?= CSaleExportEe::getTagName("SALE_EXPORT_COM_INFORMATION") ?> <?= self::getCmrXmlRootNameParams() ?>>
         <?php if (!empty($arData['CONTRAGENTS'])) { ?>
         <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENTS") ?>>
         <?php foreach ($arData['CONTRAGENTS'] as $agent) { ?>
-
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT") ?>>
-            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($agent["XML_ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
-            <<?= CSaleExportEe::getTagName("SALE_EXPORT_XML_ID_AGENT") ?>><?= htmlspecialcharsbx($agent["ID_CONTRAGENT"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_XML_ID_AGENT") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($agent["ID_CONTRAGENT"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_FULL_NAME") ?>><?= htmlspecialcharsbx($agent["NAME_ORGANIZATION"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_FULL_NAME") ?>>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_ITEM_NAME") ?>><?= htmlspecialcharsbx($agent["NAME_ORGANIZATION"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ITEM_NAME") ?>>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_TYPE") ?>><?= htmlspecialcharsbx($agent["TYPE"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_TYPE") ?>>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>><?= htmlspecialcharsbx($agent["INN"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>>
-            <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT_STATUS") ?>><?= htmlspecialcharsbx($agent["STATUS_CONTRAGENT"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT_STATUS") ?>>
-
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT_STATUS") ?>><?= $agent["STATUS_CONTRAGENT"] == '1' ? 'true' : 'false' ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT_STATUS") ?>>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_PRESENTATION") ?>>
                     <?= htmlspecialcharsbx($agent["NAME_ORGANIZATION"]) ?>
@@ -272,7 +268,6 @@ class CSaleExportEe extends CSaleExport
                     <?= htmlspecialcharsbx($agent["ADDRESS"]) ?>
                 </<?= CSaleExportEe::getTagName("SALE_EXPORT_UR_ADDRESS") ?>>
             </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS") ?>>
-
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_MONEY_ACCOUNTS") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_MONEY_ACCOUNT") ?>>
                     <<?= CSaleExportEe::getTagName("SALE_EXPORT_ACCOUNT_NUMBER") ?>>
@@ -280,7 +275,6 @@ class CSaleExportEe extends CSaleExport
                     </<?= CSaleExportEe::getTagName("SALE_EXPORT_ACCOUNT_NUMBER") ?>>
                 </<?= CSaleExportEe::getTagName("SALE_EXPORT_MONEY_ACCOUNT") ?>>
             </<?= CSaleExportEe::getTagName("SALE_EXPORT_MONEY_ACCOUNTS") ?>>
-
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_BANK") ?>>
                 <<?=CSaleExport::getTagName("SALE_EXPORT_ITEM_NAME")?>>
                     <?=htmlspecialcharsbx($agent["BANK"])?>
@@ -289,7 +283,6 @@ class CSaleExportEe extends CSaleExport
                     <?= htmlspecialcharsbx($agent["BIC"]) ?>
                 </<?= CSaleExportEe::getTagName("SALE_EXPORT_BIC") ?>>
             </<?= CSaleExportEe::getTagName("SALE_EXPORT_BANK") ?>>
-
             <<?=CSaleExport::getTagName("SALE_EXPORT_CONTACTS")?>>
                 <<?=CSaleExport::getTagName("SALE_EXPORT_CONTACT")?>>
                     <<?=CSaleExport::getTagName("SALE_EXPORT_WORK_PHONE")?>>
@@ -302,7 +295,6 @@ class CSaleExportEe extends CSaleExport
                     </<?=CSaleExport::getTagName("SALE_EXPORT_MAIL")?>>
                 </<?=CSaleExport::getTagName("SALE_EXPORT_CONTACT")?>>
             </<?=CSaleExport::getTagName("SALE_EXPORT_CONTACTS")?>>
-
             </<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT") ?>>
         <?php } ?>
         </<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENTS") ?>>
@@ -322,7 +314,7 @@ class CSaleExportEe extends CSaleExport
                         <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENT") ?>>
                             <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($contrUser["ID_CONTRAGENT"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
                             <<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>><?= htmlspecialcharsbx($contrUser["INN"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>>
-                            <<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ACTIVE") ?>><?= htmlspecialcharsbx($contrUser["STATUS"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ACTIVE") ?>>
+                            <<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ACTIVE") ?>><?= $contrUser["STATUS"] == '1' ? 'true' : 'false' ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_ACTIVE") ?>>
                         </<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENT") ?>>
                     <?php } ?>
                     </<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENTS") ?>>
