@@ -96,7 +96,6 @@ class EnteregoExchange
             while ($arResultQueryCompany = $resultQueryUsers->Fetch()) {
                 if (!empty($arResultQueryCompany) && !empty($arResultQueryCompany['RELATION_ID_CONTRAGENT'])) {
                     $userID = $arResultQueryCompany['USER_ID'];
-
                     $arData['USERS_CONTR_COMP'][$userID]['ID'] = $arResultQueryCompany['USER_ID'];
                     $arData['USERS_CONTR_COMP'][$userID]['NAME'] = $arResultQueryCompany['NAME'];
                     $arData['USERS_CONTR_COMP'][$userID]['PERSONAL_PHONE'] = $arResultQueryCompany['PERSONAL_PHONE'];
