@@ -311,10 +311,38 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
         echo 'success';
 
     } elseif ($_GET["mode"] == "query_contragents") {
+        $stepContrDate = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE');
+        $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_ID');
 
-        $stepContragent = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP');
-        $stepContragent = '';
-        $arData = EnteregoExchange::GetInfoForXML();
+// GET CONTRAGENT && USERS
+        $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $stepContrID);
+
+        if (!empty($arData['CONTRAGENTS'])) {
+            $stepContrDate = COption::SetOptionString(
+                'DATE_IMPORT_CONTRAGENTS',
+                'IMPORT_CONTRAGENTS_STEP_DATE',
+                end($arData['CONTRAGENTS'])['DATE_UPDATE']
+            );
+            $stepContrID = COption::SetOptionString(
+                'DATE_IMPORT_CONTRAGENTS',
+                'IMPORT_CONTRAGENTS_STEP_ID',
+                end($arData['CONTRAGENTS'])['ID_CONTRAGENT']
+            );
+        } else {
+            $stepContrDate = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE');
+            $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID');
+            $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $stepContrID, 'users');
+            $stepContrDate = COption::SetOptionString(
+                'DATE_IMPORT_CONTRAGENTS',
+                'IMPORT_USER_STEP_DATE',
+                end($arData['USERS'])['TIMESTAMP_X']
+            );
+            $stepContrID = COption::SetOptionString(
+                'DATE_IMPORT_CONTRAGENTS',
+                'IMPORT_USER_STEP_ID',
+                end($arData['USERS'])['ID']
+            );
+        }
 
         $result = CSaleExportEe::getXmlContragents_EE($arData);
         echo $result;

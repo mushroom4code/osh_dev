@@ -14,49 +14,59 @@ class EnteregoExchange
 {
     /**
      * Import contragent-company-user
+     * @param string $stepDate
+     * @param bool|int $id
+     * @param string $type
      * @return array
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function GetInfoForXML(): array
+    public static function GetInfoForXML(
+        string   $stepDate = '',
+        bool|int $id = 0,
+        string   $type = ''): array
     {
-        $arData = [];
+        $arData = ['CONTRAGENTS' => [], 'USERS' => []];
+        $dateExportStart = ConvertTimeStamp(false, "FULL");
+        $dateStartImport1C = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS');
 
-        $dateImport1C = strtotime(COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS'));
-        if (!$dateImport1C) {
-            $dateImport1C = date(DATE_ATOM);
-        }
-        /**
-         * select contragents for XML
-         * TODO - получение контров только тех у которых дата создания и изменения отличается от даты обмена
-         * TODO - + переделка под orm
-         */
-
-        $resultQueryContr = EnteregoORMContragentsTable::getList(
-            array(
+        if (empty($type)) {
+            /** select contragents for XML on date interval with id interval*/
+            $filterContr = array(
                 'select' => array('*'),
-                'filter' => array(
-                    ">=DATE_UPDATE" => $dateImport1C
-                ),
                 'order' => array(
-                    'DATE_UPDATE' => 'DESC'
+                    'ID_CONTRAGENT' => 'ASC'
                 ),
-                'limit' => '100'
-            )
-        );
+                'limit' => 10,
+            );
 
-        if (!empty($resultQueryContr)) {
-            while ($arResultQuery = $resultQueryContr->Fetch()) {
-                $arData['CONTRAGENTS'][] = $arResultQuery;
+            if (!empty($dateStartImport1C) || !empty($stepDate)) {
+                $filterContr['filter'] = array(
+                    ">=DATE_UPDATE" => $dateStartImport1C || $stepDate,
+                );
             }
-        }
-        /**
-         * select user+contr+comp for XML
-         * TODO - связь между пользователем и контром + сам пользователь + ORM
-         */
-        $resultQueryUsers = UserTable::getList(
-            array(
+
+            $filterContr['filter']['<=DATE_UPDATE'] = $dateExportStart;
+
+            if ($id > 0) {
+                $filterContr['filter'][">=ID_CONTRAGENT"] = $id;
+            }
+
+            $resultQueryContr = EnteregoORMContragentsTable::getList(
+                $filterContr
+            );
+
+            if (!empty($resultQueryContr)) {
+                while ($arResultQuery = $resultQueryContr->Fetch()) {
+                    $arData['CONTRAGENTS'][$arResultQuery['ID_CONTRAGENT']] = $arResultQuery;
+                }
+            }
+
+        } else {
+            /** select user+contr+comp for XML */
+            
+            $filterUser = array(
                 'select' => array(
                     'NAME',
                     'LOGIN',
@@ -68,10 +78,7 @@ class EnteregoExchange
                     'CONTRAGENT',
                     'INN' => 'CONTRAGENT.INN'
                 ),
-                'filter' => array(
-                    ">=TIMESTAMP_X" => $dateImport1C,
-                ),
-                'limit' => '100',
+                'limit' => 10,
                 'runtime' => array(
                     new Main\Entity\ReferenceField(
                         'RELATION',
@@ -91,23 +98,42 @@ class EnteregoExchange
                         array(
                             "join_type" => 'INNER'
                         )
-                    ))
-            ));
+                    )),
+                'order' => array(
+                    'ID' => 'ASC'
+                ),
+            );
 
-        if (!empty($resultQueryUsers)) {
-            while ($arResultQueryCompany = $resultQueryUsers->Fetch()) {
-                if (!empty($arResultQueryCompany) && !empty($arResultQueryCompany['RELATION_ID_CONTRAGENT'])) {
-                    $userID = $arResultQueryCompany['USER_ID'];
-                    $arData['USERS_CONTR_COMP'][$userID]['ID'] = $arResultQueryCompany['USER_ID'];
-                    $arData['USERS_CONTR_COMP'][$userID]['NAME'] = $arResultQueryCompany['NAME'];
-                    $arData['USERS_CONTR_COMP'][$userID]['PERSONAL_PHONE'] = $arResultQueryCompany['PERSONAL_PHONE'];
-                    $arData['USERS_CONTR_COMP'][$userID]['LOGIN'] = $arResultQueryCompany['LOGIN'];
-                    $arData['USERS_CONTR_COMP'][$userID]['EMAIL'] = $arResultQueryCompany['EMAIL'];
-                    $arData['USERS_CONTR_COMP'][$userID]['CONTRAGENTS'][$arResultQueryCompany['RELATION_ID_CONTRAGENT']] = [
-                        'ID_CONTRAGENT' => $arResultQueryCompany['RELATION_ID_CONTRAGENT'],
-                        'INN' => $arResultQueryCompany['INN'],
-                        'STATUS' => $arResultQueryCompany['RELATION_STATUS'],
-                    ];
+            $filterUser['filter'] = array(
+                "<=TIMESTAMP_X" => $dateExportStart,
+            );
+
+            if (!empty($dateStartImport1C) || !empty($stepDate)) {
+                $filterUser['filter']['>=TIMESTAMP_X'] = $dateStartImport1C || $stepDate;
+            }
+
+            if ($id > 0) {
+                $filterUser['filter']['>=ID'] = $id;
+            }
+
+            $resultQueryUsers = UserTable::getList($filterUser);
+
+            if (!empty($resultQueryUsers)) {
+                while ($arResultQueryCompany = $resultQueryUsers->Fetch()) {
+                    if (!empty($arResultQueryCompany) && !empty($arResultQueryCompany['RELATION_ID_CONTRAGENT'])) {
+                        $userID = $arResultQueryCompany['USER_ID'];
+                        $arData['USERS'][$userID]['ID'] = $arResultQueryCompany['USER_ID'];
+                        $arData['USERS'][$userID]['TIMESTAMP_X'] = $arResultQueryCompany['TIMESTAMP_X'];
+                        $arData['USERS'][$userID]['NAME'] = $arResultQueryCompany['NAME'];
+                        $arData['USERS'][$userID]['PERSONAL_PHONE'] = $arResultQueryCompany['PERSONAL_PHONE'];
+                        $arData['USERS'][$userID]['LOGIN'] = $arResultQueryCompany['LOGIN'];
+                        $arData['USERS'][$userID]['EMAIL'] = $arResultQueryCompany['EMAIL'];
+                        $arData['USERS'][$userID]['CONTRAGENTS'][$arResultQueryCompany['RELATION_ID_CONTRAGENT']] = [
+                            'ID_CONTRAGENT' => $arResultQueryCompany['RELATION_ID_CONTRAGENT'],
+                            'INN' => $arResultQueryCompany['INN'],
+                            'STATUS' => $arResultQueryCompany['RELATION_STATUS'],
+                        ];
+                    }
                 }
             }
         }
