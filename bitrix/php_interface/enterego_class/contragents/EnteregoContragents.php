@@ -133,10 +133,15 @@ class EnteregoContragents
             $addResult = EnteregoORMContragentsTable::add($arData);
 
             if ($addResult->isSuccess()) {
+
+                $newId = $addResult->getId();
+                EnteregoORMContragentsTable::update(array('ID_CONTRAGENT' => $newId), array('XML_ID' => $newId),);
+
                 $addResultRel = EnteregoORMRelationshipUserContragentsTable::add(array(
-                    'ID_CONTRAGENT' => $addResult->getId(),
+                    'ID_CONTRAGENT' => $newId,
                     'USER_ID' => $user_id,
                 ));
+
                 $result = $addResultRel->isSuccess() ?
                     ['success' => 'Ожидайте подтверждения связи'] :
                     ['error' => 'Вы не смогли добавить контрагента - попробуйте еще раз'];

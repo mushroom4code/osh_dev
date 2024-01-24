@@ -1,16 +1,7 @@
-<?php
-require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+<?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 global $APPLICATION;
-if (SITE_EXHIBITION == SITE_ID) {
-    $APPLICATION->SetTitle("OSHISHA.shop");
-} else {
-    $APPLICATION->SetTitle("OSHISHA - Главная");
-}
-//use Enterego\contragents\EnteregoExchange;
-//require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/sale/general/export_ee.php");
-//$agents = EnteregoExchange::GetInfoForXML();
-//
-//$result = CSaleExportEe::getXmlContragents_EE($agents);
+$APPLICATION->SetTitle("OSHISHA - Главная");
+
 if (IsModuleInstalled("advertising")):?>
     <div class="mt-3 xl:container container">
         <div class="flex md:flex-row flex-col-reverse justify-between w-full relative mb-10">

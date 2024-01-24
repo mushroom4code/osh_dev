@@ -155,7 +155,7 @@ class CSaleExportEe extends CSaleExport
             self::setOrderSumTaxMoney(self::getOrderSumTaxMoney($arOrderTax));
 
 
-            $xmlResult['Contragents'] = self::getXmlContragents_EE($arOrder, $arProp, $agent, $bExportFromCrm ? array("EXPORT_FROM_CRM" => "Y") : array());
+            $xmlResult['Contragents'] = self::getXmlContragents($arOrder, $arProp, $agent, $bExportFromCrm ? array("EXPORT_FROM_CRM" => "Y") : array());
             $xmlResult['OrderDiscount'] = self::getXmlOrderDiscount($arOrder);
             $xmlResult['SaleStoreList'] = $arStore;
             $xmlResult['ShipmentsStoreList'] = self::getShipmentsStoreList($order);
@@ -238,14 +238,21 @@ class CSaleExportEe extends CSaleExport
         return self::$arResultStat;
     }
 
+    /**
+     * @param $arOrder
+     * @return false|string
+     */
     static function getXmlContragents_EE($arOrder = array())
     {
         ob_start();
         self::ExportContragents_EE($arOrder);
-        $ec_bufer = ob_get_clean();
-        return $ec_bufer;
+        return ob_get_clean();
     }
 
+    /**
+     * @param $arData
+     * @return void
+     */
     static function ExportContragents_EE($arData = array())
     {
         ?><?= '<?xml version="1.0" encoding="UTF-8" ?>' ?>
@@ -254,7 +261,7 @@ class CSaleExportEe extends CSaleExport
         <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENTS") ?>>
         <?php foreach ($arData['CONTRAGENTS'] as $agent) { ?>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENT") ?>>
-            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($agent["ID_CONTRAGENT"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($agent["XML_ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_FULL_NAME") ?>><?= htmlspecialcharsbx($agent["NAME_ORGANIZATION"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_FULL_NAME") ?>>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_ITEM_NAME") ?>><?= htmlspecialcharsbx($agent["NAME_ORGANIZATION"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ITEM_NAME") ?>>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_TYPE") ?>><?= htmlspecialcharsbx($agent["TYPE"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_AGENT_TYPE") ?>>
@@ -299,18 +306,18 @@ class CSaleExportEe extends CSaleExport
         <?php } ?>
         </<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENTS") ?>>
     <?php }
-        if (!empty($arData['USERS_CONTR_COMP'])) { ?>
+        if (!empty($arData['USERS'])) { ?>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_USERS") ?>>
-            <?php foreach ($arData['USERS_CONTR_COMP'] as $user) { ?>
+            <?php foreach ($arData['USERS'] as $user) { ?>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($user["ID"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_NAME") ?>><?= htmlspecialcharsbx($user["NAME"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_NAME") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_LOGIN") ?>><?= htmlspecialcharsbx($user["LOGIN"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_LOGIN") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_WORK_PHONE") ?>><?= htmlspecialcharsbx($user["PERSONAL_PHONE"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_WORK_PHONE") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_MAIL") ?>><?= htmlspecialcharsbx($user["EMAIL"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_MAIL") ?>>
-                <?php if (!empty($arData['USERS_CONTR_COMP'][$user["ID"]]['CONTRAGENTS'])) { ?>
+                <?php if (!empty($arData['USERS'][$user["ID"]]['CONTRAGENTS'])) { ?>
                     <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENTS") ?>>
-                    <?php foreach ($arData['USERS_CONTR_COMP'][$user["ID"]]['CONTRAGENTS'] as $contrUser) { ?>
+                    <?php foreach ($arData['USERS'][$user["ID"]]['CONTRAGENTS'] as $contrUser) { ?>
                         <<?= CSaleExportEe::getTagName("SALE_EXPORT_USER_CONTRAGENT") ?>>
                             <<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>><?= htmlspecialcharsbx($contrUser["ID_CONTRAGENT"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_ID") ?>>
                             <<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>><?= htmlspecialcharsbx($contrUser["INN"]) ?></<?= CSaleExportEe::getTagName("SALE_EXPORT_INN") ?>>
