@@ -135,12 +135,17 @@ class EnteregoContragents
             if ($addResult->isSuccess()) {
 
                 $newId = $addResult->getId();
-                EnteregoORMContragentsTable::update(array('ID_CONTRAGENT' => $newId), array('XML_ID' => $newId),);
+                EnteregoORMContragentsTable::update(
+                    array('ID_CONTRAGENT' => $newId),
+                    array('XML_ID' => uniqid('contrxml_'))
+                );
 
-                $addResultRel = EnteregoORMRelationshipUserContragentsTable::add(array(
-                    'ID_CONTRAGENT' => $newId,
-                    'USER_ID' => $user_id,
-                ));
+                $addResultRel = $user_id !== 0 ? EnteregoORMRelationshipUserContragentsTable::add(
+                    array(
+                        'ID_CONTRAGENT' => $newId,
+                        'USER_ID' => $user_id,
+                    )
+                ) : false;
 
                 $result = $addResultRel->isSuccess() ?
                     ['success' => 'Ожидайте подтверждения связи'] :
