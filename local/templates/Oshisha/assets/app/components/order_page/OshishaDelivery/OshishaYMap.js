@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import OrderContext from "../Context/OrderContext";
 import PropTypes from 'prop-types'
 import axios from 'axios';
 
-function OshishaYMap({ cityName, cityCode, features, params, orderResult, afterSendReactRequest  }) {
+function OshishaYMap({ cityName, cityCode, features, params, orderResult}) {
     const [pvzMap, setPvzMap] = useState(null)
+    const {sendRequest} = useContext(OrderContext);
 
     function getSelectPvzPrice(objectManager, points, clusterId = undefined) {
         try {
@@ -107,8 +109,7 @@ function OshishaYMap({ cityName, cityCode, features, params, orderResult, afterS
         setAdditionalData(additionalData, 'ADDRESS_PVZ', point.properties.fullAddress);
         setAdditionalData(additionalData, 'TYPE_PVZ', point.properties.type);
         
-        BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', {},
-            afterSendReactRequest, additionalData);
+        sendRequest('refreshOrderAjax', {}, additionalData);
     }
 
     useEffect(() => {

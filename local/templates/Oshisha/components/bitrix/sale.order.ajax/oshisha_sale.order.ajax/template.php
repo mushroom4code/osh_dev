@@ -281,7 +281,7 @@ if ($request->get('ORDER_ID') <> '') {
         <input type="hidden" name="location_type" value="code">
         <input type="hidden" name="BUYER_STORE" id="BUYER_STORE" value="<?= $arResult['BUYER_STORE'] ?>">
         <!-- GENERAL ORDER BLOCK -->
-        <div id="bx-soa-order" class="container lg:grid-cols-3 lg:grid row" style="opacity: 0"></div>
+        <div id="bx-soa-order" class="container lg:grid-cols-3 lg:grid row"></div>
     </form>
 
     <div id="bx-soa-saved-files" style="display:none"></div>
@@ -430,47 +430,47 @@ if ($request->get('ORDER_ID') <> '') {
         }
         <?php }?>
         // END Enterego
-        BX.Sale.OrderAjaxComponent.init({
-            result: <?=CUtil::PhpToJSObject($arResult['JS_DATA'])?>,
-            deliveryOptions: <?=CUtil::PhpToJSObject($arResult['DELIVERY_OPTIONS'])?>,
-            locations: <?=CUtil::PhpToJSObject($arResult['LOCATIONS'])?>,
-            savedDeliveryProfiles: <?=CUtil::PhpToJSObject($savedDeliveryProfiles)?>,
-            params: <?=CUtil::PhpToJSObject($arParams)?>,
-            signedParamsString: '<?=CUtil::JSEscape($signedParams)?>',
-            siteID: '<?=CUtil::JSEscape($component->getSiteId())?>',
-            ajaxUrl: '<?=CUtil::JSEscape($component->getPath() . '/ajax.php')?>',
-            templateFolder: '<?=CUtil::JSEscape($templateFolder)?>',
-            propertyValidation: true,
-            showWarnings: true,
-            pickUpMap: {
-                defaultMapPosition: {
-                    lat: 55.76,
-                    lon: 37.64,
-                    zoom: 7
-                },
-                secureGeoLocation: false,
-                geoLocationMaxTime: 5000,
-                minToShowNearestBlock: 3,
-                nearestPickUpsToShow: 3
-            },
-            propertyMap: {
-                defaultMapPosition: {
-                    lat: 55.76,
-                    lon: 37.64,
-                    zoom: 7
-                }
-            },
-            orderBlockId: 'bx-soa-order',
-            authBlockId: 'bx-soa-auth',
-            regionBlockId: 'bx-soa-region',
-            paySystemBlockId: 'bx-soa-paysystem',
-            deliveryBlockId: 'bx-soa-delivery',
-            pickUpBlockId: 'bx-soa-pickup',
-            propsBlockId: 'bx-soa-properties',
-            newBlockId: 'new_block_with_comments',
-            totalBlockId: 'bx-soa-total',
-            userCheck: 'userCheck'
-        });
+        //BX.Sale.OrderAjaxComponent.init({
+        //    result: <?php //=CUtil::PhpToJSObject($arResult['JS_DATA'])?>//,
+        //    deliveryOptions: <?php //=CUtil::PhpToJSObject($arResult['DELIVERY_OPTIONS'])?>//,
+        //    locations: <?php //=CUtil::PhpToJSObject($arResult['LOCATIONS'])?>//,
+        //    savedDeliveryProfiles: <?php //=CUtil::PhpToJSObject($savedDeliveryProfiles)?>//,
+        //    params: <?php //=CUtil::PhpToJSObject($arParams)?>//,
+        //    signedParamsString: '<?php //=CUtil::JSEscape($signedParams)?>//',
+        //    siteID: '<?php //=CUtil::JSEscape($component->getSiteId())?>//',
+        //    ajaxUrl: '<?php //=CUtil::JSEscape($component->getPath() . '/ajax.php')?>//',
+        //    templateFolder: '<?php //=CUtil::JSEscape($templateFolder)?>//',
+        //    propertyValidation: true,
+        //    showWarnings: true,
+        //    pickUpMap: {
+        //        defaultMapPosition: {
+        //            lat: 55.76,
+        //            lon: 37.64,
+        //            zoom: 7
+        //        },
+        //        secureGeoLocation: false,
+        //        geoLocationMaxTime: 5000,
+        //        minToShowNearestBlock: 3,
+        //        nearestPickUpsToShow: 3
+        //    },
+        //    propertyMap: {
+        //        defaultMapPosition: {
+        //            lat: 55.76,
+        //            lon: 37.64,
+        //            zoom: 7
+        //        }
+        //    },
+        //    orderBlockId: 'bx-soa-order',
+        //    authBlockId: 'bx-soa-auth',
+        //    regionBlockId: 'bx-soa-region',
+        //    paySystemBlockId: 'bx-soa-paysystem',
+        //    deliveryBlockId: 'bx-soa-delivery',
+        //    pickUpBlockId: 'bx-soa-pickup',
+        //    propsBlockId: 'bx-soa-properties',
+        //    newBlockId: 'new_block_with_comments',
+        //    totalBlockId: 'bx-soa-total',
+        //    userCheck: 'userCheck'
+        //});
         BX.ready(function () {
             var wait = BX.showWait('bx-soa-order-form');  // показываем прелоадер в правом верхнем углу контейнер
             var deferreds = [];
@@ -491,18 +491,18 @@ if ($request->get('ORDER_ID') <> '') {
         // spike: for children of cities we place this prompt
         $city = TypeTable::getList(array('filter' => array('=CODE' => 'CITY'), 'select' => array('ID')))->fetch();
         ?>
-        BX.saleOrderAjax.init(<?=CUtil::PhpToJSObject(array(
-            'source' => $component->getPath() . '/get.php',
-            'cityTypeId' => intval($city['ID']),
-            'messages' => array(
-                'otherLocation' => '--- ' . Loc::getMessage('SOA_OTHER_LOCATION'),
-                'moreInfoLocation' => '--- ' . Loc::getMessage('SOA_NOT_SELECTED_ALT'), // spike: for children of cities we place this prompt
-                'notFoundPrompt' => '<div class="-bx-popup-special-prompt">' . Loc::getMessage('SOA_LOCATION_NOT_FOUND') . '.<br />' . Loc::getMessage('SOA_LOCATION_NOT_FOUND_PROMPT', array(
-                        '#ANCHOR#' => '<a href="javascript:void(0)" class="-bx-popup-set-mode-add-loc">',
-                        '#ANCHOR_END#' => '</a>'
-                    )) . '</div>'
-            )
-        ))?>);
+        //BX.saleOrderAjax.init(<?php //=CUtil::PhpToJSObject(array(
+        //    'source' => $component->getPath() . '/get.php',
+        //    'cityTypeId' => intval($city['ID']),
+        //    'messages' => array(
+        //        'otherLocation' => '--- ' . Loc::getMessage('SOA_OTHER_LOCATION'),
+        //        'moreInfoLocation' => '--- ' . Loc::getMessage('SOA_NOT_SELECTED_ALT'), // spike: for children of cities we place this prompt
+        //        'notFoundPrompt' => '<div class="-bx-popup-special-prompt">' . Loc::getMessage('SOA_LOCATION_NOT_FOUND') . '.<br />' . Loc::getMessage('SOA_LOCATION_NOT_FOUND_PROMPT', array(
+        //                '#ANCHOR#' => '<a href="javascript:void(0)" class="-bx-popup-set-mode-add-loc">',
+        //                '#ANCHOR_END#' => '</a>'
+        //            )) . '</div>'
+        //    )
+        //))?>//);
     </script>
     <?php
 

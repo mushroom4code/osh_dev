@@ -29,13 +29,12 @@ function OrderPayItem({ payment, selectPaySystem }) {
 }
 
 function OrderPaySystems() {
-    const { result, afterSendReactRequest } = useContext(OrderContext);
+    const { result, sendRequest } = useContext(OrderContext);
 
     const selectPaySystem = (paymentId) => {
         BX.OrderPageComponents.startLoader();
 
-        BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', { PAY_SYSTEM_ID: paymentId },
-            afterSendReactRequest, { PAY_SYSTEM_ID: paymentId });
+        sendRequest('refreshOrderAjax', { PAY_SYSTEM_ID: paymentId }, { PAY_SYSTEM_ID: paymentId });
     }
 
     return (

@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useContext} from 'react'
+import OrderContext from "../Context/OrderContext";
 import PropTypes from 'prop-types'
 import OshishaDoorDelivery from './OshishaDoorDelivery';
 import OshishaPvzDelivery from './OshishaPvzDelivery';
@@ -26,9 +27,8 @@ export const listOshDeliveryProp = ['ADDRESS'
 const dateDeliveryPropCode = 'DATE_DELIVERY'
 const deliveryIntervalPropCode = 'DELIVERYTIME_INTERVAL'
 
-function OrderOshishaDelivery({ result, params, afterSendReactRequest }) {
-
-    console.log(result);
+function OrderOshishaDelivery({ result, params }) {
+    const {sendRequest} = useContext(OrderContext);
     const curDelivery = result.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
     const propLocation = result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')
 
@@ -72,8 +72,7 @@ function OrderOshishaDelivery({ result, params, afterSendReactRequest }) {
             { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(response => {
                 if (response.data) {
 
-                    BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', {},
-                        afterSendReactRequest, additionalData);
+                    sendRequest('refreshOrderAjax', {}, additionalData);
                 } else {
                     //TODO send request
                     window.commonDelivery.oshMkadDistance.init(params.OSH_DELIVERY.deliveryOptions).then(oshMkad => {
@@ -98,16 +97,14 @@ function OrderOshishaDelivery({ result, params, afterSendReactRequest }) {
                         <div className='flex items-center'>
                             <input checked={curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId} type='radio' name='delivery_type' value='Самовывоз'
                                 onChange={() => {
-                                    BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', {},
-                                        afterSendReactRequest, { DELIVERY_ID: params.OSH_DELIVERY.pvzDeliveryId });
+                                    sendRequest('refreshOrderAjax', {}, { DELIVERY_ID: params.OSH_DELIVERY.pvzDeliveryId });
                                 }} />
                             <span className='ml-2 text-sm'>Самовывоз</span>
                         </div>
                         <div className='flex items-center'>
                             <input checked={curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId} type='radio' name='delivery_type' value='Доставка курьером'
                                 onChange={() => {
-                                    BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', {},
-                                        afterSendReactRequest, { DELIVERY_ID: params.OSH_DELIVERY.doorDeliveryId });
+                                    sendRequest('refreshOrderAjax', {}, { DELIVERY_ID: params.OSH_DELIVERY.doorDeliveryId });
                                 }} />
                             <span className='ml-2 text-sm'>Доставка курьером</span>
                         </div>
@@ -125,7 +122,7 @@ function OrderOshishaDelivery({ result, params, afterSendReactRequest }) {
                     Подтвердить
                 </a>
                 {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId
-                    ? <OshishaDoorDelivery result={result} params={params} afterSendReactRequest={afterSendReactRequest} />
+                    ? <OshishaDoorDelivery result={result} params={params} />
                     : null
                 }
                 {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
@@ -133,7 +130,6 @@ function OrderOshishaDelivery({ result, params, afterSendReactRequest }) {
                         cityCode={propLocation.VALUE[0]}
                         result={result}
                         params={params}
-                        afterSendReactRequest={afterSendReactRequest}
                     />
                     : null
                 }

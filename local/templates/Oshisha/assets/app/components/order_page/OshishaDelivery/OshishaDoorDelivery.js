@@ -1,9 +1,11 @@
-import React from 'react'
+import React, {useContext} from 'react'
+import OrderContext from "../Context/OrderContext";
 import PropTypes from 'prop-types'
 import { listOshDeliveryProp } from './OrderOshishaDelivery';
 import OrderProp from '../OrderProp';
 
-function OshishaDoorDelivery({ result, params, afterSendReactRequest }) {
+function OshishaDoorDelivery({ result, params }) {
+    const {sendRequest} = useContext(OrderContext);
 
     const doorDelivery = result.DELIVERY.find(delivery =>
         delivery.ID === params.OSH_DELIVERY.doorDeliveryId && delivery.CHECKED === 'Y'
@@ -23,8 +25,7 @@ function OshishaDoorDelivery({ result, params, afterSendReactRequest }) {
                     <input type='radio' name='delivery' className='form-check-input radio-field form-check-input ring-0 focus:ring-0
                             focus:ring-transparent focus:ring-offset-transparent focus:shadow-none focus:outline-none'
                         checked={isChecked} onChange={() => {
-                            BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', {},
-                                afterSendReactRequest, { [`ORDER_PROP_${propTypeDelivery.ID}`]: delivery.code });
+                            sendRequest('refreshOrderAjax', {}, { [`ORDER_PROP_${propTypeDelivery.ID}`]: delivery.code });
                         }} />
                     <div className='ml-2 text-light-red text-lg font-semibold dark:text-white '>
                         {`${delivery.name} - ${delivery.price}`}

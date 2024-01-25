@@ -14,7 +14,7 @@ OrderMain.propTypes = {};
 export const ajaxDeliveryUrl = '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php';
 
 function OrderMain({
-                       result, locations, params, options, OrderGeneralUserPropsBlockId
+                       result, locations, params, options, OrderGeneralUserPropsBlockId, ajaxUrl
                    }) {
                  
                     
@@ -71,7 +71,7 @@ function OrderMain({
     return (
         <>
             <OrderContextProvider result={result} params={params} options={options} locations={locations}
-                                  OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId}>
+                                  OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId} ajaxUrl={ajaxUrl}>
                 <div id="bx-soa-main-notifications" className="col-span-2">
                     <div className="alert alert-danger" style={{display: "none"}}></div>
                     <div datatype="informer" style={{display: "none"}}></div>

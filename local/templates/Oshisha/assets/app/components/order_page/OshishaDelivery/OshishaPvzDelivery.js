@@ -3,7 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types'
 import OshishaYMap from './OshishaYMap';
 
-function OshishaPvzDelivery({ cityCode, params, result, afterSendReactRequest }) {
+function OshishaPvzDelivery({ cityCode, params, result }) {
 
     const [curCityName, setCurCityName] = useState('')
     const [features, setFeatures] = useState([])
@@ -33,7 +33,7 @@ function OshishaPvzDelivery({ cityCode, params, result, afterSendReactRequest })
     return (
         <div>
             <OshishaYMap cityCode={cityCode} cityName={curCityName} features={features}
-                params={params} orderResult={result} afterSendReactRequest={afterSendReactRequest } />
+                params={params} orderResult={result} />
         </div>
     )
 }

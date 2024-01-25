@@ -5,9 +5,12 @@ import React from "react";
 BX.namespace('BX.OrderPageComponents');
 
 BX.OrderPageComponents = {
+    ajaxUrl: null,
     result: null,
     params: null,
     locations: null,
+    signedParamsString: null,
+    siteId: null,
     options: {},
     propertyValidation: null,
     showWarnings: null,
@@ -18,11 +21,14 @@ BX.OrderPageComponents = {
 
     init: function(currentDataset) {
         this.startLoader();
+        this.ajaxUrl = currentDataset.ajaxUrl;
         this.result = JSON.parse(currentDataset.result);
         this.params = JSON.parse(currentDataset.params);
         this.locations = JSON.parse(currentDataset.locations);
         this.propertyValidation = currentDataset.propertyValidation;
         this.showWarnings = currentDataset.showWarnings;
+        this.signedParamsString = currentDataset.signedParamsString || '';
+        this.siteId = currentDataset.siteId || '';
 
         this.options.deliveriesPerPage = parseInt(this.params.DELIVERIES_PER_PAGE);
         this.options.paySystemsPerPage = parseInt(this.params.PAY_SYSTEMS_PER_PAGE);
@@ -39,7 +45,7 @@ BX.OrderPageComponents = {
             this.OrderMainRoot = createRoot(this.OrderMainBlock);
             this.OrderMainRoot.render(
                 <OrderMain result={this.result} params={this.params} options={this.options}
-                           locations={this.locations}
+                           locations={this.locations} ajaxUrl={this.ajaxUrl}
                            OrderGeneralUserPropsBlockId={currentDataset.generalUserPropsBlockId}
                 />
             );

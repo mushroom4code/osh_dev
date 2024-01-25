@@ -3,7 +3,7 @@ import OrderContext from "../Context/OrderContext";
 import axios from "axios";
 
 function OrderPropLocationCustom({locationName, setLocationName}) {
-    const {locationProperty, afterSendReactRequest} = useContext(OrderContext);
+    const {locationProperty, sendRequest} = useContext(OrderContext);
     const [activeLocation, setActiveLocation] = useState(0)
     const [listLocations, setListLocations] = useState([]);
     const [openListLocations, setOpenListLocations] = useState(false);
@@ -16,8 +16,7 @@ function OrderPropLocationCustom({locationName, setLocationName}) {
 
         const additionalData = {};
         additionalData[[`ORDER_PROP_${locationProperty.ID}`]] = code;
-        BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', {},
-            afterSendReactRequest, additionalData);
+        sendRequest('refreshOrderAjax', {}, additionalData);
     }
     const selectLocation = () => {
         sendRequestLocation(listLocations[activeLocation].CODE, listLocations[activeLocation].DISPLAY)

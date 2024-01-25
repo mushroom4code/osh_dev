@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import OrderContext from "./Context/OrderContext";
 
 function OrderTotal() {
-    const {result, params, options, OrderGeneralUserPropsBlockId} = useContext(OrderContext);
+    const {result, params, options, animateScrollTo, OrderGeneralUserPropsBlockId} = useContext(OrderContext);
     var orderSaveAllowed = false;
 
     const getResultJsx = () => {
@@ -130,31 +130,6 @@ function OrderTotal() {
             );
         }
         return resultJsx;
-    }
-
-    const animateScrollTo = (node, duration, shiftToTop) => {
-        if (!node)
-            return;
-
-        var scrollTop = BX.GetWindowScrollPos().scrollTop,
-            orderBlockPos = BX.pos(orderBlockNode),
-            ghostTop = BX.pos(node).top - (BX.browser.IsMobile() ? 50 : 0);
-
-        if (shiftToTop)
-            ghostTop -= parseInt(shiftToTop);
-
-        if (ghostTop + window.innerHeight > orderBlockPos.bottom)
-            ghostTop = orderBlockPos.bottom - window.innerHeight + 17;
-
-        new BX.easing({
-            duration: duration || 800,
-            start: {scroll: scrollTop},
-            finish: {scroll: ghostTop},
-            transition: BX.easing.makeEaseOut(BX.easing.transitions.quad),
-            step: BX.delegate(function (state) {
-                window.scrollTo(0, state.scroll);
-            }, this)
-        }).animate();
     }
 
     const createTotalUnit = (name, value, params, line) => {

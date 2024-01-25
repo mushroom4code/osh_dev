@@ -24,7 +24,7 @@ function DeliveryItemsProps(result, param, item, checked) {
 }
 
 function OrderDelivery() {
-    const { result, params, options, afterSendReactRequest } = useContext(OrderContext);
+    const { result, params, options, sendRequest } = useContext(OrderContext);
     const groupDeliveryProps = ["Данные для доставки"];
     const deliveryBlockRef = useRef(null);
 
@@ -52,7 +52,7 @@ function OrderDelivery() {
             selectedInput.checked = false;
         }
 
-        BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', [], afterSendReactRequest);
+        sendRequest('refreshOrderAjax', []);
     }
 
     const getDeliverySortedArray = (objDelivery, params) => {
@@ -292,7 +292,7 @@ function OrderDelivery() {
     return (
         <div ref={deliveryBlockRef} className="bx-soa-section-content">
             <div className="bx-soa-pp">
-                <OrderOshishaDelivery result={result} params={params} afterSendReactRequest={afterSendReactRequest} />
+                <OrderOshishaDelivery result={result} params={params}/>
                 <div className="bx-soa-pp-item-container">
                     <div className="row">
                         {itemsJsx}
