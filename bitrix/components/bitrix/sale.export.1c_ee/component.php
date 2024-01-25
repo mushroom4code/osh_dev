@@ -306,7 +306,7 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
             }
         }
     } elseif ($_GET["mode"] == "contragents_success") {
-        // TODO - проверить
+        /** Enterego contragents success export */
         $time = !empty($_SESSION['START_DATETIME_EXPORT']) ? $_SESSION['START_DATETIME_EXPORT'] : date(DATE_ATOM);
         COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS', $time);
         $_SESSION['START_STEP_CONTRAGENT'] = '';
@@ -314,7 +314,7 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
         echo 'success';
 
     } elseif ($_GET["mode"] == "query_contragents") {
-// TODO - проверить
+        /** Enterego contragents && users export */
         if (empty($_SESSION['START_STEP_CONTRAGENT']) || !isset($_SESSION['START_STEP_CONTRAGENT'])) {
             $_SESSION['START_STEP_CONTRAGENT'] = '1';
             $_SESSION['START_DATETIME_EXPORT'] = ConvertTimeStamp(false, "FULL");
