@@ -256,7 +256,8 @@ class CSaleExportEe extends CSaleExport
     static function ExportContragents_EE($arData = array())
     {
         ?><?= '<?xml version="1.0" encoding="UTF-8" ?>' ?>
-        <<?= CSaleExportEe::getTagName("SALE_EXPORT_COM_INFORMATION") ?> <?= self::getCmrXmlRootNameParams() ?>>
+        <<?= CSaleExportEe::getTagName("SALE_EXPORT_COM_INFORMATION") ?>
+        <?= self::getCmrXmlRootNameParams() ?>>
         <?php if (!empty($arData['CONTRAGENTS'])) { ?>
         <<?= CSaleExportEe::getTagName("SALE_EXPORT_CONTRAGENTS") ?>>
         <?php foreach ($arData['CONTRAGENTS'] as $agent) { ?>

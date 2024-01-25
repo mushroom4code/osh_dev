@@ -50,7 +50,7 @@ class EnteregoExchange
             $filterContr['filter']['<=DATE_UPDATE'] = $dateExportStart;
 
             if ($id > 0) {
-                $filterContr['filter'][">=ID_CONTRAGENT"] = $id;
+                $filterContr['filter'][">ID_CONTRAGENT"] = $id;
             }
 
             $resultQueryContr = EnteregoORMContragentsTable::getList(
@@ -113,7 +113,7 @@ class EnteregoExchange
             }
 
             if ($id > 0) {
-                $filterUser['filter']['>=ID'] = $id;
+                $filterUser['filter']['>ID'] = $id;
             }
 
             $resultQueryUsers = UserTable::getList($filterUser);

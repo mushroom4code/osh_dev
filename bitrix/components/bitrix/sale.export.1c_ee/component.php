@@ -306,42 +306,56 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
             }
         }
     } elseif ($_GET["mode"] == "contragents_success") {
-        $time = date(DATE_ATOM);
+        $time = !empty($_SESSION['START_DATETIME_EXPORT']) ? $_SESSION['START_DATETIME_EXPORT'] : date(DATE_ATOM);
         COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS', $time);
+        $_SESSION['START_STEP_CONTRAGENT'] = '';
+        $_SESSION['START_DATETIME_EXPORT'] = '';
         echo 'success';
 
     } elseif ($_GET["mode"] == "query_contragents") {
-        $stepContrDate = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE');
-        $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_ID');
+// TODO - проверить
+        if (empty($_SESSION['START_STEP_CONTRAGENT']) || !isset($_SESSION['START_STEP_CONTRAGENT'])) {
+            $_SESSION['START_STEP_CONTRAGENT'] = '1';
+            $_SESSION['START_DATETIME_EXPORT'] = date(DATE_ATOM);
+        }
 
-// GET CONTRAGENT && USERS
-        $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $stepContrID);
-
-        if (!empty($arData['CONTRAGENTS'])) {
-            $stepContrDate = COption::SetOptionString(
-                'DATE_IMPORT_CONTRAGENTS',
-                'IMPORT_CONTRAGENTS_STEP_DATE',
-                end($arData['CONTRAGENTS'])['DATE_UPDATE']
-            );
-            $stepContrID = COption::SetOptionString(
-                'DATE_IMPORT_CONTRAGENTS',
-                'IMPORT_CONTRAGENTS_STEP_ID',
-                end($arData['CONTRAGENTS'])['ID_CONTRAGENT']
-            );
-        } else {
+        // GET CONTRAGENT && USERS
+        if ($_SESSION['START_STEP_CONTRAGENT'] === '1') {
+            $stepContrDate = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE');
+            $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_ID');
+            $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $stepContrID);
+            if (!empty($arData['CONTRAGENTS'])) {
+                $stepContrDate = COption::SetOptionString(
+                    'DATE_IMPORT_CONTRAGENTS',
+                    'IMPORT_CONTRAGENTS_STEP_DATE',
+                    end($arData['CONTRAGENTS'])['DATE_UPDATE']
+                );
+                $stepContrID = COption::SetOptionString(
+                    'DATE_IMPORT_CONTRAGENTS',
+                    'IMPORT_CONTRAGENTS_STEP_ID',
+                    end($arData['CONTRAGENTS'])['ID_CONTRAGENT']
+                );
+            } else {
+                $_SESSION['START_STEP_CONTRAGENT'] = '2';
+            }
+        }
+// TODO - проверить
+        if ($_SESSION['START_STEP_CONTRAGENT'] === '2') {
             $stepContrDate = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE');
             $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID');
             $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $stepContrID, 'users');
-            $stepContrDate = COption::SetOptionString(
-                'DATE_IMPORT_CONTRAGENTS',
-                'IMPORT_USER_STEP_DATE',
-                end($arData['USERS'])['TIMESTAMP_X']
-            );
-            $stepContrID = COption::SetOptionString(
-                'DATE_IMPORT_CONTRAGENTS',
-                'IMPORT_USER_STEP_ID',
-                end($arData['USERS'])['ID']
-            );
+            if (!empty($arData['USERS'])) {
+                $stepContrDate = COption::SetOptionString(
+                    'DATE_IMPORT_CONTRAGENTS',
+                    'IMPORT_USER_STEP_DATE',
+                    end($arData['USERS'])['TIMESTAMP_X']
+                );
+                $stepContrID = COption::SetOptionString(
+                    'DATE_IMPORT_CONTRAGENTS',
+                    'IMPORT_USER_STEP_ID',
+                    end($arData['USERS'])['ID']
+                );
+            }
         }
 
         $result = CSaleExportEe::getXmlContragents_EE($arData);
