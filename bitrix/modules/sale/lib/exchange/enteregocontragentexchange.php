@@ -2,18 +2,27 @@
 
 namespace Bitrix\Sale\Exchange;
 
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
+use Enterego\ORM\EnteregoORMContragentsTable;
+
 class EnteregoContragentExchange
 
 {
-    public int $ARCHIVED;
-    public int $CONTR_AGENT_ID = 0;
-    public int $CONTR_AGENT_ACTIVE;
+    public int $ID_CONTRAGENT = 0;
+    public int $STATUS_CONTRAGENT;
     public string $INN = 'Не указан';
-    public string $DATE_EDIT;
+    public string $DATE_INSERT;
     public string $NAME_CONT;
     public string $ADDRESS = 'Не указан';
-    public string $STATUS_PERSON = '';
+    public string $PHONE_COMPANY = '';
     public string $XML_ID;
+    public string $DATE_UPDATE;
+    public string $NAME_ORGANIZATION;
+    public Entity\UserImportBase|string $TYPE;
+    public string $STATUS_VIEW;
+    public string $EMAIL;
 
 
     /**
@@ -42,17 +51,23 @@ class EnteregoContragentExchange
     /**
      * Get contragent for xml_id
      * @param string $xml_id
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
      */
     public function loadContragentXMLId(string $xml_id)
     {
-        global $DB;
 
         if (!empty($xml_id)) {
-            $sql = "SELECT * FROM ent_contagents WHERE `XML_ID` = $xml_id";
-            $resQuery = $DB->Query($sql);
-            if ($resultQuery = $resQuery->Fetch()) {
-                $this->ID_CONTRAGENT = (int)$resultQuery['ID_CONTRAGENT'];
+            $resultSelect = EnteregoORMContragentsTable::getList(
+                array(
+                    'select' => array('ID_CONTRAGENT'),
+                    'filter' => array('XML_ID'=>$xml_id),
+                )
+            )->fetch();
 
+            if (!empty($resultSelect)) {
+                $this->ID_CONTRAGENT = (int)$resultSelect['ID_CONTRAGENT'];
             }
         }
     }
@@ -201,13 +216,11 @@ class EnteregoContragentExchange
                 $address = "ADDRESS= '{$this->ADDRESS}',";
             }
             $sql = "UPDATE ent_contagents SET $inn $address
-                    NAME_CONT= '{$this->NAME_CONT}', DATE_EDIT= '{$this->DATE_EDIT}', ARCHIVED= {$this->ARCHIVED},
+                    NAME_ORGANIZATION= '{$this->NAME_ORGANIZATION}', ARCHIVED= {$this->ARCHIVED},
                     CONTR_AGENT_ACTIVE = $this->CONTR_AGENT_ACTIVE  WHERE ID_CONTRAGENT = {$this->ID_CONTRAGENT}";
         } else {
-            $sql_new = "INSERT INTO ent_contagents(`INN`,`ADDRESS`,`CONTR_AGENT_ACTIVE`,`NAME_CONT`,`DATE_EDIT`,
-                             `ARCHIVED`,`STATUS_PERSON`)
-                    VALUES ('{$this->INN}','{$this->ADDRESS}','{$this->CONTR_AGENT_ACTIVE}','{$this->NAME_CONT}',
-                    '{$this->DATE_EDIT}',{$this->ARCHIVED},'{$this->STATUS_PERSON}')";
+            $sql_new = "INSERT INTO ent_contagents(`INN`,`ADDRESS`,`CONTR_AGENT_ACTIVE`,`NAME_CONT`)
+                    VALUES ('{$this->INN}','{$this->ADDRESS}','{$this->STATUS_CONTRAGENT}','{$this->NAME_ORGANIZATION}')";
             $DB->Query($sql_new);
             $new_xml_id = (string)$DB->LastID();
             $xml_id = $this->XML_ID !== '0' ? $this->XML_ID : $new_xml_id;
