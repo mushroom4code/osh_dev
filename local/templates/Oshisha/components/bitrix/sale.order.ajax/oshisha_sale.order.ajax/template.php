@@ -390,6 +390,7 @@ if ($request->get('ORDER_ID') <> '') {
             data-user-agreements-block-id='user-agreements'
             data-user-check-block-id='userCheck'
             data-paysystems-block-id='paysystems_block'
+            data-main-errors-block-id='bx-soa-main-notifications'
             data-property-validation="true"
             data-show-warnings="true"
     ></script>

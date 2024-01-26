@@ -2,7 +2,8 @@ import React, {useContext} from "react";
 import OrderContext from "./Context/OrderContext";
 
 function OrderTotal() {
-    const {result, params, options, animateScrollTo, OrderGeneralUserPropsBlockId} = useContext(OrderContext);
+    const {result, params, options, OrderGeneralUserPropsBlockId, sendRequest, isValidForm,
+        isOrderSaveAllowed, allowOrderSave} = useContext(OrderContext);
     var orderSaveAllowed = false;
 
     const getResultJsx = () => {
@@ -141,7 +142,7 @@ function OrderTotal() {
 
         if (params.error) {
             totalValue = (<a className="bx-soa-price-not-calc font-bold" dangerouslySetInnerHTML={{__html: value}}
-                             onClick={animateScrollTo}></a>);
+                             onClick={BX.OrderPageComponents.animateScrollTo}></a>);
         } else if (params.free) {
             totalValue = (<span className={'bx-soa-price-free' + (params.total ? 'font-bold' : '')}>{value}</span>);
         } else {
@@ -227,7 +228,7 @@ function OrderTotal() {
         if (result.IS_AUTHORIZED) {
             click_edit();
         }
-        if (BX.Sale.OrderAjaxComponent.isValidForm()) {
+        if (isValidForm()) {
             allowOrderSave();
             if (params.USER_CONSENT === 'Y' && BX.UserConsent) {
                 BX.onCustomEvent('bx-soa-order-save', []);
@@ -241,21 +242,8 @@ function OrderTotal() {
 
     const doSaveAction = () => {
         if (isOrderSaveAllowed()) {
-            // reachGoal('order');
-            BX.Sale.OrderAjaxComponent.sendRequest('saveOrderAjax');
+            sendRequest('saveOrderAjax', []);
         }
-    }
-
-    const isOrderSaveAllowed = () => {
-        return orderSaveAllowed === true;
-    }
-
-    const allowOrderSave = () => {
-        orderSaveAllowed = true;
-    }
-
-    const disallowOrderSave = () => {
-        orderSaveAllowed = false;
     }
 
 

@@ -34,7 +34,7 @@ export const OrderContextProvider = (props) => {
                     .querySelector('.alert.alert-danger');
                 properties_error_node.removeAttribute('style');
                 properties_error_node.textContent = 'Примите условия соглашений в конце страницы';
-                animateScrollTo(properties_error_node);
+            BX.OrderPageComponents.animateScrollTo(properties_error_node);
         }
 
         if (!BX.OrderPageComponents.startLoader()) {
@@ -57,10 +57,8 @@ export const OrderContextProvider = (props) => {
             return;
         }
 
-        let requestData = getData(action, actionData)
+        let requestData = BX.OrderPageComponents.getData(action, actionData)
         requestData.order = {...requestData.order, ...additionalData}
-        console.log(requestData);
-        console.log(result);
 
         if (action === 'saveOrderAjax') {
             form = BX('bx-soa-order-form');
@@ -110,72 +108,32 @@ export const OrderContextProvider = (props) => {
         }
     }
 
-    const getData = (action, actionData) => {
-        var data = {
-            order: getAllFormData(),
-            sessid: BX.bitrix_sessid(),
-            via_ajax: 'Y',
-            SITE_ID: BX.OrderPageComponents.siteId,
-            signedParamsString: BX.OrderPageComponents.signedParamsString
-        };
-
-        data[params.ACTION_VARIABLE] = action;
-
-        if (action === 'enterCoupon' || action === 'removeCoupon')
-            data.coupon = actionData;
-
-        return data;
-    }
-
-    const getAllFormData = () => {
-        var form = BX('bx-soa-order-form'),
-            prepared = BX.ajax.prepareForm(form),
-            i;
-
-        for (i in prepared.data) {
-            if (prepared.data.hasOwnProperty(i) && i == '') {
-                delete prepared.data[i];
-            }
-        }
-
-        return !!prepared && prepared.data ? prepared.data : {};
-    }
-
     const refreshOrder = (result) => {
         if (result.error) {
-            this.showError(this.mainErrorsNode, result.error);
-            this.animateScrollTo(this.mainErrorsNode, 800, 20);
+            var mainErrorsNode = document.getElementById(BX.OrderPageComponents.OrderMainErrorsBlockId);
+            BX.OrderPageComponents.showError(mainErrorsNode, blockErrors);
+            BX.OrderPageComponents.animateScrollTo(mainErrorsNode, 800, 20);
         } else {
             setResult(result.order);
             setLocations(result.locations);
-            // this.initOptions();
+            initOptions();
         }
         return true;
     }
 
-    const animateScrollTo = (node, duration, shiftToTop) => {
-        if (!node)
-            return;
+    const initOptions = () => {
+            var total, newOptions;
 
-        var scrollTop = BX.GetWindowScrollPos().scrollTop,
-            orderBlockPos = BX.pos(orderBlockNode),
-            ghostTop = BX.pos(node).top - (BX.browser.IsMobile() ? 50 : 0);
-
-        if (shiftToTop)
-            ghostTop -= parseInt(shiftToTop);
-
-        if (ghostTop + window.innerHeight > orderBlockPos.bottom)
-            ghostTop = orderBlockPos.bottom - window.innerHeight + 17;
-
-        new BX.easing({
-            duration: duration || 800,
-            start: {scroll: scrollTop},
-            finish: {scroll: ghostTop},
-            transition: BX.easing.makeEaseOut(BX.easing.transitions.quad),
-            step: BX.delegate(function (state) {
-                window.scrollTo(0, state.scroll);
-            }, this)
-        }).animate();
+            if (result.TOTAL) {
+                total = result.TOTAL;
+                newOptions = options;
+                newOptions.showOrderWeight = total.ORDER_WEIGHT && parseFloat(total.ORDER_WEIGHT) > 0;
+                newOptions.showPriceWithoutDiscount = parseFloat(total.ORDER_PRICE) < parseFloat(total.PRICE_WITHOUT_DISCOUNT_VALUE);
+                newOptions.showDiscountPrice = total.DISCOUNT_PRICE && parseFloat(total.DISCOUNT_PRICE) > 0;
+                newOptions.showTaxList = total.TAX_LIST && total.TAX_LIST.length;
+                newOptions.showPayedFromInnerBudget = total.PAYED_FROM_ACCOUNT_FORMATED && total.PAYED_FROM_ACCOUNT_FORMATED.length;
+                setOptions(newOptions);
+            }
     }
 
     const saveOrder = (submitResult) => {
@@ -196,12 +154,12 @@ export const OrderContextProvider = (props) => {
                     redirected = true;
                     location.href = submitResult.REDIRECT_URL;
                 } else {
-                    this.showErrors(result.ERROR, true, true);
+                    BX.OrderPageComponents.showErrors(submitResult.ERROR, true, true);
                 }
             }
 
             if (!redirected) {
-                this.handleNotRedirected();
+                handleNotRedirected();
             }
             BX.OrderPageComponents.endLoader();
     }
@@ -210,14 +168,44 @@ export const OrderContextProvider = (props) => {
         disallowOrderSave();
         BX.OrderPageComponents.endLoader();
     }
+
+    const isOrderSaveAllowed = () => {
+        return orderSaveAllowed === true;
+    }
+
+    const allowOrderSave = () => {
+        setOrderSaveAllowed(true);
+    }
     const disallowOrderSave = () => {
         setOrderSaveAllowed(false);
+    }
+
+    const isValidForm = () => {
+        if (!options.propertyValidation)
+            return true;
+
+        var propsErrors = isValidPropertiesBlock();
+
+        if (propsErrors.length) {
+            var propsBlockNode = document.getElementById(BX.OrderPageComponents.OrderPropertiesBlockId);
+            BX.OrderPageComponents.showError(propsBlockNode, propsErrors);
+            BX.OrderPageComponents.animateScrollTo(propsBlockNode, 800, 20);
+        }
+
+        return !(propsErrors.length);
+    }
+
+    const isValidPropertiesBlock = (excludeLocation) => {
+        if (!options.propertyValidation)
+            return [];
+
+        return [];
     }
 
     return <OrderContext.Provider value={{
         result, setResult, params, setParams, options, setOptions, locations,
         setLocations, locationProperty, setLocationProperty, OrderGeneralUserPropsBlockId,
-        setOrderGeneralUserPropsBlockId, sendRequest, animateScrollTo
+        setOrderGeneralUserPropsBlockId, sendRequest, isValidForm, isOrderSaveAllowed, allowOrderSave
     }}>
         {props.children}
     </OrderContext.Provider>
