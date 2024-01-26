@@ -4,6 +4,7 @@ namespace Bitrix\Sale\Exchange;
 
 use Bitrix\Sale\Exchange\Entity\UserImportBase;
 use Bitrix\Sale\Result;
+IncludeModuleLangFile($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/sale/lib/exchange/importonecpackage.php');
 
 class EnteregoUser extends ImportOneCBase
 {

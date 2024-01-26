@@ -33,7 +33,7 @@ final class ImportOneCContragent extends ImportOneCBase
             $contragent->DATE_INSERT = !empty($dateInsertUpdate) ? $dateInsertUpdate : ConvertTimeStamp(false, "FULL");
             $contragent->STATUS_VIEW = $items['СтатусКонтрагента'] == 'true' ? 'Активен' : 'Ожидает подтверждения';
             $contragent->TYPE = $items['ТипКонтрагента'] ?? 'fiz';
-            $contragent->NAME_ORGANIZATION = (string) $items['ПолноеНаименование'] ?? '';
+            $contragent->NAME_ORGANIZATION = (string)$items['ПолноеНаименование'] ?? '';
             $contragent->INN = (string)$items['ИНН'] ?? null;
             $contragent->ADDRESS = (string)$items['АдресРегистрации']['Представление'][0]['#'] ?? '';
             $contragent->EMAIL = (string)$items['Контакты']['Контакт'][0]['#'] ?? '';

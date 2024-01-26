@@ -1,5 +1,6 @@
 <?
 
+use Bitrix\Sale\Exchange\EntCSaleOrderLoader;
 use Bitrix\Sale\Exchange\EnteregoUser;
 use Bitrix\Sale\Exchange\ImportOneCContragent;
 use Enterego\contragents\EnteregoExchange;
@@ -518,7 +519,7 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
             $position = false;
             $startTime = time();
 
-            $loader = new CSaleOrderLoader;
+            $loader = new EntCSaleOrderLoader;
             $loader->arParams = $arParams;
             $loader->bNewVersion = true;
             $loader->crmCompatibleMode = $bExportFromCrm;

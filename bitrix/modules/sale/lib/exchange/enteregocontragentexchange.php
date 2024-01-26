@@ -1,6 +1,7 @@
 <?php
 
 namespace Bitrix\Sale\Exchange;
+
 use Enterego\contragents\EnteregoContragents;
 
 class EnteregoContragentExchange
@@ -42,8 +43,8 @@ class EnteregoContragentExchange
                     'EMAIL' => $this->EMAIL,
                     'STATUS_CONTRAGENT' => $this->STATUS_CONTRAGENT,
                     'XML_ID' => $this->XML_ID,
-                    'DATE_UPDATE'=> $this->DATE_UPDATE,
-                    'DATE_INSERT'=> $this->DATE_INSERT,
+                    'DATE_UPDATE' => $this->DATE_UPDATE,
+                    'DATE_INSERT' => $this->DATE_INSERT,
                 )
             );
         }
