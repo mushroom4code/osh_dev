@@ -247,7 +247,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                 </div>
             <?php endif; ?>
             <?php else: ?>
-                <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>" class="ctweb-smsauth-menu-form"
+                <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>"
+                      class="ctweb-smsauth-menu-form md:w-2/3 w-full relative"
                       action="/bitrix/components/ctweb/sms.authorize/ajax.php"
                       method="POST" name="auth">
                     <?php echo bitrix_sessid_post(); ?>
@@ -260,23 +261,18 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                     <input id="<?= $jsParams['TEMPLATE']['STATE'] ?? Manager::STEP_PHONE_WAITING ?>" type="hidden"
                            name=""
                            value="<?= $arResult['STEP'] ?>">
-                    <div class="col-11 col-md-7 p-0 mb-2">
+                    <div class="p-0 mb-2">
                         <!--STEP PNONE WAITING-->
-                        <div id="ctweb_form_step_1" class="ctweb-smsauth-menu-step">
-                            <p class="message_for_user_minzdrav font-14 mb-4">
-                                Розничная дистанционная продажа (доставка) кальянов, табачной, никотинсодержащей
-                                продукции
-                                на
-                                сайте не осуществляется. Сайт предназначен для потребителей старше 18 лет.</p>
-                            <div class="d-flex flex-lg-row flex-md-row flex-column justify-content-between mb-3">
-                                <p class="font-12 font-weight-bold">
-                                    <span class="starrequired color-redLight">* </span>
-                                    <?= GetMessage("AUTH_REQ") ?>
-                                </p>
-                                <p class="font-14 color-redLight font-weight-bold">
-                                    <a href="<?= $arResult["AUTH_AUTH_URL"] ?>" rel="nofollow">
-                                        <ins><?= GetMessage("AUTH_AUTH") ?></ins>
-                                    </a>
+                        <div id="ctweb_form_step_1" class="ctweb-smsauth-menu-step flex flex-col">
+                            <p class="font-light text-sm mb-4 text-textLight dark:text-textDarkLightGray">
+                                Розничная дистанционная продажа (доставка) кальянов, табачной, <br>
+                                никотинсодержащей продукции на сайте не осуществляется.<br>
+                                Сайт предназначен для потребителей старше 18 лет.
+                            </p>
+                            <div class="flex md:flex-row flex-col justify-between mb-3">
+                                <p class="text-sm font-medium text-lightGrayBg dark:text-white mb-3">
+                                    <span class="starrequired text-light-red md:text-hover-red text-lg">* </span>
+                                    <span><?= GetMessage("AUTH_REQ") ?></span>
                                 </p>
                             </div>
                             <div class="d-flex flex-lg-row flex-md-row flex-column">
