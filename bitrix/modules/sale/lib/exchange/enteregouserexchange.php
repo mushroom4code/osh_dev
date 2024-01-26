@@ -12,6 +12,7 @@ class EnteregoUserExchange
     public string $PERSONAL_PHONE = '';
     public array $contragents_user = [];
     public array $company_user = [];
+    public string $LOGIN;
 
     /**
      * Get contragent for xml_id
