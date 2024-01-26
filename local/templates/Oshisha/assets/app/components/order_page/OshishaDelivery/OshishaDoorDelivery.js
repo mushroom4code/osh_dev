@@ -37,8 +37,7 @@ function OshishaDoorDelivery({ result, params, sendRequest }) {
                             <input type='radio' name='delivery' className='form-check-input radio-field form-check-input ring-0 focus:ring-0
                             focus:ring-transparent focus:ring-offset-transparent focus:shadow-none focus:outline-none'
                                 checked={isChecked} onChange={() => {
-                                    BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', {},
-                                        afterSendReactRequest, { [`ORDER_PROP_${propTypeDelivery.ID}`]: delivery.code });
+                                    sendRequest('refreshOrderAjax', {}, { [`ORDER_PROP_${propTypeDelivery.ID}`]: delivery.code });
                                 }} />
                             <div className='ml-2 text-light-red text-lg font-semibold dark:text-white '>
                                 {`${delivery.name} - ${delivery.price}`}
