@@ -114,17 +114,18 @@ class EnteregoContragents
     /**
      * @param int $user_id
      * @param array $arData
+     * @param string $type
      * @return string[]
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function addContragent(int $user_id = 0, array $arData = []): array
+    public static function addContragent(int $user_id = 0, array $arData = [], string $type = ''): array
     {
         $result = ['error' => 'Такой контрагент уже существует'];
         $resultSelect = EnteregoORMContragentsTable::getList(
             array(
-                'select' => array('ID_CONTRAGENT','XML_ID'),
+                'select' => array('ID_CONTRAGENT', 'XML_ID'),
                 'filter' => array($arData),
             )
         )->fetch();
@@ -133,27 +134,60 @@ class EnteregoContragents
             $addResult = EnteregoORMContragentsTable::add($arData);
 
             if ($addResult->isSuccess()) {
-////TODO - блокировка обновления xml_id
-//                $newId = $addResult->getId();
-//                EnteregoORMContragentsTable::update(
-//                    array('ID_CONTRAGENT' => $newId),
-//                    array('XML_ID' => uniqid('contrxml_'))
-//                );
-//
-//                $addResultRel = $user_id !== 0 ? EnteregoORMRelationshipUserContragentsTable::add(
-//                    array(
-//                        'ID_CONTRAGENT' => $newId,
-//                        'USER_ID' => $user_id,
-//                    )
-//                ) : false;
+                $newId = $addResult->getId();
+                EnteregoORMContragentsTable::update(
+                    array('ID_CONTRAGENT' => $newId),
+                    array('XML_ID' => uniqid('contrxml_'))
+                );
 
-                $result = ['success' => 'Ожидайте подтверждения связи'];
-//                $result = $addResultRel->isSuccess() ?
-//                    ['success' => 'Ожидайте подтверждения связи'] :
-//                    ['error' => 'Вы не смогли добавить контрагента - попробуйте еще раз'];
+                $addResultRel = $user_id !== 0 ? EnteregoORMRelationshipUserContragentsTable::add(
+                    array(
+                        'ID_CONTRAGENT' => $newId,
+                        'USER_ID' => $user_id,
+                    )
+                ) : false;
+
+                $result = $addResultRel->isSuccess() ?
+                    ['success' => 'Ожидайте подтверждения связи'] :
+                    ['error' => 'Вы не смогли добавить контрагента - попробуйте еще раз'];
+
             }
         } else {
             $result = ['error' => ['code' => '', 'item' => $resultSelect]];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $arData
+     * @return bool
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function addOrUpdateContragent(array $arData = []): bool
+    {
+        $result = false;
+        $resultSelect = EnteregoORMContragentsTable::getList(
+            array(
+                'select' => array('ID_CONTRAGENT', 'XML_ID'),
+                'filter' => array('XML_ID' => $arData['XML_ID']),
+            )
+        )->fetch();
+
+        if (empty($resultSelect)) {
+            $addResult = EnteregoORMContragentsTable::add($arData);
+            if ($addResult->isSuccess()) {
+                $result = true;
+            }
+        } else {
+            $newArData = $arData;
+            unset($newArData['XML_ID']);
+            $updateResult = EnteregoORMContragentsTable::update(array('ID_CONTRAGENT' => $resultSelect['ID_CONTRAGENT']), $newArData);
+            if ($updateResult->isSuccess()) {
+                $result = true;
+            }
         }
 
         return $result;

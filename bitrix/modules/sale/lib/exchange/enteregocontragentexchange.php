@@ -1,13 +1,7 @@
 <?php
 
 namespace Bitrix\Sale\Exchange;
-
-use Bitrix\Main\ArgumentException;
-use Bitrix\Main\ObjectPropertyException;
-use Bitrix\Main\ORM\Data\UpdateResult;
-use Bitrix\Main\SystemException;
 use Enterego\contragents\EnteregoContragents;
-use Enterego\ORM\EnteregoORMContragentsTable;
 
 class EnteregoContragentExchange
 
@@ -28,37 +22,13 @@ class EnteregoContragentExchange
     public string $DATE_UPDATE;
     public string $XML_ID;
 
-    /**
-     * Get contragent for xml_id
-     * @param string $xml_id
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     */
-    public function loadContragentXMLId(string $xml_id)
-    {
-
-        if (!empty($xml_id)) {
-            $resultSelect = EnteregoORMContragentsTable::getList(
-                array(
-                    'select' => array('ID_CONTRAGENT'),
-                    'filter' => array('XML_ID' => $xml_id),
-                )
-            )->fetch();
-
-            if (!empty($resultSelect)) {
-                $this->ID_CONTRAGENT = (int)$resultSelect['ID_CONTRAGENT'];
-            }
-        }
-    }
 
     public function saveContragentDB()
     {
+        $saveDB = false;
 
         if (!empty($this->XML_ID)) {
-
-            $saveDB = EnteregoContragents::addContragent(
-                0,
+            $saveDB = EnteregoContragents::addOrUpdateContragent(
                 array(
                     'NAME_ORGANIZATION' => $this->NAME_ORGANIZATION,
                     'STATUS_VIEW' => $this->STATUS_VIEW,
@@ -71,13 +41,14 @@ class EnteregoContragentExchange
                     'PHONE_COMPANY' => $this->PHONE_COMPANY,
                     'EMAIL' => $this->EMAIL,
                     'STATUS_CONTRAGENT' => $this->STATUS_CONTRAGENT,
-                    'XML_ID' => $this->XML_ID
+                    'XML_ID' => $this->XML_ID,
+                    'DATE_UPDATE'=> $this->DATE_UPDATE,
+                    'DATE_INSERT'=> $this->DATE_INSERT,
                 )
             );
-
         }
 
-        return true;
+        return $saveDB;
     }
 
 }
