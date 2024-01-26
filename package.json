@@ -8,6 +8,7 @@
     "build": "webpack",
     "build-prod": "webpack --mode=production",
     "watch": "webpack --watch",
+    "tail-watch": "npx tailwindcss -i ./local/templates/Oshisha/styles.css -o ./local/templates/Oshisha/tailwind.css --watch",
     "clean": "rd /s /q dist"
   },
   "repository": {

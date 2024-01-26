@@ -28,7 +28,7 @@ class EnteregoExchange
         string   $type = ''): array
     {
         $arData = ['CONTRAGENTS' => [], 'USERS' => []];
-        $dateExportStart = ConvertTimeStamp(false, "FULL");
+        $dateExportStart = $_SESSION['START_DATETIME_EXPORT'];
         $dateStartImport1C = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS');
 
         if (empty($type)) {
@@ -50,7 +50,7 @@ class EnteregoExchange
             $filterContr['filter']['<=DATE_UPDATE'] = $dateExportStart;
 
             if ($id > 0) {
-                $filterContr['filter'][">=ID_CONTRAGENT"] = $id;
+                $filterContr['filter'][">ID_CONTRAGENT"] = $id;
             }
 
             $resultQueryContr = EnteregoORMContragentsTable::getList(
@@ -113,25 +113,25 @@ class EnteregoExchange
             }
 
             if ($id > 0) {
-                $filterUser['filter']['>=ID'] = $id;
+                $filterUser['filter']['>ID'] = $id;
             }
 
             $resultQueryUsers = UserTable::getList($filterUser);
 
             if (!empty($resultQueryUsers)) {
-                while ($arResultQueryCompany = $resultQueryUsers->Fetch()) {
-                    if (!empty($arResultQueryCompany) && !empty($arResultQueryCompany['RELATION_ID_CONTRAGENT'])) {
-                        $userID = $arResultQueryCompany['USER_ID'];
-                        $arData['USERS'][$userID]['ID'] = $arResultQueryCompany['USER_ID'];
-                        $arData['USERS'][$userID]['TIMESTAMP_X'] = $arResultQueryCompany['TIMESTAMP_X'];
-                        $arData['USERS'][$userID]['NAME'] = $arResultQueryCompany['NAME'];
-                        $arData['USERS'][$userID]['PERSONAL_PHONE'] = $arResultQueryCompany['PERSONAL_PHONE'];
-                        $arData['USERS'][$userID]['LOGIN'] = $arResultQueryCompany['LOGIN'];
-                        $arData['USERS'][$userID]['EMAIL'] = $arResultQueryCompany['EMAIL'];
-                        $arData['USERS'][$userID]['CONTRAGENTS'][$arResultQueryCompany['RELATION_ID_CONTRAGENT']] = [
-                            'ID_CONTRAGENT' => $arResultQueryCompany['RELATION_ID_CONTRAGENT'],
-                            'INN' => $arResultQueryCompany['INN'],
-                            'STATUS' => $arResultQueryCompany['RELATION_STATUS'],
+                while ($arResultUser = $resultQueryUsers->Fetch()) {
+                    if (!empty($arResultUser) && !empty($arResultUser['RELATION_ID_CONTRAGENT'])) {
+                        $userID = $arResultUser['USER_ID'];
+                        $arData['USERS'][$userID]['ID'] = $arResultUser['USER_ID'];
+                        $arData['USERS'][$userID]['TIMESTAMP_X'] = $arResultUser['TIMESTAMP_X'];
+                        $arData['USERS'][$userID]['NAME'] = $arResultUser['NAME'];
+                        $arData['USERS'][$userID]['PERSONAL_PHONE'] = $arResultUser['PERSONAL_PHONE'];
+                        $arData['USERS'][$userID]['LOGIN'] = $arResultUser['LOGIN'];
+                        $arData['USERS'][$userID]['EMAIL'] = $arResultUser['EMAIL'];
+                        $arData['USERS'][$userID]['CONTRAGENTS'][$arResultUser['RELATION_ID_CONTRAGENT']] = [
+                            'ID_CONTRAGENT' => $arResultUser['RELATION_ID_CONTRAGENT'],
+                            'INN' => $arResultUser['INN'],
+                            'STATUS' => $arResultUser['RELATION_STATUS'],
                         ];
                     }
                 }

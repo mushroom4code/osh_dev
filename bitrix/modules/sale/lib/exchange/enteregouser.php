@@ -10,7 +10,7 @@ class EnteregoUser extends ImportOneCBase
 
     /**
      * @param UserImportBase[] $items
-     * @return mixed
+     * @return Result
      */
     protected function import(array $items)
     {
@@ -18,18 +18,14 @@ class EnteregoUser extends ImportOneCBase
         $user_object = new EnteregoUserExchange();
         $user_object->XML_ID = (string)$items['Ид'];
         $user_object->loadUserXMLId();
-        $user_object->NAME = (string)$items['Имя'];
+        $user_object->NAME = (string)$items['Имя'];;
+        $user_object->LOGIN = (string)$items['Почта'];
         $user_object->EMAIL = (string)$items['Почта'];
         $user_object->PERSONAL_PHONE = (string)$items['ТелефонРабочий'];
+
         if ($items['КонтрагентыПользователя']) {
             foreach ($items['КонтрагентыПользователя'] as $contragent) {
                 $user_object->contragents_user[] = $contragent['Ид'];
-            }
-        }
-
-        if ($items['КомпанииПользователя']) {
-            foreach ($items['КомпанииПользователя'] as $company) {
-                $user_object->company_user[] = $company['Ид'];
             }
         }
 
