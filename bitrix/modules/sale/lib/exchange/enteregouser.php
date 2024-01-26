@@ -19,7 +19,7 @@ class EnteregoUser extends ImportOneCBase
         $user_object->XML_ID = (string)$items['Ид'];
         $user_object->loadUserXMLId();
         $user_object->NAME = (string)$items['Имя'];;
-        $user_object->LOGIN = (string)$items['Почта'];
+        $user_object->LOGIN = (string)$items['Логин'];
         $user_object->EMAIL = (string)$items['Почта'];
         $user_object->PERSONAL_PHONE = (string)$items['ТелефонРабочий'];
 

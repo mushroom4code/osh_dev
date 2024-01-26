@@ -1,5 +1,7 @@
 <?
 
+use Bitrix\Sale\Exchange\EnteregoUser;
+use Bitrix\Sale\Exchange\ImportOneCContragent;
 use Enterego\contragents\EnteregoExchange;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
@@ -560,9 +562,17 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
                 $o->registerNodeHandler("/" . GetMessage("CC_BSC1_COM_INFO") . "/" . GetMessage("CC_BSC1_AGENTS") . "/" . GetMessage("CC_BSC1_AGENT"), function (CDataXML $xmlObject) use ($o, $loader) {
                     \Bitrix\Sale\Exchange\ImportOneCContragent::configuration();
                     $loader->importer = new \Bitrix\Sale\Exchange\ImportOneCContragent();
+
+                    $loader->nodeHandler($xmlObject, $o);
+                });
+                $o->registerNodeHandler("/" . GetMessage("CC_BSC1_COM_INFO") . "/" . GetMessage("CC_BSC1_USERS") . "/" . GetMessage("CC_BSC1_USER"), function (CDataXML $xmlObject) use ($o, $loader) {
+                    \Bitrix\Sale\Exchange\EnteregoUser::configuration();
+                    $loader->importer = new \Bitrix\Sale\Exchange\EnteregoUser();
                     $loader->nodeHandler($xmlObject, $o);
                 });
             }
+            //endregion
+            //region schema Package.CRM or Package.Sale
             //endregion
             //region schema Package.CRM or Package.Sale
             /*

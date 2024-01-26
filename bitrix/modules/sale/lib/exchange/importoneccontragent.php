@@ -30,24 +30,24 @@ final class ImportOneCContragent extends ImportOneCBase
             $contragent->STATUS_VIEW = $items['СтатусКонтрагента'] == 'true' ? 'Активен' : 'Ожидает подтверждения';
             $contragent->TYPE = $items['ТипКонтрагента'] ?? 'fiz';
             $contragent->NAME_ORGANIZATION = (string) $items['ПолноеНаименование'] ?? '';
-            $contragent->INN = (string)$items['Инн'] ?? null;
+            $contragent->INN = (string)$items['ИНН'] ?? null;
             $contragent->ADDRESS = (string)$items['АдресРегистрации']['Представление'][0]['#'] ?? '';
 // TODO проверить
             $contragent->EMAIL = (string)$items['Контакты']['Контакт'][0]['#'] ?? '';
             if (!empty($items['Контакты']['Контакт'])) {
                 foreach ($items['Контакты']['Контакт'] as $contact) {
-                    if ($contact['Тип'][0]['#'] === 'Телефон рабочий') {
-                        $contragent->PHONE_COMPANY = $contact['Значение'][0]['#'] ?? '';
+                    if ($contact['#']['Тип'][0]['#'] === 'Телефон рабочий') {
+                        $contragent->PHONE_COMPANY = $contact['#']['Значение'][0]['#'] ?? '';
                     }
-                    if ($contact['Тип'][0]['#'] === 'Электронная почта') {
-                        $contragent->EMAIL = $contact['Значение'][0]['#'] ?? '';
+                    if ($contact['#']['Тип'][0]['#'] === 'Электронная почта') {
+                        $contragent->EMAIL = $contact['#']['Значение'][0]['#'] ?? '';
                     }
                 }
             }
 
             if (!empty($items['РасчетныеСчета']['РасчетныйСчет'])) {
                 foreach ($items['РасчетныеСчета']['РасчетныйСчет'] as $bank) {
-                    $contragent->RASCHET_CHET = $bank['#']['Номер счета'][0]['#'] ?? '';
+                    $contragent->RASCHET_CHET = $bank['#']['НомерСчета'][0]['#'] ?? '';
                     $contragent->BANK = $bank['#']['Банк'][0]['#']['Наименование'][0]['#'] ?? '';
                     $contragent->BIC = $bank['#']['Банк'][0]['#']['БИК'][0]['#'] ?? '';
                 }

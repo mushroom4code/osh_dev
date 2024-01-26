@@ -52,56 +52,32 @@ class EnteregoContragentExchange
         }
     }
 
-    public function saveContragentDB(): ArgumentException|ObjectPropertyException|UpdateResult|SystemException|\Exception|array
+    public function saveContragentDB()
     {
 
         if (!empty($this->XML_ID)) {
-            try {
-                $saveDB =  EnteregoORMContragentsTable::update(
-                    array('XML_ID' => $this->XML_ID),
-                    array(
-                        'NAME_ORGANIZATION' => $this->NAME_ORGANIZATION,
-                        'STATUS_VIEW' => $this->STATUS_VIEW,
-                        'ADDRESS' => $this->ADDRESS,
-                        'TYPE' => $this->TYPE,
-                        'INN' => $this->INN,
-                        'RASCHET_CHET' => $this->RASCHET_CHET,
-                        'BIC' => $this->BIC,
-                        'BANK' => $this->BANK,
-                        'PHONE_COMPANY' => $this->PHONE_COMPANY,
-                        'EMAIL' => $this->EMAIL,
-                        'STATUS_CONTRAGENT' => $this->STATUS_CONTRAGENT,
-                    )
-                );
-            } catch (\Exception $e) {
-                $saveDB = $e;
-            }
 
-        } else {
-            try {
-                $saveDB = EnteregoContragents::addContragent(
-                    0,
-                    array(
-                        'NAME_ORGANIZATION' => $this->NAME_ORGANIZATION,
-                        'STATUS_VIEW' => $this->STATUS_VIEW,
-                        'ADDRESS' => $this->ADDRESS,
-                        'TYPE' => $this->TYPE,
-                        'INN' => $this->INN,
-                        'RASCHET_CHET' => $this->RASCHET_CHET,
-                        'BIC' => $this->BIC,
-                        'BANK' => $this->BANK,
-                        'PHONE_COMPANY' => $this->PHONE_COMPANY,
-                        'EMAIL' => $this->EMAIL,
-                        'STATUS_CONTRAGENT' => $this->STATUS_CONTRAGENT,
-                    )
-                );
-            } catch (ObjectPropertyException|ArgumentException|SystemException $e) {
-                $saveDB = $e;
-            }
+            $saveDB = EnteregoContragents::addContragent(
+                0,
+                array(
+                    'NAME_ORGANIZATION' => $this->NAME_ORGANIZATION,
+                    'STATUS_VIEW' => $this->STATUS_VIEW,
+                    'ADDRESS' => $this->ADDRESS,
+                    'TYPE' => $this->TYPE,
+                    'INN' => $this->INN,
+                    'RASCHET_CHET' => $this->RASCHET_CHET,
+                    'BIC' => $this->BIC,
+                    'BANK' => $this->BANK,
+                    'PHONE_COMPANY' => $this->PHONE_COMPANY,
+                    'EMAIL' => $this->EMAIL,
+                    'STATUS_CONTRAGENT' => $this->STATUS_CONTRAGENT,
+                    'XML_ID' => $this->XML_ID
+                )
+            );
 
         }
 
-        return $saveDB;
+        return true;
     }
 
 }

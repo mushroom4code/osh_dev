@@ -124,7 +124,7 @@ class EnteregoContragents
         $result = ['error' => 'Такой контрагент уже существует'];
         $resultSelect = EnteregoORMContragentsTable::getList(
             array(
-                'select' => array('ID_CONTRAGENT'),
+                'select' => array('ID_CONTRAGENT','XML_ID'),
                 'filter' => array($arData),
             )
         )->fetch();
@@ -133,23 +133,24 @@ class EnteregoContragents
             $addResult = EnteregoORMContragentsTable::add($arData);
 
             if ($addResult->isSuccess()) {
+////TODO - блокировка обновления xml_id
+//                $newId = $addResult->getId();
+//                EnteregoORMContragentsTable::update(
+//                    array('ID_CONTRAGENT' => $newId),
+//                    array('XML_ID' => uniqid('contrxml_'))
+//                );
+//
+//                $addResultRel = $user_id !== 0 ? EnteregoORMRelationshipUserContragentsTable::add(
+//                    array(
+//                        'ID_CONTRAGENT' => $newId,
+//                        'USER_ID' => $user_id,
+//                    )
+//                ) : false;
 
-                $newId = $addResult->getId();
-                EnteregoORMContragentsTable::update(
-                    array('ID_CONTRAGENT' => $newId),
-                    array('XML_ID' => uniqid('contrxml_'))
-                );
-
-                $addResultRel = $user_id !== 0 ? EnteregoORMRelationshipUserContragentsTable::add(
-                    array(
-                        'ID_CONTRAGENT' => $newId,
-                        'USER_ID' => $user_id,
-                    )
-                ) : false;
-
-                $result = $addResultRel->isSuccess() ?
-                    ['success' => 'Ожидайте подтверждения связи'] :
-                    ['error' => 'Вы не смогли добавить контрагента - попробуйте еще раз'];
+                $result = ['success' => 'Ожидайте подтверждения связи'];
+//                $result = $addResultRel->isSuccess() ?
+//                    ['success' => 'Ожидайте подтверждения связи'] :
+//                    ['error' => 'Вы не смогли добавить контрагента - попробуйте еще раз'];
             }
         } else {
             $result = ['error' => ['code' => '', 'item' => $resultSelect]];
