@@ -1,11 +1,9 @@
-import React, {useContext} from 'react'
-import OrderContext from "../Context/OrderContext";
+import React from 'react'
 import PropTypes from 'prop-types'
 import { listOshDeliveryProp } from './OrderOshishaDelivery';
 import OrderProp from '../OrderProp';
 
-function OshishaDoorDelivery({ result, params }) {
-    const {sendRequest} = useContext(OrderContext);
+function OshishaDoorDelivery({ result, params, sendRequest }) {
 
     const doorDelivery = result.DELIVERY.find(delivery =>
         delivery.ID === params.OSH_DELIVERY.doorDeliveryId && delivery.CHECKED === 'Y'

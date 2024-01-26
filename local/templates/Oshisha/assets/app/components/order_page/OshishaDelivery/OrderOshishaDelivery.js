@@ -1,5 +1,4 @@
-import React, {useContext} from 'react'
-import OrderContext from "../Context/OrderContext";
+import React from 'react'
 import PropTypes from 'prop-types'
 import OshishaDoorDelivery from './OshishaDoorDelivery';
 import OshishaPvzDelivery from './OshishaPvzDelivery';
@@ -27,8 +26,7 @@ export const listOshDeliveryProp = ['ADDRESS'
 const dateDeliveryPropCode = 'DATE_DELIVERY'
 const deliveryIntervalPropCode = 'DELIVERYTIME_INTERVAL'
 
-function OrderOshishaDelivery({ result, params }) {
-    const {sendRequest} = useContext(OrderContext);
+function OrderOshishaDelivery({ result, params, sendRequest }) {
     const curDelivery = result.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
     const propLocation = result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')
 
@@ -122,7 +120,7 @@ function OrderOshishaDelivery({ result, params }) {
                     Подтвердить
                 </a>
                 {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId
-                    ? <OshishaDoorDelivery result={result} params={params} />
+                    ? <OshishaDoorDelivery result={result} params={params} sendRequest={sendRequest}/>
                     : null
                 }
                 {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
@@ -130,6 +128,7 @@ function OrderOshishaDelivery({ result, params }) {
                         cityCode={propLocation.VALUE[0]}
                         result={result}
                         params={params}
+                        sendRequest={sendRequest}
                     />
                     : null
                 }

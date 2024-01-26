@@ -292,7 +292,7 @@ function OrderDelivery() {
     return (
         <div ref={deliveryBlockRef} className="bx-soa-section-content">
             <div className="bx-soa-pp">
-                <OrderOshishaDelivery result={result} params={params}/>
+                <OrderOshishaDelivery result={result} params={params} sendRequest={sendRequest}/>
                 <div className="bx-soa-pp-item-container">
                     <div className="row">
                         {itemsJsx}
