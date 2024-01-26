@@ -1,11 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react'
-import OrderContext from "../Context/OrderContext";
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios';
 
-function OshishaYMap({ cityName, cityCode, features, params, orderResult}) {
+function OshishaYMap({ cityName, cityCode, features, params, orderResult, sendRequest}) {
     const [pvzMap, setPvzMap] = useState(null)
-    const {sendRequest} = useContext(OrderContext);
 
     function getSelectPvzPrice(objectManager, points, clusterId = undefined) {
         try {
