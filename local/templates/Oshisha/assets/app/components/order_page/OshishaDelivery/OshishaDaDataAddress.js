@@ -35,7 +35,6 @@ function reducer(state, action) {
             }
         }
         case 'cancel_suggest': {
-            console.log('test');
             clearTimeout(state.timeoutId)
             return {
                 ...state,
@@ -80,7 +79,7 @@ const initialState = {
 
 function OshishaDaDataAddress({ handleSelectSuggest }) {
 
-    const [locationName, setLocationName] = useState('');
+    const [locationName, setLocationName] = useState('Москва');
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -140,7 +139,7 @@ function OshishaDaDataAddress({ handleSelectSuggest }) {
             <div>
                 <div className='flex w-full'>
                     <button className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
-                        Москва
+                        {locationName}
                     </button>
                     <div className="relative flex-1">
                         <input

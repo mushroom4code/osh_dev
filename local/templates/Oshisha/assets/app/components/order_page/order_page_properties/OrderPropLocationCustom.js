@@ -4,12 +4,14 @@ import axios from "axios";
 
 function OrderPropLocationCustom({locationName, setLocationName}) {
     const {locationProperty, sendRequest} = useContext(OrderContext);
+    const [tempLocationName, setTempLocationName] = useState('Москва');
     const [activeLocation, setActiveLocation] = useState(0)
     const [listLocations, setListLocations] = useState([]);
     const [openListLocations, setOpenListLocations] = useState(false);
     const [timeoutId, setTimeoutId] = useState(0);
 
     const sendRequestLocation = (code, name) => {
+        setTempLocationName(name);
         setLocationName(name);
         setActiveLocation(0);
         setOpenListLocations(false);
@@ -28,7 +30,7 @@ function OrderPropLocationCustom({locationName, setLocationName}) {
     const onChangeLocationString = (e) => {
 
         const curLocationName = e.target.value;
-        setLocationName(curLocationName);
+        setTempLocationName(curLocationName);
 
         clearTimeout(timeoutId);
         setTimeoutId(setTimeout(() => {
@@ -78,7 +80,7 @@ function OrderPropLocationCustom({locationName, setLocationName}) {
                 Выберите город:
             </div>
             <div>
-                <input value={locationName} onKeyDown={onKeyDownLocation} onChange={onChangeLocationString}
+                <input value={tempLocationName} onKeyDown={onKeyDownLocation} onChange={onChangeLocationString}
                        className='form-control min-width-700 w-full text-sm cursor-text
                  border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg dark:bg-grayButton'/>
                 <input type="hidden"/>
