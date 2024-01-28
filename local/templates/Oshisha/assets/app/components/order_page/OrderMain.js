@@ -14,7 +14,7 @@ OrderMain.propTypes = {};
 export const ajaxDeliveryUrl = '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php';
 
 function OrderMain({
-                       result, locations, params, options, OrderGeneralUserPropsBlockId
+                       result, locations, params, options, OrderGeneralUserPropsBlockId, ajaxUrl
                    }) {
                  
                     
@@ -71,9 +71,9 @@ function OrderMain({
     return (
         <>
             <OrderContextProvider result={result} params={params} options={options} locations={locations}
-                                  OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId}>
+                                  OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId} ajaxUrl={ajaxUrl}>
                 <div id="bx-soa-main-notifications" className="col-span-2">
-                    <div className="alert alert-danger" style={{display: "none"}}></div>
+                    <div className="alert alert-danger text-light-red dark:text-whitep p-4" style={{display: "none"}}></div>
                     <div datatype="informer" style={{display: "none"}}></div>
                 </div>
                 <div className="col-span-2 col-lg-8 col-md-7">
@@ -147,6 +147,8 @@ function OrderMain({
                                 {/*<?php } ?>*/}
                             </div>
                             <div id="user-properties-block" className="bx-soa-section-content">
+                                <div className="alert alert-danger text-light-red dark:text-white p-4"
+                                     style={{display: "none"}}></div>
                                 <OrderUserProps/>
                             </div>
                         </div>
@@ -190,6 +192,8 @@ function OrderMain({
                             </div>
                             <div className="box_with_delivery_type">
                                 <div className="bx-soa-section-content" id="delivery-block">
+                                    <div className="alert alert-danger text-light-red dark:text-white p-4"
+                                         style={{display: "none"}}></div>
                                     <OrderDelivery/>
                                 </div>
                                 <div id="bx-soa-region" data-visited="false"
@@ -221,6 +225,8 @@ function OrderMain({
                                 </div>
                             </div>
                             <div className="bx-soa-section-content py-2.5" id="paysystems_block">
+                                <div className="alert alert-danger text-light-red dark:text-white p-4"
+                                     style={{display: "none"}}></div>
                                 <OrderPaySystems/>
                             </div>
                         </div>

@@ -449,14 +449,14 @@ class DeliveryHelper
         \CJSCore::Init(array("common_delivery"));
         $cAsset->addString(
             "<script id='' data-params=''>
-                    window.addEventListener('load', function () {
-                        BX.SaleCommonPVZ.init({
-                            params: " . CUtil::PhpToJSObject($params) . "
-                        });
-                        
-                        if (typeof BX !== 'undefined' && BX.addCustomEvent)
-                            BX.addCustomEvent('onAjaxSuccess', BX.SaleCommonPVZ.update);
-                        });
+//                    window.addEventListener('load', function () {
+//                        BX.SaleCommonPVZ.init({
+//                            params: " . CUtil::PhpToJSObject($params) . "
+//                        });
+//                        
+//                        if (typeof BX !== 'undefined' && BX.addCustomEvent)
+//                            BX.addCustomEvent('onAjaxSuccess', BX.SaleCommonPVZ.update);
+//                        });
                 </script>",
             true
         );
