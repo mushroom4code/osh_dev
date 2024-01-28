@@ -5,6 +5,7 @@ namespace Enterego\contragents;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
+use CUser;
 use Enterego\ORM\EnteregoORMContragentsTable;
 use Enterego\ORM\EnteregoORMRelationshipUserContragentsTable;
 
@@ -55,10 +56,17 @@ class EnteregoContragents
         )->fetch();
 
         if (empty($res) && !empty($resultSelect)) {
+
             $addResultRel = EnteregoORMRelationshipUserContragentsTable::add(array(
                 'ID_CONTRAGENT' => $contragent_id,
                 'USER_ID' => $user_id,
             ));
+
+            $user = new CUser();
+            $user->Update($user_id, ['PERSONAL_NOTES' => 'Обновлена связь между пользователем и контр-том '
+                    . ConvertTimeStamp(false, "FULL")]
+            );
+
             $result = $addResultRel->isSuccess() ?
                 ['success' => 'Ожидайте подтверждения связи'] :
                 ['error' => 'Вы не смогли запросить связь - попробуйте еще раз или обратитесь к менеджеру'];
@@ -114,6 +122,7 @@ class EnteregoContragents
     /**
      * @param int $user_id
      * @param array $arData
+     * @param string $type
      * @return string[]
      * @throws ArgumentException
      * @throws ObjectPropertyException
@@ -124,7 +133,7 @@ class EnteregoContragents
         $result = ['error' => 'Такой контрагент уже существует'];
         $resultSelect = EnteregoORMContragentsTable::getList(
             array(
-                'select' => array('ID_CONTRAGENT'),
+                'select' => array('ID_CONTRAGENT', 'XML_ID'),
                 'filter' => array($arData),
             )
         )->fetch();
@@ -133,7 +142,6 @@ class EnteregoContragents
             $addResult = EnteregoORMContragentsTable::add($arData);
 
             if ($addResult->isSuccess()) {
-
                 $newId = $addResult->getId();
                 EnteregoORMContragentsTable::update(
                     array('ID_CONTRAGENT' => $newId),
@@ -147,12 +155,52 @@ class EnteregoContragents
                     )
                 ) : false;
 
+                $user = new CUser();
+                $user->Update($user_id, ['PERSONAL_NOTES' => 'Обновлена связь между пользователем и контр-том '
+                        . ConvertTimeStamp(false, "FULL")]
+                );
+
                 $result = $addResultRel->isSuccess() ?
                     ['success' => 'Ожидайте подтверждения связи'] :
                     ['error' => 'Вы не смогли добавить контрагента - попробуйте еще раз'];
+
             }
         } else {
             $result = ['error' => ['code' => '', 'item' => $resultSelect]];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $arData
+     * @return bool
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function addOrUpdateContragent(array $arData = []): bool
+    {
+        $result = false;
+        $resultSelect = EnteregoORMContragentsTable::getList(
+            array(
+                'select' => array('ID_CONTRAGENT', 'XML_ID'),
+                'filter' => array('XML_ID' => $arData['XML_ID']),
+            )
+        )->fetch();
+
+        if (empty($resultSelect)) {
+            $addResult = EnteregoORMContragentsTable::add($arData);
+            if ($addResult->isSuccess()) {
+                $result = true;
+            }
+        } else {
+            $newArData = $arData;
+            unset($newArData['XML_ID']);
+            $updateResult = EnteregoORMContragentsTable::update(array('ID_CONTRAGENT' => $resultSelect['ID_CONTRAGENT']), $newArData);
+            if ($updateResult->isSuccess()) {
+                $result = true;
+            }
         }
 
         return $result;

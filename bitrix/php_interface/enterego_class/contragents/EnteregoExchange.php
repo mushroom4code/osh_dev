@@ -72,6 +72,7 @@ class EnteregoExchange
                     'LOGIN',
                     'PERSONAL_PHONE',
                     'EMAIL',
+                    'TIMESTAMP_X',
                     'USER_ID' => 'ID',
                     'RELATION_ID_CONTRAGENT' => 'RELATION.ID_CONTRAGENT',
                     'RELATION_STATUS' => 'RELATION.STATUS',

@@ -5,6 +5,8 @@ namespace Bitrix\Sale\Exchange;
 use Bitrix\Sale\Exchange\Entity\UserImportBase;
 use Bitrix\Sale\Result;
 
+IncludeModuleLangFile($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/sale/lib/exchange/importonecpackage.php');
+
 class EnteregoUser extends ImportOneCBase
 {
 
@@ -17,15 +19,19 @@ class EnteregoUser extends ImportOneCBase
         $result = new Result();
         $user_object = new EnteregoUserExchange();
         $user_object->XML_ID = (string)$items['Ид'];
-        $user_object->loadUserXMLId();
+        $user_object->ID = (string)$items['Ид'];
         $user_object->NAME = (string)$items['Имя'];;
-        $user_object->LOGIN = (string)$items['Почта'];
         $user_object->EMAIL = (string)$items['Почта'];
         $user_object->PERSONAL_PHONE = (string)$items['ТелефонРабочий'];
 
         if ($items['КонтрагентыПользователя']) {
-            foreach ($items['КонтрагентыПользователя'] as $contragent) {
-                $user_object->contragents_user[] = $contragent['Ид'];
+            foreach ($items['КонтрагентыПользователя']['КонтрагентПользователя'] as $contragent) {
+                $user_object->contragents_user[$contragent['#']['Ид'][0]['#']] = [
+                    'ID_CONTRAGENT' => $contragent['#']['Ид'][0]['#'],
+                    'INN' => $contragent['#']['ИНН'][0]['#'],
+                    'STATUS' => $contragent['#']['ПодтверждениеКонтрагента'][0]['#'] === 'true' ? 1 : 0
+                ];
+
             }
         }
 
