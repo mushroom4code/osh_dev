@@ -174,11 +174,11 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
                     </div>
                 </div>
 
-                <ul className={'absolute z-20 bg-white dark:bg-grayButton w-full p-2.5 mt-1 border-white rounded-lg'
+                <ul className={'absolute z-20 bg-white dark:bg-grayButton w-full p-2.5 mt-1 border-[1px] border-grey-line-order rounded-lg'
                     + ` ${state.openListSuggest ? '' : 'hidden'}`}>
                     {state.listSuggest.map((suggest, index) =>
-                        <li className={`${state.activeSuggest === index ? 'dark:bg-darkBox ' : ''}`
-                            + 'dark:hover:bg-darkBox rounded-lg cursor-pointer pl-1'}
+                        <li className={`${state.activeSuggest === index ? 'bg-grey-line-order dark:bg-darkBox ' : ''}`
+                            + 'hover:bg-grey-line-order dark:hover:bg-darkBox rounded-lg cursor-pointer pl-1'}
                             key={index} onMouseDown={() => selectSuggest(index)}
                             onMouseOver={() => dispatch({type: 'set_active', activeSuggest: index})}>
                             {suggest.value}

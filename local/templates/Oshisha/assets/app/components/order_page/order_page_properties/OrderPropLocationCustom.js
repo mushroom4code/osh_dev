@@ -183,9 +183,11 @@ function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
                             : null
                     }
                 </div>
-                <ul className={'absolute z-20 bg-white dark:bg-grayButton w-full p-2.5 mt-1 border-white rounded-lg' + ` ${state.openListLocations ? '' : 'hidden'}`}>
+                <ul className={'absolute z-20 bg-white dark:bg-grayButton w-full p-2.5 mt-[1px] border-grey-line-order' +
+                    ' border-2 rounded-lg ' + ` ${state.openListLocations ? '' : 'hidden'}`}>
                     {state.listLocations.map((location, index) => <li tabIndex='0'
-                        className={`${state.activeLocation === index ? 'dark:bg-darkBox' : ''}` + ' dark:hover:bg-darkBox rounded-lg cursor-pointer pl-1'}
+                        className={`${state.activeLocation === index ? 'bg:bg-grey-line-order dark:bg-darkBox' : ''}`
+                            + ' dark:hover:bg-darkBox hover:bg-grey-line-order rounded-lg cursor-pointer pl-1'}
                         key={index} onClick={onSelectLocation(index)} data-index={index}>
                         {location.DISPLAY}, {location?.PATH.map(path => path.DISPLAY).join(', ')}
                     </li>)}
