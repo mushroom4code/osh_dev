@@ -2,7 +2,15 @@ import React, {useState} from 'react';
 import IconNameContr from "./IconNameContr";
 import axios from "axios";
 
-function RelationshipContragent({contragent, setState, setContrResult, emptyDataInputs, setResultNew,setResults, setColorResNew}) {
+function RelationshipContragent({
+                                    contragent,
+                                    setState,
+                                    setContrResult,
+                                    emptyDataInputs,
+                                    setResultNew,
+                                    setResults,
+                                    setColorResNew
+                                }) {
     const [init, setInit] = useState(true)
     const [result, setResult] = useState('')
     const [colorRes, setColorRes] = useState('dark:text-hover-red text-hover-red')

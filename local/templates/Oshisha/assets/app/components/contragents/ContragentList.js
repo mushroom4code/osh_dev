@@ -4,7 +4,7 @@ import ContragentForm from "./ContragentForm";
 import ContragentItem from "./ContragentItem";
 import IconNameContr from "./IconNameContr";
 
-function ContragentList() {
+function ContragentList({typeForms}) {
     const [listContragent, setListContragent] = useState([])
     const [result, setResult] = useState('')
     const [initToClick, setInitToClick] = useState(false)
@@ -30,7 +30,11 @@ function ContragentList() {
     }
 
     useEffect(() => {
-        getContragents()
+        if (typeForms !== 'register') {
+            getContragents()
+        } else {
+            setLoads(true)
+        }
     }, []);
 
 
@@ -57,31 +61,40 @@ function ContragentList() {
     }, [initToClick, loads, type]);
 
 
-    return (<div className="px-5">
-        <ContragentForm loads={loads} initToClick={initToClick} setState={setInitToClick}
-                        listContragent={listContragent.length} setResult={setResult} setColor={setColor}
-                        showForm={showForm} setShowForm={setShowForm} type={type} setType={setType}
-        />
-        <div className={"mt-5" + color}>{result}</div>
-        {listContragent.length > 0 ? <div>
-            <p className="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal flex flex-row
-            justify-between items-center font-semibold mb-5">
-                Контрагенты
-                {listContragent.length > 0 ? <div className="p-2 dark:bg-lightGrayBg rounded-lg w-fit bg-textDark flex flex-row items-center
-                        dark:text-textDarkLightGray text-textLight"
-                                                  onClick={() => {
-                                                      setInitToClick(!initToClick)
-                                                      setShowForm(true)
-                                                  }}>
-                    <IconNameContr width="35" height="36" button={true} color={true}/>
-                    <span className="ml-1 text-sm">Добавить</span>
-                </div> : false}
-            </p>
-            <div className="flex flex-row flex-wrap">
-                {listContragent.map((contragent, keys) => <ContragentItem key={keys} contragent={contragent}/>)}
-            </div>
-        </div> : false}
-    </div>);
+    return (
+        <div className="px-5">
+            <ContragentForm loads={loads} initToClick={initToClick} setState={setInitToClick}
+                            listContragent={listContragent.length} setResult={setResult} setColor={setColor}
+                            showForm={showForm} setShowForm={setShowForm} type={type} setType={setType}
+            />
+            <div className={"mt-5" + color}>{result}</div>
+            {
+                listContragent.length > 0 ?
+                    <div>
+                        <p className="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal flex flex-row
+                justify-between items-center font-semibold mb-5">
+                            Контрагенты
+                            {
+                                listContragent.length > 0 ?
+                                    <div className="p-2 dark:bg-lightGrayBg rounded-lg w-fit bg-textDark flex flex-row items-center
+                            dark:text-textDarkLightGray text-textLight"
+                                         onClick={() => {
+                                             setInitToClick(!initToClick)
+                                             setShowForm(true)
+                                         }}>
+                                        <IconNameContr width="35" height="36" button={true} color={true}/>
+                                        <span className="ml-1 text-sm">Добавить</span>
+                                    </div> : false
+                            }
+                        </p>
+                        <div className="flex flex-row flex-wrap">
+                            {listContragent.map((contragent, keys) => <ContragentItem key={keys}
+                                                                                      contragent={contragent}/>)}
+                        </div>
+                    </div> : false
+            }
+        </div>
+    );
 }
 
 export default ContragentList;

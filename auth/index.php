@@ -20,7 +20,7 @@ if (!$userName)
 
 <?
 $APPLICATION->SetTitle("Авторизация");
-LocalRedirect('/personal/');
+LocalRedirect('/personal/contragents/');
 ?>
 
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
