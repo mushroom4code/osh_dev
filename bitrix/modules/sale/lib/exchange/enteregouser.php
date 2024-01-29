@@ -2,8 +2,10 @@
 
 namespace Bitrix\Sale\Exchange;
 
+use Bitrix\Main\Type\DateTime;
 use Bitrix\Sale\Exchange\Entity\UserImportBase;
 use Bitrix\Sale\Result;
+use COption;
 
 IncludeModuleLangFile($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/sale/lib/exchange/importonecpackage.php');
 
@@ -23,6 +25,10 @@ class EnteregoUser extends ImportOneCBase
         $user_object->NAME = (string)$items['Имя'];;
         $user_object->EMAIL = (string)$items['Почта'];
         $user_object->PERSONAL_PHONE = (string)$items['ТелефонРабочий'];
+        $date = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS')
+            ?? ConvertTimeStamp(false, "FULL");
+        $dateInsertUpdate = DateTime::createFromUserTime($date);
+        $user_object->TIMESTAMP_X = $dateInsertUpdate;
 
         if ($items['КонтрагентыПользователя']) {
             foreach ($items['КонтрагентыПользователя']['КонтрагентПользователя'] as $contragent) {
