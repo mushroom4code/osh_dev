@@ -21,6 +21,7 @@
     const ERROR_TIME_EXPIRED = 'TIME_EXPIRED';
     const ERROR_PHONE_EXISTS = 'PHONE_EXISTS';
     const ERROR_CAPTCHA_WRONG = 'CAPTCHA_WRONG';
+    const STATE_ERROR = 'STATE_ERROR';
 
     BX.Ctweb.SMSAuth.Controller = function (params) {
         this.state = STATE_INIT;
@@ -208,7 +209,7 @@
             if ($(form).find('input[name="PASSWORD"]').val() !== $(form).find('input[name="CONFIRM_PASSWORD"]').val()) {
                 $(form).find('input[name="CONFIRM_PASSWORD"]').closest('div').find('span.errors').remove();
                 $(form).find('input[name="CONFIRM_PASSWORD"]').closest('div')
-                    .append('<span class="color-redLight font-16 mt-2 mb-2 errors">' + BX.message('ERROR_NOT_CORRECT_PASSWORD') + '</span>');
+                    .append('<span class="text-xs text-light-red dark:text-hover-red font-normal my-2 errors">' + BX.message('ERROR_NOT_CORRECT_PASSWORD') + '</span>');
             } else {
                 let url = form.attr('action');
                 let data = form.serializeArray();
@@ -259,6 +260,10 @@
                             Ctweb.setState(STATE_PHONE_EXISTS);
                         } else if (objResponse['ERRORS'][0] === ERROR_CAPTCHA_WRONG) {
                             Ctweb.setState(STATE_CAPTCHA_WRONG);
+                        } else {
+                            Ctweb.setState(STATE_ERROR);
+                            this.errorText = objResponse['ERRORS'][0];
+                            this.errorTitle = 'Ошибка! ';
                         }
                     } else {
                         if (step === STATE_CODE_WAITING) {
@@ -308,7 +313,6 @@
 
     BX.Ctweb.SMSAuth.Controller.prototype.stateTransition = function (state, prev) {
         this.obState.value = state;
-        console.log(state)
 
         $('.ctweb-smsauth-menu-step').addClass('hidden');
 
@@ -396,7 +400,6 @@
                 BX.hide(this.obSubmit);
                 BX.adjust(this.errotTitle, {text: BX.message('SMS_AUTH_ERROR_CODE_NOT_CORRECT_TITLE')});
                 BX.adjust(this.errorText, {text: BX.message('SMS_AUTH_ERROR_CODE_NOT_CORRECT_TEXT')});
-
                 BX.show(this.obBack.closest('div'));
                 BX.show(this.obResend.closest('div'));
                 BX.show(this.obMessage);
@@ -417,7 +420,14 @@
                 BX.toggleClass(BX('ctweb_form_step_error'), 'flex');
                 BX.adjust(this.errotTitle, {text: BX.message('SMS_AUTH_ERROR_PHONE_EXISTS_TITLE')});
                 BX.adjust(this.errorText, {text: BX.message('SMS_AUTH_ERROR_PHONE_EXISTS_TEXT')});
-;
+                BX.show(this.obChangePhone);
+                break;
+            case STATE_ERROR:
+                clearInterval(this.timerId);
+                BX.toggleClass(BX('ctweb_form_step_error'), 'hidden');
+                BX.toggleClass(BX('ctweb_form_step_error'), 'flex');
+                BX.adjust(this.errotTitle, {text: BX.message('SMS_AUTH_ERROR_PHONE_EXISTS_TITLE')});
+                BX.adjust(this.errorText, {text: BX.message('SMS_AUTH_ERROR_PHONE_EXISTS_TEXT')});
                 BX.show(this.obChangePhone);
                 break;
             case STATE_CODE_REUSED:
@@ -441,7 +451,6 @@
                 BX.show(this.obResend.closest('div'));
                 BX.hide(this.obCode.closest('div'));
                 BX.show(this.obMessage);
-
                 break;
             default:
                 throw new Error("No state found: " + state);
