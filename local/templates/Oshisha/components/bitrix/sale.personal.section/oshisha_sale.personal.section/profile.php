@@ -42,8 +42,8 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_PROFILE"));
 $user_id = $USER->GetId();
 
 $resultQueryCompanyUser = new EnteregoUserExchange();
-$resultQueryCompanyUser->USER_ID = $user_id;
-$resultQueryCompanyUser->GetCompanyForUser(); ?>
+$resultQueryCompanyUser->ID = $user_id;
+//$resultQueryCompanyUser->GetCompanyForUser(); ?>
 <div class="hides" id="personal_company" data-user-id="<?= $user_id ?>">
     <h5 class="mb-4 font-m-21 mt-lg-0 mt-md-0 mt-3"><b>Мои компании</b></h5>
     <input type="hidden" value='<?php if (!empty($resultQueryCompanyUser->company_user)) {

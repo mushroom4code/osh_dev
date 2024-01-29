@@ -247,7 +247,8 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                 </div>
             <?php endif; ?>
             <?php else: ?>
-                <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>" class="ctweb-smsauth-menu-form"
+                <form id="<?= $jsParams['TEMPLATE']['COMPONENT_ID_BUTTON_CODE'] ?>"
+                      class="ctweb-smsauth-menu-form xl:w-2/3 lg:w-3/4 w-full relative"
                       action="/bitrix/components/ctweb/sms.authorize/ajax.php"
                       method="POST" name="auth">
                     <?php echo bitrix_sessid_post(); ?>
@@ -260,159 +261,214 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                     <input id="<?= $jsParams['TEMPLATE']['STATE'] ?? Manager::STEP_PHONE_WAITING ?>" type="hidden"
                            name=""
                            value="<?= $arResult['STEP'] ?>">
-                    <div class="col-11 col-md-7 p-0 mb-2">
+                    <div class="p-0 mb-2">
                         <!--STEP PNONE WAITING-->
-                        <div id="ctweb_form_step_1" class="ctweb-smsauth-menu-step">
-                            <p class="message_for_user_minzdrav font-14 mb-4">
-                                Розничная дистанционная продажа (доставка) кальянов, табачной, никотинсодержащей
-                                продукции
-                                на
-                                сайте не осуществляется. Сайт предназначен для потребителей старше 18 лет.</p>
-                            <div class="d-flex flex-lg-row flex-md-row flex-column justify-content-between mb-3">
-                                <p class="font-12 font-weight-bold">
-                                    <span class="starrequired color-redLight">* </span>
-                                    <?= GetMessage("AUTH_REQ") ?>
+                        <div id="ctweb_form_step_1" class="ctweb-smsauth-menu-step flex flex-col">
+                            <p class="dark:font-light font-normal text-xs mb-5 text-textLight dark:text-textDarkLightGray">
+                                Розничная дистанционная продажа (доставка) кальянов, табачной,
+                                никотинсодержащей продукции на сайте не осуществляется.<br>
+                                Сайт предназначен для потребителей <b>старше 18 лет</b>.
+                            </p>
+                            <div class="mb-8">
+                                <p class="text-xs mb-1 flex flex-row items-center">
+                                    <span class="starrequired text-light-red md:text-hover-red text-2xl mr-2">* </span>
+                                    <span class="font-medium text-lightGrayBg dark:text-white"><?= GetMessage("AUTH_REQ") ?></span>
                                 </p>
-                                <p class="font-14 color-redLight font-weight-bold">
-                                    <a href="<?= $arResult["AUTH_AUTH_URL"] ?>" rel="nofollow">
-                                        <ins><?= GetMessage("AUTH_AUTH") ?></ins>
-                                    </a>
+                                <p class="text-xs font-medium text-lightGrayBg dark:text-white mb-3 flex flex-row items-center">
+                                    <span class="starrequired mr-2">
+                                        <svg width="21" height="20" viewBox="0 0 21 20" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M10.3195 18.3333C14.9027 18.3333 18.6182 14.6023 18.6182 10C18.6182 5.39763 14.9027 1.66667 10.3195 1.66667C5.73621 1.66667 2.02074 5.39763 2.02074 10C2.02074 11.5178 2.50018 13.3457 3.20628 14.5714L2.35269 17.4286L5.48251 16.8571C6.70315 17.5661 8.80795 18.3333 10.3195 18.3333Z"
+                                                  class="fill-light-red dark:fill-white stroke-light-red dark:stroke-white"
+                                                  stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M7.82986 8.21426C7.82986 5.29757 12.3942 5.29759 12.3942 8.21426C12.3942 10.2976 10.3195 9.88084 10.3195 12.3808"
+                                                  class="dark:stroke-light-red stroke-white" stroke-width="2.5"
+                                                  stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M10.3195 15.012L10.3302 15"
+                                                  class="dark:stroke-light-red stroke-white"
+                                                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </span>
+                                    <span class="font-medium dark:font-normal text-lightGrayBg dark:text-white">Важное сообщение</span>
                                 </p>
                             </div>
-                            <div class="d-flex flex-lg-row flex-md-row flex-column">
-                                <div class="form-group mb-3 pl-lg-0 pl-md-0 pl-0 pr-lg-3 pr-md-3 pr-0">
-                                    <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2 p-0 mb-2"
-                                           for="main-profile-name"><?= GetMessage("AUTH_NAME") ?></label>
-                                    <input type="text" name="NAME" maxlength="50"
-                                           class="form-control dark:bg-grayButton input_lk bx-auth-input"
-                                           value="<?= $arResult["NAME"] ?>"/>
-                                </div>
-                                <div class="form-group mb-3  p-0">
-                                    <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
-                                           for="main-profile-name"><?= GetMessage("AUTH_LAST_NAME") ?></label>
-                                    <input type="text" name="LAST_NAME" maxlength="50"
-                                           class="form-control dark:bg-grayButton input_lk bx-auth-input"
-                                           value="<?= $arResult["LAST_NAME"] ?>"/>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-lg-row flex-md-row flex-column">
-                                <div class="form-group mb-3 pl-lg-0 pl-md-0 pl-0 pr-lg-3 pr-md-3 pr-0">
-                                    <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
-                                           for="main-profile-name">
-                                        <span class="starrequired color-redLight  color-redLight">* </span>
-                                        <?= GetMessage("AUTH_EMAIL") ?>
-                                    </label>
-                                    <input type="text" name="EMAIL" maxlength="255"
-                                           class="form-control dark:bg-grayButton input_lk bx-auth-input"
-                                           required minlength="5"
-                                           placeholder="_@_._"
-                                           value="<?= $arResult["EMAIL"] ?>"/>
-                                </div>
-                                <div class="form-group mb-3 p-0">
-                                    <div class="d-flex flex-row align-items-center mb-2 position-relative">
-                                        <label class="col-form-label main-profile-form-label p-0"
-                                               for="main-profile-name">
-                                            <span class="starrequired color-redLight">* </span>
-                                            <?= GetMessage("PERSONAL_BIRTHDAY") ?>
-                                        </label>
-                                        <i class="fa fa-question-circle-o font-20 color-redLight ml-2 block-icon-text"
-                                           aria-hidden="true"></i>
-                                        <div class="hidden block-text br-10 p-3">
-                                            <p class="m-0">
-                                                Возраст необходимо указать для открытия информации не доступной к
-                                                просмотру
-                                                лицам не достигшим 18 лет.</p>
-                                        </div>
+                            <div class="md:py-10 md:px-8 py-5 px-5 bg-textDark rounded-xl dark:bg-darkBox mb-7">
+                                <p class="mb-7 text-xl font-medium text-textLight dark:text-textDarkLightGray">
+                                    Данные пользователя
+                                </p>
+                                <div class="flex md:flex-row flex-col mb-4">
+                                    <div class="form-group mb-3 md:w-1/2 w-full md:pr-3 pr-0">
+                                        <p class="dark:text-textDarkLightGray text-textLight mb-2 text-sm dark:font-normal font-medium">
+                                            <?= GetMessage("AUTH_NAME") ?>
+                                        </p>
+                                        <input type="text" name="NAME" maxlength="50" autocomplete="off"
+                                               class="dark:bg-darkBox dark:border dark:border-textDarkLightGray bg-white border-0
+                                                focus:shadow-none active:shadow-none shadow-none py-3 px-4 outline-none rounded-lg
+                                               w-full input_lk bx-auth-input" placeholder="Введите текст"
+                                               value="<?= $arResult["NAME"] ?>"/>
                                     </div>
-                                    <input type="text" name="PERSONAL_BIRTHDAY" required
-                                           class="form-control dark:bg-grayButton input_lk bx-auth-input user-birthday readonly"
-                                           inputmode="none"
-                                           id="main-profile-brd"
-                                           autocomplete="Off"
-                                           value=""
-                                           minlength="8"
-                                           placeholder="dd/mm/yyyy"/>
+                                    <div class="form-group mb-3 md:w-1/2 w-full">
+                                        <p class="dark:text-textDarkLightGray text-textLight mb-2 text-sm dark:font-normal font-medium">
+                                            <?= GetMessage("AUTH_LAST_NAME") ?>
+                                        </p>
+                                        <input type="text" name="LAST_NAME" maxlength="50"
+                                               class="dark:bg-darkBox dark:border dark:border-textDarkLightGray bg-white border-0
+                                                focus:shadow-none active:shadow-none shadow-none py-3 px-4 outline-none rounded-lg
+                                               w-full input_lk bx-auth-input"
+                                               autocomplete="off"
+                                               placeholder="Введите текст"
+                                               value="<?= $arResult["LAST_NAME"] ?>"/>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group mb-1">
-                                <label class="col-form-label main-profile-form-label p-0 mb-2"
-                                       for="main-profile-name">
-                                    <span class="starrequired color-redLight">* </span>
-                                    <?= GetMessage("AUTH_PASSWORD_REQ") ?>
-                                </label>
-                                <input type="password" name="PASSWORD" maxlength="255"
-                                       minlength="6"
-                                       class="form-control input_lk bx-auth-input js__show-pass" required
-                                       value="<?= $arResult["PASSWORD"] ?>" autocomplete="off"/>
-                                <?php if ($arResult["SECURE_AUTH"]): ?>
-                                    <span class="bx-auth-secure" id="bx_auth_secure"
-                                          title="<?php echo GetMessage("AUTH_SECURE_NOTE") ?>"
-                                          style="display:none">
+                                <div class="flex md:flex-row flex-col mb-4">
+                                    <div class="form-group mb-3 md:w-1/2 w-full  md:pr-3 pr-0">
+                                        <p class="dark:text-textDarkLightGray text-textLight mb-2 text-sm dark:font-normal font-medium">
+                                            <span class="starrequired text-light-red md:text-hover-red">* </span>
+                                             <?= GetMessage("AUTH_EMAIL") ?>
+                                        </p>
+                                        <input type="text" name="EMAIL" maxlength="255"
+                                               class="dark:bg-darkBox dark:border dark:border-textDarkLightGray bg-white border-0
+                                                focus:shadow-none active:shadow-none shadow-none py-3 px-4 outline-none rounded-lg
+                                               w-full input_lk bx-auth-input"
+                                               required minlength="5"
+                                               autocomplete="off"
+                                               placeholder="_@_._"
+                                               value="<?= $arResult["EMAIL"] ?>"/>
+                                    </div>
+                                    <div class="form-group mb-4 md:w-1/2 w-full relative">
+                                        <p class="mb-1 flex flex-row items-center dark:text-textDarkLightGray
+                                         text-textLight text-sm dark:font-normal font-medium">
+                                                <span class="starrequired text-light-red md:text-hover-red mr-1">* </span>
+                                            <span class=" text-sm dark:font-light font-medium
+                                                dark:text-textDarkLightGray text-textLight">
+                                                      <?= GetMessage("PERSONAL_BIRTHDAY") ?>
+                                            </span>
+                                            <i class="ml-2 block-icon-text"
+                                               aria-hidden="true">
+                                                <svg width="21" height="20" viewBox="0 0 21 20" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M10.3195 18.3333C14.9027 18.3333 18.6182 14.6023 18.6182 10C18.6182 5.39763 14.9027 1.66667 10.3195 1.66667C5.73621 1.66667 2.02074 5.39763 2.02074 10C2.02074 11.5178 2.50018 13.3457 3.20628 14.5714L2.35269 17.4286L5.48251 16.8571C6.70315 17.5661 8.80795 18.3333 10.3195 18.3333Z"
+                                                          class="fill-light-red dark:fill-white stroke-light-red dark:stroke-white"
+                                                          stroke-width="1.75" stroke-linecap="round"
+                                                          stroke-linejoin="round"/>
+                                                    <path d="M7.82986 8.21426C7.82986 5.29757 12.3942 5.29759 12.3942 8.21426C12.3942 10.2976 10.3195 9.88084 10.3195 12.3808"
+                                                          class="dark:stroke-light-red stroke-white"
+                                                          stroke-width="2.5"
+                                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M10.3195 15.012L10.3302 15"
+                                                          class="dark:stroke-light-red stroke-white"
+                                                          stroke-width="2.5" stroke-linecap="round"
+                                                          stroke-linejoin="round"/>
+                                                </svg>
+                                            </i>
+                                        </p>
+                                        <div class="hidden block-text br-10 p-3 absolute top-0 right-0 bg-white h-fit
+                                             text-textLight dark:text-textDarkLightGray rounded-lg dark:bg-tagFilterGray">
+                                            Возраст необходимо указать для открытия информации не доступной к
+                                            просмотру
+                                            лицам не достигшим 18 лет.
+                                        </div>
+                                        <input type="text" name="PERSONAL_BIRTHDAY" required
+                                               class="dark:bg-darkBox dark:border dark:border-textDarkLightGray bg-white border-0
+                                                focus:shadow-none active:shadow-none shadow-none py-3 px-4 outline-none rounded-lg
+                                               w-full input_lk bx-auth-input user-birthday readonly"
+                                               inputmode="none"
+                                               id="main-profile-brd"
+                                               autocomplete="off"
+                                               value=""
+                                               minlength="8"
+                                               placeholder="dd/mm/yyyy"/>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <p class="dark:text-textDarkLightGray text-textLight mb-2 text-sm dark:font-normal font-medium">
+                                        <span class="starrequired text-light-red md:text-hover-red">* </span>
+                                         <?= GetMessage("AUTH_PASSWORD_REQ") ?>
+                                    </p>
+                                    <input type="password" name="PASSWORD" maxlength="255"
+                                           minlength="6"
+                                           class="dark:bg-darkBox dark:border dark:border-textDarkLightGray bg-white border-0
+                                                focus:shadow-none active:shadow-none shadow-none py-3 px-4 outline-none rounded-lg
+                                               w-full input_lk bx-auth-input js__show-pass" required
+                                           value="<?= $arResult["PASSWORD"] ?>" autocomplete="off"/>
+                                    <?php if ($arResult["SECURE_AUTH"]): ?>
+                                        <span class="bx-auth-secure" id="bx_auth_secure"
+                                              title="<?php echo GetMessage("AUTH_SECURE_NOTE") ?>"
+                                              style="display:none">
 					        <div class="bx-auth-secure-icon"></div>
 				            </span>
-                                    <noscript>
+                                        <noscript>
                                 <span class="bx-auth-secure" title="<?= GetMessage("AUTH_NONSECURE_NOTE") ?>">
                                     <div class="bx-auth-secure-icon bx-auth-secure-unlock"></div>
                                 </span>
-                                    </noscript>
-                                    <script type="text/javascript">
-                                        document.getElementById('bx_auth_secure').style.display = 'inline-block';
-                                    </script>
-                                <?php endif ?>
+                                        </noscript>
+                                        <script type="text/javascript">
+                                            document.getElementById('bx_auth_secure').style.display = 'inline-block';
+                                        </script>
+                                    <?php endif ?>
+                                </div>
+                                <p class="font-11 font-weight-bold color-redLight"><?= $arResult["GROUP_POLICY"]["PASSWORD_REQUIREMENTS"]; ?></p>
+                                <div class="form-group mb-3">
+                                    <p class="dark:text-textDarkLightGray text-textLight mb-2 text-sm dark:font-normal font-medium">
+                                        <span class="starrequired text-light-red md:text-hover-red ">* </span>
+                                         <?= GetMessage("AUTH_CONFIRM") ?>
+                                    </p>
+                                    <input type="password" name="CONFIRM_PASSWORD" maxlength="255"
+                                           class="dark:bg-darkBox dark:border dark:border-textDarkLightGray bg-white border-0
+                                                focus:shadow-none active:shadow-none shadow-none py-3 px-4 outline-none rounded-lg
+                                               w-full input_lk bx-auth-input js__show-pass"
+                                           minlength="6"
+                                           value="<?= $arResult["CONFIRM_PASSWORD"] ?>"
+                                           required
+                                           autocomplete="off"/>
+                                </div>
                             </div>
-                            <p class="font-11 font-weight-bold color-redLight"><?= $arResult["GROUP_POLICY"]["PASSWORD_REQUIREMENTS"]; ?></p>
-                            <div class="form-group mb-3">
-                                <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
-                                       for="main-profile-name">
-                                    <span class="starrequired color-redLight  color-redLight">* </span>
-                                    <?= GetMessage("AUTH_CONFIRM") ?>
-                                </label>
-                                <input type="password" name="CONFIRM_PASSWORD" maxlength="255"
-                                       class="form-control input_lk bx-auth-input js__show-pass"
-                                       minlength="6"
-                                       value="<?= $arResult["CONFIRM_PASSWORD"] ?>"
-                                       required
-                                       autocomplete="off"/>
-                            </div>
-                            <div class="d-flex flex-lg-row flex-md-row flex-column">
-                                <div class="col-md-8 col-lg-8 col-12 pl-0 flex-column">
-                                    <div class="d-flex flex-row align-items-center font-14 mb-3 mt-3">
-                                        <input type="checkbox" required class="check_input form-check-input mt-0 ml-0"
+                            <div class="flex md:flex-row flex-col">
+                                <div class="flex flex-col mr-8 md:w-2/3 w-full lg:mb-0 mb-4">
+                                    <div class="flex flex-row items-center mb-3 mt-3">
+                                        <input type="checkbox" required class="check_input p-4 dark:bg-grayButton
+                                         checked:hover:bg-grayButton border-iconGray dark:text-white cursor-pointer
+                                          font-normal rounded-full text-light-red checked:focus:bg-grayButton mr-4"
                                                id="soa-property-USER_RULES" checked name="USER_RULES"/>
-                                        <label class="bx-soa-custom-label mb-0 ml-3">
+                                        <p class="dark:text-textDarkLightGray dark:font-light font-medium md:text-md text-sm">
                                             Я принимаю условия
-                                            <a class="color-redLight text-decoration-underline"
+                                            <a class="md:text-md text-sm text-light-red font-medium dark:text-white underline"
                                                href="/about/users_rules/">
                                                 Пользовательского соглашения
                                             </a>
-                                        </label>
+                                        </p>
                                     </div>
-                                    <div class="d-flex flex-row align-items-center font-14 mb-4">
+                                    <div class="flex flex-row items-center mb-3 mt-3">
                                         <input type="checkbox" required checked
-                                               class="check_input  form-check-input mt-0 ml-0"
+                                               class="check_input p-4 dark:bg-grayButton checked:hover:bg-grayButton
+                                                border-iconGray dark:text-white cursor-pointer font-normal rounded-full
+                                                text-light-red checked:focus:bg-grayButton mr-4"
                                                name="USER_POLITICS"/>
-                                        <label class="bx-soa-custom-label mb-0 ml-3">
+                                        <label class="dark:text-textDarkLightGray dark:font-light font-medium md:text-md text-sm">
                                             Я принимаю условия
-                                            <a class="color-redLight text-decoration-underline" href="/about/politics/">
+                                            <a class="md:text-md text-sm text-light-red font-medium dark:text-white underline"
+                                               href="/about/politics/">
                                                 Политики конфиденциальности
                                             </a>
                                         </label>
                                     </div>
                                 </div>
-                                <div class="form-group mb-3 col-md-4 col-lg-4 col-12 p-0 align-self-end">
-                                    <label class="col-sm-12 col-md-12 col-form-label main-profile-form-label p-0 mb-2"
-                                           for="main-profile-name">
-                                        <span class="starrequired color-redLight">* </span> Номер телефона
-                                    </label>
+                                <div class="form-group mb-3 relative md:w-1/3 w-full">
+                                    <p class="dark:text-textDarkLightGray text-textLight text-sm dark:font-normal mb-1 font-semibold">
+                                        <span class="starrequired text-light-red md:text-hover-red">* </span>
+                                        Номер телефона
+                                    </p>
                                     <div class="form-group">
                                         <span id="flag"></span>
-                                        <div class="code position-relative">
+                                        <div class="code relative mt-2">
                                             <input type="text" name="PHONE"
                                                    placeholder="+_ (___)-___-____"
                                                    inputmode="text"
                                                    data-input-type="phone"
                                                    value="<?= $arResult['USER_VALUES']['PHONE'] ?? '' ?>"
-                                                   class="form-control auth-phone dark:bg-grayButton input_lk bx-auth-input"
+                                                   class="auth-phone bg-white p-3 border-textDark dark:border-grayButton
+                                                    dark:bg-grayButton cursor-pointer w-full text-textLight rounded-md
+                                                     dark:text-white text-md"
                                                    id="<?= $mainID . "phone" ?>"
                                                    autocomplete="off"/>
                                         </div>
@@ -435,7 +491,7 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                             <h3 class="ctweb-title text-center font-medium mb-4 text-textLight dark:text-textDarkLightGray
                             text-lg"><?= GetMessage("SMS_AUTH_ENTER_CODE") ?></h3>
 
-                            <div class="form-group mb-3 d-flex flex-column">
+                            <div class="form-group mb-3 flex flex-col">
                                 <label class="ctweb-label mb-3" for="sms-auth-code"></label>
                                 <input type="text" name="CODE" id="<?= $jsParams['TEMPLATE']['CODE'] ?>"
                                        class="form-control dark:bg-grayButton auth_code" autocomplete="off">
@@ -456,8 +512,10 @@ if ($arParams['PROFILE_AUTH'] == "Y"):?>
                             </div>
                         </div>
                         <!--Навигация по форме авторизации-->
-                        <div class="ctweb-button-block col-md-6 col-lg-6 col-12 p-0">
-                            <input class="btn link_menu_catalog get_code_button red_button_cart pl-3 pr-3 font-16"
+                        <div class="ctweb-button-block mt-7">
+                            <input class="btn link_menu_catalog get_code_button red_button_cart btn dark:bg-dark-red rounded-md bg-light-red text-white xs:px-7 py-3
+                             dark:shadow-md shadow-shadowDark font-light dark:hover:bg-hoverRedDark cursor-pointer
+                              sm:w-96 px-5 w-full xs:text-md text-md sm:font-normal"
                                    id="<?= $jsParams['TEMPLATE']['SUBMIT'] ?>"
                                    type="submit"
                                    value="Регистрация"
