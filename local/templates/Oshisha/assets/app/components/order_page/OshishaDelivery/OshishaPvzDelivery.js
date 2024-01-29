@@ -3,9 +3,12 @@ import axios from 'axios';
 import PropTypes from 'prop-types'
 import OshishaYMap from './OshishaYMap';
 
-function OshishaPvzDelivery({ cityCode, params, result, sendRequest }) {
+function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest }) {
 
-    const [curCityName, setCurCityName] = useState('')
+    if (cityCode===undefined) {
+        return
+    }
+
     const [features, setFeatures] = useState([])
 
     useEffect(() => {
@@ -14,9 +17,8 @@ function OshishaPvzDelivery({ cityCode, params, result, sendRequest }) {
             codeCity: cityCode,
             action: 'getCityName'
         }, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(response => {
-            //todo errors from back
 
-            const cityName = response.data.LOCATION_NAME;
+            //todo errors from back
             axios.post('/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php', {
                 sessid: BX.bitrix_sessid(),
                 codeCity: cityCode,
@@ -24,15 +26,14 @@ function OshishaPvzDelivery({ cityCode, params, result, sendRequest }) {
                 orderPackages: params.OSH_DELIVERY.packages,
                 action: 'getPVZList'
             }, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(response => {
-                setCurCityName(cityName)
                 setFeatures(response.data.features)
             })
         })
-    }, [])
+    }, [cityCode])
 
     return (
         <div>
-            <OshishaYMap cityCode={cityCode} cityName={curCityName} features={features}
+            <OshishaYMap cityCode={cityCode} cityName={cityName} features={features}
                 params={params} orderResult={result} sendRequest={sendRequest} />
         </div>
     )
