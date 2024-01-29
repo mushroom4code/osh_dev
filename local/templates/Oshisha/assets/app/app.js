@@ -1,4 +1,4 @@
-import ContragentList from "./components/ContragentList";
+import ContragentList from "./components/contragents/ContragentList";
 import {createRoot} from 'react-dom/client';
 import {StrictMode} from "react";
 import CatalogProductPopup from "./components/catalog/CatalogProductPopup";
@@ -11,6 +11,12 @@ const contragentForm = document.getElementById('createContragent');
 
 if (contragentForm) {
     createRoot(contragentForm).render(<StrictMode><ContragentList/></StrictMode>);
+}
+
+const contragentFormRegister = document.getElementById('createContragentRegister');
+
+if (contragentFormRegister) {
+    createRoot(contragentFormRegister).render(<StrictMode><ContragentList typeForms='register'/></StrictMode>);
 }
 
 /**
@@ -38,7 +44,7 @@ document.addEventListener('click', function (e) {
             root.render(
                 <StrictMode>
                     <CatalogProductPopup productId={productId} areaBuyQuantity={areaBuyQuantity} areaBuy={areaBuy}
-                                     seePopup={true} groupedProduct={groupedProduct} setVisible={setVisible}/>
+                                         seePopup={true} groupedProduct={groupedProduct} setVisible={setVisible}/>
                 </StrictMode>);
         }
     }

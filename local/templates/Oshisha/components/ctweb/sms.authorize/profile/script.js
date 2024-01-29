@@ -308,6 +308,7 @@
 
     BX.Ctweb.SMSAuth.Controller.prototype.stateTransition = function (state, prev) {
         this.obState.value = state;
+        console.log(state)
 
         $('.ctweb-smsauth-menu-step').addClass('hidden');
 
@@ -355,7 +356,7 @@
                     this.renderTime(seconds_left);
                     if (seconds_left <= 0) {
                         this.setState(STATE_CODE_REUSED);
-                        BX.style(this.obReuse, 'display', 'block');
+                        BX.style(this.obReuse, 'display', 'flex');
                     }
                 }.bind(this), 100);
 
