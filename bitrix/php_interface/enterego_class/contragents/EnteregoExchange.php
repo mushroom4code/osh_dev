@@ -5,6 +5,7 @@ namespace Enterego\contragents;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
+use Bitrix\Main\Type\DateTime;
 use Bitrix\Main\UserTable;
 use COption;
 use Bitrix\Main;
@@ -29,7 +30,9 @@ class EnteregoExchange
     {
         $arData = ['CONTRAGENTS' => [], 'USERS' => []];
         $dateExportStart = $_SESSION['START_DATETIME_EXPORT'];
-        $dateStartImport1C = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS');
+        $dateStartImport1C = DateTime::createFromUserTime(
+            COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS')
+        );
 
         if (empty($type)) {
             /** select contragents for XML on date interval with id interval*/
@@ -65,7 +68,7 @@ class EnteregoExchange
 
         } else {
             /** select user+contr+comp for XML */
-            
+
             $filterUser = array(
                 'select' => array(
                     'NAME',
