@@ -51,7 +51,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                 sessid: BX.bitrix_sessid(),
                 select: {1: "CODE", 2: "TYPE_ID", VALUE: "ID", DISPLAY: "NAME.NAME"},
                 additionals: {1: "PATH"},
-                filter: {"=CODE": propLocation.VALUE[0], "=NAME.LANGUAGE_ID": "ru", "=SITE_ID": "N2"},
+                filter: {"=CODE": propLocation.VALUE[0] ?? '0000073738', "=NAME.LANGUAGE_ID": "ru", "=SITE_ID": "N2"},
                 version: 2,
                 PAGE_SIZE: 10,
                 PAGE: 0

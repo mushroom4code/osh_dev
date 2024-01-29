@@ -27,7 +27,7 @@ function reducer(state, action) {
             return {
                 ...state,
                 timeoutId: null,
-                openListSuggest: true,
+                openListSuggest: action.listSuggest.length > 0,
                 listSuggest: action.listSuggest
             }
         }
@@ -94,6 +94,9 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
     }
 
     const onKeyDownDaDataAddress = (e) => {
+        if (e.keyCode === 27) {
+            dispatch({type: 'cancel_suggest'});
+        }
 
         if (e.keyCode === 13) {
             selectSuggest(state.activeSuggest)
@@ -145,10 +148,10 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
             <div className='title font-medium mb-1 uppercase'>
                 Введите адрес:
             </div>
-            <div>
+            <div className='relative'>
                 <div className='flex w-full'>
                     <button
-                        className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+                        className="flex-shrink-0 z-10 inline-flex items-center py-2 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                         type="button">
                         {currentLocation?.DISPLAY}
                     </button>
@@ -171,9 +174,11 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
                     </div>
                 </div>
 
-                <ul className={` ${state.openListSuggest ? '' : 'hidden'}`}>
+                <ul className={'absolute z-20 bg-white dark:bg-grayButton w-full p-2.5 mt-1 border-white rounded-lg'
+                    + ` ${state.openListSuggest ? '' : 'hidden'}`}>
                     {state.listSuggest.map((suggest, index) =>
-                        <li className={`cursor-pointer ${state.activeSuggest === index ? 'dark:bg-grayButton' : ''}`}
+                        <li className={`${state.activeSuggest === index ? 'dark:bg-darkBox ' : ''}`
+                            + 'dark:hover:bg-darkBox rounded-lg cursor-pointer pl-1'}
                             key={index} onMouseDown={() => selectSuggest(index)}
                             onMouseOver={() => dispatch({type: 'set_active', activeSuggest: index})}>
                             {suggest.value}
