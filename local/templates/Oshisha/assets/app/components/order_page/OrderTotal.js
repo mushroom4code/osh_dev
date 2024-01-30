@@ -2,8 +2,10 @@ import React, {useContext} from "react";
 import OrderContext from "./Context/OrderContext";
 
 function OrderTotal() {
-    const {result, params, options, OrderGeneralUserPropsBlockId, sendRequest, isValidForm,
-        isOrderSaveAllowed, allowOrderSave} = useContext(OrderContext);
+    const {
+        result, params, options, OrderGeneralUserPropsBlockId, sendRequest, isValidForm,
+        isOrderSaveAllowed, allowOrderSave
+    } = useContext(OrderContext);
     var orderSaveAllowed = false;
 
     const getResultJsx = () => {
@@ -106,11 +108,9 @@ function OrderTotal() {
             }
             if (!checkedDelivery?.CALCULATE_ERRORS) {
                 resultJsx.push(
-                    <div key={'total_action'} className="bx-soa-cart-total-button-container lg:text-[13px]
-                         text-[25px]">
-                        <a className="btn btn_basket btn-order-save dark:text-textDark
-                           shadow-md text-white dark:bg-dark-red bg-light-red lg:py-2 py-6 px-4 rounded-5 block
-                           text-center font-semibold"
+                    <div key={'total_action'} className="bx-soa-cart-total-button-container">
+                        <a className="btn btn_basket mt-3 btn-order-save block shadow-md text-white w-full font-normal
+                        dark:font-light text-sm dark:bg-dark-red bg-light-red py-3 px-4 rounded-5 text-center"
                            onClick={clickOrderSaveAction}>
                             Зарезервировать
                         </a>
@@ -118,14 +118,14 @@ function OrderTotal() {
                 );
             } else {
                 resultJsx.push(
-                    <span key={'total_action'} className="btn-primary-color font-semibold lg:text-[13px] text-[25px]">
+                    <span key={'total_action'} className="btn-primary-color text-hover-red text-sm font-medium my-2">
                         {checkedDelivery.CALCULATE_ERRORS}
                     </span>
                 );
             }
         } else {
             resultJsx.push(
-                <span key={'total_action'} className="btn-primary-color font-semibold lg:text-[13px] text-[25px]">
+                <span key={'total_action'} className="btn-primary-color text-hover-red font-medium text-sm my-2">
                     Для оформления заказа необходимо авторизоваться
                 </span>
             );
@@ -133,51 +133,48 @@ function OrderTotal() {
         return resultJsx;
     }
 
-    const createTotalUnit = (name, value, params, line) => {
-        var totalValue, totalUnit = [], className = 'bx-soa-cart-total-line lg:text-[13px] ' +
-            ' text-[21px] overflow-hidden flex justify-between';
-        name = name || '';
-        value = value || '';
-        params = params || {};
+    const createTotalUnit = (name = '', value = '', params = {}, line) => {
+        let totalValue, className = 'bx-soa-cart-total-line mb-4' +
+            ' overflow-hidden flex justify-between text_filter_basket text-md text-textLight' +
+            ' dark:text-textDarkLightGray font-normal dark:font-light';
 
         if (params.error) {
-            totalValue = (<a className="bx-soa-price-not-calc font-bold" dangerouslySetInnerHTML={{__html: value}}
-                             onClick={BX.OrderPageComponents.animateScrollTo}></a>);
+            totalValue = <a className="bx-soa-price-not-calc font-semibold"
+                            dangerouslySetInnerHTML={{__html: value}}
+                            onClick={BX.OrderPageComponents.animateScrollTo}></a>;
         } else if (params.free) {
-            totalValue = (<span className={'bx-soa-price-free' + (params.total ? 'font-bold' : '')}>{value}</span>);
+            totalValue = <span className={'bx-soa-price-free' + (params.total ? 'font-bold' : '')}>{value}</span>;
         } else {
-            totalValue = (
-                <span className={params.total ? 'font-bold' : ''} dangerouslySetInnerHTML={{__html: value}}></span>);
+            totalValue = <span className={params.total ? 'font-semibold' : ''}
+                               dangerouslySetInnerHTML={{__html: value}}></span>;
         }
         if (params.total) {
-            className += ' bx-soa-cart-total-line-total mt-2.5 border-t-[1px] border-grey-line-order lg:pt-[25px] ' +
-                'pt-[18px] mb-[13px] font-bold lg:text-[13px] text-[25px]';
+            className += ' bx-soa-cart-total-line-total border-t pt-4 border-borderColor dark:border-gray-slider-arrow  ' +
+                ' text_filter_basket text-md text-textLight dark:text-white font-semibold dark:font-medium my-6';
         }
 
-        if (params.highlighted) {
-            className += ' bx-soa-cart-total-line-highlighted';
-        }
-        if (name === 'НДС (20%, включен в цену):') {
-            name = '';
-            totalValue = ''
-        }
         if (name === 'Итого:') {
             name = 'Общая стоимость';
         }
 
         return (
-            <div key={'cart_total_line_' + line} className={className}>
-                <span className={'bx-soa-cart-t' + (params.total ? ' font-bold' : '')}>{name}</span>
-                <span className={'bx-soa-cart-d'
-                    + (!!params.total && options.totalPriceChanged ? ' bx-soa-changeCostSign' : '')}>
+            name !== 'НДС (20%, включен в цену):' ?
+                <div key={'cart_total_line_' + line} className={className}>
+                    <span className={'bx-soa-cart-t text-textLight ' +
+                        ' dark:text-textDarkLightGray font-normal dark:font-light '
+                        + (params.total ? ' font-semibold dark:font-semibold' : '')}>{name}</span>
+                    <span className={'bx-soa-cart-d text-textLight' +
+                        ' dark:text-textDarkLightGray font-normal dark:font-light '
+                        + (!!params.total && options.totalPriceChanged ? ' bx-soa-changeCostSign' : '')}>
                     {totalValue}
                 </span>
-            </div>
+                </div>
+                : <></>
         );
     }
 
     const getSelectedDelivery = () => {
-        var currentDelivery = false,
+        let currentDelivery = false,
             i = 0;
 
         for (i in result.DELIVERY) {
@@ -192,7 +189,7 @@ function OrderTotal() {
 
     const click_edit = () => {
         let select_block =
-            document.querySelector('#' + OrderGeneralUserPropsBlockId +' .bx-soa-section-title-container');
+            document.querySelector('#' + OrderGeneralUserPropsBlockId + ' .bx-soa-section-title-container');
         let props = BX.findChildren(select_block, {className: 'user_select'}), i, option_company, option_contrs;
         let input_block_company = document.querySelector('input[data-name="company"]');
         let input_block_contragent = document.querySelector('input[data-name="contragent"]');
@@ -252,20 +249,18 @@ function OrderTotal() {
             <h5 className="order_text lg:block hidden mb-4 text-[22px] font-semibold dark:font-normal">
                 Оформление заказа
             </h5>
-            <div className="flex align-items-center justify-between lg:text-[9px] text-[21px] lg:mb-3 mb-7">
-                <p className=" m-0 mr-1 flex items-center leading-normal font-medium dark:font-normal">
+            <div className="flex items-center flex-row justify-between lg:mb-3 mb-7">
+                <span className="text-10 m-0 font-medium dark:font-normal leading-6">
+                <span className="confidintial bg-light-red p-1.5 mr-2 whitespace-nowrap text-white font-medium text-10
+                 rounded-full text-center dark:bg-dark-red">18+</span>
                     При получении заказа, возможно, потребуется предъявить документ, подтверждающий ваш возраст.
-                </p>
-                <span className="confidintial bg-light-red lg:py-[7px] py-[9px] lg:px-2 px-3 whitespace-nowrap
-                    text-white font-semibold rounded-[100px] lg:leading-[17px] leading-[41px] self-center h-fit
-                    text-center">18+</span>
+                </span>
             </div>
             <div id="bx-soa-total" className="mb-5 bx-soa-sidebar">
                 <div className="bx-soa-cart-total-ghost"></div>
-                <div className="bx-soa-cart-total p-8 rounded-xl bg-textDark dark:bg-darkBox mb-7">
+                <div className="bx-soa-cart-total p-6 rounded-xl bg-textDark dark:bg-darkBox mb-7">
                     {getResultJsx()}
                 </div>
-
             </div>
         </>
     );

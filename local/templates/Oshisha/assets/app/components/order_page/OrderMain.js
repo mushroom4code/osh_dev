@@ -233,7 +233,7 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                     </div>
                 </div>
                 {/*SIDEBAR BLOCK*/}
-                <div id="order_total_block" className="col-start-3 col-lg-4 col-md-5 lg:ml-6">
+                <div id="order_total_block" className="col-start-3 col-lg-4 col-md-5 lg:ml-5">
                     <OrderTotal/>
                 </div>
             </OrderContextProvider>

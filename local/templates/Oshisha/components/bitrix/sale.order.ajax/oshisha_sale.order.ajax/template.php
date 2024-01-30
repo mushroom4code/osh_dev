@@ -265,7 +265,7 @@ if ($request->get('ORDER_ID') <> '') {
     } ?>
 
     <form action="<?= POST_FORM_ACTION_URI ?>" method="POST" name="ORDER_FORM"
-          class="bx-soa-wrapper text-sm mb-4<?= $themeClass ?>" id="bx-soa-order-form" enctype="multipart/form-data">
+          class="bx-soa-wrapper text-sm my-5 <?= $themeClass ?>" id="bx-soa-order-form" enctype="multipart/form-data">
         <?php
         echo bitrix_sessid_post();
 
