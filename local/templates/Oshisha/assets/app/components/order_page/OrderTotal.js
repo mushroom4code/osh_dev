@@ -135,7 +135,7 @@ function OrderTotal() {
 
     const createTotalUnit = (name, value, params, line) => {
         var totalValue, totalUnit = [], className = 'bx-soa-cart-total-line lg:text-[13px] ' +
-            ' text-[21px] lg:leading-[35px] leading-[78px] overflow-hidden flex justify-between';
+            ' text-[21px] overflow-hidden flex justify-between';
         name = name || '';
         value = value || '';
         params = params || {};
@@ -262,8 +262,7 @@ function OrderTotal() {
             </div>
             <div id="bx-soa-total" className="mb-5 bx-soa-sidebar">
                 <div className="bx-soa-cart-total-ghost"></div>
-                <div className="bx-soa-cart-total lg:p-5 p-8 border-[1px] flex flex-col rounded-lg border-solid
-                         border-textDark bg-textDark">
+                <div className="bx-soa-cart-total p-8 rounded-xl bg-textDark dark:bg-darkBox mb-7">
                     {getResultJsx()}
                 </div>
 
