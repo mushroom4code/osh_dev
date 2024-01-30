@@ -21,25 +21,39 @@ $orders_status = $_REQUEST['show_canceled'] ? 'show_canceled' : ($_REQUEST['show
 
 $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_TO_ORDERS']);
 ?>
-<div class="hides <?= empty($arResult['BASKET_ITEMS']) ? 'js--basket-empty' : 'js--basket-not-empty'?>" id="personal_orders" >
-    <h5 class="mb-4"><b>Заказы</b></h5>
-    <div class="d-flex flex-row justify-content-between mb-4 align-items-center">
-        <div style="display: none">
-            <span class="sort_orders retail_orders">Розничные заказы</span>
-            <span class="sort_orders wholesale_orders" style="display:none;">Оптовые заказы</span>
-        </div>
-        <div class="d-flex row_section justify-content-between align-items-center">
+<div class="hides <?= empty($arResult['BASKET_ITEMS']) ? 'js--basket-empty' : 'js--basket-not-empty' ?>"
+     id="personal_orders">
+    <h5 class="mb-3 text-2xl font-medium text-textLight dark:text-textDarkLightGray">Заказы</h5>
+    <div class="flex flex-row justify-between mb-4 items-center">
+        <div class="flex justify-between items-center">
             <input type="text" data-range="true" data-multiple-dates-separator=" - "
-                   class="datepicker-here form-control date_input mr-3"/>
-            <a class="sort_orders" href="javascript:void(0)"><span class="sort_orders_by">Сортировать по</span><i
-                        class="fa fa-angle-down"
-                        aria-hidden="true"></i>
-                <div class="sort_orders_elements" data-sort-status="<?= $orders_status ?>">
+                   class="datepicker-here dark:bg-grayButton bg-white dark:border-none border-borderColor text-sm
+                         focus:border-borderColor shadow-none py-2 px-4 outline-none rounded-md w-auto date_input mr-3"/>
+            <a class="sort_orders dark:bg-grayButton bg-textDark text-sm py-2 px-4 rounded-md w-full relative"
+               href="javascript:void(0)">
+                <span class="sort_orders_by flex flex-row items-center">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="mr-2"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M18.9583 5.83331C18.9583 6.17849 18.6785 6.45831 18.3333 6.45831H1.66663C1.32145 6.45831 1.04163 6.17849 1.04163 5.83331C1.04163 5.48814 1.32145 5.20831 1.66663 5.20831H18.3333C18.6785 5.20831 18.9583 5.48814 18.9583 5.83331Z"
+                              fill="#CD1D1D"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M16.4583 10C16.4583 10.3452 16.1785 10.625 15.8333 10.625H4.16663C3.82145 10.625 3.54163 10.3452 3.54163 10C3.54163 9.65483 3.82145 9.375 4.16663 9.375H15.8333C16.1785 9.375 16.4583 9.65483 16.4583 10Z"
+                              fill="#CD1D1D"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M13.9583 14.1667C13.9583 14.5119 13.6785 14.7917 13.3333 14.7917H6.66663C6.32145 14.7917 6.04163 14.5119 6.04163 14.1667C6.04163 13.8215 6.32145 13.5417 6.66663 13.5417H13.3333C13.6785 13.5417 13.9583 13.8215 13.9583 14.1667Z"
+                              fill="#CD1D1D"/>
+                    </svg>
+                    <span class="text-sm text-textLight font-normal dark:text-textDarkLightGray">Сортировать по</span>
+                </span>
+                <div class="sort_orders_elements hidden absolute top-9 w-full rounded-b-lg z-30 p-3 pt-0 dark:bg-grayButton
+                 bg-textDark right-0"
+                     data-sort-status="<?= $orders_status ?>">
                     <ul>
-                        <li class="order_sort_item" data-sort-order="new">Новые</li>
-                        <li class="order_sort_item" data-sort-order="old">Старые</li>
-                        <li class="order_sort_item" data-sort-order="cheap">Дешёвые</li>
-                        <li class="order_sort_item" data-sort-order="expensive">Дорогие</li>
+                        <li class="order_sort_item text-xs mb-2" data-sort-order="new">Новые</li>
+                        <li class="order_sort_item text-xs mb-2" data-sort-order="old">Старые</li>
+                        <li class="order_sort_item text-xs mb-2" data-sort-order="cheap">Дешёвые</li>
+                        <li class="order_sort_item text-xs mb-2" data-sort-order="expensive">Дорогие</li>
                     </ul>
                 </div>
             </a>

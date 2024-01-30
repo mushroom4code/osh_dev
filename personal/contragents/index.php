@@ -19,7 +19,7 @@ if ($USER->IsAuthorized()) {
     if (!$name) {
         $name = trim($USER->GetLogin());
     } ?>
-    <div class="mobile_lk mb-5 flex flex-col xs:bg-white md:flex-row">
+    <div class="mobile_lk mb-5 flex flex-col xs:bg-white md:flex-row mt-4">
         <?php if ($mobile->isMobile()) { ?>
             <div class="dark:bg-dark bg-lightGrayBg rounded-b-3xl border-b border-white-100">
                 <div class="box_with_photo flex flex-row px-5 pb-6 pt-4 items-end" style="

@@ -11,8 +11,7 @@ $userData = EnteregoUser::getInstance();
     <link rel="preconnect" href="//api-maps.yandex.ru">
     <link rel="dns-prefetch" href="//api-maps.yandex.ru">
     <div class="mb-8" id="box_contacts">
-        <h4 class="flex flex-row items-center mb-8 mt-5 text-3xl font-bold dark:font-medium text-textLight
-            dark:text-textDarkLightGray">Контакты</h4>
+        <h4 class="mb-8 mt-5 text-3xl font-bold dark:font-medium text-textLight dark:text-textDarkLightGray">Контакты</h4>
         <div class="mb-5 flex flex-col">
             <div class="flex md:flex-row flex-col mb-12">
                 <div class="flex flex-col md:w-1/3 w-full justify-between h-auto mb-3">

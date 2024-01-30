@@ -22,7 +22,7 @@ if (!$USER->IsAuthorized()) {
     if (!$name) {
         $name = trim($USER->GetLogin());
     } ?>
-    <div class="mobile_lk flex md:flex-row flex-col <?php if ($APPLICATION->GetCurPage() != '/personal/'): ?>private<?php endif; ?>">
+    <div class="mobile_lk flex md:flex-row flex-col mt-4 <?php if ($APPLICATION->GetCurPage() != '/personal/'): ?>private<?php endif; ?>">
         <?php
         if ($mobile->isMobile()) { ?>
             <div class="dark:bg-dark bg-lightGrayBg rounded-b-3xl border-b border-white-100">

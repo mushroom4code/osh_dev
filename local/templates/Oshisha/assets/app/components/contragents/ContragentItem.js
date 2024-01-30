@@ -8,12 +8,13 @@ const waitAccept = 'Ожидает подтверждения';
 
 function StatusContr(status) {
     const statusColor = status === active
-        ? ' dark:bg-greenButton bg-greenLight text-white font-normal '
+        ? ' dark:bg-greenButton bg-greenLight text-white font-medium '
         : status === notAccept || status === archive
             ? 'bg-grayLight text-white font-normal'
             : 'bg-yellowSt text-black font-medium'
 
-    return `${statusColor} py-2 px-4 rounded-bl-xl rounded-tr-xl w-fit text-xs flex self-end`;
+    return `${statusColor} py-2 px-4 rounded-bl-xl rounded-tr-xl w-fit text-xs flex self-end max-w-[250px] 
+    md:min-w-[200px] w-full flex justify-center items-center`;
 }
 
 
@@ -31,9 +32,10 @@ function ContragentItem({contragent}) {
 
     return (
         <div
-            className={"xs:mr-1 lg:mr-5 mb-5 dark:bg-darkBox bg-textDark lg:w-5/12 w-full flex flex-col h-fit " + (!initBoxInfo ? 'rounded-lg' : 'rounded-t-lg')}>
+            className={"mr-0 xl:mr-5 mb-5 dark:bg-darkBox bg-textDark xl:w-5/12 w-full flex flex-col h-fit " + (!initBoxInfo ? 'rounded-lg' : 'rounded-t-lg')}>
             <p className={colorClass}>{contragent?.STATUS_VIEW}</p>
-            <div className={"pr-8 pl-8 dark:text-textDarkLightGray text-textLight " + (!initHideBox ? 'pb-8' : 'pb-3')}>
+            <div className={"md:pr-8 md:pl-8 pl-4 pr-4 dark:text-textDarkLightGray text-textLight " +
+                (!initHideBox ? ' md:pb-8 pb-4 ' : 'pb-3')}>
                 <div>
                     <p className="mb-5 dark:font-medium font-semibold text-xl flex flex-row items-center">
                         <IconNameContr/>
