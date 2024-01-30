@@ -15,7 +15,7 @@ class EnteregoExchange
 {
     /**
      * Import contragent-company-user
-     * @param string $stepDate
+     * @param DateTime $stepDate
      * @param bool|int $id
      * @param string $type
      * @return array
@@ -24,7 +24,7 @@ class EnteregoExchange
      * @throws SystemException
      */
     public static function GetInfoForXML(
-        string   $stepDate = '',
+        datetime $stepDate,
         bool|int $id = 0,
         string   $type = ''): array
     {

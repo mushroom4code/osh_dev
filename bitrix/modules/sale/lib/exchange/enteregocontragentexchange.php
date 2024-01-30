@@ -2,25 +2,26 @@
 
 namespace Bitrix\Sale\Exchange;
 
+use Bitrix\Main\Type\DateTime;
 use Enterego\contragents\EnteregoContragents;
 
 class EnteregoContragentExchange
 
 {
     public int $ID_CONTRAGENT = 0;
-    public int $STATUS_CONTRAGENT;
-    public string $STATUS_VIEW;
+    public int $STATUS_CONTRAGENT = 0;
+    public string $STATUS_VIEW = '';
     public string $TYPE = 'fiz';
     public string $NAME_ORGANIZATION = '';
     public string $INN = 'Не указан';
     public string $RASCHET_CHET = '';
     public string $ADDRESS = 'Не указан';
-    public string $BIC;
-    public string $BANK;
+    public string $BIC = '';
+    public string $BANK = '';
     public string $PHONE_COMPANY = '';
-    public string $EMAIL;
-    public string $DATE_INSERT;
-    public string $DATE_UPDATE;
+    public string $EMAIL = '';
+    public datetime $DATE_INSERT;
+    public datetime $DATE_UPDATE;
     public string $XML_ID;
 
 
