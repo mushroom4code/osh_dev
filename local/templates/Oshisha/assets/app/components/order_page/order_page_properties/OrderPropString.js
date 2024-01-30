@@ -13,7 +13,7 @@ function OrderPropString({ property, disabled }) {
     }
 
     return (<div className="soa-property-container">
-        <input type="text" className="w-full text-sm cursor-text border-grey-line-order ring:grey-line-order dark:border-darkBox rounded-lg
+        <input type="text" className="w-full text-sm cursor-text p-3 border-grey-line-order ring:grey-line-order dark:border-darkBox rounded-lg
                dark:bg-darkBox"
             size={property.SIZE}
             name={'ORDER_PROP_' + property.ID} placeholder={property.DESCRIPTION}

@@ -1,7 +1,7 @@
 import OrderProp from './OrderProp';
 import React, { useContext } from "react";
 import OrderContext from "./Context/OrderContext";
-import OrderContragents from "./OrderContragents";
+import OrderContragents from "./order_page_properties/OrderContragents";
 
 function OrderUserProps() {
 

@@ -7,9 +7,9 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Security\Sign\Signer;
 use Bitrix\Main\UI\Extension;
-use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Bitrix\Sale\Location\TypeTable;
 use Bitrix\Sale\PropertyValueCollection;
+use CommonPVZ\SavedDeliveryProfiles;
 use Enterego\contragents\EnteregoContragents;
 
 /**
@@ -257,14 +257,12 @@ if ($request->get('ORDER_ID') <> '') {
 
     $themeClass = !empty($arParams['TEMPLATE_THEME']) ? ' bx-' . $arParams['TEMPLATE_THEME'] : '';
     $hideDelivery = empty($arResult['DELIVERY']);
-
+    $contrAgent = [];
     if ($USER->IsAuthorized()) {
-        $contragents = EnteregoContragents::getContragentsByUserId($USER->GetID());
-        $savedDeliveryProfiles = \CommonPVZ\SavedDeliveryProfiles::getAll($USER->GetID());
-    } else {
-        $contragents = [];
-    }
-    ?>
+        $filters['STATUS_CONTRAGENT'] = 1;
+        $contrAgent = EnteregoContragents::getContragentsByUserId($USER->GetID(), $filters);
+        $savedDeliveryProfiles = SavedDeliveryProfiles::getAll($USER->GetID());
+    } ?>
 
     <form action="<?= POST_FORM_ACTION_URI ?>" method="POST" name="ORDER_FORM"
           class="bx-soa-wrapper text-sm mb-4<?= $themeClass ?>" id="bx-soa-order-form" enctype="multipart/form-data">
@@ -366,7 +364,7 @@ if ($request->get('ORDER_ID') <> '') {
         BX.message(<?=CUtil::PhpToJSObject($messages)?>);
     </script>
     <script id="react-order-js" src="/dist/order_page.generated.js"
-            data-contragents='<?=json_encode($contragents);?>'
+            data-contr-agents='<?= json_encode($contrAgent); ?>'
             data-result='<?= json_encode($arResult['JS_DATA']); ?>'
             data-delivery-options='<?= json_encode($arResult['DELIVERY_OPTIONS']) ?>'
             data-locations='<?= json_encode($arResult['LOCATIONS'], JSON_HEX_APOS) ?>'
@@ -394,48 +392,7 @@ if ($request->get('ORDER_ID') <> '') {
             data-show-warnings="true"
     ></script>
     <script>
-        // END Enterego
-        //BX.Sale.OrderAjaxComponent.init({
-        //    result: <?php //=CUtil::PhpToJSObject($arResult['JS_DATA'])?>//,
-        //    deliveryOptions: <?php //=CUtil::PhpToJSObject($arResult['DELIVERY_OPTIONS'])?>//,
-        //    locations: <?php //=CUtil::PhpToJSObject($arResult['LOCATIONS'])?>//,
-        //    savedDeliveryProfiles: <?php //=CUtil::PhpToJSObject($savedDeliveryProfiles)?>//,
-        //    params: <?php //=CUtil::PhpToJSObject($arParams)?>//,
-        //    signedParamsString: '<?php //=CUtil::JSEscape($signedParams)?>//',
-        //    siteID: '<?php //=CUtil::JSEscape($component->getSiteId())?>//',
-        //    ajaxUrl: '<?php //=CUtil::JSEscape($component->getPath() . '/ajax.php')?>//',
-        //    templateFolder: '<?php //=CUtil::JSEscape($templateFolder)?>//',
-        //    propertyValidation: true,
-        //    showWarnings: true,
-        //    pickUpMap: {
-        //        defaultMapPosition: {
-        //            lat: 55.76,
-        //            lon: 37.64,
-        //            zoom: 7
-        //        },
-        //        secureGeoLocation: false,
-        //        geoLocationMaxTime: 5000,
-        //        minToShowNearestBlock: 3,
-        //        nearestPickUpsToShow: 3
-        //    },
-        //    propertyMap: {
-        //        defaultMapPosition: {
-        //            lat: 55.76,
-        //            lon: 37.64,
-        //            zoom: 7
-        //        }
-        //    },
-        //    orderBlockId: 'bx-soa-order',
-        //    authBlockId: 'bx-soa-auth',
-        //    regionBlockId: 'bx-soa-region',
-        //    paySystemBlockId: 'bx-soa-paysystem',
-        //    deliveryBlockId: 'bx-soa-delivery',
-        //    pickUpBlockId: 'bx-soa-pickup',
-        //    propsBlockId: 'bx-soa-properties',
-        //    newBlockId: 'new_block_with_comments',
-        //    totalBlockId: 'bx-soa-total',
-        //    userCheck: 'userCheck'
-        //});
+
         BX.ready(function () {
             var wait = BX.showWait('bx-soa-order-form');  // показываем прелоадер в правом верхнем углу контейнер
             var deferreds = [];
@@ -456,18 +413,6 @@ if ($request->get('ORDER_ID') <> '') {
         // spike: for children of cities we place this prompt
         $city = TypeTable::getList(array('filter' => array('=CODE' => 'CITY'), 'select' => array('ID')))->fetch();
         ?>
-        //BX.saleOrderAjax.init(<?php //=CUtil::PhpToJSObject(array(
-        //    'source' => $component->getPath() . '/get.php',
-        //    'cityTypeId' => intval($city['ID']),
-        //    'messages' => array(
-        //        'otherLocation' => '--- ' . Loc::getMessage('SOA_OTHER_LOCATION'),
-        //        'moreInfoLocation' => '--- ' . Loc::getMessage('SOA_NOT_SELECTED_ALT'), // spike: for children of cities we place this prompt
-        //        'notFoundPrompt' => '<div class="-bx-popup-special-prompt">' . Loc::getMessage('SOA_LOCATION_NOT_FOUND') . '.<br />' . Loc::getMessage('SOA_LOCATION_NOT_FOUND_PROMPT', array(
-        //                '#ANCHOR#' => '<a href="javascript:void(0)" class="-bx-popup-set-mode-add-loc">',
-        //                '#ANCHOR_END#' => '</a>'
-        //            )) . '</div>'
-        //    )
-        //))?>//);
     </script>
     <?php
 
