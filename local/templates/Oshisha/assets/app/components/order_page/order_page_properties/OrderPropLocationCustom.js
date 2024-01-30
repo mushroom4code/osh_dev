@@ -9,6 +9,7 @@ function reducer(state, action) {
             return {
                 ...state,
                 cityName: action.cityName,
+                fullCityPath: '',
                 timeoutId: action.timeoutId,
                 activeLocation: 0,
                 openListLocations: false
@@ -36,13 +37,16 @@ function reducer(state, action) {
                 activeLocation: 0,
                 openListLocations: false,
                 cityName: state.listLocations[state.activeLocation].DISPLAY,
+                fullCityPath: (state.listLocations[state.activeLocation].DISPLAY + ', '
+                    + state.listLocations[state.activeLocation].PATH.map(path => path.DISPLAY).join(', ')),
                 listLocations: []
             }
         }
         case 'update_city_name': {
             return {
                 ...state,
-                cityName: action.cityName
+                cityName: action.cityName,
+                fullCityPath: action.fullCityPath
             }
         }
         case 'update_open_list_locations': {
@@ -70,6 +74,7 @@ function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
 
     const initialState = {
         cityName: currentLocation?.DISPLAY ?? '',
+        fullCityPath: currentLocation ? (currentLocation.DISPLAY + ', ' + currentLocation?.PATH.map(path => path.DISPLAY).join(', ')) : '',
         path: '',
         timeoutId: null,
         openListLocations: false,
@@ -81,7 +86,8 @@ function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
-        dispatch({type: 'update_city_name', cityName: currentLocation?.DISPLAY ?? ''})
+        dispatch({type: 'update_city_name', cityName: currentLocation?.DISPLAY ?? '',
+            fullCityPath: (currentLocation?.DISPLAY + ', ' + currentLocation?.PATH.map(path => path.DISPLAY).join(', '))})
     }, [currentLocation]);
 
     const selectLocation = (index) => {
@@ -126,6 +132,7 @@ function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
     }
 
     const onKeyDownLocation = (e) => {
+        console.log('onkeydownlocation');
         if (e.keyCode === 27) {
             if (state.listLocations.length > 0 || state.responseError.error) {
                 dispatch({type: 'update_open_list_locations', openListLocations: false});
@@ -139,6 +146,7 @@ function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
             if (state.activeLocation === 0) {
                 return
             }
+
 
             dispatch({type: 'set_active_location', activeLocation: state.activeLocation - 1})
         } else if (e.keyCode === 40) {
@@ -171,22 +179,28 @@ function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
             <div className='relative' onBlur={onLostFocus}>
                 <input value={currentLocation?.CODE ?? ''} type={"hidden"} name='ORDEP_PROP_'/>
                 <div className='relative'>
+                    <div className='relative min-h-[40px]'>
+                    <input value={state.fullCityPath} readOnly={true}
+                           autoComplete="nope"
+                           className='form-control absolute z-[5] text-gray-400 min-width-700 w-full text-sm cursor-text
+                     border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg dark:bg-grayButton'/>
                     <input value={state.cityName} onKeyDown={onKeyDownLocation}
                            onChange={onChangeLocationString}
                            autoComplete="nope"
-                           className='form-control min-width-700 w-full text-sm cursor-text
+                           className='form-control absolute z-10 bg-transparent min-width-700 w-full text-sm cursor-text
                      border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg dark:bg-grayButton'/>
                     {
                         state.timeoutId != null
                             ? <Spinner
-                                className={'absolute end-1.5 bottom-2.5 inline w-5 h-5 text-gray-200 animate-spin dark:text-gray-600 fill-red-600'}/>
+                                className={'absolute z-10 end-1.5 bottom-2.5 inline w-5 h-5 text-gray-200 animate-spin dark:text-gray-600 fill-red-600'}/>
                             : null
                     }
+                    </div>
                 </div>
                 <ul className={'absolute z-20 bg-white dark:bg-grayButton w-full p-2.5 mt-[1px] border-grey-line-order' +
                     ' border-2 rounded-lg ' + ` ${state.openListLocations ? '' : 'hidden'}`}>
                     {state.listLocations.map((location, index) => <li tabIndex='0'
-                        className={`${state.activeLocation === index ? 'bg:bg-grey-line-order dark:bg-darkBox' : ''}`
+                            className={`${state.activeLocation === index ? 'bg-grey-line-order dark:bg-darkBox' : ''}`
                             + ' dark:hover:bg-darkBox hover:bg-grey-line-order rounded-lg cursor-pointer pl-1'}
                         key={index} onClick={onSelectLocation(index)} data-index={index}>
                         {location.DISPLAY}, {location?.PATH.map(path => path.DISPLAY).join(', ')}
