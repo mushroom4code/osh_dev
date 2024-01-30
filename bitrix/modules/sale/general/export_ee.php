@@ -272,10 +272,12 @@ class CSaleExportEe extends CSaleExport
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_PRESENTATION") ?>>
                     <?= htmlspecialcharsbx($agent["NAME_ORGANIZATION"]) ?>
                 </<?= CSaleExportEe::getTagName("SALE_EXPORT_PRESENTATION") ?>>
-                <<?= CSaleExportEe::getTagName("SALE_EXPORT_UR_ADDRESS") ?>>
-                    <?= htmlspecialcharsbx($agent["ADDRESS"]) ?>
-                </<?= CSaleExportEe::getTagName("SALE_EXPORT_UR_ADDRESS") ?>>
             </<?= CSaleExportEe::getTagName("SALE_EXPORT_ADDRESS") ?>>
+            <<?= CSaleExportEe::getTagName("SALE_EXPORT_REGISTRATION_ADDRESS") ?>>
+                <<?= CSaleExportEe::getTagName("SALE_EXPORT_PRESENTATION") ?>>
+                    <?= htmlspecialcharsbx($agent["ADDRESS"]) ?>
+                </<?= CSaleExportEe::getTagName("SALE_EXPORT_PRESENTATION") ?>>
+            </<?= CSaleExportEe::getTagName("SALE_EXPORT_REGISTRATION_ADDRESS") ?>>
             <<?= CSaleExportEe::getTagName("SALE_EXPORT_MONEY_ACCOUNTS") ?>>
                 <<?= CSaleExportEe::getTagName("SALE_EXPORT_MONEY_ACCOUNT") ?>>
                     <<?= CSaleExportEe::getTagName("SALE_EXPORT_ACCOUNT_NUMBER") ?>>

@@ -8,6 +8,9 @@ import OshishaDaDataAddress from './OshishaDaDataAddress';
 import OrderProp from '../OrderProp';
 import OshishaInfoDelivery from './OshishaInfoDelivery';
 import OrderPropLocationCustom from "../order_page_properties/OrderPropLocationCustom";
+import OrderPropDate from "../order_page_properties/OrderPropDate";
+import OrderPropSelect from '../order_page_properties/OrderPropSelect';
+import dayjs from 'dayjs';
 
 export const listOshDeliveryProp = ['ADDRESS'
     , 'ADDRESS_PVZ'
@@ -21,8 +24,6 @@ export const listOshDeliveryProp = ['ADDRESS'
     , 'STREET_KLADR'
     , 'LATITUDE'
     , 'LONGITUDE'
-    , 'DATE_DELIVERY'
-    , 'DELIVERYTIME_INTERVAL'
     , 'TYPE_PVZ']
 
 const addressDeliveryPropCode = 'ADDRESS'
@@ -86,7 +87,6 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
             if (response.data.length > 0) {
-                console.log('handle suggest')
                 handleSelectSuggest(response.data[0])
             }
         })
@@ -104,7 +104,6 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
         }
 
         const additionalData = {}
-        console.log(suggest)
         const latitude = suggest?.data?.geo_lat ? Number('' + suggest.data.geo_lat).toPrecision(6) : ''
         const longitude = suggest?.data?.geo_lon ? Number('' + suggest.data.geo_lon).toPrecision(6) : ''
 
@@ -150,7 +149,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
     return (
         <div className='p-2 bg-white dark:bg-darkBox dark:text-white dark:border-grey-line-order'>
             <div className='flex flex-row'>
-                <div className='flex-lg-row flex-md-row flex-wrap'>
+                <div className='flex-lg-row flex-md-row flex-wrap flex-1'>
                     <div className='flex items-center'>
                         <input checked={curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId} type='radio'
                                name='delivery_type' value='Самовывоз'
@@ -169,9 +168,14 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                     </div>
                 </div>
                 {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId
-                    ? <div>
-                        {propDateDelivery !== undefined ? <OrderProp property={propDateDelivery}/> : null}
-                        {propDeliveryInterval !== undefined ? <OrderProp property={propDeliveryInterval}/> : null}
+                    ? <div className='flex flex-row'> 
+                        {propDateDelivery !== undefined 
+                            ? <OrderPropDate property={propDateDelivery} className=' basis-1/2 flex flex-col' minDate={dayjs().add(1, 'day').toDate()}/> 
+                            : null
+                        }
+                        {propDeliveryInterval !== undefined
+                             ? <OrderPropSelect property={propDeliveryInterval} className=' basis-1/2 flex flex-col'/> 
+                             : null}
                     </div>
                     : <div>
 

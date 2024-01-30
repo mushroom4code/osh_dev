@@ -167,7 +167,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                                     $code_region = $result->fetch()['VALUE'];
                                 }
                             } ?>
-                            <span id="city-title" class="dark:text-textDarkLightGray text-white text-13 font-medium"
+                            <span id="city-title" class="dark:text-textDarkLightGray text-white lg:text-13 text-xs font-medium"
                                   data-city="<?= $code_region ?>">
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_current.php") ?>
                                         <?php include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/geolocation/location_select.php") ?>
@@ -178,41 +178,41 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
                         </a>
                     </span>
                     <a href="https://oshisha.net"
-                       class="dark:text-textDarkLightGray text-white text-13 ml-5 mr-2 font-normal dark:hover:text-white
+                       class="dark:text-textDarkLightGray text-white lg:text-13 text-xs ml-5 mr-2 font-normal dark:hover:text-white
              hover:text-hover-red">
                         Розничный сайт</a>
                 </div>
                 <div class="flex flex-row items-center">
                     <div class="hidden md:flex flex-row mr-3">
                         <a href="/about/o-nas/"
-                           class="text-13 text-textDarkLightGray mr-5 dark:font-light font-normal dark:hover:text-white
+                           class="lg:text-13 text-xs text-textDarkLightGray mr-5 dark:font-light font-normal dark:hover:text-white
                             hover:text-hover-red">О нас</a>
                         <?php if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/local/templates/Oshisha/images/presentation.pdf')) { ?>
                             <a href="/local/templates/Oshisha/images/presentation.pdf"
                                download
-                               class="text-13 mr-5 dark:text-textDarkLightGray text-white font-light dark:hover:text-white
+                               class="lg:text-13 text-xs mr-5 dark:text-textDarkLightGray text-white font-light dark:hover:text-white
                                 hover:text-hover-red">Презентация</a>
                         <?php }
                         if ($USER->IsAuthorized()) { ?>
                             <a href="<?= $option->price_list_link; ?>"
-                               class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
+                               class="lg:text-13 text-xs dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
                                dark:hover:text-white hover:text-hover-red">Прайс-лист</a>
                         <?php } else { ?>
                             <a href="/login/"
-                               class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
+                               class="lg:text-13 text-xs dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
                                 dark:hover:text-white hover:text-hover-redd">Прайс-лист</a>
                         <?php } ?>
                         <a href="/about/contacts/"
-                           class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
+                           class="lg:text-13 text-xs dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
                            dark:hover:text-white hover:text-hover-red">Контакты</a>
                         <?php if ($USER->IsAuthorized()) { ?>
                             <a href="/about/delivery/"
-                               class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
+                               class="lg:text-13 text-xs dark:text-textDarkLightGray text-white dark:font-light font-normal mr-5
                                 dark:hover:text-white hover:text-hover-red">Доставка
                                 и оплата</a>
                         <?php } ?>
                         <a href="javascript:void(0)"
-                           class="text-13 dark:text-textDarkLightGray text-white dark:font-light font-normal
+                           class="lg:text-13 text-xs dark:text-textDarkLightGray text-white dark:font-light font-normal
                            callback js__callback dark:hover:text-white hover:text-hover-red">Обратный звонок</a>
                     </div>
                     <div class="w-14 h-7 bg-gray-slider-arrow flex flex-row justify-between items-center px-1
@@ -324,7 +324,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         <?php }
         if (strripos($APPLICATION->GetCurPage(), '/personal/') === false ||
             strripos($APPLICATION->GetCurPage(), '/personal/') !== false && !$mobile->isMobile()): ?>
-            <div class="flex md:relative fixed md:bottom-auto bottom-0 flex-col md:bg-transparent bg-white
+            <div class="flex md:relative fixed md:bottom-auto bottom-0 flex-col md:bg-transparent bg-white px-4
             md:dark:bg-transparent dark:bg-darkBox md:drop-shadow-none md:dark:drop-shadow-none
             drop-shadow-[0_15px_15px_rgb(0,0,0,0.55)] dark:drop-shadow-[0_0_9px_rgb(0,0,0,0.4) justify-center
              md:w-auto w-full 2xl:py-5 md:py-3.5 py-3 items-center flex-wrap">

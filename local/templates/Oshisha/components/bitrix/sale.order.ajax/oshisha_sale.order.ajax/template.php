@@ -10,6 +10,7 @@ use Bitrix\Main\UI\Extension;
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Bitrix\Sale\Location\TypeTable;
 use Bitrix\Sale\PropertyValueCollection;
+use Enterego\contragents\EnteregoContragents;
 
 /**
  * @var array $arParams
@@ -258,13 +259,10 @@ if ($request->get('ORDER_ID') <> '') {
     $hideDelivery = empty($arResult['DELIVERY']);
 
     if ($USER->IsAuthorized()) {
-//        $user_object = new EnteregoUserExchange();
-//        $user_object->USER_ID = $USER->GetID();
-//        $user_object->GetCompanyForUser();
-//        $user_object->GetActiveContrAgentForUserForOrder();
+        $contragents = EnteregoContragents::getContragentsByUserId($USER->GetID());
         $savedDeliveryProfiles = \CommonPVZ\SavedDeliveryProfiles::getAll($USER->GetID());
     } else {
-        $savedDeliveryProfiles = false;
+        $contragents = [];
     }
     ?>
 
@@ -281,7 +279,7 @@ if ($request->get('ORDER_ID') <> '') {
         <input type="hidden" name="location_type" value="code">
         <input type="hidden" name="BUYER_STORE" id="BUYER_STORE" value="<?= $arResult['BUYER_STORE'] ?>">
         <!-- GENERAL ORDER BLOCK -->
-        <div id="bx-soa-order" class="container lg:grid-cols-3 lg:grid row"></div>
+        <div id="bx-soa-order" class="container lg:grid-cols-3 lg:grid row md:p-0 sm:p-3"></div>
     </form>
 
     <div id="bx-soa-saved-files" style="display:none"></div>
@@ -368,6 +366,7 @@ if ($request->get('ORDER_ID') <> '') {
         BX.message(<?=CUtil::PhpToJSObject($messages)?>);
     </script>
     <script id="react-order-js" src="/dist/order_page.generated.js"
+            data-contragents='<?=json_encode($contragents);?>'
             data-result='<?= json_encode($arResult['JS_DATA']); ?>'
             data-delivery-options='<?= json_encode($arResult['DELIVERY_OPTIONS']) ?>'
             data-locations='<?= json_encode($arResult['LOCATIONS'], JSON_HEX_APOS) ?>'
@@ -395,41 +394,6 @@ if ($request->get('ORDER_ID') <> '') {
             data-show-warnings="true"
     ></script>
     <script>
-        <?php if ($USER->IsAuthorized()) {?>
-        let bool_contrs = $('input').is('#connection_company_contragent');
-        if (bool_contrs) {
-            let contragent_json = $('#connection_company_contragent').val();
-            if (contragent_json !== '') {
-                let contragent_array = JSON.parse(contragent_json);
-                let document_container = $('#company_user_order');
-
-                function showContrsAccess(that) {
-                    let id = $(that).val();
-                    let box_contrs = $('#contragent_user');
-                    let new_array = [];
-                    let bool;
-                    $.each(contragent_array, function (key, value) {
-                        $.each(value.COMPANY, function (key_company) {
-                            bool = key_company === id ? true : false;
-                        });
-                        if (bool) {
-                            new_array.push(value);
-                        }
-                        $(box_contrs).html('');
-                        $.each(new_array, function (keys, val) {
-                            $(box_contrs).append('<option value="' + val.CONTR_AGENT_ID + '">' + val.NAME_CONT + '</option>')
-                        });
-                    });
-                }
-
-                showContrsAccess(document_container);
-
-                $(document_container).on('change', function () {
-                    showContrsAccess(this)
-                });
-            }
-        }
-        <?php }?>
         // END Enterego
         //BX.Sale.OrderAjaxComponent.init({
         //    result: <?php //=CUtil::PhpToJSObject($arResult['JS_DATA'])?>//,

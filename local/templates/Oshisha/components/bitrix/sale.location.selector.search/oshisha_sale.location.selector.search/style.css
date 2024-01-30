@@ -18,8 +18,16 @@
 }
 
 .bx-sls .bx-ui-sls-container {
+	margin-top: 2px !important;
 	overflow: hidden;
 	min-height:25px;
+}
+
+@media(max-width:768px)
+{
+	.bx-sls .bx-ui-sls-container {
+		margin-top: 5px !important;
+	}
 }
 
 .bx-sls .bx-ui-sls-pane {
@@ -93,8 +101,15 @@
 	height: 14px;
 	left: 10px;
 	position: absolute;
-	top: 11px;
+	top: 14px;
 	width: 14px;
+}
+
+@media(max-width:768px)
+{
+	.bx-sls .dropdown-icon {
+		top: 17px;
+	}
 }
 
 .bx-sls .quick-locations{
@@ -133,13 +148,21 @@
 	height: 30px;
 	cursor: pointer;
 	cursor: hand;
-	margin-top: 2px;
+	margin-top: 4px;
 
 	position: absolute;
 	top: 2px;
 	right: 0px;
 	display: block;
 }
+
+@media(max-width:768px)
+{
+	.bx-sls .bx-ui-sls-clear{
+		margin-top: 7px;
+	}
+}
+
 .bx-sls .bx-ui-sls-clear:hover{
 	background-position: 6px -3418px;
 }

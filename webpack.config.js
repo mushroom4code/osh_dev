@@ -22,7 +22,11 @@ module.exports = {
                         ["@babel/preset-react", {"runtime": "automatic"}]
                     ]    // используемые плагины
                 }
-            }
+            },
+            {
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader"],
+            },
         ]
     }
 };

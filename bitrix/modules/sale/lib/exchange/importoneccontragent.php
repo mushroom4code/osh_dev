@@ -5,6 +5,7 @@ namespace Bitrix\Sale\Exchange;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
+use Bitrix\Main\Type\DateTime;
 use Bitrix\Sale\Exchange\Entity\UserImportBase;
 use Bitrix\Sale\Result;
 use COption;
@@ -25,7 +26,9 @@ final class ImportOneCContragent extends ImportOneCBase
     {
         $result = new Result();
         $contragent = new EnteregoContragentExchange();
-        $dateInsertUpdate = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS');
+        $date = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS')
+            ?? ConvertTimeStamp(false, "FULL");
+        $dateInsertUpdate = DateTime::createFromUserTime($date);
 
         if (!empty($items)) {
             $contragent->STATUS_CONTRAGENT = $items['СтатусКонтрагента'] == 'true' ? 1 : 0;

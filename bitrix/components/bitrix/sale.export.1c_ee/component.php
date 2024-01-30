@@ -1,5 +1,6 @@
 <?
 
+use Bitrix\Main\Type\DateTime;
 use Bitrix\Sale\Exchange\EntCSaleOrderLoader;
 use Bitrix\Sale\Exchange\EnteregoUser;
 use Bitrix\Sale\Exchange\ImportOneCContragent;
@@ -310,7 +311,7 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
         }
     } elseif ($_GET["mode"] == "contragents_success") {
         /** Enterego contragents success export */
-        $time = !empty($_SESSION['START_DATETIME_EXPORT']) ? $_SESSION['START_DATETIME_EXPORT'] : date(DATE_ATOM);
+        $time = !empty($_SESSION['START_DATETIME_EXPORT']) ? $_SESSION['START_DATETIME_EXPORT'] : ConvertTimeStamp(false, "FULL");
         COption::SetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS', $time);
         $_SESSION['START_STEP_CONTRAGENT'] = '';
         $_SESSION['START_DATETIME_EXPORT'] = '';
@@ -325,7 +326,7 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
 
         // GET CONTRAGENT && USERS
         if ($_SESSION['START_STEP_CONTRAGENT'] === '1') {
-            $stepContrDate = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE');
+            $stepContrDate = DateTime::createFromUserTime(COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_DATE'));
             $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_CONTRAGENTS_STEP_ID');
             $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $stepContrID);
             if (!empty($arData['CONTRAGENTS'])) {
@@ -345,7 +346,7 @@ if ($_GET["mode"] == "checkauth" && $USER->IsAuthorized()) {
         }
 // TODO - проверить
         if ($_SESSION['START_STEP_CONTRAGENT'] === '2') {
-            $stepContrDate = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE');
+            $stepContrDate = DateTime::createFromUserTime(COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_DATE'));
             $stepContrID = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'IMPORT_USER_STEP_ID');
             $arData = EnteregoExchange::GetInfoForXML($stepContrDate, $stepContrID, 'users');
             if (!empty($arData['USERS'])) {

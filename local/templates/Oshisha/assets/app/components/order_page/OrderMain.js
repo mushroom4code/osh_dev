@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import OrderUserTypeCheck from "./OrderUserTypeCheck";
+import OrderContragents from "./OrderContragents";
 import OrderUserProps from "./OrderUserProps";
 import OrderDelivery from "./OrderDelivery";
 import OrderPaySystems from "./OrderPaySystems";
@@ -14,13 +15,13 @@ OrderMain.propTypes = {};
 export const ajaxDeliveryUrl = '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php';
 
 function OrderMain({
-                       result, locations, params, options, OrderGeneralUserPropsBlockId, ajaxUrl
+                       result, locations, params, options, contragents, OrderGeneralUserPropsBlockId, ajaxUrl
                    }) {
-                 
-                    
+
+
     useEffect(()=>{
         // ymap.init(()=>{console.log('ymap')})
-    }, [])                    
+    }, [])
     const renderDependingOnDeliveryToPaysystem = () => {
         return (
             <>
@@ -71,7 +72,8 @@ function OrderMain({
     return (
         <>
             <OrderContextProvider result={result} params={params} options={options} locations={locations}
-                                  OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId} ajaxUrl={ajaxUrl}>
+                                  contragents={contragents} OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId}
+                                  ajaxUrl={ajaxUrl}>
                 <div id="bx-soa-main-notifications" className="col-span-2">
                     <div className="alert alert-danger text-light-red dark:text-whitep p-4" style={{display: "none"}}></div>
                     <div datatype="informer" style={{display: "none"}}></div>
@@ -105,46 +107,7 @@ function OrderMain({
                                      id="userCheck">
                                     <OrderUserTypeCheck/>
                                 </div>
-                                {/*<?php if ($USER->IsAuthorized() && !empty($user_object->company_user) && !empty($user_object->contragents_user)) { ?>*/}
-                                {/*<input value='<?= json_encode($user_object->contragents_user) ?>' type="hidden"*/}
-                                {/*       id="connection_company_contragent"/>*/}
-                                {/*<div className="width_100 user_select" id="user_select">*/}
-                                {/*    <label for="soa-property-9" className="bx-soa-custom-label font_weight_600">*/}
-                                {/*        Выбор компании</label>*/}
-                                {/*    <select className="company_user_order mb-3" id="company_user_order"*/}
-                                {/*            style="display: none;">*/}
-                                {/*        <?php if (!empty($user_object->company_user['ADMIN'])) {*/}
-                                {/*            foreach ($user_object->company_user['ADMIN'] as $company) {*/}
-                                {/*                if ($company['ARCHIVED'] === '0') { ?>*/}
-                                {/*        <option value="<?= $company['COMPANY_ID']; ?>">*/}
-                                {/*            <?= $company['NAME_COMP']; ?>*/}
-                                {/*        </option>*/}
-                                {/*        <?php }*/}
-                                {/*    }*/}
-                                {/*}*/}
-                                {/*if (!empty($user_object->company_user['USER'])) {*/}
-                                {/*    foreach ($user_object->company_user['USER'] as $company) {*/}
-                                {/*        if ($company['ARCHIVED'] === '0') { ?>*/}
-                                {/*        <option value="<?= $company['COMPANY_ID']; ?>">*/}
-                                {/*            <?= $company['NAME_COMP']; ?>*/}
-                                {/*        </option>*/}
-                                {/*        <?php }*/}
-                                {/*    }*/}
-                                {/*} ?>*/}
-                                {/*    </select>*/}
-                                {/*    <label for="soa-property-10" className="bx-soa-custom-label font_weight_600">*/}
-                                {/*        Выбор контрагента</label>*/}
-                                {/*    <select className="contragent_user mb-3" id="contragent_user" style="display: none;">*/}
-                                {/*        <?php foreach ($user_object->contragents_user as $key => $contragent) {*/}
-                                {/*            if ($contragent['ARCHIVED'] === '0' && $contragent['CONTR_AGENT_ACTIVE'] == '1') { ?>*/}
-                                {/*        <option value="<?= $contragent['CONTR_AGENT_ID']; ?>">*/}
-                                {/*            <?= $contragent['NAME_CONT']; ?>*/}
-                                {/*        </option>*/}
-                                {/*        <?php }*/}
-                                {/*    } ?>*/}
-                                {/*    </select>*/}
-                                {/*</div>*/}
-                                {/*<?php } ?>*/}
+
                             </div>
                             <div id="user-properties-block" className="bx-soa-section-content">
                                 <div className="alert alert-danger text-light-red dark:text-white p-4"

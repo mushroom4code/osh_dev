@@ -2,6 +2,7 @@
 module.exports = {
     content: [
         "./local/templates/Oshisha/**/*.{js,php}",
+        "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js",
         "./about/**/*.php",
         "./local/templates/Oshisha/**/.default/*.{js,php}",
         "./local/components/bitrix/**/.default/*.{js,php}",
