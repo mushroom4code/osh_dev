@@ -86,6 +86,10 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
+        onChangeDaDataString(null, true);
+    }, [currentLocation]);
+
+    useEffect(() => {
         dispatch({type: 'update_address', address})
     }, [address]);
     const selectSuggest = (index) => {
@@ -116,9 +120,16 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
         }
     }
 
-    const onChangeDaDataString = (e) => {
-
-        const curAddress = e.target.value;
+    const onChangeDaDataString = (e, isUseEffect = false) => {
+        var curAddress;
+        if (!isUseEffect) {
+            curAddress = e.target.value;
+        } else {
+            if (currentLocation === null) {
+                return;
+            }
+            curAddress = currentLocation.DISPLAY;
+        }
 
         clearTimeout(state.timeoutId);
         const timeoutId = setTimeout(() => {
@@ -129,7 +140,21 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
             }
 
             if (currentLocation.DISPLAY !== undefined) {
-                data.locations = [{city: currentLocation.DISPLAY}]
+                data.locations = [{}];
+                if (currentLocation.TYPE_ID === '5') {
+                    data.locations[0].city = currentLocation.DISPLAY;
+                } else if (currentLocation.TYPE_ID === '6') {
+                    data.locations[0].settlement = currentLocation.DISPLAY.replace('деревня', '').replace('поселок')
+                        .replace('хутор');
+                }
+                currentLocation.PATH.every((location) => {
+                    if(location.TYPE_ID === '3') {
+                        data.locations[0].region = location.DISPLAY.replace('область', '').replace('край', '')
+                            .replace('Республика', '');
+                        return false;
+                    }
+                    return true;
+                });
             }
             axios.post(
                 ajaxDeliveryUrl,
@@ -137,6 +162,11 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
                 {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
             ).then(response => {
                 dispatch({type: 'end_loader', listSuggest: response.data})
+
+                if (isUseEffect) {
+                    dispatch({type: 'set_suggest', address: response.data[0].value})
+                    handleSelectSuggest(response.data[0]);
+                }
             })
         }, 800);
 

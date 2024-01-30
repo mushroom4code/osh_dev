@@ -81,12 +81,9 @@ BX.OrderPageComponents = {
                     }, this)
                 }
             });
-            BX.addClass(this.loadingScreen.overlay.element, 'bx-step-opacity');
         }
 
-        this.loadingScreen.overlay.element.style.opacity = '0';
         this.loadingScreen.show();
-        this.loadingScreen.overlay.element.style.opacity = '0.6';
 
         return true;
     },
