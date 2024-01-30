@@ -48,10 +48,7 @@ $(document).ready(function () {
     // SELECT
     let select = $('select'),
         select_sort_basket = ('.select_sort_basket'),
-        bool_select_orders = $(select).is('#select_orders'),
-        bool_select_order_return = $(select).is('#select_comments'),
-        bool_select_contragent_user = $(select).is('#contragent_user'),
-        bool_select_company_user_order = $(select).is('#company_user_order');
+        bool_select_orders = $(select).is('#select_orders');
 
     var storageType = localStorage, consentPropertyName = 'cookie_consent';
     var saveToStorage = () => storageType.setItem(consentPropertyName, true);
@@ -120,15 +117,7 @@ $(document).ready(function () {
     if (bool_select_orders) {
         $('#select_orders').select2();
     }
-    if (bool_select_order_return) {
-        $('#select_comments').select2();
-    }
-    if (bool_select_contragent_user) {
-        $('#contragent_user').select2();
-    }
-    if (bool_select_company_user_order) {
-        $('#company_user_order').select2();
-    }
+
     let boot_datepicker = $(inputItem).is('.datepicker');
 
     if ($(select).is('.select_sort_basket')) {

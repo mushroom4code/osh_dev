@@ -13,12 +13,6 @@ if (contragentForm) {
     createRoot(contragentForm).render(<StrictMode><ContragentList/></StrictMode>);
 }
 
-const contragentFormRegister = document.getElementById('createContragentRegister');
-
-if (contragentFormRegister) {
-    createRoot(contragentFormRegister).render(<StrictMode><ContragentList typeForms='register'/></StrictMode>);
-}
-
 /**
  * CATALOG POPUP
  * @type {Root}
