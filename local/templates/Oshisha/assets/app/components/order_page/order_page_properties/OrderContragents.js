@@ -10,14 +10,13 @@ function OrderContragents({property}) {
     };
 
     return (
-        <div id="contragents-block" className="flex md:flex-nowrap flex-wrap lg:gap-[30px] col-span-2
-            md:gap-[30px] gap-3.5 pr-2 pb-[23px]">
-            <div className="lg:basis-[70%] md:basis-[70%] basis-[100%] flex flex-col justify-end">
+        <div id="contragents-block" className="flex md:flex-nowrap flex-wrap w-full pb-6">
+            <div className="md:w-3/4 w-full flex flex-col justify-end">
                 <label htmlFor="contragent-select" className="bx-soa-custom-label mb-2 relative text-textLight
                     dark:text-textDarkLightGray font-semibold dark:font-light text-sm">{property['NAME']}</label>
-                <div className="soa-property-container">
-                    <select className="w-full rounded-lg !border-grey-line-order !ring-0
-                                dark:!border-darkBox dark:!bg-darkBox lg:h-[45px] md:h-[45px] h-[50px]"
+                <div className="soa-property-container md:pr-3 pr-0">
+                    <select className="w-full rounded-lg !border-grey-line-order !ring-0 dark:!border-darkBox
+                     dark:!bg-darkBox p-3 md:mb-0 mb-3"
                             name={'ORDER_PROP_' + property['ID']}
                             aria-placeholder={property['DESCRIPTION']}
                             data-name={property['CODE']} id="contragent-select"
@@ -34,15 +33,15 @@ function OrderContragents({property}) {
                     </select>
                 </div>
             </div>
-            <div className="lg:basis-[30%] md:basis-[30%] basis-[100%] bg-textDark rounded-[10px]
+            <div className="md:w-1/4 w-full bg-textDark rounded-lg
                 dark:border-darkBox dark:bg-darkBox p-3">
                 <div className="mb-2 flex flex-col">
-                    <span className="text-xs font-normal mb-1">ИНН:</span>
-                    <span className="text-xs font-semibold dark:font-normal">{selectedContragent.INN}</span>
+                    <span className="lg:text-xs text-10 dark:font-light font-normal mb-1">ИНН:</span>
+                    <span className="lg:text-xs text-10 font-semibold dark:font-medium">{selectedContragent.INN}</span>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-xs font-normal mb-1">Наименование организации:</span>
-                    <span className="text-xs font-semibold dark:font-normal">
+                    <span className="lg:text-xs text-10 dark:font-light font-normal mb-1">Наименование организации:</span>
+                    <span className="lg:text-xs text-10 font-semibold dark:font-medium">
                             {selectedContragent.NAME_ORGANIZATION}
                     </span>
                 </div>

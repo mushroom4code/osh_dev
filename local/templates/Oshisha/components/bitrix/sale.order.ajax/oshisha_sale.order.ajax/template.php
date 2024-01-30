@@ -277,7 +277,7 @@ if ($request->get('ORDER_ID') <> '') {
         <input type="hidden" name="location_type" value="code">
         <input type="hidden" name="BUYER_STORE" id="BUYER_STORE" value="<?= $arResult['BUYER_STORE'] ?>">
         <!-- GENERAL ORDER BLOCK -->
-        <div id="bx-soa-order" class="container lg:grid-cols-3 lg:grid row md:p-0 sm:p-3"></div>
+        <div id="bx-soa-order" class="container lg:grid-cols-3 lg:grid row md:p-0 p-4"></div>
     </form>
 
     <div id="bx-soa-saved-files" style="display:none"></div>
