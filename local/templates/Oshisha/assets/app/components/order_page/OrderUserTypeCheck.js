@@ -18,7 +18,7 @@ function getPersonTypeSortedArray(objPersonType) {
 
 OrderUserTypeCheck.propTypes = {};
 function OrderUserTypeCheck() {
-    const {result, params, afterSendReactRequest}  = useContext(OrderContext);
+    const {result, params, sendRequest}  = useContext(OrderContext);
     var regionBlockNotEmpty, propertyCollection = new BX.Sale.PropertyCollection(BX.merge({publicMode: true}, result.ORDER_PROP));
 
     const mounted = useRef();
@@ -30,8 +30,7 @@ function OrderUserTypeCheck() {
 
     const onChangeHandler = () => {
         if(mounted.current) {
-            BX.OrderPageComponents.startLoader();
-            BX.bind(BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', [], afterSendReactRequest), BX.Sale.OrderAjaxComponent);
+            sendRequest('refreshOrderAjax', []);
         }
     }
 

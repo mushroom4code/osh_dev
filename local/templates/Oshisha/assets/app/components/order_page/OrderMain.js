@@ -12,164 +12,70 @@ import {OrderContextProvider} from "./Context/OrderContext";
 
 OrderMain.propTypes = {};
 
+export const ajaxDeliveryUrl = '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php';
+
 function OrderMain({
-                       result, locations, params, options, contragents, OrderGeneralUserPropsBlockId
+                       result, locations, params, options, contragents, OrderGeneralUserPropsBlockId, ajaxUrl
                    }) {
 
+
+    useEffect(()=>{
+        // ymap.init(()=>{console.log('ymap')})
+    }, [])
     const renderDependingOnDeliveryToPaysystem = () => {
-        if (params['DELIVERY_TO_PAYSYSTEM'] === 'p2d') {
-            return (
-                <>
-                    {/*	PAY SYSTEMS BLOCK*/}
-                    <div id="bx-soa-paysystem" data-visited="false" className="bx-soa-section mb-4  bx-active">
-                        <div
-                            className="bx-soa-section-title-container overflow-hidden d-flex justify-content-between
-                            align-items-center flex-nowrap">
-                            <div className="bx-soa-section-title" data-entity="section-title">
-                                {params['MESS_PAYMENT_BLOCK_NAME']}
+        return (
+            <>
+                <script type="text/template" id="osh-pickup-template">
+                    <div className="row">
+                        <div className="col-lg-6 col-12">
+                            <div id="pickup-address">
+                                <span></span> <span></span>
+                                <address></address>
+                            </div>
+                            <div id="pickup-station">
+                                <div className="pickup-station-img"></div>
+                            </div>
+                            <div id="pickup-time">
+                                <div className="pickup-time-img"></div>
+                            </div>
+                            <div id="pickup-info">
+                                <div className="pickup-info-img"></div>
                             </div>
                         </div>
-                        <div className="bx-soa-section-content"></div>
-                    </div>
-                    {/*DELIVERY BLOCK*/}
-                    <div id="bx-soa-delivery" data-visited="true"
-                         className="bx-soa-section mb-4 bx-active"
-                         style={!result['DELIVERY'] ? {display: "none"} : {display: "block"}}>
-                        <div
-                            className="bx-soa-section-title-container mt-8 mb-4 overflow-hidden d-flex
-                             justify-content-between align-items-center flex-nowrap">
-                            <div className="bx-soa-section-title text-[24px] font-medium dark:font-normal"
-                                 data-entity="section-title">
-                                {params['MESS_DELIVERY_BLOCK_NAME']}
-                            </div>
+                        <div className="col-lg-6 col-12">
+                            <div id="map-pick-up"></div>
                         </div>
-                        <div className="bx-soa-section-content"></div>
-                    </div>
-                    <div id="bx-soa-region" data-visited="false" className="bx-soa-section mb-4 d-none">
-                        <div
-                            className="bx-soa-section-title-container overflow-hidden d-flex justify-content-between
-                             align-items-center flex-nowrap">
-                            <div className="bx-soa-section-title" data-entity="section-title">
-                                {params['MESS_REGION_BLOCK_NAME']}
-                            </div>
-                        </div>
-                        <div className="bx-soa-section-content"></div>
-                    </div>
-                    {/*PICKUP BLOCK*/}
-                    <div id="bx-soa-pickup" data-visited="false" className="bx-soa-section mb-4 "
-                         style={{display: "none"}}>
-                        <div
-                            className="bx-soa-section-title-container overflow-hidden d-flex justify-content-between
-                             align-items-center flex-nowrap">
-                            <div className="bx-soa-section-title" data-entity="section-title">
-                            </div>
-                        </div>
-                        <div className="bx-soa-section-content"></div>
-                    </div>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    {/*DELIVERY BLOCK*/}
-                    <div id="bx-soa-delivery" data-visited="false"
-                         className="bx-soa-section mb-4  bx-active"
-                         style={!result['DELIVERY'] ? {display: "none"} : {display: "block"}}>
-                        <div
-                            className="bx-soa-section-title-container mt-2 mb-4 overflow-hidden d-flex
-                            justify-content-between align-items-center flex-nowrap">
-                            <div className="bx-soa-section-title text-[24px] font-medium dark:font-normal my-4"
-                                 data-entity="section-title">
-                                {params['MESS_DELIVERY_BLOCK_NAME']}
-                            </div>
-                        </div>
-                        <div className="box_with_delivery_type">
-                            <div className="bx-soa-section-content" id="delivery-block">
-                                <OrderDelivery/>
-                            </div>
-                            <div id="bx-soa-region" data-visited="false"
-                                 className="bx-soa-section mb-4 hidden">
-                                <div
-                                    className="bx-soa-section-title-container d-flex justify-content-between
-                                    align-items-center flex-nowrap">
-                                    <div className="bx-soa-section-title" data-entity="section-title">
-                                        {params['MESS_REGION_BLOCK_NAME']}
-                                    </div>
-                                </div>
-                                <div className="bx-soa-section-content"></div>
-                            </div>
+                        <div className="pickup-pass-data">
+                            Данные для пропуска
                         </div>
                     </div>
+                </script>
 
-                    <script type="text/template" id="osh-pickup-template">
-                        <div className="row">
-                            <div className="col-lg-6 col-12">
-                                <div id="pickup-address">
-                                    <span></span> <span></span>
-                                    <address></address>
-                                </div>
-                                <div id="pickup-station">
-                                    <div className="pickup-station-img"></div>
-                                </div>
-                                <div id="pickup-time">
-                                    <div className="pickup-time-img"></div>
-                                </div>
-                                <div id="pickup-info">
-                                    <div className="pickup-info-img"></div>
-                                </div>
-                            </div>
-                            <div className="col-lg-6 col-12">
-                                <div id="map-pick-up"></div>
-                            </div>
-                            <div className="pickup-pass-data">
-                                Данные для пропуска
-                            </div>
+                {/*PICKUP BLOCK*/}
+                <div id="bx-soa-pickup" data-visited="false" className="bx-soa-section mb-4 "
+                     style={{display: "none"}}>
+                    <div
+                        className="bx-soa-section-title-container overflow-hidden d-flex justify-content-between
+                            align-items-center flex-nowrap">
+                        <div className="bx-soa-section-title" data-entity="section-title">
                         </div>
-                    </script>
+                    </div>
+                    <div className="bx-soa-section-content"></div>
+                </div>
 
 
-                    {/*PICKUP BLOCK*/}
-                    <div id="bx-soa-pickup" data-visited="false" className="bx-soa-section mb-4 "
-                         style={{display: "none"}}>
-                        <div
-                            className="bx-soa-section-title-container overflow-hidden d-flex justify-content-between
-                            align-items-center flex-nowrap">
-                            <div className="bx-soa-section-title" data-entity="section-title">
-                            </div>
-                        </div>
-                        <div className="bx-soa-section-content"></div>
-                    </div>
-                    {/*PAY SYSTEMS BLOCK*/}
-                    <div id="bx-soa-paysystem" data-visited="false" className="bx-soa-section mb-4  bx-active">
-                        <div
-                            className="bx-soa-section-title-container overflow-hidden flex justify-content-between
-                            align-items-center flex-nowrap">
-                            <div
-                                className="bx-soa-section-title text-2xl font-medium dark:font-normal my-4 pt-[3px]
-                                font-weight"
-                                data-entity="section-title">
-                                {params['MESS_PAYMENT_BLOCK_NAME']}
-                            </div>
-                        </div>
-                        <div className="bx-soa-section-content py-2.5" id="paysystems_block">
-                            <OrderPaySystems/>
-                        </div>
-                    </div>
-                    <div id="user-agreements" className="p-4"><OrderUserAgreements/></div>
-                    <div className="new_block_with_comments mt-0 mb-8" id="new_block_with_comments">
-                        <div id="new_block_with_comment_box"><OrderComments/></div>
-                    </div>
-                </>
-            );
-        }
+            </>
+        );
+
     }
 
     return (
         <>
             <OrderContextProvider result={result} params={params} options={options} locations={locations}
-                                  contragents={contragents} OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId}>
+                                  contragents={contragents} OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId}
+                                  ajaxUrl={ajaxUrl}>
                 <div id="bx-soa-main-notifications" className="col-span-2">
-                    <div className="alert alert-danger" style={{display: "none"}}></div>
+                    <div className="alert alert-danger text-light-red dark:text-whitep p-4" style={{display: "none"}}></div>
                     <div datatype="informer" style={{display: "none"}}></div>
                 </div>
                 <div className="col-span-2 col-lg-8 col-md-7">
@@ -204,6 +110,8 @@ function OrderMain({
 
                             </div>
                             <div id="user-properties-block" className="bx-soa-section-content">
+                                <div className="alert alert-danger text-light-red dark:text-white p-4"
+                                     style={{display: "none"}}></div>
                                 <OrderUserProps/>
                             </div>
                         </div>
@@ -233,7 +141,63 @@ function OrderMain({
                             <div className="bx-soa-section-content container-fluid"></div>
                         </div>
 
+                        {/*DELIVERY BLOCK*/}
+                        <div id="bx-soa-delivery" data-visited="false"
+                             className="bx-soa-section mb-4  bx-active"
+                             style={!result['DELIVERY'] ? {display: "none"} : {display: "block"}}>
+                            <div
+                                className="bx-soa-section-title-container mt-2 mb-4 overflow-hidden d-flex
+                            justify-content-between align-items-center flex-nowrap">
+                                <div className="bx-soa-section-title text-[24px] font-medium dark:font-normal my-4"
+                                     data-entity="section-title">
+                                    {params['MESS_DELIVERY_BLOCK_NAME']}
+                                </div>
+                            </div>
+                            <div className="box_with_delivery_type">
+                                <div className="bx-soa-section-content" id="delivery-block">
+                                    <div className="alert alert-danger text-light-red dark:text-white p-4"
+                                         style={{display: "none"}}></div>
+                                    <OrderDelivery/>
+                                </div>
+                                <div id="bx-soa-region" data-visited="false"
+                                     className="bx-soa-section mb-4 hidden">
+                                    <div
+                                        className="bx-soa-section-title-container d-flex justify-content-between
+                                    align-items-center flex-nowrap">
+                                        <div className="bx-soa-section-title" data-entity="section-title">
+                                            {params['MESS_REGION_BLOCK_NAME']}
+                                        </div>
+                                    </div>
+                                    <div className="bx-soa-section-content"></div>
+                                </div>
+                            </div>
+                        </div>
+
                         {renderDependingOnDeliveryToPaysystem()}
+
+                        {/*PAY SYSTEMS BLOCK*/}
+                        <div id="bx-soa-paysystem" data-visited="false" className="bx-soa-section mb-4  bx-active">
+                            <div
+                                className="bx-soa-section-title-container overflow-hidden flex justify-content-between
+                            align-items-center flex-nowrap">
+                                <div
+                                    className="bx-soa-section-title text-2xl font-medium dark:font-normal my-4 pt-[3px]
+                                font-weight"
+                                    data-entity="section-title">
+                                    {params['MESS_PAYMENT_BLOCK_NAME']}
+                                </div>
+                            </div>
+                            <div className="bx-soa-section-content py-2.5" id="paysystems_block">
+                                <div className="alert alert-danger text-light-red dark:text-white p-4"
+                                     style={{display: "none"}}></div>
+                                <OrderPaySystems/>
+                            </div>
+                        </div>
+
+                        <div id="user-agreements" className="p-4"><OrderUserAgreements/></div>
+                        <div className="new_block_with_comments mt-0 mb-8" id="new_block_with_comments">
+                            <div id="new_block_with_comment_box"><OrderComments/></div>
+                        </div>
 
                         {/*ORDER SAVE BLOCK*/}
                         <div id="bx-soa-orderSave">

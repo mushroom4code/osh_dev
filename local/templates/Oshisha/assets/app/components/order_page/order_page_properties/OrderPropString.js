@@ -1,21 +1,32 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
-function OrderPropString({property, disabled}) {
-    const [propertySettings, setPropertySettings] = useState(property.getSettings());
+function OrderPropString({ property, disabled }) {
+
+    const [value, setValue] = useState(property?.VALUE[0] ?? '')
+
+    useEffect(()=>{
+        setValue(property?.VALUE[0])
+    }, [property?.VALUE[0] ?? ''])
+
+    const onChangeValue = (e) => {
+        setValue(e.target.value)
+    }
 
     return (<div className="soa-property-container">
         <input type="text" className="w-full text-sm cursor-text border-grey-line-order ring:grey-line-order dark:border-darkBox rounded-lg
                dark:bg-darkBox"
-               size={propertySettings['SIZE']}
-               name={'ORDER_PROP_'+propertySettings['ID']} placeholder={propertySettings['DESCRIPTION']}
-               data-name={propertySettings['CODE']} autoComplete={propertySettings['IS_EMAIL'] === 'Y'
-                   ? 'email'
-                   : (propertySettings['IS_PAYER'] === 'Y'
-                       ? 'name'
-                       : (propertySettings['IS_PHONE'] === 'Y'
-                           ? 'tel'
-                           : null))}
-               defaultValue={propertySettings['VALUE'] ? propertySettings['VALUE'][0] : ''}/>
+            size={property.SIZE}
+            name={'ORDER_PROP_' + property.ID} placeholder={property.DESCRIPTION}
+            data-name={property.CODE} autoComplete={property.IS_EMAIL === 'Y'
+                ? 'email'
+                : (property.IS_PAYER === 'Y'
+                    ? 'name'
+                    : (property.IS_PHONE === 'Y'
+                        ? 'tel'
+                        : null))}
+            value={value}
+            onChange={onChangeValue}
+        />
     </div>);
 }
 

@@ -149,9 +149,10 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             <?= Loc::getMessage('SBB_BASKET_ITEM_MAX_COUNT_EXCEEDED', array('#PATH#' => $arParams['PATH_TO_BASKET'])) ?>
         </div>
     <?php } ?>
-    <div id="basket-root" class="bx-basket bx-<?= $arParams['TEMPLATE_THEME'] ?> bx-step-opacity flex flex-row flew-wrap"
+    <div id="basket-root"
+         class="bx-basket bx-<?= $arParams['TEMPLATE_THEME'] ?> bx-step-opacity flex lg:flex-row flex-col"
          style="opacity: 0;">
-        <div class="md:w-2/3 w-full">
+        <div class="lg:w-2/3 w-full">
             <div class="row">
                 <div class="alert alert-warning alert-dismissable" id="basket-warning" style="display: none;">
                     <span class="close" data-entity="basket-items-warning-notification-close">&times;</span>
@@ -161,36 +162,68 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                     </div>
                 </div>
             </div>
-            <div class="mb-3 basket-items-list-wrapper basket-items-list-wrapper-height-fixed basket-items-list-wrapper-light<?= $displayModeClass ?>"
+            <div class="mb-3 basket-items-list-wrapper basket-items-list-wrapper-height-fixed lg:pr-7 p-3 basket-items-list-wrapper-light<?= $displayModeClass ?>"
                  id="basket-items-list-wrapper">
                 <div class="basket-items-list-header mb-4" data-entity="basket-items-list-header">
-                    <div class="d-flex flex-row justify-content-between align-items-center basket-items-search-field"
+                    <div class="flex md:flex-row flex-col md:items-center basket-items-search-field"
                          data-entity="basket-filter">
-                        <input type="text" class="form-control text-sm basket_input search_input dark:bg-gray-box-dark
-                        bg-white  border border-textDarkLightGray dark:border-gray-box-dark outline-none
-                   dark:text-grayIconLights py-3 px-4 rounded-7 text-textLight"
-                               data-entity="basket-filter-input" placeholder="Искать в корзине"/>
-                        <div class="d-flex flex-row box_select">
-                            <?/* <select class="select_sort_basket">
-                                <option>Сортировать по</option>
-                                <option value="price_min">Цене: самые дешевые</option>
-                                <option value="price_max">Цене: самые дорогие</option>
-                            </select>*/ ?>
-                            <div class="d-flex flex-row">
-                                <div class="icon_sort_bar sort" id="basket-card" data-sort="grid"
-                                     style="display:none;"></div>
-                                <div class="icon_sort_line sort" id="basket-line" data-sort="line"
-                                     style="display:none;"></div>
-                                <form action="" method="POST" class="col-xs-6 BasketClearForm">
-                                    <button type="submit" class="clear-cart" name="BasketClear">Очистить корзину
+                        <div class="relative md:max-w-md w-full md:mr-4 mr-0 md:mb-0 mb-3">
+                            <input type="text" class="form-control text-sm basket_input search_input dark:bg-gray-box-dark
+                        bg-white border w-full border-textDarkLightGray dark:border-gray-box-dark outline-none
+                   dark:text-grayIconLights py-3 pl-9 rounded-7 text-textLight"
+                                   data-entity="basket-filter-input" placeholder="Введите название товара"/>
+                            <svg width="16" height="16" class="absolute left-2.5 h-full flex items-center top-0"
+                                 viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.2583 14.075L12.425 11.25C13.3392 10.0854 13.8352 8.64722 13.8333 7.16667C13.8333 5.84813 13.4423 4.5592 12.7098 3.46287C11.9773 2.36654 10.9361 1.51206 9.71789 1.00747C8.49972 0.502889 7.15927 0.370866 5.86607 0.628101C4.57286 0.885336 3.38497 1.52027 2.45262 2.45262C1.52027 3.38497 0.885336 4.57286 0.628101 5.86607C0.370866 7.15927 0.502889 8.49972 1.00747 9.71789C1.51206 10.9361 2.36654 11.9773 3.46287 12.7098C4.5592 13.4423 5.84813 13.8333 7.16667 13.8333C8.64722 13.8352 10.0854 13.3392 11.25 12.425L14.075 15.2583C14.1525 15.3364 14.2446 15.3984 14.3462 15.4407C14.4477 15.4831 14.5567 15.5048 14.6667 15.5048C14.7767 15.5048 14.8856 15.4831 14.9872 15.4407C15.0887 15.3984 15.1809 15.3364 15.2583 15.2583C15.3364 15.1809 15.3984 15.0887 15.4407 14.9872C15.4831 14.8856 15.5048 14.7767 15.5048 14.6667C15.5048 14.5567 15.4831 14.4477 15.4407 14.3462C15.3984 14.2446 15.3364 14.1525 15.2583 14.075ZM2.16667 7.16667C2.16667 6.17776 2.45991 5.21106 3.00932 4.38882C3.55873 3.56657 4.33962 2.92571 5.25325 2.54727C6.16688 2.16883 7.17222 2.06982 8.14212 2.26274C9.11203 2.45567 10.0029 2.93187 10.7022 3.63114C11.4015 4.3304 11.8777 5.22131 12.0706 6.19122C12.2635 7.16112 12.1645 8.16646 11.7861 9.08009C11.4076 9.99372 10.7668 10.7746 9.94452 11.324C9.12228 11.8734 8.15558 12.1667 7.16667 12.1667C5.84059 12.1667 4.56882 11.6399 3.63114 10.7022C2.69345 9.76452 2.16667 8.49275 2.16667 7.16667Z"
+                                      fill="black" class="fill-lightGrayBg dark:fill-textDarkLightGray"></path>
+                            </svg>
+                        </div>
+                        <div class="flex flex-row box_select justify-between w-full">
+                            <div class="flex flex-row">
+                                <form action="" method="POST" class="BasketClearForm">
+                                    <button type="submit" class="clear-cart py-2 px-3 dark:bg-lightGrayBg rounded-lg w-fit
+                                    bg-textDark flex flex-row items-center dark:text-textDarkLightGray text-textLight mb-1"
+                                            name="BasketClear">
+                                        <svg width="30" height="30" viewBox="0 0 27 27" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="0.637329" y="0.416748" width="26" height="26" rx="13"
+                                                  class="fill-lightGrayBg dark:fill-white" fill="#393939"/>
+                                            <path d="M7.37639 6.90784L20.0664 19.5978M17.9514 9.02284L17.6694 13.2528M17.4225 16.956L17.3868 17.4919C17.3373 18.2337 17.3126 18.6046 17.1524 18.8858C17.0113 19.1334 16.7986 19.3324 16.5422 19.4567C16.2509 19.5978 15.8792 19.5978 15.1358 19.5978H12.307C11.5636 19.5978 11.1919 19.5978 10.9006 19.4567C10.6442 19.3324 10.4314 19.1334 10.2904 18.8858C10.1302 18.6046 10.1054 18.2337 10.056 17.4919L9.49139 9.02284H8.08139M16.5414 9.02284L16.1578 7.87195C15.9659 7.29619 15.4271 6.90784 14.8201 6.90784H12.6227C12.2708 6.90784 11.9418 7.0384 11.69 7.26034M13.4488 9.02284H19.3614M15.1314 14.6628V16.7778M12.3114 11.8428V16.7778"
+                                                  class="dark:stroke-lightGrayBg stroke-white" stroke-width="1.5"
+                                                  stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span class="md:ml-2 ml-1 md:text-sm text-xs font-medium dark:font-light">Очистить корзину</span>
                                     </button>
                                 </form>
-                                <?
-                                if (isset($_POST["BasketClear"]) && CModule::IncludeModule("sale")) {
+                                <?php if (isset($_POST["BasketClear"]) && CModule::IncludeModule("sale")) {
                                     CSaleBasket::DeleteAll(CSaleBasket::GetBasketUserID());
                                     header("Location: " . $_SERVER['REQUEST_URI']);
-                                }
-                                ?>
+                                } ?>
+                            </div>
+                            <div class="flex flex-row">
+                                <div class="icon_sort_bar sort mr-2" id="basket-card" data-sort="grid">
+                                    <svg width="42" height="43" viewBox="0 0 43 44" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2" y="2" width="17.4627" height="17.4627" rx="1.5" fill="#393939"/>
+                                        <rect x="2" y="23.5376" width="17.4627" height="17.4627" rx="1.5"
+                                              fill="#393939"/>
+                                        <rect x="23.5357" y="2" width="17.4627" height="17.4627" rx="1.5"
+                                              fill="#393939"/>
+                                        <rect x="23.5357" y="23.5376" width="17.4627" height="17.4627" rx="1.5"
+                                              fill="#393939"/>
+                                    </svg>
+                                </div>
+                                <div class="icon_sort_line sort" id="basket-line" data-sort="line">
+                                    <svg width="42" height="42" viewBox="0 0 44 44" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2.74009" y="2" width="39.0003" height="10.2632" rx="1.5"
+                                              stroke="#393939"/>
+                                        <rect x="2.74009" y="16.3687" width="39.0003" height="10.2632" rx="1.5"
+                                              stroke="#393939"/>
+                                        <rect x="2.74009" y="30.7368" width="39.0003" height="10.2632" rx="1.5"
+                                              stroke="#393939"/>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -211,36 +244,53 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                             <?php
                             if (!empty($arResult['DELETED_ITEMS'])) {
                                 ?>
-                                <div class="box" id="deleted_products_box">
+                                <div class="box rounded-lg mb-2 border-2 border-lightGrayBg dark:border-dark-red"
+                                     id="deleted_products_box">
                                     <div class="card-header basket_category" id="openDeletedProducts">
-                                        <button class="btn btn-link btn-block d-flex justify-content-between
+                                        <button class="btn btn-link btn-block flex justify-between
                                            btn_basket_collapse" type="button"
                                                 data-id-category="DeletedProducts">
                                             <span>Удаленные товары</span>
                                             <i class="fa fa-angle-down" aria-hidden="true"
-                                               style="transform:rotate(180deg);"></i>
+                                               style="transform:rotate(180deg);">
+                                                <svg width="14" height="9" viewBox="0 0 14 9" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M0.890196 0.829872C0.503276 1.26416 0.503276 1.96835 0.890196 2.40263L5.73716 7.83798C6.51114 8.70588 7.76524 8.70554 8.53882 7.83731L13.3839 2.39863C13.7709 1.96435 13.7709 1.26016 13.3839 0.825857C12.997 0.391544 12.3697 0.391544 11.9828 0.825857L7.83588 5.48074C7.44899 5.91514 6.82164 5.91503 6.43475 5.48074L2.29133 0.829872C1.90442 0.395558 1.27711 0.395558 0.890196 0.829872Z"
+                                                          fill="#8B8B8B"/>
+                                                </svg>
+                                            </i>
                                         </button>
                                     </div>
                                     <div id="openCategoryDeletedProducts" class="category"
                                          data-id-block-category="DeletedProducts">
-                                        <div class="card-body basket-items-list-table"></div>
+                                        <div class="card-body basket-items-list-table md:p-5 p-3"></div>
                                     </div>
                                 </div>
                                 <?php
                             }
-                             if (!empty($arResult['ITEMS']['nAnCanBuy'])) { ?>
-                                <div class="box" id=NotAvailable">
-                                    <div class="card-header basket_category alert alert-danger" id="openDNotAvailableProducts">
-                                        <button class="btn btn-link btn-block d-flex justify-content-between btn_basket_collapse" type="button"
+                            if (!empty($arResult['ITEMS']['nAnCanBuy'])) { ?>
+                                <div class="box border-2 border-lightGrayBg dark:border-dark-red rounded-lg mb-2"
+                                     id=NotAvailable">
+                                    <div class="card-header basket_category alert alert-danger py-3.5 px-5
+                                    bg-lightGrayBg w-full dark:bg-dark-red"
+                                         id="openDNotAvailableProducts">
+                                        <button class="btn btn-link btn-block flex w-full items-center justify-between btn_basket_collapse"
+                                                type="button"
                                                 data-id-category="NotAvailable">
-                                            <span class="font-weight-bold">Нет в наличии </span>
+                                            <span class="text-white"> ( <?= count($arResult['ITEMS']['nAnCanBuy']) ?? 0 ?> )  Нет в наличии </span>
                                             <i class="fa fa-angle-down" aria-hidden="true"
-                                               style="transform:rotate(180deg);"></i>
+                                               style="transform:rotate(180deg);">
+                                                <svg width="17" height="12" viewBox="0 0 14 9" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M0.890196 0.829872C0.503276 1.26416 0.503276 1.96835 0.890196 2.40263L5.73716 7.83798C6.51114 8.70588 7.76524 8.70554 8.53882 7.83731L13.3839 2.39863C13.7709 1.96435 13.7709 1.26016 13.3839 0.825857C12.997 0.391544 12.3697 0.391544 11.9828 0.825857L7.83588 5.48074C7.44899 5.91514 6.82164 5.91503 6.43475 5.48074L2.29133 0.829872C1.90442 0.395558 1.27711 0.395558 0.890196 0.829872Z"
+                                                          fill="white"/>
+                                                </svg>
+                                            </i>
                                         </button>
                                     </div>
                                     <div id="openCategoryNotAvailableProducts" class="category"
                                          data-id-block-category="NotAvailable">
-                                        <div class="card-body basket-items-list-table"></div>
+                                        <div class="card-body basket-items-list-table md:p-5 p-3"></div>
                                     </div>
                                 </div>
                                 <?php
@@ -254,25 +304,36 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                                     $styleIcon = 'style="transform:rotate(180deg);"';
                                 } else {
                                     $styleIcon = 'style="transform:rotate(0deg);"';
-                                    $classCat = 'collapse_hide';
+                                    $classCat = 'hidden';
                                 }
                                 $newName = explode('_', $key);
-                                if ($newName[1]==='NotAvailable') {
+                                if ($newName[1] === 'NotAvailable') {
                                     continue;
                                 } ?>
-                                <div class="box" id="<?= $newName[1] ?>">
-                                    <div class="card-header basket_category" id="open<?= $newName[1] ?>">
-                                        <button class="btn btn-link btn-block d-flex justify-content-between
-                                           btn_basket_collapse" type="button"
+                                <div class="box w-full border-2 border-textDark dark:border-lightGrayBg rounded-lg mb-2"
+                                     id="<?= $newName[1] ?>">
+                                    <div class="card-header basket_category py-3.5 px-5 dark:bg-lightGrayBg w-full
+                                    bg-textDark"
+                                         id="open<?= $newName[1] ?>">
+                                        <button class="btn btn-link btn-block flex justify-between flex-row items-center
+                                            btn_basket_collapse w-full" type="button"
                                                 data-id-category="<?= $newName[1] ?>">
-                                            <span><?= $newName[0] ?></span>
+                                            <span class="dark:text-textDarkLightGray text-textLight font-normal dark:font-light">
+                                                ( <?= count($item) ?? 0 ?> )  <?= $newName[0] ?>
+                                            </span>
                                             <i class="fa fa-angle-down" aria-hidden="true"
-                                                <?= $styleIcon ?>></i>
+                                                <?= $styleIcon ?>>
+                                                <svg width="17" height="12" viewBox="0 0 14 9" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M0.890196 0.829872C0.503276 1.26416 0.503276 1.96835 0.890196 2.40263L5.73716 7.83798C6.51114 8.70588 7.76524 8.70554 8.53882 7.83731L13.3839 2.39863C13.7709 1.96435 13.7709 1.26016 13.3839 0.825857C12.997 0.391544 12.3697 0.391544 11.9828 0.825857L7.83588 5.48074C7.44899 5.91514 6.82164 5.91503 6.43475 5.48074L2.29133 0.829872C1.90442 0.395558 1.27711 0.395558 0.890196 0.829872Z"
+                                                          fill="#8B8B8B"/>
+                                                </svg>
+                                            </i>
                                         </button>
                                     </div>
                                     <div id="openCategory<?= $newName[1] ?>" class="category <?= $classCat ?>"
                                          data-id-block-category="<?= $newName[1] ?>">
-                                        <div class="card-body basket-items-list-table"></div>
+                                        <div class="card-body basket-items-list-table md:p-5 p-3"></div>
                                     </div>
                                 </div>
                                 <?php ++$i;
@@ -289,8 +350,8 @@ if (empty($arResult['ERROR_MESSAGE'])) {
             </div>
         <?php }
         if ($arParams['BASKET_WITH_ORDER_INTEGRATION'] !== 'Y' && in_array('top', $arParams['TOTAL_BLOCK_DISPLAY'])) { ?>
-            <div class="md:w-1/3 w-full p-5 rounded-xl bg-textDark dark:bg-boxDark basket-items-list-wrapper h-fit">
-                <h4 class="mb-4 d-none d-lg-block d-md-block"><b>Корзина</b></h4>
+            <div class="lg:w-1/3 w-full basket-items-list-wrapper h-fit lg:p-0 p-3">
+                <p class="h-14 mb-4 md:block hidden"></p>
                 <div data-entity="basket-total-block" class="mb-lg-0 mb-md-0 mb-5">
                 </div>
             </div>
@@ -333,92 +394,6 @@ if (empty($arResult['ERROR_MESSAGE'])) {
                 $component
             ); ?>
         </div>
-        <?/*
-        <h3 class="mb-5 mt-5 d-lg-block d-md-block d-none" ><b>Рекомендуемые товары </b></h3>
-        <div class="d-lg-block d-md-block d-none">
-            <?php $APPLICATION->IncludeComponent(
-                "bitrix:catalog.top",
-                "oshisha_catalog.top",
-                array(
-                    "ACTION_VARIABLE" => "action",
-                    "ADD_PICT_PROP" => "-",
-                    "ADD_PROPERTIES_TO_BASKET" => "Y",
-                    "ADD_TO_BASKET_ACTION" => "ADD",
-                    "BASKET_URL" => "/personal/basket.php",
-                    "CACHE_FILTER" => "N",
-                    "CACHE_GROUPS" => "Y",
-                    "CACHE_TIME" => "36000000",
-                    "CACHE_TYPE" => "N",
-                    "COMPARE_NAME" => "CATALOG_COMPARE_LIST",
-                    "COMPATIBLE_MODE" => "Y",
-                    "COMPONENT_TEMPLATE" => "oshisha_catalog.top",
-                    "CONVERT_CURRENCY" => "N",
-                    "CUSTOM_FILTER" => "{\"CLASS_ID\":\"CondGroup\",\"DATA\":{\"All\":\"AND\",\"True\":\"True\"},\"CHILDREN\":[]}",
-                    "DETAIL_URL" => "",
-                    "DISPLAY_COMPARE" => "N",
-                    "ELEMENT_COUNT" => "20",
-                    "ELEMENT_SORT_FIELD" => "sort",
-                    "ELEMENT_SORT_FIELD2" => "id",
-                    "ELEMENT_SORT_ORDER" => "asc",
-                    "ELEMENT_SORT_ORDER2" => "desc",
-                    "ENLARGE_PRODUCT" => "PROP",
-                    "ENLARGE_PROP" => "-",
-                    "FILTER_NAME" => "arrFilter",
-                    "HIDE_NOT_AVAILABLE" => "N",
-                    "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-                    "IBLOCK_ID" => IBLOCK_CATALOG,
-                    "IBLOCK_TYPE" => "1c_catalog",
-                    "LABEL_PROP" => array(),
-                    "LABEL_PROP_MOBILE" => "",
-                    "LABEL_PROP_POSITION" => "top-left",
-                    "LINE_ELEMENT_COUNT" => "20",
-                    "MESS_BTN_ADD_TO_BASKET" => "В корзину",
-                    "MESS_BTN_BUY" => "Купить",
-                    "MESS_BTN_COMPARE" => "Сравнить",
-                    "MESS_BTN_DETAIL" => "Подробнее",
-                    "MESS_NOT_AVAILABLE" => "Нет в наличии",
-                    "OFFERS_FIELD_CODE" => array(
-                        0 => "",
-                        1 => "",
-                    ),
-                    "OFFERS_LIMIT" => "1",
-                    "OFFERS_SORT_FIELD" => "sort",
-                    "OFFERS_SORT_FIELD2" => "id",
-                    "OFFERS_SORT_ORDER" => "asc",
-                    "OFFERS_SORT_ORDER2" => "desc",
-                    "OFFER_ADD_PICT_PROP" => "MORE_PHOTO",
-                    "PARTIAL_PRODUCT_PROPERTIES" => "N",
-                    "PRICE_CODE" => BXConstants::PriceCode(),
-                    "FILL_ITEM_ALL_PRICES" => "Y",
-                    "PRICE_VAT_INCLUDE" => "Y",
-                    "PRODUCT_BLOCKS_ORDER" => "price,props,sku,quantityLimit,quantity,buttons",
-                    "PRODUCT_DISPLAY_MODE" => "Y",
-                    "PRODUCT_ID_VARIABLE" => "id",
-                    "PRODUCT_PROPS_VARIABLE" => "prop",
-                    "PRODUCT_QUANTITY_VARIABLE" => "quantity",
-                    "PRODUCT_ROW_VARIANTS" => "[{'VARIANT':'0','BIG_DATA':false}]",
-                    "PRODUCT_SUBSCRIPTION" => "Y",
-                    "PROPERTY_CODE_MOBILE" => array(),
-                    "ROTATE_TIMER" => "30",
-                    "SECTION_URL" => "",
-                    "SEF_MODE" => "N",
-                    "SHOW_CLOSE_POPUP" => "N",
-                    "SHOW_DISCOUNT_PERCENT" => "N",
-                    "SHOW_MAX_QUANTITY" => "N",
-                    "SHOW_OLD_PRICE" => "N",
-                    "SHOW_PAGINATION" => "Y",
-                    "SHOW_PRICE_COUNT" => "1",
-                    "SHOW_SLIDER" => "Y",
-                    "SLIDER_INTERVAL" => "3000",
-                    "SLIDER_PROGRESS" => "N",
-                    "TEMPLATE_THEME" => "blue",
-                    "USE_ENHANCED_ECOMMERCE" => "N",
-                    "USE_PRICE_COUNT" => "N",
-                    "USE_PRODUCT_QUANTITY" => "N",
-                    "VIEW_MODE" => "SLIDER"
-                ),
-                false
-            ); ?></div>*/ ?>
         <?php
     }
 }
@@ -426,8 +401,7 @@ include(Main\Application::getDocumentRoot() . $templateFolder . '/empty.php');
 
 if ($arResult['ERROR_MESSAGE'] && !$arResult['EMPTY_BASKET']) {
     ShowError($arResult['ERROR_MESSAGE']);
-}
-?>
+} ?>
 <?php if (!$USER->IsAuthorized()): ?>
     <script>
         $(document).ready(function () {
@@ -436,19 +410,14 @@ if ($arResult['ERROR_MESSAGE'] && !$arResult['EMPTY_BASKET']) {
             $('.ctweb-smsauth-menu-block').show();
         });
     </script>
-<? endif; ?>
+<?php endif; ?>
 <script>
     $(document).ready(function () {
-        <?global $rowFavData;
-        foreach( $rowFavData as $key =>$dataEl )
-        {
-        ?>
+        <?php global $rowFavData;
+        foreach( $rowFavData as $key =>$dataEl ) { ?>
         $('.box_with_like[data-product-id="<?=$key?>"] .fa-star-o').css('color', 'red');
         $('.box_with_like[data-product-id="<?=$key?>"] .product-item__favorite-star').attr('data-fav-controls', 'true');
-
-        <?
-        }
-        ?>
+        <?php } ?>
     });
 </script>
 

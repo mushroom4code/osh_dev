@@ -325,6 +325,15 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
                                 dark:bg-dark-red bg-light-red py-2 px-4 rounded-full text-center w-fit cursor-pointer
                                 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
                                 <?= $is_key_found ? 'subscribed' : '' ?>">
+                        <svg width="18" height="17" class="mr-3 stroke-white
+                                <?= $is_key_found ? 'subscribed' : ' ' ?>"
+                             viewBox="0 0 34 33" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M25.5762 11.0001C25.5762 8.81209 24.6884 6.71367 23.1081 5.16649C21.5279 3.61932 19.3846 2.75012 17.1498 2.75012C14.915 2.75012 12.7717 3.61932 11.1915 5.16649C9.61121 6.71367 8.72344 8.81209 8.72344 11.0001C8.72344 20.6251 4.51025 23.3751 4.51025 23.3751H29.7894C29.7894 23.3751 25.5762 20.6251 25.5762 11.0001Z"
+                                  stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19.5794 28.875C19.3325 29.2917 18.9781 29.6376 18.5517 29.8781C18.1253 30.1186 17.6419 30.2451 17.1498 30.2451C16.6577 30.2451 16.1743 30.1186 15.7479 29.8781C15.3215 29.6376 14.9671 29.2917 14.7202 28.875"
+                                  stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                         Нет в наличии
                     </div>
                     <div class="detail_popup absolute z-20 <?= $USER->IsAuthorized() ? '' : 'noauth' ?>
@@ -395,7 +404,16 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
             <div class="box_with_titles flex flex-row text-xs text-textLight dark:text-textDarkLightGray
                 md:w-1/12 order-6 w-1/4 md:py-0 py-3 md:px-0 px-2">
                 <div class="not_product">
-                    Товара нет в наличии
+                    <svg width="18" height="17" class="mr-1 stroke-white
+                                <?= $is_key_found ? 'subscribed' : ' ' ?>"
+                         viewBox="0 0 34 33" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M25.5762 11.0001C25.5762 8.81209 24.6884 6.71367 23.1081 5.16649C21.5279 3.61932 19.3846 2.75012 17.1498 2.75012C14.915 2.75012 12.7717 3.61932 11.1915 5.16649C9.61121 6.71367 8.72344 8.81209 8.72344 11.0001C8.72344 20.6251 4.51025 23.3751 4.51025 23.3751H29.7894C29.7894 23.3751 25.5762 20.6251 25.5762 11.0001Z"
+                              stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M19.5794 28.875C19.3325 29.2917 18.9781 29.6376 18.5517 29.8781C18.1253 30.1186 17.6419 30.2451 17.1498 30.2451C16.6577 30.2451 16.1743 30.1186 15.7479 29.8781C15.3215 29.6376 14.9671 29.2917 14.7202 28.875"
+                              stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Нет в наличии
                 </div>
                 <?php
                 $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',

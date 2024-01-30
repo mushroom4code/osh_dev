@@ -648,7 +648,7 @@ $(document).ready(function () {
         $('a#yes_mess').on('click', function () {
             var popup_mess = $(this).closest('div#popup_mess');
             var product_id = $(this).closest('div#popup_mess').attr('data-product_id');
-            var product_name = $(this).closest('div.item-product-info').find('a.bx_catalog_item_title').text().trim();
+            var product_name = $(this).closest('div.item-product-info').find('a.bx_catalog_item_title').text().trim() ?? '';
             if ($(this).closest('div#popup_mess').hasClass('subscribed')) {
                 var subscribe = "N";
                 var subscription_id = popup_mess.attr('data-subscription_id');
@@ -740,12 +740,12 @@ $(document).ready(function () {
     if ($(div).is('.bx-basket')) {
         $(document).on('click', '.btn_basket_collapse', function () {
             let box = $(this).closest('.box').find('.category'),
-                attr = $(box).hasClass('collapse_hide');
+                attr = $(box).hasClass('hidden');
             if (attr === true) {
-                $(box).hide().removeClass('collapse_hide').show(300);
+                $(box).hide().removeClass('hidden').show(300);
                 $(this).find('i').attr('style', 'transform:rotate(180deg)');
             } else {
-                $(box).hide(300).addClass('collapse_hide');
+                $(box).hide(300).addClass('hidden');
                 $(this).find('i').attr('style', 'transform:rotate(0deg)');
             }
 
@@ -1304,12 +1304,14 @@ function drawFileRow(fls, index) {
 
         if (Object.keys(uploadFiles).length < 10) {
             $('.file-list').append(
-                '<li class="upload-file-item" data-index="' + j + '">' +
-                '<span class="image-box">' + f.name + '</span>' +
-                '<span class="file-remove">x</span>' +
+                '<li class="upload-file-item p-2 w-24 h-24 border border-gray-900/25 dark:border-grayButton bg-white ' +
+                'dark:bg-grayButton rounded-md relative mr-2 mb-3"' +
+                ' data-index="' + j + '">' +
+                '<span class="image-box text-xs line-clamp-5 text-tagFilterGray dark:text-whiteOpacity">' + f.name + '</span>' +
+                '<span class="file-remove absolute -top-2 -right-2 py-1 px-2 rounded-full bg-white text-xs ' +
+                'cursor-pointer dark:bg-tagFilterGray" title="Удалить">x</span>' +
                 '</li>'
             );
-
             uploadFiles[j] = f;
         }
     }
@@ -1721,7 +1723,6 @@ $(document).on('click', '.js__close-count-alert', function () {
 function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority = '') {
     const selectedPropData = {};
     const productsSuccess = [];
-
     /** Перебор выбранных свой-в с получением группы значений для общего поиска */
     const selectedProp = $(document).find('.offer-link.selected');
     $.each(selectedProp, function (i_prop, selectProp) {
@@ -1733,10 +1734,10 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
     $.each(arrProductGrouped, function (prod_id, item) {
 
         $.each(item.PROPERTIES, function (k, props) {
-            if (props?.JS_PROP !== undefined && k !== 'USE_DISCOUNT' &&
-                Object.keys(props?.JS_PROP).length === Object.keys(selectedPropData[k]).length) {
+            if (k !== 'USE_DISCOUNT' && props?.JS_PROP !== undefined && selectedPropData[k] !== undefined &&
+                Object.keys(props?.JS_PROP)?.length === Object.keys(selectedPropData[k])?.length) {
                 $.each(props.JS_PROP, function (key, jsProp) {
-                    let propList = selectedPropData[k][key] ?? selectedPropData[k];
+                    let propList = selectedPropData[k][key];
                     let priority = -1;
 
                     if (propList !== undefined && jsProp?.VALUE_ENUM === propList?.VALUE_ENUM) {
@@ -1746,7 +1747,7 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
                         if (productsSuccess.length <= 0) {
                             let itemPush = {
                                 id: parseInt(prod_id),
-                                code: propList?.CODE,
+                                code: item?.CODE,
                                 pr: 1 + priority,
                             }
                             productsSuccess.push(itemPush)
@@ -1759,7 +1760,7 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
                                     if (productSearch.length === 0) {
                                         let itemPush = {
                                             id: parseInt(prod_id),
-                                            code: propList.CODE,
+                                            code: item?.CODE,
                                             pr: 1 + priority,
                                         }
                                         productsSuccess.push(itemPush)
@@ -1774,11 +1775,10 @@ function sortOnPriorityArDataProducts(arrProductGrouped = [], propCodePriority =
             }
         });
     });
-    console.log(productsSuccess)
+
     if (productsSuccess.length > 0) {
         productsSuccess.sort((a, b) => a.pr < b.pr ? 1 : -1)
     }
-    console.log(productsSuccess)
     return productsSuccess;
 }
 
@@ -1856,4 +1856,3 @@ function showHidePasswd(item) {
     parentBox.querySelector('[data-type="text"]').classList.toggle('hidden')
     parentBox.querySelector('[data-type="password"]').classList.toggle('hidden')
 }
-

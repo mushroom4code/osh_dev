@@ -55,11 +55,11 @@
                 <?
             } else {
                 ?>
-                <div class="carousel-inner" role="listbox">
+                <div class="carousel-inner w-full" role="listbox">
 
                     <? foreach ($arResult["BANNERS"] as $k => $banner): ?>
 
-                        <div class="carousel-item-elems   <? if ($k == 0) echo 'active'; ?>">
+                        <div class="carousel-item-elems w-full rounded-lg  <? if ($k == 0) echo 'active'; ?>">
                             <?= $banner ?>
                         </div>
                     <? endforeach; ?>

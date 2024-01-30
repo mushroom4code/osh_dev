@@ -1,0 +1,6 @@
+<?
+$MESS["ARTURGOLUBEV_YANDEXSHARE_PANELQ_RASSARIVANIA"] = "Кнопки поделиться";
+$MESS["ARTURGOLUBEV_YANDEXSHARE_GROUP_NAME"] = "Дополнительные возможности";
+$MESS['ARTURGOLUBEV_YANDEXSHARE_MAIN_FOLDER'] = "Компоненты от Артура Голубева";
+$MESS['ARTURGOLUBEV_YANDEXSHARETITLE_FOLDER'] = "Социальные сервисы";
+?>

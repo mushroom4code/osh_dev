@@ -2,7 +2,8 @@ import React, {useContext} from "react";
 import OrderContext from "./Context/OrderContext";
 
 function OrderTotal() {
-    const {result, params, options, OrderGeneralUserPropsBlockId} = useContext(OrderContext);
+    const {result, params, options, OrderGeneralUserPropsBlockId, sendRequest, isValidForm,
+        isOrderSaveAllowed, allowOrderSave} = useContext(OrderContext);
     var orderSaveAllowed = false;
 
     const getResultJsx = () => {
@@ -132,31 +133,6 @@ function OrderTotal() {
         return resultJsx;
     }
 
-    const animateScrollTo = (node, duration, shiftToTop) => {
-        if (!node)
-            return;
-
-        var scrollTop = BX.GetWindowScrollPos().scrollTop,
-            orderBlockPos = BX.pos(orderBlockNode),
-            ghostTop = BX.pos(node).top - (BX.browser.IsMobile() ? 50 : 0);
-
-        if (shiftToTop)
-            ghostTop -= parseInt(shiftToTop);
-
-        if (ghostTop + window.innerHeight > orderBlockPos.bottom)
-            ghostTop = orderBlockPos.bottom - window.innerHeight + 17;
-
-        new BX.easing({
-            duration: duration || 800,
-            start: {scroll: scrollTop},
-            finish: {scroll: ghostTop},
-            transition: BX.easing.makeEaseOut(BX.easing.transitions.quad),
-            step: BX.delegate(function (state) {
-                window.scrollTo(0, state.scroll);
-            }, this)
-        }).animate();
-    }
-
     const createTotalUnit = (name, value, params, line) => {
         var totalValue, totalUnit = [], className = 'bx-soa-cart-total-line lg:text-[13px] ' +
             ' text-[21px] lg:leading-[35px] leading-[78px] overflow-hidden flex justify-between';
@@ -166,7 +142,7 @@ function OrderTotal() {
 
         if (params.error) {
             totalValue = (<a className="bx-soa-price-not-calc font-bold" dangerouslySetInnerHTML={{__html: value}}
-                             onClick={animateScrollTo}></a>);
+                             onClick={BX.OrderPageComponents.animateScrollTo}></a>);
         } else if (params.free) {
             totalValue = (<span className={'bx-soa-price-free' + (params.total ? 'font-bold' : '')}>{value}</span>);
         } else {
@@ -252,7 +228,7 @@ function OrderTotal() {
         if (result.IS_AUTHORIZED) {
             click_edit();
         }
-        if (BX.Sale.OrderAjaxComponent.isValidForm()) {
+        if (isValidForm()) {
             allowOrderSave();
             if (params.USER_CONSENT === 'Y' && BX.UserConsent) {
                 BX.onCustomEvent('bx-soa-order-save', []);
@@ -266,21 +242,8 @@ function OrderTotal() {
 
     const doSaveAction = () => {
         if (isOrderSaveAllowed()) {
-            // reachGoal('order');
-            BX.Sale.OrderAjaxComponent.sendRequest('saveOrderAjax');
+            sendRequest('saveOrderAjax', []);
         }
-    }
-
-    const isOrderSaveAllowed = () => {
-        return orderSaveAllowed === true;
-    }
-
-    const allowOrderSave = () => {
-        orderSaveAllowed = true;
-    }
-
-    const disallowOrderSave = () => {
-        orderSaveAllowed = false;
     }
 
 

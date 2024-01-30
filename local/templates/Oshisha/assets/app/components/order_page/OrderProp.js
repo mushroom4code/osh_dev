@@ -8,11 +8,12 @@ import OrderContext from "./Context/OrderContext";
 
 function OrderProp({property, disabled}) {
     const {result} = useContext(OrderContext);
-    var propertyType = property.getType() || '';
+
+    var propertyType = property.TYPE|| '';
 
     var classNames = "form-group bx-soa-customer-field flex justify-between flex-wrap pr-2 pb-[23px]";
 
-    switch (property.getSettings().CODE) {
+    switch (property.CODE) {
         case 'EMAIL':
             if (result.IS_AUTHORIZED) {
                 if (BX('user_select')) {
@@ -35,8 +36,8 @@ function OrderProp({property, disabled}) {
             break;
     }
 
-    let textLabel = BX.util.htmlspecialchars(property.getName()),
-        labelFor = 'soa-property-' + property.getId();
+    let textLabel = BX.util.htmlspecialchars(property.NAME),
+        labelFor = 'soa-property-' + property.ID;
 
     const renderProperty = () => {
         switch (propertyType) {
@@ -45,18 +46,22 @@ function OrderProp({property, disabled}) {
             case 'STRING':
                 return (<OrderPropString property={property} disabled={disabled}/>);
             case 'ENUM':
-                return (<OrderPropEnum property={property} disabled={disabled}/>);
+                return(<OrderPropEnum property={property} disabled={disabled}/>);
             case 'DATE':
-                return (<OrderPropDate property={property} disabled={disabled}/>);
+                return(<OrderPropDate property={property} disabled={disabled}/>);
         }
     }
 
-    return(<div className={classNames} data-property-id-row={property.getId()}>
+    return(<div className={classNames} data-property-id-row={property.ID}>
         <label className="bx-soa-custom-label pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm" htmlFor={labelFor}>
             {textLabel}
         </label>
         {renderProperty()}
     </div>);
+}
+
+OrderProp.defaultProps = {
+    disabled: false
 }
 
 export default OrderProp;

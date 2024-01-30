@@ -33,7 +33,14 @@ foreach ($item as $row) {
     $item_id[] = $row['ID'];
 }
 
+$filter['USER_ID'] = $id_USER;
 $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
+$queryObject = Bitrix\Catalog\SubscribeTable::getList(array('select' => array('ID', 'ITEM_ID', 'USER_CONTACT'), 'filter' => $filter));
+
+while ($subscribe = $queryObject->fetch()) {
+    $result['CURRENT_USER_SUBSCRIPTIONS']['ITEMS_IDS'][] = $subscribe['ITEM_ID'];
+    $result['CURRENT_USER_SUBSCRIPTIONS']['SUBSCRIPTIONS'][] = $subscribe;
+}
 
 foreach ($item as $row) {
 
@@ -65,21 +72,13 @@ foreach ($item as $row) {
     if ($ar_res = $res->fetch()) {
         if (!empty($ar_res)) {
             $str_product_prices = '';
-            $product_prices_sql = $ar_res["CATALOG_PRICE_" . BASIC_PRICE];
+            $product_prices_sql = $ar_res["CATALOG_PRICE_" . B2B_PRICE];
             if (($newProp['VALUE_XML_ID'] == 'true' || USE_CUSTOM_SALE_PRICE) && (!empty($ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])
                     && ((int)$product_prices_sql > (int)$ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID])) && !$showDiscountPrice) {
-                $str_product_prices = explode('.', $product_prices_sql);
-                $price['SALE_PRICE'] = $str_product_prices[0] . ' ₽';
+                $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . SALE_PRICE_TYPE_ID]);
+                $price['SALE_PRICE'] = $str_product_prices[0] . '₽';
                 $show_product_prices = true;
 
-            } else {
-                if ((int)$row['PRICE_TYPE_ID'] == BASIC_PRICE && !$showDiscountPrice) {
-                    $show_product_prices = true;
-                    $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . RETAIL_PRICE]);
-                } else if ((int)$row['PRICE_TYPE_ID'] == B2B_PRICE && !$showDiscountPrice) {
-                    $show_product_prices = true;
-                    $str_product_prices = explode('.', $ar_res["CATALOG_PRICE_" . BASIC_PRICE]);
-                }
             }
 
             if (!empty($ar_res["CATALOG_PRICE_" . B2B_PRICE])) {
@@ -89,8 +88,8 @@ foreach ($item as $row) {
 
             $product_prices = $str_product_prices[0] . '₽';
             $sale_price_val = (int)$str_product_prices[0];
-            $sum_sale = ((round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']) - round($row['SUM_VALUE']));
-            $sum_old = (round($row['QUANTITY']) * $price['PRICE_DATA'][0]['VAL']);
+            $sum_sale = (round(round($row['QUANTITY']) * round($product_prices_sql)) - round($row['SUM_VALUE']));
+            $sum_old = (round($row['QUANTITY']) * $product_prices_sql);
         }
     }
 
@@ -101,6 +100,7 @@ foreach ($item as $row) {
         'QUANTITY' => $row['QUANTITY'],
         'PROPS' => $row['PROPS'],
         'PROPS_ALL' => $row['PROPS_ALL'],
+        'CURRENT_USER_SUBSCRIPTIONS' => $result['CURRENT_USER_SUBSCRIPTIONS'],
         'HASH' => $row['HASH'],
         'PRICES_NET' => $price,
         'SORT' => $row['SORT'],

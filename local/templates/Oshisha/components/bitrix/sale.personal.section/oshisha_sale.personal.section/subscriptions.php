@@ -42,7 +42,7 @@ $SUBSCRIPTIONS_FILTER = array(
 );
 ?>
 <div class="hides static" id="personal_subscribe">
-    <h1 class="mb-4">Подписки на товары</h1>
+    <h1 class="text-2xl dark:text-textDarkLightGray text-textLight dark:font-normal flex flex-row justify-between items-center font-semibold mb-5">Подписки на товары</h1>
     <div class="ml-lg-4 ml-md-4 ml-0 box_with_prod">
         <?php
 

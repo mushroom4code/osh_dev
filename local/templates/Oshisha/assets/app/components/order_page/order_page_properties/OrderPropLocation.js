@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState, useRef} from "react";
 import OrderContext from "../Context/OrderContext";
 
-function OrderPropLocation({property, disabled}) {
-    const {locations, areLocationsPrepared} = useContext(OrderContext);
-    var preparedLocations, cleanLocations, locationsTemplate;
+function OrderPropLocation() {
+    const {locations, locationProperty, areLocationsPrepared} = useContext(OrderContext);
+    var disabled = false, preparedLocations, cleanLocations, locationsTemplate;
     function prepareLocations(locations) {
         var temporaryLocations, i, k, output, allTemporaryLocations = [], allCleanLocations = [];
 
@@ -41,22 +41,22 @@ function OrderPropLocation({property, disabled}) {
     var propRow,  currentLocation, i, k;
     prepareLocations(locations);
 
-    if (property.getId() in preparedLocations) {
+    if (locationProperty.ID in preparedLocations) {
         if (!disabled) {
             let locationsJsx = [];
-            propRow = preparedLocations[property.getId()];
+            propRow = preparedLocations[locationProperty.ID];
             for (i = 0; i < propRow.length; i++) {
                 currentLocation = propRow[i] ? propRow[i].output : {};
-                if (property.isMultiple())
+                if (locationProperty.MULTIPLE === 'Y')
                     locationsJsx.push(
-                        <div key={property.getId()+'_cur_location_'+i} className="bx-soa-loc"
+                        <div key={locationProperty.ID+'_cur_location_'+i} className="bx-soa-loc"
                              style={locationsTemplate === 'search' ? 'margin-bottom: 5px' : 'margin-bottom: 20px'}
                              dangerouslySetInnerHTML={{__html: currentLocation.HTML}}>
                         </div>
                     );
                 else {
                     locationsJsx.push(
-                        <div key={property.getId()+'_cur_location_'+i} className="bx-soa-loc"
+                        <div key={locationProperty.ID + '_cur_location_'+i} className="bx-soa-loc"
                              dangerouslySetInnerHTML={{__html: currentLocation.HTML}}
                         >
                         </div>
@@ -68,9 +68,9 @@ function OrderPropLocation({property, disabled}) {
                 }
             }
 
-            if (property.isMultiple()) {
+            if (locationProperty.MULTIPLE === 'Y') {
                 locationsJsx.push(
-                    <div key={property.getId()+'_is_multiple'} data-prop-id={property.getId()}
+                    <div key={ locationProperty.ID + '_is_multiple'} data-prop-id={locationProperty.ID }
                          className="btn btn-sm btn-primary"
                          onClick={BX.proxy(BX.Sale.OrderAjaxComponent.addLocationProperty, BX.Sale.OrderAjaxComponent)}
                     >
@@ -79,9 +79,17 @@ function OrderPropLocation({property, disabled}) {
                 )
             }
 
-            return (<div className="soa-property-container">
-                {locationsJsx}
-            </div>);
+            return (
+                <div className="form-group bx-soa-customer-field  flex-wrap pr-2 pb-[23px] "
+                     data-property-id-row={locationProperty.ID}>
+                    <label className="bx-soa-custom-label pb-3.5 relative text-black dark:text-white font-bold
+                     dark:font-normal text-sm uppercase" htmlFor={'soa-property-' + locationProperty.ID}>
+                        {locationProperty.NAME}
+                    </label>
+                    <div className="soa-property-container">
+                    {locationsJsx}
+                    </div>
+                </div>);
         }
     }
 }

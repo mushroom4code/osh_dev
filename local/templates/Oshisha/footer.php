@@ -95,7 +95,8 @@ $option = $option_site; ?>
                         <a class="hover:text-hover-red font-light" href="/about/feedback/">Обратная связь</a>
                     </li>
                     <li class="mb-2">
-                        <a class="hover:text-hover-red js__callback font-light" href="javascript:void(0)">Обратный звонок</a>
+                        <a class="hover:text-hover-red js__callback font-light" href="javascript:void(0)">Обратный
+                            звонок</a>
                     </li>
                     <?php if ($USER->IsAuthorized()): ?>
                         <li class="mb-2">
@@ -103,10 +104,12 @@ $option = $option_site; ?>
                         </li>
                     <?php endif; ?>
                     <li class="mb-2">
-                        <a class="hover:text-hover-red font-light" href="/about/users_rules/">Пользовательское соглашение</a>
+                        <a class="hover:text-hover-red font-light" href="/about/users_rules/">Пользовательское
+                            соглашение</a>
                     </li>
                     <li class="mb-2">
-                        <a class="hover:text-hover-red font-light" href="/about/politics/">Политика конфиденциальности</a>
+                        <a class="hover:text-hover-red font-light" href="/about/politics/">Политика
+                            конфиденциальности</a>
                     </li>
                     <li class="mb-2">
                         <a class="hover:text-hover-red font-light" href="/about/cookie/">Политика обработки Cookie</a>
@@ -237,39 +240,49 @@ $option = $option_site; ?>
         </div>
     </div>
     <div style="display:none;">
-        <div id="callbackModal" class="box-modal-white">
-            <div class="box-modal_close arcticmodal-close"></div>
+        <div id="callbackModal" class="md:rounded-xl dark:bg-darkBox bg-white rounded-lg md:p-8 p-5 relative md:max-w-xl
+         w-full">
+            <div class="box-modal_close arcticmodal-close cursor-pointer top-2 right-2"></div>
             <div class="flex_block_cols">
-                <h4>Заказать обратный звонок</h4>
-                <div class="block_text">Оставьте ваш номер и мы перезвоним вам в ближайшее рабочее время</div>
-                <div class="block_text_sub">Отдел поддержки работает с 10:00 до 20:00, ежедневно</div>
+                <h4 class="text-center font-medium mb-4 text-textLight dark:text-textDarkLightGray text-lg">
+                    Заказать обратный звонок
+                </h4>
+                <div class="block_text text-xs font-normal mb-2 text-textLight dark:text-textDarkLightGray">
+                    <span class="block_text_sub text-xs font-medium mb-2 text-textLight dark:text-textDarkLightGray">
+                        Отдел поддержки работает с 10:00 до 20:00, ежедневно.
+                    </span><br>
+                    Оставьте ваш номер и мы перезвоним вам в ближайшее рабочее время.
+                </div>
                 <form method="POST" class="callback_form">
                     <input type="hidden" name="recaptcha_token" value="">
-
                     <div class="form-group mb-3">
                         <input
                                 type="text"
                                 name="PHONE"
-                                class="PHONE callback_PHONE"
+                                class="PHONE callback_PHONE bg-textDark p-3 dark:bg-grayButton cursor-pointer w-full
+                                text-textLight rounded-md dark:text-white border-0 text-xl"
                                 placeholder="Ваш номер"
-                                value="<?= $userData->getPhone() ?>"
-                        >
+                                value="<?= $userData->getPhone() ?>">
                         <div class="er_CALLBACK_PHONE error_field js__error_field"></div>
                     </div>
-
                     <div class="form-group mb-3">
                         <label class="form-control input_lk" style="height: auto">
-                            <input name="confirm" type="checkbox" checked="checked">
-                            <span class="custom__title">Подтверждаю свое согласие с
+                            <input name="confirm" type="checkbox"
+                                   class="p-3 dark:bg-grayButton checked:hover:bg-grayButton border-0
+                                    dark:text-white cursor-pointer text-textLight font-normal rounded-full bg-textDark
+                                   checked:focus:bg-grayButton" checked="checked">
+                            <span class="custom__title text-xs dark:font-normal font-medium text-textLight dark:text-textDarkLightGray">Подтверждаю свое согласие с
                                 <a href="/about/politics/"
-                                   target="_blank">положением об обработке персональных данных</a>
+                                   target="_blank" class="underline">положением об обработке персональных данных</a>
                             </span>
                         </label>
                         <div class="er_FORM_CONFIRM error_field js__error_field"></div>
                     </div>
 
                     <div class="submit-wrap">
-                        <input type=submit class="btn btn-submit" value="Отправить"
+                        <input type="submit" class="btn btn-submit p-3 rounded-lg w-full text-white text-md
+                               cursor-pointer font-normal bg-light-red dark:bg-dark-red"
+                               value="Отправить"
                                onclick="this.form.recaptcha_token.value = window.recaptcha.getToken()">
                     </div>
                 </form>
@@ -284,7 +297,8 @@ $option = $option_site; ?>
                 <div class="flex_block">
                     <div class="age-access-inner">
                         <div class="age-access__text">
-                            <h1 class="text-dark font-medium dark:font-light text-xl dark:text-textDarkLightGray">1 / 2</h1>
+                            <h1 class="text-dark font-medium dark:font-light text-xl dark:text-textDarkLightGray">1 /
+                                2</h1>
                             <h1 class="text-light-red font-medium dark:font-light text-xl dark:text-textDarkLightGray mb-4 text-center">
                                 Уведомляем вас!</h1>
                             <div class="age-access__text-part1 mb-4 text-xs dark:font-thin font-extralight text-textLight dark:text-borderColor">
@@ -311,26 +325,26 @@ $option = $option_site; ?>
         <div style="display:none;">
             <div id="2Modal" class="box-modal p-5">
                 <div class="box-modal_close arcticmodal-close" style="display:none;"></div>
-                    <div class="age-access-inner">
-                        <div class="age-access__text">
-                            <h1 class="text-dark font-medium dark:font-light text-xl dark:text-textDarkLightGray
+                <div class="age-access-inner">
+                    <div class="age-access__text">
+                        <h1 class="text-dark font-medium dark:font-light text-xl dark:text-textDarkLightGray
                              mb-5 ">2 / 2</h1>
-                            <h1 class="text-dark font-medium dark:font-extralight text-lg dark:text-textDarkLightGray
+                        <h1 class="text-dark font-medium dark:font-extralight text-lg dark:text-textDarkLightGray
                              mb-4 text-center">
-                                Заказываете для <b>Себя</b> или для <b>Организации?</b></h1>
-                        </div>
-                        <div class="age-access__buttons flex flex-row justify-between">
-                            <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close
+                            Заказываете для <b>Себя</b> или для <b>Организации?</b></h1>
+                    </div>
+                    <div class="age-access__buttons flex flex-row justify-between">
+                        <a href="#" class="age-access__button age-access__yes link_red_button arcticmodal-close
                              border-greenButton border-2 px-3.5 py-2 rounded-md block w-3/5 mr-3 md:text-sm text-xs
                              font-medium text-center text-greenButton dark:border-none dark:bg-grayButton
                              dark:font-light shadow-lg dark:text-white"
-                               data-option="1" data-auth="false">Для организации</a>
-                            <a href="https://oshisha.net/" class="link_red_button text-center
+                           data-option="1" data-auth="false">Для организации</a>
+                        <a href="https://oshisha.net/" class="link_red_button text-center
                             border-light-red border-2 md:px-9 px-4 py-2 rounded-lg block w-2/5 text-light-red font-medium
                             dark:border-none dark:bg-dark dark:font-light dark:text-white shadow-lg md:text-sm text-xs"
-                               rel="nofollow">Для себя</a>
-                        </div>
+                           rel="nofollow">Для себя</a>
                     </div>
+                </div>
             </div>
         </div>
         <script>

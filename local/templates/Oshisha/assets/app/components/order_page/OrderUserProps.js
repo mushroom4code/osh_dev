@@ -1,41 +1,31 @@
 import OrderProp from './OrderProp';
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import OrderContext from "./Context/OrderContext";
 import OrderContragents from "./OrderContragents";
 
 function OrderUserProps() {
-    const {result} = useContext(OrderContext);
-    const group_buyer_props = ["Личные данные"];
 
-    const renderProperties = () => {
-        let div = [];
-        let group, property,
-            propsIterator,
-            groupIterator = new BX.Sale.PropertyCollection(
-                BX.merge({publicMode: true}, result.ORDER_PROP)
-            ).getGroupIterator();
-        while(group = groupIterator()) {
-            propsIterator = group.getIterator();
-            while (property = propsIterator()) {
-                // TODO Enterego pickup
-                let disabled = false;
-                if (group_buyer_props.find(item => item === group.getName()) !== undefined) {
-                    if (property.getSettings().CODE === 'CONTRAGENT_ID') {
-                        div.push(<OrderContragents property={property}/>);
-                    } else {
-                        div.push(
-                            <OrderProp key={property.getId()} property={property} disabled={disabled}/>
-                        );
-                    }
-                }
-            }
-        }
-        return div;
-    }
+    const { result } = useContext(OrderContext);
+    const userFieldsGroup = 'Личные данные'
 
-    return(<div className="row">
+    const userGroup = result.ORDER_PROP.groups.find(group => group.NAME === userFieldsGroup)
+    return (<div className="row">
         <div className="grid grid-cols-2 gap-x-2 bx-soa-customer p-0">
-            {renderProperties()}
+            {result.ORDER_PROP.properties.map(property => {
+
+                if (property.CODE === 'CONTRAGENT_ID') {
+                    return <OrderContragents property={property}/>;
+                }
+
+                if ((property.PROPS_GROUP_ID !== userGroup.ID)
+                    || (property.CODE === 'LOCATION')) {
+                    return null
+                }
+
+                const disabled = false;
+                return <OrderProp key={property.ID} property={property} disabled={disabled} />
+            })}
+
         </div>
     </div>);
 }

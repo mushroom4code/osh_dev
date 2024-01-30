@@ -2,6 +2,15 @@ BX.namespace('BX.SaleCommonPVZ');
 
 const typeDisplayPVZ = {map: 'map', list: 'list'}
 
+//FIX global handler hook
+BX.reactHandler = {
+
+    onSelectPvz: [],
+    selectPvz: function (itemId) {
+        this.onSelectPvz.forEach(item => item(itemId))
+    }
+}
+
 BX.SaleCommonPVZ = {
     curCityCode: null,
     curCityName: null,
@@ -51,11 +60,11 @@ BX.SaleCommonPVZ = {
 
         this.refresh()
         this.updateFromDaData()
-        this.updateDeliveryWidget(BX.Sale.OrderAjaxComponent.result)
+        this.updateDeliveryWidget(BX.OrderPageComponents.result)
     },
 
     refresh: function () {
-        const order = BX.Sale.OrderAjaxComponent.result
+        const order = BX.OrderPageComponents.result
 
         this.propAddressId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         this.propAddressPvzId         = order.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS_PVZ')?.ID;
@@ -73,17 +82,17 @@ BX.SaleCommonPVZ = {
         this.propDeliveryTimeInterval = order.ORDER_PROP.properties.find(prop => prop.CODE === 'DELIVERYTIME_INTERVAL')?.ID;
         this.propTypePvzId            = order.ORDER_PROP.properties.find(prop => prop.CODE === 'TYPE_PVZ')?.ID;
 
-        this.hidePropField(this.propTypeDeliveryId)
-        this.hidePropField(this.propAddressPvzId)
-        this.hidePropField(this.propFiasId)
-        this.hidePropField(this.propKladrId)
-        this.hidePropField(this.propTypePvzId)
-        this.hidePropField(this.propLatitudeId)
-        this.hidePropField(this.propLongitudeId)
-        this.hidePropField(this.propCommonPVZId)
-        this.hidePropField(this.propDateDeliveryId)
-        this.hidePropField(this.propDeliveryTimeInterval)
-        this.hidePropField(this.propStreetKladrId)
+        // this.hidePropField(this.propTypeDeliveryId)
+        // this.hidePropField(this.propAddressPvzId)
+        // this.hidePropField(this.propFiasId)
+        // this.hidePropField(this.propKladrId)
+        // this.hidePropField(this.propTypePvzId)
+        // this.hidePropField(this.propLatitudeId)
+        // this.hidePropField(this.propLongitudeId)
+        // this.hidePropField(this.propCommonPVZId)
+        // this.hidePropField(this.propDateDeliveryId)
+        // this.hidePropField(this.propDeliveryTimeInterval)
+        // this.hidePropField(this.propStreetKladrId)
 
         this.propAddressId = BX.Sale.OrderAjaxComponent.result.ORDER_PROP.properties.find(prop => prop.CODE === 'ADDRESS')?.ID;
         if (this.propAddressId) {
@@ -164,7 +173,7 @@ BX.SaleCommonPVZ = {
                         BX.create({
                             tag: 'div',
                             props: {className: 'basis-1/2', id: 'selected-delivery-address'},
-                            html: `<span class="font-bold font-lg-13">Адрес</span>: 
+                            html: `<span class="font-bold font-lg-13">Адрес</span>:
                                    <span class="ml-2 font-lg-13">${address}</span>`
                         }),
                         BX.create({
@@ -776,6 +785,8 @@ BX.SaleCommonPVZ = {
     },
 
     createPVZPopup: function () {
+        console.log('create pvz');
+
         if (BX('wrap_pvz_overlay')) {
             this.pvzOverlay = BX('wrap_pvz_overlay')
         } else {
@@ -1160,8 +1171,8 @@ BX.SaleCommonPVZ = {
             point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
             point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
             item['error'] ? `<div>При расчете стоимости произошла ошибка, пожалуйста выберите другой ПВЗ или вид доставки</div>` :
-                `<a class="btn btn_basket mt-2 dark:text-textDark shadow-md text-white dark:bg-dark-red bg-light-red 
-                    lg:py-2 py-3 px-4 rounded-5 block text-center font-semibold" href="javascript:void(0)" 
+                `<a class="btn btn_basket mt-2 dark:text-textDark shadow-md text-white dark:bg-dark-red bg-light-red
+                    lg:py-2 py-3 px-4 rounded-5 block text-center font-semibold" href="javascript:void(0)"
                     onclick="BX.SaleCommonPVZ.selectPvz(${item.id});" >Выбрать</a>`)
 
         point.properties = {
