@@ -10,7 +10,7 @@ use Bitrix\Main\UI\Extension;
 use Bitrix\Sale\Exchange\EnteregoUserExchange;
 use Bitrix\Sale\Location\TypeTable;
 use Bitrix\Sale\PropertyValueCollection;
-use Enterego\contagents\EnteregoContragents;
+use Enterego\contragents\EnteregoContragents;
 
 /**
  * @var array $arParams

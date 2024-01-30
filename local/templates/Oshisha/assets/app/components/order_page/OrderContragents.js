@@ -2,22 +2,21 @@ import React, {useContext, useState} from "react";
 import OrderContext from "./Context/OrderContext";
 
 function OrderContragents({property}) {
-    const {result, contragents, afterSendReactRequest} = useContext(OrderContext);
+    const {result, contragents, sendRequest} = useContext(OrderContext);
     const [selectedContragent, setSelectedContragent] = useState();
     if (!result['IS_AUTHORIZED'] || !contragents) {
         return(<></>);
     } else {
-        var propertySettings = property.getSettings(),
+        var propertySettings = property,
             company_name_property = result.ORDER_PROP.properties.find(prop => prop.CODE === 'COMPANY'),
-            inn_property = result.ORDER_PROP.properties.find(prop => prop.CODE === 'INN');
+            inn_property = result.ORDER_PROP.properties.find(prop => prop.CODE === 'INN'), existingContragent;
         if (!selectedContragent) {
-            if (propertySettings['VALUE'][0]) {
+            if (propertySettings['VALUE'][0] && (existingContragent = contragents.find(contragent => contragent.ID_CONTRAGENT === propertySettings['VALUE'][0]))) {
                 setSelectedContragent(
-                    contragents.find(contragent => contragent.ID_CONTRAGENT === propertySettings['VALUE'][0])
+                    existingContragent
                 );
             } else {
                 setSelectedContragent(contragents[0]);
-                BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', [], afterSendReactRequest);
             }
         }
         var selectJsx = [];
@@ -39,7 +38,7 @@ function OrderContragents({property}) {
             document.querySelector('input[name="ORDER_PROP_' + company_name_property['ID'] + '"]').value =
                 newSelectedContragent['NAME_ORGANIZATION'];
             setSelectedContragent(newSelectedContragent);
-            BX.Sale.OrderAjaxComponent.sendRequest('refreshOrderAjax', [], afterSendReactRequest);
+            sendRequest('refreshOrderAjax', []);
         };
 
         return(

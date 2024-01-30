@@ -31,6 +31,12 @@ function OrderProp({property, disabled}) {
         case 'MESSAGE_TYPE':
             classNames += " col-start-2 form-check";
             break;
+        case 'COMPANY':
+            classNames += " !hidden";
+            break;
+        case 'INN':
+            classNames += " !hidden";
+            break;
         default:
             classNames += " col-span-2";
             break;

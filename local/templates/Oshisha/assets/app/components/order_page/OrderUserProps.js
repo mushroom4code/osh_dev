@@ -14,7 +14,7 @@ function OrderUserProps() {
             {result.ORDER_PROP.properties.map(property => {
 
                 if (property.CODE === 'CONTRAGENT_ID') {
-                    return <OrderContragents property={property}/>;
+                    return <OrderContragents key={property.ID} property={property}/>;
                 }
 
                 if ((property.PROPS_GROUP_ID !== userGroup.ID)
