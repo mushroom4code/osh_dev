@@ -16,6 +16,7 @@ function reducer(state, action) {
             }
         }
         case 'show_list_locations': {
+            clearTimeout(state.timeoutId);
             return {
                 ...state,
                 listLocations: action.listLocations,
@@ -50,8 +51,10 @@ function reducer(state, action) {
             }
         }
         case 'update_open_list_locations': {
+            clearTimeout(state.timeoutId);
             return {
                 ...state,
+                timeoutId: null,
                 listLocations: [],
                 openListLocations: action.openListLocations
             }
@@ -70,7 +73,7 @@ function reducer(state, action) {
 
 }
 
-function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
+function OrderPropLocationCustom({currentLocation, setCurrentLocation, propLocation}) {
 
     const initialState = {
         cityName: currentLocation?.DISPLAY ?? '',
@@ -80,10 +83,35 @@ function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
         openListLocations: false,
         activeLocation: 0,
         listLocations: [],
-        responseError: {error: false, data: []}
+        responseError: {error: false, data: []},
+        locationsAjaxUrl: "/bitrix/components/bitrix/sale.location.selector.search/get.php"
     }
 
     const [state, dispatch] = useReducer(reducer, initialState)
+
+    useEffect(() => {
+        axios.post(state.locationsAjaxUrl,
+            {
+                sessid: BX.bitrix_sessid(),
+                select: {1: "CODE", 2: "TYPE_ID", VALUE: "ID", DISPLAY: "NAME.NAME"},
+                additionals: {1: "PATH"},
+                filter: {"=CODE": propLocation.VALUE[0] ?? '0000073738', "=NAME.LANGUAGE_ID": "ru", "=SITE_ID": "N2"},
+                version: 2,
+                PAGE_SIZE: 10,
+                PAGE: 0
+            },
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(response => {
+            const locations = eval("(" + response.data + ")")
+            if (locations.result && locations.data.ITEMS.length > 0) {
+                const pathInfo = locations.data.ITEMS[0].PATH.map(path => locations.data.ETC.PATH_ITEMS[path])
+                setCurrentLocation({...locations.data.ITEMS[0], PATH: pathInfo})
+            } else {
+                setCurrentLocation(null)
+            }
+        })
+
+    }, []);
 
     useEffect(() => {
         dispatch({type: 'update_city_name', cityName: currentLocation?.DISPLAY ?? '',
@@ -97,42 +125,44 @@ function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
     const onSelectLocation = (index) => (event) => {
         selectLocation(index);
     }
-    const onChangeLocationString = (e) => {
+    const onChangeLocationString = (e, isUseEffect = false) => {
+        var cityName;
+        cityName = e.target.value;
 
-        const cityName = e.target.value;
 
+        clearTimeout(state.timeoutId);
         const timeoutId = setTimeout(() => {
-            axios.post("/bitrix/components/bitrix/sale.location.selector.search/get.php",
+            axios.post(state.locationsAjaxUrl,
                 {
                     sessid: BX.bitrix_sessid(),
                     select: {1: "CODE", 2: "TYPE_ID", VALUE: "ID", DISPLAY: "NAME.NAME"},
                     additionals: {1: "PATH"},
-                    filter: {"=PHRASE": e.target.value, "=NAME.LANGUAGE_ID": "ru", "=SITE_ID": "N2"},
+                    filter: {"=PHRASE": cityName, "=NAME.LANGUAGE_ID": "ru", "=SITE_ID": "N2"},
                     version: 2,
                     PAGE_SIZE: 10,
                     PAGE: 0
                 },
                 {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
             ).then(response => {
-                const responseData = eval("(" + response.data + ")")
+                const responseData = eval("(" + response.data + ")");
 
-                if (responseData.result) {
-                    const listLocations = responseData.data.ITEMS.map(location => {
-                        const pathInfo = location.PATH.map(path => responseData.data.ETC.PATH_ITEMS[path])
-                        return {...location, PATH: pathInfo}
-                    })
-                    dispatch({type: 'show_list_locations', listLocations, responseError: {error: false, data: []}});
-                } else {
-                    dispatch({type: 'set_response_error', responseError: {error: true, data: responseData.errors}});
-                }
+
+                    if (responseData.result) {
+                        const listLocations = responseData.data.ITEMS.map(location => {
+                            const pathInfo = location.PATH.map(path => responseData.data.ETC.PATH_ITEMS[path])
+                            return {...location, PATH: pathInfo}
+                        })
+                        dispatch({type: 'show_list_locations', listLocations, responseError: {error: false, data: []}});
+                    } else {
+                        dispatch({type: 'set_response_error', responseError: {error: true, data: responseData.errors}});
+                    }
             })
-        }, 800)
+        }, 800);
 
         dispatch({type: 'on_change_city', cityName, timeoutId})
     }
 
     const onKeyDownLocation = (e) => {
-        console.log('onkeydownlocation');
         if (e.keyCode === 27) {
             if (state.listLocations.length > 0 || state.responseError.error) {
                 dispatch({type: 'update_open_list_locations', openListLocations: false});
@@ -182,13 +212,15 @@ function OrderPropLocationCustom({currentLocation, setCurrentLocation}) {
                     <div className='relative min-h-[40px]'>
                     <input value={state.fullCityPath} readOnly={true}
                            autoComplete="nope"
-                           className='form-control absolute z-[5] text-gray-400 min-width-700 w-full text-sm cursor-text
-                     border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg dark:bg-grayButton'/>
+                           className='form-control absolute z-[5] w-full text-gray-400 min-width-600 text-sm
+                            cursor-text border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg
+                             dark:bg-grayButton'/>
                     <input value={state.cityName} onKeyDown={onKeyDownLocation}
                            onChange={onChangeLocationString}
                            autoComplete="nope"
-                           className='form-control absolute z-10 bg-transparent min-width-700 w-full text-sm cursor-text
-                     border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg dark:bg-grayButton'/>
+                           className='form-control absolute z-10 w-full bg-transparent min-width-600 text-sm
+                            cursor-text border-grey-line-order ring:grey-line-order dark:border-grayButton rounded-lg
+                            dark:bg-grayButton'/>
                     {
                         state.timeoutId != null
                             ? <Spinner

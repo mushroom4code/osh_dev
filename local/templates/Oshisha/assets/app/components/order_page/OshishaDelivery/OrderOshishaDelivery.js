@@ -46,53 +46,6 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
 
     const [currentLocation, setCurrentLocation] = useState(null)
 
-    useEffect(() => {
-        axios.post("/bitrix/components/bitrix/sale.location.selector.search/get.php",
-            {
-                sessid: BX.bitrix_sessid(),
-                select: {1: "CODE", 2: "TYPE_ID", VALUE: "ID", DISPLAY: "NAME.NAME"},
-                additionals: {1: "PATH"},
-                filter: {"=CODE": propLocation.VALUE[0] ?? '0000073738', "=NAME.LANGUAGE_ID": "ru", "=SITE_ID": "N2"},
-                version: 2,
-                PAGE_SIZE: 10,
-                PAGE: 0
-            },
-            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        ).then(response => {
-
-            const locations = eval("(" + response.data + ")")
-            if (locations.result && locations.data.ITEMS.length > 0) {
-                const pathInfo = locations.data.ITEMS[0].PATH.map(path => locations.data.ETC.PATH_ITEMS[path])
-                setCurrentLocation({...locations.data.ITEMS[0], PATH: pathInfo})
-            } else {
-                setCurrentLocation(null)
-            }
-        })
-
-    }, []);
-
-    useEffect(() => {
-        if (currentLocation === null) {
-            return
-        }
-
-        //todo send reqeust when load current location
-        axios.post(
-            ajaxDeliveryUrl,
-            {
-                sessid: BX.bitrix_sessid(),
-                address: currentLocation.DISPLAY,
-                action: 'getDaDataSuggest'
-            },
-            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        ).then(response => {
-            if (response.data.length > 0) {
-                handleSelectSuggest(response.data[0])
-            }
-        })
-
-    }, [currentLocation]);
-
     const handleSelectSuggest = (suggest) => {
 
         function setAdditionalData(additionalData, code, value) {

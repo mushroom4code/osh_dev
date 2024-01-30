@@ -66,7 +66,6 @@ export const OrderContextProvider = (props) => {
         let requestData = BX.OrderPageComponents.getData(action, actionData)
         requestData.order = { ...requestData.order, ...additionalData }
 
-        console.log(requestData);
         if (action === 'saveOrderAjax') {
             form = BX('bx-soa-order-form');
             if (form)
@@ -83,7 +82,6 @@ export const OrderContextProvider = (props) => {
                     document.location.href = response.data.redirect;
                 switch (eventArgs.action) {
                     case 'refreshOrderAjax':
-                        console.log(response.data)
                         refreshOrder(response.data);
                         break;
                     case 'confirmSmsCode':
