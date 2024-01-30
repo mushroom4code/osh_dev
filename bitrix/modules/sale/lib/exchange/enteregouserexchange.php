@@ -16,9 +16,9 @@ class EnteregoUserExchange
     public string $PERSONAL_PHONE = '';
     public array $contragents_user = [];
     public array $company_user = [];
-    public string $LOGIN;
-    public int $ID = 0;
-    public string $STATUS;
+    public string $LOGIN = '';
+    public $ID = 0;
+    public int $STATUS = 0;
     public \Bitrix\Main\Type\DateTime $TIMESTAMP_X;
 
     /**
@@ -94,7 +94,7 @@ class EnteregoUserExchange
             $result = $user->Update($this->ID, [
                     'NAME' => $this->NAME,
                     'EMAIL' => $this->EMAIL,
-                    'TIMESTAMP_X'=>$this->TIMESTAMP_X,
+                    'TIMESTAMP_X' => $this->TIMESTAMP_X,
                     'PERSONAL_PHONE' => $this->PERSONAL_PHONE,
                     'PERSONAL_NOTES' => 'Обновлена связь между пользователем и контр-том со стороны обмена  '
                         . ConvertTimeStamp(false, "FULL")

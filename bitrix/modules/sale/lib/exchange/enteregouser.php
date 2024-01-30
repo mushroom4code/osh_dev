@@ -20,9 +20,9 @@ class EnteregoUser extends ImportOneCBase
     {
         $result = new Result();
         $user_object = new EnteregoUserExchange();
-        $user_object->XML_ID = (string)$items['Ид'];
-        $user_object->ID = (string)$items['Ид'];
-        $user_object->NAME = (string)$items['Имя'];;
+        $user_object->XML_ID = $items['Ид'];
+        $user_object->ID = $items['Ид'];
+        $user_object->NAME = (string)$items['Имя'];
         $user_object->EMAIL = (string)$items['Почта'];
         $user_object->PERSONAL_PHONE = (string)$items['ТелефонРабочий'];
         $date = COption::GetOptionString('DATE_IMPORT_CONTRAGENTS', 'DATE_IMPORT_CONTRAGENTS')

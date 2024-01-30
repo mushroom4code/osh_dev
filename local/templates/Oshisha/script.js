@@ -1183,7 +1183,7 @@ $(document).ready(function () {
                 ' dark:hover:bg-black cursor-pointer dark:bg-grayButton rounded-md bg-lightGrayBg">' +
                 'Нет</a></div>';
         } else {
-            content = '<p class="mb-5 text-lg font-semibold dark:font-normal text-textLight dark:text-textDarkLightGray">' +
+            content = '<p class="md:mb-7 mb-4 md:text-xl text-lg font-semibold dark:font-normal text-textLight dark:text-textDarkLightGray">' +
                 'Очистить корзину перед добавлением товаров?</p>' +
                 ($(this).hasClass('js--not-active') ? '<p style="font-size: 0.75rem; font-weight: 500; color: grey; margin-top: unset;">' +
                     '*Некоторые товары больше не находятся в ассортименте и не будут добавлены в корзину</p>' : '') +
@@ -1204,7 +1204,7 @@ $(document).ready(function () {
             zIndex: 300,
             offsetLeft: 0,
             offsetTop: 0,
-            className: 'flex-col flex items-center box_with_message_copy_order p-10 bg-white rounded-lg dark:bg-darkBox',
+            className: 'flex-col flex items-center md:m-0 m-3 box_with_message_copy_order md:p-10 p-5 bg-white rounded-lg dark:bg-darkBox',
             draggable: {restrict: false},
             overlay: {backgroundColor: 'black', opacity: '80'},  /* затемнение фона */
         });

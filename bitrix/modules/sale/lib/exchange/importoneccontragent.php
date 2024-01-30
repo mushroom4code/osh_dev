@@ -18,9 +18,6 @@ final class ImportOneCContragent extends ImportOneCBase
     /**
      * @param UserImportBase[] $items
      * @return Result
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
      */
     protected function import(array $items)
     {
@@ -32,8 +29,8 @@ final class ImportOneCContragent extends ImportOneCBase
 
         if (!empty($items)) {
             $contragent->STATUS_CONTRAGENT = $items['СтатусКонтрагента'] == 'true' ? 1 : 0;
-            $contragent->DATE_UPDATE = !empty($dateInsertUpdate) ? $dateInsertUpdate : ConvertTimeStamp(false, "FULL");
-            $contragent->DATE_INSERT = !empty($dateInsertUpdate) ? $dateInsertUpdate : ConvertTimeStamp(false, "FULL");
+            $contragent->DATE_UPDATE = $dateInsertUpdate;
+            $contragent->DATE_INSERT = $dateInsertUpdate;
             $contragent->STATUS_VIEW = $items['СтатусКонтрагента'] == 'true' ? 'Активен' : 'Ожидает подтверждения';
             $contragent->TYPE = $items['ТипКонтрагента'] ?? 'fiz';
             $contragent->NAME_ORGANIZATION = (string)$items['ПолноеНаименование'] ?? '';

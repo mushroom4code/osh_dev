@@ -15,7 +15,7 @@ class EnteregoExchange
 {
     /**
      * Import contragent-company-user
-     * @param string $stepDate
+     * @param DateTime $stepDate
      * @param bool|int $id
      * @param string $type
      * @return array
@@ -24,7 +24,7 @@ class EnteregoExchange
      * @throws SystemException
      */
     public static function GetInfoForXML(
-        string   $stepDate = '',
+        datetime $stepDate,
         bool|int $id = 0,
         string   $type = ''): array
     {
@@ -46,11 +46,11 @@ class EnteregoExchange
 
             if (!empty($dateStartImport1C) || !empty($stepDate)) {
                 $filterContr['filter'] = array(
-                    ">=DATE_UPDATE" => $dateStartImport1C || $stepDate,
+                    ">DATE_UPDATE" => $dateStartImport1C || $stepDate,
                 );
             }
 
-            $filterContr['filter']['<=DATE_UPDATE'] = $dateExportStart;
+            $filterContr['filter']['<DATE_UPDATE'] = $dateExportStart;
 
             if ($id > 0) {
                 $filterContr['filter'][">ID_CONTRAGENT"] = $id;
@@ -109,11 +109,11 @@ class EnteregoExchange
             );
 
             $filterUser['filter'] = array(
-                "<=TIMESTAMP_X" => $dateExportStart,
+                "<TIMESTAMP_X" => $dateExportStart,
             );
 
             if (!empty($dateStartImport1C) || !empty($stepDate)) {
-                $filterUser['filter']['>=TIMESTAMP_X'] = $dateStartImport1C || $stepDate;
+                $filterUser['filter']['>TIMESTAMP_X'] = $dateStartImport1C || $stepDate;
             }
 
             if ($id > 0) {

@@ -22,11 +22,11 @@ if (!$USER->IsAuthorized()) {
     if (!$name) {
         $name = trim($USER->GetLogin());
     } ?>
-    <div class="mobile_lk flex md:flex-row flex-col mt-4 <?php if ($APPLICATION->GetCurPage() != '/personal/'): ?>private<?php endif; ?>">
+    <div class="mobile_lk flex lg:flex-row flex-col mt-4 <?php if ($APPLICATION->GetCurPage() != '/personal/'): ?>private<?php endif; ?>">
         <?php
         if ($mobile->isMobile()) { ?>
             <div class="dark:bg-dark bg-lightGrayBg rounded-b-3xl border-b border-white-100">
-                <div class="box_with_photo flex flex-row px-5 pb-6 pt-4 items-end" style="
+                <div class="box_with_photo flex flex-row px-5 pb-6 pt-4 items-end rounded-b-3xl" style="
                 background-image: url('/local/assets/images/profile_mobile.png');
                 background-repeat: no-repeat;
                  background-position: right bottom;
