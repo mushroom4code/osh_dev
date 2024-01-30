@@ -83,7 +83,6 @@ export const OrderContextProvider = (props) => {
                     document.location.href = response.data.redirect;
                 switch (eventArgs.action) {
                     case 'refreshOrderAjax':
-                        console.log(response.data)
                         refreshOrder(response.data);
                         break;
                     case 'confirmSmsCode':

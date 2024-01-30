@@ -7,10 +7,9 @@ import OrderContext from "./Context/OrderContext";
 
 function OrderProp({property, disabled}) {
     const {result} = useContext(OrderContext);
+    const propertyType = property.TYPE || '';
 
-    var propertyType = property.TYPE || '';
-
-    var classNames = "bx-soa-customer-field flex justify-between flex-wrap pr-2 pb-6";
+    let classNames = "bx-soa-customer-field flex justify-between flex-wrap pr-2 pb-6";
 
     switch (property.CODE) {
         case 'EMAIL':
@@ -19,6 +18,9 @@ function OrderProp({property, disabled}) {
                     BX.adjust(BX('user_select'), {style: {display: "none"}});
                 }
             }
+            break;
+        case 'FIO':
+            classNames += ' col-span-2';
             break;
         default:
             break;
@@ -41,9 +43,8 @@ function OrderProp({property, disabled}) {
     }
 
     return (<div className={classNames} data-property-id-row={property.ID}>
-        <label
-            className="bx-soa-custom-label pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm"
-            htmlFor={labelFor}>
+        <label className="bx-soa-custom-label mb-3 relative text-textLight dark:text-textDarkLightGray font-semibold
+             dark:font-light text-sm" htmlFor={labelFor}>
             {textLabel}
         </label>
         {renderProperty()}
