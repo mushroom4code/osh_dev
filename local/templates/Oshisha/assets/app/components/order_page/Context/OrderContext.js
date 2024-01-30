@@ -11,10 +11,10 @@ export const OrderContextProvider = (props) => {
     const [options, setOptions] = useState(props.options);
     const [orderSaveAllowed, setOrderSaveAllowed] = useState(true);
     const [locations, setLocations] = useState(props.locations);
-    const [contragents, setContragents] = useState(props.contragents
-        ? props.contragents.filter((contragent) => contragent['STATUS_CONTRAGENT'] !== '0')
-        : props.contragents);
-    const [locationProperty, setLocationProperty] = useState(props.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION'));
+    const [contrAgents, setContrAgents] = useState(props.contrAgents);
+    const [locationProperty, setLocationProperty] = useState(
+        props.result.ORDER_PROP.properties.find(prop => prop.CODE === 'LOCATION')
+    );
     const [OrderGeneralUserPropsBlockId, setOrderGeneralUserPropsBlockId] =
         useState(props.OrderGeneralUserPropsBlockId);
 
@@ -66,7 +66,7 @@ export const OrderContextProvider = (props) => {
         let requestData = BX.OrderPageComponents.getData(action, actionData)
         requestData.order = { ...requestData.order, ...additionalData }
 
-        console.log(requestData);
+
         if (action === 'saveOrderAjax') {
             form = BX('bx-soa-order-form');
             if (form)
@@ -212,7 +212,7 @@ export const OrderContextProvider = (props) => {
 
     return <OrderContext.Provider value={{
         result, setResult, params, setParams, options, setOptions, locations,
-        setLocations, locationProperty, contragents, setContragents, setLocationProperty, OrderGeneralUserPropsBlockId,
+        setLocations, locationProperty, contrAgents, setContrAgents, setLocationProperty, OrderGeneralUserPropsBlockId,
         setOrderGeneralUserPropsBlockId, sendRequest, isValidForm, isOrderSaveAllowed, allowOrderSave
     }}>
         {props.children}

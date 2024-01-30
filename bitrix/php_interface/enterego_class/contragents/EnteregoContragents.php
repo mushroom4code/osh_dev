@@ -76,41 +76,50 @@ class EnteregoContragents
 
     /**
      * @param int $user_id
+     * @param array[] $filters
      * @return array
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function getContragentsByUserId(int $user_id = 0): array
+    public static function getContragentsByUserId(int $user_id = 0, array $filters = []): array
     {
         $result = [];
-        $ids_new = [];
-        $resultUserRelationships = EnteregoORMRelationshipUserContragentsTable::getList(
-            array(
-                'select' => array(
-                    'ID_CONTRAGENT',
-                ),
-                'filter' => array(
-                    'USER_ID' => $user_id
-                ),
-            )
-        );
 
-        while ($ids_str = $resultUserRelationships->fetch()) {
-            $ids_new[] = $ids_str['ID_CONTRAGENT'];
-        }
-        if (!empty($ids_new)) {
-            $resultSelect = EnteregoORMContragentsTable::getList(
+        if ($user_id !== 0) {
+
+            $ids_new = [];
+            $resultUserRelationships = EnteregoORMRelationshipUserContragentsTable::getList(
                 array(
-                    'select' => array('*'),
+                    'select' => array(
+                        'ID_CONTRAGENT',
+                    ),
                     'filter' => array(
-                        "@ID_CONTRAGENT" => $ids_new
+                        'USER_ID' => $user_id
                     ),
                 )
             );
-            if (!empty($resultSelect)) {
-                while ($contargent = $resultSelect->fetch()) {
-                    $result[] = $contargent;
+
+            if (!empty($resultUserRelationships)) {
+
+                while ($ids_str = $resultUserRelationships->fetch()) {
+                    $ids_new[] = $ids_str['ID_CONTRAGENT'];
+                }
+
+                if (!empty($ids_new)) {
+                    $filters["@ID_CONTRAGENT"] = $ids_new;
+
+                    $resultSelect = EnteregoORMContragentsTable::getList(
+                        array(
+                            'select' => array('*'),
+                            'filter' => $filters,
+                        )
+                    );
+                    if (!empty($resultSelect)) {
+                        while ($contargent = $resultSelect->fetch()) {
+                            $result[] = $contargent;
+                        }
+                    }
                 }
             }
         }
@@ -122,7 +131,6 @@ class EnteregoContragents
     /**
      * @param int $user_id
      * @param array $arData
-     * @param string $type
      * @return string[]
      * @throws ArgumentException
      * @throws ObjectPropertyException

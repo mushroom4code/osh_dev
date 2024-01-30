@@ -48,13 +48,12 @@ BX.OrderPageComponents = {
         this.OrderDeliveryBlockId = currentDataset.deliveryBlockId;
         this.OrderPropertiesBlockId = currentDataset.userPropsBlockId;
         this.OrderPaysystemsBlockId = currentDataset.paysystemsBlockId;
-
         this.OrderMainBlock = document.getElementById(currentDataset.orderBlockId);
         if (this.OrderMainBlock) {
             this.OrderMainRoot = createRoot(this.OrderMainBlock);
             this.OrderMainRoot.render(
                 <OrderMain result={this.result} params={this.params} options={this.options}
-                           locations={this.locations} contragents={JSON.parse(currentDataset.contragents)}
+                           locations={this.locations} contrAgents={JSON.parse(currentDataset.contrAgents)}
                            ajaxUrl={this.ajaxUrl}
                            OrderGeneralUserPropsBlockId={currentDataset.generalUserPropsBlockId}
                 />

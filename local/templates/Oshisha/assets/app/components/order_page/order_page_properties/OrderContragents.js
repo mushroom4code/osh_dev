@@ -1,38 +1,38 @@
 import React, {useContext, useState} from "react";
-import OrderContext from "./Context/OrderContext";
+import OrderContext from "../Context/OrderContext";
 
 function OrderContragents({property}) {
-    const {result, contragents, sendRequest} = useContext(OrderContext);
+    const {result, contrAgents, sendRequest} = useContext(OrderContext);
     const [selectedContragent, setSelectedContragent] = useState();
-    if (!result['IS_AUTHORIZED'] || !contragents) {
+    if (!result['IS_AUTHORIZED'] || !contrAgents) {
         return(<></>);
     } else {
         var propertySettings = property,
             company_name_property = result.ORDER_PROP.properties.find(prop => prop.CODE === 'COMPANY'),
             inn_property = result.ORDER_PROP.properties.find(prop => prop.CODE === 'INN'), existingContragent;
         if (!selectedContragent) {
-            if (propertySettings['VALUE'][0] && (existingContragent = contragents.find(contragent => contragent.ID_CONTRAGENT === propertySettings['VALUE'][0]))) {
+            if (propertySettings['VALUE'][0] && (existingContragent = contrAgents.find(contrAgent => contrAgent.ID_CONTRAGENT === propertySettings['VALUE'][0]))) {
                 setSelectedContragent(
                     existingContragent
                 );
             } else {
-                setSelectedContragent(contragents[0]);
+                setSelectedContragent(contrAgents[0]);
             }
         }
         var selectJsx = [];
 
 
-        contragents.forEach((contragent) => {
+        contrAgents.forEach((contrAgent) => {
             selectJsx.push(
-                <option key={'option_contragent_' + contragent['ID_CONTRAGENT']}
-                        value={contragent['ID_CONTRAGENT']}>
-                    {contragent['NAME_ORGANIZATION']}
+                <option key={'option_contragent_' + contrAgent['ID_CONTRAGENT']}
+                        value={contrAgent['ID_CONTRAGENT']}>
+                    {contrAgent['NAME_ORGANIZATION']}
                 </option>
             );
         });
 
         const onChangeHandler = (event) => {
-            var newSelectedContragent = contragents.find(contragent => contragent.ID_CONTRAGENT === event.target.value);
+            var newSelectedContragent = contrAgents.find(contrAgent => contrAgent.ID_CONTRAGENT === event.target.value);
             document.querySelector('input[name="ORDER_PROP_' + inn_property['ID'] + '"]').value =
                 newSelectedContragent['INN'];
             document.querySelector('input[name="ORDER_PROP_' + company_name_property['ID'] + '"]').value =

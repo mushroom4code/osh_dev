@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useEffect} from 'react';
 import OrderUserTypeCheck from "./OrderUserTypeCheck";
-import OrderContragents from "./OrderContragents";
 import OrderUserProps from "./OrderUserProps";
 import OrderDelivery from "./OrderDelivery";
 import OrderPaySystems from "./OrderPaySystems";
@@ -14,14 +12,12 @@ OrderMain.propTypes = {};
 
 export const ajaxDeliveryUrl = '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php';
 
-function OrderMain({
-                       result, locations, params, options, contragents, OrderGeneralUserPropsBlockId, ajaxUrl
-                   }) {
-
+function OrderMain({result, locations, params, options, contrAgents, OrderGeneralUserPropsBlockId, ajaxUrl}) {
 
     useEffect(()=>{
         // ymap.init(()=>{console.log('ymap')})
     }, [])
+
     const renderDependingOnDeliveryToPaysystem = () => {
         return (
             <>
@@ -72,14 +68,14 @@ function OrderMain({
     return (
         <>
             <OrderContextProvider result={result} params={params} options={options} locations={locations}
-                                  contragents={contragents} OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId}
+                                  contrAgents={contrAgents} OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId}
                                   ajaxUrl={ajaxUrl}>
                 <div id="bx-soa-main-notifications" className="col-span-2">
                     <div className="alert alert-danger text-light-red dark:text-whitep p-4" style={{display: "none"}}></div>
                     <div datatype="informer" style={{display: "none"}}></div>
                 </div>
                 <div className="col-span-2 col-lg-8 col-md-7">
-                    <h5 className="mb-14 text-[24px] font-medium dark:font-normal">
+                    <h5 className="mb-3 text-[24px] font-medium dark:font-normal">
                         Покупатель
                         <i className="inline-block w-[19px] h-[19px] ml-2.5">
                             <svg width="19" height="19" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg">
