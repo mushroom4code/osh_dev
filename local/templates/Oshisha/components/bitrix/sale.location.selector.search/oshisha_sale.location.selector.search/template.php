@@ -50,7 +50,7 @@ else:
 
 		$dropDownBlock = $uiFilter ? "dropdown-block-ui" : "dropdown-block"; ?>
 		<div class="<?=$dropDownBlock?> bx-ui-sls-input-block border-solid relative bg-white shadow-none border-[1px]
-		    pl-[30px] pr-[22px] pt-[2px] min-h-[38px] rounded-lg border-grey-line-order">
+		    pl-[30px] pr-[22px] pt-[2px] min-h-[38px] lg:h-[45px] md:h-[45px] h-[50px] rounded-lg border-grey-line-order">
 
 			<span class="dropdown-icon">
                 <div class="flex items-center justify-center h-full w-full">
