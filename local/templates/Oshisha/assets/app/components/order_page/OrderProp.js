@@ -18,9 +18,13 @@ function OrderProp({property, disabled}) {
                     BX.adjust(BX('user_select'), {style: {display: "none"}});
                 }
             }
+            classNames += ' md:w-1/2 w-full';
+            break;
+        case 'PHONE':
+            classNames += ' md:w-1/2 w-full';
             break;
         case 'FIO':
-            classNames += ' col-span-2';
+            classNames += ' w-full';
             break;
         default:
             break;

@@ -3,7 +3,7 @@ import OrderContext from "./Context/OrderContext";
 
 function OrderTotal() {
     const {
-        result, params, options, OrderGeneralUserPropsBlockId, sendRequest, isValidForm,
+        result, params, options, sendRequest, isValidForm,
         isOrderSaveAllowed, allowOrderSave
     } = useContext(OrderContext);
     var orderSaveAllowed = false;
@@ -187,44 +187,9 @@ function OrderTotal() {
         return currentDelivery;
     }
 
-    const click_edit = () => {
-        let select_block =
-            document.querySelector('#' + OrderGeneralUserPropsBlockId + ' .bx-soa-section-title-container');
-        let props = BX.findChildren(select_block, {className: 'user_select'}), i, option_company, option_contrs;
-        let input_block_company = document.querySelector('input[data-name="company"]');
-        let input_block_contragent = document.querySelector('input[data-name="contragent"]');
-        let input_period_delivery = document.querySelector('input[data-name="TIME"]');
-        let selection;
-        if (input_period_delivery) {
-            selection = document.querySelector('.select_period').value;
-            input_period_delivery.value = selection;
-        }
-        for (i = 0; i < props.length; i++) {
-            option_company = BX.findChildren(props[i], {className: 'company_user_order'});
-            option_contrs = BX.findChildren(props[i], {className: 'contragent_user'});
-            let elem_company = option_company[0];
-            let elem_contrs = option_contrs[0];
-
-            if (elem_contrs.children.length !== 0) {
-                let value_option_contragent_id = elem_contrs.options[elem_contrs.selectedIndex].value;
-                if (value_option_contragent_id && input_block_contragent !== null) {
-                    input_block_contragent.value = value_option_contragent_id;
-                }
-            }
-            if (elem_company.children.length !== 0) {
-                let value_option_company_id = elem_company.options[elem_company.selectedIndex].value;
-                if (value_option_company_id && input_block_company !== null) {
-                    input_block_company.value = value_option_company_id;
-                }
-            }
-        }
-    }
-
     const clickOrderSaveAction = (event) => {
         event.preventDefault();
-        if (result.IS_AUTHORIZED) {
-            click_edit();
-        }
+
         if (isValidForm()) {
             allowOrderSave();
             if (params.USER_CONSENT === 'Y' && BX.UserConsent) {
@@ -242,7 +207,6 @@ function OrderTotal() {
             sendRequest('saveOrderAjax', []);
         }
     }
-
 
     return (
         <>
