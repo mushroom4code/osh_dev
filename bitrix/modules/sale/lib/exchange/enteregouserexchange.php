@@ -17,7 +17,7 @@ class EnteregoUserExchange
     public array $contragents_user = [];
     public array $company_user = [];
     public string $LOGIN = '';
-    public int $ID = 0;
+    public $ID = 0;
     public int $STATUS = 0;
     public \Bitrix\Main\Type\DateTime $TIMESTAMP_X;
 

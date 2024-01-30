@@ -29,10 +29,10 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
             <input type="text" data-range="true" data-multiple-dates-separator=" - "
                    class="datepicker-here dark:bg-grayButton bg-white dark:border-none border-borderColor text-sm
                          focus:border-borderColor shadow-none py-2 px-4 outline-none rounded-md w-auto date_input mr-3"/>
-            <a class="sort_orders dark:bg-grayButton bg-textDark text-sm py-2 px-4 rounded-md w-full relative"
+            <a class="sort_orders dark:bg-grayButton bg-textDark text-sm py-2 md:px-4 px-2 rounded-md w-full relative"
                href="javascript:void(0)">
-                <span class="sort_orders_by flex flex-row items-center">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="mr-2"
+                <div class="flex flex-row items-center">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="mr-1"
                          xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
                               d="M18.9583 5.83331C18.9583 6.17849 18.6785 6.45831 18.3333 6.45831H1.66663C1.32145 6.45831 1.04163 6.17849 1.04163 5.83331C1.04163 5.48814 1.32145 5.20831 1.66663 5.20831H18.3333C18.6785 5.20831 18.9583 5.48814 18.9583 5.83331Z"
@@ -44,8 +44,12 @@ $APPLICATION->AddChainItem(Loc::getMessage("SPS_CHAIN_ORDERS"), $arResult['PATH_
                               d="M13.9583 14.1667C13.9583 14.5119 13.6785 14.7917 13.3333 14.7917H6.66663C6.32145 14.7917 6.04163 14.5119 6.04163 14.1667C6.04163 13.8215 6.32145 13.5417 6.66663 13.5417H13.3333C13.6785 13.5417 13.9583 13.8215 13.9583 14.1667Z"
                               fill="#CD1D1D"/>
                     </svg>
-                    <span class="text-sm text-textLight font-normal dark:text-textDarkLightGray">Сортировать по</span>
-                </span>
+                    <span class="sort_orders_by">
+                        <span class="md:text-sm text-xs text-textLight font-normal dark:text-textDarkLightGray">
+                            Сортировать по
+                        </span>
+                    </span>
+                </div>
                 <div class="sort_orders_elements hidden absolute top-9 w-full rounded-b-lg z-30 p-3 pt-0 dark:bg-grayButton
                  bg-textDark right-0"
                      data-sort-status="<?= $orders_status ?>">
