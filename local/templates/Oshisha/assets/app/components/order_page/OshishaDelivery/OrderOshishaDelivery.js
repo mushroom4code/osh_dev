@@ -226,13 +226,13 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                                     {propDateDelivery !== undefined
                                         ?
                                         <OrderPropDate property={propDateDelivery} className=' basis-1/2 flex flex-col'
-                                            minDate={dayjs().add(1, 'day').toDate()} />
+                                                       minDate={dayjs().add(1, 'day').toDate()}/>
                                         : null
                                     }
                                     {propDeliveryInterval !== undefined
                                         ?
                                         <OrderPropSelect property={propDeliveryInterval}
-                                            className=' basis-1/2 flex flex-col' />
+                                                         className=' basis-1/2 flex flex-col'/>
                                         : null}
                                 </div>
                                 : null
@@ -272,12 +272,14 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                         </div>
                         <div className="mb-3">
                             <OrderPropLocationCustom currentLocation={currentLocation} propLocation={propLocation}
-                                setCurrentLocation={setCurrentLocation} />
+                                                     setCurrentLocation={setCurrentLocation}/>
                         </div>
                         <div className="lg:max-h-96 overflow-auto max-h-60">
                             {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId
-                                ? <OshishaDoorDelivery result={result} params={params} propAddress={propAddress} setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
-                                    sendRequest={sendRequest} currentLocation={currentLocation} handleSelectSuggest={handleSelectSuggest} />
+                                ? <OshishaDoorDelivery result={result} params={params} propAddress={propAddress}
+                                                       setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
+                                                       sendRequest={sendRequest} currentLocation={currentLocation}
+                                                       handleSelectSuggest={handleSelectSuggest}/>
                                 : null
                             }
                             {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
@@ -294,7 +296,7 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                             }
                         </div>
                         <Close showHide={showHideBlockWithDelivery}
-                            setShowHide={setShowHideBlockWithDelivery} />
+                               setShowHide={setShowHideBlockWithDelivery}/>
                     </div>
                     {listOshDeliveryProp.map(code => {
                         const property = result.ORDER_PROP.properties.find(prop => prop.CODE === code)

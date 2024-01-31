@@ -67,9 +67,9 @@ function OshishaPvzList({
 }) {
     return (
         <div className="w-full px-[15px] mx-auto flex flex-col overflow-auto">
-            <a href='javascript(0)' className='text-white text-center flex items-center
-                    justify-content-center dark:text-textDark shadow-md dark:bg-dark-red bg-light-red py-2 lg:px-16 md:px-16 px-10 rounded-5 font-bold'>
-                Подтвердить
+            <a href='javascript(0)' className='text-white text-center flex items-center w-fit justify-center
+                         dark:text-textDark shadow-md dark:bg-dark-red bg-light-red py-2 lg:px-16 md:px-16 px-10
+                         rounded-5 font-normal'>Подтвердить
             </a>
             <div className="w-full px-[15px] mx-auto lg:flex md:flex hidden flex-row flex-wrap table-header pr-5"></div>
             {features.map((feature, index) => {
