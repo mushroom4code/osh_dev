@@ -3,11 +3,13 @@ import React, { useContext } from "react";
 import OrderContext from "./Context/OrderContext";
 import OrderContragents from "./order_page_properties/OrderContragents";
 
-function OrderUserProps() {
+function OrderUserProps({contrAgents}) {
 
-    const { result, contrAgents } = useContext(OrderContext);
+    // TODO - вопрос про хранение списка контр-тов - по сути это статичный список который получается и
+    //  обновл при обновлении формы заказа - надо ли его пихать в контектст вообще или нет
+
+    const { result } = useContext(OrderContext);
     const userFieldsGroup = 'Личные данные'
-    console.log(result)
 
     const userGroup = result.ORDER_PROP.groups.find(group => group.NAME === userFieldsGroup)
     return (<div className="row">

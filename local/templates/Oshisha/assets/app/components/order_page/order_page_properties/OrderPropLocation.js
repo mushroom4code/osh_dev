@@ -86,7 +86,7 @@ function OrderPropLocation() {
                      dark:font-normal text-sm uppercase" htmlFor={'soa-property-' + locationProperty.ID}>
                         {locationProperty.NAME}
                     </label>
-                    <div className="soa-property-container">
+                    <div className="soa-property-container w-full">
                     {locationsJsx}
                     </div>
                 </div>);

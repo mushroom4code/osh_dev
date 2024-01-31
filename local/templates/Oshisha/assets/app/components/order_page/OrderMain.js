@@ -68,8 +68,7 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
     return (
         <>
             <OrderContextProvider result={result} params={params} options={options} locations={locations}
-                                  contrAgents={contrAgents} OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId}
-                                  ajaxUrl={ajaxUrl}>
+                                  OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId} ajaxUrl={ajaxUrl}>
                 <div id="bx-soa-main-notifications" className="col-span-2">
                     <div className="alert alert-danger text-light-red dark:text-whitep p-4" style={{display: "none"}}></div>
                     <div datatype="informer" style={{display: "none"}}></div>
@@ -108,7 +107,7 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                             <div id="user-properties-block" className="bx-soa-section-content">
                                 <div className="alert alert-danger text-light-red dark:text-white p-4"
                                      style={{display: "none"}}></div>
-                                <OrderUserProps/>
+                                <OrderUserProps contrAgents={contrAgents}/>
                             </div>
                         </div>
                         {/*AUTH BLOCK	*/}

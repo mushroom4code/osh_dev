@@ -3,7 +3,7 @@ import React from "react";
 function OrderPropEnum({property, disabled}) {
 
     if (!disabled) {
-        return (<div className="soa-property-container flex justify-between">
+        return (<div className="soa-property-container flex justify-between w-full">
             {Object.keys(property.OPTIONS).map(key => <div key={'order_prop_enum_'+key}>
                     <label className="font-semibold dark:font-normal">
                         <input className="form-check-input ring-0 focus:ring-0 focus:ring-transparent
