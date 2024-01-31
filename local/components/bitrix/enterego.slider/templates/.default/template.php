@@ -99,7 +99,7 @@ if (isset($arParams['SECTIONS_ITEMS'])) {
             ?>
             <div id="<?= $strContID; ?>"
                  class="col2 <?= $templateData['TEMPLATE_CLASS']; ?>">
-                <div class="bx_catalog_tile_section max-w-full md:p-10 p-2" id="hits_slider_<?=$strRand?>">
+                <div class="bx_catalog_tile_section max-w-full md:py-6 md:px-6 p-2" id="hits_slider_<?=$strRand?>">
                     <?php
                     $boolFirst = true;
                     $arRowIDs = array();

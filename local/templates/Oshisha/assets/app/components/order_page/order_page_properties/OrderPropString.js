@@ -12,7 +12,7 @@ function OrderPropString({ property, disabled }) {
         setValue(e.target.value)
     }
 
-    return (<div className="soa-property-container">
+    return (<div className="soa-property-container w-full">
         <input type="text" className="w-full text-sm cursor-text p-3 border-grey-line-order ring:grey-line-order dark:border-darkBox rounded-lg
                dark:bg-darkBox"
             size={property.SIZE}

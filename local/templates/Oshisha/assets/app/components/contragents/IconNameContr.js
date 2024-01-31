@@ -4,7 +4,7 @@ function IconNameContr({width, height, color, form, newColor, button, newColorIc
 
     return (
         <svg width={width || '50'} height={height || "51"} viewBox="0 0 50 51" fill="none"
-             className={button ? 'mr-1' : 'mr-4'}
+             className={button ? 'mr-2' : 'mr-4'}
              xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_2032_5062)">
                 <rect y="0.154785" width="50" height="50.8453" rx="25"

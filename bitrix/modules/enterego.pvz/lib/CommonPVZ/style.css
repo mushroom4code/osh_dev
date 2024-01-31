@@ -194,22 +194,8 @@ h4.checkout-block-title > i.fa {
 
 #bx-soa-properties .form-group {
     display: flex;
-    /*align-items: center;*/
-    /*justify-content: flex-start;*/
     justify-content: space-between;
     flex-wrap: wrap;
-}
-
-#bx-soa-properties .soa-property-container {
-    width: 100%;
-}
-
-#bx-soa-properties .form-group > label.bx-soa-custom-label {
-    width: 100%;
-}
-
-#bx-soa-properties .form-group > .radio-inline {
-    width: 50%;
 }
 
 #bx-soa-properties .form-group > .radio-inline > label {
@@ -217,8 +203,6 @@ h4.checkout-block-title > i.fa {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    /*font-weight: normal;*/
-    /*font-size: 1em;*/
 }
 
 #bx-soa-properties .form-group > .radio-inline > label [name="PERSON_TYPE"] {

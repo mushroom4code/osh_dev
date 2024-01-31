@@ -83,7 +83,7 @@ function ContragentList({typeForms}) {
                                              setShowForm(true)
                                          }}>
                                         <IconNameContr width="35" height="36" button={true} color={true}/>
-                                        <span className="ml-1 text-sm">Добавить</span>
+                                        <span className="text-sm">Добавить</span>
                                     </div> : false
                             }
                         </p>
