@@ -14,7 +14,7 @@ export const ajaxDeliveryUrl = '/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.
 
 function OrderMain({result, locations, params, options, contrAgents, OrderGeneralUserPropsBlockId, ajaxUrl}) {
 
-    useEffect(()=>{
+    useEffect(() => {
         // ymap.init(()=>{console.log('ymap')})
     }, [])
 
@@ -70,7 +70,8 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
             <OrderContextProvider result={result} params={params} options={options} locations={locations}
                                   OrderGeneralUserPropsBlockId={OrderGeneralUserPropsBlockId} ajaxUrl={ajaxUrl}>
                 <div id="bx-soa-main-notifications" className="col-span-2">
-                    <div className="alert alert-danger text-light-red dark:text-whitep p-4" style={{display: "none"}}></div>
+                    <div className="alert alert-danger text-light-red dark:text-whitep p-4"
+                         style={{display: "none"}}></div>
                     <div datatype="informer" style={{display: "none"}}></div>
                 </div>
                 <div className="col-span-2">
@@ -137,19 +138,19 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
 
                         {/*DELIVERY BLOCK*/}
                         <div id="bx-soa-delivery" data-visited="false"
-                             className="bx-soa-section mb-4  bx-active"
+                             className="bx-soa-section mb-14  bx-active"
                              style={!result['DELIVERY'] ? {display: "none"} : {display: "block"}}>
                             <div
                                 className="bx-soa-section-title-container mt-2 mb-4 overflow-hidden flex
                             justify-between items-center flex-nowrap">
-                                    <div className="bx-soa-section-title text-textLight dark:text-textDarkLightGray
-                                    md:mb-3 md:text-2xl text-xl mb-5 font-medium dark:font-normal"
-                                         data-entity="section-title">
-                                        {params['MESS_DELIVERY_BLOCK_NAME']}
-                                    </div>
+                                <div className="bx-soa-section-title text-textLight dark:text-textDarkLightGray
+                                     md:text-2xl text-xl font-medium dark:font-normal"
+                                     data-entity="section-title">
+                                    {params['MESS_DELIVERY_BLOCK_NAME']}
+                                </div>
                             </div>
                             <div className="box_with_delivery_type">
-                            <div className="bx-soa-section-content" id="delivery-block">
+                                <div className="bx-soa-section-content" id="delivery-block">
                                     <div className="alert alert-danger text-light-red dark:text-white p-4"
                                          style={{display: "none"}}></div>
                                     <OrderDelivery/>
