@@ -34,6 +34,8 @@ const deliveryIntervalPropCode = 'DELIVERYTIME_INTERVAL'
 function OrderOshishaDelivery({result, params, sendRequest}) {
 
     const curDelivery = result.DELIVERY.find(delivery => delivery.CHECKED === 'Y')
+    const [typePvzList, setTypePvzList] = useState('map')
+
     const listOshDelivery = curDelivery === null || curDelivery.CALCULATE_DESCRIPTION === ''
         ? [] : JSON.parse(curDelivery.CALCULATE_DESCRIPTION)
 
@@ -45,6 +47,53 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
     const propDeliveryInterval = result.ORDER_PROP.properties.find(prop => prop.CODE === deliveryIntervalPropCode)
 
     const [currentLocation, setCurrentLocation] = useState(null)
+
+    useEffect(() => {
+        axios.post("/bitrix/components/bitrix/sale.location.selector.search/get.php",
+            {
+                sessid: BX.bitrix_sessid(),
+                select: {1: "CODE", 2: "TYPE_ID", VALUE: "ID", DISPLAY: "NAME.NAME"},
+                additionals: {1: "PATH"},
+                filter: {"=CODE": propLocation.VALUE[0] ?? '0000073738', "=NAME.LANGUAGE_ID": "ru", "=SITE_ID": "N2"},
+                version: 2,
+                PAGE_SIZE: 10,
+                PAGE: 0
+            },
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(response => {
+
+            const locations = eval("(" + response.data + ")")
+            if (locations.result && locations.data.ITEMS.length > 0) {
+                const pathInfo = locations.data.ITEMS[0].PATH.map(path => locations.data.ETC.PATH_ITEMS[path])
+                setCurrentLocation({...locations.data.ITEMS[0], PATH: pathInfo})
+            } else {
+                setCurrentLocation(null)
+            }
+        })
+
+    }, []);
+
+    useEffect(() => {
+        if (currentLocation === null) {
+            return
+        }
+
+        //todo send reqeust when load current location
+        axios.post(
+            ajaxDeliveryUrl,
+            {
+                sessid: BX.bitrix_sessid(),
+                address: currentLocation.DISPLAY,
+                action: 'getDaDataSuggest'
+            },
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(response => {
+            if (response.data.length > 0) {
+                handleSelectSuggest(response.data[0])
+            }
+        })
+
+    }, [currentLocation]);
 
     const handleSelectSuggest = (suggest) => {
 
@@ -99,6 +148,10 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
         // )
     }
 
+    const onSelectTypePvzList = (e) => {
+        setTypePvzList(e.target.value)
+    }
+
     return (
         <div className='p-2 bg-white dark:bg-darkBox dark:text-white dark:border-grey-line-order'>
             <div className='flex flex-row'>
@@ -130,9 +183,32 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                              ? <OrderPropSelect property={propDeliveryInterval} className=' basis-1/2 flex flex-col'/> 
                              : null}
                     </div>
-                    : <div>
-
-                    </div>
+                    : null
+                }
+                {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
+                    ? <>
+                        <div className='flex-1 flex flex-col'>
+                            <label className="pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm">Показать</label>
+                            <label className="font-semibold dark:font-normal">
+                                <input className="ring-0 focus:ring-0 focus:ring-transparent
+                    focus:ring-offset-transparent focus:outline-none mr-2" name='TYPE_PVZ_LIST' value='map' type="radio"
+                                    onChange={onSelectTypePvzList} checked={typePvzList==='map'}
+                                />
+                                На карте
+                            </label>
+                            <label className="font-semibold dark:font-normal">
+                                <input className="ring-0 focus:ring-0 focus:ring-transparent
+                       focus:ring-offset-transparent focus:outline-none mr-2" name='TYPE_PVZ_LIST' value='list' type="radio"
+                                    onChange={onSelectTypePvzList} checked={typePvzList==='list'}
+                                />
+                                Списком
+                            </label>
+                        </div>
+                        <div className='flex-1 flex flex-col'>
+                            <label className="pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm">Фильтрация</label>
+                        </div>
+                    </>
+                    : null
                 }
             </div>
             <OrderPropLocationCustom currentLocation={currentLocation} propLocation={propLocation}
@@ -154,6 +230,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                     result={result}
                     params={params}
                     sendRequest={sendRequest}
+                    typePvzList={typePvzList}
                 />
                 : null
             }

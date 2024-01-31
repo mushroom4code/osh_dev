@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios';
 
-function OshishaYMap({ cityName, cityCode, features, params, orderResult, sendRequest}) {
+function OshishaYMap({ cityName, cityCode, features, params, orderResult,
+    getRequestGetPvzPrice, sendRequest, getPointData }) {
+
     const [pvzMap, setPvzMap] = useState(null)
 
     function getSelectPvzPrice(objectManager, points, clusterId = undefined) {
@@ -13,29 +15,12 @@ function OshishaYMap({ cityName, cityCode, features, params, orderResult, sendRe
                     if (clusterId === undefined) {
                         objectManager.objects.balloon.setData(point);
                     }
-                    return result.concat({
-                        id: point.id,
-                        action: 'getPrice',
-                        code_city: cityCode,
-                        delivery: point.properties.deliveryName,
-                        to: point.properties.fullAddress,
-                        weight: orderResult.TOTAL.ORDER_WEIGHT,
-                        cost: params.OSH_DELIVERY.shipmentCost,
-                        packages: params.OSH_DELIVERY.packages,
-                        street_kladr: point.properties.street_kladr ?? '',
-                        latitude: point.geometry.coordinates[0],
-                        longitude: point.geometry.coordinates[1],
-                        hubregion: point.properties.hubregion,
-                        name_city: cityName,
-                        postindex: point.properties.postindex,
-                        code_pvz: point.properties.code_pvz,
-                        type_pvz: point.properties.type ?? ''
-                    })
+                    return result.concat(getPointData(point))
                 }
                 return result;
             }, [])
 
-            
+
             if (data.length === 0)
                 return;
 
@@ -48,12 +33,8 @@ function OshishaYMap({ cityName, cityCode, features, params, orderResult, sendRe
                     objectManager.clusters.balloon.setData(objectManager.clusters.balloon.getData());
                 }
             }
-            
-            axios.post('/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php', {
-                sessid: BX.bitrix_sessid(),
-                'dataToHandler': data,
-                'action': 'getPVZPrice'
-            }, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(response => {            
+
+            getRequestGetPvzPrice(data).then(response => {
                 if (response.data.status === 'success') {
                     response.data.data.forEach(item => {
                         const point = features.find(feature => feature.id == item.id)
@@ -106,7 +87,7 @@ function OshishaYMap({ cityName, cityCode, features, params, orderResult, sendRe
         setAdditionalData(additionalData, 'TYPE_DELIVERY', point.properties.deliveryName);
         setAdditionalData(additionalData, 'ADDRESS_PVZ', point.properties.fullAddress);
         setAdditionalData(additionalData, 'TYPE_PVZ', point.properties.type);
-        
+
         sendRequest('refreshOrderAjax', {}, additionalData);
     }
 
