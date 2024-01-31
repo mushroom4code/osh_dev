@@ -6,22 +6,36 @@ import OshishaPvzList from './OshishaPvzList';
 import { ajaxDeliveryUrl } from '../OrderMain';
 import { deliveryProp } from './OrderOshishaDelivery';
 
-function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, typePvzList }) {
+function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, typePvzList, setShowHideBlockWithDelivery }) {
 
     if (cityCode === undefined) {
         return
     }
 
     const [features, setFeatures] = useState([])
-    const [selectPvz, setSelectPvz] = useState(result.ORDER_PROP.properties.find(
-        prop => prop.CODE === deliveryProp.commonPvz.code)?.VALUE[0])
+    const [selectPvz, setSelectPvz] = useState({
+        code_pvz: result.ORDER_PROP.properties.find(
+            prop => prop.CODE === deliveryProp.commonPvz.code)?.VALUE[0],
+        deliveryName: result.ORDER_PROP.properties.find(
+            prop => prop.CODE === deliveryProp.typeDelivery.code)?.VALUE[0],
+        fullAddress: result.ORDER_PROP.properties.find(
+            prop => prop.CODE === deliveryProp.addressPvz.code)?.VALUE[0],
+        type: result.ORDER_PROP.properties.find(
+            prop => prop.CODE === deliveryProp.typePvz.code)?.VALUE[0],
+    })
 
-    function getRequestGetPvzPrice(data) {
-        return axios.post(ajaxDeliveryUrl, {
+    async function getRequestGetPvzPrice(data) {
+        const response = await axios.post(ajaxDeliveryUrl, {
             sessid: BX.bitrix_sessid(),
             'dataToHandler': data,
             'action': 'getPVZPrice'
         }, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+
+        if (response.data.status === "success") {
+            return response.data.data
+        } else {
+            return []
+        }
     }
 
     const getPointData = (point) => {
@@ -32,7 +46,7 @@ function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, t
             delivery: point.properties.deliveryName,
             to: point.properties.fullAddress,
             weight: result.TOTAL.ORDER_WEIGHT,
-            cost:  params.OSH_DELIVERY.shipmentCost,
+            cost: params.OSH_DELIVERY.shipmentCost,
             packages: params.OSH_DELIVERY.packages,
             street_kladr: point.properties.street_kladr ?? '',
             latitude: point.geometry.coordinates[0],
@@ -56,44 +70,39 @@ function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, t
             return additionalData
         }
 
-        setAdditionalData(additionalData, 'COMMON_PVZ', point.properties.code_pvz);
-        setAdditionalData(additionalData, 'TYPE_DELIVERY', point.properties.deliveryName);
-        setAdditionalData(additionalData, 'ADDRESS_PVZ', point.properties.fullAddress);
-        setAdditionalData(additionalData, 'TYPE_PVZ', point.properties.type);
+        setAdditionalData(additionalData, deliveryProp.commonPvz.code, point.properties.code_pvz);
+        setAdditionalData(additionalData, deliveryProp.typeDelivery.code, point.properties.deliveryName);
+        setAdditionalData(additionalData, deliveryProp.addressPvz, point.properties.fullAddress);
+        setAdditionalData(additionalData, deliveryProp.typePvz, point.properties.type);
 
         sendRequest('refreshOrderAjax', {}, additionalData);
+        setShowHideBlockWithDelivery(false)
     }
 
 
     useEffect(() => {
+        //todo errors from back
         axios.post('/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php', {
             sessid: BX.bitrix_sessid(),
             codeCity: cityCode,
-            action: 'getCityName'
+            cityName: cityName,
+            orderPackages: params.OSH_DELIVERY.packages,
+            action: 'getPVZList'
         }, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(response => {
-
-            //todo errors from back
-            axios.post('/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php', {
-                sessid: BX.bitrix_sessid(),
-                codeCity: cityCode,
-                cityName: cityName,
-                orderPackages: params.OSH_DELIVERY.packages,
-                action: 'getPVZList'
-            }, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(response => {
-                setFeatures(response.data.features)
-            })
+            setFeatures(response.data.features)
         })
+
     }, [cityCode])
 
     return (
         <div className='flex-1 overflow-auto'>
             {typePvzList === 'map'
                 ? <OshishaYMap cityCode={cityCode} cityName={cityName} features={features}
-                    params={params} orderResult={result} getPointData={getPointData}
-                    getRequestGetPvzPrice={getRequestGetPvzPrice} sendRequest={sendRequest} 
-                    handleSelectPvz={handleSelectPvz}/>
+                    getPointData={getPointData} getRequestGetPvzPrice={getRequestGetPvzPrice} handleSelectPvz={handleSelectPvz} />
                 : <OshishaPvzList features={features} sendRequest={sendRequest} getPointData={getPointData}
-                    getRequestGetPvzPrice={getRequestGetPvzPrice} selectPvz={selectPvz} setSelectPvz={setSelectPvz} />
+                    getRequestGetPvzPrice={getRequestGetPvzPrice} selectPvz={selectPvz} setSelectPvz={setSelectPvz}
+                    handleSelectPvz={handleSelectPvz}
+                />
             }
         </div>
     )

@@ -1,73 +1,66 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import axios from 'axios';
 
-function OshishaYMap({ cityName, cityCode, features, params, orderResult,
-    getRequestGetPvzPrice, sendRequest, getPointData, handleSelectPvz }) {
+function OshishaYMap({ cityName, features,
+    getRequestGetPvzPrice, getPointData, handleSelectPvz }) {
 
     const [pvzMap, setPvzMap] = useState(null)
 
     function getSelectPvzPrice(objectManager, points, clusterId = undefined) {
-        try {
-            const data = points.reduce((result, point) => {
-                if (!point.properties.balloonContent) {
-                    point.properties.balloonContent = "Идет загрузка данных...";
-                    if (clusterId === undefined) {
-                        objectManager.objects.balloon.setData(point);
-                    }
-                    return result.concat(getPointData(point))
+        const data = points.reduce((result, point) => {
+            if (!point.properties.balloonContent) {
+                point.properties.balloonContent = "Идет загрузка данных...";
+                if (clusterId === undefined) {
+                    objectManager.objects.balloon.setData(point);
                 }
-                return result;
-            }, [])
+                return result.concat(getPointData(point))
+            }
+            return result;
+        }, [])
 
 
-            if (data.length === 0)
-                return;
+        if (data.length === 0)
+            return;
 
+        if (clusterId !== undefined && objectManager.clusters.balloon.isOpen(clusterId)) {
+            objectManager.clusters.balloon.setData(objectManager.clusters.balloon.getData());
+        }
+
+        const afterSuccess = function (data) {
             if (clusterId !== undefined && objectManager.clusters.balloon.isOpen(clusterId)) {
                 objectManager.clusters.balloon.setData(objectManager.clusters.balloon.getData());
             }
+        }
 
-            const afterSuccess = function (data) {
-                if (clusterId !== undefined && objectManager.clusters.balloon.isOpen(clusterId)) {
-                    objectManager.clusters.balloon.setData(objectManager.clusters.balloon.getData());
-                }
-            }
+        getRequestGetPvzPrice(data).then(data => {
 
-            getRequestGetPvzPrice(data).then(response => {
-                if (response.data.status === 'success') {
-                    response.data.data.forEach(item => {
-                        const point = features.find(feature => feature.id == item.id)
-                        const balloonContent = "".concat(
-                            `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ'}${item.price ? ' - ' + item.price : ''} руб.</b></div>`,
-                            `<div>${point.properties.fullAddress}</div>`,
-                            point.properties.phone ? `<div>${point.properties.phone}</div>` : '',
-                            point.properties.workTime ? `<div>${point.properties.workTime}</div>` : '',
-                            point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
-                            point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
-                            item['error'] ? `<div>При расчете стоимости произошла ошибка, пожалуйста выберите другой ПВЗ или вид доставки</div>` :
-                                `<a class="btn btn_basket mt-2 dark:text-textDark shadow-md text-white dark:bg-dark-red bg-light-red 
-                    lg:py-2 py-3 px-4 rounded-5 block text-center font-semibold" href="javascript:void(0)" 
-                    onclick="BX.reactHandler.selectPvz(${item.id});" >Выбрать</a>`)
+            data.forEach(item => {
+                const point = features.find(feature => feature.id == item.id)
+                const balloonContent = "".concat(
+                    `<div><b>${point.properties?.type === "POSTAMAT" ? 'Постомат' : 'ПВЗ'}${item.price ? ' - ' + item.price : ''} руб.</b></div>`,
+                    `<div>${point.properties.fullAddress}</div>`,
+                    point.properties.phone ? `<div>${point.properties.phone}</div>` : '',
+                    point.properties.workTime ? `<div>${point.properties.workTime}</div>` : '',
+                    point.properties.comment ? `<div><i>${point.properties.comment}</i></div>` : '',
+                    point.properties.postindex ? `<div><i>${point.properties.postindex}</i></div>` : '',
+                    item['error'] ? `<div>При расчете стоимости произошла ошибка, пожалуйста выберите другой ПВЗ или вид доставки</div>` :
+                        `<a class="btn btn_basket mt-2 dark:text-textDark shadow-md text-white dark:bg-dark-red bg-light-red 
+                lg:py-2 py-3 px-4 rounded-5 block text-center font-semibold" href="javascript:void(0)" 
+                onclick="BX.reactHandler.selectPvz(${item.id});" >Выбрать</a>`)
 
-                        point.properties = {
-                            ...point.properties,
-                            price: item.price,
-                            balloonContent: balloonContent,
-                        };
+                point.properties = {
+                    ...point.properties,
+                    price: item.price,
+                    balloonContent: balloonContent,
+                };
 
-                        if (clusterId === undefined && true) {
-                            //BX.SaleCommonPVZ.componentParams.displayPVZ === typeDisplayPVZ.map) {
-                            objectManager.objects.balloon.setData(point);
-                        }
-                    })
+                if (clusterId === undefined && true) {
+                    //BX.SaleCommonPVZ.componentParams.displayPVZ === typeDisplayPVZ.map) {
+                    objectManager.objects.balloon.setData(point);
                 }
             })
 
-        } catch (excepction) {
-
-
-        }
+        })
     }
 
     function selectPvzOnMap(objectManager, itemId) {
@@ -136,12 +129,18 @@ function OshishaYMap({ cityName, cityCode, features, params, orderResult,
     }, [cityName, features, pvzMap])
 
     return (
-        <div style={{ height: 600, width: 600 }} id='map_for_delivery_react'>
+        <div className="h-full w-full pt-2" id='map_for_delivery_react'>
 
         </div>
     )
 }
 
-OshishaYMap.propTypes = {}
+OshishaYMap.propTypes = {
+    cityName: PropTypes.string,
+    features: PropTypes.array,
+    getRequestGetPvzPrice: PropTypes.func,
+    getPointData: PropTypes.func,
+    handleSelectPvz: PropTypes.func
+}
 
 export default OshishaYMap

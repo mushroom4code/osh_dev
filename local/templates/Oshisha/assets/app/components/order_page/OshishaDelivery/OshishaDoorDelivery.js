@@ -1,11 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { listOshDeliveryProp } from './OrderOshishaDelivery';
-import OrderProp from '../OrderProp';
 import MapMarker from './icon/MapMarker';
 import Track from './icon/Track';
+import OshishaDaDataAddress from './OshishaDaDataAddress';
 
-function OshishaDoorDelivery({ result, params, sendRequest }) {
+function OshishaDoorDelivery({ result, params, sendRequest, currentLocation, handleSelectSuggest, propAddress  }) {
 
     const doorDelivery = result.DELIVERY.find(delivery =>
         delivery.ID === params.OSH_DELIVERY.doorDeliveryId && delivery.CHECKED === 'Y'
@@ -16,6 +15,8 @@ function OshishaDoorDelivery({ result, params, sendRequest }) {
 
     return (
         <div>
+            <OshishaDaDataAddress currentLocation={currentLocation}
+                                              address={propAddress.VALUE[0]} handleSelectSuggest={handleSelectSuggest}/>
             <div className='w-full px-[15px] mx-auto lg:flex md:flex hidden flex-row flex-wrap'>
                 <div className='basis-1/2'>
                     <MapMarker />
@@ -53,6 +54,13 @@ function OshishaDoorDelivery({ result, params, sendRequest }) {
     )
 }
 
-OshishaDoorDelivery.propTypes = {}
+OshishaDoorDelivery.propTypes = {
+    result: PropTypes.object,
+    params: PropTypes.object,
+    sendRequest: PropTypes.func,
+    currentLocation: PropTypes.object,
+    handleSelectSuggest: PropTypes.func,
+    propAddress: PropTypes.object
+}
 
 export default OshishaDoorDelivery
