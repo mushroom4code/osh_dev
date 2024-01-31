@@ -19,7 +19,7 @@ function getPersonTypeSortedArray(objPersonType) {
 OrderUserTypeCheck.propTypes = {};
 function OrderUserTypeCheck() {
     const {result, params, sendRequest}  = useContext(OrderContext);
-    var regionBlockNotEmpty, propertyCollection = new BX.Sale.PropertyCollection(BX.merge({publicMode: true}, result.ORDER_PROP));
+    var regionBlockNotEmpty;
 
     const mounted = useRef();
     useEffect(() => {

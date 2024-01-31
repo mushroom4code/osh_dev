@@ -17,15 +17,16 @@ function OrderContragents({property, contrAgents}) {
     };
 
     return (
-        <div className="flex md:flex-nowrap flex-wrap w-full pb-6">
+        <div className="flex md:flex-nowrap flex-wrap w-full mb-7 bx-soa-customer-field order-1 pr-2"
+             data-property-id-row={property.ID}>
             <div className="md:w-3/4 w-full flex flex-col justify-end">
-                <label className="bx-soa-custom-label mb-2 relative text-textLight dark:text-textDarkLightGray
+                <label className="bx-soa-custom-label mb-3 relative text-textLight dark:text-textDarkLightGray
                 font-semibold dark:font-light text-sm">
                     {property.NAME}
                 </label>
                 <div className="soa-property-container md:mr-3 mr-0 relative">
                     <p className="w-full text-sm cursor-text p-3 border-grey-line-order border ring:grey-line-order
-                     dark:border-darkBox rounded-lg dark:bg-darkBox relative flex flex-row items-center"
+                     dark:border-darkBox rounded-lg dark:bg-darkBox relative flex flex-row items-center md:mb-0 mb-3"
                        onClick={() => (setOpenList(!openList))}>
                         <IconNameContr width="25" height="25" button={true} style="mr-2"/>
                         {selectedContrAgent?.NAME_ORGANIZATION ?? ''}

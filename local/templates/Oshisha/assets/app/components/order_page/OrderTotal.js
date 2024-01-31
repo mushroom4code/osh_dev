@@ -3,8 +3,13 @@ import OrderContext from "./Context/OrderContext";
 
 function OrderTotal() {
     const {
-        result, params, options, sendRequest, isValidForm,
-        isOrderSaveAllowed, allowOrderSave
+        result,
+        params,
+        options,
+        sendRequest,
+        isValidForm,
+        isOrderSaveAllowed,
+        allowOrderSave
     } = useContext(OrderContext);
 
     const getResultJsx = () => {
@@ -25,9 +30,6 @@ function OrderTotal() {
             priceHtml = total.ORDER_PRICE_FORMATED;
         }
 
-        if (options.showPriceWithoutDiscount) {
-            priceHtml += '<br><span class="bx-price-old">' + total.PRICE_WITHOUT_DISCOUNT + '</span>';
-        }
         let product = result.GRID.ROWS;
         let quantity = Object.keys(product).length;
         let textQuantity = 'Товары (' + quantity + ')';
@@ -62,11 +64,10 @@ function OrderTotal() {
                 deliveryValue = total.DELIVERY_PRICE_FORMATED;
             }
 
-            if (
-                curDelivery && typeof curDelivery.DELIVERY_DISCOUNT_PRICE !== 'undefined'
-                && parseFloat(curDelivery.PRICE) > parseFloat(curDelivery.DELIVERY_DISCOUNT_PRICE)
-            ) {
-                deliveryValue += '<br><span class="bx-price-old">' + curDelivery.PRICE_FORMATED + '</span>';
+            if ( curDelivery && typeof curDelivery.DELIVERY_DISCOUNT_PRICE !== 'undefined'
+                && parseFloat(curDelivery.PRICE) > parseFloat(curDelivery.DELIVERY_DISCOUNT_PRICE)) {
+                deliveryValue += '<span class="line-through text-tagFilterGray dark:text-borderColor text-sm ml-2">'
+                    + curDelivery.PRICE_FORMATED + '</span>';
             }
         }
 
@@ -81,18 +82,10 @@ function OrderTotal() {
             resultJsx.push(createTotalUnit(discText + ':', total.DISCOUNT_PRICE_FORMATED,
                 {highlighted: true}, 'discount_price'));
         }
-
-        if (options.showPayedFromInnerBudget) {
-            resultJsx.push(createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED),
-                [], 'total_price_formated');
-            resultJsx.push(createTotalUnit(BX.message('SOA_SUM_PAYED'), total.PAYED_FROM_ACCOUNT_FORMATED),
-                [], 'payed_from_account_formated');
-            resultJsx.push(createTotalUnit(BX.message('SOA_SUM_LEFT_TO_PAY'),
-                total.ORDER_TOTAL_LEFT_TO_PAY_FORMATED, {total: true}, 'total_left_to_pay_formated'));
-        } else {
-            resultJsx.push(createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED,
-                {total: true}, 'total_price_formated'));
-        }
+// добавляет блок итоговой суммы
+        resultJsx.push(createTotalUnit(BX.message('SOA_SUM_IT'), total.ORDER_TOTAL_PRICE_FORMATED,
+            {total: true}, 'total_price_formated'));
+        //
 
         if (parseFloat(total.PAY_SYSTEM_PRICE) >= 0 && result.DELIVERY.length) {
             resultJsx.push(createTotalUnit(BX.message('SOA_PAYSYSTEM_PRICE'),

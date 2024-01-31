@@ -9,7 +9,7 @@ function OrderProp({property, disabled}) {
     const {result} = useContext(OrderContext);
     const propertyType = property.TYPE || '';
 
-    let classNames = "bx-soa-customer-field flex justify-between flex-wrap pr-2 pb-6";
+    let classNames = "bx-soa-customer-field flex justify-between flex-wrap pr-2 mb-7 order-12";
 
     switch (property.CODE) {
         case 'EMAIL':

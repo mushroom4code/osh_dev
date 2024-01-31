@@ -187,11 +187,6 @@ h4.checkout-block-title > i.fa {
     margin-bottom: 1.5em;
 }
 
-#bx-soa-properties,
-#bx-soa-delivery {
-    margin-bottom: 2em !important;
-}
-
 #bx-soa-properties .form-group {
     display: flex;
     justify-content: space-between;

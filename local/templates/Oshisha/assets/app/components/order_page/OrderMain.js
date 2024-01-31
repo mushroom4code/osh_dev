@@ -51,8 +51,8 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                 <div id="bx-soa-pickup" data-visited="false" className="bx-soa-section mb-4 "
                      style={{display: "none"}}>
                     <div
-                        className="bx-soa-section-title-container overflow-hidden d-flex justify-content-between
-                            align-items-center flex-nowrap">
+                        className="bx-soa-section-title-container overflow-hidden flex justify-between
+                            items-center flex-nowrap">
                         <div className="bx-soa-section-title" data-entity="section-title">
                         </div>
                     </div>
@@ -73,8 +73,8 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                     <div className="alert alert-danger text-light-red dark:text-whitep p-4" style={{display: "none"}}></div>
                     <div datatype="informer" style={{display: "none"}}></div>
                 </div>
-                <div className="col-span-2 col-lg-8 col-md-7">
-                    <h5 className="mb-3 text-[24px] font-medium dark:font-normal">
+                <div className="col-span-2">
+                    <h5 className="md:mb-3 md:text-2xl text-xl mb-5 font-medium dark:font-normal text-textLight dark:text-textDarkLightGray">
                         Покупатель
                         <i className="inline-block w-[19px] h-[19px] ml-2.5">
                             <svg width="19" height="19" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg">
@@ -95,11 +95,10 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                         </i>
                     </h5>
                     <div className="bx-soa">
-                        <div id="bx-soa-properties" data-visited="true" className="bx-soa-section mb-4 bx-active">
+                        <div id="bx-soa-properties" data-visited="true" className="bx-soa-section mb-14 bx-active">
                             <div id="user-properties-title-block"
-                                 className="bx-soa-section-title-container overflow-hidden">
-                                <div className="width_100 mb-4 d-flex align-items-center userCheck"
-                                     id="userCheck">
+                                 className="bx-soa-section-title-container hidden">
+                                <div className=" userCheck" id="userCheck">
                                     <OrderUserTypeCheck/>
                                 </div>
 
@@ -141,15 +140,16 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                              className="bx-soa-section mb-4  bx-active"
                              style={!result['DELIVERY'] ? {display: "none"} : {display: "block"}}>
                             <div
-                                className="bx-soa-section-title-container mt-2 mb-4 overflow-hidden d-flex
-                            justify-content-between align-items-center flex-nowrap">
-                                <div className="bx-soa-section-title text-[24px] font-medium dark:font-normal my-4"
-                                     data-entity="section-title">
-                                    {params['MESS_DELIVERY_BLOCK_NAME']}
-                                </div>
+                                className="bx-soa-section-title-container mt-2 mb-4 overflow-hidden flex
+                            justify-between items-center flex-nowrap">
+                                    <div className="bx-soa-section-title text-textLight dark:text-textDarkLightGray
+                                    md:mb-3 md:text-2xl text-xl mb-5 font-medium dark:font-normal"
+                                         data-entity="section-title">
+                                        {params['MESS_DELIVERY_BLOCK_NAME']}
+                                    </div>
                             </div>
                             <div className="box_with_delivery_type">
-                                <div className="bx-soa-section-content" id="delivery-block">
+                            <div className="bx-soa-section-content" id="delivery-block">
                                     <div className="alert alert-danger text-light-red dark:text-white p-4"
                                          style={{display: "none"}}></div>
                                     <OrderDelivery/>
@@ -157,8 +157,8 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                                 <div id="bx-soa-region" data-visited="false"
                                      className="bx-soa-section mb-4 hidden">
                                     <div
-                                        className="bx-soa-section-title-container d-flex justify-content-between
-                                    align-items-center flex-nowrap">
+                                        className="bx-soa-section-title-container flex justify-between
+                                    items-center flex-nowrap">
                                         <div className="bx-soa-section-title" data-entity="section-title">
                                             {params['MESS_REGION_BLOCK_NAME']}
                                         </div>
@@ -171,13 +171,12 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                         {renderDependingOnDeliveryToPaysystem()}
 
                         {/*PAY SYSTEMS BLOCK*/}
-                        <div id="bx-soa-paysystem" data-visited="false" className="bx-soa-section mb-4  bx-active">
-                            <div
-                                className="bx-soa-section-title-container overflow-hidden flex justify-content-between
-                            align-items-center flex-nowrap">
+                        <div id="bx-soa-paysystem" data-visited="false" className="bx-soa-section mb-14  bx-active">
+                            <div className="bx-soa-section-title-container overflow-hidden flex justify-between
+                            items-center flex-nowrap">
                                 <div
-                                    className="bx-soa-section-title text-2xl font-medium dark:font-normal my-4 pt-[3px]
-                                font-weight"
+                                    className="bx-soa-section-title md:mb-3 md:text-2xl text-xl mb-5 font-medium
+                                     text-textLight dark:text-textDarkLightGray dark:font-normal"
                                     data-entity="section-title">
                                     {params['MESS_PAYMENT_BLOCK_NAME']}
                                 </div>
@@ -189,7 +188,7 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                             </div>
                         </div>
 
-                        <div id="user-agreements" className="p-4"><OrderUserAgreements/></div>
+                        <div id="user-agreements" className="mb-14"><OrderUserAgreements/></div>
                         <div className="new_block_with_comments mt-0 mb-8" id="new_block_with_comments">
                             <div id="new_block_with_comment_box"><OrderComments/></div>
                         </div>
@@ -232,7 +231,7 @@ function OrderMain({result, locations, params, options, contrAgents, OrderGenera
                     </div>
                 </div>
                 {/*SIDEBAR BLOCK*/}
-                <div id="order_total_block" className="col-start-3 col-lg-4 col-md-5 lg:ml-5">
+                <div id="order_total_block" className="col-start-3 lg:ml-5">
                     <OrderTotal/>
                 </div>
             </OrderContextProvider>
