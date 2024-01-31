@@ -188,7 +188,7 @@ $APPLICATION->SetTitle("О нас");
     </div>
     <div class="section_wrapper mb-7 flex flex-col items-center">
         <div class="container md:mb-8 mb-0 px-4 md:px-0">
-            <div class="md:p-10 p-4 bg-ugol md:min-h-550 min-h-384 h-full bg-no-repeat rounded-lg bg-right-bottom md:bg-auto bg-contain"
+            <div class="md:p-10 p-4 bg-ugol md:min-h-550 min-h-384 h-full bg-no-repeat rounded-lg bg-right-bottom bg-contain"
                  style="background-image: url('/about/o-nas/_.jpg');">
                 <div class="flex justify-between flex-col h-full">
                     <div>

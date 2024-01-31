@@ -95,11 +95,11 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
     <script src="/dist/app.generated.js?<?= hash_file('md5', $_SERVER['DOCUMENT_ROOT'] . '/dist/app.generated.js') ?>"
             defer></script>
 </head>
-<body class="bg-white dark:bg-dark dark:text-textDark relative">
+<body class="bg-white dark:bg-dark dark:text-textDark relative min-h-screen">
 <div id="panel">
     <?php $APPLICATION->ShowPanel(); ?>
 </div>
-<div class="min-h-screen">
+<div>
     <header class="bg-white dark:bg-dark sticky top-0 z-30 border-b md:border-0 border-white dark:border-grayIconLights">
         <?php if (CHECKED_INFO) {
             $Option = json_decode(COption::GetOptionString('activation_info_admin', 'PERIOD')); ?>
@@ -457,7 +457,7 @@ $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
         ); ?>
     </header>
 
-    <div class="section_wrapper min-h-550 flex flex-col items-center">
+    <div class="section_wrapper xl:min-h-550 flex min-h-96 flex-col items-center">
         <div class="container md:mb-8 mb-0 <?= strripos($APPLICATION->GetCurPage(), '/personal/') === false ? 'px-4 md:px-0' : false ?>">
             <?php $needSidebar = preg_match("~^" . SITE_DIR . "(catalog|personal\/cart|personal\/order\/make)/~", $curPage); ?>
             <div class="bx-content <?= STATIC_P ?>">
