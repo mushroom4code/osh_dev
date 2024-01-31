@@ -195,6 +195,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                                     <input checked={curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId} type='radio'
                                            name='delivery_type' value='Самовывоз'
                                            className="ring-0 focus:ring-0 focus:ring-hover-red
+                                                   dark:focus:ring-white dark:focus:ring-offset-white
                                                    focus:ring-offset-hover-red focus:outline-none form-check-input"
                                            onChange={() => {
                                                sendRequest('refreshOrderAjax', {}, {DELIVERY_ID: params.OSH_DELIVERY.pvzDeliveryId});
@@ -205,6 +206,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                                     <input checked={curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId} type='radio'
                                            name='delivery_type' value='Доставка курьером'
                                            className="ring-0 focus:ring-0 focus:ring-hover-red
+                                                   dark:focus:ring-white dark:focus:ring-offset-white
                                                    focus:ring-offset-hover-red focus:outline-none form-check-input"
                                            onChange={() => {
                                                sendRequest('refreshOrderAjax', {}, {DELIVERY_ID: params.OSH_DELIVERY.doorDeliveryId});
@@ -235,6 +237,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                                         dark:font-medium uppercase md:text-md text-sm">Показать</p>
                                         <div className="flex items-center mb-1">
                                             <input className="ring-0 focus:ring-0 focus:ring-hover-red
+                                                   dark:focus:ring-white dark:focus:ring-offset-white
                                                    focus:ring-offset-hover-red focus:outline-none form-check-input"
                                                    name='TYPE_PVZ_LIST' value='map' type="radio"
                                                    onChange={onSelectTypePvzList} checked={typePvzList === 'map'}
@@ -243,6 +246,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
                                         </div>
                                         <div className="flex items-center">
                                             <input className="ring-0 focus:ring-0 focus:ring-hover-red
+                                                   dark:focus:ring-white dark:focus:ring-offset-white
                                                    focus:ring-offset-hover-red focus:outline-none form-check-input"
                                                    name='TYPE_PVZ_LIST' value='list'
                                                    type="radio"
