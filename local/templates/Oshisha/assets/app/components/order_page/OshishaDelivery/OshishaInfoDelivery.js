@@ -11,7 +11,7 @@ export default function OshishaInfoDelivery({curDelivery, listOshDelivery, addre
             <div className='font-nornal dark:font-light md:text-xl text-lg mb-5 dark:text-textDarkLightGray'>
                 Укажите адрес и способ доставки
             </div>
-            <div className="flex md:flex-row flex-col justify-between items-end">
+            <div className="flex md:flex-row flex-col justify-between md:items-end">
                 <div className='md:mb-0 mb-3'>
                     {curDelivery.PRICE_FORMATED !== undefined
                         ? <div className="flex flex-col">

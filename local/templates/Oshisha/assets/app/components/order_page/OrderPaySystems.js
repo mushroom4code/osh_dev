@@ -3,7 +3,7 @@ import OrderContext from "./Context/OrderContext";
 
 function OrderPayItem({ payment, selectPaySystem }) {
     return (
-        <div className={`bg-textDark rounded-[10px] min-h-[170px] dark:bg-darkBox md:w-2/5 mr-4 w-full
+        <div className={`bg-textDark rounded-lg min-h-[170px] dark:bg-darkBox md:w-2/5 md:mr-4 mr-0 w-full
                 ${payment.CHECKED === 'Y' ? 'bx-selected border-2 dark:border border-solid border-light-red ' +
             'dark:border-grey-line-order bg-white' : ''}`}
             onClick={ () => {
@@ -12,13 +12,14 @@ function OrderPayItem({ payment, selectPaySystem }) {
                 }
                 selectPaySystem(payment.ID)}
             }>
-            <div className="p-[30px] flex w-full cursor-pointer">
+            <div className="p-8 flex w-full cursor-pointer">
                 <input type="checkbox" id={'ID_PAY_SYSTEM_ID_' + payment.ID}
                     name="PAY_SYSTEM_ID"
                     className="bx-soa-pp-company-checkbox hidden" value={payment.ID}
                     defaultChecked={payment.CHECKED === 'Y'} />
                 <div className="text-base w-full">
-                    <p className={`font-medium dark:font-normal mt-2 mb-2.5 dark:text-white ${payment.CHECKED === 'Y' ? 'text-light-red' : 'text-black'}`}>
+                    <p className={`font-medium dark:font-normal mt-2 mb-2.5 dark:text-white
+                     ${payment.CHECKED === 'Y' ? 'text-light-red' : 'text-black'}`}>
                         {payment.NAME}
                     </p>
                     <div className="text-stone-600 text-sm dark:text-gray-300">{payment.DESCRIPTION}</div>

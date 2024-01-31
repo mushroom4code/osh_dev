@@ -190,29 +190,39 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
             />
             <div className={showHideBlockWithDelivery ? "" : "hidden"}>
                 <div className="fixed top-0 left-0 w-full h-full bg-lightOpacityWindow dark:bg-darkOpacityWindow z-50
-                flex justify-center items-center">
-                    <div className="flex flex-col md:max-w-5xl h-4/5 max-w-auto overflow-hidden w-full bg-white dark:bg-darkBox md:p-7 p-4 rounded-xl relative">
-                        <div className='flex flex-row'>
-                            <div className='flex-lg-row flex-md-row flex-wrap flex-1'>
-                                <div className='flex items-center'>
+                md:flex block justify-center items-center">
+                    <div
+                        className="flex flex-col md:max-w-5xl md:top-auto top-0 relative md:h-4/5 max-w-auto
+                         overflow-hidden w-full bg-white dark:bg-darkBox md:p-7 p-4 md:rounded-xl rounded-0 h-full">
+                        <div className='flex flex-row mb-5'>
+                            <div className='flex-col flex-wrap flex-1'>
+                                <p className="mb-2 text-textLight dark:text-textDarkLightGray font-semibold
+                                dark:font-medium uppercase md:text-md text-sm">Способ получения</p>
+                                <div className='flex items-center mb-1'>
                                     <input checked={curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId} type='radio'
-                                        name='delivery_type' value='Самовывоз'
-                                        onChange={() => {
-                                            sendRequest('refreshOrderAjax', {}, { DELIVERY_ID: params.OSH_DELIVERY.pvzDeliveryId });
-                                        }} />
+                                           name='delivery_type' value='Самовывоз'
+                                           className="ring-0 focus:ring-0 focus:ring-hover-red
+                                                   dark:focus:ring-white dark:focus:ring-offset-white
+                                                   focus:ring-offset-hover-red focus:outline-none form-check-input"
+                                           onChange={() => {
+                                               sendRequest('refreshOrderAjax', {}, {DELIVERY_ID: params.OSH_DELIVERY.pvzDeliveryId});
+                                           }}/>
                                     <span className='ml-2 text-sm'>Самовывоз</span>
                                 </div>
                                 <div className='flex items-center'>
                                     <input checked={curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId} type='radio'
-                                        name='delivery_type' value='Доставка курьером'
-                                        onChange={() => {
-                                            sendRequest('refreshOrderAjax', {}, { DELIVERY_ID: params.OSH_DELIVERY.doorDeliveryId });
-                                        }} />
+                                           name='delivery_type' value='Доставка курьером'
+                                           className="ring-0 focus:ring-0 focus:ring-hover-red
+                                                   dark:focus:ring-white dark:focus:ring-offset-white
+                                                   focus:ring-offset-hover-red focus:outline-none form-check-input"
+                                           onChange={() => {
+                                               sendRequest('refreshOrderAjax', {}, {DELIVERY_ID: params.OSH_DELIVERY.doorDeliveryId});
+                                           }}/>
                                     <span className='ml-2 text-sm'>Доставка курьером</span>
                                 </div>
                             </div>
                             {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId
-                                ? <div className='flex flex-row'>
+                                ? <div className='flex flex-row flex-1'>
                                     {propDateDelivery !== undefined
                                         ?
                                         <OrderPropDate property={propDateDelivery} className=' basis-1/2 flex flex-col'
@@ -230,51 +240,59 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                             {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
                                 ? <>
                                     <div className='flex-1 flex flex-col'>
-                                        <label
-                                            className="pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm">Показать</label>
-                                        <label className="font-semibold dark:font-normal">
-                                            <input className="ring-0 focus:ring-0 focus:ring-transparent
-                    focus:ring-offset-transparent focus:outline-none mr-2" name='TYPE_PVZ_LIST' value='map' type="radio"
-                                                onChange={onSelectTypePvzList} checked={typePvzList === 'map'}
+                                        <p className="mb-2 text-textLight dark:text-textDarkLightGray font-semibold
+                                        dark:font-medium uppercase md:text-md text-sm">Показать</p>
+                                        <div className="flex items-center mb-1">
+                                            <input className="ring-0 focus:ring-0 focus:ring-hover-red
+                                                   dark:focus:ring-white dark:focus:ring-offset-white
+                                                   focus:ring-offset-hover-red focus:outline-none form-check-input"
+                                                   name='TYPE_PVZ_LIST' value='map' type="radio"
+                                                   onChange={onSelectTypePvzList} checked={typePvzList === 'map'}
                                             />
-                                            На карте
-                                        </label>
-                                        <label className="font-semibold dark:font-normal">
-                                            <input className="ring-0 focus:ring-0 focus:ring-transparent
-                       focus:ring-offset-transparent focus:outline-none mr-2" name='TYPE_PVZ_LIST' value='list'
-                                                type="radio"
-                                                onChange={onSelectTypePvzList} checked={typePvzList === 'list'}
+                                            <span className='ml-2 text-sm'>На карте</span>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <input className="ring-0 focus:ring-0 focus:ring-hover-red
+                                                   dark:focus:ring-white dark:focus:ring-offset-white
+                                                   focus:ring-offset-hover-red focus:outline-none form-check-input"
+                                                   name='TYPE_PVZ_LIST' value='list'
+                                                   type="radio"
+                                                   onChange={onSelectTypePvzList} checked={typePvzList === 'list'}
                                             />
-                                            Списком
-                                        </label>
+                                            <span className='ml-2 text-sm'>Списком</span>
+                                        </div>
                                     </div>
                                     <div className='flex-1 flex flex-col'>
-                                        <label
-                                            className="pb-3.5 relative text-black dark:text-white font-bold dark:font-normal text-sm">Фильтрация</label>
+                                        <p className="mb-2 text-textLight dark:text-textDarkLightGray font-semibold
+                                dark:font-medium uppercase md:text-md text-sm">Фильтрация</p>
                                     </div>
                                 </>
                                 : null
                             }
                         </div>
-                        <OrderPropLocationCustom currentLocation={currentLocation} propLocation={propLocation}
-                            setCurrentLocation={setCurrentLocation} />
-                        {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId
-                            ? <OshishaDoorDelivery result={result} params={params} propAddress={propAddress} setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
-                                sendRequest={sendRequest} currentLocation={currentLocation} handleSelectSuggest={handleSelectSuggest} />
-                            : null
-                        }
-                        {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
-                            ? <OshishaPvzDelivery
-                                cityCode={currentLocation?.CODE}
-                                cityName={currentLocation?.DISPLAY}
-                                result={result}
-                                params={params}
-                                sendRequest={sendRequest}
-                                typePvzList={typePvzList}
-                                setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
-                            />
-                            : null
-                        }
+                        <div className="mb-3">
+                            <OrderPropLocationCustom currentLocation={currentLocation} propLocation={propLocation}
+                                setCurrentLocation={setCurrentLocation} />
+                        </div>
+                        <div className="lg:max-h-96 overflow-auto max-h-60">
+                            {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId
+                                ? <OshishaDoorDelivery result={result} params={params} propAddress={propAddress} setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
+                                    sendRequest={sendRequest} currentLocation={currentLocation} handleSelectSuggest={handleSelectSuggest} />
+                                : null
+                            }
+                            {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
+                                ? <OshishaPvzDelivery
+                                    cityCode={currentLocation?.CODE}
+                                    cityName={currentLocation?.DISPLAY}
+                                    result={result}
+                                    params={params}
+                                    sendRequest={sendRequest}
+                                    typePvzList={typePvzList}
+                                    setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
+                                />
+                                : null
+                            }
+                        </div>
                         <Close showHide={showHideBlockWithDelivery}
                             setShowHide={setShowHideBlockWithDelivery} />
                     </div>
