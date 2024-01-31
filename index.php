@@ -4,9 +4,9 @@ $APPLICATION->SetTitle("OSHISHA - Главная");
 
 if (IsModuleInstalled("advertising")):?>
     <div class="mt-3 xl:container container">
-        <div class="flex md:flex-row flex-col-reverse justify-between w-full relative mb-10">
-            <div class="banner_small flex md:flex-col flex-row justify-between md:mr-8 mr-0">
-                <div class="w-full mb-5 rounded-lg">
+        <div class="flex lg:flex-row flex-col-reverse justify-between w-full relative mb-10">
+            <div class="banner_small lg:w-1/4 flex lg:flex-col flex-row justify-between lg:mr-8 mr-0">
+                <div class="w-full mb-5 rounded-lg lg:max-h-auto max-h-64">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:advertising.banner",
                         "oshisha_banners",
@@ -30,7 +30,7 @@ if (IsModuleInstalled("advertising")):?>
                         false
                     ); ?>
                 </div>
-                <div class="w-full rounded-lg">
+                <div class="w-full rounded-lg lg:max-h-auto max-h-64">
                     <?php $APPLICATION->IncludeComponent(
                         "bitrix:advertising.banner",
                         "oshisha_banners",
@@ -55,7 +55,7 @@ if (IsModuleInstalled("advertising")):?>
                     ); ?>
                 </div>
             </div>
-            <div class="max-w-6xl w-full rounded-lg relative flex justify-center items-center overflow-hidden">
+            <div class="max-w-6xl lg:w-3/4 w-full lg:mb-0 mb-5 rounded-lg relative flex justify-center items-center overflow-hidden">
                 <?php $APPLICATION->IncludeComponent(
                     "bitrix:advertising.banner",
                     "oshisha_banners",
@@ -85,7 +85,11 @@ if (IsModuleInstalled("advertising")):?>
     </div>
 <?php endif;
 if (SITE_ID !== SITE_EXHIBITION) { ?>
-    <div class="box_with_banner_dop mb-7">
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="box_with_banner_dop mb-7 w-full left-0 right-0">
         <?php $APPLICATION->IncludeComponent(
             "bitrix:advertising.banner",
             "oshisha_banners",
@@ -109,8 +113,10 @@ if (SITE_ID !== SITE_EXHIBITION) { ?>
             false
         ); ?>
     </div>
-    <div class="flex flex-row mb-7">
-        <div class="w-6/12 mb-2">
+    <div class="section_wrapper min-h-550 flex flex-col items-center">
+    <div class="container md:mb-8 mb-0 px-4 md:px-0">
+    <div class="flex md:flex-row flex-col mb-7 justify-between ">
+        <div class="md:w-6/12 w-full mb-2 md:pr-4 pr-0">
             <?php $APPLICATION->IncludeComponent(
                 "bitrix:advertising.banner",
                 "oshisha_banners",
@@ -153,7 +159,7 @@ if (SITE_ID !== SITE_EXHIBITION) { ?>
                 )
             ); ?>
         </div>
-        <div class="w-6/12 mb-7">
+        <div class="md:w-6/12 w-full mb-7 md:pl-4 pl-0">
             <?php $APPLICATION->IncludeComponent(
                 "bitrix:advertising.banner",
                 "oshisha_banners",
@@ -197,12 +203,12 @@ if (SITE_ID !== SITE_EXHIBITION) { ?>
             ); ?>
         </div>
     </div>
-    <?php
 
-    if (defined('PROPERTY_USE_ON_MAIN_PAGE')) { ?>
-        <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-5xl mb-4">Распродажа</div>
+    <?php if (defined('PROPERTY_USE_ON_MAIN_PAGE')) { ?>
+        <div class="dark:text-textDarkLightGray dark:font-thin font-medium text-textLight text-5xl mb-4">Распродажа
+        </div>
         <div class="by-card mb-7">
-        <?php
+            <?php
 
             $GLOBALS['FILTER_SALE'] = array(
                 'PROPERTY_' . PROPERTY_USE_ON_MAIN_PAGE . '_VALUE' => 'Да'
@@ -297,10 +303,13 @@ if (SITE_ID !== SITE_EXHIBITION) { ?>
                 ),
                 false
             );
-        } ?>
+            ?>
+        </div>
+    <?php }
+} ?>
     </div>
-    <?php
-}
+    </div>
+<?php
 // TODO - обработка лайки
 //$update = new Enterego\EnteregoProcessing();
 //$update->update_like_in_new_table();

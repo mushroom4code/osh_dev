@@ -1,6 +1,6 @@
-<? if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
+<?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die(); ?>
 
-<? if (count($arResult['BANNERS']) > 0): ?>
+<?php if (count($arResult['BANNERS']) > 0): ?>
 
     <?
     $this->addExternalJs("/bitrix/components/bitrix/advertising.banner/templates/bootstrap_v4/bxcarousel.js");
@@ -22,9 +22,9 @@
     $frame = $this->createFrame()->begin("");
     ?>
 
-    <? if ($arParams['PREVIEW'] == 'Y'): ?>
+    <?php if ($arParams['PREVIEW'] == 'Y'): ?>
     <div id='tPreview' style="display:none;margin:auto;">
-        <? endif; ?>
+        <?php endif; ?>
 
         <div id="carousel-<?= $arResult['ID'] ?>"
              class="carousel w-full <?= $arParams['BS_EFFECT'] ?><?= $arParams['BS_HIDE_FOR_TABLETS'] ?>"
@@ -37,35 +37,32 @@
             <?php if ($arParams['TYPE'] === 'MAIN') { ?>
                 <div class="carousel-inner carousel-inner-main overflow-hidden" role="listbox">
                     <div class="swiper-wrapper">
-                        <? foreach ($arResult["BANNERS"] as $k => $banner): ?>
+                        <?php foreach ($arResult["BANNERS"] as $k => $banner): ?>
 
-                            <div class="swiper-slide carousel-item-elems <? if ($k == 0) echo 'active'; ?>">
+                            <div class="swiper-slide carousel-item-elems <?php if ($k == 0) echo 'active'; ?>">
                                 <?php if ($arParams['TYPE'] === 'MAIN') { ?>
                                     <div class="link_banner" style="display:none;">
                                         <a href="javascript:void(0);">Новинка</a>
                                     </div>
-                                <? } ?>
+                                <?php } ?>
                                 <?= $banner ?>
                             </div>
-                        <? endforeach; ?>
+                        <?php endforeach; ?>
                     </div>
 
                 </div>
                 <div class="carousel-indicators swiper-pagination-block absolute inset-x-0 top-full"></div>
-                <?
-            } else {
-                ?>
+                <?php } else { ?>
                 <div class="carousel-inner w-full" role="listbox">
 
-                    <? foreach ($arResult["BANNERS"] as $k => $banner): ?>
-
-                        <div class="carousel-item-elems w-full rounded-lg  <? if ($k == 0) echo 'active'; ?>">
+                    <?php foreach ($arResult["BANNERS"] as $k => $banner): ?>
+                        <div class="carousel-item-elems w-full <?php if ($k == 0) echo 'active'; ?>
+                        <?= $arParams['TYPE'] !== "BANNERS_HOME_1" ? ' rounded-lg' : '' ?>">
                             <?= $banner ?>
                         </div>
-                    <? endforeach; ?>
-
+                    <?php endforeach; ?>
                 </div>
-            <? } ?>
+            <?php } ?>
             <!--endregion-->
 
             <!-- region Controls -->
@@ -97,17 +94,17 @@
 
             <!--region Indicators-->
             <?php if ($arParams['TYPE'] != 'MAIN') { ?>
-                <? if ($arParams['BS_BULLET_NAV'] == 'Y' || $arParams['BS_PREVIEW'] == 'Y'): ?>
+                <?php if ($arParams['BS_BULLET_NAV'] == 'Y' || $arParams['BS_PREVIEW'] == 'Y'): ?>
                     <div class="carousel-indicators absolute inset-x-0 top-full">
-                        <? $i = 0; ?>
-                        <? while ($i < count($arResult['BANNERS'])): ?>
+                        <?php $i = 0; ?>
+                        <?php while ($i < count($arResult['BANNERS'])): ?>
                             <span data-target="#carousel-<?= $arResult['ID'] ?>"
-                                  data-slide-to="<?= $i ?>"  <? if ($i == 0) echo 'class="active"';
+                                  data-slide-to="<?= $i ?>"  <?php if ($i == 0) echo 'class="active"';
                             $i++ ?>></span>
-                        <? endwhile; ?>
+                        <?php endwhile; ?>
                     </div>
-                <? endif; ?>
-            <? } ?>
+                <?php endif; ?>
+            <?php } ?>
 
             <!--endregion-->
             <?php if ($arParams['TYPE'] === 'MAIN') { ?>
@@ -135,7 +132,7 @@
 
                     });
                 </script>
-            <? }else{ ?>
+            <?php }else{ ?>
                 <script>
                     BX("carousel-<?=$arResult['ID']?>").addEventListener("slid.bs.carousel", function (e) {
                         var item = e.detail.curSlide.querySelector('.play-caption');
@@ -216,9 +213,9 @@
                         }
                     }
                 </script>
-            <? } ?>
+            <?php } ?>
         </div>
-        <? if ($arParams['PREVIEW'] == 'Y'): ?>
+        <?php if ($arParams['PREVIEW'] == 'Y'): ?>
     </div>
     <script>
         (function () {
@@ -236,8 +233,8 @@
             BX('tPreview').style.display = '';
         })();
     </script>
-<? endif; ?>
+<?php endif; ?>
 
-    <? $frame->end(); ?>
+    <?php $frame->end(); ?>
 
-<? endif; ?>
+<?php endif; ?>
