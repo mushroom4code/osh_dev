@@ -6,8 +6,9 @@ function OrderComments() {
     return(
         <div>
             <div className="form-group bx-soa-customer-field">
-                <label htmlFor="orderDescription" className="bx-soa-customer-label block mb-6 text-[24px] my-4 pt-[3px]
-                    font-medium dark:font-normal text-gray-900 dark:text-white"
+                <label htmlFor="orderDescription"
+                       className="bx-soa-customer-label block mb-5 md:text-2xl text-xl font-medium dark:font-normal
+                     text-textLight dark:text-textDarkLightGray"
                        dangerouslySetInnerHTML={{__html: params.MESS_ORDER_DESC}}>
                 </label>
                 <textarea name="ORDER_DESCRIPTION" id="orderDescription" cols="4"
