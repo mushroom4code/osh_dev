@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import axios from 'axios';
 
 function OshishaYMap({ cityName, cityCode, features, params, orderResult,
-    getRequestGetPvzPrice, sendRequest, getPointData }) {
+    getRequestGetPvzPrice, sendRequest, getPointData, handleSelectPvz }) {
 
     const [pvzMap, setPvzMap] = useState(null)
 
@@ -70,25 +70,9 @@ function OshishaYMap({ cityName, cityCode, features, params, orderResult,
         }
     }
 
-    function selectPvz(objectManager, itemId) {
+    function selectPvzOnMap(objectManager, itemId) {
         const point = objectManager.objects.getById(itemId);
-
-        const additionalData = {};
-        //TODO move to lib
-        function setAdditionalData(additionalData, code, value) {
-            const propAddress = orderResult.ORDER_PROP.properties.find(prop => prop.CODE === code)
-            if (propAddress !== undefined) {
-                additionalData[[`ORDER_PROP_${propAddress.ID}`]] = value;
-            }
-            return additionalData
-        }
-
-        setAdditionalData(additionalData, 'COMMON_PVZ', point.properties.code_pvz);
-        setAdditionalData(additionalData, 'TYPE_DELIVERY', point.properties.deliveryName);
-        setAdditionalData(additionalData, 'ADDRESS_PVZ', point.properties.fullAddress);
-        setAdditionalData(additionalData, 'TYPE_PVZ', point.properties.type);
-
-        sendRequest('refreshOrderAjax', {}, additionalData);
+        handleSelectPvz(point)
     }
 
     useEffect(() => {
@@ -125,7 +109,7 @@ function OshishaYMap({ cityName, cityCode, features, params, orderResult,
 
         //global react fix for yandex map
         BX.reactHandler.onSelectPvz.splice(0, BX.reactHandler.onSelectPvz.length)
-        BX.reactHandler.onSelectPvz.push((itemId) => selectPvz(objectManager, itemId))
+        BX.reactHandler.onSelectPvz.push((itemId) => selectPvzOnMap(objectManager, itemId))
 
         objectManager.clusters.events.add(['balloonopen'], function (e) {
             const clusterId = e.get('objectId');

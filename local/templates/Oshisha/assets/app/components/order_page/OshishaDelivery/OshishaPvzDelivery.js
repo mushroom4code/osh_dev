@@ -45,6 +45,25 @@ function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, t
         };
     }
 
+    const handleSelectPvz = (point) => {
+        const additionalData = {};
+        //TODO move to lib
+        function setAdditionalData(additionalData, code, value) {
+            const propAddress = result.ORDER_PROP.properties.find(prop => prop.CODE === code)
+            if (propAddress !== undefined) {
+                additionalData[[`ORDER_PROP_${propAddress.ID}`]] = value;
+            }
+            return additionalData
+        }
+
+        setAdditionalData(additionalData, 'COMMON_PVZ', point.properties.code_pvz);
+        setAdditionalData(additionalData, 'TYPE_DELIVERY', point.properties.deliveryName);
+        setAdditionalData(additionalData, 'ADDRESS_PVZ', point.properties.fullAddress);
+        setAdditionalData(additionalData, 'TYPE_PVZ', point.properties.type);
+
+        sendRequest('refreshOrderAjax', {}, additionalData);
+    }
+
 
     useEffect(() => {
         axios.post('/bitrix/modules/enterego.pvz/lib/CommonPVZ/ajax.php', {
@@ -67,11 +86,12 @@ function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, t
     }, [cityCode])
 
     return (
-        <div>
+        <div className='flex-1 overflow-auto'>
             {typePvzList === 'map'
                 ? <OshishaYMap cityCode={cityCode} cityName={cityName} features={features}
                     params={params} orderResult={result} getPointData={getPointData}
-                    getRequestGetPvzPrice={getRequestGetPvzPrice} sendRequest={sendRequest} />
+                    getRequestGetPvzPrice={getRequestGetPvzPrice} sendRequest={sendRequest} 
+                    handleSelectPvz={handleSelectPvz}/>
                 : <OshishaPvzList features={features} sendRequest={sendRequest} getPointData={getPointData}
                     getRequestGetPvzPrice={getRequestGetPvzPrice} selectPvz={selectPvz} setSelectPvz={setSelectPvz} />
             }

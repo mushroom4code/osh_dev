@@ -184,8 +184,7 @@ function OrderOshishaDelivery({result, params, sendRequest}) {
             <div className={showHideBlockWithDelivery ? "" : "hidden"}>
                 <div className="fixed top-0 left-0 w-full h-full bg-lightOpacityWindow dark:bg-darkOpacityWindow z-50
                 flex justify-center items-center">
-                    <div
-                        className="md:max-w-5xl max-w-auto w-full bg-white dark:bg-darkBox md:p-7 p-4 rounded-xl relative">
+                    <div className="flex flex-col md:max-w-5xl h-4/5 max-w-auto overflow-hidden w-full bg-white dark:bg-darkBox md:p-7 p-4 rounded-xl relative">
                         <div className='flex flex-row'>
                             <div className='flex-lg-row flex-md-row flex-wrap flex-1'>
                                 <div className='flex items-center'>
