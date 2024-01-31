@@ -214,7 +214,7 @@ function OrderPropLocationCustom({ currentLocation, setCurrentLocation, propLoca
                     '!border-grey-line-order dark:!border-darkBox dark:!bg-darkBox ' +
                     ` ${state.openListLocations ? '' : 'hidden'}`}>
                     {state.listLocations.map((location, index) => <li tabIndex='0'
-                        className={`${state.activeLocation === index ? 'bg-grey-line-order dark:bg-darkBox' : ''}`
+                        className={`${state.activeLocation === index ? 'bg-grey-line-order dark:bg-grayButton ' : ''}`
                             + ' py-2 pl-3 pr-9 text-textLight dark:text-textDarkLightGray font-normal ' +
                             ' dark:font-light hover:bg-textDarkLightGray dark:hover:bg-grayButton'}
                         key={index} onClick={onSelectLocation(index)} data-index={index}>
