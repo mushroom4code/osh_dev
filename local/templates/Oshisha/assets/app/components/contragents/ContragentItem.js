@@ -37,7 +37,7 @@ function ContragentItem({contragent}) {
             <div className={"md:pr-8 md:pl-8 pl-4 pr-4 dark:text-textDarkLightGray text-textLight " +
                 (!initHideBox ? ' md:pb-8 pb-4 ' : 'pb-3')}>
                 <div>
-                    <p className="mb-5 dark:font-medium font-semibold text-xl flex flex-row items-center">
+                    <p className="mb-5 dark:font-medium font-semibold text-lg flex flex-row items-center">
                         <IconNameContr/>
                         {contragent?.NAME_ORGANIZATION}
                     </p>
@@ -58,7 +58,7 @@ function ContragentItem({contragent}) {
             <div className={!initHideBox ? 'hidden' : 'dark:text-textDarkLightGray text-textLight relative pr-8 pl-8'}>
                 {
                     initHideBox ?
-                        <p className={"p-2 mt-2 mb-3 w-full cursor-pointer flex items-center justify-center" +
+                        <p className={"p-2 mt-1 mb-2 w-full cursor-pointer flex items-center justify-center" +
                             (initBoxInfo ? ' rotate-180' : '')} onClick={() => {
                             setInitBoxInfo(!initBoxInfo)
                         }}>
