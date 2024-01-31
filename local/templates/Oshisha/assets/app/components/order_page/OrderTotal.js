@@ -6,7 +6,6 @@ function OrderTotal() {
         result, params, options, sendRequest, isValidForm,
         isOrderSaveAllowed, allowOrderSave
     } = useContext(OrderContext);
-    var orderSaveAllowed = false;
 
     const getResultJsx = () => {
         var resultJsx = [];

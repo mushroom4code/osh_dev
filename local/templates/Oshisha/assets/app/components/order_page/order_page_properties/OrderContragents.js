@@ -1,8 +1,6 @@
-import React, {useContext, useState} from "react";
-import OrderContext from "../Context/OrderContext";
+import React, {useState} from "react";
 
-function OrderContragents({property}) {
-    const {contrAgents} = useContext(OrderContext);
+function OrderContragents({property, contrAgents}) {
     const currentContr = contrAgents.find(contrAgent => contrAgent.ID_CONTRAGENT === property['VALUE'][0]) ?? contrAgents[0];
     const [selectedContragent, setSelectedContragent] = useState(currentContr ?? {});
     const onChangeHandler = (event) => {
@@ -40,7 +38,8 @@ function OrderContragents({property}) {
                     <span className="lg:text-xs text-10 font-semibold dark:font-medium">{selectedContragent.INN}</span>
                 </div>
                 <div className="flex flex-col">
-                    <span className="lg:text-xs text-10 dark:font-light font-normal mb-1">Наименование организации:</span>
+                    <span
+                        className="lg:text-xs text-10 dark:font-light font-normal mb-1">Наименование организации:</span>
                     <span className="lg:text-xs text-10 font-semibold dark:font-medium">
                             {selectedContragent.NAME_ORGANIZATION}
                     </span>

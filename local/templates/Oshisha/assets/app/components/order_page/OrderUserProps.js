@@ -5,8 +5,9 @@ import OrderContragents from "./order_page_properties/OrderContragents";
 
 function OrderUserProps() {
 
-    const { result } = useContext(OrderContext);
+    const { result, contrAgents } = useContext(OrderContext);
     const userFieldsGroup = 'Личные данные'
+    console.log(result)
 
     const userGroup = result.ORDER_PROP.groups.find(group => group.NAME === userFieldsGroup)
     return (<div className="row">
@@ -14,7 +15,7 @@ function OrderUserProps() {
             {result.ORDER_PROP.properties.map(property => {
 
                 if (property.CODE === 'CONTRAGENT_ID') {
-                    return <OrderContragents key={property.ID} property={property}/>;
+                    return <OrderContragents key={property.ID} property={property} contrAgents={contrAgents} />;
                 }
 
                 if ((property.PROPS_GROUP_ID !== userGroup.ID)
