@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import OshishaYMap from './OshishaYMap';
 import OshishaPvzList from './OshishaPvzList';
 import { ajaxDeliveryUrl } from '../OrderMain';
+import { deliveryProp } from './OrderOshishaDelivery';
 
 function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, typePvzList }) {
 
@@ -12,6 +13,8 @@ function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, t
     }
 
     const [features, setFeatures] = useState([])
+    const [selectPvz, setSelectPvz] = useState(result.ORDER_PROP.properties.find(
+        prop => prop.CODE === deliveryProp.commonPvz.code)?.VALUE[0])
 
     function getRequestGetPvzPrice(data) {
         return axios.post(ajaxDeliveryUrl, {
@@ -70,7 +73,7 @@ function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, t
                     params={params} orderResult={result} getPointData={getPointData}
                     getRequestGetPvzPrice={getRequestGetPvzPrice} sendRequest={sendRequest} />
                 : <OshishaPvzList features={features} sendRequest={sendRequest} getPointData={getPointData}
-                    getRequestGetPvzPrice={getRequestGetPvzPrice} />
+                    getRequestGetPvzPrice={getRequestGetPvzPrice} selectPvz={selectPvz} setSelectPvz={setSelectPvz} />
             }
         </div>
     )

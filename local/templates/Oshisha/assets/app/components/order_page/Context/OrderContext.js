@@ -66,7 +66,6 @@ export const OrderContextProvider = (props) => {
         let requestData = BX.OrderPageComponents.getData(action, actionData)
         requestData.order = { ...requestData.order, ...additionalData }
 
-
         if (action === 'saveOrderAjax') {
             form = BX('bx-soa-order-form');
             if (form)

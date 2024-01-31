@@ -86,10 +86,6 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
-        onChangeDaDataString(null, true);
-    }, [currentLocation]);
-
-    useEffect(() => {
         dispatch({type: 'update_address', address})
     }, [address]);
     const selectSuggest = (index) => {
@@ -162,11 +158,6 @@ function OshishaDaDataAddress({handleSelectSuggest, currentLocation, address}) {
                 {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
             ).then(response => {
                 dispatch({type: 'end_loader', listSuggest: response.data})
-
-                if (isUseEffect) {
-                    dispatch({type: 'set_suggest', address: response.data[0].value})
-                    handleSelectSuggest(response.data[0]);
-                }
             })
         }, 800);
 
