@@ -40,7 +40,6 @@ function ContragentList({typeForms}) {
 
     useEffect(() => {
         const boxPhone = $('#phoneCodeContragent');
-        const boxEmail = $('#emailContragent');
         if (loads) {
             boxPhone.phonecode({
                 preferCo: 'ru', default_prefix: '7'
@@ -54,9 +53,6 @@ function ContragentList({typeForms}) {
                 clearMaskOnLostFocus: false,
                 clearMaskOnLostHover: false,
             });
-        }
-        if (type === 'fiz' && loads && boxEmail.length > 0) {
-            boxEmail.inputmask("email");
         }
     }, [initToClick, loads, type]);
 

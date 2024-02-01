@@ -108,7 +108,6 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
         classInput = 'w-full'
     }
 
-
     return (
         (listContragent === 0 && loads) || initToClick ?
             <div className={className}>
@@ -167,22 +166,6 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                     <label className="text-sm dark:font-light font-normal text-textLight ml-3
                                      dark:text-textDarkLightGray">Индивидуальный предприниматель</label>
                                 </div>
-                                <div className="md:mr-7 mr-0 md:mb-0 mb-3">
-                                    <input type="radio" name="check"
-                                           className="dark:text-white text-light-red w-5 h-5 bg-grayIconLights border-grayIconLights
-                                dark:checked:ring-white dark:checked:border-white dark:focus:ring-0 border-2
-                                 dark:checked:focus:border-white dark:focus:checked:ring-white
-                                 focus:checked:border-light-red focus:checked:ring-light-red
-                                  dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
-                                 dark:border-gray-slider-arrow"
-                                           onChange={(e) => {
-                                               setType(fiz)
-                                           }}
-                                           checked={type === fiz}
-                                           value={fiz}/>
-                                    <label className="text-sm dark:font-light font-normal text-textLight ml-3
-                                     dark:text-textDarkLightGray">Физическое лицо</label>
-                                </div>
                             </div>
                             {type === ip || type === uric ?
                                 <>
@@ -212,36 +195,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                                placeholder="ИНН"/>
                                     </div>
                                 </>
-                                :
-                                <>
-                                    <div className={"mb-3 " + classInput}>
-                                        <input type="text"
-                                               value={name}
-                                               required
-                                               onChange={(e) => {
-                                                   setName(e.target.value)
-                                               }}
-                                               minLength={3}
-                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                                   'outline-none rounded-md w-full'}
-                                               placeholder="Фамилия Имя Отчество"/>
-                                    </div>
-                                    <div className={"mb-3 " + classInput}>
-                                        <input type="text"
-                                               required
-                                               id="emailContragent"
-                                               inputMode="email"
-                                               onChange={(e) => {
-                                                   setEmail(e.target.value)
-                                               }}
-                                               value={email}
-                                               minLength={8}
-                                               className={
-                                                   'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                                   'outline-none rounded-md w-full'}
-                                               placeholder="Email"/>
-                                    </div>
-                                </>
+                                : false
                             }
                             <div className={"mb-3 relative " + classInput}>
                                 <span className="" id="flag"></span>

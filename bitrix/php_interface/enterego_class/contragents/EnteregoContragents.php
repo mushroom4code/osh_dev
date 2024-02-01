@@ -20,7 +20,6 @@ class EnteregoContragents
      */
 
     public const typeUric = 'uric';
-    public const typeFiz = 'fiz';
     public const typeIp = 'ip';
 
     /**
