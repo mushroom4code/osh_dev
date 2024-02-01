@@ -36,7 +36,18 @@ function is_valid_inn(i) {
 
 let className = '', classNameWindow = 'w-9/12', classInput = 'lg:w-4/5 w-full';
 
-function ContragentForm({initToClick, loads, setState, listContragent, setResult, setColor, setShowForm, showForm,type, setType}) {
+function ContragentForm({
+                            initToClick,
+                            loads,
+                            setState,
+                            listContragent,
+                            setResult,
+                            setColor,
+                            setShowForm,
+                            showForm,
+                            type,
+                            setType
+                        }) {
     const [inn, setInn] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
@@ -75,13 +86,11 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
         setPhone('')
         setName('')
         setInn('')
-        setEmail('')
     }
 
     function sendContragent(data) {
         axios.post('/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php',
             data).then(res => {
-            console.log(res)
                 if (res.data?.success) {
                     setResult(res.data?.success)
                     setColor('dark:text-textDarkLightGray text-greenButton')
@@ -92,6 +101,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                     if (res.data?.error?.code) {
                         setResultNew(res.data?.error?.code)
                         setContrResult(res.data?.error?.item)
+                        setState(true)
                         setShowForm(false)
                     }
                 } else {
@@ -168,36 +178,31 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
                                      dark:text-textDarkLightGray">Индивидуальный предприниматель</label>
                                 </div>
                             </div>
-                            {type === ip || type === uric ?
-                                <>
-                                    <div className={"mb-3 " + classInput}>
-                                        <input type="text"
-                                               value={name}
-                                               required
-                                               onChange={(e) => {
-                                                   setName(e.target.value)
-                                               }}
-                                               minLength={3}
-                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4' +
-                                                   'outline-none rounded-md w-full'}
-                                               placeholder="Полное наименование организации"/>
-                                    </div>
-                                    <div className={"mb-3 " + classInput}>
-                                        <input type="text"
-                                               required
-                                               id="inn"
-                                               value={inn}
-                                               onChange={(e) => {
-                                                   setInn(e.target.value)
-                                               }}
-                                               minLength={8}
-                                               className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
-                                                   'outline-none rounded-md w-full'}
-                                               placeholder="ИНН"/>
-                                    </div>
-                                </>
-                                : false
-                            }
+                            <div className={"mb-3 " + classInput}>
+                                <input type="text"
+                                       value={name}
+                                       required
+                                       onChange={(e) => {
+                                           setName(e.target.value)
+                                       }}
+                                       minLength={3}
+                                       className={'dark:bg-grayButton bg-textDark border-none py-3 px-4' +
+                                           'outline-none rounded-md w-full'}
+                                       placeholder="Полное наименование организации"/>
+                            </div>
+                            <div className={"mb-3 " + classInput}>
+                                <input type="text"
+                                       required
+                                       id="inn"
+                                       value={inn}
+                                       onChange={(e) => {
+                                           setInn(e.target.value)
+                                       }}
+                                       minLength={8}
+                                       className={'dark:bg-grayButton bg-textDark border-none py-3 px-4 ' +
+                                           'outline-none rounded-md w-full'}
+                                       placeholder="ИНН"/>
+                            </div>
                             <div className={"mb-3 relative " + classInput}>
                                 <span className="" id="flag"></span>
                                 <input type="text"

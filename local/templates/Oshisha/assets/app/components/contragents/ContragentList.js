@@ -84,8 +84,8 @@ function ContragentList({typeForms}) {
                             }
                         </p>
                         <div className="flex flex-row flex-wrap">
-                            {listContragent.map((contragent, keys) => <ContragentItem key={keys}
-                                                                                      contragent={contragent}/>)}
+                            {listContragent.map((contragent, keys) =>
+                                <ContragentItem key={keys} contragent={contragent}/>)}
                         </div>
                     </div> : false
             }
