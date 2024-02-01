@@ -77,8 +77,9 @@ function showOrderBlock($listStatuses, $accountNumber)
                             <div id="popup_mess_order_copy"></div>
                         </div>
                         <div class=" sale-order-list-about-container md:w-full w-1/2">
-                            <a class="sale-order-list-about-link md:px-5 px-1 xl:py-3 py-2 dark:shadow-md w-max shadow-shadowDark
-                            dark:hover:bg-black cursor-pointer dark:bg-grayButton rounded-md bg-lightGrayBg flex items-center  justify-center"
+                            <a class="sale-order-list-about-link md:px-5 px-1 xl:py-3 py-2 dark:shadow-md md:w-max shadow-shadowDark
+                            dark:hover:bg-black cursor-pointer dark:bg-grayButton rounded-md bg-lightGrayBg  w-full
+                            flex items-center justify-center "
                                href="/personal/orders/<?= $order['ACCOUNT_NUMBER'] ?>/">
                                 <svg class="md:w-7 w-4 md:h-6 h-5" viewBox="0 0 25 26" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
