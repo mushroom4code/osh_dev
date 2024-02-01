@@ -95,7 +95,7 @@ function OshishaPvzDelivery({ cityCode, cityName, params, result, sendRequest, t
     }, [cityCode])
 
     return (
-        <div className='flex-1 overflow-auto'>
+        <div className='flex-1'>
             {typePvzList === 'map'
                 ? <OshishaYMap cityCode={cityCode} cityName={cityName} features={features}
                     getPointData={getPointData} getRequestGetPvzPrice={getRequestGetPvzPrice} handleSelectPvz={handleSelectPvz} />

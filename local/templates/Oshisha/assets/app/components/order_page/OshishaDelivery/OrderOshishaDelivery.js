@@ -274,27 +274,27 @@ function OrderOshishaDelivery({ result, params, sendRequest }) {
                             <OrderPropLocationCustom currentLocation={currentLocation} propLocation={propLocation}
                                                      setCurrentLocation={setCurrentLocation}/>
                         </div>
-                        <div className="lg:max-h-96 overflow-auto max-h-60">
-                            {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId
-                                ? <OshishaDoorDelivery result={result} params={params} propAddress={propAddress}
-                                                       setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
-                                                       sendRequest={sendRequest} currentLocation={currentLocation}
-                                                       handleSelectSuggest={handleSelectSuggest}/>
-                                : null
-                            }
-                            {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
-                                ? <OshishaPvzDelivery
-                                    cityCode={currentLocation?.CODE}
-                                    cityName={currentLocation?.DISPLAY}
-                                    result={result}
-                                    params={params}
-                                    sendRequest={sendRequest}
-                                    typePvzList={typePvzList}
-                                    setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
-                                />
-                                : null
-                            }
-                        </div>
+
+                        {curDelivery.ID === params.OSH_DELIVERY.doorDeliveryId
+                            ? <OshishaDoorDelivery result={result} params={params} propAddress={propAddress}
+                                                   setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
+                                                   sendRequest={sendRequest} currentLocation={currentLocation}
+                                                   handleSelectSuggest={handleSelectSuggest}/>
+                            : null
+                        }
+                        {curDelivery.ID === params.OSH_DELIVERY.pvzDeliveryId
+                            ? <OshishaPvzDelivery
+                                cityCode={currentLocation?.CODE}
+                                cityName={currentLocation?.DISPLAY}
+                                result={result}
+                                params={params}
+                                sendRequest={sendRequest}
+                                typePvzList={typePvzList}
+                                setShowHideBlockWithDelivery={setShowHideBlockWithDelivery}
+                            />
+                            : null
+                        }
+
                         <Close showHide={showHideBlockWithDelivery}
                                setShowHide={setShowHideBlockWithDelivery}/>
                     </div>
