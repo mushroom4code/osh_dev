@@ -81,6 +81,7 @@ function ContragentForm({initToClick, loads, setState, listContragent, setResult
     function sendContragent(data) {
         axios.post('/local/templates/Oshisha/components/bitrix/sale.personal.section/oshisha_sale.personal.section/ajax.php',
             data).then(res => {
+            console.log(res)
                 if (res.data?.success) {
                     setResult(res.data?.success)
                     setColor('dark:text-textDarkLightGray text-greenButton')

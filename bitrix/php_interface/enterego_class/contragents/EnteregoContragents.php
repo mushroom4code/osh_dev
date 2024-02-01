@@ -137,11 +137,11 @@ class EnteregoContragents
      */
     public static function addContragent(int $user_id = 0, array $arData = []): array
     {
-        $result = ['error' => 'Такой контрагент уже существует'];
+        $result = [];
         $resultSelect = EnteregoORMContragentsTable::getList(
             array(
-                'select' => array('ID_CONTRAGENT', 'XML_ID'),
-                'filter' => array($arData),
+                'select' => array("*"),
+                'filter' => array('INN' => $arData['INN'] ?? ''),
             )
         )->fetch();
 
@@ -173,7 +173,12 @@ class EnteregoContragents
 
             }
         } else {
-            $result = ['error' => ['code' => '', 'item' => $resultSelect]];
+            $result = [
+                'error' => [
+                    'code' => 'Контрагент с такими данными уже существует!',
+                    'item' => $resultSelect
+                ]
+            ];
         }
 
         return $result;
@@ -222,16 +227,14 @@ class EnteregoContragents
      */
     public static function getContragentByFilter(array $filter = []): bool|array
     {
-        $result = false;
+        $result = [];
         if (!empty($filter)) {
-            $resultSelect = EnteregoORMContragentsTable::getList(
+            $result = EnteregoORMContragentsTable::getList(
                 array(
-                    'select' => array('ID_CONTRAGENT', 'TYPE', 'NAME_ORGANIZATION', 'PHONE_COMPANY', 'EMAIL', 'INN'),
+                    'select' => array('ID_CONTRAGENT', 'TYPE'),
                     'filter' => $filter,
                 )
             )->fetch();
-
-            $result = empty($resultSelect) ? true : $resultSelect;
         }
         return $result;
     }
