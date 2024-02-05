@@ -88,36 +88,37 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
             <div class="mb-3">
                 <div class="sale-order-detail-card">
                     <div class="title_order_detail">
-                        <div class="flex-row flex bg-textDark dark:bg-darkBox md:px-8 px-3 xl:py-3 md:py-3 py-1/4 md:rounded-t-3xl
-                        rounded-t-lg relative">
-                            <div class="flex-row flex w-1/2 items-center">
-                                <h4 class="font-medium dark:font-medium xl:text-2xl md:text-lg text-md mb-0 text-textLight mr-3
+                        <div class="md:flex-row flex-col-reverse flex bg-textDark dark:bg-darkBox md:px-8 px-0 xl:py-3 md:py-3 rounded-t-3xl
+                      relative">
+                            <div class="flex-row flex md:w-1/2 items-center w-full md:justify-start justify-center">
+                                <h4 class="font-semibold dark:font-medium xl:text-2xl text-md mb-0 text-textLight mr-3 md:p-0 p-3
                                  dark:text-textDarkLightGray">
                                     Заказ № <?= $arResult["ACCOUNT_NUMBER"] ?>
                                 </h4>
-                                <p class="sale-order-detail-props font-semibold xl:text-lg md:text-md text-xs  mb-0
+                                <p class="sale-order-detail-props font-semibold xl:text-lg text-sm mb-0
                                 dark:font-medium dark:text-textDarkLightGray text-textLight">
                                     от <?= $arResult["DATE_INSERT_FORMATED"] ?>
                                 </p>
                             </div>
-                            <span class="mb-1 md:w-1/2 xl:text-lg md:text-md text-xs font-medium h-full absolute top-0 right-0
-                            md:rounded-bl-3xl md:rounded-tr-3xl md:max-w-[500px] max-w-[200px] md:min-w-[200px]
-                            w-full flex items-center justify-center rounded-bl-xl rounded-tr-xl <?= $classStatus ?>">
+                            <span class="mb-1 md:w-1/2 xl:text-lg text-sm font-medium h-full md:absolute top-0 right-0
+                            rounded-bl-none md:rounded-tr-3xl md:max-w-[500px] md:min-w-[200px] rounded-tl-3xl md:p-0 p-2
+                            w-full flex items-center justify-center md:rounded-tl-none md:rounded-bl-3xl rounded-tr-3xl <?= $classStatus ?>">
                                 <?= $arResult["STATUS"]["NAME"] ?>
                             </span>
                         </div>
                     </div>
                     <div class="border-2 border-t-0 border-textDark dark:border-darkBox md:rounded-b-[2rem] rounded-b-xl">
-                        <div class="flex md:flex-row flex-col xl:p-8 md:p-5 p-3 justify-between mb-5">
+                        <div class="flex md:flex-row flex-col xl:px-8 xl:py-6 md:px-5 md:py-5 px-3 py-3 justify-between">
                             <div class="flex flex-col">
                                 <div class="flex flex-col pr-1">
-                                    <p class="mb-3 md:text-md text-sm font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
-                                        <span class="mr-1 font-semibold">Товаров:</span> <?= count($arResult['BASKET']); ?>
+                                    <p class="mb-3 md:text-md text-xs font-normal dark:font-light text-textLight
+                                     dark:text-textDarkLightGray">
+                                        <span class="mr-2 font-semibold dark:font-light">Товаров:</span>
+                                        <?= count($arResult['BASKET']); ?>
                                     </p>
-                                    <p class="mb-3 md:text-md text-sm font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
-                                        <span class="mr-1 font-semibold">Сумма доставки:</span>
-                                        <?php
-                                        $deliveryPrice = 0;
+                                    <p class="mb-3 md:text-md text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
+                                        <span class="mr-2 font-semibold dark:font-light">Сумма доставки:</span>
+                                        <?php $deliveryPrice = 0;
                                         foreach ($arResult['SHIPMENT'] as $shipment) {
                                             $deliveryPrice += $shipment["PRICE_DELIVERY"];
                                         }
@@ -125,20 +126,27 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                     </p>
                                 </div>
                                 <div class="flex flex-col">
-                                    <p class="mb-3 md:text-md text-sm font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
-                                        <span class="mr-1 font-semibold">Способ доставки:</span>
-                                        <?php foreach ($arResult['SHIPMENT'] as $shipment) {
-                                            echo htmlspecialcharsbx($shipment["DELIVERY_NAME"]);
-                                        } ?>
+                                    <p class="mb-3 md:text-md text-xs md:block flex flex-col dark:text-textDarkLightGray
+                                    text-textLight">
+                                        <span class="mr-2 md:mb-0 mb-1 md:text-md text-xs font-semibold dark:font-light">Способ доставки:</span>
+                                        <span class="font-normal dark:font-light">
+                                            <?php foreach ($arResult['SHIPMENT'] as $shipment) {
+                                                echo htmlspecialcharsbx($shipment["DELIVERY_NAME"]);
+                                            } ?>
+                                        </span>
                                     </p>
-                                    <p class="mb-3 md:text-md text-sm font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
-                                        <span class="mr-1 font-semibold">Способ оплаты: </span>
+                                    <p class="mb-3 md:text-md text-xs md:block flex flex-col dark:text-textDarkLightGray
+                                    text-textLight">
+                                        <span class="mr-2 md:mb-0 mb-1 md:text-md text-xs font-semibold dark:font-light">
+                                            Способ оплаты: </span>
+                                        <span class="font-normal dark:font-light">
                                         <?php foreach ($arResult['PAYMENT'] as $payment) {
                                             echo $payment['PAY_SYSTEM_NAME'];
                                         } ?>
+                                        </span>
                                     </p>
-                                    <p class="mb-3 md:text-md text-sm font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
-                                        <span class="mr-1 font-semibold">Получатель: </span>
+                                    <p class="mb-3 md:text-md text-xs font-normal dark:font-light dark:text-textDarkLightGray text-textLight">
+                                        <span class="mr-2 font-semibold dark:font-light">Получатель: </span>
                                         <?php if ($userName <> '') {
                                             echo htmlspecialcharsbx($userName);
                                         } elseif (mb_strlen($arResult['FIO'])) {
@@ -149,9 +157,9 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                     </p>
                                 </div>
                             </div>
-                            <div class="flex flex-col justify-between mb-3 items-end">
+                            <div class="flex md:flex-col flex-col-reverse justify-between mb-3 items-end">
                                 <a href="<?= $arResult["URL_TO_COPY"] ?>"
-                                   class="link_repeat_orders sale-order-list-repeat-link md:px-5 px-1 xl:py-3 py-2
+                                   class="link_repeat_orders sale-order-list-repeat-link md:px-5 px-3 py-3
                                     dark:bg-dark-red rounded-md bg-light-red dark:shadow-md shadow-shadowDark w-full
                                      ark:hover:bg-hoverRedDark cursor-pointer flex items-center justify-center
                                      <?= empty($arResult['BASKET_ITEMS']) ? 'js--basket-empty' : 'js--basket-not-empty' ?>
@@ -165,194 +173,156 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                         <?= Loc::getMessage('SPOD_ORDER_REPEAT') ?>
                                     </span>
                                 </a>
-                                <p class="font-bold dark:font-medium xl:text-2xl text-lg mb-0 text-textLight mr-3
+                                <p class="font-bold dark:font-medium xl:text-2xl text-lg md:mb-0 mb-3 text-textLight mr-3
                                  dark:text-textDarkLightGray">
                                     Итого: <?= $arResult["PRICE_FORMATED"] ?>
                                 </p>
                             </div>
                         </div>
-                        <div class="mt-5 mb-3 xl:p-8 md:p-5 p-3">
-                            <div class="col">
-                                <?php
-                                $id_USER = $USER->GetID();
-                                $FUser_id = Fuser::getId($id_USER);
-                                $item_id = [];
+                        <div class="xl:px-8 md:px-5 p-3 flex flex-col">
+                            <?php
+                            $id_USER = $USER->GetID();
+                            $FUser_id = Fuser::getId($id_USER);
+                            $item_id = [];
 
-                                foreach ($arResult['BASKET'] as $basketItem) {
-                                    $item_id[] = $basketItem['ID'];
+                            foreach ($arResult['BASKET'] as $basketItem) {
+                                $item_id[] = $basketItem['ID'];
+                            }
+
+                            $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
+
+                            foreach ($arResult['BASKET'] as $basketItem) {
+
+                                foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
+                                    $basketItem['COUNT_LIKES'] = $count;
                                 }
 
-                                $count_likes = DataBase_like::getLikeFavoriteAllProduct($item_id, $FUser_id);
-
-                                foreach ($arResult['BASKET'] as $basketItem) {
-
-                                    foreach ($count_likes['ALL_LIKE'] as $keyLike => $count) {
-                                        $basketItem['COUNT_LIKES'] = $count;
+                                foreach ($count_likes['USER'] as $keyLike => $count) {
+                                    if ($keyLike == $basketItem['ID']) {
+                                        $basketItem['COUNT_LIKE'] = $count['Like'][0];
+                                        $basketItem['COUNT_FAV'] = $count['Fav'][0];
                                     }
+                                }
+                                $areaId = $basketItem['AREA_ID'];
 
-                                    foreach ($count_likes['USER'] as $keyLike => $count) {
-                                        if ($keyLike == $basketItem['ID']) {
-                                            $basketItem['COUNT_LIKE'] = $count['Like'][0];
-                                            $basketItem['COUNT_FAV'] = $count['Fav'][0];
-                                        }
-                                    }
-                                    $areaId = $basketItem['AREA_ID'];
-
-                                    $itemIds = array(
-                                        'ID' => $areaId,
-                                        'PICT' => $areaId . '_pict',
-                                        'SECOND_PICT' => $areaId . '_secondpict',
-                                        'PICT_SLIDER' => $areaId . '_pict_slider',
-                                        'STICKER_ID' => $areaId . '_sticker',
-                                        'SECOND_STICKER_ID' => $areaId . '_secondsticker',
-                                        'QUANTITY' => $areaId . '_quantity',
-                                        'QUANTITY_DOWN' => $areaId . '_quant_down',
-                                        'QUANTITY_UP' => $areaId . '_quant_up',
-                                        'QUANTITY_MEASURE' => $areaId . '_quant_measure',
-                                        'QUANTITY_LIMIT' => $areaId . '_quant_limit',
-                                        'BUY_LINK' => $areaId . '_buy_link',
-                                        'BASKET_ACTIONS' => $areaId . '_basket_actions',
-                                        'NOT_AVAILABLE_MESS' => $areaId . '_not_avail',
-                                        'SUBSCRIBE_LINK' => $areaId . '_subscribe',
-                                        'COMPARE_LINK' => $areaId . '_compare_link',
-                                        'PRICE' => $areaId . '_price',
-                                        'PRICE_OLD' => $areaId . '_price_old',
-                                        'PRICE_TOTAL' => $areaId . '_price_total',
-                                        'DSC_PERC' => $areaId . '_dsc_perc',
-                                        'SECOND_DSC_PERC' => $areaId . '_second_dsc_perc',
-                                        'PROP_DIV' => $areaId . '_sku_tree',
-                                        'PROP' => $areaId . '_prop_',
-                                        'DISPLAY_PROP_DIV' => $areaId . '_sku_prop',
-                                        'BASKET_PROP_DIV' => $areaId . '_basket_prop',
-                                    );
-                                    $url = $basketItem['DETAIL_PAGE_URL'];
-                                    if (!empty($basketItem['PARENT'])) {
-                                        $url = '/catalog/product/' . CIBlockElement::GetByID($basketItem['PARENT']['ID'])->Fetch()['CODE'] . '/';
-                                    } ?>
-                                    <div class="flex flex-row justify-between mb-5">
-                                        <div class="flex flex-row">
-                                            <div class="sale-order-detail-order-item-img-block mr-4 ">
-                                                <a href="<?= $url ?>">
-                                                    <?php
-                                                    if ($basketItem['PICTURE']['SRC'] <> '') {
-                                                        $imageSrc = $basketItem['PICTURE']['SRC'];
-                                                    } else {
-                                                        $imageSrc = '/local/templates/Oshisha/images/no-photo.gif';
-                                                    }
-                                                    ?>
-                                                    <img class="sale-order-detail-order-item-img-container"
-                                                         src="<?= $imageSrc ?>"/>
-                                                </a>
-                                            </div>
-                                            <div class="sale-order-detail-order-item-properties flex flex-col
-                                               items-start justify-between mb-2"
-                                                 style="min-width: 250px;">
-                                                <div class="mb-2">
-                                                    <a class="sale-order-detail-order-item-title mb-3"
-                                                       href="<?= $url ?>"><?= htmlspecialcharsbx($basketItem['NAME']) ?></a>
-                                                    <? if (isset($basketItem['PROP']) && is_array($basketItem['PROP'])) {
-                                                        foreach ($basketItem['PROP'] as $itemProps) { ?>
-                                                            <div
-                                                                    class="sale-order-detail-order-item-properties-type">
-                                                                <?= htmlspecialcharsbx($itemProps) ?></div>
-                                                            <?
-                                                        }
-                                                    } ?>
-                                                </div>
-                                                <?php $res = EnteregoHelper::getItems($basketItem['PRODUCT_ID'],
-                                                    PROPERTY_KEY_VKUS);
-                                                if (!empty($res)) {
-                                                    ?>
-                                                    <div class="variation_taste mb-5"
-                                                         id="<?= count($res[PROPERTY_KEY_VKUS]); ?>">
-                                                        <?php foreach ($res[PROPERTY_KEY_VKUS] as $key) { ?>
-                                                            <span class="taste"
-                                                                  data-background="#<?= $key['VALUE'] ?>"
-                                                                  id="<?= $key['ID'] ?>">
-                                                                <?= $key['NAME'] ?>
-                                                            </span>
-                                                            <?php
-                                                        } ?>
-                                                    </div>
-                                                <?php } ?>
-                                                <div>
-                                                    <div class="sale-order-detail-order-item-properties text-right">
-                                                        <strong class="bx-price"><?= $basketItem['FORMATED_SUM'] ?>
-                                                            x <?= $basketItem['QUANTITY'] ?> шт.</strong>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-row">
-                                            <div class="align-self-end flex">
-                                                <div class="sale-order-detail-order-item-properties flex flex-row">
-                                                    <div class="product-item-amount-field-contain flex
-                                                    flex-row items-center">
-                                                        <span class="btn-minus  minus_icon no-select"
-                                                              id="<?= $itemIds['QUANTITY_DOWN_ID'] ?>"><span
-                                                                    class="minus_icon"></span></span>
-                                                        <div class="product-item-amount-field-block">
-                                                            <input class="product-item-amount card_element"
-                                                                   id="<?= $itemIds['QUANTITY_ID'] ?>"
-                                                                   type="number"
-                                                                   value="<?= $basketItem['QUANTITY'] ?>">
-                                                        </div>
-                                                        <a class="btn-plus plus_icon no-select add2basket"
-                                                           id="<? echo $itemIds['BUY_LINK']; ?>"
-                                                           href="javascript:void(0)"
-                                                           data-url="<?= $basketItem['DETAIL_PAGE_URL'] ?>"
-                                                           data-product_id="<?= $basketItem['PRODUCT_ID']; ?>"
-                                                           title="Добавить в корзину"></a>
-                                                    </div>
-                                                    <!--                                                    <div class="product-item-amount-field-contain">-->
-                                                    <!--                                                        <span class="btn-minus no-select minus_icon "-->
-                                                    <!--                                                              id="-->
-                                                    <? //= $itemIds['QUANTITY_DOWN_ID'] ?><!--"></span>-->
-                                                    <!--                                                        <div class="product-item-amount-field-block">-->
-                                                    <!--                                                            <input class="product-item-amount"-->
-                                                    <!--                                                                   id="-->
-                                                    <? //= $itemIds['QUANTITY_ID'] ?><!--" type="number"-->
-                                                    <!--                                                                   value="-->
-                                                    <? //= $price['MIN_QUANTITY'] ?><!--">-->
-                                                    <!--                                                        </div>-->
-                                                    <!--                                                        <span class="btn-plus no-select plus_icon"-->
-                                                    <!--                                                              id="-->
-                                                    <? //= $itemIds['QUANTITY_UP_ID'] ?><!--"></span>-->
-                                                    <!--                                                    </div>-->
-                                                    <a id="<?= $basketItem['BUY_LINK']; ?>"
-                                                       href="javascript:void(0)"
-                                                       rel="nofollow"
-                                                       class="btn_basket add2basket basket_prod_detail"
-                                                       data-url="<?= $url ?>"
-                                                       data-product_id="<?= $basketItem['ID']; ?>"
-                                                       title="Добавить в корзину">Забронировать</a>
-                                                </div>
-                                            </div>
-                                            <div class="box_with_net ml-3">
+                                $itemIds = array(
+                                    'ID' => $areaId,
+                                    'PICT' => $areaId . '_pict',
+                                    'SECOND_PICT' => $areaId . '_secondpict',
+                                    'PICT_SLIDER' => $areaId . '_pict_slider',
+                                    'STICKER_ID' => $areaId . '_sticker',
+                                    'SECOND_STICKER_ID' => $areaId . '_secondsticker',
+                                    'QUANTITY' => $areaId . '_quantity',
+                                    'QUANTITY_DOWN' => $areaId . '_quant_down',
+                                    'QUANTITY_UP' => $areaId . '_quant_up',
+                                    'QUANTITY_MEASURE' => $areaId . '_quant_measure',
+                                    'QUANTITY_LIMIT' => $areaId . '_quant_limit',
+                                    'BUY_LINK' => $areaId . '_buy_link',
+                                    'BASKET_ACTIONS' => $areaId . '_basket_actions',
+                                    'NOT_AVAILABLE_MESS' => $areaId . '_not_avail',
+                                    'SUBSCRIBE_LINK' => $areaId . '_subscribe',
+                                    'COMPARE_LINK' => $areaId . '_compare_link',
+                                    'PRICE' => $areaId . '_price',
+                                    'PRICE_OLD' => $areaId . '_price_old',
+                                    'PRICE_TOTAL' => $areaId . '_price_total',
+                                    'DSC_PERC' => $areaId . '_dsc_perc',
+                                    'SECOND_DSC_PERC' => $areaId . '_second_dsc_perc',
+                                    'PROP_DIV' => $areaId . '_sku_tree',
+                                    'PROP' => $areaId . '_prop_',
+                                    'DISPLAY_PROP_DIV' => $areaId . '_sku_prop',
+                                    'BASKET_PROP_DIV' => $areaId . '_basket_prop',
+                                );
+                                $url = $basketItem['DETAIL_PAGE_URL'];
+                                if (!empty($basketItem['PARENT'])) {
+                                    $url = '/catalog/product/' . CIBlockElement::GetByID($basketItem['PARENT']['ID'])->Fetch()['CODE'] . '/';
+                                } ?>
+                                <div class="justify-between rounded-xl p-3 md:p-5 dark:bg-darkBox bg-textDark md:mb-3
+                                mb-2 flex flex-row">
+                                    <div class="flex flex-row md:w-auto w-11/12">
+                                        <div class="sale-order-detail-order-item-img-block  md:h-auto md:p-3 p-2 h-fit
+                                         bg-white min-w-max rounded-xl flex justify-center align-center md:mr-7 mr-2">
+                                            <a href="<?= $url ?>" class="h-fit">
                                                 <?php
-                                                /**
-                                                 * @var CatalogSectionComponent $component
-                                                 */
-                                                $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
-                                                    'templates',
-                                                    array(
-                                                        'ID_PROD' => $basketItem['ID'],
-                                                        'F_USER_ID' => $FUser_id,
-                                                        'LOOK_LIKE' => true,
-                                                        'LOOK_FAVORITE' => true,
-                                                        'COUNT_LIKE' => $basketItem['COUNT_LIKE'],
-                                                        'COUNT_FAV' => $basketItem['COUNT_FAV'],
-                                                        'COUNT_LIKES' => $basketItem['COUNT_LIKES'],
-                                                    ),
-                                                    $component,
-                                                    array('HIDE_ICONS' => 'Y')
-                                                );
+                                                if ($basketItem['PICTURE']['SRC'] <> '') {
+                                                    $imageSrc = $basketItem['PICTURE']['SRC'];
+                                                } else {
+                                                    $imageSrc = '/local/templates/Oshisha/images/no-photo.gif';
+                                                }
                                                 ?>
+                                                <img class="sale-order-detail-order-item-img-container
+                                                     md:h-28 md:w-28 w-12 h-12 object-contain"
+                                                     src="<?= $imageSrc ?>"/>
+                                            </a>
+                                        </div>
+                                        <div class="sale-order-detail-order-item-properties flex flex-col
+                                               items-start justify-between mb-2 relative w-full"
+                                             style="min-width: 250px;">
+                                            <div class="mb-2">
+                                                <a class="sale-order-detail-order-item-title font-medium
+                                                dark:font-light md:text-lg text-textLight text-xs
+                                                dark:text-textDarkLightGray md:line-clamp-none line-clamp-1"
+                                                   href="<?= $url ?>"><?= htmlspecialcharsbx($basketItem['NAME']) ?></a>
+                                                <?php if (isset($basketItem['PROP']) && is_array($basketItem['PROP'])) {
+                                                    foreach ($basketItem['PROP'] as $itemProps) { ?>
+                                                        <div class="sale-order-detail-order-item-properties-type">
+                                                            <?= htmlspecialcharsbx($itemProps) ?></div>
+                                                        <?php
+                                                    }
+                                                } ?>
+                                            </div>
+                                            <div>
+                                                <div class="sale-order-detail-order-item-properties text-right">
+                                                    <strong class="bx-price font-bold  dark:font-medium md:text-xl
+                                                    text-textLight text-sm dark:text-textDarkLightGray"><?= $basketItem['FORMATED_SUM'] ?>
+                                                        x <?= $basketItem['QUANTITY'] ?> шт.</strong>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                <?php } ?>
-                            </div>
+                                    <div class="h-auto box_with_net ml-1 flex flex-col justify-between items-center md:w-auto w-1/12">
+                                        <?php
+                                        /**
+                                         * @var CatalogSectionComponent $component
+                                         */
+                                        $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                                            'templates',
+                                            array(
+                                                'ID_PROD' => $basketItem['ID'],
+                                                'F_USER_ID' => $FUser_id,
+                                                'LOOK_LIKE' => true,
+                                                'LOOK_FAVORITE' => false,
+                                                'COUNT_LIKE' => $basketItem['COUNT_LIKE'],
+                                                'COUNT_FAV' => $basketItem['COUNT_FAV'],
+                                                'COUNT_LIKES' => $basketItem['COUNT_LIKES'],
+                                            ),
+                                            $component,
+                                            array('HIDE_ICONS' => 'Y')
+                                        );
+                                        ?>
+                                        <div class="mt-3">
+                                            <?php
+                                            /**
+                                             * @var CatalogSectionComponent $component
+                                             */
+                                            $APPLICATION->IncludeComponent('bitrix:osh.like_favorites',
+                                                'templates',
+                                                array(
+                                                    'ID_PROD' => $basketItem['ID'],
+                                                    'F_USER_ID' => $FUser_id,
+                                                    'LOOK_LIKE' => false,
+                                                    'LOOK_FAVORITE' => true,
+                                                    'COUNT_LIKE' => $basketItem['COUNT_LIKE'],
+                                                    'COUNT_FAV' => $basketItem['COUNT_FAV'],
+                                                    'COUNT_LIKES' => $basketItem['COUNT_LIKES'],
+                                                ),
+                                                $component,
+                                                array('HIDE_ICONS' => 'Y')
+                                            );
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
