@@ -1,4 +1,6 @@
 <?php
+
+use Enterego\contragents\EnteregoContragents;
 use Enterego\EnteregoBasket;
 use Enterego\EnteregoGroupedProducts;
 
@@ -32,7 +34,7 @@ $listGroupedProduct = $arResult['PROPERTIES']['PRODUCTS_LIST_ON_PROP']['VALUE'];
 $arResult = EnteregoGroupedProducts::getListGroupedProduct($arResult['ID'], $listGroupedProduct, $arResult);
 /** Enterego grouped product on prop PRODUCTS_LIST_ON_PROP end */
 
-
+$arResult['ADD_TO_BASKET'] = EnteregoContragents::getActiveContragentForUser($USER->GetID());
 $useDiscount = ($arResult['PROPERTIES']['USE_DISCOUNT']['VALUE'] ?? 'Нет') === 'Да' ;
 $arResult['PRICES_CUSTOM'] = EnteregoBasket::getPricesArForProductTemplate($arResult['ITEM_ALL_PRICES'][0],
     $useDiscount, $arResult['ID']);
