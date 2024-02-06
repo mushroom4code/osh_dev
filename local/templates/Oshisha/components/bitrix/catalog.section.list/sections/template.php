@@ -88,7 +88,7 @@ if ($arResult['SECTIONS_COUNT'] > 0) {
                                     style="color:<?= $section['UF_COLOR_TEXT'] ?? '' ?>"><?= $section['NAME'] ?></h3>
                             <?php if ($arParams['COUNT_ELEMENTS'] && $section['ELEMENT_CNT'] !== null) { ?>
                                 <span class="catalog-section-list-item-counter hover:text-hover-red
-                                  text-md dark:font-light text-lightGrayBg dark:hover:text-hover-red
+                                  text-base dark:font-light text-lightGrayBg dark:hover:text-hover-red
                                  dark:text-textDarkLightGray text-medium"
                                       style="color:<?= $section['UF_COLOR_TEXT'] ?? '' ?>">
 										<?= $section['ELEMENT_CNT_TITLE'] ?>

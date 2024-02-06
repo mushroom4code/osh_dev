@@ -312,7 +312,7 @@ function setActiveColor(string $itemType = 'card'): string
                     <div class="flex flex-row justify-between md:items-center items-end mb-5">
                         <div class="col_navigation mr-4">
                             <div class="count-per-page flex md:flex-row flex-col md:items-center">
-                                <span class="font-semibold dark:font-normal md:text-md text-xs md:mr-3 text-textLight
+                                <span class="font-semibold dark:font-normal md:text-base text-xs md:mr-3 text-textLight
                                 dark:text-textDarkLightGray mr-2 md:mb-0 mb-2">Товаров</span>
                                 <div class="flex flex-row items-center">
                                     <a href="?page=24"

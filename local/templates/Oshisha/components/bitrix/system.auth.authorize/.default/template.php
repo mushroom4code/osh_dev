@@ -19,7 +19,7 @@ ShowMessage($arResult['ERROR_MESSAGE']); ?>
         <?php endforeach ?>
         <table class="bx-auth-table">
             <div class="mb-3 md:mt-0 mt-5">
-                <p class="dark:text-textDarkLightGray md:font-semibold font-normal dark:font-medium text-dark mb-2 md:text-md text-xs">
+                <p class="dark:text-textDarkLightGray md:font-semibold font-normal dark:font-medium text-dark mb-2 md:text-base text-xs">
                     <?= GetMessage("AUTH_LOGIN") ?></p>
                 <input class="bx-auth-input dark:bg-grayButton bg-white dark:border-none border-borderColor
                          focus:border-borderColor shadow-none py-2 px-4 outline-none rounded-md md:w-2/5 w-full"
@@ -27,7 +27,7 @@ ShowMessage($arResult['ERROR_MESSAGE']); ?>
                        value="<?= $arResult["LAST_LOGIN"] ?>"/>
             </div>
             <div class="mb-3">
-                <p class="dark:text-textDarkLightGray md:font-semibold font-normal dark:font-medium text-dark mb-2 md:text-md text-xs">
+                <p class="dark:text-textDarkLightGray md:font-semibold font-normal dark:font-medium text-dark mb-2 md:text-base text-xs">
                     <?= GetMessage("AUTH_PASSWORD") ?></p>
                 <input class="bx-auth-input dark:bg-grayButton bg-white dark:border-none border-borderColor
                          focus:border-borderColor shadow-none py-2 px-4 outline-none rounded-md md:w-2/5 w-full"
@@ -72,7 +72,7 @@ ShowMessage($arResult['ERROR_MESSAGE']); ?>
             <?php endif ?>
             <div class="authorize-submit-cell mb-5">
                 <input type="submit" class="shadow-md h-full flex flex-row justify-center items-center text-white
-            dark:bg-dark-red bg-light-red md:py-2.5 py-3 px-4 rounded-5 md:w-40 w-full md:text-sm text-md" name="Login"
+            dark:bg-dark-red bg-light-red md:py-2.5 py-3 px-4 rounded-5 md:w-40 w-full md:text-sm text-base" name="Login"
                        value="<?= GetMessage("AUTH_AUTHORIZE") ?>"/>
             </div>
         </table>

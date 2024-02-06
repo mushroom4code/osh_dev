@@ -51,7 +51,7 @@ if (!$USER->IsAuthorized()) {
                     </svg>
                     <div class="ml-3 flex flex-col">
                         <a href="/personal/"
-                           class="text-textDarkLightGray text-md font-semibold mb-2"
+                           class="text-textDarkLightGray text-base font-semibold mb-2"
                            id="profile_people"><span><?= htmlspecialcharsbx($name) ?></span>
                         </a>
                         <div class="flex flex-row">

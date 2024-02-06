@@ -537,7 +537,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                                     <div class="product-item-amount-field-block">
                                                         <input class="product-item-amount card_element cat-det
                                          dark:bg-grayButton bg-textDarkLightGray cursor-pointer
-                                    focus:border-none text-center border-none text-md
+                                    focus:border-none text-center border-none text-base
                                      shadow-none py-3.5 px-3 mx-2 outline-none rounded-md w-16"
                                                                id="<?= $itemIds['QUANTITY_ID'] ?>"
                                                                type="number" value="<?= $priceBasket ?>"
@@ -683,7 +683,7 @@ if ($rowResHidePrice == 'Нет' && !$USER->IsAuthorized()) {
                                         </div>
                                     <?php }
                                 } else { ?>
-                                    <div class="text-center text-md font-medium text-lightGrayBg dark:text-textDarkLightGray
+                                    <div class="text-center text-base font-medium text-lightGrayBg dark:text-textDarkLightGray
                                     dark:font-normal w-full">
                                         Для покупки товара вам необходимо
                                         <a href="/auth/"

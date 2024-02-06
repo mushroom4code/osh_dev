@@ -32,7 +32,7 @@ $APPLICATION->SetTitle("Вакансии"); ?>
             ); ?>
         </div>
         <div class="mb-10">
-            <div class="bg-textDark dark:bg-darkBox text-light dark:text-textDarkLightGray p-12 rounded-lg text-md font-normal dark:font-light">
+            <div class="bg-textDark dark:bg-darkBox text-light dark:text-textDarkLightGray p-12 rounded-lg text-base font-normal dark:font-light">
                 <b>Компания OSHISHA</b> один из крупнейших дистрибьюторов кальянной продукции и ЭСДН в России. В
                 портфеле компании сегодня: кальянные смеси, электронные системы доставки никотина, жевательный табак,
                 кальяны и комплектующие.<br>
@@ -94,7 +94,7 @@ $APPLICATION->SetTitle("Вакансии"); ?>
                             } ?>
                             <div class="mb-4 p-7 border-2 border-textDark rounded-lg dark:border-darkBox bg-white dark:bg-darkBox">
                                 <h6 class="mb-2 text-textLight dark:text-textDarkLightGray font-semibold text-xl"><?= $rowFaq['NAME']; ?></h6>
-                                <p class="mb-5 text-textLight dark:text-textDarkLightGray dark:font-light font-normal text-md">
+                                <p class="mb-5 text-textLight dark:text-textDarkLightGray dark:font-light font-normal text-base">
                                     <?= $rowFaq['PREVIEW_TEXT'] ?>
                                 </p>
                                 <?php if (!empty($rowFaq['PROPERTY_LINK_IN_SPACE_VALUE'])) { ?> <a

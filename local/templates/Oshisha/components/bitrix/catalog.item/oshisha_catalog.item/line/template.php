@@ -291,7 +291,7 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
             <div class="box_with_price card-price min-height-auto md:w-1/12 order-4 w-1/4
             md:py-0 py-3 md:px-0 px-2">
                 <div class="flex flex-col justify-center items-center">
-                    <div class="bx_price text-md font-semibold md:dark:font-medium dark:font-normal <?= $styleForNo ?> position-relative">
+                    <div class="bx_price text-base font-semibold md:dark:font-medium dark:font-normal <?= $styleForNo ?> position-relative">
                         <?php
                         if (!empty($specialPrice)) {
                             echo(round($specialPrice));
@@ -312,7 +312,7 @@ md:py-3 md:px-3 h-full relative px-0  py-0 <?= ($item['SECOND_PICT'] ? 'bx_catal
                     <?php } ?>
                 </div>
             </div>
-            <div class="font-semibold md:dark:font-medium dark:font-normal text-md sum-box md:w-2/12 w-1/4 order-5 bx_catalog_item_controls
+            <div class="font-semibold md:dark:font-medium dark:font-normal text-base sum-box md:w-2/12 w-1/4 order-5 bx_catalog_item_controls
              text-center md:py-0 py-3 md:px-0 px-1"
                  data-price="<?= $priceForSum ?? 0 ?>" data-product-id="<?= $item['ID'] ?>">
                 <?= round($priceForSum * $priceBasket) ?? 0 ?>₽

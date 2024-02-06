@@ -39,7 +39,7 @@ if (!$name)
                       class="fill-light-red dark:fill-white"/>
             </g>
         </svg>
-        <a href="/personal/" class="text-textLight dark:text-textDarkLightGray text-md font-semibold mt-3 mb-2"
+        <a href="/personal/" class="text-textLight dark:text-textDarkLightGray text-base font-semibold mt-3 mb-2"
            id="profile_people"><span><?= htmlspecialcharsbx($name) ?></span>
         </a>
         <?php if ($APPLICATION->GetCurPage() != '/personal/private/'): ?>
@@ -49,7 +49,7 @@ if (!$name)
     </div>
     <div class="personal_hide flex flex-col">
         <a href="#personal_orders_bar"
-           class="dark:text-textDarkLightGray text-md dark:hover:text-white hover:text-light-red font-medium text-textLight mb-3"
+           class="dark:text-textDarkLightGray text-base dark:hover:text-white hover:text-light-red font-medium text-textLight mb-3"
            data-toggle="collapse" aria-controls="personal_orders_bar"
            aria-expanded="false" id="not_link">Заказы</a>
         <div id="personal_orders_bar" class="flex flex-col mb-3">
@@ -67,15 +67,15 @@ if (!$name)
                id="#">В доставке</a>
         </div>
         <a href="/personal/contragents/"
-           class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-md font-medium mb-4 text-textLight"
+           class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-base font-medium mb-4 text-textLight"
            title="Контрагенты"
            id="personal_contragents">Контрагенты</a>
         <a href="/personal/subscribe/"
-           class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-md font-medium mb-4 text-textLight"
+           class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-base font-medium mb-4 text-textLight"
            title="Контрагенты"
            id="personal_contragents">Избранное</a>
         <a href="/personal/subscriptions/"
-           class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-md font-medium mb-4 text-textLight"
+           class="dark:text-textDarkLightGray dark:hover:text-white hover:text-light-red text-base font-medium mb-4 text-textLight"
            title="Подписки на товары">Подписки на товары</a>
         <a href="/?logout=yes&<?= bitrix_sessid_get() ?>"
            class="dark:text-white mb-4 text-sm font-medium flex flex-row text-textLight dark:hover:text-white hover:text-light-red mt-4 items-center"

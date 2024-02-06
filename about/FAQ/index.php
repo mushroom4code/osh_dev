@@ -41,7 +41,7 @@ if ($USER->IsAuthorized()) {
                                     <button type="button" class="flex items-center justify-between w-full p-5 font-medium
                             rtl:text-right dark:text-textDarkLightGray border-b border-neutral-200 dark:border-neutral-700
                              focus:ring-4 focus:ring-neutral-200 text-left dark:focus:ring-neutral-800
-                              hover:bg-neutral-100 dark:hover:bg-neutral-800 gap-3 md:text-md text-sm text-dark dark:font-normal
+                              hover:bg-neutral-100 dark:hover:bg-neutral-800 gap-3 md:text-base text-sm text-dark dark:font-normal
                               dark:bg-darkBox bg-white"
                                             data-accordion-target="#accordion-collapse-body-<?= $k ?>"
                                             aria-expanded="true"

@@ -14,17 +14,17 @@ $APPLICATION->SetTitle("О нас");
                 <img src="/about/o-nas/o-nas.png" class="o-nas-image dark:invert invert-0"/>
             </div>
             <div class="md:w-1/2 w-full p-4">
-                <p class="mb-5 text-textLight dark:text-textDarkLightGray text-md">
+                <p class="mb-5 text-textLight dark:text-textDarkLightGray text-base">
                     Oshisha – инновационная компания, вдохновленная на постоянное совершенствование и развитие
                     бизнеса.
                 </p>
-                <p class="mb-5 text-textLight dark:text-textDarkLightGray text-md">
+                <p class="mb-5 text-textLight dark:text-textDarkLightGray text-base">
                     Уже более 9 лет мы являемся одним
                     из крупнейших оптово-розничных поставщиков на рынке кальянной продукции и вейп индустрии.
                     Мы стремимся к предоставлению исключительного качества сервиса и услуг для наших партнёров и
                     клиентов.
                 </p>
-                <p class="mb-5 text-textLight dark:text-textDarkLightGray text-md">
+                <p class="mb-5 text-textLight dark:text-textDarkLightGray text-base">
                     Ассортимент нашего магазина состоит из самых востребованных продуктов и регулярно пополняется
                     новинками
                     рынка и под запросы потребителей.
@@ -40,7 +40,7 @@ $APPLICATION->SetTitle("О нас");
                 <div class="mr-4">
                     <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">01</span>
                 </div>
-                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-base">
                         Широкий ассортимент – более <br> 6000 товаров на любой вкус
                 </span>
             </div>
@@ -49,7 +49,7 @@ $APPLICATION->SetTitle("О нас");
                 <div class="mr-4">
                     <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">02</span>
                 </div>
-                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-base">
                     Качественный продукт - исключительно
                         <br> оригинальные товары,
                         напрямую от
@@ -62,7 +62,7 @@ $APPLICATION->SetTitle("О нас");
                 <div class="mr-4">
                     <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">03</span>
                 </div>
-                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-base">
                     Эксклюзивная дистрибьюция
                         <br> топовых продуктов рынка
                 </span>
@@ -72,7 +72,7 @@ $APPLICATION->SetTitle("О нас");
                 <div class="mr-4">
                     <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">04</span>
                 </div>
-                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-base">
                             Универсальные способы получения товара -<br>
                             мы работаем со множеством транспортных компаний и<br>
                             развозим заказы нашими курьерами по Москве\МО в<br>
@@ -85,7 +85,7 @@ $APPLICATION->SetTitle("О нас");
                 <div class="mr-4">
                     <span class="text-3xl font-semibold text-light-red dark:font-medium dark:text-white">05</span>
                 </div>
-                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-md">
+                <span class="font-normal dark:font-light text-textLight dark:text-textDarkLightGray text-base">
                     Отсутствие минимальной
                         <br> суммы заказа
                 </span>
@@ -95,7 +95,7 @@ $APPLICATION->SetTitle("О нас");
             История развития компании
         </h5>
         <div class="mb-10 md:p-10 p-3 bg-textDark dark:bg-darkBox rounded-lg">
-            <p class="mb-4 text-textLight dark:text-textDarkLightGray text-md font-normal dark:font-light">
+            <p class="mb-4 text-textLight dark:text-textDarkLightGray text-base font-normal dark:font-light">
                 История компании <b>берёт начало в далёком 2014 году</b>. Двое молодых ребят сидели в кальянной,
                 раздумывая о своем будущем и способах заработка.
                 Начался непринуждённый разговор с кальянщиком,
@@ -106,7 +106,7 @@ $APPLICATION->SetTitle("О нас");
                 Но ответ кальянщика «можно обсудить» - заставил парней всерьёз задуматься о реализации упомянутого
                 предложения.
             </p>
-            <p class="mb-4 text-textLight dark:text-textDarkLightGray text-md font-normal dark:font-light">
+            <p class="mb-4 text-textLight dark:text-textDarkLightGray text-base font-normal dark:font-light">
                 Начался настоящий мозговой штурм, поиски поставщика табака по рынкам и точкам, ребятам даже пришлось
                 помотаться по разным городам России. Наконец, поставщик нужного табака был найден. Есть поставщик,
                 есть
@@ -119,7 +119,7 @@ $APPLICATION->SetTitle("О нас");
                 задуматься о
                 бизнесе в этой сфере.
             </p>
-            <p class="mb-4 text-textLight dark:text-textDarkLightGray text-md font-normal dark:font-light">
+            <p class="mb-4 text-textLight dark:text-textDarkLightGray text-base font-normal dark:font-light">
                 Ребята поставили себе цель и усердно шли к ней. Уже в 2015 году был запущен сайт с небольшим
                 ассортиментом, начался поиск сотрудников для расширения бизнеса и улучшения качества коммуникации с
                 клиентами, партнёрами и поставщиками. К 2019 году компания уже активно участвовала на выставках,
@@ -129,7 +129,7 @@ $APPLICATION->SetTitle("О нас");
                 выпускала продукцию под собственной торговой маркой и открыла первые розничные магазины по Москве. К
                 середине 2021 года произошло масштабное обновление сайта.
             </p>
-            <p class="text-textLight dark:text-textDarkLightGray text-md font-normal dark:font-light">
+            <p class="text-textLight dark:text-textDarkLightGray text-base font-normal dark:font-light">
                 Что по итогу? Буквально с шуточного предложения было положено начало компании, которая в настоящее
                 время
                 является одним из крупнейших оптово-розничных поставщиков на рынке, имея огромный ассортимент самых

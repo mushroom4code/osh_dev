@@ -70,7 +70,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                 <?php } ?>
                 <div class="form-group mb-4">
                     <label for="main-profile-name"
-                           class="dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold">ФИО</label>
+                           class="dark:text-textDarkLightGray text-textLight text-base dark:font-normal font-semibold">ФИО</label>
                     <div class="w-full mt-3">
                         <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
                          focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md input_lk w-full"
@@ -79,9 +79,9 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                                id="main-profile-name" value="<?= $arResult["arUser"]["NAME"] ?>"/>
                     </div>
                 </div>
-                <div class="flex flex-row mb-12">
-                    <div class="form-group xs:w-2/5 w-1/2 mb-2 mr-3">
-                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
+                <div class="flex md:flex-ro flex-col mb-12">
+                    <div class="form-group xs:w-2/5 w-full mb-2 mr-3">
+                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-base dark:font-normal font-semibold"
                                for="main-profile-day">Дата рождения</label>
                         <div class="mt-3 w-full">
                             <?php if (strtotime(date('m/d/Y')) < strtotime($arResult['arUser']['UF_DATE_CHANGE_BH'])): ?>
@@ -96,7 +96,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                             <?php else: ?>
                                 <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
                          focus:border-borderColor shadow-none py-3 px-4 outline-none rounded-md input_lk user-birthday
-                          w-full xs:text-md text-sm" readonly type="text"
+                          w-full xs:text-base text-sm" readonly type="text"
                                        name="PERSONAL_BIRTHDAY"
                                        maxlength="50"
                                        id="main-profile-day2"
@@ -119,8 +119,8 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                             alias: "tt/mm/jjjj"
                         }).mask("input[name='PERSONAL_BIRTHDAY']");
                     </script>
-                    <div class="form-group xs:w-3/5 w-1/2 mb-2">
-                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
+                    <div class="form-group xs:w-3/5 w-full mb-2">
+                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-base dark:font-normal font-semibold"
                                for="main-profile-email">Почта</label>
                         <div class="mt-3">
                             <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
@@ -137,7 +137,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                 <?php if ($arResult['CAN_EDIT_PASSWORD']) { ?>
                     <div class="mb-12">
                         <div class="form-group w-full mb-4">
-                            <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
+                            <label class="mb-3 dark:text-textDarkLightGray text-textLight text-base dark:font-normal font-semibold"
                                    for="main-profile-password">Новый пароль</label>
                             <div class="mt-3 relative">
                                 <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
@@ -162,7 +162,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                             </div>
                         </div>
                         <div class="form-group w-full mb-2">
-                            <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
+                            <label class="mb-3 dark:text-textDarkLightGray text-textLight text-base dark:font-normal font-semibold"
                                    for="main-profile-password-confirm">
                                 Подтвердите пароль
                             </label>
@@ -212,14 +212,14 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                 $strAddress = str_replace('г Санкт-Петербург, Санкт-Петербург', 'г Санкт-Петербург', $strAddress);
                 ?>
                 <div class="form-group mb-6">
-                    <label class="dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
+                    <label class="dark:text-textDarkLightGray text-textLight text-base dark:font-normal font-semibold"
                            for="main-profile-country">Сохраненый адрес доставки:</label>
-                    <div class="w-full mt-3 dark:text-iconGray text-textLight font-light md:text-md text-sm">
+                    <div class="w-full mt-3 dark:text-iconGray text-textLight font-light md:text-base text-sm">
                         <?= $strAddress ?>
                     </div>
                 </div>
                 <div class="form-group mb-8">
-                    <label class="dark:text-textDarkLightGray text-textLight text-md dark:font-normal font-semibold"
+                    <label class="dark:text-textDarkLightGray text-textLight text-base dark:font-normal font-semibold"
                            for="main-profile-address">Изменить адрес</label>
                     <div class="w-full relative mt-3">
                         <input class="dark:bg-grayButton bg-white dark:border-none border-borderColor
@@ -234,7 +234,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                 </div>
                 <div class="form-group mb-3 hidden" id="edit_addressBox">
                     <div class="form-group  mb-2">
-                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md"
+                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-base"
                                for="main-profile-state">Область/край</label>
                         <div class="col-sm-12 col-md-12">
                             <input class="dark:bg-grayButton bg-textDark border-none py-3 px-4 outline-none
@@ -243,7 +243,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                         </div>
                     </div>
                     <div class="form-group  mb-2">
-                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md"
+                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-base"
                                for="main-profile-city">Город</label>
                         <div class="col-sm-12 col-md-12">
                             <input class="dark:bg-grayButton bg-textDark border-none py-3 px-4 outline-none
@@ -253,7 +253,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                     </div>
 
                     <div class="form-group  mb-2">
-                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-md"
+                        <label class="mb-3 dark:text-textDarkLightGray text-textLight text-base"
                                for="main-profile-street">Улица</label>
                         <div class="col-sm-12 col-md-12">
                             <input class="dark:bg-grayButton bg-textDark border-none py-3 px-4 outline-none
@@ -270,7 +270,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                            name="notification" checked
                            id="notification"/>
                     <label class="main-profile-form-label_notification dark:text-textDarkLightGray dark:font-light
-                    font-medium md:text-md text-sm"
+                    font-medium md:text-base text-sm"
                            for="notification">
                         Согласие на обработку персональных данных</label>
                 </div>
@@ -280,7 +280,7 @@ $this->addExternalCss('/bitrix/modules/osh.shipping/install/css/suggestions.css'
                 <div class="mt-10">
                     <input type="submit" class="btn dark:bg-dark-red rounded-md bg-light-red text-white xs:px-7 py-3
                              dark:shadow-md shadow-shadowDark font-light dark:hover:bg-hoverRedDark cursor-pointer
-                              sm:w-72 px-5 w-56 get_code_button profile xs:text-md text-sm sm:font-normal
+                              sm:w-72 px-5 w-56 get_code_button profile xs:text-base text-sm sm:font-normal
                                link_red_button main-profile-submit"
                            id="main-profile-submit"
                            name="save"

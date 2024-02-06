@@ -22,7 +22,7 @@ $itemSize = count($arResult);
 for ($index = 0; $index < $itemSize; $index++) {
     $title = htmlspecialcharsex($arResult[$index]["TITLE"]);
     $arrow = ($index > 0 ?
-        '<span class="bx-breadcrumb-item-angle mx-1.5 text-grayIconLights dark:text-gray-slider-arrow text-md">/</span>' : '');
+        '<span class="bx-breadcrumb-item-angle mx-1.5 text-grayIconLights dark:text-gray-slider-arrow text-base">/</span>' : '');
 
     if ($arResult[$index]["LINK"] <> "" && $index != $itemSize - 1) {
         if ($arResult[$index]["LINK"] === '/catalog/') {

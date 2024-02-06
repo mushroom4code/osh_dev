@@ -21,7 +21,7 @@ function showOrderBlock($listStatuses, $accountNumber)
         <div class="flex flex-col bg-textDark dark:bg-darkBox md:rounded-3xl rounded-xl xl:p-8 p-5 mx-0 mb-5 sale-order-list-inner-container relative">
             <div class="sale-order-list-title-container">
                 <h3 class="mb-2 title-orders-his">
-                    <p class="mb-3 xl:text-2xl flex md:flex-row flex-col lg:text-lg text-md font-medium
+                    <p class="mb-3 xl:text-2xl flex md:flex-row flex-col lg:text-lg text-base font-medium
                      text-textLight dark:text-textDarkLightGray md:items-center">
                         <?= Loc::getMessage('SPOL_TPL_ORDER') ?>
                         <?= Loc::getMessage('SPOL_TPL_NUMBER_SIGN') . $order['ACCOUNT_NUMBER'] ?>
@@ -50,9 +50,9 @@ function showOrderBlock($listStatuses, $accountNumber)
                             <div class="sale-order-list-payment">
                                 <div class="sale-order-list-payment-price flex flex-row">
                                     <span class="sale-order-list-payment-element mr-2 font-semibold dark:font-medium
-                                     text-textLight dark:text-textDarkLightGray xl:text-lg text-md ">Итого: </span>
-                                    <span class="sale-order-list-payment-number text-md font-semibold dark:font-medium
-                                    text-textLight dark:text-textDarkLightGray xl:text-lg text-md">
+                                     text-textLight dark:text-textDarkLightGray xl:text-lg text-base">Итого: </span>
+                                    <span class="sale-order-list-payment-number font-semibold dark:font-medium
+                                    text-textLight dark:text-textDarkLightGray xl:text-lg text-base">
                                         <?= round($order['PRICE']) . ' ₽' ?>
                                     </span>
                                 </div>
