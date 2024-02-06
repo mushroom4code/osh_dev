@@ -6,6 +6,9 @@ function OrderContragents({property, contrAgents}) {
     const currentContr = contrAgents.find(contrAgent => contrAgent.ID_CONTRAGENT === property['VALUE'][0]) ?? contrAgents[0];
     const [selectedContrAgent, setSelectedContrAgent] = useState(currentContr ?? {});
     const [openList, setOpenList] = useState(false);
+    // TODO - возможно сменить на useEffect
+    property.VALUE = [currentContr.ID_CONTRAGENT]
+
     const onSelectContr = (event) => {
         setSelectedContrAgent(
             contrAgents.find(
