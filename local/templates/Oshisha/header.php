@@ -19,8 +19,9 @@ $MESS["CITY_CHOOSE_TITLE"] = 'Выберите город';
 global $option_site;
 $option = $option_site;
 $MESS["CITY_CHOOSE_PLACEHOLDER"] = 'Ваш город ...';
-?><!DOCTYPE html>
-<html xml:lang="<?= LANGUAGE_ID ?>" lang="<?= LANGUAGE_ID ?>">
+?>
+<!DOCTYPE html>
+<html xml:lang="<?= LANGUAGE_ID ?>" lang="<?= LANGUAGE_ID ?>" class="">
 <head>
 
     <!--     Yandex.Metrika counter-->

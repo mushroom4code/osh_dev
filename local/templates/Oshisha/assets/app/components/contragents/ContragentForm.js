@@ -1,14 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import axios from "axios";
 import RelationshipContragent from "./RelationshipContragent";
+import Inputmask from "../../../js/list";
 
 const uric = 'uric';
 const ip = 'ip';
-const fiz = 'fiz';
 
 function is_valid_inn(i) {
     if (i.match(/\D/)) return false;
-
     const inn = i.match(/(\d)/g);
 
     if (inn.length === 10) {
@@ -53,7 +52,6 @@ function ContragentForm({
     const [phone, setPhone] = useState('')
     const [result, setResultNew] = useState('')
     const [colorRes, setColorRes] = useState('dark:text-hover-red text-hover-red')
-    const [email, setEmail] = useState('')
     const [contrResult, setContrResult] = useState([])
 
     const handleClick = (e) => {
@@ -150,7 +148,7 @@ function ContragentForm({
                                  dark:checked:focus:border-white dark:focus:checked:ring-white
                                  focus:checked:border-light-red focus:checked:ring-light-red
                                   dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
-                                 dark:border-gray-slider-arrow" onChange={(e) => {
+                                 dark:border-gray-slider-arrow" onChange={() => {
                                         setType(uric)
                                         Inputmask.remove('#emailContragent');
                                     }}
@@ -167,7 +165,7 @@ function ContragentForm({
                                  focus:checked:border-light-red focus:checked:ring-light-red
                                   dark:ring-offset-gray-800 dark:bg-darkBox ring-light-red checked:border-light-red
                                  dark:border-gray-slider-arrow"
-                                           onChange={(e) => {
+                                           onChange={() => {
                                                setType(ip)
                                                Inputmask.remove('#emailContragent');
                                            }}
