@@ -169,21 +169,24 @@ if (!empty($arResult['ERRORS']['FATAL'])) {
                                 </p>
                             </div>
                             <div class="flex md:flex-col flex-col-reverse justify-between mb-3 items-end lg:w-2/6 w-full">
-                                <a href="<?= $arResult["URL_TO_COPY"] ?>"
-                                   class="link_repeat_orders sale-order-list-repeat-link md:px-5 px-3 py-3
+                                <?php $userViewPrice = EnteregoContragents::getActiveContragentForUser($USER->GetID());
+                                if ($userViewPrice) { ?>
+                                    <a href="<?= $arResult["URL_TO_COPY"] ?>"
+                                       class="link_repeat_orders sale-order-list-repeat-link md:px-5 px-3 py-3
                                     dark:bg-dark-red rounded-md bg-light-red dark:shadow-md shadow-shadowDark w-full
                                      ark:hover:bg-hoverRedDark cursor-pointer flex items-center justify-center
                                      <?= empty($arResult['BASKET_ITEMS']) ? 'js--basket-empty' : 'js--basket-not-empty' ?>
                                      <?= $orderIsNotActiveItemsPresent === true ? 'js--not-active' : '' ?>">
-                                    <svg viewBox="0 0 19 22" fill="none"
-                                         xmlns="http://www.w3.org/2000/svg" class="mr-2 md:w-6 w-4 md:h-6 h-5">
-                                        <path d="M9.49743 0.666656V3.63808C4.7569 3.63808 0.893433 7.64088 0.893433 12.5524C0.893433 17.4639 4.7569 21.4667 9.49743 21.4667C14.238 21.4667 18.1014 17.4639 18.1014 12.5524C18.1014 10.6011 17.485 8.79763 16.4527 7.32722L15.0897 8.73942C15.7835 9.83239 16.1894 11.1409 16.1894 12.5524C16.1894 16.3933 13.2046 19.4857 9.49743 19.4857C5.79022 19.4857 2.80543 16.3933 2.80543 12.5524C2.80543 8.71146 5.79022 5.61904 9.49743 5.61904V8.59047L14.2774 4.62856L9.49743 0.666656Z"
-                                              fill="white"/>
-                                    </svg>
-                                    <span class="text-white md:text-[15px] text-xs">
+                                        <svg viewBox="0 0 19 22" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg" class="mr-2 md:w-6 w-4 md:h-6 h-5">
+                                            <path d="M9.49743 0.666656V3.63808C4.7569 3.63808 0.893433 7.64088 0.893433 12.5524C0.893433 17.4639 4.7569 21.4667 9.49743 21.4667C14.238 21.4667 18.1014 17.4639 18.1014 12.5524C18.1014 10.6011 17.485 8.79763 16.4527 7.32722L15.0897 8.73942C15.7835 9.83239 16.1894 11.1409 16.1894 12.5524C16.1894 16.3933 13.2046 19.4857 9.49743 19.4857C5.79022 19.4857 2.80543 16.3933 2.80543 12.5524C2.80543 8.71146 5.79022 5.61904 9.49743 5.61904V8.59047L14.2774 4.62856L9.49743 0.666656Z"
+                                                  fill="white"/>
+                                        </svg>
+                                        <span class="text-white md:text-[15px] text-xs">
                                         <?= Loc::getMessage('SPOD_ORDER_REPEAT') ?>
                                     </span>
-                                </a>
+                                    </a>
+                                <?php } ?>
                                 <p class="font-bold dark:font-medium xl:text-2xl text-lg md:mb-0 mb-3 text-textLight mr-3
                                  dark:text-textDarkLightGray">
                                     Итого: <?= $arResult["PRICE_FORMATED"] ?>
